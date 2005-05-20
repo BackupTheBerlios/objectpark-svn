@@ -1,0 +1,50 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                addBcc = id; 
+                addCc = id; 
+                addFolder = id; 
+                addReplyTo = id; 
+                changeQuoteLevel = id; 
+                followup = id; 
+                forward = id; 
+                makeFontBigger = id; 
+                makeFontSmaller = id; 
+                newMessage = id; 
+                pasteAsQuotation = id; 
+                rename = id; 
+                replyAll = id; 
+                replyDefault = id; 
+                replySender = id; 
+                saveMessage = id; 
+                showGroupInspector = id; 
+                toggleDisplay = id; 
+                toggleRich = id; 
+            }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {importTestMBox = id; openNewGroupWindow = id; saveAction = id; }; 
+            CLASS = GIApplication; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSApplication; 
+        }, 
+        {
+            ACTIONS = {toggleDisplay = id; }; 
+            CLASS = GroupController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {messageBodyView = NSTextView; tabView = NSTabView; tableView = NSTableView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {openPreferences = id; }; 
+            CLASS = NSApplication; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSResponder; 
+        }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,1861 @@
+// !$*UTF8*$!
+{
+	089C165DFE840E0CC02AAC07 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {606, 430}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {606, 430}}";
+		};
+	};
+	29B97313FDCFA39411CA2CEA = {
+		activeBuildStyle = 4A9504CCFFE6A4B311CA0CBA;
+		activeExecutable = 8D6B775F07554A41002C0A22;
+		activeTarget = 8D1107260486CEB800E47090;
+		addToTargets = (
+			8D1107260486CEB800E47090,
+		);
+		breakpoints = (
+			8D57A206079C7E580011C04A,
+			8D57A294079C94FE0011C04A,
+			8D01C7B5079D918900818BB8,
+		);
+		codeSenseManager = 8D6B776C07554A61002C0A22;
+		executables = (
+			8D6B775F07554A41002C0A22,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					309,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					262,
+					67,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 132530445;
+			PBXPrepackagedSmartGroups_v2 = (
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					activationKey = OldTargetSmartGroup;
+					clz = PBXTargetSmartGroup;
+					description = "Displays all targets of the project.";
+					globalID = 1C37FABC04509CD000000102;
+					name = Targets;
+					preferences = {
+						image = Targets;
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = PBXTargetSmartGroup2;
+					description = "Displays all targets of the project as well as nested build phases.";
+					globalID = 1C37FBAC04509CD000000102;
+					name = Targets;
+					preferences = {
+						image = Targets;
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = PBXExecutablesSmartGroup;
+					description = "Displays all executables of the project.";
+					globalID = 1C37FAAC04509CD000000102;
+					name = Executables;
+					preferences = {
+						image = Executable;
+					};
+				},
+				{
+					" PBXTransientLocationAtTop " = bottom;
+					absolutePathToBundle = "";
+					clz = PBXErrorsWarningsSmartGroup;
+					description = "Displays files with errors or warnings.";
+					globalID = 1C08E77C0454961000C914BD;
+					name = "Errors and Warnings";
+					preferences = {
+						fnmatch = "";
+						image = WarningsErrors;
+						recursive = 1;
+						regex = "";
+						root = "<PROJECT>";
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = PBXFilenameSmartGroup;
+					description = "Filters items in a given group (potentially recursively) based on matching the name with the regular expression of the filter.";
+					globalID = 1CC0EA4004350EF90044410B;
+					name = "Implementation Files";
+					preferences = {
+						canSave = 1;
+						fnmatch = "";
+						image = SmartFolder;
+						isLeaf = 0;
+						recursive = 1;
+						regex = "?*\\.[mcMC]";
+						root = "<PROJECT>";
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = PBXFilenameSmartGroup;
+					description = "This group displays Interface Builder NIB Files.";
+					globalID = 1CC0EA4004350EF90041110B;
+					name = "NIB Files";
+					preferences = {
+						canSave = 1;
+						fnmatch = "*.nib";
+						image = SmartFolder;
+						isLeaf = 0;
+						recursive = 1;
+						regex = "";
+						root = "<PROJECT>";
+					};
+				},
+				{
+					PBXTransientLocationAtTop = no;
+					absolutePathToBundle = "";
+					clz = PBXFindSmartGroup;
+					description = "Displays Find Results.";
+					globalID = 1C37FABC05509CD000000102;
+					name = "Find Results";
+					preferences = {
+						image = spyglass;
+					};
+				},
+				{
+					PBXTransientLocationAtTop = no;
+					absolutePathToBundle = "";
+					clz = PBXBookmarksSmartGroup;
+					description = "Displays Project Bookmarks.";
+					globalID = 1C37FABC05539CD112110102;
+					name = Bookmarks;
+					preferences = {
+						image = Bookmarks;
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = XCSCMSmartGroup;
+					description = "Displays files with interesting SCM status.";
+					globalID = E2644B35053B69B200211256;
+					name = SCM;
+					preferences = {
+						image = PBXRepository;
+						isLeaf = 0;
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = PBXSymbolsSmartGroup;
+					description = "Displays all symbols for the project.";
+					globalID = 1C37FABC04509CD000100104;
+					name = "Project Symbols";
+					preferences = {
+						image = ProjectSymbols;
+						isLeaf = 1;
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = PBXFilenameSmartGroup;
+					description = "Filters items in a given group (potentially recursively) based on matching the name with the regular expression of the filter.";
+					globalID = PBXTemplateMarker;
+					name = "Simple Filter SmartGroup";
+					preferences = {
+						canSave = 1;
+						fnmatch = "*.nib";
+						image = SmartFolder;
+						isLeaf = 0;
+						recursive = 1;
+						regex = "";
+						root = "<PROJECT>";
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					absolutePathToBundle = "";
+					clz = PBXFilenameSmartGroup;
+					description = "Filters items in a given group (potentially recursively) based on matching the name with the regular expression of the filter.";
+					globalID = PBXTemplateMarker;
+					name = "Simple Regular Expression SmartGroup";
+					preferences = {
+						canSave = 1;
+						fnmatch = "";
+						image = SmartFolder;
+						isLeaf = 0;
+						recursive = 1;
+						regex = "?*\\.[mcMC]";
+						root = "<PROJECT>";
+					};
+				},
+				{
+					PBXTransientLocationAtTop = bottom;
+					clz = XDDesignSmartGroup;
+					description = "Displays Xdesign models";
+					globalID = 2E4A936305E6979E00701470;
+					name = Design;
+					preferences = {
+						image = Design;
+						isLeaf = 0;
+					};
+				},
+			);
+			PBXWorkspaceStateSaveDate = 132530445;
+		};
+		perUserProjectItems = {
+			8D01C7B7079D919600818BB8 = 8D01C7B7079D919600818BB8;
+			8D45D21907E64F8A007A9622 = 8D45D21907E64F8A007A9622;
+			8D45D21A07E64F8A007A9622 = 8D45D21A07E64F8A007A9622;
+			8D45D21C07E64F8A007A9622 = 8D45D21C07E64F8A007A9622;
+			8D45D21D07E64F8A007A9622 = 8D45D21D07E64F8A007A9622;
+			8D45D60607E658BE007A9622 = 8D45D60607E658BE007A9622;
+			8D45D60707E658BE007A9622 = 8D45D60707E658BE007A9622;
+			8D45D60807E658BE007A9622 = 8D45D60807E658BE007A9622;
+			8D45D60907E658BE007A9622 = 8D45D60907E658BE007A9622;
+			8D45D60A07E658BE007A9622 = 8D45D60A07E658BE007A9622;
+			8D45D60B07E658BE007A9622 = 8D45D60B07E658BE007A9622;
+			8D45D60E07E658BE007A9622 = 8D45D60E07E658BE007A9622;
+			8D45D60F07E658BE007A9622 = 8D45D60F07E658BE007A9622;
+			8D45D61007E658BE007A9622 = 8D45D61007E658BE007A9622;
+			8D45D61107E658BE007A9622 = 8D45D61107E658BE007A9622;
+			8D45D61207E658BE007A9622 = 8D45D61207E658BE007A9622;
+			8D45D61307E658BE007A9622 = 8D45D61307E658BE007A9622;
+			8D45D61407E658BE007A9622 = 8D45D61407E658BE007A9622;
+			8D45D61507E658BE007A9622 = 8D45D61507E658BE007A9622;
+			8D45D61607E658BE007A9622 = 8D45D61607E658BE007A9622;
+			8D45D64107E65D4F007A9622 = 8D45D64107E65D4F007A9622;
+			8D45D64207E65D4F007A9622 = 8D45D64207E65D4F007A9622;
+			8D45D64307E65D4F007A9622 = 8D45D64307E65D4F007A9622;
+			8D45D64407E65D4F007A9622 = 8D45D64407E65D4F007A9622;
+			8D45D64507E65D4F007A9622 = 8D45D64507E65D4F007A9622;
+			8D45D64607E65D4F007A9622 = 8D45D64607E65D4F007A9622;
+			8D57A20A079C7F280011C04A = 8D57A20A079C7F280011C04A;
+			8D57A211079C7F280011C04A = 8D57A211079C7F280011C04A;
+			8D57A212079C7F280011C04A = 8D57A212079C7F280011C04A;
+			8D57A229079C81EC0011C04A = 8D57A229079C81EC0011C04A;
+			8D57A22B079C81EC0011C04A = 8D57A22B079C81EC0011C04A;
+			8D57A22D079C81EC0011C04A = 8D57A22D079C81EC0011C04A;
+			8D57A25A079C8BC10011C04A = 8D57A25A079C8BC10011C04A;
+			8D57A25B079C8BC10011C04A = 8D57A25B079C8BC10011C04A;
+			8D57A25D079C8BC10011C04A = 8D57A25D079C8BC10011C04A;
+			8D5C26A8079BAC68003DA0FF = 8D5C26A8079BAC68003DA0FF;
+			8D5C26A9079BAC68003DA0FF = 8D5C26A9079BAC68003DA0FF;
+			8D5C26AE079BAC68003DA0FF = 8D5C26AE079BAC68003DA0FF;
+			8D5C26AF079BAC68003DA0FF = 8D5C26AF079BAC68003DA0FF;
+			8D5C26B3079BAC68003DA0FF = 8D5C26B3079BAC68003DA0FF;
+			8D5C26B5079BAC68003DA0FF = 8D5C26B5079BAC68003DA0FF;
+			8D5C26B6079BAC68003DA0FF = 8D5C26B6079BAC68003DA0FF;
+			8D5C26B7079BAC68003DA0FF = 8D5C26B7079BAC68003DA0FF;
+			8D5C26B8079BAC68003DA0FF = 8D5C26B8079BAC68003DA0FF;
+			8D5C26C0079BAC68003DA0FF = 8D5C26C0079BAC68003DA0FF;
+			8D5C26C1079BAC68003DA0FF = 8D5C26C1079BAC68003DA0FF;
+			8D5C26C8079BAC68003DA0FF = 8D5C26C8079BAC68003DA0FF;
+			8D5C26C9079BAC68003DA0FF = 8D5C26C9079BAC68003DA0FF;
+			8D5C26CA079BAC68003DA0FF = 8D5C26CA079BAC68003DA0FF;
+			8D5C26CB079BAC68003DA0FF = 8D5C26CB079BAC68003DA0FF;
+			8D5C26CF079BAC68003DA0FF = 8D5C26CF079BAC68003DA0FF;
+			8D7F347D079B1B8B001FB13F = 8D7F347D079B1B8B001FB13F;
+		};
+		sourceControlManager = 8D6B776B07554A61002C0A22;
+		userBuildSettings = {
+		};
+	};
+	29B97316FDCFA39411CA2CEA = {
+		fileEncoding = 4;
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.objc;
+		name = main.m;
+		path = /Users/theisen/GinkoVoyager/main.m;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	770B37EC0679A11B001EADE2 = {
+		uiCtxt = {
+			"Xdesign Model Editor Bookmark Key" = {
+				"xdesign model browser state key - shown/hidden" = 1;
+				"xdesign model diagram view visible rect key" = "{{-225, 42}, {918, 354}}";
+			};
+			sepNavWindowFrame = "{{246, 23}, {728, 712}}";
+		};
+	};
+	77C8280B06725ACE000B614F = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {606, 621}}";
+			sepNavSelRange = "{449, 0}";
+			sepNavVisRect = "{{0, 0}, {606, 621}}";
+		};
+	};
+	77C8280C06725ACE000B614F = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {634, 1890}}";
+			sepNavSelRange = "{1871, 6}";
+			sepNavVisRect = "{{0, 561}, {634, 432}}";
+		};
+	};
+	8D01C7B5079D918900818BB8 = {
+		fileReference = 77C8280C06725ACE000B614F;
+		functionName = "-managedObjectContext";
+		isa = PBXFileBreakpoint;
+		lineNumber = 58;
+		state = 1;
+	};
+	8D01C7B7079D919600818BB8 = {
+		fRef = 770B37EC0679A11B001EADE2;
+		fallbackIsa = PBXBookmark;
+		isa = XDModelBookmark;
+	};
+	8D1107260486CEB800E47090 = {
+		activeExec = 0;
+		executables = (
+			8D6B775F07554A41002C0A22,
+		);
+	};
+	8D1107310486CEB800E47090 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {606, 621}}";
+			sepNavSelRange = "{274, 0}";
+			sepNavVisRect = "{{0, 0}, {606, 621}}";
+		};
+	};
+	8D337D9E07A7AF3000102DE3 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {634, 1092}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 256}, {634, 432}}";
+		};
+	};
+	8D337DAB07A7AFF000102DE3 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {634, 518}}";
+			sepNavSelRange = "{300, 0}";
+			sepNavVisRect = "{{0, 84}, {634, 432}}";
+		};
+	};
+	8D45D0C807E64488007A9622 = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = NSPersistentStoreCoordinator.h;
+		path = /System/Library/Frameworks/CoreData.framework/Versions/A/Headers/NSPersistentStoreCoordinator.h;
+		refType = 0;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {634, 1554}}";
+			sepNavSelRange = "{3671, 0}";
+			sepNavVisRect = "{{0, 1023}, {634, 432}}";
+		};
+	};
+	8D45D21907E64F8A007A9622 = {
+		fRef = 8D45D0C807E64488007A9622;
+		isa = PBXTextBookmark;
+		name = "NSPersistentStoreCoordinator.h: initWithManagedObjectModel:";
+		rLen = 0;
+		rLoc = 3671;
+		rType = 0;
+		vrLen = 1858;
+		vrLoc = 3103;
+	};
+	8D45D21A07E64F8A007A9622 = {
+		fRef = 8D337DAB07A7AFF000102DE3;
+		isa = PBXTextBookmark;
+		name = "NSManagedObjectContext+Extensions.h: 19";
+		rLen = 0;
+		rLoc = 300;
+		rType = 0;
+		vrLen = 400;
+		vrLoc = 190;
+	};
+	8D45D21C07E64F8A007A9622 = {
+		fRef = 8D337D9E07A7AF3000102DE3;
+		isa = PBXTextBookmark;
+		name = "NSManagedObjectContext+Extensions.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 641;
+		vrLoc = 364;
+	};
+	8D45D21D07E64F8A007A9622 = {
+		fRef = 8D337D9E07A7AF3000102DE3;
+		isa = PBXTextBookmark;
+		name = "NSManagedObjectContext+Extensions.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 641;
+		vrLoc = 364;
+	};
+	8D45D22A07E65450007A9622 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {792, 2534}}";
+			sepNavSelRange = "{241, 0}";
+			sepNavVisRect = "{{0, 0}, {792, 420}}";
+		};
+	};
+	8D45D24A07E65555007A9622 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {507, 432}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {507, 432}}";
+		};
+	};
+	8D45D2B107E65555007A9622 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {531, 432}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {531, 432}}";
+		};
+	};
+	8D45D44507E6555A007A9622 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {792, 2534}}";
+			sepNavSelRange = "{241, 0}";
+			sepNavVisRect = "{{0, 0}, {792, 420}}";
+		};
+	};
+	8D45D60607E658BE007A9622 = {
+		fRef = 77C8280C06725ACE000B614F;
+		isa = PBXTextBookmark;
+		name = SQLite;
+		rLen = 6;
+		rLoc = 1871;
+		rType = 0;
+		vrLen = 1451;
+		vrLoc = 1006;
+	};
+	8D45D60707E658BE007A9622 = {
+		fRef = 8D5C25A7079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = initWithManagedObjectContext;
+		rLen = 28;
+		rLoc = 1724;
+		rType = 0;
+		vrLen = 1088;
+		vrLoc = 345;
+	};
+	8D45D60807E658BE007A9622 = {
+		fRef = 8D5C25A8079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "G3MessageGroup.h: 14";
+		rLen = 0;
+		rLoc = 277;
+		rType = 0;
+		vrLen = 516;
+		vrLoc = 0;
+	};
+	8D45D60907E658BE007A9622 = {
+		fRef = 8D5C25AC079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "G3Thread.h: 13";
+		rLen = 0;
+		rLoc = 247;
+		rType = 0;
+		vrLen = 484;
+		vrLoc = 0;
+	};
+	8D45D60A07E658BE007A9622 = {
+		fRef = 8D5C25AA079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "G3Profile.h: 15";
+		rLen = 0;
+		rLoc = 294;
+		rType = 0;
+		vrLen = 666;
+		vrLoc = 0;
+	};
+	8D45D60B07E658BE007A9622 = {
+		fRef = 8D5C25A6079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "{";
+		rLen = 2;
+		rLoc = 722;
+		rType = 0;
+		vrLen = 724;
+		vrLoc = 0;
+	};
+	8D45D60E07E658BE007A9622 = {
+		fRef = 77C8280C06725ACE000B614F;
+		isa = PBXTextBookmark;
+		name = SQLite;
+		rLen = 6;
+		rLoc = 1871;
+		rType = 0;
+		vrLen = 1451;
+		vrLoc = 1006;
+	};
+	8D45D60F07E658BE007A9622 = {
+		fRef = 8D5C25A7079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = initWithManagedObjectContext;
+		rLen = 28;
+		rLoc = 1724;
+		rType = 0;
+		vrLen = 1088;
+		vrLoc = 345;
+	};
+	8D45D61007E658BE007A9622 = {
+		fRef = 8D5C25A8079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "G3MessageGroup.h: 14";
+		rLen = 0;
+		rLoc = 277;
+		rType = 0;
+		vrLen = 516;
+		vrLoc = 0;
+	};
+	8D45D61107E658BE007A9622 = {
+		fRef = 8D5C25AC079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "G3Thread.h: 13";
+		rLen = 0;
+		rLoc = 247;
+		rType = 0;
+		vrLen = 484;
+		vrLoc = 0;
+	};
+	8D45D61207E658BE007A9622 = {
+		fRef = 8D5C25AA079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "G3Profile.h: 15";
+		rLen = 0;
+		rLoc = 294;
+		rType = 0;
+		vrLen = 666;
+		vrLoc = 0;
+	};
+	8D45D61307E658BE007A9622 = {
+		fRef = 8D5C25A6079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "G3Message.h: 30";
+		rLen = 0;
+		rLoc = 707;
+		rType = 0;
+		vrLen = 724;
+		vrLoc = 0;
+	};
+	8D45D61407E658BE007A9622 = {
+		fRef = 8D45D22A07E65450007A9622;
+		isa = PBXTextBookmark;
+		name = "OPManagedObject.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 674;
+		vrLoc = 0;
+	};
+	8D45D61507E658BE007A9622 = {
+		fRef = 8D5C25A6079B2162003DA0FF;
+		isa = PBXTextBookmark;
+		name = "{";
+		rLen = 2;
+		rLoc = 722;
+		rType = 0;
+		vrLen = 724;
+		vrLoc = 0;
+	};
+	8D45D61607E658BE007A9622 = {
+		fRef = 8D45D22A07E65450007A9622;
+		isa = PBXTextBookmark;
+		name = OPManagedObject;
+		rLen = 15;
+		rLoc = 185;
+		rType = 0;
+		vrLen = 659;
+		vrLoc = 0;
+	};
+	8D45D64107E65D4F007A9622 = {
+		fRef = 8D45D24A07E65555007A9622;
+		isa = PBXTextBookmark;
+		name = ".gdb_history: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	8D45D64207E65D4F007A9622 = {
+		fRef = 8D45D22A07E65450007A9622;
+		isa = PBXTextBookmark;
+		name = "OPManagedObject.m: 19";
+		rLen = 0;
+		rLoc = 402;
+		rType = 0;
+		vrLen = 663;
+		vrLoc = 42;
+	};
+	8D45D64307E65D4F007A9622 = {
+		fRef = 8D45D2B107E65555007A9622;
+		isa = PBXBookmark;
+	};
+	8D45D64407E65D4F007A9622 = {
+		fRef = 8D45D24A07E65555007A9622;
+		isa = PBXTextBookmark;
+		name = ".gdb_history: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	8D45D64507E65D4F007A9622 = {
+		fRef = 8D45D22A07E65450007A9622;
+		isa = PBXTextBookmark;
+		name = "OPManagedObject.m: 19";
+		rLen = 0;
+		rLoc = 402;
+		rType = 0;
+		vrLen = 663;
+		vrLoc = 42;
+	};
+	8D45D64607E65D4F007A9622 = {
+		fRef = 8D45D2B107E65555007A9622;
+		isa = PBXTextBookmark;
+		name = "PkgInfo: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 8;
+		vrLoc = 0;
+	};
+	8D57A206079C7E580011C04A = {
+		fileReference = 8D5C264F079B98EB003DA0FF;
+		functionName = "enumerateMboxTest()";
+		isa = PBXFileBreakpoint;
+		lineNumber = 21;
+		state = 1;
+	};
+	8D57A20A079C7F280011C04A = {
+		fRef = 8D5C25E3079B2A1E003DA0FF;
+		isa = PBXTextBookmark;
+		name = "- (NSString*) fromWithFallback: (BOOL) fallback";
+		rLen = 47;
+		rLoc = 1917;
+		rType = 0;
+		vrLen = 2013;
+		vrLoc = 0;
+	};
+	8D57A210079C7F280011C04A = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.plist.strings;
+		name = InfoPlist.strings;
+		path = /Users/theisen/Ginko3/English.lproj/InfoPlist.strings;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	8D57A211079C7F280011C04A = {
+		fRef = 8D5C264F079B98EB003DA0FF;
+		isa = PBXTextBookmark;
+		name = "g3main.m: 48";
+		rLen = 0;
+		rLoc = 458;
+		rType = 0;
+		vrLen = 1184;
+		vrLoc = 174;
+	};
+	8D57A212079C7F280011C04A = {
+		fRef = 77C8280B06725ACE000B614F;
+		isa = PBXTextBookmark;
+		name = "Ginko3AppDelegate.h: window";
+		rLen = 0;
+		rLoc = 199;
+		rType = 0;
+		vrLen = 447;
+		vrLoc = 0;
+	};
+	8D57A229079C81EC0011C04A = {
+		fRef = 8D57A210079C7F280011C04A;
+		isa = PBXTextBookmark;
+		name = "InfoPlist.strings: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 125;
+		vrLoc = 0;
+	};
+	8D57A22B079C81EC0011C04A = {
+		fRef = 8D5C264F079B98EB003DA0FF;
+		isa = PBXTextBookmark;
+		name = "#import \"G3Message.h\"\n#import \"OPMBoxFile.h\"\n#import \"G3Thread.h\"\n#import \"OPInternetMessage.h\"";
+		rLen = 95;
+		rLoc = 174;
+		rType = 0;
+		vrLen = 557;
+		vrLoc = 0;
+	};
+	8D57A22D079C81EC0011C04A = {
+		fRef = 8D57A210079C7F280011C04A;
+		isa = PBXTextBookmark;
+		name = "InfoPlist.strings: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 125;
+		vrLoc = 0;
+	};
+	8D57A25A079C8BC10011C04A = {
+		fRef = 77C8280B06725ACE000B614F;
+		isa = PBXTextBookmark;
+		name = "Ginko3AppDelegate.h: importTestMBox:";
+		rLen = 0;
+		rLoc = 449;
+		rType = 0;
+		vrLen = 491;
+		vrLoc = 0;
+	};
+	8D57A25B079C8BC10011C04A = {
+		fRef = 8D1107310486CEB800E47090;
+		isa = PBXTextBookmark;
+		name = "Info.plist: 7";
+		rLen = 0;
+		rLoc = 274;
+		rType = 0;
+		vrLen = 784;
+		vrLoc = 0;
+	};
+	8D57A25D079C8BC10011C04A = {
+		fRef = 77C8280C06725ACE000B614F;
+		isa = PBXTextBookmark;
+		name = "Ginko3AppDelegate.m: 15";
+		rLen = 0;
+		rLoc = 347;
+		rType = 0;
+		vrLen = 1286;
+		vrLoc = 0;
+	};
+	8D57A294079C94FE0011C04A = {
+		isa = PBXSymbolicBreakpoint;
+		state = 2;
+		symbolName = "-[NSException raise]";
+	};
+	8D5C25A6079B2162003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {567, 910}}";
+			sepNavSelRange = "{722, 2}";
+			sepNavVisRect = "{{0, 224}, {567, 387}}";
+		};
+	};
+	8D5C25A7079B2162003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {766, 3556}}";
+			sepNavSelRange = "{1134, 0}";
+			sepNavVisRect = "{{0, 328}, {766, 283}}";
+		};
+	};
+	8D5C25A8079B2162003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {634, 432}}";
+			sepNavSelRange = "{277, 0}";
+			sepNavVisRect = "{{0, 0}, {634, 432}}";
+		};
+	};
+	8D5C25AA079B2162003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {634, 756}}";
+			sepNavSelRange = "{294, 0}";
+			sepNavVisRect = "{{0, 0}, {634, 432}}";
+		};
+	};
+	8D5C25AC079B2162003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {634, 432}}";
+			sepNavSelRange = "{247, 0}";
+			sepNavVisRect = "{{0, 0}, {634, 432}}";
+		};
+	};
+	8D5C25AD079B2162003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {630, 1540}}";
+			sepNavSelRange = "{266, 14}";
+			sepNavVisRect = "{{0, 0}, {630, 621}}";
+		};
+	};
+	8D5C25C4079B2A1E003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {606, 6104}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {606, 621}}";
+		};
+	};
+	8D5C25D9079B2A1E003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {630, 1274}}";
+			sepNavSelRange = "{3098, 26}";
+			sepNavVisRect = "{{0, 185}, {630, 621}}";
+		};
+	};
+	8D5C25DA079B2A1E003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {567, 31528}}";
+			sepNavSelRange = "{48609, 0}";
+			sepNavVisRect = "{{0, 22388}, {567, 374}}";
+		};
+	};
+	8D5C25E3079B2A1E003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {630, 714}}";
+			sepNavSelRange = "{1917, 47}";
+			sepNavVisRect = "{{0, 0}, {630, 621}}";
+		};
+	};
+	8D5C262D079B2E90003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {568, 504}}";
+			sepNavSelRange = "{1176, 0}";
+			sepNavVisRect = "{{0, 0}, {568, 374}}";
+		};
+	};
+	8D5C262E079B2E90003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {630, 3710}}";
+			sepNavSelRange = "{7401, 0}";
+			sepNavVisRect = "{{0, 3080}, {630, 621}}";
+		};
+	};
+	8D5C262F079B2E90003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {606, 621}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {606, 621}}";
+		};
+	};
+	8D5C2630079B2E90003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {606, 1848}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {606, 621}}";
+		};
+	};
+	8D5C2631079B2E90003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {630, 644}}";
+			sepNavSelRange = "{205, 0}";
+			sepNavVisRect = "{{0, 12}, {630, 621}}";
+		};
+	};
+	8D5C2632079B2E90003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {592, 3374}}";
+			sepNavSelRange = "{170, 0}";
+			sepNavVisRect = "{{0, 0}, {592, 374}}";
+		};
+	};
+	8D5C2641079B3500003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {630, 621}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {630, 621}}";
+		};
+	};
+	8D5C264F079B98EB003DA0FF = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {606, 621}}";
+			sepNavSelRange = "{174, 95}";
+			sepNavVisRect = "{{0, 0}, {606, 621}}";
+		};
+	};
+	8D5C26A8079BAC68003DA0FF = {
+		fRef = 8D5C262F079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "NSData+OPMboxExtensions.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1403;
+		vrLoc = 0;
+	};
+	8D5C26A9079BAC68003DA0FF = {
+		fRef = 8D5C2630079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "NSData+OPMboxExtensions.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1729;
+		vrLoc = 0;
+	};
+	8D5C26AE079BAC68003DA0FF = {
+		fRef = 8D5C25DA079B2A1E003DA0FF;
+		isa = PBXTextBookmark;
+		name = UnixLine;
+		rLen = 8;
+		rLoc = 13677;
+		rType = 0;
+		vrLen = 1350;
+		vrLoc = 13048;
+	};
+	8D5C26AF079BAC68003DA0FF = {
+		fRef = 8D5C25C4079B2A1E003DA0FF;
+		isa = PBXTextBookmark;
+		name = "EDMessagePart+OPExtensions.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1708;
+		vrLoc = 0;
+	};
+	8D5C26B3079BAC68003DA0FF = {
+		fRef = 8D5C26B4079BAC68003DA0FF;
+		isa = PBXTextBookmark;
+		name = "//\n//  main.m\n//  GinkoVoyager\n//\n//  Created by Dirk Theisen on Mon Jul 19 2004.\n//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.\n//\n\n\n#import <Cocoa/Cocoa.h>\n#import \"G3Message.h\"\n#import \"G3Thread.h\"\n\n char*  op_debug_setting;\n char** op_debug_domain;\n\nint main(int argc, const char *argv[])\n{\n    return NSApplicationMain(argc, argv);\n}\n";
+		rLen = 355;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 355;
+		vrLoc = 0;
+	};
+	8D5C26B4079BAC68003DA0FF = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.objc;
+		name = main.m;
+		path = /Users/theisen/GinkoVoyager/main.m;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	8D5C26B5079BAC68003DA0FF = {
+		fRef = 8D5C262E079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "EDMessagePart+OPMboxExtensions.m: 260";
+		rLen = 0;
+		rLoc = 7401;
+		rType = 0;
+		vrLen = 1008;
+		vrLoc = 6393;
+	};
+	8D5C26B6079BAC68003DA0FF = {
+		fRef = 8D5C2641079B3500003DA0FF;
+		isa = PBXTextBookmark;
+		name = "OPMessageDataEnumerator.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 535;
+		vrLoc = 0;
+	};
+	8D5C26B7079BAC68003DA0FF = {
+		fRef = 8D5C2632079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = messageDataEnumerator;
+		rLen = 21;
+		rLoc = 2120;
+		rType = 0;
+		vrLen = 1468;
+		vrLoc = 1418;
+	};
+	8D5C26B8079BAC68003DA0FF = {
+		fRef = 8D5C2631079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "OPMBoxFile.h: 10";
+		rLen = 0;
+		rLoc = 205;
+		rType = 0;
+		vrLen = 1056;
+		vrLoc = 0;
+	};
+	8D5C26C0079BAC68003DA0FF = {
+		fRef = 8D5C262F079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "NSData+OPMboxExtensions.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1403;
+		vrLoc = 0;
+	};
+	8D5C26C1079BAC68003DA0FF = {
+		fRef = 8D5C2630079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "NSData+OPMboxExtensions.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1647;
+		vrLoc = 147;
+	};
+	8D5C26C8079BAC68003DA0FF = {
+		fRef = 8D5C25DA079B2A1E003DA0FF;
+		isa = PBXTextBookmark;
+		name = UnixLine;
+		rLen = 8;
+		rLoc = 13677;
+		rType = 0;
+		vrLen = 1350;
+		vrLoc = 13048;
+	};
+	8D5C26C9079BAC68003DA0FF = {
+		fRef = 8D5C25C4079B2A1E003DA0FF;
+		isa = PBXTextBookmark;
+		name = "EDMessagePart+OPExtensions.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1708;
+		vrLoc = 0;
+	};
+	8D5C26CA079BAC68003DA0FF = {
+		fRef = 8D5C262E079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "EDMessagePart+OPMboxExtensions.m: 31";
+		rLen = 0;
+		rLoc = 1410;
+		rType = 0;
+		vrLen = 1385;
+		vrLoc = 732;
+	};
+	8D5C26CB079BAC68003DA0FF = {
+		fRef = 8D5C2632079B2E90003DA0FF;
+		isa = PBXTextBookmark;
+		name = "OPMBoxFile.m: 22";
+		rLen = 0;
+		rLoc = 585;
+		rType = 0;
+		vrLen = 1352;
+		vrLoc = 0;
+	};
+	8D5C26CF079BAC68003DA0FF = {
+		fRef = 29B97316FDCFA39411CA2CEA;
+		isa = PBXTextBookmark;
+		name = "main.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 355;
+		vrLoc = 0;
+	};
+	8D6B775F07554A41002C0A22 = {
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		configStateDict = {
+		};
+		cppStopOnCatchEnabled = 0;
+		cppStopOnThrowEnabled = 0;
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		isa = PBXExecutable;
+		libgmallocEnabled = 0;
+		name = Ginko3;
+		savedGlobals = {
+		};
+		shlibInfoDictList = (
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDMessagePart+OPExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/g3main.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDMessagePart.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSString+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+MIME.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDHeaderBearingObject.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSArray+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSAttributedString+MessageUtils.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSFileWrapper+OPApplefileExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSCalendarDate+NetExt.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSCharacterSet+MIME.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSString+MessageUtils.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPInternetMessage+GinkoExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPInternetMessage.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPMultipartContentCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDCompositeContentCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDContentCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPXFolderContentCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSAttributedString+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+OPMD5.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSObject+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSScanner+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDMessagePart+OPMboxExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+OPMboxExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPMBoxFile.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPMessageDataEnumerator.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDEntityFieldCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDHeaderFieldCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDObjectPair.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDIdListFieldCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/G3Message.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Developer/Applications/Xcode.app/Contents/PlugIns/GDBMIDebugging.xcplugin/Contents/Resources/PBGDBIntrospectionSupport.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/Ginko3AppDelegate.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libSystem.B.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDTextFieldCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/CoreServices/Encodings/libLatin2Converter.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData;
+				whenToLoad = 0;
+			},
+		);
+		shlibInfoDictList_v2 = (
+			{
+				level = 0;
+				path = /usr/lib/system/libmathCommon.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libSystem.B.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libicucore.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libauto.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libobjc.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libz.1.2.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Security.framework/Versions/A/Security;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CFNetwork.framework/Versions/A/CFNetwork;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/WebServicesCore.framework/Versions/A/WebServicesCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SearchKit.framework/Versions/A/SearchKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libbsm.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/AE;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libcrypto.0.9.7.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ColorSync.framework/Versions/A/ColorSync;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreText.framework/Versions/A/CoreText;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/QD.framework/Versions/A/QD;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libcups.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/PrintCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LangAnalysis.framework/Versions/A/LangAnalysis;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/FindByContent.framework/Versions/A/FindByContent;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libRaw.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/vImage;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/vecLib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/ImageIO;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/CarbonSound.framework/Versions/A/CarbonSound;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libiconv.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libxml2.2.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/PrivateFrameworks/DesktopServicesPriv.framework/Versions/A/DesktopServicesPriv;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SpeechRecognition.framework/Versions/A/SpeechRecognition;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /usr/lib/libsqlite3.0.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/PrivateFrameworks/ZeroLink.framework/Versions/A/ZeroLink;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Users/theisen/GinkoVoyager/build/Ginko3.app/Contents/MacOS/Ginko3;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/g3main.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDMessagePart+OPExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+MIME.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSString+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDMessagePart.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDHeaderBearingObject.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSArray+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSFileWrapper+OPApplefileExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSAttributedString+MessageUtils.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSCalendarDate+NetExt.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSCharacterSet+MIME.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSString+MessageUtils.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPInternetMessage+GinkoExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPInternetMessage.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPMultipartContentCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDCompositeContentCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDContentCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSAttributedString+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+OPMD5.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSObject+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSScanner+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDMessagePart+OPMboxExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSData+OPMboxExtensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/NSManagedObjectContext+Extensions.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCSync.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/Ginko3AppDelegate.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libRIP.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCGATS.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/G3Message.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/G3MessageGroup.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/G3Thread.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = /Developer/Applications/Xcode.app/Contents/PlugIns/GDBMIDebugging.xcplugin/Contents/Resources/PBGDBIntrospectionSupport.A.dylib;
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPMBoxFile.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/OPMessageDataEnumerator.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDEntityFieldCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDHeaderFieldCoder.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDObjectPair.ob";
+				whenToLoad = 0;
+			},
+			{
+				level = 0;
+				path = "/Users/theisen/GinkoVoyager/build/Ginko3.build/Ginko3.build/Objects-normal/ppc/EDIdListFieldCoder.ob";
+				whenToLoad = 0;
+			},
+		);
+		sourceDirectories = (
+		);
+	};
+	8D6B776B07554A61002C0A22 = {
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		isa = PBXSourceControlManager;
+		scmConfiguration = {
+		};
+		scmType = scm.cvs;
+	};
+	8D6B776C07554A61002C0A22 = {
+		indexTemplatePath = "";
+		isa = PBXCodeSenseManager;
+	};
+	8D7F347D079B1B8B001FB13F = {
+		fRef = 770B37EC0679A11B001EADE2;
+		fallbackIsa = PBXBookmark;
+		isa = XDModelBookmark;
+	};
+}

@@ -1,0 +1,72 @@
+//
+//  G3Message.h
+//  GinkoVoyager
+//
+//  Created by Dirk Theisen on 01.12.04.
+//  Copyright 2004 Objectpark Group <http://www.objectpark.org>. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+#import "OPManagedObject.h"
+
+@class OPInternetMessage;
+@class G3Thread;
+
+#define OPSeenStatus 1
+#define OPAnsweredStatus 2
+#define OPFlaggedStatus 4
+#define OPDeletedStatus 8
+#define OPDraftStatus 16
+#define OPRecentStatus 32
+#define OPQueuedStatus 64
+#define OPExpungedStatus 128
+#define OPUninterestingStatus 256
+#define OPSendingBlockedStatus 512
+#define OPPublicMessageStatus 1024
+#define OPQueuedSendNowStatus 2048
+#define OPFulltextIndexedStatus 4096
+#define OPJunkMailStatus 8192
+#define OPIsFromMeStatus 16384
+
+@interface G3Message : OPManagedObject 
+{
+}
+
++ (id)messageForMessageId:(NSString *)messageId;
++ (id)messageWithTransferData:(NSData *)tData;
+
+- (NSString *)messageId;
+- (G3Message *)reference;
+- (G3Message *)referenceFind:(BOOL)find;
+
+- (unsigned)numberOfReferences;
+
+- (unsigned)flags;
+- (void)setFlags:(unsigned)someFlags;
+- (BOOL)hasFlag:(unsigned)flag;
+- (void)addFlags:(unsigned)someFlags;
+- (void)removeFlags:(unsigned)someFlags;
+
+- (NSAttributedString *)contentAsAttributedString;
+
+- (G3Thread *)thread;
+- (G3Thread *)threadCreate:(BOOL)doCreate;
+
+- (NSArray *)commentsInThread:(G3Thread *)thread;
+
+- (BOOL)isDummy;
+- (BOOL)isSeen;
+- (void)setSeen:(BOOL)isSeen;
+
+- (BOOL)isListMessage;
+- (BOOL)isUsenetMessage;
+- (BOOL)isEMailMessage;
+- (BOOL)isPublicMessage;
+
+- (BOOL)isFromMe;
+
+- (NSString *)senderName;
+
+- (OPInternetMessage *)internetMessage;
+
+@end

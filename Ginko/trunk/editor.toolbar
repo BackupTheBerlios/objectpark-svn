@@ -1,0 +1,74 @@
+{
+    toolbarDefaultItems = (send, queue, NSToolbarSeparatorItem, addressbook, cc, bcc, replyto, );
+    send = {
+        label = "Send Now";
+        paletteLabel = "Send Now";
+        toolTip = "Send this message immediately.";
+	action = "send:";
+        imageName = "MailIcon_send";
+    };
+    queue = {
+        label = "Queue";
+        paletteLabel = "Queue";
+        toolTip = "Queue message for sending later.";
+	action = "queue:";
+        imageName = "MailIcon_queue";
+    };
+    cc = {
+        label = "Add CC:";
+        paletteLabel = "Add carbon copy field";
+        toolTip = "Add carbon copy field for additional recipients.";
+	action = "addCc:";
+        imageName = "MailIcon_addcc";
+    };
+    bcc = {
+        label = "Add BCC:";
+        paletteLabel = "Add blind carbon copy field";
+        toolTip = "Add blind carbon copy field for non-diclosed recipients.";
+	action = "addBcc:";
+        imageName = "MailIcon_addbcc";
+    };
+    replyto = {
+        label = "Add Reply-To:";
+        paletteLabel = "Add reply-to field";
+        toolTip = "Add reply-to field (instructs the recipient to reply to that e-mail address instead of the 'From' address).";
+	action = "addReplyTo:";
+        imageName = "MailIcon_reply";
+    };
+    addressbook = {
+        label = "Addresses";
+        paletteLabel = "Show address book";
+        toolTip = "Show address book.";
+	action = "addressbook:";
+        target = "NSApp";
+        imageName = "MailIcon_addresses";
+    };
+    attach = {
+        label = "Attachment";
+        paletteLabel = "Add attachment to message";
+        toolTip = "Add/enclose an attachment/file to the message.";
+	action = "attach:";
+        imageName = "MailIcon_attach";
+    };
+    reply = {
+        label = "Reply Sender";
+        paletteLabel = "Change to reply to sender";
+        toolTip = "Change rather to reply to the sender only.";
+	action = "replySender:";
+        imageName = "MailIcon_reply";
+    };
+    replyAll = {
+        label = "Reply All";
+        paletteLabel = "Change to reply to all";
+        toolTip = "Change rather to reply to the sender and all recipients.";
+	action = "replyAll:";
+        imageName = "MailIcon_reply";
+    };
+    followup = {
+        label = "Followup";
+        paletteLabel = "Change to followup";
+        toolTip = "Change rather to followup group.";
+	action = "followup:";
+        imageName = "MailIcon_reply";
+    };
+}

@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {CLASS = AccountPrefs; LANGUAGE = ObjC; SUPERCLASS = OPPreferencePane; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = G3Account; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = NSPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "_firstKeyView" = NSView; 
+                "_initialKeyView" = NSView; 
+                "_lastKeyView" = NSView; 
+                "_window" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = OPPreferencePane; LANGUAGE = ObjC; SUPERCLASS = NSPreferencePane; }
+    ); 
+    IBVersion = 1; 
+}

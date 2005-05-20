@@ -1,0 +1,10 @@
+{
+    toolbarDefaultItems = (new, NSToolbarFlexibleSpaceItem);
+    new = {
+        label = "New";
+        paletteLabel = "Create new message";
+        toolTip = "Create new message.";
+	action = "newMessage:";
+        imageName = "MailIcon_create";
+    };
+}

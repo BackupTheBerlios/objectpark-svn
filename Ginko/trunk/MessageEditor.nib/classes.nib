@@ -1,0 +1,34 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addBcc = id; 
+                addCc = id; 
+                addReplyTo = id; 
+                followup = id; 
+                replyAll = id; 
+                replySender = id; 
+                switchProfile = id; 
+            }; 
+            CLASS = G3MessageEditorController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                hiddenCaptionPrototype = NSTextField; 
+                hiddenTextFieldPrototype = OPSizingTextField; 
+                messageTextView = GITextView; 
+                profileButton = NSPopUpButton; 
+                subjectField = OPSizingTextField; 
+                toField = OPSizingTextField; 
+                toFieldOptionsButton = NSPopUpButton; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = G3MessageEditorWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = G3MessageTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = OPSizingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }
+    ); 
+    IBVersion = 1; 
+}

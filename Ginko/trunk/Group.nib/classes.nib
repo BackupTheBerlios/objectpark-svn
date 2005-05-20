@@ -1,0 +1,37 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {selectTreeCell = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = G3CommentTreeCell; LANGUAGE = ObjC; SUPERCLASS = NSActionCell; }, 
+        {
+            CLASS = G3GroupController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                boxesDrawer = NSDrawer; 
+                boxesView = NSOutlineView; 
+                commentsMatrix = NSMatrix; 
+                groupInfoTextField = NSTextField; 
+                messageTextView = NSTextView; 
+                tabView = NSTabView; 
+                threadsView = GIOutlineViewWithKeyboardSupport; 
+                treeBodySplitter = OPCollapsingSplitView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = G3GroupWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = GIMatrixWithKeyboardSupport; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
+        {
+            CLASS = GIOutlineViewWithKeyboardSupport; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = OPCollapsingSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }
+    ); 
+    IBVersion = 1; 
+}
