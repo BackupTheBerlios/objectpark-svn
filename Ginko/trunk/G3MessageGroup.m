@@ -22,14 +22,16 @@ NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotificat
 G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSMutableArrays (e.g. #{+rootHierarchyNode} returns the NSMutableArray that is the root node). The first entry in such a hierarchy node is information of the node itself (it is a NSMutableDictionary whose keys are described lateron). All other entries are either NSStrings with URLs that reference G3MessageGroup objects (see #{-[NSManagedObject objectID]}) or other hierarchy nodes (NSMutableArrays). "*/
 
 - (NSString *)name
+/*" Returns the name of the receiver. "*/
 {
-    [self willAccessValueForKey: @"name"];
-    id result = [self primitiveValueForKey: @"name"];
-    [self didAccessValueForKey: @"name"];
+    [self willAccessValueForKey:@"name"];
+    id result = [self primitiveValueForKey:@"name"];
+    [self didAccessValueForKey:@"name"];
     return result;
 }
 
 - (void)setName:(NSString *)value 
+/*" Sets the name of the receiver. "*/
 {
     [self willChangeValueForKey:@"name"];
     [self setPrimitiveValue:value forKey:@"name"];
@@ -37,6 +39,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 }
 
 - (NSString *)URIReferenceString
+/*" Returns a string for referencing the receiver persistently. "*/ 
 {
     [NSApp saveAction:self];
     return [[[self objectID] URIRepresentation] absoluteString];
@@ -85,6 +88,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 }
 
 + (id)messageGroupWithURIReferenceString:(NSString *)anUrl
+/*" Returns the message group object referenced by the given reference string anUrl. See also: #{-URIReferenceString}. "*/
 {
     id referencedGroup = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:anUrl]];
         
@@ -105,11 +109,6 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     return result;
      */
-}
-
-- (void) dealloc 
-{
-    [super dealloc];
 }
 
 - (NSArray *)threadsByDate
@@ -155,12 +154,15 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 }
 
 - (NSString *)description
+/*" Custom description of the receiver. "*/
 {
     return [NSString stringWithFormat:@"%@ with %d threads", [super description], [[self valueForKey:@"threads"] count]];
 }
 
 - (unsigned)messageCount
-/*" Way to inefficient as it is now. "*/
+/*" Returns the count of messages that are present 'in' the receiver (contained in threads that are contained in the receiver). 
+
+    The current implementation is very inefficent, please use seldom. "*/
 {
     unsigned result = 0;
     NSEnumerator *enumerator;
@@ -176,7 +178,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 }
 
 - (unsigned)unreadMessageCount
-/*" Way to inefficient as it is now. "*/
+/*" Not yet implemented. Returns always 0. "*/
 {
     return 0;
 }
@@ -200,6 +202,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 static NSMutableArray *root = nil;
 
 + (void)commitChanges
+/*" Saves the hierarchy information to disk. "*/
 {
     NSString *plistPath;
     NSData *plistData;
@@ -222,6 +225,7 @@ static NSMutableArray *root = nil;
 }
 
 + (void)checkHierarchy:(NSMutableArray *)hierarchy withGroups:(NSMutableArray *)groupUrlsToCheck
+/*" Checks the given hierarchy if all groups (referenced by groupUrlsToCheck) and no more are contained in the hierarchy. Adjusts the hierarchy accordingly. "*/
 {
     int i, count;
     
@@ -255,7 +259,7 @@ static NSMutableArray *root = nil;
 }
 
 + (void)enforceIntegrity
-    /*" Checks if all groups are in the hierarchy and that the hierarchy has no nonexistent groups in it. "*/
+/*" Checks if all groups are in the hierarchy and that the hierarchy has no nonexistent groups in it. "*/
 {
     NSMutableArray *groupUrlsToCheck;
     NSArray *allGroups;
@@ -280,6 +284,7 @@ static NSMutableArray *root = nil;
 }
 
 + (NSMutableArray *)hierarchyRootNode
+/*" Returns the root node of the message group hierarchy. The first entry in every node describes the hierarchy. It is a #{NSDictionary} with keys 'name' for the name of the hierarchy and 'uid' for an unique id of the hierarchy. "*/
 {
     if (! root)
     {
@@ -315,6 +320,7 @@ static NSMutableArray *root = nil;
 }
 
 + (NSMutableArray *)findHierarchyNodeForEntry:(id)entry startingWithHierarchyNode:(NSMutableArray *)aHierarchy
+/*" Returns the hierarchy node in which entry is contained. Starts the search at the hierarchy node aHierarchy. Returns nil if entry couldn't be found in the hierarchy. "*/
 {
     NSMutableArray *result = nil;
     NSEnumerator *enumerator;
@@ -338,6 +344,7 @@ static NSMutableArray *root = nil;
 }
 
 + (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly
+/*" Moves entry (either a hierarchy node or a group reference to another hierarchy node aHierarchy at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
 {
     NSMutableArray *entrysHierarchy;
     int entrysIndex;
@@ -389,15 +396,16 @@ static NSMutableArray *root = nil;
     return YES;
 }
 
-+ (void)addNewHierarchyNodeAfterItem:(id)item
++ (void)addNewHierarchyNodeAfterEntry:(id)anEntry
+/*" Adds a new hierarchy node below (as visually indicated in the groups list) the given entry anEntry. "*/ 
 {
-    NSMutableArray *hierarchy = [self findHierarchyNodeForEntry:item startingWithHierarchyNode:[self hierarchyRootNode]];
+    NSMutableArray *hierarchy = [self findHierarchyNodeForEntry:anEntry startingWithHierarchyNode:[self hierarchyRootNode]];
     NSMutableArray *newHierarchy = [NSMutableArray arrayWithObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
         NSLocalizedString(@"New Folder", @"new messagegroup folder"), @"name",
         [NSNumber numberWithFloat:[NSCalendarDate timeIntervalSinceReferenceDate]], @"uid",
         nil, nil
         ]];
-    int index = [hierarchy indexOfObject:item] + 1;
+    int index = [hierarchy indexOfObject:anEntry] + 1;
     
     if (index < [hierarchy count])
     {
@@ -442,7 +450,7 @@ static NSMutableArray *root = nil;
 }
 
 + (G3MessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
-    /*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
+/*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
 {
     NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
     G3MessageGroup *result = nil;

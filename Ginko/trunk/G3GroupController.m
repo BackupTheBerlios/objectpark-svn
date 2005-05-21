@@ -568,7 +568,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     int selectedRow = [boxesView selectedRow];
     [boxesView setAutosaveName:nil];
-    [G3MessageGroup addNewHierarchyNodeAfterItem:[boxesView itemAtRow:selectedRow]];
+    [G3MessageGroup addNewHierarchyNodeAfterEntry:[boxesView itemAtRow:selectedRow]];
     [boxesView reloadData];
     [boxesView setAutosaveName:@"boxesView"];
     

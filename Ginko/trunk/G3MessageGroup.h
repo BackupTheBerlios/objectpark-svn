@@ -24,7 +24,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
                             atHierarchyNode:(NSMutableArray *)aNode
                                     atIndex:(int)anIndex;
 + (id)messageGroupWithURIReferenceString:(NSString *)anUrl;
-+ (void)addNewHierarchyNodeAfterItem:(id)item;
++ (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
 + (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)anUid;
 + (BOOL)moveEntry:(id)entry 
   toHierarchyNode:(NSMutableArray *)aHierarchy 
