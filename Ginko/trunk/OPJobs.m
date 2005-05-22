@@ -3,13 +3,13 @@
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 22.05.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Objectpark Group. All rights reserved.
 //
 
 #import "OPJobs.h"
 
 @implementation OPJobs
-/*" Description forthcoming. :-) "*/
+/*" Engine for using worker threads. Spawns worker threads as needed (limited by a maximum) for executing jobs. Jobs can mutual exclude other jobs from running at the same time by using synchronized objects (see below). Jobs are put into a list of pending jobs and the worker threads are executing them as they are eligible and a worker thread would be idle. "*/
 
 enum {OPNoPendingJobs, OPPendingJobs};
 
@@ -84,6 +84,7 @@ static unsigned nextJobId = 0;
 }
 
 + (unsigned)scheduleJobWithTarget:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
+/*" Schedules a job for being executed by a worker thread as soon as a unemployed worker thread is present and the execution of this job isn't mutual excluded by a currently running job. aTarget is the object on which aSelector will be executed with someArguments as the only argument. aSynchronizedObject may be nil but can be used for excluding other jobs with equal synchronized objects for running at the same time. aSelector must denote a method that takes exactly one parameter of the type #{NSMutableDictionary} This dictionary holds all job information (including someArguments) (see the source code of the corresponding unit tests for an example). An optional result should be put in this dictionary with the key #{OPJobResult}. Returns the job's unique id which has to be used for inquiries lateron. "*/
 {
     [jobsLock lock];
 
@@ -205,7 +206,7 @@ static unsigned nextJobId = 0;
     }
 }
 
-+ (BOOL)jobIsRunning:(unsigned)aJobId
++ (BOOL)jobIsRunning:(unsigned)anJobId
 {
     BOOL result = NO;
     int i, count;
@@ -215,9 +216,54 @@ static unsigned nextJobId = 0;
     count = [runningJobs count];
     for (i = 0; i < count; i++)
     {
-        if ([[[runningJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == aJobId)
+        if ([[[runningJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
         {
             result = YES;
+            break;
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (BOOL)jobIsFinished:(unsigned)anJobId
+{
+    BOOL result = NO;
+    int i, count;
+    
+    [jobsLock lock];
+    
+    count = [finishedJobs count];
+    for (i = 0; i < count; i++)
+    {
+        if ([[[finishedJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        {
+            result = YES;
+            break;
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (id)resultForJob:(unsigned)anJobId
+{
+    id result = nil;
+    int i, count;
+    
+    [jobsLock lock];
+    
+    count = [finishedJobs count];
+    for (i = count - 1; i >= 0; i--)
+    {
+        if ([[[finishedJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        {
+            NSLog(@"found result");
+            result = [[finishedJobs objectAtIndex:i] objectForKey:OPJobResult];
             break;
         }
     }

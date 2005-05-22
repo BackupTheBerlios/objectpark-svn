@@ -17,6 +17,8 @@
     //NSDictionary *args = [jobDescription objectForKey:OPJobArguments];
     //NSLog(@"Hello, I'm job with name: %@", [args objectForKey:@"name"]);
     
+    [jobDescription setObject:@"TestResult" forKey:OPJobResult];
+    
     sleep(5);
 }
 
@@ -106,6 +108,27 @@
     //NSLog(@"jobKoeln2 completed");    
     
     STAssertTrue([OPJobs idleThreadCount] == 2, @"all threads should be idle");
+    STAssertTrue([OPJobs activeThreadCount] == 0, @"no thread should be active");
+}
+
+- (void)testResult
+{
+    unsigned jobKoeln1 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
+    
+    sleep(1);
+    
+    STAssertTrue([OPJobs jobIsRunning:jobKoeln1], @"Koeln1 soll laufen");
+    STAssertTrue([OPJobs activeThreadCount] == 1, @"1 should be active but only %d are.", [OPJobs activeThreadCount]);
+    
+    while ([OPJobs jobIsRunning:jobKoeln1])
+    {
+        //NSLog(@"jobKoeln1 still running...");
+        sleep(1);
+    }
+    
+    //NSLog(@"jobKoeln1 completed");
+    STAssertTrue([OPJobs jobIsFinished:jobKoeln1], @"should be finished");
+    STAssertTrue([[OPJobs resultForJob:jobKoeln1] isEqual:@"TestResult"], @"wrong result %@ = TestResult", [OPJobs resultForJob:jobKoeln1]);
     STAssertTrue([OPJobs activeThreadCount] == 0, @"no thread should be active");
 }
 

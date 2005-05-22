@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 22.05.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Objectpark Group. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -17,7 +17,9 @@
 + (unsigned)scheduleJobWithTarget:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
 /*" Inquiring job info "*/
-+ (BOOL)jobIsRunning:(unsigned)aJobId;
++ (BOOL)jobIsRunning:(unsigned)anJobId;
++ (BOOL)jobIsFinished:(unsigned)anJobId;
++ (id)resultForJob:(unsigned)anJobId;
 
 /*" Jobs engine status "*/
 + (int)idleThreadCount;
