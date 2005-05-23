@@ -12,12 +12,12 @@
 
 @implementation TestOPJobs
 
-- (void)jobToTest:(NSMutableDictionary *)jobDescription
+- (void)jobToTest:(NSMutableDictionary *)arguments
 {
     //NSDictionary *args = [jobDescription objectForKey:OPJobArguments];
     //NSLog(@"Hello, I'm job with name: %@", [args objectForKey:@"name"]);
     
-    [jobDescription setObject:@"TestResult" forKey:OPJobResult];
+    [OPJobs setResult:@"TestResult"];
     
     sleep(5);
 }
@@ -113,6 +113,9 @@
 
 - (void)testResult
 {
+    [OPJobs removeAllFinishedJobs];
+    STAssertTrue([[OPJobs finishedJobs] count] == 0, @"at least one finished job in place");
+    
     unsigned jobKoeln1 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
     
     sleep(1);
@@ -130,6 +133,10 @@
     STAssertTrue([OPJobs jobIsFinished:jobKoeln1], @"should be finished");
     STAssertTrue([[OPJobs resultForJob:jobKoeln1] isEqual:@"TestResult"], @"wrong result %@ = TestResult", [OPJobs resultForJob:jobKoeln1]);
     STAssertTrue([OPJobs activeThreadCount] == 0, @"no thread should be active");
+    
+    STAssertTrue([[OPJobs finishedJobs] count] == 1, @"not one finished job in place");
+    [OPJobs removeFinishedJob:jobKoeln1];
+    STAssertTrue([[OPJobs finishedJobs] count] == 0, @"at least one finished job in place");
 }
 
 @end

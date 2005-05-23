@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 @interface OPJobs : NSObject 
 {
 }
@@ -16,20 +15,23 @@
 /*" Scheduling new Jobs "*/
 + (unsigned)scheduleJobWithTarget:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
-/*" Inquiring job info "*/
+/*" Methods for clients "*/
 + (BOOL)jobIsRunning:(unsigned)anJobId;
 + (BOOL)jobIsFinished:(unsigned)anJobId;
-+ (id)resultForJob:(unsigned)anJobId;
-
-/*" Jobs engine status "*/
++ (NSArray *)finishedJobs;
 + (int)idleThreadCount;
 + (int)activeThreadCount;
++ (BOOL)removeFinishedJob:(unsigned)anJobId;
++ (void)removeAllFinishedJobs;
++ (id)resultForJob:(unsigned)anJobId;
+
+/*" Methods for use within jobs "*/
++ (void)setResult:(id)aResult;
 
 @end
 
-extern NSString *OPJobId;
-extern NSString *OPJobTarget;
-extern NSString *OPJobSelector;
-extern NSString *OPJobArguments;
-extern NSString *OPJobResult;
-extern NSString *OPJobUnhandledException;
+/*" Notification that a job a about to being executed. object is a NSNumber object which hold the job's id as an unsigned. "*/
+extern NSString *OPJobWillStartNotification;
+
+/*" Notification that a job has been finished. object is a NSNumber object which hold the job's id as an unsigned. "*/
+extern NSString *OPJobDidFinishNotification;

@@ -21,7 +21,7 @@
 {
 }
 
-- (void)testSMTPConnect
+- (void)disabledtestSMTPConnect
 {
     OPSMTP *SMTP;
     NSHost* host;
