@@ -15,18 +15,28 @@
 /*" Scheduling new Jobs "*/
 + (unsigned)scheduleJobWithTarget:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
-/*" Methods for clients "*/
+/*" Statistics "*/
++ (int)idleThreadCount;
++ (int)activeThreadCount;
+
+/*" Inquiring job state "*/
 + (BOOL)jobIsRunning:(unsigned)anJobId;
 + (BOOL)jobIsFinished:(unsigned)anJobId;
 + (NSArray *)finishedJobs;
-+ (int)idleThreadCount;
-+ (int)activeThreadCount;
+
+/*" Handling finished jobs "*/
 + (BOOL)removeFinishedJob:(unsigned)anJobId;
 + (void)removeAllFinishedJobs;
+
+/*" Getting job results "*/
 + (id)resultForJob:(unsigned)anJobId;
+
+/*" Aborting jobs "*/
++ (BOOL)suggestTerminatingJob:(unsigned)anJobId;
 
 /*" Methods for use within jobs "*/
 + (void)setResult:(id)aResult;
++ (BOOL)shouldTerminate;
 
 @end
 

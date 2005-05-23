@@ -19,7 +19,14 @@
     
     [OPJobs setResult:@"TestResult"];
     
-    sleep(5);
+    sleep(2);
+    
+    if ([OPJobs shouldTerminate])
+    {
+        [OPJobs setResult:@"Terminated"];
+        return;
+    }
+    sleep(3);
 }
 
 - (void)testBasics
@@ -137,6 +144,23 @@
     STAssertTrue([[OPJobs finishedJobs] count] == 1, @"not one finished job in place");
     [OPJobs removeFinishedJob:jobKoeln1];
     STAssertTrue([[OPJobs finishedJobs] count] == 0, @"at least one finished job in place");
+}
+
+- (void)testTermination
+{
+    unsigned job1 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject:nil];
+    
+    sleep(1);
+    
+    [OPJobs suggestTerminatingJob:job1];
+    
+    while ([OPJobs jobIsRunning:job1])
+    {
+        //NSLog(@"job1 still running...");
+        sleep(1);
+    }
+    
+    STAssertTrue([[OPJobs resultForJob:job1] isEqual:@"Terminated"], @"wrong result %@ = Terminated", [OPJobs resultForJob:job1]);
 }
 
 @end

@@ -24,6 +24,7 @@ NSString *OPJobResult = @"OPJobResult";
 NSString *OPJobUnhandledException = @"OPJobUnhandledException";
 NSString *OPJobSynchronizedObject = @"OPJobSynchronizedObject";
 NSString *OPJobWorkerThread = @"OPJobWorkerThread";
+NSString *OPJobShouldTerminate = @"OPJobShouldTerminate";
 
 static NSConditionLock *jobsLock = nil;
 
@@ -331,6 +332,30 @@ static unsigned nextJobId = 0;
     [jobsLock unlockWithCondition:[jobsLock condition]];
 }
 
++ (BOOL)shouldTerminate
+/*" Returns YES if termination is suggested. NO otherwise. "*/
+{
+    int i, count;
+    NSThread *jobThread = [NSThread currentThread];
+    BOOL result = NO;
+    
+    [jobsLock lock];
+    
+    count = [runningJobs count];
+    for (i = count - 1; i >= 0; i--)
+    {
+        if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
+        {
+            result = [[[runningJobs objectAtIndex:i] objectForKey:OPJobShouldTerminate] boolValue];
+            break;
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
 + (int)idleThreadCount
 /*" Returns the number of threads in idle state. "*/
 {
@@ -404,6 +429,30 @@ static unsigned nextJobId = 0;
     [jobsLock lock];
     [finishedJobs removeAllObjects];
     [jobsLock unlockWithCondition:[jobsLock condition]];
+}
+
++ (BOOL)suggestTerminatingJob:(unsigned)anJobId
+/*" Suggests that a job should terminate. While this does not enforce termination of a job denoted by anJobId, the job can see that termination is requested and can do so. Returns YES if the suggestion could be passed on, NO otherwise. "*/
+{
+    BOOL result = NO;
+    
+    [jobsLock lock];
+    NSEnumerator *enumerator = [runningJobs objectEnumerator];
+    NSMutableDictionary *jobDescription;
+    
+    while (jobDescription = [enumerator nextObject])
+    {
+        if ([[jobDescription objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        {
+            [jobDescription setObject:[NSNumber numberWithBool:YES] forKey:OPJobShouldTerminate];
+            result = YES;
+            break;
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
 }
 
 @end
