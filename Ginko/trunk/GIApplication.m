@@ -260,8 +260,7 @@
 - (IBAction) importTestMBox: (id) sender
 {
 	
-	NSString *boxFilename = [[NSBundle mainBundle] pathForResource: @"test-mbox" 
-															ofType: @""];	
+	NSString *boxFilename = [[NSBundle mainBundle] pathForResource: @"test-mbox" ofType: @""];	
 	OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
 	
 	[GIMessageBase importFromMBoxFile: box];		

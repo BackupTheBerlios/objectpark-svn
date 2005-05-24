@@ -370,6 +370,34 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		77136F3008438E2A002F9298 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = TestGIThread.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		77136F3108438E2A002F9298 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = TestGIThread.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		77136F3208438E2A002F9298 = {
+			fileRef = 77136F3008438E2A002F9298;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		77136F3308438E2A002F9298 = {
+			fileRef = 77136F3108438E2A002F9298;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		7717AEC907DF30C700B0B0F5 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -632,6 +660,8 @@
 				6131DCD5083A85D10056FF9D,
 				77DFA5C70840B49C0068AD15,
 				77DFA5C80840B49C0068AD15,
+				77136F3008438E2A002F9298,
+				77136F3108438E2A002F9298,
 			);
 			isa = PBXGroup;
 			name = Tests;
@@ -1876,6 +1906,7 @@
 				6131DCD6083A85D10056FF9D,
 				77DFA5BF08409DF00068AD15,
 				77DFA5C90840B49C0068AD15,
+				77136F3208438E2A002F9298,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2023,6 +2054,7 @@
 				6131DCD7083A85D10056FF9D,
 				77DFA5C008409DF00068AD15,
 				77DFA5CA0840B49C0068AD15,
+				77136F3308438E2A002F9298,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

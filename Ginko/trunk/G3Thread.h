@@ -28,4 +28,6 @@
 - (unsigned) commentDepth;
 - (BOOL) hasUnreadMessages;
 
+- (G3Thread *)splitWithMessage:(G3Message *)aMessage;
+
 @end

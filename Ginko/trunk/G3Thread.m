@@ -57,6 +57,66 @@
 	}
 }
 
+BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
+/*" Assumes that there are no rings in references. "*/
+{
+    G3Message *reference = [aMessage reference];
+    
+    if (reference)
+    {
+        if ([someMessages containsObject:reference]) 
+        {
+            return YES;
+        }
+        else
+        {
+            return messageReferencesOneOfThese(reference, someMessages);
+        }
+    }
+    
+    return NO;
+}
+
+- (NSSet *)subthreadWithMessage:(G3Message *)aMessage
+{
+    NSMutableSet *subthreadMessages = [NSMutableSet setWithObject:aMessage];
+    NSEnumerator *enumerator;
+    G3Message *message;
+    
+    enumerator = [[self messages] objectEnumerator];
+    while (message = [enumerator nextObject])
+    {
+        if (messageReferencesOneOfThese(message, subthreadMessages))
+        {
+            [subthreadMessages addObject:message];
+        }
+    }
+    
+    return subthreadMessages;
+}
+
+- (G3Thread *)splitWithMessage:(G3Message *)aMessage
+/*" Splits the receiver into two threads. Returns a thread containing aMessage and comments and removes these messages from the receiver. "*/
+{
+    G3Thread *newThread = [[[[self class] alloc] init] autorelease];
+    NSEnumerator *enumerator;
+    G3Message *message;
+    
+    enumerator = [[self subthreadWithMessage:aMessage] objectEnumerator];
+    while (message = [enumerator nextObject])
+    {
+        [newThread addMessage:message];
+    }
+    
+    return newThread;
+}
+
+- (void)mergeMessagesFromThread:(G3Thread *)anotherThread
+/*" Includes all messages from anotherThread. "*/
+{
+    
+}
+
 /*
 - (BOOL) validateForInsert: (NSError**) error
 {
