@@ -15,6 +15,10 @@
 /*" Scheduling new Jobs "*/
 + (unsigned)scheduleJobWithTarget:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
+/*" Worker Threads "*/
++ (unsigned)maxThreads;
++ (BOOL)setMaxThreads:(unsigned)newMax;
+
 /*" Statistics "*/
 + (int)idleThreadCount;
 + (int)activeThreadCount;

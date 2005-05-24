@@ -455,4 +455,36 @@ static unsigned nextJobId = 0;
     return result;
 }
 
++ (BOOL)setMaxThreads:(unsigned)newMax
+/*" Sets a new maximum number of worker threads. Only increasing is possible. Returns YES if the maximum was increased. NO otherwise. "*/
+{
+    BOOL result = NO;
+    
+    [jobsLock lock];
+
+    if (newMax > maxThreads)
+    {
+        result = YES;
+        maxThreads = newMax;
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (unsigned)maxThreads
+/*" Returns the maximum number of worker threads that may be used. "*/
+{
+    unsigned result;
+    
+    [jobsLock lock];
+    
+    result = maxThreads;
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
 @end
