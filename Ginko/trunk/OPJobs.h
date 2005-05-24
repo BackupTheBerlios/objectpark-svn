@@ -24,9 +24,15 @@
 + (int)activeThreadCount;
 
 /*" Inquiring job state "*/
-+ (BOOL)jobIsRunning:(unsigned)anJobId;
-+ (BOOL)jobIsFinished:(unsigned)anJobId;
++ (BOOL)isJobPending:(unsigned)anJobId;
++ (NSArray *)pendingJobs;
++ (BOOL)isJobRunning:(unsigned)anJobId;
++ (NSArray *)runningJobs;
++ (BOOL)isJobFinished:(unsigned)anJobId;
 + (NSArray *)finishedJobs;
+
+/*" Cancelling pending jobs "*/
++ (BOOL)cancelPendingJob:(unsigned)anJobId;
 
 /*" Handling finished jobs "*/
 + (BOOL)removeFinishedJob:(unsigned)anJobId;
@@ -39,6 +45,7 @@
 + (BOOL)suggestTerminatingJob:(unsigned)anJobId;
 
 /*" Methods for use within jobs "*/
++ (unsigned)jobId;
 + (void)setResult:(id)aResult;
 + (BOOL)shouldTerminate;
 

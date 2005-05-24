@@ -17,6 +17,8 @@
     //NSDictionary *args = [jobDescription objectForKey:OPJobArguments];
     //NSLog(@"Hello, I'm job with name: %@", [args objectForKey:@"name"]);
     
+    STAssertTrue([OPJobs jobId] != 0, @"not %u", [OPJobs jobId]);
+    
     [OPJobs setResult:@"TestResult"];
     
     sleep(2);
@@ -39,7 +41,7 @@
     
     STAssertTrue([OPJobs activeThreadCount] == 2, @"2 should be active");
 
-    while ([OPJobs jobIsRunning:jobId1])
+    while ([OPJobs isJobRunning:jobId1])
     {
         //NSLog(@"job1 still running...");
         sleep(1);
@@ -47,7 +49,7 @@
     
     //NSLog(@"job1 completed");
 
-    while ([OPJobs jobIsRunning:jobId2])
+    while ([OPJobs isJobRunning:jobId2])
     {
         //NSLog(@"job2 still running...");
         sleep(1);
@@ -60,7 +62,7 @@
     STAssertTrue([OPJobs activeThreadCount] == 1, @"1 should be active");
     STAssertTrue([OPJobs idleThreadCount] == 1, @"1 should be idle");
 
-    while ([OPJobs jobIsRunning:jobId3])
+    while ([OPJobs isJobRunning:jobId3])
     {
         //NSLog(@"job3 still running...");
         sleep(1);
@@ -80,12 +82,12 @@
     
     sleep(1);
     
-    STAssertTrue([OPJobs jobIsRunning:jobKoeln1], @"Koeln1 soll laufen");
-    STAssertFalse([OPJobs jobIsRunning:jobKoeln2], @"Koeln2 soll nicht laufen");
-    STAssertTrue([OPJobs jobIsRunning:jobDuisburg], @"jobDuisburg soll laufen");
+    STAssertTrue([OPJobs isJobRunning:jobKoeln1], @"Koeln1 soll laufen");
+    STAssertFalse([OPJobs isJobRunning:jobKoeln2], @"Koeln2 soll nicht laufen");
+    STAssertTrue([OPJobs isJobRunning:jobDuisburg], @"jobDuisburg soll laufen");
     STAssertTrue([OPJobs activeThreadCount] == 2, @"2 should be active but only %d are.", [OPJobs activeThreadCount]);
     
-    while ([OPJobs jobIsRunning:jobKoeln1])
+    while ([OPJobs isJobRunning:jobKoeln1])
     {
         //NSLog(@"jobKoeln1 still running...");
         sleep(1);
@@ -93,7 +95,7 @@
     
     //NSLog(@"jobKoeln1 completed");
     
-    while ([OPJobs jobIsRunning:jobDuisburg])
+    while ([OPJobs isJobRunning:jobDuisburg])
     {
         //NSLog(@"jobDuisburg still running...");
         sleep(1);
@@ -106,7 +108,7 @@
     STAssertTrue([OPJobs activeThreadCount] == 1, @"1 should be active");
     STAssertTrue([OPJobs idleThreadCount] == 1, @"1 should be idle");
     
-    while ([OPJobs jobIsRunning:jobKoeln2])
+    while ([OPJobs isJobRunning:jobKoeln2])
     {
         //NSLog(@"jobKoeln2 still running...");
         sleep(1);
@@ -127,17 +129,17 @@
     
     sleep(1);
     
-    STAssertTrue([OPJobs jobIsRunning:jobKoeln1], @"Koeln1 soll laufen");
+    STAssertTrue([OPJobs isJobRunning:jobKoeln1], @"Koeln1 soll laufen");
     STAssertTrue([OPJobs activeThreadCount] == 1, @"1 should be active but only %d are.", [OPJobs activeThreadCount]);
     
-    while ([OPJobs jobIsRunning:jobKoeln1])
+    while ([OPJobs isJobRunning:jobKoeln1])
     {
         //NSLog(@"jobKoeln1 still running...");
         sleep(1);
     }
     
     //NSLog(@"jobKoeln1 completed");
-    STAssertTrue([OPJobs jobIsFinished:jobKoeln1], @"should be finished");
+    STAssertTrue([OPJobs isJobFinished:jobKoeln1], @"should be finished");
     STAssertTrue([[OPJobs resultForJob:jobKoeln1] isEqual:@"TestResult"], @"wrong result %@ = TestResult", [OPJobs resultForJob:jobKoeln1]);
     STAssertTrue([OPJobs activeThreadCount] == 0, @"no thread should be active");
     
@@ -154,7 +156,7 @@
     
     [OPJobs suggestTerminatingJob:job1];
     
-    while ([OPJobs jobIsRunning:job1])
+    while ([OPJobs isJobRunning:job1])
     {
         //NSLog(@"job1 still running...");
         sleep(1);

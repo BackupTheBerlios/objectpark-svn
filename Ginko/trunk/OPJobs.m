@@ -39,7 +39,7 @@ static NSMutableArray *activeThreads = nil;
 
 static unsigned maxThreads = 2;
 static unsigned threadCount = 0;
-static unsigned nextJobId = 0;
+static unsigned nextJobId = 1;
 
 + (void)initialize
 {
@@ -242,18 +242,17 @@ static unsigned nextJobId = 0;
     }
 }
 
-+ (BOOL)jobIsRunning:(unsigned)anJobId
-/*" Returns YES if the job denoted by anJobId is currently running. NO otherwise. "*/
+static BOOL isJobInArray(unsigned anJobId, NSArray *anArray)
 {
     BOOL result = NO;
     int i, count;
     
     [jobsLock lock];
     
-    count = [runningJobs count];
+    count = [anArray count];
     for (i = 0; i < count; i++)
     {
-        if ([[[runningJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
         {
             result = YES;
             break;
@@ -265,20 +264,37 @@ static unsigned nextJobId = 0;
     return result;
 }
 
-+ (BOOL)jobIsFinished:(unsigned)anJobId
++ (BOOL)isJobPending:(unsigned)anJobId
+/*" Returns YES if the job denoted by anJobId is currently pending. NO otherwise. "*/
+{
+    return isJobInArray(anJobId, pendingJobs);
+}
+
++ (BOOL)isJobRunning:(unsigned)anJobId
+/*" Returns YES if the job denoted by anJobId is currently running. NO otherwise. "*/
+{
+    return isJobInArray(anJobId, runningJobs);
+}
+
++ (BOOL)isJobFinished:(unsigned)anJobId
 /*" Returns YES if the job denoted by anJobId is in the list of finished jobs. NO otherwise. "*/
 {
-    BOOL result = NO;
+    return isJobInArray(anJobId, finishedJobs);
+}
+
+id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
+{
+    id result = nil;
     int i, count;
     
     [jobsLock lock];
     
-    count = [finishedJobs count];
-    for (i = 0; i < count; i++)
+    count = [anArray count];
+    for (i = count - 1; i >= 0; i--)
     {
-        if ([[[finishedJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
         {
-            result = YES;
+            result = [[anArray objectAtIndex:i] objectForKey:key];
             break;
         }
     }
@@ -291,24 +307,7 @@ static unsigned nextJobId = 0;
 + (id)resultForJob:(unsigned)anJobId
 /*" Returns the result object for the job denoted by anJobId. nil, if no result was set. "*/
 {
-    id result = nil;
-    int i, count;
-    
-    [jobsLock lock];
-    
-    count = [finishedJobs count];
-    for (i = count - 1; i >= 0; i--)
-    {
-        if ([[[finishedJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
-        {
-            result = [[finishedJobs objectAtIndex:i] objectForKey:OPJobResult];
-            break;
-        }
-    }
-    
-    [jobsLock unlockWithCondition:[jobsLock condition]];
-    
-    return result;
+    return objectForKeyInJobInArray(anJobId, finishedJobs, OPJobResult);
 }
 
 + (void)setResult:(id)aResult
@@ -356,6 +355,30 @@ static unsigned nextJobId = 0;
     return result;
 }
 
++ (unsigned)jobId
+/*" Returns the job's id. "*/
+{
+    int i, count;
+    NSThread *jobThread = [NSThread currentThread];
+    unsigned result = 0;
+    
+    [jobsLock lock];
+    
+    count = [runningJobs count];
+    for (i = count - 1; i >= 0; i--)
+    {
+        if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
+        {
+            result = [[[runningJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue];
+            break;
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
 + (int)idleThreadCount
 /*" Returns the number of threads in idle state. "*/
 {
@@ -380,13 +403,12 @@ static unsigned nextJobId = 0;
     return result;
 }
 
-+ (NSArray *)finishedJobs
-/*" Returns the job ids of all finished jobs. "*/
+static NSArray *jobIdsFromArray(NSArray *anArray)
 {
-    NSMutableArray *result = [NSMutableArray array];
-
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:[anArray count]];
+    
     [jobsLock lock];
-    NSEnumerator *enumerator = [finishedJobs objectEnumerator];
+    NSEnumerator *enumerator = [anArray objectEnumerator];
     NSDictionary *jobDescription;
     
     while (jobDescription = [enumerator nextObject])
@@ -395,30 +417,72 @@ static unsigned nextJobId = 0;
     }
     
     [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
 
++ (NSArray *)pendingJobs
+/*" Returns the job ids of all pending jobs. "*/
+{
+    return jobIdsFromArray(runningJobs);
+}
+
++ (NSArray *)runningJobs
+/*" Returns the job ids of all running jobs. "*/
+{
+    return jobIdsFromArray(runningJobs);
+}
+
++ (NSArray *)finishedJobs
+/*" Returns the job ids of all finished jobs. "*/
+{
+    return jobIdsFromArray(finishedJobs);
+}
+
+BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
+/*" Calling code must lock! "*/
+{
+    BOOL result = NO;
+    int i, count;
+    
+    count = [anArray count];
+    for (i = 0; i < count; i++)
+    {
+        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        {
+            result = YES;
+            [anArray removeObjectAtIndex:i];
+            break;
+        }
+    }
+    
     return result;
 }
 
 + (BOOL)removeFinishedJob:(unsigned)anJobId
 /*" Removes the job denoted by anJobId including all job information (e.g. the job's result) from the list of finished jobs. "*/
 {
-    BOOL result = NO;
+    BOOL result;
     
     [jobsLock lock];
-    NSEnumerator *enumerator = [finishedJobs objectEnumerator];
-    NSDictionary *jobDescription;
     
-    while (jobDescription = [enumerator nextObject])
-    {
-        if ([[jobDescription objectForKey:OPJobId] unsignedIntValue] == anJobId)
-        {
-            [finishedJobs removeObject:jobDescription];
-            result = YES;
-            break;
-        }
-    }
+    result = removeJobFromArray(anJobId, finishedJobs);
     
     [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (BOOL)cancelPendingJob:(unsigned)anJobId
+/*" Cancels the pending job denoted by anJobId. Returns YES if job could be cancelled, NO otherwise. "*/
+{
+    BOOL result;
+    
+    [jobsLock lock];
+    
+    result = removeJobFromArray(anJobId, pendingJobs);
+    
+    [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
     
     return result;
 }
