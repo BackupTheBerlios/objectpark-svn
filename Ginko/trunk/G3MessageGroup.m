@@ -119,6 +119,32 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
      */
 }
 
+- (void)addThread:(G3Thread *)value 
+{    
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    
+    [self willChangeValueForKey:@"threads" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    
+    [[self primitiveValueForKey: @"threads"] addObject: value];
+    
+    [self didChangeValueForKey:@"threads" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
+
+- (void)removeThread:(G3Thread *)value 
+{
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    
+    [self willChangeValueForKey:@"threads" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    
+    [[self primitiveValueForKey: @"threads"] removeObject: value];
+    
+    [self didChangeValueForKey:@"threads" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
+
 - (NSArray *)threadsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
@@ -126,19 +152,20 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     NSArray *result = nil;
     
     if (! dateDescriptor) dateDescriptor = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO] autorelease], nil];
-    
+    /*
 #warning ugly hackaround, Dude!
     result = [[self valueForKey:@"threads"] allObjects];
     
     return result;
-//    return [[(NSSet *)[self valueForKey:@"threads"] allObjects] sortedArrayUsingDescriptors:dateDescriptor];
+     */
+    //return [[(NSSet *)[self valueForKey:@"threads"] allObjects] sortedArrayUsingDescriptors:dateDescriptor];
 
-    /*
+    
     //	return [[self valueForKey:@"threads"] allObjects];
     
-    [NSApp saveAction:self];
+//f    [NSApp saveAction:self];
     
-    NSArray* result = nil;
+//    NSArray* result = nil;
     NSError* error = nil;
     NSFetchRequest* request = [[[NSFetchRequest alloc] init] autorelease];
     [request setEntity: [G3Thread entity]];
@@ -158,7 +185,6 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     //NSAssert([result count] == [[self valueForKey:@"threads"] count], @"result != threadsCount");
     
     return result;
-    */
 }
 
 - (NSString *)description

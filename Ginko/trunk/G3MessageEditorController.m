@@ -1000,37 +1000,37 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     G3Message *message;
     
     message = [G3Message messageWithTransferData:[[self message] transferData]];
-            
+    
     // status
-	if (oldMessage) [message setFlags:[oldMessage flags]];
+    if (oldMessage) [message setFlags:[oldMessage flags]];
     [message addFlags:OPSeenStatus | OPDraftStatus | aType];
-	
+    
     // unmark message as blocked for sending
     [message removeFlags:OPSendingBlockedStatus];
     
-	// remove old message from database if present
-	if (oldMessage) [GIMessageBase removeMessage:oldMessage];
-	
-	//add new message to database
+    // remove old message from database if present
+    if (oldMessage) [GIMessageBase removeMessage:oldMessage];
+    
+    //add new message to database
     [GIMessageBase addOutgoingMessage:message];
-	
+    
     [oldMessage autorelease];
     oldMessage = [message retain];
-        
+    
     // set answered status if reply
     [referencedMessage addFlags:OPAnsweredStatus];
     
     [window setDocumentEdited:NO];
     
-	NSError *error;
-	[(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save:&error];
-	if (error) 
-	{
-		NSLog(@"Error checkpointing message: %@", error);
-	}
-	
-	//#warning just testing
-//    [[[G3MessageEditorController alloc] initWithMessage:message profile:profile] autorelease];
+    NSError *error;
+    [(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save:&error];
+    if (error) 
+    {
+        NSLog(@"Error checkpointing message: %@", error);
+    }
+    
+    //#warning just testing
+    //    [[[G3MessageEditorController alloc] initWithMessage:message profile:profile] autorelease];
 }
 
 #define FORBIDDENCHARS @" []\\"

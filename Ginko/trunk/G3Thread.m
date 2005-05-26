@@ -8,6 +8,7 @@
 
 #import "G3Thread.h"
 #import "G3Message.h"
+#import "G3MessageGroup.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "NSArray+Extensions.h"
 
@@ -17,29 +18,27 @@
 - (id) init
 /*" Adds the reciever to the default managed object context. "*/
 {
-	return [self initWithManagedObjectContext: [NSManagedObjectContext defaultContext]];
+    return [self initWithManagedObjectContext: [NSManagedObjectContext defaultContext]];
 }
 
-
-
-+ (G3Thread*) thread
++ (G3Thread *)thread
 /*" Creates a new persistent thread in the default managed object context. "*/
 {	
-	return [[[self alloc] init] autorelease];
+    return [[[self alloc] init] autorelease];
 }
 
-- (unsigned) messageCount
+- (unsigned)messageCount
 {
-    return (unsigned)[[self valueForKey: @"numberOfMessages"] intValue]; 
+    return (unsigned)[[self valueForKey:@"numberOfMessages"] intValue]; 
 }
 
 
-- (NSSet*) messages
+- (NSSet *)messages
 {
-	[self willAccessValueForKey: @"messages"];
-	id messages = [self primitiveValueForKey: @"messages"];
-	[self didAccessValueForKey: @"messages"];
-	return messages;
+    [self willAccessValueForKey: @"messages"];
+    id messages = [self primitiveValueForKey: @"messages"];
+    [self didAccessValueForKey: @"messages"];
+    return messages;
 }
 /*
 - (void) addMessage: (G3Message*) message
@@ -99,6 +98,29 @@
     [self setValue: [NSNumber numberWithInt: newValue] forKey:@"numberOfMessages"];    
 }
 
+- (void)addGroup:(G3MessageGroup *)value 
+{    
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    
+    [self willChangeValueForKey:@"groups" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"groups"] addObject: value];
+    [self didChangeValueForKey:@"groups" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
+
+- (void)removeGroup:(G3MessageGroup *)value 
+{
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    
+    [self willChangeValueForKey:@"groups" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"groups"] removeObject:value];
+    [self didChangeValueForKey:@"groups" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
+
+
 BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 /*" Assumes that there are no rings in references. "*/
 {
@@ -156,7 +178,25 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 - (void)mergeMessagesFromThread:(G3Thread *)anotherThread
 /*" Includes all messages from anotherThread. "*/
 {
+    // put all messages from anotherThread into self and remove anotherThread
+    NSEnumerator *enumerator;
+    G3Message *message;
+    G3MessageGroup *group;
     
+    enumerator = [[anotherThread messages] objectEnumerator];
+    while (message = [enumerator nextObject])
+    {
+        [self addMessage:message];
+    }
+    
+    // disconnecting another thread from all groups:
+    enumerator = [[anotherThread valueForKey:@"groups"] objectEnumerator];
+    while (group = [enumerator nextObject])
+    {
+        [self removeGroup:group];
+    }
+    
+    [[NSManagedObjectContext defaultContext] deleteObject:anotherThread];		
 }
 
 /*
@@ -176,43 +216,48 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 }
 */
 
-- (NSArray*) messagesByDate
+- (NSArray *)messagesByDate
 {
-	return [[[self messages] allObjects] sortedArrayByComparingAttribute: @"date"];
+    return [[[self messages] allObjects] sortedArrayByComparingAttribute:@"date"];
 }
 
-- (NSString*) description
+- (NSString *)description
 {
-    return [NSString stringWithFormat: @"%@ %@: %@", [super description], [self valueForKey: @"subject"], [self messages]];
+    return [NSString stringWithFormat:@"%@ %@: %@", [super description], [self valueForKey: @"subject"], [self messages]];
 }
 
-- (BOOL) containsSingleMessage
+- (BOOL)containsSingleMessage
 {
     return [self messageCount] == 1;
 }
 
-- (NSArray*) rootMessages
+- (NSArray *)rootMessages
 /*" Returns all messages without reference in the receiver. "*/
 {
-    NSMutableArray* result = [NSMutableArray array];
-    NSEnumerator* me = [[self messages] objectEnumerator];
-    G3Message* message;
-    while (message = [me nextObject]) {
-        if (![message reference]) {
-            [result addObject: message];
+    NSMutableArray *result = [NSMutableArray array];
+    NSEnumerator *me = [[self messages] objectEnumerator];
+    G3Message *message;
+    while (message = [me nextObject]) 
+    {
+        if (![message reference]) 
+        {
+            [result addObject:message];
         }
     }
+    
     return result;
 }
 
-- (unsigned) commentDepthWithRoot: (G3Message*) root
+- (unsigned)commentDepthWithRoot:(G3Message *)root
 {
-    NSEnumerator* ce = [[root commentsInThread: self] objectEnumerator];
-    G3Message* comment;
+    NSEnumerator *ce = [[root commentsInThread: self] objectEnumerator];
+    G3Message *comment;
     unsigned result = 0;
-    while (comment = [ce nextObject]) {
-        result = MAX(result, 1+[self commentDepthWithRoot: comment]);
+    while (comment = [ce nextObject]) 
+    {
+        result = MAX(result, 1 + [self commentDepthWithRoot: comment]);
     }
+    
     return result;
 }
 
@@ -228,26 +273,30 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 }
 */
 
-- (unsigned) commentDepth
+- (unsigned)commentDepth
 /*" Returns the the length of the longest comment chain in this thread. "*/
 {
-    NSEnumerator* re = [[self messages] objectEnumerator];
-    G3Message* msg;
+    NSEnumerator *re = [[self messages] objectEnumerator];
+    G3Message *msg;
     unsigned result = 0;
-    while (msg = [re nextObject]) {
+    while (msg = [re nextObject]) 
+    {
         result = MAX(result, [msg numberOfReferences]);
     }
-    return result+1;
+    
+    return result + 1;
 }
 
-- (BOOL) hasUnreadMessages
+- (BOOL)hasUnreadMessages
 {
     NSEnumerator *enumerator;
     G3Message *message;
     
     enumerator = [[self messages] objectEnumerator];
-    while (message = [enumerator nextObject]) {
-        if (![message isSeen]) {
+    while (message = [enumerator nextObject]) 
+    {
+        if (![message isSeen]) 
+        {
             return YES;
         }
     }

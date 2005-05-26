@@ -29,5 +29,6 @@
 - (BOOL) hasUnreadMessages;
 
 - (G3Thread *)splitWithMessage:(G3Message *)aMessage;
+- (void)mergeMessagesFromThread:(G3Thread *)anotherThread;
 
 @end

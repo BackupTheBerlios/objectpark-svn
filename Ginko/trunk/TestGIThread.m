@@ -9,6 +9,7 @@
 #import "TestGIThread.h"
 #import "G3Thread.h"
 #import "G3Message.h"
+#import "G3MessageGroup.h"
 #import "OPMBoxFile.h"
 
 @implementation TestGIThread
@@ -36,18 +37,53 @@
 - (void)testSplit
 {
     G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
-    G3Message *messageB = [self makeAMessageWithId:@"test2"];
     G3Message *messageA = [self makeAMessageWithId:@"test1"];
-        
+    G3Message *messageB = [self makeAMessageWithId:@"test2"];
+    G3Message *messageC = [self makeAMessageWithId:@"test3"];
+    
+    [messageC setValue:messageB forKey:@"reference"];
+    
     [threadA addMessage:messageA];
     [threadA addMessage:messageB];
-    
-    STAssertTrue([[threadA messages] count] == 2, @"not %d", [[threadA messages] count]);
+    [threadA addMessage:messageC];
+        
+    STAssertTrue([[threadA messages] count] == 3, @"not %d", [[threadA messages] count]);
     
     G3Thread *threadB = [threadA splitWithMessage:messageB];
     
     STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
-    STAssertTrue([[threadB messages] count] == 1, @"not %d", [[threadB messages] count]);
+    STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
+}
+
+- (void)testMerge
+{
+    G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
+    G3Thread *threadB = [[[G3Thread alloc] init] autorelease];
+    G3Message *messageA = [self makeAMessageWithId:@"testA"];
+    G3Message *messageB = [self makeAMessageWithId:@"testB"];
+    G3Message *messageC = [self makeAMessageWithId:@"testC"];
+    
+    [messageC setValue:messageB forKey:@"reference"];
+    
+    [threadB addMessage:messageA];
+    [threadB addMessage:messageB];
+    [threadA addMessage:messageC];
+    
+    STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
+    STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
+    
+    id groupsFromThreadB = [threadB valueForKey:@"groups"];
+    
+    [threadA mergeMessagesFromThread:threadB];
+    
+    STAssertTrue([[threadA messages] count] == 3, @"not %d", [[threadA messages] count]);
+    
+    NSEnumerator *enumerator = [groupsFromThreadB objectEnumerator];
+    NSArray *threads;
+    while (threads = [[enumerator nextObject] objectForKey:@"threads"])
+    {
+        STAssertTrue(![threads containsObject:threadB], @"Should not contain %@", threadB);
+    }
 }
 
 @end
