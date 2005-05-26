@@ -6,6 +6,8 @@
                 addFolder = id; 
                 addMessageGroup = id; 
                 removeFolderMessageGroup = id; 
+                rename = id; 
+                search = id; 
                 showThreads = id; 
             }; 
             CLASS = G3GroupController; 
@@ -16,6 +18,9 @@
                 commentsMatrix = NSMatrix; 
                 groupInfoTextField = NSTextField; 
                 messageTextView = NSTextView; 
+                searchField = NSSearchField; 
+                searchResultTableView = NSTableView; 
+                searchWindow = NSWindow; 
                 tabView = NSTabView; 
                 threadsView = GIOutlineViewWithKeyboardSupport; 
                 treeBodySplitter = OPCollapsingSplitView; 

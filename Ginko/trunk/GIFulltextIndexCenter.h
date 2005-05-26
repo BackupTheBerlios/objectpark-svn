@@ -17,10 +17,8 @@
 + (id)defaultIndexCenter;
 
 - (BOOL)addMessage:(G3Message *)aMessage;
-- (void)removeMessage:(G3Message *)aMessage;
-
+- (BOOL)removeMessage:(G3Message *)aMessage;
 - (NSArray *)hitsForQueryString:(NSString *)aQuery;
-
-- (SKIndexRef)getIndexWithPath:(NSString *)aPath;
+- (BOOL)reindexAllMessages;
 
 @end

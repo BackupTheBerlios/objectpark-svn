@@ -21,6 +21,7 @@
 #import "G3GroupInspectorController.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "G3MessageGroup.h"
+#import "GIFulltextIndexCenter.h"
 
 @interface G3GroupController (CommentsTree)
 
@@ -608,6 +609,25 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)removeFolderMessageGroup:(id)sender
 {
+}
+
+- (IBAction)search:(id)sender
+{
+    NSLog(@"[G3GroupController search] will search for %@", [sender stringValue]);
+    // set searchResults
+    [self setSearchResults:[[GIFulltextIndexCenter defaultIndexCenter] hitsForQueryString:[sender stringValue]]];
+}
+
+- (NSArray*)searchResults
+{
+    NSLog(@"[G3GroupController getSearchResults]");
+    return searchResults;
+}
+
+- (void)setSearchResults:(NSArray*)newSearchResults
+{
+    //[searchResults autorelease];
+    searchResults = newSearchResults;
 }
 
 /*

@@ -24,12 +24,18 @@
     IBOutlet NSDrawer *boxesDrawer;
     IBOutlet NSOutlineView *boxesView;
     IBOutlet OPCollapsingSplitView *treeBodySplitter;
+    // search
+    IBOutlet NSWindow *searchWindow;
+    IBOutlet NSSearchField *searchField;
+    IBOutlet NSTableView *searchResultTableView;
 	
     NSArray* allGroups;
     G3MessageGroup *group;
     G3Thread *displayedThread; // displayed as comment tree
     G3Message *displayedMessage; // displayed with body
 	NSArray *threadCache;
+    
+    NSArray *searchResults;
     
     // -- Toolbar --
     NSArray *toolbarItems;
@@ -66,6 +72,11 @@
 - (IBAction)rename:(id)sender;
 - (IBAction)addMessageGroup:(id)sender;
 - (IBAction)removeFolderMessageGroup:(id)sender;
+
+// search
+- (IBAction)search:(id)sender;
+- (NSArray*)searchResults;
+- (void)setSearchResults:(NSArray*)newSearchResults;
 
 @end
 

@@ -13,6 +13,7 @@
 #import "OPMBoxFile.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "GIUserDefaultsKeys.h"
+#import "GIFulltextIndexCenter.h"
 
 @implementation GIMessageBase
 
@@ -37,11 +38,18 @@
         }
     }
     
+    // add message to index
+    GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+    [indexCenter addMessage:message];
+    
     return message;
 }
 
 + (void)removeMessage:(G3Message *)aMessage
 {	
+    // remove message from index
+    [[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
+
     G3Thread *thread = [aMessage thread];
     
     // delete thread also if it would become a thread without messages:
