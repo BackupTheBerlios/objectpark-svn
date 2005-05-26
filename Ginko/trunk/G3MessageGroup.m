@@ -90,7 +90,15 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 + (id)messageGroupWithURIReferenceString:(NSString *)anUrl
 /*" Returns the message group object referenced by the given reference string anUrl. See also: #{-URIReferenceString}. "*/
 {
-    id referencedGroup = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:anUrl]];
+    id referencedGroup = nil;
+    
+    @try {
+        referencedGroup = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:anUrl]];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"Could not find group for URI ''", anUrl);
+    }
         
     return referencedGroup;
     /*

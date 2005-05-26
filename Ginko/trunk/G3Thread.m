@@ -41,20 +41,62 @@
 	[self didAccessValueForKey: @"messages"];
 	return messages;
 }
-
+/*
 - (void) addMessage: (G3Message*) message
 {
-	[self addValue: message toRelationshipWithKey: @"messages"];
-	// update numberOfMessages attribute:
-	int newValue = [[self messages] count];
-	[self setValue: [NSNumber numberWithInt: newValue] forKey: @"numberOfMessages"];
-	
-	// Set the thread's date to the date of the latest message:
-	NSCalendarDate* threadDate = [self valueForKey: @"date"];
-	NSCalendarDate* messageDate = [message valueForKey: @"date"];
-	if ((!threadDate) || [messageDate compare: threadDate]==NSOrderedDescending) {
-		[self setValue: messageDate forKey: @"date"];
-	}
+    [self addValue: message toRelationshipWithKey: @"messages"];
+    // update numberOfMessages attribute:
+    int newValue = [[self messages] count];
+    [self setValue: [NSNumber numberWithInt: newValue] forKey: @"numberOfMessages"];
+    
+    // Set the thread's date to the date of the latest message:
+    NSCalendarDate* threadDate = [self valueForKey: @"date"];
+    NSCalendarDate* messageDate = [message valueForKey: @"date"];
+    if ((!threadDate) || [messageDate compare: threadDate]==NSOrderedDescending) {
+        [self setValue: messageDate forKey: @"date"];
+    }
+}
+*/
+
+- (void)addMessage:(G3Message *)aMessage
+{
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
+    [self willChangeValueForKey:@"messages"
+                withSetMutation:NSKeyValueUnionSetMutation
+                   usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"messages"] addObject:aMessage];
+    [self didChangeValueForKey:@"messages"
+               withSetMutation:NSKeyValueUnionSetMutation
+                  usingObjects:changedObjects];
+    [changedObjects release];
+
+    // update numberOfMessages attribute:
+    int newValue = [[self messages] count];
+    [self setValue: [NSNumber numberWithInt: newValue] forKey: @"numberOfMessages"];
+    
+    // Set the thread's date to the date of the latest message:
+    NSCalendarDate* threadDate = [self valueForKey: @"date"];
+    NSCalendarDate* messageDate = [aMessage valueForKey: @"date"];
+    if ((!threadDate) || [messageDate compare: threadDate]==NSOrderedDescending) {
+        [self setValue: messageDate forKey: @"date"];
+    }
+}
+
+- (void)removeMessage:(G3Message *)aMessage
+{
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
+    [self willChangeValueForKey:@"messages"
+                withSetMutation:NSKeyValueMinusSetMutation
+                   usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"messages"] removeObject:aMessage];
+    [self didChangeValueForKey:@"messages"
+               withSetMutation:NSKeyValueMinusSetMutation
+                  usingObjects:changedObjects];
+    [changedObjects release];
+
+    // update numberOfMessages attribute:
+    int newValue = [[self messages] count];
+    [self setValue: [NSNumber numberWithInt: newValue] forKey:@"numberOfMessages"];    
 }
 
 BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
