@@ -1948,7 +1948,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return [flowedText substringToIndex:[flowedText length] - [lineBreakSeq length]];
 }
 
-- (NSString *)stringByDecodingFlowedFormat
+- (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp
 {
     NSMutableString *flowedText, *paragraph;
     NSArray *lines;

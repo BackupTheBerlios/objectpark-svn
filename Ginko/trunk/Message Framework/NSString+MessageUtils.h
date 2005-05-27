@@ -70,7 +70,7 @@
 - (NSString*) stringByWrappingToSoftLimit: (unsigned int) length;
 
 - (NSString *)stringBySpaceStuffing;
-- (NSString *)stringByDecodingFlowedFormat;
+- (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp;
 - (NSString *)stringByEncodingFlowedFormat;
 
 + (NSString *)temporaryFilenameWithExtension: (NSString*) ext;

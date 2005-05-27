@@ -759,8 +759,16 @@ static unsigned threadCountJobId = 0;
         // Open last expanded thread:
         NSString* threadURL = [self valueForGroupProperty:@"ExpandedThreadId"];
         G3Thread* thread = nil;
+        
         if (threadURL) 
-            thread = [[NSManagedObjectContext defaultContext] objectWithURI: [NSURL URLWithString: threadURL]];
+        {
+            @try {
+                thread = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:threadURL]];
+            } @catch(NSException *e) {
+                NSLog(@"Exception on getting ExpandedThreadId %@", e);
+            }
+        }
+        
         if (thread && (![thread containsSingleMessage]))
         {
             int itemRow = [threadsView rowForItem:thread];

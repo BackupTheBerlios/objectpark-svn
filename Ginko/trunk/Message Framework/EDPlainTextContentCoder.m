@@ -167,11 +167,19 @@
     [text retain];
     
     format = [[mpart contentTypeParameters] objectForKey:@"format"];
-    if((format != nil) && ([format caseInsensitiveCompare:@"flowed"] == NSOrderedSame))
+    if ((format != nil) && ([format caseInsensitiveCompare:@"flowed"] == NSOrderedSame))
     {
+        BOOL useDelSp = NO;
+        NSString *delsp;
         NSString *deflowed;
         
-        deflowed = [[text stringByDecodingFlowedFormat] retain];
+        delsp = [[mpart contentTypeParameters] objectForKey:@"delsp"];
+        if ((delsp != nil) && ([delsp caseInsensitiveCompare:@"yes"] == NSOrderedSame))
+        {
+            useDelSp = YES;
+        }
+        
+        deflowed = [[text stringByDecodingFlowedUsingDelSp:useDelSp] retain];
         [text release];
         text = deflowed;
     }

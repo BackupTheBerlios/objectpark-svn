@@ -39,7 +39,12 @@
 {
     NSString *testString = @"This is\n a test";
     
-    STAssertEqualObjects(testString, [[testString stringByEncodingFlowedFormat] stringByDecodingFlowedFormat], @"should be same.");
+    STAssertEqualObjects(testString, [[testString stringByEncodingFlowedFormat] stringByDecodingFlowedUsingDelSp:NO], @"should be same.");
+    
+    testString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/ \r\nno/sucking/umlauts/for/making/a/good/example";
+    NSString *expectedString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/no/sucking/umlauts/for/making/a/good/example";
+    
+    STAssertTrue([[testString stringByDecodingFlowedUsingDelSp:YES] isEqualToString:expectedString], @"%@ is wrong", [testString stringByDecodingFlowedUsingDelSp:YES]);
 }
 
 - (void)testPunycode
