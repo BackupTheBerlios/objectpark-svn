@@ -13,7 +13,7 @@
 }
 
 /*" Scheduling new Jobs "*/
-+ (unsigned)scheduleJobWithTarget:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
++ (unsigned)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
 /*" Worker Threads "*/
 + (unsigned)maxThreads;
@@ -51,8 +51,8 @@
 
 @end
 
-/*" Notification that a job a about to being executed. object is a NSNumber object which hold the job's id as an unsigned. "*/
+/*" Notification that a job a about to being executed. object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". "*/
 extern NSString *OPJobWillStartNotification;
 
-/*" Notification that a job has been finished. object is a NSNumber object which hold the job's id as an unsigned. "*/
+/*" Notification that a job has been finished. object is a NSNumber object which hold the job's id as an unsigned.object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". "*/
 extern NSString *OPJobDidFinishNotification;

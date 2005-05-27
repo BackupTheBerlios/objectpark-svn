@@ -33,9 +33,9 @@
 
 - (void)testBasics
 {
-    unsigned jobId1 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 1" forKey:@"name"] synchronizedObject:nil];
-    unsigned jobId2 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject:nil];
-    unsigned jobId3 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject:nil];
+    unsigned jobId1 = [OPJobs scheduleJobWithName:@"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 1" forKey:@"name"] synchronizedObject:nil];
+    unsigned jobId2 = [OPJobs scheduleJobWithName:@"job2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject:nil];
+    unsigned jobId3 = [OPJobs scheduleJobWithName:@"job3" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject:nil];
     
     sleep(1);
     
@@ -76,9 +76,9 @@
 
 - (void)testSynchronizing
 {
-    unsigned jobKoeln1 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
-    unsigned jobKoeln2 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln2" forKey:@"name"] synchronizedObject:@"Koeln"];
-    unsigned jobDuisburg = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Duisburg" forKey:@"name"] synchronizedObject:@"Duisburg"];
+    unsigned jobKoeln1 = [OPJobs scheduleJobWithName:@"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
+    unsigned jobKoeln2 = [OPJobs scheduleJobWithName:@"koeln2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln2" forKey:@"name"] synchronizedObject:@"Koeln"];
+    unsigned jobDuisburg = [OPJobs scheduleJobWithName:@"duisburg" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Duisburg" forKey:@"name"] synchronizedObject:@"Duisburg"];
     
     sleep(1);
     
@@ -125,7 +125,7 @@
     [OPJobs removeAllFinishedJobs];
     STAssertTrue([[OPJobs finishedJobs] count] == 0, @"at least one finished job in place");
     
-    unsigned jobKoeln1 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
+    unsigned jobKoeln1 = [OPJobs scheduleJobWithName:@"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
     
     sleep(1);
     
@@ -150,7 +150,7 @@
 
 - (void)testTermination
 {
-    unsigned job1 = [OPJobs scheduleJobWithTarget:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject:nil];
+    unsigned job1 = [OPJobs scheduleJobWithName:@"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject:nil];
     
     sleep(1);
     

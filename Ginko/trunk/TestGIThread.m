@@ -11,8 +11,14 @@
 #import "G3Message.h"
 #import "G3MessageGroup.h"
 #import "OPMBoxFile.h"
+#import "NSManagedObjectContext+Extensions.h"
 
 @implementation TestGIThread
+
+- (void)tearDown
+{
+    [[NSManagedObjectContext defaultContext] rollback];
+}
 
 - (G3Message *)makeAMessageWithId:(NSString *)messageId
 {

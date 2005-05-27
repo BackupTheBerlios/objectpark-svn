@@ -17,6 +17,7 @@ NSString *OPJobDidFinishNotification = @"OPJobDidFinishNotification";
 enum {OPNoPendingJobs, OPPendingJobs};
 
 NSString *OPJobId = @"OPJobId";
+NSString *OPJobName = @"OPJobName";
 NSString *OPJobTarget = @"OPJobTarget";
 NSString *OPJobSelector = @"OPJobSelector";
 NSString *OPJobArguments = @"OPJobArguments";
@@ -89,8 +90,10 @@ static unsigned nextJobId = 1;
     return result;
 }
 
-+ (unsigned)scheduleJobWithTarget:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
++ (unsigned)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
 /*" Schedules a job for being executed by a worker thread as soon as a unemployed worker thread is present and the execution of this job isn't mutual excluded by a currently running job. 
+
+    aName is an arbitrary name for the job (doesn't need to be unique). This name is used as object when notifications are posted. This way an observer can easily filter by name.
 
     aTarget is the object on which aSelector will be executed with someArguments as the only argument. 
 
@@ -106,6 +109,7 @@ static unsigned nextJobId = 1;
     unsigned jobId = nextJobId++;
     
     [jobDescription setObject:[NSNumber numberWithUnsignedInt:jobId] forKey:OPJobId];
+    [jobDescription setObject:aName forKey:OPJobName];
     [jobDescription setObject:aTarget forKey:OPJobTarget];
     [jobDescription setObject:NSStringFromSelector(aSelector) forKey:OPJobSelector];
     [jobDescription setObject:[[someArguments copy] autorelease] forKey:OPJobArguments];
@@ -156,18 +160,6 @@ static unsigned nextJobId = 1;
     }
     
     return result;
-}
-
-+ (void)noteJobWillStart:(NSNumber *)anJobId
-/*" Performed on main thread to notify of the upcoming start of a job. "*/
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobWillStartNotification object:anJobId];
-}
-
-+ (void)noteJobDidFinish:(NSNumber *)anJobId
-/*" Performed on main thread to notifiy of the finishing of a job. "*/
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:anJobId];
 }
 
 + (void)workerThread:(id)args
@@ -302,6 +294,22 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
     [jobsLock unlockWithCondition:[jobsLock condition]];
     
     return result;
+}
+
++ (void)noteJobWillStart:(NSNumber *)anJobId
+    /*" Performed on main thread to notify of the upcoming start of a job. "*/
+{
+    NSString *jobName = objectForKeyInJobInArray([anJobId unsignedIntValue], pendingJobs, OPJobName);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobWillStartNotification object:jobName userInfo:[NSDictionary dictionaryWithObject:anJobId forKey:@"jobId"]];    
+}
+
++ (void)noteJobDidFinish:(NSNumber *)anJobId
+    /*" Performed on main thread to notifiy of the finishing of a job. "*/
+{
+    NSString *jobName = objectForKeyInJobInArray([anJobId unsignedIntValue], finishedJobs, OPJobName);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:jobName userInfo:[NSDictionary dictionaryWithObject:anJobId forKey:@"jobId"]];    
 }
 
 + (id)resultForJob:(unsigned)anJobId
