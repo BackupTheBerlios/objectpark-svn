@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Ulf Licht on 24.05.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Ulf Licht, Objectpark Group. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -17,7 +17,7 @@
 }
 
 + (id)indexWithName:(NSString*)aName atPath:(NSString*)aPath;
-- (void)initWithName:(NSString*)aName atPath:(NSString *)aPath;
+- (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
 
 - (SKIndexRef)index;
 - (void)setIndex:(SKIndexRef)newIndex;

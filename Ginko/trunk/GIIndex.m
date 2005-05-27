@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Ulf Licht on 24.05.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Ulf Licht, Objectpark Group. All rights reserved.
 //
 
 #import "GIIndex.h"
@@ -14,16 +14,14 @@
 + (id)indexWithName:(NSString*)aName atPath:(NSString*)aPath
 {
     NSLog(@"+[GIIndex indexWithPath:%@]", aPath);
-    GIIndex* newIndex = [self alloc];
-    if ( newIndex == nil ) {
-        return nil;
-    }
-    [newIndex initWithName:aName atPath:aPath];
-    return newIndex;
+    GIIndex* newIndex = [[self alloc] initWithName:aName atPath:aPath];
+    return [newIndex autorelease];
 }
 
-- (void)initWithName:(NSString*)aName atPath:(NSString *)aPath;
+- (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
 {
+    self = [super init];
+    
     [self setName:aName];
     NSURL* indexFileURL = [NSURL fileURLWithPath: aPath];
     NSFileManager* fm = [NSFileManager defaultManager];
@@ -38,31 +36,34 @@
                          forKey:(NSString *)kSKMinTermLength];
         
         // returns an retained index or nil, if failed:
-        [self setIndex:SKIndexCreateWithURL( 
-                                          // the file: URL of where to place the index file.
-                                          (CFURLRef)indexFileURL,
-                                          //A name for the index (this may be nil).
-                                          (CFStringRef)aName,
-                                          //The type of index.
-                                          kSKIndexInverted,
-                                          //And your index attributes dictionary.
-                                          (CFDictionaryRef)analysisDict)];
+        SKIndexRef theIndex = SKIndexCreateWithURL( 
+                                                    // the file: URL of where to place the index file.
+                                                    (CFURLRef)indexFileURL,
+                                                    //A name for the index (this may be nil).
+                                                    (CFStringRef)aName,
+                                                    //The type of index.
+                                                    kSKIndexInverted,
+                                                    //And your index attributes dictionary.
+                                                    (CFDictionaryRef)analysisDict);
+        
+        
+        [self setIndex: theIndex]; // setIndex retains it.
+        
+        if (theIndex) CFRelease(theIndex);
         
         if(index == nil) {
-            NSLog(@"-[GIIndex initWithPath] Couldn't create index.");
+            NSLog(@"Warning: -[GIIndex initWithPath] Couldn't create index.");
         }
     }
     #warning when to call SKIndexClose?
+    return self;
 }
 
 - (void)dealloc
 {
-    if (index)
-    {
-        CFRelease(index);
-    }
-    
+    [self setIndex: nil];
     [name release];
+    
     [super dealloc];
 }
 
@@ -72,11 +73,10 @@
 }
 
 - (void)setIndex:(SKIndexRef)newIndex
+
 {
-    NSParameterAssert(newIndex != nil);
-    
     if (index) CFRelease(index); // initially index is nil
-    
+    if (newIndex) CFRetain(newIndex);
     index = newIndex;
 }
 
@@ -165,7 +165,7 @@
     for (i=0; i<tempOutFoundCount; i++) {
         //NSLog(@"hit: %d with score: %f", tempDocumentIDArray[i], tempScoresArray[i]);
         SKDocumentRef tempHitDocument =  SKIndexCopyDocumentForDocumentID ([self index], tempDocumentIDArray[i]);
-        CFDictionaryRef tempHitProperties = SKIndexCopyDocumentProperties ([self index], tempHitDocument);
+        //CFDictionaryRef tempHitProperties = SKIndexCopyDocumentProperties ([self index], tempHitDocument);
         NSString* tempHitName = (NSString*)SKDocumentGetName(tempHitDocument);
         //NSLog(@"hitName: %@", tempHitName);
         [resultArray addObject:tempHitName];
@@ -175,7 +175,7 @@
     #warning this crashes, don't know why
     // CFRelease(contentSearchRef); 
     
-	return [[resultArray copy] autorelease];
+    return [[resultArray copy] autorelease];
 }
 
 
