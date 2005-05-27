@@ -25,6 +25,10 @@ G3Message* tempMessage;
     NSLog(@"-[TestGIFulltextIndexCenter setUp]");
     tempIndexCenter = [GIFulltextIndexCenter defaultIndexCenter];
 
+#pragma mark Hier knallt es schon, weil der index nicht gešffnet/angelegt werden konnte!
+    
+    NSLog(@"created tempIndexCenter");
+    
     // get first message of default mailbox
     G3MessageGroup* tempMessageGroup = [G3MessageGroup defaultMessageGroup];
     STAssertNotNil(tempMessageGroup, @"tempMessageGroup must not be NIL");

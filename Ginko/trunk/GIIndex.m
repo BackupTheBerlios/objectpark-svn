@@ -37,6 +37,7 @@
         [analysisDict setObject:[NSNumber numberWithInt:2] 
                          forKey:(NSString *)kSKMinTermLength];
         
+        // returns an retained index or nil, if failed:
         [self setIndex:SKIndexCreateWithURL( 
                                           // the file: URL of where to place the index file.
                                           (CFURLRef)indexFileURL,
@@ -48,10 +49,21 @@
                                           (CFDictionaryRef)analysisDict)];
         
         if(index == nil) {
-            NSLog(@"[GIIndex initWithPath] Couldn't create index.");
+            NSLog(@"-[GIIndex initWithPath] Couldn't create index.");
         }
     }
     #warning when to call SKIndexClose?
+}
+
+- (void)dealloc
+{
+    if (index)
+    {
+        CFRelease(index);
+    }
+    
+    [name release];
+    [super dealloc];
 }
 
 - (SKIndexRef)index
@@ -61,6 +73,10 @@
 
 - (void)setIndex:(SKIndexRef)newIndex
 {
+    NSParameterAssert(newIndex != nil);
+    
+    if (index) CFRelease(index); // initially index is nil
+    
     index = newIndex;
 }
 
@@ -71,6 +87,8 @@
 
 - (void)setName:(NSString * )newName
 {
+    [newName retain];
+    [name release];
     name = newName;
 }
 
@@ -157,7 +175,7 @@
     #warning this crashes, don't know why
     // CFRelease(contentSearchRef); 
     
-	return [resultArray copy];
+	return [[resultArray copy] autorelease];
 }
 
 

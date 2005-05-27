@@ -621,13 +621,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (NSArray*)searchResults
 {
-    NSLog(@"[G3GroupController getSearchResults]");
+    NSLog(@"-[G3GroupController searchResults]");
     return searchResults;
 }
 
 - (void)setSearchResults:(NSArray*)newSearchResults
 {
     //[searchResults autorelease];
+    [newSearchResults retain];
+    [searchResults release];
     searchResults = newSearchResults;
 }
 
