@@ -11,6 +11,7 @@
 
 @interface GIIndex : NSObject {
     
+    @private
     NSString* name;
     SKIndexRef index;
     
@@ -20,7 +21,7 @@
 - (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
 
 - (SKIndexRef)index;
-- (void)setIndex:(SKIndexRef)newIndex;
+
 - (NSString *)name;
 - (void)setName:(NSString * )newName;
 

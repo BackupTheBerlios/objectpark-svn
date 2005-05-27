@@ -18,6 +18,27 @@
     return [newIndex autorelease];
 }
 
+- (SKIndexRef)index
+{
+    return index;
+}
+
+- (void)setIndex:(SKIndexRef)newIndex
+// Sets a new index. Closes the previous one.
+{
+    if (index) {
+        SKIndexClose(index);
+        CFRelease(index); // initially, index is nil
+    }
+    if (newIndex) CFRetain(newIndex);
+    index = newIndex;
+}
+
+- (NSString *)name
+{
+    return name;
+}
+
 - (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
 {
     self = [super init];
@@ -55,7 +76,7 @@
             NSLog(@"Warning: -[GIIndex initWithPath] Couldn't create index.");
         }
     }
-    #warning when to call SKIndexClose?
+    //#warning when to call SKIndexClose? In setIndex
     return self;
 }
 
@@ -67,23 +88,6 @@
     [super dealloc];
 }
 
-- (SKIndexRef)index
-{
-    return index;
-}
-
-- (void)setIndex:(SKIndexRef)newIndex
-
-{
-    if (index) CFRelease(index); // initially index is nil
-    if (newIndex) CFRetain(newIndex);
-    index = newIndex;
-}
-
-- (NSString *)name
-{
-    return name;
-}
 
 - (void)setName:(NSString * )newName
 {
