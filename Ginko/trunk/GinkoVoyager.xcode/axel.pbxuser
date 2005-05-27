@@ -2,7 +2,7 @@
 {
 	29B97313FDCFA39411CA2CEA = {
 		activeBuildStyle = 7747732A080D7D0700A6A49C;
-		activeExecutable = 77253CF607ECB6B100375AFC;
+		activeExecutable = 77B8E3BE07EEC20200068222;
 		activeTarget = 8D1107260486CEB800E47090;
 		addToTargets = (
 			8D1107260486CEB800E47090,
@@ -343,6 +343,8 @@
 			7782A3AE0847336600D94021 = 7782A3AE0847336600D94021;
 			7782A3AF0847346700D94021 = 7782A3AF0847346700D94021;
 			7782A3B00847346700D94021 = 7782A3B00847346700D94021;
+			7782A3B1084734D000D94021 = 7782A3B1084734D000D94021;
+			7782A3B2084734D900D94021 = 7782A3B2084734D900D94021;
 			77980DD408376A2F00BC1778 = 77980DD408376A2F00BC1778;
 			77A2F28808460B1500D54978 = 77A2F28808460B1500D54978;
 			77A2F28908460B1500D54978 = 77A2F28908460B1500D54978;
@@ -2011,24 +2013,24 @@
 	};
 	777625A60760E0EC0066BE60 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {751, 24388}}";
+			sepNavIntBoundsRect = "{{0, 0}, {655, 24808}}";
 			sepNavSelRange = "{23626, 0}";
-			sepNavVisRect = "{{0, 10684}, {751, 458}}";
+			sepNavVisRect = "{{0, 10987}, {655, 524}}";
 			sepNavWindowFrame = "{{15, 133}, {786, 694}}";
 		};
 	};
 	7779AC9A07C40D1B00F064D3 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {635, 536}}";
+			sepNavIntBoundsRect = "{{0, 0}, {655, 524}}";
 			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 0}, {635, 536}}";
+			sepNavVisRect = "{{0, 0}, {655, 524}}";
 		};
 	};
 	7779AC9B07C40D1B00F064D3 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {751, 1666}}";
-			sepNavSelRange = "{1613, 0}";
-			sepNavVisRect = "{{0, 478}, {751, 458}}";
+			sepNavIntBoundsRect = "{{0, 0}, {655, 1666}}";
+			sepNavSelRange = "{304, 0}";
+			sepNavVisRect = "{{0, 432}, {655, 524}}";
 			sepNavWindowFrame = "{{26, 180}, {750, 502}}";
 		};
 	};
@@ -2114,7 +2116,7 @@
 		fRef = 8D9021640779EC8A005365EA;
 		isa = PBXTextBookmark;
 		rLen = 0;
-		rLoc = "-2147483630";
+		rLoc = "-2147482935";
 		rType = 0;
 	};
 	7782A37908472AA100D94021 = {
@@ -2142,7 +2144,7 @@
 		isa = PBXTextBookmark;
 		name = "NSString+MessageUtils.m: stringByEncodingFlowedFormat";
 		rLen = 0;
-		rLoc = 63176;
+		rLoc = 63197;
 		rType = 0;
 		vrLen = 1081;
 		vrLoc = 62979;
@@ -2162,7 +2164,7 @@
 		isa = PBXTextBookmark;
 		name = "NSString+MessageUtils.m: stringByEncodingFlowedFormat";
 		rLen = 0;
-		rLoc = 63176;
+		rLoc = 63197;
 		rType = 0;
 		vrLen = 1167;
 		vrLoc = 62946;
@@ -2232,7 +2234,7 @@
 		isa = PBXTextBookmark;
 		name = "NSString+MessageUtils.m: stringByEncodingFlowedFormat";
 		rLen = 0;
-		rLoc = 63176;
+		rLoc = 63197;
 		rType = 0;
 		vrLen = 1023;
 		vrLoc = 62622;
@@ -2581,6 +2583,26 @@
 		rType = 0;
 		vrLen = 1203;
 		vrLoc = 22629;
+	};
+	7782A3B1084734D000D94021 = {
+		fRef = 777625A60760E0EC0066BE60;
+		isa = PBXTextBookmark;
+		name = "G3GroupController.m: 768";
+		rLen = 0;
+		rLoc = 23626;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 22746;
+	};
+	7782A3B2084734D900D94021 = {
+		fRef = 777625A60760E0EC0066BE60;
+		isa = PBXTextBookmark;
+		name = "G3GroupController.m: 768";
+		rLen = 0;
+		rLoc = 23626;
+		rType = 0;
+		vrLen = 1126;
+		vrLoc = 22868;
 	};
 	779185C8082B71390039C582 = {
 		isa = PBXFileReference;
@@ -2970,17 +2992,17 @@
 		};
 	};
 	77B8E3BE07EEC20200068222 = {
-		activeArgIndex = 3;
+		activeArgIndex = 2;
 		activeArgIndices = (
 			NO,
 			NO,
-			NO,
 			YES,
+			NO,
 		);
 		argumentStrings = (
 			"-SenTest Self GinkoVoyager.app",
 			"-SenTest TestGIFulltextIndexCenter/testAddOneMessage GinkoVoyager.app",
-			"-SenTest \"TestNSString+MessageUtils/testFormatFlowed\" GinkoVoyager.app",
+			"-SenTest TestNSString_MessageUtils GinkoVoyager.app",
 			"-SenTest TestGIThread GinkoVoyager.app",
 		);
 		configStateDict = {

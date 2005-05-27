@@ -1949,6 +1949,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 }
 
 - (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp
+/*" See RFC3676. "*/
 {
     NSMutableString *flowedText, *paragraph;
     NSArray *lines;
@@ -1959,33 +1960,39 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     
     lineBreakSeq = @"\r\n";
     if([self rangeOfString:lineBreakSeq].location == NSNotFound)
+    {
         lineBreakSeq = @"\n";
+    }
     
     flowedText = [[NSMutableString allocWithZone:[self zone]] initWithCapacity:[self length]];
     
     paragraph = [NSMutableString string];
     
     if ([self hasSuffix:lineBreakSeq])
+    {
         lines = [[self substringToIndex:[self length] - [lineBreakSeq length]] componentsSeparatedByString:lineBreakSeq];
+    }
     else
+    {
         lines = [self componentsSeparatedByString:lineBreakSeq];
+    }
     
     lineEnumerator = [lines objectEnumerator];
     
-    while ((line = [lineEnumerator nextObject]) != nil)
+    while ((line = [lineEnumerator nextObject]))
     {
         NSAutoreleasePool *pool;
         int quoteDepth = 0;
         /*
-         4.2.  Interpreting Format=Flowed
+         4.1.  Interpreting Format=Flowed
          
          If the first character of a line is a quote mark (">"), the line is
-         considered to be quoted (see section 4.5).  Logically, all quote
+         considered to be quoted (see Section 4.5).  Logically, all quote
          marks are counted and deleted, resulting in a line with a non-zero
-         quote depth, and content. (The agent is of course free to display the
-                                    content with quote marks or excerpt bars or anything else.)
+         quote depth, and content.  (The agent is of course free to display
+                                     the content with quote marks or excerpt bars or anything else.)
          Logically, this test for quoted lines is done before any other tests
-         (that is, before checking for space-stuffed and flowed).     
+         (that is, before checking for space-stuffed and flowed).
          */
         
         pool = [[NSAutoreleasePool alloc] init];
@@ -1997,7 +2004,9 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         }
         
         if ((paragraphQuoteDepth == 0) && (quoteDepth != 0))
+        {
             paragraphQuoteDepth = quoteDepth;
+        }
         
         /*
          If the first character of a line is a space, the line has been
@@ -2007,12 +2016,15 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
          */
         
         if ([line hasPrefix:@" "])
+        {
             line = [line substringFromIndex:1]; // chop of the first character
+        }
         
         /*
-         If the line ends in one or more spaces, the line is flowed.
-         Otherwise it is fixed.  Trailing spaces are part of the line's
-         content, but the CRLF of a soft line break is not.
+         If the line ends in a space, the line is flowed.  Otherwise it is
+         fixed.  The exception to this rule is a signature separator line,
+         described in Section 4.3.  Such lines end in a space but are neither
+         flowed nor fixed.
          */
         
         isFlowed = [line hasSuffix:@" "] 
@@ -2020,12 +2032,27 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             && ([line caseInsensitiveCompare:@"-- "] != NSOrderedSame);
         
         /*
-         A series of one or more flowed lines followed by one fixed line is
-         considered a paragraph, and MAY be flowed (wrapped and unwrapped) as
-         appropriate on display and in the construction of new messages (see
-                                                                         section 4.5).   
+         If the line is flowed and DelSp is "yes", the trailing space
+         immediately prior to the line's CRLF is logically deleted.  If the
+         DelSp parameter is "no" 
+         (or not specified, or set to an unrecognized value), 
+         the trailing space is not deleted.
+         
+         Any remaining trailing spaces are part of the line's content, but the
+         CRLF of a soft line break is not. 
          */
         
+        if (isFlowed && useDelSp)
+        {
+            line = [line substringToIndex:[line length] - 1];
+        }
+                
+        /*
+         A series of one or more flowed lines followed by one fixed line is
+         considered a paragraph, and MAY be flowed (wrapped and unwrapped) as
+         appropriate on display and in the construction of new messages 
+         (see section 4.5).   
+         */
         
         [paragraph appendString:line];
         if (! isFlowed)
@@ -2035,7 +2062,9 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 int i;
                 
                 for (i=0; i<paragraphQuoteDepth; i++)
+                {
                     [flowedText appendString:@">"];
+                }
                 
                 [flowedText appendString:@" "];
             }
@@ -2059,7 +2088,9 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             int i;
             
             for (i=0; i<paragraphQuoteDepth; i++)
+            {
                 [flowedText appendString:@">"];
+            }
             
             [flowedText appendString:@" "];
         }
@@ -2067,27 +2098,29 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         [flowedText appendString:paragraph];
     }
     
-//    return [flowedText autorelease];
     return [[flowedText autorelease] substringToIndex:[flowedText length] - [lineBreakSeq length]];
 }
 
-- (NSString*) stringBySpaceStuffing
+- (NSString *)stringBySpaceStuffing
 {
     if (([self hasPrefix:@" "]) || ([self hasPrefix:@"From "]))
+    {
         return [NSString stringWithFormat:@" %@", self];
+    }
     
     return self;
 }
 
-+ (NSString*) temporaryFilenameWithExtension: (NSString*) ext 
++ (NSString *)temporaryFilenameWithExtension:(NSString *)ext 
 {
     NSString* result = nil;
     do {
         // ##WARNING dirk->all Use a privacy-safe path like /tmp/Ginko/Users for temp files.
-        char* name = tmpnam(NULL);
+        char *name = tmpnam(NULL);
         result = [NSString stringWithFormat: @"%s.%@", name, ext];
         //free(name); only needed for tempnam
     } while (_fileExists(result));
+    
     return result;
 }
 

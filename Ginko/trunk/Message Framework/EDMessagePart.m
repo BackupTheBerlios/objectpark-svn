@@ -239,13 +239,14 @@
 }
 
 
-- (NSString*) contentType
+- (NSString *)contentType
 {
-    NSString* fBody = [self bodyForHeaderField:@"content-type"];
-    EDEntityFieldCoder* coder;
+    NSString *fBody = [self bodyForHeaderField:@"content-type"];
+    EDEntityFieldCoder *coder;
     
-    if ((contentType == nil) && fBody != nil) {
-        coder = [EDEntityFieldCoder decoderWithFieldBody: fBody];
+    if ((contentType == nil) && fBody != nil) 
+    {
+        coder = [EDEntityFieldCoder decoderWithFieldBody:fBody];
         contentType = [[coder value] retain];
         contentTypeParameters = [[coder parameters] retain];
     }
@@ -253,7 +254,7 @@
 }
 
 
-- (NSDictionary*) contentTypeParameters
+- (NSDictionary *)contentTypeParameters
 {
     [self contentType];
     return contentTypeParameters;
