@@ -21,6 +21,7 @@
 #import "G3GroupInspectorController.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "G3MessageGroup.h"
+#import "OPJobs.h"
 #import "GIFulltextIndexCenter.h"
 
 @interface G3GroupController (CommentsTree)
@@ -674,9 +675,34 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
+static unsigned threadCountJobId = 0;
+
+- (void)threadCountJobFinished:(NSNotification *)aNotification
+{
+    NSLog(@"threadCountJobFinished");
+    unsigned jobId = [[aNotification object] unsignedIntValue];
+    
+    if (jobId == threadCountJobId)
+    {
+        unsigned threadCount = [[OPJobs resultForJob:jobId] unsignedIntValue];
+        [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%u threads", "group info text template"), threadCount]];
+    }
+}
+
+- (void)asyncThreadCount:(NSDictionary *)someArguments
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSLog(@"asyncThreadCount");
+//    [OPJobs setResult:[NSNumber numberWithUnsignedInt:[group threadCount]]];
+    [pool release];
+}
+
 - (void)updateGroupInfoTextField
 {
-    [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%u messages", "group info text template"), [group messageCount]]];
+    NSLog(@"updateGroupInfoTextField");
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadCountJobFinished:) name:OPJobDidFinishNotification object:nil];
+    
+//    threadCountJobId = [OPJobs scheduleJobWithTarget:self selector:@selector(asyncThreadCount:) arguments:[NSDictionary dictionary] synchronizedObject:@"asyncThreadCount"];
 }
 
 - (void)modelChanged:(NSNotification *)aNotification
@@ -689,11 +715,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (NSArray *)allGroups
 {
-	if (!allGroups) 
-	{
-		allGroups = [[G3MessageGroup allObjects] retain];
-	}
-	return allGroups;
+    if (!allGroups) 
+    {
+        allGroups = [[G3MessageGroup allObjects] retain];
+    }
+    return allGroups;
 }
 
 - (G3MessageGroup *)group
@@ -705,12 +731,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (aGroup != group)
     {
-        NSLog(@"Setting group for controller: %@", [aGroup description]);
+        //NSLog(@"Setting group for controller: %@", [aGroup description]);
         
-		// key value observing:
-		[group removeObserver:self forKeyPath:@"threads"];
-		[aGroup addObserver:self forKeyPath:@"threads" options:NSKeyValueObservingOptionNew context:NULL];
-		
+        // key value observing:
+        [group removeObserver:self forKeyPath:@"threads"];
+        [aGroup addObserver:self forKeyPath:@"threads" options:NSKeyValueObservingOptionNew context:NULL];
+        
         [group autorelease];
         group = [aGroup retain];
         
@@ -728,16 +754,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [threadsView setAutosaveExpandedItems:NO];
         
         // Open last expanded thread:
-		NSString* threadURL = [self valueForGroupProperty:@"ExpandedThreadId"];
+        NSString* threadURL = [self valueForGroupProperty:@"ExpandedThreadId"];
         G3Thread* thread = nil;
-		if (threadURL) 
-			thread = [[NSManagedObjectContext defaultContext] objectWithURI: [NSURL URLWithString: threadURL]];
+        if (threadURL) 
+            thread = [[NSManagedObjectContext defaultContext] objectWithURI: [NSURL URLWithString: threadURL]];
         if (thread && (![thread containsSingleMessage]))
         {
             int itemRow = [threadsView rowForItem:thread];
             
             if (itemRow >= 0) 
-			{
+            {
                 [threadsView selectRow:itemRow byExtendingSelection:NO];
                 [self openSelection:self];
             }
@@ -835,7 +861,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         if ([item isKindOfClass:[NSString class]])
         {
-            [self setGroup:[G3MessageGroup messageGroupWithURIReferenceString:[NSURL URLWithString:item]]];
+            [self setGroup:[G3MessageGroup messageGroupWithURIReferenceString:item]];
         }
     }
 }
@@ -884,7 +910,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if (outlineView == threadsView) 
     {
         // subjects list
-        if ([item isKindOfClass: [G3Thread class]])
+        if ([item isKindOfClass:[G3Thread class]])
         {
             return ![item containsSingleMessage];
         }

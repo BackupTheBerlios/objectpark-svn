@@ -8,13 +8,6 @@
 
 #import "NSManagedObjectContext+Extensions.h"
 
-#ifndef TIGER
-
-@implementation NSManagedObjectContext 
-@end
-
-#endif
-
 @implementation NSManagedObjectContext (OPExtensions)
 
 static id context = nil;
@@ -24,7 +17,6 @@ static id context = nil;
     NSAssert (context != nil, @"+[NSManagedObject (Extensions) defaultContext]: context returned should never be nil");
     return context;
 }
-
 
 + (void)setDefaultContext:(NSManagedObjectContext *)aContext
 {

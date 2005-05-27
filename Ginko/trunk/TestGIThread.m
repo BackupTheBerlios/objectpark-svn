@@ -86,4 +86,17 @@
     }
 }
 
+- (void)testGroupAdding
+{
+    G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
+    G3Message *messageA = [self makeAMessageWithId:@"testA1"];
+    G3MessageGroup *group = [G3MessageGroup defaultMessageGroup];
+    
+    [threadA addMessage:messageA];
+    [threadA addGroup:group];
+    
+    STAssertTrue([[threadA valueForKey:@"groups"] containsObject:group], @"should contain group.");
+    STAssertTrue([[group valueForKey:@"threads"] containsObject:threadA], @"should contain thread.");
+}
+
 @end

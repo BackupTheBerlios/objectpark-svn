@@ -75,6 +75,7 @@
 
 - (void) restoreOpenWindowsFromLastSession
 {
+    NSLog(@"-[GIApplication restoreOpenWindowsFromLastSession] (not yet implemented)");
     // TODO
 }
 
@@ -154,7 +155,7 @@
 									code: 0		
 								userInfo: [NSDictionary dictionaryWithObjectsAndKeys:error, NSUnderlyingErrorKey, [NSString stringWithFormat:@"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
     }
-	NSLog(@"Store: %@", [[coordinator persistentStores] lastObject]);	
+	//NSLog(@"Store: %@", [[coordinator persistentStores] lastObject]);	
 	return managedObjectContext;
 }
 
@@ -180,21 +181,21 @@
 
 - (void) awakeFromNib
 {
-	[NSManagedObjectContext setDefaultContext: [self initialManagedObjectContext]];
-	
+    [NSManagedObjectContext setDefaultContext: [self initialManagedObjectContext]];
+    
     [self setDelegate: self];
     [self restoreOpenWindowsFromLastSession];
-	
-	// Some statistical messsages:
-	//	NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];	
-	NSArray *allMessages = [G3Message allObjects];
-	G3Message *aMessage  = [allMessages lastObject];
-	
-	NSLog(@"MessageBase contains %d message objects in %d threads.", [allMessages count], [[G3Thread allObjects] count]);
-	
-	//	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
-	NSLog(@"last message = %@", aMessage);
-	NSLog(@"All Groups %@", [G3MessageGroup allObjects]);
+    
+    // Some statistical messsages:
+    //	NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];	
+    //NSArray *allMessages = [G3Message allObjects];
+    //G3Message *aMessage  = [allMessages lastObject];
+    
+    //NSLog(@"MessageBase contains %d message objects in %d threads.", [allMessages count], [[G3Thread allObjects] count]);
+    
+    //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
+    //NSLog(@"last message = %@", aMessage);
+    //NSLog(@"All Groups %@", [G3MessageGroup allObjects]);
 }
 
 - (BOOL) isGroupsDrawerMode

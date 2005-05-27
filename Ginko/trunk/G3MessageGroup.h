@@ -48,8 +48,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
 /*" Complex Accessors "*/
 - (NSArray *)threadsByDate;
 
-- (unsigned)messageCount;
-- (unsigned)unreadMessageCount;
+- (unsigned)threadCount;
 
 /*" Profile handling "*/
 - (G3Profile *)defaultProfile;

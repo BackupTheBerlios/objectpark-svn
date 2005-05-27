@@ -92,14 +92,18 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 {
     id referencedGroup = nil;
     
-    @try {
-        referencedGroup = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:anUrl]];
-    }
-    @catch (NSException *e)
+    NSParameterAssert([anUrl isKindOfClass:[NSString class]]);
+    
+    if ([anUrl length])
     {
-        NSLog(@"Could not find group for URI ''", anUrl);
+        @try {
+            referencedGroup = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:anUrl]];
+        }
+        @catch (NSException *e) {
+            NSLog(@"Could not find group for URI ''", anUrl);
+        }
     }
-        
+    
     return referencedGroup;
     /*
     id result = nil;
@@ -151,6 +155,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     static NSArray *dateDescriptor = nil;
     NSArray *result = nil;
     
+    NSLog(@"threadsByDate");
     if (! dateDescriptor) dateDescriptor = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO] autorelease], nil];
     /*
 #warning ugly hackaround, Dude!
@@ -172,7 +177,9 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     //NSLog(@"All messages for %@: %@", self, [self valueForKey: @"threads"]);
     
-    NSPredicate* p = [NSPredicate predicateWithFormat: @"ANY groups.name like %@", [self name]];
+   // NSPredicate* p = [NSPredicate predicateWithFormat: @"ANY groups.name like %@", [self name]];
+   NSPredicate* p = [NSPredicate predicateWithFormat: @"ANY groups = %@", self];
+   // NSPredicate* p = [NSPredicate predicateWithFormat: @"%@ IN groups", self];
     
     [request setPredicate: p];
     
@@ -187,34 +194,32 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     return result;
 }
 
+/* as documentation of NSManagedObject suggests...no overriding of -description
 - (NSString *)description
-/*" Custom description of the receiver. "*/
 {
     return [NSString stringWithFormat:@"%@ with %d threads", [super description], [[self valueForKey:@"threads"] count]];
 }
+*/
 
-- (unsigned)messageCount
-/*" Returns the count of messages that are present 'in' the receiver (contained in threads that are contained in the receiver). 
+- (unsigned)threadCount
+/*" Returns the count of threads that are present 'in' the receiver. 
 
     The current implementation is very inefficent, please use seldom. "*/
 {
+    return [[self valueForKey:@"threads"] count];
+    /*
     unsigned result = 0;
     NSEnumerator *enumerator;
     G3Thread *thread;
     
-    enumerator = [[self threadsByDate] objectEnumerator];
+    enumerator = [[self valueForKey:@"threads"] objectEnumerator];
     while (thread = [enumerator nextObject])
     {
         result += [thread messageCount];
     }
     
     return result;
-}
-
-- (unsigned)unreadMessageCount
-/*" Not yet implemented. Returns always 0. "*/
-{
-    return 0;
+     */
 }
 
 - (G3Profile *)defaultProfile

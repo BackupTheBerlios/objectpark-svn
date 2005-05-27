@@ -24,53 +24,51 @@
 + (id) messageForMessageId: (NSString*) messageId
 /*" Returns either nil or the message specified by its messageId. "*/
 {
-#ifdef TIGER
-	NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-	//NSManagedObjectModel *model = [[NSApp delegate] managedObjectModel];
-	[request setEntity: [self entity]];
-	NSPredicate* predicate = [NSComparisonPredicate predicateWithLeftExpression: [NSExpression expressionForKeyPath: @"messageId"] rightExpression: [NSExpression expressionForConstantValue: messageId] modifier: NSDirectPredicateModifier type: NSEqualToPredicateOperatorType options: 0];
-	[request setPredicate: predicate];
-	NSError* error = nil;
-	NSArray* results = [[NSManagedObjectContext defaultContext] executeFetchRequest: request error: &error];
-	if (results != nil) {
-		return [results count] ? [results lastObject] : nil;
+    NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+    //NSManagedObjectModel *model = [[NSApp delegate] managedObjectModel];
+    [request setEntity: [self entity]];
+    NSPredicate* predicate = [NSComparisonPredicate predicateWithLeftExpression: [NSExpression expressionForKeyPath: @"messageId"] rightExpression: [NSExpression expressionForConstantValue: messageId] modifier: NSDirectPredicateModifier type: NSEqualToPredicateOperatorType options: 0];
+    [request setPredicate: predicate];
+    NSError* error = nil;
+    NSArray* results = [[NSManagedObjectContext defaultContext] executeFetchRequest: request error: &error];
+    if (results != nil) {
+        return [results count] ? [results lastObject] : nil;
 								
-	} else {// deal with error…
-		NSLog(@"Fetch error: %@", [error userInfo]);
-	}
-#endif
-	return nil;
+    } else {// deal with error…
+        NSLog(@"Fetch error: %@", [error userInfo]);
+    }
+    return nil;
 }
 
 + (id) messageWithTransferData: (NSData*) tData
 {
-	OPInternetMessage* msg = [[[OPInternetMessage alloc] initWithTransferData: tData] autorelease];
-	
-	id result = nil;
-
-	if (![self messageForMessageId: [msg messageId]]) {		
-		// Create a new message in the default context:
-		result = [[[G3Message alloc] initWithManagedObjectContext: [NSManagedObjectContext defaultContext]] autorelease];
-		
-		//NSString* fromHeader = [msg bodyForHeaderField: @"from"];
-		NSString* fromHeader = [msg fromWithFallback: YES];
-		
-		[result setValue: tData forKey: @"transferData"];
-		[result setValue: [msg messageId] forKey: @"messageId"];  
-		[result setValue: [msg normalizedSubject] forKey: @"subject"];
-		[result setValue: fromHeader forKey: @"author"];
-		[result setValue: [msg date] forKey: @"date"];
-		
-		// Note that this method operates on the encoded header field. It's OK because email
-		// addresses are 7bit only.
-		if ([G3Profile isMyEmailAddress: fromHeader]) 
-			[result addFlags: OPIsFromMeStatus];
-		
-	} else {
-		//NSLog(@"Dupe check failed for id %@", [msg messageId]);
-	}
-	
-	return result;
+    OPInternetMessage* msg = [[[OPInternetMessage alloc] initWithTransferData: tData] autorelease];
+    
+    id result = nil;
+    
+    if (![self messageForMessageId: [msg messageId]]) {		
+        // Create a new message in the default context:
+        result = [[[G3Message alloc] initWithManagedObjectContext: [NSManagedObjectContext defaultContext]] autorelease];
+        
+        //NSString* fromHeader = [msg bodyForHeaderField: @"from"];
+        NSString* fromHeader = [msg fromWithFallback: YES];
+        
+        [result setValue: tData forKey: @"transferData"];
+        [result setValue: [msg messageId] forKey: @"messageId"];  
+        [result setValue: [msg normalizedSubject] forKey: @"subject"];
+        [result setValue: fromHeader forKey: @"author"];
+        [result setValue: [msg date] forKey: @"date"];
+        
+        // Note that this method operates on the encoded header field. It's OK because email
+        // addresses are 7bit only.
+        if ([G3Profile isMyEmailAddress: fromHeader]) 
+            [result addFlags: OPIsFromMeStatus];
+        
+    } else {
+        //NSLog(@"Dupe check failed for id %@", [msg messageId]);
+    }
+    
+    return result;
 }
 
 
@@ -81,62 +79,62 @@
 
 - (void) setTransferData: (NSData*) newData
 {
-	NSManagedObjectContext *context = [self managedObjectContext];
-	NSEntityDescription *entity = [[[[context persistentStoreCoordinator] managedObjectModel] entitiesByName] objectForKey:@"MessageData"];
-	NSManagedObject* messageData = [[[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext: context] autorelease];
-
-	[messageData setValue: newData forKey: @"transferData"];
-	[self setValue: messageData forKey: @"messageData"];
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSEntityDescription *entity = [[[[context persistentStoreCoordinator] managedObjectModel] entitiesByName] objectForKey:@"MessageData"];
+    NSManagedObject* messageData = [[[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext: context] autorelease];
+    
+    [messageData setValue: newData forKey: @"transferData"];
+    [self setValue: messageData forKey: @"messageData"];
 }
 
 - (NSString*) messageId
 {
-	[self willAccessValueForKey: @"messageId"];
-	id result = [self primitiveValueForKey: @"messageId"];
-	[self didAccessValueForKey: @"messageId"];
-	return result;
+    [self willAccessValueForKey: @"messageId"];
+    id result = [self primitiveValueForKey: @"messageId"];
+    [self didAccessValueForKey: @"messageId"];
+    return result;
 }
 
 - (unsigned)flags
 {
-	unsigned result;
-	
-	[self willAccessValueForKey:@"flags"];
-	result = [[self primitiveValueForKey:@"flags"] intValue];
-	[self didAccessValueForKey:@"flags"];
-	return result;
+    unsigned result;
+    
+    [self willAccessValueForKey:@"flags"];
+    result = [[self primitiveValueForKey:@"flags"] intValue];
+    [self didAccessValueForKey:@"flags"];
+    return result;
 }
 
 - (void)setFlags:(unsigned)someFlags
 {
-	[self willChangeValueForKey:@"flags"];
-	[self setPrimitiveValue:[NSNumber numberWithInt:someFlags] forKey:@"flags"];
-	[self didChangeValueForKey:@"flags"];
+    [self willChangeValueForKey:@"flags"];
+    [self setPrimitiveValue:[NSNumber numberWithInt:someFlags] forKey:@"flags"];
+    [self didChangeValueForKey:@"flags"];
 }
 
 - (BOOL)hasFlag:(unsigned)flag
 {
-	int flags = [self flags];
-	return (flag & flags) != 0;
+    int flags = [self flags];
+    return (flag & flags) != 0;
 }
 
 - (void)addFlags:(unsigned)someFlags
 {
-	int flags = [self flags];
-	if (someFlags | flags !=flags)
-	{
-		[self setFlags:(flags | someFlags)];
-	}
+    int flags = [self flags];
+    if (someFlags | flags !=flags)
+    {
+        [self setFlags:(flags | someFlags)];
+    }
 }
 
 - (void)removeFlags:(unsigned)someFlags
 {
-	int flags = [self flags];
-	
-	if ((flags & (~someFlags)) != flags)
-	{
-		[self setFlags:(flags & (~someFlags))];
-	}
+    int flags = [self flags];
+    
+    if ((flags & (~someFlags)) != flags)
+    {
+        [self setFlags:(flags & (~someFlags))];
+    }
 }
 
 /*
@@ -159,48 +157,48 @@
 
 - (G3Message*) referenceFind: (BOOL) find
 {
-	G3Message* result = [self reference];
-	if (!result && find) {
-		NSEnumerator* e = [[[self internetMessage] references] reverseObjectEnumerator];
-		NSString* refId;
-		while (refId = [e nextObject]) {
-			result = [[self class] messageForMessageId: refId];
-			if (result) {
-				[self setValue: result forKey: @"reference"];
-				return result;
-			}
-		}
-	}
-	return nil;
+    G3Message* result = [self reference];
+    if (!result && find) {
+        NSEnumerator* e = [[[self internetMessage] references] reverseObjectEnumerator];
+        NSString* refId;
+        while (refId = [e nextObject]) {
+            result = [[self class] messageForMessageId: refId];
+            if (result) {
+                [self setValue: result forKey: @"reference"];
+                return result;
+            }
+        }
+    }
+    return nil;
 }
 
 - (G3Thread*) thread
 {
     [self willAccessValueForKey: @"thread"];
     id thread = [self primitiveValueForKey: @"thread"];
-	[self didAccessValueForKey: @"thread"];
+    [self didAccessValueForKey: @"thread"];
     return thread;
 }
 
 - (G3Thread*) threadCreate: (BOOL) doCreate
 {
-	G3Thread* thread = [self thread];
-	if (doCreate && !thread) {
-		// do threading by reference
-		thread = [[self referenceFind: YES] thread];
-		if (!thread) {
-			thread = [G3Thread thread];
-			[thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
-		} else {
-			NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
-			// Set the thread's subject to be the first messages subject:
-		}
-		// We got one, so set it:
-		[self setValue: thread forKey: @"thread"];
-		[thread addMessage: self];
-		
-	}
-	return thread;
+    G3Thread* thread = [self thread];
+    if (doCreate && !thread) {
+        // do threading by reference
+        thread = [[self referenceFind: YES] thread];
+        if (!thread) {
+            thread = [G3Thread thread];
+            [thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
+        } else {
+            NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
+            // Set the thread's subject to be the first messages subject:
+        }
+        // We got one, so set it:
+        [self setValue: thread forKey: @"thread"];
+        [thread addMessage: self];
+        
+    }
+    return thread;
 }
 
 
@@ -217,13 +215,15 @@
 
 - (NSAttributedString*) contentAsAttributedString
 {
-	return [[self internetMessage] bodyContent];
+    return [[self internetMessage] bodyContent];
 }
 
+/* as documentation of NSManagedObject suggests...no overriding of -description
 - (NSString*) description
 {
     return [NSString stringWithFormat: @"%@, Subject: '%@', Author: '%@', Date: '%@'", [super description], [self valueForKey: @"subject"], [self valueForKey: @"author"], [self valueForKey: @"date"]];
 }
+*/
 
 - (NSArray*) commentsInThread: (G3Thread*) thread
 /* Returns all directly commenting messages in the thread given. */

@@ -19,18 +19,11 @@
 
 + (void)removeMessage:(G3Message *)aMessage;
 
-+ (NSArray*) defaultGroupsForMessage: (G3Message*) aMessage;
++ (NSSet *)defaultGroupsForMessage:(G3Message *)aMessage;
 
 + (void) importFromMBoxFile: (OPMBoxFile*) box;
 
 + (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup;
 + (void)addOutgoingMessage:(G3Message *)aMessage;
 
-/*" deprecated methods (moved to G3MessageGroup) "*/
-/*
-+ (G3MessageGroup *)defaultMessageGroup;
-+ (G3MessageGroup *)outgoingMessageGroup;
-+ (G3MessageGroup *)draftMessageGroup;
-+ (G3MessageGroup *)spamMessageGroup;
-*/
 @end

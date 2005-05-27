@@ -24,8 +24,11 @@
     if (message) 
     {
         G3Thread *thread = [message threadCreate:YES];
-        NSArray *groups = [self defaultGroupsForMessage:message];
+        NSSet *groups = [self defaultGroupsForMessage:message];
         
+        [thread addGroups:groups];
+        
+        /*
         // Make sure, thread is contained in all groups:
         int i;
         for (i = [groups count] - 1; i >= 0; i--) 
@@ -36,6 +39,7 @@
             [group addValue:thread toRelationshipWithKey:@"threads"];
             [thread addValue:group toRelationshipWithKey:@"groups"];
         }
+         */
     }
     
     // add message to index
@@ -51,7 +55,7 @@
     [[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
 
     G3Thread *thread = [aMessage thread];
-    
+        
     // delete thread also if it would become a thread without messages:
     if ([thread messageCount] == 1)
     {
@@ -60,34 +64,6 @@
     
     // delete message:
     [[NSManagedObjectContext defaultContext] deleteObject:aMessage];
-}
-
-+ (G3MessageGroup *)defaultMessageGroup
-{
-    NSLog(@"deprecated: use +[G3MessageGroup defaultMessageGroup] instead");
-    
-    return [G3MessageGroup defaultMessageGroup];
-}
-
-+ (G3MessageGroup *)outgoingMessageGroup
-{
-    NSLog(@"deprecated: use +[G3MessageGroup outgoingMessageGroup] instead");
-    
-    return [G3MessageGroup outgoingMessageGroup];
-}
-
-+ (G3MessageGroup *)draftMessageGroup
-{
-    NSLog(@"deprecated: use +[G3MessageGroup draftMessageGroup] instead");
-    
-    return [G3MessageGroup draftMessageGroup];
-}
-
-+ (G3MessageGroup *)spamMessageGroup
-{
-    NSLog(@"deprecated: use +[G3MessageGroup spamMessageGroup] instead");
-    
-    return [G3MessageGroup spamMessageGroup];
 }
 
 + (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup
@@ -103,14 +79,14 @@
 
 + (void)addOutgoingMessage:(G3Message *)aMessage
 {
-    [self addMessage:aMessage toMessageGroup:[self outgoingMessageGroup]];
+    [self addMessage:aMessage toMessageGroup:[G3MessageGroup outgoingMessageGroup]];
 }
 
-+ (NSArray *)defaultGroupsForMessage:(G3Message *)aMessage
++ (NSSet *)defaultGroupsForMessage:(G3Message *)aMessage
 /*" Returns an array of G3MessageGroup objects where the given message should go into per the user's filter setting. "*/
 {
     // TODO: just a dummy here!
-    return [NSArray arrayWithObjects:[G3MessageGroup defaultMessageGroup], nil];
+    return [NSSet setWithObjects:[G3MessageGroup defaultMessageGroup], nil];
 }
 
 + (void) importFromMBoxFile: (OPMBoxFile*) box
@@ -131,7 +107,7 @@
 	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
-	int maxImport = 110;
+	int maxImport = 10000;
 	int i = 0;
 	int imported = 0;
 	int lastImported = 0;

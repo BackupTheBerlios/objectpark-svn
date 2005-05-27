@@ -14,7 +14,6 @@
 
 @implementation G3Thread
 
-
 - (id) init
 /*" Adds the reciever to the default managed object context. "*/
 {
@@ -31,7 +30,6 @@
 {
     return (unsigned)[[self valueForKey:@"numberOfMessages"] intValue]; 
 }
-
 
 - (NSSet *)messages
 {
@@ -56,6 +54,39 @@
     }
 }
 */
+
+- (void)addGroup:(G3MessageGroup *)value 
+{    
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    
+    [self willChangeValueForKey:@"groups" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"groups"] addObject: value];
+    [self didChangeValueForKey:@"groups" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
+
+- (void)addGroups:(NSSet *)someGroups
+{
+    [self willChangeValueForKey:@"groups"
+                withSetMutation:NSKeyValueUnionSetMutation
+                   usingObjects:someGroups];
+    [[self primitiveValueForKey:@"groups"] unionSet:someGroups];
+    [self didChangeValueForKey:@"groups"
+               withSetMutation:NSKeyValueUnionSetMutation
+                  usingObjects:someGroups];
+}
+
+- (void)removeGroup:(G3MessageGroup *)value 
+{
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    
+    [self willChangeValueForKey:@"groups" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"groups"] removeObject:value];
+    [self didChangeValueForKey:@"groups" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
 
 - (void)addMessage:(G3Message *)aMessage
 {
@@ -96,30 +127,20 @@
     // update numberOfMessages attribute:
     int newValue = [[self messages] count];
     [self setValue: [NSNumber numberWithInt: newValue] forKey:@"numberOfMessages"];    
-}
 
-- (void)addGroup:(G3MessageGroup *)value 
-{    
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    
-    [self willChangeValueForKey:@"groups" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"groups"] addObject: value];
-    [self didChangeValueForKey:@"groups" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    
-    [changedObjects release];
+    if (newValue == 0)
+    {
+        // disconnecting self from all groups:
+        NSEnumerator *enumerator = [[self valueForKey:@"groups"] objectEnumerator];
+        G3MessageGroup *group;
+        while (group = [enumerator nextObject])
+        {
+            [self removeGroup:group];
+        }
+        
+        [[NSManagedObjectContext defaultContext] deleteObject:self];		
+    }
 }
-
-- (void)removeGroup:(G3MessageGroup *)value 
-{
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    
-    [self willChangeValueForKey:@"groups" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"groups"] removeObject:value];
-    [self didChangeValueForKey:@"groups" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    
-    [changedObjects release];
-}
-
 
 BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 /*" Assumes that there are no rings in references. "*/
@@ -171,6 +192,23 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
     {
         [newThread addMessage:message];
     }
+
+    // update numberOfMessages attribute:
+    int newValue = [[self messages] count];
+    [self setValue: [NSNumber numberWithInt:newValue] forKey:@"numberOfMessages"];
+    
+    if (newValue == 0)
+    {
+        // disconnecting self from all groups:
+        NSEnumerator *enumerator = [[self valueForKey:@"groups"] objectEnumerator];
+        G3MessageGroup *group;
+        while (group = [enumerator nextObject])
+        {
+            [self removeGroup:group];
+        }
+        
+        [[NSManagedObjectContext defaultContext] deleteObject:self];		
+    }
     
     return newThread;
 }
@@ -221,10 +259,12 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
     return [[[self messages] allObjects] sortedArrayByComparingAttribute:@"date"];
 }
 
+/* as documentation of NSManagedObject suggests...no overriding of -description
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"%@ %@: %@", [super description], [self valueForKey: @"subject"], [self messages]];
 }
+*/
 
 - (BOOL)containsSingleMessage
 {

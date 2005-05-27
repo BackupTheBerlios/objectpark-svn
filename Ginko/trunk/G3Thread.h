@@ -8,11 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import "OPManagedObject.h"
+
 @class G3Message;
+@class G3MessageGroup;
 
-
-@interface G3Thread : OPManagedObject {
-   // NSMutableDictionary* verticalOffsets;
+@interface G3Thread : OPManagedObject 
+{
 }
 
 + (G3Thread*) thread;
@@ -22,6 +23,10 @@
 - (void) addMessage: (G3Message*) message;
 - (NSArray*) messagesByDate;
 
+/*" Groups handling "*/
+- (void)addGroup:(G3MessageGroup *)aGroup;
+- (void)addGroups:(NSSet *)someGroups;
+- (void)removeGroup:(G3MessageGroup *)aGroup; 
 
 - (unsigned) messageCount;
 - (NSArray*) rootMessages;
