@@ -14,8 +14,7 @@
 + (id)indexWithName:(NSString*)aName atPath:(NSString*)aPath
 {
     NSLog(@"+[GIIndex indexWithPath:%@]", aPath);
-    GIIndex* newIndex = [[self alloc] initWithName:aName atPath:aPath];
-    return [newIndex autorelease];
+    return [[[self alloc] initWithName:aName atPath:aPath] autorelease];
 }
 
 - (SKIndexRef)index
@@ -176,8 +175,7 @@
     }
     
     // release
-    #warning this crashes, don't know why
-    // CFRelease(contentSearchRef); 
+    // CFRelease(searchRef); // crashes, don't know why
     
     return [[resultArray copy] autorelease];
 }

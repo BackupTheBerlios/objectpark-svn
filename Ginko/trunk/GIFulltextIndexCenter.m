@@ -64,8 +64,8 @@ NSDictionary* indexDictionary;
         isIndexed = [[indexDictionary objectForKey:@"statusIndex"] addDocumentWithName:[aMessage messageId]
                                              andText:@"OPFulltextIndexedStatus"
                                        andProperties:documentPropertiesDict];
-        #warning GIIndex when does status change?
-        #warning GIIndex how to handle more stati
+        #warning TODO GIFulltextIndexCenter when does status change?
+        #warning TODO GIFulltextIndexCenter how to handle more stati
     }
          
     if (isIndexed) {
@@ -106,17 +106,18 @@ NSDictionary* indexDictionary;
 
 - (BOOL)reindexAllMessages
 {
-    BOOL result;
+    BOOL result = NO;
     NSEnumerator* threadEnumerator;
     NSEnumerator* messageEnumerator;
     G3Thread* tempThread;
     G3Message* tempMessage;
     
     // get default MessageGroup
-    #warning get all MessageGroups
+    #warning TODO -[GIFulltextIndexCenter reindexAllMessages] get all MessageGroups
     G3MessageGroup* tempMessageGroup = [G3MessageGroup defaultMessageGroup];
     
     // get all threads
+    #warning check result in while clauses
     threadEnumerator = [[tempMessageGroup threadsByDate] objectEnumerator];
     while ( tempThread = [threadEnumerator nextObject] ) {
         messageEnumerator = [[tempThread messagesByDate] objectEnumerator];

@@ -43,8 +43,8 @@
     }
     
     // add message to index
-    GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-    [indexCenter addMessage:message];
+    //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+    //[indexCenter addMessage:message];
     
     return message;
 }
@@ -52,7 +52,7 @@
 + (void)removeMessage:(G3Message *)aMessage
 {	
     // remove message from index
-    [[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
+    //[[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
 
     G3Thread *thread = [aMessage thread];
         
