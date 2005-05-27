@@ -28,21 +28,20 @@ G3Message* tempMessage;
 #pragma mark Hier knallt es schon, weil der index nicht gešffnet/angelegt werden konnte!
     
     NSLog(@"created tempIndexCenter");
+       
+    NSString *messageId = @"searchtest-message-1";
+    NSString *transferString = [NSString stringWithFormat:
+                                             @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nLudovic Marcotte wrote:\r\n", messageId];
     
-    // get first message of default mailbox
-    G3MessageGroup* tempMessageGroup = [G3MessageGroup defaultMessageGroup];
-    STAssertNotNil(tempMessageGroup, @"tempMessageGroup must not be NIL");
+    NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
     
-    // get all threads
-    NSArray* tempAllThreads = [tempMessageGroup threadsByDate];
+    STAssertNotNil(transferData, @"nee");
     
-    // work with first thread of MessageGroup
-    STAssertTrue([tempAllThreads count] > 0, @"At least one thread must be given in MessageGroup to run fulltext search tests '%@'", [tempMessageGroup name]);
-    G3Thread* tempThread = (G3Thread*)[tempAllThreads objectAtIndex:0];
+    tempMessage = [G3Message messageWithTransferData:transferData];
+    [tempMessage setValue:messageId forKey:@"messageId"];  
     
-    // get first message of a thread
-    STAssertTrue([[tempThread messagesByDate] count] > 0, @"At least one message must be given to run fulltext search tests");
-    tempMessage = (G3Message*)[[tempThread messagesByDate] objectAtIndex:0];
+    STAssertNotNil(tempMessage, @"nee %@", messageId);
+    STAssertTrue([[tempMessage messageId] isEqual:messageId], @"nee");
 }
 
 - (void)tearDown
