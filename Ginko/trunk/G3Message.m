@@ -56,7 +56,7 @@
         [result setValue: tData forKey: @"transferData"];
         [result setValue: [msg messageId] forKey: @"messageId"];  
         [result setValue: [msg normalizedSubject] forKey: @"subject"];
-        [result setValue: fromHeader forKey: @"author"];
+        [result setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"author"];
         [result setValue: [msg date] forKey: @"date"];
         
         // Note that this method operates on the encoded header field. It's OK because email
@@ -331,7 +331,7 @@
         if ([name = [result realnameFromEMailString] length]) {
             result = name;
         }
-        [self setValue: result forKey: @"senderRealname"];
+        [self setValue: result forKey: @"authorRealname"];
     }
 	 */
     return result;

@@ -1110,11 +1110,15 @@ static NSAttributedString* spacer2()
     {
         if ([[tableColumn identifier] isEqualToString:@"date"])
         {
-            BOOL isRead;
+            BOOL isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item isSeen];
             
-            isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item isSeen];
+            NSCalendarDate* date = [item valueForKey:@"date"];
             
-            return [[[NSAttributedString alloc] initWithString: [[item valueForKey:@"date"] description] attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):unreadAttributes()] autorelease];
+            NSString* dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone:[date timeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+                
+                
+            
+            return [[[NSAttributedString alloc] initWithString: dateString attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):unreadAttributes()] autorelease];
         }
         
         if ([[tableColumn identifier] isEqualToString: @"subject"])
@@ -1130,31 +1134,30 @@ static NSAttributedString* spacer2()
                 G3Thread *thread = (G3Thread *)item;
                 
                 if ([thread containsSingleMessage]) {
-                    G3Message *message;
                     NSString *from;
                     NSAttributedString* aFrom;
                     
-                    message = [[thread valueForKey: @"messages"] anyObject];
-					
-					if (message) {
-						BOOL isRead  = [message isSeen];
-						
-						NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: [message valueForKey: @"subject"] attributes: isRead ? (inSelectionAndAppActive ? selectedReadAttributes(): readAttributes()): unreadAttributes()];
-						
-						[result appendAttributedString: aSubject];
-						
-						from = [message senderName];
-						from = from ? from : @"- sender missing -";
-						
-						from = [NSString stringWithFormat:@" (%@)", from];
-						
-						aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):(inSelectionAndAppActive ? selectedUnreadFromAttributes():unreadFromAttributes())];
-						
-						[result appendAttributedString:aFrom];
-						
-						[aSubject release];
-						[aFrom release];
-					}
+                    G3Message *message = [[thread valueForKey: @"messages"] anyObject];
+                    
+                    if (message) {
+                        BOOL isRead  = [message isSeen];
+                        
+                        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: [message valueForKey: @"subject"] attributes: isRead ? (inSelectionAndAppActive ? selectedReadAttributes(): readAttributes()): unreadAttributes()];
+                        
+                        [result appendAttributedString: aSubject];
+                        
+                        from = [message senderName];
+                        from = from ? from : @"- sender missing -";
+                        
+                        from = [NSString stringWithFormat:@" (%@)", from];
+                        
+                        aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):(inSelectionAndAppActive ? selectedUnreadFromAttributes():unreadFromAttributes())];
+                        
+                        [result appendAttributedString:aFrom];
+                        
+                        [aSubject release];
+                        [aFrom release];
+                    }
                 }
                 else // contains more than one message
                 {

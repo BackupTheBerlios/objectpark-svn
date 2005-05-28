@@ -99,7 +99,7 @@
 - (BOOL)addDocumentWithName:(NSString *)aName andText:(NSString *)aText andProperties:(NSDictionary *) aPropertiesDictionary
 {
     BOOL isIndexed = YES;
-	NSLog(@"-[GIIndex(%@) addDocumentWithName:%@",[self name], aName);
+    NSLog(@"-[GIIndex(%@) addDocumentWithName:%@",[self name], aName);
     SKDocumentRef tempDocument = [self createDocumentWithName:aName];
     // add document to index
     isIndexed = SKIndexAddDocumentWithText([self index], tempDocument, (CFStringRef)aText, YES);
@@ -114,10 +114,12 @@
 - (BOOL)removeDocumentWithName:(NSString *)aName
 {
     BOOL isRemoveSuccessfull = NO;
+    if ([self index]) {
 	NSLog(@"-[GIIndex(%@) removeDocumentWithName:]", [self name]);
-    isRemoveSuccessfull = SKIndexRemoveDocument([self index], [self createDocumentWithName:aName]);
-    if (isRemoveSuccessfull) {
-        [self flushIndex];
+        isRemoveSuccessfull = SKIndexRemoveDocument([self index], [self createDocumentWithName:aName]);
+        if (isRemoveSuccessfull) {
+            [self flushIndex];
+        }
     }
     return isRemoveSuccessfull;
 }
@@ -139,7 +141,7 @@
 
 - (NSArray *)hitsForQueryString:(NSString *)aQuery
 {
- 	NSLog(@"-[GIIndex(%@) hitsForQueryString:%@]",[self name], aQuery);
+    NSLog(@"-[GIIndex(%@) hitsForQueryString:%@]",[self name], aQuery);
     NSMutableArray* resultArray = [NSMutableArray arrayWithCapacity:10];
     
     // build Search objects
@@ -176,7 +178,7 @@
     
     // release
     // CFRelease(searchRef); // crashes, don't know why
-    
+    NSLog(@"Returning $d hits for query.", [resultArray count]);
     return [[resultArray copy] autorelease];
 }
 
