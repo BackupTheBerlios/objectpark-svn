@@ -22,6 +22,7 @@
 #import "NSData+Extensions.h"
 #import "utilities.h"
 #import "NSCharacterSet+MIME.h"
+#import "NSString+MessageUtils.h"
 #import "NSData+MIME.h"
 
 @interface NSData(EDMIMEExtensionsPrivateAPI)
@@ -342,12 +343,10 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     return decodedData;
 }
 
-
 - (NSData *)encodeHeaderQuotedPrintable
 {
     return [self encodeHeaderQuotedPrintableMustEscapeCharactersInString:nil];
 }
-
 
 - (NSData *)encodeHeaderQuotedPrintableMustEscapeCharactersInString:(NSString *)escChars
 {
@@ -357,53 +356,142 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     unsigned int		  length;
     const unsigned char		   	  *source, *chunkStart, *endOfSource;
     char				  escValue[3] = "=00", underscore = '_';
-
+    
     if(escChars != nil)
-        {
+    {
         tempCharacterSet = [[NSCharacterSet MIMEHeaderDefaultLiteralCharacterSet] mutableCopy];
         [tempCharacterSet removeCharactersInString:escChars];
         literalChars = [[tempCharacterSet copy] autorelease];
         [tempCharacterSet release];
-        }
+    }
     else
-        {
+    {
         literalChars = [NSCharacterSet MIMEHeaderDefaultLiteralCharacterSet];
-        }
-
+    }
+    
     length = [self length];
     buffer = [[[NSMutableData alloc] initWithCapacity:length + length / 10] autorelease];
-
+    
     chunkStart = source = [self bytes];
     endOfSource = source + length;
     while(source < endOfSource)
-        {
+    {
         if([literalChars characterIsMember:(unichar)(*source)] == NO)
-            {
+        {
             if((length = (source - chunkStart)) > 0)
                 [buffer appendBytes:chunkStart length:length];
             if(*source == SPACE)
-                {
+            {
                 [buffer appendBytes:&underscore length:1];
-                }
+            }
             else
-                {
+            {
                 encode2bytehex(*source, &escValue[1]);
                 [buffer appendBytes:escValue length:3];
-                }
-            chunkStart = source + 1;
             }
-        source += 1;
+            chunkStart = source + 1;
         }
+        source += 1;
+    }
     [buffer appendBytes:chunkStart length:(source - chunkStart)];
-
+    
     return buffer;
 }
 
+void doFrom_Quoting(NSMutableString* aString) 
+/*" From_ quoting for generating mbox data. "*/
+{
+    NSRange range;
+    unsigned length = [aString length];
+    
+    range.location = 0;
+    range.length = length;
+    
+    do
+    {
+        range = [aString rangeOfString:@"From " options:NSLiteralSearch range:range];
+        if(range.location != NSNotFound)
+        {
+            unsigned int position;
+            
+            position = range.location - 1;
+            
+            while(position >= 0)
+            {
+                unichar character;
+                
+                character = [aString characterAtIndex:position];
+                if(character == '\n') {
+                    // insert quote >
+                    [aString insertString:@">" atIndex:position+1];
+                    length++;
+                    break;
+                }
+                else if(character != '>')
+                {
+                    break;
+                }
+                position--;
+            }
+            
+            range.location += 5; // + From_
+            range.length = length - range.location;
+        }
+    }
+    while((range.location != NSNotFound) && (range.location < length));
+    
+    return;
+}
 
-//---------------------------------------------------------------------------------------
-    @end
-//---------------------------------------------------------------------------------------
+- (NSData *)mboxDataFromTransferDataWithEnvSender:(NSString *)envsender
+{
+    NSMutableData *mboxData;
+    NSMutableString *fromQuoteBuffer;
+    NSString *from_, *myDate, *fromQuoted;
+    NSAutoreleasePool *pool;
+    time_t myTime;
+    struct tm *ptm;
+    char *timestr;
+    
+    myTime = time(NULL);
+    ptm = gmtime (&myTime);
+    timestr = asctime(ptm);
+    
+    pool = [[NSAutoreleasePool alloc] init];
+    
+    myDate = [NSString stringWithCString:timestr length:24];
+    
+    if(!envsender) {
+        envsender = @"MAILER-DAEMON";
+    }
+    
+    from_ = [NSString stringWithFormat:@"From %@ %@\n", envsender, myDate];
+    fromQuoteBuffer = [NSMutableString stringWithCString:[self bytes] length:[self length]];
+    
+    doFrom_Quoting(fromQuoteBuffer);
 
+    if (![fromQuoteBuffer hasSuffix:@"\n"])
+    {
+        [fromQuoteBuffer appendString:@"\n"];
+    }
+    
+//    [fromQuoteBuffer appendString: [fromQuoteBuffer hasSuffix:@"\n"] ? @"\n" : @"\n\n"];
+    
+    fromQuoted = [fromQuoteBuffer stringWithUnixLinebreaks];
+    
+    mboxData = [NSMutableData dataWithCapacity:[from_ length] + [fromQuoted length]];
+    
+    [mboxData appendBytes:[from_ lossyCString] length:[from_ length]];
+    [mboxData appendBytes:[fromQuoted lossyCString] length:[fromQuoted length]];
+    
+    [mboxData retain]; // keep it longer than the pool
+    [pool release];
+    [mboxData autorelease];
+    
+    return mboxData;
+}
+
+@end
 
 #if 0
 static void appendchars(NSMutableString *buffer, const char *p, unsigned int l)

@@ -45,9 +45,11 @@
 + (BOOL)suggestTerminatingJob:(unsigned)anJobId;
 
 /*" Methods for use within jobs "*/
-+ (unsigned)jobId;
++ (NSNumber *)jobId;
 + (void)setResult:(id)aResult;
 + (BOOL)shouldTerminate;
++ (NSString *)jobName;
++ (void)postNotificationInMainThreadWithName:(NSString *)aNotificationName andUserInfo:(NSMutableDictionary *)userInfo;
 
 @end
 

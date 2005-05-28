@@ -230,6 +230,33 @@ NSString *OPMBoxException = @"OPMBoxException";
     return result;
 }
 
+- (void) appendMBoxData: (NSData*) mboxData
+{
+    [_lock lock];
+    
+    @try 
+    {
+        FILE* file = [self mboxFile];
+        
+        NSAssert(mboxData, @"Error: Objects not in place.");
+        
+        if (fwrite([mboxData bytes], 1, [mboxData length], file) < [mboxData length])
+        {
+            [NSException raise:NSObjectInaccessibleException format:@"Exception raised in -takeMessage: ! Could not write message to mbox file."];
+        }
+        
+        fflush(file);
+        
+    } @catch(NSException *localException) {
+        NSLog(@"Exception raised in -appendMBoxData. %@", [localException reason]);
+        [localException raise];
+    
+    } @finally {
+        [_lock unlock];
+        
+    }
+}
+
 - (void) dealloc
 {
     [_path release];

@@ -691,6 +691,34 @@
 			isa = PBXBuildStyle;
 			name = "Development (linked)";
 		};
+		775025F208489585008DD1CD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = "TestNSData+MessageUtils.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		775025F308489586008DD1CD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = "TestNSData+MessageUtils.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		775025F408489586008DD1CD = {
+			fileRef = 775025F208489585008DD1CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		775025F508489586008DD1CD = {
+			fileRef = 775025F308489586008DD1CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		775A96DE0839D5C2008EC276 = {
 			children = (
 				775A96E10839D5EB008EC276,
@@ -948,6 +976,8 @@
 				77AD5857080C450F00EBE93C,
 				77477313080D72DD00A6A49C,
 				77477314080D72DD00A6A49C,
+				775025F208489585008DD1CD,
+				775025F308489586008DD1CD,
 			);
 			isa = PBXGroup;
 			name = Tests;
@@ -1947,6 +1977,7 @@
 				77DFA5C90840B49C0068AD15,
 				77136F3208438E2A002F9298,
 				617C2A77084632F700803758,
+				775025F408489586008DD1CD,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2096,6 +2127,7 @@
 				77DFA5CA0840B49C0068AD15,
 				77136F3308438E2A002F9298,
 				617C2A78084632F700803758,
+				775025F508489586008DD1CD,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

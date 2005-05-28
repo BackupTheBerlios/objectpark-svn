@@ -26,17 +26,17 @@
 
 - (BOOL)isValidTransferEncoding:(NSString *)encodingName;
 
-- (NSData*) decodeContentWithTransferEncoding:(NSString *)encodingName;
-- (NSData*) encodeContentWithTransferEncoding:(NSString *)encodingName;
+- (NSData *)decodeContentWithTransferEncoding:(NSString *)encodingName;
+- (NSData *)encodeContentWithTransferEncoding:(NSString *)encodingName;
 
-- (NSData*) decodeQuotedPrintable;
-- (NSData*) encodeQuotedPrintable;
+- (NSData *)decodeQuotedPrintable;
+- (NSData *)encodeQuotedPrintable;
 
-- (NSData*) decodeHeaderQuotedPrintable;
-- (NSData*) encodeHeaderQuotedPrintable;
-- (NSData*) encodeHeaderQuotedPrintableMustEscapeCharactersInString:(NSString *)escChars;
+- (NSData *)decodeHeaderQuotedPrintable;
+- (NSData *)encodeHeaderQuotedPrintable;
+- (NSData *)encodeHeaderQuotedPrintableMustEscapeCharactersInString:(NSString *)escChars;
 
-// base64 encoding is handled in a category in EDCommon
+- (NSData *)mboxDataFromTransferDataWithEnvSender:(NSString *)envsender;
 
 @end
 

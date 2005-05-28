@@ -152,5 +152,19 @@
 	
 }
 
++ (OPMBoxFile *)MBoxLogFile
+{
+    static OPMBoxFile *mboxFile = nil;
+    
+#warning path is only for testing
+    if (!mboxFile) mboxFile = [OPMBoxFile mboxWithPath:@"/tmp/mboxlogfile.txt" createIfNotPresent:YES];
+    
+    return mboxFile;
+}
+
++ (void)appendMessage:(G3Message *)aMessage toMBoxFile:(OPMBoxFile *)anMBoxFile
+{
+    
+}
 
 @end

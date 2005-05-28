@@ -331,7 +331,7 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
     {
         if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
         {
-            [[runningJobs objectAtIndex:i] setObject:aResult forKey:OPJobResult];
+            [[runningJobs objectAtIndex:i] setObject:[[aResult copy] autorelease] forKey:OPJobResult];
             break;
         }
     }
@@ -363,21 +363,20 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
     return result;
 }
 
-+ (unsigned)jobId
-/*" Returns the job's id. "*/
+id objectForKeyForRunningJob(NSString *key)
 {
+    id result = nil;
     int i, count;
-    NSThread *jobThread = [NSThread currentThread];
-    unsigned result = 0;
+    NSThread *thread = [NSThread currentThread];
     
     [jobsLock lock];
     
     count = [runningJobs count];
     for (i = count - 1; i >= 0; i--)
     {
-        if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
+        if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == thread)
         {
-            result = [[[runningJobs objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue];
+            result = [[runningJobs objectAtIndex:i] objectForKey:key];
             break;
         }
     }
@@ -385,6 +384,40 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
     [jobsLock unlockWithCondition:[jobsLock condition]];
     
     return result;
+}
+
++ (NSNumber *)jobId
+/*" Returns the job's id. "*/
+{
+    return objectForKeyForRunningJob(OPJobId);
+}
+
++ (NSString *)jobName
+/*" Returns the job's name. "*/
+{
+    return objectForKeyForRunningJob(OPJobName);
+}
+
++ (void)postNotification:(NSNotification *)aNotification;
+/*" Called in main thread to post aNotification. "*/
+{
+    [[NSNotificationCenter defaultCenter] postNotification:aNotification];    
+}
+
++ (void)postNotificationInMainThreadWithName:(NSString *)aNotificationName andUserInfo:(NSMutableDictionary *)userInfo
+/*" Helper for jobs. Posts a notification where object is the job's name. The job's id is added to the userInfo dictionary with key @"jobId". "*/
+{
+    NSNotification *notification;
+    NSString *nameObject;
+    
+    nameObject = [self jobName];
+    aNotificationName = [[aNotificationName copy] autorelease];
+    [userInfo setObject:[self jobId] forKey:@"jobId"];
+    userInfo = [[userInfo copy] autorelease];
+    
+    notification = [NSNotification notificationWithName:aNotificationName object:nameObject userInfo:userInfo];
+    
+    [self performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
 }
 
 + (int)idleThreadCount

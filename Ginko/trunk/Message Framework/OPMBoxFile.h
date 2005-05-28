@@ -34,7 +34,7 @@
 - (FILE*) mboxFile;
 - (NSString*) path;
 - (void) setPath: (NSString*) aPath;
-- (BOOL) isReadOnly;;
+- (BOOL) isReadOnly;
 - (unsigned int) mboxFileSize;
 
 - (NSEnumerator*) messageDataEnumerator;
