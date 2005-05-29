@@ -27,7 +27,9 @@
     
     tempDefaultGroup = [G3MessageGroup defaultMessageGroup];
     
-    STAssertTrue([[tempDefaultGroup name] isEqual:@"Default Inbox"], @"Name of default group is not 'Default Inbox' but '%@'", [tempDefaultGroup name]);
+    STAssertTrue(tempDefaultGroup != nil, @"should not be nil");
+    
+    STAssertEqualObjects([tempDefaultGroup name], @"Default Inbox", @"Name of default group is not 'Default Inbox' but '%@'", [tempDefaultGroup name]);
 }
 
 @end

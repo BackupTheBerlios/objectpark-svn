@@ -37,9 +37,9 @@
 - (NSData *)encodeHeaderQuotedPrintableMustEscapeCharactersInString:(NSString *)escChars;
 
 - (NSData *)mboxDataFromTransferDataWithEnvSender:(NSString *)envsender;
+- (NSData *)transferDataFromMboxData;
 
 @end
-
 
 extern NSString *MIME7BitContentTransferEncoding;
 extern NSString *MIME8BitContentTransferEncoding;

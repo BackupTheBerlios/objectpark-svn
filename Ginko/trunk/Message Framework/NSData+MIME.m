@@ -443,6 +443,114 @@ void doFrom_Quoting(NSMutableString* aString)
     return;
 }
 
+- (NSData *)transferDataFromMboxData
+{
+    char *start, *end, *pos, *lfPos;
+    char *buffer, *copyPos;
+    BOOL headerSeen = NO;
+    
+    unsigned length = [self length];
+    start = pos = (char *)[self bytes];
+    
+    // strip trailing blank line
+    if (length >= 2)
+    {
+        if (start[length-1] == '\n')
+        {
+            --length;
+            if (start[length-1] == '\r') --length;
+        }
+    }
+    
+    end = start + length;
+    
+    // alloc buffer
+    if (! (copyPos = buffer = malloc((end - pos) * 2 + 4)))  // times 2 to ensures the buffer will be large enough (this will be enough even if the mail contains only 'lf's)
+        return nil;
+    
+    // remove From_ line (if it exists)
+    if ((length >= 5) && (!strncmp(pos, "From ", 5)))
+    {
+        pos += 5;
+        while (lfPos = memchr(pos, '\n', end - pos))
+        {
+            pos = lfPos + 1;
+            
+            if (pos >= end)
+                break;
+            if (!isblank(*pos))
+                break;
+        }
+    }
+    else *copyPos++ = *pos++;  // copy the first char, even if it's an 'lf' :-/ (this simplifies the code by allowing 'look back by one')
+    
+    // first line is not >From unquoted (should be OK since >From should only occur in the message body)
+    while ((pos < end) && (lfPos = memchr(pos, '\n', end - pos)))
+    {
+        // copy line and convert 'lf' to 'crlf' if necessary
+        if (lfPos[-1] == '\r')   // 'look back by one'
+        {
+            int lineLength = lfPos+1 - pos;
+            memcpy(copyPos, pos, lineLength);
+            copyPos += lineLength;
+            headerSeen |= (lineLength == 2);
+        }
+        else
+        {
+            int lineLength = lfPos - pos;
+            memcpy(copyPos, pos, lineLength);
+            copyPos += lineLength;
+            *copyPos++ = '\r';
+            *copyPos++ = '\n';
+            headerSeen |= (lineLength == 0);
+        }
+        pos = lfPos+1;
+        
+        
+        if (pos >= end)
+            break;  // end of data reached
+        
+        
+        // search for >From and unquote
+        if (*pos == '>')
+        {
+            char* tempPos = pos;
+            while (++tempPos <= (end - 5))
+            {
+                if (*tempPos == '>')
+                    continue;
+                
+                if (!strncmp(tempPos, "From ", 5))
+                    pos++;  // remove the first '>'
+                
+                break;
+            }
+        }
+    }
+    
+    // copy the remaining part
+    if (pos < end)
+    {
+        memcpy(copyPos, pos, end - pos);
+        copyPos += end - pos;
+    }
+    
+    // check if header ending \r\n\r\n is present -> fixing if needed to avoid crash of EDMessagePart
+    if (!headerSeen)
+    {
+        *copyPos++ = '\r';
+        *copyPos++ = '\n';
+        *copyPos++ = '\r';
+        *copyPos++ = '\n';
+    }
+    
+    NSData *result =  [[[NSData alloc] initWithBytes:buffer length:copyPos - buffer] autorelease];
+    
+    free(buffer);
+    
+    return result;
+}
+
 - (NSData *)mboxDataFromTransferDataWithEnvSender:(NSString *)envsender
 {
     NSMutableData *mboxData;
@@ -470,12 +578,15 @@ void doFrom_Quoting(NSMutableString* aString)
     
     doFrom_Quoting(fromQuoteBuffer);
 
+    /*
     if (![fromQuoteBuffer hasSuffix:@"\n"])
     {
         [fromQuoteBuffer appendString:@"\n"];
     }
+    */
     
-//    [fromQuoteBuffer appendString: [fromQuoteBuffer hasSuffix:@"\n"] ? @"\n" : @"\n\n"];
+    // ensure trailing blank line (e.g. procmail style):
+    [fromQuoteBuffer appendString: [fromQuoteBuffer hasSuffix:@"\n"] ? @"\n" : @"\n\n"];
     
     fromQuoted = [fromQuoteBuffer stringWithUnixLinebreaks];
     

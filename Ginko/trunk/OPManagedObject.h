@@ -10,39 +10,8 @@
 
 @class NSManagedObjectContext;
 
-#ifndef TIGER
-
-@interface NSManagedObject : NSObject {
-    NSMutableDictionary* ivs;
-}
-
-
-- (void) willAccessValueForKey: (NSString*) key;
-- (void) willChangeValueForKey: (NSString*) key;
-- (void) didAccessValueForKey: (NSString*) key;
-- (void) didChangeValueForKey: (NSString*) key;
-
-- (id) initWithDictionary: (NSMutableDictionary*) dict;
-
-- (id) primitiveValueForKey: (NSString*) key;
-
-- (void) setPrimitiveValue: (id) value forKey: (NSString*) key;
-
-@end
-#endif
-
 @interface OPManagedObject : NSManagedObject {
 }
-
-#ifndef TIGER
-
-+ (NSMutableDictionary*) objectsByClass;
-
-+ (id) instanceForId: (id) someId;
-
-+ (NSMutableArray*) makeInstancesInArray: (NSMutableArray*) ids;
-
-#endif
 
 @end
 

@@ -14,6 +14,7 @@
 #import "NSManagedObjectContext+Extensions.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIFulltextIndexCenter.h"
+#import "NSData+MIME.h"
 
 @implementation GIMessageBase
 
@@ -89,67 +90,67 @@
     return [NSSet setWithObjects:[G3MessageGroup defaultMessageGroup], nil];
 }
 
-+ (void) importFromMBoxFile: (OPMBoxFile*) box
++ (void)importFromMBoxFile:(OPMBoxFile *)box
 {
-	NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];
-	
-	NSLog(@"Got context %@.", context);
-	
-	//id model = [context mana];
-	
-	//NSLog(@"Got model %@.", model);
-	
-	NSEnumerator* e = [box messageDataEnumerator];
-	NSData* mboxData;
-	NSError* error = nil;
-	
-	NSLog(@"retainsRegisteredObjects == %d", [context retainsRegisteredObjects]);
-	
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	
-	int maxImport = 10000;
-	int i = 0;
-	int imported = 0;
-	int lastImported = 0;
-	while (mboxData = [e nextObject]) {
-		//NSLog(@"Found mbox data of length %d", [mboxData length]);
-		//OPInternetMessage* importedMessage = [[[OPInternetMessage alloc] initWithTransferData: mboxData] autorelease];
-		G3Message* persistentMessage = [self insertMessageWithTransferData: mboxData];
-		
-		//NSLog(@"Found %d. message with MsgId '%@'", i+1, [persistentMessage messageId]);
-		
-		if (persistentMessage) {
-			imported++;
-			//NSLog(@"Thread: %@", [persistentMessage threadCreate: YES]);
-		}
-		
-		if (i++>=maxImport) break;
-		
-		if (i % 100==0) {
-			NSLog(@"*** Read %d messages (imported %d)...", i, imported);
-		}
-		if (imported%100==0 && imported>lastImported) {
-			NSLog(@"*** Committing changes (imported %d)...", imported);
-			[context save: &error];
-			if (error) {
-				NSLog(@"Warning: Commit error: %@", error);
-			}
-			lastImported = imported;
-		}
-		
-		[pool drain]; // should be last statement in while loop
-	}
-	[pool release];	
-	
-	
-	NSLog(@"Processed %d messages. %d imported.", i, imported);
-	
-	[context save: &error];
-	
-	if (error) {
-		NSLog(@"Warning: Commit error: %@", error);
-	}
-	
+    NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
+            
+    NSEnumerator *enumerator = [box messageDataEnumerator];
+    NSData *mboxData;
+    NSError *error = nil;
+        
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    int maxImport = 10000;
+    int i = 0;
+    int imported = 0;
+    int lastImported = 0;
+    
+    while (mboxData = [enumerator nextObject]) 
+    {
+        //NSLog(@"Found mbox data of length %d", [mboxData length]);
+        G3Message *persistentMessage = [self insertMessageWithTransferData:[mboxData transferDataFromMboxData]];
+        
+        //NSLog(@"Found %d. message with MsgId '%@'", i+1, [persistentMessage messageId]);
+        
+        if (persistentMessage) 
+        {
+            imported++;
+            //NSLog(@"Thread: %@", [persistentMessage threadCreate: YES]);
+        }
+        
+        if (i++ >= maxImport) break;
+        
+        if ((i % 100) == 0) 
+        {
+            NSLog(@"*** Read %d messages (imported %d)...", i, imported);
+        }
+        
+        if (((imported % 100) == 0) && (imported > lastImported)) 
+        {
+            NSLog(@"*** Committing changes (imported %d)...", imported);
+            
+            [context save:&error];
+            if (error) 
+            {
+                NSLog(@"Warning: Commit error: %@", error);
+            }
+            
+            lastImported = imported;
+        }
+        
+        [pool drain]; // should be last statement in while loop
+    }
+    
+    [pool release];	
+    
+    NSLog(@"Processed %d messages. %d imported.", i, imported);
+    
+    [context save:&error];
+    
+    if (error) 
+    {
+        NSLog(@"Warning: Commit error: %@", error);
+    }
 }
 
 + (OPMBoxFile *)MBoxLogFile

@@ -491,6 +491,8 @@ static NSMutableArray *root = nil;
 + (G3MessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
 /*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
 {
+    NSParameterAssert(defaultName != nil);
+    
     NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
     G3MessageGroup *result = nil;
         
@@ -504,9 +506,13 @@ static NSMutableArray *root = nil;
         // not found creating new:
         result = [G3MessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:0];
                 
+        NSAssert1([result name] != nil, @"group should have name: %@", defaultName);
+        
         [[NSUserDefaults standardUserDefaults] setObject:[result URIReferenceString] forKey:defaultsKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    
+    NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);
     
     return result;
 }

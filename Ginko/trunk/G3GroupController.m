@@ -37,7 +37,7 @@
 
 - (id)init
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
     return [[super init] retain]; // self retaining!
 }
 
@@ -307,15 +307,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([object isEqual:[self group]]) 
-	{
-		NSNotification *notification;
-		
-		notification = [NSNotification notificationWithName:@"GroupContentChangedNotification" object:self];
-		
-		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+    {
+        NSNotification *notification;
+        
+        notification = [NSNotification notificationWithName:@"GroupContentChangedNotification" object:self];
+        
+        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
     }
     // the same change
-//    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    //    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (NSArray *)threadsByDate
@@ -936,7 +936,7 @@ static unsigned threadCountJobId = 0;
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
-    if (outlineView == threadsView)// subjects list
+    if (outlineView == threadsView) // subjects list
     {
         if (! item) 
         {

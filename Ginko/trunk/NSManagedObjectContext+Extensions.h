@@ -8,16 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-#ifndef TIGER
-
-@interface NSManagedObjectContext : NSObject {
-    
-}
-
-@end
-
-#endif
-
 @interface NSManagedObjectContext (OPExtensions)
 
 + (NSManagedObjectContext*) defaultContext;
@@ -26,13 +16,8 @@
 
 @end
 
-
-#ifdef TIGER
-
 @interface NSManagedObjectModel (OPExtensions)
 
 - (NSEntityDescription*) entityForClassName: (NSString*) className;
 
 @end
-
-#endif

@@ -24,23 +24,24 @@ static id context = nil;
     context = [aContext retain];
 }
 
-- (id) objectWithURI: (NSURL*) uri
+- (id)objectWithURI:(NSURL *)uri
 {
-	if (uri) {
-		NSManagedObjectID* moid = [[self persistentStoreCoordinator] managedObjectIDForURIRepresentation: uri];
-		if (moid)
-			return [self objectWithID: moid];
-	}
-	return nil;
+    if (uri) 
+    {
+        NSManagedObjectID *moid = [[self persistentStoreCoordinator] managedObjectIDForURIRepresentation: uri];
+        
+        if (moid && !([moid isTemporaryID])) // no temporary ids allowed
+        {
+            return [self objectWithID: moid];
+        }
+    }
+    
+    return nil;
 }
-
 
 @end
 
-#ifdef TIGER
-
 @implementation NSManagedObjectModel (OPExtensions)
-
 
 - (NSEntityDescription*) entityForClassName: (NSString*) className
 {
@@ -76,5 +77,3 @@ static id context = nil;
 }
 
 @end
-
-#endif

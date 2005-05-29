@@ -63,34 +63,28 @@
     return [self initWithTransferData:data fallbackHeaderFields:fields];
 }
 
-
 - (id)initWithTransferData:(NSData *)data fallbackHeaderFields:(NSDictionary *)fields
 {
-
-                [super init];
-
-        if(fields != nil)
-            {
-                fallbackFields = [[NSMutableDictionary allocWithZone:[self zone]] initWithDictionary:[[self class] _defaultFallbackHeaders]];
-                [(NSMutableDictionary *)fallbackFields addEntriesFromDictionary:fields];
-            }
-        else
-        {
-            fallbackFields = [[[self class] _defaultFallbackHeaders] retain];
-        }
-
-
-            if((data == nil) || ([data length] == 0))
-                return self;
-
-        bodyRange = [self _takeHeadersFromData:data];
-        originalTransferData = [data retain];
-
+    [super init];
+    
+    if(fields != nil)
+    {
+        fallbackFields = [[NSMutableDictionary allocWithZone:[self zone]] initWithDictionary:[[self class] _defaultFallbackHeaders]];
+        [(NSMutableDictionary *)fallbackFields addEntriesFromDictionary:fields];
+    }
+    else
+    {
+        fallbackFields = [[[self class] _defaultFallbackHeaders] retain];
+    }
+    
+    if((data == nil) || ([data length] == 0))
+        return self;
+    
+    bodyRange = [self _takeHeadersFromData:data];
+    originalTransferData = [data retain];
+    
     return self;
 }
-
-
-
 
 - (id)init
 {

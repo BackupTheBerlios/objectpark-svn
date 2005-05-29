@@ -272,35 +272,34 @@ NSString *OPMBoxException = @"OPMBoxException";
 
 @implementation OPMessageDataEnumerator
 
-+ (id) enumeratorWithMBox: (OPMBoxFile*) theMbox
++ (id)enumeratorWithMBox:(OPMBoxFile *)theMbox
 {
-    return [[[self alloc] initWithMBox: theMbox] autorelease];
+    return [[[self alloc] initWithMBox:theMbox] autorelease];
 }
 
-- (id) initWithMBox: (OPMBoxFile*) theMbox
+- (id)initWithMBox:(OPMBoxFile *)theMbox
 {
-	if (self = [super init]) {
-		mbox = [theMbox retain];
-		offset = 0;
-		length = (unsigned) [theMbox mboxFileSize];
-	}
-	return self;
+    if (self = [super init]) 
+    {
+        mbox = [theMbox retain];
+        offset = 0;
+        length = (unsigned) [theMbox mboxFileSize];
+    }
+    return self;
 }
 
-- (unsigned) offsetOfNextObject 
+- (unsigned)offsetOfNextObject 
 {
     return offset;
 }
 
-- (id) nextObject
+- (id)nextObject
 {
-	
-    if (offset >= length) return nil;
-	
     unsigned endOffset;
     NSData *mboxData;
     NSRange range;
-	
+    
+    if (offset >= length) return nil;
 	
     mboxData = [mbox mboxSubdataFromOffset:offset endOffset:&endOffset];
 	
@@ -312,7 +311,6 @@ NSString *OPMBoxException = @"OPMBoxException";
     }
 	
     range = NSMakeRange(offset, endOffset - offset + 1);
-	
 	
     offset = endOffset + 1;
 	
