@@ -14,7 +14,7 @@
 #import "NSManagedObjectContext+Extensions.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIFulltextIndexCenter.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 
 @implementation GIMessageBase
 

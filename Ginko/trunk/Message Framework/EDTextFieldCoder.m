@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NSString+MessageUtils.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 #import "NSData+Extensions.h"
 #import "EDTextFieldCoder.h"
 #import "MPWDebug.h"

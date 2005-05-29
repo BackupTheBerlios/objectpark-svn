@@ -18,7 +18,7 @@
 */
 
 #import "OPMultimediaContentCoder.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 #import "OPInternetMessage.h"
 #import "NSAttributedString+MessageUtils.h"
 #import "NSString+MessageUtils.h"

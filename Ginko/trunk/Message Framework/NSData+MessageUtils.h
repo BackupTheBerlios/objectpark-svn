@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------------------
-//  NSData+MIME.h created by erik on Sun 12-Jan-1997
-//  @(#)$Id: NSData+MIME.h,v 1.1 2004/12/23 16:45:16 theisen Exp $
+//  NSData+MessageUtils.h created by erik on Sun 12-Jan-1997
+//  @(#)$Id: NSData+MessageUtils.h,v 1.1 2004/12/23 16:45:16 theisen Exp $
 //
 //  Copyright (c) 1997-1999 by Erik Doernenburg. All rights reserved.
 //
@@ -21,7 +21,7 @@
 #import "OPInternetMessage.h"
 
 
-@interface NSData (EDMIMEExtensions)
+@interface NSData (MessageUtils)
 
 
 - (BOOL)isValidTransferEncoding:(NSString *)encodingName;

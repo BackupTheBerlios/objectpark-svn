@@ -25,7 +25,7 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
 #import <OPNetwork/NSHost+Extensions.h>
 #import "EDTextFieldCoder.h"
 #import "NSString+MessageUtils.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 #import "NSData+Extensions.h"
 
 NSString *OPSMTPException = @"OPSMTPException";

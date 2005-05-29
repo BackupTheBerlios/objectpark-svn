@@ -22,7 +22,7 @@
 #import <Foundation/Foundation.h>
 
 #import "NSString+MessageUtils.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 #import "OPInternetMessage.h"
 #import "EDEntityFieldCoder.h"
 #import "EDCompositeContentCoder.h"

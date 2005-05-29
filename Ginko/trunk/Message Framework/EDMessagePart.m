@@ -22,7 +22,7 @@
 #import <Foundation/NSDebug.h>
 #import "utilities.h"
 #import "NSString+MessageUtils.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 #import "EDTextFieldCoder.h"
 #import "EDEntityFieldCoder.h"
 #import "EDMessagePart.h"

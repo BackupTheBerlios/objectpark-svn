@@ -23,7 +23,7 @@
 #import "utilities.h"
 #import "NSCharacterSet+MIME.h"
 #import "NSString+MessageUtils.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 
 @interface NSData(EDMIMEExtensionsPrivateAPI)
 - (NSData *)_encodeQuotedPrintableStep1;
@@ -69,14 +69,10 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     return ((b >= 33) && (b <= 60)) || ((b >=62) && (b <= 126));
 }
 
-
-//---------------------------------------------------------------------------------------
-    @implementation NSData(EDMIMEExtensions)
-//---------------------------------------------------------------------------------------
-
-/* Returns YES if encoding name describes an encoding scheme that is known to the framework. NO otherwise. */
+@implementation NSData(MessageUtils)
 
 - (BOOL)isValidTransferEncoding:(NSString *)encodingName
+/*" Returns YES if encoding name describes an encoding scheme that is known to the framework. NO otherwise. "*/
 {
     encodingName = [encodingName lowercaseString];
     if([encodingName isEqualToString:MIME7BitContentTransferEncoding])
@@ -92,7 +88,6 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     
     return NO;
 }
-
 
 - (NSData *)decodeContentWithTransferEncoding:(NSString *)encodingName
 {
@@ -110,7 +105,6 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     // If we don't know it, fall back to 7-bit
     return self; 
 }
-
 
 - (NSData *)encodeContentWithTransferEncoding:(NSString *)encodingName
 {

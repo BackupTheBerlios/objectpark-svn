@@ -7,7 +7,7 @@
 //
 
 #import "TestNSData+MessageUtils.h"
-#import "NSData+MIME.h"
+#import "NSData+MessageUtils.h"
 #import <Foundation/Foundation.h>
 
 @implementation TestNSData_MessageUtils
