@@ -21,16 +21,16 @@ NSDictionary* indexDictionary;
 
 + (id)defaultIndexCenter
 {
-	static GIFulltextIndexCenter *defaultCenter = nil;
-	
+    static GIFulltextIndexCenter *defaultCenter = nil;
+    
     //NSLog(@"-[GIFulltextIndexCenter defaultIndexCenter]");
-
-	if (!defaultCenter)
-	{
-		defaultCenter = [[self alloc] init]; // no autorelease, why?
+    
+    if (!defaultCenter)
+    {
+        defaultCenter = [[self alloc] init]; // no autorelease, why?
     }
-
-	return defaultCenter;
+    
+    return defaultCenter;
 }
 
 - (id)init

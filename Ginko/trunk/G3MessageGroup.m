@@ -199,7 +199,19 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     return result;
 }
 
-- (NSArray *)threadIdsByDate
+static int collectThreadURIStringsCallback(void *result, int columns, char **values, char **colnames)
+{
+    //NSLog(@"%s", values[0]);
+    static NSString *prefix = nil;
+    
+    if (!prefix) prefix = [G3Thread URIStringPrefix];
+    
+    [(NSMutableArray *)result addObject:[prefix stringByAppendingString:[NSString stringWithUTF8String:values[0]]]];
+    
+    return 0;
+}
+
+- (NSArray *)threadReferenceURIsByDate
 {
     NSMutableArray *result = [NSMutableArray array];
     
@@ -214,21 +226,21 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
         char *error;
         NSLog(@"DB opened. Fetching thread objects...");
         
-        if (errorCode = sqlite3_exec(db, /* An open database */
+        if (errorCode = sqlite3_exec(db, // An open database
             "SELECT Z_PK FROM ZTHREAD ORDER BY ZDATE;", /* SQL to be executed */
-            NULL, /* Callback function */
-            NULL, /* 1st argument to callback function */
+            collectThreadURIStringsCallback, /* Callback function */
+            result, /* 1st argument to callback function */
             &error)) { 
             if (error) 
             {
                 NSLog(@"Error creating index: %s", error);
+                sqlite3_free(error);
             }
         }
-        
     }
-
+    
     sqlite3_close(db);
-
+    
     return result;
 }
 

@@ -14,6 +14,20 @@
 
 @implementation G3Thread
 
++ (NSString *)URIStringPrefix
+{
+    static NSString *prefix = nil;
+    
+    if (! prefix)
+    {
+        NSPersistentStoreCoordinator *sc = [[NSManagedObjectContext defaultContext] persistentStoreCoordinator];
+                
+        prefix = [[NSString stringWithFormat:@"x-coredata://%@/Thread/p", [[sc metadataForPersistentStore:[[sc persistentStores] objectAtIndex:0]] objectForKey:NSStoreUUIDKey]] retain];
+    }
+    
+    return prefix;
+}
+
 - (id) init
 /*" Adds the reciever to the default managed object context. "*/
 {

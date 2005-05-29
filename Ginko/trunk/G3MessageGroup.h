@@ -47,6 +47,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
 
 /*" Complex Accessors "*/
 - (NSArray *)threadsByDate;
+- (NSArray *)threadReferenceURIsByDate;
 
 - (unsigned)threadCount;
 

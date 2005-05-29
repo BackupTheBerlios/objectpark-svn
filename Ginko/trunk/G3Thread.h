@@ -17,6 +17,7 @@
 }
 
 + (G3Thread*) thread;
++ (NSString *)URIStringPrefix;
 
 - (BOOL) containsSingleMessage;
 - (NSSet*) messages;
