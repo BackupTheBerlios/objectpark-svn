@@ -1112,14 +1112,12 @@ static NSAttributedString* spacer2()
         {
             BOOL isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item isSeen];
             
-            NSCalendarDate* date = [item valueForKey:@"date"];
+            NSCalendarDate *date = [item valueForKey:@"date"];
             
-            NSAssert1([date isKindOfClass:[NSCalendarDate class]], @"NSCalendarDate expected but got %@", NSStringFromClass([date class]));
+//            NSAssert1([date isKindOfClass:[NSCalendarDate class]], @"NSCalendarDate expected but got %@", NSStringFromClass([date class]));
             
-            NSString* dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone:[date timeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-                
-                
-            
+            NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+                            
             return [[[NSAttributedString alloc] initWithString: dateString attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):unreadAttributes()] autorelease];
         }
         
