@@ -266,8 +266,8 @@
 
 - (IBAction) importTestMBox: (id) sender
 {
-    //NSString *boxFilename = [[NSBundle mainBundle] pathForResource: @"test-mbox" ofType: @""];
-    NSString *boxFilename = @"/Users/axel/Desktop/macosx-dev.mbox.txt";
+    NSString *boxFilename = [[NSBundle mainBundle] pathForResource: @"test-mbox" ofType: @""];
+    //NSString *boxFilename = @"/Users/axel/Desktop/macosx-dev.mbox.txt";
     
     OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
     
