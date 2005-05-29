@@ -42,6 +42,9 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 /*" Returns a string for referencing the receiver persistently. "*/ 
 {
     [NSApp saveAction:self];
+    
+    NSAssert(![[self objectID] isTemporaryID], @"URIReferenceString is temporary Id. Fatal error.");
+    
     return [[[self objectID] URIRepresentation] absoluteString];
 }
 
@@ -499,6 +502,7 @@ static NSMutableArray *root = nil;
     if (URLString)
     {
         result = [G3MessageGroup messageGroupWithURIReferenceString:URLString];
+        if (!result) NSLog(@"Couldn't find standard box '%@'", defaultName);
     }
     
     if (!result)
@@ -510,6 +514,8 @@ static NSMutableArray *root = nil;
         
         [[NSUserDefaults standardUserDefaults] setObject:[result URIReferenceString] forKey:defaultsKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result URIReferenceString]], @"Fatal error. User defaults are wrong.");
     }
     
     NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);

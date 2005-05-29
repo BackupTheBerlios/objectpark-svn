@@ -1114,6 +1114,8 @@ static NSAttributedString* spacer2()
             
             NSCalendarDate* date = [item valueForKey:@"date"];
             
+            NSAssert1([date isKindOfClass:[NSCalendarDate class]], @"NSCalendarDate expected but got %@", NSStringFromClass([date class]));
+            
             NSString* dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone:[date timeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
                 
                 
