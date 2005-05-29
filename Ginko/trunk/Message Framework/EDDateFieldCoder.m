@@ -119,7 +119,13 @@
     string = [string stringByRemovingSurroundingWhitespace];
     date = [[NSCalendarDate dateWithMessageTimeSpecification:string] retain];
     if(date == nil)
-        NSLog(@"Warning: Invalid date spec; found \"%@\"\n", string);
+    {
+        date = [[NSCalendarDate dateWithNaturalLanguageString:string] retain];
+        if (date == nil)
+        {
+            NSLog(@"Warning: Invalid date spec; found \"%@\"\n", string);
+        }
+    }
 }
 
 

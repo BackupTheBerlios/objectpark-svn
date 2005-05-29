@@ -190,7 +190,7 @@
             thread = [G3Thread thread];
             [thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
         } else {
-            NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
+            // NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
             // Set the thread's subject to be the first messages subject:
         }
         // We got one, so set it:

@@ -100,47 +100,58 @@
         
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    int maxImport = 10000;
+    int maxImport = 20000;
     int i = 0;
     int imported = 0;
     int lastImported = 0;
     
+    // avoid memory hogging:
+    [[context undoManager] disableUndoRegistration];
+    
     while (mboxData = [enumerator nextObject]) 
     {
         //NSLog(@"Found mbox data of length %d", [mboxData length]);
-        G3Message *persistentMessage = [self insertMessageWithTransferData:[mboxData transferDataFromMboxData]];
+        NSData *transferData = [mboxData transferDataFromMboxData];
         
-        //NSLog(@"Found %d. message with MsgId '%@'", i+1, [persistentMessage messageId]);
-        
-        if (persistentMessage) 
+        if (transferData)
         {
-            imported++;
-            //NSLog(@"Thread: %@", [persistentMessage threadCreate: YES]);
-        }
-        
-        if (i++ >= maxImport) break;
-        
-        if ((i % 100) == 0) 
-        {
-            NSLog(@"*** Read %d messages (imported %d)...", i, imported);
-        }
-        
-        if (((imported % 100) == 0) && (imported > lastImported)) 
-        {
-            NSLog(@"*** Committing changes (imported %d)...", imported);
+            G3Message *persistentMessage = [self insertMessageWithTransferData:transferData];
             
-            [context save:&error];
-            if (error) 
+            //NSLog(@"Found %d. message with MsgId '%@'", i+1, [persistentMessage messageId]);
+            
+            if (persistentMessage) 
             {
-                NSLog(@"Warning: Commit error: %@", error);
+                imported++;
+                //NSLog(@"Thread: %@", [persistentMessage threadCreate: YES]);
             }
             
-            lastImported = imported;
+            if (i++ >= maxImport) break;
+            
+            if ((i % 100) == 0) 
+            {
+                NSLog(@"*** Read %d messages (imported %d)...", i, imported);
+            }
+            
+            if (((imported % 100) == 0) && (imported > lastImported)) 
+            {
+                NSLog(@"*** Committing changes (imported %d)...", imported);
+                
+                [context save:&error];
+                if (error) 
+                {
+                    NSLog(@"Warning: Commit error: %@", error);
+                }
+                
+                [[context undoManager] removeAllActions];
+
+                lastImported = imported;
+            }
         }
-        
         [pool drain]; // should be last statement in while loop
     }
     
+    [[context undoManager] enableUndoRegistration];
+
     [pool release];	
     
     NSLog(@"Processed %d messages. %d imported.", i, imported);

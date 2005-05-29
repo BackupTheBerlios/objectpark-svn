@@ -444,6 +444,9 @@ void doFrom_Quoting(NSMutableString* aString)
     BOOL headerSeen = NO;
     
     unsigned length = [self length];
+    
+    if (length == 0) return nil;
+    
     start = pos = (char *)[self bytes];
     
     // strip trailing blank line

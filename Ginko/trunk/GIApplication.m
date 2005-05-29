@@ -129,6 +129,13 @@
 	sqlite3_close(db);
 }
 
+- (NSString *)databasePath
+{
+    static NSString *path = nil;
+    if (!path) path = [[self applicationSupportPath] stringByAppendingPathComponent:@"GinkoBase.sqlite"];
+    return path;
+}
+
 - (NSManagedObjectContext*) newManagedObjectContext
 /* Creates a new context according to the model. The result is not autoreleased! */
 {
@@ -141,15 +148,14 @@
 	[coordinator release];
     /* Change this path/code to point to your App's data store. */
     //NSString *applicationSupportDir = [@"~/Library/Application Support/Ginko3" stringByStandardizingPath];
-    //NSFileManager* fileManager = [NSFileManager defaultManager];
-	NSString*      path        = [[self applicationSupportPath] stringByAppendingPathComponent: @"GinkoBase.sqlite"];
-	
+    //NSFileManager* fileManager = [NSFileManager defaultManager];	
 	
     if (![coordinator addPersistentStoreWithType: NSSQLiteStoreType // NSXMLStoreType
-								   configuration: nil
-											 URL: [NSURL fileURLWithPath: path]
-										 options: nil
-										   error: &error]) {
+                                   configuration: nil
+                                             URL: [NSURL fileURLWithPath:[self databasePath]]
+                                         options: nil
+                                           error: &error]) 
+    {
         localizedDescription = [error localizedDescription];
         error = [NSError errorWithDomain: @"Ginko3Domain" 
 									code: 0		
@@ -260,11 +266,12 @@
 
 - (IBAction) importTestMBox: (id) sender
 {
-	
-	NSString *boxFilename = [[NSBundle mainBundle] pathForResource: @"test-mbox" ofType: @""];	
-	OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
-	
-	[GIMessageBase importFromMBoxFile: box];		
+    //NSString *boxFilename = [[NSBundle mainBundle] pathForResource: @"test-mbox" ofType: @""];
+    NSString *boxFilename = @"/Users/axel/Desktop/macosx-dev.mbox.txt";
+    
+    OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
+    
+    [GIMessageBase importFromMBoxFile: box];		
 }
 
 

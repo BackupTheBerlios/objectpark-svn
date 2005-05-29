@@ -47,6 +47,7 @@ G3Message* tempMessage;
 {
     NSLog(@"-[TestGIFulltextIndexCenter tearDown]");
     [tempMessage release];
+    [[NSManagedObjectContext defaultContext] rollback];
     //[tempIndexCenter release];
 }
 

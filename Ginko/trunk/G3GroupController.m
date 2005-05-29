@@ -23,6 +23,8 @@
 #import "G3MessageGroup.h"
 #import "OPJobs.h"
 #import "GIFulltextIndexCenter.h"
+#import "GIOutlineViewWithKeyboardSupport.h"
+#import "G3Message.h"
 
 @interface G3GroupController (CommentsTree)
 
@@ -48,7 +50,7 @@
         [NSBundle loadNibNamed:@"Group" owner:self];
         
         if (! aGroup) {
-            aGroup = [[self allGroups] firstObject];
+            aGroup = [[G3MessageGroup allObjects] firstObject];
         }
         
         [self setGroup: aGroup];
@@ -114,8 +116,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [displayedMessage release];
     [displayedThread release];
     [group release];
-	[allGroups release];
-	[threadCache release];
+    [threadCache release];
     
     [super dealloc];
 }
@@ -319,16 +320,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 
 - (NSArray *)threadsByDate
-	/*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
+/*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-	NSArray* result = [self threadCache];
-	
-	if (!result) {
-		result = [[self group] threadsByDate];
-		if (result) 
-			[self setThreadCache: result];
-	}
-	return result;
+    NSArray* result = [self threadCache];
+    
+    if (!result) 
+    {
+        result = [[self group] threadsByDate];
+        if (result) [self setThreadCache:result];
+    }
+    return result;
 }
 
 - (BOOL)openSelection:(id)sender
@@ -678,51 +679,23 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-static unsigned threadCountJobId = 0;
-
-- (void)threadCountJobFinished:(NSNotification *)aNotification
-{
-    NSLog(@"threadCountJobFinished");
-    unsigned jobId = [[aNotification object] unsignedIntValue];
-    
-    if (jobId == threadCountJobId)
-    {
-        unsigned threadCount = [[OPJobs resultForJob:jobId] unsignedIntValue];
-        [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%u threads", "group info text template"), threadCount]];
-    }
-}
-
-- (void)asyncThreadCount:(NSDictionary *)someArguments
-{
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSLog(@"asyncThreadCount");
-//    [OPJobs setResult:[NSNumber numberWithUnsignedInt:[group threadCount]]];
-    [pool release];
-}
-
 - (void)updateGroupInfoTextField
 {
-    NSLog(@"updateGroupInfoTextField");
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadCountJobFinished:) name:OPJobDidFinishNotification object:nil];
-    
-//    threadCountJobId = [OPJobs scheduleJobWithTarget:self selector:@selector(asyncThreadCount:) arguments:[NSDictionary dictionary] synchronizedObject:@"asyncThreadCount"];
+    if (![self isStandaloneBoxesWindow])
+    {
+//        NSNumber *messageCount = [group valueForKeyPath:@"threads.@sum.messages.@count"];
+        NSNumber *messageCount = [NSNumber numberWithInt:0];
+        
+        [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ messages in %u threads", "group info text template"), messageCount, [[self threadsByDate] count]]];
+    }    
 }
 
 - (void)modelChanged:(NSNotification *)aNotification
 {
-    NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
+    //NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
     [self setThreadCache:nil];
     [self updateGroupInfoTextField];
     [threadsView reloadData];
-}
-
-- (NSArray *)allGroups
-{
-    if (!allGroups) 
-    {
-        allGroups = [[G3MessageGroup allObjects] retain];
-    }
-    return allGroups;
 }
 
 - (G3MessageGroup *)group
@@ -859,8 +832,6 @@ static unsigned threadCountJobId = 0;
 
 - (void)groupsChanged:(NSNotification *)aNotification
 {
-    [allGroups autorelease];
-    allGroups = nil; // clear cache
     [boxesView reloadData];
 }
 

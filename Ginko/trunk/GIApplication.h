@@ -18,6 +18,8 @@
 - (BOOL)isGroupsDrawerMode;
 - (NSWindow *)standaloneGroupsWindow;
 
+- (NSString *)databasePath;
+
 /*" Actions "*/
 - (IBAction)openNewGroupWindow:(id)sender;
 

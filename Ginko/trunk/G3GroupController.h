@@ -7,11 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "G3Message.h"
-#import "GIOutlineViewWithKeyboardSupport.h"
 
 @class OPCollapsingSplitView;
 @class G3MessageGroup;
+@class GIOutlineViewWithKeyboardSupport;
+@class G3Message;
+@class G3Thread;
 
 @interface G3GroupController : NSObject 
 {
@@ -28,12 +29,11 @@
     IBOutlet NSWindow *searchWindow;
     IBOutlet NSSearchField *searchField;
     IBOutlet NSTableView *searchResultTableView;
-	
-    NSArray* allGroups;
+    
     G3MessageGroup *group;
     G3Thread *displayedThread; // displayed as comment tree
     G3Message *displayedMessage; // displayed with body
-	NSArray *threadCache;
+    NSArray *threadCache;
     
     NSArray *searchResults;
     
@@ -50,7 +50,6 @@
 - (NSWindow *)window;
 - (G3MessageGroup *)group;
 - (void)setGroup:(G3MessageGroup *)aGroup;
-- (NSArray *)allGroups;
 
 - (BOOL)isStandaloneBoxesWindow;
 

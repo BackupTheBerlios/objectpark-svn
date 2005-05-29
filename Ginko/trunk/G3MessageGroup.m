@@ -13,6 +13,7 @@
 #import "GIApplication.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIUserDefaultsKeys.h"
+#import <sqlite3.h>
 
 NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
 
@@ -158,7 +159,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     static NSArray *dateDescriptor = nil;
     NSArray *result = nil;
     
-    NSLog(@"threadsByDate");
+    NSLog(@"entered threadsByDate");
     if (! dateDescriptor) dateDescriptor = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO] autorelease], nil];
     /*
 #warning ugly hackaround, Dude!
@@ -193,7 +194,41 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     //#warning for debugging only as it is inefficient
     //NSAssert([result count] == [[self valueForKey:@"threads"] count], @"result != threadsCount");
+    NSLog(@"exited threadsByDate");
+
+    return result;
+}
+
+- (NSArray *)threadIdsByDate
+{
+    NSMutableArray *result = [NSMutableArray array];
     
+    // open db:
+    sqlite3 *db = NULL;
+    sqlite3_open([[NSApp databasePath] UTF8String],   /* Database filename (UTF-8) */
+        &db);                /* OUT: SQLite db handle */
+    
+    if (db) 
+    {
+        int errorCode;
+        char *error;
+        NSLog(@"DB opened. Fetching thread objects...");
+        
+        if (errorCode = sqlite3_exec(db, /* An open database */
+            "SELECT Z_PK FROM ZTHREAD ORDER BY ZDATE;", /* SQL to be executed */
+            NULL, /* Callback function */
+            NULL, /* 1st argument to callback function */
+            &error)) { 
+            if (error) 
+            {
+                NSLog(@"Error creating index: %s", error);
+            }
+        }
+        
+    }
+
+    sqlite3_close(db);
+
     return result;
 }
 
