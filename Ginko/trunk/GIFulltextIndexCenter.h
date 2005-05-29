@@ -15,6 +15,7 @@
 }
 
 + (id)defaultIndexCenter;
+- (id)init;
 
 - (BOOL)addMessage:(G3Message *)aMessage;
 - (BOOL)removeMessage:(G3Message *)aMessage;

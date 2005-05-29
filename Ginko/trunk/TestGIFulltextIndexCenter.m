@@ -16,8 +16,6 @@
 
 @implementation TestGIFulltextIndexCenter
 
-#warning Disabled TestGIFulltextIndexCenter tests by prepending 'disabled' to method names because they crashed
-
 GIFulltextIndexCenter* tempIndexCenter;
 G3Message* tempMessage;
 
@@ -26,33 +24,34 @@ G3Message* tempMessage;
     // get defaultIndexCenter
     NSLog(@"-[TestGIFulltextIndexCenter setUp]");
     tempIndexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-
-#pragma mark Hier knallt es schon, weil der index nicht gešffnet/angelegt werden konnte!
+    //[tempIndexCenter retain];
+    STAssertNotNil(tempIndexCenter, @"tempIndexCenter must not be nil");
     
     NSLog(@"created tempIndexCenter");
        
-    NSString *messageId = @"searchtest-message-1";
+    NSString *messageId = @"<searchtest-message-1>";
     NSString *transferString = [NSString stringWithFormat:
-                                             @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nLudovic Marcotte wrote:\r\n", messageId];
-    
+                                             @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
-    
     STAssertNotNil(transferData, @"nee");
     
     tempMessage = [G3Message messageWithTransferData:transferData];
-    [tempMessage setValue:messageId forKey:@"messageId"];  
-    
+    [tempMessage retain];
     STAssertNotNil(tempMessage, @"nee %@", messageId);
+
+    //[tempMessage setValue:messageId forKey:@"messageId"];  
     STAssertTrue([[tempMessage messageId] isEqual:messageId], @"nee");
 }
 
 - (void)tearDown
 {
+    NSLog(@"-[TestGIFulltextIndexCenter tearDown]");
+    [tempMessage release];
+    //[tempIndexCenter release];
 }
 
-- (void)disabledtestAddOneMessage
+- (void)testAddOneMessage
 {
-    #warning Does not pass if the default message group has no messages in it.
     NSLog(@"-[TestGIFulltextIndexCenter testAddOneMessage]");
     //NSLog(@"adding message '%@' with text: %@", [tempMessage messageId], [[tempMessage contentAsAttributedString] string]);
     STAssertTrue([tempIndexCenter addMessage:tempMessage], @"addMessage must return true");
@@ -61,21 +60,20 @@ G3Message* tempMessage;
 }
 
 /*
-- (void)reindexAllMessages
+- (void)testReindexAllMessages
 {
     NSLog(@"-[TestGIFulltextIndexCenter reindexAllMessages]");
     STAssertTrue([tempIndexCenter reindexAllMessages],@"[tempIndexCenter reindexAllMessages] must return true");
-    STAssertTrue([tempIndexCenter flushIndex],@"[tempIndexCenter flushIndex] must return true");
 }
 */
 
-- (void)disabledtestSearch
+- (void)testSearch
 {
     NSLog(@"-[TestGIFulltextIndexCenter testSearch]");
-    [tempIndexCenter hitsForQueryString:@"pasteboard"];
+    STAssertTrue( 1 == [[tempIndexCenter hitsForQueryString:@"Ulf Licht"] count], "search did not result in one hit");
 }
 
-- (void)disabledtestXRemoveMessage
+- (void)testXRemoveMessage
 {
     NSLog(@"-[TestGIFulltextIndexCenter testXRemoveMessage]");
     STAssertTrue([tempIndexCenter removeMessage:tempMessage],@"removeMessage must return true");

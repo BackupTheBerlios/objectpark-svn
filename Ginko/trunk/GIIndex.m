@@ -13,29 +13,8 @@
 
 + (id)indexWithName:(NSString*)aName atPath:(NSString*)aPath
 {
-    NSLog(@"+[GIIndex indexWithPath:%@]", aPath);
+    NSLog(@"+[GIIndex indexWithName:%@ atPath:%@]", aName, aPath);
     return [[[self alloc] initWithName:aName atPath:aPath] autorelease];
-}
-
-- (SKIndexRef)index
-{
-    return index;
-}
-
-- (void)setIndex:(SKIndexRef)newIndex
-// Sets a new index. Closes the previous one.
-{
-    if (index) {
-        SKIndexClose(index);
-        CFRelease(index); // initially, index is nil
-    }
-    if (newIndex) CFRetain(newIndex);
-    index = newIndex;
-}
-
-- (NSString *)name
-{
-    return name;
 }
 
 - (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
@@ -48,8 +27,10 @@
     
     // open or create index
     if ([fm fileExistsAtPath:aPath]) {
-        [self setIndex:SKIndexOpenWithURL((CFURLRef)indexFileURL,NULL,true)];
+        NSLog(@"-[GIIndex initWithName:%@ atPath:%@] opening existing index", aName, aPath);
+        [self setIndex:SKIndexOpenWithURL((CFURLRef)indexFileURL,(CFStringRef)aName, true) ];
     } else {        
+        NSLog(@"-[GIIndex initWithName:%@ atPath:%@] creating new index ", aName, aPath);
         NSMutableDictionary * analysisDict = [[NSMutableDictionary alloc] init];
         [analysisDict setObject:@"en" forKey:(NSString *)kSKLanguageTypes];
         [analysisDict setObject:[NSNumber numberWithInt:2] 
@@ -72,7 +53,9 @@
         if (theIndex) CFRelease(theIndex);
         
         if(index == nil) {
-            NSLog(@"Warning: -[GIIndex initWithPath] Couldn't create index.");
+            NSLog(@"Warning: -[GIIndex initWithName:%@ atPath:%@] Couldn't create index", aName, aPath);
+        } else {
+            NSLog(@"[GIIndex initWithName:%@ atPath:%@] contains %d documents", aName, [self documentCount]);
         }
     }
     //#warning when to call SKIndexClose? In setIndex
@@ -87,6 +70,33 @@
     [super dealloc];
 }
 
+- (SKIndexRef)index
+{
+    return index;
+}
+
+- (void)setIndex:(SKIndexRef)newIndex
+    // Sets a new index. Closes the previous one.
+{
+    //NSLog(@"-[GIIndex(%@) setIndex]", [self name]);
+    #warning if index == newIndex might release might be dangerous
+    if (index) {
+        //NSLog(@"-[GIIndex(%@) setIndex] will close/release old index", [self name]);
+        SKIndexClose(index);
+        CFRelease(index); // initially, index is nil
+    }
+    if (newIndex) 
+    {
+        //NSLog(@"-[GIIndex(%@) setIndex] will retain new index", [self name]);
+        CFRetain(newIndex);
+    } 
+    index = newIndex;
+}
+
+- (NSString *)name
+{
+    return name;
+}
 
 - (void)setName:(NSString * )newName
 {
@@ -98,26 +108,33 @@
 
 - (BOOL)addDocumentWithName:(NSString *)aName andText:(NSString *)aText andProperties:(NSDictionary *) aPropertiesDictionary
 {
-    BOOL isIndexed = YES;
-    NSLog(@"-[GIIndex(%@) addDocumentWithName:%@",[self name], aName);
+    BOOL isIndexed = NO;
+//	NSLog(@"-[GIIndex(%@) addDocumentWithName:%@",[self name], aName);
     SKDocumentRef tempDocument = [self createDocumentWithName:aName];
     // add document to index
-    isIndexed = SKIndexAddDocumentWithText([self index], tempDocument, (CFStringRef)aText, YES);
-    if (isIndexed) {
+    if (tempDocument) 
+    {
+        isIndexed = SKIndexAddDocumentWithText([self index], tempDocument, (CFStringRef)aText, YES);
+    }
+    if (isIndexed)
+    {
         SKIndexSetDocumentProperties([self index], tempDocument, (CFDictionaryRef)aPropertiesDictionary);
     }
-    // flush index after every inserted document
+
     [self flushIndex];
+    
     return isIndexed;
 }
 
 - (BOOL)removeDocumentWithName:(NSString *)aName
 {
     BOOL isRemoveSuccessfull = NO;
-    if ([self index]) {
-	NSLog(@"-[GIIndex(%@) removeDocumentWithName:]", [self name]);
+    if ([self index])
+    {
+//      NSLog(@"-[GIIndex(%@) removeDocumentWithName:]", [self name]);
         isRemoveSuccessfull = SKIndexRemoveDocument([self index], [self createDocumentWithName:aName]);
-        if (isRemoveSuccessfull) {
+        if (isRemoveSuccessfull)
+        {
             [self flushIndex];
         }
     }
@@ -142,6 +159,7 @@
 - (NSArray *)hitsForQueryString:(NSString *)aQuery
 {
     NSLog(@"-[GIIndex(%@) hitsForQueryString:%@]",[self name], aQuery);
+
     NSMutableArray* resultArray = [NSMutableArray arrayWithCapacity:10];
     
     // build Search objects
@@ -157,7 +175,7 @@
     CFIndex tempOutFoundCount = 0;
     CFIndex* pointerToOutFoundCount = &tempOutFoundCount;
     SKSearchFindMatches(searchRef, tempInMaximumCount, pointerToDocumentIDArray, pointerToScoresArray, tempMaximumTime, pointerToOutFoundCount);
-    NSLog(@"-[GIIndex(%@) hitsForQueryString]search resulted in %d hit(s)", [self name], tempOutFoundCount);
+    NSLog(@"-[GIIndex(%@) hitsForQueryString:%@] resulted in %d hit(s) from %d documents", [self name], aQuery, tempOutFoundCount, [self documentCount]);
     /*
      while ( SKSearchFindMatches(contentSearchRef, tempInMaximumCount, pointerToDocumentIDArray, pointerToScoresArray, tempMaximumTime, pointerToOutFoundCount) ) {
          NSLog(@"search still in progress with currently %d results", tempOutFoundCount);
@@ -178,7 +196,6 @@
     
     // release
     // CFRelease(searchRef); // crashes, don't know why
-    NSLog(@"Returning $d hits for query.", [resultArray count]);
     return [[resultArray copy] autorelease];
 }
 
