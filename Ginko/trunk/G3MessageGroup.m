@@ -228,7 +228,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         
         if (errorCode = sqlite3_exec(db, // An open database
                                      //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
-            "SELECT Z_PK FROM ZTHREAD ORDER BY ZDATE;", /* SQL to be executed */
+            "select Z_PK from ZTHREAD, Z_4THREADS where 1 = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZDATE;", /* SQL to be executed */
                                      collectThreadURIStringsCallback, /* Callback function */
                                      result, /* 1st argument to callback function */
                                      &error)) 

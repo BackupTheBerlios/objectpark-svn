@@ -32,6 +32,7 @@
 - (void)deallocCommentTree;
 - (IBAction)selectTreeCell:(id)sender;
 - (void)updateCommentTree:(BOOL)rebuildThread;
+- (BOOL)matrixIsVisible;
 
 @end
 
@@ -365,12 +366,18 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             {
                 selectedThread = item;
                 
-                if ([selectedThread containsSingleMessage]) {
+                if ([selectedThread containsSingleMessage]) 
+                {
                     message = [[selectedThread valueForKey: @"messages"] anyObject];
-                } else {
-                    if ([threadsView isItemExpanded:item])  {
+                } 
+                else 
+                {
+                    if ([threadsView isItemExpanded:item])  
+                    {
                         [threadsView collapseItem:item];
-                    } else {
+                    } 
+                    else 
+                    {
                         NSEnumerator *enumerator;
                         G3Message *message;
                         
@@ -400,19 +407,28 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                     return YES;
                 }
             }
-            			
-			if ([message hasFlag:OPDraftStatus])
-			{
-				[[[G3MessageEditorController alloc] initWithMessage:message profile:[[self group] defaultProfile]] autorelease];
-			}
-			else
-			{
-				[tabView selectTabViewItemWithIdentifier:@"message"];
-				[window makeFirstResponder:commentsMatrix];
-				[message setSeen: YES];
-				
-				[self setDisplayedMessage:message thread:selectedThread];
-			}
+            
+            if ([message hasFlag:OPDraftStatus])
+            {
+                [[[G3MessageEditorController alloc] initWithMessage:message profile:[[self group] defaultProfile]] autorelease];
+            }
+            else
+            {
+                [tabView selectTabViewItemWithIdentifier:@"message"];
+                
+                if ([self matrixIsVisible])
+                {
+                    [window makeFirstResponder:commentsMatrix];
+                }
+                else
+                {
+                    [window makeFirstResponder:messageTextView];                    
+                }
+                
+                [message setSeen: YES];
+                
+                [self setDisplayedMessage:message thread:selectedThread];
+            }
         }
         
     } else {
@@ -429,7 +445,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (sender == messageTextView)
     {
-        [window makeFirstResponder:commentsMatrix];
+        if ([self matrixIsVisible])
+        {
+            [window makeFirstResponder:commentsMatrix];
+        }
+        else
+        {
+            [tabView selectFirstTabViewItem:sender];
+        }
     } 
     else 
     {
@@ -437,7 +460,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         {
             if ([window firstResponder] == messageTextView)
             {
-                [window makeFirstResponder:commentsMatrix];
+                if ([self matrixIsVisible])
+                {
+                    [window makeFirstResponder:commentsMatrix];
+                }
+                else
+                {
+                    [tabView selectFirstTabViewItem:sender];
+                }
             } 
             else 
             {
@@ -447,7 +477,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         } 
         else 
         {
-            if (![self isStandaloneBoxesWindow]){
+            if (![self isStandaloneBoxesWindow])
+            {
             // from threads switch back to the groups window:
                 [[GIApp standaloneGroupsWindow] makeKeyAndOrderFront:sender];
             }
@@ -894,6 +925,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         // subjects list
         if ([item isKindOfClass:[G3Thread class]])
         {
+#warning this might be a performance killer as thread fault objects will be fired
             return ![item containsSingleMessage];
         }
     }
@@ -1372,7 +1404,8 @@ NSMutableArray* border = nil;
 
 - (void)updateCommentTree:(BOOL)rebuildThread
 {
-    if (rebuildThread){
+    if (rebuildThread)
+    {
         [commentsMatrix deselectAllCells];
         [commentsMatrix renewRows:1 columns:[displayedThread commentDepth]];
         
@@ -1419,9 +1452,10 @@ NSMutableArray* border = nil;
 - (IBAction)selectTreeCell:(id)sender
 /*" Displays the corresponding message. "*/
 {
-    G3Message* selectedMessage = [[sender selectedCell] representedObject];
+    G3Message *selectedMessage = [[sender selectedCell] representedObject];
     
-    if (selectedMessage){
+    if (selectedMessage)
+    {
         [self setDisplayedMessage:selectedMessage thread:[self displayedThread]];
     }
 }
@@ -1503,6 +1537,12 @@ NSMutableArray* border = nil;
         }
         NSBeep();
     }
+}
+
+- (BOOL)matrixIsVisible
+/*" Returns YES if the comments matrix is shown and not collapsed. NO otherwise "*/
+{
+    return ![treeBodySplitter isSubviewCollapsed:[commentsMatrix superview]];
 }
 
 //[commentsMatrix cellAtRow:y column:x]
