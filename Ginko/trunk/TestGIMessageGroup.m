@@ -40,7 +40,7 @@
     NSArray *result = [[G3MessageGroup defaultMessageGroup] threadReferenceURIsByDate];
     NSLog(@"testThreadIdsByDate exited");
 
-    NSLog(@"First Thread's name '%@'", [(G3Thread *)[[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:0]]] valueForKey:@"subject"]);
+    NSLog(@"First Thread's name '%@'", [(G3Thread *)[[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
 }
 
 @end

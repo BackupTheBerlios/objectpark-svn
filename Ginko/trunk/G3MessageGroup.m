@@ -207,7 +207,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     if (!prefix) prefix = [G3Thread URIStringPrefix];
     
     [(NSMutableArray *)result addObject:[prefix stringByAppendingString:[NSString stringWithUTF8String:values[0]]]];
-    
+//    [result addObject:[NSString stringWithUTF8String:values[0]]];
     return 0;
 }
 
@@ -227,10 +227,12 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         NSLog(@"DB opened. Fetching thread objects...");
         
         if (errorCode = sqlite3_exec(db, // An open database
+                                     //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
             "SELECT Z_PK FROM ZTHREAD ORDER BY ZDATE;", /* SQL to be executed */
-            collectThreadURIStringsCallback, /* Callback function */
-            result, /* 1st argument to callback function */
-            &error)) { 
+                                     collectThreadURIStringsCallback, /* Callback function */
+                                     result, /* 1st argument to callback function */
+                                     &error)) 
+        { 
             if (error) 
             {
                 NSLog(@"Error creating index: %s", error);
@@ -240,6 +242,9 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     }
     
     sqlite3_close(db);
+    
+    NSLog(@"result count = %d", [result count]);
+    NSLog(@"result = %@", result);
     
     return result;
 }
