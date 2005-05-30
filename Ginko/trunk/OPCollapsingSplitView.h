@@ -8,10 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+// this class is unfinished. some methods don't work!
 
 @interface OPCollapsingSplitView : NSSplitView {
     
-    unsigned collapsedSubviewIndex; // NSNotFound if none is collapsed
     float preservedSubviewSize;
     
 }
@@ -19,7 +19,7 @@
 - (void) setSubview: (NSView*) subview isCollapsed: (BOOL) flag;
 - (void) moveSplitterBy: (float) moveValue;
 - (void) setFirstSubviewSize: (float) firstSize;
-
-
+- (BOOL) isSubviewCollapsed: (NSView*) subview;
+- (NSView*) collapsedSubview;
 
 @end

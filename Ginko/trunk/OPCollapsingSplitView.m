@@ -11,6 +11,9 @@
 
 @implementation OPCollapsingSplitView
 
+//- (id)
+
+/*
 - initWithFrame: (NSRect) frameRect
 {
     if (self = [super initWithFrame: frameRect]) {
@@ -26,41 +29,54 @@
     }
     return self;
 }
-
+*/
 
 - (void) setSubview: (NSView*) subview isCollapsed: (BOOL) collapse
 /*" Collapses the subview specified. Only one subview can be collapsed.
     Needs work to function with vertical splitting. "*/
 {
-    unsigned subViewIndex = [[self subviews] indexOfObject: subview];
-    NSSize frameSize = [subview frame].size;
-
-    if (collapse) {
-        if (subViewIndex!=collapsedSubviewIndex) {
-            if (collapsedSubviewIndex!=NSNotFound) 
-                [self setSubview: [[self subviews] objectAtIndex: collapsedSubviewIndex] 
-                     isCollapsed: NO];
-            
-            collapsedSubviewIndex = subViewIndex;
-            preservedSubviewSize = frameSize.height;
-            [subview setFrameSize: NSMakeSize(frameSize.width, 0.0)];
-        }
-    } else {
-        if (subViewIndex == subViewIndex) {
-            if (collapsedSubviewIndex!=NSNotFound) {
-                // uncollapse collapsedSubviewIndex:
+    if (subview) {
+        NSSize frameSize = [subview frame].size;
+        NSView* collapsedSubview = [self collapsedSubview];
+        if (collapse) {
+            // We shall collapose subview:
+            if (subview != collapsedSubview) {
+                // Uncollapse old subview:
+                [self setSubview: collapsedSubview isCollapsed: NO];
+                
+                preservedSubviewSize = frameSize.height;
+                [subview setFrameSize: NSMakeSize(frameSize.width, 0.0)];
+            }
+        } else {
+            // We shall uncollapose subview:
+            if (subview == collapsedSubview) {
+                // restore preserved size:
                 [subview setFrameSize: NSMakeSize(frameSize.width, preservedSubviewSize)];
-                collapsedSubviewIndex = NSNotFound;
             }
         }
     }
 }
 
+- (NSView*) collapsedSubview
+{
+    NSArray* subviews = [self subviews];
+    int i = 0;
+    int imax = [subviews count];
+    while (i<imax) {
+        NSView* view = [subviews objectAtIndex: i];
+        if ([self isSubviewCollapsed: view]) {
+            return view;
+        }
+    }
+    return nil;
+}
+
 - (BOOL) isSubviewCollapsed: (NSView*) subview
 {
-    collapsedSubviewIndex=0;
-    int subViewIndex = [[self subviews] indexOfObject: subview];
-    return subViewIndex==collapsedSubviewIndex || [super isSubviewCollapsed: subview];
+    //int subViewIndex = [[self subviews] indexOfObject: subview];
+    BOOL result = [super isSubviewCollapsed: subview];
+    NSSize subviewSize = [subview frame].size;
+    return result || ([self isVertical] ? subviewSize.width : subviewSize.height)<1.0;
 }
 
 - (void) moveSplitterBy: (float) moveValue
@@ -84,7 +100,11 @@
     NSScrollView* firstView = [[self subviews] objectAtIndex: 0];
     NSSize  firstViewSize = [firstView frame].size;
     NSScrollView* lastView = [[self subviews] lastObject];    
-    firstViewSize.height = firstSize;
+    if ([self isVertical]) {
+        firstViewSize.width = firstSize;
+    } else {
+        firstViewSize.height = firstSize;
+    }
     [firstView setFrameSize: firstViewSize];
     [lastView setFrameSize: NSMakeSize(totalSize.width, totalSize.height-[self dividerThickness]-firstViewSize.height)]; 
     [self adjustSubviews];

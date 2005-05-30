@@ -416,18 +416,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             {
                 [tabView selectTabViewItemWithIdentifier:@"message"];
                 
-                if ([self matrixIsVisible])
-                {
-                    [window makeFirstResponder:commentsMatrix];
-                }
-                else
-                {
-                    [window makeFirstResponder:messageTextView];                    
-                }
-                
                 [message setSeen: YES];
                 
                 [self setDisplayedMessage:message thread:selectedThread];
+                
+                if ([self matrixIsVisible])
+                {
+                    [window makeFirstResponder:commentsMatrix];
+                } else {
+                    [window makeFirstResponder:messageTextView];                    
+                }
             }
         }
         
@@ -1542,7 +1540,7 @@ NSMutableArray* border = nil;
 - (BOOL)matrixIsVisible
 /*" Returns YES if the comments matrix is shown and not collapsed. NO otherwise "*/
 {
-    return ![treeBodySplitter isSubviewCollapsed:[commentsMatrix superview]];
+    return ![treeBodySplitter isSubviewCollapsed: [[treeBodySplitter subviews] objectAtIndex:0]];
 }
 
 //[commentsMatrix cellAtRow:y column:x]
