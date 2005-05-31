@@ -340,6 +340,15 @@
     text = [[NSAttributedString allocWithZone:[self zone]] initWithHTML:data documentAttributes:NULL];
 }
 
+- (NSAttributedString *)attributedString
+{
+    NSMutableAttributedString *result;
+    
+    result = [[[self text] mutableCopy] autorelease];
+    [result urlify];
+    
+    return result;
+}
 
 //---------------------------------------------------------------------------------------
     @end
