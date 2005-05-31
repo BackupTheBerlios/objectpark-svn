@@ -999,7 +999,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     G3Message *message;
     
-    message = [G3Message messageWithTransferData:[[self message] transferData] inManagedObjectContext:[NSManagedObjectContext defaultContext]];
+    message = [G3Message messageWithTransferData:[[self message] transferData]];
     
     // status
     if (oldMessage) [message setFlags:[oldMessage flags]];

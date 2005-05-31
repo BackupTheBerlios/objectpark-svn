@@ -16,7 +16,7 @@
 {
 }
 
-+ (G3Thread*) thread;
++ (G3Thread *)threadInManagedObjectContext:(NSManagedObjectContext *)aContext;
 + (NSString *)URIStringPrefix;
 
 - (BOOL) containsSingleMessage;

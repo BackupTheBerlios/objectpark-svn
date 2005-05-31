@@ -19,10 +19,11 @@
 
 @class NSEntityDescription;
 
+NSString *GIDupeMessageException = @"GIDupeMessageException";
+
 @implementation G3Message
 
-
-+ (id)messageForMessageId:(NSString *)messageId inManagedObjectContext:(NSManagedObjectContext *)aContext
++ (id)messageForMessageId:(NSString *)messageId
 /*" Returns either nil or the message specified by its messageId. "*/
 {
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
@@ -32,55 +33,56 @@
     [request setPredicate:predicate];
     
     NSError *error = nil;
-    NSArray *results = [aContext executeFetchRequest:request error:&error];
+    NSArray *results = [[NSManagedObjectContext defaultContext] executeFetchRequest:request error:&error];
+    
+    NSAssert1(!error, @"+[G3Message messageForMessageId:inManagedObjectContext:] error while fetching (%@).", error);    
+    
     if (results != nil) 
     {
         return [results count] ? [results lastObject] : nil;						
     } 
-    else 
-    { // deal with error…
-        NSLog(@"Fetch error: %@", [error userInfo]);
-    }
     
     return nil;
 }
 
-+ (id)messageWithTransferData:(NSData *)someTransferData inManagedObjectContext:aContext
++ (id)messageWithTransferData:(NSData *)someTransferData
+/*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context and a GIDupeMessageException is raised. "*/
 {
     id result = nil;
-    OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:someTransferData] autorelease];
+    OPInternetMessage *internetMessage = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
     
-    if (![self messageForMessageId:[internetMessage messageId] inManagedObjectContext:aContext]) 
-    {		
-        // Create a new message in the default context:
-        result = [[[G3Message alloc] initWithManagedObjectContext:aContext] autorelease];
-        
-        //NSString* fromHeader = [msg bodyForHeaderField: @"from"];
-        NSString *fromHeader = [internetMessage fromWithFallback:YES];
-        
-        [result setValue:someTransferData forKey:@"transferData"];
-        [result setValue:[internetMessage messageId] forKey:@"messageId"];  
-        [result setValue:[internetMessage normalizedSubject] forKey:@"subject"];
-        [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
-        [result setValue:[internetMessage date] forKey:@"date"];
-        
-        // Note that this method operates on the encoded header field. It's OK because email
-        // addresses are 7bit only.
-        if ([G3Profile isMyEmailAddress:fromHeader])
-        {
-            [result addFlags:OPIsFromMeStatus];
-        }
-    } 
-    else 
+    if ([self messageForMessageId:[internetMessage messageId]])
     {
-        if (NSDebugEnabled) NSLog(@"Dupe check failed for id %@", [internetMessage messageId]);
+        [internetMessage release];
+        [NSException exceptionWithName:GIDupeMessageException reason:@"Dupe for given transfer data detected. (see userInfo for key transferData)" userInfo:[NSDictionary dictionaryWithObject:someTransferData forKey:@"transferData"]];        
+    }
+    
+    // Create a new message in the default context:
+    result = [[[G3Message alloc] initWithManagedObjectContext:[NSManagedObjectContext defaultContext]] autorelease];
+    
+    //NSString* fromHeader = [msg bodyForHeaderField: @"from"];
+    NSString *fromHeader = [internetMessage fromWithFallback:YES];
+    
+    [result setValue:someTransferData forKey:@"transferData"];
+    [result setValue:[internetMessage messageId] forKey:@"messageId"];  
+    [result setValue:[internetMessage normalizedSubject] forKey:@"subject"];
+    [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
+    [result setValue:[internetMessage date] forKey:@"date"];
+    
+    [internetMessage release];
+    
+    // Note that this method operates on the encoded header field. It's OK because email
+    // addresses are 7bit only.
+    if ([G3Profile isMyEmailAddress:fromHeader])
+    {
+        [result addFlags:OPIsFromMeStatus];
     }
     
     return result;
 }
 
 
-- (NSData*) transferData
+- (NSData *)transferData
 {
 	return [self valueForKeyPath: @"messageData.transferData"];
 }
@@ -95,11 +97,11 @@
     [self setValue: messageData forKey: @"messageData"];
 }
 
-- (NSString*) messageId
+- (NSString *)messageId
 {
-    [self willAccessValueForKey: @"messageId"];
-    id result = [self primitiveValueForKey: @"messageId"];
-    [self didAccessValueForKey: @"messageId"];
+    [self willAccessValueForKey:@"messageId"];
+    id result = [self primitiveValueForKey:@"messageId"];
+    [self didAccessValueForKey:@"messageId"];
     return result;
 }
 
@@ -165,13 +167,17 @@
 
 - (G3Message *)referenceFind:(BOOL)find
 {
-    G3Message* result = [self reference];
-    if (!result && find) {
+    G3Message *result = [self reference];
+    if (!result && find) 
+    {
         NSEnumerator* e = [[[self internetMessage] references] reverseObjectEnumerator];
-        NSString* refId;
-        while (refId = [e nextObject]) {
-            result = [[self class] messageForMessageId: refId inManagedObjectContext:[NSManagedObjectContext defaultContext]];
-            if (result) {
+        NSString *refId;
+        while (refId = [e nextObject]) 
+        {
+            result = [[self class] messageForMessageId:refId];
+            
+            if (result) 
+            {
                 [self setValue: result forKey: @"reference"];
                 return result;
             }
@@ -180,35 +186,40 @@
     return nil;
 }
 
-- (G3Thread*) thread
+- (G3Thread *)thread
 {
-    [self willAccessValueForKey: @"thread"];
-    id thread = [self primitiveValueForKey: @"thread"];
-    [self didAccessValueForKey: @"thread"];
+    [self willAccessValueForKey:@"thread"];
+    id thread = [self primitiveValueForKey:@"thread"];
+    [self didAccessValueForKey:@"thread"];
     return thread;
 }
 
-- (G3Thread*) threadCreate: (BOOL) doCreate
+- (G3Thread *)threadCreate:(BOOL)doCreate
 {
-    G3Thread* thread = [self thread];
-    if (doCreate && !thread) {
+    G3Thread *thread = [self thread];
+    
+    if (doCreate && !thread) 
+    {
         // do threading by reference
-        thread = [[self referenceFind: YES] thread];
-        if (!thread) {
-            thread = [G3Thread thread];
-            [thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
-        } else {
+        thread = [[self referenceFind:YES] thread];
+        
+        if (!thread) 
+        {
+            thread = [G3Thread threadInManagedObjectContext:[self managedObjectContext]];
+            [thread setValue:[self valueForKey:@"subject"] forKey:@"subject"];
+        } 
+        else 
+        {
             // NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
             // Set the thread's subject to be the first messages subject:
         }
         // We got one, so set it:
-        [self setValue: thread forKey: @"thread"];
-        [thread addMessage: self];
-        
+        [self setValue:thread forKey:@"thread"];
+        [thread addMessage:self];
     }
+    
     return thread;
 }
-
 
 /*
 - (unsigned) numberOfReferences
@@ -221,7 +232,7 @@
 */
 
 
-- (NSAttributedString*) contentAsAttributedString
+- (NSAttributedString *)contentAsAttributedString
 {
     return [[self internetMessage] bodyContent];
 }
@@ -233,7 +244,7 @@
 }
 */
 
-- (NSArray*) commentsInThread: (G3Thread*) thread
+- (NSArray *)commentsInThread:(G3Thread *) thread
 /* Returns all directly commenting messages in the thread given. */
 {
     NSEnumerator* me = [[thread messages] objectEnumerator];

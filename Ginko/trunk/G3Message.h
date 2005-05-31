@@ -32,8 +32,8 @@
 {
 }
 
-+ (id)messageForMessageId:(NSString *)messageId inManagedObjectContext:(NSManagedObjectContext *)aContext;
-+ (id)messageWithTransferData:(NSData *)someTransferData inManagedObjectContext:aContext;
++ (id)messageForMessageId:(NSString *)messageId;
++ (id)messageWithTransferData:(NSData *)someTransferData;
 
 - (NSString *)messageId;
 - (G3Message *)reference;
@@ -70,3 +70,6 @@
 - (OPInternetMessage *)internetMessage;
 
 @end
+
+/*" Raised when trying to create a dupe message. userInfo holds the dupe transfer data for the key transferData. "*/
+extern NSString *GIDupeMessageException;

@@ -10,23 +10,24 @@
 
 @implementation NSManagedObjectContext (OPExtensions)
 
-static id context = nil;
-
 + (NSManagedObjectContext *)defaultContext
 {
-    NSAssert (context != nil, @"+[NSManagedObject (Extensions) defaultContext]: context returned should never be nil");
-    return context;
+    NSManagedObjectContext *result;
+    
+    result = [[[NSThread currentThread] threadDictionary] objectForKey:@"OPDefaultManagedObjectContext"];
+    NSAssert (result != nil, @"+[NSManagedObject (Extensions) defaultContext]: context returned should never be nil");
+    return result;
 }
 
 + (void)setDefaultContext:(NSManagedObjectContext *)aContext
 {
-    if (!context)
+    if (aContext)
     {
-        context = [aContext retain];
+        [[[NSThread currentThread] threadDictionary] setObject:aContext forKey:@"OPDefaultManagedObjectContext"];
     }
     else
     {
-        [[NSException exceptionWithName:NSGenericException reason:@"Default context should not be switched!" userInfo:nil] raise];
+        [[[NSThread currentThread] threadDictionary] removeObjectForKey:@"OPDefaultManagedObjectContext"];
     }
 }
 

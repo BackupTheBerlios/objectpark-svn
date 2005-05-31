@@ -22,7 +22,7 @@
 + (G3Message *)addMessageWithTransferData:(NSData *)someTransferData inManagedObjectContext:(NSManagedObjectContext *)aContext
 /*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if the message could not be created. "*/
 {
-    G3Message *message = [G3Message messageWithTransferData:someTransferData inManagedObjectContext:aContext];
+    G3Message *message = [G3Message messageWithTransferData:someTransferData];
     
     if (message) 
     {
@@ -100,6 +100,8 @@
     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
     [context setPersistentStoreCoordinator:[[NSManagedObjectContext defaultContext] persistentStoreCoordinator]];
     
+    [NSManagedObjectContext setDefaultContext:context];
+    
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *mboxData;
     NSError *error = nil;
@@ -118,16 +120,26 @@
             
             if (transferData)
             {
-                G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData inManagedObjectContext:context];
-                
-                NSAssert1(persistentMessage != nil, @"Fatal error. No message could be generated from transfer data: %@", transferData);
-                
-                if ((++addedMessageCount % 100) == 0) 
-                {
-                    if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
+                @try {
+                    G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData inManagedObjectContext:context];
                     
-                    [context save:&error];
-                    NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
+                    NSAssert1(persistentMessage != nil, @"Fatal error. No message could be generated from transfer data: %@", transferData);
+                    
+                    if ((++addedMessageCount % 100) == 0) 
+                    {
+                        if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
+                        
+                        [context save:&error];
+                        NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
+                        
+                        [context reset];
+                    }
+                } @catch (NSException *localException) {
+                    if ([localException name] == GIDupeMessageException)
+                    {
+                        if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
+                        else [localException raise];
+                    }
                 }
             }
             [pool drain]; // should be last statement in while loop
@@ -147,6 +159,7 @@
     {
         [pool release];
         [context release];
+        [NSManagedObjectContext setDefaultContext:nil];
     }
 }
 

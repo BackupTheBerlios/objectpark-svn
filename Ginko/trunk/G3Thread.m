@@ -31,13 +31,13 @@
 - (id) init
 /*" Adds the reciever to the default managed object context. "*/
 {
-    return [self initWithManagedObjectContext: [NSManagedObjectContext defaultContext]];
+    return [self initWithManagedObjectContext:[NSManagedObjectContext defaultContext]];
 }
 
-+ (G3Thread *)thread
++ (G3Thread *)threadInManagedObjectContext:(NSManagedObjectContext *)aContext
 /*" Creates a new persistent thread in the default managed object context. "*/
 {	
-    return [[[self alloc] init] autorelease];
+    return [[[self alloc] initWithManagedObjectContext:aContext] autorelease];
 }
 
 - (unsigned)messageCount
