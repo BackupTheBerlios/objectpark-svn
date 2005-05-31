@@ -32,8 +32,8 @@
 {
 }
 
-+ (id)messageForMessageId:(NSString *)messageId;
-+ (id)messageWithTransferData:(NSData *)tData;
++ (id)messageForMessageId:(NSString *)messageId inManagedObjectContext:(NSManagedObjectContext *)aContext;
++ (id)messageWithTransferData:(NSData *)someTransferData inManagedObjectContext:aContext;
 
 - (NSString *)messageId;
 - (G3Message *)reference;

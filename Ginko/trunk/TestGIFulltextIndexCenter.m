@@ -12,7 +12,7 @@
 #import "G3Thread.h"
 #import "GIFulltextIndexCenter.h"
 #import "G3Message.h"
-
+#import "NSManagedObjectContext+Extensions.h"
 
 @implementation TestGIFulltextIndexCenter
 
@@ -35,7 +35,7 @@ G3Message* tempMessage;
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
     STAssertNotNil(transferData, @"nee");
     
-    tempMessage = [G3Message messageWithTransferData:transferData];
+    tempMessage = [G3Message messageWithTransferData:transferData inManagedObjectContext:[NSManagedObjectContext defaultContext]];
     [tempMessage retain];
     STAssertNotNil(tempMessage, @"nee %@", messageId);
 
@@ -71,7 +71,7 @@ G3Message* tempMessage;
 - (void)testSearch
 {
     NSLog(@"-[TestGIFulltextIndexCenter testSearch]");
-    STAssertTrue( 1 == [[tempIndexCenter hitsForQueryString:@"Ulf Licht"] count], "search did not result in one hit");
+    STAssertTrue( 1 == [[tempIndexCenter hitsForQueryString:@"Ulf Licht"] count], @"search did not result in one hit");
 }
 
 - (void)testXRemoveMessage

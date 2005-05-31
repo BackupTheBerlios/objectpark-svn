@@ -15,57 +15,65 @@
 #import "OPInternetMessage+GinkoExtensions.h"
 #import "OPManagedObject.h"
 #import "G3MessageGroup.h"
+#import <Foundation/NSDebug.h>
 
 @class NSEntityDescription;
 
 @implementation G3Message
 
 
-+ (id) messageForMessageId: (NSString*) messageId
++ (id)messageForMessageId:(NSString *)messageId inManagedObjectContext:(NSManagedObjectContext *)aContext
 /*" Returns either nil or the message specified by its messageId. "*/
 {
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     //NSManagedObjectModel *model = [[NSApp delegate] managedObjectModel];
     [request setEntity: [self entity]];
-    NSPredicate* predicate = [NSComparisonPredicate predicateWithLeftExpression: [NSExpression expressionForKeyPath: @"messageId"] rightExpression: [NSExpression expressionForConstantValue: messageId] modifier: NSDirectPredicateModifier type: NSEqualToPredicateOperatorType options: 0];
-    [request setPredicate: predicate];
-    NSError* error = nil;
-    NSArray* results = [[NSManagedObjectContext defaultContext] executeFetchRequest: request error: &error];
-    if (results != nil) {
-        return [results count] ? [results lastObject] : nil;
-								
-    } else {// deal with error…
+    NSPredicate *predicate = [NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForKeyPath: @"messageId"] rightExpression:[NSExpression expressionForConstantValue:messageId] modifier:NSDirectPredicateModifier type:NSEqualToPredicateOperatorType options:0];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *results = [aContext executeFetchRequest:request error:&error];
+    if (results != nil) 
+    {
+        return [results count] ? [results lastObject] : nil;						
+    } 
+    else 
+    { // deal with error…
         NSLog(@"Fetch error: %@", [error userInfo]);
     }
+    
     return nil;
 }
 
-+ (id) messageWithTransferData: (NSData*) tData
++ (id)messageWithTransferData:(NSData *)someTransferData inManagedObjectContext:aContext
 {
-    OPInternetMessage* msg = [[[OPInternetMessage alloc] initWithTransferData: tData] autorelease];
-    
     id result = nil;
+    OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:someTransferData] autorelease];
     
-    if (![self messageForMessageId: [msg messageId]]) {		
+    if (![self messageForMessageId:[internetMessage messageId] inManagedObjectContext:aContext]) 
+    {		
         // Create a new message in the default context:
-        result = [[[G3Message alloc] initWithManagedObjectContext: [NSManagedObjectContext defaultContext]] autorelease];
+        result = [[[G3Message alloc] initWithManagedObjectContext:aContext] autorelease];
         
         //NSString* fromHeader = [msg bodyForHeaderField: @"from"];
-        NSString* fromHeader = [msg fromWithFallback: YES];
+        NSString *fromHeader = [internetMessage fromWithFallback:YES];
         
-        [result setValue: tData forKey: @"transferData"];
-        [result setValue: [msg messageId] forKey: @"messageId"];  
-        [result setValue: [msg normalizedSubject] forKey: @"subject"];
-        [result setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"author"];
-        [result setValue: [msg date] forKey: @"date"];
+        [result setValue:someTransferData forKey:@"transferData"];
+        [result setValue:[internetMessage messageId] forKey:@"messageId"];  
+        [result setValue:[internetMessage normalizedSubject] forKey:@"subject"];
+        [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
+        [result setValue:[internetMessage date] forKey:@"date"];
         
         // Note that this method operates on the encoded header field. It's OK because email
         // addresses are 7bit only.
-        if ([G3Profile isMyEmailAddress: fromHeader]) 
-            [result addFlags: OPIsFromMeStatus];
-        
-    } else {
-        //NSLog(@"Dupe check failed for id %@", [msg messageId]);
+        if ([G3Profile isMyEmailAddress:fromHeader])
+        {
+            [result addFlags:OPIsFromMeStatus];
+        }
+    } 
+    else 
+    {
+        if (NSDebugEnabled) NSLog(@"Dupe check failed for id %@", [internetMessage messageId]);
     }
     
     return result;
@@ -155,14 +163,14 @@
     return reference;
 }
 
-- (G3Message*) referenceFind: (BOOL) find
+- (G3Message *)referenceFind:(BOOL)find
 {
     G3Message* result = [self reference];
     if (!result && find) {
         NSEnumerator* e = [[[self internetMessage] references] reverseObjectEnumerator];
         NSString* refId;
         while (refId = [e nextObject]) {
-            result = [[self class] messageForMessageId: refId];
+            result = [[self class] messageForMessageId: refId inManagedObjectContext:[NSManagedObjectContext defaultContext]];
             if (result) {
                 [self setValue: result forKey: @"reference"];
                 return result;

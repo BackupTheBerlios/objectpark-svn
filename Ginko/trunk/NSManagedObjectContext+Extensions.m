@@ -20,8 +20,14 @@ static id context = nil;
 
 + (void)setDefaultContext:(NSManagedObjectContext *)aContext
 {
-    [context autorelease];
-    context = [aContext retain];
+    if (!context)
+    {
+        context = [aContext retain];
+    }
+    else
+    {
+        [[NSException exceptionWithName:NSGenericException reason:@"Default context should not be switched!" userInfo:nil] raise];
+    }
 }
 
 - (id)objectWithURI:(NSURL *)uri

@@ -15,32 +15,21 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIFulltextIndexCenter.h"
 #import "NSData+MessageUtils.h"
+#import <Foundation/NSDebug.h>
 
 @implementation GIMessageBase
 
-+ (G3Message *)insertMessageWithTransferData:(NSData *)transferData
-/*" Creates a new G3Message object from transferData and adds it to the message base, applying filter rules and threading as necessary. "*/
++ (G3Message *)addMessageWithTransferData:(NSData *)someTransferData inManagedObjectContext:(NSManagedObjectContext *)aContext
+/*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if the message could not be created. "*/
 {
-    G3Message *message = [G3Message messageWithTransferData:transferData];
+    G3Message *message = [G3Message messageWithTransferData:someTransferData inManagedObjectContext:aContext];
+    
     if (message) 
     {
         G3Thread *thread = [message threadCreate:YES];
         NSSet *groups = [self defaultGroupsForMessage:message];
         
-        [thread addGroups:groups];
-        
-        /*
-        // Make sure, thread is contained in all groups:
-        int i;
-        for (i = [groups count] - 1; i >= 0; i--) 
-        {
-            G3MessageGroup *group = [groups objectAtIndex:i];
-            
-            // Add to both sides of relationships:
-            [group addValue:thread toRelationshipWithKey:@"threads"];
-            [thread addValue:group toRelationshipWithKey:@"groups"];
-        }
-         */
+        [thread addGroups:groups];        
     }
     
     // add message to index
@@ -73,9 +62,13 @@
     
     G3Thread *thread = [aMessage threadCreate:YES];
     
+    [thread addGroup:aGroup];
+    
+    /* old baroque style 
     // Add to both sides of relationship:
     [aGroup addValue:thread toRelationshipWithKey:@"threads"];
     [thread addValue:aGroup toRelationshipWithKey:@"groups"];
+    */
 }
 
 + (void)addOutgoingMessage:(G3Message *)aMessage
@@ -88,6 +81,73 @@
 {
     // TODO: just a dummy here!
     return [NSSet setWithObjects:[G3MessageGroup defaultMessageGroup], nil];
+}
+
+- (void)addMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
+/*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
+
+    Should run as job (#{see OPJobs})."*/
+{
+    NSString *mboxFilePath = [arguments objectForKey:@"mboxFilename"];
+    NSParameterAssert(mboxFilePath != nil);
+    
+    // Create mbox file object for enumerating the contained messages:
+    OPMBoxFile *mboxFile = [OPMBoxFile mboxWithPath:mboxFilePath];
+    NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
+    
+    // Create a own context for this job/thread but use the same store coordinator
+    // as the main thread because this job/threads works for the main thread.
+    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
+    [context setPersistentStoreCoordinator:[[NSManagedObjectContext defaultContext] persistentStoreCoordinator]];
+    
+    NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
+    NSData *mboxData;
+    NSError *error = nil;
+    unsigned addedMessageCount = 0;
+    
+    [[context undoManager] disableUndoRegistration];
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    @try 
+    {
+        while (mboxData = [enumerator nextObject]) 
+        {
+            //NSLog(@"Found mbox data of length %d", [mboxData length]);
+            NSData *transferData = [mboxData transferDataFromMboxData];
+            
+            if (transferData)
+            {
+                G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData inManagedObjectContext:context];
+                
+                NSAssert1(persistentMessage != nil, @"Fatal error. No message could be generated from transfer data: %@", transferData);
+                
+                if ((++addedMessageCount % 100) == 0) 
+                {
+                    if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
+                    
+                    [context save:&error];
+                    NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
+                }
+            }
+            [pool drain]; // should be last statement in while loop
+        }
+        
+        if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
+        
+        [context save:&error];
+        NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
+    } 
+    @catch (NSException *localException) 
+    {
+        if (NSDebugEnabled) NSLog(@"Exception while adding messages in background: %@", localException);
+        [localException raise];
+    } 
+    @finally 
+    {
+        [pool release];
+        [context release];
+    }
 }
 
 + (void)importFromMBoxFile:(OPMBoxFile *)box
@@ -115,7 +175,7 @@
         
         if (transferData)
         {
-            G3Message *persistentMessage = [self insertMessageWithTransferData:transferData];
+            G3Message *persistentMessage = [self addMessageWithTransferData:transferData inManagedObjectContext:[NSManagedObjectContext defaultContext]];
             
             //NSLog(@"Found %d. message with MsgId '%@'", i+1, [persistentMessage messageId]);
             

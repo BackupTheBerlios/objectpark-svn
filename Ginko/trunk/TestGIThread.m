@@ -31,7 +31,7 @@
     
     STAssertNotNil(transferData, @"nee");
     
-    result = [G3Message messageWithTransferData:transferData];
+    result = [G3Message messageWithTransferData:transferData inManagedObjectContext:[NSManagedObjectContext defaultContext]];
     [result setValue:messageId forKey:@"messageId"];  
 
     STAssertNotNil(result, @"nee %@", messageId);
