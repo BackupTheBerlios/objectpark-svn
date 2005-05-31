@@ -40,7 +40,16 @@
     NSArray *result = [[G3MessageGroup defaultMessageGroup] threadReferenceURIsByDate];
     NSLog(@"testThreadIdsByDate exited");
 
-    NSLog(@"First Thread's name '%@'", [(G3Thread *)[[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
+    NSEnumerator *enumerator = [result objectEnumerator];
+    NSString *urlString;
+    NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
+    
+    while (urlString = [enumerator nextObject])
+    {
+        STAssertTrue([context objectWithURI:[NSURL URLWithString:urlString]] != nil, @"Url %@ failed.", urlString);
+    }
+    
+    //NSLog(@"First Thread's name '%@'", [(G3Thread *)[[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
 }
 
 @end
