@@ -287,6 +287,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     [self checkpointMessageWithStatus:OPQueuedStatus];
     [window performClose:self];
+    [window close];
 }
 
 - (IBAction)saveMessage:(id)sender
@@ -1000,6 +1001,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     G3Message *message;
     
     message = [G3Message messageWithTransferData:[[self message] transferData]];
+    NSAssert1(message != nil, @"-[G3MessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [[self message] transferData]);
     
     // status
     if (oldMessage) [message setFlags:[oldMessage flags]];
@@ -1024,11 +1026,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     NSError *error;
     [(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save:&error];
-    if (error) 
-    {
-        NSLog(@"Error checkpointing message: %@", error);
-    }
+    NSAssert1(!error, @"Error checkpointing message: %@", error);
     
+    if (NSDebugEnabled) NSLog(@"checkpointed message");
     //#warning just testing
     //    [[[G3MessageEditorController alloc] initWithMessage:message profile:profile] autorelease];
 }

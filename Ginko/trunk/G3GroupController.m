@@ -36,6 +36,15 @@
 
 @end
 
+static G3Thread *threadForItem(NSString *item)
+{
+    static NSManagedObjectContext *dc = nil;
+    
+    if (!dc) dc = [NSManagedObjectContext defaultContext];
+    
+    return [dc objectWithURI:[NSURL URLWithString:item]];
+}
+
 @implementation G3GroupController
 
 - (id)init
@@ -116,8 +125,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
     [displayedMessage release];
     [displayedThread release];
-    [group release];
+    [self setGroup:nil];
     [threadCache release];
+    [nonExpandableItemsCache release];
     
     [super dealloc];
 }
@@ -125,8 +135,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (id)valueForGroupProperty:(NSString *)prop
 /*" Used for accessing user defaults for current message group. "*/
 {
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    return [[ud objectForKey:[group name]]objectForKey:prop];
+    NSString *key = [group name];
+    if (key)
+    {
+        NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+        return [[ud objectForKey:key] objectForKey:prop];
+    }
 }
 
 - (void)setValue:(id)value forGroupProperty:(NSString *)prop 
@@ -296,14 +310,26 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (NSArray *)threadCache
 {
-	return threadCache;
+    return threadCache;
 }
 
 - (void)setThreadCache:(NSArray *)newCache
 {
-	[newCache retain];
-	[threadCache release];
-	threadCache = newCache;
+    [newCache retain];
+    [threadCache release];
+    threadCache = newCache;
+}
+
+- (NSSet *)nonExpandableItemsCache
+{
+    return nonExpandableItemsCache;
+}
+
+- (void)setNonExpandableItemsCache:(NSSet *)newCache
+{
+    [newCache retain];
+    [nonExpandableItemsCache release];
+    nonExpandableItemsCache = newCache;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -312,23 +338,37 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         NSNotification *notification;
         
+        NSLog(@"observeValueForKeyPath");
+        [self modelChanged:nil];
         notification = [NSNotification notificationWithName:@"GroupContentChangedNotification" object:self];
         
-        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
     }
     // the same change
     //    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (NSArray *)threadsByDate
+- (NSArray *)threadIdsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
     NSArray* result = [self threadCache];
     
     if (!result) 
     {
-        result = [[self group] threadsByDate];
+        result = [[self group] threadReferenceURIsByDate];
         if (result) [self setThreadCache:result];
+    }
+    return result;
+}
+
+- (NSSet *)nonExpandableItems
+{
+    NSSet* result = [self nonExpandableItemsCache];
+    
+    if (!result) 
+    {
+        result = [[self group] threadsContainingSingleMessage];
+        if (result) [self setNonExpandableItemsCache:result];
     }
     return result;
 }
@@ -360,15 +400,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 message = item;
                 // find the thread above message:
                 while ([threadsView levelForRow:--selectedRow]){}
-                selectedThread = [threadsView itemAtRow:selectedRow];
+                selectedThread = threadForItem([threadsView itemAtRow:selectedRow]);
             }
             else 
             {
-                selectedThread = item;
+                selectedThread = threadForItem(item);
                 
                 if ([selectedThread containsSingleMessage]) 
                 {
-                    message = [[selectedThread valueForKey: @"messages"] anyObject];
+                    message = [[selectedThread valueForKey:@"messages"] anyObject];
                 } 
                 else 
                 {
@@ -715,7 +755,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 //        NSNumber *messageCount = [group valueForKeyPath:@"threads.@sum.messages.@count"];
         NSNumber *messageCount = [NSNumber numberWithInt:0];
         
-        [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ messages in %u threads", "group info text template"), messageCount, [[self threadsByDate] count]]];
+        [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ messages in %u threads", "group info text template"), messageCount, [[self threadIdsByDate] count]]];
     }    
 }
 
@@ -723,6 +763,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     //NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
     [self setThreadCache:nil];
+    [self setNonExpandableItemsCache:nil];
     [self updateGroupInfoTextField];
     [threadsView reloadData];
 }
@@ -739,8 +780,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         //NSLog(@"Setting group for controller: %@", [aGroup description]);
         
         // key value observing:
-        [group removeObserver:self forKeyPath:@"threads"];
-        [aGroup addObserver:self forKeyPath:@"threads" options:NSKeyValueObservingOptionNew context:NULL];
+        if (![self isStandaloneBoxesWindow])
+        {
+            [group removeObserver:self forKeyPath:@"threads"];
+            [aGroup addObserver:self forKeyPath:@"threads" options:NSKeyValueObservingOptionNew context:NULL];
+        }
         
         [group autorelease];
         group = [aGroup retain];
@@ -765,7 +809,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         if (threadURL) 
         {
             @try {
-                thread = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:threadURL]];
+                thread = threadForItem(threadURL);
             } @catch(NSException *e) {
                 NSLog(@"Exception on getting ExpandedThreadId %@", e);
             }
@@ -773,7 +817,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         if (thread && (![thread containsSingleMessage]))
         {
-            int itemRow = [threadsView rowForItem:thread];
+            int itemRow = [threadsView rowForItem:threadURL];
             
             if (itemRow >= 0) 
             {
@@ -802,8 +846,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
             if (([item isKindOfClass:[G3Message 
-                class]])
-                || ([item containsSingleMessage]))
+                class]]) || ([threadForItem(item) containsSingleMessage]))
             {
                 return YES;
             }
@@ -880,9 +923,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (BOOL)outlineView:(NSOutlineView*)outlineView shouldExpandItem:(id)item
 /*" Remembers last expanded thread for opening the next time. "*/
 {
-    if (outlineView == threadsView)// subjects list
+    if (outlineView == threadsView) // subjects list
     {
-        [self setValue: [[[item objectID] URIRepresentation] absoluteString] forGroupProperty:@"ExpandedThreadId"];
+        [self setValue:item forGroupProperty:@"ExpandedThreadId"];
         [tabView selectFirstTabViewItem:self];
     }
     
@@ -895,11 +938,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         if (! item) 
         {
-            return [[self threadsByDate] count];
+            return [[self threadIdsByDate] count];
         } 
         else 
         {
-            return [[(G3Thread *)item messages] count];
+            G3Thread *thread = threadForItem(item);
+            
+            return [[thread messages] count];
         }
     } 
     else // boxes list
@@ -921,10 +966,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if (outlineView == threadsView) 
     {
         // subjects list
-        if ([item isKindOfClass:[G3Thread class]])
+        if ([item isKindOfClass:[NSString class]])
         {
+            //NSLog(@"isItemExpandable");
+            return ![[self nonExpandableItems] containsObject:item];
+            /*
+            G3Thread *thread = threadForItem(item);
 #warning this might be a performance killer as thread fault objects will be fired
-            return ![item containsSingleMessage];
+            return ![thread containsSingleMessage];
+             */
         }
     }
     else // boxes list
@@ -941,11 +991,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         if (! item) 
         {
-            return [[self threadsByDate] objectAtIndex:index];
+            return [[self threadIdsByDate] objectAtIndex:index];
         } 
         else 
         {
-            return [[(G3Thread *)item messagesByDate] objectAtIndex:index];
+            G3Thread *thread = threadForItem(item);
+            
+            return [[thread messagesByDate] objectAtIndex:index];
         }
     } 
     else // boxes list
@@ -1111,6 +1163,11 @@ static NSAttributedString* spacer2()
     {
         if ([[tableColumn identifier] isEqualToString:@"date"])
         {
+            if ([item isKindOfClass:[NSString class]])
+            {
+                item = threadForItem(item);
+            }
+
             BOOL isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item isSeen];
             
             NSCalendarDate *date = [item valueForKey:@"date"];
@@ -1119,10 +1176,10 @@ static NSAttributedString* spacer2()
             
             NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
                             
-            return [[[NSAttributedString alloc] initWithString: dateString attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):unreadAttributes()] autorelease];
+            return [[[NSAttributedString alloc] initWithString:dateString attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):unreadAttributes()] autorelease];
         }
         
-        if ([[tableColumn identifier] isEqualToString: @"subject"])
+        if ([[tableColumn identifier] isEqualToString:@"subject"])
         {
             NSMutableAttributedString *result = nil;
             int i, level;
@@ -1130,20 +1187,23 @@ static NSAttributedString* spacer2()
             result = [[[NSMutableAttributedString alloc] init] autorelease];
             level = [outlineView levelForItem: item];
             
-            if (level == 0) {
-				// it's a thread:
-                G3Thread *thread = (G3Thread *)item;
+            if (level == 0) 
+            {
+		// it's a thread:		
+                G3Thread *thread = threadForItem(item);
                 
-                if ([thread containsSingleMessage]) {
+                if ([thread containsSingleMessage]) 
+                {
                     NSString *from;
-                    NSAttributedString* aFrom;
+                    NSAttributedString *aFrom;
                     
-                    G3Message *message = [[thread valueForKey: @"messages"] anyObject];
+                    G3Message *message = [[thread valueForKey:@"messages"] anyObject];
                     
-                    if (message) {
+                    if (message) 
+                    {
                         BOOL isRead  = [message isSeen];
                         
-                        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: [message valueForKey: @"subject"] attributes: isRead ? (inSelectionAndAppActive ? selectedReadAttributes(): readAttributes()): unreadAttributes()];
+                        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString: [message valueForKey: @"subject"] attributes: isRead ? (inSelectionAndAppActive ? selectedReadAttributes(): readAttributes()): unreadAttributes()];
                         
                         [result appendAttributedString: aSubject];
                         
@@ -1162,7 +1222,7 @@ static NSAttributedString* spacer2()
                 }
                 else // contains more than one message
                 {
-                    return [[[NSAttributedString alloc] initWithString:[item valueForKey:@"subject"] attributes:[(G3Thread*)item hasUnreadMessages] ? unreadAttributes():(inSelectionAndAppActive ? selectedReadAttributes():readAttributes())] autorelease];
+                    return [[[NSAttributedString alloc] initWithString:[thread valueForKey:@"subject"] attributes:[thread hasUnreadMessages] ? unreadAttributes():(inSelectionAndAppActive ? selectedReadAttributes():readAttributes())] autorelease];
                 }
             }
             else // a message, not a thread

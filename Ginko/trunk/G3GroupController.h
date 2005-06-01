@@ -34,6 +34,7 @@
     G3Thread *displayedThread; // displayed as comment tree
     G3Message *displayedMessage; // displayed with body
     NSArray *threadCache;
+    NSSet *nonExpandableItemsCache;
     
     NSArray *searchResults;
     

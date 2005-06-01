@@ -16,6 +16,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
 
 @interface G3MessageGroup : OPManagedObject 
 {
+    NSString *pk;
 }
 
 /*" Handling message groups. Class methods. "*/
@@ -46,8 +47,9 @@ extern NSString *GIMessageGroupWasAddedNotification;
 - (void)setName:(NSString *)value;
 
 /*" Complex Accessors "*/
-- (NSArray *)threadsByDate;
+//- (NSArray *)threadsByDate;
 - (NSArray *)threadReferenceURIsByDate;
+- (NSSet *)threadsContainingSingleMessage;
 
 - (unsigned)threadCount;
 

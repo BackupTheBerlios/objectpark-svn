@@ -188,16 +188,22 @@
         
         if (transferData)
         {
-            G3Message *persistentMessage = [self addMessageWithTransferData:transferData inManagedObjectContext:[NSManagedObjectContext defaultContext]];
-            
-            //NSLog(@"Found %d. message with MsgId '%@'", i+1, [persistentMessage messageId]);
-            
-            if (persistentMessage) 
-            {
-                imported++;
-                //NSLog(@"Thread: %@", [persistentMessage threadCreate: YES]);
+            @try {
+                G3Message *persistentMessage = nil;
+                
+                persistentMessage = [self addMessageWithTransferData:transferData inManagedObjectContext:[NSManagedObjectContext defaultContext]];
+                
+                //NSLog(@"Found %d. message with MsgId '%@'", i+1, [persistentMessage messageId]);
+                
+                if (persistentMessage) 
+                {
+                    imported++;
+                    //NSLog(@"Thread: %@", [persistentMessage threadCreate: YES]);
+                }
+                
+            } @catch(NSException *localException) {
+                NSLog(@"%@", [localException reason]);
             }
-            
             if (i++ >= maxImport) break;
             
             if ((i % 100) == 0) 
@@ -216,7 +222,7 @@
                 }
                 
                 [[context undoManager] removeAllActions];
-
+                
                 lastImported = imported;
             }
         }

@@ -168,20 +168,21 @@
 - (NSManagedObjectContext*) initialManagedObjectContext
 {
     NSError*   error;
-	NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"GinkoBase.sqlite"];
-	BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
-	
-	NSManagedObjectContext* managedObjectContext = [self newManagedObjectContext];
-
-	if (isNewlyCreated) {
-		error = nil;
-		[managedObjectContext save: &error];
-		[managedObjectContext release]; // get rid of it
-		NSLog(@"Commit errors: %@", error);
-		[self configureDatabaseAtPath: path];
-		managedObjectContext = [self newManagedObjectContext];
-	}
-
+    NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"GinkoBase.sqlite"];
+    BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
+    
+    NSManagedObjectContext* managedObjectContext = [self newManagedObjectContext];
+    
+    if (isNewlyCreated) {
+        error = nil;
+        [managedObjectContext save: &error];
+        [managedObjectContext release]; // get rid of it
+        NSLog(@"Commit errors: %@", error);
+        [self configureDatabaseAtPath: path];
+        managedObjectContext = [self newManagedObjectContext];
+    }
+    
+    [[managedObjectContext undoManager] setLevelsOfUndo:0];
     return [managedObjectContext autorelease];
 }
 

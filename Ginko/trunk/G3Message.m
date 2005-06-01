@@ -53,8 +53,8 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     
     if ([self messageForMessageId:[internetMessage messageId]])
     {
-        [internetMessage release];
-        [NSException exceptionWithName:GIDupeMessageException reason:@"Dupe for given transfer data detected. (see userInfo for key transferData)" userInfo:[NSDictionary dictionaryWithObject:someTransferData forKey:@"transferData"]];        
+        [internetMessage autorelease];
+        [[NSException exceptionWithName:GIDupeMessageException reason:[NSString stringWithFormat:@"Dupe for message id %@ detected.", [internetMessage messageId]] userInfo:[NSDictionary dictionaryWithObject:someTransferData forKey:@"transferData"]] raise];        
     }
     
     // Create a new message in the default context:

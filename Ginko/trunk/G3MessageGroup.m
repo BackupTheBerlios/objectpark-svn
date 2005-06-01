@@ -175,6 +175,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 //f    [NSApp saveAction:self];
     
 //    NSArray* result = nil;
+    
     NSError* error = nil;
     NSFetchRequest* request = [[[NSFetchRequest alloc] init] autorelease];
     [request setEntity: [G3Thread entity]];
@@ -183,11 +184,11 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
    // NSPredicate* p = [NSPredicate predicateWithFormat: @"ANY groups.name like %@", [self name]];
    NSPredicate* p = [NSPredicate predicateWithFormat: @"ANY groups = %@", self];
-   // NSPredicate* p = [NSPredicate predicateWithFormat: @"%@ IN groups", self];
+   //NSPredicate* p = [NSPredicate predicateWithFormat: @"%@ IN groups", self];
     
     [request setPredicate: p];
     
-    [request setSortDescriptors: [NSArray arrayWithObject: [[[NSSortDescriptor alloc] initWithKey: @"date" ascending: NO] autorelease]]];
+    //[request setSortDescriptors: [NSArray arrayWithObject: [[[NSSortDescriptor alloc] initWithKey: @"date" ascending: NO] autorelease]]];
     
     result = [[self managedObjectContext] executeFetchRequest: request error: &error];
     if (error) NSLog(@"Error fetching threads: %@", error);
@@ -199,6 +200,18 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     return result;
 }
 
+- (NSString *)primaryKey
+{    
+    if (!pk)
+    { 
+        NSString *URLString = [[[self objectID] URIRepresentation] absoluteString];
+        pk = [[[URLString lastPathComponent] substringFromIndex:1] retain];
+    }
+    
+    //NSLog(@"primary key = %@", pk);
+    return pk;
+}
+
 static int collectThreadURIStringsCallback(void *result, int columns, char **values, char **colnames)
 {
     //NSLog(@"%s", values[0]);
@@ -206,7 +219,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     if (!prefix) prefix = [G3Thread URIStringPrefix];
     
-    [(NSMutableArray *)result addObject:[prefix stringByAppendingString:[NSString stringWithUTF8String:values[0]]]];
+    [(id)result addObject:[prefix stringByAppendingString:[NSString stringWithUTF8String:values[0]]]];
 //    [result addObject:[NSString stringWithUTF8String:values[0]]];
     return 0;
 }
@@ -224,11 +237,12 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     {
         int errorCode;
         char *error;
-        NSLog(@"DB opened. Fetching thread objects...");
+        //NSLog(@"DB opened. Fetching thread objects...");
+        NSString *queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZTHREAD.ZDATE;", [self primaryKey]];
         
         if (errorCode = sqlite3_exec(db, // An open database
-                                     //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
-            "select Z_PK from Z_4THREADS, ZTHREAD where 1 = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZTHREAD.ZDATE;", /* SQL to be executed */
+                                         //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
+                                     [queryString UTF8String], /* SQL to be executed */
                                      collectThreadURIStringsCallback, /* Callback function */
                                      result, /* 1st argument to callback function */
                                      &error)) 
@@ -243,7 +257,46 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     sqlite3_close(db);
     
-    NSLog(@"result count = %d", [result count]);
+    //NSLog(@"result count = %d", [result count]);
+    //NSLog(@"result = %@", result);
+    
+    return result;
+}
+
+- (NSSet *)threadsContainingSingleMessage
+{
+    NSMutableSet *result = [NSMutableSet set];
+    
+    // open db:
+    sqlite3 *db = NULL;
+    sqlite3_open([[NSApp databasePath] UTF8String],   /* Database filename (UTF-8) */
+        &db);                /* OUT: SQLite db handle */
+    
+    if (db) 
+    {
+        int errorCode;
+        char *error;
+        //NSLog(@"DB opened. Fetching thread objects...");
+        NSString *queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZNUMBEROFMESSAGES < 2;", [self primaryKey]];
+        
+        if (errorCode = sqlite3_exec(db, // An open database
+                                         //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
+                                     [queryString UTF8String], /* SQL to be executed */
+                                     collectThreadURIStringsCallback, /* Callback function */
+                                     result, /* 1st argument to callback function */
+                                     &error)) 
+        { 
+            if (error) 
+            {
+                NSLog(@"Error creating index: %s", error);
+                sqlite3_free(error);
+            }
+        }
+    }
+    
+    sqlite3_close(db);
+    
+    //NSLog(@"result count = %d", [result count]);
     //NSLog(@"result = %@", result);
     
     return result;
@@ -275,6 +328,12 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     return result;
      */
+}
+
+- (void)dealloc
+{
+    [pk release];
+    [super dealloc];
 }
 
 - (G3Profile *)defaultProfile
