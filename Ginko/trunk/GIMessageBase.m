@@ -83,13 +83,15 @@
     return [NSSet setWithObjects:[G3MessageGroup defaultMessageGroup], nil];
 }
 
-- (void)addMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
+- (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
 
     Should run as job (#{see OPJobs})."*/
 {
     NSString *mboxFilePath = [arguments objectForKey:@"mboxFilename"];
     NSParameterAssert(mboxFilePath != nil);
+    NSManagedObjectContext *parentContext = [arguments objectForKey:@"parentContext"];
+    NSParameterAssert(parentContext != nil);
     
     // Create mbox file object for enumerating the contained messages:
     OPMBoxFile *mboxFile = [OPMBoxFile mboxWithPath:mboxFilePath];
@@ -98,7 +100,7 @@
     // Create a own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
-    [context setPersistentStoreCoordinator:[[NSManagedObjectContext defaultContext] persistentStoreCoordinator]];
+    [context setPersistentStoreCoordinator:[parentContext persistentStoreCoordinator]];
     
     [NSManagedObjectContext setDefaultContext:context];
     
@@ -109,10 +111,12 @@
     
     [[context undoManager] disableUndoRegistration];
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSAutoreleasePool *pool = nil;
     
     @try 
     {
+        pool = [[NSAutoreleasePool alloc] init];
+        
         while (mboxData = [enumerator nextObject]) 
         {
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
@@ -132,17 +136,24 @@
                         [context save:&error];
                         NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
                         
-                        [context reset];
+                        [pool drain];
+                        pool = [[NSAutoreleasePool alloc] init];
+                        
+                        if ((++addedMessageCount % 5000) == 0) 
+                        {
+                            [context reset];
+                        }
                     }
                 } @catch (NSException *localException) {
                     if ([localException name] == GIDupeMessageException)
                     {
                         if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
-                        else [localException raise];
+                        [pool drain];
+                        pool = [[NSAutoreleasePool alloc] init];
                     }
                 }
             }
-            [pool drain]; // should be last statement in while loop
+            //[pool drain]; // should be last statement in while loop
         }
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
@@ -227,6 +238,7 @@
             }
         }
         [pool drain]; // should be last statement in while loop
+        pool = [[NSAutoreleasePool alloc] init];
     }
     
     [[context undoManager] enableUndoRegistration];

@@ -1202,8 +1202,11 @@ static NSAttributedString* spacer2()
                     if (message) 
                     {
                         BOOL isRead  = [message isSeen];
+                        NSString *subject = [message valueForKey:@"subject"];
                         
-                        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString: [message valueForKey: @"subject"] attributes: isRead ? (inSelectionAndAppActive ? selectedReadAttributes(): readAttributes()): unreadAttributes()];
+                        if (!subject) subject = @"";
+                        
+                        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? (inSelectionAndAppActive ? selectedReadAttributes(): readAttributes()): unreadAttributes()];
                         
                         [result appendAttributedString: aSubject];
                         

@@ -19,6 +19,7 @@
 #import "G3Thread.h"
 #import "G3MessageGroup.h"
 #import <sqlite3.h>
+#import "OPJobs.h"
 
 
 @implementation GIApplication
@@ -267,12 +268,18 @@
 
 - (IBAction) importTestMBox: (id) sender
 {
-    NSString *boxFilename = [[NSBundle mainBundle] pathForResource: @"test-mbox" ofType: @""];
+    NSString *boxFilename = [[NSBundle mainBundle] pathForResource:@"test-mbox" ofType:@""];
     //NSString *boxFilename = @"/Users/axel/Desktop/macosx-dev.mbox.txt";
+    NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
+    [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
+    [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
     
-    [GIMessageBase importFromMBoxFile: box];		
+    [OPJobs scheduleJobWithName:@"mbox import" target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
+  
+//    OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
+    
+//    [GIMessageBase importFromMBoxFile: box];		
 }
 
 

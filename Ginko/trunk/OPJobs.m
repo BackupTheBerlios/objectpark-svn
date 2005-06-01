@@ -176,7 +176,11 @@ static unsigned nextJobId = 1;
     
     for(;;)
     {
-        [pool drain];
+        [pool release];
+        pool = [[NSAutoreleasePool alloc] init];
+        
+        // is drain broken as it seems that afterwards the pool is no longer in place
+        //[pool drain];
 
         [jobsLock lockWhenCondition:OPPendingJobs];
 
