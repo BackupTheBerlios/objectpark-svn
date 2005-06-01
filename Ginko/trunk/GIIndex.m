@@ -55,15 +55,30 @@
         if(index == nil) {
             NSLog(@"Warning: -[GIIndex initWithName:%@ atPath:%@] Couldn't create index", aName, aPath);
         } else {
-            NSLog(@"[GIIndex initWithName:%@ atPath:%@] contains %d documents", aName, [self documentCount]);
+            NSLog(@"[GIIndex initWithName:%@ atPath:%@] contains %d documents", aName, aPath, [self documentCount]);
         }
     }
     //#warning when to call SKIndexClose? In setIndex
     return self;
 }
 
+/*
+- (void)retain
+{
+    //[super retain];
+    NSLog(@"-[GIIndex(%@) retain]", [self name]);
+}
+
+- (void)release
+{
+    NSLog(@"-[GIIndex(%@) release]", [self name]);
+    //[super release];
+}
+*/
+
 - (void)dealloc
 {
+    NSLog(@"-[GIIndex dealloc]");
     [self setIndex: nil];
     [name release];
     
@@ -111,7 +126,8 @@
     BOOL isIndexed = NO;
 //	NSLog(@"-[GIIndex(%@) addDocumentWithName:%@",[self name], aName);
     SKDocumentRef tempDocument = [self createDocumentWithName:aName];
-    // add document to index
+
+    // add document to index        
     if (tempDocument) 
     {
         isIndexed = SKIndexAddDocumentWithText([self index], tempDocument, (CFStringRef)aText, YES);

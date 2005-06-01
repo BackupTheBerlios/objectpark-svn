@@ -14,12 +14,16 @@
 {
 }
 
-+ (id)defaultIndexCenter;
++ (GIFulltextIndexCenter *)defaultIndexCenter;
 - (id)init;
 
 - (BOOL)addMessage:(G3Message *)aMessage;
 - (BOOL)removeMessage:(G3Message *)aMessage;
 - (NSArray *)hitsForQueryString:(NSString *)aQuery;
 - (BOOL)reindexAllMessages;
+
+- (NSDictionary *)indexDictionary;
+- (void)setIndexDictionary:(NSDictionary *)newIndexDictionary;
+
 
 @end

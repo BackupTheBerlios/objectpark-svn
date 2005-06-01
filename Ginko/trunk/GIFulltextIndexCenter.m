@@ -18,16 +18,17 @@
 @implementation GIFulltextIndexCenter
 
 NSDictionary* indexDictionary;
+GIIndex * contentIndex;
 
-+ (id)defaultIndexCenter
++ (GIFulltextIndexCenter *)defaultIndexCenter
 {
     static GIFulltextIndexCenter *defaultCenter = nil;
     
     //NSLog(@"-[GIFulltextIndexCenter defaultIndexCenter]");
-    
-    if (!defaultCenter)
-    {
-        defaultCenter = [[self alloc] init]; // no autorelease, why?
+
+	if (!defaultCenter)
+	{
+		defaultCenter = [[self alloc] init]; // no autorelease, because it is a sigleton?
     }
     
     return defaultCenter;
@@ -37,21 +38,25 @@ NSDictionary* indexDictionary;
 {
     self = [super init];
  
-    NSMutableDictionary* tempIndexDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
+    //NSMutableDictionary* tempIndexDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
     
     NSString* CONTENT_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"content.index"];
-    NSString* SENDER_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"sender.index"];
-    NSString* STATUS_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"status.index"];
+    //NSString* SENDER_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"sender.index"];
+    //NSString* STATUS_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"status.index"];
 
+    contentIndex = [GIIndex indexWithName:@"contentIndex" atPath:CONTENT_INDEX_PATH];
+    [contentIndex retain];
+    /*
     [tempIndexDictionary setObject:[GIIndex indexWithName:@"contentIndex" atPath:CONTENT_INDEX_PATH]
                             forKey:@"contentIndex"];
     [tempIndexDictionary setObject:[GIIndex indexWithName:@"senderIndex" atPath:SENDER_INDEX_PATH]
                             forKey:@"senderIndex"];
     [tempIndexDictionary setObject:[GIIndex indexWithName:@"statusIndex" atPath:STATUS_INDEX_PATH]
                             forKey:@"statusIndex"];
-    
-    [self setIndexDictionary:(NSDictionary *)tempIndexDictionary];
-    
+
+     [self setIndexDictionary:(NSDictionary *)tempIndexDictionary];
+     */
+
     return self;
 }
 
@@ -72,24 +77,21 @@ NSDictionary* indexDictionary;
 - (void)setIndexDictionary:(NSDictionary *)newIndexDictionary
 {
     [newIndexDictionary retain];
-    if (indexDictionary) 
-    {
-        [indexDictionary release];
-    }
-    if (newIndexDictionary) 
-    {
-        indexDictionary = newIndexDictionary;
-    }
+    [indexDictionary release];
+    indexDictionary = newIndexDictionary;
 }
 
 - (BOOL)addMessage:(G3Message *)aMessage
 {
     BOOL isIndexed = FALSE;
     NSLog(@"-[GIFulltextIndexCenter addMessage:%@", [aMessage messageId]);
-    //NSMutableDictionary* documentPropertiesDict = [[NSMutableDictionary alloc] init];
     NSMutableDictionary* documentPropertiesDict = [NSMutableDictionary dictionaryWithCapacity:1];
     [documentPropertiesDict setObject:[aMessage senderName] forKey:@"senderName"];
     
+    isIndexed = [contentIndex addDocumentWithName:[aMessage messageId]
+                                          andText:[[aMessage contentAsAttributedString] string]
+                                    andProperties:documentPropertiesDict];
+    /*
     isIndexed = [[indexDictionary objectForKey:@"contentIndex"] addDocumentWithName:[aMessage messageId]
                                           andText:[[aMessage contentAsAttributedString] string]
                                     andProperties:documentPropertiesDict];
@@ -104,6 +106,7 @@ NSDictionary* indexDictionary;
         #warning TODO GIFulltextIndexCenter how to handle more stati
     }
          
+     */
     if (isIndexed) {
         [aMessage setFlags:OPFulltextIndexedStatus];
     }
@@ -113,11 +116,14 @@ NSDictionary* indexDictionary;
 
 - (BOOL)removeMessage:(G3Message *)aMessage
 {
-    BOOL isRemoveSuccessfull;
+    BOOL isRemoveSuccessfull = NO;
     NSLog(@"-[GIFulltextIndexCenter removeMessage:%@", [aMessage messageId]);
+    isRemoveSuccessfull = [contentIndex removeDocumentWithName:[aMessage messageId]];
+    /*
     isRemoveSuccessfull = [[indexDictionary objectForKey:@"contentIndex"] removeDocumentWithName:[aMessage messageId]];
     isRemoveSuccessfull = [[indexDictionary objectForKey:@"senderIndex"] removeDocumentWithName:[aMessage messageId]];
     isRemoveSuccessfull = [[indexDictionary objectForKey:@"statusIndex"] removeDocumentWithName:[aMessage messageId]];
+     */
     if (isRemoveSuccessfull) {
         [aMessage removeFlags:OPFulltextIndexedStatus];
     }
@@ -127,15 +133,12 @@ NSDictionary* indexDictionary;
 - (NSArray *)hitsForQueryString:(NSString *)aQuery
 {
  	NSLog(@"-[GIFulltextIndexCenter hitsForQueryString:%@]", aQuery);
-    GIIndex* tempContentIndex = [indexDictionary objectForKey:@"contentIndex"];
     
+	return [contentIndex hitsForQueryString:aQuery];
     /*
-    if (tempContentIndex) {
-        NSLog(@"got index");
-    }
-     */
-    
+    GIIndex* tempContentIndex = [indexDictionary objectForKey:@"contentIndex"];
 	return [tempContentIndex hitsForQueryString:aQuery];
+     */
     
     
     //NSMutableArray* resultArray = [NSMutableArray arrayWithArray:[[indexDictionary objectForKey:@"contentIndex"] hitsForQueryString:aQuery]];
