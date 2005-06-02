@@ -26,22 +26,24 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 + (id)messageForMessageId:(NSString *)messageId
 /*" Returns either nil or the message specified by its messageId. "*/
 {
-    NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-    //NSManagedObjectModel *model = [[NSApp delegate] managedObjectModel];
-    [request setEntity: [self entity]];
-    NSPredicate *predicate = [NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForKeyPath: @"messageId"] rightExpression:[NSExpression expressionForConstantValue:messageId] modifier:NSDirectPredicateModifier type:NSEqualToPredicateOperatorType options:0];
-    [request setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSArray *results = [[NSManagedObjectContext defaultContext] executeFetchRequest:request error:&error];
-    
-    NSAssert1(!error, @"+[G3Message messageForMessageId:inManagedObjectContext:] error while fetching (%@).", error);    
-    
-    if (results != nil) 
+    if (messageId)
     {
-        return [results count] ? [results lastObject] : nil;						
-    } 
-    
+        NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+        //NSManagedObjectModel *model = [[NSApp delegate] managedObjectModel];
+        [request setEntity: [self entity]];
+        NSPredicate *predicate = [NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForKeyPath: @"messageId"] rightExpression:[NSExpression expressionForConstantValue:messageId] modifier:NSDirectPredicateModifier type:NSEqualToPredicateOperatorType options:0];
+        [request setPredicate:predicate];
+        
+        NSError *error = nil;
+        NSArray *results = [[NSManagedObjectContext defaultContext] executeFetchRequest:request error:&error];
+        
+        NSAssert1(!error, @"+[G3Message messageForMessageId:inManagedObjectContext:] error while fetching (%@).", error);    
+        
+        if (results != nil) 
+        {
+            return [results count] ? [results lastObject] : nil;						
+        } 
+    }
     return nil;
 }
 

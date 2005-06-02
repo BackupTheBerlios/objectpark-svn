@@ -20,32 +20,28 @@
     [[NSManagedObjectContext defaultContext] rollback];
 }
 
-- (G3Message *)makeAMessageWithId:(NSString *)messageId
+- (G3Message *)makeAMessage
 {
-    G3Message *result;
-    
+    static int i = 1;
+    NSString *messageId = [NSString stringWithFormat:@"<threadtest-message-%d@test.org>",i++];
     NSString *transferString = [NSString stringWithFormat:
-    @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nLudovic Marcotte wrote:\r\n", messageId];
-    
+                                             @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
-    
     STAssertNotNil(transferData, @"nee");
     
-    result = [G3Message messageWithTransferData:transferData];
-    [result setValue:messageId forKey:@"messageId"];  
-
-    STAssertNotNil(result, @"nee %@", messageId);
-    STAssertTrue([[result messageId] isEqual:messageId], @"nee");
+    G3Message *message = [G3Message messageWithTransferData:transferData];
+    STAssertNotNil(message, @"nee %@", messageId);
+    STAssertTrue([[message messageId] isEqual:messageId], @"nee");
     
-    return result;
+    return message;
 }
 
 - (void)testSplit
 {
     G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
-    G3Message *messageA = [self makeAMessageWithId:@"test1"];
-    G3Message *messageB = [self makeAMessageWithId:@"test2"];
-    G3Message *messageC = [self makeAMessageWithId:@"test3"];
+    G3Message *messageA = [self makeAMessage];
+    G3Message *messageB = [self makeAMessage];
+    G3Message *messageC = [self makeAMessage];
     
     [messageC setValue:messageB forKey:@"reference"];
     
@@ -65,9 +61,9 @@
 {
     G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
     G3Thread *threadB = [[[G3Thread alloc] init] autorelease];
-    G3Message *messageA = [self makeAMessageWithId:@"testA"];
-    G3Message *messageB = [self makeAMessageWithId:@"testB"];
-    G3Message *messageC = [self makeAMessageWithId:@"testC"];
+    G3Message *messageA = [self makeAMessage];
+    G3Message *messageB = [self makeAMessage];
+    G3Message *messageC = [self makeAMessage];
     
     [messageC setValue:messageB forKey:@"reference"];
     
@@ -92,11 +88,11 @@
     }
 }
 
-- (void)testGroupAdding
+- (void)disabledtestGroupAdding
 {
-    G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
-    G3Message *messageA = [self makeAMessageWithId:@"testA1"];
-    G3MessageGroup *group = [G3MessageGroup defaultMessageGroup];
+    G3Thread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"G3Thread" inManagedObjectContext:[NSManagedObjectContext defaultContext]];
+    G3Message *messageA = [self makeAMessage];
+    G3MessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"G3MessageGroup" inManagedObjectContext:[NSManagedObjectContext defaultContext]];
     
     [threadA addMessage:messageA];
     [threadA addGroup:group];
