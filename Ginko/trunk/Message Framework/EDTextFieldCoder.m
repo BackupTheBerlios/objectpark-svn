@@ -78,6 +78,17 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
     [super dealloc];
 }
 
+/*
+- (id)autorelease
+{
+    return [super autorelease];
+}
+
+- (void)release
+{
+    [super release];
+}
+*/
 
 //---------------------------------------------------------------------------------------
 //	CODING
@@ -130,20 +141,20 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
     NSStringEncoding	stringEncoding;
     NSData				*wContents;
     BOOL				hasSeenEncodedWord;
-
+    
     result = [NSMutableString string];
     hasSeenEncodedWord = NO;
     scanner = [NSScanner scannerWithString:fieldBody];
     [scanner setCharactersToBeSkipped:nil];
     while([scanner isAtEnd] == NO)
-        {
+    {
         if([scanner scanUpToString:@"=?" intoString:&chunk] == YES)
-            {
+        {
             if((hasSeenEncodedWord == NO) || ([chunk isWhitespace] == NO))
                 [result appendString:chunk];
-            }
+        }
         if([scanner scanString:@"=?" intoString:NULL] == YES)
-            {
+        {
             previousChunk = chunk;
             if(([scanner scanUpToString:@"?" intoString:&charset] == NO) ||
                ([scanner scanString:@"?" intoString:NULL] == NO) ||
@@ -151,14 +162,14 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
                ([scanner scanString:@"?" intoString:NULL] == NO) ||
                ([scanner scanUpToString:@"?=" intoString:&chunk] == NO) ||
                ([scanner scanString:@"?=" intoString:NULL] == NO))
-                {
+            {
                 [NSException raise:EDMessageFormatException format:EDLS_MALFORMED_MIME_HEADER_WORD, fieldBody];
                 if([previousChunk isWhitespace])
                     [result appendString:previousChunk];
                 hasSeenEncodedWord = NO;
-               }
+            }
             else
-                {
+            {
                 wContents = [chunk dataUsingEncoding:NSASCIIStringEncoding];
                 if([transferEncoding caseInsensitiveCompare:@"Q"] == NSOrderedSame)
                     wContents = [wContents decodeHeaderQuotedPrintable];
@@ -175,9 +186,9 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
                 if((decodedWord = [NSString stringWithData:wContents encoding:stringEncoding]) != nil)
                     [result appendString:decodedWord];
                 hasSeenEncodedWord = YES;
-                }
             }
         }
+    }
     return result;
 }
 

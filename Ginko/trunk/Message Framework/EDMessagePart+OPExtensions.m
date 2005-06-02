@@ -311,7 +311,9 @@
             content = [[[NSAttributedString alloc] initWithString:@"Exception while extracting contents as attributed string."] autorelease];
         NS_ENDHANDLER
 
-        [contentCoder release];
+#warning debug only
+        [contentCoder autorelease];
+//        [contentCoder release];
     }
     
     if (! content)

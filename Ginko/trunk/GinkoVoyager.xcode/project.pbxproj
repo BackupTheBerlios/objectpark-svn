@@ -185,6 +185,7 @@
 		};
 		29B97317FDCFA39411CA2CEA = {
 			children = (
+				772F293C084F8249004D50E0,
 				8DCA9ABD08015F7600EEA49F,
 				8D6840C807F5BD77003DB791,
 				8D68417407F5C5A7003DB791,
@@ -616,6 +617,58 @@
 			settings = {
 			};
 		};
+		772F293C084F8249004D50E0 = {
+			children = (
+				772F293D084F826F004D50E0,
+			);
+			isa = PBXGroup;
+			name = "Test Resources";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		772F293D084F826F004D50E0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			name = "multipartAlternativeTest-mbox.txt";
+			path = "Message Framework/multipartAlternativeTest-mbox.txt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		772F293E084F826F004D50E0 = {
+			fileRef = 772F293D084F826F004D50E0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		772F293F084F82BA004D50E0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = TestOPMultipartContentCoder.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		772F2940084F82BA004D50E0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = TestOPMultipartContentCoder.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		772F2941084F82BA004D50E0 = {
+			fileRef = 772F293F084F82BA004D50E0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		772F2942084F82BA004D50E0 = {
+			fileRef = 772F2940084F82BA004D50E0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		7742E9DF076A1AB500B1B4BA = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -978,6 +1031,8 @@
 				77477314080D72DD00A6A49C,
 				775025F208489585008DD1CD,
 				775025F308489586008DD1CD,
+				772F293F084F82BA004D50E0,
+				772F2940084F82BA004D50E0,
 			);
 			isa = PBXGroup;
 			name = Tests;
@@ -2006,6 +2061,7 @@
 				617C2A77084632F700803758,
 				775025F408489586008DD1CD,
 				77DF88290849BB6D006CA19D,
+				772F2941084F82BA004D50E0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2057,6 +2113,7 @@
 				8DDD227D080ECA3F006C902D,
 				8DD602F1080ED9300050E973,
 				7781EBAA0833B55100830729,
+				772F293E084F826F004D50E0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2156,6 +2213,7 @@
 				617C2A78084632F700803758,
 				775025F508489586008DD1CD,
 				77DF882A0849BB6D006CA19D,
+				772F2942084F82BA004D50E0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2694,9 +2752,9 @@
 		};
 		8D9020B50779D943005365EA = {
 			children = (
+				7779AC9907C40CC300F064D3,
 				77DF88270849BB6D006CA19D,
 				77DF88280849BB6D006CA19D,
-				7779AC9907C40CC300F064D3,
 				8D68416607F5C434003DB791,
 				8D68416707F5C434003DB791,
 				77D79BD507F31BDB00C521CE,

@@ -100,14 +100,14 @@
 {
     NSString* aContentType;
     EDMessagePart* subpart;
-	EDMessagePart* result = nil;
+    EDMessagePart* result = nil;
     
-	NSMutableArray* alternativeContentTypes = [[NSMutableArray allocWithZone: [self zone]] init];
-	NSMutableArray* alternativeSubparts     = [[NSMutableArray allocWithZone: [self zone]] init];
+    NSMutableArray* alternativeContentTypes = [[NSMutableArray allocWithZone: [self zone]] init];
+    NSMutableArray* alternativeSubparts     = [[NSMutableArray allocWithZone: [self zone]] init];
     
     // reverse order (the most rich content type should be the first after that)
     // filter out the alternatives for which no decoder class can be found
-	NSEnumerator* enumerator = [[self subparts] reverseObjectEnumerator];
+    NSEnumerator* enumerator = [[self subparts] reverseObjectEnumerator];
     while (subpart = [enumerator nextObject]) {
         if ([subpart contentDecoderClass] != nil) {
             aContentType = [[subpart contentType] lowercaseString];
@@ -119,21 +119,26 @@
             }
         }
     }
-        
+    
     if ([alternativeContentTypes count] == 0) // don't return empty array
-        return nil;
+    {
+        [alternativeContentTypes release];
+        [alternativeSubparts release];
 
+        return nil;
+    }
+    
     // sort array after user preference
     
     if (preferredContentTypes) {
         NSString* anDefault;
         enumerator = [preferredContentTypes reverseObjectEnumerator];
-		
+        
         while (anDefault = [enumerator nextObject]) {
-			
+            
             NSString* comparand = [anDefault lowercaseString];
             int index = [alternativeContentTypes indexOfObject:comparand];
-                        
+            
             if (index != NSNotFound)
             {
                 // move to first position
@@ -147,12 +152,14 @@
         }
     }
     
-    result = [alternativeSubparts objectAtIndex:0];
+    NSAssert([alternativeSubparts count] > 0, @"at least one alternative");
+    
+    result = [[alternativeSubparts objectAtIndex:0] retain];
     
     [alternativeContentTypes release];
     [alternativeSubparts release];
     
-    return result;
+    return [result autorelease];
 }
 
 // alternative
