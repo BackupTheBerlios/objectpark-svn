@@ -33,8 +33,8 @@
     }
     
     // add message to index
-    //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-    //[indexCenter addMessage:message];
+    GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+    [indexCenter addMessage:message];
     
     return message;
 }
@@ -128,7 +128,8 @@
                     G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData inManagedObjectContext:context];
                     
                     NSAssert1(persistentMessage != nil, @"Fatal error. No message could be generated from transfer data: %@", transferData);
-                    
+#warning just debugging
+                    if (addedMessageCount > 1) break;
                     if ((++addedMessageCount % 100) == 0) 
                     {
                         if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
