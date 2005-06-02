@@ -141,6 +141,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
         return [[ud objectForKey:key] objectForKey:prop];
     }
+    return nil;
 }
 
 - (void)setValue:(id)value forGroupProperty:(NSString *)prop 

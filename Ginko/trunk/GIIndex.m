@@ -17,6 +17,31 @@
     return [[[self alloc] initWithName:aName atPath:aPath] autorelease];
 }
 
+- (SKIndexRef)index
+{
+    return index;
+}
+
+- (void)setIndex:(SKIndexRef)newIndex
+    // Sets a new index. Closes the previous one.
+{
+    //NSLog(@"-[GIIndex(%@) setIndex]", [self name]);
+    if (index!=newIndex) {
+        if (index) {
+        //NSLog(@"-[GIIndex(%@) setIndex] will close/release old index", [self name]);
+            SKIndexClose(index);
+            CFRelease(index); // initially, index is nil
+        }
+        if (newIndex) 
+        {
+        //NSLog(@"-[GIIndex(%@) setIndex] will retain new index", [self name]);
+            CFRetain(newIndex);
+        } 
+        index = newIndex;
+    }
+}
+
+
 - (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
 {
     self = [super init];
@@ -85,28 +110,6 @@
     [super dealloc];
 }
 
-- (SKIndexRef)index
-{
-    return index;
-}
-
-- (void)setIndex:(SKIndexRef)newIndex
-    // Sets a new index. Closes the previous one.
-{
-    //NSLog(@"-[GIIndex(%@) setIndex]", [self name]);
-    #warning if index == newIndex might release might be dangerous
-    if (index) {
-        //NSLog(@"-[GIIndex(%@) setIndex] will close/release old index", [self name]);
-        SKIndexClose(index);
-        CFRelease(index); // initially, index is nil
-    }
-    if (newIndex) 
-    {
-        //NSLog(@"-[GIIndex(%@) setIndex] will retain new index", [self name]);
-        CFRetain(newIndex);
-    } 
-    index = newIndex;
-}
 
 - (NSString *)name
 {
