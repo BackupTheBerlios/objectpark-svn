@@ -115,7 +115,6 @@
             if (aContentType) {
                 [alternativeContentTypes addObject: aContentType];
                 [alternativeSubparts addObject: subpart];
-                [aContentType release];
             }
         }
     }
@@ -148,7 +147,6 @@
                 [alternativeContentTypes removeObjectAtIndex:index + 1];
                 [alternativeSubparts removeObjectAtIndex:index + 1];
             }
-            [comparand release];
         }
     }
     

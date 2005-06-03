@@ -21,7 +21,7 @@
 
 + (NSSet *)defaultGroupsForMessage:(G3Message *)aMessage;
 
-+ (void) importFromMBoxFile: (OPMBoxFile*) box;
+//+ (void) importFromMBoxFile: (OPMBoxFile*) box;
 
 + (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup;
 + (void)addOutgoingMessage:(G3Message *)aMessage;
