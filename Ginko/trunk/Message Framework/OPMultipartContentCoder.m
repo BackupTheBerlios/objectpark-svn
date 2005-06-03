@@ -74,7 +74,6 @@
 
 - (NSAttributedString *)attributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes
 {
-    NSMutableAttributedString *result;
     
     if ([subtype caseInsensitiveCompare:@"alternative"] == NSOrderedSame)
         return [self _attributedStringFromMultipartAlternativeWithPreferredContentTypes:preferredContentTypes];
@@ -85,11 +84,11 @@
     else if ([subtype caseInsensitiveCompare:@"report"] == NSOrderedSame)
         return [self _attributedStringFromMultipartReportWithPreferredContentTypes:preferredContentTypes];
     
-    result = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"multipart/%@ not yet decodable. Fallback to multipart/mixed handling\n", subtype]] autorelease];
+    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"multipart/%@ not yet decodable. Fallback to multipart/mixed handling\n", subtype]];
     
     [result appendAttributedString:[self _attributedStringFromMultipartMixedWithPreferredContentTypes:preferredContentTypes]];
-    
-    return result;
+        
+    return [result autorelease];
 }
 
 @end
@@ -98,7 +97,6 @@
 
 - (EDMessagePart*) _mostPreferredSubpartWithPreferredContentTypes: (NSArray*) preferredContentTypes
 {
-    NSString* aContentType;
     EDMessagePart* subpart;
     EDMessagePart* result = nil;
     
@@ -110,7 +108,7 @@
     NSEnumerator* enumerator = [[self subparts] reverseObjectEnumerator];
     while (subpart = [enumerator nextObject]) {
         if ([subpart contentDecoderClass] != nil) {
-            aContentType = [[subpart contentType] lowercaseString];
+            NSString* aContentType = [[subpart contentType] lowercaseString];
             
             if (aContentType) {
                 [alternativeContentTypes addObject: aContentType];
@@ -163,16 +161,11 @@
 // alternative
 - (NSAttributedString *)_attributedStringFromMultipartAlternativeWithPreferredContentTypes:(NSArray *)preferredContentTypes
 {
-    EDMessagePart *preferredSubpart;
-
-    preferredSubpart = [self _mostPreferredSubpartWithPreferredContentTypes:preferredContentTypes];
+    EDMessagePart *preferredSubpart = [self _mostPreferredSubpartWithPreferredContentTypes:preferredContentTypes];
     
-    if (preferredSubpart)
-    {
+    if (preferredSubpart) {
         return [preferredSubpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
-    }
-    else
-    {
+    } else {
         return [[[NSAttributedString alloc] initWithString:@"\nmultipart/alternative message part with no decodable alternative.\n"] autorelease];
     }
 }
@@ -180,13 +173,10 @@
 // mixed
 - (NSAttributedString *)_attributedStringFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes
 {
-    NSEnumerator *enumerator;
-    EDMessagePart *subpart;
-    NSMutableAttributedString *result;
+    NSMutableAttributedString* result = [[NSMutableAttributedString alloc] init];
+    EDMessagePart* subpart;
+    NSEnumerator* enumerator = [[self subparts] objectEnumerator];
     
-    result = [[[NSMutableAttributedString alloc] init] autorelease];
-    
-    enumerator = [[self subparts] objectEnumerator];
     while (subpart = [enumerator nextObject])
     {
         NS_DURING
@@ -197,7 +187,7 @@
         NS_ENDHANDLER
     }
     
-    return result;
+    return [result autorelease];
 }
 
 // related

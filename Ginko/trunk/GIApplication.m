@@ -264,6 +264,8 @@
             [[[G3GroupController alloc] initAsStandAloneBoxesWindow:nil] autorelease];
         }
     }
+//#warning leaking memory as hell:
+  //  [NSAutoreleasePool enableRelease: NO];
 }
 
 - (IBAction) importTestMBox: (id) sender

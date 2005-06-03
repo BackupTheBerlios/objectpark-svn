@@ -91,7 +91,6 @@ static NSArray* _headersShown = nil;
 /*" Returns empty string if aMessage is nil. "*/
 {
     NSMutableAttributedString *displayString = [[[NSMutableAttributedString alloc] init] autorelease];
-    
     if (aMessage) {
         NSEnumerator* enumerator = [headers objectEnumerator];
         NSString *fieldName;
@@ -170,22 +169,21 @@ static NSArray* _headersShown = nil;
 
 + (NSMutableAttributedString*) renderedBodyForMessage: (OPInternetMessage*) aMessage
 {
-    NSMutableAttributedString* bodyContent = [[aMessage bodyContent] retain];
+    NSMutableAttributedString* bodyContent = [aMessage bodyContent];
     // prepare quotations
     [bodyContent prepareQuotationsForDisplay];
-    
     return bodyContent;
 }
 
 
 - (NSAttributedString*) renderedMessageIncludingAllHeaders: (BOOL) allHeaders
-/*" Eagerly renderes the internetmessage contained in the receiver. Includes all headers if flag set. Default list if headers otherise. Can be slow! Cache it somewhere! "*/
+    /*" Eagerly renderes the internetmessage contained in the receiver. Includes all headers if flag set. Default list if headers otherise. Can be slow! Cache it somewhere! "*/
 {
     OPInternetMessage* theMessage = [self internetMessage];
+    
     NSMutableAttributedString* messageContent = [[self class] renderedHeaders: [[self class] headersShown] 
                                                                    forMessage: theMessage 
-                                                                   showOthers: allHeaders];
-        //_headerLength = [messageContent length];
+                                                                   showOthers: allHeaders];    
     if (theMessage) [messageContent appendAttributedString:[[self class] renderedBodyForMessage:theMessage]];
     
     return messageContent;

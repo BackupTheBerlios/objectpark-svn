@@ -265,16 +265,16 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
 {
     NSMutableAttributedString *bodyContent;
 
-    NS_DURING
-        bodyContent = [[[NSMutableAttributedString alloc] initWithAttributedString:[self contentAsAttributedStringWithPreferredContentTypes:[EDMessagePart preferredContentTypes]]] autorelease];
-    NS_HANDLER
+    @try {
+        bodyContent = [[NSMutableAttributedString alloc] initWithAttributedString:[self contentAsAttributedStringWithPreferredContentTypes:[EDMessagePart preferredContentTypes]]];
+    } @catch (NSException* localException) {
         NSLog(@"warning: [%@]\n", [localException reason]);
-        bodyContent = [[[NSMutableAttributedString alloc] initWithString:@"Not decodable.\nFallback to text/plain:\n\n"] autorelease];
+        bodyContent = [[NSMutableAttributedString alloc] initWithString:@"Not decodable.\nFallback to text/plain:\n\n"];
         [self setContentType: @"text/plain"];
         [bodyContent appendAttributedString:[self contentAsAttributedString]];
-    NS_ENDHANDLER
+    }
 
-    return bodyContent;
+    return [bodyContent autorelease];
 }
 
 - (NSAttributedString *)editableBodyContent

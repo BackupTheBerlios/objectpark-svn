@@ -56,38 +56,41 @@
     return YES;
 }
 
-
 //---------------------------------------------------------------------------------------
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
 - (id) initWithMessagePart: (EDMessagePart*) mpart
 {
-    [super init];
-    if ([[mpart contentType] hasPrefix: @"text"])
-        [self _takeTextFromMessagePart:mpart];
+    if (self = [self init]) {
+        if ([[mpart contentType] hasPrefix: @"text"])
+            [self _takeTextFromMessagePart:mpart];
+    }
     return self;
 }
 
 
 - (id)initWithText:(NSString *)someText
 {
-    [super init];
-    text = [someText retain];
+    if (self = [self init]) {
+        text = [someText retain];
+    }
     return self;
 }
 
-- (void)dealloc
+
+- (void) dealloc
 {
-    [text release];
+    [text release]; text = nil;
     [super dealloc];
 }
+
 
 //---------------------------------------------------------------------------------------
 //	CONTENT ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-- (NSString *)text
+- (NSString*) text
 {
     return text;
 }
@@ -189,8 +192,10 @@
     NSString *charset, *flowedText;
     NSDictionary *parameters;
     NSData *contentData;
-
+    
     flowedText = [text stringByEncodingFlowedFormat];
+    
+    NSLog(@"Encoding Text with Class %@", targetClass);
     
     result = [[[targetClass alloc] init] autorelease];
     charset = [flowedText recommendedMIMEEncoding];
@@ -208,6 +213,8 @@
     return result;
 }
 
+
+
 - (id)initWithAttributedString:(NSAttributedString *)anAttributedString
 {
     NSRange effectiveRange;
@@ -219,26 +226,21 @@
         return nil;
     }
     
-    [self initWithText:[[anAttributedString string] stringWithUnixLinebreaks]];
-    [self setDataMustBe7Bit:YES]; // ensure 7bit compatibility
-    
+    if (self = [self initWithText: [[anAttributedString string] stringWithUnixLinebreaks]]) {
+        [self setDataMustBe7Bit:YES]; // ensure 7bit compatibility
+    }
     return self;
 }
 
 - (NSAttributedString *)attributedString
 {
-    NSString *plainText;
-    NSMutableAttributedString *result;
-    
-    plainText = [self text];
-    
-    result = [[[plainText attributedStringWithQuotationAttributes] mutableCopy] autorelease];
+    NSMutableAttributedString* result = [[[self text] attributedStringWithQuotationAttributes] mutableCopy];
         
     [result addAttribute:NSFontAttributeName value:[G3Message font] range:NSMakeRange(0, [result length])];
     
     [result urlify];
     
-    return result;
+    return [result autorelease];
 }
 
 //---------------------------------------------------------------------------------------

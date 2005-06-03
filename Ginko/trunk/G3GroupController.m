@@ -205,7 +205,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         NSAttributedString *messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
         
-		NSAssert(messageText != nil, @"Could not retrieve messageText from message.");
+        if (!messageText) {
+            messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText==nil."];
+        }
+
         [[messageTextView textStorage] setAttributedString:messageText];
         
         // set the insertion point (cursor)to 0, 0

@@ -553,7 +553,7 @@ void doFrom_Quoting(NSMutableString* aString)
     NSMutableData *mboxData;
     NSMutableString *fromQuoteBuffer;
     NSString *from_, *myDate, *fromQuoted;
-    NSAutoreleasePool *pool;
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     time_t myTime;
     struct tm *ptm;
     char *timestr;
@@ -561,9 +561,7 @@ void doFrom_Quoting(NSMutableString* aString)
     myTime = time(NULL);
     ptm = gmtime (&myTime);
     timestr = asctime(ptm);
-    
-    pool = [[NSAutoreleasePool alloc] init];
-    
+        
     myDate = [NSString stringWithCString:timestr length:24];
     
     if(!envsender) {
@@ -587,14 +585,14 @@ void doFrom_Quoting(NSMutableString* aString)
     
     fromQuoted = [fromQuoteBuffer stringWithUnixLinebreaks];
     
-    mboxData = [NSMutableData dataWithCapacity:[from_ length] + [fromQuoted length]];
+    mboxData = [[NSMutableData alloc] initWithCapacity:[from_ length] + [fromQuoted length]];
     
     [mboxData appendBytes:[from_ lossyCString] length:[from_ length]];
     [mboxData appendBytes:[fromQuoted lossyCString] length:[fromQuoted length]];
     
-    [mboxData retain]; // keep it longer than the pool
     [pool release];
-    [mboxData autorelease];
+    
+    [mboxData autorelease]; // autorelease in outer pool
     
     return mboxData;
 }

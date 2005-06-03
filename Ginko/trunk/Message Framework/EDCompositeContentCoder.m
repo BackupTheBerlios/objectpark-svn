@@ -60,32 +60,37 @@ static short boundaryId = 0;
 
 - (id) initWithMessagePart: (EDMessagePart*) mpart
 {
-    [super init];
-
-    if ([[mpart contentType] hasPrefix: @"multipart/"]) {
-        [self _takeSubpartsFromMultipartContent:mpart];
-    } else if([[mpart contentType] isEqualToString:@"message/rfc822"]) {
-        [self _takeSubpartsFromMessageContent:mpart];
-    } else {
-        [NSException raise:NSInvalidArgumentException format:@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]];
-    }	
-
+    if (self = [self init]) {
+        if ([[mpart contentType] hasPrefix: @"multipart/"]) {
+            [self _takeSubpartsFromMultipartContent:mpart];
+        } else if([[mpart contentType] isEqualToString:@"message/rfc822"]) {
+            [self _takeSubpartsFromMessageContent:mpart];
+        } else {
+#warning suspicious code:
+            // need [self dealloc] here?
+            //[NSException raise:NSInvalidArgumentException format:@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]];
+            NSLog(@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]);
+            [self dealloc];
+            return nil;
+        }	
+    }
     return self;
 }
 
 
 - (id)initWithSubparts:(NSArray *)someParts
 {
-    [super init];
-    subparts = [someParts retain];
+    if (self = [self init]) {
+        subparts = [someParts retain];
+    }
     return self;
 }
 
 
 
-- (void)dealloc
+- (void) dealloc
 {
-    [subparts release];
+    [subparts release]; subparts = nil;
     [super dealloc];
 }
 

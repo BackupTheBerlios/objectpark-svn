@@ -69,24 +69,24 @@
 
 - (id) initWithMessagePart: (EDMessagePart*) mpart
 {
-    [super init];
-    NSString* type = [mpart contentType];
-    if([type hasPrefix: @"text/"])
-        {
-        if([type isEqualToString:@"text/plain"])
-            [self _takeTextFromPlainTextMessagePart: mpart];
-        else if([type isEqualToString:@"text/enriched"])
-            [self _takeTextFromEnrichedTextMessagePart: mpart];
-        else if([type isEqualToString:@"text/html"])
-            [self _takeTextFromHTMLMessagePart: mpart];
+    if (self = [super init]) {
+        NSString* type = [mpart contentType];
+        if([type hasPrefix: @"text/"]) {
+            if([type isEqualToString:@"text/plain"])
+                [self _takeTextFromPlainTextMessagePart: mpart];
+            else if([type isEqualToString:@"text/enriched"])
+                [self _takeTextFromEnrichedTextMessagePart: mpart];
+            else if([type isEqualToString:@"text/html"])
+                [self _takeTextFromHTMLMessagePart: mpart];
         }
+    }
     return self;
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
-    [text release];
+    [text release]; text = nil;
     [super dealloc];
 }
 
@@ -159,9 +159,7 @@
     // first pass
     while([scanner isAtEnd] == NO)
     {
-        NSAutoreleasePool *pool;
-        
-        pool = [[NSAutoreleasePool alloc] init];
+        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
         
         output = (paramct > 0) ? nil : rawString;
         if([scanner scanUpToCharactersFromSet:etSpecialSet intoString:&string])
@@ -283,10 +281,9 @@
     while (attributeAndRange = [attributesEnumerator nextObject])
     {
         int location, length;
-        NSAutoreleasePool *pool;
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         NSRange range;
         
-        pool = [[NSAutoreleasePool alloc] init];
         
         tag = [attributeAndRange objectForKey:@"tag"];
         location = [[attributeAndRange objectForKey:@"location"] intValue] + offset;

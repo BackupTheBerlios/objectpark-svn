@@ -56,25 +56,27 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id)initWithFieldBody:(NSString *)body
+- (id) initWithFieldBody: (NSString*) body
 {
-    [self init];
-    text = [[[self class] stringByDecodingMIMEWordsInString:body] retain];
+    if (self = [self init]) {
+        text = [[[self class] stringByDecodingMIMEWordsInString:body] retain];
+    }
     return self;
 }
 
 
-- (id)initWithText:(NSString *)value
+- (id) initWithText: (NSString*) value
 {
-    [self init];
-    text = [value copyWithZone:[self zone]];
+    if (self = [self init]) {
+        text = [value copyWithZone:[self zone]];
+    }
     return self;
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
-    [text release];
+    [text release]; text = nil;
     [super dealloc];
 }
 

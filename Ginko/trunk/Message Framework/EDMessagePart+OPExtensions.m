@@ -31,6 +31,7 @@
 #import "OPXFolderContentCoder.h"
 #import "EDPLainTextContentCoder.h"
 #import "utilities.h"
+#import "EDTextContentCoder.h" // can be removed
 
 @interface EDMessagePart(PrivateAPI)
 + (NSDictionary *)_defaultFallbackHeaders;
@@ -263,11 +264,11 @@
     }
     
     if (!defaultTypes) {
-        defaultTypes = [[NSArray arrayWithObjects: 
+        defaultTypes = [[NSArray alloc] initWithObjects: 
             @"multipart/mixed", 
             @"text/enriched", 
             @"text/plain", 
-            @"text/html", nil] retain];
+            @"text/html", nil];
     }
     
     return defaultTypes;
@@ -287,33 +288,36 @@
 - (NSAttributedString *)contentAsAttributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes
 /*" Returns the receivers content as a user presentable attributed string. Returns nil if not decodable. "*/
 {
-    NSAttributedString *content;
+    NSAttributedString* content = nil;
     Class contentCoderClass;
     
-    content = nil;
     contentCoderClass = [self contentDecoderClass];
     
-    if (NSDebugEnabled) NSLog(@"Using DecoderClass = %@", contentCoderClass);
+    //if (NSDebugEnabled) NSLog(@"Using DecoderClass = %@", contentCoderClass);
     
     if (contentCoderClass != nil) // found a content coder willing to decode self
     {
-        EDContentCoder *contentCoder;
-
-        contentCoder = [[contentCoderClass alloc] initWithMessagePart:self];
+        EDContentCoder* contentCoder = [[contentCoderClass alloc] initWithMessagePart:self];
         
-        NS_DURING
-            if ([contentCoder respondsToSelector:@selector(attributedStringWithPreferredContentTypes:)])
-                content = [[[(id)contentCoder attributedStringWithPreferredContentTypes:preferredContentTypes] retain] autorelease];
-            else
-                content = [[[contentCoder attributedString] retain] autorelease];
-        NS_HANDLER
+
+        @try {
+
+            if ([contentCoder respondsToSelector:@selector(attributedStringWithPreferredContentTypes:)]) {
+                content = [(id)contentCoder attributedStringWithPreferredContentTypes:preferredContentTypes];
+                [content retain];
+            } else {
+                content = [contentCoder attributedString];
+                [content retain];
+            }
+        } @catch (NSException* localException) {
             OPDebugLog3(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = [[[NSAttributedString alloc] initWithString:@"Exception while extracting contents as attributed string."] autorelease];
-        NS_ENDHANDLER
-
-#warning debug only
-        [contentCoder autorelease];
-//        [contentCoder release];
+        } @finally {
+        }
+        
+//#warning debug only
+//        [contentCoder autorelease];
+        [contentCoder release];
     }
     
     if (! content)
@@ -333,15 +337,14 @@
             [result appendAttributedString:[contentCoder attributedString]];
         NS_HANDLER
             OPDebugLog3(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
-            content = [[[NSAttributedString alloc] initWithString:@"Exception while extracting contents as attributed string."] autorelease];
+            content = [[NSAttributedString alloc] initWithString:@"Exception while extracting contents as attributed string."];
         NS_ENDHANDLER
 
         [contentCoder release];
         
-        return result;
+
     }
-    
-    return content;
+    return [content autorelease];
 }
 
 - (NSString *)contentAsPlainString
