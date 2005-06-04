@@ -38,11 +38,7 @@
 
 static G3Thread *threadForItem(NSString *item)
 {
-    static NSManagedObjectContext *dc = nil;
-    
-    if (!dc) dc = [NSManagedObjectContext defaultContext];
-    
-    return [dc objectWithURI:[NSURL URLWithString:item]];
+    return [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:item]];
 }
 
 @implementation G3GroupController
