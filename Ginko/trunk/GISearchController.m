@@ -53,22 +53,28 @@
     return [[self searchResults] count];
 }
 
+- (void) dealloc
+{
+    [cachedMessage release];
+    [searchResults release];
+    [super dealloc];
+}
+
 - (id) tableView: (NSTableView*) aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
     // Cache last message:
-    static G3Message* lastMessage = nil; // leaking one message. move to ivar
     NSString* messageId = [[self searchResults] objectAtIndex: rowIndex];
-    if (![[lastMessage messageId] isEqualToString: messageId]) {
-        [lastMessage release];
-        lastMessage = [[G3Message messageForMessageId: messageId] retain];
+    if (![[cachedMessage messageId] isEqualToString: messageId]) {
+        [cachedMessage release];
+        cachedMessage = [[G3Message messageForMessageId: messageId] retain];
     }
     
     NSString* identifier = [aTableColumn identifier];
     if ([identifier isEqualToString: @"date"]) {
-        return [lastMessage valueForKey: @"date"];
+        return [cachedMessage valueForKey: @"date"];
     } 
     
-    return [lastMessage valueForKey: @"subject"];
+    return [cachedMessage valueForKey: @"subject"];
 }
 
 
