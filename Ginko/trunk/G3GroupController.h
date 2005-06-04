@@ -32,9 +32,7 @@
     G3Message *displayedMessage; // displayed with body
     NSArray *threadCache;
     NSSet *nonExpandableItemsCache;
-    
-    NSArray *searchResults;
-    
+        
     // -- Toolbar --
     NSArray *toolbarItems;
     NSArray *defaultIdentifiers;
@@ -69,11 +67,6 @@
 - (IBAction)rename:(id)sender;
 - (IBAction)addMessageGroup:(id)sender;
 - (IBAction)removeFolderMessageGroup:(id)sender;
-
-// search
-- (IBAction)search:(id)sender;
-- (NSArray*)searchResults;
-- (void)setSearchResults:(NSArray*)newSearchResults;
 
 @end
 
