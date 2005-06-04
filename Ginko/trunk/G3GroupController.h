@@ -25,10 +25,7 @@
     IBOutlet NSDrawer *boxesDrawer;
     IBOutlet NSOutlineView *boxesView;
     IBOutlet OPCollapsingSplitView *treeBodySplitter;
-    // search
-    IBOutlet NSWindow *searchWindow;
-    IBOutlet NSSearchField *searchField;
-    IBOutlet NSTableView *searchResultTableView;
+
     
     G3MessageGroup *group;
     G3Thread *displayedThread; // displayed as comment tree

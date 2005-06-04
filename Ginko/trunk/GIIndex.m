@@ -184,12 +184,12 @@
     // build Search objects
     SKSearchRef searchRef = SKSearchCreate([self index], (CFStringRef)aQuery, kSKSearchOptionDefault);
     // set up and start search
-    int tempInMaximumCount = 10;
+    int tempInMaximumCount = 100;
     int tempMaximumTime = 5;
     // create search output variables and get pointers referencing them
-    SKDocumentID tempDocumentIDArray[10];
+    SKDocumentID tempDocumentIDArray[100];
     SKDocumentID* pointerToDocumentIDArray = &tempDocumentIDArray[0];
-    float tempScoresArray[10];
+    float tempScoresArray[100];
     float* pointerToScoresArray = &tempScoresArray[0];
     CFIndex tempOutFoundCount = 0;
     CFIndex* pointerToOutFoundCount = &tempOutFoundCount;

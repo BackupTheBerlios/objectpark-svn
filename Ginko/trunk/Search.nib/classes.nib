@@ -1,0 +1,30 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                importTestMBox = id; 
+                openNewGroupWindow = id; 
+                openSearchWindow = id; 
+                saveAction = id; 
+            }; 
+            CLASS = GIApplication; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {searchController = GISearchController; }; 
+            SUPERCLASS = NSApplication; 
+        }, 
+        {
+            ACTIONS = {search = id; }; 
+            CLASS = GISearchController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                searchField = NSSearchField; 
+                searchProgress = NSProgressIndicator; 
+                searchResultTableView = NSTableView; 
+                searchWindow = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

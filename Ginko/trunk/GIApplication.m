@@ -18,6 +18,7 @@
 #import "OPManagedObject.h"
 #import "G3Thread.h"
 #import "G3MessageGroup.h"
+#import "GISearchController.h"
 #import <sqlite3.h>
 #import "OPJobs.h"
 
@@ -304,6 +305,22 @@
     [self saveAction:self];
 }
 
+- (IBAction) openSearchWindow: (id) sender
+{
+    if (!searchController) {
+        [NSBundle loadNibNamed: @"Search" owner: self];   
+    }
+    [[searchController window] makeKeyAndOrderFront: self];
+}
+
+/*
+- (void) setSearchController: (GISearchController*) c
+{
+    [c retain];
+    [searchController release];
+    searchController = c;
+}
+*/
 
 
 @end

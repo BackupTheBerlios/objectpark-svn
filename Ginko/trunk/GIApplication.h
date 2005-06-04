@@ -9,10 +9,13 @@
 #import <AppKit/AppKit.h>
 #import <AddressBook/AddressBook.h>
 
+@class GISearchController;
+
 #define GIApp ((GIApplication*)NSApp)
 
 @interface GIApplication : NSApplication 
 {
+    IBOutlet GISearchController* searchController;
 }
 
 - (BOOL)isGroupsDrawerMode;
@@ -26,5 +29,6 @@
 //- (IBAction) importTestMBox: (id) sender;
 - (IBAction) saveAction: (id) sender;
 - (IBAction) importTestMBox: (id) sender;
+- (IBAction) openSearchWindow: (id) sender;
 
 @end

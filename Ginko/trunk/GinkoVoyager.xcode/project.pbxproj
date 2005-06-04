@@ -52,6 +52,8 @@
 				8DAB5CF20803C4FB0036C0BA,
 				77962BCA08142114005ADB94,
 				77962BCB08142114005ADB94,
+				8D2147AD085114B2004C44B9,
+				8D2147AE085114B3004C44B9,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -202,6 +204,7 @@
 				77CD550F07699AD1003354A0,
 				77E541AE0785AB9D00265DBB,
 				77D2A74007DB62F500CCF5C2,
+				8D2147CE0851182E004C44B9,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -2062,6 +2065,7 @@
 				775025F408489586008DD1CD,
 				77DF88290849BB6D006CA19D,
 				772F2941084F82BA004D50E0,
+				8D2147AF085114B3004C44B9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2114,6 +2118,7 @@
 				8DD602F1080ED9300050E973,
 				7781EBAA0833B55100830729,
 				772F293E084F826F004D50E0,
+				8D2147CF0851182E004C44B9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2214,6 +2219,7 @@
 				775025F508489586008DD1CD,
 				77DF882A0849BB6D006CA19D,
 				772F2942084F82BA004D50E0,
+				8D2147B0085114B3004C44B9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2260,6 +2266,47 @@
 			path = GinkoVoyager.app;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8D2147AD085114B2004C44B9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = GISearchController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		8D2147AE085114B3004C44B9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = GISearchController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		8D2147AF085114B3004C44B9 = {
+			fileRef = 8D2147AD085114B2004C44B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		8D2147B0085114B3004C44B9 = {
+			fileRef = 8D2147AE085114B3004C44B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		8D2147CE0851182E004C44B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = Search.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		8D2147CF0851182E004C44B9 = {
+			fileRef = 8D2147CE0851182E004C44B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		8D40BAC30806769000F68BF3 = {
 			isa = PBXFileReference;

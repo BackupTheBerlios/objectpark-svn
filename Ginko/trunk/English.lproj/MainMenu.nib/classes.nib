@@ -27,9 +27,15 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {importTestMBox = id; openNewGroupWindow = id; saveAction = id; }; 
+            ACTIONS = {
+                importTestMBox = id; 
+                openNewGroupWindow = id; 
+                openSearchWindow = id; 
+                saveAction = id; 
+            }; 
             CLASS = GIApplication; 
             LANGUAGE = ObjC; 
+            OUTLETS = {searchController = GISearchController; }; 
             SUPERCLASS = NSApplication; 
         }, 
         {

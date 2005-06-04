@@ -686,27 +686,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
 }
 
-- (IBAction)search:(id)sender
-{
-    NSLog(@"[G3GroupController search] will search for %@", [sender stringValue]);
-    // set searchResults
-    [self setSearchResults:[[GIFulltextIndexCenter defaultIndexCenter] hitsForQueryString:[sender stringValue]]];
-}
 
-- (NSArray*)searchResults
-{
-    NSLog(@"-[G3GroupController searchResults]");
-    return searchResults;
-}
-
-- (void)setSearchResults:(NSArray*)newSearchResults
-{
-    NSLog(@"-[G3GroupController setSearchResults:(NSArray*)newSearchResults]");
-    //[searchResults autorelease];
-    [newSearchResults retain];
-    [searchResults release];
-    searchResults = newSearchResults;
-}
 
 /*
 - (void)moveToTrash:(id)sender
