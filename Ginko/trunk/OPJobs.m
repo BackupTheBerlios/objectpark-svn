@@ -13,6 +13,12 @@
 
 NSString *OPJobWillStartNotification = @"OPJobWillStartNotification";
 NSString *OPJobDidFinishNotification = @"OPJobDidFinishNotification";
+NSString *OPJobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotification";
+
+NSString *OPJobProgressMinValue = @"OPJobProgressMinValue";
+NSString *OPJobProgressMaxValue = @"OPJobProgressMaxValue";
+NSString *OPJobProgressCurrentValue = @"OPJobProgressCurrentValue";
+NSString *OPJobProgressDescription = @"OPJobProgressDescription";
 
 enum {OPNoPendingJobs, OPPendingJobs};
 
@@ -22,6 +28,7 @@ NSString *OPJobTarget = @"OPJobTarget";
 NSString *OPJobSelector = @"OPJobSelector";
 NSString *OPJobArguments = @"OPJobArguments";
 NSString *OPJobResult = @"OPJobResult";
+NSString *OPJobProgressInfo = @"OPJobProgressInfo";
 NSString *OPJobUnhandledException = @"OPJobUnhandledException";
 NSString *OPJobSynchronizedObject = @"OPJobSynchronizedObject";
 NSString *OPJobWorkerThread = @"OPJobWorkerThread";
@@ -319,7 +326,12 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
 + (id)resultForJob:(unsigned)anJobId
 /*" Returns the result object for the job denoted by anJobId. nil, if no result was set. "*/
 {
-    return objectForKeyInJobInArray(anJobId, finishedJobs, OPJobResult);
+    id result;
+    
+    result = objectForKeyInJobInArray(anJobId, finishedJobs, OPJobResult);
+    if (! result) result = objectForKeyInJobInArray(anJobId, runningJobs, OPJobResult);
+    
+    return result;
 }
 
 + (void)setResult:(id)aResult
@@ -594,6 +606,85 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     [jobsLock unlockWithCondition:[jobsLock condition]];
     
     return result;
+}
+
++ (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription
+{
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSNumber numberWithDouble:aMinValue], OPJobProgressMinValue,
+        [NSNumber numberWithDouble:aMaxValue], OPJobProgressMaxValue,
+        [NSNumber numberWithDouble:currentValue], OPJobProgressCurrentValue,
+        aDescription, OPJobProgressDescription,
+        nil, nil];
+}
+
++ (NSDictionary *)indeterminateProgressInfoWithDescription:(NSString *)aDescription
+{
+    return [NSDictionary dictionaryWithObject:aDescription forKey:OPJobProgressDescription];
+}
+
++ (void)setProgressInfo:(NSDictionary *)progressInfo;
+/*" Sets the progress info for the calling job. "*/
+{
+    int i, count;
+    NSThread *jobThread = [NSThread currentThread];
+    
+    [jobsLock lock];
+    
+    count = [runningJobs count];
+    for (i = count - 1; i >= 0; i--)
+    {
+        if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
+        {
+            [[runningJobs objectAtIndex:i] setObject:[[progressInfo copy] autorelease] forKey:OPJobProgressInfo];
+            [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidSetProgressInfoNotification object:[[runningJobs objectAtIndex:i] objectForKey:OPJobName] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                [[runningJobs objectAtIndex:i] objectForKey:OPJobId], @"jobId",
+                progressInfo, @"progressInfo",
+                nil, nil]];
+            break;
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+}
+
++ (NSDictionary *)progressInfoForJob:(unsigned)anJobId
+/*" Returns the progress info dictionary for the job denoted by anJobId. nil, if no progress info was set. See #{NSDictinary (OPJobsExtensions)} for easy job progress info access. "*/
+{
+    id result;
+    
+    result = objectForKeyInJobInArray(anJobId, runningJobs, OPJobProgressInfo);
+    
+    return result;
+}
+
+@end
+
+@implementation NSDictionary (OPJobsExtensions)
+
+- (double)jobProgressMinValue
+{
+    return [[self objectForKey:OPJobProgressMinValue] doubleValue];
+}
+
+- (double)jobProgressMaxValue
+{
+    return [[self objectForKey:OPJobProgressMaxValue] doubleValue];
+}
+
+- (double)jobProgressCurrentValue
+{
+    return [[self objectForKey:OPJobProgressCurrentValue] doubleValue];
+}
+
+- (NSString *)jobProgressDescription
+{
+    return [self objectForKey:OPJobProgressDescription];
+}
+
+- (BOOL)isJobProgressIndeterminate
+{
+    return [self objectForKey:OPJobProgressCurrentValue] != nil;
 }
 
 @end

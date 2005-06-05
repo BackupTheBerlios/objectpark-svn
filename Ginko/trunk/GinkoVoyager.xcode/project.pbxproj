@@ -205,6 +205,7 @@
 				77E541AE0785AB9D00265DBB,
 				77D2A74007DB62F500CCF5C2,
 				8D2147CE0851182E004C44B9,
+				7739C40C0853564700FC0EBA,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -668,6 +669,19 @@
 		};
 		772F2942084F82BA004D50E0 = {
 			fileRef = 772F2940084F82BA004D50E0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7739C40C0853564700FC0EBA = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = Activity.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7739C40D0853564700FC0EBA = {
+			fileRef = 7739C40C0853564700FC0EBA;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2119,6 +2133,7 @@
 				7781EBAA0833B55100830729,
 				772F293E084F826F004D50E0,
 				8D2147CF0851182E004C44B9,
+				7739C40D0853564700FC0EBA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

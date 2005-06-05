@@ -24,8 +24,7 @@
 + (id) mboxWithPath:(NSString*) aPath;
 + (id) mboxWithPath:(NSString*) aPath createIfNotPresent: (BOOL) shouldCreateIfNotPresent;
 
-
-    /*" Initialization Methods "*/
+/*" Initialization Methods "*/
 - (id) initWithPath:(NSString*) aPath;
 - (id) initWithPath:(NSString*) aPath createIfNotPresent:(BOOL) shouldCreateIfNotPresent;
 
@@ -42,4 +41,8 @@
 /*" Exception name for Mbox exceptions. "*/
 extern NSString *OPMBoxException;
 
+@end
+
+@interface NSEnumerator (OPMboxFileExtensions)
+- (unsigned)offsetOfNextObject;
 @end

@@ -42,9 +42,9 @@
     NSAttributedString *theAttributedString = [message contentAsAttributedString];
     STAssertTrue(theAttributedString != nil, @"message should have an message id.");
 
-    NSString *thePlainString = [theAttributedString string];
+    //NSString *thePlainString = [theAttributedString string];
     
-    NSLog(@"thePlainString = %@", thePlainString);
+    //NSLog(@"thePlainString = %@", thePlainString);
     [pool release];
 }
 

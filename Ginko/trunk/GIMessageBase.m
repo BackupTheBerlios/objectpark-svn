@@ -16,6 +16,7 @@
 #import "GIFulltextIndexCenter.h"
 #import "NSData+MessageUtils.h"
 #import <Foundation/NSDebug.h>
+#import "OPJobs.h"
 
 @implementation GIMessageBase
 
@@ -96,6 +97,7 @@
     // Create mbox file object for enumerating the contained messages:
     OPMBoxFile *mboxFile = [OPMBoxFile mboxWithPath:mboxFilePath];
     NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
+    unsigned int mboxFileSize = [mboxFile mboxFileSize];
     
     // Create a own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
@@ -110,6 +112,8 @@
     unsigned addedMessageCount = 0;
     
     [[context undoManager] disableUndoRegistration];
+    
+    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
     
     NSAutoreleasePool *pool = nil;
     
@@ -153,12 +157,12 @@
                     }
                 }
             }
-            //[pool drain]; // should be last statement in while loop
+            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
         }
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
         
-        [context save:&error];
+        [context save:(NSError **)&error];
         NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
     } 
     @catch (NSException *localException) 

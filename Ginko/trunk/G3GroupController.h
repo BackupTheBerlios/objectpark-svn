@@ -26,7 +26,6 @@
     IBOutlet NSOutlineView *boxesView;
     IBOutlet OPCollapsingSplitView *treeBodySplitter;
 
-    
     G3MessageGroup *group;
     G3Thread *displayedThread; // displayed as comment tree
     G3Message *displayedMessage; // displayed with body
@@ -59,6 +58,8 @@
 - (BOOL)threadsShownCurrently;
 
 - (BOOL)validateSelector:(SEL)aSelector; // necessary?
+
+- (void)modelChanged:(NSNotification *)aNotification; // remove as soon as possible
 
 /*" Actions "*/
 - (IBAction)showThreads:(id)sender;
