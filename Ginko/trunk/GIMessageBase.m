@@ -166,7 +166,7 @@
                 
                 if (newPercentComplete > percentComplete) // report only when percentage changes
                 {
-                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
+                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:[mboxFilePath lastPathComponent]]];
                     
                     percentComplete = newPercentComplete;
                 }

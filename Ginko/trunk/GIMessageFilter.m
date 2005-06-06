@@ -504,12 +504,12 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 {
     NSMutableArray *result = [NSMutableArray array];
     NSEnumerator *enumerator = [[self filters] objectEnumerator];
-	GIMessageFilter *filter;
-	
+    GIMessageFilter *filter;
+    
     while (filter = [enumerator nextObject]) 
-	{
+    {
         if ([filter matchesForMessage:message flags:flags]) 
-		{
+        {
             [result addObject:filter];
         }
     }
@@ -518,7 +518,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 }
 
 + (BOOL)filterMessage:(G3Message *)message flags:(int)flags
-	/*" Filters the given message. Returns YES if message was inserted/moved into a box
+/*" Filters the given message. Returns YES if message was inserted/moved into a box
     different to currentBox. NO otherwise. "*/
 {
     NSEnumerator *filterEnumerator;
@@ -554,10 +554,10 @@ static NSString *_filterDefinitionsPath()
 definition plist. "*/
 {
     static NSString *path = nil;
-	
+    
     if (! path) 
-	{
-		path = [[[NSApp applicationSupportPath] stringByAppendingPathComponent:@"FilterDefinitions.plist"] retain]; // once and for all
+    {
+        path = [[[NSApp applicationSupportPath] stringByAppendingPathComponent:@"FilterDefinitions.plist"] retain]; // once and for all
     }
     
     return path;
@@ -570,19 +570,19 @@ definition plist. "*/
     NSEnumerator *enumerator;
     NSDictionary *definitionDictionary;
     NSMutableArray *result;
-	
+    
     if (! plist) 
-	{
+    {
         return [NSMutableArray array];
-	}
-	
+    }
+    
     result = [NSMutableArray arrayWithCapacity:[plist count]];
-	
+    
     enumerator = [plist objectEnumerator];
     while (definitionDictionary = [enumerator nextObject]) 
-	{
+    {
         GIMessageFilter *filter;
-		
+        
         filter = [[GIMessageFilter allocWithZone:[result zone]] initWithFilterDefinitionDictionary:definitionDictionary];
         [result addObject:filter];
         [filter release];

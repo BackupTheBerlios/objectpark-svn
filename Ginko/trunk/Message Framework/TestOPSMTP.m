@@ -10,6 +10,8 @@
 #import "OPSMTP.h"
 #import <OPNetwork/OPStream+SSL.h>
 #import "NSString+MessageUtils.h"
+#import "G3Message.h"
+#import "NSManagedObjectContext+Extensions.h"
 
 @implementation TestOPSMTP
 
@@ -19,9 +21,26 @@
 
 - (void)tearDown
 {
+    [[NSManagedObjectContext defaultContext] rollback];
 }
 
-- (void)disabledtestSMTPConnect
+- (G3Message *)makeAMessage
+{
+    static int i = 1;
+    NSString *messageId = [NSString stringWithFormat:@"<smtptest-message-%d@test.org>",i++];
+    NSString *transferString = [NSString stringWithFormat:
+                                             @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nTo: axel@objectpark.org\r\nFrom: axel@xn--heinz-knig-kcb.de\r\nMIME-Version: 1.0\r\nSubject: SMTP-Test\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
+    NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
+    STAssertNotNil(transferData, @"nee");
+    
+    G3Message *message = [G3Message messageWithTransferData:transferData];
+    STAssertNotNil(message, @"nee %@", messageId);
+    STAssertTrue([[message messageId] isEqual:messageId], @"nee");
+    
+    return message;
+}
+
+- (void)testSMTPConnect
 {
     OPSMTP *SMTP;
     NSHost* host;
@@ -44,9 +63,8 @@
     NSAssert(SMTP != nil, @"SMTP error");
     NSLog(@"SMTP = %@", SMTP);
   
-    /*
-    [SMTP acceptMessage:aMessage];
-    */
+    [SMTP acceptMessage:[[self makeAMessage] internetMessage]];
+    
     [SMTP release];
     [smtpStream close];
 }
