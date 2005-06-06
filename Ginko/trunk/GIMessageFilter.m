@@ -525,19 +525,19 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     GIMessageFilter *filter;
     BOOL inserted = NO;
     BOOL shouldStopFiltering = NO;
-	
+    
     filterEnumerator = [[self filtersMatchingForMessage:message flags:flags] objectEnumerator];
     while ( (filter = [filterEnumerator nextObject]) && (! shouldStopFiltering) ) 
-	{
+    {
         NSEnumerator *actionEnumerator;
         GIMessageFilterAction *action;
-		
+        
         actionEnumerator = [[filter actions] objectEnumerator];
         while (action = [actionEnumerator nextObject]) 
-		{
+        {
             if ([action state] == NSOnState) 
-			{
-				// Do it only when active:
+            {
+                // Do it only when active:
                 BOOL filterPutInBox = NO;
                 
                 shouldStopFiltering |= [GIMessageFilterAction performAction:action withMessage:message flags:flags putIntoMessagebox:&filterPutInBox];

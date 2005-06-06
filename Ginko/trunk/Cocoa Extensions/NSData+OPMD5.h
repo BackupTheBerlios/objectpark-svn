@@ -61,7 +61,7 @@ extern "C"
 
 @interface NSData (OPMD5)
 
-- (NSString*) md5HexString;
-- (NSString*) md5Base64String;
+- (NSString *)md5HexString;
+- (NSString *)md5Base64String;
 
 @end

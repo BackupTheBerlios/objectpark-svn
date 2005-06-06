@@ -379,7 +379,7 @@ md5_finish(md5_state_t *pms, md5_byte_t digest[16])
 @implementation NSData (OPMD5)
 /*" Adds MD5 digest functionality to NSData. "*/
 
-- (NSString*) md5HexString
+- (NSString *)md5HexString
 /*" Returns the MD5 digest from the receiver's contents as 32 character long string in hexadecimal format. "*/
 {
     NSMutableString *result;
@@ -401,7 +401,7 @@ md5_finish(md5_state_t *pms, md5_byte_t digest[16])
     return result;
 }
 
-- (NSString*) md5Base64String
+- (NSString *)md5Base64String
 /*" Returns the MD5 digest from the receiver's contents as 22 character long string in Base64 format. "*/
 {
     NSData *digestData;

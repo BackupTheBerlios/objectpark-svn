@@ -17,18 +17,20 @@
 #import "NSData+MessageUtils.h"
 #import <Foundation/NSDebug.h>
 #import "OPJobs.h"
+#import "GIMessageFilter.h"
 
 @implementation GIMessageBase
 
-+ (G3Message *)addMessageWithTransferData:(NSData *)someTransferData inManagedObjectContext:(NSManagedObjectContext *)aContext
-/*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if the message could not be created. "*/
++ (G3Message *)addMessageWithTransferData:(NSData *)someTransferData
+/*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if the message could not be created. Raises a GIDupeMessageException exception if message was a dupe messsage. "*/
 {
     G3Message *message = [G3Message messageWithTransferData:someTransferData];
     NSAssert(message != nil, @"Fatal error. Couldn't create message from transfer data.");
-    G3Thread *thread = [message threadCreate:YES];
-    NSSet *groups = [self defaultGroupsForMessage:message];
     
-    [thread addGroups:groups];        
+    if (![GIMessageFilter filterMessage:message flags:0])
+    {
+        [self addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup]];
+    }
     
     // add message to index
     GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
@@ -59,7 +61,6 @@
     NSParameterAssert(aMessage != nil);
     
     G3Thread *thread = [aMessage threadCreate:YES];
-    
     [thread addGroup:aGroup];
     
     /* old baroque style 
@@ -127,7 +128,7 @@
             if (transferData)
             {
                 @try {
-                    G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData inManagedObjectContext:context];
+                    G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
                     
                     NSAssert1(persistentMessage != nil, @"Fatal error. No message could be generated from transfer data: %@", transferData);
 

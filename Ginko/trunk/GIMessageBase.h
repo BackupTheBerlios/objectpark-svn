@@ -15,7 +15,7 @@
 
 }
 
-+ (G3Message *)addMessageWithTransferData:(NSData *)someTransferData inManagedObjectContext:(NSManagedObjectContext *)aContext;
++ (G3Message *)addMessageWithTransferData:(NSData *)someTransferData;
 
 + (void)removeMessage:(G3Message *)aMessage;
 
