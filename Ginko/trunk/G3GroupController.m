@@ -668,8 +668,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         node = [G3MessageGroup findHierarchyNodeForEntry:item startingWithHierarchyNode:[G3MessageGroup hierarchyRootNode]];
         
-        NSAssert(node != nil, @"did not find item in hierarchy");
-        index = [node indexOfObject:item]; // +1 correction already in!
+        if (node)
+        {
+            index = [node indexOfObject:item]; // +1 correction already in!
+        }
+        else
+        {
+            node = [G3MessageGroup hierarchyRootNode];
+            index = 0;
+        }
     }
     
     [G3MessageGroup newMessageGroupWithName:nil atHierarchyNode:node atIndex:index];
