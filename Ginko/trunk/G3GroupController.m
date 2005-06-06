@@ -113,7 +113,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void)dealloc
 {
     NSLog(@"G3GroupController dealloc");
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window setDelegate:nil];
     
     [self deallocCommentTree];
@@ -201,7 +201,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         NSAttributedString *messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
         
-        if (!messageText) {
+        if (!messageText) 
+        {
             messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText==nil."];
         }
 
@@ -221,7 +222,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // Hide comment tree, if trivial:
     //[treeBodySplitter setSubview:[[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
     //if (YES && !collapseTree){
-    if (isNewThread){
+    if (isNewThread)
+    {
         NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
         //[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
         //[treeBodySplitter moveSplitterBy:[commentsMatrix frame].size.height+10-[scrollView frame].size.height];
@@ -231,7 +233,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [scrollView setHasHorizontalScroller:hasHorzontalScroller];
         if ([commentsMatrix numberOfColumns]<=1)
             newHeight = 0;
-        if (newHeight>200.0){
+        if (newHeight>200.0)
+        {
             newHeight = 200.0;
             [scrollView setHasVerticalScroller:YES];
             //[scrollView setAutohidesScrollers:YES];

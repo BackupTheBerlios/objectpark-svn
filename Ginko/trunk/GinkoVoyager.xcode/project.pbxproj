@@ -54,6 +54,8 @@
 				77962BCB08142114005ADB94,
 				8D2147AD085114B2004C44B9,
 				8D2147AE085114B3004C44B9,
+				7759B41508535F830011B606,
+				7759B41608535F830011B606,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -785,6 +787,34 @@
 		};
 		775025F508489586008DD1CD = {
 			fileRef = 775025F308489586008DD1CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7759B41508535F830011B606 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = GIActivityPanelController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7759B41608535F830011B606 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = GIActivityPanelController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7759B41708535F830011B606 = {
+			fileRef = 7759B41508535F830011B606;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7759B41808535F830011B606 = {
+			fileRef = 7759B41608535F830011B606;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2080,6 +2110,7 @@
 				77DF88290849BB6D006CA19D,
 				772F2941084F82BA004D50E0,
 				8D2147AF085114B3004C44B9,
+				7759B41708535F830011B606,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2235,6 +2266,7 @@
 				77DF882A0849BB6D006CA19D,
 				772F2942084F82BA004D50E0,
 				8D2147B0085114B3004C44B9,
+				7759B41808535F830011B606,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

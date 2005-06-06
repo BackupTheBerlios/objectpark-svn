@@ -21,7 +21,7 @@
 #import "GISearchController.h"
 #import <sqlite3.h>
 #import "OPJobs.h"
-
+#import "GIActivityPanelController.h"
 
 @implementation GIApplication
 
@@ -322,5 +322,9 @@
 }
 */
 
+- (IBAction)showActivityPanel:(id)sender
+{
+    [GIActivityPanelController showActivityPanel];
+}
 
 @end
