@@ -83,13 +83,12 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return result;
 }
 
-
 - (NSData *)transferData
 {
-	return [self valueForKeyPath: @"messageData.transferData"];
+    return [self valueForKeyPath:@"messageData.transferData"];
 }
 
-- (void) setTransferData: (NSData*) newData
+- (void)setTransferData:(NSData *)newData
 {
     NSManagedObjectContext *context = [self managedObjectContext];
     NSEntityDescription *entity = [[[[context persistentStoreCoordinator] managedObjectModel] entitiesByName] objectForKey:@"MessageData"];

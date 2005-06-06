@@ -32,11 +32,11 @@ static NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeeds
 {
     if (! panel)
     {
-        [[[self alloc] init] autorelease];
+        panel = [[[self alloc] init] autorelease];
     }
     
-    [panel updateData:nil];
     [[panel window] orderFront:nil];
+    [panel dataChanged:nil];
 }
 
 - (id)init
@@ -65,8 +65,8 @@ static NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeeds
 
 - (void)windowWillClose:(NSNotification *)notification 
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     panel = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self autorelease]; // balance self-retaining
 }
 

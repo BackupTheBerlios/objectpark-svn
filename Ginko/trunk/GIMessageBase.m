@@ -24,14 +24,11 @@
 /*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if the message could not be created. "*/
 {
     G3Message *message = [G3Message messageWithTransferData:someTransferData];
+    NSAssert(message != nil, @"Fatal error. Couldn't create message from transfer data.");
+    G3Thread *thread = [message threadCreate:YES];
+    NSSet *groups = [self defaultGroupsForMessage:message];
     
-    if (message) 
-    {
-        G3Thread *thread = [message threadCreate:YES];
-        NSSet *groups = [self defaultGroupsForMessage:message];
-        
-        [thread addGroups:groups];        
-    }
+    [thread addGroups:groups];        
     
     // add message to index
     GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
@@ -155,6 +152,10 @@
                         if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
                         [pool drain];
                         pool = [[NSAutoreleasePool alloc] init];
+                    }
+                    else
+                    {
+                        [localException raise];
                     }
                 }
             }
