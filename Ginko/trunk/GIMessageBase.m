@@ -159,13 +159,16 @@
                 }
             }
             
-            int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
-            
-            if (newPercentComplete > percentComplete) // report only when percentage changes
+            if (mboxFileSize > 0) // avoid division by zero
             {
-                [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
+                int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
                 
-                percentComplete = newPercentComplete;
+                if (newPercentComplete > percentComplete) // report only when percentage changes
+                {
+                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
+                    
+                    percentComplete = newPercentComplete;
+                }
             }
         }
         
