@@ -88,7 +88,7 @@ static NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeeds
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-    NSDictionary *progressInfo = [OPJobs progressInfoForJob:[[jobIds objectAtIndex:rowIndex] unsignedIntValue]];
+    NSDictionary *progressInfo = [OPJobs progressInfoForJob:[jobIds objectAtIndex:rowIndex]];
     
     if (progressInfo)
     {

@@ -98,7 +98,7 @@ static unsigned nextJobId = 1;
     return result;
 }
 
-+ (unsigned)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
++ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
 /*" Schedules a job for being executed by a worker thread as soon as a unemployed worker thread is present and the execution of this job isn't mutual excluded by a currently running job. 
 
     aName is an arbitrary name for the job (doesn't need to be unique). This name is used as object when notifications are posted. This way an observer can easily filter by name.
@@ -114,9 +114,9 @@ static unsigned nextJobId = 1;
     [jobsLock lock];
 
     NSMutableDictionary *jobDescription = [NSMutableDictionary dictionary];
-    unsigned jobId = nextJobId++;
+    NSNumber *jobId = [NSNumber numberWithUnsignedInt:nextJobId++];
     
-    [jobDescription setObject:[NSNumber numberWithUnsignedInt:jobId] forKey:OPJobId];
+    [jobDescription setObject:jobId forKey:OPJobId];
     [jobDescription setObject:aName forKey:OPJobName];
     [jobDescription setObject:aTarget forKey:OPJobTarget];
     [jobDescription setObject:NSStringFromSelector(aSelector) forKey:OPJobSelector];
@@ -246,7 +246,7 @@ static unsigned nextJobId = 1;
     }
 }
 
-static BOOL isJobInArray(unsigned anJobId, NSArray *anArray)
+static BOOL isJobInArray(NSNumber *anJobId, NSArray *anArray)
 {
     BOOL result = NO;
     int i, count;
@@ -256,7 +256,7 @@ static BOOL isJobInArray(unsigned anJobId, NSArray *anArray)
     count = [anArray count];
     for (i = 0; i < count; i++)
     {
-        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] isEqualToNumber:anJobId])
         {
             result = YES;
             break;
@@ -268,25 +268,25 @@ static BOOL isJobInArray(unsigned anJobId, NSArray *anArray)
     return result;
 }
 
-+ (BOOL)isJobPending:(unsigned)anJobId
++ (BOOL)isJobPending:(NSNumber *)anJobId
 /*" Returns YES if the job denoted by anJobId is currently pending. NO otherwise. "*/
 {
     return isJobInArray(anJobId, pendingJobs);
 }
 
-+ (BOOL)isJobRunning:(unsigned)anJobId
++ (BOOL)isJobRunning:(NSNumber *)anJobId
 /*" Returns YES if the job denoted by anJobId is currently running. NO otherwise. "*/
 {
     return isJobInArray(anJobId, runningJobs);
 }
 
-+ (BOOL)isJobFinished:(unsigned)anJobId
++ (BOOL)isJobFinished:(NSNumber *)anJobId
 /*" Returns YES if the job denoted by anJobId is in the list of finished jobs. NO otherwise. "*/
 {
     return isJobInArray(anJobId, finishedJobs);
 }
 
-id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
+id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
 {
     id result = nil;
     int i, count;
@@ -296,7 +296,7 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
     count = [anArray count];
     for (i = count - 1; i >= 0; i--)
     {
-        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] isEqualToNumber:anJobId])
         {
             result = [[anArray objectAtIndex:i] objectForKey:key];
             break;
@@ -311,7 +311,7 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
 + (void)noteJobWillStart:(NSNumber *)anJobId
 /*" Performed on main thread to notify of the upcoming start of a job. "*/
 {
-    NSString *jobName = objectForKeyInJobInArray([anJobId unsignedIntValue], pendingJobs, OPJobName);
+    NSString *jobName = objectForKeyInJobInArray(anJobId, pendingJobs, OPJobName);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:OPJobWillStartNotification object:jobName userInfo:[NSDictionary dictionaryWithObject:anJobId forKey:@"jobId"]];    
 }
@@ -319,12 +319,12 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
 + (void)noteJobDidFinish:(NSNumber *)anJobId
 /*" Performed on main thread to notifiy of the finishing of a job. "*/
 {
-    NSString *jobName = objectForKeyInJobInArray([anJobId unsignedIntValue], finishedJobs, OPJobName);
+    NSString *jobName = objectForKeyInJobInArray(anJobId, finishedJobs, OPJobName);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:jobName userInfo:[NSDictionary dictionaryWithObject:anJobId forKey:@"jobId"]];    
 }
 
-+ (id)resultForJob:(unsigned)anJobId
++ (id)resultForJob:(NSNumber *)anJobId
 /*" Returns the result object for the job denoted by anJobId. nil, if no result was set. "*/
 {
     id result;
@@ -497,7 +497,7 @@ static NSArray *jobIdsFromArray(NSArray *anArray)
     return jobIdsFromArray(finishedJobs);
 }
 
-BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
+BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
 /*" Calling code must lock! "*/
 {
     BOOL result = NO;
@@ -506,7 +506,7 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     count = [anArray count];
     for (i = 0; i < count; i++)
     {
-        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] isEqualToNumber:anJobId])
         {
             result = YES;
             [anArray removeObjectAtIndex:i];
@@ -517,7 +517,7 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     return result;
 }
 
-+ (BOOL)removeFinishedJob:(unsigned)anJobId
++ (BOOL)removeFinishedJob:(NSNumber *)anJobId
 /*" Removes the job denoted by anJobId including all job information (e.g. the job's result) from the list of finished jobs. "*/
 {
     BOOL result;
@@ -531,7 +531,7 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     return result;
 }
 
-+ (BOOL)cancelPendingJob:(unsigned)anJobId
++ (BOOL)cancelPendingJob:(NSNumber *)anJobId
 /*" Cancels the pending job denoted by anJobId. Returns YES if job could be cancelled, NO otherwise. "*/
 {
     BOOL result;
@@ -553,7 +553,7 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     [jobsLock unlockWithCondition:[jobsLock condition]];
 }
 
-+ (BOOL)suggestTerminatingJob:(unsigned)anJobId
++ (BOOL)suggestTerminatingJob:(NSNumber *)anJobId
 /*" Suggests that a job should terminate. While this does not enforce termination of a job denoted by anJobId, the job can see that termination is requested and can do so. Returns YES if the suggestion could be passed on, NO otherwise. "*/
 {
     BOOL result = NO;
@@ -564,7 +564,7 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     
     while (jobDescription = [enumerator nextObject])
     {
-        if ([[jobDescription objectForKey:OPJobId] unsignedIntValue] == anJobId)
+        if ([[jobDescription objectForKey:OPJobId] isEqualToNumber:anJobId])
         {
             [jobDescription setObject:[NSNumber numberWithBool:YES] forKey:OPJobShouldTerminate];
             result = YES;
@@ -658,7 +658,7 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     }
 }
 
-+ (NSDictionary *)progressInfoForJob:(unsigned)anJobId
++ (NSDictionary *)progressInfoForJob:(NSNumber *)anJobId
 /*" Returns the progress info dictionary for the job denoted by anJobId. nil, if no progress info was set. See #{NSDictinary (OPJobsExtensions)} for easy job progress info access. "*/
 {
     id result;

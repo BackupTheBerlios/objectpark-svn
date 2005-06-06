@@ -93,6 +93,7 @@
     NSParameterAssert(mboxFilePath != nil);
     NSManagedObjectContext *parentContext = [arguments objectForKey:@"parentContext"];
     NSParameterAssert(parentContext != nil);
+    int percentComplete = -1;
     
     // Create mbox file object for enumerating the contained messages:
     OPMBoxFile *mboxFile = [OPMBoxFile mboxWithPath:mboxFilePath];
@@ -157,7 +158,15 @@
                     }
                 }
             }
-            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
+            
+            int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
+            
+            if (newPercentComplete > percentComplete) // report only when percentage changes
+            {
+                [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
+                
+                percentComplete = newPercentComplete;
+            }
         }
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);

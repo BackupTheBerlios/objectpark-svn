@@ -13,7 +13,7 @@
 }
 
 /*" Scheduling new Jobs "*/
-+ (unsigned)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
++ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
 /*" Worker Threads "*/
 + (unsigned)maxThreads;
@@ -24,28 +24,28 @@
 + (int)activeThreadCount;
 
 /*" Inquiring job state "*/
-+ (BOOL)isJobPending:(unsigned)anJobId;
++ (BOOL)isJobPending:(NSNumber *)anJobId;
 + (NSArray *)pendingJobs;
-+ (BOOL)isJobRunning:(unsigned)anJobId;
++ (BOOL)isJobRunning:(NSNumber *)anJobId;
 + (NSArray *)runningJobs;
-+ (BOOL)isJobFinished:(unsigned)anJobId;
++ (BOOL)isJobFinished:(NSNumber *)anJobId;
 + (NSArray *)finishedJobs;
 
 /*" Cancelling pending jobs "*/
-+ (BOOL)cancelPendingJob:(unsigned)anJobId;
++ (BOOL)cancelPendingJob:(NSNumber *)anJobId;
 
 /*" Handling finished jobs "*/
-+ (BOOL)removeFinishedJob:(unsigned)anJobId;
++ (BOOL)removeFinishedJob:(NSNumber *)anJobId;
 + (void)removeAllFinishedJobs;
 
 /*" Getting job results "*/
-+ (id)resultForJob:(unsigned)anJobId;
++ (id)resultForJob:(NSNumber *)anJobId;
 
 /*" Aborting jobs "*/
-+ (BOOL)suggestTerminatingJob:(unsigned)anJobId;
++ (BOOL)suggestTerminatingJob:(NSNumber *)anJobId;
 
 /*" Accessing job progress info "*/ 
-+ (NSDictionary *)progressInfoForJob:(unsigned)anJobId;
++ (NSDictionary *)progressInfoForJob:(NSNumber *)anJobId;
 
 /*" Methods for use within jobs "*/
 + (NSNumber *)jobId;
