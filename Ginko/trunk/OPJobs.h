@@ -72,6 +72,7 @@ extern NSString *OPJobProgressMinValue;
 extern NSString *OPJobProgressMaxValue;
 extern NSString *OPJobProgressCurrentValue;
 extern NSString *OPJobProgressDescription;
+extern NSString *OPJobProgressJobName;
 
 @interface NSDictionary (OPJobsExtensions)
 
@@ -79,6 +80,7 @@ extern NSString *OPJobProgressDescription;
 - (double)jobProgressMaxValue;
 - (double)jobProgressCurrentValue;
 - (NSString *)jobProgressDescription;
+- (NSString *)jobProgressJobName;
 - (BOOL)isJobProgressIndeterminate;
 
 @end

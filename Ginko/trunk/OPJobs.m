@@ -19,6 +19,7 @@ NSString *OPJobProgressMinValue = @"OPJobProgressMinValue";
 NSString *OPJobProgressMaxValue = @"OPJobProgressMaxValue";
 NSString *OPJobProgressCurrentValue = @"OPJobProgressCurrentValue";
 NSString *OPJobProgressDescription = @"OPJobProgressDescription";
+NSString *OPJobProgressJobName = @"OPJobProgressJobName";
 
 enum {OPNoPendingJobs, OPPendingJobs};
 
@@ -308,7 +309,7 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
 }
 
 + (void)noteJobWillStart:(NSNumber *)anJobId
-    /*" Performed on main thread to notify of the upcoming start of a job. "*/
+/*" Performed on main thread to notify of the upcoming start of a job. "*/
 {
     NSString *jobName = objectForKeyInJobInArray([anJobId unsignedIntValue], pendingJobs, OPJobName);
     
@@ -316,7 +317,7 @@ id objectForKeyInJobInArray(unsigned anJobId, NSArray *anArray, NSString *key)
 }
 
 + (void)noteJobDidFinish:(NSNumber *)anJobId
-    /*" Performed on main thread to notifiy of the finishing of a job. "*/
+/*" Performed on main thread to notifiy of the finishing of a job. "*/
 {
     NSString *jobName = objectForKeyInJobInArray([anJobId unsignedIntValue], finishedJobs, OPJobName);
     
@@ -615,12 +616,16 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
         [NSNumber numberWithDouble:aMaxValue], OPJobProgressMaxValue,
         [NSNumber numberWithDouble:currentValue], OPJobProgressCurrentValue,
         aDescription, OPJobProgressDescription,
+        [self jobName], OPJobProgressJobName,
         nil, nil];
 }
 
 + (NSDictionary *)indeterminateProgressInfoWithDescription:(NSString *)aDescription
 {
-    return [NSDictionary dictionaryWithObject:aDescription forKey:OPJobProgressDescription];
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+        aDescription, OPJobProgressDescription,
+        [self jobName], OPJobProgressJobName,
+        nil, nil];
 }
 
 + (void)setProgressInfo:(NSDictionary *)progressInfo;
@@ -628,7 +633,9 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
 {
     int i, count;
     NSThread *jobThread = [NSThread currentThread];
+    BOOL setInfo = NO;
     
+    progressInfo = [[progressInfo copy] autorelease];
     [jobsLock lock];
     
     count = [runningJobs count];
@@ -636,16 +643,19 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
     {
         if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
         {
-            [[runningJobs objectAtIndex:i] setObject:[[progressInfo copy] autorelease] forKey:OPJobProgressInfo];
-            [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidSetProgressInfoNotification object:[[runningJobs objectAtIndex:i] objectForKey:OPJobName] userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                [[runningJobs objectAtIndex:i] objectForKey:OPJobId], @"jobId",
-                progressInfo, @"progressInfo",
-                nil, nil]];
+            [[runningJobs objectAtIndex:i] setObject:progressInfo forKey:OPJobProgressInfo];
+            setInfo = YES;
+            
             break;
         }
     }
-    
+
     [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    if (setInfo)
+    {
+        [self postNotificationInMainThreadWithName:OPJobDidSetProgressInfoNotification andUserInfo:[NSMutableDictionary dictionaryWithObject:progressInfo forKey:@"progressInfo"]];
+    }
 }
 
 + (NSDictionary *)progressInfoForJob:(unsigned)anJobId
@@ -684,7 +694,12 @@ BOOL removeJobFromArray(unsigned anJobId, NSMutableArray *anArray)
 
 - (BOOL)isJobProgressIndeterminate
 {
-    return [self objectForKey:OPJobProgressCurrentValue] != nil;
+    return [self objectForKey:OPJobProgressCurrentValue] == nil;
+}
+
+- (NSString *)jobProgressJobName
+{
+    return [self objectForKey:OPJobProgressJobName];    
 }
 
 @end

@@ -11,6 +11,9 @@
 @interface GIActivityPanelController : NSObject 
 {
     IBOutlet NSWindow *window;
+    IBOutlet NSTableView *tableView;
+    
+    NSArray *jobIds;
 }
 
 + (void)showActivityPanel;
