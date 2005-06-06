@@ -39,6 +39,9 @@
 - (id)initWithTransferData:(NSData *)data fallbackHeaderFields:(NSDictionary *)fields;
 
 - (NSData*) transferData;
+- (BOOL) transferDataDidChange;
+
+- (NSRange) takeHeadersFromData: (NSData*) data;
 
 - (void)setContentType: (NSString*) aType;
 - (void)setContentType: (NSString*) aType withParameters: (NSDictionary*) someParameters;

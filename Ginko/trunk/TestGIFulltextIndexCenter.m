@@ -89,7 +89,7 @@ NSMutableArray* tempMessageArray;
 - (void)testAddManyMessages
 {
     NSLog(@"-[TestGIFulltextIndexCenter testAddManyMessages]");
-    int i;
+    //int i;
     NSEnumerator * messageEnumerator = [tempMessageArray objectEnumerator];
     G3Message * tempMessageFromArray;
     while ( tempMessageFromArray = [messageEnumerator nextObject] ) {

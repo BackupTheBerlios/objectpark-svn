@@ -75,6 +75,12 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     return [super transferData];
 }
 
+- (BOOL) transferDataDidChange 
+/*" Returns YES, if the transferData had been changed since this object was initialized. "*/
+{
+    return originalTransferData==nil;
+}
+
 - (NSArray*) references 
 /*" Returns an array of messages in the reply-chain, either taken from the 'In-Reply-To' or 'References' header. "*/
 {
@@ -334,6 +340,17 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     NSParameterAssert(transferData != nil); // Adds this assertion.
     return [super initWithTransferData: transferData];
 }
+
+- (NSRange) takeHeadersFromData: (NSData*) data
+{
+    NSRange result = [super takeHeadersFromData: data];
+    
+    if (![[self bodyForHeaderField:@"message-id"] length]) {
+        [self generateMessageIdWithSuffix: @"FakedByOPMS2"];
+    }
+    return result;
+}
+
 
 
 /*"Returns a NSData containing the complete header as a string."*/

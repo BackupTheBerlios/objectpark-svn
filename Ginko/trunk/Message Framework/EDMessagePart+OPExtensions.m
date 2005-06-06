@@ -35,7 +35,7 @@
 
 @interface EDMessagePart(PrivateAPI)
 + (NSDictionary *)_defaultFallbackHeaders;
-- (NSData *)_takeHeadersFromData:(NSData *)data;
+- (NSData *)takeHeadersFromData:(NSData *)data;
 @end
 
 
@@ -64,7 +64,7 @@
     if([data length] == 0)
         return self;
 
-    rawData = [self _takeHeadersFromData:data];
+    rawData = [self takeHeadersFromData:data];
     cte = [[(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:[self bodyForHeaderField:@"content-transfer-encoding"]] text] stringByRemovingSurroundingWhitespace];
     
     NS_DURING
@@ -97,7 +97,7 @@
 /* Waht is the improvement over the EDM version?
 
 // make resistent agains missing header to body separators
-- (NSData *)_takeHeadersFromData:(NSData *)data
+- (NSData *)takeHeadersFromData:(NSData *)data
 {
     const char		 *p, *pmax, *fnamePtr, *fbodyPtr, *eolPtr;
     NSMutableData	 *fbodyData;

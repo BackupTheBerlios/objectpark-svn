@@ -31,7 +31,7 @@
 
 @interface EDMessagePart(PrivateAPI)
 + (NSDictionary *)_defaultFallbackHeaders;
-- (NSRange)_takeHeadersFromData:(NSData *)data;
+- (NSRange)takeHeadersFromData:(NSData *)data;
 - (void)_takeContentDataFromOriginalTransferData;
 - (void)_forgetOriginalTransferData;
 @end
@@ -64,37 +64,28 @@
 }
 
 - (id)initWithTransferData:(NSData *)data fallbackHeaderFields:(NSDictionary *)fields
+/*" Designated Initializer. "*/
 {
-    [super init];
+    self = [self init];
     
     if(fields != nil)
     {
         fallbackFields = [[NSMutableDictionary allocWithZone:[self zone]] initWithDictionary:[[self class] _defaultFallbackHeaders]];
         [(NSMutableDictionary *)fallbackFields addEntriesFromDictionary:fields];
-    }
-    else
-    {
+    } else {
         fallbackFields = [[[self class] _defaultFallbackHeaders] retain];
     }
     
     if((data == nil) || ([data length] == 0))
         return self;
     
-    bodyRange = [self _takeHeadersFromData:data];
+    bodyRange = [self takeHeadersFromData:data];
     originalTransferData = [data retain];
     
     return self;
 }
 
-- (id)init
-{
-    [super init];
-    fallbackFields = nil;
-    return self;
-}
-
-
-- (void)dealloc
+- (void) dealloc
 {
     bodyRange = NSMakeRange(0,0);   // do not convert transferData...
     [fallbackFields release];
@@ -395,7 +386,7 @@
 }
 
 
-- (NSRange)_takeHeadersFromData:(NSData *)data
+- (NSRange) takeHeadersFromData: (NSData*) data
     /*
      Parses the header fields and returns the NSRange belonging to the message body (for seperate processing).
      */
