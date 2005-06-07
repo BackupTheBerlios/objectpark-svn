@@ -75,11 +75,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     return [super transferData];
 }
 
-- (BOOL) transferDataDidChange 
-/*" Returns YES, if the transferData had been changed since this object was initialized. "*/
-{
-    return originalTransferData==nil;
-}
+
 
 - (NSArray*) references 
 /*" Returns an array of messages in the reply-chain, either taken from the 'In-Reply-To' or 'References' header. "*/

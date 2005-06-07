@@ -148,7 +148,7 @@
     NSString *fBody;
 
     if((messageId == nil) && ((fBody = [self bodyForHeaderField:@"message-id"]) != nil))
-        messageId = [[[EDIdListFieldCoder decoderWithFieldBody:fBody] list] lastObject];
+        messageId = [[[[EDIdListFieldCoder decoderWithFieldBody:fBody] list] lastObject] retain];
     return messageId;
 }
 

@@ -478,6 +478,12 @@
     contentData = [[rawData decodeContentWithTransferEncoding:cte] retain];
 }
 
+- (BOOL) transferDataDidChange 
+    /*" Returns YES, if the transferData had been changed since this object was initialized. "*/
+{
+    return originalTransferData==nil;
+}
+
 
 - (void)_forgetOriginalTransferData
 {

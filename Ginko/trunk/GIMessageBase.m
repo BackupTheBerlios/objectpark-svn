@@ -139,8 +139,7 @@
                         [context save:&error];
                         NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
                         
-                        [pool drain];
-                        pool = [[NSAutoreleasePool alloc] init];
+                        [pool drain]; pool = [[NSAutoreleasePool alloc] init];
                         
                         if ((++addedMessageCount % 5000) == 0) 
                         {
@@ -148,14 +147,10 @@
                         }
                     }
                 } @catch (NSException *localException) {
-                    if ([localException name] == GIDupeMessageException)
-                    {
+                    if ([localException name] == GIDupeMessageException) {
                         if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
-                        [pool drain];
-                        pool = [[NSAutoreleasePool alloc] init];
-                    }
-                    else
-                    {
+                        [pool drain]; pool = [[NSAutoreleasePool alloc] init];
+                    } else {
                         [localException raise];
                     }
                 }
