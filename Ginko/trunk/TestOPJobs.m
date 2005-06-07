@@ -38,7 +38,7 @@
     NSNumber *jobId3 = [OPJobs scheduleJobWithName:@"job3" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject:nil];
     
     sleep(1);
-    
+        
     STAssertTrue([OPJobs activeThreadCount] == 2, @"2 should be active");
 
     while ([OPJobs isJobRunning:jobId1])

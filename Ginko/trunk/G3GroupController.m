@@ -788,7 +788,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         [threadsView reloadData];
         
-        [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString: [[group objectID] description]]];
+        [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[[group objectID] description] ? [[group objectID] description] : @"nil"]];
         [threadsView setAutosaveTableColumns:YES];
         [threadsView setAutosaveExpandedItems:NO];
         
