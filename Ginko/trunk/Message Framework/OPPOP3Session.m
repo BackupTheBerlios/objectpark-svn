@@ -30,7 +30,7 @@ NSString *OPPOP3SessionException = @"OPPOP3SessionException";
 NSString *OPPOP3APOPAuthenticationMethod = @"OPPOP3APOPAuthenticationMethod";
 NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMethod";
 
-#define UIDLsDir   @"Infos for UIDLs"
+#define UIDLsDir @"Infos for UIDLs"
 
 @interface OPPOP3Session (Authentication)
 - (void)_authenticationWithServerGreeting:(NSString *)serverGreeting;

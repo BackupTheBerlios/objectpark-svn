@@ -33,8 +33,8 @@
     }
     
     // add message to index
-    GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-    [indexCenter addMessage:message];
+    //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+    //[indexCenter addMessage:message];
     
     return message;
 }

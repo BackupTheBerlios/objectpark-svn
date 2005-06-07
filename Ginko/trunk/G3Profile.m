@@ -17,20 +17,24 @@
 
 + (NSArray *)profiles
 {    
-	NSArray *result;
-	
-    result = [self allObjects];
-	
-	if (![result count])
-	{
-		G3Profile *profile = [[[self alloc] init] autorelease];
-		[profile setName:@"Dummy Profile"];
-		[profile setRealname:@"Dummy Profiler"];
-		[profile setEmailAddress:@"dummy@profile.org"];
-		result = [self allObjects];
-	}
-	
-	return result;
+    NSArray *result;
+    
+    @synchronized(self)
+    {
+        result = [self allObjects];
+        
+        if (![result count])
+        {
+            G3Profile *profile = [[[self alloc] init] autorelease];
+            [profile setName:@"Dummy Profile"];
+            [profile setRealname:@"Dummy Profiler"];
+            [profile setEmailAddress:@"dummy@profile.org"];
+            result = [self allObjects];
+        }
+        
+        result = [[result copy] autorelease];
+    }
+    return result;
 }
 
 + (void)setProfiles:(NSArray *)someProfiles
@@ -46,28 +50,34 @@
 }
 
 - (id)init
-	/*" Adds the reciever to the default managed object context. "*/
+/*" Adds the reciever to the default managed object context. "*/
 {
-	return [self initWithManagedObjectContext: [NSManagedObjectContext defaultContext]];
+    return [self initWithManagedObjectContext:[NSManagedObjectContext defaultContext]];
 }
 
-+ (BOOL) isMyEmailAddress: (NSString*) anAddress
++ (BOOL)isMyEmailAddress:(NSString *)anAddress
 {
     NSEnumerator *enumerator;
     G3Profile *profile;
     
-	@try {
-		anAddress = [anAddress addressFromEMailString]; // to be sure to have only the address part
-	} @catch (NSException* e) {
-		return NO; // Expect our users to have correct email addresses.
-	}
-    
-    enumerator = [[G3Profile profiles] objectEnumerator];
-    while (profile = [enumerator nextObject]) {
-        if ([[[profile emailAddress] addressFromEMailString] caseInsensitiveCompare:anAddress] == NSOrderedSame) {
-            return YES;
+    @try 
+    {
+        anAddress = [anAddress addressFromEMailString]; // to be sure to have only the address part
+        
+        enumerator = [[G3Profile profiles] objectEnumerator];
+        while (profile = [enumerator nextObject]) 
+        {
+            if ([[[profile emailAddress] addressFromEMailString] caseInsensitiveCompare:anAddress] == NSOrderedSame) 
+            {
+                return YES;
+            }
         }
+    } 
+    @catch (NSException *localException) 
+    {
+        return NO; // Expect our users to have correct email addresses.
     }
+    
     return NO;
 }
 
@@ -93,15 +103,18 @@
     }
             
     enumerator = [[self profiles] objectEnumerator];
-    while ((profile = [enumerator nextObject])) {
-        if ([[profile valueForKey: @"enabled"] boolValue]) {
+    while ((profile = [enumerator nextObject])) 
+    {
+        if ([[profile valueForKey: @"enabled"] boolValue]) 
+        {
             NSString *email = [profile emailAddress];
             NSString *replyTo = [profile replyToAddress];
             NSEnumerator *addressEnumerator = [addressList objectEnumerator];
             NSString *address;
             
             while ((address = [addressEnumerator nextObject])) {
-                if (email && [email caseInsensitiveCompare:address] == NSOrderedSame) {
+                if (email && [email caseInsensitiveCompare:address] == NSOrderedSame) 
+                {
                     return profile;
                 }
                 
@@ -116,64 +129,64 @@
     return replyToCandidate;
 }
 
-- (NSString*) name
+- (NSString *)name
 {
-	[self willAccessValueForKey: @"name"];
-    id result = [self primitiveValueForKey: @"name"];
-	[self didAccessValueForKey: @"name"];
-	return result;
+    [self willAccessValueForKey:@"name"];
+    id result = [self primitiveValueForKey:@"name"];
+    [self didAccessValueForKey:@"name"];
+    return result;
 }
 
-- (void) setName: (NSString*) aString
+- (void)setName:(NSString *)aString
 {
-	[self willChangeValueForKey: @"name"];
-    [self setPrimitiveValue: aString forKey: @"name"];
-	[self didChangeValueForKey: @"name"];
+    [self willChangeValueForKey:@"name"];
+    [self setPrimitiveValue: aString forKey:@"name"];
+    [self didChangeValueForKey:@"name"];
 }
 
-- (NSString*) realname
+- (NSString *)realname
 {
-	[self willAccessValueForKey: @"realname"];
+    [self willAccessValueForKey:@"realname"];
     id result = [self primitiveValueForKey:@"realname"];
-	[self didAccessValueForKey: @"realname"];
-	return result;
+    [self didAccessValueForKey:@"realname"];
+    return result;
 }
 
-- (void) setRealname: (NSString*) aString
+- (void)setRealname:(NSString *)aString
 {
-	[self willChangeValueForKey: @"realname"];
-    [self setPrimitiveValue: aString forKey: @"realname"];
-	[self didChangeValueForKey: @"realname"];
+    [self willChangeValueForKey:@"realname"];
+    [self setPrimitiveValue: aString forKey:@"realname"];
+    [self didChangeValueForKey:@"realname"];
 }
 
-- (NSString*) emailAddress
+- (NSString *)emailAddress
 {
-	[self willAccessValueForKey: @"mailaddress"];
+    [self willAccessValueForKey:@"mailaddress"];
     id result = [self primitiveValueForKey:@"mailaddress"];
-	[self didAccessValueForKey: @"mailaddress"];
-	return result;
+    [self didAccessValueForKey:@"mailaddress"];
+    return result;
 }
 
-- (void)setEmailAddress: (NSString*) aString
+- (void)setEmailAddress:(NSString *)aString
 {
-	[self willChangeValueForKey: @"mailaddress"];
-    [self setPrimitiveValue: aString forKey: @"mailaddress"];
-	[self didChangeValueForKey: @"mailaddress"];
+    [self willChangeValueForKey:@"mailaddress"];
+    [self setPrimitiveValue:aString forKey:@"mailaddress"];
+    [self didChangeValueForKey:@"mailaddress"];
 }
 
-- (NSString*) replyToAddress
+- (NSString *)replyToAddress
 {
-	[self willAccessValueForKey: @"defaultReplyTo"];
-    id result = [self primitiveValueForKey: @"defaultReplyTo"];
-	[self didAccessValueForKey: @"defaultReplyTo"];
-	return result;
+    [self willAccessValueForKey:@"defaultReplyTo"];
+    id result = [self primitiveValueForKey:@"defaultReplyTo"];
+    [self didAccessValueForKey:@"defaultReplyTo"];
+    return result;
 }
 
 - (void)setReplyToAddress:(NSString *)aString
 {
-	[self willChangeValueForKey: @"defaultReplyTo"];
-    [self setPrimitiveValue: aString forKey: @"defaultReplyTo"];
-	[self didChangeValueForKey: @"defaultReplyTo"];
+    [self willChangeValueForKey:@"defaultReplyTo"];
+    [self setPrimitiveValue:aString forKey:@"defaultReplyTo"];
+    [self didChangeValueForKey:@"defaultReplyTo"];
 }
 
 - (NSString *)organization
@@ -181,13 +194,12 @@
     return [self primitiveValueForKey:@"organization"];
 }
 
-- (void) setOrganization: (NSString*) aString
+- (void)setOrganization:(NSString *)aString
 {
-	[self willChangeValueForKey: @"organization"];
-    [self setPrimitiveValue: aString forKey: @"organization"];
-	[self didChangeValueForKey: @"organization"];
+    [self willChangeValueForKey:@"organization"];
+    [self setPrimitiveValue:aString forKey:@"organization"];
+    [self didChangeValueForKey:@"organization"];
 }
-
 
 - (NSData *)signature
 {
@@ -196,11 +208,10 @@
 
 - (void)setSignature:(NSData *)aSig
 {
-	[self willChangeValueForKey:@"signature"];
+    [self willChangeValueForKey:@"signature"];
     [self setPrimitiveValue:aSig forKey:@"signature"];
-	[self didChangeValueForKey:@"signature"];
+    [self didChangeValueForKey:@"signature"];
 }
-
 
 - (G3Account *)sendAccount 
 {
@@ -233,17 +244,17 @@
 
 - (NSData *)messageTemplate
 {
-	[self willAccessValueForKey:@"messageTemplate"];
+    [self willAccessValueForKey:@"messageTemplate"];
     id result = [self primitiveValueForKey:@"messageTemplate"];
-	[self didAccessValueForKey:@"messageTemplate"];
-	return result;
+    [self didAccessValueForKey:@"messageTemplate"];
+    return result;
 }
 
 - (void)setMessageTemplate:(NSData *)aTemp
 {
-	[self willChangeValueForKey: @"messageTemplate"];
-    [self setPrimitiveValue: aTemp forKey: @"messageTemplate"];
-	[self didChangeValueForKey: @"messageTemplate"];
+    [self willChangeValueForKey:@"messageTemplate"];
+    [self setPrimitiveValue:aTemp forKey:@"messageTemplate"];
+    [self didChangeValueForKey:@"messageTemplate"];
 }
 
 @end
