@@ -48,19 +48,21 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 }
 
 + (id)messageWithTransferData:(NSData *)someTransferData
-/*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context and a GIDupeMessageException is raised. "*/
+/*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context nil is returned. "*/
 {
     id result = nil;
     OPInternetMessage *internetMessage = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
     
     if ([self messageForMessageId:[internetMessage messageId]])
     {
-        [internetMessage autorelease];
-        [[NSException exceptionWithName:GIDupeMessageException reason:[NSString stringWithFormat:@"Dupe for message id %@ detected.", [internetMessage messageId]] userInfo:[NSDictionary dictionaryWithObject:someTransferData forKey:@"transferData"]] raise];        
+        if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [internetMessage messageId]);        
+        [internetMessage release];
+        return nil;
     }
     
     // Create a new message in the default context:
     result = [[[G3Message alloc] initWithManagedObjectContext:[NSManagedObjectContext defaultContext]] autorelease];
+    NSAssert(result != nil, @"Could not create message object");
     
     //NSString* fromHeader = [msg bodyForHeaderField: @"from"];
     NSString *fromHeader = [internetMessage fromWithFallback:YES];

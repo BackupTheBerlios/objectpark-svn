@@ -22,19 +22,21 @@
 @implementation GIMessageBase
 
 + (G3Message *)addMessageWithTransferData:(NSData *)someTransferData
-/*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if the message could not be created. Raises a GIDupeMessageException exception if message was a dupe messsage. "*/
+/*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
 {
     G3Message *message = [G3Message messageWithTransferData:someTransferData];
-    NSAssert(message != nil, @"Fatal error. Couldn't create message from transfer data.");
     
-    if (![GIMessageFilter filterMessage:message flags:0])
+    if (message) // if no dupe
     {
-        [self addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup]];
+        if (![GIMessageFilter filterMessage:message flags:0])
+        {
+            [self addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup]];
+        }
+        
+        // add message to index
+        //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+        //[indexCenter addMessage:message];
     }
-    
-    // add message to index
-    //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-    //[indexCenter addMessage:message];
     
     return message;
 }
@@ -130,20 +132,21 @@
                 @try {
                     G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
                     
-                    NSAssert1(persistentMessage != nil, @"Fatal error. No message could be generated from transfer data: %@", transferData);
-
-                    if ((++addedMessageCount % 100) == 0) 
+                    if (persistentMessage) // if not a dupe
                     {
-                        if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
-                        
-                        [context save:&error];
-                        NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
-                        
-                        [pool drain]; pool = [[NSAutoreleasePool alloc] init];
-                        
-                        if ((++addedMessageCount % 5000) == 0) 
+                        if ((++addedMessageCount % 100) == 0) 
                         {
-                            [context reset];
+                            if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
+                            
+                            [context save:&error];
+                            NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
+                            
+                            [pool drain]; pool = [[NSAutoreleasePool alloc] init];
+                            
+                            if ((++addedMessageCount % 5000) == 0) 
+                            {
+                                [context reset];
+                            }
                         }
                     }
                 } @catch (NSException *localException) {
