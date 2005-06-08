@@ -3,12 +3,13 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 06.04.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Objectpark Group. All rights reserved.
 //
 
 #import "GIMessageBase.h"
 #import "G3Message.h"
 #import "G3Thread.h"
+#import "G3Account.h"
 #import "G3MessageGroup.h"
 #import "OPMBoxFile.h"
 #import "NSManagedObjectContext+Extensions.h"
@@ -18,6 +19,7 @@
 #import <Foundation/NSDebug.h>
 #import "OPJobs.h"
 #import "GIMessageFilter.h"
+#import "OPPOP3Session.h"
 
 @implementation GIMessageBase
 
@@ -286,6 +288,83 @@
 + (void)appendMessage:(G3Message *)aMessage toMBoxFile:(OPMBoxFile *)anMBoxFile
 {
     
+}
+
+- (void)retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
+/*" Retrieves using delegate for providing password. "*/
+{
+    G3Account *account = [arguments objectForKey:@"account"];
+    NSParameterAssert([account isPOPAccount]);
+    OPPOP3Session *pop3session;
+    NSAutoreleasePool *pool;
+    NSString *password;
+    
+    
+    /*
+    [_password release];
+    _password = [[account objectForKey:OPAPassword] retain];
+    if (_password == nil)
+    {
+        // Whenever the user denies access to the password via key chain, we skip  the whole thing.
+        NSLog(@"POP3: Unable to get a password. Skipping retrieval from %@.", [account objectForKey:OPAHostname]);
+        return;
+    }
+    
+    pool = [[NSAutoreleasePool alloc] init];
+    //    [[account retain] autorelease];
+    
+    if(! (uniqueID = [account objectForKey:OPAUniqueId]))
+        uniqueID = @"";
+    
+    if ([self _hostIsReachable])
+    {
+        // successful connecting creates the popStream
+        if ([self _connect])
+        {
+            [self _startSSL];
+            
+            if (pop3session = [self _login])
+            {
+                if (mailsShouldBeFetched)
+                    [self _retrieveMailsWithSession:pop3session];
+                
+                OPDebugLog1(POPDEBUG, OPINFO, @"Closing POP3 connection for %@", account);
+                
+                if (skipCleanUp)
+                {
+                    [pop3session abortSession];
+                }
+                else
+                {
+                    [pop3session closeSession];
+                }
+                
+                [pop3session release];
+            }
+            
+            [self _stopSSL];
+            [popStream close];
+        }
+    }
+    else
+    {
+        NSLog(@"Host %@ not reachable. Skipping retrieval.\n", [account objectForKey:OPAHostname]);
+    }
+    
+    [pool release];    
+     */
+}
+
++ (void)retrieveMessagesFromPOPAccount:(G3Account *)anAccount
+/*" Starts a background job for retrieving messages from the given POP account anAccount. One account can only be 'popped' by at most one pop job at a time. "*/
+{
+    NSParameterAssert([anAccount isPOPAccount]);
+    
+    NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+    
+    [jobArguments setObject:anAccount forKey:@"account"];
+    
+    [OPJobs scheduleJobWithName:@"POP3 fetch" target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[[anAccount objectID] URIRepresentation]];
 }
 
 @end

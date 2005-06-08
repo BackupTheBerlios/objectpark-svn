@@ -674,17 +674,20 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
 
 - (double)jobProgressMinValue
 {
-    return [[self objectForKey:OPJobProgressMinValue] doubleValue];
+    NSNumber *result = [self objectForKey:OPJobProgressMinValue];
+    return result ? [result doubleValue] : 0.0;
 }
 
 - (double)jobProgressMaxValue
 {
-    return [[self objectForKey:OPJobProgressMaxValue] doubleValue];
+    NSNumber *result = [self objectForKey:OPJobProgressMaxValue];
+    return result ? [result doubleValue] : 0.0;
 }
 
 - (double)jobProgressCurrentValue
 {
-    return [[self objectForKey:OPJobProgressCurrentValue] doubleValue];
+    NSNumber *result = [self objectForKey:OPJobProgressCurrentValue];
+    return result ? [result doubleValue] : 0.0;
 }
 
 - (NSString *)jobProgressDescription

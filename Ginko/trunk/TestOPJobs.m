@@ -39,6 +39,7 @@
     
     sleep(1);
         
+    STAssertTrue(NO, @"intended");
     STAssertTrue([OPJobs activeThreadCount] == 2, @"2 should be active");
 
     while ([OPJobs isJobRunning:jobId1])
