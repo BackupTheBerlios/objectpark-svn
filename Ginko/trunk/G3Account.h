@@ -103,4 +103,8 @@ enum LeaveOnServerDuration
 
 - (BOOL)outgoingUsernameNeeded;
 
+- (BOOL)allowExpiredSSLCertificates;
+- (BOOL)allowAnyRootSSLCertificate;
+- (BOOL)verifySSLCertificateChain;
+
 @end

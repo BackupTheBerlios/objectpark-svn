@@ -20,6 +20,8 @@
 #import "OPJobs.h"
 #import "GIMessageFilter.h"
 #import "OPPOP3Session.h"
+#import <OPNetwork/OPNetwork.h>
+#import "NSHost+GIReachability.h"
 
 @implementation GIMessageBase
 
@@ -290,69 +292,116 @@
     
 }
 
+// Socket timeout (60 secs)
+#define TIMEOUT 60
+
 - (void)retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
-/*" Retrieves using delegate for providing password. "*/
+    /*" Retrieves using delegate for providing password. "*/
 {
-    G3Account *account = [arguments objectForKey:@"account"];
+#warning better use not G3Account here but separate parameters for host name, password etc?
+    G3Account *account = [[[arguments objectForKey:@"account"] retain] autorelease];
     NSParameterAssert([account isPOPAccount]);
-    OPPOP3Session *pop3session;
-    NSAutoreleasePool *pool;
-    NSString *password;
     
+    // finding host:
+    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:0 currentValue:0 description:[NSString stringWithFormat:NSLocalizedString(@"finding %@", @"progress description in POP job"), [account incomingServerName]]]];
     
-    /*
-    [_password release];
-    _password = [[account objectForKey:OPAPassword] retain];
-    if (_password == nil)
+    NSHost *host = [NSHost hostWithName:[account incomingServerName]];
+    [host name]; // I remember that was important, but I can't remember why
+    NSAssert(host != nil, @"host should be created");
+    
+    if ([host isReachableWithNoStringsAttached])
     {
-        // Whenever the user denies access to the password via key chain, we skip  the whole thing.
-        NSLog(@"POP3: Unable to get a password. Skipping retrieval from %@.", [account objectForKey:OPAHostname]);
-        return;
-    }
-    
-    pool = [[NSAutoreleasePool alloc] init];
-    //    [[account retain] autorelease];
-    
-    if(! (uniqueID = [account objectForKey:OPAUniqueId]))
-        uniqueID = @"";
-    
-    if ([self _hostIsReachable])
-    {
-        // successful connecting creates the popStream
-        if ([self _connect])
+        // connecting to host:
+        [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:0 currentValue:0 description:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%@", @"progress description in POP job"), [account incomingServerName], [account incomingServerPort]]]];
+        
+        OPStream *stream = [OPStream streamConnectedToHost:host
+                                                      port:[account incomingServerPort]
+                                               sendTimeout:TIMEOUT
+                                            receiveTimeout:TIMEOUT];
+        
+        NSAssert2(stream != nil, @"could not connect to server %@:%@", [account incomingServerName], [account incomingServerPort]);
+        
+        @try
         {
-            [self _startSSL];
-            
-            if (pop3session = [self _login])
+            // starting SSL if needed:
+            if ([account incomingServerType] == POP3S)
             {
-                if (mailsShouldBeFetched)
-                    [self _retrieveMailsWithSession:pop3session];
+                [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:0 currentValue:0 description:[NSString stringWithFormat:NSLocalizedString(@"opening secure connection to %@", @"progress description in POP job"), [account incomingServerName]]]];
                 
-                OPDebugLog1(POPDEBUG, OPINFO, @"Closing POP3 connection for %@", account);
+                [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:[account allowAnyRootSSLCertificate]];
                 
-                if (skipCleanUp)
-                {
-                    [pop3session abortSession];
-                }
-                else
-                {
-                    [pop3session closeSession];
-                }
-                
-                [pop3session release];
+                [stream negotiateEncryption];
             }
             
-            [self _stopSSL];
-            [popStream close];
+            // logging into POP server:
+            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:0 currentValue:0 description:[NSString stringWithFormat:NSLocalizedString(@"loggin in to %@", @"progress description in POP job"), [account incomingServerName]]]];
+            
+            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream andDelegate:self] autorelease];
+            [pop3session setAutosaveName:[account incomingServerName]];
+            [pop3session openSession]; // also sets current postion cursor for maildrop
+            
+            // fetching messages:
+            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+            @try
+            {
+                int numberOfMessagesToFetch = ([pop3session maildropSize] - [pop3session currentPosition]) + 1;
+                int fetchCount = 0;
+                BOOL shouldTerminate = NO;
+                NSData *transferData = nil;
+                
+                while ((transferData = [pop3session nextTransferData]) && !shouldTerminate)
+                {
+                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"fetching message (%d of %d)", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch]]];
+                    
+                    // putting onto disk:
+#warning TODO!
+                    
+                    fetchCount++;
+                    shouldTerminate = [OPJobs shouldTerminate];
+                }
+                
+                if (!shouldTerminate)
+                {
+                    // cleaning up maildrop:
+                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:0 currentValue:0 description:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [account incomingServerName]]]];
+                    
+                    [pop3session cleanUp];
+                }
+            }
+            @catch (NSException *localException)
+            {
+                [pop3session abortSession];
+                @throw;
+            }
+            @finally
+            {
+                [pool release];
+            }
+            
+            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:0 currentValue:0 description:[NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in POP job"), [account incomingServerName]]]];
+            
+            [pop3session closeSession];
+            
+            if ([account incomingServerType] == POP3S)
+            {
+                [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:0 currentValue:0 description:[NSString stringWithFormat:NSLocalizedString(@"closing secure connection to %@", @"progress description in POP job"), [account incomingServerName]]]];
+                
+                [stream shutdownEncryption];
+            }
+        }
+        @catch (NSException *localException)
+        {
+            @throw;
+        }
+        @finally
+        {
+            [stream close];
         }
     }
     else
     {
-        NSLog(@"Host %@ not reachable. Skipping retrieval.\n", [account objectForKey:OPAHostname]);
+        NSLog(@"Host %@ not reachable. Skipping retrieval.\n", [account incomingServerName]);
     }
-    
-    [pool release];    
-     */
 }
 
 + (void)retrieveMessagesFromPOPAccount:(G3Account *)anAccount

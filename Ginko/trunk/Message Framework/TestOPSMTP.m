@@ -21,7 +21,9 @@
 
 - (void)tearDown
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [[NSManagedObjectContext defaultContext] rollback];
+    [pool release];
 }
 
 - (G3Message *)makeAMessage
@@ -42,6 +44,7 @@
 
 - (void)testSMTPConnect
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     OPSMTP *SMTP;
     NSHost* host;
     OPStream *smtpStream;
@@ -59,7 +62,6 @@
     NSAssert(smtpStream != nil, @"stream error");
     NSLog(@"smtpStream = %@", smtpStream);
 
-    SMTP = [[OPSMTP alloc] initWithStream:smtpStream andDelegate:self];
     NSAssert(SMTP != nil, @"SMTP error");
     NSLog(@"SMTP = %@", SMTP);
   
@@ -67,6 +69,7 @@
     
     [SMTP release];
     [smtpStream close];
+    [pool release];
 }
 
 - (NSString *)usernameForSMTP:(OPSMTP *)aSMTP

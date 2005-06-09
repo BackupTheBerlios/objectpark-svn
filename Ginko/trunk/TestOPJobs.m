@@ -21,14 +21,15 @@
     
     [OPJobs setResult:@"TestResult"];
     
-    sleep(2);
+    sleep(1);
     
     if ([OPJobs shouldTerminate])
     {
         [OPJobs setResult:@"Terminated"];
         return;
     }
-    sleep(3);
+    
+//    sleep(1);
 }
 
 - (void)testBasics
@@ -37,7 +38,7 @@
     NSNumber *jobId2 = [OPJobs scheduleJobWithName:@"job2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject:nil];
     NSNumber *jobId3 = [OPJobs scheduleJobWithName:@"job3" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject:nil];
     
-    sleep(1);
+   // sleep(1);
         
     STAssertTrue([OPJobs activeThreadCount] == 2, @"2 should be active");
 
@@ -57,7 +58,7 @@
     
     //NSLog(@"job2 completed");
 
-    sleep(1);
+    //sleep(1);
     
     STAssertTrue([OPJobs activeThreadCount] == 1, @"1 should be active");
     STAssertTrue([OPJobs idleThreadCount] == 1, @"1 should be idle");
