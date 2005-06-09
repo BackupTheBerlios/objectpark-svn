@@ -270,16 +270,31 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
-- (IBAction) importTestMBox: (id) sender
+- (IBAction)importMboxFile:(id)sender
 {
-    NSString *boxFilename = [[NSBundle mainBundle] pathForResource:@"test-mbox" ofType:@""];
+    int result;
+    NSArray *fileTypes = [NSArray arrayWithObject:@"mboxfile"];
+    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+    [oPanel setAllowsMultipleSelection:NO];
+    result = [oPanel runModalForDirectory:NSHomeDirectory()
+                                     file:nil types:fileTypes];
+    if (result == NSOKButton) 
+    {
+        NSArray *filesToOpen = [oPanel filenames];
+        if ([filesToOpen count])
+        {
+            NSString *boxFilename = [filesToOpen lastObject];
+            NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+            
+            [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
+            [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
+            
+            [OPJobs scheduleJobWithName:@"mbox import" target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
+        }
+    }    
+    
+    //NSString *boxFilename = [[NSBundle mainBundle] pathForResource:@"test-mbox" ofType:@""];
     //NSString *boxFilename = @"/Users/axel/Desktop/macosx-dev.mbox.txt";
-    NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
-    
-    [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
-    [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
-    
-    [OPJobs scheduleJobWithName:@"mbox import" target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
   
 //    OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
     

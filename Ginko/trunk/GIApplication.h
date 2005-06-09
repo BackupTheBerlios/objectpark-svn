@@ -26,9 +26,7 @@
 /*" Actions "*/
 - (IBAction)openNewGroupWindow:(id)sender;
 
-//- (IBAction) importTestMBox: (id) sender;
 - (IBAction) saveAction: (id) sender;
-- (IBAction) importTestMBox: (id) sender;
 - (IBAction) openSearchWindow: (id) sender;
 
 @end
