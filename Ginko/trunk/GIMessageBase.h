@@ -27,3 +27,4 @@
 + (void)addOutgoingMessage:(G3Message *)aMessage;
 
 @end
+

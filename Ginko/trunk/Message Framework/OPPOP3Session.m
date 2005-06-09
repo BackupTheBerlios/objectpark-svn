@@ -200,7 +200,7 @@ UIDL. nil otherwise. "*/
     NS_DURING
         [self _readOKForCommand:@"command"]; 	// try to use UIDL command
     NS_HANDLER
-        OPDebugLog1(POPDEBUG, OPERROR, @"UIDL command not understood by POP3 server.", self);
+        if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.", self);
         while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
         return nil;				// UIDL command not understood.
     NS_ENDHANDLER
@@ -222,7 +222,7 @@ UIDL. nil otherwise. "*/
         NSMutableDictionary *infoDict = [_messageInfo objectAtIndex:_currentPosition - 1];
         result = [infoDict objectForKey:@"messageId"];
 
-        OPDebugLog2(POPDEBUG, OPINFO, @"peeking id of message #%d in %@", _currentPosition, self);
+        if (NSDebugEnabled) NSLog(@"peeking id of message #%d in %@", _currentPosition, self);
 
         if (! result) // try to get info from message
         {
@@ -252,11 +252,11 @@ UIDL. nil otherwise. "*/
 - (void)keepAlive
 /*"Sends some command to the server to prevent the connection from timing out."*/
 {
-    OPDebugLog1(POPDEBUG, OPINFO, @"sending 'keep alive' for %@", [self description]);
+    if (NSDebugEnabled) NSLog(@"sending 'keep alive' for %@", [self description]);
     
     // send some command that does not alter any state and produces little traffic
     int size = [self _maildropSize];
-    OPDebugLog2(POPDEBUG, OPINFO, @"-keepAlive on %@ returned %d", [self description], size);
+    if (NSDebugEnabled) NSLog(@"-keepAlive on %@ returned %d", [self description], size);
 }
 
 - (void)setAutosaveName:(NSString *)aName
@@ -338,7 +338,7 @@ UIDL. nil otherwise. "*/
 
 - (void)cleanUp
 {
-    OPDebugLog(POPDEBUG, OPINFO, @"Starting cleanup...");
+    if (NSDebugEnabled) NSLog(@"Starting cleanup...");
     
     [self _gatherStatsIfNeeded];
     
@@ -353,7 +353,7 @@ UIDL. nil otherwise. "*/
             NSString *messageId = [infoDict objectForKey:@"messageId"];
             NSDate *date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
 
-            OPDebugLog2(POPDEBUG, OPINFO, @"Cleaning message #%d in %@", i, self);
+            if (NSDebugEnabled) NSLog(@"Cleaning message #%d in %@", i, self);
             
             if ( (! date) && (! messageId) ) // try to get info from message
             {
@@ -386,7 +386,7 @@ UIDL. nil otherwise. "*/
             [pool release];            
         }
     }
-    OPDebugLog(POPDEBUG, OPINFO, @"Cleanup finished.");
+    if (NSDebugEnabled) NSLog(@"Cleanup finished.");
 }
 
 @end
@@ -442,7 +442,7 @@ UIDL. nil otherwise. "*/
                 [self _APOPAuthenticationWithServerGreeting:serverGreeting];
             }
             
-            OPDebugLog1(POPDEBUG, OPINFO, @"APOP succeeded for POP3Session %@.", self);
+            if (NSDebugEnabled) NSLog(@"APOP succeeded for POP3Session %@.", self);
 
             if ([_delegate respondsToSelector:@selector(authenticationMethod:succeededInPOP3Session:)])
             {
@@ -452,7 +452,7 @@ UIDL. nil otherwise. "*/
     }
     NS_HANDLER
     {
-        OPDebugLog1(POPDEBUG, OPINFO, @"APOP failed for POP3Session %@.", self);
+        if (NSDebugEnabled) NSLog(@"APOP failed for POP3Session %@.", self);
         
         [triedMethods addObject:[NSString stringWithFormat:@"APOP failed (%@)", [localException reason]]];
         
@@ -483,7 +483,7 @@ UIDL. nil otherwise. "*/
                 [self _userPassAuthentication];
             }
 
-            OPDebugLog1(POPDEBUG, OPINFO, @"USER/PASS succeeded for POP3Session %@.", self);
+            if (NSDebugEnabled) NSLog(@"USER/PASS succeeded for POP3Session %@.", self);
             
             if ([_delegate respondsToSelector:@selector(authenticationMethod:succeededInPOP3Session:)])
             {
@@ -492,7 +492,7 @@ UIDL. nil otherwise. "*/
         }
         NS_HANDLER
         {
-            OPDebugLog1(POPDEBUG, OPINFO, @"USER/PASS failed for POP3Session %@.", self);
+            if (NSDebugEnabled) NSLog(@"USER/PASS failed for POP3Session %@.", self);
             
             [triedMethods addObject:[NSString stringWithFormat:@"Plain failed (%@)", [localException reason]]];
             
@@ -619,6 +619,7 @@ UIDL. nil otherwise. "*/
         while (response)
         {
             NSArray *components = [response componentsSeparatedByString:@" "];
+            NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
             NSDecimalNumber *sizeNumber = [[NSDecimalNumber alloc] initWithString:
                 [components objectAtIndex:1]];
             int messageNumber = [[components objectAtIndex:0] intValue];
@@ -629,7 +630,7 @@ UIDL. nil otherwise. "*/
             response = [_stream availableLine];
         };
     NS_HANDLER
-        OPDebugLog(POPDEBUG, OPERROR, @"LIST command failed on POP3 server.");
+        if (NSDebugEnabled) NSLog(@"LIST command failed on POP3 server.");
     NS_ENDHANDLER
 
     [pool release];
@@ -653,11 +654,11 @@ UIDL. nil otherwise. "*/
         UIDLFromLastPosition = [[NSUserDefaults standardUserDefaults] stringForKey:
             [@"OPPOP3Session lastUIDL " stringByAppendingString:_autosaveName]];
         
-        OPDebugLog2(POPDEBUG, OPINFO, @"%@: Read UIDL %@ for last position from user defaults.", self, UIDLFromLastPosition);
+        if (NSDebugEnabled) NSLog(@"%@: Read UIDL %@ for last position from user defaults.", self, UIDLFromLastPosition);
     }
     else
     {
-        OPDebugLog1(POPDEBUG, OPINFO, @"%@: No UIDLs read from user defaults. No autosave name given.", self);
+        if (NSDebugEnabled) NSLog(@"%@: No UIDLs read from user defaults. No autosave name given.", self);
     }
 
     // create info array
@@ -668,15 +669,14 @@ UIDL. nil otherwise. "*/
     NS_DURING
         [self _readOKForCommand:@"UIDL"]; 	// try to use UIDL command
     NS_HANDLER
-        OPDebugLog(POPDEBUG, OPERROR, @"UIDL command not understood by POP3 server.");
+        if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.");
         while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
         [pool release];
         return 0;				// UIDL command not understood.
     NS_ENDHANDLER
 
     NS_DURING
-        response = [_stream availableLine];
-        while (response)
+        while (response = [_stream availableLine])
         {
             NSMutableDictionary *infoDict;
             NSArray *components;
@@ -684,6 +684,7 @@ UIDL. nil otherwise. "*/
             int messageNumber;
 
             components = [response componentsSeparatedByString:@" "];
+            NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
             messageNumber = [[components objectAtIndex:0] intValue];
             UIDL = [components objectAtIndex:1];
 
@@ -704,25 +705,23 @@ UIDL. nil otherwise. "*/
                 if (result == 0)
                 {
                     result = messageNumber;
-                    OPDebugLog2(POPDEBUG, OPINFO, @"%@: Position %d for last UIDL found.", self, messageNumber);
+                    if (NSDebugEnabled) NSLog(@"%@: Position %d for last UIDL found.", self, messageNumber);
                 }
                 else
                 {
-                    OPDebugLog2(POPDEBUG, OPERROR, @"%@: CAUTION! An additional position %d for last UIDL found.", self, messageNumber);
+                    if (NSDebugEnabled) NSLog(@"%@: CAUTION! An additional position %d for last UIDL found.", self, messageNumber);
                 }
             }
-
-            response = [_stream availableLine];
         };
     NS_HANDLER
-        OPDebugLog1(POPDEBUG, OPERROR, @"%@: Error while retrieving UIDLs from POP3 server.", self);
+        if (NSDebugEnabled) NSLog(@"%@: Error while retrieving UIDLs from POP3 server.", self);
     NS_ENDHANDLER
 
     [pool release];
 
     if (result == 0)
     {
-        OPDebugLog1(POPDEBUG, OPINFO, @"%@: No position for last UIDL found. Defaulting to first message of maildrop.", self);
+        if (NSDebugEnabled) NSLog(@"%@: No position for last UIDL found. Defaulting to first message of maildrop.", self);
     }
     
     return result;
@@ -756,11 +755,11 @@ UIDL. nil otherwise. "*/
             if (UIDLFromLastPosition = [[_messageInfo objectAtIndex:UIDLPosition - 2] objectForKey:@"UIDL"])
             {
                 [defaults setObject:UIDLFromLastPosition forKey:key];
-                OPDebugLog2(POPDEBUG, OPINFO, @"%@: Saved last position UIDL %@ to user defaults.", self, UIDLFromLastPosition);
+                if (NSDebugEnabled) NSLog(@"%@: Saved last position UIDL %@ to user defaults.", self, UIDLFromLastPosition);
             }
             else
             {
-                OPDebugLog1(POPDEBUG, OPINFO, @"%@: Saved NO last position UIDL to user defaults. Not found.", self);
+                if (NSDebugEnabled) NSLog(@"%@: Saved NO last position UIDL to user defaults. Not found.", self);
             }
         }
 
@@ -873,7 +872,7 @@ UIDL. nil otherwise. "*/
             [self _readOKForCommand:[NSString stringWithFormat: @"RETR %d", position]];
             transferData = [_stream availableTextData];
         NS_HANDLER
-            OPDebugLog1(POPDEBUG, OPERROR, @"POP3 server fails : %@", localException);
+            if (NSDebugEnabled) NSLog(@"POP3 server fails : %@", localException);
         NS_ENDHANDLER
     }
     return transferData;
@@ -889,7 +888,7 @@ UIDL. nil otherwise. "*/
             [self _readOKForCommand:[NSString stringWithFormat: @"TOP %d 0", position]];
             headerData = [_stream availableTextData];
         NS_HANDLER
-            OPDebugLog(POPDEBUG, OPINFO, @"POP3 server does not understand the optional TOP command. Using RETR instead.");
+            if (NSDebugEnabled) NSLog(@"POP3 server does not understand the optional TOP command. Using RETR instead.");
             headerData = [self _transferDataAtPosition:position];
         NS_ENDHANDLER
     }

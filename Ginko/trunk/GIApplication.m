@@ -22,6 +22,7 @@
 #import <sqlite3.h>
 #import "OPJobs.h"
 #import "GIActivityPanelController.h"
+#import "GIPOPJob.h"
 
 @implementation GIApplication
 
@@ -325,6 +326,14 @@
 - (IBAction)showActivityPanel:(id)sender
 {
     [GIActivityPanelController showActivityPanel];
+}
+
+- (IBAction)getNewMailInAllAccounts:(id)sender
+{
+    G3Account *account = [[G3Account allObjects] lastObject];
+    NSAssert(account != nil, @"no account available");
+    
+    [GIPOPJob retrieveMessagesFromPOPAccount:account];
 }
 
 @end
