@@ -74,7 +74,6 @@ typedef enum _OPPOP3State {
 
 @interface OPPOP3Session (OPMessageProducer)
 - (NSData *)nextTransferData;
-- (OPInternetMessage *)nextMessage;
 - (void)skipNextMessage;
 - (long)peekSizeOfNextMessage;
 @end

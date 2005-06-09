@@ -8,6 +8,10 @@
 
 #import "G3Account.h"
 #import "NSManagedObjectContext+Extensions.h"
+#include <CoreFoundation/CoreFoundation.h>
+#include <Security/Security.h>
+#include <CoreServices/CoreServices.h>
+#include "NSString+Extensions.h"
 
 @implementation G3Account
 
@@ -209,6 +213,122 @@
     [self willChangeValueForKey:@"incomingUsername"];
     [self setPrimitiveValue:value forKey:@"incomingUsername"];
     [self didChangeValueForKey:@"incomingUsername"];
+}
+
+- (SecProtocolType)incomingSecProtocolType
+{
+    switch ([self incomingServerType])
+    {
+        case POP3:
+            return kSecProtocolTypePOP3;
+        case POP3S:
+            return kSecProtocolTypePOP3S;
+        case NNTP:
+            return kSecProtocolTypeNNTP;
+        case NNTPS:
+            return kSecProtocolTypeNNTPS;
+        default:
+            return '    ';
+    }    
+}
+
+- (NSString *)incomingPasswordItemRef:(SecKeychainItemRef *)itemRef
+/*" Accesses keychain to get password. "*/
+{
+    const char *serverName = [[self incomingServerName] UTF8String];
+    const char *accountName = [[self incomingUsername] UTF8String];
+    UInt32 passwordLength;
+    void *passwordData;
+    NSString *result = nil;
+    
+    OSStatus err = SecKeychainFindInternetPassword(NULL, //<#CFTypeRef keychainOrArray#>
+                                                   strlen(serverName), //<#UInt32 serverNameLength#>
+                                                   serverName, //<#const char * serverName#>
+                                                   0, //<#UInt32 securityDomainLength#>
+                                                   NULL, //<#const char * securityDomain#>
+                                                   strlen(accountName), //<#UInt32 accountNameLength#>
+                                                   accountName, //<#const char * accountName#>
+                                                   0, //<#UInt32 pathLength#>
+                                                   NULL, //<#const char * path#>
+                                                   (UInt16)[self incomingServerPort], //<#UInt16 port#>
+                                                   [self incomingSecProtocolType], //<#SecProtocolType protocol#>
+                                                   kSecAuthenticationTypeDefault, //<#SecAuthenticationType authenticationType#>
+                                                   &passwordLength, //<#UInt32 * passwordLength#>
+                                                   &passwordData, //<#void * * passwordData#>
+                                                   itemRef //<#SecKeychainItemRef * itemRef#>
+                                                   );
+    if (err != noErr)
+    {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
+        NSLog(@"Error with getting password (%@)", error);
+    }
+    else
+    {
+        NSData *data = [NSData dataWithBytesNoCopy:passwordData length:passwordLength];
+        result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
+    }
+    
+    err = SecKeychainItemFreeContent(
+                                     NULL,           //No attribute data to release
+                                     passwordData    //Release data buffer allocated 
+                                     );
+    
+    if (err != noErr)
+    {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
+        NSLog(@"Error with getting password (%@)", error);
+    }
+    
+    return result;
+}
+
+- (NSString *)incomingPassword
+{
+    SecKeychainItemRef itemRef;
+    NSString *result = [self incomingPasswordItemRef:&itemRef];
+    return result;
+}
+
+- (void)setIncomingPassword:(NSString *)aPassword
+/*" Uses keychain to store password. "*/
+{
+    const char *serverName = [[self incomingServerName] UTF8String];
+    const char *accountName = [[self incomingUsername] UTF8String];
+    const char *password = [aPassword UTF8String];
+    OSStatus err;
+    SecKeychainItemRef itemRef = NULL;
+    
+    if ([self incomingPasswordItemRef:&itemRef])
+    {        
+        err = SecKeychainItemModifyAttributesAndData(
+                                                     itemRef, // the item reference
+                                                     NULL, // no change to attributes
+                                                     strlen(password),  // length of password
+                                                     password // pointer to password data
+                                                     );
+    }
+    else
+    {
+        err = SecKeychainAddInternetPassword (
+                                              NULL, // SecKeychainRef keychain,
+                                              strlen(serverName), // UInt32 serverNameLength,
+                                              serverName, //const char *serverName,
+                                              0, // UInt32 securityDomainLength,
+                                              NULL, // const char *securityDomain,
+                                              strlen(accountName), // UInt32 accountNameLength,
+                                              accountName, // const char *accountName,
+                                              0, // UInt32 pathLength,
+                                              NULL, // const char *path,
+                                              (UInt16)[self incomingServerPort], // UInt16 port,
+                                              [self incomingSecProtocolType], // SecProtocolType protocol,
+                                              kSecAuthenticationTypeDefault, // SecAuthenticationType authenticationType,
+                                              strlen(password), // UInt32 passwordLength,
+                                              password, // const void *passwordData,
+                                              NULL //SecKeychainItemRef *itemRef
+                                              );
+        
+    }
+    if (itemRef) CFRelease(itemRef);
 }
 
 - (int)retrieveMessageInterval 

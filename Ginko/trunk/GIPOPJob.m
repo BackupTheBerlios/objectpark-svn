@@ -177,7 +177,7 @@
 
 - (NSString *)passwordForPOP3Session:(OPPOP3Session *)aSession
 {
-    return @"XXXX"; //[account incomingPassword];
+    return [account incomingPassword];
 }
 
 /*" optional "*/

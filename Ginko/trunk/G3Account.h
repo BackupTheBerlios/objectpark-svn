@@ -76,6 +76,9 @@ enum LeaveOnServerDuration
 - (NSString *)incomingUsername;
 - (void)setIncomingUsername:(NSString *)aName;
 
+- (NSString *)incomingPassword;
+- (void)setIncomingPassword:(NSString *)aPassword;
+
 - (int)retrieveMessageInterval;
 - (void)setRetrieveMessageInterval:(int)minutes;
 

@@ -307,25 +307,6 @@ UIDL. nil otherwise. "*/
     return -1;
 }
 
-- (OPInternetMessage *)nextMessage
-/*" Returns an available OPMessage object. <nil> if no OPMessage object is available. "*/
-{
-    OPInternetMessage *result = nil;
-    NSData *transferData;
-
-    [self _gatherStatsIfNeeded];
-
-    if (transferData = [self _transferDataAtPosition:_currentPosition])
-    {
-        result = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
-
-        [self _takeInfoFromMessage:result forPosition:_currentPosition];
-
-        _currentPosition += 1;
-    }
-    return result;
-}
-
 - (void)skipNextMessage
 /*" Skips the next message. "*/
 {
