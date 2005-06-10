@@ -21,9 +21,7 @@
 
 - (void)tearDown
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [[NSManagedObjectContext defaultContext] rollback];
-    [pool release];
 }
 
 - (G3Message *)makeAMessage

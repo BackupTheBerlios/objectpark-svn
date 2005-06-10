@@ -108,7 +108,7 @@ GIIndex * contentIndex;
          
      */
     if (isIndexed) {
-        [aMessage setFlags:OPFulltextIndexedStatus];
+        [aMessage setIsFulltextIndexed:YES];
     }
     
     return isIndexed;
@@ -125,7 +125,7 @@ GIIndex * contentIndex;
     isRemoveSuccessfull = [[indexDictionary objectForKey:@"statusIndex"] removeDocumentWithName:[aMessage messageId]];
      */
     if (isRemoveSuccessfull) {
-        [aMessage removeFlags:OPFulltextIndexedStatus];
+        [aMessage setIsFulltextIndexed:NO];
     }
     return isRemoveSuccessfull;
 }

@@ -24,7 +24,7 @@
 #define OPSendingBlockedStatus 512
 #define OPPublicMessageStatus 1024
 #define OPQueuedSendNowStatus 2048
-#define OPFulltextIndexedStatus 4096
+//#define OPFulltextIndexedStatus 4096
 #define OPJunkMailStatus 8192
 #define OPIsFromMeStatus 16384
 
@@ -57,6 +57,10 @@
 - (BOOL)isDummy;
 - (BOOL)isSeen;
 - (void)setSeen:(BOOL)isSeen;
+
+/*" Fulltext Indexing Support "*/
+- (BOOL)isFulltextIndexed;
+- (void)setIsFulltextIndexed:(BOOL)value;
 
 - (BOOL)isListMessage;
 - (BOOL)isUsenetMessage;

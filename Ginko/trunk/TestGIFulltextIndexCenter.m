@@ -71,7 +71,7 @@ NSMutableArray* tempMessageArray;
     NSLog(@"-[TestGIFulltextIndexCenter testAddOneMessage]");
     //NSLog(@"adding message '%@' with text: %@", [tempMessage messageId], [[tempMessage contentAsAttributedString] string]);
     STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
-    STAssertTrue([tempMessage hasFlag:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
+    STAssertTrue([tempMessage isFulltextIndexed],@"tempMessage must have status OPFulltextIndexedStatus after adding");
     //STAssertTrue([tempIndexCenter flushIndex],@"[tempIndexCenter flushIndex] must return true");
 }
 
@@ -80,10 +80,10 @@ NSMutableArray* tempMessageArray;
     NSLog(@"-[TestGIFulltextIndexCenter testAddTwoMessages]");
     //NSLog(@"adding message '%@' with text: %@", [tempMessage messageId], [[tempMessage contentAsAttributedString] string]);
     STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
-    STAssertTrue([tempMessage hasFlag:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
+    STAssertTrue([tempMessage isFulltextIndexed],@"tempMessage must have status OPFulltextIndexedStatus after adding");
     //STAssertTrue([tempIndexCenter flushIndex],@"[tempIndexCenter flushIndex] must return true");
     STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
-    STAssertTrue([tempMessage hasFlag:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
+    STAssertTrue([tempMessage isFulltextIndexed],@"tempMessage must have status OPFulltextIndexedStatus after adding");
 }
 
 - (void)testAddManyMessages
@@ -94,7 +94,7 @@ NSMutableArray* tempMessageArray;
     G3Message * tempMessageFromArray;
     while ( tempMessageFromArray = [messageEnumerator nextObject] ) {
         STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessageFromArray], @"addMessage must return true");
-        STAssertTrue([tempMessageFromArray hasFlag:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
+        STAssertTrue([tempMessageFromArray isFulltextIndexed],@"tempMessage must have status OPFulltextIndexedStatus after adding");
     }
 }
 
@@ -116,7 +116,7 @@ NSMutableArray* tempMessageArray;
 {
     NSLog(@"-[TestGIFulltextIndexCenter testXRemoveMessage]");
     STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] removeMessage:tempMessage],@"removeMessage must return true");
-    STAssertFalse([tempMessage hasFlag:OPFulltextIndexedStatus],@"tempMessage must not have status OPFulltextIndexedStatus after removing from index");
+    STAssertFalse([tempMessage isFulltextIndexed],@"tempMessage must not have status OPFulltextIndexedStatus after removing from index");
 }
 
 @end

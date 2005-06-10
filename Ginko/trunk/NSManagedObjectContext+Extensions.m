@@ -7,6 +7,7 @@
 //
 
 #import "NSManagedObjectContext+Extensions.h"
+#import "GIApplication.h"
 
 @implementation NSManagedObjectContext (OPExtensions)
 
@@ -15,6 +16,12 @@
     NSManagedObjectContext *result;
     
     result = [[[NSThread currentThread] threadDictionary] objectForKey:@"OPDefaultManagedObjectContext"];
+    if (!result) 
+    {
+        result = [NSApp newManagedObjectContext];
+        [self setDefaultContext:result];
+    }
+    
     NSAssert (result != nil, @"+[NSManagedObject (Extensions) defaultContext]: context returned should never be nil");
     return result;
 }

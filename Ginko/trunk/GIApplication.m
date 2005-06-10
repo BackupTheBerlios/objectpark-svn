@@ -189,10 +189,8 @@
     return [managedObjectContext autorelease];
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
-    [NSManagedObjectContext setDefaultContext: [self initialManagedObjectContext]];
-    
     [self setDelegate: self];
     [self restoreOpenWindowsFromLastSession];
     

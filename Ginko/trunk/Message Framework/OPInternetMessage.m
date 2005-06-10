@@ -347,8 +347,6 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     return result;
 }
 
-
-
 /*"Returns a NSData containing the complete header as a string."*/
 - (NSData*) _headerData
 {

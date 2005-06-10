@@ -287,7 +287,30 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 }
 */
 
+- (BOOL)isFulltextIndexed 
+{
+    NSNumber *tmpValue;
+    
+    [self willAccessValueForKey:@"isFulltextIndexed"];
+    tmpValue = [self primitiveValueForKey:@"isFulltextIndexed"];
+    [self didAccessValueForKey:@"isFulltextIndexed"];
+    
+    return (tmpValue!=nil) ? [tmpValue boolValue] : FALSE;
+}
 
+- (void)setIsFulltextIndexed:(BOOL)value 
+{
+    [self willChangeValueForKey:@"isFulltextIndexed"];
+    [self setPrimitiveValue:[NSNumber numberWithBool:value]
+                     forKey:@"isFulltextIndexed"];
+    [self didChangeValueForKey:@"isFulltextIndexed"];
+}
+
+- (BOOL)validateIsFulltextIndexed: (id *)valueRef error:(NSError **)outError 
+{
+    // Insert custom validation logic here.
+    return YES;
+}
 
 - (BOOL) isDummy
 {
@@ -295,20 +318,19 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 }
 
 
-- (BOOL) isSeen
+- (BOOL)isSeen
 {
     return [self hasFlag: OPSeenStatus];
 }
 
-- (void) setSeen: (BOOL) isSeen
+- (void)setSeen:(BOOL)isSeen
 {
-	if (isSeen)
-		[self addFlags: OPSeenStatus];
-	else
-		[self removeFlags: OPSeenStatus];
+    if (isSeen) [self addFlags:OPSeenStatus];
+    else [self removeFlags:OPSeenStatus];
 }
 
-- (BOOL) isListMessage
+
+- (BOOL)isListMessage
 /*" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). "*/
 {
     OPInternetMessage *m = [self internetMessage];   

@@ -20,6 +20,7 @@
 
 - (BOOL)isGroupsDrawerMode;
 - (NSWindow *)standaloneGroupsWindow;
+- (NSManagedObjectContext*) newManagedObjectContext;
 
 - (NSString *)databasePath;
 

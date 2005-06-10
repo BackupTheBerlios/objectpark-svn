@@ -60,10 +60,12 @@
 		772F2941084F82BA004D50E0 /* TestOPMultipartContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 772F293F084F82BA004D50E0 /* TestOPMultipartContentCoder.h */; };
 		772F2942084F82BA004D50E0 /* TestOPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 772F2940084F82BA004D50E0 /* TestOPMultipartContentCoder.m */; };
 		7739C40D0853564700FC0EBA /* Activity.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7739C40C0853564700FC0EBA /* Activity.nib */; };
+		773FFE970859778700E0767F /* Password.nib in Resources */ = {isa = PBXBuildFile; fileRef = 773FFE960859778700E0767F /* Password.nib */; };
 		7742E9E1076A1AB500B1B4BA /* NSView+ViewMoving.h in Headers */ = {isa = PBXBuildFile; fileRef = 7742E9DF076A1AB500B1B4BA /* NSView+ViewMoving.h */; };
 		7742E9E2076A1AB500B1B4BA /* NSView+ViewMoving.m in Sources */ = {isa = PBXBuildFile; fileRef = 7742E9E0076A1AB500B1B4BA /* NSView+ViewMoving.m */; };
 		77477315080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77477313080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.h */; };
 		77477316080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77477314080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m */; };
+		774A05B50859DAFD00AF321C /* Tasks.txt in Resources */ = {isa = PBXBuildFile; fileRef = 774A05B40859DAFD00AF321C /* Tasks.txt */; };
 		775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 775025F208489585008DD1CD /* TestNSData+MessageUtils.h */; };
 		775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 775025F308489586008DD1CD /* TestNSData+MessageUtils.m */; };
 		775597BF085506BE00E53108 /* OPPOP3Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 775597BD085506BE00E53108 /* OPPOP3Session.h */; };
@@ -402,10 +404,12 @@
 		772F293F084F82BA004D50E0 /* TestOPMultipartContentCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPMultipartContentCoder.h; sourceTree = "<group>"; };
 		772F2940084F82BA004D50E0 /* TestOPMultipartContentCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPMultipartContentCoder.m; sourceTree = "<group>"; };
 		7739C40C0853564700FC0EBA /* Activity.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Activity.nib; sourceTree = "<group>"; };
+		773FFE960859778700E0767F /* Password.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Password.nib; sourceTree = "<group>"; };
 		7742E9DF076A1AB500B1B4BA /* NSView+ViewMoving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+ViewMoving.h"; sourceTree = SOURCE_ROOT; };
 		7742E9E0076A1AB500B1B4BA /* NSView+ViewMoving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+ViewMoving.m"; sourceTree = SOURCE_ROOT; };
 		77477313080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPAppleDoubleContentCoder.h; sourceTree = "<group>"; };
 		77477314080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPAppleDoubleContentCoder.m; sourceTree = "<group>"; };
+		774A05B40859DAFD00AF321C /* Tasks.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Tasks.txt; sourceTree = "<group>"; };
 		775025F208489585008DD1CD /* TestNSData+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSData+MessageUtils.h"; sourceTree = "<group>"; };
 		775025F308489586008DD1CD /* TestNSData+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSData+MessageUtils.m"; sourceTree = "<group>"; };
 		775597BD085506BE00E53108 /* OPPOP3Session.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPPOP3Session.h; sourceTree = "<group>"; };
@@ -736,6 +740,7 @@
 				77050B5F07F1653A009AD9D2 /* HowToBuild.rtf */,
 				776B7D2707C41518009DA8B8 /* HowToTest.rtf */,
 				8DF749FB085525B900049071 /* Bugs.txt */,
+				774A05B40859DAFD00AF321C /* Tasks.txt */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -783,6 +788,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				773FFE960859778700E0767F /* Password.nib */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -1276,6 +1282,8 @@
 				8D2147CF0851182E004C44B9 /* Search.nib in Resources */,
 				7739C40D0853564700FC0EBA /* Activity.nib in Resources */,
 				8DF749FC085525B900049071 /* Bugs.txt in Resources */,
+				773FFE970859778700E0767F /* Password.nib in Resources */,
+				774A05B50859DAFD00AF321C /* Tasks.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
