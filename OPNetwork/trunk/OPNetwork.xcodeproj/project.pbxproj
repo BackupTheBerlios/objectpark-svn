@@ -1,0 +1,515 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8D44120A0727C46300063044 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D4412090727C46300063044 /* libresolv.dylib */; };
+		8D795029071E9EFC00002E0F /* OPSerialPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D795025071E9EFC00002E0F /* OPSerialPort.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8D79502A071E9EFC00002E0F /* OPSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D795026071E9EFC00002E0F /* OPSerialPort.m */; };
+		8D79502B071E9EFC00002E0F /* OPSerialPort+Discovery.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D795027071E9EFC00002E0F /* OPSerialPort+Discovery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8D79502C071E9EFC00002E0F /* OPSerialPort+Discovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D795028071E9EFC00002E0F /* OPSerialPort+Discovery.m */; };
+		8D79503B071EA1E600002E0F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D79503A071EA1E600002E0F /* IOKit.framework */; };
+		8DA9E86E07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DA9E86C07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DA9E86F07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA9E86D07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m */; };
+		8DAEB9A506620422000668A3 /* NSHost+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB894E065A43DD0012ED8D /* NSHost+Extensions.m */; };
+		8DAEB9A606620423000668A3 /* NSHost+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB894D065A43DD0012ED8D /* NSHost+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DC2EF510486A6940098B216 /* OPNetwork_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCF5E0370ADEE00C91783 /* OPNetwork_Prefix.pch */; };
+		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
+		8DC2EF550486A6940098B216 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 08FB77B4FE84181DC02AAC07 /* main.c */; settings = {ATTRIBUTES = (); }; };
+		8DCB8960065A43DD0012ED8D /* functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB8949065A43DD0012ED8D /* functions.h */; settings = {ATTRIBUTES = (); }; };
+		8DCB8961065A43DD0012ED8D /* functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB894A065A43DD0012ED8D /* functions.m */; };
+		8DCB8963065A43DE0012ED8D /* NSFileHandle+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB894C065A43DD0012ED8D /* NSFileHandle+Extensions.m */; };
+		8DCB8966065A43DE0012ED8D /* OPCommonDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB894F065A43DD0012ED8D /* OPCommonDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB8967065A43DE0012ED8D /* OPIPSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB8950065A43DD0012ED8D /* OPIPSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB8968065A43DE0012ED8D /* OPIPSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB8951065A43DD0012ED8D /* OPIPSocket.m */; };
+		8DCB8969065A43DE0012ED8D /* OPNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB8952065A43DD0012ED8D /* OPNetwork.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB896A065A43DE0012ED8D /* OPSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB8953065A43DD0012ED8D /* OPSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB896B065A43DE0012ED8D /* OPSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB8954065A43DD0012ED8D /* OPSocket.m */; };
+		8DCB896C065A43DE0012ED8D /* OPSSLSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB8955065A43DD0012ED8D /* OPSSLSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB896D065A43DE0012ED8D /* OPSSLSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB8956065A43DD0012ED8D /* OPSSLSocket.m */; };
+		8DCB896E065A43DE0012ED8D /* OPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB8957065A43DD0012ED8D /* OPStream.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB896F065A43DE0012ED8D /* OPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB8958065A43DD0012ED8D /* OPStream.m */; };
+		8DCB8970065A43DE0012ED8D /* OPStream+SSL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB8959065A43DD0012ED8D /* OPStream+SSL.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB8971065A43DE0012ED8D /* OPStream+SSL.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB895A065A43DD0012ED8D /* OPStream+SSL.m */; };
+		8DCB8972065A43DE0012ED8D /* OPStream+TimeoutExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB895B065A43DD0012ED8D /* OPStream+TimeoutExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB8973065A43DE0012ED8D /* OPStream+TimeoutExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB895C065A43DD0012ED8D /* OPStream+TimeoutExtensions.m */; };
+		8DCB8974065A43DE0012ED8D /* OPTCPSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB895D065A43DD0012ED8D /* OPTCPSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DCB8975065A43DE0012ED8D /* OPTCPSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB895E065A43DD0012ED8D /* OPTCPSocket.m */; };
+		8DCB8976065A43DE0012ED8D /* osdep.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB895F065A43DD0012ED8D /* osdep.h */; };
+		8DCB8CF9065A493B0012ED8D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+		8DCB8D16065A49C10012ED8D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCB8D15065A49C10012ED8D /* Security.framework */; };
+		8DCB8F40065A4C780012ED8D /* NSFileHandle+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB894B065A43DD0012ED8D /* NSFileHandle+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		014CEA440018CDF011CA2923 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OPTIMIZATION_CFLAGS = "-O0";
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		014CEA450018CDF011CA2923 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXFileReference section */
+		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		08FB77B4FE84181DC02AAC07 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		32DBCF5E0370ADEE00C91783 /* OPNetwork_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPNetwork_Prefix.pch; sourceTree = "<group>"; };
+		8D4412090727C46300063044 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = /usr/lib/libresolv.dylib; sourceTree = "<absolute>"; };
+		8D795025071E9EFC00002E0F /* OPSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSerialPort.h; sourceTree = "<group>"; };
+		8D795026071E9EFC00002E0F /* OPSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSerialPort.m; sourceTree = "<group>"; };
+		8D795027071E9EFC00002E0F /* OPSerialPort+Discovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPSerialPort+Discovery.h"; sourceTree = "<group>"; };
+		8D795028071E9EFC00002E0F /* OPSerialPort+Discovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPSerialPort+Discovery.m"; sourceTree = "<group>"; };
+		8D79503A071EA1E600002E0F /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
+		8DA9E86C07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+ThreadIO.h"; sourceTree = "<group>"; };
+		8DA9E86D07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+ThreadIO.m"; sourceTree = "<group>"; };
+		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8DC2EF5B0486A6940098B216 /* OPNetwork.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPNetwork.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DCB8949065A43DD0012ED8D /* functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = functions.h; sourceTree = "<group>"; };
+		8DCB894A065A43DD0012ED8D /* functions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = functions.m; sourceTree = "<group>"; };
+		8DCB894B065A43DD0012ED8D /* NSFileHandle+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+Extensions.h"; sourceTree = "<group>"; };
+		8DCB894C065A43DD0012ED8D /* NSFileHandle+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+Extensions.m"; sourceTree = "<group>"; };
+		8DCB894D065A43DD0012ED8D /* NSHost+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSHost+Extensions.h"; sourceTree = "<group>"; };
+		8DCB894E065A43DD0012ED8D /* NSHost+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSHost+Extensions.m"; sourceTree = "<group>"; };
+		8DCB894F065A43DD0012ED8D /* OPCommonDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPCommonDefines.h; sourceTree = "<group>"; };
+		8DCB8950065A43DD0012ED8D /* OPIPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPIPSocket.h; sourceTree = "<group>"; };
+		8DCB8951065A43DD0012ED8D /* OPIPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPIPSocket.m; sourceTree = "<group>"; };
+		8DCB8952065A43DD0012ED8D /* OPNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPNetwork.h; sourceTree = "<group>"; };
+		8DCB8953065A43DD0012ED8D /* OPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSocket.h; sourceTree = "<group>"; };
+		8DCB8954065A43DD0012ED8D /* OPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSocket.m; sourceTree = "<group>"; };
+		8DCB8955065A43DD0012ED8D /* OPSSLSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSSLSocket.h; sourceTree = "<group>"; };
+		8DCB8956065A43DD0012ED8D /* OPSSLSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSSLSocket.m; sourceTree = "<group>"; };
+		8DCB8957065A43DD0012ED8D /* OPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPStream.h; sourceTree = "<group>"; };
+		8DCB8958065A43DD0012ED8D /* OPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPStream.m; sourceTree = "<group>"; };
+		8DCB8959065A43DD0012ED8D /* OPStream+SSL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPStream+SSL.h"; sourceTree = "<group>"; };
+		8DCB895A065A43DD0012ED8D /* OPStream+SSL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPStream+SSL.m"; sourceTree = "<group>"; };
+		8DCB895B065A43DD0012ED8D /* OPStream+TimeoutExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPStream+TimeoutExtensions.h"; sourceTree = "<group>"; };
+		8DCB895C065A43DD0012ED8D /* OPStream+TimeoutExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPStream+TimeoutExtensions.m"; sourceTree = "<group>"; };
+		8DCB895D065A43DD0012ED8D /* OPTCPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPTCPSocket.h; sourceTree = "<group>"; };
+		8DCB895E065A43DD0012ED8D /* OPTCPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPTCPSocket.m; sourceTree = "<group>"; };
+		8DCB895F065A43DD0012ED8D /* osdep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osdep.h; sourceTree = "<group>"; };
+		8DCB8D15065A49C10012ED8D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = ../../../../../System/Library/Frameworks/Security.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DC2EF560486A6940098B216 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DCB8CF9065A493B0012ED8D /* Foundation.framework in Frameworks */,
+				8DCB8D16065A49C10012ED8D /* Security.framework in Frameworks */,
+				8D79503B071EA1E600002E0F /* IOKit.framework in Frameworks */,
+				8D44120A0727C46300063044 /* libresolv.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5B0486A6940098B216 /* OPNetwork.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* OPNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				089C1665FE841158C02AAC07 /* Resources */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = OPNetwork;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				8D4412090727C46300063044 /* libresolv.dylib */,
+				8D79503A071EA1E600002E0F /* IOKit.framework */,
+				8DCB8D15065A49C10012ED8D /* Security.framework */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C1665FE841158C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				8DA9E86C07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h */,
+				8DA9E86D07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m */,
+				8D795025071E9EFC00002E0F /* OPSerialPort.h */,
+				8D795026071E9EFC00002E0F /* OPSerialPort.m */,
+				8D795027071E9EFC00002E0F /* OPSerialPort+Discovery.h */,
+				8D795028071E9EFC00002E0F /* OPSerialPort+Discovery.m */,
+				8DCB8952065A43DD0012ED8D /* OPNetwork.h */,
+				8DCB8949065A43DD0012ED8D /* functions.h */,
+				8DCB894A065A43DD0012ED8D /* functions.m */,
+				8DCB894B065A43DD0012ED8D /* NSFileHandle+Extensions.h */,
+				8DCB894C065A43DD0012ED8D /* NSFileHandle+Extensions.m */,
+				8DCB894D065A43DD0012ED8D /* NSHost+Extensions.h */,
+				8DCB894E065A43DD0012ED8D /* NSHost+Extensions.m */,
+				8DCB894F065A43DD0012ED8D /* OPCommonDefines.h */,
+				8DCB8950065A43DD0012ED8D /* OPIPSocket.h */,
+				8DCB8951065A43DD0012ED8D /* OPIPSocket.m */,
+				8DCB8953065A43DD0012ED8D /* OPSocket.h */,
+				8DCB8954065A43DD0012ED8D /* OPSocket.m */,
+				8DCB8955065A43DD0012ED8D /* OPSSLSocket.h */,
+				8DCB8956065A43DD0012ED8D /* OPSSLSocket.m */,
+				8DCB8957065A43DD0012ED8D /* OPStream.h */,
+				8DCB8958065A43DD0012ED8D /* OPStream.m */,
+				8DCB8959065A43DD0012ED8D /* OPStream+SSL.h */,
+				8DCB895A065A43DD0012ED8D /* OPStream+SSL.m */,
+				8DCB895B065A43DD0012ED8D /* OPStream+TimeoutExtensions.h */,
+				8DCB895C065A43DD0012ED8D /* OPStream+TimeoutExtensions.m */,
+				8DCB895D065A43DD0012ED8D /* OPTCPSocket.h */,
+				8DCB895E065A43DD0012ED8D /* OPTCPSocket.m */,
+				8DCB895F065A43DD0012ED8D /* osdep.h */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32DBCF5E0370ADEE00C91783 /* OPNetwork_Prefix.pch */,
+				08FB77B4FE84181DC02AAC07 /* main.c */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8DC2EF500486A6940098B216 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DC2EF510486A6940098B216 /* OPNetwork_Prefix.pch in Headers */,
+				8DCB8960065A43DD0012ED8D /* functions.h in Headers */,
+				8DCB8966065A43DE0012ED8D /* OPCommonDefines.h in Headers */,
+				8DCB8967065A43DE0012ED8D /* OPIPSocket.h in Headers */,
+				8DCB8969065A43DE0012ED8D /* OPNetwork.h in Headers */,
+				8DCB896A065A43DE0012ED8D /* OPSocket.h in Headers */,
+				8DCB896C065A43DE0012ED8D /* OPSSLSocket.h in Headers */,
+				8DCB896E065A43DE0012ED8D /* OPStream.h in Headers */,
+				8DCB8970065A43DE0012ED8D /* OPStream+SSL.h in Headers */,
+				8DCB8972065A43DE0012ED8D /* OPStream+TimeoutExtensions.h in Headers */,
+				8DCB8974065A43DE0012ED8D /* OPTCPSocket.h in Headers */,
+				8DCB8976065A43DE0012ED8D /* osdep.h in Headers */,
+				8DCB8F40065A4C780012ED8D /* NSFileHandle+Extensions.h in Headers */,
+				8DAEB9A606620423000668A3 /* NSHost+Extensions.h in Headers */,
+				8D795029071E9EFC00002E0F /* OPSerialPort.h in Headers */,
+				8D79502B071E9EFC00002E0F /* OPSerialPort+Discovery.h in Headers */,
+				8DA9E86E07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8DC2EF4F0486A6940098B216 /* OPNetwork */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7709371E0857490E00A29008 /* Build configuration list for PBXNativeTarget "OPNetwork" */;
+			buildPhases = (
+				8DC2EF500486A6940098B216 /* Headers */,
+				8DC2EF520486A6940098B216 /* Resources */,
+				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF560486A6940098B216 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPNetwork_Prefix.pch;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Dynamic;
+				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = OPNetwork;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = framework;
+			};
+			dependencies = (
+			);
+			name = OPNetwork;
+			productInstallPath = "$(HOME)/Library/Frameworks";
+			productName = OPNetwork;
+			productReference = 8DC2EF5B0486A6940098B216 /* OPNetwork.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 770937220857490E00A29008 /* Build configuration list for PBXProject "OPNetwork" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA440018CDF011CA2923 /* Development */,
+				014CEA450018CDF011CA2923 /* Deployment */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* OPNetwork */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				8DC2EF4F0486A6940098B216 /* OPNetwork */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8DC2EF520486A6940098B216 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DC2EF540486A6940098B216 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DC2EF550486A6940098B216 /* main.c in Sources */,
+				8DCB8961065A43DD0012ED8D /* functions.m in Sources */,
+				8DCB8963065A43DE0012ED8D /* NSFileHandle+Extensions.m in Sources */,
+				8DCB8968065A43DE0012ED8D /* OPIPSocket.m in Sources */,
+				8DCB896B065A43DE0012ED8D /* OPSocket.m in Sources */,
+				8DCB896D065A43DE0012ED8D /* OPSSLSocket.m in Sources */,
+				8DCB896F065A43DE0012ED8D /* OPStream.m in Sources */,
+				8DCB8971065A43DE0012ED8D /* OPStream+SSL.m in Sources */,
+				8DCB8973065A43DE0012ED8D /* OPStream+TimeoutExtensions.m in Sources */,
+				8DCB8975065A43DE0012ED8D /* OPTCPSocket.m in Sources */,
+				8DAEB9A506620422000668A3 /* NSHost+Extensions.m in Sources */,
+				8D79502A071E9EFC00002E0F /* OPSerialPort.m in Sources */,
+				8D79502C071E9EFC00002E0F /* OPSerialPort+Discovery.m in Sources */,
+				8DA9E86F07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C1666FE841158C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C1667FE841158C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7709371F0857490E00A29008 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPNetwork_Prefix.pch;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Dynamic;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = OPNetwork;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		770937200857490E00A29008 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPNetwork_Prefix.pch;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Dynamic;
+				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = OPNetwork;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		770937210857490E00A29008 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPNetwork_Prefix.pch;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Dynamic;
+				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = OPNetwork;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Default;
+		};
+		770937230857490E00A29008 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Development;
+		};
+		770937240857490E00A29008 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Deployment;
+		};
+		770937250857490E00A29008 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7709371E0857490E00A29008 /* Build configuration list for PBXNativeTarget "OPNetwork" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7709371F0857490E00A29008 /* Development */,
+				770937200857490E00A29008 /* Deployment */,
+				770937210857490E00A29008 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		770937220857490E00A29008 /* Build configuration list for PBXProject "OPNetwork" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				770937230857490E00A29008 /* Development */,
+				770937240857490E00A29008 /* Deployment */,
+				770937250857490E00A29008 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
