@@ -531,7 +531,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
     NSAttributedString *attchString;
     NSString *directoryname;
     NSString *path;
-    OPInternetMessageAttachmentCell *cell;
+    OPInternetMessageAttachmentCell *cell = nil;
     
     // write file wrapper's forks to disk
     do {
@@ -562,12 +562,28 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
     // add attachment to attributed string
     attachment = [[[NSTextAttachment alloc] initWithFileWrapper:aFileWrapper] autorelease];
 
-    if (! shouldShowInline)
+    //if (! shouldShowInline)
     {
         cell = [[[OPInternetMessageAttachmentCell alloc] initImageCell:[[NSWorkspace sharedWorkspace] iconForFile:path]] autorelease];
-        [cell setAttachment:attachment];
+        [cell setAttachment: attachment];
         
-        [attachment setAttachmentCell:cell];
+        if ([aFileWrapper isRegularFile]) {
+            unsigned int fileSize;
+            NSData *resourceForkData;
+            
+            fileSize = [[aFileWrapper regularFileContents] length];
+            
+            if (resourceForkData = [[aFileWrapper fileAttributes] objectForKey: OPFileResourceForkData]) {
+            // add the size of the resource fork also
+                fileSize += [resourceForkData length];
+            }
+            
+            [cell setTitle: [NSString stringWithFormat:@"%@ %u Bytes", [aFileWrapper filename], fileSize]];
+        } else {
+            [cell setTitle: [NSString stringWithFormat:@"%@", [aFileWrapper filename]]];
+        }
+        
+        [attachment setAttachmentCell: cell];
     }
     
     attchString = [NSAttributedString attributedStringWithAttachment:attachment];
@@ -575,21 +591,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
     [self appendAttributedString:attchString];
     [self addAttribute:OPAttachmentPathAttribute value:path range:NSMakeRange([self length] - 1, 1)];
         
-    if ([aFileWrapper isRegularFile]) {
-        unsigned int fileSize;
-        NSData *resourceForkData;
-        
-        fileSize = [[aFileWrapper regularFileContents] length];
-        
-        if (resourceForkData = [[aFileWrapper fileAttributes] objectForKey: OPFileResourceForkData]) {
-            // add the size of the resource fork also
-            fileSize += [resourceForkData length];
-        }
-        
-        [self appendString:[NSString stringWithFormat:@"[%@ %u Bytes]\n", [aFileWrapper filename], fileSize]];
-    } else {
-        [self appendString:[NSString stringWithFormat:@"[%@]\n", [aFileWrapper filename]]];
-    }
+
 
 }
 

@@ -14,14 +14,85 @@
 - (NSSize) cellSize
 {
     NSSize result = [[self image] size];
-    result.height+=12.0;
+    result.height+=22.0;
+    if (result.width<160.0) result.width = 160.0;
     return result;
+}
+
+
+- (NSLineBreakMode) lineBreakMode
+{
+    return NSLineBreakByTruncatingMiddle;
 }
 
 - (void) drawWithFrame: (NSRect) cellFrame 
                 inView: (NSView*) controlView
 {
-    [super drawWithFrame:cellFrame inView:controlView];
+    
+    NSString* title          = [self title];
+    
+    NSRect    textFrame      = NSInsetRect(cellFrame, 2.0, 2.0);
+    
+    //[super drawWithFrame:cellFrame inView:controlView];
+    
+    
+     NSImage*  image = [self image];
+     NSRect    fullImageRect  = NSMakeRect(0,0,[image size].width, [image size].height);
+     NSRect    drawImageRect  = NSOffsetRect(fullImageRect, (cellFrame.size.width-[image size].width)/2.0+cellFrame.origin.x, 5.0+cellFrame.origin.y);
+     
+     NSParameterAssert(image);
+     
+     if ([self isHighlighted]) {
+         NSColor* backgroundColor = [self highlightColorWithFrame: cellFrame inView: controlView];
+         [backgroundColor set];
+         NSRectFill(cellFrame);
+     }
+     
+    // Draw it flipped if we are in a flipped view, like NSMatrix:
+     [image setFlipped: [controlView isFlipped]];
+     
+     [image drawInRect: drawImageRect          
+              fromRect: fullImageRect 
+             operation: NSCompositeSourceOver 
+              fraction: 1.0];
+     
+    
+    
+    
+    // NSLineBreakByTruncatingMiddle
+    
+    textFrame.origin.y    = NSMaxY(textFrame)-14.0;
+    textFrame.size.height = 14.0;
+    
+    
+    static NSDictionary* attributes = nil;
+    if (!attributes) {
+        NSMutableParagraphStyle* style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        [style setLineBreakMode: [self lineBreakMode]];
+        [style setAlignment: NSCenterTextAlignment];
+        attributes = [[NSDictionary alloc] initWithObjectsAndKeys: 
+            style, NSParagraphStyleAttributeName,
+            [NSFont systemFontOfSize: 9], NSFontAttributeName,
+            nil, nil];
+    }
+    
+    [title drawWithRect: textFrame
+                options: NSStringDrawingUsesLineFragmentOrigin 
+             attributes: attributes];
+    
+    
+}
+
+- (void) setTitle: (NSString*) newTitle
+{
+    // Keep the image around!
+    NSImage* image = [[self image] retain];
+    
+    [super setTitle: newTitle];
+    if (image) {
+        [self setImage: image];
+        [image release];
+    }
 }
 
 @end
