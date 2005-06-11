@@ -177,7 +177,14 @@
 
 - (NSString *)passwordForPOP3Session:(OPPOP3Session *)aSession
 {
-    return [account incomingPassword];
+    NSString *password = [account incomingPassword];
+    
+    if (!password)
+    {
+        password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:YES];
+    }
+    
+    return password;
 }
 
 /*" optional "*/

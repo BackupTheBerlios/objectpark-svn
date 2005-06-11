@@ -37,6 +37,10 @@
 		6131DCD7083A85D10056FF9D /* TestGIFulltextIndexCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */; };
 		617C2A77084632F700803758 /* GIIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 617C2A75084632F700803758 /* GIIndex.h */; };
 		617C2A78084632F700803758 /* GIIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C2A76084632F700803758 /* GIIndex.m */; };
+		77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77006FF2085A08D400AB0064 /* GIPasswordController.h */; };
+		77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */; };
+		770070E7085B123500AB0064 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 770070E6085B123500AB0064 /* Security.framework */; };
+		7700727B085B129600AB0064 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7700727A085B129600AB0064 /* SystemConfiguration.framework */; };
 		77049FE80858570800253732 /* GIPOPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 77049FE60858570800253732 /* GIPOPJob.h */; };
 		77049FE90858570800253732 /* GIPOPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 77049FE70858570800253732 /* GIPOPJob.m */; };
 		7709374C08574DF200A29008 /* NSHost+GIReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 7709374A08574DF200A29008 /* NSHost+GIReachability.h */; };
@@ -379,6 +383,10 @@
 		6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TestGIFulltextIndexCenter.m; sourceTree = "<group>"; };
 		617C2A75084632F700803758 /* GIIndex.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GIIndex.h; sourceTree = "<group>"; };
 		617C2A76084632F700803758 /* GIIndex.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GIIndex.m; sourceTree = "<group>"; };
+		77006FF2085A08D400AB0064 /* GIPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPasswordController.h; sourceTree = "<group>"; };
+		77006FF3085A08D400AB0064 /* GIPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPasswordController.m; sourceTree = "<group>"; };
+		770070E6085B123500AB0064 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		7700727A085B129600AB0064 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		77049FE60858570800253732 /* GIPOPJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPOPJob.h; sourceTree = "<group>"; };
 		77049FE70858570800253732 /* GIPOPJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPOPJob.m; sourceTree = "<group>"; };
 		77050B5F07F1653A009AD9D2 /* HowToBuild.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = HowToBuild.rtf; sourceTree = "<group>"; };
@@ -639,6 +647,8 @@
 				8D40BAC40806769000F68BF3 /* libsqlite3.0.dylib in Frameworks */,
 				8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */,
 				8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */,
+				770070E7085B123500AB0064 /* Security.framework in Frameworks */,
+				7700727B085B129600AB0064 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -699,6 +709,8 @@
 				7759B41608535F830011B606 /* GIActivityPanelController.m */,
 				77049FE60858570800253732 /* GIPOPJob.h */,
 				77049FE70858570800253732 /* GIPOPJob.m */,
+				77006FF2085A08D400AB0064 /* GIPasswordController.h */,
+				77006FF3085A08D400AB0064 /* GIPasswordController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -706,6 +718,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7700727A085B129600AB0064 /* SystemConfiguration.framework */,
+				770070E6085B123500AB0064 /* Security.framework */,
 				8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */,
 				8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */,
 				8D40BAC30806769000F68BF3 /* libsqlite3.0.dylib */,
@@ -774,6 +788,7 @@
 				777435CA077755A000899957 /* group.toolbar */,
 				8DD2BEA50773257B00587AAA /* Images */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				773FFE960859778700E0767F /* Password.nib */,
 				7776BBA907D0773E00822246 /* MainMenu.nib */,
 				7776259C0760DEC20066BE60 /* Group.nib */,
 				77CD550F07699AD1003354A0 /* MessageEditor.nib */,
@@ -788,7 +803,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				773FFE960859778700E0767F /* Password.nib */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -1154,6 +1168,7 @@
 				775597BF085506BE00E53108 /* OPPOP3Session.h in Headers */,
 				7709374C08574DF200A29008 /* NSHost+GIReachability.h in Headers */,
 				77049FE80858570800253732 /* GIPOPJob.h in Headers */,
+				77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1408,6 +1423,7 @@
 				775597C0085506BE00E53108 /* OPPOP3Session.m in Sources */,
 				7709374D08574DF200A29008 /* NSHost+GIReachability.m in Sources */,
 				77049FE90858570800253732 /* GIPOPJob.m in Sources */,
+				77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

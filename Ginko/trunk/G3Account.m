@@ -12,6 +12,7 @@
 #include <Security/Security.h>
 #include <CoreServices/CoreServices.h>
 #include "NSString+Extensions.h"
+#include <Foundation/NSDebug.h>
 
 @implementation G3Account
 
@@ -275,8 +276,7 @@
     
     if (err != noErr)
     {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
-        NSLog(@"Error with getting password (%@)", error);
+         if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
     }
     
     return result;

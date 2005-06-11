@@ -84,3 +84,11 @@ extern NSString *OPJobProgressJobName;
 - (BOOL)isJobProgressIndeterminate;
 
 @end
+
+@class G3Account;
+
+@interface OPJobs (GinkoExtensions)
+
+- (NSString *)runPasswordPanelWithAccount:(G3Account *)anAccount forIncomingPassword:(BOOL)isIncoming;
+
+@end
