@@ -271,7 +271,7 @@
 - (IBAction)importMboxFile:(id)sender
 {
     int result;
-    NSArray *fileTypes = [NSArray arrayWithObject:@"mboxfile"];
+    NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", nil];
     NSOpenPanel *oPanel = [NSOpenPanel openPanel];
     [oPanel setAllowsMultipleSelection:NO];
     result = [oPanel runModalForDirectory:NSHomeDirectory()
@@ -283,6 +283,12 @@
         {
             NSString *boxFilename = [filesToOpen lastObject];
             NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+            
+            // support for 'mbox' bundles
+            if ([[boxFilename pathExtension] isEqualToString:@"mbox"])
+            {
+                boxFilename = [boxFilename stringByAppendingPathComponent:@"mbox"];
+            }
             
             [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
             [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
@@ -343,10 +349,13 @@
 
 - (IBAction)getNewMailInAllAccounts:(id)sender
 {
-    G3Account *account = [[G3Account allObjects] lastObject];
-    NSAssert(account != nil, @"no account available");
+    NSEnumerator *enumerator = [[G3Account allObjects] objectEnumerator];
+    G3Account *account;
     
-    [GIPOPJob retrieveMessagesFromPOPAccount:account];
+    while (account = [enumerator nextObject])
+    {
+        if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount:account];
+    }
 }
 
 @end
