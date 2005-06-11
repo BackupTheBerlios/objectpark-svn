@@ -82,8 +82,10 @@ typedef enum _OPPOP3State {
 - (void)cleanUp;
 @end
 
-extern NSString *OPPOP3SessionException;
 /*" reason has details for the exception "*/
+extern NSString *OPPOP3SessionException;
+
+extern NSString *OPPOP3AuthenticationFailedException;
 
 @protocol OPPOP3SessionDelegate
 - (NSString *)usernameForPOP3Session:(OPPOP3Session *)aSession;
@@ -108,8 +110,8 @@ extern NSString *OPPOP3SessionException;
 - (BOOL)shouldDeleteMessageWithMessageId:(NSString *)messageId date:(NSDate *)messageDate size:(long)size inPOP3Session:(OPPOP3Session *)aSession;
 @end
 
-extern NSString *OPPOP3APOPAuthenticationMethod;
 /*" Signals the APOP authentication method. "*/
+extern NSString *OPPOP3APOPAuthenticationMethod;
 
-extern NSString *OPPOP3USERPASSAuthenticationMethod;
 /*" Signals the basic USER/PASS authentication method. "*/ 
+extern NSString *OPPOP3USERPASSAuthenticationMethod;

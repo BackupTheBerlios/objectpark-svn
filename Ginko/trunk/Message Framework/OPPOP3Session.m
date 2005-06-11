@@ -27,6 +27,7 @@
 #import "NSApplication+OPExtensions.h"
 
 NSString *OPPOP3SessionException = @"OPPOP3SessionException";
+NSString *OPPOP3AuthenticationFailedException = @"OPPOP3AuthenticationFailedException";
 NSString *OPPOP3APOPAuthenticationMethod = @"OPPOP3APOPAuthenticationMethod";
 NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMethod";
 
@@ -501,7 +502,7 @@ UIDL. nil otherwise. "*/
             triedMessage = @"None";
         }
         
-        [NSException raise:OPPOP3SessionException format:@"POP3 server authentication failed. Tried %@.", triedMessage];
+        [NSException raise:OPPOP3AuthenticationFailedException format:@"POP3 server authentication failed. Tried %@.", triedMessage];
     }
 }
 

@@ -327,7 +327,7 @@
                                               );
         
     }
-    if (itemRef) CFRelease(itemRef);
+    //if (itemRef) CFRelease(itemRef);
 }
 
 - (int)retrieveMessageInterval 

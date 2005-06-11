@@ -9,6 +9,7 @@
 #import "GIPasswordController.h"
 #import <Foundation/NSDebug.h>
 #import "G3Account.h"
+#import "GIUserDefaultsKeys.h"
 
 @implementation GIPasswordController
 
@@ -111,13 +112,13 @@
 {
     [titleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ Password Needed", @"password panel"), [self serviceTypeString]]];
     
-    [subtitleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"for %@ account %@", @"password panel"), [self serverTypeString], [account name]]];
+    [subtitleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"for %@ account \"%@\"", @"password panel"), [self serverTypeString], [account name]]];
     
     [userNameField setStringValue:isIncomingPassword ? [account incomingUsername] : [account outgoingUsername]];
     
     [serverNameField setStringValue:isIncomingPassword ? [account incomingServerName] : [account outgoingServerName]];
     
-//    [storeInKeychainCheckbox setState:[[NSUserDefaul
+    [storeInKeychainCheckbox setState:[[[NSUserDefaults standardUserDefaults] objectForKey:DisableKeychainForPasswortDefault] boolValue] ? NSOffState : NSOnState];
         
     [window center];
     [window makeKeyAndOrderFront:self];
@@ -151,6 +152,8 @@
         }
     }
     
+    [[NSUserDefaults standardUserDefaults] setBool:[storeInKeychainCheckbox state] == NSOnState ? NO : YES forKey:DisableKeychainForPasswortDefault];
+
     [window close];
 }
 

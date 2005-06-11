@@ -127,6 +127,11 @@
         }
         @catch (NSException *localException)
         {
+            if ([[localException name] isEqualToString:OPPOP3AuthenticationFailedException])
+            {
+                // Authentication failed (assuming that the password was wrong) -> clearing password
+                [theAccount setIncomingPassword:@""];
+            }
             @throw;
         }
         @finally
@@ -179,7 +184,7 @@
 {
     NSString *password = [account incomingPassword];
     
-    if (!password)
+    if (![password length])
     {
         password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:YES];
     }

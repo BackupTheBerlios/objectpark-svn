@@ -20,6 +20,7 @@ NSString *AdditionalHeadersShown  = @"GIAdditionalHeadersShown";
 NSString *OutgoingMessageGroupURLString = @"OutgoingMessageGroupURLString";
 NSString *DefaultMessageGroupURLString = @"DefaultMessageGroupURLString";
 NSString *DraftsMessageGroupURLString = @"DraftsMessageGroupURLString";
+NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
 NSArray* allAdditionalHeadersForDisplay()
 {

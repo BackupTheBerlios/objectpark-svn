@@ -18,6 +18,7 @@ extern NSString *AdditionalHeadersShown;
 extern NSString *OutgoingMessageGroupURLString;
 extern NSString *DefaultMessageGroupURLString;
 extern NSString *DraftsMessageGroupURLString;
+extern NSString *DisableKeychainForPasswortDefault;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 
