@@ -577,8 +577,8 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
                 // add the size of the resource fork also
                 fileSize += [resourceForkData length];
             }
-            
-            [cell setInfoString: [NSString stringWithFormat:@"(%u bytes)", fileSize]];
+            NSString* infoString = fileSize<1024 ? [NSString stringWithFormat: @"(%u Bytes)", fileSize] : [NSString stringWithFormat: @"(%.1g KB)", fileSize/1024.0];
+            [cell setInfoString: infoString];
         } 
         [cell setTitle: [aFileWrapper filename]];
         
