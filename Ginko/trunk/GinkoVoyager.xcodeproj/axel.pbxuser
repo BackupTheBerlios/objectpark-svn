@@ -3,7 +3,7 @@
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = "Development (linked)";
 		activeBuildStyle = 4A9504CCFFE6A4B311CA0CBA /* Development */;
-		activeExecutable = 77253CF607ECB6B100375AFC /* GinkoVoyager */;
+		activeExecutable = 77B8E3BE07EEC20200068222 /* Run Tests */;
 		activeTarget = 8D1107260486CEB800E47090 /* GinkoVoyager */;
 		addToTargets = (
 			8D1107260486CEB800E47090 /* GinkoVoyager */,
@@ -408,6 +408,15 @@
 			77FBF871085B532600B35FF8 /* PBXTextBookmark */ = 77FBF871085B532600B35FF8 /* PBXTextBookmark */;
 			77FBF872085B532600B35FF8 /* PBXTextBookmark */ = 77FBF872085B532600B35FF8 /* PBXTextBookmark */;
 			77FBF873085B532600B35FF8 /* PBXTextBookmark */ = 77FBF873085B532600B35FF8 /* PBXTextBookmark */;
+			77FBF87D085B556200B35FF8 /* PBXTextBookmark */ = 77FBF87D085B556200B35FF8 /* PBXTextBookmark */;
+			77FBF87E085B556200B35FF8 /* PBXTextBookmark */ = 77FBF87E085B556200B35FF8 /* PBXTextBookmark */;
+			77FBF87F085B556200B35FF8 /* PBXTextBookmark */ = 77FBF87F085B556200B35FF8 /* PBXTextBookmark */;
+			77FBF880085B556200B35FF8 /* PBXTextBookmark */ = 77FBF880085B556200B35FF8 /* PBXTextBookmark */;
+			77FBF881085B556200B35FF8 /* PBXTextBookmark */ = 77FBF881085B556200B35FF8 /* PBXTextBookmark */;
+			77FBF882085B556200B35FF8 /* PBXTextBookmark */ = 77FBF882085B556200B35FF8 /* PBXTextBookmark */;
+			77FBF884085B559100B35FF8 /* PBXTextBookmark */ = 77FBF884085B559100B35FF8 /* PBXTextBookmark */;
+			77FBF885085B559A00B35FF8 /* PBXTextBookmark */ = 77FBF885085B559A00B35FF8 /* PBXTextBookmark */;
+			77FBF886085B55A100B35FF8 /* PBXTextBookmark */ = 77FBF886085B55A100B35FF8 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 77253D5507ECB6D400375AFC /* Source Control */;
 		userBookmarkGroup = 7747CDB4084DBC6400681D03 /* PBXBookmarkGroup */;
@@ -452,9 +461,9 @@
 	};
 	77006FF3085A08D400AB0064 /* GIPasswordController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {703, 2422}}";
-			sepNavSelRange = "{2691, 0}";
-			sepNavVisRect = "{{0, 1521}, {703, 459}}";
+			sepNavIntBoundsRect = "{{0, 0}, {703, 2492}}";
+			sepNavSelRange = "{4207, 0}";
+			sepNavVisRect = "{{0, 1977}, {703, 459}}";
 		};
 	};
 	7700700B085ADFAF00AB0064 /* PBXTextBookmark */ = {
@@ -1467,13 +1476,6 @@
 			sepNavWindowFrame = "{{15, 43}, {750, 784}}";
 		};
 	};
-	779AF73A08571F61004E4BE7 /* GinkoVoyager */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = "compiled.mach-o.executable";
-		name = GinkoVoyager;
-		path = build/GinkoVoyager.app/Contents/MacOS/GinkoVoyager;
-		sourceTree = "<group>";
-	};
 	77A84B960771D32700112B7D /* G3MessageEditorWindow.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {604, 588}}";
@@ -1632,14 +1634,14 @@
 	};
 	77B8E3BE07EEC20200068222 /* Run Tests */ = {
 		isa = PBXExecutable;
-		activeArgIndex = 5;
+		activeArgIndex = 4;
 		activeArgIndices = (
 			NO,
 			NO,
 			NO,
 			NO,
-			NO,
 			YES,
+			NO,
 		);
 		argumentStrings = (
 			"-SenTest Self",
@@ -1694,7 +1696,7 @@
 		);
 		executableSystemSymbolLevel = 0;
 		executableUserSymbolLevel = 0;
-		launchableReference = 779AF73A08571F61004E4BE7 /* GinkoVoyager */;
+		launchableReference = 77FBF883085B558600B35FF8 /* GinkoVoyager */;
 		libgmallocEnabled = 0;
 		name = "Run Tests";
 		savedGlobals = {
@@ -2394,6 +2396,103 @@
 		rType = 0;
 		vrLen = 1161;
 		vrLoc = 2413;
+	};
+	77FBF87D085B556200B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77AD77B807CF1A8300A15B83 /* G3Account.m */;
+		name = "G3Account.m: 330";
+		rLen = 0;
+		rLoc = 11045;
+		rType = 0;
+		vrLen = 2092;
+		vrLoc = 9597;
+	};
+	77FBF87E085B556200B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 776B7D2707C41518009DA8B8 /* HowToTest.rtf */;
+		name = "HowToTest.rtf: 10";
+		rLen = 0;
+		rLoc = 716;
+		rType = 0;
+		vrLen = 716;
+		vrLoc = 0;
+	};
+	77FBF87F085B556200B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */;
+		name = "GIPasswordController.m: 120";
+		rLen = 0;
+		rLoc = 3080;
+		rType = 0;
+		vrLen = 1255;
+		vrLoc = 2382;
+	};
+	77FBF880085B556200B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */;
+		name = "GIPasswordController.m: 120";
+		rLen = 0;
+		rLoc = 3080;
+		rType = 0;
+		vrLen = 1255;
+		vrLoc = 2382;
+	};
+	77FBF881085B556200B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 776B7D2707C41518009DA8B8 /* HowToTest.rtf */;
+		name = "HowToTest.rtf: 10";
+		rLen = 0;
+		rLoc = 716;
+		rType = 0;
+		vrLen = 716;
+		vrLoc = 0;
+	};
+	77FBF882085B556200B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */;
+		name = "GIPasswordController.m: 158";
+		rLen = 0;
+		rLoc = 4207;
+		rType = 0;
+		vrLen = 969;
+		vrLoc = 3479;
+	};
+	77FBF883085B558600B35FF8 /* GinkoVoyager */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = "compiled.mach-o.executable";
+		name = GinkoVoyager;
+		path = "build/Development (linked)/GinkoVoyager.app/Contents/MacOS/GinkoVoyager";
+		sourceTree = "<group>";
+	};
+	77FBF884085B559100B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */;
+		name = "GIPasswordController.m: 158";
+		rLen = 0;
+		rLoc = 4207;
+		rType = 0;
+		vrLen = 853;
+		vrLoc = 3479;
+	};
+	77FBF885085B559A00B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */;
+		name = "GIPasswordController.m: 158";
+		rLen = 0;
+		rLoc = 4207;
+		rType = 0;
+		vrLen = 1046;
+		vrLoc = 3394;
+	};
+	77FBF886085B55A100B35FF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */;
+		name = "GIPasswordController.m: 158";
+		rLen = 0;
+		rLoc = 4207;
+		rType = 0;
+		vrLen = 884;
+		vrLoc = 3556;
 	};
 	8D1107260486CEB800E47090 /* GinkoVoyager */ = {
 		activeExec = 0;

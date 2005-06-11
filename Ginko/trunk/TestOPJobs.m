@@ -21,7 +21,7 @@
     
     [OPJobs setResult:@"TestResult"];
     
-    sleep(1);
+    sleep(2);
     
     if ([OPJobs shouldTerminate])
     {
@@ -29,7 +29,7 @@
         return;
     }
     
-//    sleep(1);
+    sleep(3);
 }
 
 - (void)testBasics
