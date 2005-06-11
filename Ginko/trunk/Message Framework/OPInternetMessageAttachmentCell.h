@@ -10,11 +10,11 @@
 
 @interface OPInternetMessageAttachmentCell : NSTextAttachmentCell
 {
+    @private
+    NSString* infoString;
 }
 
-/*" Overridden from NSCell "*/
-- (NSSize) cellSize;
-- (void) drawWithFrame: (NSRect) cellFrame 
-                inView: (NSView*) controlView;
+- (NSString*) infoString;
+- (void) setInfoString: (NSString*) newInfo;
 
 @end

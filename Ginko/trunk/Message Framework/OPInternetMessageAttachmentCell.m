@@ -14,8 +14,8 @@
 - (NSSize) cellSize
 {
     NSSize result = [[self image] size];
-    result.height+=22.0;
-    if (result.width<160.0) result.width = 160.0;
+    result.height+= [infoString length] ? 30.0 : 22.0;
+    if (result.width<140.0) result.width = 140.0;
     return result;
 }
 
@@ -25,12 +25,24 @@
     return NSLineBreakByTruncatingMiddle;
 }
 
+- (NSString*) infoString
+{
+    return infoString;
+}
+
+- (void) setInfoString: (NSString*) newInfo
+{
+    if (![newInfo isEqualToString: infoString]) {
+        [infoString release];
+        infoString = [newInfo retain];
+    }
+}
+
 - (void) drawWithFrame: (NSRect) cellFrame 
                 inView: (NSView*) controlView
 {
     
     NSString* title          = [self title];
-    
     NSRect    textFrame      = NSInsetRect(cellFrame, 2.0, 2.0);
     
     //[super drawWithFrame:cellFrame inView:controlView];
@@ -61,8 +73,16 @@
     
     // NSLineBreakByTruncatingMiddle
     
-    textFrame.origin.y    = NSMaxY(textFrame)-14.0;
-    textFrame.size.height = 14.0;
+     if ([infoString length]) {
+         // We have two lines to show:
+         title = [NSString stringWithFormat: @"%@\n%@", title, infoString];
+
+         textFrame.origin.y    = NSMaxY(textFrame)-24.0;
+         textFrame.size.height = 24.0;
+     } else {
+         textFrame.origin.y    = NSMaxY(textFrame)-14.0;
+         textFrame.size.height = 14.0;
+     }
     
     
     static NSDictionary* attributes = nil;
@@ -93,6 +113,13 @@
         [self setImage: image];
         [image release];
     }
+}
+
+- (void) delloc 
+{
+    //NSLog(@"Deallocating 0x%x od class %@", self, [self class]);;
+    [infoString release];
+    [super dealloc];
 }
 
 @end

@@ -569,19 +569,18 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
         
         if ([aFileWrapper isRegularFile]) {
             unsigned int fileSize;
-            NSData *resourceForkData;
+            NSData* resourceForkData;
             
             fileSize = [[aFileWrapper regularFileContents] length];
             
             if (resourceForkData = [[aFileWrapper fileAttributes] objectForKey: OPFileResourceForkData]) {
-            // add the size of the resource fork also
+                // add the size of the resource fork also
                 fileSize += [resourceForkData length];
             }
             
-            [cell setTitle: [NSString stringWithFormat:@"%@ %u Bytes", [aFileWrapper filename], fileSize]];
-        } else {
-            [cell setTitle: [NSString stringWithFormat:@"%@", [aFileWrapper filename]]];
-        }
+            [cell setInfoString: [NSString stringWithFormat:@"(%u bytes)", fileSize]];
+        } 
+        [cell setTitle: [aFileWrapper filename]];
         
         [attachment setAttachmentCell: cell];
     }
