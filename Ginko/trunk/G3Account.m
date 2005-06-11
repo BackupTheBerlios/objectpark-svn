@@ -260,23 +260,22 @@
                                                    );
     if (err != noErr)
     {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
-        NSLog(@"Error with getting password (%@)", error);
+        if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
     }
     else
     {
         NSData *data = [NSData dataWithBytesNoCopy:passwordData length:passwordLength];
         result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
-    }
-    
-    err = SecKeychainItemFreeContent(
-                                     NULL,           //No attribute data to release
-                                     passwordData    //Release data buffer allocated 
-                                     );
-    
-    if (err != noErr)
-    {
-         if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
+        
+        err = SecKeychainItemFreeContent(
+                                         NULL,           //No attribute data to release
+                                         passwordData    //Release data buffer allocated 
+                                         );
+        
+        if (err != noErr)
+        {
+            if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
+        }
     }
     
     return result;

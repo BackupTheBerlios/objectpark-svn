@@ -296,10 +296,10 @@ NSString *OPMBoxException = @"OPMBoxException";
 
 - (void) dealloc
 {
+    if (_mboxFile) fclose(_mboxFile);    
     [_path release];
     [_dateOfMostRecentChange release];
     
-    if (_mboxFile) fclose(_mboxFile);    
     [super dealloc];
 } 
 

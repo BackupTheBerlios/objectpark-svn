@@ -111,11 +111,16 @@
 {
     [titleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ Password Needed", @"password panel"), [self serviceTypeString]]];
     
-    [subtitleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"for %@ Access", @"password panel"), [self serverTypeString]]];
+    [subtitleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"for %@ account %@", @"password panel"), [self serverTypeString], [account name]]];
     
     [userNameField setStringValue:isIncomingPassword ? [account incomingUsername] : [account outgoingUsername]];
     
     [serverNameField setStringValue:isIncomingPassword ? [account incomingServerName] : [account outgoingServerName]];
+    
+//    [storeInKeychainCheckbox setState:[[NSUserDefaul
+        
+    [window center];
+    [window makeKeyAndOrderFront:self];
 }
 
 - (void)windowWillClose:(NSNotification *)notification 
@@ -132,6 +137,18 @@
     {
         [result setObject:[passwordField stringValue] forKey:@"password"];
         [result setObject:[NSNumber numberWithBool:YES] forKey:@"finished"];
+    }
+    
+    if ([storeInKeychainCheckbox state] == NSOnState)
+    {
+        if (isIncomingPassword)
+        {
+            [account setIncomingPassword:[passwordField stringValue]];
+        }
+        else // outgoing
+        {
+            [account setOutgoingPassword:[passwordField stringValue]];
+        }
     }
     
     [window close];
