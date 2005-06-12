@@ -297,7 +297,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build,
+					../OPPreferences/build/PBXBuildStyle/Development,
 					../OPNetwork/build,
 					$USER_LIBRARY_DIR/Frameworks/,
 				);
@@ -338,7 +338,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build,
+					../OPPreferences/build/PBXBuildStyle/linkedDevelopment,
 					../OPNetwork/build,
 					$USER_LIBRARY_DIR/Frameworks/,
 				);
@@ -611,8 +611,8 @@
 		8DB12B4907A6348C0030EE90 /* NSManagedObjectContext+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+Extensions.m"; sourceTree = SOURCE_ROOT; };
 		8DB2D4F70796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMatrixWithKeyboardSupport.h; sourceTree = "<group>"; };
 		8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
-		8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = ../OPPreferences/build/OPPreferences.framework; sourceTree = SOURCE_ROOT; };
-		8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = ../OPNetwork/build/OPNetwork.framework; sourceTree = SOURCE_ROOT; };
+		8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = ../OPPreferences/build/Development/OPPreferences.framework; sourceTree = SOURCE_ROOT; };
+		8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = ../OPNetwork/build/Development/OPNetwork.framework; sourceTree = SOURCE_ROOT; };
 		8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSizingTextField.h; sourceTree = "<group>"; };
 		8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSizingTextField.m; sourceTree = "<group>"; };
 		8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SQLConfig.sqlstatements; sourceTree = "<group>"; };
@@ -1447,8 +1447,8 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build,
-					../OPNetwork/build,
+					../OPPreferences/build/Development,
+					../OPNetwork/build/Development,
 					$USER_LIBRARY_DIR/Frameworks/,
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -1490,8 +1490,8 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build,
-					../OPNetwork/build,
+					../OPPreferences/build/Development,
+					../OPNetwork/build/Development,
 					$USER_LIBRARY_DIR/Frameworks/,
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -1615,7 +1615,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build,
+					../OPPreferences/build/XCBuildConfiguration/Development_2,
 					../OPNetwork/build,
 					$USER_LIBRARY_DIR/Frameworks/,
 				);
@@ -1647,7 +1647,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build,
+					../OPPreferences/build/XCBuildConfiguration/linkedDevelopment_2,
 					../OPNetwork/build,
 					$USER_LIBRARY_DIR/Frameworks/,
 				);
@@ -1721,6 +1721,7 @@
 		7749E6D20855CB04009EF4F3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = ../OPPreferences/build/$BUILD_STYLE/;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
@@ -1729,6 +1730,7 @@
 		7749E6D30855CB04009EF4F3 /* Development (linked) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = ../OPPreferences/build/$BUILD_STYLE/;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
@@ -1737,6 +1739,7 @@
 		7749E6D40855CB04009EF4F3 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = ../OPPreferences/build/$BUILD_STYLE/;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
@@ -1745,6 +1748,7 @@
 		7749E6D50855CB04009EF4F3 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = ../OPPreferences/build/$BUILD_STYLE/;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
