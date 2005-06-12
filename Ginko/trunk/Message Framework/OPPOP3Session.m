@@ -502,6 +502,7 @@ UIDL. nil otherwise. "*/
             triedMessage = @"None";
         }
         
+        _state = DISCONNECTED;
         [NSException raise:OPPOP3AuthenticationFailedException format:@"POP3 server authentication failed. Tried %@.", triedMessage];
     }
 }

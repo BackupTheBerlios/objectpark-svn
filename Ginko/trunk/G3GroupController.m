@@ -743,9 +743,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if (![self isStandaloneBoxesWindow])
     {
 //        NSNumber *messageCount = [group valueForKeyPath:@"threads.@sum.messages.@count"];
-        NSNumber *messageCount = [NSNumber numberWithInt:0];
+//        NSNumber *messageCount = [NSNumber numberWithInt:0];
         
-        [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ messages in %u threads", "group info text template"), messageCount, [[self threadIdsByDate] count]]];
+        [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%u threads", "group info text template"), [[self threadIdsByDate] count]]];
     }    
 }
 

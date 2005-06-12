@@ -264,7 +264,7 @@
     }
     else
     {
-        NSData *data = [NSData dataWithBytesNoCopy:passwordData length:passwordLength];
+        NSData *data = [NSData dataWithBytes:passwordData length:passwordLength];
         result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
         
         err = SecKeychainItemFreeContent(
@@ -328,6 +328,17 @@
         
     }
     //if (itemRef) CFRelease(itemRef);
+}
+
+- (NSString *)outgoingPassword
+{
+    [NSException raise:NSGenericException format:@"not yet implemented"];
+    return nil;
+}
+
+- (void)setOutgoingPassword:(NSString *)aPassword
+{
+    [NSException raise:NSGenericException format:@"not yet implemented"];
 }
 
 - (int)retrieveMessageInterval 

@@ -104,6 +104,9 @@ enum LeaveOnServerDuration
 - (NSString *)outgoingUsername;
 - (void)setOutgoingUsername:(NSString *)aName;
 
+- (NSString *)outgoingPassword;
+- (void)setOutgoingPassword:(NSString *)aPassword;
+
 - (BOOL)outgoingUsernameNeeded;
 
 - (BOOL)allowExpiredSSLCertificates;
