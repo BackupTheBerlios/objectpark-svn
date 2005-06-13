@@ -458,9 +458,9 @@ You can mix #availableString and #availableLine without loosing data. However, #
 
 
 /*" Reads and returns a string up to (and not including) the current linebreak sequence. If not enough data is available this method blocks until more data is received. Returns !{nil} if no more data is available on the stream. "*/
-
 - (NSString *)availableLine
 {
+#warning dirk->all: fixme! Implement dot unquoting as in -availableTextData.
     NSData 		  *lineData;
     NSString	  *string;
 
@@ -488,7 +488,7 @@ You can mix #availableString and #availableLine without loosing data. However, #
         if([recordBuffer length] > 0)  {
             lineData = [self getRecordBuffer];
         }
-#warning dirk->all: fixme! Implement dot unquoting as in - availableLine.
+#warning dirk->all: fixme! Implement dot unquoting as in -availableTextData.
         // otherwise return nil lineData.
     }
     return lineData;

@@ -304,7 +304,7 @@ This call is blocking so it returns less than %length bytes only if an error occ
 
 
 /*"This methods writes %data to the socket."*/
-- (void) writeData:(NSData*)data
+- (void)writeData:(NSData*)data
 {
     OSStatus err;
     size_t bytesWritten = 0;
