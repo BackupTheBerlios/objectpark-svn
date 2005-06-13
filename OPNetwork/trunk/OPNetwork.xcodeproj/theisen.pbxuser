@@ -1,17 +1,19 @@
 // !$*UTF8*$!
 {
-	0867D690FE84028FC02AAC07 = {
-		activeBuildStyle = 014CEA440018CDF011CA2923;
-		activeTarget = 8DC2EF4F0486A6940098B216;
+	0867D690FE84028FC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Development;
+		activeBuildStyle = 014CEA440018CDF011CA2923 /* Development */;
+		activeTarget = 8DC2EF4F0486A6940098B216 /* OPNetwork */;
 		addToTargets = (
-			8DC2EF4F0486A6940098B216,
+			8DC2EF4F0486A6940098B216 /* OPNetwork */,
 		);
 		breakpoints = (
-			8D18B2F60781B6E100BA2BBA,
-			8D18B2F80781B6EA00BA2BBA,
-			8D32AD5507F500E5006A6694,
+			8D18B2F60781B6E100BA2BBA /* OPSerialPort.m:586 */,
+			8D18B2F80781B6EA00BA2BBA /* OPSerialPort.m:581 */,
+			8D32AD5507F500E5006A6694 /* OPStream+SSL.m:36 */,
 		);
-		codeSenseManager = 8DCB8948065A43520012ED8D;
+		breakpointsGroup = 8DD13F29085CDD7D00EB61FA /* XCBreakpointsBucket */;
+		codeSenseManager = 8DCB8948065A43520012ED8D /* Code sense */;
 		perUserDictionary = {
 			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
@@ -44,7 +46,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					369,
+					343,
 					20,
 					69,
 					43,
@@ -83,7 +85,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 139787807;
+			PBXPerProjectTemplateStateSaveDate = 140355573;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -545,550 +547,60 @@
 				};
 				RubberWindowFrame = "1295 269 867 690 1024 120 1152 864 ";
 			};
-			PBXWorkspaceStateSaveDate = 139787807;
+			PBXWorkspaceStateSaveDate = 140355573;
 		};
 		perUserProjectItems = {
-			8D18B2130781A63D00BA2BBA = 8D18B2130781A63D00BA2BBA;
-			8D18B2150781A63D00BA2BBA = 8D18B2150781A63D00BA2BBA;
-			8D18B2C20781B54700BA2BBA = 8D18B2C20781B54700BA2BBA;
-			8D18B2D20781B5AF00BA2BBA = 8D18B2D20781B5AF00BA2BBA;
-			8D32AD5607F500ED006A6694 = 8D32AD5607F500ED006A6694;
-			8D32AD5707F500ED006A6694 = 8D32AD5707F500ED006A6694;
-			8D32AD5807F500ED006A6694 = 8D32AD5807F500ED006A6694;
-			8D32AD5E07F501FF006A6694 = 8D32AD5E07F501FF006A6694;
-			8D32AD6B07F5A556006A6694 = 8D32AD6B07F5A556006A6694;
-			8D32AD6C07F5A556006A6694 = 8D32AD6C07F5A556006A6694;
-			8D440EBC0725652F00063044 = 8D440EBC0725652F00063044;
-			8D4411680727BAF700063044 = 8D4411680727BAF700063044;
-			8D4412190727C4E400063044 = 8D4412190727C4E400063044;
-			8D44121B0727C4E400063044 = 8D44121B0727C4E400063044;
-			8D4412260727C55700063044 = 8D4412260727C55700063044;
-			8D44134E0727EB0500063044 = 8D44134E0727EB0500063044;
-			8D44137A0727F1EF00063044 = 8D44137A0727F1EF00063044;
-			8D44137D0727F1EF00063044 = 8D44137D0727F1EF00063044;
-			8D4413D00727F4E800063044 = 8D4413D00727F4E800063044;
-			8D4413D20727F4E800063044 = 8D4413D20727F4E800063044;
-			8D44EE0C0724040300063044 = 8D44EE0C0724040300063044;
-			8D44EE7607240F1300063044 = 8D44EE7607240F1300063044;
-			8D44EF650724125B00063044 = 8D44EF650724125B00063044;
-			8D44EF690724125B00063044 = 8D44EF690724125B00063044;
-			8D44EF6D0724125B00063044 = 8D44EF6D0724125B00063044;
-			8D44EF87072415C000063044 = 8D44EF87072415C000063044;
-			8D44EFA507241BF000063044 = 8D44EFA507241BF000063044;
-			8D44EFAA07241BF000063044 = 8D44EFAA07241BF000063044;
-			8D44EFB007241BF000063044 = 8D44EFB007241BF000063044;
-			8D69440507F4B7B1008B7C20 = 8D69440507F4B7B1008B7C20;
-			8D69440607F4B7B1008B7C20 = 8D69440607F4B7B1008B7C20;
-			8D69440907F4B7B1008B7C20 = 8D69440907F4B7B1008B7C20;
-			8D69441707F4BA50008B7C20 = 8D69441707F4BA50008B7C20;
-			8D69441807F4BA50008B7C20 = 8D69441807F4BA50008B7C20;
-			8D69441907F4BA50008B7C20 = 8D69441907F4BA50008B7C20;
-			8D69441A07F4BA50008B7C20 = 8D69441A07F4BA50008B7C20;
-			8D69441C07F4BA50008B7C20 = 8D69441C07F4BA50008B7C20;
-			8D69441D07F4BA50008B7C20 = 8D69441D07F4BA50008B7C20;
-			8D69441E07F4BA50008B7C20 = 8D69441E07F4BA50008B7C20;
-			8D69441F07F4BA50008B7C20 = 8D69441F07F4BA50008B7C20;
-			8D794EBF071D876400002E0F = 8D794EBF071D876400002E0F;
-			8D794EC3071D876400002E0F = 8D794EC3071D876400002E0F;
-			8D794EC4071D876400002E0F = 8D794EC4071D876400002E0F;
-			8D795044071EA88700002E0F = 8D795044071EA88700002E0F;
-			8D79504C071EA88700002E0F = 8D79504C071EA88700002E0F;
-			8D79504D071EA88700002E0F = 8D79504D071EA88700002E0F;
-			8D795086071EB75B00002E0F = 8D795086071EB75B00002E0F;
-			8D795089071EB75B00002E0F = 8D795089071EB75B00002E0F;
-			8D7952D1071EC27700002E0F = 8D7952D1071EC27700002E0F;
-			8DD3DBD70721FC98001635AF = 8DD3DBD70721FC98001635AF;
-			8DD3DBE20721FDDB001635AF = 8DD3DBE20721FDDB001635AF;
-			8DD3DD4107221BE7001635AF = 8DD3DD4107221BE7001635AF;
-			8DF749900855163500049071 = 8DF749900855163500049071;
-			8DF749910855163500049071 = 8DF749910855163500049071;
-			8DF749920855163500049071 = 8DF749920855163500049071;
-			8DF749930855163500049071 = 8DF749930855163500049071;
-			8DF749940855163500049071 = 8DF749940855163500049071;
-			8DF749950855163500049071 = 8DF749950855163500049071;
-			8DF749960855163500049071 = 8DF749960855163500049071;
-			8DF749970855163500049071 = 8DF749970855163500049071;
-			8DF749980855163500049071 = 8DF749980855163500049071;
-			8DF749990855163500049071 = 8DF749990855163500049071;
-			8DF7499A0855163500049071 = 8DF7499A0855163500049071;
-			8DF7499B0855163500049071 = 8DF7499B0855163500049071;
-			8DF7499C0855163500049071 = 8DF7499C0855163500049071;
-			8DF7499E0855163B00049071 = 8DF7499E0855163B00049071;
-			8DF7499F0855167E00049071 = 8DF7499F0855167E00049071;
-			8DF749A00855167E00049071 = 8DF749A00855167E00049071;
-			8DF749A10855167E00049071 = 8DF749A10855167E00049071;
-			8DF749A20855167E00049071 = 8DF749A20855167E00049071;
-			8DF749A30855167E00049071 = 8DF749A30855167E00049071;
-			8DF749A4085516ED00049071 = 8DF749A4085516ED00049071;
-			8DF749A5085516ED00049071 = 8DF749A5085516ED00049071;
-			8DF749A6085516ED00049071 = 8DF749A6085516ED00049071;
-			8DF749A7085516ED00049071 = 8DF749A7085516ED00049071;
+			8DD13F8B085CE14800EB61FA = 8DD13F8B085CE14800EB61FA /* PBXTextBookmark */;
+			8DD140DB085D916800EB61FA = 8DD140DB085D916800EB61FA /* PBXTextBookmark */;
+			8DD14118085DAE9D00EB61FA /* PBXTextBookmark */ = 8DD14118085DAE9D00EB61FA /* PBXTextBookmark */;
+			8DD14119085DAE9D00EB61FA /* PBXTextBookmark */ = 8DD14119085DAE9D00EB61FA /* PBXTextBookmark */;
+			8DD1411A085DAE9D00EB61FA /* PBXTextBookmark */ = 8DD1411A085DAE9D00EB61FA /* PBXTextBookmark */;
+			8DD1411B085DAE9D00EB61FA /* PBXTextBookmark */ = 8DD1411B085DAE9D00EB61FA /* PBXTextBookmark */;
 		};
-		sourceControlManager = 8DCB8947065A43520012ED8D;
+		sourceControlManager = 8DCB8947065A43520012ED8D /* Source Control */;
 		userBuildSettings = {
 		};
 	};
-	8D18B2130781A63D00BA2BBA = {
-		fRef = 8D4414060728020100063044;
-		isa = PBXTextBookmark;
-		name = writeData;
-		rLen = 9;
-		rLoc = 359;
-		rType = 0;
-		vrLen = 617;
-		vrLoc = 0;
-	};
-	8D18B2150781A63D00BA2BBA = {
-		fRef = 8D4414060728020100063044;
-		isa = PBXTextBookmark;
-		name = writeData;
-		rLen = 9;
-		rLoc = 359;
-		rType = 0;
-		vrLen = 617;
-		vrLoc = 0;
-	};
-	8D18B2C20781B54700BA2BBA = {
-		fRef = 8DA9E86D07201AD9003BFAE4;
-		isa = PBXTextBookmark;
-		name = "NSFileHandle+ThreadIO.m: 111";
-		rLen = 0;
-		rLoc = 3732;
-		rType = 0;
-		vrLen = 654;
-		vrLoc = 3106;
-	};
-	8D18B2D20781B5AF00BA2BBA = {
-		fRef = 8D795025071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPort.h: readTarget";
-		rLen = 0;
-		rLoc = 2033;
-		rType = 0;
-		vrLen = 760;
-		vrLoc = 1888;
-	};
-	8D18B2F60781B6E100BA2BBA = {
-		fileReference = 8D795026071E9EFC00002E0F;
-		functionName = "-commitChanges";
+	8D18B2F60781B6E100BA2BBA /* OPSerialPort.m:586 */ = {
 		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 8D795026071E9EFC00002E0F /* OPSerialPort.m */;
+		functionName = "-commitChanges";
+		hitCount = 0;
 		lineNumber = 586;
-		state = 1;
+		modificationTime = 140355578.456911;
+		state = 0;
 	};
-	8D18B2F80781B6EA00BA2BBA = {
-		fileReference = 8D795026071E9EFC00002E0F;
+	8D18B2F80781B6EA00BA2BBA /* OPSerialPort.m:581 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 8D795026071E9EFC00002E0F /* OPSerialPort.m */;
 		functionName = "-commitChanges";
-		isa = PBXFileBreakpoint;
+		hitCount = 0;
 		lineNumber = 581;
-		state = 1;
+		modificationTime = 140355578.583656;
+		state = 0;
 	};
-	8D32AD5507F500E5006A6694 = {
-		fileReference = 8DCB895A065A43DD0012ED8D;
-		functionName = "-shutdownEncryption";
+	8D32AD5507F500E5006A6694 /* OPStream+SSL.m:36 */ = {
 		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 8DCB895A065A43DD0012ED8D /* OPStream+SSL.m */;
+		functionName = "-shutdownEncryption";
+		hitCount = 0;
 		lineNumber = 36;
-		state = 1;
+		modificationTime = 140355578.639123;
+		state = 0;
 	};
-	8D32AD5607F500ED006A6694 = {
-		fRef = 8DCB8955065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSSLSocket.h: 78";
-		rLen = 0;
-		rLoc = 2132;
-		rType = 0;
-		vrLen = 682;
-		vrLoc = 1346;
-	};
-	8D32AD5707F500ED006A6694 = {
-		fRef = 8DCB895A065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		rLen = 57;
-		rLoc = 1541;
-		rType = 0;
-	};
-	8D32AD5807F500ED006A6694 = {
-		fRef = 8DCB8955065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSSLSocket.h: 78";
-		rLen = 0;
-		rLoc = 2132;
-		rType = 0;
-		vrLen = 682;
-		vrLoc = 1346;
-	};
-	8D32AD5E07F501FF006A6694 = {
-		fRef = 8DCB8956065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSSLSocket.m: 699";
-		rLen = 0;
-		rLoc = 25196;
-		rType = 0;
-		vrLen = 544;
-		vrLoc = 24652;
-	};
-	8D32AD6B07F5A556006A6694 = {
-		fRef = 8DCB8956065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSSLSocket.m: 507";
-		rLen = 0;
-		rLoc = 19132;
-		rType = 0;
-		vrLen = 1014;
-		vrLoc = 19012;
-	};
-	8D32AD6C07F5A556006A6694 = {
-		fRef = 8DCB895A065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "Encryption can only be shut down on secure socket handles";
-		rLen = 57;
-		rLoc = 1541;
-		rType = 0;
-		vrLen = 1262;
-		vrLoc = 507;
-	};
-	8D440EBC0725652F00063044 = {
-		fRef = 8DCB894C065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSData *)readDataOfMaxLengthNonBlocking:(unsigned int)length\n";
-		rLen = 64;
-		rLoc = 6677;
-		rType = 0;
-		vrLen = 1283;
-		vrLoc = 5160;
-	};
-	8D4411680727BAF700063044 = {
-		fRef = 8DCB895B065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPStream+TimeoutExtensions.h: 26";
-		rLen = 0;
-		rLoc = 860;
-		rType = 0;
-		vrLen = 860;
-		vrLoc = 0;
-	};
-	8D4412190727C4E400063044 = {
-		anchor = "//apple_ref/doc/uid/20000304/availableData";
-		fRef = 8D44EFB207241BF000063044;
-		glyphRangeLength = 0;
-		glyphRangeLocation = 0;
-		isa = PBXDocBookmark;
-		name = "Cocoa: NSFileHandle class (Objective-C)";
-	};
-	8D44121B0727C4E400063044 = {
-		anchor = "//apple_ref/doc/uid/20000304/availableData";
-		fRef = 8D44EFB207241BF000063044;
-		glyphRangeLength = 0;
-		glyphRangeLocation = 0;
-		isa = PBXDocBookmark;
-		name = "Cocoa: NSFileHandle class (Objective-C)";
-	};
-	8D4412260727C55700063044 = {
-		fRef = 8DCB894E065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = resolv;
-		rLen = 6;
-		rLoc = 2999;
-		rType = 0;
-		vrLen = 691;
-		vrLoc = 2876;
-	};
-	8D44134E0727EB0500063044 = {
-		fRef = 8DA9E86C07201AD9003BFAE4;
-		isa = PBXTextBookmark;
-		name = readInBackgroundThreadAndCallDelegate;
-		rLen = 37;
-		rLoc = 517;
-		rType = 0;
-		vrLen = 578;
-		vrLoc = 0;
-	};
-	8D44137A0727F1EF00063044 = {
-		fRef = 8DCB895F065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "osdep.h: 137";
-		rLen = 0;
-		rLoc = 4111;
-		rType = 0;
-		vrLen = 541;
-		vrLoc = 3861;
-	};
-	8D44137D0727F1EF00063044 = {
-		fRef = 8DCB895F065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "osdep.h: 137";
-		rLen = 0;
-		rLoc = 4111;
-		rType = 0;
-		vrLen = 541;
-		vrLoc = 3861;
-	};
-	8D4413D00727F4E800063044 = {
-		fRef = 8D795025071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = drain;
-		rLen = 5;
-		rLoc = 3451;
-		rType = 0;
-		vrLen = 840;
-		vrLoc = 3090;
-	};
-	8D4413D20727F4E800063044 = {
-		fRef = 8D795025071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = drain;
-		rLen = 5;
-		rLoc = 3451;
-		rType = 0;
-		vrLen = 840;
-		vrLoc = 3090;
-	};
-	8D4414060728020100063044 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSFileHandle.h;
-		path = /System/Library/Frameworks/Foundation.framework/Versions/C/Headers/NSFileHandle.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	8D44EE0C0724040300063044 = {
-		fRef = 8DA9E86C07201AD9003BFAE4;
-		isa = PBXTextBookmark;
-		name = "@interface NSObject (NSFileHandleDelegate)\n\n- (void) fileHandle: (NSFileHandle*) handle\n           readData: (char*) bytes \n             length: (unsigned) byteCount";
-		rLen = 171;
-		rLoc = 225;
-		rType = 0;
-		vrLen = 572;
-		vrLoc = 0;
-	};
-	8D44EE7607240F1300063044 = {
-		fRef = 8D795025071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPort.h: 100";
-		rLen = 0;
-		rLoc = 2450;
-		rType = 0;
-		vrLen = 1067;
-		vrLoc = 1636;
-	};
-	8D44EF650724125B00063044 = {
-		fRef = 8DCB8952065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPNetwork.h: 19";
-		rLen = 0;
-		rLoc = 439;
-		rType = 0;
-		vrLen = 442;
-		vrLoc = 0;
-	};
-	8D44EF690724125B00063044 = {
-		fRef = 8DCB894B065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "NSFileHandle+Extensions.h: 47";
-		rLen = 0;
-		rLoc = 1734;
-		rType = 0;
-		vrLen = 1167;
-		vrLoc = 782;
-	};
-	8D44EF6D0724125B00063044 = {
-		fRef = 8DD3DBCB0721F86B001635AF;
-		isa = PBXTextBookmark;
-		name = NSThread;
-		rLen = 8;
-		rLoc = 1076;
-		rType = 0;
-		vrLen = 369;
-		vrLoc = 0;
-	};
-	8D44EF87072415C000063044 = {
-		fRef = 8D795026071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPort.m: 174";
-		rLen = 0;
-		rLoc = 3881;
-		rType = 0;
-		vrLen = 468;
-		vrLoc = 3575;
-	};
-	8D44EFA507241BF000063044 = {
-		fRef = 8DCB894B065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "NSFileHandle+Extensions.h: 47";
-		rLen = 0;
-		rLoc = 1734;
-		rType = 0;
-		vrLen = 1241;
-		vrLoc = 708;
-	};
-	8D44EFAA07241BF000063044 = {
-		fRef = 8DCB894C065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSData *)readDataOfMaxLengthNonBlocking:(unsigned int)length\n";
-		rLen = 64;
-		rLoc = 6677;
-		rType = 0;
-		vrLen = 1289;
-		vrLoc = 5855;
-	};
-	8D44EFB007241BF000063044 = {
-		fRef = 8DA9E8B30721918F003BFAE4;
-		isa = PBXTextBookmark;
-		name = NSFileHandle;
-		rLen = 12;
-		rLoc = 209;
-		rType = 0;
-		vrLen = 309;
-		vrLoc = 73;
-	};
-	8D44EFB207241BF000063044 = {
-		isa = PBXFileReference;
-		lastKnownFileType = text.html.documentation;
-		name = NSFileHandle.html;
-		path = "/Developer/ADC Reference Library/documentation/Cocoa/Reference/Foundation/ObjC_classic/Classes/NSFileHandle.html";
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	8D69440507F4B7B1008B7C20 = {
-		fRef = 8D795026071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPort.m: 616";
-		rLen = 0;
-		rLoc = 16137;
-		rType = 0;
-		vrLen = 950;
-		vrLoc = 15263;
-	};
-	8D69440607F4B7B1008B7C20 = {
-		fRef = 8DCB8956065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSSLSocket.m: 456";
-		rLen = 0;
-		rLoc = 17305;
-		rType = 0;
-		vrLen = 894;
-		vrLoc = 17060;
-	};
-	8D69440907F4B7B1008B7C20 = {
-		fRef = 8DCB8956065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSSLSocket.m: 456";
-		rLen = 0;
-		rLoc = 17305;
-		rType = 0;
-		vrLen = 894;
-		vrLoc = 17060;
-	};
-	8D69441707F4BA50008B7C20 = {
-		fRef = 8D795026071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPort.m: 573";
-		rLen = 0;
-		rLoc = 14717;
-		rType = 0;
-		vrLen = 670;
-		vrLoc = 14678;
-	};
-	8D69441807F4BA50008B7C20 = {
-		fRef = 8DCB8951065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPIPSocket.m: 227";
-		rLen = 0;
-		rLoc = 10433;
-		rType = 0;
-		vrLen = 1117;
-		vrLoc = 9880;
-	};
-	8D69441907F4BA50008B7C20 = {
-		fRef = 8DCB8953065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSocket.h: 20";
-		rLen = 0;
-		rLoc = 1237;
-		rType = 0;
-		vrLen = 564;
-		vrLoc = 1237;
-	};
-	8D69441A07F4BA50008B7C20 = {
-		fRef = 8DCB8955065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "@interface NSFileHandle (OPSSLSocket)\n\n- (BOOL) isEncrypted; // Superclass returns NO by default.\n\n@end";
-		rLen = 100;
-		rLoc = 2032;
-		rType = 0;
-		vrLen = 687;
-		vrLoc = 1445;
-	};
-	8D69441C07F4BA50008B7C20 = {
-		fRef = 8D795026071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPort.m: 573";
-		rLen = 0;
-		rLoc = 14717;
-		rType = 0;
-		vrLen = 670;
-		vrLoc = 14678;
-	};
-	8D69441D07F4BA50008B7C20 = {
-		fRef = 8DCB8956065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = OPSSLSocket;
-		rLen = 11;
-		rLoc = 1099;
-		rType = 0;
-		vrLen = 1137;
-		vrLoc = 599;
-	};
-	8D69441E07F4BA50008B7C20 = {
-		fRef = 8DCB8955065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSSLSocket.h: 73";
-		rLen = 0;
-		rLoc = 2069;
-		rType = 0;
-		vrLen = 790;
-		vrLoc = 1122;
-	};
-	8D69441F07F4BA50008B7C20 = {
-		fRef = 8DCB8951065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPIPSocket.m: 227";
-		rLen = 0;
-		rLoc = 10433;
-		rType = 0;
-		vrLen = 1117;
-		vrLoc = 9880;
-	};
-	8D794EBF071D876400002E0F = {
-		fRef = 8DCB895E065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = startListeningOnLocalPort;
-		rLen = 25;
-		rLoc = 2543;
-		rType = 0;
-		vrLen = 2004;
-		vrLoc = 0;
-	};
-	8D794EC3071D876400002E0F = {
-		fRef = 8DCB895E065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = startListeningOnLocalPort;
-		rLen = 25;
-		rLoc = 2543;
-		rType = 0;
-		vrLen = 2004;
-		vrLoc = 0;
-	};
-	8D794EC4071D876400002E0F = {
-		fRef = 8DCB8953065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSocket.h: 36";
-		rLen = 0;
-		rLoc = 1447;
-		rType = 0;
-		vrLen = 1033;
-		vrLoc = 768;
-	};
-	8D795025071E9EFC00002E0F = {
+	8D795025071E9EFC00002E0F /* OPSerialPort.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 2925}}";
 			sepNavSelRange = "{2033, 0}";
@@ -1096,88 +608,28 @@
 			sepNavWindowFrame = "{{94, 141}, {750, 558}}";
 		};
 	};
-	8D795026071E9EFC00002E0F = {
+	8D795026071E9EFC00002E0F /* OPSerialPort.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 9267}}";
 			sepNavSelRange = "{14717, 0}";
 			sepNavVisRect = "{{0, 8204}, {588, 418}}";
 		};
 	};
-	8D795027071E9EFC00002E0F = {
+	8D795027071E9EFC00002E0F /* OPSerialPort+Discovery.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {684, 433}}";
 			sepNavSelRange = "{223, 21}";
 			sepNavVisRect = "{{0, 0}, {684, 433}}";
 		};
 	};
-	8D795028071E9EFC00002E0F = {
+	8D795028071E9EFC00002E0F /* OPSerialPort+Discovery.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {684, 2631}}";
 			sepNavSelRange = "{3946, 0}";
 			sepNavVisRect = "{{0, 1736}, {684, 626}}";
 		};
 	};
-	8D795044071EA88700002E0F = {
-		fRef = 8DCB8957065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPStream.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1814;
-		vrLoc = 0;
-	};
-	8D79504C071EA88700002E0F = {
-		fRef = 8D795027071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPortList.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 270;
-		vrLoc = 0;
-	};
-	8D79504D071EA88700002E0F = {
-		fRef = 8D795028071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPortList.m: 36";
-		rLen = 0;
-		rLoc = 654;
-		rType = 0;
-		vrLen = 976;
-		vrLoc = 365;
-	};
-	8D795086071EB75B00002E0F = {
-		fRef = 8D795028071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = "OPSerialPort+Discovery.m: 136";
-		rLen = 0;
-		rLoc = 3946;
-		rType = 0;
-		vrLen = 1257;
-		vrLoc = 3628;
-	};
-	8D795089071EB75B00002E0F = {
-		fRef = 8DCB8952065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPNetwork.h: 18";
-		rLen = 0;
-		rLoc = 442;
-		rType = 0;
-		vrLen = 348;
-		vrLoc = 0;
-	};
-	8D7952D1071EC27700002E0F = {
-		fRef = 8D795027071E9EFC00002E0F;
-		isa = PBXTextBookmark;
-		name = availablePortWithName;
-		rLen = 21;
-		rLoc = 223;
-		rType = 0;
-		vrLen = 270;
-		vrLoc = 0;
-	};
-	8DA9E86C07201AD9003BFAE4 = {
+	8DA9E86C07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 418}}";
 			sepNavSelRange = "{517, 37}";
@@ -1185,37 +637,29 @@
 			sepNavWindowFrame = "{{53, 183}, {750, 558}}";
 		};
 	};
-	8DA9E86D07201AD9003BFAE4 = {
+	8DA9E86D07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 1666}}";
 			sepNavSelRange = "{3732, 0}";
 			sepNavVisRect = "{{0, 1246}, {588, 418}}";
 		};
 	};
-	8DA9E8B30721918F003BFAE4 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSFileHandle.h;
-		path = /Developer/SDKs/MacOSX10.2.8.sdk/System/Library/Frameworks/Foundation.framework/Versions/C/Headers/NSFileHandle.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	8DC2EF4F0486A6940098B216 = {
+	8DC2EF4F0486A6940098B216 /* OPNetwork */ = {
 		activeExec = 0;
 	};
-	8DCB8947065A43520012ED8D = {
+	8DCB8947065A43520012ED8D /* Source Control */ = {
+		isa = PBXSourceControlManager;
 		fallbackIsa = XCSourceControlManager;
 		isSCMEnabled = 0;
-		isa = PBXSourceControlManager;
 		scmConfiguration = {
 		};
 		scmType = scm.cvs;
 	};
-	8DCB8948065A43520012ED8D = {
-		indexTemplatePath = "";
+	8DCB8948065A43520012ED8D /* Code sense */ = {
 		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
 	};
-	8DCB8949065A43DD0012ED8D = {
+	8DCB8949065A43DD0012ED8D /* functions.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {585, 557}}";
 			sepNavSelRange = "{1470, 18}";
@@ -1223,112 +667,112 @@
 			sepNavWindowFrame = "{{78, 162}, {750, 558}}";
 		};
 	};
-	8DCB894A065A43DD0012ED8D = {
+	8DCB894A065A43DD0012ED8D /* functions.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {585, 797}}";
 			sepNavSelRange = "{1520, 0}";
 			sepNavVisRect = "{{0, 238}, {585, 557}}";
 		};
 	};
-	8DCB894B065A43DD0012ED8D = {
+	8DCB894B065A43DD0012ED8D /* NSFileHandle+Extensions.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 783}}";
 			sepNavSelRange = "{1734, 0}";
 			sepNavVisRect = "{{0, 166}, {588, 604}}";
 		};
 	};
-	8DCB894C065A43DD0012ED8D = {
+	8DCB894C065A43DD0012ED8D /* NSFileHandle+Extensions.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 2995}}";
 			sepNavSelRange = "{6677, 64}";
 			sepNavVisRect = "{{0, 2064}, {588, 604}}";
 		};
 	};
-	8DCB894D065A43DD0012ED8D = {
+	8DCB894D065A43DD0012ED8D /* NSHost+Extensions.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {585, 587}}";
 			sepNavSelRange = "{1343, 0}";
 			sepNavVisRect = "{{0, 30}, {585, 557}}";
 		};
 	};
-	8DCB894E065A43DD0012ED8D = {
+	8DCB894E065A43DD0012ED8D /* NSHost+Extensions.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 2071}}";
 			sepNavSelRange = "{2999, 6}";
 			sepNavVisRect = "{{0, 1091}, {588, 418}}";
 		};
 	};
-	8DCB8950065A43DD0012ED8D = {
+	8DCB8950065A43DD0012ED8D /* OPIPSocket.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {585, 1077}}";
 			sepNavSelRange = "{2907, 0}";
 			sepNavVisRect = "{{0, 0}, {585, 555}}";
 		};
 	};
-	8DCB8951065A43DD0012ED8D = {
+	8DCB8951065A43DD0012ED8D /* OPIPSocket.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 5669}}";
 			sepNavSelRange = "{10433, 0}";
 			sepNavVisRect = "{{0, 3530}, {588, 418}}";
 		};
 	};
-	8DCB8952065A43DD0012ED8D = {
+	8DCB8952065A43DD0012ED8D /* OPNetwork.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 604}}";
 			sepNavSelRange = "{439, 0}";
 			sepNavVisRect = "{{0, 0}, {588, 604}}";
 		};
 	};
-	8DCB8953065A43DD0012ED8D = {
+	8DCB8953065A43DD0012ED8D /* OPSocket.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {573, 686}}";
 			sepNavSelRange = "{1234, 0}";
 			sepNavVisRect = "{{0, 183}, {573, 489}}";
 		};
 	};
-	8DCB8954065A43DD0012ED8D = {
+	8DCB8954065A43DD0012ED8D /* OPSocket.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {585, 5319}}";
 			sepNavSelRange = "{4540, 6}";
 			sepNavVisRect = "{{0, 1386}, {585, 555}}";
 		};
 	};
-	8DCB8955065A43DD0012ED8D = {
+	8DCB8955065A43DD0012ED8D /* OPSSLSocket.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {751, 1091}}";
 			sepNavSelRange = "{2132, 0}";
 			sepNavVisRect = "{{0, 630}, {751, 365}}";
 		};
 	};
-	8DCB8956065A43DD0012ED8D = {
+	8DCB8956065A43DD0012ED8D /* OPSSLSocket.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {588, 10695}}";
 			sepNavSelRange = "{19132, 0}";
 			sepNavVisRect = "{{0, 7748}, {588, 418}}";
 		};
 	};
-	8DCB8957065A43DD0012ED8D = {
+	8DCB8957065A43DD0012ED8D /* OPStream.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {652, 1400}}";
-			sepNavSelRange = "{3535, 0}";
-			sepNavVisRect = "{{0, 1087}, {652, 313}}";
+			sepNavIntBoundsRect = "{{0, 0}, {701, 1400}}";
+			sepNavSelRange = "{3531, 0}";
+			sepNavVisRect = "{{0, 252}, {701, 600}}";
 		};
 	};
-	8DCB8958065A43DD0012ED8D = {
+	8DCB8958065A43DD0012ED8D /* OPStream.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {652, 8974}}";
-			sepNavSelRange = "{19559, 31}";
-			sepNavVisRect = "{{0, 7705}, {652, 313}}";
+			sepNavIntBoundsRect = "{{0, 0}, {701, 8876}}";
+			sepNavSelRange = "{19181, 0}";
+			sepNavVisRect = "{{0, 7171}, {701, 600}}";
 		};
 	};
-	8DCB895A065A43DD0012ED8D = {
+	8DCB895A065A43DD0012ED8D /* OPStream+SSL.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {751, 643}}";
 			sepNavSelRange = "{1541, 57}";
 			sepNavVisRect = "{{0, 278}, {751, 365}}";
 		};
 	};
-	8DCB895B065A43DD0012ED8D = {
+	8DCB895B065A43DD0012ED8D /* OPStream+TimeoutExtensions.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {573, 489}}";
 			sepNavSelRange = "{860, 0}";
@@ -1336,298 +780,99 @@
 			sepNavWindowFrame = "{{101, 141}, {750, 558}}";
 		};
 	};
-	8DCB895C065A43DD0012ED8D = {
+	8DCB895C065A43DD0012ED8D /* OPStream+TimeoutExtensions.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {573, 1344}}";
 			sepNavSelRange = "{1503, 155}";
 			sepNavVisRect = "{{0, 638}, {573, 489}}";
 		};
 	};
-	8DCB895D065A43DD0012ED8D = {
+	8DCB895D065A43DD0012ED8D /* OPTCPSocket.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {573, 630}}";
 			sepNavSelRange = "{1308, 7}";
 			sepNavVisRect = "{{0, 0}, {573, 489}}";
 		};
 	};
-	8DCB895E065A43DD0012ED8D = {
+	8DCB895E065A43DD0012ED8D /* OPTCPSocket.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {759, 1973}}";
 			sepNavSelRange = "{2543, 25}";
 			sepNavVisRect = "{{0, 0}, {759, 552}}";
 		};
 	};
-	8DCB895F065A43DD0012ED8D = {
+	8DCB895F065A43DD0012ED8D /* osdep.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {751, 3219}}";
 			sepNavSelRange = "{4111, 0}";
 			sepNavVisRect = "{{0, 1787}, {751, 365}}";
 		};
 	};
-	8DD3DBCB0721F86B001635AF = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = NSThread.h;
-		path = /Developer/SDKs/MacOSX10.2.8.sdk/System/Library/Frameworks/Foundation.framework/Versions/C/Headers/NSThread.h;
-		refType = 0;
-		sourceTree = "<absolute>";
+	8DD13F29085CDD7D00EB61FA /* XCBreakpointsBucket */ = {
+		isa = XCBreakpointsBucket;
+		name = "Project Breakpoints";
+		objects = (
+			8D18B2F60781B6E100BA2BBA /* OPSerialPort.m:586 */,
+			8D18B2F80781B6EA00BA2BBA /* OPSerialPort.m:581 */,
+			8D32AD5507F500E5006A6694 /* OPStream+SSL.m:36 */,
+		);
 	};
-	8DD3DBD70721FC98001635AF = {
-		fRef = 8DA9E8B30721918F003BFAE4;
+	8DD13F8B085CE14800EB61FA /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		name = fileDescriptor;
-		rLen = 14;
-		rLoc = 2444;
-		rType = 0;
-		vrLen = 301;
-		vrLoc = 2307;
-	};
-	8DD3DBE20721FDDB001635AF = {
-		fRef = 8DD3DBCB0721F86B001635AF;
-		isa = PBXTextBookmark;
-		name = NSThread;
-		rLen = 8;
-		rLoc = 163;
-		rType = 0;
-		vrLen = 369;
-		vrLoc = 0;
-	};
-	8DD3DD4107221BE7001635AF = {
-		fRef = 8DA9E86D07201AD9003BFAE4;
-		isa = PBXTextBookmark;
-		name = "NSFileHandle+ThreadIO.m: 98";
-		rLen = 0;
-		rLoc = 3698;
-		rType = 0;
-		vrLen = 1623;
-		vrLoc = 1688;
-	};
-	8DF749900855163500049071 = {
-		fRef = 8DCB895D065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "#inc";
-		rLen = 7;
-		rLoc = 1308;
-		rType = 0;
-		vrLen = 1454;
-		vrLoc = 0;
-	};
-	8DF749910855163500049071 = {
-		fRef = 8DCB895B065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPStream+TimeoutExtensions.h: 26";
-		rLen = 0;
-		rLoc = 860;
-		rType = 0;
-		vrLen = 860;
-		vrLoc = 0;
-	};
-	8DF749920855163500049071 = {
-		fRef = 8DCB895C065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "+ (id)streamConnectedToHost:(NSHost *)host port:(unsigned short)port sendTimeout:(NSTimeInterval)sendTimeout receiveTimeout:(NSTimeInterval)receiveTimeout";
-		rLen = 155;
-		rLoc = 1503;
-		rType = 0;
-		vrLen = 1079;
-		vrLoc = 1158;
-	};
-	8DF749930855163500049071 = {
-		fRef = 8DCB8957065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSString *)availableLine";
-		rLen = 27;
-		rLoc = 3234;
-		rType = 0;
-		vrLen = 794;
-		vrLoc = 2831;
-	};
-	8DF749940855163500049071 = {
-		fRef = 8DCB8953065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSocket.h: 21";
-		rLen = 0;
-		rLoc = 1234;
-		rType = 0;
-		vrLen = 1037;
-		vrLoc = 764;
-	};
-	8DF749950855163500049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSString *)availableLine";
-		rLen = 28;
-		rLoc = 18418;
-		rType = 0;
-		vrLen = 1125;
-		vrLoc = 17963;
-	};
-	8DF749960855163500049071 = {
-		fRef = 8DCB895D065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "#inc";
-		rLen = 7;
-		rLoc = 1308;
-		rType = 0;
-		vrLen = 1454;
-		vrLoc = 0;
-	};
-	8DF749970855163500049071 = {
-		fRef = 8DCB895B065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPStream+TimeoutExtensions.h: 26";
-		rLen = 0;
-		rLoc = 860;
-		rType = 0;
-		vrLen = 860;
-		vrLoc = 0;
-	};
-	8DF749980855163500049071 = {
-		fRef = 8DCB895C065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "+ (id)streamConnectedToHost:(NSHost *)host port:(unsigned short)port sendTimeout:(NSTimeInterval)sendTimeout receiveTimeout:(NSTimeInterval)receiveTimeout";
-		rLen = 155;
-		rLoc = 1503;
-		rType = 0;
-		vrLen = 1079;
-		vrLoc = 1158;
-	};
-	8DF749990855163500049071 = {
-		fRef = 8DCB8957065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSString *)availableLine";
-		rLen = 27;
-		rLoc = 3234;
-		rType = 0;
-		vrLen = 794;
-		vrLoc = 2831;
-	};
-	8DF7499A0855163500049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSString *)availableLine";
-		rLen = 28;
-		rLoc = 18418;
-		rType = 0;
-		vrLen = 1125;
-		vrLoc = 17963;
-	};
-	8DF7499B0855163500049071 = {
-		fRef = 8DCB8953065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPSocket.h: 21";
-		rLen = 0;
-		rLoc = 1234;
-		rType = 0;
-		vrLen = 1037;
-		vrLoc = 764;
-	};
-	8DF7499C0855163500049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSData*) availableTextData";
-		rLen = 30;
-		rLoc = 19463;
-		rType = 0;
-		vrLen = 1114;
-		vrLoc = 20840;
-	};
-	8DF7499E0855163B00049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSData*) availableTextData";
-		rLen = 30;
-		rLoc = 19463;
-		rType = 0;
-		vrLen = 295;
-		vrLoc = 20840;
-	};
-	8DF7499F0855167E00049071 = {
-		fRef = 8DCB8957065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "- (NSString *)availableLine";
-		rLen = 27;
-		rLoc = 3234;
-		rType = 0;
-		vrLen = 1297;
-		vrLoc = 0;
-	};
-	8DF749A00855167E00049071 = {
-		comments = "error: 'CRLF' undeclared (first use in this function)";
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		rLen = 0;
-		rLoc = 486;
+		comments = "warning: #warning dirk->all: fixme! Implement dot unquoting as in - availableLine.";
+		fRef = 8DCB8958065A43DD0012ED8D /* OPStream.m */;
+		rLen = 1;
+		rLoc = 494;
 		rType = 1;
 	};
-	8DF749A10855167E00049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
+	8DD140DB085D916800EB61FA /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		name = "OPStream.m: 484";
+		fRef = 8DCB8958065A43DD0012ED8D /* OPStream.m */;
+		name = "- (NSData*) availableTextData";
+		rLen = 31;
+		rLoc = 19729;
+		rType = 0;
+		vrLen = 992;
+		vrLoc = 20227;
+	};
+	8DD14118085DAE9D00EB61FA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCB8957065A43DD0012ED8D /* OPStream.h */;
+		name = "OPStream.h: 97";
 		rLen = 0;
-		rLoc = 19044;
+		rLoc = 3531;
 		rType = 0;
-		vrLen = 818;
-		vrLoc = 2151;
+		vrLen = 1498;
+		vrLoc = 1143;
 	};
-	8DF749A20855167E00049071 = {
-		fRef = 8DCB8957065A43DD0012ED8D;
+	8DD14119085DAE9D00EB61FA /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		name = "- (NSString *)availableLine";
-		rLen = 27;
-		rLoc = 3234;
-		rType = 0;
-		vrLen = 1297;
-		vrLoc = 0;
-	};
-	8DF749A30855167E00049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = getRecordWithDelimiter;
-		rLen = 22;
-		rLoc = 19084;
-		rType = 0;
-		vrLen = 586;
-		vrLoc = 18875;
-	};
-	8DF749A4085516ED00049071 = {
-		fRef = 8DCB8957065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = linebreakStyle;
-		rLen = 14;
-		rLoc = 1403;
-		rType = 0;
-		vrLen = 690;
-		vrLoc = 1299;
-	};
-	8DF749A5085516ED00049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPStream.m: 487";
+		fRef = 8DCB8958065A43DD0012ED8D /* OPStream.m */;
+		name = "OPStream.m: 476";
 		rLen = 0;
-		rLoc = 19128;
+		rLoc = 19166;
 		rType = 0;
-		vrLen = 802;
-		vrLoc = 18607;
+		vrLen = 1503;
+		vrLoc = 18180;
 	};
-	8DF749A6085516ED00049071 = {
-		fRef = 8DCB8957065A43DD0012ED8D;
+	8DD1411A085DAE9D00EB61FA /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		name = linebreakStyle;
-		rLen = 14;
-		rLoc = 1403;
-		rType = 0;
-		vrLen = 690;
-		vrLoc = 1299;
-	};
-	8DF749A7085516ED00049071 = {
-		fRef = 8DCB8958065A43DD0012ED8D;
-		isa = PBXTextBookmark;
-		name = "OPStream.m: 487";
+		fRef = 8DCB8957065A43DD0012ED8D /* OPStream.h */;
+		name = "OPStream.h: 97";
 		rLen = 0;
-		rLoc = 19148;
+		rLoc = 3531;
 		rType = 0;
-		vrLen = 625;
-		vrLoc = 18933;
+		vrLen = 1498;
+		vrLoc = 1143;
+	};
+	8DD1411B085DAE9D00EB61FA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCB8958065A43DD0012ED8D /* OPStream.m */;
+		name = "OPStream.m: 476";
+		rLen = 0;
+		rLoc = 19104;
+		rType = 0;
+		vrLen = 1472;
+		vrLoc = 18413;
 	};
 }

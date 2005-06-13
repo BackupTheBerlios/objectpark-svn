@@ -458,24 +458,28 @@ You can mix #availableString and #availableLine without loosing data. However, #
 
 
 /*" Reads and returns a string up to (and not including) the current linebreak sequence. If not enough data is available this method blocks until more data is received. Returns !{nil} if no more data is available on the stream. "*/
-- (NSString *)availableLine
+- (NSString*) availableLine
 {
-#warning dirk->all: fixme! Implement dot unquoting as in -availableTextData.
-    NSData 		  *lineData;
-    NSString	  *string;
-
-    if((lineData = [self getRecordWithDelimiter:linebreakSequences[flags.linebreakStyle]]) != nil)
-        {
-        string = [[[NSString allocWithZone:[self zone]] initWithData:lineData encoding:stringEncoding] autorelease];
-        }
-    else if([recordBuffer length] > 0)
-        {
-        string = [[[NSString allocWithZone:[self zone]] initWithData:[self getRecordBuffer] encoding:stringEncoding] autorelease];
-        }
-    else
-        {
+    NSData*   lineData;
+    NSString* string;
+    
+    if((lineData = [self getRecordWithDelimiter: linebreakSequences[flags.linebreakStyle]]) != nil) {
+        string = [[[NSString allocWithZone: [self zone]] initWithData: lineData 
+                                                             encoding: stringEncoding] autorelease];
+    } else if([recordBuffer length] > 0) {
+        string = [[[NSString allocWithZone: [self zone]] initWithData: [self getRecordBuffer] 
+                                                             encoding: stringEncoding] autorelease];
+    } else {
         string = nil;
+    }
+    // Quick way to get dot-unquoting working:
+    if ([self escapesLeadingDots] && [string hasPrefix: @"."]) {
+        if ([string length] <= 1) {
+            string = nil;
+        } else {
+            string = [string substringFromIndex: 1];
         }
+    }
     return string;
 }
 
