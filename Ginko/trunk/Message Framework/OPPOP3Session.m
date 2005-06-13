@@ -41,7 +41,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 @end
 
 @interface OPPOP3Session (UIDL)
-- (void)_takeInfoFromMessage:(OPInternetMessage *)message forPosition:(int)position;
+- (void)_takeInfoFromTransferData:(NSData *)transferData forPosition:(int)position;
 - (void)_addMessageSizesToMessageInfo;
 - (int)_synchronizeUIDLs;
 - (void)_autosaveUIDLs;
@@ -275,7 +275,7 @@ UIDL. nil otherwise. "*/
 - (NSString *)description
 /*" Overridden from %{NSObject}. Returns string containing information about the receiver. "*/
 {
-    return [NSMutableString stringWithFormat:@"<POP3Session %@: user %@, stream %@>", [super description], _username, _stream]; 
+    return [NSMutableString stringWithFormat:@"<POP3Session %@: stream %@>", [super description], _stream]; 
 }
 
 @end
@@ -289,8 +289,11 @@ UIDL. nil otherwise. "*/
     [self _gatherStatsIfNeeded];
     
     if (result = [self _transferDataAtPosition:_currentPosition])
+    {
+        [self _takeInfoFromTransferData:result forPosition:_currentPosition];
         _currentPosition += 1;
-    
+    }
+        
     return result;
 }
 
@@ -340,14 +343,13 @@ UIDL. nil otherwise. "*/
             if ( (! date) && (! messageId) ) // try to get info from message
             {
                 OPInternetMessage *message;
-                
+                NSData *headerData = [self _headerDataAtPosition:i];
                 NS_DURING
-                    message = [[[OPInternetMessage alloc] initWithTransferData:
-                        [self _headerDataAtPosition:i]] autorelease];
+                    message = [[[OPInternetMessage alloc] initWithTransferData:headerData] autorelease];
 
                     if (message)
                     {
-                        [self _takeInfoFromMessage:message forPosition:i];
+                        [self _takeInfoFromTransferData:headerData forPosition:i];
 
                         messageId = [infoDict objectForKey:@"messageId"];
                         date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
@@ -575,18 +577,28 @@ UIDL. nil otherwise. "*/
     _messageInfo = anArray;
 }
 
-- (void)_takeInfoFromMessage:(OPInternetMessage *)message forPosition:(int)position
+- (void)_takeInfoFromTransferData:(NSData *)transferData forPosition:(int)position
 {
-    // save message info
-    NSMutableDictionary *infoDict = [_messageInfo objectAtIndex:position - 1];
-    NSString *messageId;
-    NSDate *date;
-
-    if (messageId = [message messageId])
-        [infoDict setObject:messageId forKey:@"messageId"];
-
-    if (date = [message date])
-        [infoDict setObject:date forKey:@"date"];
+    OPInternetMessage *message = nil;
+    
+    @try
+    {
+        message = [[OPInternetMessage alloc] initWithTransferData:transferData];
+        // save message info
+        NSMutableDictionary *infoDict = [_messageInfo objectAtIndex:position - 1];
+        NSString *messageId = [message messageId];
+        NSDate *date = [message date];
+        
+        if (messageId)
+            [infoDict setObject:messageId forKey:@"messageId"];
+        
+        if (date)
+            [infoDict setObject:date forKey:@"date"];
+    }
+    @finally
+    {
+        [message release];
+    }
 }
 
 - (void)_addMessageSizesToMessageInfo
@@ -773,7 +785,15 @@ UIDL. nil otherwise. "*/
             }
         }
         
-        if (![infoForUIDL writeToFile:[[[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent:UIDLsDir] stringByAppendingPathComponent:_autosaveName] atomically:YES])
+        NSString *dir = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent:UIDLsDir];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dir])
+        {
+            [[NSFileManager defaultManager] createDirectoryAtPath:dir attributes:nil];
+        }
+        
+        NSString *path = [dir stringByAppendingPathComponent:_autosaveName];
+        
+        if (![infoForUIDL writeToFile:path atomically:YES])
         {
             NSLog(@"Could not save UIDLs for %@", _autosaveName);
         }

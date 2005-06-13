@@ -22,10 +22,8 @@
 #define TIMEOUT 60
 
 - (void)retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
-    /*" Retrieves using delegate for providing password. "*/
+/*" Retrieves using delegate for providing password. "*/
 {
-#warning better use not G3Account here but separate parameters for host name, password etc?
-    //G3Account *theAccount = [[[arguments objectForKey:@"account"] retain] autorelease];
     G3Account *theAccount = [[account retain] autorelease];
     NSParameterAssert([theAccount isPOPAccount]);
     
@@ -93,8 +91,6 @@
                     shouldTerminate = [OPJobs shouldTerminate];
                 }
                 
-#warning no cleaning for now
-                /*
                 if (!shouldTerminate)
                 {
                     // cleaning up maildrop:
@@ -102,7 +98,6 @@
                     
                     [pop3session cleanUp];
                 }
-                 */
             }
             @catch (NSException *localException)
             {
@@ -223,13 +218,20 @@
     return YES;
 }
 
+- (NSDate *)deletionDate
+/*"Calculates the date for mail deletion. Mails older than this date wil be deleted."*/
+{
+    int days = [account retrieveMessageInterval];
+        
+    if (days == 0) return [NSDate distantPast];
+    if (days == -1) return [NSDate distantFuture];
+    
+    return [NSDate dateWithTimeIntervalSinceNow:days * -86400]; // 86400 = seconds per day
+}
+
 - (BOOL)shouldDeleteMessageWithMessageId:(NSString *)messageId date:(NSDate *)messageDate size:(long)size inPOP3Session:(OPPOP3Session *)aSession
 {
-#warning for debugging:
-//    if([messageDate compare:[self _calculateDeletionDate]] != NSOrderedDescending) /* date <= tooOldDate */
-//        return YES;
-//    else
-        return NO;
+    return [messageDate compare:[self deletionDate]] != NSOrderedDescending; /* date <= tooOldDate */
 }
 
 @end
