@@ -3,16 +3,20 @@ Ginko Voyager's tasks and bugs
 Tasks:
 High priority:
 - (=> Axel) POP3 and SMTP jobs
-- (=> Dirk) logging incoming messages in mbox (backup)
+- (=> Dirk) logging incoming messages in mbox (for backup)
 - UI for splitting/merging message threads
 Medium priority:
-- Bayesian spam filter
+- bayesian spam filter
+- attachment D&D into Finder etc.
+- use new TextAttachmentCell during Message composition
 - configurable debug logging (better than if (NSDebugEnbled) NSLog() granularity)
 Low priority:
 - external filter action and UI
 - completion of real names
 - using token fields for header field input
+- better networking classes
 
 
 (DONE Dirk)- dot quoting support in streams
+(DONE Dirk)- create custom TextAttachmentCell showing file size
 (DONE Axel)- let the views react (update) when "job finished" notifications have been sent

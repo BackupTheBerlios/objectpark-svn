@@ -153,7 +153,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     [changedObjects release];
 }
 
-- (NSArray *)threadsByDate
+- (NSArray*) threadsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
     static NSArray *dateDescriptor = nil;

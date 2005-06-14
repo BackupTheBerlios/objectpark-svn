@@ -51,7 +51,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
 - (NSArray *)threadReferenceURIsByDate;
 - (NSSet *)threadsContainingSingleMessage;
 
-- (unsigned)threadCount;
+- (unsigned) threadCount;
 
 /*" Profile handling "*/
 - (G3Profile *)defaultProfile;
