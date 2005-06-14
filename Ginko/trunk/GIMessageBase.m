@@ -33,7 +33,7 @@
     {
         if (![GIMessageFilter filterMessage:message flags:0])
         {
-            [self addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup]];
+            [self addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup] suppressThreading:NO];
         }
         
         // add message to index
@@ -61,23 +61,40 @@
     [[NSManagedObjectContext defaultContext] deleteObject:aMessage];
 }
 
-+ (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup
++ (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-    G3Thread *thread = [aMessage threadCreate:YES];
-    [thread addGroup:aGroup];
+    G3Thread *thread = [aMessage threadCreate:!suppressThreading];
+    if (!thread)
+    {
+        thread = [G3Thread threadInManagedObjectContext:[aMessage managedObjectContext]];
+        [thread setValue:[aMessage valueForKey:@"subject"] forKey:@"subject"];
+        [aMessage setValue:thread forKey:@"thread"];
+        [thread addMessage:aMessage];
+    }
     
-    /* old baroque style 
-    // Add to both sides of relationship:
-    [aGroup addValue:thread toRelationshipWithKey:@"threads"];
-    [thread addValue:aGroup toRelationshipWithKey:@"groups"];
-    */
+    [thread addGroup:aGroup];    
 }
 
 + (void)addOutgoingMessage:(G3Message *)aMessage
 {
-    [self addMessage:aMessage toMessageGroup:[G3MessageGroup outgoingMessageGroup]];
+    [self addMessage:aMessage toMessageGroup:[G3MessageGroup outgoingMessageGroup] suppressThreading:NO];
+}
+
++ (void)addDraftMessage:(G3Message *)aMessage
+{
+    [self addMessage:aMessage toMessageGroup:[G3MessageGroup draftMessageGroup] suppressThreading:YES];
+}
+
++ (void)removeDraftMessage:(G3Message *)aMessage
+/*" Removes group and message from aMessage's thread. "*/
+{
+    G3Thread *thread = [aMessage thread];
+    NSAssert(thread != nil, @"draft message without thread");
+    
+    [thread removeGroup:[G3MessageGroup draftMessageGroup]];
+    [thread removeMessage:aMessage];
 }
 
 + (NSSet *)defaultGroupsForMessage:(G3Message *)aMessage

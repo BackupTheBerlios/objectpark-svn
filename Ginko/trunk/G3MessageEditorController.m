@@ -54,16 +54,30 @@
     return self;
 }
 
-- (id)initWithMessage:(G3Message *)aMessage profile:(G3Profile *)aProfile
+- (id)initWithMessage:(G3Message *)aMessage
+/*" For reopening an unsent message. "*/
 {
     if (self = [self init]) 
     {        
-        if (! aProfile)
-        {
-            aProfile = [G3Profile defaultProfile];
-        }
+        // get message's profile:
+        NSError *error = nil;
+        NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+        [request setEntity: [G3Profile entity]];
+        [request setPredicate:[NSPredicate predicateWithFormat: @"%@ IN messagesToSend", aMessage]];
+        NSArray *result = [[NSManagedObjectContext defaultContext] executeFetchRequest:request error:&error];
         
-        profile = [aProfile retain];
+        if (error)
+        {
+            NSLog(@"Error fetching threads: %@", error);
+            profile = [G3Profile defaultProfile];
+        }
+        else
+        {
+            NSAssert([result count] == 1, @"Should have exactly one profile");
+            profile = [result lastObject];
+        }
+                
+        profile = [profile retain];
         oldMessage = [aMessage retain];
         referencedMessage = nil;
         
@@ -94,6 +108,7 @@
         {
             aProfile = [G3Profile defaultProfile];
         }
+        
         profile = [aProfile retain];
         referencedMessage = nil;
                 
@@ -562,13 +577,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSEnumerator *enumerator;
     NSString *headerField, *from;
     G3Profile *p = [self profile];
-    
-#warning take care of profile (send account for message) -> maybe not here but in client code
-    
-    /*
-     [headerFields setObject:[SMTPAccount objectForKey:OPAUniqueId] forKey:GIInternalHeaderSmtpAccount];
-     */
-    
+
     // fills the headerFields dictionary from ui
     [self takeValuesFromHeaderFields];
     
@@ -645,7 +654,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 
 - (void)addReferenceToMessage:(G3Message *)aMessage
-        /*"Adds a "references:" or "In-Reply-To:" header to the message to create."*/
+/*"Adds a "references:" or "In-Reply-To:" header to the message to create."*/
 {
     if ([aMessage isUsenetMessage]) // Make References: header line
     {
@@ -1011,16 +1020,23 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [message removeFlags:OPSendingBlockedStatus];
     
     // remove old message from database if present
-    if (oldMessage) [GIMessageBase removeMessage:oldMessage];
+    if (oldMessage) 
+    {
+        [profile removeMessageToSend:oldMessage];
+        [GIMessageBase removeMessage:oldMessage];
+    }
     
     //add new message to database
-    [GIMessageBase addOutgoingMessage:message];
+    [GIMessageBase addDraftMessage:message];
     
     [oldMessage autorelease];
     oldMessage = [message retain];
     
     // set answered status if reply
     [referencedMessage addFlags:OPAnsweredStatus];
+    
+    // set message in profile's messagesToSend:
+    [profile addMessageToSend:message];
     
     [window setDocumentEdited:NO];
     
@@ -1029,8 +1045,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSAssert1(!error, @"Error checkpointing message: %@", error);
     
     if (NSDebugEnabled) NSLog(@"checkpointed message");
-    //#warning just testing
-    //    [[[G3MessageEditorController alloc] initWithMessage:message profile:profile] autorelease];
 }
 
 #define FORBIDDENCHARS @" []\\"

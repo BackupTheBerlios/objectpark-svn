@@ -112,17 +112,24 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 {
     unsigned result;
     
-    [self willAccessValueForKey:@"flags"];
-    result = [[self primitiveValueForKey:@"flags"] intValue];
-    [self didAccessValueForKey:@"flags"];
+    @synchronized(self)
+    {
+        [self willAccessValueForKey:@"flags"];
+        result = [[self primitiveValueForKey:@"flags"] intValue];
+        [self didAccessValueForKey:@"flags"];
+    }
+    
     return result;
 }
 
 - (void)setFlags:(unsigned)someFlags
 {
-    [self willChangeValueForKey:@"flags"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:someFlags] forKey:@"flags"];
-    [self didChangeValueForKey:@"flags"];
+    @synchronized(self)
+    {
+        [self willChangeValueForKey:@"flags"];
+        [self setPrimitiveValue:[NSNumber numberWithInt:someFlags] forKey:@"flags"];
+        [self didChangeValueForKey:@"flags"];
+    }
 }
 
 - (BOOL)hasFlag:(unsigned)flag
@@ -133,20 +140,26 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 
 - (void)addFlags:(unsigned)someFlags
 {
-    int flags = [self flags];
-    if (someFlags | flags !=flags)
+    @synchronized(self)
     {
-        [self setFlags:(flags | someFlags)];
+        int flags = [self flags];
+        if (someFlags | flags !=flags)
+        {
+            [self setFlags:(flags | someFlags)];
+        }
     }
 }
 
 - (void)removeFlags:(unsigned)someFlags
 {
-    int flags = [self flags];
-    
-    if ((flags & (~someFlags)) != flags)
+    @synchronized(self)
     {
-        [self setFlags:(flags & (~someFlags))];
+        int flags = [self flags];
+        
+        if ((flags & (~someFlags)) != flags)
+        {
+            [self setFlags:(flags & (~someFlags))];
+        }
     }
 }
 
@@ -381,19 +394,26 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return result;
 }
 
-- (OPInternetMessage*) internetMessage
+- (OPInternetMessage *)internetMessage
 {
-    id transferData = [self valueForKey: @"transferData"];
+    NSData *transferData = [self valueForKey:@"transferData"];
     
-    if (transferData) {
-        if ([transferData isKindOfClass: [NSString class]]) { // only for dummy backend
-            transferData = [transferData dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
-        }
-        return [[[OPInternetMessage alloc] initWithTransferData: transferData] autorelease];
+    if (transferData) 
+    {
+        return [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
     }
+    
     return nil; // hamma nit
 }
 
+- (void)putInSendJobStatus
+{
+    [self addFlags:OPInSendJobStatus];
+}
 
+- (void)removeInSendJobStatus
+{
+    [self removeFlags:OPInSendJobStatus];
+}
 
 @end

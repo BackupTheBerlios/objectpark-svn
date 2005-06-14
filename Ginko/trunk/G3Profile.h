@@ -11,6 +11,7 @@
 
 @class OPInternetMessage;
 @class G3Account;
+@class G3Message;
 
 @interface G3Profile : OPManagedObject 
 {
@@ -46,5 +47,8 @@
 
 - (NSData *)messageTemplate;
 - (void)setMessageTemplate:(NSData *)aTemp;
+
+- (void)addMessageToSend:(G3Message *)aMessage;
+- (void)removeMessageToSend:(G3Message *)aMessage;
 
 @end

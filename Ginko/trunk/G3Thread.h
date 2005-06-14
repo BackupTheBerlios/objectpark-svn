@@ -19,20 +19,21 @@
 + (G3Thread *)threadInManagedObjectContext:(NSManagedObjectContext *)aContext;
 + (NSString *)URIStringPrefix;
 
-- (BOOL) containsSingleMessage;
-- (NSSet*) messages;
-- (void) addMessage: (G3Message*) message;
-- (NSArray*) messagesByDate;
+- (BOOL)containsSingleMessage;
+- (NSSet *)messages;
+- (void)addMessage:(G3Message *)message;
+- (void)removeMessage:(G3Message *)aMessage;
+- (NSArray *)messagesByDate;
 
 /*" Groups handling "*/
 - (void)addGroup:(G3MessageGroup *)aGroup;
 - (void)addGroups:(NSSet *)someGroups;
 - (void)removeGroup:(G3MessageGroup *)aGroup; 
 
-- (unsigned) messageCount;
-- (NSArray*) rootMessages;
-- (unsigned) commentDepth;
-- (BOOL) hasUnreadMessages;
+- (unsigned)messageCount;
+- (NSArray *)rootMessages;
+- (unsigned)commentDepth;
+- (BOOL)hasUnreadMessages;
 
 - (G3Thread *)splitWithMessage:(G3Message *)aMessage;
 - (void)mergeMessagesFromThread:(G3Thread *)anotherThread;

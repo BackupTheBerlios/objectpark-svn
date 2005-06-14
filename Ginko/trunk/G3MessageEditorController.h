@@ -51,7 +51,7 @@ typedef enum
     NSArray *defaultIdentifiers;
 }
 
-- (id)initWithMessage:(G3Message *)aMessage profile:(G3Profile *)profile;
+- (id)initWithMessage:(G3Message *)aMessage;
 - (id)initNewMessageWithProfile:(G3Profile *)aProfile;
 - (id)initReplyTo:(G3Message *)aMessage all:(BOOL)toAll profile:(G3Profile *)aProfile;
 - (id)initFollowupTo:(G3Message *)aMessage profile:(G3Profile *)aProfile;

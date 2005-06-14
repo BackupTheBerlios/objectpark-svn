@@ -23,8 +23,10 @@
 
 - (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments;
 
-+ (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup;
++ (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading;
 + (void)addOutgoingMessage:(G3Message *)aMessage;
++ (void)addDraftMessage:(G3Message *)aMessage;
++ (void)removeDraftMessage:(G3Message *)aMessage;
 
 @end
 

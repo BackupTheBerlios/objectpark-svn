@@ -455,7 +455,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             
             if ([message hasFlag:OPDraftStatus])
             {
-                [[[G3MessageEditorController alloc] initWithMessage:message profile:[[self group] defaultProfile]] autorelease];
+                if ([message hasFlag:OPInSendJobStatus])
+                {
+                    NSLog(@"message is in send job");
+                    NSBeep();
+                }
+                else
+                {
+                    [[[G3MessageEditorController alloc] initWithMessage:message] autorelease];
+                }
             }
             else
             {

@@ -17,5 +17,6 @@
 }
 
 + (void)sendMessages:(NSArray *)someMessages viaSMTPAccount:(G3Account *)anAccount;
++ (NSString *)jobName;
 
 @end

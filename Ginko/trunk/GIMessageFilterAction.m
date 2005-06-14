@@ -123,7 +123,7 @@
             }
             
             // now that a destination box is present put message in
-            [GIMessageBase addMessage:message toMessageGroup:destinationGroup];
+            [GIMessageBase addMessage:message toMessageGroup:destinationGroup suppressThreading:NO];
             if (putInBox) *putInBox = YES;
             break;
         }

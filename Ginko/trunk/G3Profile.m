@@ -8,6 +8,7 @@
 
 #import "G3Profile.h"
 #import "G3Account.h"
+#import "G3Message.h"
 #import "NSString+MessageUtils.h"
 #import "NSArray+Extensions.h"
 #import "OPInternetMessage.h"
@@ -239,7 +240,6 @@
 
 - (void)setSendAccountName:(NSString *)aName
 {
-    NSLog(@"bla");
 }
 
 - (NSData *)messageTemplate
@@ -256,5 +256,32 @@
     [self setPrimitiveValue:aTemp forKey:@"messageTemplate"];
     [self didChangeValueForKey:@"messageTemplate"];
 }
+
+- (void)addMessageToSend:(G3Message *)aMessage 
+{    
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
+    
+    [self willChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    
+    [[self primitiveValueForKey:@"messagesToSend"] addObject:aMessage];
+    
+    [self didChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
+
+- (void)removeMessageToSend:(G3Message *)aMessage 
+{
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
+    
+    [self willChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    
+    [[self primitiveValueForKey:@"messagesToSend"] removeObject:aMessage];
+    
+    [self didChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    
+    [changedObjects release];
+}
+
 
 @end

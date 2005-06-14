@@ -23,6 +23,8 @@
 #import "OPJobs.h"
 #import "GIActivityPanelController.h"
 #import "GIPOPJob.h"
+#import "GISMTPJob.h"
+#import <Foundation/NSDebug.h>
 
 @implementation GIApplication
 
@@ -191,8 +193,10 @@
 
 - (void)awakeFromNib
 {
-    [self setDelegate: self];
+    [self setDelegate:self];
     [self restoreOpenWindowsFromLastSession];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
     // Some statistical messsages:
     //	NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];	
@@ -206,12 +210,12 @@
     //NSLog(@"All Groups %@", [G3MessageGroup allObjects]);
 }
 
-- (BOOL) isGroupsDrawerMode
+- (BOOL)isGroupsDrawerMode
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:GroupsDrawerMode];
 }
 
-- (NSWindow*) standaloneGroupsWindow
+- (NSWindow *)standaloneGroupsWindow
 {
     NSWindow *win;
     NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
@@ -356,6 +360,75 @@
     {
         if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount:account];
     }
+}
+
+- (void)SMTPJobFinished:(NSNotification *)aNotification
+{
+    if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
+    
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    
+    NSDictionary *result = [OPJobs resultForJob:jobId];
+    NSAssert1(result != nil, @"no result for job with id %@", jobId);
+    
+    NSArray *messages = [result objectForKey:@"messages"];
+    NSAssert(messages != nil, @"result does not contain 'messages'");
+    
+    NSArray *sentMessages = [result objectForKey:@"sentMessages"];
+    NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
+
+    NSEnumerator *enumerator = [sentMessages objectEnumerator];
+    G3Message *message;
+    
+    while (message = [enumerator nextObject])
+    {
+        [message removeFlags:OPDraftStatus | OPQueuedStatus | OPQueuedSendNowStatus];
+        [GIMessageBase removeDraftMessage:message];
+        [GIMessageBase addOutgoingMessage:message];
+        /*    
+            [messageCenter performSelector:@selector(addRecipientsToLRUMailAddresses:)
+                                withObject:message
+                                  inThread:parentThread];
+        */
+    }
+    
+    [messages makeObjectsPerformSelector:@selector(removeInSendJobStatus)];
+    [self saveAction:self];
+}
+
+- (void)sendQueuedMessagesWithFlag:(unsigned)flag
+/*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). "*/
+{
+    // iterate over all profiles:
+    NSEnumerator *enumerator = [[G3Profile allObjects] objectEnumerator];
+    G3Profile *profile;
+    
+    while (profile = [enumerator nextObject])
+    {
+        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+        G3Message *message;
+        NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
+            
+        while (message = [messagesToSendEnumerator nextObject])
+        {
+            if (![message hasFlag:OPSendingBlockedStatus] && [message hasFlag:flag])
+            {
+                [messagesQualifyingForSend addObject:message];
+            }
+        }
+        
+        if ([messagesQualifyingForSend count]) // something to send for the account?
+        {
+            [messagesQualifyingForSend makeObjectsPerformSelector:@selector(putInSendJobStatus)];
+            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile sendAccount]];
+        }
+    }
+}
+
+- (IBAction)sendQueuedMessages:(id)sender
+{
+    [self sendQueuedMessagesWithFlag:OPQueuedStatus];
 }
 
 @end

@@ -102,12 +102,12 @@
             [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), [theAccount outgoingServerName]]]];
             
             OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
+            NSEnumerator *enumerator = [theMessages objectEnumerator];
             
             // sending messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
             @try
             {
-                NSEnumerator *enumerator = [theMessages objectEnumerator];
                 G3Message *message;
                 
                 while (message = [enumerator nextObject])
@@ -144,7 +144,10 @@
         }
         @finally
         {
-            [OPJobs setResult:sentMessages];
+            [OPJobs setResult:[NSDictionary dictionaryWithObjectsAndKeys:
+                sentMessages, @"sentMessages",
+                theMessages, @"messages",
+                nil, nil]];
         }
     }
 }
@@ -167,6 +170,11 @@
     [super dealloc];
 }
 
++ (NSString *)jobName
+{
+    return @"SMTP send";
+}
+
 + (void)sendMessages:(NSArray *)someMessages viaSMTPAccount:(G3Account *)anAccount
 /*" Starts a background job for sending messages someMessages via the given SMTP account anAccount. One account can only be 'smtp'ed by at most one smtp job at a time. "*/
 {
@@ -175,7 +183,7 @@
     
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    [OPJobs scheduleJobWithName:@"SMTP send" target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) arguments:jobArguments synchronizedObject:[[anAccount objectID] URIRepresentation]];
+    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) arguments:jobArguments synchronizedObject:[[anAccount objectID] URIRepresentation]];
 }
 
 @end
@@ -185,12 +193,20 @@
 /*" required "*/
 - (NSString *)usernameForSMTP:(OPSMTP *)aSMTP
 {
-    return [account outgoingUsername];
+    if ([account outgoingAuthenticationMethod] == SMTPAuthentication)
+    {
+        return [account outgoingUsername];
+    }
+    else return nil;
 }
 
 - (NSString *)passwordForSMTP:(OPSMTP *)aSMTP
 {
-    return [account outgoingPassword];
+    if ([account outgoingAuthenticationMethod] == SMTPAuthentication)
+    {
+        return [account outgoingPassword];
+    }
+    else return nil;
 }
 
 /*" optional "*/
