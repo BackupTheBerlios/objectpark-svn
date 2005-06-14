@@ -190,7 +190,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // select responding item in threads view:
     if ((itemRow = [threadsView rowForItem:aMessage])< 0)// message could be from single message thread -> message is no item
     {
-        itemRow = [threadsView rowForItem:aThread];
+        itemRow = [threadsView rowForItem:[[[aThread objectID] URIRepresentation] absoluteString]];
     }
     
     [threadsView selectRow:itemRow byExtendingSelection:NO];
