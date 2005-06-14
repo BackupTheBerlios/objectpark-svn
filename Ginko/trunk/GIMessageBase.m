@@ -87,6 +87,8 @@
     return [NSSet setWithObjects:[G3MessageGroup defaultMessageGroup], nil];
 }
 
+NSString *MboxImportJobName = @"mbox import";
+
 - (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
 

@@ -164,7 +164,7 @@
     
     [jobArguments setObject:anAccount forKey:@"account"];
     
-    [OPJobs scheduleJobWithName:@"POP3 fetch" target:[[[self alloc] initWithAccount:(G3Account *)anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[[anAccount objectID] URIRepresentation]];
+    [OPJobs scheduleJobWithName:@"POP3 fetch" target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[[anAccount objectID] URIRepresentation]];
 }
 
 /******** POP3 delegate methods **********/

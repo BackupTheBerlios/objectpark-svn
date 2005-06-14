@@ -271,7 +271,7 @@
 - (IBAction)importMboxFile:(id)sender
 {
     int result;
-    NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", nil];
+    NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", @"mbx", nil];
     NSOpenPanel *oPanel = [NSOpenPanel openPanel];
     [oPanel setAllowsMultipleSelection:NO];
     result = [oPanel runModalForDirectory:NSHomeDirectory()
@@ -293,7 +293,7 @@
             [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
             [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
             
-            [OPJobs scheduleJobWithName:@"mbox import" target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
+            [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
         }
     }    
     

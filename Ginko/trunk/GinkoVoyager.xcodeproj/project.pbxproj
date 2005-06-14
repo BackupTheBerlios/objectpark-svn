@@ -69,6 +69,8 @@
 		7742E9E2076A1AB500B1B4BA /* NSView+ViewMoving.m in Sources */ = {isa = PBXBuildFile; fileRef = 7742E9E0076A1AB500B1B4BA /* NSView+ViewMoving.m */; };
 		77477315080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77477313080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.h */; };
 		77477316080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77477314080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m */; };
+		774791BD085DF0150001560D /* GISMTPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 774791BB085DF0150001560D /* GISMTPJob.h */; };
+		774791BE085DF0150001560D /* GISMTPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 774791BC085DF0150001560D /* GISMTPJob.m */; };
 		774A05B50859DAFD00AF321C /* Tasks.txt in Resources */ = {isa = PBXBuildFile; fileRef = 774A05B40859DAFD00AF321C /* Tasks.txt */; };
 		775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 775025F208489585008DD1CD /* TestNSData+MessageUtils.h */; };
 		775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 775025F308489586008DD1CD /* TestNSData+MessageUtils.m */; };
@@ -417,6 +419,8 @@
 		7742E9E0076A1AB500B1B4BA /* NSView+ViewMoving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+ViewMoving.m"; sourceTree = SOURCE_ROOT; };
 		77477313080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPAppleDoubleContentCoder.h; sourceTree = "<group>"; };
 		77477314080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPAppleDoubleContentCoder.m; sourceTree = "<group>"; };
+		774791BB085DF0150001560D /* GISMTPJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISMTPJob.h; sourceTree = "<group>"; };
+		774791BC085DF0150001560D /* GISMTPJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISMTPJob.m; sourceTree = "<group>"; };
 		774A05B40859DAFD00AF321C /* Tasks.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Tasks.txt; sourceTree = "<group>"; };
 		775025F208489585008DD1CD /* TestNSData+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSData+MessageUtils.h"; sourceTree = "<group>"; };
 		775025F308489586008DD1CD /* TestNSData+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSData+MessageUtils.m"; sourceTree = "<group>"; };
@@ -711,6 +715,8 @@
 				77049FE70858570800253732 /* GIPOPJob.m */,
 				77006FF2085A08D400AB0064 /* GIPasswordController.h */,
 				77006FF3085A08D400AB0064 /* GIPasswordController.m */,
+				774791BB085DF0150001560D /* GISMTPJob.h */,
+				774791BC085DF0150001560D /* GISMTPJob.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1169,6 +1175,7 @@
 				7709374C08574DF200A29008 /* NSHost+GIReachability.h in Headers */,
 				77049FE80858570800253732 /* GIPOPJob.h in Headers */,
 				77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */,
+				774791BD085DF0150001560D /* GISMTPJob.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1424,6 +1431,7 @@
 				7709374D08574DF200A29008 /* NSHost+GIReachability.m in Sources */,
 				77049FE90858570800253732 /* GIPOPJob.m in Sources */,
 				77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */,
+				774791BE085DF0150001560D /* GISMTPJob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

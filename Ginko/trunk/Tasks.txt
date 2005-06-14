@@ -5,9 +5,7 @@ High priority:
 - (=> Axel) POP3 and SMTP jobs
 - (=> Dirk) logging incoming messages in mbox (backup)
 - UI for splitting/merging message threads
-- dot quoting support in streams
 Medium priority:
-- let the views react (update) when "job finished" notifications have been sent
 - Bayesian spam filter
 - configurable debug logging (better than if (NSDebugEnbled) NSLog() granularity)
 Low priority:
@@ -16,3 +14,5 @@ Low priority:
 - using token fields for header field input
 
 
+(DONE Dirk)- dot quoting support in streams
+(DONE Axel)- let the views react (update) when "job finished" notifications have been sent

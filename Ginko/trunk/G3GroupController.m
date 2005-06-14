@@ -25,6 +25,7 @@
 #import "GIFulltextIndexCenter.h"
 #import "GIOutlineViewWithKeyboardSupport.h"
 #import "G3Message.h"
+#import "GIMessageBase.h"
 
 @interface G3GroupController (CommentsTree)
 
@@ -46,6 +47,7 @@ static G3Thread *threadForItem(NSString *item)
 - (id)init
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
     return [[super init] retain]; // self retaining!
 }
 
