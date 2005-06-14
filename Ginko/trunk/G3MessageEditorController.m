@@ -59,6 +59,8 @@
 {
     if (self = [self init]) 
     {        
+        [aMessage setFlags:OPSendingBlockedStatus];
+        
         // get message's profile:
         NSError *error = nil;
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
