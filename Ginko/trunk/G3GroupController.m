@@ -553,7 +553,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     else
     {
-        result = [[(G3Thread *)item messagesByDate] lastObject];
+        result = [[threadForItem(item) messagesByDate] lastObject];
         if (! [result isKindOfClass:[G3Message class]])
         {
             result = nil;
