@@ -337,25 +337,27 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     return [super initWithTransferData: transferData];
 }
 
-- (NSRange) takeHeadersFromData: (NSData*) data
+- (NSRange)takeHeadersFromData:(NSData *)data
 {
-    NSRange result = [super takeHeadersFromData: data];
+    NSRange result = [super takeHeadersFromData:data];
     
-    if (![[self bodyForHeaderField:@"message-id"] length]) {
-        [self generateMessageIdWithSuffix: @"FakedByOPMS2"];
+    if (![[self bodyForHeaderField:@"message-id"] length]) 
+    {
+        [self generateMessageIdWithSuffix:@"FakedByOPMS2@objectpark.org"];
     }
     return result;
 }
 
 /*"Returns a NSData containing the complete header as a string."*/
-- (NSData*) _headerData
+- (NSData *)_headerData
 {
     NSEnumerator *fieldEnum;
     EDObjectPair *field;
     NSMutableString *stringBuffer = [[[NSMutableString alloc] init] autorelease];
     
     fieldEnum = [[self headerFields] objectEnumerator];
-    while ((field = [fieldEnum nextObject]) != nil) {
+    while ((field = [fieldEnum nextObject]) != nil) 
+    {
         [stringBuffer appendString:[field firstObject]];
         [stringBuffer appendString:@": "];
         [stringBuffer appendString:[field secondObject]];
@@ -365,27 +367,30 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     return [stringBuffer dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-static NSCharacterSet* gremlinCharacterSet()
+static NSCharacterSet *gremlinCharacterSet()
 {
-    static NSCharacterSet* _gremlinCharacterSet = nil;
-    if (!_gremlinCharacterSet) {
-        _gremlinCharacterSet = [[[NSCharacterSet characterSetWithRange: NSMakeRange(0,128)] invertedSet] retain];
+    static NSCharacterSet *_gremlinCharacterSet = nil;
+    if (!_gremlinCharacterSet) 
+    {
+        _gremlinCharacterSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange(0,128)] invertedSet] retain];
     }
     return _gremlinCharacterSet;
 }
 
-- (void) zapHeaderGremlins
-    /*" Removes non-ascii characters from header bodies. "*/
+- (void)zapHeaderGremlins
+/*" Removes non-ascii characters from header bodies. "*/
 {
-    NSEnumerator* fieldEnum = [[self headerFields] objectEnumerator];
-    EDObjectPair* field;    
-    while ((field = [fieldEnum nextObject]) != nil) {
-        NSString* body = [field secondObject];
+    NSEnumerator *fieldEnum = [[self headerFields] objectEnumerator];
+    EDObjectPair *field;    
+    while ((field = [fieldEnum nextObject]) != nil) 
+    {
+        NSString *body = [field secondObject];
         //NSLog(@"Checking header '%@' for gremlins: %@", [field firstObject], body);
-        if ([body rangeOfCharacterFromSet: gremlinCharacterSet()].length>0) {
+        if ([body rangeOfCharacterFromSet:gremlinCharacterSet()].length > 0) 
+        {
             if (NSDebugEnabled) NSLog(@"Warning: Removing gremlin characters from body for header '%@': %@", [field firstObject], body);
-            body = [body stringByRemovingCharactersFromSet: gremlinCharacterSet()];
-            [self setBody: body forHeaderField: [field firstObject]];
+            body = [body stringByRemovingCharactersFromSet:gremlinCharacterSet()];
+            [self setBody:body forHeaderField:[field firstObject]];
         }
     }
 }
