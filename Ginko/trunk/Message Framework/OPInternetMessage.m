@@ -393,7 +393,10 @@ static NSCharacterSet* gremlinCharacterSet()
 /*"Generates a message ID string (to use for messages without a message ID)."*/
 - (void)generateMessageIdWithSuffix:(NSString *)aString
 {
-    NSString *md5sum = [[self _headerData] md5Base64String];
+    static NSCharacterSet *equalsSet = nil;
+    if (!equalsSet) equalsSet = [[NSCharacterSet characterSetWithCharactersInString:@"="] retain];
+    
+    NSString *md5sum = [[[self _headerData] md5Base64String] stringByTrimmingCharactersInSet:equalsSet];
     [self setBody:[NSString stringWithFormat:@"<GI%@%@>", md5sum, aString] forHeaderField:@"Message-ID"];
     // Make sure we can generate the transferData:
     [self zapHeaderGremlins]; // we destroyed the original transferData anyway

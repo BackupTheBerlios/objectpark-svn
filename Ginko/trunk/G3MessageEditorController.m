@@ -12,6 +12,7 @@
 #import "NSString+MessageUtils.h"
 #import "GIAddressFormatter.h"
 #import "G3Profile.h"
+#import "G3Account.h"
 #import "NSToolbar+OPExtensions.h"
 #import "GITextView.h"
 #import "OPInternetMessage.h"
@@ -572,35 +573,56 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 // ### message generation ###
 
+#define GINKOVERSION @"Ginko(Voyager)/%@ (See <http://www.objectpark.org>)"
+
+- (NSString *)versionString
+/*" Returns the version string for use in new messages' headers. "*/
+{
+    static NSString *versionString = nil;
+    
+    if (! versionString)
+    {
+        NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+        // We replace spaces in the version number to make the version string compliant with RFC2616 and draft-ietf-usefor-article-09.txt (internet draft for news article format)
+        [bundleVersion replaceOccurrencesOfString:@" " withString:@"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
+        
+        versionString = [[NSString alloc] initWithFormat:GINKOVERSION, bundleVersion];
+        
+        [bundleVersion release];
+    }
+    
+    return versionString;
+}
+
 - (OPInternetMessage *)message
 /*" Returns the current content of the message editor as a G3Message. "*/
 {
     OPInternetMessage *result = nil;
     NSEnumerator *enumerator;
     NSString *headerField, *from;
-    G3Profile *p = [self profile];
+    G3Profile *theProfile = [self profile];
 
     // fills the headerFields dictionary from ui
     [self takeValuesFromHeaderFields];
     
     // create from header:
     {
-        if([[p realname] length])
+        if([[theProfile realname] length])
         {
-            from = [NSString stringWithFormat:@"%@ <%@>", [p realname], [p emailAddress]];
+            from = [NSString stringWithFormat:@"%@ <%@>", [theProfile realname], [theProfile emailAddress]];
         }
         else
         {
-            from = [p emailAddress];
+            from = [theProfile emailAddress];
         }
         
         [headerFields setObject:from forKey:@"From"];
     }
     
     // organization:
-    if ((! [result bodyForHeaderField:@"Organization"]) && ([[p organization] length]))
+    if ((! [result bodyForHeaderField:@"Organization"]) && ([[theProfile organization] length]))
     {
-        [headerFields setObject:[p organization] forKey:@"Organization"];
+        [headerFields setObject:[theProfile organization] forKey:@"Organization"];
     }
     
     result = [OPInternetMessage messageWithAttributedStringContent:[messageTextView textStorage]];
@@ -638,19 +660,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [result setDate:[NSCalendarDate calendarDate]];
     
     // message id
-    [result generateMessageIdWithSuffix:[NSString stringWithFormat:@"%d", [p hash]]];
+    [result generateMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", [[theProfile sendAccount] outgoingServerName]]];
     
     // mailer info
-    /*
-     if([result isUsenetMessage])
+/*     if([result isUsenetMessage])
      {
          [result setBody:[self versionString] forHeaderField: @"User-Agent"];
      }
      else
-     {
+     {*/
          [result setBody:[self versionString] forHeaderField: @"X-Mailer"];
-     }
-     */
+/*     }*/
     
     return result;
 }
