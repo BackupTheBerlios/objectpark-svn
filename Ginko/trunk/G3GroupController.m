@@ -736,28 +736,48 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [tabView selectFirstTabViewItem:sender];
 }
 
-- (IBAction) joinThreads: (id) sender
-/*" Joins the selected threads into one. "*/
+- (NSArray*) selectedThreadURIs
 {
+    NSMutableArray* result = [NSMutableArray array];
     NSIndexSet* set = [threadsView selectedRowIndexes];
-    id firstThreadURI = [threadsView itemAtRow: [set firstIndex]];
-    NSAssert([threadsView levelForRow: [set firstIndex]]==0, @"Try to merge non-thread objects.");
-    G3Thread* firstThread = [NSManagedObjectContext objectWithURIString: firstThreadURI];
-    int i;
-    for (i=[set firstIndex]; i<=[set lastIndex]; i++) {
-        if ([set containsIndex: i]) {
-            
-            if ([threadsView levelForRow: i]==0) {
-                NSString* nextThreadURI = [threadsView itemAtRow: i];
-                G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
-                
-                [[self threadCache] removeObjectIdenticalTo:nextThreadURI];
-                [[self nonExpandableItemsCache] addObject:firstThread]; 
-                [firstThread mergeMessagesFromThread: nextThread];
+    if ([set count]) {
+        int lastIndex = [set lastIndex];
+        int i;
+        for (i=[set firstIndex]; i<=lastIndex; i++) {
+            if ([set containsIndex: i]) {
+                if ([threadsView levelForRow: i]==0) {
+                    NSString* nextThreadURI = [threadsView itemAtRow: i];
+                    [result addObject: nextThreadURI];
+                }
             }
         }
     }
+    return result;
+}
+
+- (IBAction) joinThreads: (id) sender
+/*" Joins the selected threads into one. "*/
+{
+    NSEnumerator* e = [[self selectedThreadURIs] objectEnumerator];
+    NSString* firstThreadURI = [e nextObject];
+    G3Thread* firstThread = [NSManagedObjectContext objectWithURIString: firstThreadURI];
+    
+    NSLog(@"Merging other threads into %@", firstThread);
+    NSString* nextThreadURI;
+
+    while (nextThreadURI = [e nextObject]) {
+        G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
+        [[self nonExpandableItemsCache] removeObject: firstThreadURI]; 
+        [[self nonExpandableItemsCache] removeObject: nextThreadURI];    
+        [[self threadCache] removeObjectIdenticalTo: nextThreadURI];
+        [firstThread mergeMessagesFromThread: nextThread];
+    }
+
+    //[self setThreadCache: nil];
+    //[self setNonExpandableItemsCache: nil];
     [threadsView reloadData];
+    [threadsView selectRow: [threadsView rowForItem: firstThreadURI] byExtendingSelection: NO];
+    [GIApp saveAction: sender];
 }
 
 - (IBAction) extractThread: (id) sender

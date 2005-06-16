@@ -242,12 +242,15 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
         [self addMessage:message];
     }
     
+    /*
     // disconnecting another thread from all groups:
     enumerator = [[otherThread valueForKey:@"groups"] objectEnumerator];
     while (group = [enumerator nextObject])
     {
         [self removeGroup:group];
     }
+     */
+
     
     [[NSManagedObjectContext defaultContext] deleteObject:otherThread];		
 }

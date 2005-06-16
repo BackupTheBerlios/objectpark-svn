@@ -29,8 +29,8 @@
     G3MessageGroup *group;
     G3Thread *displayedThread; // displayed as comment tree
     G3Message *displayedMessage; // displayed with body
-    NSMutableArray *threadCache;
-    NSMutableSet *nonExpandableItemsCache;
+    NSMutableArray *threadCache; // contains item uris
+    NSMutableSet *nonExpandableItemsCache; // contains item uris
         
     // -- Toolbar --
     NSArray *toolbarItems;
