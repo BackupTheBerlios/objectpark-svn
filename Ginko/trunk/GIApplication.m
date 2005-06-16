@@ -385,7 +385,7 @@
     {
         [message removeFlags:OPDraftStatus | OPQueuedStatus | OPQueuedSendNowStatus];
         [GIMessageBase removeDraftMessage:message];
-        [GIMessageBase addOutgoingMessage:message];
+        [GIMessageBase addSentMessage:message];
         /*    
             [messageCenter performSelector:@selector(addRecipientsToLRUMailAddresses:)
                                 withObject:message

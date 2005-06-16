@@ -372,7 +372,7 @@ static NSCharacterSet *gremlinCharacterSet()
     static NSCharacterSet *_gremlinCharacterSet = nil;
     if (!_gremlinCharacterSet) 
     {
-        _gremlinCharacterSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange(0,128)] invertedSet] retain];
+        _gremlinCharacterSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange(0, 128)] invertedSet] retain];
     }
     return _gremlinCharacterSet;
 }

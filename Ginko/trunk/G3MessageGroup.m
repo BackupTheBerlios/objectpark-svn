@@ -639,19 +639,29 @@ static NSMutableArray *root = nil;
     return [self standardMessageGroupWithUserDefaultsKey:DefaultMessageGroupURLString defaultName:NSLocalizedString(@"Default Inbox", @"default group name for default inbox")];
 }
 
-+ (G3MessageGroup *)outgoingMessageGroup
++ (G3MessageGroup *)sentMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:OutgoingMessageGroupURLString defaultName:NSLocalizedString(@"Outgoing Messages", @"default group name for outgoing messages")];
+    return [self standardMessageGroupWithUserDefaultsKey:SentMessageGroupURLString defaultName:NSLocalizedString(@"Sent Messages", @"default group name for outgoing messages")];
 }
 
 + (G3MessageGroup *)draftMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:DraftsMessageGroupURLString defaultName:NSLocalizedString(@"Drafts", @"default group name for drafts")];
+    return [self standardMessageGroupWithUserDefaultsKey:DraftsMessageGroupURLString defaultName:NSLocalizedString(@"Draft Messages", @"default group name for drafts")];
+}
+
++ (G3MessageGroup *)queuedMessageGroup
+{
+    return [self standardMessageGroupWithUserDefaultsKey:QueuedMessageGroupURLString defaultName:NSLocalizedString(@"Queued Messages", @"default group name for queued")];
 }
 
 + (G3MessageGroup *)spamMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:DraftsMessageGroupURLString defaultName:NSLocalizedString(@"Spam", @"default group name for spam")];
+    return [self standardMessageGroupWithUserDefaultsKey:SpamMessageGroupURLString defaultName:NSLocalizedString(@"Spam Messages", @"default group name for spam")];
+}
+
++ (G3MessageGroup *)trashMessageGroup
+{
+    return [self standardMessageGroupWithUserDefaultsKey:TrashMessageGroupURLString defaultName:NSLocalizedString(@"Trash", @"default group name for trash")];
 }
 
 @end

@@ -15,9 +15,12 @@ extern NSString *ContentTypePreferences;
 extern NSString *GroupsDrawerMode;
 extern NSString *HeadersShown;
 extern NSString *AdditionalHeadersShown;
-extern NSString *OutgoingMessageGroupURLString;
+extern NSString *SentMessageGroupURLString;
 extern NSString *DefaultMessageGroupURLString;
 extern NSString *DraftsMessageGroupURLString;
+extern NSString *QueuedMessageGroupURLString;
+extern NSString *SpamMessageGroupURLString;
+extern NSString *TrashMessageGroupURLString;
 extern NSString *DisableKeychainForPasswortDefault;
 
 extern NSArray *allAdditionalHeadersForDisplay();

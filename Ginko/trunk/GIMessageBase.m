@@ -77,9 +77,9 @@
     [thread addGroup:aGroup];    
 }
 
-+ (void)addOutgoingMessage:(G3Message *)aMessage
++ (void)addSentMessage:(G3Message *)aMessage
 {
-    [self addMessage:aMessage toMessageGroup:[G3MessageGroup outgoingMessageGroup] suppressThreading:NO];
+    [self addMessage:aMessage toMessageGroup:[G3MessageGroup sentMessageGroup] suppressThreading:NO];
 }
 
 + (void)addDraftMessage:(G3Message *)aMessage

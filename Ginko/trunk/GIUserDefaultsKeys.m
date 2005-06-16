@@ -17,9 +17,13 @@ NSString *ContentTypePreferences  = @"ContentTypePreferences";
 NSString *GroupsDrawerMode        = @"GroupsDrawerMode";
 NSString *HeadersShown            = @"GIHeadersShown";
 NSString *AdditionalHeadersShown  = @"GIAdditionalHeadersShown";
-NSString *OutgoingMessageGroupURLString = @"OutgoingMessageGroupURLString";
+NSString *SentMessageGroupURLString = @"SentMessageGroupURLString";
 NSString *DefaultMessageGroupURLString = @"DefaultMessageGroupURLString";
 NSString *DraftsMessageGroupURLString = @"DraftsMessageGroupURLString";
+NSString *QueuedMessageGroupURLString = @"QueuedMessageGroupURLString";
+NSString *SpamMessageGroupURLString = @"SpamMessageGroupURLString";
+NSString *TrashMessageGroupURLString = @"TrashMessageGroupURLString";
+
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
 NSArray* allAdditionalHeadersForDisplay()

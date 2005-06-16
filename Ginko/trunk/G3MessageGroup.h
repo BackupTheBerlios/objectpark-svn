@@ -36,9 +36,11 @@ extern NSString *GIMessageGroupWasAddedNotification;
 
 /*" Standard message groups "*/
 + (G3MessageGroup *)defaultMessageGroup;
-+ (G3MessageGroup *)outgoingMessageGroup;
++ (G3MessageGroup *)sentMessageGroup;
++ (G3MessageGroup *)queuedMessageGroup;
 + (G3MessageGroup *)draftMessageGroup;
 + (G3MessageGroup *)spamMessageGroup;
++ (G3MessageGroup *)trashMessageGroup;
 
 /*" Simple Accessors "*/
 - (NSString *)URIReferenceString;

@@ -82,7 +82,7 @@
                 
                 while ((transferData = [pop3session nextTransferData]) && !shouldTerminate)
                 {
-                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"fetching message (%d of %d)", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch]]];
+                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"fetching messages from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
                     
                     // putting onto disk:
                     [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender:nil]];
@@ -164,7 +164,7 @@
     
     [jobArguments setObject:anAccount forKey:@"account"];
     
-    [OPJobs scheduleJobWithName:@"POP3 fetch" target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[[anAccount objectID] URIRepresentation]];
+    [OPJobs scheduleJobWithName:@"POP3 fetch" target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[anAccount incomingServerName]];
 }
 
 /******** POP3 delegate methods **********/

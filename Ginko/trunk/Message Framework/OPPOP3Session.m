@@ -227,23 +227,9 @@ UIDL. nil otherwise. "*/
 
         if (! result) // try to get info from message
         {
-            OPInternetMessage *message;
-
-            NS_DURING
-                message = [[OPInternetMessage alloc] initWithTransferData:
-                    [self _headerDataAtPosition:_currentPosition]];
-
-                if (message)
-                {
-                    [self _takeInfoFromMessage:message forPosition:_currentPosition];
-
-                    result = [infoDict objectForKey:@"messageId"];
-                }
-
-                [message release];
-            NS_HANDLER
-                ;
-            NS_ENDHANDLER
+            [self _takeInfoFromTransferData:[self _headerDataAtPosition:_currentPosition] forPosition:_currentPosition];
+            
+            result = [infoDict objectForKey:@"messageId"];
         }
     }
 

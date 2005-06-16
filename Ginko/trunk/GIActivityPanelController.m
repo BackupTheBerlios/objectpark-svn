@@ -118,6 +118,13 @@ static NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeeds
         {
             return [progressInfo jobProgressDescription];
         }
+        else if ([identifier isEqualToString:@"absolute"])
+        {
+            if (![progressInfo isJobProgressIndeterminate])
+            {
+                return [NSString stringWithFormat:@"%lu/%lu", (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
+            }
+        }
     }
 
     return @""; // should not occur
