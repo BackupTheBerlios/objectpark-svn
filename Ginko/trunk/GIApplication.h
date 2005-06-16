@@ -11,11 +11,11 @@
 
 @class GISearchController;
 
-#define GIApp ((GIApplication*)NSApp)
+#define GIApp ((GIApplication *)NSApp)
 
 @interface GIApplication : NSApplication 
 {
-    IBOutlet GISearchController* searchController;
+    IBOutlet GISearchController *searchController;
 }
 
 - (BOOL)isGroupsDrawerMode;
@@ -27,7 +27,8 @@
 /*" Actions "*/
 - (IBAction)openNewGroupWindow:(id)sender;
 
-- (IBAction) saveAction: (id) sender;
-- (IBAction) openSearchWindow: (id) sender;
+- (IBAction)saveAction:(id)sender;
+- (IBAction)openSearchWindow:(id)sender;
+- (IBAction)showActivityPanel:(id)sender;
 
 @end
