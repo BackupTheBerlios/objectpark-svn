@@ -272,7 +272,7 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
-- (IBAction)importMboxFile:(id)sender
+- (IBAction) importMboxFile: (id) sender
 {
     int result;
     NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", @"mbx", nil];
@@ -283,8 +283,7 @@
     if (result == NSOKButton) 
     {
         NSArray *filesToOpen = [oPanel filenames];
-        if ([filesToOpen count])
-        {
+        if ([filesToOpen count]) {
             NSString *boxFilename = [filesToOpen lastObject];
             NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
             
@@ -298,6 +297,7 @@
             [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
             
             [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
+            [self showActivityPanel: sender];
         }
     }    
     
