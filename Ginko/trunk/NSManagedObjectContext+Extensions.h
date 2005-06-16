@@ -13,6 +13,7 @@
 + (NSManagedObjectContext*) defaultContext;
 + (void) setDefaultContext: (NSManagedObjectContext*) context;
 - (id) objectWithURI: (NSURL*) uri;
++ (id) objectWithURIString: (NSString*) uri;
 
 @end
 

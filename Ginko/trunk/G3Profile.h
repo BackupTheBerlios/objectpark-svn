@@ -13,7 +13,7 @@
 @class G3Account;
 @class G3Message;
 
-@interface G3Profile : OPManagedObject 
+@interface G3Profile : NSManagedObject 
 {
 }
 

@@ -12,7 +12,7 @@
 @class G3Message;
 @class G3MessageGroup;
 
-@interface G3Thread : OPManagedObject 
+@interface G3Thread : NSManagedObject 
 {
 }
 

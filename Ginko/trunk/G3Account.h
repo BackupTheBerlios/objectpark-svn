@@ -39,7 +39,7 @@ enum LeaveOnServerDuration
     Never = -1, Forever = 0, FourWeeks = 28, OneWeek = 7, ThreeDays = 3
 };
 
-@interface G3Account : OPManagedObject 
+@interface G3Account : NSManagedObject 
 {
 }
 

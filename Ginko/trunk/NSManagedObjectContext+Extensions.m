@@ -38,7 +38,7 @@
     }
 }
 
-- (id)objectWithURI:(NSURL *)uri
+- (id) objectWithURI: (NSURL*) uri
 {
     if (uri) 
     {
@@ -52,6 +52,13 @@
     
     return nil;
 }
+
++ (id) objectWithURIString: (NSString*) uri
+/*" Returns the  object for the uri given in the default context. "*/
+{
+    return [[self defaultContext] objectWithURI: [NSURL URLWithString: uri]];
+}
+
 
 @end
 

@@ -224,7 +224,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     return 0;
 }
 
-- (NSArray *)threadReferenceURIsByDate
+- (NSMutableArray*) threadReferenceURIsByDate
 {
     NSMutableArray *result = [NSMutableArray array];
     
@@ -263,7 +263,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     return result;
 }
 
-- (NSSet *)threadsContainingSingleMessage
+- (NSMutableSet *)threadsContainingSingleMessage
 {
     NSMutableSet *result = [NSMutableSet set];
     

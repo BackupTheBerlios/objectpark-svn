@@ -10,11 +10,6 @@
 
 @class NSManagedObjectContext;
 
-@interface OPManagedObject : NSManagedObject {
-}
-
-@end
-
 @interface NSManagedObject (OPExtensions) 
 
 // common methods

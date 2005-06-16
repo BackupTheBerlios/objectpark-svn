@@ -28,7 +28,7 @@
 #define OPJunkMailStatus 8192
 #define OPIsFromMeStatus 16384
 
-@interface G3Message : OPManagedObject 
+@interface G3Message : NSManagedObject 
 {
 }
 

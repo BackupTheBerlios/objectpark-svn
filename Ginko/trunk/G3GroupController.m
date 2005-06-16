@@ -37,11 +37,6 @@
 
 @end
 
-static G3Thread *threadForItem(NSString *item)
-{
-    return [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:item]];
-}
-
 @implementation G3GroupController
 
 - (id)init
@@ -313,24 +308,25 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return window;
 }
 
-- (NSArray *)threadCache
+- (NSMutableArray *)threadCache
+/* Returns an array of thread URI strings. */
 {
     return threadCache;
 }
 
-- (void)setThreadCache:(NSArray *)newCache
+- (void)setThreadCache:(NSMutableArray *)newCache
 {
     [newCache retain];
     [threadCache release];
     threadCache = newCache;
 }
 
-- (NSSet *)nonExpandableItemsCache
+- (NSMutableSet *)nonExpandableItemsCache
 {
     return nonExpandableItemsCache;
 }
 
-- (void)setNonExpandableItemsCache:(NSSet *)newCache
+- (void)setNonExpandableItemsCache:(NSMutableSet *)newCache
 {
     [newCache retain];
     [nonExpandableItemsCache release];
@@ -356,7 +352,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (NSArray *)threadIdsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-    NSArray* result = [self threadCache];
+    NSMutableArray* result = [self threadCache];
     
     if (!result) 
     {
@@ -368,7 +364,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (NSSet *)nonExpandableItems
 {
-    NSSet* result = [self nonExpandableItemsCache];
+    NSMutableSet* result = [self nonExpandableItemsCache];
     
     if (!result) 
     {
@@ -405,11 +401,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 message = item;
                 // find the thread above message:
                 while ([threadsView levelForRow:--selectedRow]){}
-                selectedThread = threadForItem([threadsView itemAtRow:selectedRow]);
+                selectedThread = [NSManagedObjectContext objectWithURIString: [threadsView itemAtRow: selectedRow]];
             }
             else 
             {
-                selectedThread = threadForItem(item);
+                selectedThread = [NSManagedObjectContext objectWithURIString: item];
                 
                 if ([selectedThread containsSingleMessage]) 
                 {
@@ -561,7 +557,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     else
     {
-        result = [[threadForItem(item) messagesByDate] lastObject];
+        result = [[[NSManagedObjectContext objectWithURIString: item] messagesByDate] lastObject];
         if (! [result isKindOfClass:[G3Message class]])
         {
             result = nil;
@@ -740,6 +736,38 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [tabView selectFirstTabViewItem:sender];
 }
 
+- (IBAction) joinThreads: (id) sender
+/*" Joins the selected threads into one. "*/
+{
+    NSIndexSet* set = [threadsView selectedRowIndexes];
+    id firstThreadURI = [threadsView itemAtRow: [set firstIndex]];
+    NSAssert([threadsView levelForRow: [set firstIndex]]==0, @"Try to merge non-thread objects.");
+    G3Thread* firstThread = [NSManagedObjectContext objectWithURIString: firstThreadURI];
+    int i;
+    for (i=[set firstIndex]; i<=[set lastIndex]; i++) {
+        if ([set containsIndex: i]) {
+            
+            if ([threadsView levelForRow: i]==0) {
+                NSString* nextThreadURI = [threadsView itemAtRow: i];
+                G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
+                
+                [[self threadCache] removeObjectIdenticalTo:nextThreadURI];
+                [[self nonExpandableItemsCache] addObject:firstThread]; 
+                [firstThread mergeMessagesFromThread: nextThread];
+            }
+        }
+    }
+    [threadsView reloadData];
+}
+
+- (IBAction) extractThread: (id) sender
+/*" Creates a new thread for the selected messages. "*/
+{
+    NSLog(@"Should extractThread here.");
+    
+}
+
+
 - (void)updateWindowTitle
 {
     if (! [self isStandaloneBoxesWindow])
@@ -809,7 +837,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         if (threadURL) 
         {
             @try {
-                thread = threadForItem(threadURL);
+                thread = [NSManagedObjectContext objectWithURIString: threadURL];
             } @catch(NSException *e) {
                 NSLog(@"Exception on getting ExpandedThreadId %@", e);
             }
@@ -846,7 +874,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
             if (([item isKindOfClass:[G3Message 
-                class]]) || ([threadForItem(item) containsSingleMessage]))
+                class]]) || ([[NSManagedObjectContext objectWithURIString: item] containsSingleMessage]))
             {
                 return YES;
             }
@@ -942,7 +970,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         } 
         else 
         {
-            G3Thread *thread = threadForItem(item);
+            G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
             
             return [[thread messages] count];
         }
@@ -995,7 +1023,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         } 
         else 
         {
-            G3Thread *thread = threadForItem(item);
+            G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
             
             return [[thread messagesByDate] objectAtIndex:index];
         }
@@ -1165,7 +1193,7 @@ static NSAttributedString* spacer2()
         {
             if ([item isKindOfClass:[NSString class]])
             {
-                item = threadForItem(item);
+                item = [NSManagedObjectContext objectWithURIString: item];
             }
 
             BOOL isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item isSeen];
@@ -1190,7 +1218,7 @@ static NSAttributedString* spacer2()
             if (level == 0) 
             {
 		// it's a thread:		
-                G3Thread *thread = threadForItem(item);
+                G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
                 
                 if ([thread containsSingleMessage]) 
                 {

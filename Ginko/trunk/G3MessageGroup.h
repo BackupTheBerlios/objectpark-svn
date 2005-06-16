@@ -14,7 +14,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
 
 @class G3Profile;
 
-@interface G3MessageGroup : OPManagedObject 
+@interface G3MessageGroup : NSManagedObject 
 {
     NSString *pk;
 }
@@ -50,8 +50,8 @@ extern NSString *GIMessageGroupWasAddedNotification;
 
 /*" Complex Accessors "*/
 //- (NSArray *)threadsByDate;
-- (NSArray *)threadReferenceURIsByDate;
-- (NSSet *)threadsContainingSingleMessage;
+- (NSMutableArray *)threadReferenceURIsByDate;
+- (NSMutableSet *)threadsContainingSingleMessage;
 
 - (unsigned) threadCount;
 

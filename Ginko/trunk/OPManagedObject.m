@@ -72,6 +72,3 @@
 
 @end
 
-@implementation OPManagedObject
-
-@end
