@@ -277,27 +277,44 @@
     int result;
     NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", @"mbx", nil];
     NSOpenPanel *oPanel = [NSOpenPanel openPanel];
-    [oPanel setAllowsMultipleSelection:NO];
-    result = [oPanel runModalForDirectory:NSHomeDirectory() file:nil types:fileTypes];
+    NSString *directory = [[NSUserDefaults standardUserDefaults] objectForKey:ImportPanelLastDirectory];
+    
+    if (!directory) directory = NSHomeDirectory();
+    
+    [oPanel setAllowsMultipleSelection:YES];
+    [oPanel setAllowsOtherFileTypes:YES];
+    [oPanel setPrompt:NSLocalizedString(@"Import", @"Import open panel OK button")];
+    [oPanel setTitle:NSLocalizedString(@"Import mbox Files", @"Import open panel title")];
+    
+    result = [oPanel runModalForDirectory:directory file:nil types:fileTypes];
     
     if (result == NSOKButton) 
     {
+        [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
+        
         NSArray *filesToOpen = [oPanel filenames];
-        if ([filesToOpen count]) {
-            NSString *boxFilename = [filesToOpen lastObject];
-            NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
-            
-            // support for 'mbox' bundles
-            if ([[boxFilename pathExtension] isEqualToString:@"mbox"])
-            {
-                boxFilename = [boxFilename stringByAppendingPathComponent:@"mbox"];
-            }
-            
-            [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
-            [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
-            
-            [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
+        if ([filesToOpen count]) 
+        {
             [self showActivityPanel:sender];
+            
+            NSEnumerator *enumerator = [filesToOpen objectEnumerator];
+            NSString *boxFilename;
+            
+            while (boxFilename = [enumerator nextObject])
+            {
+                NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+                
+                // support for 'mbox' bundles
+                if ([[boxFilename pathExtension] isEqualToString:@"mbox"])
+                {
+                    boxFilename = [boxFilename stringByAppendingPathComponent:@"mbox"];
+                }
+                
+                [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
+                [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
+                
+                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
+            }
         }
     }    
     

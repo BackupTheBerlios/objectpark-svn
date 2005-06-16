@@ -22,7 +22,7 @@ extern NSString *QueuedMessageGroupURLString;
 extern NSString *SpamMessageGroupURLString;
 extern NSString *TrashMessageGroupURLString;
 extern NSString *DisableKeychainForPasswortDefault;
-
+extern NSString *ImportPanelLastDirectory;
 extern NSArray *allAdditionalHeadersForDisplay();
 
 

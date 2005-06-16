@@ -23,6 +23,7 @@ NSString *DraftsMessageGroupURLString = @"DraftsMessageGroupURLString";
 NSString *QueuedMessageGroupURLString = @"QueuedMessageGroupURLString";
 NSString *SpamMessageGroupURLString = @"SpamMessageGroupURLString";
 NSString *TrashMessageGroupURLString = @"TrashMessageGroupURLString";
+NSString *ImportPanelLastDirectory = @"ImportPanelLastDirectory";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
