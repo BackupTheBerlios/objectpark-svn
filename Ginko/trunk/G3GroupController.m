@@ -736,6 +736,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [tabView selectFirstTabViewItem:sender];
 }
 
+
+
 - (NSArray*) selectedThreadURIs
 {
     NSMutableArray* result = [NSMutableArray array];
@@ -759,24 +761,24 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 /*" Joins the selected threads into one. "*/
 {
     NSEnumerator* e = [[self selectedThreadURIs] objectEnumerator];
-    NSString* firstThreadURI = [e nextObject];
-    G3Thread* firstThread = [NSManagedObjectContext objectWithURIString: firstThreadURI];
+    NSString* targetThreadURI = [e nextObject];
+    G3Thread* targetThread = [NSManagedObjectContext objectWithURIString: targetThreadURI];
     
-    NSLog(@"Merging other threads into %@", firstThread);
+    NSLog(@"Merging other threads into %@", targetThread);
     NSString* nextThreadURI;
 
     while (nextThreadURI = [e nextObject]) {
         G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
-        [[self nonExpandableItemsCache] removeObject: firstThreadURI]; 
+        [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
         [[self nonExpandableItemsCache] removeObject: nextThreadURI];    
         [[self threadCache] removeObjectIdenticalTo: nextThreadURI];
-        [firstThread mergeMessagesFromThread: nextThread];
+        [targetThread mergeMessagesFromThread: nextThread];
     }
 
     //[self setThreadCache: nil];
     //[self setNonExpandableItemsCache: nil];
     [threadsView reloadData];
-    [threadsView selectRow: [threadsView rowForItem: firstThreadURI] byExtendingSelection: NO];
+    [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
     [GIApp saveAction: sender];
 }
 
