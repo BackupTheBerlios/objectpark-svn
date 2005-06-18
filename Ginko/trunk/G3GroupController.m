@@ -167,6 +167,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     int itemRow;
     BOOL isNewThread = ![aThread isEqual:displayedThread];
     
+    if (displayedMessage == aMessage) return;
+    
+    [(NSClipView *)[messageTextView superview] scrollToPoint:NSMakePoint(0, 0)];
+    
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
     [displayedMessage setSeen: YES];
