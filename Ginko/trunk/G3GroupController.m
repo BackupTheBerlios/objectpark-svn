@@ -169,19 +169,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if (displayedMessage == aMessage) return;
     
+    // make sure that the message's head is displayed:
     [(NSClipView *)[messageTextView superview] scrollToPoint:NSMakePoint(0, 0)];
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
     [displayedMessage setSeen: YES];
     
-    if (isNewThread){
+    if (isNewThread) 
+    {
         [displayedThread autorelease];
         displayedThread = [aThread retain];
     }
     
     // make sure that thread is expanded in threads outline view:
-    if (aThread && (![aThread containsSingleMessage])) {
+    if (aThread && (![aThread containsSingleMessage])) 
+    {
         [threadsView expandItem:aThread];
         [self setValue: [[[aThread objectID] URIRepresentation] absoluteString] forGroupProperty:@"ExpandedThreadId"];
     }
@@ -196,26 +199,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView scrollRowToVisible:itemRow];
     
     // message display string:
-    //attString = [[[NSAttributedString alloc] initWithString:[aMessage primitiveValueForKey:@"body"]] autorelease];
-    //[[messageTextView textStorage] setAttributedString:attString];
+    NSAttributedString *messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
     
-    {
-        NSAttributedString *messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
-        
-        if (!messageText) 
-        {
-            messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText==nil."];
-        }
-
-        [[messageTextView textStorage] setAttributedString:messageText];
-        
-        // set the insertion point (cursor)to 0, 0
-        [messageTextView setSelectedRange:NSMakeRange(0, 0)];
-        //[[messageTextView contentView] scrollToPoint:NSMakePoint(0, 0)];
-        
-        //[_peopleView displayImage:[renderer personImage]];
-        // [self _setWindowTitle];
-    }
+    if (!messageText) messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
+    
+    [[messageTextView textStorage] setAttributedString:messageText];
+    
+    // set the insertion point (cursor)to 0, 0
+    [messageTextView setSelectedRange:NSMakeRange(0, 0)];
     
     [self updateCommentTree:isNewThread];
     
@@ -1818,6 +1809,65 @@ NSMutableArray* border = nil;
     [lastView setFrameSize:NSMakeSize(newSize.width, newSize.height-[sender dividerThickness]-firstViewSize.height)];
     
     [[sender window] setContentMinSize:NSMakeSize(200, 30+firstViewSize.height+[sender dividerThickness])];
+}
+
+@end
+
+#import "NSAttributedString+MessageUtils.h"
+
+@implementation G3GroupController (TextViewDelegate)
+
+- (void)textView:(NSTextView *)textView doubleClickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(unsigned)charIndex
+{
+    NSTextAttachment *attachment;
+    NSFileWrapper *fileWrapper;
+    NSString *filename;
+    NSRange range;
+    
+    attachment = [cell attachment];
+    fileWrapper = [attachment fileWrapper];
+    filename = [[textView textStorage] attribute:OPAttachmentPathAttribute atIndex:charIndex effectiveRange:&range];
+    
+    if (NSDebugEnabled) NSLog(@"double click on attachment with name %@", filename);
+    
+    [[NSWorkspace sharedWorkspace] openFile:filename];
+}
+
+- (void)textView:(NSTextView *)view draggedCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)rect event:(NSEvent *)event atIndex:(unsigned)charIndex
+{
+    NSTextAttachment *attachment;
+    NSFileWrapper *fileWrapper;
+    NSString *filename;
+    NSRange range;
+    
+    attachment = [cell attachment];
+    fileWrapper = [attachment fileWrapper];
+    filename = [[view textStorage] attribute:OPAttachmentPathAttribute atIndex:charIndex effectiveRange:&range];
+    
+    if (NSDebugEnabled) NSLog(@"draggedCell %@", filename);
+    
+    NSPoint mouseLocation = [event locationInWindow];
+    mouseLocation.x -= 16; // file icons are guaranteed to have 32 by 32 pixels (Mac OS 10.4 NSWorkspace docs)
+    mouseLocation.y -= 16;
+    mouseLocation = [view convertPoint:mouseLocation toView:nil];
+     
+    rect = NSMakeRect(mouseLocation.x, mouseLocation.y, 1, 1);
+    [view dragFile:filename fromRect:rect slideBack:YES event:event];
+}
+
+- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)flag
+{
+    return NSDragOperationCopy;
+}
+
+- (BOOL)ignoreModifierKeysWhileDragging
+{
+    return YES;
+}
+
+- (void)textView:(NSTextView *)textView spaceKeyPressedWithModifierFlags:(int)modifierFlags
+{
+    if (NSDebugEnabled) NSLog(@"spaceKeyPressedWithModifierFlags");
 }
 
 @end
