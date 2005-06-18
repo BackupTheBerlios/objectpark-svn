@@ -115,6 +115,7 @@ NSString *MboxImportJobName = @"mbox import";
     NSParameterAssert(mboxFilePath != nil);
     NSManagedObjectContext *parentContext = [arguments objectForKey:@"parentContext"];
     NSParameterAssert(parentContext != nil);
+    BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
     
     // Create mbox file object for enumerating the contained messages:
@@ -206,9 +207,9 @@ NSString *MboxImportJobName = @"mbox import";
     } 
     @finally 
     {
+        [NSManagedObjectContext setDefaultContext:nil];
         [pool release];
         [context release];
-        [NSManagedObjectContext setDefaultContext:nil];
     }
     
     // move imported mbox to imported boxes:
@@ -223,7 +224,14 @@ NSString *MboxImportJobName = @"mbox import";
     // only move if not already there:
     if (![[NSFileManager defaultManager] fileExistsAtPath:destinationPath])
     {
-        NSAssert2([[NSFileManager defaultManager] movePath:mboxFilePath toPath:destinationPath handler:NULL], @"Could not move imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+        if (shouldCopyOnly)
+        {
+            NSAssert2([[NSFileManager defaultManager] copyPath:mboxFilePath toPath:destinationPath handler:NULL], @"Could not copy imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+        }
+        else
+        {
+            NSAssert2([[NSFileManager defaultManager] movePath:mboxFilePath toPath:destinationPath handler:NULL], @"Could not move imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+        }
     }
 }
 

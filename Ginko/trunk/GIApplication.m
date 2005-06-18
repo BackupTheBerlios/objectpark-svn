@@ -346,6 +346,7 @@
                 
                 [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
                 [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
+                [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
                 
                 [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
             }
