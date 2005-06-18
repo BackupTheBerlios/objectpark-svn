@@ -62,7 +62,7 @@
 /*" Notification that a job a about to being executed. object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". "*/
 extern NSString *OPJobWillStartNotification;
 
-/*" Notification that a job has been finished. object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". "*/
+/*" Notification that a job has been finished. object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". The job's result, if present is stored for the key "result". "*/
 extern NSString *OPJobDidFinishNotification;
 
 /*" Notification that a job has been set its progress information. object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". The job progress info dictionary is stored for the key "progressInfo". "*/

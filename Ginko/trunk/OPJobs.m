@@ -320,8 +320,13 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
 /*" Performed on main thread to notifiy of the finishing of a job. "*/
 {
     NSString *jobName = objectForKeyInJobInArray(anJobId, finishedJobs, OPJobName);
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    id result = [self resultForJob:anJobId];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:jobName userInfo:[NSDictionary dictionaryWithObject:anJobId forKey:@"jobId"]];    
+    if (result) [userInfo setObject:result forKey:@"result"];
+    [userInfo setObject:anJobId forKey:@"jobId"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:jobName userInfo:userInfo];
 }
 
 + (id)resultForJob:(NSNumber *)anJobId
