@@ -223,6 +223,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
+
     // Some statistical messsages:
     //NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];	
     //NSArray *allMessages = [G3Message allObjects];
@@ -297,7 +299,14 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
+- (NSArray *)sortFilePathsByCreationDate:(NSArray *)someFilePaths
+{
+#warning implement for better mbox restore
+    return someFilePaths;
+}
+
 - (IBAction)importMboxFile:(id)sender
+/*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
     NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", @"mbx", nil];
@@ -317,7 +326,7 @@
     {
         [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
         
-        NSArray *filesToOpen = [oPanel filenames];
+        NSArray *filesToOpen = [self sortFilePathsByCreationDate:[oPanel filenames]];
         if ([filesToOpen count]) 
         {
             [self showActivityPanel:sender];
@@ -338,19 +347,11 @@
                 [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
                 [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
                 
-                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:nil];
+                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
             }
         }
     }    
-    
-    //NSString *boxFilename = [[NSBundle mainBundle] pathForResource:@"test-mbox" ofType:@""];
-    //NSString *boxFilename = @"/Users/axel/Desktop/macosx-dev.mbox.txt";
-  
-//    OPMBoxFile *box = [OPMBoxFile mboxWithPath: boxFilename];
-    
-//    [GIMessageBase importFromMBoxFile: box];		
 }
-
 
 - (IBAction) saveAction: (id) sender
 {
@@ -404,6 +405,30 @@
     }
 }
 
+- (void)POPJobFinished:(NSNotification *)aNotification
+{
+    if (NSDebugEnabled) NSLog(@"POPJobFinished");
+    
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    
+    NSString *mboxPath = [OPJobs resultForJob:jobId];
+    [OPJobs removeFinishedJob:jobId]; // clean up
+    
+    if (mboxPath)
+    {
+        NSParameterAssert([mboxPath isKindOfClass:[NSString class]]);
+     
+        // import mbox at path mboxPath:
+        NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+                
+        [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
+        [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
+        
+        [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
+    }
+}
+
 - (void)SMTPJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
@@ -413,6 +438,8 @@
     
     NSDictionary *result = [OPJobs resultForJob:jobId];
     NSAssert1(result != nil, @"no result for job with id %@", jobId);
+    
+    [OPJobs removeFinishedJob:jobId]; // clean up
     
     NSArray *messages = [result objectForKey:@"messages"];
     NSAssert(messages != nil, @"result does not contain 'messages'");

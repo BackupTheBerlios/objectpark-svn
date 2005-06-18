@@ -210,6 +210,21 @@ NSString *MboxImportJobName = @"mbox import";
         [context release];
         [NSManagedObjectContext setDefaultContext:nil];
     }
+    
+    // move imported mbox to imported boxes:
+    NSString *importedMboxesDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"imported mboxes"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:importedMboxesDirectory])
+    {
+        NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:importedMboxesDirectory attributes:nil], @"Could not create directory %@", importedMboxesDirectory);
+    }
+    
+    NSString *destinationPath = [importedMboxesDirectory stringByAppendingPathComponent:[mboxFilePath lastPathComponent]];
+    
+    // only move if not already there:
+    if (![[NSFileManager defaultManager] fileExistsAtPath:destinationPath])
+    {
+        NSAssert2([[NSFileManager defaultManager] movePath:mboxFilePath toPath:destinationPath handler:NULL], @"Could not move imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+    }
 }
 
 @end

@@ -66,7 +66,13 @@
             [pop3session openSession]; // also sets current postion cursor for maildrop
             
             // creating unique mbox file:
-            NSString *pathTemplate = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"POP3Fetched-XXXXX"];
+            NSString *mboxToImportDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"mboxes to import"];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:mboxToImportDirectory])
+            {
+                NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:mboxToImportDirectory attributes:nil], @"Could not create directory %@", mboxToImportDirectory);
+            }
+            
+            NSString *pathTemplate = [mboxToImportDirectory stringByAppendingPathComponent:@"POP3Fetched-XXXXX"];
             
             OPMBoxFile *mboxFile = [OPMBoxFile createMboxFileWithPathTemplate:pathTemplate];
             NSAssert(mboxFile != nil, @"could not open unique mbox file");
@@ -90,18 +96,26 @@
                     fetchCount++;
                     shouldTerminate = [OPJobs shouldTerminate];
                 }
-                
+                                                
                 if (!shouldTerminate)
                 {
+                    // set result:
+                    [OPJobs setResult:[mboxFile path]];
+                    
                     // cleaning up maildrop:
                     [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
                     
                     [pop3session cleanUp];
                 }
+                else
+                {
+                    [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];               
+                }
             }
             @catch (NSException *localException)
             {
                 [pop3session abortSession];
+                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];               
                 @throw;
             }
             @finally
@@ -155,6 +169,11 @@
     [super dealloc];
 }
 
++ (NSString *)jobName
+{
+    return @"POP3 fetch";
+}
+
 + (void)retrieveMessagesFromPOPAccount:(G3Account *)anAccount
 /*" Starts a background job for retrieving messages from the given POP account anAccount. One account can only be 'popped' by at most one pop job at a time. "*/
 {
@@ -164,7 +183,7 @@
     
     [jobArguments setObject:anAccount forKey:@"account"];
     
-    [OPJobs scheduleJobWithName:@"POP3 fetch" target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[anAccount incomingServerName]];
+    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[anAccount incomingServerName]];
 }
 
 /******** POP3 delegate methods **********/
