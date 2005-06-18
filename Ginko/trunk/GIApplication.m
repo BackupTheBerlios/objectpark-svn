@@ -106,31 +106,41 @@
 		&db);                /* OUT: SQLite db handle */
 	
 	if (db) {
-		int errorCode;
-		char* error;
-		NSLog(@"DB opened. Creating additional indexes...");
-		
-		if (errorCode = sqlite3_exec(db, /* An open database */
-			"CREATE UNIQUE INDEX MY_MESSAGE_ID_INDEX ON ZMESSAGE (ZMESSAGEID);", /* SQL to be executed */
-			NULL, /* Callback function */
-			NULL, /* 1st argument to callback function */
-			&error)) { /* Error msg written here */
-			if (error) {
-				NSLog(@"Error creating index: %s", error);
-			}
-		}
-		
-		if (errorCode = sqlite3_exec(db, /* An open database */
-			"CREATE INDEX MY_THREAD_DATE_INDEX ON ZTHREAD (ZDATE);", /* SQL to be executed */
-			NULL, /* Callback function */
-			NULL, /* 1st argument to callback function */
-			&error)) { /* Error msg written here */
-			if (error) {
-				NSLog(@"Error creating index: %s", error);
-			}
-		}
+            int errorCode;
+            char* error;
+            NSLog(@"DB opened. Creating additional indexes...");
+            
+            if (errorCode = sqlite3_exec(db, /* An open database */
+                "CREATE UNIQUE INDEX MY_MESSAGE_ID_INDEX ON ZMESSAGE (ZMESSAGEID);", /* SQL to be executed */
+                NULL, /* Callback function */
+                NULL, /* 1st argument to callback function */
+                &error)) { /* Error msg written here */
+                if (error) {
+                    NSLog(@"Error creating index: %s", error);
+                }
+            }
+            
+            if (errorCode = sqlite3_exec(db, /* An open database */
+                "CREATE INDEX MY_THREAD_DATE_INDEX ON ZTHREAD (ZDATE);", /* SQL to be executed */
+                NULL, /* Callback function */
+                NULL, /* 1st argument to callback function */
+                &error)) { /* Error msg written here */
+                if (error) {
+                    NSLog(@"Error creating index: %s", error);
+                }
+            }
+    if (errorCode = sqlite3_exec(db, /* An open database */
+    "PRAGMA default_cache_size = 8000;", /* SQL to be executed */
+    NULL, /* Callback function */
+    NULL, /* 1st argument to callback function */
+    &error)) { /* Error msg written here */
+    if (error) {
+        NSLog(@"Error setting cache size: %s", error);
+    }
+    }
+
 	}
-	
+
 	sqlite3_close(db);
 }
 
@@ -146,28 +156,43 @@
 {
     NSError*  error;
     NSString* localizedDescription;
-	
+    NSString* dbPath = [self databasePath];
+    
+    BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: dbPath]; // used to configure DB using SQL below (todo)
+    
+    
     NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
     NSManagedObjectContext* managedObjectContext = [[NSManagedObjectContext alloc] init];
     [managedObjectContext setPersistentStoreCoordinator: coordinator];
-	[coordinator release];
+    [coordinator release];
     /* Change this path/code to point to your App's data store. */
     //NSString *applicationSupportDir = [@"~/Library/Application Support/Ginko3" stringByStandardizingPath];
     //NSFileManager* fileManager = [NSFileManager defaultManager];	
-	
+    
     if (![coordinator addPersistentStoreWithType: NSSQLiteStoreType // NSXMLStoreType
                                    configuration: nil
-                                             URL: [NSURL fileURLWithPath:[self databasePath]]
+                                             URL: [NSURL fileURLWithPath: dbPath]
                                          options: nil
                                            error: &error]) 
     {
         localizedDescription = [error localizedDescription];
         error = [NSError errorWithDomain: @"Ginko3Domain" 
-									code: 0		
-								userInfo: [NSDictionary dictionaryWithObjectsAndKeys:error, NSUnderlyingErrorKey, [NSString stringWithFormat:@"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
+                                    code: 0		
+                                userInfo: [NSDictionary dictionaryWithObjectsAndKeys:error, NSUnderlyingErrorKey, [NSString stringWithFormat:@"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
     }
-	//NSLog(@"Store: %@", [[coordinator persistentStores] lastObject]);	
-	return managedObjectContext;
+    //NSLog(@"Store: %@", [[coordinator persistentStores] lastObject]);
+    
+    // Create Indexes, etc.
+    if (isNewlyCreated) {
+        [managedObjectContext save: NULL];
+        [self configureDatabaseAtPath: dbPath];
+        [managedObjectContext release];
+        managedObjectContext = [self newManagedObjectContext];
+    }
+    
+    [[managedObjectContext undoManager] setLevelsOfUndo:0];
+
+    return managedObjectContext;
 }
 
 - (NSManagedObjectContext*) initialManagedObjectContext
@@ -199,7 +224,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
     // Some statistical messsages:
-    //	NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];	
+    //NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];	
     //NSArray *allMessages = [G3Message allObjects];
     //G3Message *aMessage  = [allMessages lastObject];
     

@@ -28,20 +28,17 @@
 
 + (void)setDefaultContext:(NSManagedObjectContext *)aContext
 {
-    if (aContext)
-    {
-        [[[NSThread currentThread] threadDictionary] setObject:aContext forKey:@"OPDefaultManagedObjectContext"];
-    }
-    else
-    {
-        [[[NSThread currentThread] threadDictionary] removeObjectForKey:@"OPDefaultManagedObjectContext"];
+    NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
+    if (aContext) {
+        [threadDict setObject:aContext forKey: @"OPDefaultManagedObjectContext"];
+    } else {
+        [threadDict removeObjectForKey: @"OPDefaultManagedObjectContext"];
     }
 }
 
 - (id) objectWithURI: (NSURL*) uri
 {
-    if (uri) 
-    {
+    if (uri) {
         NSManagedObjectID *moid = [[self persistentStoreCoordinator] managedObjectIDForURIRepresentation: uri];
         
         if (moid && !([moid isTemporaryID])) // no temporary ids allowed
