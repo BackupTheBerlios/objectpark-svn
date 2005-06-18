@@ -322,9 +322,12 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     NSString *jobName = objectForKeyInJobInArray(anJobId, finishedJobs, OPJobName);
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     id result = [self resultForJob:anJobId];
+    id exception = [self exceptionForJob:anJobId];
     
     if (result) [userInfo setObject:result forKey:@"result"];
+    if (exception) [userInfo setObject:exception forKey:@"exception"];
     [userInfo setObject:anJobId forKey:@"jobId"];
+    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:jobName userInfo:userInfo];
 }
@@ -336,6 +339,16 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     
     result = objectForKeyInJobInArray(anJobId, finishedJobs, OPJobResult);
     if (! result) result = objectForKeyInJobInArray(anJobId, runningJobs, OPJobResult);
+    
+    return result;
+}
+
++ (id)exceptionForJob:(NSNumber *)anJobId
+/*" Returns the exception object for the job denoted by anJobId. nil, if no exception was set. "*/
+{
+    id result;
+    
+    result = objectForKeyInJobInArray(anJobId, finishedJobs, OPJobUnhandledException);
     
     return result;
 }

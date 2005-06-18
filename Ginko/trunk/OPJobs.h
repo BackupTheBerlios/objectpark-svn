@@ -41,6 +41,9 @@
 /*" Getting job results "*/
 + (id)resultForJob:(NSNumber *)anJobId;
 
+/*" Getting job exeption "*/
++ (id)exceptionForJob:(NSNumber *)anJobId;
+
 /*" Aborting jobs "*/
 + (BOOL)suggestTerminatingJob:(NSNumber *)anJobId;
 

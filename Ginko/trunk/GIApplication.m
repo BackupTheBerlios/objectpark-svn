@@ -178,7 +178,7 @@
         localizedDescription = [error localizedDescription];
         error = [NSError errorWithDomain: @"Ginko3Domain" 
                                     code: 0		
-                                userInfo: [NSDictionary dictionaryWithObjectsAndKeys:error, NSUnderlyingErrorKey, [NSString stringWithFormat:@"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
+                                userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
     }
     //NSLog(@"Store: %@", [[coordinator persistentStores] lastObject]);
     
@@ -363,7 +363,7 @@
     
     if (! [(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save: &error]) {
         localizedDescription = [error localizedDescription];
-        error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:error, NSUnderlyingErrorKey, [NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
+        error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
         [[NSApplication sharedApplication] presentError:error];
     }
 }
@@ -412,6 +412,20 @@
     
     NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    
+    NSException *exception = [[aNotification userInfo] objectForKey:@"exception"];
+    
+    if (exception)
+    {
+        NSString *localizedDescription = [[exception userInfo] objectForKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:@"Ginko3Domain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+            localizedDescription ? localizedDescription : [exception reason], NSLocalizedDescriptionKey, 
+            nil]];
+        [[NSApplication sharedApplication] presentError:error];
+
+        return;
+    }
     
     NSString *mboxPath = [OPJobs resultForJob:jobId];
     [OPJobs removeFinishedJob:jobId]; // clean up
