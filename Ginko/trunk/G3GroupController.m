@@ -26,6 +26,7 @@
 #import "GIOutlineViewWithKeyboardSupport.h"
 #import "G3Message.h"
 #import "GIMessageBase.h"
+#import "NSString+Extensions.h"
 
 @interface G3GroupController (CommentsTree)
 
@@ -166,9 +167,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     int itemRow;
     BOOL isNewThread = ![aThread isEqual:displayedThread];
-    
-    if (displayedMessage == aMessage) return;
-    
+        
     // make sure that the message's head is displayed:
     [(NSClipView *)[messageTextView superview] scrollToPoint:NSMakePoint(0, 0)];
     
@@ -199,7 +198,24 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView scrollRowToVisible:itemRow];
     
     // message display string:
-    NSAttributedString *messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
+    NSAttributedString *messageText = nil;
+        
+    if (showRawSource)
+    {
+        static NSDictionary *fixedFont = nil;
+        if (!fixedFont)
+        {
+            fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:
+                [NSFont userFixedPitchFontOfSize:10], NSFontAttributeName,
+                nil, nil];
+        }
+        
+        messageText = [[[NSAttributedString alloc] initWithString:[NSString stringWithData:[displayedMessage transferData] encoding:NSUTF8StringEncoding] attributes:fixedFont] autorelease]; 
+    }
+    else
+    {
+        messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
+    }
     
     if (!messageText) messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
     
@@ -239,7 +255,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     //[commentsMatrix scrollCellToVisibleAtRow:[commentsMatrix selectedRow] column:[commentsMatrix selectedRow]];
 
 }
-
 
 - (G3Message*)displayedMessage
 {
@@ -731,7 +746,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [tabView selectFirstTabViewItem:sender];
 }
 
-
+- (IBAction)showRawSource:(id)sender
+{
+    showRawSource = !showRawSource;
+    
+    if (displayedMessage && displayedThread)
+    {
+        [self setDisplayedMessage:displayedMessage thread:displayedThread];
+    }
+}
 
 - (NSArray*) selectedThreadURIs
 {
@@ -898,7 +921,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         }
         return NO;
     }
-
     /*
     if ( 
          (aSelector == @selector(catchup:))
@@ -940,7 +962,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    return [self validateSelector:[menuItem action]];
+    if ([menuItem action] == @selector(showRawSource:))
+    {
+        [menuItem setState:showRawSource ? NSOnState : NSOffState];
+        return ![self threadsShownCurrently];
+    }
+    else
+    {
+        return [self validateSelector:[menuItem action]];
+    }
 }
 
 @end

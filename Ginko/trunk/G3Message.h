@@ -35,6 +35,8 @@
 + (id)messageForMessageId:(NSString *)messageId;
 + (id)messageWithTransferData:(NSData *)someTransferData;
 
+- (NSData *)transferData;
+
 - (NSString *)messageId;
 - (G3Message *)reference;
 - (G3Message *)referenceFind:(BOOL)find;

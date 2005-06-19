@@ -187,9 +187,6 @@ static unsigned nextJobId = 1;
         [pool release];
         pool = [[NSAutoreleasePool alloc] init];
         
-        // is drain broken as it seems that afterwards the pool is no longer in place
-        //[pool drain];
-
         [jobsLock lockWhenCondition:OPPendingJobs];
 
         NSMutableDictionary *jobDescription = [self nextPendingJobUnlockingSynchronizedObject:nil];
@@ -214,12 +211,10 @@ static unsigned nextJobId = 1;
                 [self performSelectorOnMainThread:@selector(noteJobWillStart:) withObject:[jobDescription objectForKey:OPJobId] waitUntilDone:NO];
                 
                 [jobTarget performSelector:jobSelector withObject:[jobDescription objectForKey:OPJobArguments]];
-            }
-            @catch (NSException *exception) {
+            } @catch (NSException *exception) {
                 NSLog(@"Job (%@) caused Exception: %@", jobDescription, exception);
                 [jobDescription setObject:exception forKey:OPJobUnhandledException];
-            }
-            @finally {
+            } @finally {
                 [jobsLock lock];
                 
                 [jobDescription removeObjectForKey:OPJobWorkerThread];
@@ -241,7 +236,8 @@ static unsigned nextJobId = 1;
                 [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
             }
             
-            [pool drain];
+            [pool release];
+            pool = [[NSAutoreleasePool alloc] init];
         }
     }
 }

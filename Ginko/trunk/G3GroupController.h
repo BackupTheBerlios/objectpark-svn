@@ -31,7 +31,8 @@
     G3Message *displayedMessage; // displayed with body
     NSMutableArray *threadCache; // contains item uris
     NSMutableSet *nonExpandableItemsCache; // contains item uris
-        
+    BOOL showRawSource;
+    
     // -- Toolbar --
     NSArray *toolbarItems;
     NSArray *defaultIdentifiers;
