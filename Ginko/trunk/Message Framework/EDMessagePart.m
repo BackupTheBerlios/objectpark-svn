@@ -159,7 +159,10 @@
 
     [stringBuffer appendString:@"\r\n"];
     if ((headerData = [stringBuffer dataUsingEncoding:NSASCIIStringEncoding]) == nil)
-        [NSException raise:NSInternalInconsistencyException format:@"-[%@ %@]: Transfer representation of header fields contains non ASCII characters.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+    {
+        NSLog(@"-[%@ %@]: Transfer representation of header fields contains non ASCII characters. Fallback to lossy encoding.", NSStringFromClass(isa), NSStringFromSelector(_cmd));
+        headerData = [stringBuffer dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    }
     [transferData appendData:headerData];
 
     [transferData appendData:[contentData encodeContentWithTransferEncoding: [self contentTransferEncoding]]];
