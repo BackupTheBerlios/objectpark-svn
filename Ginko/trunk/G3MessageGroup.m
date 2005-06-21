@@ -8,6 +8,7 @@
 
 #import "G3MessageGroup.h"
 #import "NSManagedObjectContext+Extensions.h"
+#import "OPManagedObject.h"
 #import "G3Thread.h"
 #import "G3Profile.h"
 #import "GIApplication.h"
@@ -228,6 +229,8 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
 {
     NSMutableArray *result = [NSMutableArray array];
     
+    [NSManagedObject lockStore];
+    
     // open db:
     sqlite3 *db = NULL;
     sqlite3_open([[NSApp databasePath] UTF8String],   /* Database filename (UTF-8) */
@@ -257,6 +260,8 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     sqlite3_close(db);
     
+    [NSManagedObject unlockStore];
+    
     //NSLog(@"result count = %d", [result count]);
     //NSLog(@"result = %@", result);
     
@@ -266,6 +271,8 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
 - (NSMutableSet *)threadsContainingSingleMessage
 {
     NSMutableSet *result = [NSMutableSet set];
+    
+    [NSManagedObject lockStore];
     
     // open db:
     sqlite3 *db = NULL;
@@ -296,6 +303,8 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     sqlite3_close(db);
     
+    [NSManagedObject unlockStore];
+
     //NSLog(@"result count = %d", [result count]);
     //NSLog(@"result = %@", result);
     

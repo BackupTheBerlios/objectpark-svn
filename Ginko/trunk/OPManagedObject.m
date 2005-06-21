@@ -12,6 +12,16 @@
 
 @implementation NSManagedObject (OPExtensions)
 
++ (void)lockStore
+{
+    [[[NSManagedObjectContext defaultContext] persistentStoreCoordinator] lock];
+}
+
++ (void)unlockStore
+{
+    [[[NSManagedObjectContext defaultContext] persistentStoreCoordinator] unlock];
+}
+
 + (NSEntityDescription*) entity
 {
     NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
