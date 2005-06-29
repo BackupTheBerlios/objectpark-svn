@@ -8,6 +8,14 @@
         }, 
         {CLASS = G3CommentTreeCell; LANGUAGE = ObjC; SUPERCLASS = NSActionCell; }, 
         {
+            ACTIONS = {
+                addFolder = id; 
+                addMessageGroup = id; 
+                removeFolderMessageGroup = id; 
+                rename = id; 
+                showThreads = id; 
+                threadFilterPopUpChanged = id; 
+            }; 
             CLASS = G3GroupController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -17,6 +25,7 @@
                 groupInfoTextField = NSTextField; 
                 messageTextView = NSTextView; 
                 tabView = NSTabView; 
+                threadFilterPopUp = NSPopUpButton; 
                 threadsView = GIOutlineViewWithKeyboardSupport; 
                 treeBodySplitter = OPCollapsingSplitView; 
                 window = NSWindow; 

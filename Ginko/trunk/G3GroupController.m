@@ -29,6 +29,8 @@
 #import "NSString+Extensions.h"
 #import "GIMessageFilter.h"
 
+static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
+
 @interface G3GroupController (CommentsTree)
 
 - (void)awakeCommentTree;
@@ -106,6 +108,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self awakeCommentTree];
 
     lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
+    
     [window makeKeyAndOrderFront:self];    
 }
 
@@ -130,7 +133,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (id)valueForGroupProperty:(NSString *)prop
 /*" Used for accessing user defaults for current message group. "*/
 {
-    NSString *key = [group name];
+    NSString *key = [[[[self group] objectID] URIRepresentation] absoluteString];
     if (key)
     {
         NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
@@ -143,8 +146,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 /*" Used for accessing user defaults for current message group. "*/
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary* groupProperties = [[ud objectForKey:[group name]] mutableCopy];
-    if (!groupProperties)groupProperties = [[NSMutableDictionary alloc] init];
+    NSString *key = [[[[self group] objectID] URIRepresentation] absoluteString];
+    
+    NSMutableDictionary* groupProperties = [[ud objectForKey:key] mutableCopy];
+    if (!groupProperties) groupProperties = [[NSMutableDictionary alloc] init];
+    
     if (value)
     {
         [groupProperties setObject:value forKey:prop];
@@ -153,7 +159,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         [groupProperties removeObjectForKey:prop];
     }
-    [ud setObject:groupProperties forKey:[group name]];
+    
+    [ud setObject:groupProperties forKey:key];
     [groupProperties release];
 }
 
@@ -291,6 +298,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return nil;
 }
 
+/*
+- (IBAction) showThreads2: (id) sender
+{
+    G3MessageGroup *selectedGroup = [G3MessageGroup messageGroupWithURIReferenceString:[boxesView itemAtRow:[boxesView selectedRow]]];
+    
+    NSLog(@"Fetching Threads via CoreData...");
+    [selectedGroup threadsByDate];
+    NSLog(@"Fetched Threads via CoreData.");
+}
+   */
+
 - (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
@@ -360,14 +378,26 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     //    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
+- (NSTimeInterval)nowForThreadFiltering
+{
+    if (![[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]) return 0;
+    
+    if (nowForThreadFiltering == 0)
+    {
+        nowForThreadFiltering = [[NSDate date] timeIntervalSinceReferenceDate] - 60 * 60 * 24 * 28;
+    }
+    
+    return nowForThreadFiltering;
+}
+
 - (NSArray *)threadIdsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-    NSMutableArray* result = [self threadCache];
+    NSMutableArray *result = [self threadCache];
     
     if (!result) 
     {
-        result = [[self group] threadReferenceURIsByDate];
+        result = [[self group] threadReferenceURIsByDateNewerThan:[self nowForThreadFiltering]];
         if (result) [self setThreadCache:result];
     }
     return result;
@@ -375,11 +405,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (NSSet *)nonExpandableItems
 {
-    NSMutableSet* result = [self nonExpandableItemsCache];
+    NSMutableSet *result = [self nonExpandableItemsCache];
     
     if (!result) 
     {
-        result = [[self group] threadsContainingSingleMessage];
+        result = [[self group] threadsContainingSingleMessageNewerThan:[self nowForThreadFiltering]];
         if (result) [self setNonExpandableItemsCache:result];
     }
     return result;
@@ -602,7 +632,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [[[G3MessageEditorController alloc] initReplyTo:message all:NO profile:[self profileForMessage:message]] autorelease];
 }
 
-- (void)followup:(id)sender
+- (IBAction)followup:(id)sender
 {
     G3Message *message = [self selectedMessage];
     
@@ -611,7 +641,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [[[G3MessageEditorController alloc] initFollowupTo:message profile:[[self group] defaultProfile]] autorelease];
 }
 
-- (void)replyAll:(id)sender
+- (IBAction)replyAll:(id)sender
 {
     G3Message *message = [self selectedMessage];
     
@@ -620,7 +650,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [[[G3MessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
 }
 
-- (void)replyDefault:(id)sender
+- (IBAction)replyDefault:(id)sender
 {
     G3Message *message = [self selectedMessage];
 
@@ -634,7 +664,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (void)forward:(id)sender
+- (IBAction)forward:(id)sender
 {
     /*
     OPInternetMessage *message;
@@ -707,6 +737,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)removeFolderMessageGroup:(id)sender
 {
+    NSLog(@"-removeFolderMessageGroup: needs to be implemented");
 }
 
 - (IBAction)applySortingAndFiltering:(id)sender
@@ -752,6 +783,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     // commit changes:
     [NSApp saveAction:self];
+}
+
+- (IBAction)threadFilterPopUpChanged:(id)sender
+{
+    if (NSDebugEnabled) NSLog(@"-threadFilterPopUpChanged:");
+
+    nowForThreadFiltering = 0;
+    
+    [self setValue:[NSNumber numberWithInt:[[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
+    
+    [threadCache release]; threadCache = nil;
+    [nonExpandableItemsCache release]; nonExpandableItemsCache = nil;
+
+    [self modelChanged:nil];
 }
 
 /*
@@ -900,6 +945,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         [group autorelease];
         group = [aGroup retain];
+        
+        // thread filter popup:
+        [threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];

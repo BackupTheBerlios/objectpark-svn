@@ -25,6 +25,7 @@
     IBOutlet NSDrawer *boxesDrawer;
     IBOutlet NSOutlineView *boxesView;
     IBOutlet OPCollapsingSplitView *treeBodySplitter;
+    IBOutlet NSPopUpButton *threadFilterPopUp;
 
     G3MessageGroup *group;
     G3Thread *displayedThread; // displayed as comment tree
@@ -32,6 +33,7 @@
     NSMutableArray *threadCache; // contains item uris
     NSMutableSet *nonExpandableItemsCache; // contains item uris
     BOOL showRawSource;
+    NSTimeInterval nowForThreadFiltering;
     
     // -- Toolbar --
     NSArray *toolbarItems;
@@ -64,11 +66,11 @@
 
 /*" Actions "*/
 - (IBAction)showThreads:(id)sender;
-
 - (IBAction)addFolder:(id)sender;
 - (IBAction)rename:(id)sender;
 - (IBAction)addMessageGroup:(id)sender;
 - (IBAction)removeFolderMessageGroup:(id)sender;
+- (IBAction)threadFilterPopUpChanged:(id)sender;
 
 @end
 

@@ -189,7 +189,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     [request setPredicate: p];
     
-    //[request setSortDescriptors: [NSArray arrayWithObject: [[[NSSortDescriptor alloc] initWithKey: @"date" ascending: NO] autorelease]]];
+    [request setSortDescriptors: [NSArray arrayWithObject: [[[NSSortDescriptor alloc] initWithKey: @"date" ascending: NO] autorelease]]];
     
     result = [[self managedObjectContext] executeFetchRequest: request error: &error];
     if (error) NSLog(@"Error fetching threads: %@", error);
@@ -225,10 +225,11 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     return 0;
 }
 
-- (NSMutableArray*) threadReferenceURIsByDate
+- (NSMutableArray *)threadReferenceURIsByDateNewerThan:(NSTimeInterval)sinceRefDate
 {
     NSMutableArray *result = [NSMutableArray array];
     
+    NSLog(@"entered threadReferenceURIsByDate");
     [NSManagedObject lockStore];
     
     // open db:
@@ -241,7 +242,18 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         int errorCode;
         char *error;
         //NSLog(@"DB opened. Fetching thread objects...");
-        NSString *queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZTHREAD.ZDATE;", [self primaryKey]];
+        NSString *queryString = nil;
+        
+        if (sinceRefDate)
+        {
+            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f order by ZTHREAD.ZDATE;", [self primaryKey], sinceRefDate];
+        }
+        else
+        {
+            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZTHREAD.ZDATE;", [self primaryKey]];
+        }
+        
+        //NSString *queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZTHREAD.ZDATE;", [self primaryKey]];
         
         if (errorCode = sqlite3_exec(db, // An open database
                                          //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
@@ -262,13 +274,15 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     [NSManagedObject unlockStore];
     
+    NSLog(@"exited threadReferenceURIsByDate");
+
     //NSLog(@"result count = %d", [result count]);
     //NSLog(@"result = %@", result);
     
     return result;
 }
 
-- (NSMutableSet *)threadsContainingSingleMessage
+- (NSMutableSet *)threadsContainingSingleMessageNewerThan:(NSTimeInterval)sinceRefDate
 {
     NSMutableSet *result = [NSMutableSet set];
     
@@ -284,7 +298,16 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         int errorCode;
         char *error;
         //NSLog(@"DB opened. Fetching thread objects...");
-        NSString *queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZNUMBEROFMESSAGES < 2;", [self primaryKey]];
+        NSString *queryString = nil;
+        
+        if (sinceRefDate)
+        {
+            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f and ZTHREAD.ZNUMBEROFMESSAGES < 2;", [self primaryKey], sinceRefDate];
+        }
+        else
+        {
+            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZNUMBEROFMESSAGES < 2;", [self primaryKey]];
+        }
         
         if (errorCode = sqlite3_exec(db, // An open database
                                          //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
