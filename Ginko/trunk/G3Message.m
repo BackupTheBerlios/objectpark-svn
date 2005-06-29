@@ -59,18 +59,7 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
         [internetMessage release];
         return nil;
     }
-    
-    // sanity check for date header field:
-    NSCalendarDate *messageDate = [internetMessage date];
-    NSCalendarDate *nowPlusTolerance = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:0 hours:0 minutes:15 seconds:0];
-    if ([nowPlusTolerance compare:messageDate] != NSOrderedDescending) // if message's date is a future date
-    {
-        // broken message, set current date:
-        [internetMessage setDate:[NSCalendarDate date]];
-        someTransferData = [internetMessage transferData];
-        if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
-    }
-    
+        
     // Create a new message in the default context:
     result = [[[G3Message alloc] initWithManagedObjectContext:[NSManagedObjectContext defaultContext]] autorelease];
     NSAssert(result != nil, @"Could not create message object");
@@ -82,7 +71,17 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     [result setValue:[internetMessage messageId] forKey:@"messageId"];  
     [result setValue:[internetMessage normalizedSubject] forKey:@"subject"];
     [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
-    [result setValue:[internetMessage date] forKey:@"date"];
+
+    // sanity check for date header field:
+    NSCalendarDate *messageDate = [internetMessage date];
+    NSCalendarDate *nowPlusTolerance = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:0 hours:0 minutes:15 seconds:0];
+    if ([nowPlusTolerance compare:messageDate] != NSOrderedDescending) // if message's date is a future date
+    {
+      // broken message, set current date:
+      messageDate = [NSCalendarDate date];
+      if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
+    }
+    [result setValue:messageDate forKey:@"date"];
     
     [internetMessage release];
     

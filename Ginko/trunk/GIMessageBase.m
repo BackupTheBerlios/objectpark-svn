@@ -74,7 +74,8 @@
         [thread addMessage:aMessage];
     }
     
-    [thread addGroup:aGroup];    
+    [aGroup addThread:thread];
+    //[thread addGroup:aGroup];    
 }
 
 + (void)addSentMessage:(G3Message *)aMessage

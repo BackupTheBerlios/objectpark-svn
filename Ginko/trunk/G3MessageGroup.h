@@ -13,6 +13,7 @@
 extern NSString *GIMessageGroupWasAddedNotification;
 
 @class G3Profile;
+@class G3Thread;
 
 @interface G3MessageGroup : NSManagedObject 
 {
@@ -52,6 +53,9 @@ extern NSString *GIMessageGroupWasAddedNotification;
 //- (NSArray *)threadsByDate;
 - (NSMutableArray *)threadReferenceURIsByDate;
 - (NSMutableSet *)threadsContainingSingleMessage;
+
+- (void)addThread:(G3Thread *)value;
+- (void)removeThread:(G3Thread *)value;
 
 - (unsigned) threadCount;
 

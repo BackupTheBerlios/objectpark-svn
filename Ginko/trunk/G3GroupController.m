@@ -27,6 +27,7 @@
 #import "G3Message.h"
 #import "GIMessageBase.h"
 #import "NSString+Extensions.h"
+#import "GIMessageFilter.h"
 
 @interface G3GroupController (CommentsTree)
 
@@ -350,10 +351,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         NSNotification *notification;
         
         NSLog(@"observeValueForKeyPath");
-        [self modelChanged:nil];
+//        [self modelChanged:nil];
         notification = [NSNotification notificationWithName:@"GroupContentChangedNotification" object:self];
         
-        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
     }
     // the same change
     //    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -708,7 +709,50 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
 }
 
-
+- (IBAction)applySortingAndFiltering:(id)sender
+/*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
+{
+    NSIndexSet *selectedIndexes;
+    selectedIndexes = [threadsView selectedRowIndexes];
+    int lastIndex = [selectedIndexes lastIndex];
+    
+    int i;
+    for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++)
+    {
+        if ([threadsView isRowSelected:i])
+        {
+            // get one of the selected threads:
+            G3Thread *thread = [NSManagedObjectContext objectWithURIString:[threadsView itemAtRow:i]];
+            NSAssert([thread isKindOfClass:[G3Thread class]], @"assuming object is a thread");
+            
+            // remove selected thread from receiver's group:
+            [[self group] removeThread:thread];
+            BOOL threadWasPutIntoAtLeastOneGroup = NO;
+            
+            @try
+            {
+                // apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
+                NSEnumerator *enumerator = [[thread messages] objectEnumerator];
+                G3Message *message;
+                
+                while (message = [enumerator nextObject])
+                {
+                    threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage:message flags:0];
+                }
+            }
+            @catch (NSException *localException)
+            {
+                @throw;
+            }
+            @finally
+            {
+                if (!threadWasPutIntoAtLeastOneGroup) [[self group] addThread:thread];
+            }
+        }
+    }
+    // commit changes:
+    [NSApp saveAction:self];
+}
 
 /*
 - (void)moveToTrash:(id)sender
@@ -829,7 +873,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void)modelChanged:(NSNotification *)aNotification
 {
-    //NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
+    if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
     [self setThreadCache:nil];
     [self setNonExpandableItemsCache:nil];
     [self updateGroupInfoTextField];
@@ -896,6 +940,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
+static BOOL isThreadItem(id item)
+{
+    return [item isKindOfClass:[NSString class]];
+}
+
 // validation
 - (BOOL)validateSelector:(SEL)aSelector
 {
@@ -913,13 +962,36 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         if ((! [self isStandaloneBoxesWindow])&& ([selectedIndexes count] == 1))
         {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[G3Message 
-                class]]) || ([[NSManagedObjectContext objectWithURIString: item] containsSingleMessage]))
+            if (([item isKindOfClass:[G3Message class]]) || ([[NSManagedObjectContext objectWithURIString: item] containsSingleMessage]))
             {
                 return YES;
             }
         }
         return NO;
+    }
+    else if (aSelector == @selector(applySortingAndFiltering:))
+    {
+        // true when only threads are selected; false otherwise
+        NSIndexSet *selectedIndexes;
+        
+        selectedIndexes = [threadsView selectedRowIndexes];
+        if ((! [self isStandaloneBoxesWindow]) && ([selectedIndexes count] > 0))
+        {
+            int i, lastIndex;
+            
+            lastIndex = [selectedIndexes lastIndex];
+            
+            for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++)
+            {
+                if ([threadsView isRowSelected:i])
+                {
+                    if (!isThreadItem([threadsView itemAtRow:i])) return NO;
+                }
+            }
+            
+            return YES;
+        }
+        return NO;        
     }
     /*
     if ( 
