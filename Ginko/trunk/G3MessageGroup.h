@@ -6,7 +6,7 @@
 //  Copyright 2004 Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 #import "OPManagedObject.h"
 
 /*" Sent when a new message group was added. %{object} holds the added G3MessageGroup object. "*/

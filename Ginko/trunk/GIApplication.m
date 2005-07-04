@@ -24,6 +24,7 @@
 #import "GIActivityPanelController.h"
 #import "GIPOPJob.h"
 #import "GISMTPJob.h"
+#import "G3Account.h"
 #import <Foundation/NSDebug.h>
 
 @implementation GIApplication

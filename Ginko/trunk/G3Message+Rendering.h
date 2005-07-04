@@ -20,7 +20,7 @@
  at http://www.objectpark.org/Ginko.html
  */
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 #import "G3Message.h"
 #import "EDHeaderFieldCoder.h"
 

@@ -6,7 +6,7 @@
 //  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 #import "G3MessageGroup.h"
 
 @interface G3GroupInspectorController : NSObject 

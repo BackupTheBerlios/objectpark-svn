@@ -6,7 +6,7 @@
 //  Copyright 2005 Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 
 
 @interface GIMatrixWithKeyboardSupport : NSMatrix {

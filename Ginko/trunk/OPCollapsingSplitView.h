@@ -6,7 +6,7 @@
 //  Copyright 2004 Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 
 // this class is unfinished. some methods don't work!
 

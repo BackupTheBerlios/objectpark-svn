@@ -6,7 +6,7 @@
 //  Copyright 2005 Objectpark Group. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 
 @interface OPJobs : NSObject 
 {

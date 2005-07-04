@@ -157,13 +157,15 @@
 		77F3181E077B327A0097096B /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F3181C077B327A0097096B /* GITextView.m */; };
 		8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		8D2147AF085114B3004C44B9 /* GISearchController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D2147AD085114B2004C44B9 /* GISearchController.h */; };
 		8D2147B0085114B3004C44B9 /* GISearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D2147AE085114B3004C44B9 /* GISearchController.m */; };
 		8D2147CF0851182E004C44B9 /* Search.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2147CE0851182E004C44B9 /* Search.nib */; };
-		8D40BAC40806769000F68BF3 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D40BAC30806769000F68BF3 /* libsqlite3.0.dylib */; };
 		8D4C5755076E3B6F000F46DA /* G3CommentTreeCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D4C5753076E3B6F000F46DA /* G3CommentTreeCell.h */; };
 		8D4C5756076E3B6F000F46DA /* G3CommentTreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D4C5754076E3B6F000F46DA /* G3CommentTreeCell.m */; };
+		8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
+		8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		8D543D260873F470007245ED /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D543D250873F470007245ED /* libsqlite3.dylib */; };
+		8D543DC0087412D3007245ED /* libsqlite3.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D543D250873F470007245ED /* libsqlite3.dylib */; };
 		8D666EF807D523C50076C74D /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D666EF607D523C50076C74D /* ActivePrefPanes.plist */; };
 		8D666F0207D5247A0076C74D /* GIContentPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D666EFE07D5247A0076C74D /* GIContentPane.h */; };
 		8D666F0307D5247B0076C74D /* GIContentPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D666EFF07D5247A0076C74D /* GIContentPane.m */; };
@@ -289,6 +291,7 @@
 		8DDD227F080ECA4A006C902D /* GIFiltersPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD227E080ECA4A006C902D /* GIFiltersPane.h */; };
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
+		8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
 		8DF749FC085525B900049071 /* Bugs.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8DF749FB085525B900049071 /* Bugs.txt */; };
 /* End PBXBuildFile section */
 
@@ -367,6 +370,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				8D543DC0087412D3007245ED /* libsqlite3.dylib in CopyFiles */,
 				8DBFD4FF0826DE93006D29DE /* OPPreferences.framework in CopyFiles */,
 				8DBFD5000826DE98006D29DE /* OPNetwork.framework in CopyFiles */,
 			);
@@ -375,7 +379,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -510,9 +513,9 @@
 		8D2147AD085114B2004C44B9 /* GISearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISearchController.h; sourceTree = "<group>"; };
 		8D2147AE085114B3004C44B9 /* GISearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISearchController.m; sourceTree = "<group>"; };
 		8D2147CE0851182E004C44B9 /* Search.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Search.nib; sourceTree = "<group>"; };
-		8D40BAC30806769000F68BF3 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = /usr/lib/libsqlite3.0.dylib; sourceTree = "<absolute>"; };
 		8D4C5753076E3B6F000F46DA /* G3CommentTreeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G3CommentTreeCell.h; sourceTree = "<group>"; };
 		8D4C5754076E3B6F000F46DA /* G3CommentTreeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G3CommentTreeCell.m; sourceTree = "<group>"; };
+		8D543D250873F470007245ED /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.dylib; sourceTree = SOURCE_ROOT; };
 		8D666EF607D523C50076C74D /* ActivePrefPanes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = ActivePrefPanes.plist; sourceTree = "<group>"; };
 		8D666EFE07D5247A0076C74D /* GIContentPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIContentPane.h; path = Preferences/GIContentPane.h; sourceTree = SOURCE_ROOT; };
 		8D666EFF07D5247A0076C74D /* GIContentPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIContentPane.m; path = Preferences/GIContentPane.m; sourceTree = SOURCE_ROOT; };
@@ -637,6 +640,7 @@
 		8DDD2281080ECA57006C902D /* GIFiltersPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIFiltersPane.nib; sourceTree = "<group>"; };
 		8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPExtensions.h"; sourceTree = "<group>"; };
 		8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPExtensions.m"; sourceTree = "<group>"; };
+		8DF2CF6A0879F523008F8F6B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		8DF749FB085525B900049071 /* Bugs.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bugs.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -645,14 +649,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				8D86D3DF0712FA7C001B6105 /* AddressBook.framework in Frameworks */,
 				77B8E36007EEBE1300068222 /* SenTestingKit.framework in Frameworks */,
-				8D40BAC40806769000F68BF3 /* libsqlite3.0.dylib in Frameworks */,
 				8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */,
 				8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */,
 				770070E7085B123500AB0064 /* Security.framework in Frameworks */,
 				7700727B085B129600AB0064 /* SystemConfiguration.framework in Frameworks */,
+				8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */,
+				8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */,
+				8D543D260873F470007245ED /* libsqlite3.dylib in Frameworks */,
+				8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,25 +730,18 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8DF2CF6A0879F523008F8F6B /* CoreData.framework */,
+				8D543D250873F470007245ED /* libsqlite3.dylib */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				7700727A085B129600AB0064 /* SystemConfiguration.framework */,
 				770070E6085B123500AB0064 /* Security.framework */,
 				8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */,
 				8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */,
-				8D40BAC30806769000F68BF3 /* libsqlite3.0.dylib */,
 				776B7DA007C41673009DA8B8 /* SenTestingKit.framework */,
 				8D86D3DE0712FA7C001B6105 /* AddressBook.framework */,
-				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
-				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -810,7 +809,6 @@
 			isa = PBXGroup;
 			children = (
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
-				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1458,6 +1456,7 @@
 					../OPPreferences/build/Development,
 					../OPNetwork/build/Development,
 					$USER_LIBRARY_DIR/Frameworks/,
+					"$(SRCROOT)/../../..",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = YES;
@@ -1475,7 +1474,7 @@
 				HEADER_SEARCH_PATHS = $USER_LIBRARY_DIR/Frameworks/SenTestingKit.framework/Headers/;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
@@ -1501,6 +1500,7 @@
 					../OPPreferences/build/Development,
 					../OPNetwork/build/Development,
 					$USER_LIBRARY_DIR/Frameworks/,
+					"$(SRCROOT)/../../..",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1518,7 +1518,7 @@
 				HEADER_SEARCH_PATHS = $USER_LIBRARY_DIR/Frameworks/SenTestingKit.framework/Headers/;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
@@ -1544,6 +1544,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Users/theisen/Projects/Work/OPPreferences/build,
 					/Users/theisen/Projects/Work/OPNetwork/build,
+					"$(SRCROOT)/../../..",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = YES;
@@ -1563,7 +1564,7 @@
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
@@ -1587,6 +1588,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Users/theisen/Projects/Work/OPPreferences/build,
 					/Users/theisen/Projects/Work/OPNetwork/build,
+					"$(SRCROOT)/../../..",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1602,7 +1604,7 @@
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = GinkoVoyager;

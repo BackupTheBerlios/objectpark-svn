@@ -230,13 +230,10 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 - (void)mergeMessagesFromThread:(G3Thread *)otherThread
 /*" Includes all messages from otherThread. otherThread is being deleted. "*/
 {
-#warning connect self to all groups of otherThread
     // put all messages from otherThread into self and remove otherThread
-    NSEnumerator *enumerator;
     G3Message *message;
-    G3MessageGroup *group;
+    NSEnumerator *enumerator = [[otherThread messages] objectEnumerator];
     
-    enumerator = [[otherThread messages] objectEnumerator];
     while (message = [enumerator nextObject])
     {
         [self addMessage:message];

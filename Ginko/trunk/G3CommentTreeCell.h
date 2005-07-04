@@ -6,7 +6,7 @@
 //  Copyright 2004, 2005 Objectpark.org. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 
 
 @interface G3CommentTreeCell : NSCell {

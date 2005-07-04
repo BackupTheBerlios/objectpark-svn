@@ -6,7 +6,8 @@
 //  Copyright 2004 Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
+#import <CoreData/CoreData.h>
 
 @class NSManagedObjectContext;
 

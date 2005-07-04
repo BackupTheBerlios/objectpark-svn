@@ -6,7 +6,7 @@
 //  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 @class OPMBoxFile;
 @class G3Message;
 @class G3MessageGroup;

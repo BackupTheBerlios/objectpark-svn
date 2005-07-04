@@ -6,7 +6,7 @@
 //  Copyright 2004 Objectpark. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 
 @class OPCollapsingSplitView;
 @class G3MessageGroup;
