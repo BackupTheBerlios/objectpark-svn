@@ -1189,6 +1189,7 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				8D9E8F1006AC46540055F87C /* CopyFiles */,
+				8DF2D1B6087A8CEC008F8F6B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1322,6 +1323,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# shell script goes here\n#headerdoc2html -t -o HeaderDoc *.h\n#cd \"Cocoa Extensions\"\n#headerdoc2html -t -o ../HeaderDoc/CocoaExtensions *.h\n#cd ..\n#cd \"Message Framework\"\n#headerdoc2html -t -o ../HeaderDoc/MessageFramework *.h\n#cd ..\n#gatherheaderdoc HeaderDoc\n\nrm -rf $SRCROOT/AutoDoc\n/usr/local/bin/autodoc -format html -tree -proj $SRCROOT -dest $SRCROOT/AutoDoc\n#perl \"$HOME/Developer/AutoDoc/contrib/LinkDocs/linkDocs.pl\" $SRCROOT/AutoDoc\n";
+		};
+		8DF2D1B6087A8CEC008F8F6B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "echo Changing libsqlite load path...\n#echo $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

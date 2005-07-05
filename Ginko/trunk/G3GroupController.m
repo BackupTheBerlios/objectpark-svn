@@ -783,6 +783,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // commit changes:
     [NSApp saveAction: self];
     [threadsView selectRow: firstIndex byExtendingSelection: NO];
+    [threadsView scrollRowToVisible: firstIndex];
 }
 
 - (IBAction)threadFilterPopUpChanged:(id)sender
