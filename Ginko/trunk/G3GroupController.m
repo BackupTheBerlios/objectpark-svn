@@ -368,7 +368,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         NSNotification *notification;
         
-        NSLog(@"observeValueForKeyPath");
+        NSLog(@"observeValueForKeyPath %@", keyPath);
 //        [self modelChanged:nil];
         notification = [NSNotification notificationWithName:@"GroupContentChangedNotification" object:self];
         
@@ -743,12 +743,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (IBAction)applySortingAndFiltering:(id)sender
 /*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
 {
-    NSIndexSet *selectedIndexes;
-    selectedIndexes = [threadsView selectedRowIndexes];
-    int lastIndex = [selectedIndexes lastIndex];
-    
+    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+    int lastIndex  = [selectedIndexes lastIndex];
+    int firstIndex = [selectedIndexes firstIndex];
     int i;
-    for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++)
+    for (i = firstIndex; i <= lastIndex; i++)
     {
         if ([threadsView isRowSelected:i])
         {
@@ -782,7 +781,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         }
     }
     // commit changes:
-    [NSApp saveAction:self];
+    [NSApp saveAction: self];
+    [threadsView selectRow: firstIndex byExtendingSelection: NO];
 }
 
 - (IBAction)threadFilterPopUpChanged:(id)sender

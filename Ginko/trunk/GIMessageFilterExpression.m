@@ -131,7 +131,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
 }
 
-- (void)filtersDidChange: (NSNotification*) aNotification
+- (void) filtersDidChange: (NSNotification*) aNotification
 /*" Cleares the _subjects cache. "*/
 {
     [_subjectsCache release];
@@ -143,11 +143,9 @@
 {
     NSEnumerator *enumerator;
     NSString *matchString, *argument;
-    NSAutoreleasePool *pool;
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSArray *matchStrings = nil;
     BOOL matches = NO;
-
-    pool = [[NSAutoreleasePool alloc] init];
 
     // Step one: assembling of subjects (array of strings)
     switch ([self subjectType]) 
