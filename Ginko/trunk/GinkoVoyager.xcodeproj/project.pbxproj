@@ -1337,7 +1337,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "echo Changing libsqlite load path...\n#echo $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\ninstall_name_tool -change /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData @executable_path/../Frameworks/CoreData.framework/Versions/A/CoreData \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/CoreData.framework/Versions/A/CoreData\"";
+			shellScript = "echo Changing libsqlite load path...\n\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\ninstall_name_tool -change /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData @executable_path/../Frameworks/CoreData.framework/Versions/A/CoreData \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/CoreData.framework/Versions/A/CoreData\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
