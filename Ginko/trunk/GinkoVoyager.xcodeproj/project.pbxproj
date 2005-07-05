@@ -292,6 +292,7 @@
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
 		8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
+		8DF2D1C9087A9746008F8F6B /* CoreData.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
 		8DF749FC085525B900049071 /* Bugs.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8DF749FB085525B900049071 /* Bugs.txt */; };
 /* End PBXBuildFile section */
 
@@ -371,6 +372,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				8D543DC0087412D3007245ED /* libsqlite3.dylib in CopyFiles */,
+				8DF2D1C9087A9746008F8F6B /* CoreData.framework in CopyFiles */,
 				8DBFD4FF0826DE93006D29DE /* OPPreferences.framework in CopyFiles */,
 				8DBFD5000826DE98006D29DE /* OPNetwork.framework in CopyFiles */,
 			);
@@ -1335,7 +1337,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "echo Changing libsqlite load path...\n#echo $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"";
+			shellScript = "echo Changing libsqlite load path...\n#echo $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\ninstall_name_tool -change /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData @executable_path/../Frameworks/CoreData.framework/Versions/A/CoreData \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\ninstall_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/CoreData.framework/Versions/A/CoreData\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
