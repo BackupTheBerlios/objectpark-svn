@@ -468,9 +468,10 @@
     
     while (message = [enumerator nextObject])
     {
-        [message removeFlags:OPDraftStatus | OPQueuedStatus | OPQueuedSendNowStatus];
+        [message removeFlags:OPDraftStatus | OPQueuedStatus];
         [GIMessageBase removeDraftMessage:message];
         [GIMessageBase addSentMessage:message];
+        
         /*    
             [messageCenter performSelector:@selector(addRecipientsToLRUMailAddresses:)
                                 withObject:message
@@ -497,7 +498,7 @@
             
         while (message = [messagesToSendEnumerator nextObject])
         {
-            if (![message hasFlag:OPSendingBlockedStatus] && [message hasFlag:flag])
+            if (![message hasFlags:OPSendingBlockedStatus] && [message hasFlags:OPQueuedStatus])
             {
                 [messagesQualifyingForSend addObject:message];
             }

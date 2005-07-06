@@ -95,6 +95,12 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return result;
 }
 
+- (id)initWithEntity:(NSEntityDescription*)entity insertIntoManagedObjectContext:(NSManagedObjectContext*)context
+{
+    flagsCache = -1;
+    return [super initWithEntity:entity insertIntoManagedObjectContext:context];
+}
+
 - (NSData *)transferData
 {
     return [self valueForKeyPath:@"messageData.transferData"];
@@ -120,32 +126,32 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 
 - (unsigned)flags
 {
-    unsigned result;
-    
     @synchronized(self)
     {
-        [self willAccessValueForKey:@"flags"];
-        result = [[self primitiveValueForKey:@"flags"] intValue];
-        [self didAccessValueForKey:@"flags"];
+        if (flagsCache < 0)
+        {
+            flagsCache = 0;
+            
+            if ([[self valueForKey:@"isInSendJob"] boolValue]) flagsCache |= OPInSendJobStatus;
+            if ([[self valueForKey:@"isQueued"] boolValue]) flagsCache |= OPQueuedStatus;
+            if ([[self valueForKey:@"isInteresting"] boolValue]) flagsCache |= OPInterestingStatus;
+            if ([[self valueForKey:@"isSeen"] boolValue]) flagsCache |= OPSeenStatus;
+            if ([[self valueForKey:@"isJunk"] boolValue]) flagsCache |= OPJunkMailStatus;
+            if ([[self valueForKey:@"isSendingBlocked"] boolValue]) flagsCache |= OPSendingBlockedStatus;
+            if ([[self valueForKey:@"isFlagged"] boolValue]) flagsCache |= OPFlaggedStatus;
+            if ([[self valueForKey:@"isFromMe"] boolValue]) flagsCache |= OPIsFromMeStatus;
+            if ([[self valueForKey:@"isFulltextIndexed"] boolValue]) flagsCache |= OPFulltextIndexedStatus;
+            if ([[self valueForKey:@"isAnswered"] boolValue]) flagsCache |= OPAnsweredStatus;
+            if ([[self valueForKey:@"isDraft"] boolValue]) flagsCache |= OPDraftStatus;
+        }
     }
     
-    return result;
+    return flagsCache;
 }
 
-- (void)setFlags:(unsigned)someFlags
+- (BOOL)hasFlags:(unsigned)someFlags
 {
-    @synchronized(self)
-    {
-        [self willChangeValueForKey:@"flags"];
-        [self setPrimitiveValue:[NSNumber numberWithInt:someFlags] forKey:@"flags"];
-        [self didChangeValueForKey:@"flags"];
-    }
-}
-
-- (BOOL)hasFlag:(unsigned)flag
-{
-    int flags = [self flags];
-    return (flag & flags) != 0;
+    return (someFlags & [self flags]) == someFlags;
 }
 
 - (void)addFlags:(unsigned)someFlags
@@ -153,9 +159,23 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     @synchronized(self)
     {
         int flags = [self flags];
-        if (someFlags | flags !=flags)
+        if (someFlags | flags != flags)
         {
-            [self setFlags:(flags | someFlags)];
+            // flags to set:
+            NSNumber *yes = [NSNumber numberWithBool:YES];
+            if (someFlags & OPInSendJobStatus) [self setValue:yes forKey:@"isInSendJob"];
+            if (someFlags & OPQueuedStatus) [self setValue:yes forKey:@"isQueued"];
+            if (someFlags & OPInterestingStatus) [self setValue:yes forKey:@"isInteresting"];
+            if (someFlags & OPSeenStatus) [self setValue:yes forKey:@"isSeen"];
+            if (someFlags & OPJunkMailStatus) [self setValue:yes forKey:@"isJunk"];
+            if (someFlags & OPSendingBlockedStatus) [self setValue:yes forKey:@"isSendingBlocked"];
+            if (someFlags & OPFlaggedStatus) [self setValue:yes forKey:@"isFlagged"];
+            if (someFlags & OPIsFromMeStatus) [self setValue:yes forKey:@"isFromMe"];
+            if (someFlags & OPFulltextIndexedStatus) [self setValue:yes forKey:@"isFulltextIndexed"];
+            if (someFlags & OPAnsweredStatus) [self setValue:yes forKey:@"isAnswered"];
+            if (someFlags & OPDraftStatus) [self setValue:yes forKey:@"isDraft"];
+        
+            flagsCache = someFlags | flags;
         }
     }
 }
@@ -168,20 +188,24 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
         
         if ((flags & (~someFlags)) != flags)
         {
-            [self setFlags:(flags & (~someFlags))];
+            // flags to remove:
+            NSNumber *no = [NSNumber numberWithBool:NO];
+            if (someFlags & OPInSendJobStatus) [self setValue:no forKey:@"isInSendJob"];
+            if (someFlags & OPQueuedStatus) [self setValue:no forKey:@"isQueued"];
+            if (someFlags & OPInterestingStatus) [self setValue:no forKey:@"isInteresting"];
+            if (someFlags & OPSeenStatus) [self setValue:no forKey:@"isSeen"];
+            if (someFlags & OPJunkMailStatus) [self setValue:no forKey:@"isJunk"];
+            if (someFlags & OPSendingBlockedStatus) [self setValue:no forKey:@"isSendingBlocked"];
+            if (someFlags & OPFlaggedStatus) [self setValue:no forKey:@"isFlagged"];
+            if (someFlags & OPIsFromMeStatus) [self setValue:no forKey:@"isFromMe"];
+            if (someFlags & OPFulltextIndexedStatus) [self setValue:no forKey:@"isFulltextIndexed"];
+            if (someFlags & OPAnsweredStatus) [self setValue:no forKey:@"isAnswered"];
+            if (someFlags & OPDraftStatus) [self setValue:no forKey:@"isDraft"];
+            
+            flagsCache = (flags & (~someFlags));
         }
     }
 }
-
-/*
-- (void) setFlag: (unsigned) flag to: (BOOL) value
-{
-	int flags = [[self valueForKey: @"flag"] intValue];
-	if ((((1<<flag) & flags) != 0) !=value) {
-		[self setValue: [NSNumber numberWithInt: (flags | (1<<flag))] forKey: @"flags"];
-	}
-}
-*/
 
 - (G3Message *)reference
 {
@@ -218,6 +242,26 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     id thread = [self primitiveValueForKey:@"thread"];
     [self didAccessValueForKey:@"thread"];
     return thread;
+}
+
+
+- (G3Profile *)profile 
+{
+    id tmpObject;
+    
+    [self willAccessValueForKey:@"profile"];
+    tmpObject = [self primitiveValueForKey:@"profile"];
+    [self didAccessValueForKey:@"profile"];
+    
+    return tmpObject;
+}
+
+- (void)setProfile:(G3Profile *)value 
+{
+    [self willChangeValueForKey:@"profile"];
+    [self setPrimitiveValue:value
+                     forKey:@"profile"];
+    [self didChangeValueForKey:@"profile"];
 }
 
 - (G3Thread *)threadCreate:(BOOL)doCreate
@@ -263,13 +307,6 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return [[self internetMessage] bodyContent];
 }
 
-/* as documentation of NSManagedObject suggests...no overriding of -description
-- (NSString*) description
-{
-    return [NSString stringWithFormat: @"%@, Subject: '%@', Author: '%@', Date: '%@'", [super description], [self valueForKey: @"subject"], [self valueForKey: @"author"], [self valueForKey: @"date"]];
-}
-*/
-
 - (NSArray *)commentsInThread:(G3Thread *) thread
 /* Returns all directly commenting messages in the thread given. */
 {
@@ -310,49 +347,6 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 }
 */
 
-- (BOOL)isFulltextIndexed 
-{
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"isFulltextIndexed"];
-    tmpValue = [self primitiveValueForKey:@"isFulltextIndexed"];
-    [self didAccessValueForKey:@"isFulltextIndexed"];
-    
-    return (tmpValue!=nil) ? [tmpValue boolValue] : FALSE;
-}
-
-- (void)setIsFulltextIndexed:(BOOL)value 
-{
-    [self willChangeValueForKey:@"isFulltextIndexed"];
-    [self setPrimitiveValue:[NSNumber numberWithBool:value]
-                     forKey:@"isFulltextIndexed"];
-    [self didChangeValueForKey:@"isFulltextIndexed"];
-}
-
-- (BOOL)validateIsFulltextIndexed: (id *)valueRef error:(NSError **)outError 
-{
-    // Insert custom validation logic here.
-    return YES;
-}
-
-- (BOOL) isDummy
-{
-    return [self valueForKey:@"transferData"] == nil;
-}
-
-
-- (BOOL)isSeen
-{
-    return [self hasFlag: OPSeenStatus];
-}
-
-- (void)setSeen:(BOOL)isSeen
-{
-    if (isSeen) [self addFlags:OPSeenStatus];
-    else [self removeFlags:OPSeenStatus];
-}
-
-
 - (BOOL)isListMessage
 /*" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). "*/
 {
@@ -381,10 +375,9 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return [self isListMessage] || [self isUsenetMessage];
 }
 
-- (BOOL) isFromMe
-/*" Returns YES, if the from: header contains one of my SMTP addresses configured. "*/
+- (BOOL)isDummy
 {
-	return [self hasFlag: OPIsFromMeStatus];
+    return [self transferData] == nil;
 }
 
 - (NSString*) senderName

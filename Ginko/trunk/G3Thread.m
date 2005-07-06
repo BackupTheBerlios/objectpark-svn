@@ -350,7 +350,7 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
     enumerator = [[self messages] objectEnumerator];
     while (message = [enumerator nextObject]) 
     {
-        if (![message isSeen]) 
+        if (![message hasFlags:OPSeenStatus]) 
         {
             return YES;
         }

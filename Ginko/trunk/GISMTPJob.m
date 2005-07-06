@@ -134,7 +134,7 @@
             @finally
             {
                 [pool drain];
-                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
                 [stream close];
             }
         }

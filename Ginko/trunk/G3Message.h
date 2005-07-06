@@ -11,25 +11,27 @@
 
 @class OPInternetMessage;
 @class G3Thread;
+@class G3Profile;
 
 #define OPSeenStatus 1
 #define OPAnsweredStatus 2
 #define OPFlaggedStatus 4
-#define OPDeletedStatus 8
+//#define OPDeletedStatus 8
 #define OPDraftStatus 16
-#define OPRecentStatus 32
+//#define OPRecentStatus 32
 #define OPQueuedStatus 64
-#define OPExpungedStatus 128
-#define OPUninterestingStatus 256
+//#define OPExpungedStatus 128
+#define OPInterestingStatus 256
 #define OPSendingBlockedStatus 512
-#define OPPublicMessageStatus 1024
-#define OPQueuedSendNowStatus 2048
+//#define OPPublicMessageStatus 1024
+#define OPFulltextIndexedStatus 2048
 #define OPInSendJobStatus 4096
 #define OPJunkMailStatus 8192
 #define OPIsFromMeStatus 16384
 
 @interface G3Message : NSManagedObject 
 {
+    int flagsCache;
 }
 
 + (id)messageForMessageId:(NSString *)messageId;
@@ -44,8 +46,7 @@
 - (unsigned)numberOfReferences;
 
 - (unsigned)flags;
-- (void)setFlags:(unsigned)someFlags;
-- (BOOL)hasFlag:(unsigned)flag;
+- (BOOL)hasFlags:(unsigned)someFlags;
 - (void)addFlags:(unsigned)someFlags;
 - (void)removeFlags:(unsigned)someFlags;
 
@@ -54,22 +55,16 @@
 - (G3Thread *)thread;
 - (G3Thread *)threadCreate:(BOOL)doCreate;
 
+- (G3Profile *)profile;
+- (void)setProfile:(G3Profile *)value;
+
 - (NSArray *)commentsInThread:(G3Thread *)thread;
-
-- (BOOL)isDummy;
-- (BOOL)isSeen;
-- (void)setSeen:(BOOL)isSeen;
-
-/*" Fulltext Indexing Support "*/
-- (BOOL)isFulltextIndexed;
-- (void)setIsFulltextIndexed:(BOOL)value;
 
 - (BOOL)isListMessage;
 - (BOOL)isUsenetMessage;
 - (BOOL)isEMailMessage;
 - (BOOL)isPublicMessage;
-
-- (BOOL)isFromMe;
+- (BOOL)isDummy;
 
 - (NSString *)senderName;
 

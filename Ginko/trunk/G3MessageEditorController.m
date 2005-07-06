@@ -26,7 +26,7 @@
 
 @interface G3MessageEditorController (PrivateAPI)
 - (OPInternetMessage *)message;
-- (void)checkpointMessageWithStatus:(unsigned int)aType;
+- (G3Message *)checkpointMessageWithStatus:(unsigned int)aType;
 - (void)addReferenceToMessage:(G3Message *)aMessage;
 - (void)setHeadersFromMessage:(G3Message *)aMessage;
 - (void)appendContentFromMessage:(G3Message *)aMessage;
@@ -60,7 +60,7 @@
 {
     if (self = [self init]) 
     {        
-        [aMessage setFlags:OPSendingBlockedStatus];
+        [aMessage addFlags:OPSendingBlockedStatus];
         
         // get message's profile:
         NSError *error = nil;
@@ -253,7 +253,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (returnCode == NSAlertDefaultReturn)
     {
-        [self checkpointMessageWithStatus:[(NSNumber *)contextInfo unsignedIntValue]];
+        G3Message *message = [self checkpointMessageWithStatus:OPQueuedStatus];
+        
+        BOOL sendNow = [(NSNumber *)contextInfo boolValue];
+        if (sendNow)
+        {
+#warning start message send job here
+        }
+        
         [window performClose:self];
     }
     
@@ -275,13 +282,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                           self,   // delegate
                           @selector(sendSheetDidEnd:returnCode:contextInfo:),
                           NULL,   // didDismissSelector,
-                          [[NSNumber alloc] initWithUnsignedInt:OPQueuedStatus | OPQueuedSendNowStatus],   // contextinfo
+                          [[NSNumber alloc] initWithBool:YES], // contextinfo
                           NSLocalizedString(@"The To: field contains one of your own email addresses. You can now send the message or edit it and remove the address.", @"sendSoliloquySheet")
                           );
         return;
     }
     
-    [self checkpointMessageWithStatus:OPQueuedStatus | OPQueuedSendNowStatus];
+    G3Message *message = [self checkpointMessageWithStatus:OPQueuedStatus];
+#warning start message send job here
+
     [window performClose:self];
 }
 
@@ -297,7 +306,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                           self,   // delegate
                           @selector(sendSheetDidEnd:returnCode:contextInfo:),
                           NULL,   // didDismissSelector,
-                          [[NSNumber alloc] initWithUnsignedInt:OPQueuedStatus],   // contextinfo
+                          [[NSNumber alloc] initWithBool:NO],   // contextinfo
                           NSLocalizedString(@"The To: field contains one of your own email addresses. You can now send the message or edit it and remove the address.", @"sendSoliloquySheet")
                           );
         return;
@@ -864,7 +873,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // If we are replying to our own message, we probably want is to send a message to the recients (to header)
     NSString *preSetTo = [[replyMessage internetMessage] replyToWithFallback:YES];
     
-    if ([replyMessage isFromMe]) 
+    if ([replyMessage hasFlags:OPIsFromMeStatus]) 
     {
         NSString *preSetCc = [[replyMessage internetMessage] ccWithFallback:YES];
         
@@ -1027,15 +1036,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (void)checkpointMessageWithStatus:(unsigned int)aType
+- (G3Message *)checkpointMessageWithStatus:(unsigned int)aType
 {
-    G3Message *message;
+    G3Message *message = nil;
     
     message = [G3Message messageWithTransferData:[[self message] transferData]];
     NSAssert1(message != nil, @"-[G3MessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [[self message] transferData]);
     
     // status
-    if (oldMessage) [message setFlags:[oldMessage flags]];
+    if (oldMessage) [message addFlags:[oldMessage flags]];
     [message addFlags:OPSeenStatus | OPDraftStatus | aType];
     
     // unmark message as blocked for sending
@@ -1067,6 +1076,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSAssert1(!error, @"Error checkpointing message: %@", error);
     
     if (NSDebugEnabled) NSLog(@"checkpointed message");
+    
+    return message;
 }
 
 #define FORBIDDENCHARS @" []\\"

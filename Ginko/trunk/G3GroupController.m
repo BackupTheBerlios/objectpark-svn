@@ -181,7 +181,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
-    [displayedMessage setSeen: YES];
+    [displayedMessage addFlags:OPSeenStatus];
     
     if (isNewThread) 
     {
@@ -470,7 +470,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                         enumerator = [[selectedThread messages] objectEnumerator];
                         while (message = [enumerator nextObject])
                         {
-                            if (! [message isSeen])
+                            if (! [message hasFlags:OPSeenStatus])
                             {
                                 [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:message]] byExtendingSelection:NO];
                                 break;
@@ -490,9 +490,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 }
             }
             
-            if ([message hasFlag:OPDraftStatus])
+            if ([message hasFlags:OPDraftStatus])
             {
-                if ([message hasFlag:OPInSendJobStatus])
+                if ([message hasFlags:OPInSendJobStatus])
                 {
                     NSLog(@"message is in send job");
                     NSBeep();
@@ -506,7 +506,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             {
                 [tabView selectTabViewItemWithIdentifier:@"message"];
                 
-                [message setSeen: YES];
+                [message addFlags:OPSeenStatus];
                 
                 [self setDisplayedMessage:message thread:selectedThread];
                 
@@ -1364,7 +1364,7 @@ static NSAttributedString* spacer2()
                 item = [NSManagedObjectContext objectWithURIString: item];
             }
 
-            BOOL isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item isSeen];
+            BOOL isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item hasFlags:OPSeenStatus];
             
             NSCalendarDate *date = [item valueForKey:@"date"];
             
@@ -1397,7 +1397,7 @@ static NSAttributedString* spacer2()
                     
                     if (message) 
                     {
-                        BOOL isRead  = [message isSeen];
+                        BOOL isRead  = [message hasFlags:OPSeenStatus];
                         NSString *subject = [message valueForKey:@"subject"];
                         
                         if (!subject) subject = @"";
@@ -1441,7 +1441,7 @@ static NSAttributedString* spacer2()
                 from = [item senderName];
                 from = from ? from :@"- sender missing -";
                 
-                [result appendAttributedString:[[NSAttributedString alloc] initWithString:from attributes:[(G3Message *)item isSeen] ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):(inSelectionAndAppActive ? selectedUnreadFromAttributes():unreadFromAttributes())]];
+                [result appendAttributedString:[[NSAttributedString alloc] initWithString:from attributes:[(G3Message *)item hasFlags:OPSeenStatus] ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):(inSelectionAndAppActive ? selectedUnreadFromAttributes():unreadFromAttributes())]];
             }
             
             return result;
@@ -1638,7 +1638,7 @@ NSMutableArray* border = nil;
 
     // set cell's message attributes
     [cell setRepresentedObject:message];
-    [cell setSeen: [message isSeen]];
+    [cell setSeen:[message hasFlags:OPSeenStatus]];
     [cell setIsDummyMessage: [message isDummy]];
     [cell setHasConnectionToDummyMessage: [[message reference] isDummy]];
     

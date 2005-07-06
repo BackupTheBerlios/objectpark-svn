@@ -190,18 +190,24 @@ static NSArray* _headersShown = nil;
 }
 
 - (NSImage*) personImage
-    /*"Tries multiple way to aquire an image of the sender. Returns nil, if unsuccessful."*/
+/*"Tries multiple way to aquire an image of the sender. Returns nil, if unsuccessful."*/
 {
-    NSImage* cachedImage = [self primitiveValueForKey: @"CachedImage"];
-    if (!cachedImage) {
-        if ([self isFromMe]) {
+    NSImage *cachedImage = [self primitiveValueForKey:@"CachedImage"];
+    
+    if (!cachedImage) 
+    {
+        if ([self hasFlags:OPIsFromMeStatus]) 
+        {
 // ##WARNING put only single to: address image here.
             //cachedImage = [[GIPeopleImageCache sharedInstance] getImageForName: [[theMessage toWithFallback: YES] addressFromEMailString]];
-        } else {
+        } 
+        else 
+        {
             //cachedImage = [[GIPeopleImageCache sharedInstance] getImageForName: [[theMessage replyToWithFallback: YES] addressFromEMailString]];
-            NSLog(@"Searching personImage for %@", [[self internetMessage] replyToWithFallback: YES]);
+            NSLog(@"Searching personImage for %@", [[self internetMessage] replyToWithFallback:YES]);
             
-            if (!cachedImage) {
+            if (!cachedImage) 
+            {
                 
 // disabled for now!
                 
@@ -209,8 +215,10 @@ static NSArray* _headersShown = nil;
  //if (cachedImage) NSLog(@"Created XFace with checksum %@.", [[cachedImage TIFFRepresentation] md5Checksum]);
             }
         }
-        [self setPrimitiveValue: cachedImage forKey: @"CachedImage"];
+        
+        [self setPrimitiveValue:cachedImage forKey:@"CachedImage"];
     }
+    
     return cachedImage;
 }
 
