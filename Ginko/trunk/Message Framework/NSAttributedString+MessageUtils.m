@@ -520,6 +520,46 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
                      showInlineIfPossible: YES];
 }
 
+
+NSString* bytes2Display(unsigned int bytes)
+{
+    NSString *unit, *format;
+    double result;
+    
+    if (bytes < 1024) {
+        unit = @"B";
+        result = bytes;
+    }
+    else if (bytes < 1048525) {   // 1023.95 KB
+        unit = @"KB";
+        result = bytes / 1024.0;
+    }
+    else if (bytes < 1073689395) {   // 1023.95 MB
+        unit = @"MB";
+        result = bytes / 1048576.0;
+    }
+    else {
+        unit = @"GB";
+        result = bytes / 1073741824.0;
+    }
+    
+    if (result < 10.05) {
+        format = @"%.2g %@";
+    }
+    else if (result < 100.05) {
+        format = @"%.3g %@";
+    }
+    else if (result < 1000.05) {
+        format = @"%.4g %@";
+    }
+    else {
+        format = @"%.5g %@";
+    }
+    
+    return [NSString stringWithFormat:format, result, unit];
+}
+
+
 - (void) appendAttachmentWithFileWrapper: (NSFileWrapper*)aFileWrapper 
                     showInlineIfPossible: (BOOL) shouldShowInline
 /*" The file wrapper is materialized in a temp location
@@ -577,7 +617,9 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
                 // add the size of the resource fork also
                 fileSize += [resourceForkData length];
             }
-            NSString* infoString = fileSize<1024 ? [NSString stringWithFormat: @"(%u Bytes)", fileSize] : [NSString stringWithFormat: @"(%.1g KB)", fileSize/1024.0];
+            
+            NSString* infoString = bytes2Display(fileSize);
+            
             [cell setInfoString: infoString];
         } 
         [cell setTitle: [aFileWrapper filename]];
