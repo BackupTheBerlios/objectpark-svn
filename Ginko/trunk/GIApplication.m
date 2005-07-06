@@ -120,16 +120,16 @@
                     NSLog(@"Error creating index: %s", error);
                 }
             }
-            
-            if (errorCode = sqlite3_exec(db, /* An open database */
-                "CREATE INDEX MY_THREAD_DATE_INDEX ON ZTHREAD (ZDATE);", /* SQL to be executed */
-                NULL, /* Callback function */
-                NULL, /* 1st argument to callback function */
-                &error)) { /* Error msg written here */
-                if (error) {
-                    NSLog(@"Error creating index: %s", error);
-                }
-            }
+// This index is not used by sqlite.            
+//            if (errorCode = sqlite3_exec(db, /* An open database */
+//                "CREATE INDEX MY_THREAD_DATE_INDEX ON ZTHREAD (ZDATE);", /* SQL to be executed */
+//                NULL, /* Callback function */
+//                NULL, /* 1st argument to callback function */
+//                &error)) { /* Error msg written here */
+//                if (error) {
+//                    NSLog(@"Error creating index: %s", error);
+//                }
+//            }
     if (errorCode = sqlite3_exec(db, /* An open database */
     "PRAGMA default_cache_size = 8000;", /* SQL to be executed */
     NULL, /* Callback function */
