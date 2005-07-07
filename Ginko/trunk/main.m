@@ -21,6 +21,7 @@ int main(int argc, const char *argv[])
     // Make Ginko use the private sqlite dylib from application bundle
     // instead of the one installed in /usr/lib:
     //setenv("LD_LIBRARY_PATH", [[[NSBundle mainBundle] privateFrameworksPath] cString], 1);
+    
     //[pool release];
     return NSApplicationMain(argc, argv);
 }

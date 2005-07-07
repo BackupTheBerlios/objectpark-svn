@@ -376,6 +376,8 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 - (void)dealloc
 /*" releases ivars. "*/
 {    
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [headerFieldsForPopup release];
     [super dealloc];
 }
 
@@ -781,8 +783,6 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     IBOutlet NSButton *actionMoveCheckbox;		/*" sheet checkbox move "*/
     IBOutlet NSPopUpButton *actionMoveParameter;	/*" sheet parameter move "*/
     IBOutlet NSButton *actionPreventCheckbox;		/*" sheet checkbox prevent further filtering "*/
-    
-    @private NSMutableArray *_headerFieldsForPopup;	/*" the header fields for popup "*/
     
     GIMessageFilter *filter;
     id _lastArgumentValue;

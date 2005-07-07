@@ -47,51 +47,73 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return nil;
 }
 
+/*
+- (void) setInternetMessage: (OPInternetMessage *)iMessage
+    //" Private method. Used for simplified memory management only. "
+{
+    [iMessage retain];
+    [internetMessageCache release]; 
+    internetMessageCache = iMessage;
+}
+*/
+
+- (OPInternetMessage*) internetMessage
+{
+    OPInternetMessage* cache = [self primitiveValueForKey: @"internetMessageCache"];
+    if (!cache) {
+        NSData *transferData = [self valueForKey: @"transferData"];
+        
+        if (transferData) {
+            cache = [[OPInternetMessage alloc] initWithTransferData: transferData];
+            [self setPrimitiveValue: cache forKey: @"internetMessageCache"];
+            [cache release];
+        }
+    }
+    return cache;
+}
+
+
 + (id)messageWithTransferData:(NSData *)someTransferData
 /*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context nil is returned. "*/
 {
     id result = nil;
-    OPInternetMessage *internetMessage = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
+    OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData: someTransferData];
     
-    if ([self messageForMessageId:[internetMessage messageId]])
+    if ([self messageForMessageId: [im messageId]])
     {
-        if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [internetMessage messageId]);        
-        [internetMessage release];
-        return nil;
-    }
+        //if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [im messageId]);        
+    } else {
         
-    // Create a new message in the default context:
-    result = [[[G3Message alloc] initWithManagedObjectContext:[NSManagedObjectContext defaultContext]] autorelease];
-    NSAssert(result != nil, @"Could not create message object");
-    
-    //NSString* fromHeader = [msg bodyForHeaderField: @"from"];
-    NSString *fromHeader = [internetMessage fromWithFallback:YES];
-    
-    [result setValue:someTransferData forKey:@"transferData"];
-    [result setValue:[internetMessage messageId] forKey:@"messageId"];  
-    [result setValue:[internetMessage normalizedSubject] forKey:@"subject"];
-    [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
-
-    // sanity check for date header field:
-    NSCalendarDate *messageDate = [internetMessage date];
-    NSCalendarDate *nowPlusTolerance = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:0 hours:0 minutes:15 seconds:0];
-    if ([nowPlusTolerance compare:messageDate] != NSOrderedDescending) // if message's date is a future date
-    {
-      // broken message, set current date:
-      messageDate = [NSCalendarDate date];
-      if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
+        // Create a new message in the default context:
+        result = [[[G3Message alloc] initWithManagedObjectContext: [NSManagedObjectContext defaultContext]] autorelease];
+        NSAssert(result != nil, @"Could not create message object");
+        
+        NSString *fromHeader = [im fromWithFallback: YES];
+        
+        [result setPrimitiveValue: im forKey: @"internetMessageCache"];
+        [result setValue: someTransferData forKey: @"transferData"];
+        [result setValue: [im messageId] forKey: @"messageId"];  
+        [result setValue: [im normalizedSubject] forKey: @"subject"];
+        [result setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"author"];
+        
+        // sanity check for date header field:
+        NSCalendarDate* messageDate = [im date];
+        if ([(NSDate*)[NSDate dateWithTimeIntervalSinceNow: 15*60.0] compare: messageDate] != NSOrderedDescending) // if message's date is a future date
+        {
+        // broken message, set current date:
+            messageDate = [NSCalendarDate date];
+            if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
+        }
+        [result setValue:messageDate forKey: @"date"];
+        
+        // Note that this method operates on the encoded header field. It's OK because email
+        // addresses are 7bit only.
+        if ([G3Profile isMyEmailAddress:fromHeader])
+        {
+            [result addFlags:OPIsFromMeStatus];
+        }
     }
-    [result setValue:messageDate forKey:@"date"];
-    
-    [internetMessage release];
-    
-    // Note that this method operates on the encoded header field. It's OK because email
-    // addresses are 7bit only.
-    if ([G3Profile isMyEmailAddress:fromHeader])
-    {
-        [result addFlags:OPIsFromMeStatus];
-    }
-    
+    [im release];
     return result;
 }
 
@@ -116,15 +138,15 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     [self setValue: messageData forKey: @"messageData"];
 }
 
-- (NSString *)messageId
+- (NSString*) messageId
 {
-    [self willAccessValueForKey:@"messageId"];
-    id result = [self primitiveValueForKey:@"messageId"];
-    [self didAccessValueForKey:@"messageId"];
+    [self willAccessValueForKey: @"messageId"];
+    id result = [self primitiveValueForKey: @"messageId"];
+    [self didAccessValueForKey: @"messageId"];
     return result;
 }
 
-- (unsigned)flags
+- (unsigned) flags
 {
     @synchronized(self)
     {
@@ -397,17 +419,20 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return result;
 }
 
-- (OPInternetMessage *)internetMessage
+
+- (void) didTurnIntoFault
 {
-    NSData *transferData = [self valueForKey:@"transferData"];
-    
-    if (transferData) 
-    {
-        return [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
-    }
-    
-    return nil; // hamma nit
+    NSLog(@"G3Message 0x%x turned into fault.", self);
+    //[self setInternetMessage: nil];
 }
+
+/*
+- (void) dealloc
+{
+    [self setInternetMessage: nil];
+    [super dealloc];
+}
+*/
 
 - (void)putInSendJobStatus
 {
