@@ -887,6 +887,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     //[self setNonExpandableItemsCache: nil];
     [threadsView reloadData];
     [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
+    [threadsView expandItem: targetThreadURI];
     [GIApp saveAction: sender];
 }
 
