@@ -96,13 +96,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [boxesView setTarget:self];
     [boxesView setDoubleAction:@selector(showGroupWindow:)];
     // Register to grok GinkoMessages and GinkoMessageboxes drags
-    [boxesView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinkoMessages", @"GinkoMessageboxes", nil]];
+    [boxesView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinkoThreads", @"GinkoMessageboxes", nil]];
     [boxesView setAutosaveName:@"boxesView"];
     [boxesView setAutosaveExpandedItems:YES];
     
     [threadsView setTarget:self];
     [threadsView setDoubleAction:@selector(openSelection:)];
     [threadsView setHighlightThreads:YES];
+    [threadsView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinkoThreads", nil]];
     
     [self awakeToolbar];
     [self awakeCommentTree];
@@ -442,7 +443,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 message = item;
                 // find the thread above message:
                 while ([threadsView levelForRow:--selectedRow]){}
-                selectedThread = [NSManagedObjectContext objectWithURIString: [threadsView itemAtRow: selectedRow]];
+                selectedThread = [NSManagedObjectContext objectWithURIString:[threadsView itemAtRow:selectedRow]];
             }
             else 
             {
@@ -996,6 +997,33 @@ static BOOL isThreadItem(id item)
 }
 
 // validation
+
+- (BOOL)isOnlyThreadsSelected
+{
+    // true when only threads are selected; false otherwise
+    NSIndexSet *selectedIndexes;
+    
+    selectedIndexes = [threadsView selectedRowIndexes];
+    if ((! [self isStandaloneBoxesWindow]) && ([selectedIndexes count] > 0))
+    {
+        int i, lastIndex;
+        
+        lastIndex = [selectedIndexes lastIndex];
+        
+        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++)
+        {
+            if ([threadsView isRowSelected:i])
+            {
+                if (!isThreadItem([threadsView itemAtRow:i])) return NO;
+            }
+        }
+        
+        return YES;
+    }
+    
+    return NO;        
+}
+
 - (BOOL)validateSelector:(SEL)aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
@@ -1021,27 +1049,7 @@ static BOOL isThreadItem(id item)
     }
     else if (aSelector == @selector(applySortingAndFiltering:))
     {
-        // true when only threads are selected; false otherwise
-        NSIndexSet *selectedIndexes;
-        
-        selectedIndexes = [threadsView selectedRowIndexes];
-        if ((! [self isStandaloneBoxesWindow]) && ([selectedIndexes count] > 0))
-        {
-            int i, lastIndex;
-            
-            lastIndex = [selectedIndexes lastIndex];
-            
-            for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++)
-            {
-                if ([threadsView isRowSelected:i])
-                {
-                    if (!isThreadItem([threadsView itemAtRow:i])) return NO;
-                }
-            }
-            
-            return YES;
-        }
-        return NO;        
+        return [self isOnlyThreadsSelected];
     }
     /*
     if ( 
@@ -1887,7 +1895,7 @@ NSMutableArray* border = nil;
 
 - (BOOL)outlineView:(NSOutlineView *)anOutlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
-    if (anOutlineView == boxesView) // Message Groups
+    if (anOutlineView == boxesView) // Message Groups list
     {
         NSArray *items;
         
@@ -1909,11 +1917,38 @@ NSMutableArray* border = nil;
             return YES;
         }
     }
+    else if (anOutlineView == threadsView)
+    {
+        // move threads from source group to destination group:
+        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        G3MessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
+        G3MessageGroup *destinationGroup = [self group];
+        NSEnumerator *enumerator = [threadURLs objectEnumerator];
+        NSString *threadURL;
+        
+        while (threadURL = [enumerator nextObject])
+        {
+            G3Thread *thread = [NSManagedObjectContext objectWithURIString:threadURL];
+            NSAssert([thread isKindOfClass:[G3Thread class]], @"should be a thread");
+            
+            // remove thread from source group:
+            [thread removeGroup:sourceGroup];
+            
+            // add thread to destination group:
+            [thread addGroup:destinationGroup];
+        }
+        
+        // select all in dragging source:
+        NSOutlineView *sourceView = [info draggingSource];        
+        [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
+        
+        [NSApp saveAction:self];
+    }
     
     return NO;
 }
 
-- (NSDragOperation)outlineView:(NSOutlineView*)anOutlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+- (NSDragOperation)outlineView:(NSOutlineView *)anOutlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
     if (anOutlineView == boxesView) // Message Groups
     {
@@ -1932,18 +1967,56 @@ NSMutableArray* border = nil;
             }
         }
     }
+    else if (anOutlineView == threadsView)
+    {
+        if ([info draggingSource] != threadsView) // don't let drop on itself
+        {
+            NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+            
+            if ([items count] > 0) 
+            {
+                [anOutlineView setDropItem:nil dropChildIndex:-1]; 
+                return NSDragOperationMove;
+            }
+        }
+    }
+    
     return NSDragOperationNone;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
 {
-    // ##WARNING works only for single selections. Not for multi selection!
-    
-    [pboard declareTypes:[NSArray arrayWithObject:@"GinkoMessageboxes"] owner:self];    
-    [pboard setPropertyList:items forType:@"GinkoMessageboxes"];
+    if (outlineView == boxesView) // Message Groups list
+    {
+        // ##WARNING works only for single selections. Not for multi selection!
+        
+        [pboard declareTypes:[NSArray arrayWithObject:@"GinkoMessageboxes"] owner:self];    
+        [pboard setPropertyList:items forType:@"GinkoMessageboxes"];
+    }
+    else if (outlineView == threadsView) // threads list
+    {
+        if (! [self isOnlyThreadsSelected]) return NO;
+        
+        [pboard declareTypes:[NSArray arrayWithObject:@"GinkoThreads"] owner:self];
+        [pboard setPropertyList:items forType:@"GinkoThreads"];
+    }
     
     return YES;
 }
+
+/*
+- (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
+{
+    if (outlineView == threadsView) // threads list
+    {
+        return nil;
+    }
+    else
+    {
+        return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
+    }
+}
+*/
 
 @end
 

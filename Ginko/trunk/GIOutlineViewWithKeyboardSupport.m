@@ -73,10 +73,12 @@
     switch (firstChar)
     {
         case RETURN:
-            if ([[self delegate] respondsToSelector:@selector(openSelection:)]) {
-                [[self delegate] performSelector:@selector(openSelection:)
-                                      withObject:self];
-            } else {
+            if ([[self delegate] respondsToSelector:@selector(openSelection:)]) 
+            {
+                [[self delegate] performSelector:@selector(openSelection:) withObject:self];
+            } 
+            else 
+            {
                 [self expandItem:item];
             }
             break;
