@@ -187,6 +187,13 @@
 }
 
 
+- (void) removeHeaderField: (NSString*) fieldName
+{
+    [self _forgetOriginalTransferData];
+    [super removeHeaderField: fieldName];
+}
+
+
 - (void)setBody:(NSString *)fieldBody forHeaderField:(NSString *)fieldName
 {
     [self _forgetOriginalTransferData];

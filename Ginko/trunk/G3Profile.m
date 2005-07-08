@@ -28,7 +28,7 @@
         {
             G3Profile *profile = [[[self alloc] init] autorelease];
             [profile setName:@"Dummy Profile"];
-            [profile setRealname:@"Dummy Profiler"];
+            //[profile setRealname:@"Dummy Profiler"];
             [profile setEmailAddress:@"dummy@profile.org"];
             result = [self allObjects];
         }
