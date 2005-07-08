@@ -246,7 +246,9 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         
         if (sinceRefDate)
         {
-            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f order by ZTHREAD.ZDATE;", [self primaryKey], sinceRefDate];
+            //queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f order by ZTHREAD.ZDATE;", [self primaryKey], sinceRefDate];
+            // Alternative form:
+            queryString = [NSString stringWithFormat:@"select T.Z_PK from Z_4THREADS, (select Z_PK, ZDATE from ZTHREAD where ZTHREAD.ZDATE >= %f) as T where %@ = Z_4THREADS.Z_4GROUPS and T.Z_PK = Z_4THREADS.Z_6THREADS order by T.ZDATE;", sinceRefDate, [self primaryKey] ];
         }
         else
         {
