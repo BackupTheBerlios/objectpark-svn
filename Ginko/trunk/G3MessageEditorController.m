@@ -901,8 +901,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     else
     {
-        [headerFields setObject:@"" forKey:@"Cc"];
-        [headerFields setObject:@"" forKey:@"Bcc"];
+        NSString *Cc = [[self profile] valueForKey:@"defaultCc"];
+        if (![Cc length]) Cc = @"";
+        NSString *Bcc = [[self profile] valueForKey:@"defaultBcc"];
+        if (![Bcc length]) Bcc = @"";
+        
+        [headerFields setObject:Cc forKey:@"Cc"];
+        [headerFields setObject:Bcc forKey:@"Bcc"];
     }
     
     [headerFields setObject:makeStringIfNil(preSetTo) forKey:@"To"];
@@ -1180,7 +1185,7 @@ NSDictionary *maxLinesForCalendarName()
     enumerator = [[G3Profile profiles] objectEnumerator];
     while (aProfile = [enumerator nextObject])
     {
-        [profileButton addItemWithTitle:[aProfile primitiveValueForKey:@"name"]];
+        [profileButton addItemWithTitle:[aProfile valueForKey:@"name"]];
         [[profileButton lastItem] setRepresentedObject:aProfile];
     }
 }
@@ -1206,7 +1211,7 @@ NSDictionary *maxLinesForCalendarName()
     {
         field = [self headerTextFieldWithFieldName:@"Cc"];
         
-        oldText = [oldProfile primitiveValueForKey:@"defaultCc"];
+        oldText = [oldProfile valueForKey:@"defaultCc"];
         oldText = oldText ? oldText : @"";
         
         if ([[field stringValue] isEqualToString:oldText])
@@ -1215,7 +1220,7 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
         
-    if ((text = [profile primitiveValueForKey:@"defaultCc"]))
+    if ((text = [profile valueForKey:@"defaultCc"]))
     {
         field = [self headerTextFieldWithFieldName:@"Cc"];
         if (! [[field stringValue] length])
@@ -1229,7 +1234,7 @@ NSDictionary *maxLinesForCalendarName()
     {
         field = [self headerTextFieldWithFieldName:@"Bcc"];
         
-        oldText = [oldProfile primitiveValueForKey:@"defaultBcc"];
+        oldText = [oldProfile valueForKey:@"defaultBcc"];
         oldText = oldText ? oldText : @"";
         
         if ([[field stringValue] isEqualToString:oldText])
@@ -1238,7 +1243,7 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
 
-    if ((text = [profile primitiveValueForKey:@"defaultBcc"]))
+    if ((text = [profile valueForKey:@"defaultBcc"]))
     {
         NSTextField *field = [self headerTextFieldWithFieldName:@"Bcc"];
         if (! [[field stringValue] length])
@@ -1252,7 +1257,7 @@ NSDictionary *maxLinesForCalendarName()
     {
         field = [self headerTextFieldWithFieldName:@"Reply-To"];
         
-        oldText = [oldProfile primitiveValueForKey:@"defaultReplyTo"];
+        oldText = [oldProfile valueForKey:@"defaultReplyTo"];
         oldText = oldText ? oldText : @"";
         
         if ([[field stringValue] isEqualToString:oldText])
@@ -1261,7 +1266,7 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
     
-    if ((text = [profile primitiveValueForKey:@"defaultReplyTo"]))
+    if ((text = [profile valueForKey:@"defaultReplyTo"]))
     {
         NSTextField *field = [self headerTextFieldWithFieldName:@"Reply-To"];
         if (! [[field stringValue] length])
