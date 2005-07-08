@@ -41,4 +41,7 @@
 - (int) rowForItemEqualTo: (id) item
             startingAtRow: (int) start;
 
+- (NSArray*) selectedItems;
+- (void) selectItems: (NSArray*) items ordered: (BOOL) ordered;
+
 @end

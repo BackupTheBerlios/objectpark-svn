@@ -873,40 +873,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSEnumerator* e = [[self selectedThreadURIs] objectEnumerator];
     NSString* targetThreadURI = [e nextObject];
     G3Thread* targetThread    = [NSManagedObjectContext objectWithURIString: targetThreadURI];
-    
-    NSLog(@"Merging other threads into %@", targetThread);
+    [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
+    [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
+
+    //NSLog(@"Merging other threads into %@", targetThread);    
+
     NSString* nextThreadURI;
-    
     while (nextThreadURI = [e nextObject]) {
         G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
-        [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
-        [[self nonExpandableItemsCache] removeObject: nextThreadURI];    
-        [[self threadCache] removeObjectIdenticalTo: nextThreadURI];
         [targetThread mergeMessagesFromThread: nextThread];
     }
     
-    //[self setThreadCache: nil];
-    //[self setNonExpandableItemsCache: nil];
-    [threadsView reloadData];
-    [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
     [threadsView expandItem: targetThreadURI];
     [GIApp saveAction: self];
-    
 }
 
-- (void) selectRowsWithItemURIs: (NSArray*) uriStrings
-    // We assume uriStrings are ordered the same way the items are
-{
-    [threadsView deselectAll: self];
-    NSEnumerator* e = [uriStrings objectEnumerator];
-    NSString* uri;
-    int row = 0;
-    while (uri = [e nextObject]) {
-        row = [threadsView rowForItemEqualTo: uri startingAtRow: row];
-        if (row>=0) [threadsView selectRow: row byExtendingSelection: YES];
-        else NSLog(@"Warning: Unable to select row for item: %@", [NSManagedObjectContext objectWithURIString: uri]);
-    }
-}
 
 - (IBAction) selectThreadsWithCurrentSubject: (id) sender
     /*" Joins all threads with the subject of the selected thread. "*/
@@ -921,7 +902,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             NSArray* result = [[self group] threadReferenceURIsByDateNewerThan: [self nowForThreadFiltering]
                                                                    withSubject: subject
                                                                         author: nil ];
-            [self selectRowsWithItemURIs: result];
+            [threadsView selectItems: result ordered: YES];
         }
     }
 }
@@ -959,13 +940,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }    
 }
 
-- (void)modelChanged:(NSNotification *)aNotification
+- (void) modelChanged: (NSNotification*) aNotification
 {
+    NSArray* selectedItems = [threadsView selectedItems];
     if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
     [self setThreadCache:nil];
     [self setNonExpandableItemsCache:nil];
     [self updateGroupInfoTextField];
+    [threadsView deselectAll: nil];
     [threadsView reloadData];
+    NSLog(@"Re-Selecting items %@", selectedItems);
+    [threadsView selectItems: selectedItems ordered: YES];
 }
 
 - (G3MessageGroup *)group

@@ -21,6 +21,7 @@
 */
 
 #import "GIOutlineViewWithKeyboardSupport.h"
+#import <Foundation/NSDebug.h>
 
 #define TAB ((char)'\x09')
 #define SPACE ((char)'\x20')
@@ -262,5 +263,39 @@
     }
     return -1;
 }
+
+- (NSArray*) selectedItems
+/*" The result is sorted from low to high row indexes. "*/
+{
+    NSMutableArray* result = [NSMutableArray array];
+    NSIndexSet* set = [self selectedRowIndexes];
+    if ([set count]) {
+        int lastIndex = [set lastIndex];
+        int i;
+        for (i=[set firstIndex]; i<=lastIndex; i++) {
+            if ([set containsIndex: i]) {
+                if ([self levelForRow: i]==0) {
+                    id item = [self itemAtRow: i];
+                    [result addObject: item];
+                }
+            }
+        }
+    }
+    return result;
+}
+
+- (void) selectItems: (NSArray*) items ordered: (BOOL) ordered
+/*" Extends the selection by the rows for the items passed. If ordered==YES, We assume uriStrings are ordered the same way the items are, improving performance. "*/
+{
+    NSEnumerator* e = [items objectEnumerator];
+    NSString* item;
+    int row = 0;
+    while (item = [e nextObject]) {
+        row = [self rowForItemEqualTo: item startingAtRow: ordered ? row : 0];
+        if (row>=0) [self selectRow: row byExtendingSelection: YES];
+        else if (NSDebugEnabled) NSLog(@"Warning: Unable to select row for item: %@", item);
+    }
+}
+
 
 @end
