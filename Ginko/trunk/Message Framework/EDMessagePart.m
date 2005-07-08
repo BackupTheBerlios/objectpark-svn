@@ -148,14 +148,14 @@
     stringBuffer = [NSMutableString string];
     fieldEnum = [[self headerFields] objectEnumerator];
     while((field = [fieldEnum nextObject]) != nil)
-        {
+    {
         headerLine = [[NSMutableString alloc] initWithString:[field firstObject]];
         [headerLine appendString:@": "];
         [headerLine appendString:[field secondObject]];
         [headerLine appendString:@"\r\n"];
         [stringBuffer appendString:[headerLine stringByFoldingToLimit:998]];
         [headerLine release];
-        }
+    }
 
     [stringBuffer appendString:@"\r\n"];
     if ((headerData = [stringBuffer dataUsingEncoding:NSASCIIStringEncoding]) == nil)

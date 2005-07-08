@@ -68,7 +68,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     // If we don't have a cached version we'll be constructing the transfer data. In this
     // case tag with our version.
     if((originalTransferData == nil) && ([self bodyForHeaderField:@"mime-version"] == nil))
-        {
+    {
         NSString *desig = @"Ginko (www.objectpark.org)";
         [self setBody:[NSString stringWithFormat:@"1.0 (%@)", desig] forHeaderField:@"MIME-Version"];
     }

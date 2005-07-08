@@ -129,8 +129,8 @@ NSString *MboxImportJobName = @"mbox import";
     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
     [context setPersistentStoreCoordinator:[parentContext persistentStoreCoordinator]];
     
-//    [NSManagedObjectContext setDefaultContext:context];
-    [NSManagedObjectContext setDefaultContext:parentContext];
+    [NSManagedObjectContext setDefaultContext:context];
+    //[NSManagedObjectContext setDefaultContext:parentContext];
     
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *mboxData;
