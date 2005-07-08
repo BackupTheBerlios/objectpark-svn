@@ -231,34 +231,44 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     if (!prefix) prefix = [G3Thread URIStringPrefix];
     
-    [(id)result addObject:[prefix stringByAppendingString:[NSString stringWithUTF8String:values[0]]]];
-//    [result addObject:[NSString stringWithUTF8String:values[0]]];
+    [(id)result addObject:[prefix stringByAppendingString: [NSString stringWithUTF8String:values[0]]]];
     return 0;
 }
 
-- (NSMutableArray *)threadReferenceURIsByDateNewerThan:(NSTimeInterval)sinceRefDate
+- (NSMutableArray*) threadReferenceURIsByDateNewerThan: (NSTimeInterval) sinceRefDate
+                                           withSubject: (NSString*) subject
+                                                author: (NSString*) author
 {
     NSMutableArray *result = [NSMutableArray array];
     
-    NSLog(@"entered threadReferenceURIsByDate");
+    NSLog(@"entered threadReferenceURIsByDate query");
     [NSManagedObject lockStore];
     
     // open db:
     sqlite3 *db = NULL;
     sqlite3_open([[NSApp databasePath] UTF8String],   /* Database filename (UTF-8) */
         &db);                /* OUT: SQLite db handle */
-    if (db) 
-    {
+    if (db) {
         int errorCode;
         char *error;
         //NSLog(@"DB opened. Fetching thread objects...");
         NSString *queryString = nil;
         
-        if (sinceRefDate)
-        {
-            //queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f order by ZTHREAD.ZDATE;", [self primaryKey], sinceRefDate];
+        
+        NSMutableArray* clauses = [NSMutableArray arrayWithCapacity: 2];
+        if ([subject length]) {
+            [clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZSUBJECT like '%@'", subject]];
+        }
+        if ([author length]) {
+            [clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZAUTHOR like '%@'", author]];
+        }
+        if (sinceRefDate>0.0) {
+            [clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= %f", sinceRefDate]];
+        }
+        if ([clauses count]) {
+            //queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f order by ZTHREAD.ZDATE;", [self primaryKey]];
             // Alternative form:
-            queryString = [NSString stringWithFormat:@"select T.Z_PK from Z_4THREADS, (select Z_PK, ZDATE from ZTHREAD where ZTHREAD.ZDATE >= %f) as T where %@ = Z_4THREADS.Z_4GROUPS and T.Z_PK = Z_4THREADS.Z_6THREADS order by T.ZDATE;", sinceRefDate, [self primaryKey] ];
+            queryString = [NSString stringWithFormat:@"select T.Z_PK from Z_4THREADS, (select Z_PK, ZDATE from ZTHREAD where %@) as T where %@ = Z_4THREADS.Z_4GROUPS and T.Z_PK = Z_4THREADS.Z_6THREADS order by T.ZDATE;", [clauses componentsJoinedByString: @" and "], [self primaryKey] ];
         }
         else
         {
@@ -286,7 +296,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     [NSManagedObject unlockStore];
     
-    NSLog(@"exited threadReferenceURIsByDate");
+    NSLog(@"exited threadReferenceURIsByDate query");
 
     //NSLog(@"result count = %d", [result count]);
     //NSLog(@"result = %@", result);

@@ -35,3 +35,10 @@
 - (void)setHighlightThreads:(BOOL)aBool;
 
 @end
+
+@interface NSOutlineView (RowSelection)
+
+- (int) rowForItemEqualTo: (id) item
+            startingAtRow: (int) start;
+
+@end

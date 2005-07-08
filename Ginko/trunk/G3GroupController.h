@@ -65,12 +65,13 @@
 - (void)modelChanged:(NSNotification *)aNotification; // remove as soon as possible
 
 /*" Actions "*/
-- (IBAction)showThreads:(id)sender;
-- (IBAction)addFolder:(id)sender;
-- (IBAction)rename:(id)sender;
-- (IBAction)addMessageGroup:(id)sender;
-- (IBAction)removeFolderMessageGroup:(id)sender;
-- (IBAction)threadFilterPopUpChanged:(id)sender;
+- (IBAction) showThreads: (id) sender;
+- (IBAction) addFolder: (id) sender;
+- (IBAction) rename: (id) sender;
+- (IBAction) addMessageGroup: (id) sender;
+- (IBAction) removeFolderMessageGroup: (id) sender;
+- (IBAction) threadFilterPopUpChanged: (id) sender;
+- (IBAction) selectThreadsWithCurrentSubject: (id) sender;
 
 @end
 

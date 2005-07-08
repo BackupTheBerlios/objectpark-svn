@@ -398,7 +398,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if (!result) 
     {
-        result = [[self group] threadReferenceURIsByDateNewerThan:[self nowForThreadFiltering]];
+        result = [[self group] threadReferenceURIsByDateNewerThan: [self nowForThreadFiltering]
+                                                      withSubject: nil
+                                                           author: nil ];
         if (result) [self setThreadCache:result];
     }
     return result;
@@ -866,16 +868,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (IBAction) joinThreads: (id) sender
-/*" Joins the selected threads into one. "*/
+- (void) joinThreadsWithURIs: (NSArray*) uriArray
 {
     NSEnumerator* e = [[self selectedThreadURIs] objectEnumerator];
     NSString* targetThreadURI = [e nextObject];
-    G3Thread* targetThread = [NSManagedObjectContext objectWithURIString: targetThreadURI];
+    G3Thread* targetThread    = [NSManagedObjectContext objectWithURIString: targetThreadURI];
     
     NSLog(@"Merging other threads into %@", targetThread);
     NSString* nextThreadURI;
-
+    
     while (nextThreadURI = [e nextObject]) {
         G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
         [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
@@ -883,13 +884,52 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [[self threadCache] removeObjectIdenticalTo: nextThreadURI];
         [targetThread mergeMessagesFromThread: nextThread];
     }
-
+    
     //[self setThreadCache: nil];
     //[self setNonExpandableItemsCache: nil];
     [threadsView reloadData];
     [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
     [threadsView expandItem: targetThreadURI];
-    [GIApp saveAction: sender];
+    [GIApp saveAction: self];
+    
+}
+
+- (void) selectRowsWithItemURIs: (NSArray*) uriStrings
+    // We assume uriStrings are ordered the same way the items are
+{
+    [threadsView deselectAll: self];
+    NSEnumerator* e = [uriStrings objectEnumerator];
+    NSString* uri;
+    int row = 0;
+    while (uri = [e nextObject]) {
+        row = [threadsView rowForItemEqualTo: uri startingAtRow: row];
+        if (row>=0) [threadsView selectRow: row byExtendingSelection: YES];
+        else NSLog(@"Warning: Unable to select row for item: %@", [NSManagedObjectContext objectWithURIString: uri]);
+    }
+}
+
+- (IBAction) selectThreadsWithCurrentSubject: (id) sender
+    /*" Joins all threads with the subject of the selected thread. "*/
+{
+    NSArray* uriStrings = [self selectedThreadURIs];
+    if ([uriStrings count]) {
+        NSString* uri = [uriStrings objectAtIndex: 0];
+        G3Thread* thread = [NSManagedObjectContext objectWithURIString: uri];
+        NSString* subject = [thread valueForKey: @"subject"];
+        if (subject) {
+            // query database
+            NSArray* result = [[self group] threadReferenceURIsByDateNewerThan: [self nowForThreadFiltering]
+                                                                   withSubject: subject
+                                                                        author: nil ];
+            [self selectRowsWithItemURIs: result];
+        }
+    }
+}
+
+- (IBAction) joinThreads: (id) sender
+/*" Joins the selected threads into one. "*/
+{
+    [self joinThreadsWithURIs: [self selectedThreadURIs]];
 }
 
 - (IBAction) extractThread: (id) sender

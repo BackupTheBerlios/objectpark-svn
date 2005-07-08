@@ -248,3 +248,19 @@
 }
 
 @end
+
+@implementation NSOutlineView (RowSelection)
+
+- (int) rowForItemEqualTo: (id) item
+            startingAtRow: (int) start
+{
+    int count = [self numberOfRows];
+    while (start<count) {
+        id rowItem = [self itemAtRow: start];
+        if ([item isEqual: rowItem]) return start;
+        start++;
+    }
+    return -1;
+}
+
+@end

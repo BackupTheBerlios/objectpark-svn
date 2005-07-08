@@ -37,7 +37,7 @@
 - (void)testThreadIdsByDate
 {
     NSLog(@"testThreadIdsByDate entered");
-    NSArray *result = [[G3MessageGroup defaultMessageGroup] threadReferenceURIsByDate];
+    NSArray *result = [[G3MessageGroup defaultMessageGroup] threadReferenceURIsByDateNewerThan: 0.0 withSubject: nil author: nil];
     NSLog(@"testThreadIdsByDate exited");
 
     NSEnumerator *enumerator = [result objectEnumerator];
