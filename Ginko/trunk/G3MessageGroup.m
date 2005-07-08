@@ -23,6 +23,17 @@ NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotificat
 
 G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSMutableArrays (e.g. #{+rootHierarchyNode} returns the NSMutableArray that is the root node). The first entry in such a hierarchy node is information of the node itself (it is a NSMutableDictionary whose keys are described lateron). All other entries are either NSStrings with URLs that reference G3MessageGroup objects (see #{-[NSManagedObject objectID]}) or other hierarchy nodes (NSMutableArrays). "*/
 
++(void)initialize
+/*" Makes sure that all default groups are in place. "*/
+{
+    [self defaultMessageGroup];
+    [self sentMessageGroup];
+    [self queuedMessageGroup];
+    [self draftMessageGroup];
+    [self spamMessageGroup];
+    [self trashMessageGroup];
+}
+
 - (NSString *)name
 /*" Returns the name of the receiver. "*/
 {
@@ -236,7 +247,6 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     sqlite3 *db = NULL;
     sqlite3_open([[NSApp databasePath] UTF8String],   /* Database filename (UTF-8) */
         &db);                /* OUT: SQLite db handle */
-    
     if (db) 
     {
         int errorCode;
@@ -304,7 +314,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         
         if (sinceRefDate)
         {
-            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f and ZTHREAD.ZNUMBEROFMESSAGES < 2;", [self primaryKey], sinceRefDate];
+            queryString = [NSString stringWithFormat:@"select T.Z_PK from Z_4THREADS, (select Z_PK, ZDATE from ZTHREAD where ZTHREAD.ZDATE >= %f and ZTHREAD.ZNUMBEROFMESSAGES < 2) as T where %@ = Z_4THREADS.Z_4GROUPS and T.Z_PK = Z_4THREADS.Z_6THREADS order by T.ZDATE;", sinceRefDate, [self primaryKey]];
         }
         else
         {

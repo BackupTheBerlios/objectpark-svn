@@ -69,7 +69,7 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
             [cache release];
         }
     } 
-    else NSLog(@"using cached imessage data"); // remove this after testing.
+    //else NSLog(@"using cached imessage data"); // remove this after testing.
     return cache;
 }
 
