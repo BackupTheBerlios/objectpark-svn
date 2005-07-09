@@ -118,6 +118,7 @@ NSString *MboxImportJobName = @"mbox import";
     NSParameterAssert(parentContext != nil);
     BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
+    NSDate *lastProgressSet = [[NSDate alloc] init];
     
     // Create mbox file object for enumerating the contained messages:
     OPMBoxFile *mboxFile = [OPMBoxFile mboxWithPath:mboxFilePath];
@@ -128,6 +129,7 @@ NSString *MboxImportJobName = @"mbox import";
     // as the main thread because this job/threads works for the main thread.
     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
     [context setPersistentStoreCoordinator:[parentContext persistentStoreCoordinator]];
+    [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
     
     [NSManagedObjectContext setDefaultContext:context];
     //[NSManagedObjectContext setDefaultContext:parentContext];
@@ -187,13 +189,19 @@ NSString *MboxImportJobName = @"mbox import";
             if (mboxFileSize > 0) // avoid division by zero
             {
                 int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
+                NSDate *now = [[NSDate alloc] init];
+                BOOL timeIsRipe = [now timeIntervalSinceDate:lastProgressSet] > 1.5;
                 
-                if (newPercentComplete > percentComplete) // report only when percentage changes
+                if (timeIsRipe || (newPercentComplete > percentComplete)) // report only when percentage changes
                 {
                     [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:[mboxFilePath lastPathComponent]]];
                     
                     percentComplete = newPercentComplete;
+                    [lastProgressSet release];
+                    lastProgressSet = [now retain];
                 }
+                
+                [now release];
             }
         }
         
@@ -205,10 +213,12 @@ NSString *MboxImportJobName = @"mbox import";
     @catch (NSException *localException) 
     {
         if (NSDebugEnabled) NSLog(@"Exception while adding messages in background: %@", localException);
-        [localException raise];
+        [[localException retain] autorelease];
+        @throw;
     } 
     @finally 
     {
+        [lastProgressSet release];
         [NSManagedObjectContext setDefaultContext:nil];
         [pool release];
         [context release];
