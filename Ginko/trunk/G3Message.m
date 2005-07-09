@@ -430,7 +430,7 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 - (void) didSave
 {
     // Preserve memory by getting rid of the transient attribute:
-    [self setInternetMessage: nil];
+    [self setPrimitiveValue: nil forKey: @"internetMessageCache"];
 }
 
 /*

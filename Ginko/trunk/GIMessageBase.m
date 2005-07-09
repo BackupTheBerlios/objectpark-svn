@@ -165,7 +165,7 @@ NSString *MboxImportJobName = @"mbox import";
                         {
                             if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
                             
-                            [context save:&error];
+                            [context save: &error];
                             NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
                             
                             [pool drain]; pool = [[NSAutoreleasePool alloc] init];
