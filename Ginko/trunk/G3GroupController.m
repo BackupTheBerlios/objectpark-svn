@@ -940,17 +940,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }    
 }
 
-- (void) modelChanged: (NSNotification*) aNotification
+- (void)modelChanged:(NSNotification *)aNotification
 {
-    NSArray* selectedItems = [threadsView selectedItems];
+    NSArray *selectedItems = [threadsView selectedItems];
     if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
     [self setThreadCache:nil];
     [self setNonExpandableItemsCache:nil];
     [self updateGroupInfoTextField];
-    [threadsView deselectAll: nil];
+    [threadsView deselectAll:nil];
+#warning Is this clever? Maybe!
+    if ([self group])
+    {
+        [[NSManagedObjectContext defaultContext] refreshObject:[self group] mergeChanges:NO];
+    }
     [threadsView reloadData];
     NSLog(@"Re-Selecting items %@", selectedItems);
-    [threadsView selectItems: selectedItems ordered: YES];
+    [threadsView selectItems:selectedItems ordered:YES];
 }
 
 - (G3MessageGroup *)group

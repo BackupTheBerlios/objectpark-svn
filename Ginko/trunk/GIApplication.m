@@ -191,7 +191,7 @@
         managedObjectContext = [self newManagedObjectContext];
     }
     
-//    [managedObjectContext setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
+    //[managedObjectContext setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
 
     [[managedObjectContext undoManager] setLevelsOfUndo:0];
 
