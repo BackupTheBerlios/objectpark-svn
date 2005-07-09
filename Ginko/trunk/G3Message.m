@@ -427,6 +427,12 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     //[self setInternetMessage: nil];
 }
 
+- (void) didSave
+{
+    // Preserve memory by getting rid of the transient attribute:
+    [self setInternetMessage: nil];
+}
+
 /*
 - (void) dealloc
 {

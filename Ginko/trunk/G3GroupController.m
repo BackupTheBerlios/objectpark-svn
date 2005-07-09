@@ -875,6 +875,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     G3Thread* targetThread    = [NSManagedObjectContext objectWithURIString: targetThreadURI];
     [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
     [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
+    [threadsView expandItem: targetThreadURI];
 
     //NSLog(@"Merging other threads into %@", targetThread);    
 
@@ -884,7 +885,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [targetThread mergeMessagesFromThread: nextThread];
     }
     
-    [threadsView expandItem: targetThreadURI];
     [GIApp saveAction: self];
 }
 
@@ -942,7 +942,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void)modelChanged:(NSNotification *)aNotification
 {
-    NSArray *selectedItems = [threadsView selectedItems];
+    // Re-query all threads keeping the selection, if possible.
+    NSArray* selectedItems = [threadsView selectedItems];
     if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
     [self setThreadCache:nil];
     [self setNonExpandableItemsCache:nil];
