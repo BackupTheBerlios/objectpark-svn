@@ -35,32 +35,31 @@
 #define BACKSPACEKEY 0x33
 #define ESCKEY 0x35
 
-- (void) dealloc
+- (void)dealloc
 {
     if (NSDebugEnabled) NSLog(@"G3GroupWindow dealloc");
     [super dealloc];
 }
 
-- (BOOL) makeFirstResponder: (NSResponder*) aResponder
+- (BOOL)makeFirstResponder:(NSResponder *)aResponder
 {
-    BOOL result = [super makeFirstResponder: aResponder];
+    BOOL result = [super makeFirstResponder:aResponder];
 //    NSLog(@"New first responder of %@ is %@ (success: %d)", self, [self firstResponder], result);
     return result;
 }
 
-
-- (void) sendActionSelector: (SEL) selector
+- (void)sendActionSelector:(SEL)selector
 {
     id delegate = [self delegate];
-    if ([delegate respondsToSelector: selector]) {
+    if ([delegate respondsToSelector:selector]) 
+    {
         //if ([delegate validateKeyboardSelector: selector]) {
-        [delegate performSelector: selector withObject: self
-            ];
+        [delegate performSelector:selector withObject:self];
         //}
     } 
 }
 
-- (void) sendEvent: (NSEvent*) theEvent
+- (void)sendEvent:(NSEvent *)theEvent
 /*" Intercept the 'switch key' and inform the delegate and don't send the event further along the responder chain if it has a selector -switchKeyPressed:(id)sender. Otherwise the event is send further along the responder chain. "*/ 
 {
     BOOL consumed = NO;
@@ -70,7 +69,7 @@
         {
             case SWITCHKEY:
             case ALTSWITCHKEY:
-                [self sendActionSelector: @selector(openSelection:)];
+                [self sendActionSelector:@selector(openSelection:)];
                 return;
                 break;
             //case TABKEY:
@@ -78,8 +77,17 @@
             //    break;
             case ESCKEY:
             case BACKSPACEKEY:
-                [self sendActionSelector: @selector(closeSelection:)];
+            {
+                if ([theEvent modifierFlags] & NSCommandKeyMask)
+                {
+                    [self sendActionSelector:@selector(moveSelectionToTrash:)];
+                }
+                else
+                {
+                    [self sendActionSelector:@selector(closeSelection:)];
+                }
                 return;
+            }
                 break;
             
             /*

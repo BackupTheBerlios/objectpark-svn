@@ -29,6 +29,7 @@
 - (void)addGroup:(G3MessageGroup *)aGroup;
 - (void)addGroups:(NSSet *)someGroups;
 - (void)removeGroup:(G3MessageGroup *)aGroup; 
+- (void)removeFromAllGroups;
 
 - (unsigned)messageCount;
 - (NSArray *)rootMessages;

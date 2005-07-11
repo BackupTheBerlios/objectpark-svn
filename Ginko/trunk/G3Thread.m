@@ -102,6 +102,11 @@
     [changedObjects release];
 }
 
+- (void)removeFromAllGroups
+{
+    [self setValue:[NSSet set] forKey:@"groups"];
+}
+
 - (void)addMessage:(G3Message *)aMessage
 {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];

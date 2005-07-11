@@ -849,7 +849,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (NSArray*) selectedThreadURIs
+- (NSArray *)selectedThreadURIs
 {
     NSMutableArray* result = [NSMutableArray array];
     NSIndexSet* set = [threadsView selectedRowIndexes];
@@ -868,11 +868,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (void) joinThreadsWithURIs: (NSArray*) uriArray
+- (void)joinThreadsWithURIs:(NSArray *)uriArray
 {
-    NSEnumerator* e = [[self selectedThreadURIs] objectEnumerator];
-    NSString* targetThreadURI = [e nextObject];
-    G3Thread* targetThread    = [NSManagedObjectContext objectWithURIString: targetThreadURI];
+    NSEnumerator *e = [[self selectedThreadURIs] objectEnumerator];
+    NSString *targetThreadURI = [e nextObject];
+    G3Thread *targetThread = [NSManagedObjectContext objectWithURIString: targetThreadURI];
     [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
     [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
     [threadsView expandItem: targetThreadURI];
@@ -880,7 +880,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     //NSLog(@"Merging other threads into %@", targetThread);    
 
     NSString* nextThreadURI;
-    while (nextThreadURI = [e nextObject]) {
+    while (nextThreadURI = [e nextObject]) 
+    {
         G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
         [targetThread mergeMessagesFromThread: nextThread];
     }
@@ -920,6 +921,29 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
 }
 
+- (IBAction)moveSelectionToTrash:(id)sender
+{
+    G3MessageGroup *trashGroup = [G3MessageGroup trashMessageGroup];
+    NSEnumerator *enumerator = [[self selectedThreadURIs] objectEnumerator];
+    NSString *uriString;
+    BOOL trashedAtLeastOne = NO;
+    
+    while (uriString = [enumerator nextObject])
+    {
+        G3Thread *thread = [NSManagedObjectContext objectWithURIString:uriString];
+        NSAssert([thread isKindOfClass:[G3Thread class]], @"got non-thread object");
+        
+       // [thread removeFromAllGroups];
+        [[self group] removeThread:thread];
+        [trashGroup addThread:thread];
+        trashedAtLeastOne = YES;
+    }
+    
+    if (trashedAtLeastOne) [NSApp saveAction:self];
+    else NSBeep();
+    
+    NSLog(@"-moveSelectionToTrash:");
+}
 
 - (void)updateWindowTitle
 {
@@ -949,7 +973,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self setNonExpandableItemsCache:nil];
     [self updateGroupInfoTextField];
     [threadsView deselectAll:nil];
-#warning Is this clever? Maybe!
+//#warning Is this clever? Maybe!
     if ([self group])
     {
         [[NSManagedObjectContext defaultContext] refreshObject:[self group] mergeChanges:NO];
