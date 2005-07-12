@@ -78,7 +78,7 @@
 - (void) setSubjectValue: (NSString*) aString
 /*" Sets the (simple) subject of the receiver (e.g. "To" Header). "*/
 {
-    [_expressionDefinition setObject: aString forKey: @"subjectValue"];
+    [_expressionDefinition setObject: aString ? aString: @"" forKey: @"subjectValue"];
     
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageFiltersDidChangeNotification object: self];

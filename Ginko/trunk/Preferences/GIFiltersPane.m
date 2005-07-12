@@ -492,13 +492,13 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     static NSMutableArray *result = nil;
     
     if (! result) {
-        result = [[NSMutableArray allocWithZone:[self zone]] init];
+        result = [[NSMutableArray allocWithZone: [self zone]] init];
         
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaContains]];
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaDoesNotContain]];
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaStartsWith]];
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaEndsWith]];
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaEquals]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaContains]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaDoesNotContain]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaStartsWith]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaEndsWith]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaEquals]];
     }
     
     return result;
@@ -509,11 +509,11 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     static NSMutableArray *result = nil;
     
     if (! result) {
-        result = [[NSMutableArray allocWithZone:[self zone]] init];
+        result = [[NSMutableArray allocWithZone: [self zone]] init];
         
-        [result addObject:NSLocalizedString(@"has Flag", filter pref criteria name)];
-        [result addObject:NSLocalizedString(@"does not have Flag", filter pref criteria name)];
-        [result addObject:NSLocalizedString(@"has only Flag", filter pref criteria name)];
+        [result addObject: NSLocalizedString(@"has Flag", @"filter pref criteria name")];
+        [result addObject: NSLocalizedString(@"does not have Flag", @"filter pref criteria name")];
+        [result addObject: NSLocalizedString(@"has only Flag", @"filter pref criteria name")];
     }
     
     return result;
@@ -524,11 +524,11 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     static NSMutableArray *result = nil;
     
     if (! result) {
-        result = [[NSMutableArray allocWithZone:[self zone]] init];
+        result = [[NSMutableArray allocWithZone: [self zone]] init];
         
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaContains]];
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaDoesNotContain]];
-        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaEquals]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaContains]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaDoesNotContain]];
+        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaEquals]];
     }
     
     return result;

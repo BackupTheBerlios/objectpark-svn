@@ -54,11 +54,16 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 - (NSString *)URIReferenceString
 /*" Returns a string for referencing the receiver persistently. "*/ 
 {
-    [NSApp saveAction:self];
+    id oid = [self objectID];
+    // Make sure we do not hand out a temporary id:
+    if ([oid isTemporaryID]) {
+        [NSApp saveAction: self];
+        oid = [self objectID];
+    }
     
-    NSAssert(![[self objectID] isTemporaryID], @"URIReferenceString is temporary Id. Fatal error.");
+    NSAssert(![oid isTemporaryID], @"URIReferenceString is temporary Id. Fatal error.");
     
-    return [[[self objectID] URIRepresentation] absoluteString];
+    return [[oid URIRepresentation] absoluteString];
 }
 
 + (G3MessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex

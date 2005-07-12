@@ -798,9 +798,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     nowForThreadFiltering = 0;
     
     [self setValue:[NSNumber numberWithInt:[[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
-    
-    [threadCache release]; threadCache = nil;
-    [nonExpandableItemsCache release]; nonExpandableItemsCache = nil;
 
     [self modelChanged:nil];
 }
