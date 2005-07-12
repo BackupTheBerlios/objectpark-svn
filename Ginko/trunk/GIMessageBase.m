@@ -225,12 +225,7 @@ NSString *MboxImportJobName = @"mbox import";
                 }
                 
                 [now release];
-            }
-            
-            if ((++mboxDataCount % 100) == 0) 
-            {
-                
-            }
+            }            
         }
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);

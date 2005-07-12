@@ -1965,6 +1965,24 @@ NSMutableArray* border = nil;
 
 @implementation G3GroupController (DragNDrop)
 
+- (void)moveThreadsWithURI:(NSArray *)threadURIs fromGroup:(G3MessageGroup *)sourceGroup toGroup:(G3MessageGroup *)destinationGroup
+{
+    NSEnumerator *enumerator = [threadURIs objectEnumerator];
+    NSString *threadURI;
+    
+    while (threadURI = [enumerator nextObject])
+    {
+        G3Thread *thread = [NSManagedObjectContext objectWithURIString:threadURI];
+        NSAssert([thread isKindOfClass:[G3Thread class]], @"should be a thread");
+        
+        // remove thread from source group:
+        [thread removeGroup:sourceGroup];
+        
+        // add thread to destination group:
+        [thread addGroup:destinationGroup];
+    }
+}
+
 - (BOOL)outlineView:(NSOutlineView *)anOutlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
     if (anOutlineView == boxesView) // Message Groups list
@@ -1988,6 +2006,21 @@ NSMutableArray* border = nil;
             
             return YES;
         }
+        
+        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        if ([threadURLs count])
+        {
+            G3MessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
+            G3MessageGroup *destinationGroup = [NSManagedObjectContext objectWithURIString:item];
+            
+            [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
+            
+            // select all in dragging source:
+            NSOutlineView *sourceView = [info draggingSource];        
+            [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
+            
+            [NSApp saveAction:self];
+        }
     }
     else if (anOutlineView == threadsView)
     {
@@ -1995,6 +2028,9 @@ NSMutableArray* border = nil;
         NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
         G3MessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
         G3MessageGroup *destinationGroup = [self group];
+        
+        [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
+        /*
         NSEnumerator *enumerator = [threadURLs objectEnumerator];
         NSString *threadURL;
         
@@ -2009,6 +2045,7 @@ NSMutableArray* border = nil;
             // add thread to destination group:
             [thread addGroup:destinationGroup];
         }
+        */
         
         // select all in dragging source:
         NSOutlineView *sourceView = [info draggingSource];        
@@ -2024,11 +2061,11 @@ NSMutableArray* border = nil;
 {
     if (anOutlineView == boxesView) // Message Groups
     {
-        if (index != NSOutlineViewDropOnItemIndex) // accept only when no on item
+        NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
+        
+        if ([items count] == 1) 
         {
-            NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
-            
-            if ([items count] == 1) 
+            if (index != NSOutlineViewDropOnItemIndex) // accept only when no on item
             {
                 if ([G3MessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:YES])
                 {
@@ -2038,6 +2075,17 @@ NSMutableArray* border = nil;
                 }
             }
         }
+        
+        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        if ([threadURLs count])
+        {
+            if (index == NSOutlineViewDropOnItemIndex)
+            {
+                return NSDragOperationMove;
+            }
+        }
+        
+        return NSDragOperationNone;
     }
     else if (anOutlineView == threadsView)
     {
