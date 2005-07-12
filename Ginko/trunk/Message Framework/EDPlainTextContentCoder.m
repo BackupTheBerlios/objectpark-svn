@@ -193,7 +193,7 @@
     NSDictionary *parameters;
     NSData *contentData;
     
-    flowedText = [text stringByEncodingFlowedFormat];
+    flowedText = [[text stringWithCanonicalLinebreaks] stringByEncodingFlowedFormat];
     
     NSLog(@"Encoding Text with Class %@", targetClass);
     
