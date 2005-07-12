@@ -276,7 +276,7 @@
             if ([set containsIndex: i]) {
                 if ([self levelForRow: i]==0) {
                     id item = [self itemAtRow: i];
-                    [result addObject: item];
+                    if (item) [result addObject: item];
                 }
             }
         }

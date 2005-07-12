@@ -973,10 +973,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self updateGroupInfoTextField];
     [threadsView deselectAll:nil];
 //#warning Is this clever? Maybe!
-    if ([self group])
+/*    if ([self group])
     {
         [[NSManagedObjectContext defaultContext] refreshObject:[self group] mergeChanges:NO];
     }
+    */
     [threadsView reloadData];
     NSLog(@"Re-Selecting items %@", selectedItems);
     [threadsView selectItems:selectedItems ordered:YES];
