@@ -155,6 +155,7 @@ NSString *MboxImportJobName = @"mbox import";
     NSData *mboxData;
     NSError *error = nil;
     unsigned addedMessageCount = 0;
+    unsigned mboxDataCount = 0;
     
     [[context undoManager] disableUndoRegistration];
     
@@ -165,7 +166,6 @@ NSString *MboxImportJobName = @"mbox import";
     @try 
     {
         pool = [[NSAutoreleasePool alloc] init];
-        int mboxDataCount = 0;
         
         while (mboxData = [enumerator nextObject]) 
         {
@@ -177,30 +177,33 @@ NSString *MboxImportJobName = @"mbox import";
                 @try {
                     G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
                     
-                    //if (persistentMessage) // if not a dupe
+                    if ((++mboxDataCount % 100) == 0) 
                     {
-                        if ((++addedMessageCount % 100) == 0) 
+                        if (persistentMessage) 
                         {
-                            if (persistentMessage)
+                            if ((++addedMessageCount % 100) == 0)
                             {
                                 if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
                                 
-                                [context save: &error];
-                                NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
-                                [pool drain]; pool = [[NSAutoreleasePool alloc] init];                            
-                                [context reset];
-                            }
-                            else
-                            {
-                                [pool drain]; pool = [[NSAutoreleasePool alloc] init];                            
+                                [context save:&error];
+                                if (error)
+                                {
+                                    NSLog(@"Error in Import Job. Committing of added messages failed (%@).", error);
+                                }
+                                //[context reset];
                             }
                         }
+                        
+                        [pool drain]; pool = [[NSAutoreleasePool alloc] init];                            
                     }
                 } @catch (NSException *localException) {
-                    if ([localException name] == GIDupeMessageException) {
+                    if ([localException name] == GIDupeMessageException) 
+                    {
                         if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
                         [pool drain]; pool = [[NSAutoreleasePool alloc] init];
-                    } else {
+                    } 
+                    else 
+                    {
                         [localException raise];
                     }
                 }
