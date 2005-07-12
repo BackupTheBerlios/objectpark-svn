@@ -501,7 +501,7 @@
             
         while (message = [messagesToSendEnumerator nextObject])
         {
-            if (![message hasFlags:OPSendingBlockedStatus] && [message hasFlags:OPQueuedStatus])
+            if (![message hasFlags:OPSendingBlockedStatus] && ![message hasFlags:OPDraftStatus] && [message hasFlags:OPQueuedStatus])
             {
                 [messagesQualifyingForSend addObject:message];
             }

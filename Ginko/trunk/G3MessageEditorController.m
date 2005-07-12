@@ -1050,7 +1050,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // status
     if (oldMessage) [message addFlags:[oldMessage flags]];
-    [message addFlags:OPSeenStatus | OPDraftStatus | aType];
+    [message addFlags:OPSeenStatus | aType];
     
     // unmark message as blocked for sending
     [message removeFlags:OPSendingBlockedStatus];
@@ -1062,8 +1062,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [GIMessageBase removeMessage:oldMessage];
     }
     
-    //add new message to database
-    [GIMessageBase addDraftMessage:message];
+    if (aType & OPDraftStatus)
+    {
+        //add new message to database
+        [GIMessageBase addDraftMessage:message];
+    }
+    else
+    {
+        [GIMessageBase addQueuedMessage:message];
+    }
     
     [oldMessage autorelease];
     oldMessage = [message retain];

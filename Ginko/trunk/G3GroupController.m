@@ -174,6 +174,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void)setDisplayedMessage:(G3Message *)aMessage thread:(G3Thread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
+    NSParameterAssert([aThread isKindOfClass:[G3Thread class]]);
+    
     int itemRow;
     BOOL isNewThread = ![aThread isEqual:displayedThread];
         
@@ -198,9 +200,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     
     // select responding item in threads view:
-    if ((itemRow = [threadsView rowForItem:aMessage])< 0)// message could be from single message thread -> message is no item
+    if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     {
-        itemRow = [threadsView rowForItem:[[[aThread objectID] URIRepresentation] absoluteString]];
+        itemRow = [threadsView rowForItemEqualTo:[[[aThread objectID] URIRepresentation] absoluteString] startingAtRow:0];
     }
     
     [threadsView selectRow:itemRow byExtendingSelection:NO];
@@ -493,7 +495,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 }
             }
             
-            if ([message hasFlags:OPDraftStatus])
+            if ([message hasFlags:OPDraftStatus] || [message hasFlags:OPQueuedStatus])
             {
                 if ([message hasFlags:OPInSendJobStatus])
                 {
@@ -923,7 +925,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)moveSelectionToTrash:(id)sender
 {
-    G3MessageGroup *trashGroup = [G3MessageGroup trashMessageGroup];
     NSEnumerator *enumerator = [[self selectedThreadURIs] objectEnumerator];
     NSString *uriString;
     BOOL trashedAtLeastOne = NO;
@@ -935,14 +936,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
        // [thread removeFromAllGroups];
         [[self group] removeThread:thread];
-        [trashGroup addThread:thread];
+        [GIMessageBase addTrashThread:thread];
         trashedAtLeastOne = YES;
     }
     
     if (trashedAtLeastOne) [NSApp saveAction:self];
     else NSBeep();
-    
-    NSLog(@"-moveSelectionToTrash:");
 }
 
 - (void)updateWindowTitle
@@ -1035,7 +1034,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         if (thread && (![thread containsSingleMessage]))
         {
-            int itemRow = [threadsView rowForItem:threadURL];
+            int itemRow = [threadsView rowForItemEqualTo:threadURL startingAtRow:0];
             
             if (itemRow >= 0) 
             {

@@ -85,7 +85,24 @@
 
 + (void)addDraftMessage:(G3Message *)aMessage
 {
+    G3Thread *thread = [aMessage threadCreate:NO];
+    if (thread) [[G3MessageGroup queuedMessageGroup] removeThread:thread];
     [self addMessage:aMessage toMessageGroup:[G3MessageGroup draftMessageGroup] suppressThreading:YES];
+}
+
++ (void)addQueuedMessage:(G3Message *)aMessage
+{
+    G3Thread *thread = [aMessage threadCreate:NO];
+    if (thread) [[G3MessageGroup draftMessageGroup] removeThread:thread];
+    [self addMessage:aMessage toMessageGroup:[G3MessageGroup queuedMessageGroup] suppressThreading:YES];
+}
+
++ (void)addTrashThread:(G3Thread *)aThread
+{
+    [[G3MessageGroup draftMessageGroup] removeThread:aThread];
+    [[G3MessageGroup queuedMessageGroup] removeThread:aThread];
+    
+    [[G3MessageGroup trashMessageGroup] addThread:aThread];
 }
 
 + (void)removeDraftMessage:(G3Message *)aMessage

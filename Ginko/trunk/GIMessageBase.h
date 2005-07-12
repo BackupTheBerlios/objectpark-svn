@@ -10,6 +10,7 @@
 @class OPMBoxFile;
 @class G3Message;
 @class G3MessageGroup;
+@class G3Thread;
 
 @interface GIMessageBase : NSObject {
 
@@ -26,6 +27,8 @@
 + (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading;
 + (void)addSentMessage:(G3Message *)aMessage;
 + (void)addDraftMessage:(G3Message *)aMessage;
++ (void)addQueuedMessage:(G3Message *)aMessage;
++ (void)addTrashThread:(G3Thread *)aThread;
 + (void)removeDraftMessage:(G3Message *)aMessage;
 
 @end
