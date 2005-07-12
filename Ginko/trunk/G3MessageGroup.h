@@ -51,11 +51,13 @@ extern NSString *GIMessageGroupWasAddedNotification;
 
 /*" Complex Accessors "*/
 //- (NSArray *)threadsByDate;
-- (NSMutableArray*) threadReferenceURIsByDateNewerThan: (NSTimeInterval) sinceRefDate
-                                           withSubject: (NSString*) subject
-                                                author: (NSString*) author;
 
-- (NSMutableSet *)threadsContainingSingleMessageNewerThan:(NSTimeInterval)sinceRefDate;
+-  (void) fetchThreadURIs: (NSMutableArray**) uris
+           trivialThreads: (NSMutableSet**) trivialThreads
+                newerThan: (NSTimeInterval) sinceRefDate
+              withSubject: (NSString*) subject
+                   author: (NSString*) author
+    sortedByDateAscending: (BOOL) ascending;
 
 - (void)addThread:(G3Thread *)value;
 - (void)removeThread:(G3Thread *)value;

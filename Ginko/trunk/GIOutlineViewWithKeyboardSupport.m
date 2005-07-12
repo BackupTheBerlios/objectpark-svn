@@ -265,7 +265,7 @@
 }
 
 - (NSArray*) selectedItems
-/*" The result is sorted from low to high row indexes. "*/
+/*" The result is sorted from low to high row indexes and never nil. "*/
 {
     NSMutableArray* result = [NSMutableArray array];
     NSIndexSet* set = [self selectedRowIndexes];

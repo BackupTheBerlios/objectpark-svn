@@ -229,24 +229,44 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     return pk;
 }
 
-static int collectThreadURIStringsCallback(void *result, int columns, char **values, char **colnames)
+struct ResultSet {
+    NSMutableArray* uris;
+    NSMutableSet*   trivialThreads;
+};
+
+static int collectThreadURIStringsCallback(void *this, int columns, char **values, char **colnames)
 {
+    struct ResultSet* result = (struct ResultSet*)this;
     //NSLog(@"%s", values[0]);
-    static NSString *prefix = nil;
+    static NSString *prefix = nil; if (!prefix) prefix = [G3Thread URIStringPrefix];
     
-    if (!prefix) prefix = [G3Thread URIStringPrefix];
+    int threadCount = atoi(values[1]);
+    NSString* uri = [prefix stringByAppendingString: [NSString stringWithUTF8String:values[0]]];
     
-    [(id)result addObject:[prefix stringByAppendingString: [NSString stringWithUTF8String:values[0]]]];
+    if (result->uris) {
+        // Collect all result uris in order:
+        [result->uris addObject: uri];
+    }
+    if (result->trivialThreads) {
+        // build a set of non trivial threads (with messageCount > 1):
+        if (threadCount<=1) [result->trivialThreads addObject: uri];
+    }
+    
     return 0;
 }
 
-- (NSMutableArray*) threadReferenceURIsByDateNewerThan: (NSTimeInterval) sinceRefDate
-                                           withSubject: (NSString*) subject
-                                                author: (NSString*) author
+-  (void) fetchThreadURIs: (NSMutableArray**) uris
+           trivialThreads: (NSMutableSet**) trivialThreads
+                newerThan: (NSTimeInterval) sinceRefDate
+              withSubject: (NSString*) subject
+                   author: (NSString*) author
+    sortedByDateAscending: (BOOL) ascending
 {
-    NSMutableArray *result = [NSMutableArray array];
+    struct ResultSet result;
+    result.uris           = uris == NULL           ? NULL : *uris;
+    result.trivialThreads = trivialThreads == NULL ? NULL : *trivialThreads;
     
-    NSLog(@"entered threadReferenceURIsByDate query");
+    NSLog(@"entered fetchThreadURIs query");
     [NSManagedObject lockStore];
     
     // open db:
@@ -256,11 +276,13 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     if (db) {
         int errorCode;
         char *error;
-        //NSLog(@"DB opened. Fetching thread objects...");
-        NSString *queryString = nil;
+        //NSLog(@"DB opened. Fetching thread objects...");        
         
+        NSMutableArray* clauses = [NSMutableArray arrayWithObject: @"ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS"];
         
-        NSMutableArray* clauses = [NSMutableArray arrayWithCapacity: 2];
+        // Find only threads belonging to self:
+        [clauses addObject: [NSString stringWithFormat: @"%@ = Z_4THREADS.Z_4GROUPS", [self primaryKey]]];
+        
         if ([subject length]) {
             [clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZSUBJECT like '%@'", subject]];
         }
@@ -270,25 +292,14 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         if (sinceRefDate>0.0) {
             [clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= %f", sinceRefDate]];
         }
-        if ([clauses count]) {
-            //queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZDATE >= %f order by ZTHREAD.ZDATE;", [self primaryKey]];
-            // Alternative form:
-            queryString = [NSString stringWithFormat:@"select T.Z_PK from Z_4THREADS, (select Z_PK, ZDATE from ZTHREAD where %@) as T where %@ = Z_4THREADS.Z_4GROUPS and T.Z_PK = Z_4THREADS.Z_6THREADS order by T.ZDATE;", [clauses componentsJoinedByString: @" and "], [self primaryKey]];
-        }
-        else
-        {
-            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZTHREAD.ZDATE;", [self primaryKey]];
-        }
         
-        //NSString *queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS order by ZTHREAD.ZDATE;", [self primaryKey]];
+        NSString *queryString = [NSString stringWithFormat: @"select Z_PK, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@  order by ZTHREAD.ZDATE;", [clauses componentsJoinedByString: @" and "], [self primaryKey]];
         
-        if (errorCode = sqlite3_exec(db, // An open database
-                                         //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
+        if (errorCode = sqlite3_exec(db, 
                                      [queryString UTF8String], /* SQL to be executed */
                                      collectThreadURIStringsCallback, /* Callback function */
-                                     result, /* 1st argument to callback function */
-                                     &error)) 
-        { 
+                                     &result, /* 1st argument to callback function */
+                                     &error)) { 
             if (error) 
             {
                 NSLog(@"Error creating index: %s", error);
@@ -301,14 +312,13 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     [NSManagedObject unlockStore];
     
-    NSLog(@"exited threadReferenceURIsByDate query");
+    NSLog(@"exited fetchThreadURIs query");
 
     //NSLog(@"result count = %d", [result count]);
     //NSLog(@"result = %@", result);
-    
-    return result;
 }
 
+/*
 - (NSMutableSet *)threadsContainingSingleMessageNewerThan:(NSTimeInterval)sinceRefDate
 {
     NSMutableSet *result = [NSMutableSet set];
@@ -317,8 +327,8 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     // open db:
     sqlite3 *db = NULL;
-    sqlite3_open([[NSApp databasePath] UTF8String],   /* Database filename (UTF-8) */
-        &db);                /* OUT: SQLite db handle */
+    sqlite3_open([[NSApp databasePath] UTF8String],   // Database filename (UTF-8) 
+        &db);                // OUT: SQLite db handle 
     
     if (db) 
     {
@@ -338,9 +348,9 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
         
         if (errorCode = sqlite3_exec(db, // An open database
                                          //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
-                                     [queryString UTF8String], /* SQL to be executed */
-                                     collectThreadURIStringsCallback, /* Callback function */
-                                     result, /* 1st argument to callback function */
+                                     [queryString UTF8String], // SQL to be executed 
+                                     collectThreadURIStringsCallback, // Callback function 
+                                     result, // 1st argument to callback function 
                                      &error)) 
         { 
             if (error) 
@@ -360,6 +370,7 @@ static int collectThreadURIStringsCallback(void *result, int columns, char **val
     
     return result;
 }
+*/
 
 /* as documentation of NSManagedObject suggests...no overriding of -description
 - (NSString *)description

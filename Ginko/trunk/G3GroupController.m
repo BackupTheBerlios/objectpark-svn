@@ -393,29 +393,43 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return nowForThreadFiltering;
 }
 
-- (NSArray *)threadIdsByDate
+- (void) cacheThreadsAndExpandableItems
+{
+    if ([self group]) {
+        NSMutableArray* results         = [NSMutableArray arrayWithCapacity: 500];
+        NSMutableSet* trivialThreadURIs = [NSMutableSet setWithCapacity: 250];
+        
+        [self setThreadCache: results];
+        [self setNonExpandableItemsCache: trivialThreadURIs];
+        
+        [[self group] fetchThreadURIs: &results
+                       trivialThreads: &trivialThreadURIs
+                            newerThan: [self nowForThreadFiltering]
+                          withSubject: nil
+                               author: nil 
+                sortedByDateAscending: YES];
+    }
+}
+
+- (NSArray*) threadIdsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-    NSMutableArray *result = [self threadCache];
+    NSMutableArray* result = [self threadCache];
     
-    if (!result) 
-    {
-        result = [[self group] threadReferenceURIsByDateNewerThan: [self nowForThreadFiltering]
-                                                      withSubject: nil
-                                                           author: nil ];
-        if (result) [self setThreadCache:result];
+    if (!result) {
+        [self cacheThreadsAndExpandableItems];
+        result = [self threadCache];
     }
     return result;
 }
 
-- (NSSet *)nonExpandableItems
+- (NSSet*) nonExpandableItems
 {
-    NSMutableSet *result = [self nonExpandableItemsCache];
+    NSMutableSet* result = [self nonExpandableItemsCache];
     
-    if (!result) 
-    {
-        result = [[self group] threadsContainingSingleMessageNewerThan:[self nowForThreadFiltering]];
-        if (result) [self setNonExpandableItemsCache:result];
+    if (!result) {
+        [self cacheThreadsAndExpandableItems];
+        result = [self nonExpandableItemsCache];
     }
     return result;
 }
@@ -472,7 +486,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                         // ##TODO:select first "interesting" message of this thread
                         // perhaps the next/first unread message
                         
-                        enumerator = [[selectedThread messages] objectEnumerator];
+                        enumerator = [[selectedThread messagesByDate] objectEnumerator];
                         while (message = [enumerator nextObject])
                         {
                             if (! [message hasFlags:OPSeenStatus])
@@ -899,9 +913,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         NSString* subject = [thread valueForKey: @"subject"];
         if (subject) {
             // query database
-            NSArray* result = [[self group] threadReferenceURIsByDateNewerThan: [self nowForThreadFiltering]
-                                                                   withSubject: subject
-                                                                        author: nil ];
+            NSMutableArray* result = [NSMutableArray array];
+            
+            [[self group] fetchThreadURIs: &result 
+                           trivialThreads: NULL 
+                                newerThan: [self nowForThreadFiltering]
+                              withSubject: subject
+                                   author: nil 
+                    sortedByDateAscending: YES];
+
             [threadsView selectItems: result ordered: YES];
         }
     }
@@ -976,7 +996,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     */
     [threadsView reloadData];
-    NSLog(@"Re-Selecting items %@", selectedItems);
+    //NSLog(@"Re-Selecting items %@", selectedItems);
     [threadsView selectItems:selectedItems ordered:YES];
 }
 
