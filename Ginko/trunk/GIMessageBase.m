@@ -165,9 +165,10 @@ NSString *MboxImportJobName = @"mbox import";
     @try 
     {
         pool = [[NSAutoreleasePool alloc] init];
+        int mboxDataCount = 0;
         
         while (mboxData = [enumerator nextObject]) 
-        {
+        {            
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
             
@@ -184,15 +185,19 @@ NSString *MboxImportJobName = @"mbox import";
                             
                             [context save: &error];
                             NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);
-                            
-                            [pool drain]; pool = [[NSAutoreleasePool alloc] init];
-                            
+                                                        
                             if ((++addedMessageCount % 5000) == 0) 
                             {
                                 [context reset];
                             }
                         }
                     }
+                    
+                    if ((++mboxDataCount % 100) == 0) 
+                    {
+                        [pool drain]; pool = [[NSAutoreleasePool alloc] init];
+                    }
+                    
                 } @catch (NSException *localException) {
                     if ([localException name] == GIDupeMessageException) {
                         if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
@@ -219,7 +224,7 @@ NSString *MboxImportJobName = @"mbox import";
                 }
                 
                 [now release];
-            }
+            }            
         }
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
