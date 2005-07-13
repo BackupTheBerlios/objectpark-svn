@@ -36,10 +36,10 @@
 
 - (void)testThreadIdsByDate
 {
-    NSLog(@"testThreadIdsByDate entered");
-    NSArray *result = [[G3MessageGroup defaultMessageGroup] threadReferenceURIsByDateNewerThan: 0.0 withSubject: nil author: nil];
-    NSLog(@"testThreadIdsByDate exited");
-
+    NSMutableArray *result = [NSMutableArray array];
+    
+    [G3MessageGroup fetchThreadURIs:&result trivialThreads:NULL newerThan:0.0 withSubject:nil author:nil sortedByDateAscending:YES];
+    
     NSEnumerator *enumerator = [result objectEnumerator];
     NSString *urlString;
     NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];

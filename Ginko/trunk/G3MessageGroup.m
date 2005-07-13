@@ -293,7 +293,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
             [clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= %f", sinceRefDate]];
         }
         
-        NSString *queryString = [NSString stringWithFormat: @"select Z_PK, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@  order by ZTHREAD.ZDATE;", [clauses componentsJoinedByString: @" and "], [self primaryKey]];
+        NSString *queryString = [NSString stringWithFormat: @"select Z_PK, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
         
         if (errorCode = sqlite3_exec(db, 
                                      [queryString UTF8String], /* SQL to be executed */
@@ -317,67 +317,6 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     //NSLog(@"result count = %d", [result count]);
     //NSLog(@"result = %@", result);
 }
-
-/*
-- (NSMutableSet *)threadsContainingSingleMessageNewerThan:(NSTimeInterval)sinceRefDate
-{
-    NSMutableSet *result = [NSMutableSet set];
-    
-    [NSManagedObject lockStore];
-    
-    // open db:
-    sqlite3 *db = NULL;
-    sqlite3_open([[NSApp databasePath] UTF8String],   // Database filename (UTF-8) 
-        &db);                // OUT: SQLite db handle 
-    
-    if (db) 
-    {
-        int errorCode;
-        char *error;
-        //NSLog(@"DB opened. Fetching thread objects...");
-        NSString *queryString = nil;
-        
-        if (sinceRefDate)
-        {
-            queryString = [NSString stringWithFormat:@"select T.Z_PK from Z_4THREADS, (select Z_PK, ZDATE from ZTHREAD where ZTHREAD.ZDATE >= %f and ZTHREAD.ZNUMBEROFMESSAGES < 2) as T where %@ = Z_4THREADS.Z_4GROUPS and T.Z_PK = Z_4THREADS.Z_6THREADS order by T.ZDATE;", sinceRefDate, [self primaryKey]];
-        }
-        else
-        {
-            queryString = [NSString stringWithFormat:@"select Z_PK from Z_4THREADS, ZTHREAD where %@ = Z_4THREADS.Z_4GROUPS and ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and ZTHREAD.ZNUMBEROFMESSAGES < 2;", [self primaryKey]];
-        }
-        
-        if (errorCode = sqlite3_exec(db, // An open database
-                                         //"select Z_PK from ZTHREAD inner join Z_4THREADS on ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and 1 = Z_4THREADS.Z_4GROUPS ORDER BY ZDATE",
-                                     [queryString UTF8String], // SQL to be executed 
-                                     collectThreadURIStringsCallback, // Callback function 
-                                     result, // 1st argument to callback function 
-                                     &error)) 
-        { 
-            if (error) 
-            {
-                NSLog(@"Error creating index: %s", error);
-                sqlite3_free(error);
-            }
-        }
-    }
-    
-    sqlite3_close(db);
-    
-    [NSManagedObject unlockStore];
-
-    //NSLog(@"result count = %d", [result count]);
-    //NSLog(@"result = %@", result);
-    
-    return result;
-}
-*/
-
-/* as documentation of NSManagedObject suggests...no overriding of -description
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"%@ with %d threads", [super description], [[self valueForKey:@"threads"] count]];
-}
-*/
 
 - (unsigned)threadCount
 /*" Returns the count of threads that are present 'in' the receiver. 
