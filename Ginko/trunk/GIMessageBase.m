@@ -153,9 +153,10 @@ NSString *MboxImportJobName = @"mbox import";
     
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *mboxData;
-    NSError *error = nil;
-    unsigned addedMessageCount = 0;
+    //NSError *error = nil;
+    BOOL messagesWereAdded = NO;
     unsigned mboxDataCount = 0;
+    unsigned addedMessageCount = 0;
     
     [[context undoManager] disableUndoRegistration];
     
@@ -173,30 +174,40 @@ NSString *MboxImportJobName = @"mbox import";
             NSData *transferData = [mboxData transferDataFromMboxData];
             
             if (transferData)
-            {
-                @try {
+            {;
+                @try 
+                {
                     G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
-                    
-                    if ((++mboxDataCount % 100) == 0) 
+                    if (persistentMessage) 
                     {
-                        if (persistentMessage) 
+                        messagesWereAdded = YES;
+                        ++addedMessageCount;
+                    }
+
+                    // if ((++mboxDataCount % 100) == 0) 
+                    if ((++mboxDataCount % 1) == 0) // testing only
+                    {
+                        if (messagesWereAdded)
                         {
-                            if ((++addedMessageCount % 100) == 0)
+                            if (NSDebugEnabled) NSLog(@"*** Committing changes (added %u messages)...", addedMessageCount);
+                            
+                            [NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
+                            /*
+                            [context save:&error];
+                            if (error)
                             {
-                                if (NSDebugEnabled) NSLog(@"*** Committing changes (added %d messages)...", addedMessageCount);
-                                
-                                [context save:&error];
-                                if (error)
-                                {
-                                    NSLog(@"Error in Import Job. Committing of added messages failed (%@).", error);
-                                }
-                                //[context reset];
+                                NSLog(@"Error in Import Job. Committing of added messages failed (%@).", error);
                             }
+                             */
+                            messagesWereAdded = NO;
+                            //[context reset];
                         }
                         
-                        [pool drain]; pool = [[NSAutoreleasePool alloc] init];                            
+                        [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
                     }
-                } @catch (NSException *localException) {
+                } 
+                @catch (NSException *localException) 
+                {
                     if ([localException name] == GIDupeMessageException) 
                     {
                         if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
@@ -230,8 +241,9 @@ NSString *MboxImportJobName = @"mbox import";
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
         
-        [context save:(NSError **)&error];
-        NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
+        [NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
+        //[context save:(NSError **)&error];
+        //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
     } 
     @catch (NSException *localException) 
     {

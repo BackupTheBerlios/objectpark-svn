@@ -357,14 +357,31 @@
     }    
 }
 
+- (NSError *)commitChanges
+{
+    NSError *error = nil;
+    
+    NSLog(@"committing database objects");
+    
+    if (![(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save:&error])
+    {
+        return error;
+    }
+    else
+    {
+        return nil;
+    }
+}
+
 - (IBAction) saveAction: (id) sender
 {
-    NSError *error;
+    NSError *error = [self commitChanges];
     NSString *localizedDescription;
     
     NSLog(@"committing database objects");
     
-    if (! [(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save: &error]) {
+    if (error)
+    {
         NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[error userInfo] objectForKey:NSInsertedObjectsKey], [[error userInfo] objectForKey:NSUpdatedObjectsKey]);
         localizedDescription = [error localizedDescription];
         error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
