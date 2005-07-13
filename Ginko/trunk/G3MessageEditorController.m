@@ -975,7 +975,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSRange selectedRange;
     
     // set content in text view
-    [[messageTextView textStorage] replaceCharactersInRange:NSMakeRange(0, [[messageTextView textStorage] length]) withAttributedString:content];
+    [[messageTextView textStorage] replaceCharactersInRange:NSMakeRange(0, [[messageTextView textStorage] length]) withAttributedString:[content length] ? content : [[[NSAttributedString alloc] init] autorelease]];
         
     // place insertion marker behind content
     selectedRange = NSMakeRange([[messageTextView textStorage] length], 0);

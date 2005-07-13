@@ -200,8 +200,10 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
         //NSLog(@"Inserting %@ into %@ at range %@.", result, [self textStorage], NSStringFromRange([self rangeForUserTextChange]));
 
         // Finally, paste in text:
-        [[self textStorage] replaceCharactersInRange:[self rangeForUserTextChange] withAttributedString:result];
-        
+        if ([result length])
+        {
+            [[self textStorage] replaceCharactersInRange:[self rangeForUserTextChange] withAttributedString:result];
+        }
         //NSLog(@"Inserted %@ into %@.", result, [self textStorage]);
 
         [[self textStorage] endEditing];

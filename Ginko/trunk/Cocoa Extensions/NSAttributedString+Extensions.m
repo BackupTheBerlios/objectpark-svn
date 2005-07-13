@@ -58,13 +58,16 @@
 
 /*" Appends  %string to the receiver using the text attributes as set at the end of the receiver. "*/
 
-- (void) appendString: (NSString*) string
+- (void)appendString:(NSString *)string
 {
+    if ([string length])
+    {
 #if 0
-    [self appendAttributedString:[[[NSAttributedString alloc] initWithString:string] autorelease]];
+        [self appendAttributedString:[[[NSAttributedString alloc] initWithString:string] autorelease]];
 #else
-    [self replaceCharactersInRange:NSMakeRange([self length], 0) withString:string];
+        [self replaceCharactersInRange:NSMakeRange([self length], 0) withString:string];
 #endif
+    }
 }
 
 /*" Appends  %string to the receiver using the %attributes passed in. "*/
