@@ -288,7 +288,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         return;
     }
     
-    G3Message *message = [self checkpointMessageWithStatus:OPQueuedStatus];
+    //G3Message *message = 
+    [self checkpointMessageWithStatus:OPQueuedStatus];
 #warning start message send job here
 
     [window performClose:self];

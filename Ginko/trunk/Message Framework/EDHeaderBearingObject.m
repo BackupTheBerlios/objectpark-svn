@@ -87,7 +87,7 @@
 }
 
 
-- (void)setBody:(NSString *)fieldBody forHeaderField:(NSString *)fieldName
+- (void) setBody: (NSString*) fieldBody forHeaderField: (NSString*) fieldName
 {
     EDObjectPair	*headerField;
     NSString 		*canonicalName;
@@ -96,19 +96,17 @@
     fieldName = [fieldName sharedInstance];
     canonicalName = [[fieldName lowercaseString] sharedInstance];
     headerField = [[EDObjectPair allocWithZone:[self zone]] initWithObjects:fieldName:fieldBody];
-    if([headerDictionary objectForKey:canonicalName] != nil)
-        {
-        NSLog(@"will replace body for header field %@", fieldName);
+    if ([headerDictionary objectForKey:canonicalName] != nil)
+    {
+        //NSLog(@"will replace body for header field %@", fieldName);
         for(i = 0, n = [headerFields count]; i < n; i++)
             if([[[headerFields objectAtIndex:i] firstObject] caseInsensitiveCompare:fieldName] == NSOrderedSame)
                 break;
         NSAssert(i < n, @"header dictionary inconsistent with header fields");
         [headerFields replaceObjectAtIndex:i withObject:headerField];
-        }
-    else
-        {
+    } else {
         [headerFields addObject:headerField];
-        }
+    }
     [headerDictionary setObject:fieldBody forKey:canonicalName];
     [headerField release];
 }

@@ -324,7 +324,7 @@ UIDL. nil otherwise. "*/
             NSString *messageId = [infoDict objectForKey:@"messageId"];
             NSDate *date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
 
-            if (NSDebugEnabled) NSLog(@"Cleaning message #%d in %@", i, self);
+            //if (NSDebugEnabled) NSLog(@"Cleaning message #%d in %@", i, self);
             
             if ( (! date) && (! messageId) ) // try to get info from message
             {

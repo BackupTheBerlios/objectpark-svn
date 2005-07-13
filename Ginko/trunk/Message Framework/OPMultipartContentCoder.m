@@ -179,12 +179,17 @@
     
     while (subpart = [enumerator nextObject])
     {
-        NS_DURING
-            [result appendAttributedString:[subpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes]];
-        NS_HANDLER
+        @try {
+            NSAttributedString* subpartContent = [subpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
+            if (!subpartContent) {
+                [result appendString: [NSString stringWithFormat:@"\nsubpart decoding error [%@]\n", subpart]];
+                [subpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
+            } else
+                [result appendAttributedString: subpartContent];
+        } @catch (NSException* localException) {
             [result appendString:[NSString stringWithFormat:@"\nsubpart decoding error [%@]\n", [localException reason]]];
             NSLog(@"subpart decoding error [%@]\n", [localException reason]);
-        NS_ENDHANDLER
+        }
     }
     
     return [result autorelease];

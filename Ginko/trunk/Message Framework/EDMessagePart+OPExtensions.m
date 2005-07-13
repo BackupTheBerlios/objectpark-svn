@@ -320,25 +320,20 @@
         [contentCoder release];
     }
     
-    if (! content)
-    {
-        EDContentCoder *contentCoder;
-        NSMutableAttributedString *result;
-        
-        result = [[NSMutableAttributedString alloc] initWithString:@"Content could not be decoded. Fallback to text/plain.\n\n"];
-        
-        // fake text/plain
-        
-        [self setContentType: @"text/plain" withParameters:[NSDictionary dictionary]];
-        
-        contentCoder = [[EDPlainTextContentCoder alloc] initWithMessagePart:self];
-        
-        NS_DURING
-            [result appendAttributedString:[contentCoder attributedString]];
-        NS_HANDLER
+    if (! content) {
+        NSMutableAttributedString* result = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithFormat: @"--- Content of type %@ could not be decoded. Falling back to text/plain: ---\n\n", [self contentType]]];
+        // Fake text/plain for the content coder to work:
+        [self setContentType: @"text/plain" withParameters: [NSDictionary dictionary]];
+
+        EDContentCoder* contentCoder = [[EDPlainTextContentCoder alloc] initWithMessagePart:self];
+
+        @try {
+            [result appendAttributedString: [contentCoder attributedString]];
+            content = result;
+        } @catch (NSException* localException) {
             OPDebugLog3(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = [[NSAttributedString alloc] initWithString:@"Exception while extracting contents as attributed string."];
-        NS_ENDHANDLER
+        }
 
         [contentCoder release];
         
