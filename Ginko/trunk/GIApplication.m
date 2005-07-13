@@ -377,9 +377,7 @@
 {
     NSError *error = [self commitChanges];
     NSString *localizedDescription;
-    
-    NSLog(@"committing database objects");
-    
+        
     if (error)
     {
         NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[error userInfo] objectForKey:NSInsertedObjectsKey], [[error userInfo] objectForKey:NSUpdatedObjectsKey]);
