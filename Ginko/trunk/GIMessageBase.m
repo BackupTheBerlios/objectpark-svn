@@ -184,8 +184,7 @@ NSString *MboxImportJobName = @"mbox import";
                         ++addedMessageCount;
                     }
 
-                    // if ((++mboxDataCount % 100) == 0) 
-                    if ((++mboxDataCount % 1) == 0) // testing only
+                    if ((++mboxDataCount % 100) == 0) 
                     {
                         if (messagesWereAdded)
                         {
