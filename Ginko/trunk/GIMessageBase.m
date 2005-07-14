@@ -146,7 +146,7 @@ NSString *MboxImportJobName = @"mbox import";
     // as the main thread because this job/threads works for the main thread.
     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
     [context setPersistentStoreCoordinator:[parentContext persistentStoreCoordinator]];
-    //[context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+    [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
     
     [NSManagedObjectContext setDefaultContext:context];
     //[NSManagedObjectContext setDefaultContext:parentContext];

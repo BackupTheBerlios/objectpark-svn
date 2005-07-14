@@ -380,7 +380,7 @@
         
     if (error)
     {
-        NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[error userInfo] objectForKey:NSInsertedObjectsKey], [[error userInfo] objectForKey:NSUpdatedObjectsKey]);
+        NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[NSManagedObjectContext defaultContext] insertedObjects], [[NSManagedObjectContext defaultContext] updatedObjects]);
         localizedDescription = [error localizedDescription];
         error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
         [[NSApplication sharedApplication] presentError:error];
