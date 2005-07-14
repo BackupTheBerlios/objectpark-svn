@@ -17,7 +17,7 @@
 
 - (void)tearDown
 {
-    [[NSManagedObjectContext defaultContext] rollback];
+    [[NSManagedObjectContext threadContext] rollback];
 }
 
 - (void)testAttributedString

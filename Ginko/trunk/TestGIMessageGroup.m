@@ -42,14 +42,14 @@
     
     NSEnumerator *enumerator = [result objectEnumerator];
     NSString *urlString;
-    NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
+    NSManagedObjectContext *context = [NSManagedObjectContext threadContext];
     
     while (urlString = [enumerator nextObject])
     {
         STAssertTrue([context objectWithURI:[NSURL URLWithString:urlString]] != nil, @"Url %@ failed.", urlString);
     }
     
-    //NSLog(@"First Thread's name '%@'", [(G3Thread *)[[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
+    //NSLog(@"First Thread's name '%@'", [(G3Thread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
 }
 
 @end

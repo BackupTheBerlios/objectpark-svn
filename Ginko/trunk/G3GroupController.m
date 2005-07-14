@@ -992,7 +992,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 //#warning Is this clever? Maybe!
 /*    if ([self group])
     {
-        [[NSManagedObjectContext defaultContext] refreshObject:[self group] mergeChanges:NO];
+        [[NSManagedObjectContext threadContext] refreshObject:[self group] mergeChanges:NO];
     }
     */
     [threadsView reloadData];

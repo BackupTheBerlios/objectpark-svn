@@ -229,7 +229,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
 
     // Some statistical messsages:
-    //NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];	
+    //NSManagedObjectContext* context = [NSManagedObjectContext threadContext];	
     //NSArray *allMessages = [G3Message allObjects];
     //G3Message *aMessage  = [allMessages lastObject];
     
@@ -348,7 +348,7 @@
                 }
                 
                 [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
-                [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
+                [jobArguments setObject:[NSManagedObjectContext threadContext] forKey:@"parentContext"];
                 [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
                 
                 [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
@@ -363,7 +363,7 @@
     
     NSLog(@"committing database objects");
     
-    if (![(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save:&error])
+    if (![(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error])
     {
         return error;
     }
@@ -457,7 +457,7 @@
         NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
         [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
-        [jobArguments setObject:[NSManagedObjectContext defaultContext] forKey:@"parentContext"];
+        [jobArguments setObject:[NSManagedObjectContext threadContext] forKey:@"parentContext"];
         
         [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
     }

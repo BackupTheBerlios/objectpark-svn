@@ -21,7 +21,7 @@
 
 - (void)tearDown
 {
-    [[NSManagedObjectContext defaultContext] rollback];
+    [[NSManagedObjectContext threadContext] rollback];
 }
 
 - (G3Message *)makeAMessage

@@ -14,17 +14,17 @@
 
 + (void)lockStore
 {
-    [[[NSManagedObjectContext defaultContext] persistentStoreCoordinator] lock];
+    [[[NSManagedObjectContext threadContext] persistentStoreCoordinator] lock];
 }
 
 + (void)unlockStore
 {
-    [[[NSManagedObjectContext defaultContext] persistentStoreCoordinator] unlock];
+    [[[NSManagedObjectContext threadContext] persistentStoreCoordinator] unlock];
 }
 
 + (NSEntityDescription*) entity
 {
-    NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
+    NSManagedObjectContext *context = [NSManagedObjectContext threadContext];
     NSEntityDescription* entity = [[[context persistentStoreCoordinator] managedObjectModel] entityForClassName: NSStringFromClass(self)];
     return entity;
 }
@@ -49,7 +49,7 @@
 + (NSArray*) allObjects
 {
     NSEntityDescription*    entity  = [self entity];
-    NSManagedObjectContext* context = [NSManagedObjectContext defaultContext];
+    NSManagedObjectContext* context = [NSManagedObjectContext threadContext];
     NSFetchRequest*         request = [[[NSFetchRequest alloc] init] autorelease];
     
     [request setEntity:entity];

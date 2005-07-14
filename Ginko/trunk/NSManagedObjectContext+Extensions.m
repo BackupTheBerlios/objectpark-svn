@@ -11,7 +11,7 @@
 
 @implementation NSManagedObjectContext (OPExtensions)
 
-+ (NSManagedObjectContext *)defaultContext
++ (NSManagedObjectContext *)threadContext
 {
     NSManagedObjectContext *result;
     
@@ -19,14 +19,14 @@
     if (!result) 
     {
         result = [NSApp newManagedObjectContext];
-        [self setDefaultContext:result];
+        [self setThreadContext:result];
     }
     
-    NSAssert (result != nil, @"+[NSManagedObject (Extensions) defaultContext]: context returned should never be nil");
+    NSAssert (result != nil, @"+[NSManagedObject (Extensions) threadContext]: context returned should never be nil");
     return result;
 }
 
-+ (void)setDefaultContext:(NSManagedObjectContext *)aContext
++ (void)setThreadContext:(NSManagedObjectContext *)aContext
 {
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
     if (aContext) {
@@ -53,7 +53,7 @@
 + (id) objectWithURIString: (NSString*) uri
 /*" Returns the  object for the uri given in the default context. "*/
 {
-    return [[self defaultContext] objectWithURI: [NSURL URLWithString: uri]];
+    return [[self threadContext] objectWithURI: [NSURL URLWithString: uri]];
 }
 
 

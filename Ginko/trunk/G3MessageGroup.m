@@ -84,7 +84,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     }
     
     // creating new group and setting name:
-    result = [[[self alloc] initWithManagedObjectContext:[NSManagedObjectContext defaultContext]] autorelease];
+    result = [[[self alloc] initWithManagedObjectContext:[NSManagedObjectContext threadContext]] autorelease];
     [result setName:aName];
 
     // placing new group in hierarchy:
@@ -118,7 +118,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     if ([anUrl length])
     {
         @try {
-            referencedGroup = [[NSManagedObjectContext defaultContext] objectWithURI:[NSURL URLWithString:anUrl]];
+            referencedGroup = [[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:anUrl]];
         }
         @catch (NSException *e) {
             NSLog(@"Could not find group for URI ''", anUrl);

@@ -17,7 +17,7 @@
 
 - (void)tearDown
 {
-    [[NSManagedObjectContext defaultContext] rollback];
+    [[NSManagedObjectContext threadContext] rollback];
 }
 
 - (G3Message *)makeAMessage
@@ -90,9 +90,9 @@
 
 - (void)disabledtestGroupAdding
 {
-    G3Thread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"G3Thread" inManagedObjectContext:[NSManagedObjectContext defaultContext]];
+    G3Thread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"G3Thread" inManagedObjectContext:[NSManagedObjectContext threadContext]];
     G3Message *messageA = [self makeAMessage];
-    G3MessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"G3MessageGroup" inManagedObjectContext:[NSManagedObjectContext defaultContext]];
+    G3MessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"G3MessageGroup" inManagedObjectContext:[NSManagedObjectContext threadContext]];
     
     [threadA addMessage:messageA];
     [threadA addGroup:group];

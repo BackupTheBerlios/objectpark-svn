@@ -67,7 +67,7 @@
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
         [request setEntity: [G3Profile entity]];
         [request setPredicate:[NSPredicate predicateWithFormat: @"%@ IN messagesToSend", aMessage]];
-        NSArray *result = [[NSManagedObjectContext defaultContext] executeFetchRequest:request error:&error];
+        NSArray *result = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
         
         if (error)
         {
@@ -976,7 +976,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSRange selectedRange;
     
     // set content in text view
-    [[messageTextView textStorage] replaceCharactersInRange:NSMakeRange(0, [[messageTextView textStorage] length]) withAttributedString:[content length] ? content : [[[NSAttributedString alloc] init] autorelease]];
+    [[messageTextView textStorage] replaceCharactersInRange:NSMakeRange(0, [[messageTextView textStorage] length]) withAttributedString:content];
         
     // place insertion marker behind content
     selectedRange = NSMakeRange([[messageTextView textStorage] length], 0);
@@ -1085,7 +1085,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window setDocumentEdited:NO];
     
     NSError *error;
-    [(NSManagedObjectContext *)[NSManagedObjectContext defaultContext] save:&error];
+    [(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error];
     NSAssert1(!error, @"Error checkpointing message: %@", error);
     
     if (NSDebugEnabled) NSLog(@"checkpointed message");

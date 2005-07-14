@@ -35,7 +35,7 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
         [request setPredicate:predicate];
         
         NSError *error = nil;
-        NSArray *results = [[NSManagedObjectContext defaultContext] executeFetchRequest:request error:&error];
+        NSArray *results = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
         
         NSAssert1(!error, @"+[G3Message messageForMessageId:inManagedObjectContext:] error while fetching (%@).", error);    
         
@@ -86,7 +86,7 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     } else {
         
         // Create a new message in the default context:
-        result = [[[G3Message alloc] initWithManagedObjectContext: [NSManagedObjectContext defaultContext]] autorelease];
+        result = [[[G3Message alloc] initWithManagedObjectContext: [NSManagedObjectContext threadContext]] autorelease];
         NSAssert(result != nil, @"Could not create message object");
         
         NSString *fromHeader = [im fromWithFallback: YES];

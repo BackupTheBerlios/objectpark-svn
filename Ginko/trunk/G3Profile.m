@@ -53,7 +53,7 @@
 - (id)init
 /*" Adds the reciever to the default managed object context. "*/
 {
-    return [self initWithManagedObjectContext:[NSManagedObjectContext defaultContext]];
+    return [self initWithManagedObjectContext:[NSManagedObjectContext threadContext]];
 }
 
 + (BOOL)isMyEmailAddress:(NSString *)anAddress

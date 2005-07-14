@@ -66,7 +66,7 @@
 - (id)init
 /*" Designated initializer "*/
 {
-    return [self initWithManagedObjectContext:[NSManagedObjectContext defaultContext]];
+    return [self initWithManagedObjectContext:[NSManagedObjectContext threadContext]];
 }
 
 - (void)dealloc

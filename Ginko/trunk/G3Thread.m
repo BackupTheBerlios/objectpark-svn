@@ -20,7 +20,7 @@
     
     if (! prefix)
     {
-        NSPersistentStoreCoordinator *sc = [[NSManagedObjectContext defaultContext] persistentStoreCoordinator];
+        NSPersistentStoreCoordinator *sc = [[NSManagedObjectContext threadContext] persistentStoreCoordinator];
                 
         prefix = [[NSString stringWithFormat:@"x-coredata://%@/Thread/p", [[sc metadataForPersistentStore:[[sc persistentStores] objectAtIndex:0]] objectForKey:NSStoreUUIDKey]] retain];
     }
@@ -31,7 +31,7 @@
 - (id) init
 /*" Adds the reciever to the default managed object context. "*/
 {
-    return [self initWithManagedObjectContext:[NSManagedObjectContext defaultContext]];
+    return [self initWithManagedObjectContext:[NSManagedObjectContext threadContext]];
 }
 
 + (G3Thread *)threadInManagedObjectContext:(NSManagedObjectContext *)aContext
@@ -157,7 +157,7 @@
             [self removeGroup:group];
         }
         
-        [[NSManagedObjectContext defaultContext] deleteObject:self];		
+        [[NSManagedObjectContext threadContext] deleteObject:self];		
     }
 }
 
@@ -226,7 +226,7 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
             [self removeGroup:group];
         }
         
-        [[NSManagedObjectContext defaultContext] deleteObject:self];		
+        [[NSManagedObjectContext threadContext] deleteObject:self];		
     }
     
     return newThread;
@@ -254,7 +254,7 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
      */
 
     
-    [[NSManagedObjectContext defaultContext] deleteObject:otherThread];		
+    [[NSManagedObjectContext threadContext] deleteObject:otherThread];		
 }
 
 /*

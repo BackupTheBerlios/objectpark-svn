@@ -11,8 +11,8 @@
 
 @interface NSManagedObjectContext (OPExtensions)
 
-+ (NSManagedObjectContext*) defaultContext;
-+ (void) setDefaultContext: (NSManagedObjectContext*) context;
++ (NSManagedObjectContext*) threadContext;
++ (void) setThreadContext: (NSManagedObjectContext*) context;
 - (id) objectWithURI: (NSURL*) uri;
 + (id) objectWithURIString: (NSString*) uri;
 
