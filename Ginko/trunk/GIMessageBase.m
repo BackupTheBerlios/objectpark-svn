@@ -144,8 +144,8 @@ NSString *MboxImportJobName = @"mbox import";
     
     // Create a own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
-    NSManagedObjectContext *context = parentContext; //[[NSManagedObjectContext alloc] init];
-    //[context setPersistentStoreCoordinator:[parentContext persistentStoreCoordinator]];
+    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
+    [context setPersistentStoreCoordinator:[parentContext persistentStoreCoordinator]];
     //[context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
     
     [NSManagedObjectContext setDefaultContext:context];
@@ -157,6 +157,7 @@ NSString *MboxImportJobName = @"mbox import";
     BOOL messagesWereAdded = NO;
     unsigned mboxDataCount = 0;
     unsigned addedMessageCount = 0;
+    NSError *error = nil;
     
     [[context undoManager] disableUndoRegistration];
     
@@ -190,16 +191,13 @@ NSString *MboxImportJobName = @"mbox import";
                         {
                             if (NSDebugEnabled) NSLog(@"*** Committing changes (added %u messages)...", addedMessageCount);
                             
-                            [NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
-                            /*
                             [context save:&error];
                             if (error)
                             {
                                 NSLog(@"Error in Import Job. Committing of added messages failed (%@).", error);
                             }
-                             */
                             messagesWereAdded = NO;
-                            //[context reset];
+                            [context reset];
                         }
                         
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
@@ -240,9 +238,9 @@ NSString *MboxImportJobName = @"mbox import";
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
         
-        [NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
-        //[context save:(NSError **)&error];
-        //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
+        //[NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
+        [context save:(NSError **)&error];
+        NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
     } 
     @catch (NSException *localException) 
     {
