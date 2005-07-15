@@ -210,10 +210,11 @@ NSString *MboxImportJobName = @"mbox import";
                     if ([localException name] == GIDupeMessageException) 
                     {
                         if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
-                        [pool drain]; pool = [[NSAutoreleasePool alloc] init];
+                        [pool release]; pool = [[NSAutoreleasePool alloc] init];
                     } 
                     else 
                     {
+                        [localException retain]; [localException autorelease]; // Try to avoid zombie exception object
                         [localException raise];
                     }
                 }

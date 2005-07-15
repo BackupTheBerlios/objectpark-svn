@@ -43,7 +43,7 @@ static BOOL showActivities = NO;
 /*" Set the interactive flag to indicate the the panel should be shown as a result of an interactive user request. "*/
 {
     if (! panel) {
-        panel = [[[self alloc] init] autorelease];
+        panel = [[self alloc] init];
     }
     
     [[panel window] orderFront: nil];
@@ -54,15 +54,21 @@ static BOOL showActivities = NO;
 {
     if (showActivities) {
         [self showActivityPanelInteractive: NO];
+
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        
+        [center addObserver: panel selector:@selector(updateData:) name:GIActivityPanelNeedsUpdateNotification object:nil];
+        [center addObserver: panel selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
+        [center addObserver: panel selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];
     }
 }
 
 - (id) init
 {
     if (self = [super init]) {
-        [NSBundle loadNibNamed:@"Activity" owner:self];
+        [NSBundle loadNibNamed: @"Activity" owner: self];
         
-        [self retain]; // balanced in -windowWillClose:
+        //[self retain]; // balanced in -windowWillClose:
         
         // register for notifications:
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -90,9 +96,8 @@ static BOOL showActivities = NO;
 - (void) windowWillClose: (NSNotification*) notification 
 {
     showActivities = NO;
-    panel = nil;
     [[NSNotificationCenter defaultCenter] removeObserver: self];
-    [self autorelease]; // balance self-retaining
+    //[self autorelease]; // balance self-retaining
 }
 
 - (void) dealloc
