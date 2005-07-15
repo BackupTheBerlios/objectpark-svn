@@ -23,7 +23,10 @@
 - (NSSet *)messages;
 - (void)addMessage:(G3Message *)message;
 - (void)removeMessage:(G3Message *)aMessage;
-- (NSArray *)messagesByDate;
+
+- (NSArray*) messagesByDate;
+- (NSArray*) messagesByTree;
+
 
 /*" Groups handling "*/
 - (void)addGroup:(G3MessageGroup *)aGroup;

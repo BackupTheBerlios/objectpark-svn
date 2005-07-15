@@ -163,7 +163,7 @@ GIIndex * contentIndex;
     // get all threads
     threadEnumerator = [[tempMessageGroup threadsByDate] objectEnumerator];
     while ( tempThread = [threadEnumerator nextObject] ) {
-        messageEnumerator = [[tempThread messagesByDate] objectEnumerator];
+        messageEnumerator = [[tempThread messages] objectEnumerator];
         while ( tempMessage = [messageEnumerator nextObject] ) {
             if ( [self addMessage:tempMessage] )
             {

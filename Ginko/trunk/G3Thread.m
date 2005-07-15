@@ -102,9 +102,9 @@
     [changedObjects release];
 }
 
-- (void)removeFromAllGroups
+- (void) removeFromAllGroups
 {
-    [self setValue:[NSSet set] forKey:@"groups"];
+    [self setValue: [NSSet set] forKey: @"groups"];
 }
 
 - (void)addMessage:(G3Message *)aMessage
@@ -131,7 +131,7 @@
     }
 }
 
-- (void)removeMessage:(G3Message *)aMessage
+- (void) removeMessage: (G3Message*) aMessage
 {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
     [self willChangeValueForKey:@"messages"
@@ -147,8 +147,7 @@
     int newValue = [[self messages] count];
     [self setValue: [NSNumber numberWithInt: newValue] forKey:@"numberOfMessages"];    
 
-    if (newValue == 0)
-    {
+    if (newValue == 0) {
         // disconnecting self from all groups:
         NSEnumerator *enumerator = [[self valueForKey:@"groups"] objectEnumerator];
         G3MessageGroup *group;
@@ -166,18 +165,13 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 {
     G3Message *reference = [aMessage reference];
     
-    if (reference)
-    {
-        if ([someMessages containsObject:reference]) 
-        {
-            return YES;
-        }
-        else
-        {
+    if (reference) {
+        if (![someMessages containsObject:reference]) {
             return messageReferencesOneOfThese(reference, someMessages);
         }
+        return YES;
     }
-    
+    // None found
     return NO;
 }
 
@@ -274,9 +268,36 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 }
 */
 
-- (NSArray *)messagesByDate
+- (NSArray*) messagesByDate
 {
-    return [[[self messages] allObjects] sortedArrayByComparingAttribute:@"date"];
+    return [[[self messages] allObjects] sortedArrayByComparingAttribute: @"date"];
+}
+
+- (void) treeWalkFrom: (G3Message*) localRoot addTo: (NSMutableArray*) result
+{
+    [result addObject: localRoot];
+    NSArray* comments = [localRoot commentsInThread: self];
+    int i;
+    int commentCount = [comments count];
+    for (i=0; i<commentCount; i++) {
+        [self treeWalkFrom: [comments objectAtIndex: i] addTo: result];
+    }
+}
+
+- (NSArray*) messagesByTree
+/* Returns an array containing the result of a depth first search over all tree roots. */
+{
+    NSArray* allMessages = [self messages];
+    NSMutableArray* result = [NSMutableArray arrayWithCapacity: [allMessages count]];
+    NSEnumerator *me = [allMessages objectEnumerator];
+    G3Message *message;
+    while (message = [me nextObject]) {
+        if (![message reference]) {
+            // Found a root message. Walk the tree and collect all nodes:
+            [self treeWalkFrom: message addTo: result];
+        }
+    }
+    return result;
 }
 
 /* as documentation of NSManagedObject suggests...no overriding of -description
@@ -291,7 +312,7 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
     return [self messageCount] == 1;
 }
 
-- (NSArray *)rootMessages
+- (NSArray*) rootMessages
 /*" Returns all messages without reference in the receiver. "*/
 {
     NSMutableArray *result = [NSMutableArray array];

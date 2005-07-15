@@ -487,7 +487,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                         // ##TODO:select first "interesting" message of this thread
                         // perhaps the next/first unread message
                         
-                        enumerator = [[selectedThread messagesByDate] objectEnumerator];
+                        enumerator = [[selectedThread messagesByTree] objectEnumerator];
                         while (message = [enumerator nextObject])
                         {
                             if (! [message hasFlags:OPSeenStatus])
@@ -500,7 +500,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                         if (! message)
                         {
                             // if no message found select last one:
-                            [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:[[selectedThread messagesByDate] lastObject]]] byExtendingSelection:NO];   
+                            [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:[[selectedThread messagesByTree] lastObject]]] byExtendingSelection:NO];   
                         }
                         
                         // make selection visible:
@@ -618,7 +618,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     else
     {
-        result = [[[NSManagedObjectContext objectWithURIString: item] messagesByDate] lastObject];
+        result = [[[NSManagedObjectContext objectWithURIString: item] messagesByTree] lastObject];
         if (! [result isKindOfClass:[G3Message class]])
         {
             result = nil;
@@ -1275,7 +1275,7 @@ static BOOL isThreadItem(id item)
         {
             G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
             
-            return [[thread messagesByDate] objectAtIndex:index];
+            return [[thread messagesByTree] objectAtIndex:index];
         }
     } 
     else // boxes list
@@ -2211,9 +2211,27 @@ NSMutableArray* border = nil;
     return YES;
 }
 
-- (void)textView:(NSTextView *)textView spaceKeyPressedWithModifierFlags:(int)modifierFlags
+- (void) textView: (NSTextView*) textView spaceKeyPressedWithModifierFlags: (int) modifierFlags
 {
     if (NSDebugEnabled) NSLog(@"spaceKeyPressedWithModifierFlags");
+
+    G3Message* result = nil;
+    G3Message* candidate;
+    
+    NSArray* orderedMessages = [[self displayedThread] messagesByTree];
+    int orderedMessageCount = [orderedMessages count];
+    int iStart = [orderedMessages indexOfObject: [self displayedMessage]];
+    int i = (iStart+1) % orderedMessageCount;
+    while (i!=iStart) {
+        if (([candidate = [orderedMessages objectAtIndex: i] flags] & OPSeenStatus) == 0) {
+            result = candidate; break;
+        }
+        i = (i+1) % orderedMessageCount;
+    } 
+    if (result) {
+        [self setDisplayedMessage: result thread: [self displayedThread]];
+    } else NSBeep();
+    return;
 }
 
 @end
