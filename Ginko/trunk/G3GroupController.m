@@ -179,8 +179,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     int itemRow;
     BOOL isNewThread = ![aThread isEqual:displayedThread];
         
-    // make sure that the message's head is displayed:
-    [(NSClipView *)[messageTextView superview] scrollToPoint:NSMakePoint(0, 0)];
+
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
@@ -233,16 +232,18 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [[messageTextView textStorage] setAttributedString:messageText];
     
     // set the insertion point (cursor)to 0, 0
-    [messageTextView setSelectedRange:NSMakeRange(0, 0)];
-    
+    [messageTextView setSelectedRange: NSMakeRange(0, 0)];
+    [messageTextView sizeToFit];
+    // make sure that the message's header is displayed:
+    [messageTextView scrollRangeToVisible: NSMakeRange(0, 0)];
+
     [self updateCommentTree:isNewThread];
     
     //BOOL collapseTree = [commentsMatrix numberOfColumns]<=1;
     // Hide comment tree, if trivial:
     //[treeBodySplitter setSubview:[[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
     //if (YES && !collapseTree){
-    if (isNewThread)
-    {
+    if (isNewThread) {
         NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
         //[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
         //[treeBodySplitter moveSplitterBy:[commentsMatrix frame].size.height+10-[scrollView frame].size.height];
