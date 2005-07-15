@@ -951,23 +951,48 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return;
 }
 
-- (NSString*) signature 
-/*"Returns the signature ???(.signature file contents)???."*/
+- (NSAttributedString *)signature 
+/*"Returns the signature of the current profile."*/
 {
-#warning TODO: reenable
-    /*
-    NSString *signature;
+    NSDictionary *attributes;
+    NSError *error;
     
-    signature = [[NSUserDefaults standardUserDefaults] objectForKey: @"Signature"];
+    NSAttributedString *signature = [[[NSAttributedString alloc] initWithData:[[self profile] signature] options:nil documentAttributes:&attributes error:&error] autorelease];
     
     if ([signature length])
     {
-        signature = [@"\n-- \n" stringByAppendingString: signature];
+        NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] initWithString:@"\n-- \n"] autorelease];
+        [result appendAttributedString:signature];
+        
+        return result;
     }
     
-    return signature;
-     */
     return nil;
+}
+
+- (void)updateSignature
+{
+    NSMutableAttributedString *messageText = [messageTextView textStorage];
+    NSRange signatureRange = [[messageText string] rangeOfString:@"\n-- \n" options:NSBackwardsSearch | NSLiteralSearch];
+    
+    if (signatureRange.location != NSNotFound)
+    {
+        signatureRange.length = [messageText length] - signatureRange.location;
+        [messageText deleteCharactersInRange:signatureRange];
+    }
+    
+    NSAttributedString *signature = [self signature];
+    
+    if ([signature length])
+    {
+        NSRange selectedRange = [messageTextView selectedRange];
+        [messageText appendAttributedString:signature];
+        
+        if ((selectedRange.location + selectedRange.length) < [messageText length])
+        {
+            [messageTextView setSelectedRange:selectedRange];
+        }
+    }    
 }
 
 - (void)updateMessageTextView
@@ -983,12 +1008,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if (shouldAppendSignature)
     {
-        NSString *signature = [self signature];
+        [self updateSignature];
+        
+        /*
+        NSAttributedString *signature = [self signature];
         
         if ([signature length])
         {
-            [[messageTextView textStorage] appendString:signature];
+            [[messageTextView textStorage] appendAttributedString:signature];
         }
+         */
     }
     
     [messageTextView setSelectedRange:selectedRange];
@@ -1295,6 +1324,7 @@ NSDictionary *maxLinesForCalendarName()
     if ([self profile] != newProfile) // check if something to do
     {
         [self selectProfile:newProfile];
+        [self updateSignature];
         [window setDocumentEdited:YES];
     }
 }
