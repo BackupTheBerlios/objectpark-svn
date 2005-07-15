@@ -380,7 +380,7 @@
         
     if (error)
     {
-        NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[NSManagedObjectContext defaultContext] insertedObjects], [[NSManagedObjectContext defaultContext] updatedObjects]);
+        NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[NSManagedObjectContext threadContext] insertedObjects], [[NSManagedObjectContext threadContext] updatedObjects]);
         localizedDescription = [error localizedDescription];
         error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
         [[NSApplication sharedApplication] presentError:error];
@@ -411,7 +411,7 @@
 
 - (IBAction)showActivityPanel:(id)sender
 {
-    [GIActivityPanelController showActivityPanel];
+    [GIActivityPanelController showActivityPanelInteractive: YES];
 }
 
 - (IBAction)getNewMailInAllAccounts:(id)sender

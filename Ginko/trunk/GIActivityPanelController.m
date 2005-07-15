@@ -14,35 +14,52 @@
 static GIActivityPanelController *panel = nil;
 static NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeedsUpdateNotification";
 
-- (void)updateData:(NSNotification *)aNotification
+static BOOL showActivities = NO;
+
+- (void) updateData: (NSNotification*) aNotification
 {
     [jobIds autorelease];
     jobIds = [[OPJobs runningJobs] retain];
     
     [tableView reloadData];
+    
+    if (![jobIds count]) {
+        if (showActivities) {
+            [window close];
+            showActivities = YES;
+        } else {
+            [window close];
+        }
+    }
 }
 
-- (void)dataChanged:(NSNotification *)aNotification
+- (void) dataChanged: (NSNotification*) aNotification
 {
     NSNotification *notification = [NSNotification notificationWithName:GIActivityPanelNeedsUpdateNotification object:self];
     [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
 }
 
-+ (void)showActivityPanel
++ (void) showActivityPanelInteractive: (BOOL) interactive
+/*" Set the interactive flag to indicate the the panel should be shown as a result of an interactive user request. "*/
 {
-    if (! panel)
-    {
+    if (! panel) {
         panel = [[[self alloc] init] autorelease];
     }
     
-    [[panel window] orderFront:nil];
-    [panel dataChanged:nil];
+    [[panel window] orderFront: nil];
+    if (interactive) showActivities = YES;
 }
 
-- (id)init
++ (void) activityStarted: (NSNotification*) aNotification
 {
-    if (self = [super init])
-    {
+    if (showActivities) {
+        [self showActivityPanelInteractive: NO];
+    }
+}
+
+- (id) init
+{
+    if (self = [super init]) {
         [NSBundle loadNibNamed:@"Activity" owner:self];
         
         [self retain]; // balanced in -windowWillClose:
@@ -53,27 +70,34 @@ static NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeeds
         [center addObserver:self selector:@selector(updateData:) name:GIActivityPanelNeedsUpdateNotification object:nil];
         [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
         [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];
+        
+        [center addObserver: [self class] selector: @selector(activityStarted:) name:OPJobWillStartNotification object: nil];
     }
     
     return self;
 }
 
-- (NSWindow *)window
+- (NSWindow*) window
 {
     return window;
 }
 
-- (void)windowWillClose:(NSNotification *)notification 
+- (void) awakeFromNib
 {
+    [tableView reloadData];   
+}
+
+- (void) windowWillClose: (NSNotification*) notification 
+{
+    showActivities = NO;
     panel = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
     [self autorelease]; // balance self-retaining
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [jobIds release];
-    
     [super dealloc];
 }
 

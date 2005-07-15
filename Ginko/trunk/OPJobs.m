@@ -654,10 +654,8 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [jobsLock lock];
     
     count = [runningJobs count];
-    for (i = count - 1; i >= 0; i--)
-    {
-        if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
-        {
+    for (i = count - 1; i >= 0; i--) {
+        if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread) {
             [[runningJobs objectAtIndex:i] setObject:progressInfo forKey:OPJobProgressInfo];
             setInfo = YES;
             
@@ -667,8 +665,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
 
     [jobsLock unlockWithCondition:[jobsLock condition]];
     
-    if (setInfo)
-    {
+    if (setInfo) {
         [self postNotificationInMainThreadWithName:OPJobDidSetProgressInfoNotification andUserInfo:[NSMutableDictionary dictionaryWithObject:progressInfo forKey:@"progressInfo"]];
     }
 }
