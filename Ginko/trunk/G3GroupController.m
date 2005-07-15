@@ -1542,6 +1542,23 @@ static NSAttributedString* spacer2()
                 return [[G3MessageGroup messageGroupWithURIReferenceString:item] name];
             }
         }
+        if ([[tableColumn identifier] isEqualToString:@"info"])
+        {
+            if (![item isKindOfClass:[NSMutableArray class]])
+            {
+                G3MessageGroup *g = [G3MessageGroup messageGroupWithURIReferenceString:item];
+                NSMutableArray *threadURIs = [NSMutableArray array];
+                NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
+                
+                [g fetchThreadURIs:&threadURIs
+                    trivialThreads:NULL
+                         newerThan:[date timeIntervalSinceReferenceDate]
+                       withSubject:nil
+                            author:nil
+             sortedByDateAscending:YES];
+                return [NSNumber numberWithInt:[threadURIs count]];
+            }
+        }
     }
     
     return @"";

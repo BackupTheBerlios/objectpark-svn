@@ -1084,10 +1084,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     [window setDocumentEdited:NO];
     
+    [NSApp saveAction:self];
+    /*
     NSError *error;
     [(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error];
     NSAssert1(!error, @"Error checkpointing message: %@", error);
-    
+    */
     if (NSDebugEnabled) NSLog(@"checkpointed message");
     
     return message;
