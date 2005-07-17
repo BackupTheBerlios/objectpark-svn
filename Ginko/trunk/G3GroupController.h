@@ -26,6 +26,7 @@
     IBOutlet NSOutlineView *boxesView;
     IBOutlet OPCollapsingSplitView *treeBodySplitter;
     IBOutlet NSPopUpButton *threadFilterPopUp;
+    IBOutlet NSProgressIndicator *progressIndicator;
 
     G3MessageGroup *group;
     G3Thread *displayedThread; // displayed as comment tree

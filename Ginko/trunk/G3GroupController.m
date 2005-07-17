@@ -195,7 +195,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if (aThread && (![aThread containsSingleMessage])) 
     {
         [threadsView expandItem:aThread];
-        [self setValue: [[[aThread objectID] URIRepresentation] absoluteString] forGroupProperty:@"ExpandedThreadId"];
     }
     
     // select responding item in threads view:
@@ -1038,27 +1037,39 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [threadsView setAutosaveTableColumns:YES];
         [threadsView setAutosaveExpandedItems:NO];
         
-        // Open last expanded thread:
-        NSString* threadURL = [self valueForGroupProperty:@"ExpandedThreadId"];
-        G3Thread* thread = nil;
+        // Show last selected item:
+        NSString *itemURI = [self valueForGroupProperty:@"LastSelectedMessageItem"];
         
-        if (threadURL) 
+        if (itemURI)
         {
-            @try {
-                thread = [NSManagedObjectContext objectWithURIString: threadURL];
-            } @catch(NSException *e) {
-                NSLog(@"Exception on getting ExpandedThreadId %@", e);
-            }
-        }
-        
-        if (thread && (![thread containsSingleMessage]))
-        {
-            int itemRow = [threadsView rowForItemEqualTo:threadURL startingAtRow:0];
-            
-            if (itemRow >= 0) 
+            id item = [NSManagedObjectContext objectWithURIString:itemURI];
+            if (item)
             {
-                [threadsView selectRow:itemRow byExtendingSelection:NO];
-                [self openSelection:self];
+                G3Message *message = nil;
+                G3Thread *thread = nil;
+                
+                if ([item isKindOfClass:[G3Thread class]])
+                {
+                    thread = item;
+                }
+                else
+                {
+                    message = item;
+                    thread = [message thread];
+                }
+                
+                int itemRow = [threadsView rowForItemEqualTo:[[[thread objectID] URIRepresentation] absoluteString] startingAtRow:0];
+                
+                if (itemRow >= 0) 
+                {
+                    [threadsView selectRow:itemRow byExtendingSelection:NO];
+                    
+                    if (![thread containsSingleMessage])
+                    {
+                        [self openSelection:self];
+                    }
+                    [threadsView scrollRowToVisible:itemRow];
+                }
             }
         }
     }
@@ -1196,6 +1207,10 @@ static BOOL isThreadItem(id item)
             [self setGroup:[G3MessageGroup messageGroupWithURIReferenceString:item]];
         }
     }
+    else if ([notification object] == threadsView)
+    {
+        [self setValue:[threadsView itemAtRow:[threadsView selectedRow]] forGroupProperty:@"LastSelectedMessageItem"];
+    }
 }
 
 - (BOOL)outlineView:(NSOutlineView*)outlineView shouldExpandItem:(id)item
@@ -1203,7 +1218,6 @@ static BOOL isThreadItem(id item)
 {
     if (outlineView == threadsView) // subjects list
     {
-        [self setValue:item forGroupProperty:@"ExpandedThreadId"];
         [tabView selectFirstTabViewItem:self];
     }
     
