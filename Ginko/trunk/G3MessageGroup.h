@@ -43,6 +43,8 @@ extern NSString *GIMessageGroupWasAddedNotification;
 + (G3MessageGroup *)spamMessageGroup;
 + (G3MessageGroup *)trashMessageGroup;
 
++ (void) ensureDefaultGroups;
+
 /*" Simple Accessors "*/
 - (NSString *)URIReferenceString;
 

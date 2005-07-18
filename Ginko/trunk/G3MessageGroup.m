@@ -23,7 +23,7 @@ NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotificat
 
 G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSMutableArrays (e.g. #{+rootHierarchyNode} returns the NSMutableArray that is the root node). The first entry in such a hierarchy node is information of the node itself (it is a NSMutableDictionary whose keys are described lateron). All other entries are either NSStrings with URLs that reference G3MessageGroup objects (see #{-[NSManagedObject objectID]}) or other hierarchy nodes (NSMutableArrays). "*/
 
-+(void)initialize
++ (void) ensureDefaultGroups
 /*" Makes sure that all default groups are in place. "*/
 {
     [self defaultMessageGroup];

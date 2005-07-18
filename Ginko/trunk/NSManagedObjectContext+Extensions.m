@@ -11,22 +11,31 @@
 
 @implementation NSManagedObjectContext (OPExtensions)
 
-+ (NSManagedObjectContext *)threadContext
+static volatile NSThread* mainThread = nil;
+
++ (NSManagedObjectContext*) threadContext
 {
     NSManagedObjectContext *result;
-    
-    result = [[[NSThread currentThread] threadDictionary] objectForKey:@"OPDefaultManagedObjectContext"];
-    if (!result) 
-    {
-        result = [NSApp newManagedObjectContext];
-        [self setThreadContext:result];
+    NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
+
+    result = [threadDict objectForKey:@"OPDefaultManagedObjectContext"];
+    if (!result) {
+        NSAssert(mainThread!=[NSThread currentThread], @"Need a mainThreadContext before any threadContext can be inqired.");
+        
+        NSManagedObjectContext* mainContext = [[mainThread threadDictionary] objectForKey:@"OPDefaultManagedObjectContext"];
+        NSPersistentStoreCoordinator* psc = [mainContext persistentStoreCoordinator];
+        result = [[NSManagedObjectContext alloc] init];
+        [result setPersistentStoreCoordinator: psc];
+        
+        [threadDict setObject: result forKey: @"OPDefaultManagedObjectContext"];
+        [result release];
     }
     
     NSAssert (result != nil, @"+[NSManagedObject (Extensions) threadContext]: context returned should never be nil");
     return result;
 }
 
-+ (void)setThreadContext:(NSManagedObjectContext *)aContext
++ (void) setMainThreadContext: (NSManagedObjectContext*) aContext
 {
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
     if (aContext) {
@@ -34,6 +43,15 @@
     } else {
         [threadDict removeObjectForKey: @"OPDefaultManagedObjectContext"];
     }
+    mainThread = [NSThread currentThread];
+}
+
++ (void) resetThreadContext
+{
+        // todo: save persistent store coordinator when currentThread==mainThread
+
+    NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
+    [threadDict removeObjectForKey: @"OPDefaultManagedObjectContext"];
 }
 
 - (id) objectWithURI: (NSURL*) uri

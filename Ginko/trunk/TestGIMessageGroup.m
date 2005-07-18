@@ -37,9 +37,7 @@
 - (void)testThreadIdsByDate
 {
     NSMutableArray *result = [NSMutableArray array];
-    
-    [G3MessageGroup fetchThreadURIs:&result trivialThreads:NULL newerThan:0.0 withSubject:nil author:nil sortedByDateAscending:YES];
-    
+        
     NSEnumerator *enumerator = [result objectEnumerator];
     NSString *urlString;
     NSManagedObjectContext *context = [NSManagedObjectContext threadContext];

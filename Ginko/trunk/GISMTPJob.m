@@ -106,25 +106,19 @@
             
             // sending messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            @try
-            {
+            @try {
                 G3Message *message;
                 
-                while (message = [enumerator nextObject])
-                {
+                while (message = [enumerator nextObject]) {
                     [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
                     
-                    @try
-                    {
-                        [SMTP acceptMessage:[message internetMessage]];
-                        [sentMessages addObject:message];
-                    }
-                    @catch (NSException *localException)
-                    {
+                    @try {
+                        [SMTP acceptMessage: [message internetMessage]];
+                        [sentMessages addObject: message];
+                    } @catch (NSException* localException) {
                         NSLog(@"Error sending message %@: %@", [message valueForKey:@"subject"], [localException reason]);
                     }
-                    [pool drain];
-                    pool = [[NSAutoreleasePool alloc] init];
+                    [pool release]; pool = [[NSAutoreleasePool alloc] init];
                 }
             }
             @catch (NSException *localException)
@@ -138,12 +132,9 @@
                 [stream close];
             }
         }
-        @catch (NSException *localException)
-        {
+        @catch (NSException *localException) {
             @throw;
-        }
-        @finally
-        {
+        } @finally {
             [OPJobs setResult:[NSDictionary dictionaryWithObjectsAndKeys:
                 sentMessages, @"sentMessages",
                 theMessages, @"messages",

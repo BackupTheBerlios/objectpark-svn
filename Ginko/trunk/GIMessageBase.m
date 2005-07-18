@@ -131,8 +131,8 @@ NSString *MboxImportJobName = @"mbox import";
 {
     NSString *mboxFilePath = [arguments objectForKey:@"mboxFilename"];
     NSParameterAssert(mboxFilePath != nil);
-    NSManagedObjectContext *parentContext = [arguments objectForKey:@"parentContext"];
-    NSParameterAssert(parentContext != nil);
+    //NSManagedObjectContext *parentContext = [arguments objectForKey:@"parentContext"];
+    //NSParameterAssert(parentContext != nil);
     BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
     NSDate *lastProgressSet = [[NSDate alloc] init];
@@ -142,20 +142,16 @@ NSString *MboxImportJobName = @"mbox import";
     NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
     unsigned int mboxFileSize = [mboxFile mboxFileSize];
     
-    // Create a own context for this job/thread but use the same store coordinator
+    // Get our own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
-    NSManagedObjectContext *context = parentContext; //[[NSManagedObjectContext alloc] init];
-    //[context setPersistentStoreCoordinator:[parentContext persistentStoreCoordinator]];
-    [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-    
-    [NSManagedObjectContext setThreadContext:context];
-    //[NSManagedObjectContext setThreadContext:parentContext];
+    NSManagedObjectContext* context = [NSManagedObjectContext threadContext];  
+    [context setMergePolicy: NSMergeByPropertyObjectTrumpMergePolicy];
     
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *mboxData;
-    //NSError *error = nil;
-    BOOL messagesWereAdded = NO;
-    unsigned mboxDataCount = 0;
+
+    BOOL     messagesWereAdded = NO;
+    unsigned mboxDataCount     = 0;
     unsigned addedMessageCount = 0;
     
     [[context undoManager] disableUndoRegistration];
@@ -186,18 +182,16 @@ NSString *MboxImportJobName = @"mbox import";
 
                     if ((++mboxDataCount % 100) == 0) 
                     {
-                        if (messagesWereAdded)
-                        {
+                        if (messagesWereAdded) {
                             if (NSDebugEnabled) NSLog(@"*** Committing changes (added %u messages)...", addedMessageCount);
                             
-                            [NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
-                            /*
-                            [context save:&error];
-                            if (error)
-                            {
+                            //[NSApp performSelectorOnMainThread: @selector(saveAction:) withObject: self waitUntilDone: YES];
+                            NSError* error = nil;
+                            [context save: &error];
+                            if (error) {
                                 NSLog(@"Error in Import Job. Committing of added messages failed (%@).", error);
                             }
-                             */
+                            
                             messagesWereAdded = NO;
                             //[context reset];
                         }
@@ -254,9 +248,8 @@ NSString *MboxImportJobName = @"mbox import";
     @finally 
     {
         [lastProgressSet release];
-        [NSManagedObjectContext setThreadContext:nil];
+        [NSManagedObjectContext resetThreadContext];
         [pool release];
-        [context release];
     }
     
     // move imported mbox to imported boxes:

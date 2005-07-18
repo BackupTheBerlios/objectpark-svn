@@ -219,10 +219,9 @@
     return [managedObjectContext autorelease];
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
     [self setDelegate:self];
-    [self restoreOpenWindowsFromLastSession];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
@@ -237,8 +236,24 @@
     
     //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
     //NSLog(@"last message = %@", aMessage);
+    [NSManagedObjectContext setMainThreadContext: [self newManagedObjectContext]];
+
+    [G3MessageGroup ensureDefaultGroups];
     //NSLog(@"All Groups %@", [G3MessageGroup allObjects]);
+    
+    [self restoreOpenWindowsFromLastSession];
+
 }
+
+/*
++ (void) initialize
+{
+    static BOOL initialized = NO;
+    if (!initialized) {
+        [NSManagedObjectContext setMainThreadContext: [self newManagedObjectContext]];
+    }
+}
+*/
 
 - (BOOL)isGroupsDrawerMode
 {

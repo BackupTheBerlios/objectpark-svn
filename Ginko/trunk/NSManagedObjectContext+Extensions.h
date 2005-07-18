@@ -12,9 +12,10 @@
 @interface NSManagedObjectContext (OPExtensions)
 
 + (NSManagedObjectContext*) threadContext;
-+ (void) setThreadContext: (NSManagedObjectContext*) context;
++ (void) setMainThreadContext: (NSManagedObjectContext*) aContext;
 - (id) objectWithURI: (NSURL*) uri;
 + (id) objectWithURIString: (NSString*) uri;
++ (void) resetThreadContext;
 
 @end
 
