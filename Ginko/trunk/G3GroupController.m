@@ -1209,7 +1209,14 @@ static BOOL isThreadItem(id item)
     }
     else if ([notification object] == threadsView)
     {
-        [self setValue:[threadsView itemAtRow:[threadsView selectedRow]] forGroupProperty:@"LastSelectedMessageItem"];
+        id item = [threadsView itemAtRow:[threadsView selectedRow]];
+        
+        if ([item isKindOfClass:[NSManagedObject class]])
+        {
+            item = [[[item objectID] URIRepresentation] absoluteString];
+        }
+        
+        [self setValue:item forGroupProperty:@"LastSelectedMessageItem"];
     }
 }
 
