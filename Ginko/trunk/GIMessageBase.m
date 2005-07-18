@@ -196,6 +196,7 @@ NSString *MboxImportJobName = @"mbox import";
                         
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
                     }
+                    [persistentMessage flushInternetMessageCache]; // free some memory
                 } 
                 @catch (NSException *localException) 
                 {
@@ -228,7 +229,8 @@ NSString *MboxImportJobName = @"mbox import";
                 }
                 
                 [now release];
-            }            
+            }     
+            
         }
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);

@@ -47,15 +47,13 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return nil;
 }
 
-/*
-- (void) setInternetMessage: (OPInternetMessage *)iMessage
-    //" Private method. Used for simplified memory management only. "
+
+- (void) flushInternetMessageCache
+/*" Flushes the cache for the internetMessageCache transient attribute. Used for optimized memory usage. "*/
 {
-    [iMessage retain];
-    [internetMessageCache release]; 
-    internetMessageCache = iMessage;
+    [self setPrimitiveValue: nil forKey: @"internetMessageCache"];
 }
-*/
+
 
 - (OPInternetMessage*) internetMessage
 {
@@ -424,22 +422,14 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
 - (void) didTurnIntoFault
 {
     NSLog(@"G3Message 0x%x turned into fault.", self);
-    //[self setInternetMessage: nil];
+    [self flushInternetMessageCache];
 }
 
 - (void) didSave
 {
     // Preserve memory by getting rid of the transient attribute:
-    [self setPrimitiveValue: nil forKey: @"internetMessageCache"];
+    [self flushInternetMessageCache];
 }
-
-/*
-- (void) dealloc
-{
-    [self setInternetMessage: nil];
-    [super dealloc];
-}
-*/
 
 - (void)putInSendJobStatus
 {

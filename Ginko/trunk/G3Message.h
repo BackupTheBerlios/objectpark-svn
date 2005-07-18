@@ -68,7 +68,8 @@
 
 - (NSString *)senderName;
 
-- (OPInternetMessage *)internetMessage;
+- (void) flushInternetMessageCache;
+- (OPInternetMessage*) internetMessage;
 
 - (void)putInSendJobStatus;
 - (void)removeInSendJobStatus;
