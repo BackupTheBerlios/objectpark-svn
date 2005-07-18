@@ -32,7 +32,6 @@
     
     NSHost *host = [NSHost hostWithName:[theAccount incomingServerName]];
     [host name]; // I remember that was important, but I can't remember why
-    NSAssert(host != nil, @"host should be created");
     
     if ([host isReachableWithNoStringsAttached])
     {
