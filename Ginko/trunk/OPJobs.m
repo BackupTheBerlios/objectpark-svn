@@ -228,8 +228,7 @@ static unsigned nextJobId = 1;
                 // try to get next job:
                 jobDescription = [self nextPendingJobUnlockingSynchronizedObject:[jobDescription objectForKey:OPJobSynchronizedObject]];
                 
-                if (!jobDescription)
-                {
+                if (!jobDescription) {
                     [activeThreads removeObject:[NSThread currentThread]];
                     [idleThreads addObject:[NSThread currentThread]];
                 }
@@ -237,8 +236,7 @@ static unsigned nextJobId = 1;
                 [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
             }
             
-            [pool release];
-            pool = [[NSAutoreleasePool alloc] init];
+            [pool release]; pool = [[NSAutoreleasePool alloc] init];
         }
     }
 }
