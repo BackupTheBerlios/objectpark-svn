@@ -160,17 +160,15 @@ NSString *MboxImportJobName = @"mbox import";
     
     NSAutoreleasePool *pool = nil;
     
-    @try 
-    {
+    @try {
         pool = [[NSAutoreleasePool alloc] init];
         
-        while (mboxData = [enumerator nextObject]) 
-        {
+        while (mboxData = [enumerator nextObject]) {
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
             
             if (transferData)
-            {;
+            {
                 @try 
                 {
                     G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
@@ -193,7 +191,7 @@ NSString *MboxImportJobName = @"mbox import";
                             }
                             
                             messagesWereAdded = NO;
-                            //[context reset];
+                            [context reset];
                         }
                         
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
@@ -235,9 +233,10 @@ NSString *MboxImportJobName = @"mbox import";
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
         
-        [NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
-        //[context save:(NSError **)&error];
-        //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
+        //[NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
+        NSError* error = nil;
+        [context save: &error];
+        NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
     } 
     @catch (NSException *localException) 
     {
