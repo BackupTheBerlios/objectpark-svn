@@ -68,12 +68,70 @@ static volatile NSThread* mainThread = nil;
     return nil;
 }
 
++ (NSManagedObjectContext*) mainThreadContext
+    /*" Use carefully. "*/
+{
+    NSDictionary* threadDict = [mainThread threadDictionary];
+    NSManagedObjectContext* result = [threadDict objectForKey:@"OPDefaultManagedObjectContext"];
+    return result;
+}
+
 + (id) objectWithURIString: (NSString*) uri
 /*" Returns the  object for the uri given in the default context. "*/
 {
     return [[self threadContext] objectWithURI: [NSURL URLWithString: uri]];
 }
 
+- (void) refreshObjectsWithObjectIDs: (NSArray*) ids
+{
+    NSEnumerator* e = [ids objectEnumerator];
+    NSManagedObjectID* oid;
+    BOOL ownObjectsAffected = NO;
+    while (oid = [e nextObject]) {
+        NSManagedObject* object = [self objectRegisteredForID: oid];
+        if (object) {
+            NSLog(@"refreshing object %@", object);
+            [self refreshObject: object mergeChanges: YES]; 
+            //[self refreshObject: object mergeChanges: NO]; 
+            ownObjectsAffected = YES;
+        }
+    }
+    if (ownObjectsAffected) {
+        NSError* error = nil;
+        
+        [self save: &error];
+        if (error) 
+            NSLog(@"Error after merge: %@", error);
+    }
+}
+
+- (void) mergeObjectsWithIds: (NSArray*) ids
+{
+    //NSLog(@"Will merge objects with ids: %@", ids);
+    [self refreshObjectsWithObjectIDs: ids];
+}
+
+NSArray* objectIdsForObjects(NSSet* aSet)
+{
+    NSMutableArray* result = [NSMutableArray array];
+    NSEnumerator* e = [aSet objectEnumerator];
+    NSManagedObject* object;
+    while (object = [e nextObject]) {
+        [result addObject: [object objectID]];
+    }
+    return result;
+}
+
++ (void) objectsDidChange2: (NSNotification*) notification
+{
+    if (mainThread!=[NSThread currentThread]) {
+        //NSManagedObjectContext* nContext = [notification object];
+        NSSet* changedObjects = [[notification userInfo] objectForKey: NSUpdatedObjectsKey];
+        //NSLog(@"%d Objects did change in %@ (background thread %@)", [changedObjects count], nContext, [NSThread currentThread]);
+        [[self mainThreadContext] performSelectorOnMainThread: @selector(mergeObjectsWithIds:) withObject: objectIdsForObjects(changedObjects) waitUntilDone: NO];
+
+    }
+}
 
 @end
 

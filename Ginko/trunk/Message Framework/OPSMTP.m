@@ -276,7 +276,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     if (state != Disconnected)
         [stream writeString:@"QUIT\r\n"];

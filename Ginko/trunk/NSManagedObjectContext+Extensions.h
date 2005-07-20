@@ -9,13 +9,18 @@
 #import <AppKit/AppKit.h>
 #import <CoreData/CoreData.h>
 
+NSArray* objectIdsForObjects(NSSet* aSet);
+
 @interface NSManagedObjectContext (OPExtensions)
 
 + (NSManagedObjectContext*) threadContext;
 + (void) setMainThreadContext: (NSManagedObjectContext*) aContext;
++ (NSManagedObjectContext*) mainThreadContext;
+
 - (id) objectWithURI: (NSURL*) uri;
 + (id) objectWithURIString: (NSString*) uri;
 + (void) resetThreadContext;
+- (void) refreshObjectsWithObjectIDs: (NSArray*) ids;
 
 @end
 

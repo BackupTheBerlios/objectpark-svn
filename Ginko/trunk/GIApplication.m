@@ -243,7 +243,13 @@
     
     [self restoreOpenWindowsFromLastSession];
 
+        // Make sure, we receive NSManagedObjectContextDidSaveNotifications:
+    [[NSNotificationCenter defaultCenter] addObserver: [NSManagedObjectContext class] selector: @selector(objectsDidChange2:) 
+                                                 name: NSManagedObjectContextDidSaveNotification 
+                                               object: nil];  
+    
 }
+
 
 /*
 + (void) initialize
@@ -317,10 +323,11 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
-- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void) applicationDidFinishLaunching: (NSNotification*) aNotification
 /*" On launch, opens a group window. "*/
 {
     [self applicationDidBecomeActive: aNotification];
+    [OPJobs setMaxThreads: 4];
 }
 
 
@@ -379,18 +386,15 @@
     }    
 }
 
-- (NSError *)commitChanges
+- (NSError*) commitChanges
 {
     NSError *error = nil;
     
     NSLog(@"committing database objects");
     
-    if (![(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error])
-    {
+    if (![(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error]) {
         return error;
-    }
-    else
-    {
+    } else {
         return nil;
     }
 }
