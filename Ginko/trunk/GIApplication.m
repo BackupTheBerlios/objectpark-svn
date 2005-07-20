@@ -317,6 +317,13 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
+- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
+/*" On launch, opens a group window. "*/
+{
+    [self applicationDidBecomeActive: aNotification];
+}
+
+
 - (NSArray *)sortFilePathsByCreationDate:(NSArray *)someFilePaths
 {
 #warning implement for better mbox restore
