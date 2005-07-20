@@ -34,47 +34,50 @@
     int flagsCache;
 }
 
-+ (id)messageForMessageId:(NSString *)messageId;
-+ (id)messageWithTransferData:(NSData *)someTransferData;
++ (id) messageForMessageId: (NSString*) messageId;
++ (id) messageWithTransferData: (NSData*) someTransferData;
 
-- (NSData *)transferData;
+- (NSData*) transferData;
 
-- (NSString *)messageId;
-- (G3Message *)reference;
-- (G3Message *)referenceFind:(BOOL)find;
+- (NSString*) messageId;
+- (G3Message*) reference;
+- (G3Message*) referenceFind: (BOOL)find;
 
-- (unsigned)numberOfReferences;
+- (unsigned) numberOfReferences;
 
-- (unsigned)flags;
-- (BOOL)hasFlags:(unsigned)someFlags;
-- (void)addFlags:(unsigned)someFlags;
-- (void)removeFlags:(unsigned)someFlags;
+- (unsigned) flags;
+- (BOOL) hasFlags: (unsigned) someFlags;
+- (void) addFlags: (unsigned) someFlags;
+- (void) removeFlags: (unsigned) someFlags;
 
-- (NSAttributedString *)contentAsAttributedString;
+- (NSString*) flagsString; // use only for export
+- (void) addFlagsFromString: (NSString*) flagsString; // use only for import
 
-- (G3Thread *)thread;
-- (G3Thread *)threadCreate:(BOOL)doCreate;
+- (NSAttributedString*) contentAsAttributedString;
+
+- (G3Thread*) thread;
+- (G3Thread*) threadCreate: (BOOL) doCreate;
 
 - (G3Profile *)profile;
-- (void)setProfile:(G3Profile *)value;
+- (void)setProfile: (G3Profile *)value;
 
-- (NSArray *)commentsInThread:(G3Thread *)thread;
+- (NSArray*)commentsInThread: (G3Thread*)thread;
 
-- (BOOL)isListMessage;
-- (BOOL)isUsenetMessage;
-- (BOOL)isEMailMessage;
-- (BOOL)isPublicMessage;
-- (BOOL)isDummy;
+- (BOOL) isListMessage;
+- (BOOL) isUsenetMessage;
+- (BOOL) isEMailMessage;
+- (BOOL) isPublicMessage;
+- (BOOL) isDummy;
 
-- (NSString *)senderName;
+- (NSString*) senderName;
 
 - (void) flushInternetMessageCache;
 - (OPInternetMessage*) internetMessage;
 
-- (void)putInSendJobStatus;
-- (void)removeInSendJobStatus;
+- (void) putInSendJobStatus;
+- (void) removeInSendJobStatus;
 
 @end
 
 /*" Raised when trying to create a dupe message. userInfo holds the dupe transfer data for the key transferData. "*/
-extern NSString *GIDupeMessageException;
+extern NSString* GIDupeMessageException;

@@ -170,6 +170,36 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return flagsCache;
 }
 
+- (NSString*) flagsString
+/*" Returns a textual representation of some flags. Used for exporting messages, including their flags. Not all available flags are supported. "*/
+{
+    char result[10]; 
+    int i = 0;
+    //NSMutableString* result = [[[NSMutableString alloc] initWithCapacity: 6] autorelease];
+    unsigned flags = [self flags];
+    if (flags & OPInterestingStatus) result[i++] = 'I';
+    if (flags & OPAnsweredStatus) result[i++] = 'A';
+    if (flags & OPJunkMailStatus) result[i++] = 'J';
+    if (flags & OPSeenStatus) result[i++] = 'R';
+    if (flags & OPDraftStatus) result[i++] = 'D';
+    result[i++] = '\0'; // terminate string
+    return [NSString stringWithCString: result];
+}
+
+- (void) addFlagsFromString: (NSString*) flagsString
+/*" Not all available flags are supported. "*/
+{
+    char flagcstr[20];
+    unsigned flags = 0;
+    [flagsString getCString: flagcstr maxLength: 19];
+    if (strchr(flagcstr, 'I')) flags |= OPInterestingStatus;
+    if (strchr(flagcstr, 'A')) flags |= OPAnsweredStatus;
+    if (strchr(flagcstr, 'J')) flags |= OPJunkMailStatus;
+    if (strchr(flagcstr, 'R')) flags |= OPSeenStatus;
+    if (strchr(flagcstr, 'D')) flags |= OPDraftStatus;
+    [self addFlags: flags];
+}
+
 - (BOOL)hasFlags:(unsigned)someFlags
 {
     return (someFlags & [self flags]) == someFlags;
