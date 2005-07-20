@@ -220,7 +220,7 @@ static unsigned nextJobId = 1;
 #warning *** Selector 'isKindOfClass:' sent to dealloced instance 0x5581a80 of class NSException.
                 NSLog(@"Job (%@) caused Exception: %@", jobDescription, exception);
                 [jobDescription setObject:exception forKey:OPJobUnhandledException];
-                [exception release];
+                [exception autorelease];
             } 
             @finally 
             {

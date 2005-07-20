@@ -892,6 +892,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
     //NSLog(@"Merging other threads into %@", targetThread);    
 
+    // prevent merge problems:
+    [[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+    
     NSString* nextThreadURI;
     while (nextThreadURI = [e nextObject]) 
     {
@@ -946,8 +949,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSString *uriString;
     BOOL trashedAtLeastOne = NO;
     
-    while (uriString = [enumerator nextObject])
-    {
+    // Make sure we have a fresh group object and prevent merge problems:
+    [[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+    
+    while (uriString = [enumerator nextObject]) {
+        
         G3Thread *thread = [NSManagedObjectContext objectWithURIString:uriString];
         NSAssert([thread isKindOfClass:[G3Thread class]], @"got non-thread object");
         
@@ -2004,21 +2010,25 @@ NSMutableArray* border = nil;
 
 @implementation G3GroupController (DragNDrop)
 
-- (void)moveThreadsWithURI:(NSArray *)threadURIs fromGroup:(G3MessageGroup *)sourceGroup toGroup:(G3MessageGroup *)destinationGroup
+- (void) moveThreadsWithURI: (NSArray*) threadURIs 
+                  fromGroup: (G3MessageGroup*) sourceGroup 
+                    toGroup: (G3MessageGroup*) destinationGroup
 {
-    NSEnumerator *enumerator = [threadURIs objectEnumerator];
-    NSString *threadURI;
+    NSEnumerator* enumerator = [threadURIs objectEnumerator];
+    NSString* threadURI;
     
-    while (threadURI = [enumerator nextObject])
-    {
-        G3Thread *thread = [NSManagedObjectContext objectWithURIString:threadURI];
-        NSAssert([thread isKindOfClass:[G3Thread class]], @"should be a thread");
+    // Prevent merge problems:
+    [[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+    
+    while (threadURI = [enumerator nextObject]) {
+        G3Thread* thread = [NSManagedObjectContext objectWithURIString: threadURI];
+        NSAssert([thread isKindOfClass: [G3Thread class]], @"should be a thread");
         
         // remove thread from source group:
-        [thread removeGroup:sourceGroup];
+        [thread removeGroup: sourceGroup];
         
         // add thread to destination group:
-        [thread addGroup:destinationGroup];
+        [thread addGroup: destinationGroup];
     }
 }
 
