@@ -200,8 +200,10 @@ static unsigned nextJobId = 1;
         while (jobDescription)
         {
             //NSLog(@"Working on job with description: %@", jobDescription);
+            ;
             
-            @try {
+            @try 
+            {
                 // do job here:
                 NSObject *jobTarget = [jobDescription objectForKey:OPJobTarget];
                 SEL jobSelector = NSSelectorFromString([jobDescription objectForKey:OPJobSelector]);
@@ -211,11 +213,17 @@ static unsigned nextJobId = 1;
                 [self performSelectorOnMainThread:@selector(noteJobWillStart:) withObject:[jobDescription objectForKey:OPJobId] waitUntilDone:NO];
                 
                 [jobTarget performSelector:jobSelector withObject:[jobDescription objectForKey:OPJobArguments]];
-            } @catch (NSException *exception) {
+            } 
+            @catch (NSException *exception) 
+            {
+                [exception retain];
 #warning *** Selector 'isKindOfClass:' sent to dealloced instance 0x5581a80 of class NSException.
                 NSLog(@"Job (%@) caused Exception: %@", jobDescription, exception);
                 [jobDescription setObject:exception forKey:OPJobUnhandledException];
-            } @finally {
+                [exception release];
+            } 
+            @finally 
+            {
                 [jobsLock lock];
                 
                 [jobDescription removeObjectForKey:OPJobWorkerThread];

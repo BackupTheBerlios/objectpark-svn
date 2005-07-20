@@ -148,6 +148,8 @@
 		77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */; };
 		77DFA5C90840B49C0068AD15 /* TestOPJobs.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DFA5C70840B49C0068AD15 /* TestOPJobs.h */; };
 		77DFA5CA0840B49C0068AD15 /* TestOPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5C80840B49C0068AD15 /* TestOPJobs.m */; };
+		77E05AA4088D64FB0008FC96 /* GIFilteredThreads.h in Headers */ = {isa = PBXBuildFile; fileRef = 77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */; };
+		77E05AA5088D64FB0008FC96 /* GIFilteredThreads.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */; };
 		77E5401D0785839D00265DBB /* GIApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9E8A8306AC44080055F87C /* GIApplication.h */; };
 		77E541AF0785AB9D00265DBB /* Boxes.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77E541AE0785AB9D00265DBB /* Boxes.nib */; };
 		77EF03D207DC4AF9007CD721 /* GroupInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */; };
@@ -505,6 +507,8 @@
 		77DFA5BE08409DF00068AD15 /* OPJobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPJobs.m; sourceTree = "<group>"; };
 		77DFA5C70840B49C0068AD15 /* TestOPJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPJobs.h; sourceTree = "<group>"; };
 		77DFA5C80840B49C0068AD15 /* TestOPJobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPJobs.m; sourceTree = "<group>"; };
+		77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFilteredThreads.h; sourceTree = "<group>"; };
+		77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFilteredThreads.m; sourceTree = "<group>"; };
 		77E541AE0785AB9D00265DBB /* Boxes.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Boxes.nib; sourceTree = "<group>"; };
 		77EF040107DC4DEF007CD721 /* G3GroupInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G3GroupInspectorController.h; sourceTree = "<group>"; };
 		77EF040207DC4DEF007CD721 /* G3GroupInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G3GroupInspectorController.m; sourceTree = "<group>"; };
@@ -725,6 +729,8 @@
 				77049FE70858570800253732 /* GIPOPJob.m */,
 				774791BB085DF0150001560D /* GISMTPJob.h */,
 				774791BC085DF0150001560D /* GISMTPJob.m */,
+				77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */,
+				77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1176,6 +1182,7 @@
 				77049FE80858570800253732 /* GIPOPJob.h in Headers */,
 				77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */,
 				774791BD085DF0150001560D /* GISMTPJob.h in Headers */,
+				77E05AA4088D64FB0008FC96 /* GIFilteredThreads.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1446,6 +1453,7 @@
 				77049FE90858570800253732 /* GIPOPJob.m in Sources */,
 				77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */,
 				774791BE085DF0150001560D /* GISMTPJob.m in Sources */,
+				77E05AA5088D64FB0008FC96 /* GIFilteredThreads.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
