@@ -208,25 +208,35 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // message display string:
     NSAttributedString *messageText = nil;
-        
+    
     if (showRawSource)
     {
+        NSData *transferData;
+        NSString *transferString;
+        
         static NSDictionary *fixedFont = nil;
+        
         if (!fixedFont)
         {
-            fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:
-                [NSFont userFixedPitchFontOfSize:10], NSFontAttributeName,
-                nil, nil];
+            fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName,
+                                                                     nil, nil];
         }
         
-        messageText = [[[NSAttributedString alloc] initWithString:[NSString stringWithData:[displayedMessage transferData] encoding:NSUTF8StringEncoding] attributes:fixedFont] autorelease]; 
+        transferData = [displayedMessage transferData];
+        
+        // joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
+        if (!(transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSUTF8StringEncoding]))
+            transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSISOLatin1StringEncoding];
+        
+        messageText = [[[NSAttributedString alloc] initWithString:transferString attributes:fixedFont] autorelease]; 
     }
     else
     {
         messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
     }
     
-    if (!messageText) messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
+    if (!messageText)
+        messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
     
     [[messageTextView textStorage] setAttributedString:messageText];
     
