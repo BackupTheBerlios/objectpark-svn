@@ -25,8 +25,9 @@ static volatile NSThread* mainThread = nil;
         NSManagedObjectContext* mainContext = [[mainThread threadDictionary] objectForKey:@"OPDefaultManagedObjectContext"];
         NSPersistentStoreCoordinator* psc = [mainContext persistentStoreCoordinator];
         result = [[NSManagedObjectContext alloc] init];
+        [result setUndoManager: nil];
         [result setPersistentStoreCoordinator: psc];
-        
+
         [threadDict setObject: result forKey: @"OPDefaultManagedObjectContext"];
         [result release];
     }
@@ -44,6 +45,7 @@ static volatile NSThread* mainThread = nil;
         [threadDict removeObjectForKey: @"OPDefaultManagedObjectContext"];
     }
     mainThread = [NSThread currentThread];
+    [aContext setUndoManager: nil];
 }
 
 + (void) resetThreadContext

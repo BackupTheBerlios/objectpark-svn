@@ -276,6 +276,17 @@
 		8DC773C506B27FCB00053CB7 /* OPSizingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */; };
 		8DC773C606B27FCB00053CB7 /* OPSizingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */; };
 		8DCA9ABE08015F7600EEA49F /* SQLConfig.sqlstatements in Resources */ = {isa = PBXBuildFile; fileRef = 8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */; };
+		8DCE35F90891905600F705EF /* OPPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35F80891905600F705EF /* OPPersistence.h */; };
+		8DCE35FA0891905900F705EF /* GIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E60891900B00F705EF /* GIMessage.h */; };
+		8DCE35FB0891905A00F705EF /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E70891900B00F705EF /* GIMessage.m */; };
+		8DCE35FC0891905A00F705EF /* OPPersistentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E80891900B00F705EF /* OPPersistentObject.h */; };
+		8DCE35FD0891905A00F705EF /* OPPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */; };
+		8DCE35FE0891905B00F705EF /* OPPersistentObjectContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35EA0891900B00F705EF /* OPPersistentObjectContext.h */; };
+		8DCE35FF0891905C00F705EF /* OPPersistentObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35EB0891900B00F705EF /* OPPersistentObjectContext.m */; };
+		8DCE36080891918900F705EF /* OPSQLiteConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE36060891918900F705EF /* OPSQLiteConnection.h */; };
+		8DCE36090891918900F705EF /* OPSQLiteConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE36070891918900F705EF /* OPSQLiteConnection.m */; };
+		8DCE362B0891961500F705EF /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D543D250873F470007245ED /* libsqlite3.dylib */; };
+		8DCE363E0891C71500F705EF /* OPPersistenceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */; };
 		8DD2BF430775A1BA00587AAA /* G3Message+Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */; };
 		8DD2BF440775A1BA00587AAA /* G3Message+Rendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */; };
 		8DD602F1080ED9300050E973 /* GIFiltersPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8DDD2281080ECA57006C902D /* GIFiltersPane.nib */; };
@@ -629,6 +640,18 @@
 		8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSizingTextField.h; sourceTree = "<group>"; };
 		8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSizingTextField.m; sourceTree = "<group>"; };
 		8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SQLConfig.sqlstatements; sourceTree = "<group>"; };
+		8DCE35E60891900B00F705EF /* GIMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessage.h; sourceTree = "<group>"; };
+		8DCE35E70891900B00F705EF /* GIMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessage.m; sourceTree = "<group>"; };
+		8DCE35E80891900B00F705EF /* OPPersistentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentObject.h; sourceTree = "<group>"; };
+		8DCE35E90891900B00F705EF /* OPPersistentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentObject.m; sourceTree = "<group>"; };
+		8DCE35EA0891900B00F705EF /* OPPersistentObjectContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentObjectContext.h; sourceTree = "<group>"; };
+		8DCE35EB0891900B00F705EF /* OPPersistentObjectContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentObjectContext.m; sourceTree = "<group>"; };
+		8DCE35F10891902600F705EF /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DCE35F20891902600F705EF /* OPPersistence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "OPPersistence-Info.plist"; sourceTree = "<group>"; };
+		8DCE35F80891905600F705EF /* OPPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistence.h; sourceTree = "<group>"; };
+		8DCE36060891918900F705EF /* OPSQLiteConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSQLiteConnection.h; sourceTree = "<group>"; };
+		8DCE36070891918900F705EF /* OPSQLiteConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSQLiteConnection.m; sourceTree = "<group>"; };
+		8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistenceConstants.h; sourceTree = "<group>"; };
 		8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "G3Message+Rendering.h"; sourceTree = "<group>"; };
 		8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "G3Message+Rendering.m"; sourceTree = "<group>"; };
 		8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFiltersPane.m; sourceTree = "<group>"; };
@@ -668,12 +691,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8DCE35EF0891902600F705EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DCE362B0891961500F705EF /* libsqlite3.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				8DCE35E508918FC200F705EF /* Persistence */,
 				617C2A74084632BA00803758 /* FulltextSearch */,
 				8DDD2258080EC983006C902D /* MessageFilter */,
 				8D666F0407D524E20076C74D /* Preferences */,
@@ -756,6 +788,7 @@
 			isa = PBXGroup;
 			children = (
 				8D1107320486CEB800E47090 /* GinkoVoyager.app */,
+				8DCE35F10891902600F705EF /* OPPersistence.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -774,6 +807,7 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				7779A7AB07C409E600F064D3 /* Test-Info.plist */,
+				8DCE35F20891902600F705EF /* OPPersistence-Info.plist */,
 			);
 			name = GinkoVoyager;
 			sourceTree = "<group>";
@@ -1029,6 +1063,23 @@
 			path = "Message Framework";
 			sourceTree = "<group>";
 		};
+		8DCE35E508918FC200F705EF /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */,
+				8DCE35F80891905600F705EF /* OPPersistence.h */,
+				8DCE35E80891900B00F705EF /* OPPersistentObject.h */,
+				8DCE35E90891900B00F705EF /* OPPersistentObject.m */,
+				8DCE35EA0891900B00F705EF /* OPPersistentObjectContext.h */,
+				8DCE35EB0891900B00F705EF /* OPPersistentObjectContext.m */,
+				8DCE35E60891900B00F705EF /* GIMessage.h */,
+				8DCE35E70891900B00F705EF /* GIMessage.m */,
+				8DCE36060891918900F705EF /* OPSQLiteConnection.h */,
+				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
+			);
+			name = Persistence;
+			sourceTree = "<group>";
+		};
 		8DD2BEA50773257B00587AAA /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -1186,6 +1237,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8DCE35EC0891902600F705EF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DCE35F90891905600F705EF /* OPPersistence.h in Headers */,
+				8DCE35FA0891905900F705EF /* GIMessage.h in Headers */,
+				8DCE35FC0891905A00F705EF /* OPPersistentObject.h in Headers */,
+				8DCE35FE0891905B00F705EF /* OPPersistentObjectContext.h in Headers */,
+				8DCE36080891918900F705EF /* OPSQLiteConnection.h in Headers */,
+				8DCE363E0891C71500F705EF /* OPPersistenceConstants.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -1243,6 +1307,73 @@
 			productReference = 8D1107320486CEB800E47090 /* GinkoVoyager.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8DCE35F00891902600F705EF /* OPPersistence */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8DCE35F30891902800F705EF /* Build configuration list for PBXNativeTarget "OPPersistence" */;
+			buildPhases = (
+				8DCE35EC0891902600F705EF /* Headers */,
+				8DCE35ED0891902600F705EF /* Resources */,
+				8DCE35EE0891902600F705EF /* Sources */,
+				8DCE35EF0891902600F705EF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "OPPersistence-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistence;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			dependencies = (
+			);
+			name = OPPersistence;
+			productName = OPPersistence;
+			productReference = 8DCE35F10891902600F705EF /* OPPersistence.framework */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>OPPersistence</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourcompany.OPPersistence</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1262,6 +1393,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* GinkoVoyager */,
 				77AD780207CF1CC200A15B83 /* Run AutoDoc */,
+				8DCE35F00891902600F705EF /* OPPersistence */,
 			);
 		};
 /* End PBXProject section */
@@ -1314,6 +1446,13 @@
 				8DF749FC085525B900049071 /* Bugs.txt in Resources */,
 				773FFE970859778700E0767F /* Password.nib in Resources */,
 				774A05B50859DAFD00AF321C /* Tasks.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DCE35ED0891902600F705EF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1454,6 +1593,17 @@
 				77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */,
 				774791BE085DF0150001560D /* GISMTPJob.m in Sources */,
 				77E05AA5088D64FB0008FC96 /* GIFilteredThreads.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DCE35EE0891902600F705EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DCE35FB0891905A00F705EF /* GIMessage.m in Sources */,
+				8DCE35FD0891905A00F705EF /* OPPersistentObject.m in Sources */,
+				8DCE35FF0891905C00F705EF /* OPPersistentObjectContext.m in Sources */,
+				8DCE36090891918900F705EF /* OPSQLiteConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1788,6 +1938,140 @@
 			};
 			name = Default;
 		};
+		8DCE35F40891902800F705EF /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "OPPersistence-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistence;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Development;
+		};
+		8DCE35F50891902800F705EF /* Development (linked) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "OPPersistence-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistence;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Development (linked)";
+		};
+		8DCE35F60891902800F705EF /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "OPPersistence-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistence;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Deployment;
+		};
+		8DCE35F70891902800F705EF /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "OPPersistence-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistence;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1823,6 +2107,16 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
+		};
+		8DCE35F30891902800F705EF /* Build configuration list for PBXNativeTarget "OPPersistence" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8DCE35F40891902800F705EF /* Development */,
+				8DCE35F50891902800F705EF /* Development (linked) */,
+				8DCE35F60891902800F705EF /* Deployment */,
+				8DCE35F70891902800F705EF /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

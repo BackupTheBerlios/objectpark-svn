@@ -3,7 +3,7 @@
 //  Ginko
 //
 //  Created by Axel Katerbau on Sun Apr 06 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2003 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
 #import "NSApplication+OPExtensions.h"

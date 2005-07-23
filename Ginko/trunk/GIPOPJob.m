@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 09.06.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
 #import "GIPOPJob.h"
@@ -122,7 +122,7 @@
                 [pool release];
             }
             
-            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
             
             [pop3session closeSession];
             

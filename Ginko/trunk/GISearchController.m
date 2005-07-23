@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 04.06.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
 #import "GISearchController.h"

@@ -61,10 +61,9 @@ extern NSString *GIMessageGroupWasAddedNotification;
                    author: (NSString*) author
     sortedByDateAscending: (BOOL) ascending;
 
-- (void)addThread:(G3Thread *)value;
-- (void)removeThread:(G3Thread *)value;
+- (void) addThread: (G3Thread*) value;
+- (void) removeThread: (G3Thread*) value;
 
-- (unsigned) threadCount;
 
 /*" Profile handling "*/
 - (G3Profile *)defaultProfile;

@@ -251,16 +251,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void)sendSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    if (returnCode == NSAlertDefaultReturn)
-    {
-        G3Message *message = [self checkpointMessageWithStatus:OPQueuedStatus];
+    if (returnCode == NSAlertDefaultReturn) {
+        //G3Message *message = [self checkpointMessageWithStatus:OPQueuedStatus];
         
         BOOL sendNow = [(NSNumber *)contextInfo boolValue];
-        if (sendNow)
-        {
+        if (sendNow) {
 #warning start message send job here
         }
-        
         [window performClose:self];
     }
     

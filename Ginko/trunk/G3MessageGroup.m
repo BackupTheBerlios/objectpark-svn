@@ -144,30 +144,15 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
      */
 }
 
-- (void)addThread:(G3Thread *)value 
+- (void) addThread: (G3Thread*) thread 
 {    
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    
-    [self willChangeValueForKey:@"threads" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    
-    [[self primitiveValueForKey: @"threads"] addObject: value];
-    
-    [self didChangeValueForKey:@"threads" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    
-    [changedObjects release];
+    [thread addGroup: self];
+    // Should invalidate thread-cache here as necessary
 }
 
-- (void)removeThread:(G3Thread *)value 
+- (void) removeThread: (G3Thread*) thread 
 {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    
-    [self willChangeValueForKey:@"threads" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    
-    [[self primitiveValueForKey: @"threads"] removeObject: value];
-    
-    [self didChangeValueForKey:@"threads" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    
-    [changedObjects release];
+    [thread removeGroup: self];
 }
 
 - (NSArray*) threadsByDate
@@ -313,39 +298,15 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     [NSManagedObject unlockStore];
     
     NSLog(@"exited fetchThreadURIs query");
-
-    //NSLog(@"result count = %d", [result count]);
-    //NSLog(@"result = %@", result);
 }
 
-- (unsigned)threadCount
-/*" Returns the count of threads that are present 'in' the receiver. 
-
-    The current implementation is very inefficent, please use seldom. "*/
-{
-    return [[self valueForKey:@"threads"] count];
-    /*
-    unsigned result = 0;
-    NSEnumerator *enumerator;
-    G3Thread *thread;
-    
-    enumerator = [[self valueForKey:@"threads"] objectEnumerator];
-    while (thread = [enumerator nextObject])
-    {
-        result += [thread messageCount];
-    }
-    
-    return result;
-     */
-}
-
-- (void)dealloc
+- (void) dealloc
 {
     [pk release];
     [super dealloc];
 }
 
-- (G3Profile *)defaultProfile
+- (G3Profile*) defaultProfile
 /*" Returns the default profile to use for replies on messages on this group. 
     Returns nil, if no default profile was specified. "*/
 {
@@ -363,7 +324,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 static NSMutableArray *root = nil;
 
-+ (void)commitChanges
++ (void) commitChanges
 /*" Saves the hierarchy information to disk. "*/
 {
     NSString *plistPath;
@@ -373,12 +334,9 @@ static NSMutableArray *root = nil;
     plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"Hierarchy.plist"];
     
     plistData = [NSPropertyListSerialization dataFromPropertyList:[self hierarchyRootNode] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
-    if(plistData)
-    {
+    if(plistData) {
         [plistData writeToFile:plistPath atomically:YES];
-    }
-    else
-    {
+    } else {
         NSLog(error);
         [error release];
     }
@@ -386,7 +344,7 @@ static NSMutableArray *root = nil;
 //    [NSApp saveAction:self];
 }
 
-+ (void)checkHierarchy:(NSMutableArray *)hierarchy withGroups:(NSMutableArray *)groupUrlsToCheck
++ (void) checkHierarchy: (NSMutableArray*) hierarchy withGroups: (NSMutableArray*) groupUrlsToCheck
 /*" Checks the given hierarchy if all groups (referenced by groupUrlsToCheck) and no more are contained in the hierarchy. Adjusts the hierarchy accordingly. "*/
 {
     int i, count;

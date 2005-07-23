@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 05.06.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
 #import "GIActivityPanelController.h"
@@ -77,7 +77,7 @@ static BOOL showActivities = NO;
         [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
         [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];
         
-        [center addObserver: [self class] selector: @selector(activityStarted:) name:OPJobWillStartNotification object: nil];
+        [center addObserver: [self class] selector: @selector(activityStarted:) name:OPJobWillStartNotification object: nil]; // move into +initialize?
     }
     
     return self;

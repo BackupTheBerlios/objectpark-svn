@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 18.04.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
 #import "GIFulltextIndexCenter.h"
@@ -148,7 +148,7 @@ GIIndex * contentIndex;
 }
 
 
-- (BOOL)reindexAllMessages
+- (BOOL) reindexAllMessages
 {
     BOOL isAddSuccessfull = YES;
     NSEnumerator* threadEnumerator;
@@ -161,16 +161,13 @@ GIIndex * contentIndex;
     G3MessageGroup* tempMessageGroup = [G3MessageGroup defaultMessageGroup];
     
     // get all threads
-    threadEnumerator = [[tempMessageGroup threadsByDate] objectEnumerator];
+    threadEnumerator = [[tempMessageGroup valueForKey: @"threads"] objectEnumerator];
     while ( tempThread = [threadEnumerator nextObject] ) {
         messageEnumerator = [[tempThread messages] objectEnumerator];
         while ( tempMessage = [messageEnumerator nextObject] ) {
-            if ( [self addMessage:tempMessage] )
-            {
+            if ( [self addMessage:tempMessage] ) {
                 isAddSuccessfull = YES;
-            }
-            else 
-            {
+            } else {
                 return NO;
             }
         }

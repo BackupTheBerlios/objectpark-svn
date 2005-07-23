@@ -287,7 +287,7 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
 - (NSArray*) messagesByTree
 /* Returns an array containing the result of a depth first search over all tree roots. */
 {
-    NSArray* allMessages = [self messages];
+    NSSet* allMessages = [self messages];
     NSMutableArray* result = [NSMutableArray arrayWithCapacity: [allMessages count]];
     NSEnumerator *me = [allMessages objectEnumerator];
     G3Message *message;

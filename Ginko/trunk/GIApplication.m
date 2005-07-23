@@ -193,7 +193,7 @@
     
     //[managedObjectContext setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
 
-    [[managedObjectContext undoManager] setLevelsOfUndo:0];
+    //[[managedObjectContext undoManager] setLevelsOfUndo:0];
 
     return managedObjectContext;
 }
@@ -215,7 +215,7 @@
         managedObjectContext = [self newManagedObjectContext];
     }
     
-    [[managedObjectContext undoManager] setLevelsOfUndo:0];
+    //[[managedObjectContext undoManager] setLevelsOfUndo:0];
     return [managedObjectContext autorelease];
 }
 
@@ -244,9 +244,9 @@
     [self restoreOpenWindowsFromLastSession];
 
         // Make sure, we receive NSManagedObjectContextDidSaveNotifications:
-    [[NSNotificationCenter defaultCenter] addObserver: [NSManagedObjectContext class] selector: @selector(objectsDidChange2:) 
-                                                 name: NSManagedObjectContextDidSaveNotification 
-                                               object: nil];  
+    //[[NSNotificationCenter defaultCenter] addObserver: [NSManagedObjectContext class] selector: @selector(objectsDidChange2:) 
+    //                                             name: NSManagedObjectContextDidSaveNotification 
+    //                                           object: nil];  
     
 }
 
