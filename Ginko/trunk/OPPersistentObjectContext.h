@@ -28,11 +28,19 @@
 
 + (Class) classForCid: (CID) cid;
 + (CID) cidForClass: (Class) pClass;
++ (OID) oidForLid: (LID) lid class: (Class) poClass;
 
+- (OPPersistentObject*) objectRegisteredForOid: (OID) oid;
 - (OPPersistentObject*) objectForOid: (OID) oid;
 - (void) registerObject: (OPPersistentObject*) object;
 - (void) unregisterObject: (OPPersistentObject*) object;
 - (NSDictionary*) persistentValuesForOid: (OID) oid;
++ (void) setDefaultContext: (OPPersistentObjectContext*) context;
+
+
+- (void) setDatabaseConnectionFromPath: (NSString*) dbPath;
+- (OPSQLiteConnection*) databaseConnection;
+- (void) setDatabaseConnection: (OPSQLiteConnection*) newConnection;
 
 // Methods for use by the appication developer:
 + (OPPersistentObjectContext*) defaultContext;

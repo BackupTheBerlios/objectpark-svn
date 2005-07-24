@@ -16,6 +16,10 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 + (OPPersistentObjectContext*) defaultContext
 {
+    if (!defaultContext) {
+        [self setDefaultContext: [[[self alloc] init] autorelease]];
+        NSLog(@"Created default %@", defaultContext);
+    }
     return defaultContext;
 }
 
@@ -43,12 +47,18 @@ static NSMutableArray* persistentClasses = nil;
     return result;
 }
 
-+ (void) setDefaultContext: (OPPersistentObjectContext*) context
-/*" A default context can only be set once. It is retained and never deallocated. Use -reset to trim memory usage after no persistent objects are us use any more. "*/
++ (OID) oidForLid: (LID) lid class: (Class) poClass
 {
-    NSAssert(defaultContext==nil || defaultContext==context, @"Default context can only be set once.");
+    return MakeOID([self cidForClass: poClass], lid);
+}
+
++ (void) setDefaultContext: (OPPersistentObjectContext*) context
+/*" A default context can only be set once. Use -reset to trim memory usage after no persistent objects are us use any more. "*/
+{
+    NSAssert(context == nil || defaultContext==nil || defaultContext==context, @"Default context can not be changed.");
     
     if (context!=defaultContext) {
+        [defaultContext release];
         defaultContext = [context retain];
     }
 }
@@ -87,6 +97,25 @@ static NSMutableArray* persistentClasses = nil;
     NSHashRemove(registeredObjects, object);
 }
 
+- (OPPersistentObject*) objectRegisteredForOid: (OID) oid
+{
+    // SearchStruct is a fake object made for searching in the hashtable:
+    struct {
+        Class isa;
+        OID oid;
+        NSMutableDictionary* attributes;
+    } searchStruct;
+    searchStruct.isa = [OPPersistentObject class];
+    searchStruct.oid = oid;
+    searchStruct.attributes = nil;
+
+   //OPPersistentObject* testObject = [[[OPPersistentObject alloc] initWithContext: self oid: oid] autorelease];
+    
+    OPPersistentObject* result = NSHashGet(registeredObjects, &searchStruct);
+    NSLog(@"Object registered for oid %llu: %@", oid, result);
+    return result;
+}
+
 - (void) willChangeObject: (OPPersistentObject*) object
 /*" This method retains object until changes are saved. "*/
 {
@@ -102,17 +131,19 @@ static NSMutableArray* persistentClasses = nil;
 - (OPPersistentObject*) objectForOid: (OID) oid
 {
     Class poClass = [[self class] classForCid: (CIDFromOID(oid))];
-    OPPersistentObject* result = nil;
+    OPPersistentObject* result = [self objectRegisteredForOid: oid];
     // Look up in registered objects cache
-    if (NO) { 
+    if (!result) { 
         // not found - create a fault object:
         result = [[[poClass alloc] initWithContext: self oid: oid] autorelease];
         [self registerObject: result];
+        NSAssert(result == [self objectRegisteredForOid: oid], @"Problem with hash lookup");
     }
     return result;
 }
 
 - (void) reset
+/*" Resets the internal state of the receiver, excluding the database connection. "*/
 {
     if (registeredObjects) NSFreeHashTable(registeredObjects);
     registeredObjects = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 1000);
@@ -135,9 +166,28 @@ static NSMutableArray* persistentClasses = nil;
     return self;
 }
 
+- (void) setDatabaseConnectionFromPath: (NSString*) dbPath
+{
+    OPSQLiteConnection* dbc = [[[OPSQLiteConnection alloc] initWithFile: dbPath] autorelease];
+    [self setDatabaseConnection: dbc];
+}
+ 
+- (OPSQLiteConnection*) databaseConnection
+{
+    return db;   
+}
+
+- (void) setDatabaseConnection: (OPSQLiteConnection*) newConnection
+{
+    NSParameterAssert(db==nil);
+    db = [newConnection retain];
+    [db open];
+}
+
 - (NSArray*) fetchAllInstancesOfClass: (Class) persistentClass
 {
-    
+    // implement
+    return nil;
 }
 
 - (void) dealloc
@@ -147,3 +197,7 @@ static NSMutableArray* persistentClasses = nil;
 }
 
 @end
+
+
+
+

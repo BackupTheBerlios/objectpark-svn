@@ -166,8 +166,6 @@
 		8D4C5756076E3B6F000F46DA /* G3CommentTreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D4C5754076E3B6F000F46DA /* G3CommentTreeCell.m */; };
 		8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
 		8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
-		8D543D260873F470007245ED /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D543D250873F470007245ED /* libsqlite3.dylib */; };
-		8D543DC0087412D3007245ED /* libsqlite3.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D543D250873F470007245ED /* libsqlite3.dylib */; };
 		8D666EF807D523C50076C74D /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D666EF607D523C50076C74D /* ActivePrefPanes.plist */; };
 		8D666F0207D5247A0076C74D /* GIContentPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D666EFE07D5247A0076C74D /* GIContentPane.h */; };
 		8D666F0307D5247B0076C74D /* GIContentPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D666EFF07D5247A0076C74D /* GIContentPane.m */; };
@@ -277,16 +275,21 @@
 		8DC773C606B27FCB00053CB7 /* OPSizingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */; };
 		8DCA9ABE08015F7600EEA49F /* SQLConfig.sqlstatements in Resources */ = {isa = PBXBuildFile; fileRef = 8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */; };
 		8DCE35F90891905600F705EF /* OPPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35F80891905600F705EF /* OPPersistence.h */; };
-		8DCE35FA0891905900F705EF /* GIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E60891900B00F705EF /* GIMessage.h */; };
-		8DCE35FB0891905A00F705EF /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E70891900B00F705EF /* GIMessage.m */; };
 		8DCE35FC0891905A00F705EF /* OPPersistentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E80891900B00F705EF /* OPPersistentObject.h */; };
 		8DCE35FD0891905A00F705EF /* OPPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */; };
 		8DCE35FE0891905B00F705EF /* OPPersistentObjectContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35EA0891900B00F705EF /* OPPersistentObjectContext.h */; };
 		8DCE35FF0891905C00F705EF /* OPPersistentObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35EB0891900B00F705EF /* OPPersistentObjectContext.m */; };
 		8DCE36080891918900F705EF /* OPSQLiteConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE36060891918900F705EF /* OPSQLiteConnection.h */; };
 		8DCE36090891918900F705EF /* OPSQLiteConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE36070891918900F705EF /* OPSQLiteConnection.m */; };
-		8DCE362B0891961500F705EF /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D543D250873F470007245ED /* libsqlite3.dylib */; };
 		8DCE363E0891C71500F705EF /* OPPersistenceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */; };
+		8DCE38A208940D5900F705EF /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE38A108940D5900F705EF /* OPPersistence.framework */; };
+		8DCE38C008940E0000F705EF /* OPPersistence.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DCE38A108940D5900F705EF /* OPPersistence.framework */; };
+		8DCE38FD08940F4000F705EF /* TestPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE38FB08940F4000F705EF /* TestPersistence.h */; };
+		8DCE38FE08940F4000F705EF /* TestPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE38FC08940F4000F705EF /* TestPersistence.m */; };
+		8DCE39030894116500F705EF /* GIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E60891900B00F705EF /* GIMessage.h */; };
+		8DCE39040894116700F705EF /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E70891900B00F705EF /* GIMessage.m */; };
+		8DCE392B089423E000F705EF /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.0.dylib */; };
+		8DCE392C089423E000F705EF /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.0.dylib */; };
 		8DD2BF430775A1BA00587AAA /* G3Message+Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */; };
 		8DD2BF440775A1BA00587AAA /* G3Message+Rendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */; };
 		8DD602F1080ED9300050E973 /* GIFiltersPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8DDD2281080ECA57006C902D /* GIFiltersPane.nib */; };
@@ -377,6 +380,16 @@
 		};
 /* End PBXBuildStyle section */
 
+/* Begin PBXContainerItemProxy section */
+		8DCE38F408940F0A00F705EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DCE35F00891902600F705EF /* OPPersistence */;
+			remoteInfo = OPPersistence;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		8D9E8F1006AC46540055F87C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -384,10 +397,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8D543DC0087412D3007245ED /* libsqlite3.dylib in CopyFiles */,
 				8DF2D1C9087A9746008F8F6B /* CoreData.framework in CopyFiles */,
 				8DBFD4FF0826DE93006D29DE /* OPPreferences.framework in CopyFiles */,
 				8DBFD5000826DE98006D29DE /* OPNetwork.framework in CopyFiles */,
+				8DCE38C008940E0000F705EF /* OPPersistence.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,7 +545,6 @@
 		8D2147CE0851182E004C44B9 /* Search.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Search.nib; sourceTree = "<group>"; };
 		8D4C5753076E3B6F000F46DA /* G3CommentTreeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G3CommentTreeCell.h; sourceTree = "<group>"; };
 		8D4C5754076E3B6F000F46DA /* G3CommentTreeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G3CommentTreeCell.m; sourceTree = "<group>"; };
-		8D543D250873F470007245ED /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.dylib; sourceTree = SOURCE_ROOT; };
 		8D666EF607D523C50076C74D /* ActivePrefPanes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = ActivePrefPanes.plist; sourceTree = "<group>"; };
 		8D666EFE07D5247A0076C74D /* GIContentPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIContentPane.h; path = Preferences/GIContentPane.h; sourceTree = SOURCE_ROOT; };
 		8D666EFF07D5247A0076C74D /* GIContentPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIContentPane.m; path = Preferences/GIContentPane.m; sourceTree = SOURCE_ROOT; };
@@ -652,6 +664,10 @@
 		8DCE36060891918900F705EF /* OPSQLiteConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSQLiteConnection.h; sourceTree = "<group>"; };
 		8DCE36070891918900F705EF /* OPSQLiteConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSQLiteConnection.m; sourceTree = "<group>"; };
 		8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistenceConstants.h; sourceTree = "<group>"; };
+		8DCE38A108940D5900F705EF /* OPPersistence.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPersistence.framework; path = "build/Development (linked)/OPPersistence.framework"; sourceTree = "<group>"; };
+		8DCE38FB08940F4000F705EF /* TestPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestPersistence.h; sourceTree = "<group>"; };
+		8DCE38FC08940F4000F705EF /* TestPersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestPersistence.m; sourceTree = "<group>"; };
+		8DCE392A089423E000F705EF /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = /usr/lib/libsqlite3.0.dylib; sourceTree = "<absolute>"; };
 		8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "G3Message+Rendering.h"; sourceTree = "<group>"; };
 		8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "G3Message+Rendering.m"; sourceTree = "<group>"; };
 		8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFiltersPane.m; sourceTree = "<group>"; };
@@ -686,8 +702,9 @@
 				7700727B085B129600AB0064 /* SystemConfiguration.framework in Frameworks */,
 				8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */,
 				8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */,
-				8D543D260873F470007245ED /* libsqlite3.dylib in Frameworks */,
 				8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */,
+				8DCE38A208940D5900F705EF /* OPPersistence.framework in Frameworks */,
+				8DCE392B089423E000F705EF /* libsqlite3.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -695,7 +712,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DCE362B0891961500F705EF /* libsqlite3.dylib in Frameworks */,
+				8DCE392C089423E000F705EF /* libsqlite3.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -770,8 +787,9 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8DCE392A089423E000F705EF /* libsqlite3.0.dylib */,
+				8DCE38A108940D5900F705EF /* OPPersistence.framework */,
 				8DF2CF6A0879F523008F8F6B /* CoreData.framework */,
-				8D543D250873F470007245ED /* libsqlite3.dylib */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				7700727A085B129600AB0064 /* SystemConfiguration.framework */,
@@ -875,6 +893,10 @@
 		775A96DE0839D5C2008EC276 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				8DCE35E60891900B00F705EF /* GIMessage.h */,
+				8DCE35E70891900B00F705EF /* GIMessage.m */,
+				8DCE38FB08940F4000F705EF /* TestPersistence.h */,
+				8DCE38FC08940F4000F705EF /* TestPersistence.m */,
 				775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */,
 				775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */,
 				6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */,
@@ -1072,8 +1094,6 @@
 				8DCE35E90891900B00F705EF /* OPPersistentObject.m */,
 				8DCE35EA0891900B00F705EF /* OPPersistentObjectContext.h */,
 				8DCE35EB0891900B00F705EF /* OPPersistentObjectContext.m */,
-				8DCE35E60891900B00F705EF /* GIMessage.h */,
-				8DCE35E70891900B00F705EF /* GIMessage.m */,
 				8DCE36060891918900F705EF /* OPSQLiteConnection.h */,
 				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
 			);
@@ -1234,6 +1254,8 @@
 				77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */,
 				774791BD085DF0150001560D /* GISMTPJob.h in Headers */,
 				77E05AA4088D64FB0008FC96 /* GIFilteredThreads.h in Headers */,
+				8DCE38FD08940F4000F705EF /* TestPersistence.h in Headers */,
+				8DCE39030894116500F705EF /* GIMessage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1242,7 +1264,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DCE35F90891905600F705EF /* OPPersistence.h in Headers */,
-				8DCE35FA0891905900F705EF /* GIMessage.h in Headers */,
 				8DCE35FC0891905A00F705EF /* OPPersistentObject.h in Headers */,
 				8DCE35FE0891905B00F705EF /* OPPersistentObjectContext.h in Headers */,
 				8DCE36080891918900F705EF /* OPSQLiteConnection.h in Headers */,
@@ -1300,6 +1321,7 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
+				8DCE38F508940F0A00F705EF /* PBXTargetDependency */,
 			);
 			name = GinkoVoyager;
 			productInstallPath = "$(HOME)/Applications";
@@ -1593,6 +1615,8 @@
 				77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */,
 				774791BE085DF0150001560D /* GISMTPJob.m in Sources */,
 				77E05AA5088D64FB0008FC96 /* GIFilteredThreads.m in Sources */,
+				8DCE38FE08940F4000F705EF /* TestPersistence.m in Sources */,
+				8DCE39040894116700F705EF /* GIMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1600,7 +1624,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DCE35FB0891905A00F705EF /* GIMessage.m in Sources */,
 				8DCE35FD0891905A00F705EF /* OPPersistentObject.m in Sources */,
 				8DCE35FF0891905C00F705EF /* OPPersistentObjectContext.m in Sources */,
 				8DCE36090891918900F705EF /* OPSQLiteConnection.m in Sources */,
@@ -1608,6 +1631,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8DCE38F508940F0A00F705EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DCE35F00891902600F705EF /* OPPersistence */;
+			targetProxy = 8DCE38F408940F0A00F705EF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		7776BBA907D0773E00822246 /* MainMenu.nib */ = {
@@ -1631,6 +1662,7 @@
 					../OPNetwork/build/Development,
 					$USER_LIBRARY_DIR/Frameworks/,
 					"$(SRCROOT)/../../..",
+					"$(SRCROOT)/build/Development (linked)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = YES;
@@ -1675,6 +1707,7 @@
 					../OPNetwork/build/Development,
 					$USER_LIBRARY_DIR/Frameworks/,
 					"$(SRCROOT)/../../..",
+					"$(SRCROOT)/build/Development (linked)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1719,6 +1752,7 @@
 					/Users/theisen/Projects/Work/OPPreferences/build,
 					/Users/theisen/Projects/Work/OPNetwork/build,
 					"$(SRCROOT)/../../..",
+					"$(SRCROOT)/build/Development (linked)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = YES;
@@ -1763,6 +1797,7 @@
 					/Users/theisen/Projects/Work/OPPreferences/build,
 					/Users/theisen/Projects/Work/OPNetwork/build,
 					"$(SRCROOT)/../../..",
+					"$(SRCROOT)/build/Development (linked)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1983,7 +2018,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				INFOPLIST_FILE = "OPPersistence-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";

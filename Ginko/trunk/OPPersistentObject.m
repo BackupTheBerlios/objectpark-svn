@@ -38,6 +38,7 @@
 }
 
 - (OPPersistentObjectContext*) context
+/*" Returns the context for the receiver. Currently, always returns the default context. "*/
 {
     return [OPPersistentObjectContext defaultContext]; // simplistic implementation
 }
@@ -48,8 +49,7 @@
     if (attributes==nil) {
         // implement using the default PersistentObjectContext.
         NSLog(@"Warning! Unable to resolve fault object %@", self);
-        attributes = [[[self context] persistentValuesForOid: oid
-                                                        ofClass: [self class]] retain];
+        attributes = [[[self context] persistentValuesForOid: oid] retain];
         return attributes != nil;
     }
     return YES;
@@ -62,6 +62,7 @@
 }
 
 - (BOOL) isFault
+/*" Returns wether object attributes need to be fetched. "*/
 {
     return attributes==nil;
 }
@@ -115,10 +116,12 @@
 
 - (unsigned) hash
 {
-    return (unsigned) oid;
+    unsigned result = (unsigned) oid;
+    //NSLog(@"Hash value of %@ is %u", self, result);
+    return result;
 }
 
-- (BOOL) isEaual: (id) other
+- (BOOL) isEqual: (id) other
 {
     return oid == [other oid];
 }
@@ -127,6 +130,11 @@
 {
     [[self context] unregisterObject: self];
     [super dealloc];
+}
+
+- (NSString*) description
+{
+    return [NSString stringWithFormat: @"<Persistent %@ (0x%x), oid %llu, attributes: %@>", [self class], self, LIDFromOID(oid), attributes];
 }
 
 @end

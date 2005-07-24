@@ -12,8 +12,9 @@
  * LID - local object id, 1 word-1 bytes wide
  * LID and CID can be encoded into an OID and back.
  */
-#define OID long long 
+#define OID unsigned long long 
+#define LID OID
 #define LIDBITS 56
 #define CIDFromOID(x) (x>>LIDBITS)
 #define LIDFromOID(x) ((x<<8)>>8)
-#define MakeOID(c,o)  ((((OID)c)<<LIDBITS)+o)
+#define MakeOID(c,l)  ((((OID)c)<<LIDBITS)+l)
