@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #include <sqlite3.h>
+#import "OPPersistenceConstants.h"
 
 @interface OPSQLiteConnection : NSObject {
     
@@ -21,12 +22,12 @@
 - (NSDictionary*) attributeDictForTable: (NSString*) tableName
                              attributes: (NSArray*) attrNames
                                    keys: (NSArray*) keys
-                                    oid: (long long) oid;
+                                    oid: (OID) oid;
 
 - (BOOL) open;
 - (void) close;
 - (NSString*) path;
-- (long long) lastInsertedRowId;
+- (unsigned long long) lastInsertedRowId;
 
 - (void) beginTransaction;
 - (void) commitTransaction;

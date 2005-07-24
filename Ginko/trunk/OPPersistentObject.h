@@ -26,6 +26,7 @@
 
 - (OPPersistentObjectContext*) context;
 - (BOOL) isFault;
+- (BOOL) resolveFault;
 - (OID) oid;
 - (id) persistentValueForKey: (NSString*) key;
 - (void) setPersistentValue: (id) object forKey: (NSString*) key;

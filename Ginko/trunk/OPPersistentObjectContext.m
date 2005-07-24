@@ -181,7 +181,7 @@ static NSMutableArray* persistentClasses = nil;
 {
     NSParameterAssert(db==nil);
     db = [newConnection retain];
-    [db open];
+    NSParameterAssert([db open]);
 }
 
 - (NSArray*) fetchAllInstancesOfClass: (Class) persistentClass

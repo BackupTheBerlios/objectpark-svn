@@ -385,7 +385,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DCE35F00891902600F705EF /* OPPersistence */;
+			remoteGlobalIDString = 8DCE35F00891902600F705EF;
 			remoteInfo = OPPersistence;
 		};
 /* End PBXContainerItemProxy section */
@@ -671,6 +671,7 @@
 		8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "G3Message+Rendering.h"; sourceTree = "<group>"; };
 		8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "G3Message+Rendering.m"; sourceTree = "<group>"; };
 		8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFiltersPane.m; sourceTree = "<group>"; };
+		8DD61AAD089448CD009ED3A5 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = /usr/include/sqlite3.h; sourceTree = "<absolute>"; };
 		8DDD225C080EC99B006C902D /* GIJunkFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIJunkFilter.h; sourceTree = "<group>"; };
 		8DDD225D080EC99B006C902D /* GIJunkFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIJunkFilter.m; sourceTree = "<group>"; };
 		8DDD225E080EC99B006C902D /* GIMessageFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageFilter.h; sourceTree = "<group>"; };
@@ -1088,6 +1089,7 @@
 		8DCE35E508918FC200F705EF /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				8DD61AAD089448CD009ED3A5 /* sqlite3.h */,
 				8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */,
 				8DCE35F80891905600F705EF /* OPPersistence.h */,
 				8DCE35E80891900B00F705EF /* OPPersistentObject.h */,
@@ -1987,7 +1989,7 @@
 				INFOPLIST_FILE = "OPPersistence-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -2020,7 +2022,7 @@
 				INFOPLIST_FILE = "OPPersistence-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -2054,7 +2056,7 @@
 				INFOPLIST_FILE = "OPPersistence-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -2087,7 +2089,7 @@
 				INFOPLIST_FILE = "OPPersistence-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",

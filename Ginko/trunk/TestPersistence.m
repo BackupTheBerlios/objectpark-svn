@@ -18,7 +18,7 @@
 
     if (![context databaseConnection]) {
         
-        [context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Application Support/GinkoVoyager/GinkoBase.sqlite"]];
+        [context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Application Support/GinkoVoyager/GinkoBase.sqlite"]];
         
     } else {
         [context reset];
@@ -33,9 +33,12 @@
 
 - (void) testSimpleFaulting
 {
-    OID testOid = [OPPersistentObjectContext oidForLid: 1 class: [GIMessage class]];
+    OID testOid = [OPPersistentObjectContext oidForLid: 2 class: [GIMessage class]];
     GIMessage* message = [context objectForOid: testOid];
-    NSLog(@"Got first message fault: %@", message);
+    NSLog(@"Got message fault: %@", message);
+    [message resolveFault];
+    NSLog(@"Got message: %@", message);
+
 }
 
 @end

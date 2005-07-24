@@ -11,6 +11,16 @@
 
 @implementation OPSQLiteConnection
 
+#define MAX_PERSISTENT_CLASSES 50
+
+static sqlite3_stmt* getAttributesStatements[MAX_PERSISTENT_CLASSES]; // warning! limit on number of persistent classes
+
++ (void) initialize
+{
+    // Clear statement cache:
+    memset(getAttributesStatements, 0, MAX_PERSISTENT_CLASSES * sizeof(sqlite3_stmt*));
+}
+
 - (sqlite3*) database
 {
     return connection;
@@ -29,21 +39,42 @@
 - (NSDictionary*) attributeDictForTable: (NSString*) tableName
                              attributes: (NSArray*) attrNames
                                    keys: (NSArray*) keys
-                                    oid: (long long) oid
+                                    oid: (OID) oid
 {
-    NSString* queryString = [NSString stringWithFormat: @"select ROWID, %@ from %@ where ROWID = %d", [attrNames componentsJoinedByString: @","], tableName, oid];
-    int keyCount = [keys count];
-    NSLog(@"Will issue query: %@", queryString);
-    NSMutableDictionary* attributes = [NSMutableDictionary dictionaryWithCapacity: keyCount];
-    int i = 0;
-    while (i<keyCount) {
-        NSString* key = [keys objectAtIndex: i];
+    NSMutableDictionary* attributes = nil;
+    CID cid = CIDFromOID(oid);
+    sqlite3_stmt* statement = getAttributesStatements[cid];
+    if (!statement) {
+        NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [attrNames componentsJoinedByString: @","], tableName];
+        NSAssert([attrNames count] == [keys count], @"key and attribute name arrays must match.");
+        NSLog(@"Prepating statement for query: %@", queryString);
+        sqlite3_prepare(connection, [queryString UTF8String], -1, &statement, NULL);
+        if (!statement) NSLog(@"Error preparing statement: %@", [self lastError]);
+        getAttributesStatements[cid] = statement; // cache it for later use
+        NSLog(@"Created getAttribute-Statement 0x%x for table %@", statement, tableName);
+    } else NSLog(@"Using cached statement.");
+    sqlite3_reset(statement);
+    sqlite3_bind_int64(statement, 1, LIDFromOID(oid));
+    if (sqlite3_step(statement) == SQLITE_ROW) {
         
-        id value = @"Need to fetch value.";
-        
-        [attributes setObject: value forKey: key];
+        int keyCount = [keys count];
+        int i = 0;
+
+        attributes = [NSMutableDictionary dictionaryWithCapacity: keyCount];
+        while (i<keyCount) {
+            NSString* key = [keys objectAtIndex: i];
+            const char* utf8TextResult = (char*)sqlite3_column_text(statement, i);
+            if (utf8TextResult) {
+                id value = [NSString stringWithUTF8String: utf8TextResult];
+                [attributes setObject: value forKey: key];
+            } else {
+                NSLog(@"No value for key %@", key);
+            }
+            i++;
+        }
+    } else {
+        NSLog(@"*** SQLite error: %@", [self lastError]);  
     }
-    
     return attributes;
 }
 
@@ -69,6 +100,7 @@
 
 - (BOOL) open
 {
+    NSLog(@"Opening database at '%@'.", dbPath);
     return SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
 }
 
@@ -85,9 +117,9 @@
     return dbPath;
 }
 
-- (long long) lastInsertedRowId
+- (unsigned long long) lastInsertedRowId
 {
-    return sqlite3_last_insert_rowid(connection);
+    return (unsigned long long) sqlite3_last_insert_rowid(connection);
 }
 
 - (void) beginTransaction

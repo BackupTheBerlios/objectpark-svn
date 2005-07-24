@@ -47,8 +47,7 @@
     /*" Returns YES, if the reciever is not a fault afterwards. "*/
 {
     if (attributes==nil) {
-        // implement using the default PersistentObjectContext.
-        NSLog(@"Warning! Unable to resolve fault object %@", self);
+        // impjlkjlklement using the default PersistentObjectContext.
         attributes = [[[self context] persistentValuesForOid: oid] retain];
         return attributes != nil;
     }
