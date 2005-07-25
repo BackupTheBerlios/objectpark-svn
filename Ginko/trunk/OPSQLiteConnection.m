@@ -258,4 +258,21 @@ static sqlite3_stmt* getAttributesStatements[MAX_PERSISTENT_CLASSES]; // warning
     return result;
 }
 
+@end 
+
+@implementation NSData (OPSQLiteSupport)
+
++ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
+{
+    id result = nil;
+    int type = sqlite3_column_type(statement, index);
+    if (type!=SQLITE_NULL) {
+        NSAssert2(type==SQLITE_BLOB, @"SQLite type error. Expected #%d, got #%d.", SQLITE_BLOB, type);
+        const void* bytes = sqlite3_column_blob(statement, index);
+        int byteCount = sqlite3_column_bytes(statement, index);
+        result = [NSData dataWithBytes: bytes length: byteCount];
+    }
+    return result;
+}
+
 @end
