@@ -79,6 +79,7 @@ static NSMutableArray* persistentClasses = nil;
     NSDictionary* attrDict = [db attributeDictForTable: [poClass databaseTableName]
                                             attributes: [poClass databaseAttributeNames]
                                                   keys: [poClass objectAttributeNames]
+                                                 types: [poClass objectAttributeClasses]
                                                    oid: LIDFromOID(oid)];
     
     return attrDict;

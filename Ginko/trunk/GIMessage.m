@@ -50,6 +50,22 @@
     return oattrs;
 }
 
++ (NSArray*) objectAttributeClasses
+{
+    static NSArray* otypes = nil;
+    if (!otypes) {
+        otypes = [[NSArray alloc] initWithObjects:
+            [NSString class], //@"messageId"
+            [NSNumber class], //@"messageDataForeignKey"
+            [NSDate class],   //@"date"
+            [NSString class], //@"author"
+            [NSString class], //@"subject"
+            [NSNumber class], //@"profileForeignKey"
+            nil];
+    }
+    return otypes;
+}
+
 - (NSString*) messageId
 {
     return [self persistentValueForKey: @"messageId"];

@@ -22,6 +22,7 @@
 - (NSDictionary*) attributeDictForTable: (NSString*) tableName
                              attributes: (NSArray*) attrNames
                                    keys: (NSArray*) keys
+                                  types: (NSArray*) types
                                     oid: (OID) oid;
 
 - (BOOL) open;
@@ -36,5 +37,11 @@
 - (int) lastErrorNumber;
 - (NSString*) lastError;
 
+
+@end
+
+@interface NSObject (OPSQLiteSupport)
+
++ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index;
 
 @end

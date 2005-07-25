@@ -39,6 +39,7 @@ static sqlite3_stmt* getAttributesStatements[MAX_PERSISTENT_CLASSES]; // warning
 - (NSDictionary*) attributeDictForTable: (NSString*) tableName
                              attributes: (NSArray*) attrNames
                                    keys: (NSArray*) keys
+                                  types: (NSArray*) types
                                     oid: (OID) oid
 {
     NSMutableDictionary* attributes = nil;
@@ -63,12 +64,12 @@ static sqlite3_stmt* getAttributesStatements[MAX_PERSISTENT_CLASSES]; // warning
         attributes = [NSMutableDictionary dictionaryWithCapacity: keyCount];
         while (i<keyCount) {
             NSString* key = [keys objectAtIndex: i];
-            const char* utf8TextResult = (char*)sqlite3_column_text(statement, i);
-            if (utf8TextResult) {
-                id value = [NSString stringWithUTF8String: utf8TextResult];
+            id value = [[types objectAtIndex: i] newFromStatement: statement index: i];
+            NSLog(@"Read attribute %@ (%@): %@", key, [types objectAtIndex: i], value);
+            if (value) {
                 [attributes setObject: value forKey: key];
             } else {
-                NSLog(@"No value for key %@", key);
+                //NSLog(@"No value for key %@", key);
             }
             i++;
         }
@@ -204,5 +205,57 @@ static sqlite3_stmt* getAttributesStatements[MAX_PERSISTENT_CLASSES]; // warning
     return [SQLStatement statementWithFormat: format database: self];
 }
 */
+
+@end
+
+@implementation NSObject (OPSQLiteSupport)
+
++ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
+/*" Returns an autoreleased instance, initialized with the sqlite column value at the sepcified index. Defaults to a string. "*/
+{
+    const char* utf8TextResult = (char*)sqlite3_column_text(statement, index);
+    id result = nil;
+    if (utf8TextResult) {
+        result = [NSString stringWithUTF8String: utf8TextResult];
+    }
+    return result;
+}
+
+@end
+
+@implementation NSNumber (OPSQLiteSupport)
+
++ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
+{
+    id result = nil;
+    int type = sqlite3_column_type(statement, index);
+    //SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, SQLITE_NULL
+    if (type!=SQLITE_NULL) {
+        if (type==SQLITE_FLOAT) {
+            result = [NSNumber numberWithDouble: sqlite3_column_double(statement, index)];
+        } else if (type==SQLITE_INTEGER) {
+            long long value = sqlite3_column_int64(statement, index);
+            result = value<(2^31) ? [NSNumber numberWithInt: value] : [NSNumber numberWithLongLong: value]; // who knows about Cocoa's implementation?
+        } else {
+            NSLog(@"Warning: Typing Error. Number expected, got sqlite type #%d. Value ignored.", type);
+        }
+    }
+    return result;
+}
+@end
+
+@implementation NSDate (OPSQLiteSupport)
+
++ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
+{
+    id result = nil;
+    int type = sqlite3_column_type(statement, index);
+    //SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, SQLITE_NULL
+    if (type!=SQLITE_NULL) {
+        long long value = sqlite3_column_int64(statement, index);
+        result = [self dateWithTimeIntervalSinceReferenceDate: value];
+    }
+    return result;
+}
 
 @end

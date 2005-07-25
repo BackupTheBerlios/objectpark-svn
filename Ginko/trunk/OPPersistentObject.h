@@ -20,6 +20,8 @@
 
 + (NSArray*) databaseAttributeNames;
 + (NSArray*) objectAttributeNames;
++ (NSArray*) objectAttributeClasses;
+
 
 - (id) initWithContext: (OPPersistentObjectContext*) context 
                    oid: (OID) anOid;

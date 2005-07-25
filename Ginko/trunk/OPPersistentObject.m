@@ -13,9 +13,9 @@
 @implementation OPPersistentObject
 
 + (NSString*) databaseTableName
-/*" Overwrite this in subclass. "*/
+/*" Overwrite this in subclass. Default implementation returns class name. "*/
 {
-    return nil; 
+    return NSStringFromClass(self); 
 }
 
 + (NSArray*) databaseAttributeNames
@@ -26,6 +26,11 @@
 
 + (NSArray*) objectAttributeNames
 /*" Overwrite this in subclass. "*/
+{
+    return nil;
+}
+
++ (NSArray*) objectAttributeClasses
 {
     return nil;
 }
