@@ -15,11 +15,11 @@
 #import "OPInternetMessage+GinkoExtensions.h"
 #import "OPManagedObject.h"
 #import "G3MessageGroup.h"
+#import "GIMessageBase.h"
+#import "GIApplication.h"
 #import <Foundation/NSDebug.h>
 
 @class NSEntityDescription;
-
-NSString *GIDupeMessageException = @"GIDupeMessageException";
 
 @implementation G3Message
 
@@ -71,39 +71,53 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
     return cache;
 }
 
-
 + (id)messageWithTransferData:(NSData *)someTransferData
 /*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context nil is returned. "*/
 {
     id result = nil;
-    OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData: someTransferData];
+    OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
+    BOOL insertMessage = NO;
     
-    if ([self messageForMessageId: [im messageId]])
+    G3Message *dupe = [self messageForMessageId:[im messageId]];
+    if (dupe)
     {
+        if ([G3Profile isMyEmailAddress:[im fromWithFallback:YES]])
+        {
+            //replace old message with new:
+            [GIMessageBase removeMessage:dupe];
+            [NSApp saveAction:self];
+            insertMessage = YES;
+        }
         //if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [im messageId]);        
-    } else {
-        
+    } 
+    else
+    {
+        insertMessage = YES;
+    }
+    
+    if (insertMessage)
+    {
         // Create a new message in the default context:
-        result = [[[G3Message alloc] initWithManagedObjectContext: [NSManagedObjectContext threadContext]] autorelease];
+        result = [[[G3Message alloc] initWithManagedObjectContext:[NSManagedObjectContext threadContext]] autorelease];
         NSAssert(result != nil, @"Could not create message object");
         
         NSString *fromHeader = [im fromWithFallback: YES];
         
-        [result setPrimitiveValue: im forKey: @"internetMessageCache"];
-        [result setValue: someTransferData forKey: @"transferData"];
-        [result setValue: [im messageId] forKey: @"messageId"];  
-        [result setValue: [im normalizedSubject] forKey: @"subject"];
-        [result setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"author"];
+        [result setPrimitiveValue:im forKey:@"internetMessageCache"];
+        [result setValue:someTransferData forKey:@"transferData"];
+        [result setValue:[im messageId] forKey:@"messageId"];  
+        [result setValue:[im normalizedSubject] forKey:@"subject"];
+        [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
         
         // sanity check for date header field:
-        NSCalendarDate* messageDate = [im date];
-        if ([(NSDate*)[NSDate dateWithTimeIntervalSinceNow: 15*60.0] compare: messageDate] != NSOrderedDescending) // if message's date is a future date
+        NSCalendarDate *messageDate = [im date];
+        if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare:messageDate] != NSOrderedDescending) // if message's date is a future date
         {
         // broken message, set current date:
             messageDate = [NSCalendarDate date];
             if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
         }
-        [result setValue:messageDate forKey: @"date"];
+        [result setValue:messageDate forKey:@"date"];
         
         // Note that this method operates on the encoded header field. It's OK because email
         // addresses are 7bit only.
@@ -112,6 +126,7 @@ NSString *GIDupeMessageException = @"GIDupeMessageException";
             [result addFlags:OPIsFromMeStatus];
         }
     }
+    
     [im release];
     return result;
 }

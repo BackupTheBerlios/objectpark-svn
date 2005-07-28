@@ -79,5 +79,3 @@
 
 @end
 
-/*" Raised when trying to create a dupe message. userInfo holds the dupe transfer data for the key transferData. "*/
-extern NSString* GIDupeMessageException;

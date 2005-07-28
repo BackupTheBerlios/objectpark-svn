@@ -68,7 +68,7 @@
         enumerator = [[G3Profile profiles] objectEnumerator];
         while (profile = [enumerator nextObject]) 
         {
-            if ([[[profile emailAddress] addressFromEMailString] caseInsensitiveCompare:anAddress] == NSOrderedSame) 
+            if ([[[profile emailAddress] addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch] .location != NSNotFound) 
             {
                 return YES;
             }

@@ -36,6 +36,11 @@
             [self addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup] suppressThreading:NO];
         }
         
+        if ([message hasFlags:OPIsFromMeStatus])
+        {
+            [self addMessage:message toMessageGroup:[G3MessageGroup sentMessageGroup] suppressThreading:NO];
+        }
+        
         // add message to index
         //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
         //[indexCenter addMessage:message];
@@ -80,6 +85,7 @@
 
 + (void)addSentMessage:(G3Message *)aMessage
 {
+    [GIMessageFilter filterMessage:aMessage flags:0]; // put the message where it belongs
     [self addMessage:aMessage toMessageGroup:[G3MessageGroup sentMessageGroup] suppressThreading:NO];
 }
 
@@ -168,7 +174,7 @@ NSString *MboxImportJobName = @"mbox import";
             NSData *transferData = [mboxData transferDataFromMboxData];
             
             if (transferData)
-            {
+            {;
                 @try 
                 {
                     G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
@@ -203,16 +209,8 @@ NSString *MboxImportJobName = @"mbox import";
                 } 
                 @catch (NSException *localException) 
                 {
-                    if ([localException name] == GIDupeMessageException) 
-                    {
-                        if (NSDebugEnabled) NSLog(@"%@", [localException reason]);
-                        [pool release]; pool = [[NSAutoreleasePool alloc] init];
-                    } 
-                    else 
-                    {
-                        [localException retain]; [localException autorelease]; // Try to avoid zombie exception object
-                        [localException raise];
-                    }
+                    [localException retain]; [localException autorelease]; // Try to avoid zombie exception object
+                    [localException raise];
                 }
             }
             
