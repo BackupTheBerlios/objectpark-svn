@@ -30,8 +30,8 @@ enum GIThreadFilterMode
 - (NSDate *)ageRestriction;
 - (void)setAgeRestriction:(NSDate *)aDate;
 
-- (NSString *)filterQuery;
-- (void)setFilterQuery:(NSString *)aQuery;
+- (NSString *)conditions;
+- (void)setConditions:(NSString *)someConditions;
 
 - (BOOL)isSortingAscending;
 - (void)setSortingAscending:(BOOL)ascending;

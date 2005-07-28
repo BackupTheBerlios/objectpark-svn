@@ -12,6 +12,11 @@
 
 @implementation TestOPJobs
 
+- (void)setUp
+{
+    [OPJobs setMaxThreads:2];
+}
+
 - (void)jobToTest:(NSMutableDictionary *)arguments
 {
     //NSDictionary *args = [jobDescription objectForKey:OPJobArguments];
@@ -40,6 +45,8 @@
     
    // sleep(1);
         
+    STAssertTrue([OPJobs maxThreads] == 2, @"Max 2 Threads allowed otherwise many tests will fail.");
+
     STAssertTrue([OPJobs activeThreadCount] == 2, @"2 should be active");
 
     while ([OPJobs isJobRunning:jobId1])

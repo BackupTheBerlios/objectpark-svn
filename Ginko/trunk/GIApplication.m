@@ -323,13 +323,12 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
-- (void) applicationDidFinishLaunching: (NSNotification*) aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 /*" On launch, opens a group window. "*/
 {
-    [self applicationDidBecomeActive: aNotification];
-    [OPJobs setMaxThreads: 4];
+    [self applicationDidBecomeActive:aNotification];
+    [OPJobs setMaxThreads:4];
 }
-
 
 - (NSArray *)sortFilePathsByCreationDate:(NSArray *)someFilePaths
 {

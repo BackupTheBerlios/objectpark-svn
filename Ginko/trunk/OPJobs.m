@@ -105,6 +105,10 @@ static unsigned nextJobId = 1;
 
     aTarget is the object on which aSelector will be executed with someArguments as the only argument. 
 
+    aSelector is the selector to call (the method that performs the job).
+
+    someArguments is an dictionary containing arbitrary arguments that can be used by the job.
+
     aSynchronizedObject may be nil but can be used for excluding other jobs with equal synchronized objects for running at the same time. aSelector must denote a method that takes exactly one parameter of the type #{NSMutableDictionary}. The dictionary holds someArguments (see the source code of the corresponding unit tests for an example). 
 
     An optional result should be set by invoking #{-setResult:} from within the job. 
@@ -214,13 +218,13 @@ static unsigned nextJobId = 1;
                 
                 [jobTarget performSelector:jobSelector withObject:[jobDescription objectForKey:OPJobArguments]];
             } 
-            @catch (NSException *exception) 
+            @catch (NSException *localException) 
             {
-                [exception retain];
-#warning *** Selector 'isKindOfClass:' sent to dealloced instance 0x5581a80 of class NSException.
-                NSLog(@"Job (%@) caused Exception: %@", jobDescription, exception);
-                [jobDescription setObject:exception forKey:OPJobUnhandledException];
-                [exception autorelease];
+                [localException retain];
+//#warning *** Selector 'isKindOfClass:' sent to dealloced instance 0x5581a80 of class NSException.
+                NSLog(@"Job (%@) caused Exception: %@", jobDescription, localException);
+                [jobDescription setObject:localException forKey:OPJobUnhandledException];
+                [localException autorelease];
             } 
             @finally 
             {
@@ -599,13 +603,13 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
 }
 
 + (BOOL)setMaxThreads:(unsigned)newMax
-/*" Sets a new maximum number of worker threads. Only increasing is possible. Returns YES if the maximum was increased. NO otherwise. "*/
+/*" Sets a new maximum number of worker threads. Lower bound is the current count of created worker threads. Returns YES if the maximum could be set. NO otherwise. "*/
 {
     BOOL result = NO;
     
     [jobsLock lock];
 
-    if (newMax > maxThreads)
+    if (newMax >= [activeThreads count])
     {
         result = YES;
         maxThreads = newMax;

@@ -92,10 +92,13 @@ static volatile NSThread* mainThread = nil;
     while (oid = [e nextObject]) {
         NSManagedObject* object = [self objectRegisteredForID: oid];
         if (object) {
-            NSLog(@"refreshing object %@", object);
-            [self refreshObject: object mergeChanges: YES]; 
-            //[self refreshObject: object mergeChanges: NO]; 
-            ownObjectsAffected = YES;
+            if (!([object isDeleted]) && !([object isFault])) 
+            {
+                NSLog(@"refreshing object %@", object);
+                [self refreshObject: object mergeChanges: YES]; 
+                //[self refreshObject: object mergeChanges: NO]; 
+                ownObjectsAffected = YES;
+            }
         }
     }
     if (ownObjectsAffected) {

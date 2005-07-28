@@ -48,7 +48,7 @@ enum LeaveOnServerDuration
 
 /*" Class methods "*/
 + (NSArray *)accounts;
-+ (void)setAccounts:(NSArray *)someAccounts;
+//+ (void)setAccounts:(NSArray *)someAccounts;
 + (int)defaultPortForIncomingServerType:(int)serverType;
 + (int)defaultPortForOutgoingServerType:(int)serverType;
 

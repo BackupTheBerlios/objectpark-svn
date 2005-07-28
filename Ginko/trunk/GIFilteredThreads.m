@@ -57,7 +57,6 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
 
 - (id)propertyForName:(NSString *)aName
 {
-    
     return [[self properties] objectForKey:aName];
 }
 
@@ -99,14 +98,14 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     [self setProperty:aDate forName:@"AgeRestriction"];
 }
 
-- (NSString *)filterQuery
+- (NSString *)conditions
 {
-    return [self propertyForName:@"Query"];
+    return [self propertyForName:@"Conditions"];
 }
 
-- (void)setFilterQuery:(NSString *)aQuery
+- (void)setConditions:(NSString *)someConditions
 {
-    [self setProperty:aQuery forName:@"Query"];
+    [self setProperty:someConditions forName:@"Conditions"];
 }
 
 - (BOOL)isSortingAscending
@@ -119,9 +118,25 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     [self setProperty:[NSNumber numberWithBool:ascending] forName:@"IsAscending"];
 }
 
-/*
-- (NSArray *)displayThreads;
+- (NSArray *)displayThreads
+{
+    NSMutableArray *conditions = [NSMutableArray array];
+    
+    NSDate *ageRestriction = [self ageRestriction];
+    if (ageRestriction) [conditions addObject:[NSString stringWithFormat:@"ZTHREAD.ZDATE >= %f", [ageRestriction timeIntervalSinceReferenceDate]]];
+    
+    NSString *additionalConditions = [self conditions];
+    if (additionalConditions) [conditions addObject:additionalConditions];
+    
+    BOOL ascending = [self isSortingAscending];
+    
+    NSString *queryString = [NSString stringWithFormat:@"select Z_PK, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [conditions componentsJoinedByString:@" and "], ascending ? @"ASC" : @"DESC"];
+    
+    return nil;
+    
+}
+    /*
 - (NSArray *)markThreads;
-*/
+    */
 
 @end
