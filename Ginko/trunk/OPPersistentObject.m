@@ -8,9 +8,20 @@
 
 #import "OPPersistentObject.h"
 #import "OPPersistentObjectContext.h"
-
+#import "OPClassDescription.h"
 
 @implementation OPPersistentObject
+
+
++ (void) initialize
+{
+
+}
+
++ (NSString*) persistentAttributesPlist
+{
+	return @"{}";
+}
 
 + (NSString*) databaseTableName
 /*" Overwrite this in subclass. Default implementation returns class name. "*/
@@ -18,14 +29,15 @@
     return NSStringFromClass(self); 
 }
 
+/*
 + (NSArray*) databaseAttributeNames
-/*" Can overwrite this in subclass. Defaults to +[objectAttributeNames]."*/
+//" Can overwrite this in subclass. Defaults to +[objectAttributeNames]."
 {
     return [self objectAttributeNames];
 }
 
 + (NSArray*) objectAttributeNames
-/*" Overwrite this in subclass. "*/
+//" Overwrite this in subclass. "
 {
     return nil;
 }
@@ -33,6 +45,12 @@
 + (NSArray*) objectAttributeClasses
 {
     return nil;
+}
+*/
+
++ (BOOL) canPersist
+{
+	return YES;
 }
 
 - (id) initWithContext: (OPPersistentObjectContext*) context 
@@ -53,16 +71,19 @@
 {
     if (attributes==nil) {
         // impjlkjlklement using the default PersistentObjectContext.
-        attributes = [[[self context] persistentValuesForOid: oid] retain];
+        attributes = [[[self context] persistentValuesForObject: self] retain];
         return attributes != nil;
     }
     return YES;
 }
 
 - (void) refault
-/*" Turns the reciever in to a fault, releasing attibute values. "*/
+/*" Turns the reciever in to a fault, releasing attibute values. 
+	If the reveiver hasChanges, does nothing. "*/
 {
-    [attributes release]; attributes = nil;
+	if (![self hasChanged]) {
+		[attributes release]; attributes = nil;
+	}
 }
 
 - (BOOL) isFault
@@ -74,6 +95,11 @@
 - (void) willSave
 /*" Subclass hook. Called prior to the object's attribute values being saved to the database. "*/
 {
+}
+
+- (id) valueForUndefinedKey: (NSString*) key
+{
+	return [self persistentValueForKey: key];
 }
 
 - (OID) oid
@@ -118,6 +144,16 @@
     [self didChangeValueForKey: key];
 }
 
+- (NSDictionary*) attributeValues
+{
+	return attributes;
+}
+
+- (BOOL) hasChanged
+{
+	return [[[self context] changedObjects] containsObject: self];
+}
+
 - (unsigned) hash
 {
     unsigned result = (unsigned) oid;
@@ -127,7 +163,26 @@
 
 - (BOOL) isEqual: (id) other
 {
-    return oid == [other oid];
+    return isa == [other class] && oid == [other oid];
+	// && [self class] == [other class];
+}
+
++ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
+{
+    id result = nil;
+    int type = sqlite3_column_type(statement, index);
+    //SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, SQLITE_NULL
+    if (type!=SQLITE_NULL) {
+		if (type==SQLITE_INTEGER) {
+            long long value = sqlite3_column_int64(statement, index);
+			if (value)
+				result = [[OPPersistentObjectContext defaultContext] objectForOid: value 
+																		  ofClass: self];
+        } else {
+            NSLog(@"Warning: Typing Error. Number expected, got sqlite type #%d. Value ignored.", type);
+        }
+    }
+    return result;
 }
 
 - (void) dealloc

@@ -207,19 +207,17 @@
     return [self primitiveValueForKey:@"signature"];
 }
 
-- (void)setSignature:(NSData *)aSig
+- (void) setSignature: (NSData*) aSig
 {
     [self willChangeValueForKey:@"signature"];
     [self setPrimitiveValue:aSig forKey:@"signature"];
     [self didChangeValueForKey:@"signature"];
 }
 
-- (G3Account *)sendAccount 
-{
-    id tmpObject;
-    
+- (G3Account*) sendAccount 
+{    
     [self willAccessValueForKey:@"sendAccount"];
-    tmpObject = [self primitiveValueForKey:@"sendAccount"];
+    id tmpObject = [self primitiveValueForKey:@"sendAccount"];
     [self didAccessValueForKey:@"sendAccount"];
     
     return tmpObject;
@@ -274,11 +272,11 @@
 {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
     
-    [self willChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey: @"messagesToSend" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     
-    [[self primitiveValueForKey:@"messagesToSend"] removeObject:aMessage];
+    [[self primitiveValueForKey: @"messagesToSend"] removeObject:aMessage];
     
-    [self didChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self didChangeValueForKey: @"messagesToSend" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     
     [changedObjects release];
 }

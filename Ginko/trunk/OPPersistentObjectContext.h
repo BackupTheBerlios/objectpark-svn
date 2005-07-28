@@ -30,11 +30,15 @@
 + (CID) cidForClass: (Class) pClass;
 + (OID) oidForLid: (LID) lid class: (Class) poClass;
 
-- (OPPersistentObject*) objectRegisteredForOid: (OID) oid;
-- (OPPersistentObject*) objectForOid: (OID) oid;
+- (OPPersistentObject*) objectRegisteredForOid: (OID) oid
+									   ofClass: (Class) poClass;
+- (OPPersistentObject*) objectForOid: (OID) oid
+							 ofClass: (Class) poClass;
 - (void) registerObject: (OPPersistentObject*) object;
 - (void) unregisterObject: (OPPersistentObject*) object;
-- (NSDictionary*) persistentValuesForOid: (OID) oid;
+- (NSSet*) changedObjects;
+- (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object;
+
 + (void) setDefaultContext: (OPPersistentObjectContext*) context;
 
 

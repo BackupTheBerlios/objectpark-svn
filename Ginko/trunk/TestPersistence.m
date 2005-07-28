@@ -33,11 +33,16 @@
 
 - (void) testSimpleFaulting
 {
-    OID testOid = [OPPersistentObjectContext oidForLid: 2 class: [GIMessage class]];
-    GIMessage* message = [context objectForOid: testOid];
+    OID testOid = 2;
+    GIMessage* message = [context objectForOid: testOid ofClass: [GIMessage class]];
     NSLog(@"Got message fault: %@", message);
     [message resolveFault];
     NSLog(@"Got message: %@", message);
+	
+	[[message valueForKey: @"profile"] resolveFault];
+	
+	NSLog(@"Message fas profile: %@", [message valueForKey: @"profile"]);
+
 
 }
 

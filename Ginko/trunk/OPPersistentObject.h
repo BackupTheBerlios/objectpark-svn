@@ -18,13 +18,18 @@
 
 + (NSString*) databaseTableName;
 
-+ (NSArray*) databaseAttributeNames;
-+ (NSArray*) objectAttributeNames;
-+ (NSArray*) objectAttributeClasses;
+//+ (NSArray*) databaseAttributeNames;
+//+ (NSArray*) objectAttributeNames;
+//+ (NSArray*) objectAttributeClasses;
 
+
++ (NSString*) persistentAttributesPlist;
 
 - (id) initWithContext: (OPPersistentObjectContext*) context 
                    oid: (OID) anOid;
+
+- (NSDictionary*) attributeValues;
+- (BOOL) hasChanged;
 
 - (OPPersistentObjectContext*) context;
 - (BOOL) isFault;

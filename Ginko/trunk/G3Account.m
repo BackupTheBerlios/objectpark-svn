@@ -86,14 +86,14 @@
     return tmpValue;
 }
 
-- (void)setName:(NSString *)value 
+- (void) setName: (NSString*) value 
 {
     [self willChangeValueForKey:@"name"];
     [self setPrimitiveValue: value forKey:@"name"];
     [self didChangeValueForKey:@"name"];
 }
 
-- (BOOL)isEnabled 
+- (BOOL) isEnabled 
 {
     NSNumber *tmpValue;
     
@@ -104,7 +104,7 @@
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void)setIsEnabled:(BOOL)value 
+- (void) setIsEnabled: (BOOL) value 
 {
     [self willChangeValueForKey:@"isEnabled"];
     [self setPrimitiveValue:[NSNumber numberWithBool:value]

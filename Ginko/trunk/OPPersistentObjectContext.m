@@ -73,18 +73,6 @@ static NSMutableArray* persistentClasses = nil;
     [lock lock];
 }
 
-- (NSDictionary*) persistentValuesForOid: (OID) oid
-{
-    Class poClass = [[self class] classForCid: (CIDFromOID(oid))];
-    NSDictionary* attrDict = [db attributeDictForTable: [poClass databaseTableName]
-                                            attributes: [poClass databaseAttributeNames]
-                                                  keys: [poClass objectAttributeNames]
-                                                 types: [poClass objectAttributeClasses]
-                                                   oid: LIDFromOID(oid)];
-    
-    return attrDict;
-}
-
 
 
 - (void) registerObject: (OPPersistentObject*) object
@@ -99,6 +87,7 @@ static NSMutableArray* persistentClasses = nil;
 }
 
 - (OPPersistentObject*) objectRegisteredForOid: (OID) oid
+									   ofClass: (Class) poClass
 {
     // SearchStruct is a fake object made for searching in the hashtable:
     struct {
@@ -106,7 +95,7 @@ static NSMutableArray* persistentClasses = nil;
         OID oid;
         NSMutableDictionary* attributes;
     } searchStruct;
-    searchStruct.isa = [OPPersistentObject class];
+    searchStruct.isa = poClass;
     searchStruct.oid = oid;
     searchStruct.attributes = nil;
 
@@ -130,17 +119,22 @@ static NSMutableArray* persistentClasses = nil;
 }
 
 - (OPPersistentObject*) objectForOid: (OID) oid
+							 ofClass: (Class) poClass
 {
-    Class poClass = [[self class] classForCid: (CIDFromOID(oid))];
-    OPPersistentObject* result = [self objectRegisteredForOid: oid];
+    OPPersistentObject* result = [self objectRegisteredForOid: oid ofClass: poClass];
     // Look up in registered objects cache
     if (!result) { 
         // not found - create a fault object:
         result = [[[poClass alloc] initWithContext: self oid: oid] autorelease];
         [self registerObject: result];
-        NSAssert(result == [self objectRegisteredForOid: oid], @"Problem with hash lookup");
+        NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
     }
     return result;
+}
+
+- (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object
+{
+	return [db attributesForOid: [object oid] ofClass: [object class]];
 }
 
 - (void) reset
@@ -189,6 +183,29 @@ static NSMutableArray* persistentClasses = nil;
 {
     // implement
     return nil;
+}
+
+- (NSSet*) changedObjects
+{
+	return changedObjects;
+}
+
+
+
+- (void) saveChanges
+{
+	[db beginTransaction];
+	
+	// Process all updated objects and save their changed attribute sets:
+	NSEnumerator* coe = [changedObjects objectEnumerator];
+	OPPersistentObject* changedObject;
+	while (changedObject = [coe nextObject]) {
+		
+		[db updateObject: changedObject];
+			
+	}
+	
+	[db commitTransaction];
 }
 
 - (void) dealloc

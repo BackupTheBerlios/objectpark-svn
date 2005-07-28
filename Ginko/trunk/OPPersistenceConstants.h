@@ -13,6 +13,7 @@
  * LID and CID can be encoded into an OID and back.
  */
 #define OID unsigned long long 
+#define ROWID long long
 #define LID OID
 #define LIDBITS 56
 #define CIDFromOID(x) (x>>LIDBITS)

@@ -10,20 +10,18 @@
 #include <sqlite3.h>
 #import "OPPersistenceConstants.h"
 
+@class OPPersistentObject;
+
 @interface OPSQLiteConnection : NSObject {
     
     sqlite3* connection;
     NSString* dbPath;
+	NSMutableDictionary* classDescriptions;
 }
 
 - (sqlite3*) database;
-- (id) initWithFile: (NSString*) inPath;
 
-- (NSDictionary*) attributeDictForTable: (NSString*) tableName
-                             attributes: (NSArray*) attrNames
-                                   keys: (NSArray*) keys
-                                  types: (NSArray*) types
-                                    oid: (OID) oid;
+- (id) initWithFile: (NSString*) inPath;
 
 - (BOOL) open;
 - (void) close;
@@ -36,11 +34,17 @@
 
 - (int) lastErrorNumber;
 - (NSString*) lastError;
+- (void) performCommand: (NSString*) sql;
 
+- (void) updateObject: (OPPersistentObject*) object;
+- (NSDictionary*) attributesForOid: (OID) oid
+						   ofClass: (Class) persistentClass;
 
 @end
 
 @interface NSObject (OPSQLiteSupport)
+
++ (BOOL) canPersist;
 
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index;
 
