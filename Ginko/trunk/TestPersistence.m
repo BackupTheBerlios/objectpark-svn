@@ -44,7 +44,7 @@
 	NSLog(@"Message fas profile: %@", [message valueForKey: @"profile"]);
 }
 
-- (void) notestInsert
+- (void) testInsert
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
@@ -53,7 +53,7 @@
 	
 	[context saveChanges];
 	
-	NSAssert1([newMessage oid], @"No oid was assigned during -saveChanges for %@", newMessage);
+	NSAssert1([newMessage currentOid], @"No oid was assigned during -saveChanges for %@", newMessage);
 	
 }
 
