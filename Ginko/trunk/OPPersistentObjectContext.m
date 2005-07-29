@@ -110,7 +110,7 @@ static OPPersistentObjectContext* defaultContext = nil;
         // not found - create a fault object:
         result = [[[poClass alloc] initFaultWithContext: self oid: oid] autorelease];
         [self registerObject: result];
-		NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
+		//NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
         NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
     }
     return result;
@@ -118,12 +118,18 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object
 {
-	return [db attributesForOid: [object oid] ofClass: [object class]];
+	OID oid = [object currentOid];
+	id result = nil;
+	if (oid) 
+		result = [db attributesForOid: [object oid] ofClass: [object class]];
+	else
+		result = [NSMutableDictionary dictionary];
+	return result;
 }
 
 static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object2)
 {
-	NSLog(@"Comparing %@ and %@.", object1, object2);
+	//NSLog(@"Comparing %@ and %@.", object1, object2);
 	return [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
 }
 
@@ -198,20 +204,31 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 
 
+- (OID) saveAttributesOfObject: (OPPersistentObject*) changedObject
+{
+	return [db updateRowOfClass: [changedObject class] rowId: [changedObject currentOid] values: [changedObject attributeValues]];
+}
+
 - (void) saveChanges
 /*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
 	[db beginTransaction];
-	
+	NSLog(@"Beginning db transaction.");
 	// Process all updated objects and save their changed attribute sets:
 	NSEnumerator* coe = [changedObjects objectEnumerator];
 	OPPersistentObject* changedObject;
 	while (changedObject = [coe nextObject]) {
 		
-		[db updateObject: changedObject];
+		NSLog(@"Saving object %@", changedObject);
+		
+		[changedObject saveChanges]; // assigns oid, if necessary
 			
 	}
 	
+	// Release all changed objects:
+	[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
+	
+	NSLog(@"Committing db transaction.");
 	[db commitTransaction];
 }
 

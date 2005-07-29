@@ -55,6 +55,7 @@
 - (void) didChangeObject: (OPPersistentObject*) object;
 
 - (void) saveChanges;
+- (OID) saveAttributesOfObject: (OPPersistentObject*) changedObject;
 
 
 @end

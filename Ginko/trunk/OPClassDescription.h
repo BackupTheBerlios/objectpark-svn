@@ -30,7 +30,7 @@
 - (void) createStatementsForConnection: (OPSQLiteConnection*) connection;
 - (sqlite3_stmt*) fetchStatementForRowId: (ROWID) rid;
 - (sqlite3_stmt*) insertStatement;
-- (sqlite3_stmt*) updateStatement;
+- (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid;
 
 
 - (NSString*) tableName;

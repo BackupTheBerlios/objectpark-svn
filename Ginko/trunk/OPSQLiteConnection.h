@@ -37,7 +37,10 @@
 - (NSString*) lastError;
 - (void) performCommand: (NSString*) sql;
 
-- (void) updateObject: (OPPersistentObject*) object;
+- (ROWID) updateRowOfClass: (Class) poClass
+					 rowId: (ROWID) rid
+					values: (NSDictionary*) values;
+
 - (NSDictionary*) attributesForOid: (OID) oid
 						   ofClass: (Class) persistentClass;
 
@@ -48,5 +51,6 @@
 + (BOOL) canPersist;
 
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index;
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index;
 
 @end

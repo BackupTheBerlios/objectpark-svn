@@ -8,7 +8,6 @@
 
 #import "OPSQLiteConnection.h"
 #import "OPClassDescription.h"
-//#import "OPAttributeDescription.h"
 
 @implementation OPSQLiteConnection
 
@@ -47,7 +46,7 @@
 	if (!result) {
 		// Create and cache the classDescription:
 		result = [[[OPClassDescription alloc] initWithPersistentClass: poClass] autorelease];
-		NSLog(@"Created ClassDescription %@", result);
+		//NSLog(@"Created ClassDescription %@", result);
 		[result createStatementsForConnection: self]; // create necessary SQL-Statements
 		[classDescriptions setObject: result forKey: poClass];
 	}
@@ -88,14 +87,37 @@
     return result;
 }
 
-- (void) updateObject: (OPPersistentObject*) object
+- (ROWID) updateRowOfClass: (Class) poClass
+					 rowId: (ROWID) rid
+					values: (NSDictionary*) values
+/*" Returns a new row id, if rid was 0. "*/
 {
-	sqlite3_stmt* updateStatement = [[self descriptionForClass: [object class]] updateStatement];	
+	OPClassDescription* cd = [self descriptionForClass: poClass];
+	NSArray* attributeKeys = [cd attributeKeys];
+	sqlite3_stmt* updateStatement = [cd updateStatementForRowId: rid];	
 	int result = sqlite3_step(updateStatement);
+	int i = 0;
+	int attrCount = [attributeKeys count];
+	
+	for (i=1; i<=attrCount; i++) {
+		NSString* key = [attributeKeys objectAtIndex: i];
+		id value = [values objectForKey: key];
+		if (value) {
+			[value bindValueToStatement: updateStatement atIndex: i];
+		} else {
+			sqlite3_bind_null(updateStatement, i);
+		}
+		
+	}
 	
 	if (result != SQLITE_DONE) {
 		[self raiseSQLiteError];
 	}
+	if (!rid) {
+		rid = sqlite3_last_insert_rowid(connection);
+		NSLog(@"Got new oid for %@ object: %lld", poClass, rid);
+	}
+	return rid;
 }
 
 - (ROWID) insertNewRowForClass: (Class) poClass
@@ -249,6 +271,11 @@
 	return YES; 
 }
 
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+{
+	sqlite3_bind_text(statement, index, [self UTF8String], -1, SQLITE_STATIC);
+}
+
 @end
 
 @implementation NSMutableString (OPSQLiteSupport)
@@ -287,6 +314,11 @@
     return result;
 }
 
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+{
+	assert(0);
+}
+
 @end
 
 
@@ -315,6 +347,20 @@
     }
     return result;
 }
+
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+{
+    int type = sqlite3_column_type(statement, index);
+    //SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, SQLITE_NULL
+    if (type!=SQLITE_NULL) {
+        if (type==SQLITE_FLOAT) {
+			sqlite3_bind_double(statement, index, [self doubleValue]);
+        } else if (type==SQLITE_INTEGER) {
+			sqlite3_bind_int64(statement, index, [self longLongValue]);
+		}
+	}
+}
+
 @end
 
 @implementation NSDate (OPSQLiteSupport)
@@ -335,6 +381,11 @@
         result = [self dateWithTimeIntervalSinceReferenceDate: value];
     }
     return result;
+}
+
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+{
+	sqlite3_bind_int64(statement, index, (long long)[self timeIntervalSinceReferenceDate]);
 }
 
 @end 

@@ -80,11 +80,10 @@
     /*" Returns YES, if the reciever is not a fault afterwards. "*/
 {
     if (attributes==nil) {
-        // impjlkjlklement using the default PersistentObjectContext.
+        // implement using the default PersistentObjectContext:
         attributes = [[[self context] persistentValuesForObject: self] retain];
-        return attributes != nil;
     }
-    return YES;
+	return attributes != nil;
 }
 
 - (void) refault
@@ -131,6 +130,12 @@
 		}
 	}
     return oid;
+}
+
+- (void) saveChanges
+{
+	oid = [[self context] saveAttributesOfObject: self];
+	//NSLog(@"Saved %@", self);
 }
 
 - (void) willChangeValueForKey: (NSString*) key

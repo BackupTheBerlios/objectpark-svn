@@ -40,7 +40,7 @@
 }
 
 
-- (NSArray*) columnNames
+- (NSMutableArray*) columnNames
 {
 	NSMutableArray* result = [NSMutableArray array];
 	NSEnumerator* e = [attributeDescriptions objectEnumerator];
@@ -55,16 +55,17 @@
 {
     if (!fetchStatement) {
         NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[self columnNames] componentsJoinedByString: @","], [self tableName]];
-        NSLog(@"Preparing statement for fetch: %@", queryString);
+        NSLog(@"Preparing statement for fetches: %@", queryString);
         sqlite3_prepare([connection database], [queryString UTF8String], -1, &fetchStatement, NULL);
         if (!fetchStatement) NSLog(@"Error preparing statement: %@", [connection lastError]);
-        NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
+        //NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
     } 
 	
 	if (!insertStatement) {
+		
 		// Just create an empty entry to get a new ROWID:
 		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL);", [self tableName]];
-		NSLog(@"Preparing statement for insert: %@", queryString);
+		NSLog(@"Preparing statement for inserts: %@", queryString);
         sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
 
 		NSAssert2(insertStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
@@ -72,11 +73,15 @@
 	}
 	
 	if (!updateStatement) {
-		int i = [attributeDescriptions count];
+		
+		int i = [attributeDescriptions count] + 1;
 		NSMutableArray* valuePlaceholders = [NSMutableArray array];
 		while (i--) [valuePlaceholders addObject: @"?"];
-		NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ %@ values (%@);", [self tableName], [self columnNames], [valuePlaceholders componentsJoinedByString: @","]];
-		NSLog(@"Preparing statement for update: %@", queryString);
+		NSMutableArray* columnNames = [self columnNames];
+		[columnNames addObject: @"ROWID"];
+
+		NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [self tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
+		NSLog(@"Preparing statement for updates: %@", queryString);
 		sqlite3_prepare([connection database], [queryString UTF8String], -1, &updateStatement, NULL);
 
 		NSAssert2(updateStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
@@ -95,11 +100,18 @@
 	return insertStatement;
 }
 
-- (sqlite3_stmt*) updateStatement
+- (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid
 {
 	assert(updateStatement);
 	
 	sqlite3_reset(updateStatement);
+	// The last placeholder is the ROWID:
+	if (rid) {
+		sqlite3_bind_int64(updateStatement, [attributeDescriptions count]+1, rid);
+	} else {
+		//NSLog(@"Binding to null rowid to request one...");
+		sqlite3_bind_null(updateStatement,[attributeDescriptions count]+1);
+	}
 	
 	return updateStatement;
 }

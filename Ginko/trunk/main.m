@@ -11,6 +11,7 @@
 #import "G3Message.h"
 #import "G3Thread.h"
 //#include <stdlib.h>
+#import <SenTestingKit/SenTestProbe.h>
 
  char*  op_debug_setting;
  char** op_debug_domain;
@@ -23,5 +24,5 @@ int main(int argc, const char *argv[])
     //setenv("LD_LIBRARY_PATH", [[[NSBundle mainBundle] privateFrameworksPath] cString], 1);
     
     //[pool release];
-    return NSApplicationMain(argc, argv);
+	return argc>1 ? SenSelfTestMain() : NSApplicationMain(argc, argv);
 }
