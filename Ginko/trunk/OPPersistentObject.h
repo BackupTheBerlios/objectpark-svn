@@ -45,6 +45,6 @@
 - (void) setPersistentValue: (id) object forKey: (NSString*) key;
 - (void) refault;
 - (OID) currentOid; // internal method
-- (void) saveChanges; // internal method
+- () setOid: (OID) theOid; // for internal use
 
 @end

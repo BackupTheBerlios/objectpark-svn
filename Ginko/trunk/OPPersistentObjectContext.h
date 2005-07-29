@@ -56,6 +56,7 @@
 
 - (void) saveChanges;
 - (OID) saveAttributesOfObject: (OPPersistentObject*) changedObject;
+- (void) revertChanges;
 
 
 @end

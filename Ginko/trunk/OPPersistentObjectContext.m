@@ -103,14 +103,12 @@ static OPPersistentObjectContext* defaultContext = nil;
 - (OPPersistentObject*) objectForOid: (OID) oid
 							 ofClass: (Class) poClass
 {
-	if (!oid) 
-		return nil;
+	if (!oid) return nil;
     OPPersistentObject* result = [self objectRegisteredForOid: oid ofClass: poClass];
     // Look up in registered objects cache
     if (!result) { 
         // not found - create a fault object:
         result = [[[poClass alloc] initFaultWithContext: self oid: oid] autorelease];
-        [self registerObject: result];
 		//NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
         NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
     }
@@ -224,9 +222,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	OPPersistentObject* changedObject;
 	while (changedObject = [coe nextObject]) {
 		
+		OID newOid = [self saveAttributesOfObject: changedObject];
+		[changedObject setOid: newOid];
 		
-		[changedObject saveChanges]; // assigns oid, if necessary
-			
 	}
 	
 	// Release all changed objects:

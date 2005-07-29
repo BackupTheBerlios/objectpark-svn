@@ -66,7 +66,8 @@
 						oid: (OID) anOid
 {
 	NSParameterAssert(anOid>0);
-    oid = anOid;
+	// Set the context here in the future
+	[self setOid: anOid];
     return self;
 }
 
@@ -126,17 +127,22 @@
 		// Create database row and oid:
 		OPPersistentObjectContext* context = [self context];
 		if (context) {
-			oid = [context newDatabaseObjectForObject: self];
+			OID newOid = [context newDatabaseObjectForObject: self];
+			[self setOid: newOid];
 		}
 	}
     return oid;
 }
 
-- (void) saveChanges
+- () setOid: (OID) theOid
 {
-	oid = [[self context] saveAttributesOfObject: self];
-	//NSLog(@"Saved %@", self);
+	if (oid != theOid) {
+		NSAssert(oid==0, @"Object ids can be set only once per instance.");
+		oid = theOid;
+		[[self context] registerObject: self];
+	}
 }
+
 
 - (void) willChangeValueForKey: (NSString*) key
 {
