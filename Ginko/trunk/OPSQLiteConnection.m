@@ -73,11 +73,11 @@
         while (i<attrCount) {
             OPAttributeDescription* desc = [attributes objectAtIndex: i];
             id value = [desc->theClass newFromStatement: statement index: i];
-            NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
+            //NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
             if (value) {
                 [result setObject: value forKey: desc->name];
             } else {
-                NSLog(@"No value for attribute %@", desc);
+                //NSLog(@"No value for attribute %@", desc);
             }
             i++;
         }
@@ -181,17 +181,28 @@
 
 - (void) beginTransaction
 {
-    [self performCommand: @"BEGIN TRANSACTION"];   
+	if (!transactionInProgress) {
+		[self performCommand: @"BEGIN TRANSACTION"];   
+		NSLog(@"Beginning db transaction.");
+		transactionInProgress = YES;
+	}
 }
 
 - (void) commitTransaction
 {
-    [self performCommand: @"COMMIT TRANSACTION"];   
+	NSAssert(transactionInProgress, @"There seems to be no transaction to commit.");
+    [self performCommand: @"COMMIT TRANSACTION"];  
+	NSLog(@"Committing db transaction.");
+	transactionInProgress = NO;
 }
 
 - (void) rollBackTransaction
 {
-    [self performCommand: @"ROLLBACK TRANSACTION"];   
+	if (transactionInProgress) {
+		[self performCommand: @"ROLLBACK TRANSACTION"];   
+		NSLog(@"Rolled back db transaction.");
+		transactionInProgress = NO;
+	}
 }
 
 - (int) lastErrorNumber

@@ -17,6 +17,7 @@
     sqlite3* connection;
     NSString* dbPath;
 	NSMutableDictionary* classDescriptions;
+	BOOL transactionInProgress;
 }
 
 - (sqlite3*) database;

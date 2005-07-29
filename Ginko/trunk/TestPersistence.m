@@ -28,7 +28,7 @@
 
 - (void) tearDown
 {
-    
+    [context revertChanges];
 }
 
 - (void) testSimpleFaulting
@@ -41,7 +41,7 @@
 	
 	[[message valueForKey: @"profile"] resolveFault];
 	
-	NSLog(@"Message fas profile: %@", [message valueForKey: @"profile"]);
+	NSLog(@"Message has profile: %@", [message valueForKey: @"profile"]);
 }
 
 - (void) testInsert

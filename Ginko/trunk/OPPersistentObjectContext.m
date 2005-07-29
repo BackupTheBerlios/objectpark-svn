@@ -74,7 +74,7 @@ static OPPersistentObjectContext* defaultContext = nil;
    //OPPersistentObject* testObject = [[[OPPersistentObject alloc] initWithContext: self oid: oid] autorelease];
     
     OPPersistentObject* result = NSHashGet(registeredObjects, &searchStruct);
-    NSLog(@"Object registered for oid %llu: %@", oid, result);
+    //NSLog(@"Object registered for oid %llu: %@", oid, result);
     return result;
 }
 
@@ -92,6 +92,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 - (OID) newDatabaseObjectForObject: (OPPersistentObject*) object
 {
+	[db beginTransaction]; // transaction is committed on -saveChanges
 	OID newOid = [db insertNewRowForClass: [object class]];
 	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
 	[insertedObjects addObject: object];
@@ -163,6 +164,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     
     [deletedObjects release];
     deletedObjects = [[NSMutableSet alloc] init];
+	
+	[db rollBackTransaction]; // just to be sure
 }
 
 - (id) init 
@@ -213,13 +216,14 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
 	[db beginTransaction];
-	NSLog(@"Beginning db transaction.");
+	
+	NSLog(@"Saving %u object(s).", [changedObjects count]);
+
 	// Process all updated objects and save their changed attribute sets:
 	NSEnumerator* coe = [changedObjects objectEnumerator];
 	OPPersistentObject* changedObject;
 	while (changedObject = [coe nextObject]) {
 		
-		NSLog(@"Saving object %@", changedObject);
 		
 		[changedObject saveChanges]; // assigns oid, if necessary
 			
@@ -228,8 +232,14 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	// Release all changed objects:
 	[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
 	
-	NSLog(@"Committing db transaction.");
 	[db commitTransaction];
+}
+
+- (void) revertChanges
+{
+#warning refault all known objects on revert.
+	
+	[db rollBackTransaction];
 }
 
 - (void) dealloc
