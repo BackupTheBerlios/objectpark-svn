@@ -114,14 +114,18 @@
             
             // try address book
             {
-                ABSearchElement *searchElement;
+                ABSearchElement *searchElementEmailAddress, *searchElementFirstname, *searchElementLastname;
                 NSEnumerator *enumerator;
                 NSArray *searchResult;
                 id record;
                 
-                searchElement = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
-
-                searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElement];
+                searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
+                searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
+                searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
+                    
+                ABSearchElement *conjunction = [ABSearchElement searchElementForConjunction:kABSearchOr children:[NSArray arrayWithObjects:searchElementEmailAddress, searchElementFirstname, searchElementLastname, nil]];
+                
+                searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
 
                 enumerator = [searchResult objectEnumerator];
                 while (record = [enumerator nextObject])

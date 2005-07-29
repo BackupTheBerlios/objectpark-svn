@@ -9,7 +9,7 @@
 #import <AppKit/AppKit.h>
 
 
-@interface OPSizingTextField : NSTextField {
+@interface OPSizingTextField : NSTokenField {
     float _lineHeight;
     unsigned maxlines;
     NSTextView* privateFieldEditor;

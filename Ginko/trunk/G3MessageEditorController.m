@@ -10,7 +10,7 @@
 #import "NSView+ViewMoving.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSString+MessageUtils.h"
-#import "GIAddressFormatter.h"
+//#import "GIAddressFormatter.h"
 #import "G3Profile.h"
 #import "G3Account.h"
 #import "NSToolbar+OPExtensions.h"
@@ -1329,7 +1329,6 @@ NSDictionary *maxLinesForCalendarName()
 - (void)awakeHeaders
 /*" The awakeFromNib part of the Headers category. "*/
 {
-    NSFormatter *addressFormatter;
     unsigned maxLines;
     
     // prepare dictionary for looking up header fields:
@@ -1346,9 +1345,11 @@ NSDictionary *maxLinesForCalendarName()
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [subjectField setMaxLines:maxLines];
     
-    addressFormatter = [[GIAddressFormatter alloc] init];
+    /*
+    NSFormatter *addressFormatter = [[GIAddressFormatter alloc] init];
     [toField setFormatter:addressFormatter];
     [addressFormatter release];
+    */
     
     // target/action for profile popup:
     [profileButton setTarget:self];
@@ -1518,6 +1519,7 @@ NSDictionary *maxLinesForCalendarName()
 
     if (predecessor == bottomTextField) bottomTextField = result;
     
+/*
     // if address entry field set formatter
     if ([self isAddressListField:aFieldName])
     {
@@ -1525,7 +1527,7 @@ NSDictionary *maxLinesForCalendarName()
         [result setFormatter:addressFormatter];
         [addressFormatter release];
     }
-    
+    */
     return result;
 }
 
@@ -1549,6 +1551,61 @@ NSDictionary *maxLinesForCalendarName()
     
     return result;
 }
+
+@end
+
+#import <AddressBook/AddressBook.h>
+#import "ABPerson+Convenience.h"
+
+@implementation G3MessageEditorController (TokenFieldDelegate)
+
+- (NSArray *)tokenField:(NSTokenField *)tokenField completionsForSubstring:(NSString *)substring indexOfToken:(int)tokenIndex indexOfSelectedItem:(int *)selectedIndex
+{
+    ABSearchElement *searchElementEmailAddress, *searchElementFirstname, *searchElementLastname;
+    NSArray *searchResult;
+    NSMutableArray *result = [NSMutableArray array];
+    NSEnumerator *enumerator;
+    id record;
+
+    searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    
+    searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
+
+    enumerator = [searchResult objectEnumerator];
+    while (record = [enumerator nextObject])
+    {
+        if ([record isKindOfClass:[ABPerson class]]) // only persons (not groups!) at this time
+        {
+            ABPerson *person = record;
+            NSString *fullname = [person fullname];
+            ABMultiValue *emails = [person valueForProperty:kABEmailProperty];
+            int i;
+            
+            for (i = 0; i < [emails count]; i++)
+            {
+                if ([fullname length])
+                {
+                    [result addObject:[NSString stringWithFormat:@"%@ <%@>", fullname, [emails valueAtIndex:i]]];
+                }
+                else
+                {
+                    [result addObject:[person email]];
+                }
+            }
+        }
+    }
+    
+    return [result count] ? result : nil;
+}
+
+/*
+-(NSArray *)tokenField:(NSTokenField *)tokenField shouldAddObjects:(NSArray *)tokens atIndex:(unsigned)index
+{
+    return [NSArray array];
+}
+*/
 
 @end
 
