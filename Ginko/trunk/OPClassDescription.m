@@ -55,15 +55,38 @@
 {
     if (!fetchStatement) {
         NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[self columnNames] componentsJoinedByString: @","], [self tableName]];
-        NSLog(@"Prepating statement for query: %@", queryString);
+        NSLog(@"Preparing statement for fetch: %@", queryString);
         sqlite3_prepare([connection database], [queryString UTF8String], -1, &fetchStatement, NULL);
         if (!fetchStatement) NSLog(@"Error preparing statement: %@", [connection lastError]);
         NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
-    } else NSLog(@"%@ using cached statement.", self);	
+    } 
+	
+	if (!insertStatement) {
+		// Just create an empty entry to get a new ROWID:
+		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL);", [self tableName]];
+		NSLog(@"Preparing statement for insert: %@", queryString);
+        sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
+
+		NSAssert2(insertStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
+
+	}
+	
+	if (!updateStatement) {
+		int i = [attributeDescriptions count];
+		NSMutableArray* valuePlaceholders = [NSMutableArray array];
+		while (i--) [valuePlaceholders addObject: @"?"];
+		NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ %@ values (%@);", [self tableName], [self columnNames], [valuePlaceholders componentsJoinedByString: @","]];
+		NSLog(@"Preparing statement for update: %@", queryString);
+		sqlite3_prepare([connection database], [queryString UTF8String], -1, &updateStatement, NULL);
+
+		NSAssert2(updateStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
+
+	}
+	
 	
 }
 
-- (sqlite3_stmt*) insertStatementForObject: (OPPersistentObject*) object
+- (sqlite3_stmt*) insertStatement
 {
 	assert(insertStatement);
 
@@ -72,9 +95,23 @@
 	return insertStatement;
 }
 
-- (sqlite3_stmt*) deleteStatementForObject: (OPPersistentObject*) object
+- (sqlite3_stmt*) updateStatement
+{
+	assert(updateStatement);
+	
+	sqlite3_reset(updateStatement);
+	
+	return updateStatement;
+}
+
+
+
+- (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid
 {
 	assert(deleteStatement);
+	
+	sqlite3_reset(insertStatement);
+	sqlite3_bind_int64(fetchStatement, 1, rid);	
 	
 	return deleteStatement;
 }

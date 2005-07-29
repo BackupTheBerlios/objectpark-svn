@@ -23,35 +23,6 @@ static OPPersistentObjectContext* defaultContext = nil;
     return defaultContext;
 }
 
-
-// persistentClasses array associates a persistent class with its compact class id (cid).
-static NSMutableArray* persistentClasses = nil;
-
-+ (Class) classForCid: (CID) cid
-{
-    return [persistentClasses objectAtIndex: cid];
-}
-
-+ (CID) cidForClass: (Class) pClass
-{
-    if (!persistentClasses) {
-        persistentClasses = [[NSMutableArray alloc] init];   
-    }
-    CID result = [persistentClasses indexOfObjectIdenticalTo: pClass];
-    if (result == NSNotFound) {
-        // Register class:
-        result = [persistentClasses count];
-        [persistentClasses addObject: pClass];
-        NSLog(@"Assigning cid %d to class %@", result, pClass);
-    }
-    return result;
-}
-
-+ (OID) oidForLid: (LID) lid class: (Class) poClass
-{
-    return MakeOID([self cidForClass: poClass], lid);
-}
-
 + (void) setDefaultContext: (OPPersistentObjectContext*) context
 /*" A default context can only be set once. Use -reset to trim memory usage after no persistent objects are us use any more. "*/
 {
@@ -77,6 +48,7 @@ static NSMutableArray* persistentClasses = nil;
 
 - (void) registerObject: (OPPersistentObject*) object
 {
+	NSParameterAssert([object currentOid]>0); // hashing is based on oids here
     NSHashInsert(registeredObjects, object);
 }
 
@@ -118,15 +90,27 @@ static NSMutableArray* persistentClasses = nil;
     [lock unlock];
 }
 
+- (OID) newDatabaseObjectForObject: (OPPersistentObject*) object
+{
+	OID newOid = [db insertNewRowForClass: [object class]];
+	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
+	[insertedObjects addObject: object];
+	if (![object isFault]) [changedObjects addObject: object]; // make sure the values make it into the database
+	return newOid;
+}
+
 - (OPPersistentObject*) objectForOid: (OID) oid
 							 ofClass: (Class) poClass
 {
+	if (!oid) 
+		return nil;
     OPPersistentObject* result = [self objectRegisteredForOid: oid ofClass: poClass];
     // Look up in registered objects cache
     if (!result) { 
         // not found - create a fault object:
-        result = [[[poClass alloc] initWithContext: self oid: oid] autorelease];
+        result = [[[poClass alloc] initFaultWithContext: self oid: oid] autorelease];
         [self registerObject: result];
+		NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
         NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
     }
     return result;
@@ -137,11 +121,33 @@ static NSMutableArray* persistentClasses = nil;
 	return [db attributesForOid: [object oid] ofClass: [object class]];
 }
 
+static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object2)
+{
+	NSLog(@"Comparing %@ and %@.", object1, object2);
+	return [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
+}
+
+
+static unsigned	oidHash(NSHashTable* table, const void * object)
+/* Hash function used for the registered objects table, based on the object oid. 
+ * Newly created objects do have a changing oid and so cannot be put into 
+ * the registeredObjects hashTable.
+ */
+{
+	// Maybe we need a better hash funktion as multiple tables will use the same oids.
+	// Incorporate the class pointer somehow?
+	unsigned result = (unsigned)[(OPPersistentObject*)object currentOid];
+	return result;
+}
+
 - (void) reset
 /*" Resets the internal state of the receiver, excluding the database connection. "*/
 {
+	NSHashTableCallBacks htCallBacks = NSNonRetainedObjectHashCallBacks;
+	htCallBacks.hash = &oidHash;
+	htCallBacks.isEqual = &oidEqual;
     if (registeredObjects) NSFreeHashTable(registeredObjects);
-    registeredObjects = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 1000);
+    registeredObjects = NSCreateHashTable(htCallBacks, 1000);
     
     [changedObjects release];
     changedObjects = [[NSMutableSet alloc] init]; 
@@ -193,6 +199,7 @@ static NSMutableArray* persistentClasses = nil;
 
 
 - (void) saveChanges
+/*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
 	[db beginTransaction];
 	

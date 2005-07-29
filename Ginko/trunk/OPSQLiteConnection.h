@@ -26,11 +26,12 @@
 - (BOOL) open;
 - (void) close;
 - (NSString*) path;
-- (unsigned long long) lastInsertedRowId;
 
 - (void) beginTransaction;
 - (void) commitTransaction;
 - (void) rollBackTransaction;
+- (ROWID) insertNewRowForClass: (Class) poClass;
+
 
 - (int) lastErrorNumber;
 - (NSString*) lastError;

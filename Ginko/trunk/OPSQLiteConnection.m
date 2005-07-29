@@ -69,7 +69,7 @@
 		NSArray* attributes = cd->attributeDescriptions;
         int attrCount = [attributes count];
         int i = 0;
-		NSLog(@"Processing attributeDescriptions %@", attributes);
+		//NSLog(@"Processing attributeDescriptions %@", attributes);
         result = [NSMutableDictionary dictionaryWithCapacity: attrCount];
         while (i<attrCount) {
             OPAttributeDescription* desc = [attributes objectAtIndex: i];
@@ -90,12 +90,20 @@
 
 - (void) updateObject: (OPPersistentObject*) object
 {
-	sqlite3_stmt* insertStatement = [[self descriptionForClass: [object class]] insertStatementForObject: object];	
-	int result = sqlite3_step(insertStatement);
+	sqlite3_stmt* updateStatement = [[self descriptionForClass: [object class]] updateStatement];	
+	int result = sqlite3_step(updateStatement);
 	
 	if (result != SQLITE_DONE) {
 		[self raiseSQLiteError];
 	}
+}
+
+- (ROWID) insertNewRowForClass: (Class) poClass
+{
+	sqlite3_stmt* insertStatement = [[self descriptionForClass: poClass] insertStatement];
+	int result = sqlite3_step(insertStatement);
+	NSAssert1(result == SQLITE_DONE,  @"Unable to insert new database record: %@", [self lastError]);
+	return sqlite3_last_insert_rowid(connection);
 }
 
 /*
@@ -136,11 +144,6 @@
 - (NSString*) path
 {
     return dbPath;
-}
-
-- (unsigned long long) lastInsertedRowId
-{
-    return (unsigned long long) sqlite3_last_insert_rowid(connection);
 }
 
 - (void) performCommand: (NSString*) sql

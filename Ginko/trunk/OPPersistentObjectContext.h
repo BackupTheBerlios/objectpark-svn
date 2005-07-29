@@ -26,10 +26,6 @@
 
 // Methods for internal use:
 
-+ (Class) classForCid: (CID) cid;
-+ (CID) cidForClass: (Class) pClass;
-+ (OID) oidForLid: (LID) lid class: (Class) poClass;
-
 - (OPPersistentObject*) objectRegisteredForOid: (OID) oid
 									   ofClass: (Class) poClass;
 - (OPPersistentObject*) objectForOid: (OID) oid
@@ -38,6 +34,8 @@
 - (void) unregisterObject: (OPPersistentObject*) object;
 - (NSSet*) changedObjects;
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object;
+- (OID) newDatabaseObjectForObject: (OPPersistentObject*) object;
+
 
 + (void) setDefaultContext: (OPPersistentObjectContext*) context;
 
@@ -55,5 +53,8 @@
 
 - (void) willChangeObject: (OPPersistentObject*) object;
 - (void) didChangeObject: (OPPersistentObject*) object;
+
+- (void) saveChanges;
+
 
 @end

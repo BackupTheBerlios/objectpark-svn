@@ -53,9 +53,19 @@
 	return YES;
 }
 
-- (id) initWithContext: (OPPersistentObjectContext*) context 
-                   oid: (OID) anOid
+- (void) insertIntoContext: (OPPersistentObjectContext*) context
 {
+	[[self context] willChangeObject: self];
+	NSParameterAssert([self context]==nil);
+	attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
+	NSLog(@"Created attribute dictionary for object %@");
+	[[self context] didChangeObject: self];
+}
+
+- (id) initFaultWithContext: (OPPersistentObjectContext*) context 
+						oid: (OID) anOid
+{
+	NSParameterAssert(anOid>0);
     oid = anOid;
     return self;
 }
@@ -63,7 +73,7 @@
 - (OPPersistentObjectContext*) context
 /*" Returns the context for the receiver. Currently, always returns the default context. "*/
 {
-    return [OPPersistentObjectContext defaultContext]; // simplistic implementation
+    return [OPPersistentObjectContext defaultContext]; // simplistic implementation; prepared for multiple contexts.
 }
 
 - (BOOL) resolveFault
@@ -102,8 +112,24 @@
 	return [self persistentValueForKey: key];
 }
 
-- (OID) oid
+- (OID) currentOid
+/*" Private method to be used within the framework only. "*/
 {
+	return oid;
+}
+
+
+- (OID) oid
+/*" Returns the object id for the receiver or NILOID if the object has no context.
+	Currently, the defaultContext is always used. "*/
+{
+	if (!oid) {
+		// Create database row and oid:
+		OPPersistentObjectContext* context = [self context];
+		if (context) {
+			oid = [context newDatabaseObjectForObject: self];
+		}
+	}
     return oid;
 }
 
@@ -144,6 +170,11 @@
     [self didChangeValueForKey: key];
 }
 
+- (void) setValue: (id) value forUndefinedKey: (NSString*) key
+{
+	[self setPersistentValue: value forKey: key];
+}
+
 - (NSDictionary*) attributeValues
 {
 	return attributes;
@@ -154,18 +185,13 @@
 	return [[[self context] changedObjects] containsObject: self];
 }
 
-- (unsigned) hash
-{
-    unsigned result = (unsigned) oid;
-    //NSLog(@"Hash value of %@ is %u", self, result);
-    return result;
-}
-
+/*
 - (BOOL) isEqual: (id) other
 {
     return isa == [other class] && oid == [other oid];
 	// && [self class] == [other class];
 }
+*/
 
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
 {

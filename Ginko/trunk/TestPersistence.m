@@ -42,8 +42,33 @@
 	[[message valueForKey: @"profile"] resolveFault];
 	
 	NSLog(@"Message fas profile: %@", [message valueForKey: @"profile"]);
+}
 
+- (void) notestInsert
+{
+    GIMessage* newMessage = [[GIMessage alloc] init];
+	
+	[newMessage setValue: @"BlaBla" forKey: @"subject"];
+	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"author"];
+	
+	[context saveChanges];
+	
+	NSAssert1([newMessage oid], @"No oid was assigned during -saveChanges for %@", newMessage);
+	
+}
 
+- (void) testOidGeneration
+{
+    GIMessage* newMessage = [[GIMessage alloc] init];
+	
+	[newMessage setValue: @"BlaBla" forKey: @"subject"];
+	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"author"];
+	
+	// This inserts the object into the database:
+	NSAssert1([newMessage oid], @"No oid was assigned during -saveChanges for %@", newMessage);
+	
+	NSLog(@"New message object created: %@", newMessage);	
+	
 }
 
 @end

@@ -23,12 +23,15 @@
 	sqlite3_stmt* insertStatement;
 	sqlite3_stmt* deleteStatement;
 	sqlite3_stmt* fetchStatement;
+	sqlite3_stmt* updateStatement;
 }
 
 - (id) initWithPersistentClass: (Class) poClass;
 - (void) createStatementsForConnection: (OPSQLiteConnection*) connection;
 - (sqlite3_stmt*) fetchStatementForRowId: (ROWID) rid;
-- (sqlite3_stmt*) insertStatementForObject: (OPPersistentObject*) object;
+- (sqlite3_stmt*) insertStatement;
+- (sqlite3_stmt*) updateStatement;
+
 
 - (NSString*) tableName;
 
