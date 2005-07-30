@@ -17,7 +17,7 @@
     
     NSHashTable* registeredObjects;
     NSMutableSet* changedObjects;
-    NSMutableSet* insertedObjects;
+    //NSMutableSet* insertedObjects;
     NSMutableSet* deletedObjects;
     NSRecursiveLock* lock; // unused so far
     
@@ -55,7 +55,6 @@
 - (void) didChangeObject: (OPPersistentObject*) object;
 
 - (void) saveChanges;
-- (OID) saveAttributesOfObject: (OPPersistentObject*) changedObject;
 - (void) revertChanges;
 
 

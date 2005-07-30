@@ -134,7 +134,7 @@
     return oid;
 }
 
-- () setOid: (OID) theOid
+- (void) setOid: (OID) theOid
 {
 	if (oid != theOid) {
 		NSAssert(oid==0, @"Object ids can be set only once per instance.");

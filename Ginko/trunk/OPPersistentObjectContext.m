@@ -95,8 +95,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 	[db beginTransaction]; // transaction is committed on -saveChanges
 	OID newOid = [db insertNewRowForClass: [object class]];
 	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
-	[insertedObjects addObject: object];
-	if (![object isFault]) [changedObjects addObject: object]; // make sure the values make it into the database
+	[changedObjects addObject: object]; // make sure the values make it into the database
 	return newOid;
 }
 
@@ -156,10 +155,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     
     [changedObjects release];
     changedObjects = [[NSMutableSet alloc] init]; 
-    
-    [insertedObjects release];
-    insertedObjects = [[NSMutableSet alloc] init];    
-    
+        
     [deletedObjects release];
     deletedObjects = [[NSMutableSet alloc] init];
 	
@@ -204,12 +200,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 
-
-- (OID) saveAttributesOfObject: (OPPersistentObject*) changedObject
-{
-	return [db updateRowOfClass: [changedObject class] rowId: [changedObject currentOid] values: [changedObject attributeValues]];
-}
-
 - (void) saveChanges
 /*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
@@ -222,13 +212,34 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	OPPersistentObject* changedObject;
 	while (changedObject = [coe nextObject]) {
 		
-		OID newOid = [self saveAttributesOfObject: changedObject];
-		[changedObject setOid: newOid];
+		OID newOid = [db updateRowOfClass: [changedObject class] 
+									rowId: [changedObject currentOid] 
+								   values: [changedObject attributeValues]];
+		
+		[changedObject setOid: newOid]; // also registers object
 		
 	}
 	
 	// Release all changed objects:
 	[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
+	
+#warning implement deletion
+	
+	coe = [deletedObjects objectEnumerator];
+	OPPersistentObject* deletedObject;
+	while (deletedObject = [coe nextObject]) {
+		
+		NSLog(@"Should honk %@", deletedObject);
+		//[db updateRowOfClass: [changedObject class] 
+		//			   rowId: [changedObject currentOid] 
+		
+		[deletedObject refault]; // also registers object
+		
+	}
+	
+	// Release all changed objects:
+	[deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
+	
 	
 	[db commitTransaction];
 }
