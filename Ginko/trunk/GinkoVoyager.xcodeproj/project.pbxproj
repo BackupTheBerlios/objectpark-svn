@@ -309,6 +309,7 @@
 		8DDD227F080ECA4A006C902D /* GIFiltersPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD227E080ECA4A006C902D /* GIFiltersPane.h */; };
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
+		8DE962A0089E20D70053ED6B /* libsqlite3.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DE96297089E20CB0053ED6B /* libsqlite3.dylib */; };
 		8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */; };
 		8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
 		8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
@@ -401,6 +402,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				8DE962A0089E20D70053ED6B /* libsqlite3.dylib in CopyFiles */,
 				8D9B40290899A7AE002931A0 /* OPPersistence.framework in CopyFiles */,
 				8DF2D1C9087A9746008F8F6B /* CoreData.framework in CopyFiles */,
 				8DBFD4FF0826DE93006D29DE /* OPPreferences.framework in CopyFiles */,
@@ -691,6 +693,7 @@
 		8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPExtensions.h"; sourceTree = "<group>"; };
 		8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPExtensions.m"; sourceTree = "<group>"; };
 		8DE859760899A51900F06AD4 /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DE96297089E20CB0053ED6B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.dylib; sourceTree = "<group>"; };
 		8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPClassDescription.h; sourceTree = "<group>"; };
 		8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPClassDescription.m; sourceTree = "<group>"; };
 		8DF2CF6A0879F523008F8F6B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -849,6 +852,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8DE96297089E20CB0053ED6B /* libsqlite3.dylib */,
 				772F293C084F8249004D50E0 /* Test Resources */,
 				8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */,
 				8D6840C807F5BD77003DB791 /* Ginko3_DataModel.xcdatamodel */,
@@ -1696,7 +1700,10 @@
 				HEADER_SEARCH_PATHS = $USER_LIBRARY_DIR/Frameworks/SenTestingKit.framework/Headers/;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../..",
+					"$(SRCROOT)",
+				);
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
@@ -1741,7 +1748,10 @@
 				HEADER_SEARCH_PATHS = $USER_LIBRARY_DIR/Frameworks/SenTestingKit.framework/Headers/;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../..",
+					"$(SRCROOT)",
+				);
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
@@ -1788,7 +1798,10 @@
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../..",
+					"$(SRCROOT)",
+				);
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
@@ -1829,7 +1842,10 @@
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../..\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../..",
+					"$(SRCROOT)",
+				);
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = GinkoVoyager;
