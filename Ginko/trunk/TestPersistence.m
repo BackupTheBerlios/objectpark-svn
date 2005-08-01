@@ -19,16 +19,14 @@
     if (![context databaseConnection]) {
         
         [context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Application Support/GinkoVoyager/GinkoBase.sqlite"]];
-        
-    } else {
-        [context reset];
+
     }
     
 }
 
 - (void) tearDown
 {
-    [context revertChanges];
+    [context reset];
 }
 
 - (void) testSimpleFaulting
@@ -38,7 +36,7 @@
     NSLog(@"Got message fault: %@", message);
     [message resolveFault];
     NSLog(@"Got message: %@", message);
-	
+	NSAssert(![message isFault], @"Faulting did not work for oid 2.");
 	[[message valueForKey: @"profile"] resolveFault];
 	
 	NSLog(@"Message has profile: %@", [message valueForKey: @"profile"]);
@@ -48,12 +46,18 @@
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
+	[newMessage setValue: [NSDate date] forKey: @"date"];
 	[newMessage setValue: @"BlaBla" forKey: @"subject"];
 	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"author"];
 	
 	[context saveChanges];
 	
 	NSAssert1([newMessage currentOid], @"No oid was assigned during -saveChanges for %@", newMessage);
+	
+	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Inserted object value not set.");
+	
+	[newMessage revert];
+	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Unable to retrieve inserted object value.");
 	
 }
 
@@ -70,5 +74,35 @@
 	NSLog(@"New message object created: %@", newMessage);	
 	
 }
+
+
+- (void) testDelete
+{
+    GIMessage* newMessage = [[GIMessage alloc] init];
+	
+	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
+	[newMessage setValue: @"Ernst SChwallinger <ernst@schwallkopf.net>" forKey: @"author"];
+	
+	[context saveChanges];
+	
+	OID oid = [newMessage oid];
+	
+	[context reset];
+	
+	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
+	
+	[context deleteObject: newMessage];
+	
+	NSAssert([newMessage isDeleted], @"Deleted message not marked deleted.");
+	
+	[context saveChanges];
+	[context reset];
+	
+	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
+	
+	NSAssert1(![newMessage resolveFault], @"deleted object still accessible from the database: %@", newMessage);
+	
+}
+
 
 @end

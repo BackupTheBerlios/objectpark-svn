@@ -3,7 +3,34 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 22.07.05.
-//  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
+//  Copyright 2005 Dirk Theisen <d.theisen@objectpark.org>. All rights reserved.
+//
+//
+//  OPPersistence - a persistent object library for Cocoa.
+//
+//  For non-commercial use, you can redistribute this library and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation; either
+//  version 2.1 of the License, or (at your option) any later version.
+//
+//  This library is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//  Lesser General Public License for more details:
+//
+//  <http://www.gnu.org/copyleft/lesser.html#SEC1>
+//
+//  You should have received a copy of the GNU Lesser General Public
+//  License along with this library; if not, write to the Free Software
+//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+//
+//  For commercial use, commercial licenses and redistribution licenses
+//  are available - including support - from the author,
+//  Dirk Theisen <d.theisen@objectpark.org> for a reasonable fee.
+//
+//  DEFINITION Commercial use
+//  This library is used commercially whenever the library or derivative work
+//  is charged for more than the price for shipping and handling.
 //
 
 #import "OPPersistentObject.h"
@@ -78,7 +105,7 @@
 }
 
 - (BOOL) resolveFault
-    /*" Returns YES, if the reciever is not a fault afterwards. "*/
+/*" Returns YES, if the reciever is not a fault afterwards. "*/
 {
     if (attributes==nil) {
         // implement using the default PersistentObjectContext:
@@ -87,12 +114,22 @@
 	return attributes != nil;
 }
 
+- (void) revert
+{
+/*" Turns the receiver in to a fault, releasing attribute values. 
+	Changes done since the last -saveChanges are lost. "*/
+	id context = [self context];
+	[context willRevertObject: self];
+	[attributes release]; attributes = nil;
+	[context didRevertObject: self];
+}
+
 - (void) refault
-/*" Turns the reciever in to a fault, releasing attibute values. 
-	If the reveiver hasChanges, does nothing. "*/
+/*" Turns the receiver in to a fault, releasing attribute values. 
+	If the reveiver -hasChanges, does nothing. "*/
 {
 	if (![self hasChanged]) {
-		[attributes release]; attributes = nil;
+		[attributes release]; attributes = nil; // better call -revert?
 	}
 }
 
@@ -100,6 +137,11 @@
 /*" Returns wether object attributes need to be fetched. "*/
 {
     return attributes==nil;
+}
+
+- (BOOL) isDeleted
+{
+	return [[[self context] deletedObjects] containsObject: self];
 }
 
 - (void) willSave
@@ -141,6 +183,12 @@
 		oid = theOid;
 		[[self context] registerObject: self];
 	}
+}
+
+- (void) willDelete
+	/*" Called whenever the receiver is marked for deletion. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. "*/
+{
+	
 }
 
 
@@ -230,7 +278,7 @@
 
 - (NSString*) description
 {
-    return [NSString stringWithFormat: @"<Persistent %@ (0x%x), oid %llu, attributes: %@>", [self class], self, LIDFromOID(oid), attributes];
+    return [NSString stringWithFormat: @"<Persistent %@ (0x%x), oid %llu, attributes: %@>", [self class], self, oid, attributes];
 }
 
 @end

@@ -1,9 +1,35 @@
 //
 //  OPClassDescription.m
-//  GinkoVoyager
 //
 //  Created by Dirk Theisen on 27.07.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Dirk Theisen <d.theisen@objectpark.org>. All rights reserved.
+//
+//
+//  OPPersistence - a persistent object library for Cocoa.
+//
+//  For non-commercial use, you can redistribute this library and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation; either
+//  version 2.1 of the License, or (at your option) any later version.
+//
+//  This library is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//  Lesser General Public License for more details:
+//
+//  <http://www.gnu.org/copyleft/lesser.html#SEC1>
+//
+//  You should have received a copy of the GNU Lesser General Public
+//  License along with this library; if not, write to the Free Software
+//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+//
+//  For commercial use, commercial licenses and redistribution licenses
+//  are available - including support - from the author,
+//  Dirk Theisen <d.theisen@objectpark.org> for a reasonable fee.
+//
+//  DEFINITION Commercial use
+//  This library is used commercially whenever the library or derivative work
+//  is charged for more than the price for shipping and handling.
 //
 
 #import "OPClassDescription.h"
@@ -16,6 +42,11 @@
 - (id) initWithPersistentClass: (Class) poClass
 {
 	if (self = [super init]) {
+		
+		if (poClass==nil) {
+			[self autorelease];
+			NSParameterAssert(poClass!=nil);
+		}
 		
 		persistentClass = poClass;
 				
@@ -51,11 +82,22 @@
 	return result;
 }
 
+- (NSArray*) attributeNames
+{
+	NSMutableArray* result = [NSMutableArray array];
+	NSEnumerator* e = [attributeDescriptions objectEnumerator];
+	OPAttributeDescription* attr;
+	while (attr = [e nextObject]) {
+		[result addObject: attr->name];
+	}
+	return result;
+}
+
 - (void) createStatementsForConnection: (OPSQLiteConnection*) connection
 {
     if (!fetchStatement) {
         NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[self columnNames] componentsJoinedByString: @","], [self tableName]];
-        NSLog(@"Preparing statement for fetches: %@", queryString);
+        //NSLog(@"Preparing statement for fetches: %@", queryString);
         sqlite3_prepare([connection database], [queryString UTF8String], -1, &fetchStatement, NULL);
         if (!fetchStatement) NSLog(@"Error preparing statement: %@", [connection lastError]);
         //NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
@@ -65,7 +107,7 @@
 		
 		// Just create an empty entry to get a new ROWID:
 		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL);", [self tableName]];
-		NSLog(@"Preparing statement for inserts: %@", queryString);
+		//NSLog(@"Preparing statement for inserts: %@", queryString);
         sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
 
 		NSAssert2(insertStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
@@ -81,13 +123,21 @@
 		[columnNames addObject: @"ROWID"];
 
 		NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [self tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
-		NSLog(@"Preparing statement for updates: %@", queryString);
+		//NSLog(@"Preparing statement for updates: %@", queryString);
 		sqlite3_prepare([connection database], [queryString UTF8String], -1, &updateStatement, NULL);
 
 		NSAssert2(updateStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
 
 	}
 	
+	if (!deleteStatement) {
+		
+		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID = ?;", [self tableName]];
+		//NSLog(@"Preparing statement for deletes: %@", queryString);
+        sqlite3_prepare([connection database], [queryString UTF8String], -1, &deleteStatement, NULL);
+		
+		NSAssert2(deleteStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
+	}
 	
 }
 
@@ -99,6 +149,17 @@
 	
 	return insertStatement;
 }
+
+- (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid
+{
+	assert(deleteStatement);
+	NSParameterAssert(rid>0);
+	sqlite3_reset(deleteStatement);
+	sqlite3_bind_int64(deleteStatement, 1, rid);
+
+	return deleteStatement;
+}
+
 
 - (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid
 {
@@ -116,17 +177,6 @@
 	return updateStatement;
 }
 
-
-
-- (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid
-{
-	assert(deleteStatement);
-	
-	sqlite3_reset(insertStatement);
-	sqlite3_bind_int64(fetchStatement, 1, rid);	
-	
-	return deleteStatement;
-}
 
 - (NSString*) tableName
 {

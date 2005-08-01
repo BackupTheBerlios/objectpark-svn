@@ -1,9 +1,35 @@
 //
 //  OPPersistentObjectContext.m
-//  GinkoVoyager
 //
 //  Created by Dirk Theisen on 22.07.05.
-//  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
+//  Copyright 2005 Dirk Theisen <d.theisen@objectpark.org>. All rights reserved.
+//
+//
+//  OPPersistence - a persistent object library for Cocoa.
+//
+//  For non-commercial use, you can redistribute this library and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation; either
+//  version 2.1 of the License, or (at your option) any later version.
+//
+//  This library is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//  Lesser General Public License for more details:
+//
+//  <http://www.gnu.org/copyleft/lesser.html#SEC1>
+//
+//  You should have received a copy of the GNU Lesser General Public
+//  License along with this library; if not, write to the Free Software
+//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+//
+//  For commercial use, commercial licenses and redistribution licenses
+//  are available - including support - from the author,
+//  Dirk Theisen <d.theisen@objectpark.org> for a reasonable fee.
+//
+//  DEFINITION Commercial use
+//  This library is used commercially whenever the library or derivative work
+//  is charged for more than the price for shipping and handling.
 //
 
 #import "OPPersistentObjectContext.h"
@@ -58,8 +84,8 @@ static OPPersistentObjectContext* defaultContext = nil;
     NSHashRemove(registeredObjects, object);
 }
 
-- (OPPersistentObject*) objectRegisteredForOid: (OID) oid
-									   ofClass: (Class) poClass
+- (id) objectRegisteredForOid: (OID) oid ofClass: (Class) poClass
+/*" Returns a subclass of OPPersistentObject. "*/
 {
     // SearchStruct is a fake object made for searching in the hashtable:
     struct {
@@ -90,6 +116,17 @@ static OPPersistentObjectContext* defaultContext = nil;
     [lock unlock];
 }
 
+- (void) willRevertObject: (OPPersistentObject*) object
+{
+	//[lock lock];
+    [changedObjects removeObject: object];  
+}
+
+- (void) didRevertObject: (OPPersistentObject*) object
+{
+	//[lock unlock];
+}
+
 - (OID) newDatabaseObjectForObject: (OPPersistentObject*) object
 {
 	[db beginTransaction]; // transaction is committed on -saveChanges
@@ -99,8 +136,8 @@ static OPPersistentObjectContext* defaultContext = nil;
 	return newOid;
 }
 
-- (OPPersistentObject*) objectForOid: (OID) oid
-							 ofClass: (Class) poClass
+- (id) objectForOid: (OID) oid ofClass: (Class) poClass
+/*" Returns a subclass of OPPersistentObject. "*/
 {
 	if (!oid) return nil;
     OPPersistentObject* result = [self objectRegisteredForOid: oid ofClass: poClass];
@@ -118,10 +155,14 @@ static OPPersistentObjectContext* defaultContext = nil;
 {
 	OID oid = [object currentOid];
 	id result = nil;
-	if (oid) 
-		result = [db attributesForOid: [object oid] ofClass: [object class]];
-	else
+	if (oid) {
+		result = [db attributesForRowId: [object oid] ofClass: [object class]];
+		if (!result) {
+			NSLog(@"Faulting problem: object with id %llu not in the database.", oid);
+		}
+	} else {
 		result = [NSMutableDictionary dictionary];
+	}
 	return result;
 }
 
@@ -147,6 +188,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (void) reset
 /*" Resets the internal state of the receiver, excluding the database connection. "*/
 {
+	[self revertChanges]; // just to be sure
+
 	NSHashTableCallBacks htCallBacks = NSNonRetainedObjectHashCallBacks;
 	htCallBacks.hash = &oidHash;
 	htCallBacks.isEqual = &oidEqual;
@@ -159,7 +202,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     [deletedObjects release];
     deletedObjects = [[NSMutableSet alloc] init];
 	
-	[db rollBackTransaction]; // just to be sure
+	[db close];
+	[db open];
+	
 }
 
 - (id) init 
@@ -199,56 +244,107 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return changedObjects;
 }
 
+- (NSSet*) deletedObjects
+{
+	return deletedObjects;
+}
+
+/*
+- (void) prepareSave
+{
+	// Call -willDelete on all deleted objects
+	[lock lock];
+	
+	NSEnumerator* de = [deletedObjects objectEnumerator];
+
+	NSMutableSet* allDeleted = deletedObjects;
+	NSMutableSet* allChanged = changedObjects;
+	deletedObjects = [[NSMutableSet alloc] init];
+	changedObjects = [[NSMutableSet alloc] init];
+	
+	// The following might trigger faults, so we need to unlock:
+	[lock unlock];
+	id deletedObject;
+	
+	do {
+	while (deletedObject = [de objectEnumerator]) {
+		[deletedObject willDelete];
+	}
+	
+	} while ([deletedObjects count]);
+	
+}
+*/
 
 - (void) saveChanges
 /*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
+	[lock lock];
 	[db beginTransaction];
 	
-	NSLog(@"Saving %u object(s).", [changedObjects count]);
-
-	// Process all updated objects and save their changed attribute sets:
-	NSEnumerator* coe = [changedObjects objectEnumerator];
-	OPPersistentObject* changedObject;
-	while (changedObject = [coe nextObject]) {
+	// do we need a local autoreleasepoool here?
+	
+	if ([changedObjects count]) {
+		NSLog(@"Saving %u objects.", [changedObjects count]);
 		
-		OID newOid = [db updateRowOfClass: [changedObject class] 
-									rowId: [changedObject currentOid] 
-								   values: [changedObject attributeValues]];
+		// Process all updated objects and save their changed attribute sets:
+		NSEnumerator* coe = [changedObjects objectEnumerator];
+		OPPersistentObject* changedObject;
+		while (changedObject = [coe nextObject]) {
+			
+			OID newOid = [db updateRowOfClass: [changedObject class] 
+										rowId: [changedObject currentOid] 
+									   values: [changedObject attributeValues]];
+			
+			[changedObject setOid: newOid]; // also registers object
+			
+		}
 		
-		[changedObject setOid: newOid]; // also registers object
+		// Release all changed objects:
+		[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
+	}	
+	
+	if ([deletedObjects count]) {
+		NSEnumerator* coe = [deletedObjects objectEnumerator];
+		OPPersistentObject* deletedObject;
+		while (deletedObject = [coe nextObject]) {
+			
+			NSLog(@"Will honk %@", deletedObject);
+			[db deleteRowOfClass: [deletedObject class] 
+						   rowId: [deletedObject currentOid]];
+			
+			[changedObjects removeObject: deletedObject];
+		}
 		
+		// Release all changed objects:
+		[deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
 	}
-	
-	// Release all changed objects:
-	[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
-	
-#warning implement deletion
-	
-	coe = [deletedObjects objectEnumerator];
-	OPPersistentObject* deletedObject;
-	while (deletedObject = [coe nextObject]) {
-		
-		NSLog(@"Should honk %@", deletedObject);
-		//[db updateRowOfClass: [changedObject class] 
-		//			   rowId: [changedObject currentOid] 
-		
-		[deletedObject refault]; // also registers object
-		
-	}
-	
-	// Release all changed objects:
-	[deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
-	
 	
 	[db commitTransaction];
+	[lock unlock];
 }
+
+- (void) deleteObject: (OPPersistentObject*) object
+/*" Marks object for deletion on the next -saveChanges call. "*/
+{
+	[deletedObjects addObject: object];
+	[changedObjects removeObject: object];
+	[object willDelete];
+}
+
 
 - (void) revertChanges
 {
-#warning refault all known objects on revert.
+	[lock lock];
 	
-	[db rollBackTransaction];
+	OPPersistentObject* changedObject;
+	while (changedObject = [changedObjects anyObject]) {
+		[changedObject revert]; // removes itself from changedObjects
+	}
+	
+	[db rollBackTransaction]; // in case one is in progress
+	
+	[lock unlock];
 }
 
 - (void) dealloc
