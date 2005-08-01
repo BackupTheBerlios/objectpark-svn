@@ -33,6 +33,46 @@
 }
 
 
++ (id) messageForMessageId: (NSString*) messageId
+	/*" Returns either nil or the message specified by its messageId. "*/
+{
+	GIMessage* result = nil;
+    if (messageId) {
+		
+		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+		
+		OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where: @"$messageId=?"];
+		
+		[objectEnum reset]; // optional
+		[objectEnum bind: messageId, nil]; // only necessary for requests containing question mark placeholders
+		
+		result = [objectEnum nextObject];
+		
+	}
+	return result;
+	
+	/*	
+        NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+        //NSManagedObjectModel *model = [[NSApp delegate] managedObjectModel];
+        [request setEntity: [self entity]];
+        NSPredicate *predicate = [NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForKeyPath: @"messageId"] rightExpression:[NSExpression expressionForConstantValue:messageId] modifier:NSDirectPredicateModifier type:NSEqualToPredicateOperatorType options:0];
+        [request setPredicate:predicate];
+        
+        NSError *error = nil;
+        NSArray *results = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
+        
+        NSAssert1(!error, @"+[G3Message messageForMessageId:inManagedObjectContext:] error while fetching (%@).", error);    
+        
+        if (results != nil) 
+        {
+            return [results count] ? [results lastObject] : nil;						
+        } 
+    }
+    return nil;
+	 */
+}
+
+
 - (NSString*) messageId
 {
     return [self persistentValueForKey: @"messageId"];

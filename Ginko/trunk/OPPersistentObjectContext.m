@@ -353,8 +353,92 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     [super dealloc];
 }
 
+- (OPSQLiteConnection*) dbConnection
+{
+	return db;
+}
+
+- (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
+													 where: (NSString*) clause
+{
+	return [[[OPPersistentObjectEnumerator alloc] initWithContext: self 
+													  resultClass: poClass
+													  whereClause: clause] autorelease];
+}
+
 @end
 
+@implementation OPPersistentObjectEnumerator 
 
+
+- (id) initWithContext: (OPPersistentObjectContext*) aContext
+		   resultClass: (Class) poClass 
+		   whereClause: (NSString*) clause
+{
+	if (self = [super init]) {
+		NSString* queryString = [NSString stringWithFormat: @"select ROWID from %@ where %@;", [poClass databaseTableName], clause];
+		
+		context     = [aContext retain];
+		resultClass = poClass;
+		
+		//NSLog(@"Preparing statement for fetches: %@", queryString);
+		sqlite3_prepare([[context dbConnection] database], [queryString UTF8String], -1, &statement, NULL);
+		if (!statement) {
+			NSLog(@"Error preparing statement: %@", [[context dbConnection] lastError]);
+			[self autorelease];
+			return nil;
+		}
+		NSLog(@"Created enum statement 0x%x for table %@", statement, [resultClass databaseTableName]);
+	} 
+	return self;
+}
+
+// "select ZMESSAGE.ROWID from ZMESSAGE, ZJOIN where aaa=bbb;"
+
+- (void) bind: (id) variable, ...;
+{
+	[variable bindValueToStatement: statement index: 1];
+#warning todo: Implement vararg to support more than one variable binding.
+}
+
+/*
+- (id) nextObject
+//" Call this if you might not need the object and want to spare memory. "
+{
+	int res = sqlite3_step(statement);
+}
+*/
+
+- (void) reset
+{
+	sqlite3_reset(statement);
+}
+
+- (id) nextObject
+/*" Returns the next fetched object including all its attributes. "*/
+{
+	id result = nil;
+	int res = sqlite3_step(statement);
+	if (res==SQLITE_ROW) {
+		if (NO && sqlite3_column_count(statement)>1) {
+			// expect to fetch the whole attribute-set:
+			assert(NO);
+		} else {
+			// expect the rowid on position one:
+			ROWID rid = sqlite3_column_int64(statement, 0);
+			result = [context objectForOid: rid ofClass: resultClass];
+		}
+	}
+	return result;
+}
+
+- (void) dealloc
+{
+	sqlite3_finalize(statement);
+	[context release]; context = nil;
+	[super dealloc];
+}
+
+@end
 
 

@@ -223,9 +223,14 @@
 }
 
 - (void) setPersistentValue: (id) object forKey: (NSString*) key
+/*" Passing a nil value is allowed. "*/
 {
     [self willChangeValueForKey: key];
-    [attributes setObject: object forKey: key];
+	if (object) {
+		[attributes setObject: object forKey: key];
+	} else {
+		[attributes removeObjectForKey: key];
+	}
     [self didChangeValueForKey: key];
 }
 

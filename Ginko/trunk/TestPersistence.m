@@ -81,7 +81,7 @@
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
 	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
-	[newMessage setValue: @"Ernst SChwallinger <ernst@schwallkopf.net>" forKey: @"author"];
+	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"author"];
 	
 	[context saveChanges];
 	
@@ -101,6 +101,31 @@
 	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
 	
 	NSAssert1(![newMessage resolveFault], @"deleted object still accessible from the database: %@", newMessage);
+	
+}
+
+- (void) testManualFetch
+{	
+	// Insert an object, so we are sure it's there:
+	NSString* messageId = [[NSDate date] description]; // just a unique string for testing
+	
+	GIMessage* newMessage = [[GIMessage alloc] init];
+	
+	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
+	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"author"];
+	[newMessage setValue: messageId forKey: @"messageId"];
+	
+	[context saveChanges];
+	
+	
+	OPPersistentObjectEnumerator* enumerator = [context objectEnumeratorForClass: [GIMessage class] where: @"ZMESSAGEID=?"];
+	
+	[enumerator reset]; // optional
+	[enumerator bind: messageId, nil]; // only necessary for requests containing question mark placeholders
+	
+	id result = [enumerator nextObject];	
+	
+	NSAssert(newMessage == result, @"Fetch did not return identical object.");
 	
 }
 

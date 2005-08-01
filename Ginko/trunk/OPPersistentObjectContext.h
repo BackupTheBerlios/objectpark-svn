@@ -38,6 +38,7 @@
 
 @class OPPersistentObject;
 @class OPSQLiteConnection;
+@class OPPersistentObjectEnumerator;
 
 @interface OPPersistentObjectContext : NSObject {
     
@@ -85,6 +86,27 @@
 
 - (void) saveChanges;
 - (void) revertChanges;
+
+- (OPSQLiteConnection*) dbConnection;
+
+- (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
+													 where: (NSString*) clause;
+
+@end
+
+@interface OPPersistentObjectEnumerator : NSEnumerator {
+	sqlite3_stmt* statement;
+	Class resultClass;
+	OPPersistentObjectContext* context;
+}
+
+- (id) initWithContext: (OPPersistentObjectContext*) aContext
+		   resultClass: (Class) poClass 
+		   whereClause: (NSString*) clause;
+
+- (void) reset;
+
+- (void) bind: (id) variable, ...;
 
 
 @end
