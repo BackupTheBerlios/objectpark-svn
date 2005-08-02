@@ -233,12 +233,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     NSParameterAssert([db open]);
 }
 
-- (NSArray*) fetchAllInstancesOfClass: (Class) persistentClass
-{
-    // implement
-    return nil;
-}
-
 - (NSSet*) changedObjects
 {
 	return changedObjects;
@@ -285,7 +279,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	// do we need a local autoreleasepoool here?
 	
 	if ([changedObjects count]) {
-		NSLog(@"Saving %u objects.", [changedObjects count]);
+		NSLog(@"Saving %u object(s).", [changedObjects count]);
 		
 		// Process all updated objects and save their changed attribute sets:
 		NSEnumerator* coe = [changedObjects objectEnumerator];
@@ -376,7 +370,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		   whereClause: (NSString*) clause
 {
 	if (self = [super init]) {
-		NSString* queryString = [NSString stringWithFormat: @"select ROWID from %@ where %@;", [poClass databaseTableName], clause];
+		NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [poClass databaseTableName], clause];
 		
 		context     = [aContext retain];
 		resultClass = poClass;

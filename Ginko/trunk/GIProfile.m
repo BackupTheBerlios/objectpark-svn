@@ -9,6 +9,12 @@
 #import "GIProfile.h"
 #import <Foundation/NSDebug.h>
 
+#import "G3Account.h"
+#import "GIMessage.h"
+#import "NSString+MessageUtils.h"
+#import "NSArray+Extensions.h"
+#import "OPInternetMessage.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation GIProfile
 

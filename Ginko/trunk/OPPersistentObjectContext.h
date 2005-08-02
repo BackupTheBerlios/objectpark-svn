@@ -66,7 +66,6 @@
 
 + (void) setDefaultContext: (OPPersistentObjectContext*) context;
 
-
 - (void) setDatabaseConnectionFromPath: (NSString*) dbPath;
 - (OPSQLiteConnection*) databaseConnection;
 - (void) setDatabaseConnection: (OPSQLiteConnection*) newConnection;

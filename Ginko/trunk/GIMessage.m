@@ -8,7 +8,16 @@
 
 #import "GIMessage.h"
 #import "GIProfile.h"
-
+#import "GIThread.h"
+#import "OPInternetMessage.h"
+#import "NSString+MessageUtils.h"
+#import "NSManagedObjectContext+Extensions.h"
+#import "OPInternetMessage+GinkoExtensions.h"
+#import "OPManagedObject.h"
+#import "G3MessageGroup.h"
+#import "GIMessageBase.h"
+#import "GIApplication.h"
+#import <Foundation/NSDebug.h>
 
 @implementation GIMessage
 
@@ -47,35 +56,102 @@
 		[objectEnum bind: messageId, nil]; // only necessary for requests containing question mark placeholders
 		
 		result = [objectEnum nextObject];
+		[objectEnum reset]; // might free some memory.
 		
 	}
 	return result;
-	
-	/*	
-        NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-        //NSManagedObjectModel *model = [[NSApp delegate] managedObjectModel];
-        [request setEntity: [self entity]];
-        NSPredicate *predicate = [NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForKeyPath: @"messageId"] rightExpression:[NSExpression expressionForConstantValue:messageId] modifier:NSDirectPredicateModifier type:NSEqualToPredicateOperatorType options:0];
-        [request setPredicate:predicate];
+}
+
+- (void) flushInternetMessageCache
+	/*" Flushes the cache for the internetMessageCache transient attribute. Used for optimized memory usage. "*/
+{
+    [self setPrimitiveValue: nil forKey: @"internetMessageCache"];
+}
+
+
+- (OPInternetMessage*) internetMessage
+{
+    OPInternetMessage* cache = [self primitiveValueForKey: @"internetMessageCache"];
+    if (!cache) {
+        NSData *transferData = [self valueForKey: @"transferData"];
         
-        NSError *error = nil;
-        NSArray *results = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
-        
-        NSAssert1(!error, @"+[G3Message messageForMessageId:inManagedObjectContext:] error while fetching (%@).", error);    
-        
-        if (results != nil) 
+        if (transferData) {
+            cache = [[OPInternetMessage alloc] initWithTransferData: transferData];
+            [self setPrimitiveValue: cache forKey: @"internetMessageCache"];
+            [cache release];
+        }
+    } 
+    //else NSLog(@"using cached imessage data"); // remove this after testing.
+    return cache;
+}
+
++ (id)messageWithTransferData:(NSData *)someTransferData
+	/*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context nil is returned. "*/
+{
+    id result = nil;
+    OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
+    BOOL insertMessage = NO;
+    
+    G3Message *dupe = [self messageForMessageId:[im messageId]];
+    if (dupe)
+    {
+        if ([G3Profile isMyEmailAddress:[im fromWithFallback:YES]])
         {
-            return [results count] ? [results lastObject] : nil;						
-        } 
+            //replace old message with new:
+            [GIMessageBase removeMessage:dupe];
+            [NSApp saveAction:self];
+            insertMessage = YES;
+        }
+        //if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [im messageId]);        
+    } 
+    else
+    {
+        insertMessage = YES;
     }
-    return nil;
-	 */
+    
+    if (insertMessage)
+    {
+        // Create a new message in the default context:
+        result = [[[G3Message alloc] initWithManagedObjectContext:[NSManagedObjectContext threadContext]] autorelease];
+        NSAssert(result != nil, @"Could not create message object");
+        
+        NSString *fromHeader = [im fromWithFallback: YES];
+        
+        [result setPrimitiveValue:im forKey:@"internetMessageCache"];
+        [result setValue:someTransferData forKey:@"transferData"];
+        [result setValue:[im messageId] forKey:@"messageId"];  
+        [result setValue:[im normalizedSubject] forKey:@"subject"];
+        [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
+        
+        // sanity check for date header field:
+        NSCalendarDate *messageDate = [im date];
+        if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare:messageDate] != NSOrderedDescending) // if message's date is a future date
+        {
+			// broken message, set current date:
+            messageDate = [NSCalendarDate date];
+            if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
+        }
+        [result setValue:messageDate forKey:@"date"];
+        
+        // Note that this method operates on the encoded header field. It's OK because email
+        // addresses are 7bit only.
+        if ([G3Profile isMyEmailAddress:fromHeader])
+        {
+            [result addFlags: OPIsFromMeStatus];
+        }
+    }
+    
+    [im release];
+    return result;
 }
 
 
 - (NSString*) messageId
 {
-    return [self persistentValueForKey: @"messageId"];
+	[self willAccessValueForKey: @"messageId"];
+    id result = [self primitiveValueForKey: @"messageId"];
+	[self didAccessValueForKey: @"messageId"];
+	return result;
 }
 
 

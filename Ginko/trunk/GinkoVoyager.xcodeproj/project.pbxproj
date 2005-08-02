@@ -310,6 +310,10 @@
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
 		8DE962A0089E20D70053ED6B /* libsqlite3.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DE96297089E20CB0053ED6B /* libsqlite3.dylib */; };
+		8DE96470089F9F1F0053ED6B /* GIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE9646E089F9F1F0053ED6B /* GIThread.h */; };
+		8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE9646F089F9F1F0053ED6B /* GIThread.m */; };
+		8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */; };
+		8DE96484089FA0990053ED6B /* OPPersistentObject+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */; };
 		8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */; };
 		8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
 		8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
@@ -694,6 +698,10 @@
 		8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPExtensions.m"; sourceTree = "<group>"; };
 		8DE859760899A51900F06AD4 /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DE96297089E20CB0053ED6B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.dylib; sourceTree = "<group>"; };
+		8DE9646E089F9F1F0053ED6B /* GIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThread.h; sourceTree = "<group>"; };
+		8DE9646F089F9F1F0053ED6B /* GIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThread.m; sourceTree = "<group>"; };
+		8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPPersistentObject+Extensions.h"; sourceTree = "<group>"; };
+		8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPPersistentObject+Extensions.m"; sourceTree = "<group>"; };
 		8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPClassDescription.h; sourceTree = "<group>"; };
 		8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPClassDescription.m; sourceTree = "<group>"; };
 		8DF2CF6A0879F523008F8F6B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -918,6 +926,10 @@
 				77DFA5C80840B49C0068AD15 /* TestOPJobs.m */,
 				77136F3008438E2A002F9298 /* TestGIThread.h */,
 				77136F3108438E2A002F9298 /* TestGIThread.m */,
+				8DE9646E089F9F1F0053ED6B /* GIThread.h */,
+				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
+				8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */,
+				8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -1273,6 +1285,8 @@
 				8DCE38FD08940F4000F705EF /* TestPersistence.h in Headers */,
 				8DCE39030894116500F705EF /* GIMessage.h in Headers */,
 				8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */,
+				8DE96470089F9F1F0053ED6B /* GIThread.h in Headers */,
+				8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1636,6 +1650,8 @@
 				8DCE38FE08940F4000F705EF /* TestPersistence.m in Sources */,
 				8DCE39040894116700F705EF /* GIMessage.m in Sources */,
 				8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */,
+				8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */,
+				8DE96484089FA0990053ED6B /* OPPersistentObject+Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

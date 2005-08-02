@@ -70,11 +70,17 @@
 - (void) willDelete;
 
 - (OID) oid;
-- (id) persistentValueForKey: (NSString*) key;
-- (void) setPersistentValue: (id) object forKey: (NSString*) key;
+- (id) primitiveValueForKey: (NSString*) key;
+- (void) setPrimitiveValue: (id) object forKey: (NSString*) key;
 - (void) refault;
 - (void) revert;
 - (OID) currentOid; // internal method
 - (void) setOid: (OID) theOid; // for internal use
+
+- (void) willChangeValueForKey: (NSString*) key;
+- (void) willAccessValueForKey: (NSString*) key;
+- (void) didChangeValueForKey: (NSString*) key;
+- (void) didAccessValueForKey: (NSString*) key;
+
 
 @end

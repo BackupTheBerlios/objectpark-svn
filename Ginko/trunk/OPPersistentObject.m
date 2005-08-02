@@ -151,7 +151,10 @@
 
 - (id) valueForUndefinedKey: (NSString*) key
 {
-	return [self persistentValueForKey: key];
+	[self willAccessValueForKey: key];
+	id result = [self primitiveValueForKey: key];
+	[self didAccessValueForKey: key];
+	return result;
 }
 
 - (OID) currentOid
@@ -198,7 +201,7 @@
     [[self context] willChangeObject: self];
 }
 
-- (void) willReadValueForKey: (NSString*) key
+- (void) willAccessValueForKey: (NSString*) key
 {
     [[self context] lock];
     [self resolveFault];
@@ -209,34 +212,32 @@
     [[self context] didChangeObject: self];
 }
 
-- (void) didReadValueForKey: (NSString*) key
+- (void) didAccessValueForKey: (NSString*) key
 {
     [[self context] unlock];
-}
+} 
 
-- (id) persistentValueForKey: (NSString*) key
+- (id) primitiveValueForKey: (NSString*) key
 {
-    [self willReadValueForKey: key];
     id result = [attributes objectForKey: key];
-    [self didReadValueForKey: key];
     return result;
 }
 
-- (void) setPersistentValue: (id) object forKey: (NSString*) key
+- (void) setPrimitiveValue: (id) object forKey: (NSString*) key
 /*" Passing a nil value is allowed. "*/
 {
-    [self willChangeValueForKey: key];
 	if (object) {
 		[attributes setObject: object forKey: key];
 	} else {
 		[attributes removeObjectForKey: key];
 	}
-    [self didChangeValueForKey: key];
 }
 
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
-	[self setPersistentValue: value forKey: key];
+	[self willChangeValueForKey: key];
+	[self setPrimitiveValue: value forKey: key];
+	[self didChangeValueForKey: key];
 }
 
 - (NSDictionary*) attributeValues

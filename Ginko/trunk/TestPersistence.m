@@ -133,8 +133,6 @@
 - (void) testManualFetch2
 {	
 
-	
-	
 	OPPersistentObjectEnumerator* enumerator = [context objectEnumeratorForClass: [GIMessage class] where: @"ZMESSAGEID like ?"];
 	
 	[enumerator reset]; // optional
@@ -144,6 +142,15 @@
 	
 	NSAssert([results count]>0, @"No results for query for messageID containing '2005'.");
 	
+}
+
+- (void) testGettingAllObjects
+{
+	NSArray* allThreads = [[context objectEnumeratorForClass: [GIThread class] where: nil] allObjects];
+	
+	NSLog(@"Got %d thread faults.", [allThreads count]);
+	
+	NSAssert([allThreads count]>0, @"Problem getting allThread faults at once");
 }
 
 
