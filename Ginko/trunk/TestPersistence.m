@@ -130,4 +130,21 @@
 }
 
 
+- (void) testManualFetch2
+{	
+
+	
+	
+	OPPersistentObjectEnumerator* enumerator = [context objectEnumeratorForClass: [GIMessage class] where: @"ZMESSAGEID like ?"];
+	
+	[enumerator reset]; // optional
+	[enumerator bind: @"%2005%", nil]; // only necessary for requests containing question mark placeholders
+	
+	NSArray* results = [enumerator allObjects];
+	
+	NSAssert([results count]>0, @"No results for query for messageID containing '2005'.");
+	
+}
+
+
 @end
