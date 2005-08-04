@@ -40,8 +40,8 @@
 - (NSString *)stringByUnwrappingParagraphs;
 - (NSString *)stringByWrappingToLineLength:(unsigned int)length;
 - (NSString *)stringByPrefixingLinesWithString:(NSString *)prefix;
-- (NSString *)stringByFoldingStringToLimit:(int)limit;
-- (NSString *)stringByUnfoldingString;
+//- (NSString *)stringByFoldingStringToLimit:(int)limit;
+//- (NSString *)stringByUnfoldingString;
 
 
 - (NSString *)stringByFoldingToLimit:(unsigned int)limit;
@@ -59,9 +59,6 @@
 - (NSCalendarDate *)slowDateFromRFC2822String;
 
 - (NSString *)stringByNormalizingWhitespaces;
-
-- (NSString *)stringByFoldingStringToLimit:(int)limit;
-- (NSString *)stringByUnfoldingString;
 
 - (NSArray *)fieldListFromEMailString;
 // - (NSArray*) realnameListFromEMailString;

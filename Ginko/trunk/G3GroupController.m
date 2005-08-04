@@ -695,13 +695,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)forward:(id)sender
 {
-    /*
-    OPInternetMessage *message;
-    
-    message = [[[self messagebox] messageStore] messageWithMessageId:[[[messageListController visibleSelectedMessageSummaries] objectAtIndex:0] messageId]];
-    
-    [[GIMessageEditorManager sharedMessageEditorManager] newMessageAsForward:message];
-     */
+    G3Message *message = [self selectedMessage];
+        
+    [[[G3MessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
 }
 
 - (IBAction)rename:(id)sender

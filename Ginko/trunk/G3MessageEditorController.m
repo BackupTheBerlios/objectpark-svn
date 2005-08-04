@@ -10,12 +10,13 @@
 #import "NSView+ViewMoving.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSString+MessageUtils.h"
-//#import "GIAddressFormatter.h"
+#import "GIApplication.h"
 #import "G3Profile.h"
 #import "G3Account.h"
 #import "NSToolbar+OPExtensions.h"
 #import "GITextView.h"
 #import "OPInternetMessage.h"
+#import "OPInternetMessage+GinkoExtensions.h"
 #import "G3Message+Rendering.h"
 #import "GIMessageBase.h"
 #import "OPURLFieldCoder.h"
@@ -30,11 +31,13 @@
 - (void)addReferenceToMessage:(G3Message *)aMessage;
 - (void)setHeadersFromMessage:(G3Message *)aMessage;
 - (void)appendContentFromMessage:(G3Message *)aMessage;
+- (void)appendForwardContentFromMessage:(G3Message *)aMessage;
 - (void)switchToReplyToAll:(G3Message *)replyMessage;
 - (void)switchToReplyToSender:(G3Message *)replyMessage;
 - (void)switchToFollowup:(G3Message *)replyMessage;
 - (void)appendQuotePasteboardContents;
 - (void)setReplySubjectFromMessage:(G3Message *)aMessage;
+- (void)setReplyForwardSubjectFromMessage:(G3Message *)aMessage;
 - (void)updateMessageTextView;
 - (void)updateWindowTitle;
 - (BOOL)messageIsSendable;
@@ -202,6 +205,31 @@
         [window makeKeyAndOrderFront:self];
     }
         
+    return self;
+}
+
+- (id)initForward:(G3Message *)aMessage profile:(G3Profile *)aProfile
+{
+    if (self = [self init]) 
+    {
+        if (! aProfile) aProfile = [G3Profile defaultProfile];
+        profile = [aProfile retain];
+        
+        [self setReplyForwardSubjectFromMessage:aMessage];
+        [self appendForwardContentFromMessage:aMessage];
+        type = MessageTypeForward;
+        shouldAppendSignature = YES;
+                
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
+        
+        [self updateHeaders];
+        [self updateMessageTextView];
+        [self updateWindowTitle];
+        
+        [window makeFirstResponder:messageTextView];
+        [window makeKeyAndOrderFront:self];
+    }
+    
     return self;
 }
 
@@ -783,15 +811,34 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void)setReplySubjectFromMessage:(G3Message *)aMessage
 {
     NSString *replySubject;
+    OPInternetMessage *internetMessage = [aMessage internetMessage];
     
-    NS_DURING
-        replySubject = [[aMessage internetMessage] replySubject];
-    NS_HANDLER
+    @try
+    {
+        replySubject = [internetMessage replySubject];
+    }
+    @catch (NSException *localException)
+    {
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
-        replySubject = [[aMessage internetMessage] bodyForHeaderField:@"Subject"];
-    NS_ENDHANDLER
+        replySubject = [internetMessage bodyForHeaderField:@"Subject"];
+    }
     
     [headerFields setObject:replySubject ? replySubject : @"Re: " forKey: @"Subject"];	
+}
+
+- (void)setReplyForwardSubjectFromMessage:(G3Message *)aMessage
+{
+    OPInternetMessage *internetMessage = [aMessage internetMessage];
+    
+    @try
+    {
+        [headerFields setObject:[internetMessage forwardSubject] forKey:@"Subject"];
+    }
+    @catch (NSException *localException)
+    {
+        if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
+        [headerFields setObject:[@"FWD: " stringByAppendingString:[internetMessage bodyForHeaderField:@"Subject"]] forKey:@"Subject"];
+    }
 }
 
 - (void)setHeadersFromMessage:(G3Message *)aMessage
@@ -946,6 +993,28 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSBeep();
     NSLog(@"Unable to determine way to post to group.");
     return;
+}
+
+- (void)appendForwardContentFromMessage:(G3Message *)aMessage
+{
+    NSAttributedString *forwardHeaders, *forwardPrefix, *forwardSuffix;
+    NSMutableAttributedString  *result;
+    OPInternetMessage *internetMessage = [aMessage internetMessage];
+    
+    forwardPrefix = [[[NSAttributedString allocWithZone:[self zone]] initWithString:@"\n\n==== BEGIN FORWARDED MESSAGE ====\n"] autorelease];
+    
+    forwardSuffix = [[[NSAttributedString allocWithZone:[self zone]] initWithString:@"\n==== END FORWARDED MESSAGE ====\n\n"] autorelease];
+    
+    forwardHeaders = [G3Message renderedHeaders:[NSArray arrayWithObjects:@"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage:internetMessage showOthers:NO];
+    
+    result = [[[NSMutableAttributedString alloc] init] autorelease];
+    
+    [result appendAttributedString:forwardPrefix];
+    [result appendAttributedString:forwardSuffix];
+    [result insertAttributedString:[internetMessage editableBodyContent] atIndex:[forwardPrefix length]];
+    [result insertAttributedString:forwardHeaders atIndex:[forwardPrefix length]];
+    
+    [content appendAttributedString:result];
 }
 
 - (NSAttributedString *)signature 
@@ -1341,6 +1410,13 @@ NSDictionary *maxLinesForCalendarName()
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [toField setMaxLines:maxLines];
     
+    NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
+
+    [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] removeCharactersInString:@" ."];
+    NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
+
+    NSLog(@"toField charset = %d", [[toField tokenizingCharacterSet] characterIsMember:' ']);
+    
     maxLines = [[maxLinesForCalendarName() objectForKey:@"Subject"] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [subjectField setMaxLines:maxLines];
@@ -1582,22 +1658,26 @@ NSDictionary *maxLinesForCalendarName()
             NSString *fullname = [person fullname];
             ABMultiValue *emails = [person valueForProperty:kABEmailProperty];
             int i;
+            NSString *entryCandidate = nil;
             
             for (i = 0; i < [emails count]; i++)
             {
                 if ([fullname length])
                 {
-                    [result addObject:[NSString stringWithFormat:@"%@ <%@>", fullname, [emails valueAtIndex:i]]];
+                    entryCandidate = [NSString stringWithFormat:@"%@ (%@)", [emails valueAtIndex:i], fullname];
                 }
                 else
                 {
-                    [result addObject:[person email]];
+                    entryCandidate = [person email];
                 }
+                
+                if ([entryCandidate hasPrefix:substring]) [result addObject:entryCandidate];
             }
         }
     }
-    
-    return [result count] ? result : nil;
+        
+    NSArray *r = [result sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    return [r count] ? r : nil;
 }
 
 /*

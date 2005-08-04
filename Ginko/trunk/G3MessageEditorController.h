@@ -55,6 +55,7 @@ typedef enum
 - (id)initNewMessageWithProfile:(G3Profile *)aProfile;
 - (id)initReplyTo:(G3Message *)aMessage all:(BOOL)toAll profile:(G3Profile *)aProfile;
 - (id)initFollowupTo:(G3Message *)aMessage profile:(G3Profile *)aProfile;
+- (id)initForward:(G3Message *)aMessage profile:(G3Profile *)aProfile;
 
 - (BOOL)validateSelector:(SEL)aSelector;
 - (G3Profile *)profile;

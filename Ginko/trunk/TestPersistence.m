@@ -29,7 +29,7 @@
     [context reset];
 }
 
-- (void) testSimpleFaulting
+- (void) testSimpleFaultingCa
 {
     OID testOid = 2;
     GIMessage* message = [context objectForOid: testOid ofClass: [GIMessage class]];

@@ -126,8 +126,6 @@
 //	TRANSFER LEVEL ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-
-
 - (NSData *)transferData
 {
     NSMutableData	*transferData;
@@ -136,8 +134,7 @@
     NSEnumerator	*fieldEnum;
     EDObjectPair	*field;
 
-    if(originalTransferData != nil)
-        return originalTransferData;
+    if(originalTransferData != nil) return originalTransferData;
 
     // Make sure we have an encoding that we can use (we fall back to MIME 8Bit)
     if([contentData isValidTransferEncoding:[self contentTransferEncoding]] == NO)
@@ -186,25 +183,23 @@
     return fieldBody;
 }
 
-
-- (void) removeHeaderField: (NSString*) fieldName
+- (void)removeHeaderField:(NSString *)fieldName
 {
     [self _forgetOriginalTransferData];
-    [super removeHeaderField: fieldName];
+    [super removeHeaderField:fieldName];
 }
-
 
 - (void)setBody:(NSString *)fieldBody forHeaderField:(NSString *)fieldName
 {
     [self _forgetOriginalTransferData];
-    [super setBody: fieldBody forHeaderField: fieldName];
+    [super setBody:fieldBody forHeaderField:fieldName];
 }
 
 
 - (void)addToHeaderFields:(EDObjectPair *)headerField
 {
     [self _forgetOriginalTransferData];
-    [super addToHeaderFields: headerField];
+    [super addToHeaderFields:headerField];
 }
 
 //---------------------------------------------------------------------------------------

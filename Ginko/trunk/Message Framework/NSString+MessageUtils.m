@@ -461,7 +461,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
         lineBreakSeq = @"\n";
     
     separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -\t"];
-    forceBreakSet = [NSCharacterSet characterSetWithCharactersInString:@" \t.?!:-·1234567890>}#%|"];
+    forceBreakSet = [NSCharacterSet characterSetWithCharactersInString:@" \t.?!:-âˆ‘1234567890>}#%|"];
     buffer = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
     lineEnum = [[self componentsSeparatedByString:lineBreakSeq] objectEnumerator];
     currentLine = [lineEnum nextObject];
@@ -601,49 +601,47 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 
 /*" Returns a folded version of the receiver according to RFC 2822 to the hard limit length. "*/
 
-- (NSString*) stringByFoldingToLimit: (unsigned int) limit
+- (NSString *)stringByFoldingToLimit:(unsigned int)limit
 {
     NSMutableString *result;
     NSCharacterSet *whitespaces;
     int lineStart;
-
+    
     // short cut a very common case
-    if ([self length] <= limit)
-        return self;
-
+    if ([self length] <= limit) return self;
+    
     result = [NSMutableString string];
     whitespaces = [NSCharacterSet whitespaceCharacterSet];
     lineStart = 0;
-
+    
     while (lineStart < [self length])
+    {
+        if (([self length] - lineStart) > limit) // something to fold left over?
         {
-        if (([self length] - lineStart) > limit)
-            // something to fold left over?
-            {
             NSRange lineEnd;
-
-            // find place to fold
+            
+            // find place to fold:
             lineEnd = [self rangeOfCharacterFromSet:whitespaces options:NSBackwardsSearch range:NSMakeRange(lineStart, limit)];
-
+            
             if (lineEnd.location == NSNotFound) // no whitespace found -> use hard break
-                {
+            {
                 lineEnd.location = lineStart + limit;
-                }
-
+            }
+            
             [result appendString:[self substringWithRange:NSMakeRange(lineStart, lineEnd.location - lineStart)]];
             [result appendString:@"\r\n "];
-
+            
             lineStart = NSMaxRange(lineEnd);
-            }
-        else
-            {
-            [result appendString:[self substringWithRange:NSMakeRange(lineStart, [self length] - lineStart)]];
-
-            break; // nothing to do in loop
-            }
         }
-
-    return [result copy];
+        else
+        {
+            [result appendString:[self substringWithRange:NSMakeRange(lineStart, [self length] - lineStart)]];
+            
+            break; // nothing to do in loop
+        }
+    }
+    
+    return [[result copy] autorelease];
 }
 
 
@@ -1489,6 +1487,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return result;
 }
 
+#ifdef _0
 - (NSString *)stringByFoldingStringToLimit:(int)limit
 /*" Returns a folded version of the receiver according to RFC 2822 to the hard limit  length. "*/
 {
@@ -1534,6 +1533,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         return [result copy];
     }
 }
+#endif
 
 - (NSString*) stringByUnfoldingString
 /*" Returns an unfolded version of the receiver according to RFC 2822 "*/
