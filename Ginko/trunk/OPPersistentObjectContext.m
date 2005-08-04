@@ -439,6 +439,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 NSURL* OPURLFromOidAndClass(OID oid, Class poClass)
 {
 #warning Axel, please modify this!
+#warning Dirk, how? To be compatible with CoreData's format?
 	return [NSURL URLWithString: [NSString stringWithFormat: @"opo://%@/%@/%lld", @"GinkoVoyager", poClass, oid]];
 }
 
