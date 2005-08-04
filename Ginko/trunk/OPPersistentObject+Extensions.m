@@ -16,4 +16,11 @@
 	return [[[OPPersistentObjectContext defaultContext] objectEnumeratorForClass: self where: nil] allObjects];
 }
 
+- (BOOL) primitiveBoolForKey: (NSString*) key
+{
+	BOOL result = [[self primitiveValueForKey: key] boolValue];
+	return result;
+}
+
+
 @end

@@ -13,4 +13,7 @@
 
 + (NSArray*) allObjects;
 
+- (BOOL) primitiveBoolForKey: (NSString*) key;
+
+
 @end

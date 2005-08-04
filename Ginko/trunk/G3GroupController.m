@@ -73,7 +73,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
         [NSBundle loadNibNamed:@"Boxes" owner:self];
         [self setGroup:aGroup];
 		
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name:G3MessageGroupWasAddedNotification object:nil];
     }
     
     return self;

@@ -70,6 +70,8 @@
 - (void) willDelete;
 
 - (OID) oid;
+- (NSURL*) objectURL;
+
 - (id) primitiveValueForKey: (NSString*) key;
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key;
 - (void) refault;

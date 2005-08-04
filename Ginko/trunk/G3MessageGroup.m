@@ -16,7 +16,7 @@
 #import "GIUserDefaultsKeys.h"
 #import <sqlite3.h>
 
-NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
+NSString *G3MessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
 
 @implementation G3MessageGroup
 /*" G3MessageGroup is a collection of G3Thread objects (which in turn are a collection of G3Message objects). G3MessageGroup is an entity in the datamodel (see %{Ginko3_DataModel.xcdatamodel} file).
@@ -103,7 +103,7 @@ G3MessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     [self commitChanges];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupWasAddedNotification object:result];
+    [[NSNotificationCenter defaultCenter] postNotificationName:G3MessageGroupWasAddedNotification object:result];
     
     return result;
 }

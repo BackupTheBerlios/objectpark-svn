@@ -179,6 +179,11 @@
     return oid;
 }
 
+- (NSURL*) objectURL
+{
+	return OPURLFromOidAndClass([self oid], isa);
+}
+
 - (void) setOid: (OID) theOid
 {
 	if (oid != theOid) {

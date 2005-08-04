@@ -30,7 +30,7 @@
 #define OPIsFromMeStatus 16384
 
 @interface GIMessage : OPPersistentObject {
-
+    int flagsCache; // should move to attributes dictionary so it does not put load onto the faults?
 }
 
 + (id) messageForMessageId: (NSString*) messageId;

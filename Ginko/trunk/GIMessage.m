@@ -17,6 +17,7 @@
 #import "G3MessageGroup.h"
 #import "GIMessageBase.h"
 #import "GIApplication.h"
+#import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
 
 @implementation GIMessage
@@ -135,8 +136,7 @@
         
         // Note that this method operates on the encoded header field. It's OK because email
         // addresses are 7bit only.
-        if ([G3Profile isMyEmailAddress:fromHeader])
-        {
+        if ([GIProfile isMyEmailAddress:fromHeader]) {
             [result addFlags: OPIsFromMeStatus];
         }
     }
@@ -145,6 +145,54 @@
     return result;
 }
 
+- (BOOL) isUsenetMessage
+	/*" Returns YES, if Ginko thinks (from the message headers) that this message is an Usenet News article (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
+{
+    return ([[self internetMessage] bodyForHeaderField:@"Newsgroups"] != nil);
+}
+
+- (BOOL) isEMailMessage
+	/*" Returns YES, if Ginko thinks (from the message headers) that this message is some kind of email (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
+{
+    return ([[self internetMessage] bodyForHeaderField:@"To"] != nil);
+}
+
+- (BOOL) isPublicMessage 
+{
+    return [self isListMessage] || [self isUsenetMessage];
+}
+
+- (BOOL) isDummy
+{
+    return [self transferData] == nil;
+}
+
+- (unsigned) flags
+{
+    @synchronized(self)
+    {
+        if (flagsCache < 0) {
+            flagsCache = 0;
+            
+			[self willAccessValueForKey: @"isSeen"];
+
+            if ([self primitiveBoolForKey: @"isInSendJob"]) flagsCache |= OPInSendJobStatus;
+            if ([self primitiveBoolForKey: @"isQueued"]) flagsCache |= OPQueuedStatus;
+            if ([self primitiveBoolForKey: @"isInteresting"]) flagsCache |= OPInterestingStatus;
+            if ([self primitiveBoolForKey: @"isSeen"]) flagsCache |= OPSeenStatus;
+            if ([self primitiveBoolForKey: @"isJunk"]) flagsCache |= OPJunkMailStatus;
+            if ([self primitiveBoolForKey: @"isSendingBlocked"]) flagsCache |= OPSendingBlockedStatus;
+			if ([self primitiveBoolForKey: @"isFlagged"]) flagsCache |= OPFlaggedStatus;
+			if ([self primitiveBoolForKey: @"isFromMe"]) flagsCache |= OPIsFromMeStatus;
+            if ([self primitiveBoolForKey: @"isFulltextIndexed"]) flagsCache |= OPFulltextIndexedStatus;
+            if ([self primitiveBoolForKey: @"isAnswered"]) flagsCache |= OPAnsweredStatus;
+            if ([self primitiveBoolForKey: @"isDraft"]) flagsCache |= OPDraftStatus;
+			
+			[self didAccessValueForKey: @"isSeen"];
+        }
+    }    
+    return flagsCache;
+}
 
 - (NSString*) messageId
 {

@@ -314,6 +314,8 @@
 		8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE9646F089F9F1F0053ED6B /* GIThread.m */; };
 		8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */; };
 		8DE96484089FA0990053ED6B /* OPPersistentObject+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */; };
+		8DE964D2089FFEBA0053ED6B /* GIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */; };
+		8DE964D3089FFEBA0053ED6B /* GIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */; };
 		8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */; };
 		8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
 		8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
@@ -702,6 +704,8 @@
 		8DE9646F089F9F1F0053ED6B /* GIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThread.m; sourceTree = "<group>"; };
 		8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPPersistentObject+Extensions.h"; sourceTree = "<group>"; };
 		8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPPersistentObject+Extensions.m"; sourceTree = "<group>"; };
+		8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroup.h; sourceTree = "<group>"; };
+		8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroup.m; sourceTree = "<group>"; };
 		8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPClassDescription.h; sourceTree = "<group>"; };
 		8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPClassDescription.m; sourceTree = "<group>"; };
 		8DF2CF6A0879F523008F8F6B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -930,6 +934,8 @@
 				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
 				8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */,
 				8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */,
+				8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */,
+				8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -1287,6 +1293,7 @@
 				8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */,
 				8DE96470089F9F1F0053ED6B /* GIThread.h in Headers */,
 				8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */,
+				8DE964D2089FFEBA0053ED6B /* GIMessageGroup.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1652,6 +1659,7 @@
 				8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */,
 				8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */,
 				8DE96484089FA0990053ED6B /* OPPersistentObject+Extensions.m in Sources */,
+				8DE964D3089FFEBA0053ED6B /* GIMessageGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

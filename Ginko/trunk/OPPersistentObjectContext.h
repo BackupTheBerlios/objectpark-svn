@@ -107,5 +107,6 @@
 
 - (void) bind: (id) variable, ...;
 
-
 @end
+
+extern NSURL* OPURLFromOidAndClass(OID oid, Class poClass);
