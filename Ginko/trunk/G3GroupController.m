@@ -951,15 +951,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)moveSelectionToTrash:(id)sender
 {
+    int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
     NSEnumerator *enumerator = [[self selectedThreadURIs] objectEnumerator];
     NSString *uriString;
     BOOL trashedAtLeastOne = NO;
     
     // Make sure we have a fresh group object and prevent merge problems:
-    [[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+    [[NSManagedObjectContext threadContext] refreshObject:[self group] mergeChanges:YES];
     
-    while (uriString = [enumerator nextObject]) {
-        
+    while (uriString = [enumerator nextObject]) 
+    {
         G3Thread *thread = [NSManagedObjectContext objectWithURIString:uriString];
         NSAssert([thread isKindOfClass:[G3Thread class]], @"got non-thread object");
         
@@ -969,7 +970,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         trashedAtLeastOne = YES;
     }
     
-    if (trashedAtLeastOne) [NSApp saveAction:self];
+    if (trashedAtLeastOne) 
+    {
+        [NSApp saveAction:self];
+        if (rowBefore >= 0)
+        {
+            [threadsView selectRow:rowBefore byExtendingSelection:NO];
+        }
+    }
+    
     else NSBeep();
 }
 
