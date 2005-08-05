@@ -8,6 +8,8 @@
 
 #import "GIThread.h"
 
+@class G3Message;
+@class G3MessageGroup;
 
 @implementation GIThread
 

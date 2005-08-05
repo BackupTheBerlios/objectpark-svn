@@ -390,6 +390,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 // "select ZMESSAGE.ROWID from ZMESSAGE, ZJOIN where aaa=bbb;"
 
 - (void) bind: (id) variable, ...;
+/*" Replaces all the question marks in the where string with the values passed.
+	Current implementation only uses the first variable. "*/
 {
 	[variable bindValueToStatement: statement index: 1];
 #warning todo: Implement vararg to support more than one variable binding.
@@ -438,8 +440,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 NSURL* OPURLFromOidAndClass(OID oid, Class poClass)
 {
-#warning Axel, please modify this!
-#warning Dirk, how? To be compatible with CoreData's format?
+#warning Axel, please modify this so it makes sense.
 	return [NSURL URLWithString: [NSString stringWithFormat: @"opo://%@/%@/%lld", @"GinkoVoyager", poClass, oid]];
 }
 
