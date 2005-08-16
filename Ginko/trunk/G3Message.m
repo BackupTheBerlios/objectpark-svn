@@ -330,28 +330,25 @@
     [self didChangeValueForKey:@"profile"];
 }
 
-- (G3Thread *)threadCreate:(BOOL)doCreate
+- (G3Thread*) threadCreate: (BOOL) doCreate
+/*" Returns the one thread the message belongs to. If doCreate is yes, this method creates a new thread in the receiver's context containing just the receiver. "*/
 {
     G3Thread *thread = [self thread];
     
-    if (doCreate && !thread) 
-    {
+    if (doCreate && !thread) {
         // do threading by reference
         thread = [[self referenceFind:YES] thread];
         
-        if (!thread) 
-        {
+        if (!thread) {
             thread = [G3Thread threadInManagedObjectContext:[self managedObjectContext]];
             [thread setValue:[self valueForKey:@"subject"] forKey:@"subject"];
-        } 
-        else 
-        {
+        } else {
             // NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
             // Set the thread's subject to be the first messages subject:
         }
         // We got one, so set it:
-        [self setValue:thread forKey:@"thread"];
-        [thread addMessage:self];
+        [self setValue: thread forKey: @"thread"];
+        [thread addMessage: self];
     }
     
     return thread;
@@ -373,7 +370,7 @@
     return [[self internetMessage] bodyContent];
 }
 
-- (NSArray *)commentsInThread:(G3Thread *) thread
+- (NSArray*) commentsInThread: (G3Thread*) thread
 /* Returns all directly commenting messages in the thread given. */
 {
     NSEnumerator* me = [[thread messages] objectEnumerator];

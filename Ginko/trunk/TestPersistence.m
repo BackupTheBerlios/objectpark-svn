@@ -29,7 +29,7 @@
     [context reset];
 }
 
-- (void) testSimpleFaultingCa
+- (void) testSimpleFaulting
 {
     OID testOid = 2;
     GIMessage* message = [context objectForOid: testOid ofClass: [GIMessage class]];
@@ -37,12 +37,11 @@
     [message resolveFault];
     NSLog(@"Got message: %@", message);
 	NSAssert(![message isFault], @"Faulting did not work for oid 2.");
-	[[message valueForKey: @"profile"] resolveFault];
-	
+	[[message valueForKey: @"profile"] resolveFault]; // make sure we do not print a profile fault below
 	NSLog(@"Message has profile: %@", [message valueForKey: @"profile"]);
 }
 
-- (void) testInsert
+- (void) notestInsert
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
@@ -61,7 +60,7 @@
 	
 }
 
-- (void) testOidGeneration
+- (void) notestOidGeneration
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
@@ -76,7 +75,7 @@
 }
 
 
-- (void) testDelete
+- (void) notestDelete
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
@@ -151,6 +150,23 @@
 	NSLog(@"Got %d thread faults.", [allThreads count]);
 	
 	NSAssert([allThreads count]>0, @"Problem getting allThread faults at once");
+}
+
+- (void) notestToManyRelationship
+{
+	GIMessage* message = [context objectForOid: 2 ofClass: [GIMessage class]];
+	GIThread* thread = [message valueForKey: @"thread"];
+	
+	NSArray* groups = [thread valueForKey: @"groups"];
+	NSLog(@"Thread %@ is contained in %d group(s) (e.g. %@)", thread, [groups count], [[groups lastObject] valueForKey: @"name"]);
+	NSAssert([groups count], @"Thread has no groups!");
+	
+	NSArray* messages = [thread valueForKey: @"messages"];
+	
+	NSAssert([messages containsObject: message], @"1:n reverse relationship did not work.");
+	
+	NSLog(@"Messages in thread for message (oid 2): %@", messages);
+	
 }
 
 

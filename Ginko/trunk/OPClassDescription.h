@@ -38,30 +38,34 @@
 
 @class OPSQLiteConnection;
 @class OPPersistentObject;
+@class OPAttributeDescription;
 
 @interface OPClassDescription : NSObject {
 	@public
 	Class persistentClass;
 	NSArray* attributeDescriptions;
 	NSString* columnList; // comma-separated list of column names
-	NSString* tableName;
+	//NSString* tableName;
 	
-	sqlite3_stmt* insertStatement;
+	sqlite3_stmt* insertStatement; 
 	sqlite3_stmt* deleteStatement;
-	sqlite3_stmt* fetchStatement;
-	sqlite3_stmt* updateStatement;
+	//sqlite3_stmt* fetchStatement;
+	//sqlite3_stmt* updateStatement;
 }
 
 - (id) initWithPersistentClass: (Class) poClass;
 - (void) createStatementsForConnection: (OPSQLiteConnection*) connection;
-- (sqlite3_stmt*) fetchStatementForRowId: (ROWID) rid;
+//- (sqlite3_stmt*) fetchStatementForRowId: (ROWID) rid;
 - (sqlite3_stmt*) insertStatement;
-- (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid;
+//- (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid;
 - (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid;
+
+- (OPAttributeDescription*) attributeWithName: (NSString*) name;
 
 
 - (NSString*) tableName;
 - (NSArray*) attributeNames;
+- (NSMutableArray*) columnNames;
 
 
 
@@ -78,14 +82,19 @@
 	Class targetClass; // for relationships
 	NSString* foreignKeyColumnName; // for 1:n relationships 
 	NSString* joinTableName;
+	NSString* queryString;
 }
 
-- (id) initWithName: (NSString*) attributeName
-		 columnName: (NSString*) dbName
-		   andClass: (Class) aClass;
 
 - (id) initWithName: (NSString*) aName properties: (NSDictionary*) dict;
+- (NSString*) queryString;
+- (Class) attributeClass;
 
 
 @end
 
+@interface NSObject (OPClassDescription)
+
++ (OPClassDescription*) persistentClassDescription;
+
+@end

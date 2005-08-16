@@ -39,6 +39,7 @@
 	@"date = {ColumnName = ZDATE; AttributeClass = NSCalendarDate;};"
 	@"author = {ColumnName = ZAUTHOR; AttributeClass = NSString;};"
 	@"profile = {ColumnName = ZPROFILE; AttributeClass = GIProfile;};"
+	@"thread = {ColumnName = ZTHREAD; AttributeClass = GIThread;};"
 	@"}";
 }
 
@@ -200,6 +201,64 @@
     id result = [self primitiveValueForKey: @"messageId"];
 	[self didAccessValueForKey: @"messageId"];
 	return result;
+}
+
+- (unsigned) numberOfReferences
+	/*" Returns the number of referenced messages until a root message is reached. "*/
+{
+	[self willAccessValueForKey: @"numberOfReferences"];
+    NSNumber* cachedValue = [self primitiveValueForKey: @"numberOfReferences"];
+	[self didAccessValueForKey: @"numberOfReferences"];
+    if (cachedValue) return [cachedValue unsignedIntValue];
+    if (![self reference]) return 0;
+    cachedValue = [NSNumber numberWithUnsignedInt: [[self reference] numberOfReferences]+1];
+    [self setValue: cachedValue forKey: @"numberOfReferences"];
+    return [cachedValue unsignedIntValue];
+}
+
+- (NSArray*) commentsInThread: (GIThread*) thread
+	/* Returns all directly commenting messages in the thread given. */
+{
+    NSEnumerator* me = [[thread messages] objectEnumerator];
+    NSMutableArray *result = [NSMutableArray array];
+    G3Message* other;
+    while (other = [me nextObject]) {
+        if ([other reference] == self) {
+            [result addObject: other];
+        }
+    }
+    return result;
+}
+
+- (NSAttributedString *)contentAsAttributedString
+{
+    return [[self internetMessage] bodyContent];
+}
+
+
+- (GIThread*) threadCreate: (BOOL) doCreate
+	/*" Returns the one thread the message belongs to. If doCreate is yes, this method creates a new thread in the receiver's context containing just the receiver. "*/
+{
+    GIThread *thread = [self thread];
+    
+    if (doCreate && !thread) {
+        // do threading by reference
+        thread = [[self referenceFind: YES] thread];
+        
+        if (!thread) {
+            thread = [[[GIThread alloc] init] autorelease];
+			[thread insertIntoContext: [self context]];
+            [thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
+        } else {
+            // NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
+            // Set the thread's subject to be the first messages subject:
+        }
+        // We got one, so set it:
+        [self setValue: thread forKey: @"thread"];
+        [thread addMessage: self];
+    }
+    
+    return thread;
 }
 
 

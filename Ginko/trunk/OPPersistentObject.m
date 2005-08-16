@@ -56,6 +56,26 @@
     return NSStringFromClass(self); 
 }
 
+
++ (OPClassDescription*) persistentClassDescription
+{
+	static NSMutableDictionary* descriptionsByClass = nil;
+	
+	if (!descriptionsByClass) {
+		descriptionsByClass = [[NSMutableDictionary alloc] init];
+	}
+	
+	OPClassDescription* result = [descriptionsByClass objectForKey: self];
+	if (!result) {
+		// Create and cache the classDescription:
+		result = [[[OPClassDescription alloc] initWithPersistentClass: self] autorelease];
+		//NSLog(@"Created ClassDescription %@", result);
+		[descriptionsByClass setObject: result forKey: self];
+	}
+	return result;
+}
+
+
 /*
 + (NSArray*) databaseAttributeNames
 //" Can overwrite this in subclass. Defaults to +[objectAttributeNames]."
@@ -80,13 +100,18 @@
 	return YES;
 }
 
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+{
+	sqlite3_bind_int64(statement, index, [self oid]);
+}
+
 - (void) insertIntoContext: (OPPersistentObjectContext*) context
 {
-	[[self context] willChangeObject: self];
+	[context willChangeObject: self];
 	NSParameterAssert([self context]==nil);
 	attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
 	NSLog(@"Created attribute dictionary for object %@");
-	[[self context] didChangeObject: self];
+	[context didChangeObject: self];
 }
 
 - (id) initFaultWithContext: (OPPersistentObjectContext*) context 
@@ -225,6 +250,12 @@
 - (id) primitiveValueForKey: (NSString*) key
 {
     id result = [attributes objectForKey: key];
+	if (!result) {
+		result = [[self context] containerForObject: self
+									relationShipKey: key];
+		if (result) [attributes setObject: result forKey: key]; // cache result in attributes dictionary
+	}
+	
     return result;
 }
 
@@ -291,5 +322,6 @@
 {
     return [NSString stringWithFormat: @"<Persistent %@ (0x%x), oid %llu, attributes: %@>", [self class], self, oid, attributes];
 }
+
 
 @end

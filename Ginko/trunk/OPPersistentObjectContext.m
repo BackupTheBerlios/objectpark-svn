@@ -35,6 +35,7 @@
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentObject.h"
 #import "OPSQLiteConnection.h"
+#import "OPClassDescription.h"
 
 @implementation OPPersistentObjectContext
 
@@ -156,7 +157,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 	OID oid = [object currentOid];
 	id result = nil;
 	if (oid) {
-		result = [db attributesForRowId: [object oid] ofClass: [object class]];
+		result = [db attributesForRowId: oid ofClass: [object class]];
 		if (!result) {
 			NSLog(@"Faulting problem: object with id %llu not in the database.", oid);
 		}
@@ -321,10 +322,38 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (void) deleteObject: (OPPersistentObject*) object
 /*" Marks object for deletion on the next -saveChanges call. "*/
 {
-	[deletedObjects addObject: object];
-	[changedObjects removeObject: object];
+	if ([object currentOid]) {
+		[deletedObjects addObject: object];
+	} // otherwise it has not been stored persistently, so we do not need to delete it
+	[changedObjects removeObject: object]; // make sure, it is not inserted again
 	[object willDelete];
 }
+
+
+
+- (id) containerForObject: (id) object
+		  relationShipKey: (NSString*) key
+/*" Returns the container specified in the attribute descrition. Currently, only NSArray is supported. "*/
+{
+	OPClassDescription* cd          = [[object class] persistentClassDescription];
+	OPAttributeDescription* ad      = [cd attributeWithName: key];
+	NSString* sql                   = [ad queryString];
+	OPPersistentObjectEnumerator* e = nil;
+	if (!ad) {
+		NSLog(@"Warning - no attributeDescription for key %@", key);
+	}
+	if (sql) {
+		// We might want to cache these:
+		
+		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
+													  resultClass: [ad attributeClass] 
+													  queryString: sql];
+		[e bind: object, nil];
+	}
+	
+	return [e allObjects];
+}
+
 
 
 - (void) revertChanges
@@ -364,19 +393,17 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 @implementation OPPersistentObjectEnumerator 
 
-
 - (id) initWithContext: (OPPersistentObjectContext*) aContext
 		   resultClass: (Class) poClass 
-		   whereClause: (NSString*) clause
+		   queryString: (NSString*) sql
 {
 	if (self = [super init]) {
-		NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [poClass databaseTableName], clause];
 		
 		context     = [aContext retain];
 		resultClass = poClass;
 		
 		//NSLog(@"Preparing statement for fetches: %@", queryString);
-		sqlite3_prepare([[context dbConnection] database], [queryString UTF8String], -1, &statement, NULL);
+		sqlite3_prepare([[context dbConnection] database], [sql UTF8String], -1, &statement, NULL);
 		if (!statement) {
 			NSLog(@"Error preparing statement: %@", [[context dbConnection] lastError]);
 			[self autorelease];
@@ -387,12 +414,23 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return self;
 }
 
+- (id) initWithContext: (OPPersistentObjectContext*) aContext
+		   resultClass: (Class) poClass 
+		   whereClause: (NSString*) clause
+{
+	NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [poClass databaseTableName], clause];
+
+	return [self initWithContext: aContext resultClass: poClass queryString: queryString];
+}
+
 // "select ZMESSAGE.ROWID from ZMESSAGE, ZJOIN where aaa=bbb;"
 
 - (void) bind: (id) variable, ...;
-/*" Replaces all the question marks in the where string with the values passed.
+/*" Replaces all the question marks in the where string with the object values passed.
+	Valid object classes return YES to +[canPersist].
 	Current implementation only uses the first variable. "*/
 {
+	//NSParameterAssert([[variable class] canPersist]);
 	[variable bindValueToStatement: statement index: 1];
 #warning todo: Implement vararg to support more than one variable binding.
 }

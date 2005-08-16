@@ -37,13 +37,22 @@
 #import "OPPersistenceConstants.h"
 
 @class OPPersistentObject;
+@class OPSQLiteStatement;
 
 @interface OPSQLiteConnection : NSObject {
     
     sqlite3* connection;
     NSString* dbPath;
-	NSMutableDictionary* classDescriptions;
+
 	BOOL transactionInProgress;
+	
+	NSMutableDictionary* insertStatements; // keyed by Class
+	NSMutableDictionary* deleteStatements; // keyed by Class
+	NSMutableDictionary* updateStatements; // keyed by Class
+	NSMutableDictionary* fetchStatements;  // keyed by Class
+	
+	//NSMutableDictionary* fetchRelationStatements;
+	
 }
 
 - (sqlite3*) database;
@@ -58,6 +67,9 @@
 - (void) commitTransaction;
 - (void) rollBackTransaction;
 - (ROWID) insertNewRowForClass: (Class) poClass;
+
+- (OPSQLiteStatement*) updateStatementForClass: (Class) poClass;
+- (OPSQLiteStatement*) fetchStatementForClass: (Class) poClass;
 
 
 - (int) lastErrorNumber;
@@ -74,6 +86,10 @@
 - (NSDictionary*) attributesForRowId: (ROWID) rid
 							 ofClass: (Class) persistentClass;
 
+- (sqlite3_stmt*) statementForClass: (Class) object
+							  forId: (ROWID) rid
+					   relationship: (NSString*) key;
+
 @end
 
 @interface NSObject (OPSQLiteSupport)
@@ -82,5 +98,22 @@
 
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index;
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index;
+
+@end
+
+@interface OPSQLiteStatement: NSObject {
+	sqlite3_stmt* statement;
+	OPSQLiteConnection* connection;
+}
+
+- (void) bindPlaceholderAtIndex: (int) index toValue: (id) value;
+- (void) bindPlaceholderAtIndex: (int) index toRowId: (ROWID) rid;
+
+- (id) initWithSQL: (NSString*) sql connection: (OPSQLiteConnection*) connection;
+- (int) execute;
+- (void) reset;
+- (sqlite3_stmt*) stmt;
+
+
 
 @end

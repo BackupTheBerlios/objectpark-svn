@@ -91,6 +91,10 @@
 - (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
 													 where: (NSString*) clause;
 
+- (id) containerForObject: (id) object
+		  relationShipKey: (NSString*) key;
+
+
 @end
 
 @interface OPPersistentObjectEnumerator : NSEnumerator {
@@ -98,6 +102,10 @@
 	Class resultClass;
 	OPPersistentObjectContext* context;
 }
+
+- (id) initWithContext: (OPPersistentObjectContext*) aContext
+		   resultClass: (Class) poClass 
+		   queryString: (NSString*) sql;
 
 - (id) initWithContext: (OPPersistentObjectContext*) aContext
 		   resultClass: (Class) poClass 

@@ -13,33 +13,32 @@
 @class GIMessage;
 
 @interface GIThread : OPPersistentObject {
-
+	int age; // since reference date (should be 1970)
 }
 
-+ (id) threadInManagedObjectContext:(NSManagedObjectContext *)aContext;
-+ (NSString*) URIStringPrefix;
+//+ (id) threadInManagedObjectContext:(NSManagedObjectContext *)aContext;
 
 - (NSSet*) messages;
-- (void)addMessage:(GIMessage *)message;
-- (void)removeMessage:(GIMessage *)aMessage;
+- (void) addMessage:(GIMessage *)message;
+- (void) removeMessage:(GIMessage *)aMessage;
 
-- (NSArray*) messagesByDate;
+//- (NSArray*) messagesByDate;
 - (NSArray*) messagesByTree;
 
 
 	/*" Groups handling "*/
-- (void)addGroup:(GIMessageGroup *)aGroup;
-- (void)addGroups:(NSSet *)someGroups;
-- (void)removeGroup:(GIMessageGroup *)aGroup; 
-- (void)removeFromAllGroups;
+- (void) addGroup: (GIMessageGroup*) aGroup;
+- (void) addGroups: (NSSet*) someGroups;
+- (void) removeGroup: (GIMessageGroup*) aGroup; 
+- (void) removeFromAllGroups;
 
-- (unsigned)messageCount;
-- (NSArray *)rootMessages;
-- (unsigned)commentDepth;
-- (BOOL)hasUnreadMessages;
+- (unsigned) messageCount;
+- (NSArray*) rootMessages;
+- (unsigned) commentDepth;
+- (BOOL) hasUnreadMessages;
 
-- (GIThread *)IplitWithMessage:(GIMessage *)aMessage;
-- (void)mergeMessagesFromThread:(GIThread *)anotherThread;
+- (GIThread*) splitWithMessage: (GIMessage*) aMessage;
+- (void) mergeMessagesFromThread: (GIThread*) anotherThread;
 
 
 @end

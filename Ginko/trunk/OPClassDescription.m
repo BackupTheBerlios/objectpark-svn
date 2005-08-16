@@ -60,11 +60,16 @@
 		
 		NSEnumerator* keyEnumerator = [plist keyEnumerator];
 		NSMutableArray* attrs = [NSMutableArray array];
+		NSMutableArray* relations = [NSMutableArray array];
 		NSString* key;
 		while (key = [keyEnumerator nextObject]) {
 			OPAttributeDescription* ad = [[[OPAttributeDescription alloc] initWithName: key properties: [plist objectForKey: key]] autorelease];
-			[attrs addObject: ad];
+			[(ad->columnName ? attrs : relations) addObject: ad];
 		}
+		NSLog(@"Found relations in %@: %@", poClass, relations);
+		NSLog(@"Found attributes in %@: %@", poClass, attrs);
+		// relations are put at the end!
+		[attrs addObjectsFromArray: relations];
 		attributeDescriptions = [attrs copy];
 	}
 	return self;
@@ -77,7 +82,7 @@
 	NSEnumerator* e = [attributeDescriptions objectEnumerator];
 	OPAttributeDescription* attr;
 	while (attr = [e nextObject]) {
-		[result addObject: attr->columnName];
+		if (attr->columnName) [result addObject: attr->columnName];
 	}
 	return result;
 }
@@ -93,16 +98,29 @@
 	return result;
 }
 
+- (OPAttributeDescription*) attributeWithName: (NSString*) name
+{
+	// improve over linear search?
+	int count = [attributeDescriptions count];
+	int i;
+	for (i=0; i<count; i++) {
+		OPAttributeDescription* ad = [attributeDescriptions objectAtIndex: i];
+		if ([ad->name isEqualToString: name]) return ad;
+	}
+	return nil;
+}
+
 - (void) createStatementsForConnection: (OPSQLiteConnection*) connection
 {
+	/*
     if (!fetchStatement) {
         NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[self columnNames] componentsJoinedByString: @","], [self tableName]];
         //NSLog(@"Preparing statement for fetches: %@", queryString);
         sqlite3_prepare([connection database], [queryString UTF8String], -1, &fetchStatement, NULL);
-        if (!fetchStatement) NSLog(@"Error preparing statement: %@", [connection lastError]);
+        if (!fetchStatement) NSLog(@"Error preparing statement '%@': %@", queryString, [connection lastError]);
         //NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
     } 
-	
+	*/
 	if (!insertStatement) {
 		
 		// Just create an empty entry to get a new ROWID:
@@ -114,21 +132,23 @@
 
 	}
 	
+	/*
 	if (!updateStatement) {
 		
-		int i = [attributeDescriptions count] + 1;
+		NSMutableArray* columnNames = [self columnNames];
+		int i = [columnNames count] + 1;
 		NSMutableArray* valuePlaceholders = [NSMutableArray array];
 		while (i--) [valuePlaceholders addObject: @"?"];
-		NSMutableArray* columnNames = [self columnNames];
 		[columnNames addObject: @"ROWID"];
 
 		NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [self tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
 		//NSLog(@"Preparing statement for updates: %@", queryString);
 		sqlite3_prepare([connection database], [queryString UTF8String], -1, &updateStatement, NULL);
 
-		NSAssert2(updateStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
+		NSAssert2(updateStatement, @"Could not prepare statement '%@': %@", queryString, [connection lastError]);
 
 	}
+	 */
 	
 	if (!deleteStatement) {
 		
@@ -161,6 +181,7 @@
 }
 
 
+/*
 - (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid
 {
 	assert(updateStatement);
@@ -176,6 +197,7 @@
 	
 	return updateStatement;
 }
+*/
 
 
 - (NSString*) tableName
@@ -183,21 +205,11 @@
 	return [persistentClass databaseTableName];
 }
 
-- (sqlite3_stmt*) fetchStatementForRowId: (ROWID) rid
-{
-	assert(fetchStatement);
-	
-	sqlite3_reset(fetchStatement);
-    sqlite3_bind_int64(fetchStatement, 1, rid);	
-	
-	return fetchStatement;
-}
 
 - (void) dealloc
 {
 	if (deleteStatement) sqlite3_finalize(deleteStatement);
 	if (insertStatement) sqlite3_finalize(insertStatement);
-	if (fetchStatement) sqlite3_finalize(fetchStatement);
 	[attributeDescriptions release];
 	[super dealloc];
 }
@@ -211,6 +223,7 @@
 
 @implementation OPAttributeDescription
 
+/*
 - (id) initWithName: (NSString*) attributeName
 		 columnName: (NSString*) dbName
 		   andClass: (Class) aClass
@@ -224,22 +237,84 @@
 	}
 	return self;
 }
+*/
 
 - (id) initWithName: (NSString*) aName properties: (NSDictionary*) dict
 {
-	id aColumnName = [dict objectForKey: @"ColumnName"];
-	Class aClass = NSClassFromString([dict objectForKey: @"AttributeClass"]);
+	NSParameterAssert(aName);
+	if (self = [super init]) {
+		
+		name        = [aName copy];
+		columnName  = [[dict objectForKey: @"ColumnName"] copy];
+		theClass    = NSClassFromString([dict objectForKey: @"AttributeClass"]);
+		queryString = [dict objectForKey: @"QueryString"];
+		
+		NSParameterAssert([theClass canPersist]);
+		
+	}
 	
-	return [self initWithName: aName columnName: aColumnName andClass: aClass];
+	return self;
 }
+
+- (NSString*) queryString
+{
+	return queryString;
+}
+
+- (Class) attributeClass
+{
+	return theClass;
+}
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ name: %@", [super description], name];
+}
+
+
+/*
+- (sqlite3_stmt*) fetchStatement
+{
+	if (!fetchStatement) {
+		NSString* queryString = ;
+        //NSLog(@"Preparing statement for fetches: %@", queryString);
+        sqlite3_prepare([connection database], [queryString UTF8String], -1, &fetchStatement, NULL);
+        if (!fetchStatement) NSLog(@"Error preparing statement: %@", [connection lastError]);
+        //NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
+		
+		
+		fetchStatement = 
+		
+	}
+	sqlite3_reset(fetchStatement);
+	return fetchStatement;
+}
+*/
 
 - (void) dealloc
 {
 	[name release];
 	[columnName release];
+	//sqlite3_finalize(fetchStatement);
 	[super dealloc];
 }
 
 
+
+
 @end
+
+@implementation NSObject (OPClassDescription)
+
++ (OPClassDescription*) persistentClassDescription
+/*" Default implementation returns nil. e.g. OPPersistentObject implements this. "*/
+{
+	return nil;
+}
+
+@end
+
+
+
+
 

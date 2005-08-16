@@ -47,6 +47,7 @@
  */
 
 @class OPPersistentObjectContext;
+@class OPClassDescription;
 
 @interface OPPersistentObject : NSObject {
     OID oid;
@@ -57,8 +58,13 @@
 
 + (NSString*) persistentAttributesPlist;
 
++ (OPClassDescription*) persistentClassDescription;
+
 - (id) initFaultWithContext: (OPPersistentObjectContext*) context 
 						oid: (OID) anOid;
+
+- (void) insertIntoContext: (OPPersistentObjectContext*) context;
+
 
 - (NSDictionary*) attributeValues;
 - (BOOL) hasChanged;
