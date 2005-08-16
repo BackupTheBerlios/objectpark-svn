@@ -24,6 +24,7 @@
 #import "EDObjectPair.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import <Foundation/NSDebug.h>
+#import "GIAddressFormatter.h"
 
 @interface G3MessageEditorController (PrivateAPI)
 - (OPInternetMessage *)message;
@@ -1410,22 +1411,20 @@ NSDictionary *maxLinesForCalendarName()
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [toField setMaxLines:maxLines];
     
-    NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
+    //NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
 
-    [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] removeCharactersInString:@" ."];
-    NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
+    //[[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] removeCharactersInString:@" ."];
+    //NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey:@"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
 
-    NSLog(@"toField charset = %d", [[toField tokenizingCharacterSet] characterIsMember:' ']);
+    //NSLog(@"toField charset = %d", [[toField tokenizingCharacterSet] characterIsMember:' ']);
     
     maxLines = [[maxLinesForCalendarName() objectForKey:@"Subject"] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [subjectField setMaxLines:maxLines];
     
-    /*
     NSFormatter *addressFormatter = [[GIAddressFormatter alloc] init];
     [toField setFormatter:addressFormatter];
     [addressFormatter release];
-    */
     
     // target/action for profile popup:
     [profileButton setTarget:self];
@@ -1595,7 +1594,6 @@ NSDictionary *maxLinesForCalendarName()
 
     if (predecessor == bottomTextField) bottomTextField = result;
     
-/*
     // if address entry field set formatter
     if ([self isAddressListField:aFieldName])
     {
@@ -1603,7 +1601,7 @@ NSDictionary *maxLinesForCalendarName()
         [result setFormatter:addressFormatter];
         [addressFormatter release];
     }
-    */
+    
     return result;
 }
 
