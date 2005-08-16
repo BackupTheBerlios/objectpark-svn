@@ -409,7 +409,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			[self autorelease];
 			return nil;
 		}
-		NSLog(@"Created enum statement 0x%x for table %@", statement, [resultClass databaseTableName]);
+		NSLog(@"Created enumerator statement %@ for table %@", sql, [resultClass databaseTableName]);
 	} 
 	return self;
 }

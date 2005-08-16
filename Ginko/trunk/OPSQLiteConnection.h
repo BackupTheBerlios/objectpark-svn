@@ -47,8 +47,8 @@
 	BOOL transactionInProgress;
 	
 	NSMutableDictionary* insertStatements; // keyed by Class
-	NSMutableDictionary* deleteStatements; // keyed by Class
-	NSMutableDictionary* updateStatements; // keyed by Class
+	NSMutableDictionary* updateStatements ; // keyed by Class
+	NSMutableDictionary* deleteStatements;  // keyed by Class
 	NSMutableDictionary* fetchStatements;  // keyed by Class
 	
 	//NSMutableDictionary* fetchRelationStatements;

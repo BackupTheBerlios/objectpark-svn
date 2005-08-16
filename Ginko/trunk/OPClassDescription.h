@@ -44,21 +44,15 @@
 	@public
 	Class persistentClass;
 	NSArray* attributeDescriptions;
-	NSString* columnList; // comma-separated list of column names
-	//NSString* tableName;
-	
-	sqlite3_stmt* insertStatement; 
-	sqlite3_stmt* deleteStatement;
-	//sqlite3_stmt* fetchStatement;
-	//sqlite3_stmt* updateStatement;
+	NSString* columnList; // comma-separated list of column names	
 }
 
 - (id) initWithPersistentClass: (Class) poClass;
 - (void) createStatementsForConnection: (OPSQLiteConnection*) connection;
 //- (sqlite3_stmt*) fetchStatementForRowId: (ROWID) rid;
-- (sqlite3_stmt*) insertStatement;
+//- (sqlite3_stmt*) insertStatement;
 //- (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid;
-- (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid;
+//- (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid;
 
 - (OPAttributeDescription*) attributeWithName: (NSString*) name;
 

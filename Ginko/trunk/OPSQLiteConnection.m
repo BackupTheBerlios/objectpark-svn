@@ -34,6 +34,7 @@
 
 #import "OPSQLiteConnection.h"
 #import "OPClassDescription.h"
+#import "OPPersistentObject.h"
 
 @implementation OPSQLiteConnection
 
@@ -164,6 +165,27 @@
 	return result;
 }
 
+- (OPSQLiteStatement*) insertStatementForClass: (Class) poClass
+{
+	OPSQLiteStatement* result = [insertStatements objectForKey: poClass];
+	
+	if (!result) {
+		// Create statement using class description and cache it in the insertStatements dictionary:
+		OPClassDescription* cd = [poClass persistentClassDescription];
+		
+		// Just create an empty entry to get a new ROWID:
+		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL);", [cd tableName]];
+		//NSLog(@"Preparing statement for inserts: %@", queryString);
+		//sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
+		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
+
+		//NSAssert2(insertStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);	
+		
+		[insertStatements setObject: result forKey: poClass]; // cache it
+	}
+	return result;
+}
+
 - (OPSQLiteStatement*) fetchStatementForClass: (Class) poClass
 {
 	OPSQLiteStatement* result = [fetchStatements objectForKey: poClass];
@@ -215,24 +237,32 @@
 }
 
 - (ROWID) insertNewRowForClass: (Class) poClass
+/*" Creates an empty row and returns the rowid assigned by SQLite. "*/
 {
-	sqlite3_stmt* insertStatement = [[self descriptionForClass: poClass] insertStatement];
-	int result = sqlite3_step(insertStatement);
-	if (result!=SQLITE_DONE) [self raiseSQLiteError];
-
-	sqlite3_reset(insertStatement);
+	OPSQLiteStatement* insertStatement = [self insertStatementForClass: poClass];
+	[insertStatement execute];
+	[insertStatement reset];
 	return sqlite3_last_insert_rowid(connection);
 }
 
 - (void) deleteRowOfClass: (Class) poClass 
 					rowId: (ROWID) rid
 {
-	sqlite3_stmt* deleteStatement = [[self descriptionForClass: poClass] deleteStatementForRowId: rid];
-	int result = sqlite3_step(deleteStatement);
+	OPSQLiteStatement* result = [deleteStatements objectForKey: poClass];
 
-	if (result != SQLITE_DONE) {
-		[self raiseSQLiteError];
+	if (!result) {
+		
+		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID=?;", [poClass databaseTableName]];
+
+		result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self]; 
+		
+		NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);
+		
+		[deleteStatements setObject: result forKey: poClass];
 	}
+	
+	[result bindPlaceholderAtIndex: 0 toRowId: rid];
+	[result execute];
 	
 }
 
@@ -261,15 +291,14 @@
     NSLog(@"Opening database at '%@'.", dbPath);
 	updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-	deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-	fetchStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	
     return SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
 }
 
 - (void) close
 {
-    if(!connection) return;
+    if (!connection) return;
     	
     sqlite3_close(connection);
     connection = NULL;
@@ -278,7 +307,6 @@
 	[insertStatements release]; insertStatements = nil; 
 	[deleteStatements release]; deleteStatements = nil; 
 	[fetchStatements release];  fetchStatements  = nil; 
-	
 }
 
 - (NSString*) path

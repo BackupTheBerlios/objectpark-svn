@@ -121,6 +121,7 @@
         //NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
     } 
 	*/
+	/*
 	if (!insertStatement) {
 		
 		// Just create an empty entry to get a new ROWID:
@@ -131,6 +132,7 @@
 		NSAssert2(insertStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
 
 	}
+	 */
 	
 	/*
 	if (!updateStatement) {
@@ -150,6 +152,7 @@
 	}
 	 */
 	
+	/*
 	if (!deleteStatement) {
 		
 		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID = ?;", [self tableName]];
@@ -158,26 +161,8 @@
 		
 		NSAssert2(deleteStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
 	}
+	 */
 	
-}
-
-- (sqlite3_stmt*) insertStatement
-{
-	assert(insertStatement);
-
-	sqlite3_reset(insertStatement);
-	
-	return insertStatement;
-}
-
-- (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid
-{
-	assert(deleteStatement);
-	NSParameterAssert(rid>0);
-	sqlite3_reset(deleteStatement);
-	sqlite3_bind_int64(deleteStatement, 1, rid);
-
-	return deleteStatement;
 }
 
 
@@ -208,8 +193,6 @@
 
 - (void) dealloc
 {
-	if (deleteStatement) sqlite3_finalize(deleteStatement);
-	if (insertStatement) sqlite3_finalize(insertStatement);
 	[attributeDescriptions release];
 	[super dealloc];
 }

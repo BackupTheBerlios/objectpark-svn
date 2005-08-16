@@ -41,7 +41,7 @@
 	NSLog(@"Message has profile: %@", [message valueForKey: @"profile"]);
 }
 
-- (void) notestInsert
+- (void) testInsert
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
@@ -60,7 +60,7 @@
 	
 }
 
-- (void) notestOidGeneration
+- (void) testOidGeneration
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
@@ -75,7 +75,7 @@
 }
 
 
-- (void) notestDelete
+- (void) testDelete
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
