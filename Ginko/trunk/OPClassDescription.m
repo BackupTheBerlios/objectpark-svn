@@ -33,7 +33,6 @@
 //
 
 #import "OPClassDescription.h"
-//#import "OPAttributeDescription.h"
 #import "OPSQLiteConnection.h"
 #import "OPPersistentObject.h"
 
@@ -82,21 +81,11 @@
 	NSEnumerator* e = [attributeDescriptions objectEnumerator];
 	OPAttributeDescription* attr;
 	while (attr = [e nextObject]) {
-		if (attr->columnName) [result addObject: attr->columnName];
+		if (attr->columnName && !attr->queryString) [result addObject: attr->columnName];
 	}
 	return result;
 }
 
-- (NSArray*) attributeNames
-{
-	NSMutableArray* result = [NSMutableArray array];
-	NSEnumerator* e = [attributeDescriptions objectEnumerator];
-	OPAttributeDescription* attr;
-	while (attr = [e nextObject]) {
-		[result addObject: attr->name];
-	}
-	return result;
-}
 
 - (OPAttributeDescription*) attributeWithName: (NSString*) name
 {
@@ -110,84 +99,16 @@
 	return nil;
 }
 
-- (void) createStatementsForConnection: (OPSQLiteConnection*) connection
-{
-	/*
-    if (!fetchStatement) {
-        NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[self columnNames] componentsJoinedByString: @","], [self tableName]];
-        //NSLog(@"Preparing statement for fetches: %@", queryString);
-        sqlite3_prepare([connection database], [queryString UTF8String], -1, &fetchStatement, NULL);
-        if (!fetchStatement) NSLog(@"Error preparing statement '%@': %@", queryString, [connection lastError]);
-        //NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
-    } 
-	*/
-	/*
-	if (!insertStatement) {
-		
-		// Just create an empty entry to get a new ROWID:
-		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL);", [self tableName]];
-		//NSLog(@"Preparing statement for inserts: %@", queryString);
-        sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
-
-		NSAssert2(insertStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
-
-	}
-	 */
-	
-	/*
-	if (!updateStatement) {
-		
-		NSMutableArray* columnNames = [self columnNames];
-		int i = [columnNames count] + 1;
-		NSMutableArray* valuePlaceholders = [NSMutableArray array];
-		while (i--) [valuePlaceholders addObject: @"?"];
-		[columnNames addObject: @"ROWID"];
-
-		NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [self tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
-		//NSLog(@"Preparing statement for updates: %@", queryString);
-		sqlite3_prepare([connection database], [queryString UTF8String], -1, &updateStatement, NULL);
-
-		NSAssert2(updateStatement, @"Could not prepare statement '%@': %@", queryString, [connection lastError]);
-
-	}
-	 */
-	
-	/*
-	if (!deleteStatement) {
-		
-		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID = ?;", [self tableName]];
-		//NSLog(@"Preparing statement for deletes: %@", queryString);
-        sqlite3_prepare([connection database], [queryString UTF8String], -1, &deleteStatement, NULL);
-		
-		NSAssert2(deleteStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);
-	}
-	 */
-	
-}
-
-
-/*
-- (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid
-{
-	assert(updateStatement);
-	
-	sqlite3_reset(updateStatement);
-	// The last placeholder is the ROWID:
-	if (rid) {
-		sqlite3_bind_int64(updateStatement, [attributeDescriptions count]+1, rid);
-	} else {
-		//NSLog(@"Binding to null rowid to request one...");
-		sqlite3_bind_null(updateStatement,[attributeDescriptions count]+1);
-	}
-	
-	return updateStatement;
-}
-*/
-
 
 - (NSString*) tableName
 {
 	return [persistentClass databaseTableName];
+}
+
+
+- (NSArray*) allAttributes
+{
+	return attributeDescriptions;
 }
 
 
@@ -206,21 +127,6 @@
 
 @implementation OPAttributeDescription
 
-/*
-- (id) initWithName: (NSString*) attributeName
-		 columnName: (NSString*) dbName
-		   andClass: (Class) aClass
-{
-	if (self = [super init]) {
-		NSParameterAssert(attributeName!=nil);
-		name       = [attributeName copy];
-		columnName = [(dbName ? dbName : name) copy];
-		theClass   = aClass ? aClass : [NSString class]; // attribute class defaults to string
-		NSParameterAssert([aClass canPersist]);
-	}
-	return self;
-}
-*/
 
 - (id) initWithName: (NSString*) aName properties: (NSDictionary*) dict
 {
@@ -244,6 +150,11 @@
 	return queryString;
 }
 
+- (BOOL) isRelationship
+{
+	return queryString!=nil;
+}
+
 - (Class) attributeClass
 {
 	return theClass;
@@ -255,25 +166,6 @@
 }
 
 
-/*
-- (sqlite3_stmt*) fetchStatement
-{
-	if (!fetchStatement) {
-		NSString* queryString = ;
-        //NSLog(@"Preparing statement for fetches: %@", queryString);
-        sqlite3_prepare([connection database], [queryString UTF8String], -1, &fetchStatement, NULL);
-        if (!fetchStatement) NSLog(@"Error preparing statement: %@", [connection lastError]);
-        //NSLog(@"Created fetchStatement 0x%x for table %@", fetchStatement, [self tableName]);
-		
-		
-		fetchStatement = 
-		
-	}
-	sqlite3_reset(fetchStatement);
-	return fetchStatement;
-}
-*/
-
 - (void) dealloc
 {
 	[name release];
@@ -281,8 +173,6 @@
 	//sqlite3_finalize(fetchStatement);
 	[super dealloc];
 }
-
-
 
 
 @end

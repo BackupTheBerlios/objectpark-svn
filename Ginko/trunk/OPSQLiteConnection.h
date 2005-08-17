@@ -51,7 +51,7 @@
 	NSMutableDictionary* deleteStatements;  // keyed by Class
 	NSMutableDictionary* fetchStatements;  // keyed by Class
 	
-	//NSMutableDictionary* fetchRelationStatements;
+	NSMutableDictionary* fetchRelationStatements;
 	
 }
 
@@ -74,6 +74,7 @@
 
 - (int) lastErrorNumber;
 - (NSString*) lastError;
+
 - (void) performCommand: (NSString*) sql;
 
 - (ROWID) updateRowOfClass: (Class) poClass
@@ -86,9 +87,9 @@
 - (NSDictionary*) attributesForRowId: (ROWID) rid
 							 ofClass: (Class) persistentClass;
 
-- (sqlite3_stmt*) statementForClass: (Class) object
-							  forId: (ROWID) rid
-					   relationship: (NSString*) key;
+- (OPSQLiteStatement*) fetchStatementForClass: (Class) poClass
+										rowId: (ROWID) rid
+								 relationship: (NSString*) key;
 
 @end
 

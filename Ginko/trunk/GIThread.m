@@ -3,14 +3,11 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 02.08.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Dirk Theisen. All rights reserved.
 //
 
 #import "GIThread.h"
-#import <sqlite3.h>
-
-@class G3Message;
-@class G3MessageGroup;
+#import "OPSQLiteConnection.h"
 
 @implementation GIThread
 
@@ -21,11 +18,6 @@
 	return @"ZTHREAD";
 }
 
-+ (NSString*) prefetchedDatabaseColumns
-/*" A comma-separated list of attributes to fetch. Those can be accessed in +newFromStatement at index two and up. "*/
-{
-	return @",ZDATE";
-}
 
 + (NSString*) persistentAttributesPlist
 {
@@ -36,7 +28,8 @@
 	@"date = {ColumnName = ZDATE; AttributeClass = NSNumber;};"
 	@"groups = {AttributeClass = GIMessageGroup; QueryString =\"select Z_4THREADS.Z_4GROUPS from Z_4THREADS where Z_4THREADS.Z_6THREADS=?\"; ContainerClass=NSMutableArray;};"
 	@"messages = {AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZTHREAD=?\"; ContainerClass=NSMutableArray;};"
-	//@"groups = {AttributeClass = GIMessageGroup; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_6THREADS; TargetKeyColumnName = Z_4GROUPS; ContainerClass=NSArray;};"
+	//@"groups = {AttributeClass = GIMessageGroup; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_6THREADS; TargetKeyColumnName = Z_4GROUPS; ContainerClass=NSArray; SortAttribute = age};"
+	//@"groups = {AttributeClass = GIMessageGroup; SQL = \"select Z_4THREADS.\"; ContainerClass=NSArray; SortAttribute = age};"
 	@"}";
 }
 
@@ -61,7 +54,7 @@
 /*" Includes all messages from otherThread. otherThread is being deleted. "*/
 {
     // put all messages from otherThread into self and remove otherThread
-    G3Message *message;
+    GIMessage *message;
     NSEnumerator *enumerator = [[otherThread messages] objectEnumerator];
     
     while (message = [enumerator nextObject]) {
@@ -113,9 +106,10 @@
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
 /*" Overwritten from OPPersistentObject to support fetching the age attribute used for sorting together with the oid on fault creation time. This allows us to update e.g. the threadsByDate relation in GIMessageGroup without re-fetching all threads (which is slow). "*/
 {
+#warning Note, that we also want to set the age when the fault already existed (without age).
 	GIThread* result = [super newFromStatement: statement index: index];
-	if (index==1 && sqlite3_column_count(statement)>1) {
-		result->age = sqlite3_column_int(statement, 2);
+	if (sqlite3_column_count(statement)>index) {
+		result->age = sqlite3_column_int(statement, index+1);
 	}
 	return result;
 }

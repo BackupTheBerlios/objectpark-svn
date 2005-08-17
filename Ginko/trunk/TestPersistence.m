@@ -3,12 +3,13 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 24.07.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Dirk Theisen. All rights reserved.
 //
 
 #import "TestPersistence.h"
 #import "OPPersistence.h"
 #import "GIMessage.h"
+#import "GIMessageGroup.h"
 
 @implementation TestPersistence
 
@@ -165,9 +166,17 @@
 	
 	NSAssert([messages containsObject: message], @"1:n reverse relationship did not work.");
 	
-	NSLog(@"Messages in thread for message (oid 2): %@", messages);
-	
+	NSLog(@"Messages in thread for message (oid 2): %@", messages);	
 }
 
+
+- (void) notestThreadsRelationship
+{
+	// Test, if we can attach a single attribute (date) to the GIThread faults: 
+	GIMessageGroup* group = [context objectForOid: 1 ofClass: [GIMessageGroup class]];
+	NSAssert(group, @"Unable to fetch group 0.");
+	
+	
+}
 
 @end

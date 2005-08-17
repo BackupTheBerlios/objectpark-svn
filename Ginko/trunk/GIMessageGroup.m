@@ -9,8 +9,8 @@
 #import "GIMessageGroup.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "OPManagedObject.h"
-#import "G3Thread.h"
-#import "G3Profile.h"
+#import "GIThread.h"
+#import "GIProfile.h"
 #import "GIApplication.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIUserDefaultsKeys.h"
@@ -32,6 +32,8 @@
 	@"{"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
 // relations missing here
+    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select Z_4THREADS.Z_6THREADS, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where Z_4THREADS.Z_4GROUPS=?;\"; ContainerClass = NSArray; SortAttributeName = age};"
+	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; ContainerClass = NSArray; SortAttributeName = date};"
 	@"}";
 }
 
@@ -148,20 +150,16 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     [thread removeGroup: self];
 }
 
+/*
 - (NSArray*) threadsByDate
-/*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
+//" Returns an ordered list of all message threads of the receiver, ordered by date. "
 {
     static NSArray *dateDescriptor = nil;
     NSArray *result = nil;
     
     NSLog(@"entered threadsByDate");
     if (! dateDescriptor) dateDescriptor = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO] autorelease], nil];
-    /*
-#warning ugly hackaround, Dude!
-    result = [[self valueForKey:@"threads"] allObjects];
-    
-    return result;
-     */
+
     //return [[(NSSet *)[self valueForKey:@"threads"] allObjects] sortedArrayUsingDescriptors:dateDescriptor];
 
     
@@ -173,7 +171,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     NSError* error = nil;
     NSFetchRequest* request = [[[NSFetchRequest alloc] init] autorelease];
-    [request setEntity: [G3Thread entity]];
+    [request setEntity: [GIThread entity]];
     
     //NSLog(@"All messages for %@: %@", self, [self valueForKey: @"threads"]);
     
@@ -194,6 +192,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 
     return result;
 }
+*/
 
 /*
 - (NSString *)primaryKey

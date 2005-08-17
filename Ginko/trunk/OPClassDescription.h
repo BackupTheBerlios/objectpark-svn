@@ -48,17 +48,12 @@
 }
 
 - (id) initWithPersistentClass: (Class) poClass;
-- (void) createStatementsForConnection: (OPSQLiteConnection*) connection;
-//- (sqlite3_stmt*) fetchStatementForRowId: (ROWID) rid;
-//- (sqlite3_stmt*) insertStatement;
-//- (sqlite3_stmt*) updateStatementForRowId: (ROWID) rid;
-//- (sqlite3_stmt*) deleteStatementForRowId: (ROWID) rid;
 
 - (OPAttributeDescription*) attributeWithName: (NSString*) name;
-
+- (NSArray*) allAttributes; 
 
 - (NSString*) tableName;
-- (NSArray*) attributeNames;
+//- (NSArray*) simpleAttributeNames;
 - (NSMutableArray*) columnNames;
 
 
@@ -83,6 +78,7 @@
 - (id) initWithName: (NSString*) aName properties: (NSDictionary*) dict;
 - (NSString*) queryString;
 - (Class) attributeClass;
+- (BOOL) isRelationship;
 
 
 @end

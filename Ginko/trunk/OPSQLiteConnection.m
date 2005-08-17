@@ -68,30 +68,11 @@
     return self;
 }
 
-- (OPClassDescription*) descriptionForClass: (Class) poClass
-// this method should go away!
-{
-	id result = [poClass persistentClassDescription];
-	[result createStatementsForConnection: self];
-	return result;
-	/*
-	if (!result) {
-		// Create and cache the classDescription:
-		result = [[[OPClassDescription alloc] initWithPersistentClass: poClass] autorelease];
-		//NSLog(@"Created ClassDescription %@", result);
-		[result createStatementsForConnection: self]; // create necessary SQL-Statements
-		[classDescriptions setObject: result forKey: poClass];
-	}
-	return result;
-	 */
-}
-
-
 - (NSDictionary*) attributesForRowId: (ROWID) rid
 							 ofClass: (Class) persistentClass
 {
     NSMutableDictionary* result = nil;
-	OPClassDescription* cd = [self descriptionForClass: persistentClass];
+	OPClassDescription* cd = [persistentClass persistentClassDescription];
     OPSQLiteStatement* statement = [self fetchStatementForClass: persistentClass];
 		
 	[statement reset];
@@ -122,25 +103,26 @@
     return result;
 }
 
-/*
 
-- (sqlite3_stmt*) statementForClass: (Class) object
-							 forId: (ROWID) rid
-					   relationship: (NSString*) key
+
+- (OPSQLiteStatement*) statementForClass: (Class) poClass
+								   forId: (ROWID) rid
+							relationship: (NSString*) key;
 {
-	OPClassDescription* cd = [self descriptionForClass: poClass];
-
+	OPClassDescription* cd = [poClass persistentClassDescription];
 	
 	
-	OPAttributeDescription* ad = [cd attributeDescriptionWithName: key];
 	
-	sqlite3_stmt* statement = [ad fetchStatement];
-	if 
+	OPAttributeDescription* ad = [cd attributeWithName: key];
 	
+	NSString* queryString = [ad queryString];
 	
+	OPSQLiteStatement* result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+	
+	return result;
 }
 
-*/
+
 
 - (OPSQLiteStatement*) updateStatementForClass: (Class) poClass
 {
@@ -211,18 +193,21 @@
 /*" Returns a new row id, if rid was 0. "*/
 {
 	
-	OPClassDescription* cd = [self descriptionForClass: poClass];
-	NSArray* attributeKeys = [cd attributeNames];
+	OPClassDescription* cd = [poClass persistentClassDescription];
+	NSArray* attributes = [cd allAttributes];
 	OPSQLiteStatement* updateStatement = [self updateStatementForClass: poClass];		
 	
-	int attrCount = [attributeKeys count];
+	int attrCount = [attributes count];
 	int i;
 
 	for (i=0; i<attrCount; i++) {
-		NSString* key = [attributeKeys objectAtIndex: i];
-		id value = [values objectForKey: key];
-		//NSLog(@"Binding value %@ to attribute %@ of update statement.", value, key);
-		[updateStatement bindPlaceholderAtIndex: i toValue: value];
+		OPAttributeDescription* ad = [attributes objectAtIndex: i];
+		if (![ad isRelationship]) {
+			NSString* key = ad->name;
+			id value = [values objectForKey: key];
+			//NSLog(@"Binding value %@ to attribute %@ of update statement.", value, key);
+			[updateStatement bindPlaceholderAtIndex: i toValue: value];
+		}
 	}
 	[updateStatement bindPlaceholderAtIndex: i toRowId: rid]; // fill in where clause
 	
