@@ -458,7 +458,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
 		[self reset];
 	}
-	NSLog(@"%@: Enumerated object %@", self, result);
+	//NSLog(@"%@: Enumerated object %@", self, result);
 	return result;
 }
 

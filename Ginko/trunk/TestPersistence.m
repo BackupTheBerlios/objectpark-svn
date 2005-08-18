@@ -171,7 +171,7 @@
 }
 
 
-- (void) notestThreadsRelationship
+- (void) testThreadsRelationship
 {
 	// Test, if we can attach a single attribute (date) to the GIThread faults: 
 	GIMessageGroup* group = [context objectForOid: 1 ofClass: [GIMessageGroup class]];

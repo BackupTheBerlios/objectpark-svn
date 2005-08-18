@@ -108,9 +108,11 @@
 {
 #warning Note, that we also want to set the age when the fault already existed (without age).
 	GIThread* result = [super newFromStatement: statement index: index];
-	int cc = sqlite3_column_count(statement);
-	if (cc>=index) {
-		result->age = sqlite3_column_int(statement, index+1);
+	if (result) {
+		int cc = sqlite3_column_count(statement);
+		if (cc>index && sqlite3_column_type(statement, index+1)==SQLITE_INTEGER) {
+			result->age = sqlite3_column_int(statement, index+1);
+		}
 	}
 	return result;
 }
