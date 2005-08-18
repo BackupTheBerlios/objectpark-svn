@@ -59,9 +59,68 @@ static NSArray* _headersShown = nil;
     return _headersShown;
 }
 
+static NSString *templatePrefix = nil;
+static NSString *templateRow = nil;
+static NSString *templatePostfix = nil;
+
++ (void)initTemplate
+{    
+    if (!templatePrefix)
+    {
+        NSError *error = nil;
+        NSString *template = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"HeaderTemplate" ofType:@"html"] encoding:NSUTF8StringEncoding error:&error];
+        
+        NSAssert(template != nil, @"header template could not be loaded");
+
+        NSRange range = [template rangeOfString:@"<tr>"];
+        NSAssert(range.location != NSNotFound, @"table start not found");
+        templatePrefix = [[template substringWithRange:NSMakeRange(0, range.location)] retain];
+        NSAssert(templatePrefix != nil, @"header prefix could not be computed");   
+        
+        NSRange rowRange = [template rangeOfString:@"</tr>"];
+        NSAssert(rowRange.location != NSNotFound, @"table row not found");        
+        
+        int position = rowRange.location + rowRange.length;
+        templateRow = [[template substringWithRange:NSMakeRange(range.location, position - (range.location))] retain];
+
+        templatePostfix = [[template substringWithRange:NSMakeRange(position, [template length] - (position))] retain];        
+    }
+}
+
++ (NSMutableAttributedString *)fieldTableWithRowCount:(int)rowCount
+{
+    NSParameterAssert(rowCount > 0);
+    
+    [self initTemplate];
+    
+    NSMutableString *string = [NSMutableString stringWithString:templatePrefix];
+    int i;
+    
+    for (i = 0; i < rowCount; i++) [string appendString:templateRow];
+    
+    [string appendString:templatePostfix];
+    
+    return [[[NSMutableAttributedString alloc] initWithHTML:[string dataUsingEncoding:NSUTF8StringEncoding] documentAttributes:NULL] autorelease];
+}
 
 + (void)_appendFieldName:(NSString *)fieldName andDecodedHeader:(NSString *)decodedHeader  toAttributedString:(NSMutableAttributedString *)displayString
 {
+    /*
+    NSMutableAttributedString *template = [self headerTemplate];
+    NSRange nameRange = [[template string] rangeOfString:@"$fieldname$"];
+    
+    NSAssert(nameRange.location != NSNotFound, @"name range not found");
+    
+    [template replaceCharactersInRange:nameRange withString:NSLocalizedString(fieldName, @"A field name in the message header like 'Subject'")];
+    
+    NSRange valueRange = [[template string] rangeOfString:@"$fieldvalue$"];
+    NSAssert(valueRange.location != NSNotFound, @"value range not found");
+    [template replaceCharactersInRange:valueRange withString:decodedHeader];
+    
+    [displayString appendAttributedString:template];
+    //[displayString appendString:@"\n"];
+    
+*/
     int startLocation, endLocation;
     
     startLocation = [displayString length];
@@ -85,21 +144,23 @@ static NSArray* _headersShown = nil;
     [displayString applyFontTraits:NSUnboldFontMask range:NSMakeRange(startLocation, endLocation - startLocation)];
 }
 
-+ (NSMutableAttributedString*) renderedHeaders: (NSArray*)headers 
-                                    forMessage: (OPInternetMessage*) aMessage 
-                                    showOthers: (BOOL) showOthers
++ (NSMutableAttributedString *)renderedHeaders:(NSArray *)headers forMessage:(OPInternetMessage *)aMessage showOthers:(BOOL)showOthers
 /*" Returns empty string if aMessage is nil. "*/
 {
     NSMutableAttributedString *displayString = [[[NSMutableAttributedString alloc] init] autorelease];
-    if (aMessage) {
-        NSEnumerator* enumerator = [headers objectEnumerator];
+    if (aMessage) 
+    {
+        NSEnumerator *enumerator = [headers objectEnumerator];
         NSString *fieldName;
         EDHeaderFieldCoder *coder;
         NSString *decodedHeader = nil;
+        NSMutableArray *fieldNames = [NSMutableArray array];
+        NSMutableArray *fieldValues = [NSMutableArray array];
         
-        while(fieldName = [enumerator nextObject])
+        while (fieldName = [enumerator nextObject])
         {
-            if ([fieldName isEqualToString:@"Date"]) {
+            if ([fieldName isEqualToString:@"Date"]) 
+            {
                 NSCalendarDate *myDate;
                 
                 myDate = [[aMessage date] copy];
@@ -108,23 +169,55 @@ static NSArray* _headersShown = nil;
                 decodedHeader = [myDate descriptionWithCalendarFormat:@"%A %B %e, %Y (%I:%M %p)"];
                 
                 [myDate release];
-            } else {
-                NS_DURING
+            } 
+            else 
+            {;
+                @try
+                {
                     coder = [aMessage decoderForHeaderField:fieldName];
                     decodedHeader = [coder stringValue];
-                NS_HANDLER
+                }
+                @catch(NSException *localException)
+                {
                     decodedHeader = [aMessage bodyForHeaderField:fieldName];
-                NS_ENDHANDLER
+                }
             }
             
             if (decodedHeader)
             {
-                [self _appendFieldName:fieldName andDecodedHeader:decodedHeader toAttributedString:displayString];
+                [fieldNames addObject:fieldName];
+                [fieldValues addObject:decodedHeader];
             }
         }
         
+        NSMutableAttributedString *fieldTable = [self fieldTableWithRowCount:[fieldNames count]];
+        int i, count = [fieldNames count];
+        int startPosition = 0;
+        
+        // replace templates
+        for (i = 0; i < count; i++)
+        {
+            NSRange nameRange = [[fieldTable string] rangeOfString:@"$fieldname$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+            NSAssert(nameRange.location != NSNotFound, @"name template could not be found");
+            NSString *nameString = NSLocalizedString([fieldNames objectAtIndex:i], @"A field name in the message header like 'Subject'");
+            [fieldTable replaceCharactersInRange:nameRange withString:nameString];
+            
+            startPosition = nameRange.location + [nameString length];
+            
+            NSRange valueRange = [[fieldTable string] rangeOfString:@"$fieldvalue$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+            NSAssert(valueRange.location != NSNotFound, @"value template could not be found");
+            [fieldTable replaceCharactersInRange:valueRange withString:[fieldValues objectAtIndex:i]];
+            
+            startPosition = valueRange.location + [[fieldValues objectAtIndex:i] length];
+        }
+        
+        
+        [displayString appendAttributedString:fieldTable];
+                
+        
     // other headers
-        if (showOthers) {
+        if (showOthers) 
+        {
             NSEnumerator *enumerator;
             EDObjectPair *headerField;
             
@@ -159,9 +252,12 @@ static NSArray* _headersShown = nil;
             }
         }
         
-        if([displayString length] > 0) {
+        /*
+        if([displayString length] > 0) 
+        {
             [displayString appendString:@"\n"];
         }
+         */
     }
     return displayString;
 }

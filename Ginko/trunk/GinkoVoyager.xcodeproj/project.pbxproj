@@ -43,6 +43,7 @@
 		7700727B085B129600AB0064 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7700727A085B129600AB0064 /* SystemConfiguration.framework */; };
 		77049FE80858570800253732 /* GIPOPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 77049FE60858570800253732 /* GIPOPJob.h */; };
 		77049FE90858570800253732 /* GIPOPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 77049FE70858570800253732 /* GIPOPJob.m */; };
+		770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 770878C008B4FCD600FBB196 /* HeaderTemplate.html */; };
 		7709374C08574DF200A29008 /* NSHost+GIReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 7709374A08574DF200A29008 /* NSHost+GIReachability.h */; };
 		7709374D08574DF200A29008 /* NSHost+GIReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7709374B08574DF200A29008 /* NSHost+GIReachability.m */; };
 		77136F3208438E2A002F9298 /* TestGIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 77136F3008438E2A002F9298 /* TestGIThread.h */; };
@@ -71,7 +72,6 @@
 		77477316080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77477314080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m */; };
 		774791BD085DF0150001560D /* GISMTPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 774791BB085DF0150001560D /* GISMTPJob.h */; };
 		774791BE085DF0150001560D /* GISMTPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 774791BC085DF0150001560D /* GISMTPJob.m */; };
-		774A05B50859DAFD00AF321C /* Tasks.txt in Resources */ = {isa = PBXBuildFile; fileRef = 774A05B40859DAFD00AF321C /* Tasks.txt */; };
 		775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 775025F208489585008DD1CD /* TestNSData+MessageUtils.h */; };
 		775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 775025F308489586008DD1CD /* TestNSData+MessageUtils.m */; };
 		775597BF085506BE00E53108 /* OPPOP3Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 775597BD085506BE00E53108 /* OPPOP3Session.h */; };
@@ -320,7 +320,6 @@
 		8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
 		8DF2CF6B0879F523008F8F6B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
 		8DF2D1C9087A9746008F8F6B /* CoreData.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DF2CF6A0879F523008F8F6B /* CoreData.framework */; };
-		8DF749FC085525B900049071 /* Bugs.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8DF749FB085525B900049071 /* Bugs.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -436,6 +435,7 @@
 		77049FE70858570800253732 /* GIPOPJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPOPJob.m; sourceTree = "<group>"; };
 		77050B5F07F1653A009AD9D2 /* HowToBuild.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = HowToBuild.rtf; sourceTree = "<group>"; };
 		7708155707CF5FD90066A136 /* AutoDoc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AutoDoc; sourceTree = "<group>"; };
+		770878C008B4FCD600FBB196 /* HeaderTemplate.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = HeaderTemplate.html; sourceTree = "<group>"; };
 		7709374A08574DF200A29008 /* NSHost+GIReachability.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSHost+GIReachability.h"; sourceTree = "<group>"; };
 		7709374B08574DF200A29008 /* NSHost+GIReachability.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSHost+GIReachability.m"; sourceTree = "<group>"; };
 		77136F3008438E2A002F9298 /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
@@ -864,6 +864,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				770878C008B4FCD600FBB196 /* HeaderTemplate.html */,
 				8DE96297089E20CB0053ED6B /* libsqlite3.dylib */,
 				772F293C084F8249004D50E0 /* Test Resources */,
 				8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */,
@@ -1504,9 +1505,8 @@
 				772F293E084F826F004D50E0 /* multipartAlternativeTest-mbox.txt in Resources */,
 				8D2147CF0851182E004C44B9 /* Search.nib in Resources */,
 				7739C40D0853564700FC0EBA /* Activity.nib in Resources */,
-				8DF749FC085525B900049071 /* Bugs.txt in Resources */,
 				773FFE970859778700E0767F /* Password.nib in Resources */,
-				774A05B50859DAFD00AF321C /* Tasks.txt in Resources */,
+				770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
