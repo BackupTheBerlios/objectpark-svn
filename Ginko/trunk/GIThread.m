@@ -8,6 +8,7 @@
 
 #import "GIThread.h"
 #import "OPSQLiteConnection.h"
+#import "OPPersistentObjectContext.h"
 
 @implementation GIThread
 
@@ -104,18 +105,22 @@
 
 
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
-/*" Overwritten from OPPersistentObject to support fetching the age attribute used for sorting together with the oid on fault creation time. This allows us to update e.g. the threadsByDate relation in GIMessageGroup without re-fetching all threads (which is slow). "*/
+//" Overwritten from OPPersistentObject to support fetching the age attribute used for sorting together with the oid on fault creation time. This allows us to update e.g. the threadsByDate relation in GIMessageGroup without re-fetching all threads (which is slow). "/
 {
 #warning Note, that we also want to set the age when the fault already existed (without age).
+
 	GIThread* result = [super newFromStatement: statement index: index];
+	
 	if (result) {
-		int cc = sqlite3_column_count(statement);
-		if (cc>index && sqlite3_column_type(statement, index+1)==SQLITE_INTEGER) {
-			result->age = sqlite3_column_int(statement, index+1);
+		int columnCount = sqlite3_column_count(statement);
+		index++; // forward to next column, i.e. the date
+		if (columnCount>index) {
+			result->age = sqlite3_column_int(statement, index);
 		}
 	}
 	return result;
 }
+
 
 
 @end

@@ -37,6 +37,8 @@
 #import "OPPersistentObjectContext.h"
 #import "OPClassDescription.h"
 
+#import "GIThread.h"
+
 @implementation OPPersistentObject
 
 
@@ -301,9 +303,10 @@
     //SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, SQLITE_NULL
     if (type!=SQLITE_NULL) {
 		if (type==SQLITE_INTEGER) {
-            long long value = sqlite3_column_int64(statement, index);
-			if (value)
-				result = [[OPPersistentObjectContext defaultContext] objectForOid: value 
+            ROWID rid = sqlite3_column_int64(statement, index);
+
+			if (rid)
+				result = [[OPPersistentObjectContext defaultContext] objectForOid: rid 
 																		  ofClass: self];
         } else {
             NSLog(@"Warning: Typing Error. Number expected, got sqlite type #%d. Value ignored.", type);
