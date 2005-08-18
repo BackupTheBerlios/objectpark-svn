@@ -32,7 +32,7 @@
 	@"{"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
 // relations missing here
-    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select Z_4THREADS.Z_6THREADS, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where Z_4THREADS.Z_4GROUPS=?;\"; ContainerClass = NSArray; SortAttributeName = age};"
+    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select Z_4THREADS.Z_6THREADS, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; ContainerClass = NSArray; SortAttributeName = age;};"
 	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; ContainerClass = NSArray; SortAttributeName = date};"
 	@"}";
 }

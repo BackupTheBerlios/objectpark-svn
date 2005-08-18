@@ -82,7 +82,7 @@
 		// We got a raw row, loop over all attributes and create a dictionary:
 		
 		NSArray* attributes = cd->attributeDescriptions;
-        int attrCount = [attributes count];
+        int attrCount = cd->simpleAttributeCount;
         int i = 0;
 		//NSLog(@"Processing attributeDescriptions %@", attributes);
         result = [NSMutableDictionary dictionaryWithCapacity: attrCount];
@@ -92,7 +92,7 @@
         while (i<attrCount) {
 			OPAttributeDescription* desc = [attributes objectAtIndex: i];
 			id value = [desc->theClass newFromStatement: [statement stmt] index: i];
-			//NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
+			NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
 			if (value) {
 				[result setObject: value forKey: desc->name];
 			} 
@@ -105,13 +105,11 @@
 
 
 
-- (OPSQLiteStatement*) statementForClass: (Class) poClass
-								   forId: (ROWID) rid
-							relationship: (NSString*) key;
+- (OPSQLiteStatement*) fetchStatementForClass: (Class) poClass
+										rowId: (ROWID) rid
+								 relationship: (NSString*) key;
 {
 	OPClassDescription* cd = [poClass persistentClassDescription];
-	
-	
 	
 	OPAttributeDescription* ad = [cd attributeWithName: key];
 	
@@ -194,7 +192,7 @@
 {
 	
 	OPClassDescription* cd = [poClass persistentClassDescription];
-	NSArray* attributes = [cd allAttributes];
+	NSArray* attributes = cd->attributeDescriptions;
 	OPSQLiteStatement* updateStatement = [self updateStatementForClass: poClass];		
 	
 	int attrCount = [attributes count];
@@ -399,10 +397,6 @@
     return sqlResult;
 }
 
-- (SQLStatement*) statementWithFormat: (NSString*) format
-{
-    return [SQLStatement statementWithFormat: format database: self];
-}
 */
 
 @end

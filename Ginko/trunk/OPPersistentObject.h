@@ -90,4 +90,6 @@
 - (void) didChangeValueForKey: (NSString*) key;
 - (void) didAccessValueForKey: (NSString*) key;
 
+- (NSString*) descriptionIncludingAttributes: (BOOL) printAttributes;
+
 @end

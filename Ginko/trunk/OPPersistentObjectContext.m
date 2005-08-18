@@ -333,21 +333,20 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (id) containerForObject: (id) object
 		  relationShipKey: (NSString*) key
-/*" Returns the container specified in the attribute descrition. Currently, only NSArray is supported. "*/
+/*" Returns the container specified in the attribute description. Currently, only NSArray is supported or nil if key does not
+	denote a to-many relationship. "*/
 {
 	OPClassDescription* cd          = [[object class] persistentClassDescription];
 	OPAttributeDescription* ad      = [cd attributeWithName: key];
 	NSString* sql                   = [ad queryString];
 	OPPersistentObjectEnumerator* e = nil;
-	if (!ad) {
-		NSLog(@"Warning - no attributeDescription for key %@", key);
-	}
-	if (sql) {
+	
+	if ([ad isRelationship] && sql!=nil) {
 		// We might want to cache these:
 		
-		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
+		e = [[[OPPersistentObjectEnumerator alloc] initWithContext: self 
 													  resultClass: [ad attributeClass] 
-													  queryString: sql];
+													  queryString: sql] autorelease];
 		[e bind: object, nil];
 	}
 	
@@ -454,15 +453,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	id result = nil;
 	int res = sqlite3_step(statement);
 	if (res==SQLITE_ROW) {
-		if (NO && sqlite3_column_count(statement)>1) {
-			// expect to fetch the whole attribute-set:
-			assert(NO);
-		} else {
-			// expect the rowid on position one:
-			ROWID rid = sqlite3_column_int64(statement, 0);
-			result = [context objectForOid: rid ofClass: resultClass];
-		}
+		result = [resultClass newFromStatement: statement index: 0];
+	} else {
+		NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
+		[self reset];
 	}
+	NSLog(@"%@: Enumerated object %@", self, result);
 	return result;
 }
 

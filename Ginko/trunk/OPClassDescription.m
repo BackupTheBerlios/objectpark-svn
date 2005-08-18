@@ -63,11 +63,12 @@
 		NSString* key;
 		while (key = [keyEnumerator nextObject]) {
 			OPAttributeDescription* ad = [[[OPAttributeDescription alloc] initWithName: key properties: [plist objectForKey: key]] autorelease];
-			[(ad->columnName ? attrs : relations) addObject: ad];
+			[([ad isRelationship] ? relations : attrs) addObject: ad];
 		}
-		NSLog(@"Found relations in %@: %@", poClass, relations);
-		NSLog(@"Found attributes in %@: %@", poClass, attrs);
+		//NSLog(@"Found relations in %@: %@", poClass, relations);
+		//NSLog(@"Found attributes in %@: %@", poClass, attrs);
 		// relations are put at the end!
+		simpleAttributeCount = [attrs count];
 		[attrs addObjectsFromArray: relations];
 		attributeDescriptions = [attrs copy];
 	}
@@ -103,12 +104,6 @@
 - (NSString*) tableName
 {
 	return [persistentClass databaseTableName];
-}
-
-
-- (NSArray*) allAttributes
-{
-	return attributeDescriptions;
 }
 
 

@@ -29,7 +29,7 @@
 	@"groups = {AttributeClass = GIMessageGroup; QueryString =\"select Z_4THREADS.Z_4GROUPS from Z_4THREADS where Z_4THREADS.Z_6THREADS=?\"; ContainerClass=NSMutableArray;};"
 	@"messages = {AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZTHREAD=?\"; ContainerClass=NSMutableArray;};"
 	//@"groups = {AttributeClass = GIMessageGroup; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_6THREADS; TargetKeyColumnName = Z_4GROUPS; ContainerClass=NSArray; SortAttribute = age};"
-	//@"groups = {AttributeClass = GIMessageGroup; SQL = \"select Z_4THREADS.\"; ContainerClass=NSArray; SortAttribute = age};"
+	//@"groups = {AttributeClass = GIMessageGroup; SQL = \"select Z_4THREADS. from\"; ContainerClass=NSArray; SortAttribute = age};"
 	@"}";
 }
 
@@ -108,7 +108,8 @@
 {
 #warning Note, that we also want to set the age when the fault already existed (without age).
 	GIThread* result = [super newFromStatement: statement index: index];
-	if (sqlite3_column_count(statement)>index) {
+	int cc = sqlite3_column_count(statement);
+	if (cc>=index) {
 		result->age = sqlite3_column_int(statement, index+1);
 	}
 	return result;

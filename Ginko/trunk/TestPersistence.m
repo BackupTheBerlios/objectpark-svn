@@ -57,6 +57,7 @@
 	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Inserted object value not set.");
 	
 	[newMessage revert];
+	
 	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Unable to retrieve inserted object value.");
 	
 }
@@ -146,14 +147,14 @@
 
 - (void) testGettingAllObjects
 {
-	NSArray* allThreads = [[context objectEnumeratorForClass: [GIThread class] where: nil] allObjects];
+	NSArray* allThreads = [[context objectEnumeratorForClass: [GIMessageGroup class] where: nil] allObjects];
 	
 	NSLog(@"Got %d thread faults.", [allThreads count]);
 	
 	NSAssert([allThreads count]>0, @"Problem getting allThread faults at once");
 }
 
-- (void) notestToManyRelationship
+- (void) testToManyRelationship
 {
 	GIMessage* message = [context objectForOid: 2 ofClass: [GIMessage class]];
 	GIThread* thread = [message valueForKey: @"thread"];
@@ -164,7 +165,7 @@
 	
 	NSArray* messages = [thread valueForKey: @"messages"];
 	
-	NSAssert([messages containsObject: message], @"1:n reverse relationship did not work.");
+	NSAssert([messages containsObject: message], @"1:n inverse relationship did not work.");
 	
 	NSLog(@"Messages in thread for message (oid 2): %@", messages);	
 }
@@ -176,7 +177,12 @@
 	GIMessageGroup* group = [context objectForOid: 1 ofClass: [GIMessageGroup class]];
 	NSAssert(group, @"Unable to fetch group 0.");
 	
+	NSArray* threads = [group valueForKey: @"threadsByDate"];
 	
+	GIThread* someThread = [threads lastObject];
+	
+	NSAssert1([threads count]>0, @"Unable to fetch threads for group %@.", group);
+
 }
 
 @end

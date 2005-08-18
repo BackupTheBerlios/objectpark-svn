@@ -318,9 +318,49 @@
     [super dealloc];
 }
 
+
+- (NSString*) attributeDescription
+/*" Does not call -derscription on other persistent objects to avoid cycles. "*/
+{
+	NSMutableString* result = nil;
+	
+	if (attributes) {
+		if ([attributes count]) {
+			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+			NSEnumerator* e = [attributes keyEnumerator];
+			NSString* key;
+			result = [[NSMutableString alloc] initWithString: @"{\n"];
+			while (key = [e nextObject]) {
+				id value = [attributes objectForKey: key];
+				[result appendString: key];
+				[result appendString: @": "];
+				if ([value isKindOfClass: [NSArray class]]) {
+					[result appendString: [NSString stringWithFormat: @"(%d objects)", [value count]]];
+				} else {
+					[result appendString: [value isKindOfClass: [OPPersistentObject class]] ? [value descriptionIncludingAttributes: NO] : [value description]];
+				}
+				[result appendString: @";\n"];
+
+			}
+			[result appendString: @"}\n"];
+ 
+			[pool release];
+		} else {
+			result = @"{}";
+		}
+	}
+	//NSLog(@"attrDescr: %@", result);
+	return [result autorelease];
+}
+
+- (NSString*) descriptionIncludingAttributes: (BOOL) printAttributes
+{
+	return [NSString stringWithFormat: @"<Persistent %@ (0x%x), oid %llu, attributes: %@>", [self class], self, oid, printAttributes ? [self attributeDescription] : (attributes ? @"{...}" : nil)];
+}
+
 - (NSString*) description
 {
-    return [NSString stringWithFormat: @"<Persistent %@ (0x%x), oid %llu, attributes: %@>", [self class], self, oid, attributes];
+    return [self descriptionIncludingAttributes: YES];
 }
 
 
