@@ -92,4 +92,7 @@
 
 - (NSString*) descriptionIncludingAttributes: (BOOL) printAttributes;
 
+- (void) addValue: (id) value forKey: (NSString*) key;
+- (void) removeValue: (id) value forKey: (NSString*) key;
+
 @end

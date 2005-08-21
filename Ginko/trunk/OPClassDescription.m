@@ -131,7 +131,7 @@
 		name        = [aName copy];
 		columnName  = [[dict objectForKey: @"ColumnName"] copy];
 		theClass    = NSClassFromString([dict objectForKey: @"AttributeClass"]);
-		queryString = [dict objectForKey: @"QueryString"];
+		queryString = [[dict objectForKey: @"QueryString"] copy];
 		
 		NSParameterAssert([theClass canPersist]);
 		
@@ -165,6 +165,7 @@
 {
 	[name release];
 	[columnName release];
+	[queryString release];
 	//sqlite3_finalize(fetchStatement);
 	[super dealloc];
 }

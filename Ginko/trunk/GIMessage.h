@@ -77,3 +77,8 @@
 - (void) removeInSendJobStatus;
 
 @end
+
+@interface GIMessageData : OPPersistentObject {
+}
+ 
+@end

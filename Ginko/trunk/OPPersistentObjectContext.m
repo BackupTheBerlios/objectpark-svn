@@ -68,7 +68,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 - (void) unlock
 {
-    [lock lock];
+    [lock unlock];
 }
 
 
@@ -401,13 +401,15 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		context     = [aContext retain];
 		resultClass = poClass;
 		
-		//NSLog(@"Preparing statement for fetches: %@", queryString);
-		sqlite3_prepare([[context dbConnection] database], [sql UTF8String], -1, &statement, NULL);
+		[context lock];
+		sqlite3_prepare([[context dbConnection] database], [sql UTF8String], -1, &statement, NULL);	
+		[context unlock];
 		if (!statement) {
 			NSLog(@"Error preparing statement: %@", [[context dbConnection] lastError]);
 			[self autorelease];
 			return nil;
 		}
+		
 		NSLog(@"Created enumerator statement %@ for table %@", sql, [resultClass databaseTableName]);
 	} 
 	return self;
@@ -429,38 +431,45 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	Valid object classes return YES to +[canPersist].
 	Current implementation only uses the first variable. "*/
 {
+	// locking?
 	//NSParameterAssert([[variable class] canPersist]);
 	[variable bindValueToStatement: statement index: 1];
 #warning todo: Implement vararg to support more than one variable binding.
 }
 
-/*
-- (id) nextObject
-//" Call this if you might not need the object and want to spare memory. "
-{
-	int res = sqlite3_step(statement);
-}
-*/
-
 - (void) reset
 {
+	[context lock];
 	sqlite3_reset(statement);
+	[context unlock];
+}
+
+- (BOOL) skipObject
+	/*" Returns YES, if an object was skipped, NO otherwise (nothing to enumerate). Similar to nextObject, but does not create the result object (if any). "*/
+{
+	[context lock];
+	int res = sqlite3_step(statement);
+	[context unlock];
+	return (res==SQLITE_ROW);
 }
 
 - (id) nextObject
-/*" Returns the next fetched object including all its attributes. "*/
+	/*" Returns the next fetched object including all its attributes. "*/
 {
+	[context lock];
 	id result = nil;
-	int res = sqlite3_step(statement);
-	if (res==SQLITE_ROW) {
+	if (sqlite3_step(statement)==SQLITE_ROW) {
 		result = [resultClass newFromStatement: statement index: 0];
 	} else {
-		NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
-		[self reset];
+		//NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
+		sqlite3_reset(statement); // finished
 	}
-	NSLog(@"%@: Enumerated object %@", self, result);
+	[context unlock];
+	//NSLog(@"%@: Enumerated object %@", self, result);
 	return result;
 }
+
+
 
 - (void) dealloc
 {

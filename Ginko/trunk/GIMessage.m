@@ -34,7 +34,7 @@
 	return 
 	@"{"
 	@"messageId = {ColumnName = ZMESSAGEID; AttributeClass = NSString;};"
-	@"messageDataRowId = {ColumnName = ZMESSAGEDATA; AttributeClass = NSNumber;};"
+	@"messageData = {ColumnName = ZMESSAGEDATA; AttributeClass = GIMessageData;};"
 	@"subject = {ColumnName = ZSUBJECT; AttributeClass = NSString;};"
 	@"date = {ColumnName = ZDATE; AttributeClass = NSCalendarDate;};"
 	@"author = {ColumnName = ZAUTHOR; AttributeClass = NSString;};"
@@ -70,6 +70,10 @@
     [self setPrimitiveValue: nil forKey: @"internetMessageCache"];
 }
 
+- (NSData*) transferData
+{
+	return [self valueForKeyPath: @"messageData.transferData"];
+}
 
 - (OPInternetMessage*) internetMessage
 {
@@ -87,14 +91,14 @@
     return cache;
 }
 
-+ (id)messageWithTransferData:(NSData *)someTransferData
++ (id)messageWithTransferData: (NSData*) someTransferData
 	/*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context nil is returned. "*/
 {
     id result = nil;
-    OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
+    OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData: someTransferData];
     BOOL insertMessage = NO;
     
-    G3Message *dupe = [self messageForMessageId:[im messageId]];
+    G3Message *dupe = [self messageForMessageId: [im messageId]];
     if (dupe)
     {
         if ([G3Profile isMyEmailAddress:[im fromWithFallback:YES]])
@@ -261,5 +265,21 @@
     return thread;
 }
 
+@end
+
+@implementation GIMessageData
+
++ (NSString*) databaseTableName
+{
+    return @"ZMESSAGEDATA";
+}
+
++ (NSString*) persistentAttributesPlist
+{
+	return 
+	@"{"
+	@"transferData = {ColumnName = ZTRANSFERDATA; AttributeClass = NSData;};"
+	@"}";
+}
 
 @end

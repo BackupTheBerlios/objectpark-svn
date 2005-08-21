@@ -112,6 +112,7 @@
 		   whereClause: (NSString*) clause;
 
 - (void) reset;
+- (BOOL) skipObject;
 
 - (void) bind: (id) variable, ...;
 

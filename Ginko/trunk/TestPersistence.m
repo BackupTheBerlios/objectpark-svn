@@ -9,6 +9,7 @@
 #import "TestPersistence.h"
 #import "OPPersistence.h"
 #import "GIMessage.h"
+#import "GIThread.h"
 #import "GIMessageGroup.h"
 
 @implementation TestPersistence
@@ -154,7 +155,7 @@
 	NSAssert([allThreads count]>0, @"Problem getting allThread faults at once");
 }
 
-- (void) testToManyRelationship
+- (void) testGroupsRelationshipRead
 {
 	GIMessage* message = [context objectForOid: 2 ofClass: [GIMessage class]];
 	GIThread* thread = [message valueForKey: @"thread"];
@@ -168,6 +169,31 @@
 	NSAssert([messages containsObject: message], @"1:n inverse relationship did not work.");
 	
 	NSLog(@"Messages in thread for message (oid 2): %@", messages);	
+}
+
+- (void) testGroupsRelationshipWrite
+{
+	GIMessage* message = [context objectForOid: 2 ofClass: [GIMessage class]];
+	GIThread* thread = [message valueForKey: @"thread"];
+	
+	NSArray* groups = [thread valueForKey: @"groups"];
+	NSLog(@"Thread %@ is contained in %d group(s) (e.g. %@)", thread, [groups count], [[groups lastObject] valueForKey: @"name"]);
+	int groupCount = [groups count];
+	
+	GIMessageGroup* additionalGroup = [context objectForOid: 4 ofClass: [GIMessageGroup class]];
+	
+	NSAssert(![groups containsObject: additionalGroup], @"Bad test data.");
+	
+	[thread addToGroups: additionalGroup];
+	
+	groups = [thread valueForKey: @"groups"];
+	
+	NSAssert([groups count] == groupCount+1, @"relationship addition failed.");
+		
+	[thread removeFromGroups: additionalGroup];
+
+	NSAssert([groups count] == groupCount, @"relationship removal failed.");
+
 }
 
 

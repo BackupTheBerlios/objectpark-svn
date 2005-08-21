@@ -36,18 +36,18 @@
 
 - (void) addToGroups: (GIMessageGroup*) group
 {
-	//[self willChangeValueForKey: @"groups"];
-	
+	[self willChangeValueForKey: @"groups"];
 	[self addValue: group forKey: @"groups"]; 
-	
-	//[self didChangeValueForKey: @"groups"];
+	[self didChangeValueForKey: @"groups"];
 }
 
 
 
 - (void) removeFromGroups: (GIMessageGroup*) group
 {
+	[self willChangeValueForKey: @"groups"];
 	[self removeValue: group forKey: @"groups"];
+	[self didChangeValueForKey: @"groups"];
 }
 
 
@@ -95,7 +95,7 @@
         NSEnumerator *enumerator = [[self valueForKey: @"groups"] objectEnumerator];
         GIMessageGroup *group;
         while (group = [enumerator nextObject]) {
-            [self removeGroup: group];
+            [self removeFromGroups: group];
         }
         
         [[self context] deleteObject: self];		

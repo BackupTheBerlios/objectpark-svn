@@ -27,11 +27,10 @@
 - (NSArray*) messagesByTree;
 
 
-	/*" Groups handling "*/
-- (void) addGroup: (GIMessageGroup*) aGroup;
-- (void) addGroups: (NSSet*) someGroups;
-- (void) removeGroup: (GIMessageGroup*) aGroup; 
-- (void) removeFromAllGroups;
+/*" Groups handling "*/
+- (void) addToGroups: (GIMessageGroup*) group;
+- (void) removeFromGroups: (GIMessageGroup*) group;
+- (void) removeAllFromGroups;
 
 - (unsigned) messageCount;
 - (NSArray*) rootMessages;

@@ -366,5 +366,23 @@
     return [self descriptionIncludingAttributes: YES];
 }
 
+- (void) addValue: (id) value forKey: (NSString*) key
+{
+	id container = [self primitiveValueForKey: key];
+	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
+#warning Record relationship change in persistent context somehow.
+#warning Also update inverse relationship.
+	
+	[container addObject: value];	
+}
+
+- (void) removeValue: (id) value forKey: (NSString*) key
+{
+	id container = [self primitiveValueForKey: key];
+#warning Record relationship change in persistent context somehow.
+#warning Also update inverse relationship.
+	[container removeObject: value];
+}
+
 
 @end
