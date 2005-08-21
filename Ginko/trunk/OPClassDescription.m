@@ -128,10 +128,11 @@
 	NSParameterAssert(aName);
 	if (self = [super init]) {
 		
-		name        = [aName copy];
-		columnName  = [[dict objectForKey: @"ColumnName"] copy];
-		theClass    = NSClassFromString([dict objectForKey: @"AttributeClass"]);
-		queryString = [[dict objectForKey: @"QueryString"] copy];
+		name              = [aName copy];
+		columnName        = [[dict objectForKey: @"ColumnName"] copy];
+		theClass          = NSClassFromString([dict objectForKey: @"AttributeClass"]);
+		queryString       = [[dict objectForKey: @"QueryString"] copy];
+		sortAttributeName = [[dict objectForKey: @"SortAttribute"] copy];
 		
 		NSParameterAssert([theClass canPersist]);
 		
@@ -148,6 +149,12 @@
 - (BOOL) isRelationship
 {
 	return queryString!=nil;
+}
+
+- (NSString*) sortAttributeName
+/*" Returns the attribute name to sort a relationship by. If (for a relationship) no sortAttribute is specified, the relationship is not sorted and an NSSet is used. "*/
+{
+	return sortAttributeName;
 }
 
 - (Class) attributeClass

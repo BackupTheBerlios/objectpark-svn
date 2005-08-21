@@ -45,7 +45,7 @@
 	Class persistentClass;
 	NSArray* attributeDescriptions; // simple attributeDescriptions followed by relationship attributeDescriptions
 	unsigned simpleAttributeCount; // number of simple attributeDescriptions in attributeDescriptions array
-	NSString* columnList; // comma-separated list of column names	
+	NSString* columnList; // comma-separated list of column name
 }
 
 - (id) initWithPersistentClass: (Class) poClass;
@@ -56,8 +56,6 @@
 //- (NSArray*) simpleAttributeNames;
 - (NSMutableArray*) columnNames;
 
-
-
 @end
 
 #import <Cocoa/Cocoa.h>
@@ -66,12 +64,14 @@
 	@public // Made public for fast access only. Never change those. These objects are immutable.
 	NSString* name;
 	NSString* columnName;
-	Class theClass; // The class to use for the attribute. Either NSString, NSNumber, NSData or NSDate or any OPPerstistentObject (subclass)
-					// more stuff for relationships:
+	Class theClass; // The class to use for the attribute. Either NSString, NSNumber, NSData or NSDate or any OPPerstistentObject (subclass).
+	
+	// Stuff used for relationships:
 	Class targetClass; // for relationships
 	NSString* foreignKeyColumnName; // for 1:n relationships 
 	NSString* joinTableName;
 	NSString* queryString;
+	NSString* sortAttributeName; // set this to use a sorted array container instead of a set.
 }
 
 
@@ -79,6 +79,7 @@
 - (NSString*) queryString;
 - (Class) attributeClass;
 - (BOOL) isRelationship;
+- (NSString*) sortAttributeName;
 
 
 @end

@@ -86,13 +86,10 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     anIndex += 1; // first position is node info
     resultURLString = [result URIReferenceString];
     
-    if (anIndex = [aNode count])
-    {
-        [aNode addObject:resultURLString];
-    }
-    else
-    {
-        [aNode insertObject:resultURLString atIndex:anIndex];
+    if (anIndex = [aNode count]) {
+        [aNode addObject: resultURLString];
+    } else {
+        [aNode insertObject: resultURLString atIndex: anIndex];
     }
     
     [self commitChanges];
@@ -140,13 +137,12 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 
 - (void) addThread: (GIThread*) thread 
 {    
-    [thread addGroup: self];
-    // Should invalidate thread-cache here as necessary
+    [thread addToGroups: self];
 }
 
 - (void) removeThread: (GIThread*) thread 
 {
-    [thread removeGroup: self];
+    [thread removeFromGroups: self];
 }
 
 /*

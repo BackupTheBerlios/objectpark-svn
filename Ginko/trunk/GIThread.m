@@ -9,6 +9,7 @@
 #import "GIThread.h"
 #import "OPSQLiteConnection.h"
 #import "OPPersistentObjectContext.h"
+#import "GIMessage.h"
 
 @implementation GIThread
 
@@ -28,7 +29,7 @@
 	@"subject = {ColumnName = ZSUBJECT; AttributeClass = NSString;};"
 	@"date = {ColumnName = ZDATE; AttributeClass = NSNumber;};"
 	@"groups = {AttributeClass = GIMessageGroup; QueryString =\"select Z_4THREADS.Z_4GROUPS from Z_4THREADS where Z_4THREADS.Z_6THREADS=?\"; ContainerClass=NSMutableArray;};"
-	@"messages = {AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZTHREAD=?\"; ContainerClass=NSMutableArray;};"
+	@"messages = {AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZTHREAD=?\";};"
 	//@"groups = {AttributeClass = GIMessageGroup; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_6THREADS; TargetKeyColumnName = Z_4GROUPS; ContainerClass=NSArray; SortAttribute = age};"
 	//@"groups = {AttributeClass = GIMessageGroup; SQL = \"select Z_4THREADS. from\"; ContainerClass=NSArray; SortAttribute = age};"
 	@"}";
@@ -59,7 +60,7 @@
     NSEnumerator *enumerator = [[otherThread messages] objectEnumerator];
     
     while (message = [enumerator nextObject]) {
-        [self addMessage: message];
+        [self addToMessages: message];
     }
     
     /*
@@ -67,7 +68,7 @@
 	 enumerator = [[otherThread valueForKey:@"groups"] objectEnumerator];
 	 while (group = [enumerator nextObject])
 	 {
-		 [self removeGroup:group];
+		 [self removeFromGroups: group];
 	 }
      */
 	
@@ -83,7 +84,7 @@
     
     enumerator = [[self subthreadWithMessage: aMessage] objectEnumerator];
     while (message = [enumerator nextObject]) {
-        [newThread addMessage:message];
+        [newThread addToMessages: message];
     }
 	
     // update numberOfMessages attribute:
@@ -121,6 +122,105 @@
 	return result;
 }
 
+- (unsigned) messageCount
+{
+    return (unsigned)[[self valueForKey: @"numberOfMessages"] intValue]; 
+}
 
+- (void) treeWalkFrom: (GIMessage*) localRoot addTo: (NSMutableArray*) result
+{
+    [result addObject: localRoot];
+    NSArray* comments = [localRoot commentsInThread: self];
+    int i;
+    int commentCount = [comments count];
+    for (i=0; i<commentCount; i++) {
+        [self treeWalkFrom: [comments objectAtIndex: i] addTo: result];
+    }
+}
+
+- (NSArray*) subthreadWithMessage: (GIMessage*) aMessage
+/*" Returns all messages of this thread directly or indirectly referencing aMessage, sorted by tree walk. "*/
+{
+    NSMutableArray* result = [NSMutableArray array];
+	[self treeWalkFrom: aMessage addTo: result];
+    return result;
+}
+
+
+- (NSArray*) messagesByTree
+	/* Returns an array containing the result of a depth first search over all tree roots. */
+{
+    NSArray* allMessages = [self messages];
+    NSMutableArray* result = [NSMutableArray arrayWithCapacity: [allMessages count]];
+    NSEnumerator* me = [allMessages objectEnumerator];
+    GIMessage* message;
+    while (message = [me nextObject]) {
+        if (![message reference]) {
+            // Found a root message. Walk the tree and collect all nodes:
+            [self treeWalkFrom: message addTo: result];
+        }
+    }
+    return result;
+}
+
+- (NSArray*) messages
+{
+    [self willAccessValueForKey: @"messages"];
+    id messages = [self primitiveValueForKey: @"messages"];
+    [self didAccessValueForKey: @"messages"];
+    return messages;
+}
+
+- (BOOL) hasUnreadMessages
+{    
+	NSEnumerator *enumerator = [[self messages] objectEnumerator];
+	GIMessage *message;
+    while (message = [enumerator nextObject]) {
+        if (![message hasFlags: OPSeenStatus]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (NSArray*) rootMessages
+/*" Returns all messages without reference in the receiver. "*/
+{
+    NSMutableArray *result = [NSMutableArray array];
+    NSEnumerator *me = [[self messages] objectEnumerator];
+    GIMessage *message;
+    while (message = [me nextObject]) {
+        if (![message reference]) {
+            [result addObject:message];
+        }
+    }
+    return result;
+}
+
+- (void) addToMessages: (GIMessage*) message
+{
+	[self willAccessValueForKey: @"messages"];
+	[self addValue: message forKey: @"messages"];
+	[self didAccessValueForKey: @"messages"];
+}
+
+- (void) removeFromMessages: (GIMessage*) message
+{
+	[self willAccessValueForKey: @"messages"];
+	[self removeValue: message forKey: @"messages"];
+	[self didAccessValueForKey: @"messages"];
+}
+
+- (unsigned) commentDepth
+	/*" Returns the the length of the longest comment chain in this thread. "*/
+{
+    NSEnumerator *re = [[self messages] objectEnumerator];
+    GIMessage *msg;
+    unsigned result = 0;
+    while (msg = [re nextObject]) {
+        result = MAX(result, [msg numberOfReferences]);
+    }
+    return result + 1;
+}
 
 @end

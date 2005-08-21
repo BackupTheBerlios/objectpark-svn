@@ -368,20 +368,15 @@ BOOL messageReferencesOneOfThese(G3Message *aMessage, NSSet *someMessages)
     return result + 1;
 }
 
-- (BOOL)hasUnreadMessages
-{
-    NSEnumerator *enumerator;
-    G3Message *message;
-    
-    enumerator = [[self messages] objectEnumerator];
-    while (message = [enumerator nextObject]) 
-    {
-        if (![message hasFlags:OPSeenStatus]) 
-        {
+- (BOOL) hasUnreadMessages
+{    
+	NSEnumerator *enumerator = [[self messages] objectEnumerator];
+	G3Message *message;
+    while (message = [enumerator nextObject]) {
+        if (![message hasFlags: OPSeenStatus]) {
             return YES;
         }
     }
-    
     return NO;
 }
 

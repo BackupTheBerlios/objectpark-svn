@@ -19,9 +19,9 @@
 
 //+ (id) threadInManagedObjectContext:(NSManagedObjectContext *)aContext;
 
-- (NSSet*) messages;
-- (void) addMessage:(GIMessage *)message;
-- (void) removeMessage:(GIMessage *)aMessage;
+- (NSArray*) messages;
+- (void) addToMessages: (GIMessage*) message;
+- (void) removeFromMessages: (GIMessage*) aMessage;
 
 //- (NSArray*) messagesByDate;
 - (NSArray*) messagesByTree;
@@ -30,12 +30,14 @@
 /*" Groups handling "*/
 - (void) addToGroups: (GIMessageGroup*) group;
 - (void) removeFromGroups: (GIMessageGroup*) group;
-- (void) removeAllFromGroups;
+//- (void) removeAllFromGroups;
 
 - (unsigned) messageCount;
 - (NSArray*) rootMessages;
 - (unsigned) commentDepth;
 - (BOOL) hasUnreadMessages;
+
+- (NSArray*) subthreadWithMessage: (GIMessage*) aMessage;
 
 - (GIThread*) splitWithMessage: (GIMessage*) aMessage;
 - (void) mergeMessagesFromThread: (GIThread*) anotherThread;
