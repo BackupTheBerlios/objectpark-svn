@@ -19,13 +19,14 @@
 	
 }
 
-+ (NSArray*) profiles;
-+ (void)setProfiles:(NSArray *)someProfiles;
-+ (GIProfile *)defaultProfile;
-+ (GIProfile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage;
++ (NSArray*) allObjects;
++ (GIProfile*) defaultProfile;
 
-+ (BOOL)isMyEmailAddress:(NSString *)aString;
++ (GIProfile*) guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage;
 
++ (BOOL) isMyEmailAddress: (NSString*) aString;
+
+/*
 - (NSString *)name;
 - (void)setName:(NSString *)aString;
 
@@ -43,15 +44,9 @@
 
 - (NSData *)signature;
 - (void)setSignature:(NSData *)aSig;
+*/
 
-- (GIAccount *)sendAccount;
-- (void)setSendAccount:(GIAccount *)anAccount;
-
-- (NSData *)messageTemplate;
-- (void)setMessageTemplate:(NSData *)aTemp;
-
-- (void)addMessageToSend:(GIMessage *)aMessage;
-- (void)removeMessageToSend:(GIMessage *)aMessage;
+- (NSString*) emailAddress;
 
 
 @end

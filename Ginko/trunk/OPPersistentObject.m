@@ -36,6 +36,7 @@
 #import "OPPersistentObject.h"
 #import "OPPersistentObjectContext.h"
 #import "OPClassDescription.h"
+#import <Foundation/NSDebug.h>
 
 #import "GIThread.h"
 
@@ -181,6 +182,10 @@
 	[self willAccessValueForKey: key];
 	id result = [self primitiveValueForKey: key];
 	[self didAccessValueForKey: key];
+	if (NSDebugEnabled && !result) {
+		// Check, if this key corresponds to a persistent attribute (slow!):
+		if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+	}
 	return result;
 }
 
@@ -221,7 +226,7 @@
 }
 
 - (void) willDelete
-	/*" Called whenever the receiver is marked for deletion. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. "*/
+	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. "*/
 {
 	
 }

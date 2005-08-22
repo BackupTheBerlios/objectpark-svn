@@ -473,14 +473,14 @@
     [self flushInternetMessageCache];
 }
 
-- (void)putInSendJobStatus
+- (void) setSendJobStatus
 {
-    [self addFlags:OPInSendJobStatus];
+    [self addFlags: OPInSendJobStatus];
 }
 
-- (void)removeInSendJobStatus
+- (void) resetSendJobStatus
 {
-    [self removeFlags:OPInSendJobStatus];
+    [self removeFlags: OPInSendJobStatus];
 }
 
 @end

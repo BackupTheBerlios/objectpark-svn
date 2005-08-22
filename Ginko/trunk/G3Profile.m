@@ -16,20 +16,20 @@
 
 @implementation G3Profile
 
-+ (NSArray *)profiles
++ (NSArray*) allObjects
+/*" Returns all profile instances, assuring there is at least one (by creating it). "*/
 {    
     NSArray *result;
     
     @synchronized(self)
     {
-        result = [self allObjects];
+        result = [super allObjects];
         
-        if (![result count])
-        {
+        if (![result count]) {
             G3Profile *profile = [[[self alloc] init] autorelease];
-            [profile setName:@"Dummy Profile"];
-            //[profile setRealname:@"Dummy Profiler"];
-            [profile setEmailAddress:@"dummy@profile.org"];
+            [profile setValue: @"Dummy Profile" forKey: @"name"];
+            [profile setValue: [NSNumber numberWithBool: NO] forKey: @"enabled"];
+            [profile setValue: @"dummy@profile.org" forKey: @"emailAddress"];
             result = [self allObjects];
         }
         
@@ -44,10 +44,10 @@
    // profiles = [someProfiles retain];
 }
 
-+ (G3Profile *)defaultProfile
++ (G3Profile*) defaultProfile
 /*" Returns the default Profile. "*/
 {
-    return [[self profiles] firstObject];
+    return [[self allObjects] firstObject]; // dth: why should this work?
 }
 
 - (id)init
@@ -56,26 +56,21 @@
     return [self initWithManagedObjectContext:[NSManagedObjectContext threadContext]];
 }
 
-+ (BOOL)isMyEmailAddress:(NSString *)anAddress
++ (BOOL) isMyEmailAddress: (NSString*) anAddress
 {
     NSEnumerator *enumerator;
     G3Profile *profile;
     
-    @try 
-    {
+    @try {
         anAddress = [anAddress addressFromEMailString]; // to be sure to have only the address part
         
-        enumerator = [[G3Profile profiles] objectEnumerator];
-        while (profile = [enumerator nextObject]) 
-        {
-            if ([[[profile emailAddress] addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch] .location != NSNotFound) 
-            {
+        enumerator = [[G3Profile allObjects] objectEnumerator];
+        while (profile = [enumerator nextObject]) {
+            if ([[[profile emailAddress] addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch] .location != NSNotFound) {
                 return YES;
             }
         }
-    } 
-    @catch (NSException *localException) 
-    {
+    } @catch (NSException *localException) {
         return NO; // Expect our users to have correct email addresses.
     }
     
@@ -88,39 +83,33 @@
     NSArray *toList, *ccList, *addressList;
     NSEnumerator *enumerator;
     G3Profile *profile;
-    G3Profile *replyToCandidate = nil;
+    G3Profile* replyToCandidate = nil;
     
     // all addressees:
-    toList = [[aMessage bodyForHeaderField:@"To"] addressListFromEMailString];
-    ccList = [[aMessage bodyForHeaderField:@"Cc"] addressListFromEMailString];
+    toList = [[aMessage bodyForHeaderField: @"To"] addressListFromEMailString];
+    ccList = [[aMessage bodyForHeaderField: @"Cc"] addressListFromEMailString];
     
-    if ([ccList count])
-    {
+    if ([ccList count]) {
         addressList = [toList arrayByAddingObjectsFromArray:ccList];
-    }
-    else
-    {
+    } else {
         addressList = toList;
     }
             
-    enumerator = [[self profiles] objectEnumerator];
-    while ((profile = [enumerator nextObject])) 
-    {
-        if ([[profile valueForKey: @"enabled"] boolValue]) 
-        {
+    enumerator = [[self allObjects] objectEnumerator];
+    while ((profile = [enumerator nextObject])) {
+		
+        if ([[profile valueForKey: @"enabled"] boolValue]) {
             NSString *email = [profile emailAddress];
-            NSString *replyTo = [profile replyToAddress];
+            NSString *replyTo = [profile valueForKey: @"replyToAddress"];
             NSEnumerator *addressEnumerator = [addressList objectEnumerator];
             NSString *address;
             
             while ((address = [addressEnumerator nextObject])) {
-                if (email && [email caseInsensitiveCompare:address] == NSOrderedSame) 
-                {
+                if (email && [email caseInsensitiveCompare:address] == NSOrderedSame) {
                     return profile;
                 }
                 
-                if (!replyToCandidate && replyTo && [replyTo caseInsensitiveCompare:address] == NSOrderedSame) 
-                {
+                if (!replyToCandidate && replyTo && [replyTo caseInsensitiveCompare:address] == NSOrderedSame) {
                     replyToCandidate = profile;
                 }
             }
@@ -166,6 +155,12 @@
     id result = [self primitiveValueForKey:@"mailaddress"];
     [self didAccessValueForKey:@"mailaddress"];
     return result;
+}
+
+- (void) removeValue: (id) value forKey: (NSString*) key // for forward compatibility only
+{
+	NSParameterAssert([key isEqualToString: @"messagesToSend"]);
+	[self removeMessageToSend: value];
 }
 
 - (void)setEmailAddress:(NSString *)aString
@@ -214,31 +209,6 @@
     [self didChangeValueForKey:@"signature"];
 }
 
-- (G3Account*) sendAccount 
-{    
-    [self willAccessValueForKey:@"sendAccount"];
-    id tmpObject = [self primitiveValueForKey:@"sendAccount"];
-    [self didAccessValueForKey:@"sendAccount"];
-    
-    return tmpObject;
-}
-
-- (void)setSendAccount:(G3Account *)value 
-{
-    [self willChangeValueForKey:@"sendAccount"];
-    [self setPrimitiveValue:value
-                     forKey:@"sendAccount"];
-    [self didChangeValueForKey:@"sendAccount"];
-}
-
-- (NSString *)sendAccountName
-{
-    return [[self sendAccount] name];
-}
-
-- (void)setSendAccountName:(NSString *)aName
-{
-}
 
 - (NSData *)messageTemplate
 {

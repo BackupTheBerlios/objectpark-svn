@@ -21,7 +21,7 @@ static G3GroupInspectorController *sharedInspector = nil;
     [profileButton removeAllItems];
     
     // fill profiles in:
-    enumerator = [[G3Profile profiles] objectEnumerator];
+    enumerator = [[G3Profile allObjects] objectEnumerator];
     while ((aProfile = [enumerator nextObject]))
     {
         [profileButton addItemWithTitle:[aProfile primitiveValueForKey:@"name"]];

@@ -74,8 +74,8 @@
 - (void) flushInternetMessageCache;
 - (OPInternetMessage*) internetMessage;
 
-- (void) putInSendJobStatus;
-- (void) removeInSendJobStatus;
+- (void) setSendJobStatus;
+- (void) resetSendJobStatus;
 
 @end
 

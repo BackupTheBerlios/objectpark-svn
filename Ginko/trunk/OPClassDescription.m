@@ -60,10 +60,12 @@
 		NSEnumerator* keyEnumerator = [plist keyEnumerator];
 		NSMutableArray* attrs = [NSMutableArray array];
 		NSMutableArray* relations = [NSMutableArray array];
+		NSMutableDictionary* dict = [NSMutableDictionary dictionary];
 		NSString* key;
 		while (key = [keyEnumerator nextObject]) {
 			OPAttributeDescription* ad = [[[OPAttributeDescription alloc] initWithName: key properties: [plist objectForKey: key]] autorelease];
 			[([ad isRelationship] ? relations : attrs) addObject: ad];
+			[dict setObject: ad forKey: key];
 		}
 		//NSLog(@"Found relations in %@: %@", poClass, relations);
 		//NSLog(@"Found attributes in %@: %@", poClass, attrs);
@@ -71,6 +73,7 @@
 		simpleAttributeCount = [attrs count];
 		[attrs addObjectsFromArray: relations];
 		attributeDescriptions = [attrs copy];
+		attributeDescriptionsByName = [dict copy];
 	}
 	return self;
 }

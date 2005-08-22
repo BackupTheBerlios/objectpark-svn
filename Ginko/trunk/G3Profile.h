@@ -17,20 +17,20 @@
 {
 }
 
-+ (NSArray *)profiles;
++ (NSArray*) allObjects;
 + (void)setProfiles:(NSArray *)someProfiles;
 + (G3Profile *)defaultProfile;
 + (G3Profile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage;
 
 + (BOOL)isMyEmailAddress:(NSString *)aString;
 
+/*
 - (NSString *)name;
 - (void)setName:(NSString *)aString;
 
 - (NSString *)realname;
 - (void)setRealname:(NSString *)aString;
 
-- (NSString *)emailAddress;
 - (void)setEmailAddress:(NSString *)aString;
 
 - (NSString *)replyToAddress;
@@ -41,14 +41,13 @@
 
 - (NSData *)signature;
 - (void)setSignature:(NSData *)aSig;
+*/
 
-- (G3Account *)sendAccount;
-- (void)setSendAccount:(G3Account *)anAccount;
-
-- (NSData *)messageTemplate;
-- (void)setMessageTemplate:(NSData *)aTemp;
+- (NSString *)emailAddress;
 
 - (void)addMessageToSend:(G3Message *)aMessage;
 - (void)removeMessageToSend:(G3Message *)aMessage;
+
+- (void) removeValue: (id) value forKey: (NSString*) key; // for forward compatibility only
 
 @end

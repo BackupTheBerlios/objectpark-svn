@@ -642,23 +642,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self takeValuesFromHeaderFields];
     
     // create from header:
-    {
-        if([[theProfile realname] length])
-        {
-            from = [NSString stringWithFormat:@"%@ <%@>", [theProfile realname], [theProfile emailAddress]];
-        }
-        else
-        {
-            from = [theProfile emailAddress];
-        }
-        
-        [headerFields setObject:from forKey:@"From"];
-    }
+	if ([[theProfile valueForKey: @"realname"] length]) {
+		from = [NSString stringWithFormat: @"%@ <%@>", [theProfile valueForKey: @"realname"], [theProfile emailAddress]];
+	} else {
+		from = [theProfile emailAddress];
+	}
+	[headerFields setObject: from forKey: @"From"];
     
     // organization:
-    if ((! [result bodyForHeaderField:@"Organization"]) && ([[theProfile organization] length]))
-    {
-        [headerFields setObject:[theProfile organization] forKey:@"Organization"];
+	NSString* orga = [theProfile valueForKey: @"organization"];
+    if ((! [result bodyForHeaderField: @"Organization"]) && ([orga length])) {
+        [headerFields setObject: orga forKey: @"Organization"];
     }
     
     result = [OPInternetMessage messageWithAttributedStringContent:[messageTextView textStorage]];
@@ -696,7 +690,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [result setDate:[NSCalendarDate calendarDate]];
     
     // message id
-    [result generateMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", [[theProfile sendAccount] outgoingServerName]]];
+    [result generateMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", [[theProfile valueForKey: @"sendAccount"] outgoingServerName]]];
     
     // mailer info
 /*     if([result isUsenetMessage])
@@ -1024,7 +1018,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSDictionary *attributes;
     NSError *error;
     
-    NSAttributedString *signature = [[[NSAttributedString alloc] initWithData:[[self profile] signature] options:nil documentAttributes:&attributes error:&error] autorelease];
+    NSAttributedString* signature = [[[NSAttributedString alloc] initWithData: [[self profile] 
+		valueForKey: @"signature"] options: nil documentAttributes: &attributes error: &error] autorelease];
     
     if ([signature length])
     {
@@ -1153,10 +1148,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [message removeFlags:OPSendingBlockedStatus];
     
     // remove old message from database if present
-    if (oldMessage) 
-    {
-        [profile removeMessageToSend:oldMessage];
-        [GIMessageBase removeMessage:oldMessage];
+    if (oldMessage) {
+        [profile removeValue: oldMessage forKey: @"messagesToSend"];
+        [GIMessageBase removeMessage: oldMessage];
     }
     
     if (aType & OPDraftStatus)
@@ -1288,7 +1282,7 @@ NSDictionary *maxLinesForCalendarName()
     [profileButton removeAllItems];
     
     // fill profiles in:
-    enumerator = [[G3Profile profiles] objectEnumerator];
+    enumerator = [[G3Profile allObjects] objectEnumerator];
     while (aProfile = [enumerator nextObject])
     {
         [profileButton addItemWithTitle:[aProfile valueForKey:@"name"]];

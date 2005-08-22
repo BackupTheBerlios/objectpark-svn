@@ -48,7 +48,7 @@
 
 - (IBAction)newMessage:(id)sender
 {
-    [[[G3MessageEditorController alloc] initNewMessageWithProfile:[[G3Profile profiles] lastObject]] autorelease];
+    [[[G3MessageEditorController alloc] initNewMessageWithProfile:[[G3Profile allObjects] lastObject]] autorelease];
 }
 
 - (BOOL)validateSelector:(SEL)aSelector
@@ -522,7 +522,7 @@
         */
     }
     
-    [messages makeObjectsPerformSelector:@selector(removeInSendJobStatus)];
+    [messages makeObjectsPerformSelector:@selector(resetSendJobStatus)];
     [self saveAction:self];
 }
 
@@ -549,8 +549,8 @@
         
         if ([messagesQualifyingForSend count]) // something to send for the account?
         {
-            [messagesQualifyingForSend makeObjectsPerformSelector:@selector(putInSendJobStatus)];
-            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile sendAccount]];
+            [messagesQualifyingForSend makeObjectsPerformSelector:@selector(setSendJobStatus)];
+            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile valueForKey: @"sendAccount"]];
         }
     }
 }

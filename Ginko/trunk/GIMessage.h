@@ -57,10 +57,7 @@
 - (GIThread*) thread;
 - (GIThread*) threadCreate: (BOOL) doCreate;
 
-- (GIProfile *)profile;
-- (void)setProfile: (GIProfile *)value;
-
-- (NSArray*)commentsInThread: (GIThread*)thread;
+- (NSArray*) commentsInThread: (GIThread*) thread;
 
 - (BOOL) isListMessage;
 - (BOOL) isUsenetMessage;
@@ -73,8 +70,8 @@
 - (void) flushInternetMessageCache;
 - (OPInternetMessage*) internetMessage;
 
-- (void) putInSendJobStatus;
-- (void) removeInSendJobStatus;
+- (void) setSendJobStatus;
+- (void) resetSendJobStatus;
 
 @end
 

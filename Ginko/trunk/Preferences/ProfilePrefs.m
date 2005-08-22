@@ -20,7 +20,7 @@
 
 - (NSArray *)profiles
 {
-    return [G3Profile profiles];
+    return [G3Profile allObjects];
 }
 
 - (void)setProfiles:(NSArray *)profiles;
@@ -44,7 +44,7 @@
 {
     G3Profile *selectedProfile = [[profileTableView dataSource] itemAtRow:[profileTableView selectedRow]];
     
-    [selectedProfile setSendAccount:[sender objectValue]];
+    [selectedProfile setValue: [sender objectValue] forKey: @"sendAccount"];
 }
 
 @end

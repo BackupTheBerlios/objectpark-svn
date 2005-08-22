@@ -44,6 +44,7 @@
 	@public
 	Class persistentClass;
 	NSArray* attributeDescriptions; // simple attributeDescriptions followed by relationship attributeDescriptions
+	NSDictionary* attributeDescriptionsByName;
 	unsigned simpleAttributeCount; // number of simple attributeDescriptions in attributeDescriptions array
 	NSString* columnList; // comma-separated list of column name
 }
