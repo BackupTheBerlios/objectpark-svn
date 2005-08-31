@@ -1,0 +1,73 @@
+{
+    toolbarDefaultItems = (new, replyDefault, NSToolbarSeparatorItem, replySender, replyAll, followup, NSToolbarSeparatorItem, forward, NSToolbarFlexibleSpaceItem, delete);
+    replyDefault = {
+        label = "Reply";
+        paletteLabel = "Reply";
+        toolTip = "Create reply.";
+	action = "replyDefault:";
+        imageName = "MailIcon_reply";
+    };
+    replySender = {
+        label = "Reply Sender";
+        paletteLabel = "Reply Sender";
+        toolTip = "Create reply to the sender.";
+	action = "replySender:";
+        imageName = "MailIcon_reply";
+    };
+    replyAll = {
+        label = "Reply All";
+        paletteLabel = "Reply All";
+        toolTip = "Create reply to the sender and all recipients.";
+	action = "replyAll:";
+        imageName = "MailIcon_reply";
+    };
+    followup = {
+        label = "Followup";
+        paletteLabel = "Followup";
+        toolTip = "Create a followup to group or list.";
+	action = "followup:";
+        imageName = "MailIcon_reply";
+    };
+    forward = {
+        label = "Forward";
+        paletteLabel = "Forward";
+        toolTip = "Forward message to another recipient.";
+	action = "forward:";
+        imageName = "MailIcon_forward";
+    };
+    delete = {
+        label = "Delete";
+        paletteLabel = "Delete";
+        toolTip = "Move message to Trash.";
+	action = "moveToTrash:";
+        imageName = "MailIcon_delete";
+    };
+    new = {
+        label = "New";
+        paletteLabel = "Create new message";
+        toolTip = "Create new message.";
+	action = "newMessage:";
+        imageName = "MailIcon_create";
+    };
+    addressbook = {
+        label = "Addresses";
+        paletteLabel = "Open Address Book";
+        toolTip = "Open Apple Address Book.";
+	action = "addressbook:";
+        imageName = "MailIcon_addresses";
+    };
+    more = {
+        label = "Show All";
+        paletteLabel = "Show all messages/threads";
+        toolTip = "Show all messages/threads.";
+	action = "showAllThreads:";
+        imageName = "MailIcon_more";
+    };
+    less = {
+        label = "Hide 'read'";
+        paletteLabel = "Hide 'read' Messages/Threads";
+        toolTip = "Hide 'read' Messages/Threads.";
+	action = "removeReadThreads:";
+        imageName = "MailIcon_less";
+    };
+}

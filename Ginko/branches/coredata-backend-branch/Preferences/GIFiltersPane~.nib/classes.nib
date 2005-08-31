@@ -1,0 +1,59 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addExpression = id; 
+                addFilter = id; 
+                cloneFilter = id; 
+                modeChanged = id; 
+                removeExpression = id; 
+                removeFilter = id; 
+            }; 
+            CLASS = GIFiltersPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                actionMoveCheckbox = NSButton; 
+                actionMoveParameter = NSPopUpButton; 
+                actionPreventCheckbox = NSButton; 
+                filtersTableView = NSTableView; 
+                matchingModePopUp = NSPopUpButton; 
+                matchingTableView = NSTableView; 
+            }; 
+            SUPERCLASS = OPPreferencePane; 
+        }, 
+        {
+            ACTIONS = {acceptSheet = id; addExpression = id; dismissSheet = id; }; 
+            CLASS = GIFiltersPaneSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                actionMoveCheckbox = NSButton; 
+                actionMoveParameter = NSPopUpButton; 
+                actionPreventCheckbox = NSButton; 
+                descriptionTextField = NSTextField; 
+                filtersPane = GIFiltersPane; 
+                matchingModePopUp = NSPopUpButton; 
+                matchingTableView = NSTableView; 
+                scopeIncomingCheckbox = NSButton; 
+                scopeManualCheckbox = NSButton; 
+                scopeOutgoingCheckbox = NSButton; 
+                sheet = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = NSPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "_firstKeyView" = NSView; 
+                "_initialKeyView" = NSView; 
+                "_lastKeyView" = NSView; 
+                "_window" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = OPPreferencePane; LANGUAGE = ObjC; SUPERCLASS = NSPreferencePane; }, 
+        {CLASS = OPTableColumn; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,72 @@
+From deek@d2dc.net Sat Jun  8 08:22:51 2002
+x-uunet-gateway: dfw7sosrv11.alter.net from discuss-gnustep to gnu.gnustep.discuss; Sat, 8 Jun 2002 07:25:29 GMT
+Sender: deek@uunet.uu.net
+Message-ID: <3D01B161.64E9ED82@d2dc.net>
+Date: Sat, 08 Jun 2002 03:25:21 -0400
+From: deek@d2dc.net (Jeff Teunissen)
+X-Mailer: Mozilla 4.77 [en] (X11; U; Linux 2.4.17 i686)
+X-Accept-Language: en-US, en
+MIME-Version: 1.0
+Subject: Re: look and feel
+References: <225a8dd6bca0c0a7f3271e4e8ce9733b@Maverick.digital-bushido.org>
+Content-Type: multipart/mixed; boundary="------------228EBD78905B7868BE531AE3"
+Newsgroups: gnu.gnustep.discuss
+Path: uni-berlin.de!fu-berlin.de!news-xfer.newsread.com!netaxs.com!newsread.com!nntp.abs.net!dca6-feed2.news.algx.net!jfk3-feed1.news.algx.net!allegiance!news-out.visi.com!hermes.visi.com!uunet!ash.uu.net!spool0901.news.uu.net!wendy-fate.uu.net!discuss-gnustep
+Lines: 54
+Xref: uni-berlin.de gnu.gnustep.discuss:13203
+
+This is a multi-part message in MIME format.
+--------------228EBD78905B7868BE531AE3
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Ian Jones wrote:
+
+[snip]
+
+> (I'm not to keen on it myself as the arrow images? on the scrollbars
+> don't appear to be on a transparent background)
+
+Attached is a tarball with new versions of the scroller arrows. I just
+made them from the normal arrows, so they look identical (except for the
+fact that the button background should show through).
+
+The common_Arrow*H.tiff files are slightly different too, in that the
+edges of the arrows are no longer grey, but black with an alpha of 0.5.
+This way, their antialiasing will blend nicely between black and the color
+of the button background, instead of always being grey.
+
+-- 
+| Jeff Teunissen  -=-  Pres., Dusk To Dawn Computing  -=-  deek @ d2dc.net
+| GPG: 1024D/9840105A   7102 808A 7733 C2F3 097B  161B 9222 DAB8 9840 105A
+| Core developer, The QuakeForge Project        http://www.quakeforge.net/
+| Specializing in Debian GNU/Linux              http://www.d2dc.net/~deek/
+--------------228EBD78905B7868BE531AE3
+Content-Type: application/x-gzip;
+ name="commonArrows.tar.gz"
+Content-Transfer-Encoding: base64
+Content-Disposition: inline;
+ filename="commonArrows.tar.gz"
+
+H4sIAFivAT0AA+2az2sTQRTHX9IfVNSCRSvUHoJ4EA92NrvJqidFwQQqSNGzxHTbBm0jaUqv
++/d49CSepPQkPYm9iBQUFSxUiNBii4m+SXazs5v9lSa7pfZ9ZDovs+vsLMx+35uZVywvLpaX
+ntypVMqr98qrS9erpbk56C9MYiyrKMAYk9QME2uOxOQsMGxgcjrLVGyX5GxagRTr8zhcWVmu
+FiqpFMxq2jO/+4KuH1Py+WvwEesGwN8QRQ+6fuBzvQ4H3j3oddhzubLPW53/R9+HX0LLLv9l
+3qPvwk+0ajCG7zQICfNFEwNN+xQ3BTuJ9iDWr7FhwGgf0gGGDTuJ5WwiCTewfosNo2iPo/0b
+7XOJVv8jWMaM+3m5YNi833HDvo3lonH/eywTiaGmPYoPuGTY42hPCv1cFcYwI7RD85mtf1PT
+5WLh+dR06WmlUClpy1Mz2nJ5pVJEK79YmMeq6PqF361ohao2m1otVRdSjxa01P38g4e845zx
+kJzwMOK/xTk7chE4gED9zyht/VflNNd/VZFI/+OA6/93rDfBT7lDKXiAkvsquoeyuyp8+96W
+0pstNf6r7QVqsI3WDv+r73j4gtNg+QJum75gPcAX3MR6Q/AFw8nD+4ItsHzBpOALrsTiC8yv
+nbzBSUWcEdPaXPVI4v80a+u/JMlc/zNqlvQ/Drj+b2D9xdDObYfOuuhus4TwA4ElqA+vZzvH
+aI69u4j/ZYiI/5Wg8ts9RPzrYKk8CCo/ErnKW980aTzRiXOuHHH8rzIj/pdI/2PBiv+3DBWt
+8982fa2LkbVjPeATyxt3NEJ6ijB9eY+jc8zW+2xS/O/hGSj+P+mIM2KmNL8QxQIgUP+VtKn/
+GTWTwfsVbCb9jwOu/5+gvf+vf3OeBOg7XmcD+m7QqYFeD3uucLheOkdgjRbfpLv1wJsQqr8m
+qP6fHtYDH8BS/TFB9SciV33xGyfVJzrmRgQLgOD4P23F/yrf/1HQJ5D+xwHX/68g7P/rn50n
+AfoPr7MBvRZ0aqDvhzpXaAScHPv21DkKa8T4Nt1G/2sBfuAW1u8EPzDYQ/TPPe+EoP2mH7gc
+jx/I0c7QSUecE49fRLH7Hyb/xzr/lWQe/8syo/PfWDDzf1o5M/Y8GnuOjXsejnvOjn+ej3+O
+UCPECXOYlUN/83+yYM//2esh+hfzf84Iqn8+ctU3v3BSfKKFfXZEsfvfXfwvSU39xwUA6X8c
+mPv/rTyZVs6MPY/GnmPjnofjnrPjn+fjnyMULs8oXM5Sv/f/VbDv//eyAtiCo1oBWF87eQOC
+IAiCIAiCIAiCIAiCIAiCIAiCIAiCIIjjyz/VKCjTAFAAAA==
+--------------228EBD78905B7868BE531AE3--
+
+

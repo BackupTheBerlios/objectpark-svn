@@ -1,0 +1,27 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = G3Profile; LANGUAGE = ObjC; SUPERCLASS = NSManagedObject; }, 
+        {CLASS = NSManagedObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = NSPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "_firstKeyView" = NSView; 
+                "_initialKeyView" = NSView; 
+                "_lastKeyView" = NSView; 
+                "_window" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = OPPreferencePane; LANGUAGE = ObjC; SUPERCLASS = NSPreferencePane; }, 
+        {
+            ACTIONS = {setSendAccount = id; }; 
+            CLASS = ProfilePrefs; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {profileTableView = NSTableView; }; 
+            SUPERCLASS = OPPreferencePane; 
+        }
+    ); 
+    IBVersion = 1; 
+}

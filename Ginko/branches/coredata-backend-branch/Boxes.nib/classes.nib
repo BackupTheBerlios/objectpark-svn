@@ -1,0 +1,38 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addFolder = id; 
+                addMessageGroup = id; 
+                removeFolderMessageGroup = id; 
+                rename = id; 
+                selectThreadsWithCurrentSubject = id; 
+                showThreads = id; 
+                threadFilterPopUpChanged = id; 
+            }; 
+            CLASS = G3GroupController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                boxesDrawer = NSDrawer; 
+                boxesView = NSOutlineView; 
+                commentsMatrix = NSMatrix; 
+                groupInfoTextField = NSTextField; 
+                messageTextView = NSTextView; 
+                progressIndicator = NSProgressIndicator; 
+                tabView = NSTabView; 
+                threadFilterPopUp = NSPopUpButton; 
+                threadsView = GIOutlineViewWithKeyboardSupport; 
+                treeBodySplitter = OPCollapsingSplitView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = GIOutlineViewWithKeyboardSupport; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }
+    ); 
+    IBVersion = 1; 
+}

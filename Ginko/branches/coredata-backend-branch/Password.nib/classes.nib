@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {OKAction = id; cancelAction = id; }; 
+            CLASS = GIPasswordController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                passwordField = NSSecureTextField; 
+                serverNameField = NSTextField; 
+                storeInKeychainCheckbox = NSButton; 
+                subtitleField = NSTextField; 
+                titleField = NSTextField; 
+                userNameField = NSTextField; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

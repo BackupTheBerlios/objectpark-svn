@@ -1,0 +1,65 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                addBcc = id; 
+                addCc = id; 
+                addFolder = id; 
+                addReplyTo = id; 
+                applySortingAndFiltering = id; 
+                changeQuoteLevel = id; 
+                extractThread = id; 
+                followup = id; 
+                forward = id; 
+                getNewMailInAllAccounts = id; 
+                importMboxFile = id; 
+                joinThreads = id; 
+                makeFontBigger = id; 
+                makeFontSmaller = id; 
+                newMessage = id; 
+                pasteAsQuotation = id; 
+                rename = id; 
+                replyAll = id; 
+                replyDefault = id; 
+                replySender = id; 
+                saveMessage = id; 
+                selectThreadsWithCurrentSubject = id; 
+                sendQueuedMessages = id; 
+                showActivityPanel = id; 
+                showGroupInspector = id; 
+                showRawSource = id; 
+                toggleDisplay = id; 
+                toggleRich = id; 
+            }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                importTestMBox = id; 
+                openNewGroupWindow = id; 
+                openSearchWindow = id; 
+                saveAction = id; 
+            }; 
+            CLASS = GIApplication; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {searchController = GISearchController; }; 
+            SUPERCLASS = NSApplication; 
+        }, 
+        {
+            ACTIONS = {toggleDisplay = id; }; 
+            CLASS = GroupController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {messageBodyView = NSTextView; tabView = NSTabView; tableView = NSTableView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {openPreferences = id; }; 
+            CLASS = NSApplication; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSResponder; 
+        }
+    ); 
+    IBVersion = 1; 
+}

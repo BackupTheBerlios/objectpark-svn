@@ -1,0 +1,52 @@
+Bugs:
+- after returning from message view (e.g. via Backspace) to message thread view the message thread view is scrolled to first entry instead to current cursor position
+- the last opened message thread is not remembered on reopening a group
+- SVN commit mailing list is non functional
+
+* Autorelease crasher
+* Reporter: Dirk Theisen
+* Assigned to: Dirk Theisen
+* Description: This message crashed GV on import due to a memory problem triggered by an exception. Needs investigation.
+* Findings: 
+
+x-uunet-gateway: dfw7sosrv11.alter.net from discuss-gnustep to gnu.gnustep.discuss; Fri, 16 Nov 2001 08:52:27 GMTr
+Sender: Laurent.Julliard@xrce.xerox.comr
+Message-ID: <3BF4D38D.10CBFB37@xrce.xerox.com>r
+Date: Fri, 16 Nov 2001 09:51:25 +0100r
+From: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)r
+Organization: XR&T-XAC / Open Source Teamr
+X-Mailer: Mozilla 4.77 [en] (X11; U; Linux 2.2.17-21mdk i686)r
+X-Accept-Language: enr
+MIME-Version: 1.0r
+Subject: Re: GWorkspace - next stepsr
+References: <Pine.LNX.4.33.0111151839560.23892-100000@extra.Sophos.ca>r
+Content-Type: text/plain; charset=us-asciir
+Content-Transfer-Encoding: 7bitr
+Newsgroups: gnu.gnustep.discussr
+Path: uni-berlin.de!fu-berlin.de!cpk-news-hub1.bbnplanet.com!news.gtei.net!newsfeed1.cidera.com!Cidera!feed1.newsreader.com!priapus.visi.com!news-out.visi.com!hermes.visi.com!uunet!ash.uu.net!spool0901.news.uu.net!wendy-fate.uu.net!discuss-gnustepr
+Lines: 22r
+Xref: uni-berlin.de gnu.gnustep.discuss:10555r
+r
+Ludovic Marcotte wrote:r
+> r
+> > Now what do you think of the idea to "nibify" GWorkspace? Are nibs - or inr
+> > that case - gmodels supported well enough under GNUstep? Has somebody elser
+> > some experience using nibs/gmodels under GNUstep to share (Wasn'tr
+> > GNUMail.app using gmodels or am I wrong here?)?r
+> r
+> You're wrong :)r
+> r
+> But, GNUMail.app is developped so that it uses nibs under MacOS-X andr
+> 'handcoded guis' under GNUstep.r
+> r
+> Why? As far I know, gmodel are deprecated and Gorm doesn't support (yet)r
+> some very important classes that GNUMail.app uses (like NSBrowser,r
+> NSTextView, NSTableView, ...).r
+> r
+r
+Just for your information, Gorm is making rapid progress in this area. Ir
+have been working on NSBrowser, NSTextView, NSTableView,.. recently andr
+I hope to have it available well... say... in the near futurer
+r
+Laurentr
+
