@@ -178,6 +178,8 @@
 		8D4C5756076E3B6F000F46DA /* G3CommentTreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D4C5754076E3B6F000F46DA /* G3CommentTreeCell.m */; };
 		8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
 		8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */; };
+		8D62DC2208C668BC0059ABB0 /* OPFaultingArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */; };
 		8D666EF807D523C50076C74D /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D666EF607D523C50076C74D /* ActivePrefPanes.plist */; };
 		8D666F0207D5247A0076C74D /* GIContentPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D666EFE07D5247A0076C74D /* GIContentPane.h */; };
 		8D666F0307D5247B0076C74D /* GIContentPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D666EFF07D5247A0076C74D /* GIContentPane.m */; };
@@ -557,6 +559,8 @@
 		8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D4C5753076E3B6F000F46DA /* G3CommentTreeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G3CommentTreeCell.h; sourceTree = "<group>"; };
 		8D4C5754076E3B6F000F46DA /* G3CommentTreeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G3CommentTreeCell.m; sourceTree = "<group>"; };
+		8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPFaultingArray.h; sourceTree = "<group>"; };
+		8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPFaultingArray.m; sourceTree = "<group>"; };
 		8D666EF607D523C50076C74D /* ActivePrefPanes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = ActivePrefPanes.plist; sourceTree = "<group>"; };
 		8D666EFE07D5247A0076C74D /* GIContentPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIContentPane.h; path = Preferences/GIContentPane.h; sourceTree = SOURCE_ROOT; };
 		8D666EFF07D5247A0076C74D /* GIContentPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIContentPane.m; path = Preferences/GIContentPane.m; sourceTree = SOURCE_ROOT; };
@@ -1127,6 +1131,8 @@
 				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
 				8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */,
 				8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */,
+				8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */,
+				8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */,
 			);
 			name = Persistence;
 			sourceTree = "<group>";
@@ -1297,6 +1303,7 @@
 				8D3EF46208B543C600EC41EC /* OPPersistentObject.h in Headers */,
 				8D3EF46308B543C700EC41EC /* OPPersistence.h in Headers */,
 				8D3EF46408B543C900EC41EC /* OPPersistenceConstants.h in Headers */,
+				8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1665,6 +1672,7 @@
 				8D3EF45D08B543C000EC41EC /* OPSQLiteConnection.m in Sources */,
 				8D3EF45F08B543C300EC41EC /* OPPersistentObjectContext.m in Sources */,
 				8D3EF46108B543C400EC41EC /* OPPersistentObject.m in Sources */,
+				8D62DC2208C668BC0059ABB0 /* OPFaultingArray.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
