@@ -11,6 +11,7 @@
 #import "GIMessage.h"
 #import "GIThread.h"
 #import "GIMessageGroup.h"
+#import "OPFaultingArray.h"
 
 @implementation TestPersistence
 
@@ -209,6 +210,31 @@
 	
 	NSAssert1([threads count]>0, @"Unable to fetch threads for group %@.", group);
 
+}
+
+- (void) testFaultingArray
+{
+	NSArray* allGroups = [[context objectEnumeratorForClass: [GIMessageGroup class] where: nil] allObjects];
+	OPFaultingArray* testArray = [OPFaultingArray array];
+	
+	[testArray addObject: [allGroups objectAtIndex: 0]];
+	[testArray addObject: [allGroups objectAtIndex: 1]];
+	NSAssert([testArray count] == 2, @"add-problem with OPFaultingArray.");
+	NSAssert([testArray objectAtIndex: 0]==[allGroups objectAtIndex: 0], @"Add/Retrieve problem with OPFaultingArray.");
+	
+	unsigned index1 = [testArray indexOfObject: [allGroups objectAtIndex: 1]];
+	unsigned index0 = [testArray indexOfObject: [allGroups objectAtIndex: 0]];
+	
+	NSAssert(index1!=NSNotFound, @"Unable to find added object in test array.");
+	NSAssert(index0!=NSNotFound, @"Unable to find added object in test array.");
+	NSAssert(index0!=index1, @"Inconsistent indexes for added objects.");
+	
+	[testArray removeObject: [allGroups objectAtIndex: 0]];
+
+	NSAssert([testArray count] == 1, @"remove-problem with OPFaultingArray.");
+	NSAssert([testArray objectAtIndex: 0] == [allGroups objectAtIndex: 1], @"remove-problem with OPFaultingArray.");
+
+	
 }
 
 @end

@@ -13,6 +13,19 @@
 
 @implementation OPFaultingArray
 
+
+int compareOids(OID o1, OID o2)
+{
+	return o1==o2 ? 0 : (o1<o2 ? -1 : 1);
+}
+
+- (void) setSortFunction: (int (*)(id, id)) compareFunction
+{
+	compare = compareFunction;
+}
+
+
+
 + (id) array
 {
 	return [[[self alloc] init] autorelease];
@@ -42,20 +55,6 @@
 	[self sortUsingSelector: NSSelectorFromString(sortKey)];
 }
 
-- (void) insertOid: (OID) anOid atIndex: (unsigned) index
-{
-	// needs testing!
-	NSParameterAssert(index<=count);
-	count++;
-	if ( count >= capacity ) {
-		[self _growTo: count];
-	}	
-	if ((count-index)-1>0) { 
-		// Move up elements, freeing element at index:
-		memccpy(&(data[index+1]), &(data[index]),(count-index)-1, sizeof(OID));
-	}
-	data[index] = anOid;
-}
 
 - (id) init
 {
@@ -79,17 +78,52 @@
     }
 }
 
-/*
-- (void) addOids: (OID*) intArray count: (unsigned) numOidsToAdd
+- (void) insertOid: (OID) anOid atIndex: (unsigned) index
 {
-	unsigned newCount=count+numOidsToAdd;
-	if ( newCount >= capacity ) {
-		[self _growTo:newCount];
+	// needs testing!
+	NSParameterAssert(index<=count);
+	count++;
+	if ( count >= capacity ) {
+		[self _growTo: count];
+	}	
+	if ((count-index)-1>0) { 
+		// Move up elements, freeing element at index:
+		memccpy(&(data[index+1]), &(data[index]),(count-index)-1, sizeof(OID));
 	}
-	memcpy( data+count, intArray, numOidsToAdd * sizeof(OID));
-	count=newCount;
+	data[index] = anOid;
 }
-*/
+
+
+- (unsigned) indexOfObject: (OPPersistentObject*) anObject
+/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. "*/
+{
+	// linear search! replace by binary-search!
+	if (compare) {
+		int i;
+		int res = -1;
+		for (i=0; res<0 && i<count;i++) {
+			res = compare([self objectAtIndex: i], anObject);
+		}
+		if (res == 0) return i;
+	} else {
+		OID oid = [anObject oid];
+		int i;
+		for (i=0;i<count;i++) {
+			if ([self oidAtIndex: i]==oid) return i;
+		}
+	}
+	return NSNotFound;
+}
+
+- (void) removeObject: (OPPersistentObject*) anObject
+{
+	unsigned index = [self indexOfObject: anObject];
+	if (index!=NSNotFound) {
+		memccpy(&(data[index]), &(data[index+1]),(count-index)-1, sizeof(OID));
+		count--;
+#warning Implement array shrinking!
+	}
+}
 
 
 - (void) addOid: (OID) anOid
@@ -172,3 +206,15 @@
 
 @end
 */
+
+/*
+ - (void) addOids: (OID*) intArray count: (unsigned) numOidsToAdd
+ {
+	 unsigned newCount=count+numOidsToAdd;
+	 if ( newCount >= capacity ) {
+		 [self _growTo:newCount];
+	 }
+	 memcpy( data+count, intArray, numOidsToAdd * sizeof(OID));
+	 count=newCount;
+ }
+ */
