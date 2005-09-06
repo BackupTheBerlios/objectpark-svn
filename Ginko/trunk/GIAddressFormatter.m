@@ -23,10 +23,19 @@
 #import "GIAddressFormatter.h"
 #import <AddressBook/AddressBook.h>
 #import "ABPerson+Convenience.h"
+#import "NSString+Extensions.h"
 #import "MPWDebug.h"
 
 @implementation GIAddressFormatter
+/*"
+Should match the following formats:
 
+ email@address.org (firstname lastname)
+ 
+ firstname lastname <email@address.org>
+
+ lastname, firstname <email@address.org> 
+"*/
 - (NSString *)stringForObjectValue:(id)obj
 {
     return [obj description];
@@ -45,12 +54,9 @@
 
 - (BOOL)isPartialStringValid:(NSString **)partialStringPtr proposedSelectedRange:(NSRangePointer)proposedSelRangePtr originalString:(NSString *)origString originalSelectedRange:(NSRange)origSelRange errorDescription:(NSString **)error
 {   
-    static NSCharacterSet *separatorSet;
-    
-    if (! separatorSet)
-    {
-        separatorSet = [[NSCharacterSet characterSetWithCharactersInString:@" ,;\r\n"] retain];
-    }
+    static NSCharacterSet *separatorSet = nil;
+        
+    if (! separatorSet) separatorSet = [[NSCharacterSet characterSetWithCharactersInString:@" ,;\r\n"] retain];
     
     // check whether completion should happen
     if ( 
@@ -63,7 +69,6 @@
     {
         NSString *completionPrefix;
         NSRange prefixRange;
-        NSString *address;
 //        NSEnumerator *enumerator;
         
         // test if comma was typed in
@@ -88,10 +93,46 @@
         
         if ([completionPrefix length])
         {
+            static NSMutableArray *candidates = nil;
+            static char cycleChar = '+'; // +
+            static NSString *cycleSuffix = nil;
+            static int nextIndex = 0;
+            
+            if (!cycleSuffix) cycleSuffix = [[NSString alloc] initWithFormat:@"%c", cycleChar];
+            
+            if ([completionPrefix hasSuffix:cycleSuffix])
+            {                
+                completionPrefix = [completionPrefix substringToIndex:[completionPrefix length] - 1];
+                *partialStringPtr = [*partialStringPtr substringToIndex:[*partialStringPtr length] - 1];
+                *proposedSelRangePtr = NSMakeRange(proposedSelRangePtr->location - 1, ([*partialStringPtr length] - proposedSelRangePtr->location) - 1);
+                
+                if ([candidates count] < 2) // nothing to cycle
+                {
+                    NSBeep();
+                }
+                else
+                {
+                    nextIndex += 1;
+                    if (nextIndex >= [candidates count]) nextIndex = 0;
+                    
+                    NSString *restString = [[candidates objectAtIndex:nextIndex] substringFromIndex:[completionPrefix length]];
+                    
+                    if (NSDebugEnabled) NSLog(@"Found match with: %@", [candidates objectAtIndex:nextIndex]);
+                    *partialStringPtr = [*partialStringPtr stringByAppendingString:restString];
+                    *proposedSelRangePtr = NSMakeRange(proposedSelRangePtr->location, [*partialStringPtr length] - proposedSelRangePtr->location);
+                    
+                    return NO;
+                }
+            }
+            
             prefixRange = NSMakeRange(0, [completionPrefix length]);
             
             if (NSDebugEnabled) NSLog(@"completion with prefix: '%@'", completionPrefix);
     
+            // reset candidates
+            if (candidates) [candidates release];
+            candidates = [[NSMutableArray alloc] init];
+            
             // try to find match
             /*
             enumerator = [[[GIMessageCenter defaultMessageCenter] LRUMailAddresses] objectEnumerator];
@@ -120,10 +161,10 @@
                 id record;
                 
                 searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
-                searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
-                searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
+//                searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
+//                searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
                     
-                ABSearchElement *conjunction = [ABSearchElement searchElementForConjunction:kABSearchOr children:[NSArray arrayWithObjects:searchElementEmailAddress, searchElementFirstname, searchElementLastname, nil]];
+//                ABSearchElement *conjunction = [ABSearchElement searchElementForConjunction:kABSearchOr children:[NSArray arrayWithObjects:searchElementEmailAddress, searchElementFirstname, searchElementLastname, nil]];
                 
                 searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
 
@@ -132,21 +173,37 @@
                 {
                     if ([record isKindOfClass:[ABPerson class]])
                     {
-                        address = [(ABPerson *)record email];
-                        if ([address length])
+                        static NSCharacterSet *problematicSet = nil;
+                        if (!problematicSet) problematicSet = [[NSCharacterSet characterSetWithCharactersInString:@"(),\""] retain];
+                        
+                        ABMultiValue *addresses = [record valueForProperty:kABEmailProperty];
+                        NSString *fullname = [[record fullname] stringByRemovingCharactersFromSet:problematicSet];
+                        NSString *realname = [fullname length] ? [NSString stringWithFormat:@" (%@)", fullname] : @"";
+                        int i, count = [addresses count];
+                        
+                        for (i = 0; i < count; i++)
                         {
-                            NSString *restString;
-
-                            restString = [address substringFromIndex:[completionPrefix length]];
-
-                            if (NSDebugEnabled) NSLog(@"Found match with: %@", address);
-                            *partialStringPtr = [*partialStringPtr stringByAppendingString:restString];
-                            *proposedSelRangePtr = NSMakeRange(proposedSelRangePtr->location, [*partialStringPtr length] - proposedSelRangePtr->location);
-
-                            return NO;
-                        }
+                            NSString *address = [addresses valueAtIndex:i];
+                            if ([address hasPrefix:completionPrefix])
+                            {
+                                [candidates addObject:[address stringByAppendingString:realname]];
+                            }
+                        }                        
                     }
                 }
+            }
+            
+            // return first match:
+            if ([candidates count])
+            {
+                NSString *restString = [[candidates objectAtIndex:0] substringFromIndex:[completionPrefix length]];
+                
+                if (NSDebugEnabled) NSLog(@"Found match with: %@", [candidates objectAtIndex:0]);
+                *partialStringPtr = [*partialStringPtr stringByAppendingString:restString];
+                *proposedSelRangePtr = NSMakeRange(proposedSelRangePtr->location, [*partialStringPtr length] - proposedSelRangePtr->location);
+                
+                nextIndex = 1;
+                return NO;
             }
         }
     }

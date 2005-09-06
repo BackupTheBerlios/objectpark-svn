@@ -483,7 +483,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 NSURL* OPURLFromOidAndClass(OID oid, Class poClass)
 {
-#warning Axel, please modify this so it makes sense.
 	return [NSURL URLWithString: [NSString stringWithFormat: @"opo://%@/%@/%lld", @"GinkoVoyager", poClass, oid]];
 }
 
