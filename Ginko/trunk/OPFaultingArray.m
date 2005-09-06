@@ -19,40 +19,54 @@ int compareOids(OID o1, OID o2)
 	return o1==o2 ? 0 : (o1<o2 ? -1 : 1);
 }
 
+/*
 - (void) setSortFunction: (int (*)(id, id)) compareFunction
 {
 	compare = compareFunction;
 }
+*/
 
 
+#define oidAdr(oindex) (OID*)(data+(oindex*entrySize))
+
+#define sortObjectAdr(oindex) (id*)(data+(oindex*entrySize)+sizeof(OID))
+
+#define setSortObjectAtIndex(newValue, aindex) {id* oldValuePtr=sortObjectAdr(aindex); if (*oldValuePtr!=newValue) {[*oldValuePtr autorelease]; *oldValuePtr=[newValue retain];}}
 
 + (id) array
 {
 	return [[[self alloc] init] autorelease];
 }
 
-- (id) initWithCapacity: (unsigned int) newCapacity
+- (id) initWithCapacity: (unsigned) newCapacity
 {
     if ( self = [super init] ) {
-		capacity=newCapacity;
-		count=0;
-		data=malloc( (capacity+3) * sizeof(int) );
+		capacity     = newCapacity;
+		count        = 0;
+		entrySize    = sizeof(OID);
+		needsSorting = NO;
+		data         = malloc( (capacity+3) * entrySize );
 	}
     return self;
 }
 
-- (void) sortUsingSelector: (SEL) selector 
+- (void) sort
 {
-	if ([self count]>0) {
-	// todo: implement!
-	}
+	NSAssert(sortKey, @"Try to sort without a sortKey set.");
+#warning todo: implement sorting! 
+	NSLog(@"Should sort array: %@", self);	
 }
 
 - (void) setSortKey: (NSString*) newSortKey
+/*" When calling this method, the receiver may not contain any elements. "*/
 {
-	[sortKey autorelease];
-	sortKey = [newSortKey retain];
-	[self sortUsingSelector: NSSelectorFromString(sortKey)];
+	if (newSortKey != sortKey) {
+		NSAssert(count==0, @"You can only set a sort key for an empty array (for now).");
+		[sortKey autorelease];
+		sortKey   = [newSortKey retain];
+		entrySize = sizeof(OID) + (sortKey ? sizeof(void*) : 0);
+		data      = realloc(data, (capacity+3) * entrySize );
+	}
 }
 
 
@@ -64,7 +78,7 @@ int compareOids(OID o1, OID o2)
 -(OID) oidAtIndex: (unsigned) index;
 {
 	NSParameterAssert(index < count);
-	return data[index];
+	return *oidAdr(index);
 }
 
 - (void)_growTo: (unsigned) newCapacity
@@ -72,12 +86,13 @@ int compareOids(OID o1, OID o2)
     capacity=capacity*2+2;
 	capacity=MAX( capacity, newCapacity );
     if ( data ) {
-        data=realloc( data, (capacity+3)*sizeof(OID) );
+        data=realloc( data, (capacity+3)*entrySize );
     } else {
-        data=calloc( (capacity+3), sizeof(OID) );
+        data=calloc( (capacity+3), entrySize );
     }
 }
 
+/*
 - (void) insertOid: (OID) anOid atIndex: (unsigned) index
 {
 	// needs testing!
@@ -88,44 +103,73 @@ int compareOids(OID o1, OID o2)
 	}	
 	if ((count-index)-1>0) { 
 		// Move up elements, freeing element at index:
-		memccpy(&(data[index+1]), &(data[index]),(count-index)-1, sizeof(OID));
+		memccpy(&(data[index+1]), &(data[index]),(count-index)-1, entrySize);
 	}
 	data[index] = anOid;
+}
+*/
+
+- (BOOL) findObject: (OPPersistentObject*) anObject index: (unsigned*) indexSearched
+{
+	if (needsSorting) [self sort];
+	
+	int i = 0;
+#warning linear search! replace by binary-search!
+	if (compare) {
+		int res = -1;
+		for (; res<0 && i<count;i++) {
+			res = compare([self objectAtIndex: i], anObject, (OPFaultingArray*)self);
+		}
+		if (res == 0) {
+			*indexSearched = i;
+			return YES;
+		}
+	} else {
+		OID oid = [anObject oid];
+		for (;i<count;i++) {
+			OID oidFound = *oidAdr(i);
+			if (oidFound==oid) {
+				*indexSearched = i;
+				return YES;
+			}
+			if (oidFound>oid) break;
+		}
+	}	
+	*indexSearched = i;
+	return NO;
 }
 
 
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 /*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. "*/
 {
-	// linear search! replace by binary-search!
-	if (compare) {
-		int i;
-		int res = -1;
-		for (i=0; res<0 && i<count;i++) {
-			res = compare([self objectAtIndex: i], anObject);
-		}
-		if (res == 0) return i;
-	} else {
-		OID oid = [anObject oid];
-		int i;
-		for (i=0;i<count;i++) {
-			if ([self oidAtIndex: i]==oid) return i;
-		}
+	unsigned result;
+	
+	if ([self findObject: anObject index: &result]) {
+		return result;
 	}
+	
 	return NSNotFound;
+	
+
+}
+
+- (void) removeObjectAtIndex: (unsigned) index
+{
+	if (index!=NSNotFound) {
+		if (sortKey) [*sortObjectAdr(index) release];
+		memccpy(oidAdr(index), oidAdr(index+1),(count-index)-1, entrySize);
+		count--;
+#warning Implement array shrinking!
+	}	
 }
 
 - (void) removeObject: (OPPersistentObject*) anObject
 {
-	unsigned index = [self indexOfObject: anObject];
-	if (index!=NSNotFound) {
-		memccpy(&(data[index]), &(data[index+1]),(count-index)-1, sizeof(OID));
-		count--;
-#warning Implement array shrinking!
-	}
+	[self removeObjectAtIndex: [self indexOfObject: anObject]];
 }
 
-
+/*
 - (void) addOid: (OID) anOid
 {
 	unsigned indexToInsert = count;
@@ -134,24 +178,74 @@ int compareOids(OID o1, OID o2)
 	} // otherwise add at the end:
 	[self insertOid: anOid atIndex: indexToInsert];
 }
+*/
+
+//- (void) setSortObjectAtIndex: (unsigned) oindex
+
+
+- (id) sortObjectAtIndex: (unsigned) index
+/*" Returns the attribute used for sorting for the object at the index given. Raises, if "*/
+{
+	NSAssert(sortKey!=nil, @"Only allowed, with sortKey set.");
+	id result = nil;
+	// See, if there is an object registered with the context:
+	OPPersistentObject* object = [[self context] objectRegisteredForOid: *oidAdr(index) ofClass: elementClass];
+	if (object && ![object isFault]) {
+		// Avoid firing a fault to access the sort attribute:
+		result = [object valueForKey: sortKey]; // what happens, if it returns nil?
+		setSortObjectAtIndex(result, index);
+	} else {
+		// fall back to cached sortObject:
+		result = *sortObjectAdr(index);
+	}
+	
+	return result;
+}
+
+- (void) addOid: (OID) oid sortObject: (id) sortObject
+/*" The sortObject may be nil, if sortKey is nil. "*/
+{	
+	if (count+1 >= capacity) {
+		[self _growTo: count+1];
+	}
+	
+	*oidAdr(count) = oid;
+	
+	if (sortKey) {
+		// Cache the sortObject:
+		[sortObject retain];
+		setSortObjectAtIndex(sortObject, count);
+	}
+	
+	count+=1;
+	needsSorting = (sortKey!=nil);	
+}
 
 - (void) addObject: (OPPersistentObject*) anObject
 {
-	if (!elementClass) elementClass = [anObject class]; // remember the element class
+	if (!elementClass) 
+		elementClass = [anObject class]; // remember the element class
 	
 	NSParameterAssert([anObject class] == elementClass);
-	[self addOid: [anObject oid]];
+	
+	[self addOid: [anObject oid] sortObject: sortKey ? [anObject valueForKey: sortKey] : nil];
+}
+
+- (OPPersistentObjectContext*) context
+{
+	return [OPPersistentObjectContext defaultContext];
 }
 
 - (id) objectAtIndex: (unsigned) anIndex
 {
-	OID oid = [self oidAtIndex: anIndex];
+	OID oid = *oidAdr(anIndex);
 	// Should we store and retain a context?
-	id result = [[OPPersistentObjectContext defaultContext] objectForOid: oid ofClass: elementClass];
+	id result = [[self context] objectForOid: oid ofClass: elementClass];
 	NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
 	return result;
 }
 
+/*
 -(void) replaceOidAtIndex: (unsigned) anIndex
 				  withOid: (OID) anOid
 {
@@ -159,18 +253,23 @@ int compareOids(OID o1, OID o2)
 	data[anIndex] = anOid;
 }
 
+
 -(void) replaceObjectAtIndex: (unsigned) anIndex 
 				  withObject: (OPPersistentObject*) anObject
 {
 	NSParameterAssert([anObject class] == elementClass);
 	[self replaceOidAtIndex: anIndex withOid: [anObject oid]];
 }
+*/
 
 - (void) dealloc
 {
-	if (data) {
-		free(data);
+	// Make sure, all sortObjects are released
+	if (sortKey) {
+		while (count) [self removeObjectAtIndex: count-1];
 	}
+	
+	if (data) free(data);
 	[super dealloc];
 }
 

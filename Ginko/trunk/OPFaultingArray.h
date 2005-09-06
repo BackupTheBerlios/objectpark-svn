@@ -10,28 +10,35 @@
 #import "OPPersistenceConstants.h"
 
 @class OPPersistentObject;
+@class OPFaultingArray;
+@class OPPersistentObjectContext;
 
 @interface OPFaultingArray : NSObject {
-	OID* data;
+	char* data;
 	unsigned count,capacity;
+	unsigned entrySize;
 	Class elementClass;
 	NSString* sortKey; // the key to sort the array. may be null
-	int (*compare)(id, id) ;
+	int (*compare)(id, id, OPFaultingArray*);
+	BOOL needsSorting;
 }
 
 + (id) array;
 - (id) initWithCapacity: (unsigned) newCapacity;
 
 - (unsigned) count;
+- (OPPersistentObjectContext*) context;
+
 
 - (OID) oidAtIndex: (unsigned) index;
 - (id) objectAtIndex: (unsigned) anIndex;
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject;
 - (void) removeObject: (OPPersistentObject*) anObject;
+- (void) removeObjectAtIndex: (unsigned) index;
 
 
-- (void) addOid: (OID) anOid;
+- (void) addOid: (OID) oid sortObject: (id) sortObject;
 - (void) addObject: (OPPersistentObject*) anObject;
-- (void) replaceOidAtIndex: (unsigned) anIndex withOid: (OID) anInt;
+//- (void) replaceOidAtIndex: (unsigned) anIndex withOid: (OID) anInt;
 
 @end
