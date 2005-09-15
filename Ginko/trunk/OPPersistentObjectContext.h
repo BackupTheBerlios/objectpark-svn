@@ -97,6 +97,8 @@
 
 @end
 
+@class OPFaultingArray;
+
 @interface OPPersistentObjectEnumerator : NSEnumerator {
 	sqlite3_stmt* statement;
 	Class resultClass;
@@ -115,6 +117,9 @@
 - (BOOL) skipObject;
 
 - (void) bind: (id) variable, ...;
+
+- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey;
+
 
 @end
 

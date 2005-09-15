@@ -161,7 +161,7 @@
 	GIMessage* message = [context objectForOid: 2 ofClass: [GIMessage class]];
 	GIThread* thread = [message valueForKey: @"thread"];
 	
-	NSArray* groups = [thread valueForKey: @"groups"];
+	OPFaultingArray* groups = [thread valueForKey: @"groups"];
 	NSLog(@"Thread %@ is contained in %d group(s) (e.g. %@)", thread, [groups count], [[groups lastObject] valueForKey: @"name"]);
 	NSAssert([groups count], @"Thread has no groups!");
 	
@@ -177,7 +177,7 @@
 	GIMessage* message = [context objectForOid: 2 ofClass: [GIMessage class]];
 	GIThread* thread = [message valueForKey: @"thread"];
 	
-	NSArray* groups = [thread valueForKey: @"groups"];
+	OPFaultingArray* groups = [thread valueForKey: @"groups"];
 	NSLog(@"Thread %@ is contained in %d group(s) (e.g. %@)", thread, [groups count], [[groups lastObject] valueForKey: @"name"]);
 	int groupCount = [groups count];
 	
@@ -204,7 +204,7 @@
 	GIMessageGroup* group = [context objectForOid: 1 ofClass: [GIMessageGroup class]];
 	NSAssert(group, @"Unable to fetch group 0.");
 	
-	NSArray* threads = [group valueForKey: @"threadsByDate"];
+	OPFaultingArray* threads = [group valueForKey: @"threadsByDate"];
 	
 	GIThread* someThread = [threads lastObject];
 	
@@ -233,7 +233,6 @@
 
 	NSAssert([testArray count] == 1, @"remove-problem with OPFaultingArray.");
 	NSAssert([testArray objectAtIndex: 0] == [allGroups objectAtIndex: 1], @"remove-problem with OPFaultingArray.");
-
 	
 }
 

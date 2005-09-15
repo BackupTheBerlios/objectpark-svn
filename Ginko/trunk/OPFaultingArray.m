@@ -1,9 +1,9 @@
 //
-//  MPWIntArray.m
-//  MPWFoundation
+//  OPFaultingArray.m
+//  OPPersistence
 //
-//  Created by Marcel Weiher on Sat Dec 27 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
+//  Created by Dirk Theisen  on Sat Dec 27 2004.
+//  Copyright (c) 2003 Dirk Theisen. All rights reserved.
 //
 
 #import "OPFaultingArray.h"
@@ -13,6 +13,7 @@
 
 @implementation OPFaultingArray
 
+/*" Warning: This class is not thread-save! "*/
 
 int compareOids(OID o1, OID o2)
 {
@@ -52,9 +53,16 @@ int compareOids(OID o1, OID o2)
 
 - (void) sort
 {
-	NSAssert(sortKey, @"Try to sort without a sortKey set.");
 #warning todo: implement sorting! 
 	NSLog(@"Should sort array: %@", self);	
+}
+
+
+- (void) setElementClass: (Class) eClass
+/*" This is only necessary if the receiver was filled using addOid... methods. "*/
+{
+	NSParameterAssert(count==0);
+	elementClass = eClass;
 }
 
 - (void) setSortKey: (NSString*) newSortKey
@@ -69,6 +77,11 @@ int compareOids(OID o1, OID o2)
 	}
 }
 
+
+- (id) lastObject
+{
+	return count ? [self objectAtIndex: count-1] : nil;
+}
 
 - (id) init
 {
@@ -111,20 +124,30 @@ int compareOids(OID o1, OID o2)
 
 - (BOOL) findObject: (OPPersistentObject*) anObject index: (unsigned*) indexSearched
 {
-	if (needsSorting) [self sort];
 	
 	int i = 0;
-#warning linear search! replace by binary-search!
-	if (compare) {
+#warning linear oid search! replace by binary-search using sort keys!
+	if (NO && sortKey) {
+		/*
+		 optimization
+		// Expect the array to be sorted. Use sort key:
+		id searchSortObject = [anObject valueForKey: sortKey];
+		
 		int res = -1;
-		for (; res<0 && i<count;i++) {
-			res = compare([self objectAtIndex: i], anObject, (OPFaultingArray*)self);
+		for (; res<=0 && i<count;i++) {
+			id otherSortObject = [self sortObjectAtIndex: i];
+			res = [searchSortObject compare: otherSortObject];
+			if (res == 0) {
+				OID oidFound = *oidAdr(i);
+				if (oidFound==[anObject oid]) {
+					*indexSearched = i;
+					return YES;
+				}
+			}
 		}
-		if (res == 0) {
-			*indexSearched = i;
-			return YES;
-		}
+*/
 	} else {
+		// Just compare oids:
 		OID oid = [anObject oid];
 		for (;i<count;i++) {
 			OID oidFound = *oidAdr(i);
@@ -139,19 +162,21 @@ int compareOids(OID o1, OID o2)
 	return NO;
 }
 
+- (BOOL) containsObject: (OPPersistentObject*) anObject
+{
+	return [self indexOfObject: anObject] != NSNotFound;
+}
 
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 /*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. "*/
 {
-	unsigned result;
-	
+	unsigned result;	
+	if (needsSorting) [self sort]; // does nothing, currently
+
 	if ([self findObject: anObject index: &result]) {
 		return result;
 	}
-	
 	return NSNotFound;
-	
-
 }
 
 - (void) removeObjectAtIndex: (unsigned) index

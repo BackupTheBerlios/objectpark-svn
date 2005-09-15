@@ -19,7 +19,7 @@
 	unsigned entrySize;
 	Class elementClass;
 	NSString* sortKey; // the key to sort the array. may be null
-	int (*compare)(id, id, OPFaultingArray*);
+	//int (*compare)(id, id, OPFaultingArray*);
 	BOOL needsSorting;
 }
 
@@ -33,8 +33,11 @@
 - (OID) oidAtIndex: (unsigned) index;
 - (id) objectAtIndex: (unsigned) anIndex;
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject;
+- (BOOL) containsObject: (OPPersistentObject*) anObject;
 - (void) removeObject: (OPPersistentObject*) anObject;
 - (void) removeObjectAtIndex: (unsigned) index;
+- (void) setSortKey: (NSString*) newSortKey;
+- (void) setElementClass: (Class) eClass;
 
 
 - (void) addOid: (OID) oid sortObject: (id) sortObject;

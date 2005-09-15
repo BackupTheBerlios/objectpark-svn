@@ -81,6 +81,7 @@
 - (Class) attributeClass;
 - (BOOL) isRelationship;
 - (NSString*) sortAttributeName;
+- (NSString*) columnName;
 
 
 @end

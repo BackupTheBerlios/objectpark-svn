@@ -36,6 +36,7 @@
 #import "OPPersistentObject.h"
 #import "OPSQLiteConnection.h"
 #import "OPClassDescription.h"
+#import "OPFaultingArray.h"
 
 @implementation OPPersistentObjectContext
 
@@ -339,6 +340,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	OPClassDescription* cd          = [[object class] persistentClassDescription];
 	OPAttributeDescription* ad      = [cd attributeWithName: key];
 	NSString* sql                   = [ad queryString];
+	NSString* sortKey               = [ad sortAttributeName];
 	OPPersistentObjectEnumerator* e = nil;
 	
 	if ([ad isRelationship] && sql!=nil) {
@@ -350,7 +352,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		[e bind: object, nil];
 	}
 	
-	return [e allObjects];
+	return [e allObjectsSortedByKey: sortKey];
 }
 
 
@@ -418,7 +420,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (id) initWithContext: (OPPersistentObjectContext*) aContext
 		   resultClass: (Class) poClass 
 		   whereClause: (NSString*) clause
-{
+{	
 	NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [poClass databaseTableName], clause];
 
 	return [self initWithContext: aContext resultClass: poClass queryString: queryString];
@@ -450,8 +452,27 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[context lock];
 	int res = sqlite3_step(statement);
 	[context unlock];
+	if (res!=SQLITE_ROW) {
+		sqlite3_reset(statement); // finished
+	}
 	return (res==SQLITE_ROW);
 }
+
+- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey
+/*" Returns an OPFaultingArray containing all the faults.
+	If sortKey is a key-value-complient key for the resultClass, the result is sorted by the key givenand the second result column is expected to contain the sort objects in ascending order while the first column must always contain ROWIDs. "*/
+{
+	OPFaultingArray* result = [OPFaultingArray array];
+	[result setSortKey: sortKey];
+	[result setElementClass: resultClass];
+	while ([self skipObject]) {
+		ROWID rid = sqlite3_column_int64(statement, 0);
+		id sortObject = sortKey ? [resultClass newFromStatement: statement index: 1] : nil;
+		[result addOid: rid sortObject: sortObject];
+	}
+	return result;
+}
+
 
 - (id) nextObject
 	/*" Returns the next fetched object including all its attributes. "*/

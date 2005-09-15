@@ -160,6 +160,11 @@
 	return sortAttributeName;
 }
 
+- (NSString*) columnName
+{
+	return columnName;
+}
+
 - (Class) attributeClass
 {
 	return theClass;
