@@ -285,13 +285,13 @@ int compareOids(OID o1, OID o2)
 		//NSLog(@"Adding Sortkey %@ at index: %d", sortObject, count);
 		*sortObjectPtr(count)=[sortObject retain];
 	}
-	
+	count+=1;
 	
 	//if (sortKey) NSLog(@"xxx: %@", self);
-	if (sortKey!=nil && !needsSorting && count>0)
-		needsSorting = ([[self sortObjectAtIndex: count-1] compare: sortObject] > 0);	// compare sortObject with last object!
-	
-	count+=1;
+	if (!needsSorting && count>1) {
+        // No need to set unsorted flag, if we insert in a sorted manner:
+		needsSorting = [self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0;
+	}
 }
 
 - (void) addObject: (OPPersistentObject*) anObject
