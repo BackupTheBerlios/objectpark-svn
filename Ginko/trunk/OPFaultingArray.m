@@ -286,11 +286,12 @@ int compareOids(OID o1, OID o2)
 		*sortObjectPtr(count)=[sortObject retain];
 	}
 	
-	count+=1;
 	
 	//if (sortKey) NSLog(@"xxx: %@", self);
+	if (sortKey!=nil && !needsSorting && count>0)
+		needsSorting = ([[self sortObjectAtIndex: count-1] compare: sortObject] > 0);	// compare sortObject with last object!
 	
-	needsSorting = (sortKey!=nil);	// compare sortObject with last objec to know!
+	count+=1;
 }
 
 - (void) addObject: (OPPersistentObject*) anObject
