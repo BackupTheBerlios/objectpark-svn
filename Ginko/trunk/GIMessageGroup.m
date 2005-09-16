@@ -31,8 +31,8 @@
 	return 
 	@"{"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
-    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; ContainerClass = NSArray; SortAttributeName = age;};"
-	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; ContainerClass = NSArray; SortAttributeName = date};"
+    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; SortAttribute = date;};"
+	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; SortAttributeName = date};"
 	@"}";
 }
 

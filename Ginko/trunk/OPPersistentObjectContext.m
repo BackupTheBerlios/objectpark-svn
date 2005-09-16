@@ -332,27 +332,32 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 
 
-- (id) containerForObject: (id) object
-		  relationShipKey: (NSString*) key
+- (OPFaultingArray*) containerForObject: (id) object
+						relationShipKey: (NSString*) key
 /*" Returns the container specified in the attribute description. Currently, only NSArray is supported or nil if key does not
 	denote a to-many relationship. "*/
 {
 	OPClassDescription* cd          = [[object class] persistentClassDescription];
 	OPAttributeDescription* ad      = [cd attributeWithName: key];
 	NSString* sql                   = [ad queryString];
-	NSString* sortKey               = [ad sortAttributeName];
+	NSString* sortKey               = nil; [ad sortAttributeName];
+	Class     sortKeyClass          = nil;
+	
 	OPPersistentObjectEnumerator* e = nil;
 	
 	if ([ad isRelationship] && sql!=nil) {
 		// We might want to cache these:
-		
+		if (sortKey = [ad sortAttributeName]) {
+			sortKeyClass = [[[[ad attributeClass] persistentClassDescription] attributeWithName: sortKey] attributeClass];
+		}
+
 		e = [[[OPPersistentObjectEnumerator alloc] initWithContext: self 
 													  resultClass: [ad attributeClass] 
 													  queryString: sql] autorelease];
 		[e bind: object, nil];
 	}
 	
-	return [e allObjectsSortedByKey: sortKey];
+	return [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];
 }
 
 
@@ -458,7 +463,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return (res==SQLITE_ROW);
 }
 
-- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey
+- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey 
+								   ofClass: (Class) sortKeyClass;
 /*" Returns an OPFaultingArray containing all the faults.
 	If sortKey is a key-value-complient key for the resultClass, the result is sorted by the key givenand the second result column is expected to contain the sort objects in ascending order while the first column must always contain ROWIDs. "*/
 {
@@ -467,7 +473,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[result setElementClass: resultClass];
 	while ([self skipObject]) {
 		ROWID rid = sqlite3_column_int64(statement, 0);
-		id sortObject = sortKey ? [resultClass newFromStatement: statement index: 1] : nil;
+		id sortObject = sortKey ? [sortKeyClass newFromStatement: statement index: 1] : nil;
 		[result addOid: rid sortObject: sortObject];
 	}
 	return result;

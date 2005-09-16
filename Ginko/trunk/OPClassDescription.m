@@ -155,7 +155,7 @@
 }
 
 - (NSString*) sortAttributeName
-/*" Returns the attribute name to sort a relationship by. If (for a relationship) no sortAttribute is specified, the relationship is not sorted and an NSSet is used. "*/
+/*" Returns the attribute name to sort a relationship by. If (for a relationship) no sortAttribute is specified, the relationship is not sorted. "*/
 {
 	return sortAttributeName;
 }

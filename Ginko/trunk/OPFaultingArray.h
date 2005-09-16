@@ -28,6 +28,7 @@
 
 - (unsigned) count;
 - (OPPersistentObjectContext*) context;
+- (id) lastObject;
 
 
 - (OID) oidAtIndex: (unsigned) index;

@@ -28,11 +28,11 @@ int compareOids(OID o1, OID o2)
 */
 
 
-#define oidAdr(oindex) (OID*)(data+(oindex*entrySize))
+#define oidPtr(oindex) (OID*)(data+(oindex*entrySize))
 
-#define sortObjectAdr(oindex) (id*)(data+(oindex*entrySize)+sizeof(OID))
+#define sortObjectPtr(oindex) (id*)(data+(oindex*entrySize)+sizeof(OID))
 
-#define setSortObjectAtIndex(newValue, aindex) {id* oldValuePtr=sortObjectAdr(aindex); if (*oldValuePtr!=newValue) {[*oldValuePtr autorelease]; *oldValuePtr=[newValue retain];}}
+//#define setSortObjectAtIndex(newValue, aindex) {id* oldValuePtr=sortObjectAdr(aindex); if (*oldValuePtr!=newValue) {[*oldValuePtr autorelease]; *oldValuePtr=[newValue retain];}}
 
 + (id) array
 {
@@ -74,6 +74,7 @@ int compareOids(OID o1, OID o2)
 		sortKey   = [newSortKey retain];
 		entrySize = sizeof(OID) + (sortKey ? sizeof(void*) : 0);
 		data      = realloc(data, (capacity+3) * entrySize );
+		//memset(data, 0, (capacity+3) * entrySize); // nullify memory.
 	}
 }
 
@@ -91,17 +92,17 @@ int compareOids(OID o1, OID o2)
 -(OID) oidAtIndex: (unsigned) index;
 {
 	NSParameterAssert(index < count);
-	return *oidAdr(index);
+	return *oidPtr(index);
 }
 
 - (void)_growTo: (unsigned) newCapacity
 {
-    capacity=capacity*2+2;
-	capacity=MAX( capacity, newCapacity );
+	capacity=MAX( capacity*2+2, newCapacity );
     if ( data ) {
         data=realloc( data, (capacity+3)*entrySize );
     } else {
-        data=calloc( (capacity+3), entrySize );
+        data=malloc( (capacity+3) * entrySize );
+		//memset(data, 0, (capacity+3) * entrySize); // nullify memory.
     }
 }
 
@@ -121,6 +122,7 @@ int compareOids(OID o1, OID o2)
 	data[index] = anOid;
 }
 */
+
 
 - (BOOL) findObject: (OPPersistentObject*) anObject index: (unsigned*) indexSearched
 {
@@ -150,7 +152,7 @@ int compareOids(OID o1, OID o2)
 		// Just compare oids:
 		OID oid = [anObject oid];
 		for (;i<count;i++) {
-			OID oidFound = *oidAdr(i);
+			OID oidFound = *oidPtr(i);
 			if (oidFound==oid) {
 				*indexSearched = i;
 				return YES;
@@ -182,8 +184,8 @@ int compareOids(OID o1, OID o2)
 - (void) removeObjectAtIndex: (unsigned) index
 {
 	if (index!=NSNotFound) {
-		if (sortKey) [*sortObjectAdr(index) release];
-		memccpy(oidAdr(index), oidAdr(index+1),(count-index)-1, entrySize);
+		if (sortKey) [*sortObjectPtr(index) release];
+		memccpy(oidPtr(index), oidPtr(index+1),(count-index)-1, entrySize);
 		count--;
 #warning Implement array shrinking!
 	}	
@@ -206,44 +208,89 @@ int compareOids(OID o1, OID o2)
 */
 
 //- (void) setSortObjectAtIndex: (unsigned) oindex
+/*
+ 
+ void Sort(id self, int begin, int end) 
+ {
+	 int mid;  
+	 if (begin == end)     
+		 return; 
+	 if (begin == end - 1) 
+		 return;
+	 mid = (begin + end) / 2;
+	 Sort(self, begin, mid);
+	 Sort(self, mid, end);
+	 Merge(self, begin, mid, end); //Don't forget to get Merge()
+ }
+ 
+ 
+ */
 
 
 - (id) sortObjectAtIndex: (unsigned) index
 /*" Returns the attribute used for sorting for the object at the index given. Raises, if "*/
 {
+	NSParameterAssert(index < count);
 	NSAssert(sortKey!=nil, @"Only allowed, with sortKey set.");
 	id result = nil;
 	// See, if there is an object registered with the context:
-	OPPersistentObject* object = [[self context] objectRegisteredForOid: *oidAdr(index) ofClass: elementClass];
+	OPPersistentObject* object = [[self context] objectRegisteredForOid: *oidPtr(index) ofClass: elementClass];
+	// Avoid firing a fault to access the sort attribute:
 	if (object && ![object isFault]) {
-		// Avoid firing a fault to access the sort attribute:
 		result = [object valueForKey: sortKey]; // what happens, if it returns nil?
-		setSortObjectAtIndex(result, index);
+		id* storedSortObjectPtr = sortObjectPtr(index);
+		if (result != *storedSortObjectPtr) {
+			// Update stored sortObject:
+			[*storedSortObjectPtr release];
+			*storedSortObjectPtr = [result retain];
+#warning Updating sortObjects may make array unsorted
+		}
 	} else {
 		// fall back to cached sortObject:
-		result = *sortObjectAdr(index);
+		result = *sortObjectPtr(index);
 	}
 	
 	return result;
 }
 
+/*" Compares the sort attribute (sort key or oid) of the objects at the specified indices. Warning: Equality may not mean they are the same objects, they just have equal sort attributes. "*/
+- (int) compareObjectAtIndex: (unsigned) index1 
+		   withObjectAtIndex: (unsigned) index2
+{
+	if (sortKey) {
+		id obj1 = [self sortObjectAtIndex: index1];
+		id obj2 = [self sortObjectAtIndex: index2];
+		return [obj1 compare: obj2];
+	} 
+	// Compare OIDs:
+	OID* oidp1 = oidPtr(index1);
+	OID* oidp2 = oidPtr(index2);
+	return *oidp1==*oidp2 ? 0 : oidp1<oidp2 ? -1 : 1; // can math lib do this?	
+}
+
+
 - (void) addOid: (OID) oid sortObject: (id) sortObject
 /*" The sortObject may be nil, if sortKey is nil. "*/
 {	
+	NSParameterAssert(!sortObject || sortKey);
 	if (count+1 >= capacity) {
 		[self _growTo: count+1];
 	}
 	
-	*oidAdr(count) = oid;
+	*oidPtr(count) = oid;
 	
 	if (sortKey) {
 		// Cache the sortObject:
 		[sortObject retain];
-		setSortObjectAtIndex(sortObject, count);
+		//NSLog(@"Adding Sortkey %@ at index: %d", sortObject, count);
+		*sortObjectPtr(count)=[sortObject retain];
 	}
 	
 	count+=1;
-	needsSorting = (sortKey!=nil);	
+	
+	//if (sortKey) NSLog(@"xxx: %@", self);
+	
+	needsSorting = (sortKey!=nil);	// compare sortObject with last objec to know!
 }
 
 - (void) addObject: (OPPersistentObject*) anObject
@@ -263,7 +310,7 @@ int compareOids(OID o1, OID o2)
 
 - (id) objectAtIndex: (unsigned) anIndex
 {
-	OID oid = *oidAdr(anIndex);
+	OID oid = *oidPtr(anIndex);
 	// Should we store and retain a context?
 	id result = [[self context] objectForOid: oid ofClass: elementClass];
 	NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
@@ -286,6 +333,20 @@ int compareOids(OID o1, OID o2)
 	[self replaceOidAtIndex: anIndex withOid: [anObject oid]];
 }
 */
+
+- (NSString*) description
+{
+	// Keys are just for testing...
+	NSMutableString* keys = [NSMutableString string];
+	if (NO && sortKey) {
+		int i;
+		for (i=0; i<count;i++) {
+			[keys appendString: @", "];
+			[keys appendString: [[self sortObjectAtIndex: i] description]];
+		}
+	}
+	return [NSString stringWithFormat: @"<%@ with %d elements, sortkey: %@ %@>", [super description], count, sortKey, keys];
+}
 
 - (void) dealloc
 {

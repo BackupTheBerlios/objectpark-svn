@@ -260,7 +260,9 @@
 	if (!result) {
 		result = [[self context] containerForObject: self
 									relationShipKey: key];
-		if (result) [attributes setObject: result forKey: key]; // cache result in attributes dictionary
+		
+		// Cache result container in attributes dictionary:
+		if (result) [attributes setObject: result forKey: key]; 
 	}
 	
     return result;
@@ -373,17 +375,17 @@
 
 - (void) addValue: (id) value forKey: (NSString*) key
 {
-	id container = [self primitiveValueForKey: key];
+	OPFaultingArray* container = [self primitiveValueForKey: key];
 	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
 #warning Record relationship change in persistent context somehow.
-#warning Also update inverse relationship.
+#warning Also update inverse relationship (if any)
 	
 	[container addObject: value];	
 }
 
 - (void) removeValue: (id) value forKey: (NSString*) key
 {
-	id container = [self primitiveValueForKey: key];
+	OPFaultingArray* container = [self primitiveValueForKey: key];
 #warning Record relationship change in persistent context somehow.
 #warning Also update inverse relationship.
 	[container removeObject: value];

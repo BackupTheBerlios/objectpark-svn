@@ -39,6 +39,7 @@
 @class OPPersistentObject;
 @class OPSQLiteConnection;
 @class OPPersistentObjectEnumerator;
+@class OPFaultingArray;
 
 @interface OPPersistentObjectContext : NSObject {
     
@@ -91,8 +92,8 @@
 - (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
 													 where: (NSString*) clause;
 
-- (id) containerForObject: (id) object
-		  relationShipKey: (NSString*) key;
+- (OPFaultingArray*) containerForObject: (id) object
+						relationShipKey: (NSString*) key;
 
 
 @end
@@ -118,7 +119,7 @@
 
 - (void) bind: (id) variable, ...;
 
-- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey;
+- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey ofClass: (Class) sortKeyClass;
 
 
 @end

@@ -200,14 +200,16 @@
 
 - (void) testThreadsRelationship
 {
-	// Test, if we can attach a single attribute (date) to the GIThread faults: 
-	GIMessageGroup* group = [context objectForOid: 1 ofClass: [GIMessageGroup class]];
+	GIMessageGroup* group = [context objectForOid: 2 ofClass: [GIMessageGroup class]];
 	NSAssert(group, @"Unable to fetch group 0.");
 	
 	OPFaultingArray* threads = [group valueForKey: @"threadsByDate"];
 	
 	GIThread* someThread = [threads lastObject];
+	[someThread valueForKey: @"subject"]; // fire fault
 	
+	NSLog(@"Got threadsByDate: %@, e.g. %@", threads, someThread);
+
 	NSAssert1([threads count]>0, @"Unable to fetch threads for group %@.", group);
 
 }
