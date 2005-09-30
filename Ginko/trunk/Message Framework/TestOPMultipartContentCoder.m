@@ -9,7 +9,7 @@
 #import "TestOPMultipartContentCoder.h"
 #import "OPMBoxFile.h"
 #import "NSData+MessageUtils.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 #import "OPInternetMessage.h"
 #import "NSManagedObjectContext+Extensions.h"
 
@@ -30,11 +30,11 @@
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *transferData = [[enumerator nextObject] transferDataFromMboxData];
     STAssertTrue(transferData != nil, @"transferData could not be enumerated.");
-    G3Message *message = [G3Message messageForMessageId:[[[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease] messageId]];
+    GIMessage *message = [GIMessage messageForMessageId:[[[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease] messageId]];
     
     if (!message)
     {
-        message = [G3Message messageWithTransferData:transferData];
+        message = [GIMessage messageWithTransferData:transferData];
     }
     
     STAssertTrue([message messageId] != nil, @"message should have an message id.");

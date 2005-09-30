@@ -8,8 +8,8 @@
 
 
 #import <AppKit/AppKit.h>
-#import "G3Message.h"
-#import "G3Thread.h"
+#import "GIMessage.h"
+#import "GIThread.h"
 //#include <stdlib.h>
 #import <SenTestingKit/SenTestProbe.h>
 

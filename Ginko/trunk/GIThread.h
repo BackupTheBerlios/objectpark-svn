@@ -36,6 +36,8 @@
 - (NSArray*) rootMessages;
 - (unsigned) commentDepth;
 - (BOOL) hasUnreadMessages;
+- (BOOL) containsSingleMessage;
+
 
 - (NSArray*) subthreadWithMessage: (GIMessage*) aMessage;
 

@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class G3Message;
+@class GIMessage;
 
 typedef enum GIMessageFilterActionType GIMessageFilterActionType;
 enum GIMessageFilterActionType
@@ -59,7 +59,7 @@ enum GIMessageFilterActionType
 
 @protocol GIMessageFilterActionPerformer
 
-+ (BOOL)performAction:(GIMessageFilterAction *)action withMessage:(G3Message *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox;
++ (BOOL)performAction:(GIMessageFilterAction *)action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox;
 /*" Performs the given action if capable. Returns NO if this action wants to prevent further filtering. YES otherwise.
 
     If putInBox is given (may be NULL) it is set to YES when the given

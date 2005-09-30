@@ -24,7 +24,7 @@
 #import "EDMessagePart.h"
 #import "OPInternetMessage.h"
 #import "EDPlainTextContentCoder.h"
-#import "G3Message+Rendering.h"
+#import "GIMessage+Rendering.h"
 #import "NSAttributedString+MessageUtils.h"
 #import "MPWDebug.h"
 
@@ -236,7 +236,7 @@
 {
     NSMutableAttributedString* result = [[[self text] attributedStringWithQuotationAttributes] mutableCopy];
         
-    [result addAttribute:NSFontAttributeName value:[G3Message font] range:NSMakeRange(0, [result length])];
+    [result addAttribute:NSFontAttributeName value:[GIMessage font] range:NSMakeRange(0, [result length])];
     
     [result urlify];
     

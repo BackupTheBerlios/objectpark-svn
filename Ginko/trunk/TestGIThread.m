@@ -7,9 +7,9 @@
 //
 
 #import "TestGIThread.h"
-#import "G3Thread.h"
-#import "G3Message.h"
-#import "G3MessageGroup.h"
+#import "GIThread.h"
+#import "GIMessage.h"
+#import "GIMessageGroup.h"
 #import "OPMBoxFile.h"
 #import "NSManagedObjectContext+Extensions.h"
 
@@ -20,7 +20,7 @@
     [[NSManagedObjectContext threadContext] rollback];
 }
 
-- (G3Message *)makeAMessage
+- (GIMessage *)makeAMessage
 {
     static int i = 1;
     NSString *messageId = [NSString stringWithFormat:@"<threadtest-message-%d@test.org>",i++];
@@ -29,7 +29,7 @@
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
     STAssertNotNil(transferData, @"nee");
     
-    G3Message *message = [G3Message messageWithTransferData:transferData];
+    GIMessage *message = [GIMessage messageWithTransferData:transferData];
     STAssertNotNil(message, @"nee %@", messageId);
     STAssertTrue([[message messageId] isEqual:messageId], @"nee");
     
@@ -38,20 +38,20 @@
 
 - (void)testSplit
 {
-    G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
-    G3Message *messageA = [self makeAMessage];
-    G3Message *messageB = [self makeAMessage];
-    G3Message *messageC = [self makeAMessage];
+    GIThread *threadA = [[[GIThread alloc] init] autorelease];
+    GIMessage *messageA = [self makeAMessage];
+    GIMessage *messageB = [self makeAMessage];
+    GIMessage *messageC = [self makeAMessage];
     
     [messageC setValue:messageB forKey:@"reference"];
     
-    [threadA addMessage:messageA];
-    [threadA addMessage:messageB];
-    [threadA addMessage:messageC];
+    [threadA addToMessages: messageA];
+    [threadA addToMessages: messageB];
+    [threadA addToMessages: messageC];
         
     STAssertTrue([[threadA messages] count] == 3, @"not %d", [[threadA messages] count]);
     
-    G3Thread *threadB = [threadA splitWithMessage:messageB];
+    GIThread *threadB = [threadA splitWithMessage:messageB];
     
     STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
     STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
@@ -59,17 +59,17 @@
 
 - (void)testMerge
 {
-    G3Thread *threadA = [[[G3Thread alloc] init] autorelease];
-    G3Thread *threadB = [[[G3Thread alloc] init] autorelease];
-    G3Message *messageA = [self makeAMessage];
-    G3Message *messageB = [self makeAMessage];
-    G3Message *messageC = [self makeAMessage];
+    GIThread *threadA = [[[GIThread alloc] init] autorelease];
+    GIThread *threadB = [[[GIThread alloc] init] autorelease];
+    GIMessage *messageA = [self makeAMessage];
+    GIMessage *messageB = [self makeAMessage];
+    GIMessage *messageC = [self makeAMessage];
     
     [messageC setValue:messageB forKey:@"reference"];
     
-    [threadB addMessage:messageA];
-    [threadB addMessage:messageB];
-    [threadA addMessage:messageC];
+    [threadB addToMessages: messageA];
+    [threadB addToMessages: messageB];
+    [threadA addToMessages: messageC];
     
     STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
     STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
@@ -90,11 +90,11 @@
 
 - (void)disabledtestGroupAdding
 {
-    G3Thread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"G3Thread" inManagedObjectContext:[NSManagedObjectContext threadContext]];
-    G3Message *messageA = [self makeAMessage];
-    G3MessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"G3MessageGroup" inManagedObjectContext:[NSManagedObjectContext threadContext]];
+    GIThread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"GIThread" inManagedObjectContext:[NSManagedObjectContext threadContext]];
+    GIMessage *messageA = [self makeAMessage];
+    GIMessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"GIMessageGroup" inManagedObjectContext:[NSManagedObjectContext threadContext]];
     
-    [threadA addMessage:messageA];
+    [threadA addToMessages: messageA];
     [threadA addGroup:group];
     
     STAssertTrue([[threadA valueForKey:@"groups"] containsObject:group], @"should contain group.");

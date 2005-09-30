@@ -20,8 +20,8 @@
  at http://www.objectpark.org/Ginko.html
  */
 
-#import "G3Message.h"
-#import "G3MessageGroup.h"
+#import "GIMessage.h"
+#import "GIMessageGroup.h"
 #import "GIFiltersPane.h"
 #import "GIMessageFilter.h"
 #import "GIMessageFilterExpression.h"
@@ -177,8 +177,8 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         }
         else
         {
-            G3MessageGroup *group = [G3MessageGroup messageGroupWithURIReferenceString:entry];
-            [paths addObject:[prefix stringByAppendingString:[group name]]];
+            GIMessageGroup *group = [GIMessageGroup messageGroupWithURIReferenceString:entry];
+            [paths addObject:[prefix stringByAppendingString: [group valueForKey: @"name"]]];
             [reps addObject:entry];
         }
     }
@@ -208,7 +208,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     NSMutableArray *reps = [NSMutableArray array];
     int i, count;
     
-    [self collectGroupPaths:groupPaths andURIRepresenations:reps startingAtNode:[G3MessageGroup hierarchyRootNode] prefix:@""];
+    [self collectGroupPaths:groupPaths andURIRepresenations:reps startingAtNode:[GIMessageGroup hierarchyRootNode] prefix:@""];
     
     count = [groupPaths count];
 

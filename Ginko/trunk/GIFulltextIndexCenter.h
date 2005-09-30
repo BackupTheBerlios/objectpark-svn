@@ -8,7 +8,7 @@
 
 #import <AppKit/AppKit.h>
 
-@class G3Message;
+@class GIMessage;
 
 @interface GIFulltextIndexCenter : NSObject 
 {
@@ -17,8 +17,8 @@
 + (GIFulltextIndexCenter *)defaultIndexCenter;
 - (id)init;
 
-- (BOOL)addMessage:(G3Message *)aMessage;
-- (BOOL)removeMessage:(G3Message *)aMessage;
+- (BOOL)addMessage:(GIMessage *)aMessage;
+- (BOOL)removeMessage:(GIMessage *)aMessage;
 - (NSArray *)hitsForQueryString:(NSString *)aQuery;
 - (BOOL)reindexAllMessages;
 

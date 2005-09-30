@@ -127,6 +127,11 @@
     return (unsigned)[[self valueForKey: @"numberOfMessages"] intValue]; 
 }
 
+- (BOOL) containsSingleMessage
+{
+	return [[self valueForKey: @"numberOfMessages"] intValue] == 1;
+}
+
 - (void) treeWalkFrom: (GIMessage*) localRoot addTo: (NSMutableArray*) result
 {
     [result addObject: localRoot];

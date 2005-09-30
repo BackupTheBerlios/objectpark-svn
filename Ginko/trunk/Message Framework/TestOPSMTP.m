@@ -10,7 +10,7 @@
 #import "OPSMTP.h"
 #import <OPNetwork/OPStream+SSL.h>
 #import "NSString+MessageUtils.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 #import "NSManagedObjectContext+Extensions.h"
 
 @implementation TestOPSMTP
@@ -24,7 +24,7 @@
     [[NSManagedObjectContext threadContext] rollback];
 }
 
-- (G3Message *)makeAMessage
+- (GIMessage *)makeAMessage
 {
     static int i = 1;
     NSString *messageId = [NSString stringWithFormat:@"<smtptest-message-%d@test.org>",i++];
@@ -33,7 +33,7 @@
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
     STAssertNotNil(transferData, @"nee");
     
-    G3Message *message = [G3Message messageWithTransferData:transferData];
+    GIMessage *message = [GIMessage messageWithTransferData:transferData];
     STAssertNotNil(message, @"nee %@", messageId);
     STAssertTrue([[message messageId] isEqual:messageId], @"nee");
     

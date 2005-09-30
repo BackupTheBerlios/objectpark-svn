@@ -7,7 +7,7 @@
 //
 
 #import "G3GroupInspectorController.h"
-#import "G3Profile.h"
+#import "GIProfile.h"
 
 @implementation G3GroupInspectorController
 
@@ -16,12 +16,12 @@ static G3GroupInspectorController *sharedInspector = nil;
 - (void)setupProfilePopUpButton
 {
     NSEnumerator *enumerator;
-    G3Profile *aProfile;
+    GIProfile *aProfile;
     
     [profileButton removeAllItems];
     
     // fill profiles in:
-    enumerator = [[G3Profile allObjects] objectEnumerator];
+    enumerator = [[GIProfile allObjects] objectEnumerator];
     while ((aProfile = [enumerator nextObject]))
     {
         [profileButton addItemWithTitle:[aProfile primitiveValueForKey:@"name"]];
@@ -29,7 +29,7 @@ static G3GroupInspectorController *sharedInspector = nil;
     }
 }
 
-- (void)setGroup:(G3MessageGroup *)aGroup
+- (void)setGroup:(GIMessageGroup *)aGroup
 {
     [group autorelease];
     group = [aGroup retain];
@@ -40,7 +40,7 @@ static G3GroupInspectorController *sharedInspector = nil;
     [window makeKeyAndOrderFront:self];
 }
 
-+ (id)groupInspectorForGroup:(G3MessageGroup *)aGroup
++ (id)groupInspectorForGroup:(GIMessageGroup *)aGroup
 {
     if (! sharedInspector)
     {
@@ -52,7 +52,7 @@ static G3GroupInspectorController *sharedInspector = nil;
     return sharedInspector;
 }
 
-- (id)init
+- (id) init
 {
     if ((self = [super init]))
     {
@@ -63,14 +63,14 @@ static G3GroupInspectorController *sharedInspector = nil;
     return self;
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
 }
 
-- (IBAction)switchProfile:(id)sender
+- (IBAction) switchProfile: (id) sender
     /*" Triggered by the profile select popup. "*/
 {
-    G3Profile *newProfile;
+    GIProfile *newProfile;
     
     newProfile = [[profileButton selectedItem] representedObject];
     if ([group defaultProfile] != newProfile) // check if something to do

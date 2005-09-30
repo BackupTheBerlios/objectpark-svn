@@ -1,5 +1,5 @@
 //
-//  G3MessageEditorWindow.h
+//  GIMessageEditorWindow.h
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 16.12.04.
@@ -9,7 +9,7 @@
 #import <AppKit/AppKit.h>
 
 
-@interface G3MessageEditorWindow : NSWindow 
+@interface GIMessageEditorWindow : NSWindow 
 {
 
 }

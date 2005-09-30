@@ -9,10 +9,10 @@
 #import <AppKit/AppKit.h>
 
 @class OPCollapsingSplitView;
-@class G3MessageGroup;
+@class GIMessageGroup;
 @class GIOutlineViewWithKeyboardSupport;
-@class G3Message;
-@class G3Thread;
+@class GIMessage;
+@class GIThread;
 
 @interface G3GroupController : NSObject 
 {
@@ -28,9 +28,9 @@
     IBOutlet NSPopUpButton *threadFilterPopUp;
     IBOutlet NSProgressIndicator *progressIndicator;
 
-    G3MessageGroup *group;
-    G3Thread *displayedThread; // displayed as comment tree
-    G3Message *displayedMessage; // displayed with body
+    GIMessageGroup *group;
+    GIThread *displayedThread; // displayed as comment tree
+    GIMessage *displayedMessage; // displayed with body
     NSMutableArray *threadCache; // contains item uris
     NSMutableSet *nonExpandableItemsCache; // contains item uris
     BOOL showRawSource;
@@ -43,21 +43,21 @@
     // -- Comment Tree --
 }
 
-- (id)initWithGroup:(G3MessageGroup *)aGroup;
-- (id)initAsStandAloneBoxesWindow:(G3MessageGroup *)aGroup;
+- (id)initWithGroup:(GIMessageGroup *)aGroup;
+- (id)initAsStandAloneBoxesWindow:(GIMessageGroup *)aGroup;
 
 - (NSWindow *)window;
-- (G3MessageGroup *)group;
-- (void)setGroup:(G3MessageGroup *)aGroup;
+- (GIMessageGroup *)group;
+- (void)setGroup:(GIMessageGroup *)aGroup;
 
 - (BOOL)isStandaloneBoxesWindow;
 
 - (id)valueForGroupProperty:(NSString *)prop;
 - (void)setValue:(id)value forGroupProperty:(NSString *)prop;
 
-- (void)setDisplayedMessage:(G3Message *)aMessage thread:(G3Thread *)aThread;
-- (G3Message *)displayedMessage;
-- (G3Thread *)displayedThread;
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread;
+- (GIMessage *)displayedMessage;
+- (GIThread *)displayedThread;
 
 - (BOOL)threadsShownCurrently;
 

@@ -8,28 +8,28 @@
 
 #import <AppKit/AppKit.h>
 @class OPMBoxFile;
-@class G3Message;
-@class G3MessageGroup;
-@class G3Thread;
+@class GIMessage;
+@class GIMessageGroup;
+@class GIThread;
 
 @interface GIMessageBase : NSObject {
 
 }
 
-+ (G3Message *)addMessageWithTransferData:(NSData *)someTransferData;
++ (GIMessage *)addMessageWithTransferData:(NSData *)someTransferData;
 
-+ (void)removeMessage:(G3Message *)aMessage;
++ (void)removeMessage:(GIMessage *)aMessage;
 
-+ (NSSet *)defaultGroupsForMessage:(G3Message *)aMessage;
++ (NSSet *)defaultGroupsForMessage:(GIMessage *)aMessage;
 
 - (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments;
 
-+ (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading;
-+ (void)addSentMessage:(G3Message *)aMessage;
-+ (void)addDraftMessage:(G3Message *)aMessage;
-+ (void)addQueuedMessage:(G3Message *)aMessage;
-+ (void)addTrashThread:(G3Thread *)aThread;
-+ (void)removeDraftMessage:(G3Message *)aMessage;
++ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading;
++ (void)addSentMessage:(GIMessage *)aMessage;
++ (void)addDraftMessage:(GIMessage *)aMessage;
++ (void)addQueuedMessage:(GIMessage *)aMessage;
++ (void)addTrashThread:(GIThread *)aThread;
++ (void)removeDraftMessage:(GIMessage *)aMessage;
 
 @end
 

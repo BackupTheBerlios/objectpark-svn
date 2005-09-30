@@ -7,7 +7,7 @@
 //
 
 #import <AppKit/AppKit.h>
-@class G3Message;
+@class GIMessage;
 
 @interface GISearchController : NSObject {
 
@@ -18,7 +18,7 @@
     
     @private
     NSArray* searchResults;
-    G3Message* cachedMessage; // used only in tableViewDataSource
+    GIMessage* cachedMessage; // used only in tableViewDataSource
 }
 
 - (IBAction) search: (id) sender;

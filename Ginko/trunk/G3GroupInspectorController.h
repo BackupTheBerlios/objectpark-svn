@@ -7,17 +7,17 @@
 //
 
 #import <AppKit/AppKit.h>
-#import "G3MessageGroup.h"
+#import "GIMessageGroup.h"
 
 @interface G3GroupInspectorController : NSObject 
 {
     IBOutlet NSWindow *window;
     IBOutlet NSPopUpButton *profileButton;
 
-    G3MessageGroup *group;
+    GIMessageGroup *group;
 }
 
-+ (id)groupInspectorForGroup:(G3MessageGroup *)aGroup;
++ (id)groupInspectorForGroup:(GIMessageGroup *)aGroup;
 
 - (IBAction)switchProfile:(id)sender;
 

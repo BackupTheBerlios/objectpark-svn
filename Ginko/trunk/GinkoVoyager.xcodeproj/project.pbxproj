@@ -109,8 +109,6 @@
 		77AD0FA8076EECB400D1DD65 /* MailIcon_send.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AD0FA0076EECB400D1DD65 /* MailIcon_send.tiff */; };
 		77AD5858080C450F00EBE93C /* TestOPMultimediaContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77AD5856080C450F00EBE93C /* TestOPMultimediaContentCoder.h */; };
 		77AD5859080C450F00EBE93C /* TestOPMultimediaContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AD5857080C450F00EBE93C /* TestOPMultimediaContentCoder.m */; };
-		77AD77BB07CF1A8300A15B83 /* G3Account.h in Headers */ = {isa = PBXBuildFile; fileRef = 77AD77B707CF1A8300A15B83 /* G3Account.h */; };
-		77AD77BC07CF1A8300A15B83 /* G3Account.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AD77B807CF1A8300A15B83 /* G3Account.m */; };
 		77B28DB3082E8A72007FA384 /* OPTableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B28DB1082E8A72007FA384 /* OPTableColumn.h */; };
 		77B28DB4082E8A72007FA384 /* OPTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B28DB2082E8A72007FA384 /* OPTableColumn.m */; };
 		77B8E35A07EEBDE200068222 /* TestEDTextFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DE91A607C6691C008E3C09 /* TestEDTextFieldCoder.h */; };
@@ -131,11 +129,9 @@
 		77BC58C80761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BC58C60761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h */; };
 		77BC58C90761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC58C70761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m */; };
 		77C386E907AE9F1F00420AE9 /* MIME.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77C386E807AE9F1F00420AE9 /* MIME.plist */; };
-		77C758200771888F00850E17 /* G3Profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 77C7581E0771888F00850E17 /* G3Profile.h */; };
-		77C758210771888F00850E17 /* G3Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C7581F0771888F00850E17 /* G3Profile.m */; };
 		77CD551007699AD1003354A0 /* MessageEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77CD550F07699AD1003354A0 /* MessageEditor.nib */; };
-		77CD551307699B4B003354A0 /* G3MessageEditorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CD551107699B4B003354A0 /* G3MessageEditorController.h */; };
-		77CD551407699B4B003354A0 /* G3MessageEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CD551207699B4B003354A0 /* G3MessageEditorController.m */; };
+		77CD551307699B4B003354A0 /* GIMessageEditorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CD551107699B4B003354A0 /* GIMessageEditorController.h */; };
+		77CD551407699B4B003354A0 /* GIMessageEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CD551207699B4B003354A0 /* GIMessageEditorController.m */; };
 		77CDEE7F07CBC05300675C49 /* Add_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7707CBC05300675C49 /* Add_Pressed.tiff */; };
 		77CDEE8007CBC05300675C49 /* Add.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7807CBC05300675C49 /* Add.tiff */; };
 		77CDEE8107CBC05300675C49 /* Remove_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */; };
@@ -159,6 +155,8 @@
 		77F3181E077B327A0097096B /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F3181C077B327A0097096B /* GITextView.m */; };
 		8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D14E4CE08E6C26100E67053 /* G3Account.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AD77B807CF1A8300A15B83 /* G3Account.m */; };
+		8D14E4CF08E6C26300E67053 /* G3Account.h in Headers */ = {isa = PBXBuildFile; fileRef = 77AD77B707CF1A8300A15B83 /* G3Account.h */; };
 		8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D17B5C70895BBC30057A1C6 /* GIProfile.h */; };
 		8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17B5C80895BBC30057A1C6 /* GIProfile.m */; };
 		8D2147AF085114B3004C44B9 /* GISearchController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D2147AD085114B2004C44B9 /* GISearchController.h */; };
@@ -195,12 +193,6 @@
 		8D86D3DF0712FA7C001B6105 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D86D3DE0712FA7C001B6105 /* AddressBook.framework */; };
 		8D8A496E075D395C003189BF /* OPManagedObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D8A496C075D395C003189BF /* OPManagedObject.h */; };
 		8D8A496F075D395C003189BF /* OPManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8A496D075D395C003189BF /* OPManagedObject.m */; };
-		8D8A4985075D3EA9003189BF /* G3Message.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D8A4983075D3EA9003189BF /* G3Message.h */; };
-		8D8A4986075D3EA9003189BF /* G3Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8A4984075D3EA9003189BF /* G3Message.m */; };
-		8D8A4AC3075E8B88003189BF /* G3Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D8A4AC1075E8B88003189BF /* G3Thread.h */; };
-		8D8A4AC4075E8B88003189BF /* G3Thread.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8A4AC2075E8B88003189BF /* G3Thread.m */; };
-		8D8A4EE4075FDE23003189BF /* G3MessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D8A4EE2075FDE23003189BF /* G3MessageGroup.h */; };
-		8D8A4EE5075FDE23003189BF /* G3MessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8A4EE3075FDE23003189BF /* G3MessageGroup.m */; };
 		8D901F510778EC97005365EA /* GIUserDefaultsKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D901F4F0778EC97005365EA /* GIUserDefaultsKeys.h */; };
 		8D901F520778EC97005365EA /* GIUserDefaultsKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D901F500778EC97005365EA /* GIUserDefaultsKeys.m */; };
 		8D901F8E0779D7DD005365EA /* NSAttributedString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D901F8D0779D7DD005365EA /* NSAttributedString+Extensions.m */; };
@@ -304,8 +296,8 @@
 		8DCE39040894116700F705EF /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E70891900B00F705EF /* GIMessage.m */; };
 		8DCE392B089423E000F705EF /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.0.dylib */; };
 		8DCE392C089423E000F705EF /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.0.dylib */; };
-		8DD2BF430775A1BA00587AAA /* G3Message+Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */; };
-		8DD2BF440775A1BA00587AAA /* G3Message+Rendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */; };
+		8DD2BF430775A1BA00587AAA /* GIMessage+Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */; };
+		8DD2BF440775A1BA00587AAA /* GIMessage+Rendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */; };
 		8DD602F1080ED9300050E973 /* GIFiltersPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8DDD2281080ECA57006C902D /* GIFiltersPane.nib */; };
 		8DD6030D080EDD470050E973 /* GIFiltersPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD6030C080EDD470050E973 /* GIFiltersPane.m */; };
 		8DDD2269080EC99B006C902D /* GIJunkFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD225C080EC99B006C902D /* GIJunkFilter.h */; };
@@ -525,8 +517,8 @@
 		77C7581E0771888F00850E17 /* G3Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G3Profile.h; sourceTree = "<group>"; };
 		77C7581F0771888F00850E17 /* G3Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G3Profile.m; sourceTree = "<group>"; };
 		77CD550F07699AD1003354A0 /* MessageEditor.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MessageEditor.nib; sourceTree = "<group>"; };
-		77CD551107699B4B003354A0 /* G3MessageEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G3MessageEditorController.h; sourceTree = "<group>"; };
-		77CD551207699B4B003354A0 /* G3MessageEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G3MessageEditorController.m; sourceTree = "<group>"; };
+		77CD551107699B4B003354A0 /* GIMessageEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorController.h; sourceTree = "<group>"; };
+		77CD551207699B4B003354A0 /* GIMessageEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorController.m; sourceTree = "<group>"; };
 		77CDEE7707CBC05300675C49 /* Add_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Add_Pressed.tiff; sourceTree = "<group>"; };
 		77CDEE7807CBC05300675C49 /* Add.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Add.tiff; sourceTree = "<group>"; };
 		77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove_Pressed.tiff; sourceTree = "<group>"; };
@@ -682,8 +674,8 @@
 		8DCE38FB08940F4000F705EF /* TestPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestPersistence.h; sourceTree = "<group>"; };
 		8DCE38FC08940F4000F705EF /* TestPersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestPersistence.m; sourceTree = "<group>"; };
 		8DCE392A089423E000F705EF /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = /usr/lib/libsqlite3.0.dylib; sourceTree = "<absolute>"; };
-		8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "G3Message+Rendering.h"; sourceTree = "<group>"; };
-		8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "G3Message+Rendering.m"; sourceTree = "<group>"; };
+		8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GIMessage+Rendering.h"; sourceTree = "<group>"; };
+		8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GIMessage+Rendering.m"; sourceTree = "<group>"; };
 		8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFiltersPane.m; sourceTree = "<group>"; };
 		8DD61AAD089448CD009ED3A5 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = /usr/include/sqlite3.h; sourceTree = "<absolute>"; };
 		8DDD225C080EC99B006C902D /* GIJunkFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIJunkFilter.h; sourceTree = "<group>"; };
@@ -753,6 +745,16 @@
 				8D901F890779D79A005365EA /* Cocoa Extensions */,
 				8D857FEB0785CF2D00B0D669 /* CustomViews */,
 				775A96DE0839D5C2008EC276 /* Tests */,
+				8DCE35E60891900B00F705EF /* GIMessage.h */,
+				8DCE35E70891900B00F705EF /* GIMessage.m */,
+				8DE9646E089F9F1F0053ED6B /* GIThread.h */,
+				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
+				8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */,
+				8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */,
+				8D17B5C70895BBC30057A1C6 /* GIProfile.h */,
+				8D17B5C80895BBC30057A1C6 /* GIProfile.m */,
+				8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */,
+				8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */,
 				77DFA5BD08409DF00068AD15 /* OPJobs.h */,
 				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
 				77EF040107DC4DEF007CD721 /* G3GroupInspectorController.h */,
@@ -762,12 +764,12 @@
 				77AD77B807CF1A8300A15B83 /* G3Account.m */,
 				777625A50760E0EC0066BE60 /* G3GroupController.h */,
 				777625A60760E0EC0066BE60 /* G3GroupController.m */,
-				8DD2BF410775A1BA00587AAA /* G3Message+Rendering.h */,
-				8DD2BF420775A1BA00587AAA /* G3Message+Rendering.m */,
+				8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */,
+				8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */,
 				8D8A4983075D3EA9003189BF /* G3Message.h */,
 				8D8A4984075D3EA9003189BF /* G3Message.m */,
-				77CD551107699B4B003354A0 /* G3MessageEditorController.h */,
-				77CD551207699B4B003354A0 /* G3MessageEditorController.m */,
+				77CD551107699B4B003354A0 /* GIMessageEditorController.h */,
+				77CD551207699B4B003354A0 /* GIMessageEditorController.m */,
 				77A84B950771D32700112B7D /* G3MessageEditorWindow.h */,
 				77A84B960771D32700112B7D /* G3MessageEditorWindow.m */,
 				8D8A4EE2075FDE23003189BF /* G3MessageGroup.h */,
@@ -919,14 +921,6 @@
 			children = (
 				8DCE38FB08940F4000F705EF /* TestPersistence.h */,
 				8DCE38FC08940F4000F705EF /* TestPersistence.m */,
-				8DCE35E60891900B00F705EF /* GIMessage.h */,
-				8DCE35E70891900B00F705EF /* GIMessage.m */,
-				8DE9646E089F9F1F0053ED6B /* GIThread.h */,
-				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
-				8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */,
-				8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */,
-				8D17B5C70895BBC30057A1C6 /* GIProfile.h */,
-				8D17B5C80895BBC30057A1C6 /* GIProfile.m */,
 				775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */,
 				775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */,
 				6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */,
@@ -935,8 +929,6 @@
 				77DFA5C80840B49C0068AD15 /* TestOPJobs.m */,
 				77136F3008438E2A002F9298 /* TestGIThread.h */,
 				77136F3108438E2A002F9298 /* TestGIThread.m */,
-				8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */,
-				8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -1189,21 +1181,17 @@
 				8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */,
 				8DC773C506B27FCB00053CB7 /* OPSizingTextField.h in Headers */,
 				8D8A496E075D395C003189BF /* OPManagedObject.h in Headers */,
-				8D8A4985075D3EA9003189BF /* G3Message.h in Headers */,
-				8D8A4AC3075E8B88003189BF /* G3Thread.h in Headers */,
-				8D8A4EE4075FDE23003189BF /* G3MessageGroup.h in Headers */,
 				777625A70760E0EC0066BE60 /* G3GroupController.h in Headers */,
 				77BC581C07610AB700B70D8F /* G3GroupWindow.h in Headers */,
 				77BC58C80761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h in Headers */,
-				77CD551307699B4B003354A0 /* G3MessageEditorController.h in Headers */,
+				77CD551307699B4B003354A0 /* GIMessageEditorController.h in Headers */,
 				7742E9E1076A1AB500B1B4BA /* NSView+ViewMoving.h in Headers */,
 				77BA8F4F076DCC480082F33F /* GIAddressFormatter.h in Headers */,
 				77BA9235076DCCD80082F33F /* ABPerson+Convenience.h in Headers */,
 				77BA9240076DCD0F0082F33F /* MPWDebug.h in Headers */,
 				8D4C5755076E3B6F000F46DA /* G3CommentTreeCell.h in Headers */,
-				77C758200771888F00850E17 /* G3Profile.h in Headers */,
 				77A84B970771D32700112B7D /* G3MessageEditorWindow.h in Headers */,
-				8DD2BF430775A1BA00587AAA /* G3Message+Rendering.h in Headers */,
+				8DD2BF430775A1BA00587AAA /* GIMessage+Rendering.h in Headers */,
 				777436300778055900899957 /* NSToolbar+OPExtensions.h in Headers */,
 				8D901F510778EC97005365EA /* GIUserDefaultsKeys.h in Headers */,
 				8D901F950779D7F5005365EA /* NSAttributedString+Extensions.h in Headers */,
@@ -1250,7 +1238,6 @@
 				8D857FC60785CD5500B0D669 /* OPCollapsingSplitView.h in Headers */,
 				8DB2D4F90796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h in Headers */,
 				8DB12B4A07A6348C0030EE90 /* NSManagedObjectContext+Extensions.h in Headers */,
-				77AD77BB07CF1A8300A15B83 /* G3Account.h in Headers */,
 				8D666F0207D5247A0076C74D /* GIContentPane.h in Headers */,
 				77EF040307DC4DEF007CD721 /* G3GroupInspectorController.h in Headers */,
 				7786DC5007DE2F7200C5F9F7 /* ProfilePrefs.h in Headers */,
@@ -1304,6 +1291,7 @@
 				8D3EF46308B543C700EC41EC /* OPPersistence.h in Headers */,
 				8D3EF46408B543C900EC41EC /* OPPersistenceConstants.h in Headers */,
 				8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */,
+				8D14E4CF08E6C26300E67053 /* G3Account.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1565,20 +1553,16 @@
 				8D9E8A8606AC44080055F87C /* GIApplication.m in Sources */,
 				8DC773C606B27FCB00053CB7 /* OPSizingTextField.m in Sources */,
 				8D8A496F075D395C003189BF /* OPManagedObject.m in Sources */,
-				8D8A4986075D3EA9003189BF /* G3Message.m in Sources */,
-				8D8A4AC4075E8B88003189BF /* G3Thread.m in Sources */,
-				8D8A4EE5075FDE23003189BF /* G3MessageGroup.m in Sources */,
 				777625A80760E0EC0066BE60 /* G3GroupController.m in Sources */,
 				77BC581D07610AB700B70D8F /* G3GroupWindow.m in Sources */,
 				77BC58C90761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m in Sources */,
-				77CD551407699B4B003354A0 /* G3MessageEditorController.m in Sources */,
+				77CD551407699B4B003354A0 /* GIMessageEditorController.m in Sources */,
 				7742E9E2076A1AB500B1B4BA /* NSView+ViewMoving.m in Sources */,
 				77BA8F50076DCC480082F33F /* GIAddressFormatter.m in Sources */,
 				77BA9236076DCCD80082F33F /* ABPerson+Convenience.m in Sources */,
 				8D4C5756076E3B6F000F46DA /* G3CommentTreeCell.m in Sources */,
-				77C758210771888F00850E17 /* G3Profile.m in Sources */,
 				77A84B980771D32700112B7D /* G3MessageEditorWindow.m in Sources */,
-				8DD2BF440775A1BA00587AAA /* G3Message+Rendering.m in Sources */,
+				8DD2BF440775A1BA00587AAA /* GIMessage+Rendering.m in Sources */,
 				777436310778055900899957 /* NSToolbar+OPExtensions.m in Sources */,
 				8D901F520778EC97005365EA /* GIUserDefaultsKeys.m in Sources */,
 				8D901F8E0779D7DD005365EA /* NSAttributedString+Extensions.m in Sources */,
@@ -1620,7 +1604,6 @@
 				8D857FC70785CD5500B0D669 /* OPCollapsingSplitView.m in Sources */,
 				8DB2D4FA0796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m in Sources */,
 				8DB12B4B07A6348C0030EE90 /* NSManagedObjectContext+Extensions.m in Sources */,
-				77AD77BC07CF1A8300A15B83 /* G3Account.m in Sources */,
 				8D666F0307D5247B0076C74D /* GIContentPane.m in Sources */,
 				77EF040407DC4DEF007CD721 /* G3GroupInspectorController.m in Sources */,
 				7786DC5107DE2F7200C5F9F7 /* ProfilePrefs.m in Sources */,
@@ -1673,6 +1656,7 @@
 				8D3EF45F08B543C300EC41EC /* OPPersistentObjectContext.m in Sources */,
 				8D3EF46108B543C400EC41EC /* OPPersistentObject.m in Sources */,
 				8D62DC2208C668BC0059ABB0 /* OPFaultingArray.m in Sources */,
+				8D14E4CE08E6C26100E67053 /* G3Account.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

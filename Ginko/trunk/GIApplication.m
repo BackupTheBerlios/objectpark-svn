@@ -10,14 +10,14 @@
 #import "G3GroupController.h"
 #import "GIUserDefaultsKeys.h"
 #import "G3GroupController.h"
-#import "G3MessageEditorController.h"
+#import "GIMessageEditorController.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIMessageBase.h"
 #import "OPMBoxFile.h"
 #import "OPManagedObject.h"
-#import "G3Thread.h"
-#import "G3MessageGroup.h"
+#import "GIThread.h"
+#import "GIMessageGroup.h"
 #import "GISearchController.h"
 #import <sqlite3.h>
 #import "OPJobs.h"
@@ -26,6 +26,7 @@
 #import "GISMTPJob.h"
 #import "G3Account.h"
 #import <Foundation/NSDebug.h>
+#import "GIMessage.h"
 
 @implementation GIApplication
 
@@ -48,7 +49,7 @@
 
 - (IBAction)newMessage:(id)sender
 {
-    [[[G3MessageEditorController alloc] initNewMessageWithProfile:[[G3Profile allObjects] lastObject]] autorelease];
+    [[[GIMessageEditorController alloc] initNewMessageWithProfile:[[GIProfile allObjects] lastObject]] autorelease];
 }
 
 - (BOOL)validateSelector:(SEL)aSelector
@@ -229,17 +230,17 @@
 
     // Some statistical messsages:
     //NSManagedObjectContext* context = [NSManagedObjectContext threadContext];	
-    //NSArray *allMessages = [G3Message allObjects];
-    //G3Message *aMessage  = [allMessages lastObject];
+    //NSArray *allMessages = [GIMessage allObjects];
+    //GIMessage *aMessage  = [allMessages lastObject];
     
-    //NSLog(@"MessageBase contains %d message objects in %d threads.", [allMessages count], [[G3Thread allObjects] count]);
+    //NSLog(@"MessageBase contains %d message objects in %d threads.", [allMessages count], [[GIThread allObjects] count]);
     
     //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
     //NSLog(@"last message = %@", aMessage);
     [NSManagedObjectContext setMainThreadContext: [self newManagedObjectContext]];
 
-    [G3MessageGroup ensureDefaultGroups];
-    //NSLog(@"All Groups %@", [G3MessageGroup allObjects]);
+    [GIMessageGroup ensureDefaultGroups];
+    //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);
     
     [self restoreOpenWindowsFromLastSession];
 
@@ -307,7 +308,7 @@
 
 - (void) applicationDidBecomeActive:(NSNotification *)aNotification
 {
-	//NSLog(@"Supergroup is %@", [G3MessageGroup superGroup]);
+	//NSLog(@"Supergroup is %@", [GIMessageGroup superGroup]);
 
     if ([self isGroupsDrawerMode]) {
         if (! [self hasGroupWindow]) 
@@ -507,7 +508,7 @@
     NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 
     NSEnumerator *enumerator = [sentMessages objectEnumerator];
-    G3Message *message;
+    GIMessage *message;
     
     while (message = [enumerator nextObject])
     {
@@ -530,13 +531,13 @@
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). "*/
 {
     // iterate over all profiles:
-    NSEnumerator *enumerator = [[G3Profile allObjects] objectEnumerator];
-    G3Profile *profile;
+    NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
+    GIProfile *profile;
     
     while (profile = [enumerator nextObject])
     {
         NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
-        G3Message *message;
+        GIMessage *message;
         NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
             
         while (message = [messagesToSendEnumerator nextObject])

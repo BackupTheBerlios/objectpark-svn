@@ -21,7 +21,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <G3Message.h>
+#import <GIMessage.h>
 #import "GIMessageFilterExpression.h"
 
 @interface GIMessageFilter : NSObject
@@ -59,7 +59,7 @@
 - (void)setActions:(NSArray *)someActions;
 
 /*" Filtering "*/
-- (BOOL)matchesForMessage:(G3Message *)message flags:(int)flags;
+- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags;
 
 	/*" Accessors "*/
 + (NSArray *)filters;
@@ -73,8 +73,8 @@
 + (BOOL)writeFilters;
 
 	/*" Filtering "*/
-+ (NSArray *)filtersMatchingForMessage:(G3Message *)message flags:(int)flags;
-+ (BOOL)filterMessage:(G3Message *)message flags:(int)flags;
++ (NSArray *)filtersMatchingForMessage:(GIMessage *)message flags:(int)flags;
++ (BOOL)filterMessage:(GIMessage *)message flags:(int)flags;
 
 extern NSString *GIMessageFiltersDidChangeNotification;
 /*" Informs that a change in the filter set has occurred. The notification object may be a

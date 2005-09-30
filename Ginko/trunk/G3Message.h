@@ -1,5 +1,5 @@
 //
-//  G3Message.h
+//  GIMessage.h
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 01.12.04.

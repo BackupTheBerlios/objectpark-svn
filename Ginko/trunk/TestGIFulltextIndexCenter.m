@@ -8,15 +8,15 @@
 
 #import "TestGIFulltextIndexCenter.h"
 #import "GIMessageBase.h"
-#import "G3MessageGroup.h"
-#import "G3Thread.h"
+#import "GIMessageGroup.h"
+#import "GIThread.h"
 #import "GIFulltextIndexCenter.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 #import "NSManagedObjectContext+Extensions.h"
 
 @implementation TestGIFulltextIndexCenter
 
-G3Message* tempMessage;
+GIMessage* tempMessage;
 NSMutableArray* tempMessageArray;
 
 - (void)setUp
@@ -28,28 +28,28 @@ NSMutableArray* tempMessageArray;
     int i;
     // create test message array
     for (i=0; i<maxTestMessageCount; i++) {
-        // create test G3Message
+        // create test GIMessage
         NSString *messageId = [NSString stringWithFormat:@"<searchtest-message-%d>",i];
         NSString *transferString = [NSString stringWithFormat:
                                                  @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
         NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
         STAssertNotNil(transferData, @"nee");
         
-        G3Message* tempMessageForArray = [G3Message messageWithTransferData:transferData];
+        GIMessage* tempMessageForArray = [GIMessage messageWithTransferData:transferData];
         STAssertNotNil(tempMessageForArray, @"nee %@", messageId);
         STAssertTrue([[tempMessageForArray messageId] isEqual:messageId], @"nee");
         //[tempMessage retain]; // will be retained by NSArray
         [tempMessageArray addObject:tempMessageForArray];
     }
     
-    // create test G3Message
+    // create test GIMessage
     NSString *messageId = @"<searchtest-message>";
     NSString *transferString = [NSString stringWithFormat:
                                              @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
     STAssertNotNil(transferData, @"nee");
     
-    tempMessage = [G3Message messageWithTransferData:transferData];
+    tempMessage = [GIMessage messageWithTransferData:transferData];
     [tempMessage retain];
     STAssertNotNil(tempMessage, @"nee %@", messageId);
 
@@ -91,7 +91,7 @@ NSMutableArray* tempMessageArray;
     NSLog(@"-[TestGIFulltextIndexCenter testAddManyMessages]");
     //int i;
     NSEnumerator * messageEnumerator = [tempMessageArray objectEnumerator];
-    G3Message * tempMessageFromArray;
+    GIMessage * tempMessageFromArray;
     while ( tempMessageFromArray = [messageEnumerator nextObject] ) {
         STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessageFromArray], @"addMessage must return true");
         STAssertTrue([tempMessageFromArray hasFlags:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");

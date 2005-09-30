@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class G3MessageGroup;
+@class GIMessageGroup;
 
 enum GIThreadFilterMode
 {

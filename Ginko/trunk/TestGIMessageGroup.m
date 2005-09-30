@@ -1,33 +1,33 @@
 //
 //  TestGIMessageGroup.m
-//  GinkoVoyager
+//  GinkoVoyagerGIThread
 //
 //  Created by Axel Katerbau on 17.05.05.
 //  Copyright (c) 2005 Objectpark Group. All rights reserved.
 //
 
 #import "TestGIMessageGroup.h"
-#import "G3MessageGroup.h"
-#import "G3Thread.h"
+#import "GIMessageGroup.h"
+#import "GIThread.h"
 #import "NSManagedObjectContext+Extensions.h"
 
 @implementation TestGIMessageGroup
 
 - (void)testStandardGroups
 {
-    G3MessageGroup *group1, *group2;
+    GIMessageGroup *group1, *group2;
     
-    group1 = [G3MessageGroup defaultMessageGroup];
-    group2 = [G3MessageGroup defaultMessageGroup];
+    group1 = [GIMessageGroup defaultMessageGroup];
+    group2 = [GIMessageGroup defaultMessageGroup];
     
     STAssertTrue([group1 isEqual:group2], @"Duplicate default group.");
 }
 
 - (void)testDefaultGroup
 {
-    G3MessageGroup *tempDefaultGroup;
+    GIMessageGroup *tempDefaultGroup;
     
-    tempDefaultGroup = [G3MessageGroup defaultMessageGroup];
+    tempDefaultGroup = [GIMessageGroup defaultMessageGroup];
     
     STAssertTrue(tempDefaultGroup != nil, @"should not be nil");
     
@@ -47,7 +47,7 @@
         STAssertTrue([context objectWithURI:[NSURL URLWithString:urlString]] != nil, @"Url %@ failed.", urlString);
     }
     
-    //NSLog(@"First Thread's name '%@'", [(G3Thread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
+    //NSLog(@"First Thread's name '%@'", [(GIThread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
 }
 
 @end

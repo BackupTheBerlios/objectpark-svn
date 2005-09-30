@@ -20,7 +20,7 @@
  at http://www.objectpark.org/Ginko.html
  */
 
-#import <G3Message+Rendering.h>
+#import <GIMessage+Rendering.h>
 
 #import "GIContentPane.h"
 #import "GIUserDefaultsKeys.h"

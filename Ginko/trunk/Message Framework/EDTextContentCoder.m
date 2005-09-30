@@ -28,7 +28,7 @@
 #import "NSAttributedString+MessageUtils.h"
 #import "OPInternetMessage.h"
 #import "MPWDebug.h"
-#import "G3Message+Rendering.h"
+#import "GIMessage+Rendering.h"
 
 @interface EDTextContentCoder(PrivateAPI)
 - (NSString *)_stringFromMessagePart:(EDMessagePart *)mpart;
@@ -274,7 +274,7 @@
     }
     
     // default font handling included
-    text = [[NSMutableAttributedString alloc] initWithString:rawString attributes:[NSDictionary dictionaryWithObject:[G3Message font] forKey:NSFontAttributeName]];
+    text = [[NSMutableAttributedString alloc] initWithString:rawString attributes:[NSDictionary dictionaryWithObject:[GIMessage font] forKey:NSFontAttributeName]];
     
     // second pass
     attributesEnumerator = [attributesToSet objectEnumerator];

@@ -98,7 +98,7 @@
     OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData: someTransferData];
     BOOL insertMessage = NO;
     
-    G3Message *dupe = [self messageForMessageId: [im messageId]];
+    GIMessage *dupe = [self messageForMessageId: [im messageId]];
     if (dupe)
     {
         if ([GIProfile isMyEmailAddress: [im fromWithFallback:YES]])
@@ -118,7 +118,7 @@
     if (insertMessage)
     {
         // Create a new message in the default context:
-        result = [[[G3Message alloc] initWithManagedObjectContext:[NSManagedObjectContext threadContext]] autorelease];
+        result = [[[GIMessage alloc] initWithManagedObjectContext:[NSManagedObjectContext threadContext]] autorelease];
         NSAssert(result != nil, @"Could not create message object");
         
         NSString *fromHeader = [im fromWithFallback: YES];
@@ -225,7 +225,7 @@
 {
     NSEnumerator* me = [[thread messages] objectEnumerator];
     NSMutableArray *result = [NSMutableArray array];
-    G3Message* other;
+    GIMessage* other;
     while (other = [me nextObject]) {
         if ([other reference] == self) {
             [result addObject: other];

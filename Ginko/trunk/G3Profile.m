@@ -8,7 +8,7 @@
 
 #import "G3Profile.h"
 #import "G3Account.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 #import "NSString+MessageUtils.h"
 #import "NSArray+Extensions.h"
 #import "OPInternetMessage.h"

@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "OPPersistentObject.h"
+#import "OPPersistentObject+Extensions.h"
 
 @class GIProfile;
 @class GIThread;

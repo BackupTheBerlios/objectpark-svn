@@ -386,7 +386,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 }
 
 // filtering
-- (BOOL)matchesForMessage:(G3Message *)message flags:(int)flags
+- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags
 /*" Returns YES if the receiver matches for the given message and scope. NO otherwise. "*/
 {
     if ([self isActive]) 
@@ -498,7 +498,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 
 // filtering
 
-+ (NSArray *)filtersMatchingForMessage:(G3Message *)message flags:(int)flags
++ (NSArray *)filtersMatchingForMessage:(GIMessage *)message flags:(int)flags
 	/*" Returns a (sub)set of the receiver's filters which match for the given
     message for the given scope (see %{GIMessageFilter} for details). "*/
 {
@@ -517,7 +517,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return result;
 }
 
-+ (BOOL)filterMessage:(G3Message *)message flags:(int)flags
++ (BOOL)filterMessage:(GIMessage *)message flags:(int)flags
 /*" Filters the given message. Returns YES if message was inserted/moved into a box
     different to currentBox. NO otherwise. "*/
 {

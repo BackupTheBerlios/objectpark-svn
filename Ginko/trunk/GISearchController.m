@@ -9,7 +9,7 @@
 #import "GISearchController.h"
 #import "GIFulltextIndexCenter.h"
 #import "GIApplication.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 
 
 @implementation GISearchController
@@ -66,7 +66,7 @@
     NSString* messageId = [[self searchResults] objectAtIndex: rowIndex];
     if (![[cachedMessage messageId] isEqualToString: messageId]) {
         [cachedMessage release];
-        cachedMessage = [[G3Message messageForMessageId: messageId] retain];
+        cachedMessage = [[GIMessage messageForMessageId: messageId] retain];
     }
     
     NSString* identifier = [aTableColumn identifier];

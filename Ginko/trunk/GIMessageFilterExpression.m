@@ -22,7 +22,7 @@
 
 #import "GIMessageFilterExpression.h"
 #import "GIMessageFilter.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 #import "OPInternetMessage.h"
 #import "EDTextFieldCoder.h"
 
@@ -139,7 +139,7 @@
 }
 
 // matching
-- (BOOL)matchesForMessage:(G3Message *)message flags:(int)flags
+- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags
 {
     NSEnumerator *enumerator;
     NSString *matchString, *argument;

@@ -41,7 +41,7 @@
 
 NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
 
-/*" GIMessageGroup is a collection of G3Thread objects (which in turn are a collection of G3Message objects). GIMessageGroup is an entity in the datamodel (see %{Ginko3_DataModel.xcdatamodel} file).
+/*" GIMessageGroup is a collection of G3Thread objects (which in turn are a collection of GIMessage objects). GIMessageGroup is an entity in the datamodel (see %{Ginko3_DataModel.xcdatamodel} file).
 
 GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSMutableArrays (e.g. #{+rootHierarchyNode} returns the NSMutableArray that is the root node). The first entry in such a hierarchy node is information of the node itself (it is a NSMutableDictionary whose keys are described lateron). All other entries are either NSStrings with URLs that reference GIMessageGroup objects (see #{-[NSManagedObject objectID]}) or other hierarchy nodes (NSMutableArrays). "*/
 

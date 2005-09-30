@@ -7,7 +7,7 @@
 //
 
 #import "G3Thread.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 #import "G3MessageGroup.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "NSArray+Extensions.h"

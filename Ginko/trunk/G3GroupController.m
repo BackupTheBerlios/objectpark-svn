@@ -7,24 +7,24 @@
 //
 
 #import "G3GroupController.h"
-#import "G3Message+Rendering.h"
-#import "G3Thread.h"
+#import "GIMessage+Rendering.h"
+#import "GIThread.h"
 #import "G3CommentTreeCell.h"
 #import <Foundation/NSDebug.h>
 #import "NSToolbar+OPExtensions.h"
-#import "G3MessageEditorController.h"
-#import "G3Profile.h"
+#import "GIMessageEditorController.h"
+#import "GIProfile.h"
 #import "OPCollapsingSplitView.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIApplication.h"
 #import "NSArray+Extensions.h"
 #import "G3GroupInspectorController.h"
 #import "NSManagedObjectContext+Extensions.h"
-#import "G3MessageGroup.h"
+#import "GIMessageGroup.h"
 #import "OPJobs.h"
 #import "GIFulltextIndexCenter.h"
 #import "GIOutlineViewWithKeyboardSupport.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 #import "GIMessageBase.h"
 #import "NSString+Extensions.h"
 #import "GIMessageFilter.h"
@@ -50,14 +50,14 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     return [[super init] retain]; // self retaining!
 }
 
-- (id)initWithGroup:(G3MessageGroup *)aGroup
+- (id)initWithGroup:(GIMessageGroup *)aGroup
 {
     if (self = [self init])
     {
         [NSBundle loadNibNamed:@"Group" owner:self];
         
         if (! aGroup) {
-            aGroup = [[G3MessageGroup allObjects] firstObject];
+            aGroup = [[GIMessageGroup allObjects] firstObject];
         }
         
         [self setGroup: aGroup];
@@ -66,14 +66,14 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     return self;
 }
 
-- (id)initAsStandAloneBoxesWindow:(G3MessageGroup *)aGroup
+- (id)initAsStandAloneBoxesWindow:(GIMessageGroup *)aGroup
 {
     if (self = [self init])
     {
         [NSBundle loadNibNamed:@"Boxes" owner:self];
         [self setGroup:aGroup];
 		
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name:G3MessageGroupWasAddedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
     }
     
     return self;
@@ -171,10 +171,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self autorelease]; // balance self-retaining
 }
 
-- (void)setDisplayedMessage:(G3Message *)aMessage thread:(G3Thread *)aThread
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
-    NSParameterAssert([aThread isKindOfClass:[G3Thread class]]);
+    NSParameterAssert([aThread isKindOfClass:[GIThread class]]);
     
     int itemRow;
     BOOL isNewThread = ![aThread isEqual:displayedThread];
@@ -277,17 +277,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 }
 
-- (G3Message*)displayedMessage
+- (GIMessage*)displayedMessage
 {
     return displayedMessage;
 }
 
-- (G3Thread *)displayedThread
+- (GIThread *)displayedThread
 {
     return displayedThread;
 }
 
-+ (NSWindow *)windowForGroup:(G3MessageGroup *)aGroup
++ (NSWindow *)windowForGroup:(GIMessageGroup *)aGroup
 /*" Returns the window for the group aGroup. nil if no such window exists. "*/
 {
     NSWindow *win;
@@ -314,7 +314,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 /*
 - (IBAction) showThreads2: (id) sender
 {
-    G3MessageGroup *selectedGroup = [G3MessageGroup messageGroupWithURIReferenceString:[boxesView itemAtRow:[boxesView selectedRow]]];
+    GIMessageGroup *selectedGroup = [GIMessageGroup messageGroupWithURIReferenceString:[boxesView itemAtRow:[boxesView selectedRow]]];
     
     NSLog(@"Fetching Threads via CoreData...");
     [selectedGroup threadsByDate];
@@ -325,9 +325,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-    G3MessageGroup *selectedGroup = [G3MessageGroup messageGroupWithURIReferenceString:[boxesView itemAtRow:[boxesView selectedRow]]];
+    GIMessageGroup *selectedGroup = [GIMessageGroup messageGroupWithURIReferenceString:[boxesView itemAtRow:[boxesView selectedRow]]];
     
-    if (selectedGroup && [selectedGroup isKindOfClass:[G3MessageGroup class]]) 
+    if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) 
     {
         NSWindow *groupWindow = [[self class] windowForGroup:selectedGroup];
         
@@ -459,8 +459,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         if (selectedRow >= 0)
         {
-            G3Message *message = nil;
-            G3Thread *selectedThread = nil;
+            GIMessage *message = nil;
+            GIThread *selectedThread = nil;
             id item;
             
             item = [threadsView itemAtRow:selectedRow];
@@ -490,7 +490,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                     else 
                     {
                         NSEnumerator *enumerator;
-                        G3Message *message;
+                        GIMessage *message;
                         
                         [threadsView expandItem:item];                    
                         // ##TODO:select first "interesting" message of this thread
@@ -528,7 +528,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 }
                 else
                 {
-                    [[[G3MessageEditorController alloc] initWithMessage:message] autorelease];
+                    [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
                 }
             }
             else
@@ -614,21 +614,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [messageTextView writeSelectionToPasteboard:quotePasteboard types:types];
 }
 
-- (G3Message *)selectedMessage
+- (GIMessage *)selectedMessage
 /*" Returns selected message, iff one message is selected. nil otherwise. "*/
 {
-    G3Message *result = nil;
+    GIMessage *result = nil;
     id item;
     
     item = [threadsView itemAtRow:[threadsView selectedRow]];
-    if ([item isKindOfClass:[G3Message class]])
+    if ([item isKindOfClass:[GIMessage class]])
     {
         result = item;
     }
     else
     {
         result = [[[NSManagedObjectContext objectWithURIString: item] messagesByTree] lastObject];
-        if (! [result isKindOfClass:[G3Message class]])
+        if (! [result isKindOfClass:[GIMessage class]])
         {
             result = nil;
         }
@@ -637,12 +637,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (G3Profile *)profileForMessage:(G3Message *)aMessage
+- (GIProfile *)profileForMessage:(GIMessage *)aMessage
 /*" Return the profile to use for email replies. Tries first to guess a profile based on the replied email. If no matching profile can be found, the group default profile is chosen. May return nil in case of no group default and no match present. "*/
 {
-    G3Profile *result;
+    GIProfile *result;
     
-    result = [G3Profile guessedProfileForReplyingToMessage:[aMessage internetMessage]];
+    result = [GIProfile guessedProfileForReplyingToMessage:[aMessage internetMessage]];
     
     if (!result)
     {
@@ -654,34 +654,34 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)replySender:(id)sender
 {
-    G3Message *message = [self selectedMessage];
+    GIMessage *message = [self selectedMessage];
     
     [self placeSelectedTextOnQuotePasteboard];
     
-    [[[G3MessageEditorController alloc] initReplyTo:message all:NO profile:[self profileForMessage:message]] autorelease];
+    [[[GIMessageEditorController alloc] initReplyTo:message all:NO profile:[self profileForMessage:message]] autorelease];
 }
 
 - (IBAction)followup:(id)sender
 {
-    G3Message *message = [self selectedMessage];
+    GIMessage *message = [self selectedMessage];
     
     [self placeSelectedTextOnQuotePasteboard];
     
-    [[[G3MessageEditorController alloc] initFollowupTo:message profile:[[self group] defaultProfile]] autorelease];
+    [[[GIMessageEditorController alloc] initFollowupTo:message profile:[[self group] defaultProfile]] autorelease];
 }
 
 - (IBAction)replyAll:(id)sender
 {
-    G3Message *message = [self selectedMessage];
+    GIMessage *message = [self selectedMessage];
     
     [self placeSelectedTextOnQuotePasteboard];
     
-    [[[G3MessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
+    [[[GIMessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
 }
 
 - (IBAction)replyDefault:(id)sender
 {
-    G3Message *message = [self selectedMessage];
+    GIMessage *message = [self selectedMessage];
 
     if ([message isListMessage] || [message isUsenetMessage])
     {
@@ -695,9 +695,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)forward:(id)sender
 {
-    G3Message *message = [self selectedMessage];
+    GIMessage *message = [self selectedMessage];
         
-    [[[G3MessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
+    [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
 }
 
 - (IBAction)rename:(id)sender
@@ -715,7 +715,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     int selectedRow = [boxesView selectedRow];
     [boxesView setAutosaveName:nil];
-    [G3MessageGroup addNewHierarchyNodeAfterEntry:[boxesView itemAtRow:selectedRow]];
+    [GIMessageGroup addNewHierarchyNodeAfterEntry:[boxesView itemAtRow:selectedRow]];
     [boxesView reloadData];
     [boxesView setAutosaveName:@"boxesView"];
     
@@ -738,7 +738,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     else
     {
-        node = [G3MessageGroup findHierarchyNodeForEntry:item startingWithHierarchyNode:[G3MessageGroup hierarchyRootNode]];
+        node = [GIMessageGroup findHierarchyNodeForEntry:item startingWithHierarchyNode:[GIMessageGroup hierarchyRootNode]];
         
         if (node)
         {
@@ -746,12 +746,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         }
         else
         {
-            node = [G3MessageGroup hierarchyRootNode];
+            node = [GIMessageGroup hierarchyRootNode];
             index = 0;
         }
     }
     
-    [G3MessageGroup newMessageGroupWithName:nil atHierarchyNode:node atIndex:index];
+    [GIMessageGroup newMessageGroupWithName:nil atHierarchyNode:node atIndex:index];
     
     [boxesView reloadData];
     
@@ -777,8 +777,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         if ([threadsView isRowSelected:i])
         {
             // get one of the selected threads:
-            G3Thread *thread = [NSManagedObjectContext objectWithURIString:[threadsView itemAtRow:i]];
-            NSAssert([thread isKindOfClass:[G3Thread class]], @"assuming object is a thread");
+            GIThread *thread = [NSManagedObjectContext objectWithURIString:[threadsView itemAtRow:i]];
+            NSAssert([thread isKindOfClass:[GIThread class]], @"assuming object is a thread");
             
             // remove selected thread from receiver's group:
             [[self group] removeThread:thread];
@@ -788,7 +788,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             {
                 // apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
                 NSEnumerator *enumerator = [[thread messages] objectEnumerator];
-                G3Message *message;
+                GIMessage *message;
                 
                 while (message = [enumerator nextObject])
                 {
@@ -834,9 +834,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if ([self isStandaloneBoxesWindow])
     {
-        G3MessageGroup *selectedGroup = [boxesView itemAtRow:[boxesView selectedRow]];
+        GIMessageGroup *selectedGroup = [boxesView itemAtRow:[boxesView selectedRow]];
         
-        if ([selectedGroup isKindOfClass:[G3MessageGroup class]])
+        if ([selectedGroup isKindOfClass:[GIMessageGroup class]])
         {
             [G3GroupInspectorController groupInspectorForGroup:selectedGroup];
         }
@@ -891,7 +891,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     NSEnumerator *e = [[self selectedThreadURIs] objectEnumerator];
     NSString *targetThreadURI = [e nextObject];
-    G3Thread *targetThread = [NSManagedObjectContext objectWithURIString: targetThreadURI];
+    GIThread *targetThread = [NSManagedObjectContext objectWithURIString: targetThreadURI];
     [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
     [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
     [threadsView expandItem: targetThreadURI];
@@ -904,7 +904,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSString* nextThreadURI;
     while (nextThreadURI = [e nextObject]) 
     {
-        G3Thread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
+        GIThread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
         [targetThread mergeMessagesFromThread: nextThread];
     }
     
@@ -918,7 +918,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSArray* uriStrings = [self selectedThreadURIs];
     if ([uriStrings count]) {
         NSString* uri = [uriStrings objectAtIndex: 0];
-        G3Thread* thread = [NSManagedObjectContext objectWithURIString: uri];
+        GIThread* thread = [NSManagedObjectContext objectWithURIString: uri];
         NSString* subject = [thread valueForKey: @"subject"];
         if (subject) {
             // query database
@@ -961,8 +961,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     while (uriString = [enumerator nextObject]) 
     {
-        G3Thread *thread = [NSManagedObjectContext objectWithURIString:uriString];
-        NSAssert([thread isKindOfClass:[G3Thread class]], @"got non-thread object");
+        GIThread *thread = [NSManagedObjectContext objectWithURIString:uriString];
+        NSAssert([thread isKindOfClass:[GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
         [[self group] removeThread:thread];
@@ -982,11 +982,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     else NSBeep();
 }
 
-- (void)updateWindowTitle
+- (void) updateWindowTitle
 {
-    if (! [self isStandaloneBoxesWindow])
-    {
-        [window setTitle:[NSString stringWithFormat:@"%@", [group name]]];
+    if (! [self isStandaloneBoxesWindow]) {
+        [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey: @"name"]]];
     }
 }
 
@@ -1021,12 +1020,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView selectItems:selectedItems ordered:YES];
 }
 
-- (G3MessageGroup *)group
+- (GIMessageGroup *)group
 {
     return group;
 }
 
-- (void)setGroup:(G3MessageGroup *)aGroup
+- (void)setGroup:(GIMessageGroup *)aGroup
 {
     if (aGroup != group)
     {
@@ -1066,10 +1065,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             id item = [NSManagedObjectContext objectWithURIString:itemURI];
             if (item)
             {
-                G3Message *message = nil;
-                G3Thread *thread = nil;
+                GIMessage *message = nil;
+                GIThread *thread = nil;
                 
-                if ([item isKindOfClass:[G3Thread class]])
+                if ([item isKindOfClass:[GIThread class]])
                 {
                     thread = item;
                 }
@@ -1145,7 +1144,7 @@ static BOOL isThreadItem(id item)
         if ((! [self isStandaloneBoxesWindow])&& ([selectedIndexes count] == 1))
         {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[G3Message class]]) || ([[NSManagedObjectContext objectWithURIString: item] containsSingleMessage]))
+            if (([item isKindOfClass:[GIMessage class]]) || ([[NSManagedObjectContext objectWithURIString: item] containsSingleMessage]))
             {
                 return YES;
             }
@@ -1225,7 +1224,7 @@ static BOOL isThreadItem(id item)
         
         if ([item isKindOfClass:[NSString class]])
         {
-            [self setGroup:[G3MessageGroup messageGroupWithURIReferenceString:item]];
+            [self setGroup:[GIMessageGroup messageGroupWithURIReferenceString:item]];
         }
     }
     else if ([notification object] == threadsView)
@@ -1262,7 +1261,7 @@ static BOOL isThreadItem(id item)
         } 
         else 
         {
-            G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
+            GIThread *thread = [NSManagedObjectContext objectWithURIString: item];
             
             return [[thread messages] count];
         }
@@ -1271,7 +1270,7 @@ static BOOL isThreadItem(id item)
     {
         if (! item) 
         {
-            return [[G3MessageGroup hierarchyRootNode] count] - 1;
+            return [[GIMessageGroup hierarchyRootNode] count] - 1;
         }
         else if ([item isKindOfClass:[NSMutableArray class]])
         {
@@ -1291,7 +1290,7 @@ static BOOL isThreadItem(id item)
             //NSLog(@"isItemExpandable");
             return ![[self nonExpandableItems] containsObject:item];
             /*
-            G3Thread *thread = threadForItem(item);
+            GIThread *thread = threadForItem(item);
 #warning this might be a performance killer as thread fault objects will be fired
             return ![thread containsSingleMessage];
              */
@@ -1315,7 +1314,7 @@ static BOOL isThreadItem(id item)
         } 
         else 
         {
-            G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
+            GIThread *thread = [NSManagedObjectContext objectWithURIString: item];
             
             return [[thread messagesByTree] objectAtIndex:index];
         }
@@ -1324,7 +1323,7 @@ static BOOL isThreadItem(id item)
     {
         if (!item) 
         {
-            item = [G3MessageGroup hierarchyRootNode];
+            item = [GIMessageGroup hierarchyRootNode];
         }
         
         return [item objectAtIndex:index + 1];
@@ -1488,7 +1487,7 @@ static NSAttributedString* spacer2()
                 item = [NSManagedObjectContext objectWithURIString: item];
             }
 
-            BOOL isRead = ([item isKindOfClass:[G3Thread class]])? ![(G3Thread *)item hasUnreadMessages] :[(G3Message *)item hasFlags:OPSeenStatus];
+            BOOL isRead = ([item isKindOfClass:[GIThread class]])? ![(GIThread *)item hasUnreadMessages] :[(GIMessage *)item hasFlags:OPSeenStatus];
             
             NSCalendarDate *date = [item valueForKey:@"date"];
             
@@ -1510,14 +1509,14 @@ static NSAttributedString* spacer2()
             if (level == 0) 
             {
 		// it's a thread:		
-                G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
+                GIThread *thread = [NSManagedObjectContext objectWithURIString: item];
                 
                 if ([thread containsSingleMessage]) 
                 {
                     NSString *from;
                     NSAttributedString *aFrom;
                     
-                    G3Message *message = [[thread valueForKey:@"messages"] anyObject];
+                    GIMessage *message = [[thread valueForKey:@"messages"] anyObject];
                     
                     if (message) 
                     {
@@ -1551,7 +1550,7 @@ static NSAttributedString* spacer2()
             else // a message, not a thread
             {
                 NSString *from;
-                unsigned indentation = [(G3Message *)item numberOfReferences];
+                unsigned indentation = [(GIMessage *)item numberOfReferences];
                 
                 [result appendAttributedString: spacer()];
                 
@@ -1565,7 +1564,7 @@ static NSAttributedString* spacer2()
                 from = [item senderName];
                 from = from ? from :@"- sender missing -";
                 
-                [result appendAttributedString:[[NSAttributedString alloc] initWithString:from attributes:[(G3Message *)item hasFlags:OPSeenStatus] ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):(inSelectionAndAppActive ? selectedUnreadFromAttributes():unreadFromAttributes())]];
+                [result appendAttributedString:[[NSAttributedString alloc] initWithString:from attributes:[(GIMessage *)item hasFlags:OPSeenStatus] ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):(inSelectionAndAppActive ? selectedUnreadFromAttributes():unreadFromAttributes())]];
             }
             
             return result;
@@ -1581,14 +1580,14 @@ static NSAttributedString* spacer2()
             }
             else if (item)
             {
-                return [[G3MessageGroup messageGroupWithURIReferenceString:item] name];
+                return [[GIMessageGroup messageGroupWithURIReferenceString:item] name];
             }
         }
         if ([[tableColumn identifier] isEqualToString:@"info"])
         {
             if (![item isKindOfClass:[NSMutableArray class]])
             {
-                G3MessageGroup *g = [G3MessageGroup messageGroupWithURIReferenceString:item];
+                GIMessageGroup *g = [GIMessageGroup messageGroupWithURIReferenceString:item];
                 NSMutableArray *threadURIs = [NSMutableArray array];
                 NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
                 
@@ -1613,13 +1612,13 @@ static NSAttributedString* spacer2()
         if ([item isKindOfClass:[NSMutableArray class]]) // folder
         {
             [[item objectAtIndex:0] setObject:object forKey:@"name"];
-            [G3MessageGroup commitChanges];
+            [GIMessageGroup commitChanges];
             //[outlineView selectRow:[outlineView rowForItem:item]+1 byExtendingSelection:NO];
             //[[outlineView window] endEditingFor:outlineView];
         }
         else // message group
         {
-            [(G3MessageGroup *)[G3MessageGroup messageGroupWithURIReferenceString:item] setName:object];
+            [(GIMessageGroup *)[GIMessageGroup messageGroupWithURIReferenceString:item] setName:object];
             [NSApp saveAction:self];
         }
     }
@@ -1629,7 +1628,7 @@ static NSAttributedString* spacer2()
 {
     if (outlineView == boxesView)
     {
-        return [G3MessageGroup hierarchyNodeForUid:object];
+        return [GIMessageGroup hierarchyNodeForUid:object];
     }
     
     return nil;
@@ -1678,7 +1677,7 @@ static NSAttributedString* spacer2()
 
 static NSMutableDictionary *commentsCache = nil;
 
-NSArray *commentsForMessage(G3Message *aMessage, G3Thread *aThread)
+NSArray *commentsForMessage(GIMessage *aMessage, GIThread *aThread)
 {
     NSArray *result;
     
@@ -1705,7 +1704,7 @@ NSMutableArray* border = nil;
         [border addObject:[NSNumber numberWithInt:-1]];
 }
 
-- (int)placeTreeWithRootMessage:(G3Message*)message atOrBelowRow:(int)row inColumn:(int)column
+- (int)placeTreeWithRootMessage:(GIMessage*)message atOrBelowRow:(int)row inColumn:(int)column
 {
     G3CommentTreeCell* cell;
     
@@ -1716,7 +1715,7 @@ NSMutableArray* border = nil;
     int commentCount = [comments count];
     
     NSEnumerator* children = [comments objectEnumerator];
-    G3Message* child;
+    GIMessage* child;
     
     if (child = [children nextObject])
     {
@@ -1819,7 +1818,7 @@ NSMutableArray* border = nil;
         // Usually this calls placeMessage:singleRootMessage row:0
         NSEnumerator* me = [[displayedThread rootMessages] objectEnumerator];
         unsigned row = 0;
-        G3Message* rootMessage;
+        GIMessage* rootMessage;
         
         [self initializeBorderToDepth:[displayedThread commentDepth]];
         while (rootMessage = [me nextObject])
@@ -1850,7 +1849,7 @@ NSMutableArray* border = nil;
 - (IBAction)selectTreeCell:(id)sender
 /*" Displays the corresponding message. "*/
 {
-    G3Message *selectedMessage = [[sender selectedCell] representedObject];
+    GIMessage *selectedMessage = [[sender selectedCell] representedObject];
     
     if (selectedMessage)
     {
@@ -1904,7 +1903,7 @@ NSMutableArray* border = nil;
 {
     if (![self threadsShownCurrently])
     {
-        G3Message *newMessage;
+        GIMessage *newMessage;
         
         if ((newMessage = [[self displayedMessage] reference]))
         {
@@ -2026,8 +2025,8 @@ NSMutableArray* border = nil;
 @implementation G3GroupController (DragNDrop)
 
 - (void) moveThreadsWithURI: (NSArray*) threadURIs 
-                  fromGroup: (G3MessageGroup*) sourceGroup 
-                    toGroup: (G3MessageGroup*) destinationGroup
+                  fromGroup: (GIMessageGroup*) sourceGroup 
+                    toGroup: (GIMessageGroup*) destinationGroup
 {
     NSEnumerator* enumerator = [threadURIs objectEnumerator];
     NSString* threadURI;
@@ -2036,8 +2035,8 @@ NSMutableArray* border = nil;
     [[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
     while (threadURI = [enumerator nextObject]) {
-        G3Thread* thread = [NSManagedObjectContext objectWithURIString: threadURI];
-        NSAssert([thread isKindOfClass: [G3Thread class]], @"should be a thread");
+        GIThread* thread = [NSManagedObjectContext objectWithURIString: threadURI];
+        NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
         
         // remove thread from source group:
         [thread removeGroup: sourceGroup];
@@ -2053,7 +2052,7 @@ NSMutableArray* border = nil;
     {
         NSArray *items;
         
-        if (! item) item = [G3MessageGroup hierarchyRootNode];
+        if (! item) item = [GIMessageGroup hierarchyRootNode];
         
         items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
         if ([items count] == 1) // only single selection supported at this time!
@@ -2061,7 +2060,7 @@ NSMutableArray* border = nil;
             // Hack (part 1)! Why is this necessary to archive almost 'normal' behavior?
             [boxesView setAutosaveName:nil];
             
-            [G3MessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:NO];
+            [GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:NO];
             
             [anOutlineView reloadData];
             
@@ -2074,8 +2073,8 @@ NSMutableArray* border = nil;
         NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
         if ([threadURLs count])
         {
-            G3MessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
-            G3MessageGroup *destinationGroup = [NSManagedObjectContext objectWithURIString:item];
+            GIMessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
+            GIMessageGroup *destinationGroup = [NSManagedObjectContext objectWithURIString:item];
             
             [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
             
@@ -2090,8 +2089,8 @@ NSMutableArray* border = nil;
     {
         // move threads from source group to destination group:
         NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
-        G3MessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
-        G3MessageGroup *destinationGroup = [self group];
+        GIMessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
+        GIMessageGroup *destinationGroup = [self group];
         
         [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
         /*
@@ -2100,8 +2099,8 @@ NSMutableArray* border = nil;
         
         while (threadURL = [enumerator nextObject])
         {
-            G3Thread *thread = [NSManagedObjectContext objectWithURIString:threadURL];
-            NSAssert([thread isKindOfClass:[G3Thread class]], @"should be a thread");
+            GIThread *thread = [NSManagedObjectContext objectWithURIString:threadURL];
+            NSAssert([thread isKindOfClass:[GIThread class]], @"should be a thread");
             
             // remove thread from source group:
             [thread removeGroup:sourceGroup];
@@ -2131,7 +2130,7 @@ NSMutableArray* border = nil;
         {
             if (index != NSOutlineViewDropOnItemIndex) // accept only when no on item
             {
-                if ([G3MessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:YES])
+                if ([GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:YES])
                 {
                     [anOutlineView setDropItem:item dropChildIndex:index]; 
                     
@@ -2278,8 +2277,8 @@ NSMutableArray* border = nil;
 {
     if (NSDebugEnabled) NSLog(@"spaceKeyPressedWithModifierFlags");
 
-    G3Message* result = nil;
-    G3Message* candidate;
+    GIMessage* result = nil;
+    GIMessage* candidate;
     
     NSArray* orderedMessages = [[self displayedThread] messagesByTree];
     int orderedMessageCount = [orderedMessages count];

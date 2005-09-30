@@ -7,10 +7,10 @@
 //
 
 #import "GIMessageBase.h"
-#import "G3Message.h"
-#import "G3Thread.h"
+#import "GIMessage.h"
+#import "GIThread.h"
 #import "G3Account.h"
-#import "G3MessageGroup.h"
+#import "GIMessageGroup.h"
 #import "OPMBoxFile.h"
 #import "NSManagedObjectContext+Extensions.h"
 #import "GIUserDefaultsKeys.h"
@@ -24,21 +24,19 @@
 
 @implementation GIMessageBase
 
-+ (G3Message *)addMessageWithTransferData:(NSData *)someTransferData
-/*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
++ (GIMessage*) addMessageWithTransferData: (NSData*) someTransferData
+/*" Creates and returns a new GIMessage object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
 {
-    G3Message *message = [G3Message messageWithTransferData:someTransferData];
+    GIMessage *message = [GIMessage messageWithTransferData:someTransferData];
     
     if (message) // if no dupe
     {
-        if (![GIMessageFilter filterMessage:message flags:0])
-        {
-            [self addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup] suppressThreading:NO];
+        if (![GIMessageFilter filterMessage:message flags:0])  {
+            [self addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
         }
         
-        if ([message hasFlags:OPIsFromMeStatus])
-        {
-            [self addMessage:message toMessageGroup:[G3MessageGroup sentMessageGroup] suppressThreading:NO];
+        if ([message hasFlags:OPIsFromMeStatus]) {
+            [self addMessage:message toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
         }
         
         // add message to index
@@ -49,12 +47,12 @@
     return message;
 }
 
-+ (void)removeMessage:(G3Message *)aMessage
++ (void)removeMessage:(GIMessage *)aMessage
 {	
     // remove message from index
     //[[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
 
-    G3Thread *thread = [aMessage thread];
+    GIThread *thread = [aMessage thread];
         
     // delete thread also if it would become a thread without messages:
     if ([thread messageCount] == 1)
@@ -66,66 +64,66 @@
     [[NSManagedObjectContext threadContext] deleteObject:aMessage];
 }
 
-+ (void)addMessage:(G3Message *)aMessage toMessageGroup:(G3MessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
++ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-    G3Thread *thread = [aMessage threadCreate:!suppressThreading];
+    GIThread *thread = [aMessage threadCreate:!suppressThreading];
     if (!thread)
     {
-        thread = [G3Thread threadInManagedObjectContext:[aMessage managedObjectContext]];
-        [thread setValue:[aMessage valueForKey:@"subject"] forKey:@"subject"];
-        [aMessage setValue:thread forKey:@"thread"];
-        [thread addMessage:aMessage];
+        thread = [GIThread threadInManagedObjectContext: [aMessage managedObjectContext]];
+        [thread setValue: [aMessage valueForKey: @"subject"] forKey: @"subject"];
+        [aMessage setValue: thread forKey: @"thread"];
+        [thread addToMessages: aMessage];
     }
     
     [aGroup addThread:thread];
     //[thread addGroup:aGroup];    
 }
 
-+ (void)addSentMessage:(G3Message *)aMessage
++ (void)addSentMessage:(GIMessage *)aMessage
 {
     [GIMessageFilter filterMessage:aMessage flags:0]; // put the message where it belongs
-    [self addMessage:aMessage toMessageGroup:[G3MessageGroup sentMessageGroup] suppressThreading:NO];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
 }
 
-+ (void)addDraftMessage:(G3Message *)aMessage
++ (void)addDraftMessage:(GIMessage *)aMessage
 {
-    G3Thread *thread = [aMessage threadCreate:NO];
-    if (thread) [[G3MessageGroup queuedMessageGroup] removeThread:thread];
-    [self addMessage:aMessage toMessageGroup:[G3MessageGroup draftMessageGroup] suppressThreading:YES];
+    GIThread *thread = [aMessage threadCreate:NO];
+    if (thread) [[GIMessageGroup queuedMessageGroup] removeThread:thread];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup] suppressThreading:YES];
 }
 
-+ (void)addQueuedMessage:(G3Message *)aMessage
++ (void)addQueuedMessage:(GIMessage *)aMessage
 {
-    G3Thread *thread = [aMessage threadCreate:NO];
-    if (thread) [[G3MessageGroup draftMessageGroup] removeThread:thread];
-    [self addMessage:aMessage toMessageGroup:[G3MessageGroup queuedMessageGroup] suppressThreading:YES];
+    GIThread *thread = [aMessage threadCreate:NO];
+    if (thread) [[GIMessageGroup draftMessageGroup] removeThread:thread];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup] suppressThreading:YES];
 }
 
-+ (void)addTrashThread:(G3Thread *)aThread
++ (void)addTrashThread:(GIThread *)aThread
 {
-    [[G3MessageGroup draftMessageGroup] removeThread:aThread];
-    [[G3MessageGroup queuedMessageGroup] removeThread:aThread];
+    [[GIMessageGroup draftMessageGroup] removeThread:aThread];
+    [[GIMessageGroup queuedMessageGroup] removeThread:aThread];
     
-    [[G3MessageGroup trashMessageGroup] addThread:aThread];
+    [[GIMessageGroup trashMessageGroup] addThread:aThread];
 }
 
-+ (void)removeDraftMessage:(G3Message *)aMessage
++ (void)removeDraftMessage: (GIMessage*) aMessage
 /*" Removes group and message from aMessage's thread. "*/
 {
-    G3Thread *thread = [aMessage thread];
+    GIThread *thread = [aMessage thread];
     NSAssert(thread != nil, @"draft message without thread");
     
-    [thread removeGroup:[G3MessageGroup draftMessageGroup]];
-    [thread removeMessage:aMessage];
+    [thread removeGroup: [GIMessageGroup draftMessageGroup]];
+    [thread removeFromMessages: aMessage];
 }
 
-+ (NSSet *)defaultGroupsForMessage:(G3Message *)aMessage
-/*" Returns an array of G3MessageGroup objects where the given message should go into per the user's filter setting. "*/
++ (NSSet *)defaultGroupsForMessage:(GIMessage *)aMessage
+/*" Returns an array of GIMessageGroup objects where the given message should go into per the user's filter setting. "*/
 {
     // TODO: just a dummy here!
-    return [NSSet setWithObjects:[G3MessageGroup defaultMessageGroup], nil];
+    return [NSSet setWithObjects:[GIMessageGroup defaultMessageGroup], nil];
 }
 
 NSString *MboxImportJobName = @"mbox import";
@@ -177,7 +175,7 @@ NSString *MboxImportJobName = @"mbox import";
             {;
                 @try 
                 {
-                    G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
+                    GIMessage *persistentMessage = [[self class] addMessageWithTransferData:transferData];
                     if (persistentMessage) 
                     {
                         messagesWereAdded = YES;

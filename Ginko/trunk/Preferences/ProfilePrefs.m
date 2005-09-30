@@ -7,7 +7,7 @@
 //
 
 #import "ProfilePrefs.h"
-#import "G3Profile.h"
+#import "GIProfile.h"
 #import "G3Account.h"
 
 @implementation ProfilePrefs
@@ -20,12 +20,12 @@
 
 - (NSArray *)profiles
 {
-    return [G3Profile allObjects];
+    return [GIProfile allObjects];
 }
 
 - (void)setProfiles:(NSArray *)profiles;
 {
-    [G3Profile setProfiles:profiles];
+    [GIProfile setProfiles:profiles];
 }
 
 - (NSArray *)accounts
@@ -42,7 +42,7 @@
 
 - (IBAction)setSendAccount:(id)sender
 {
-    G3Profile *selectedProfile = [[profileTableView dataSource] itemAtRow:[profileTableView selectedRow]];
+    GIProfile *selectedProfile = [[profileTableView dataSource] itemAtRow:[profileTableView selectedRow]];
     
     [selectedProfile setValue: [sender objectValue] forKey: @"sendAccount"];
 }

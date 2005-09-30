@@ -14,7 +14,7 @@
 #import "NSHost+GIReachability.h"
 #import "OPPOP3Session.h"
 #import "OPSMTP.h"
-#import "G3Message.h"
+#import "GIMessage.h"
 
 @implementation GISMTPJob
 
@@ -107,7 +107,7 @@
             // sending messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
             @try {
-                G3Message *message;
+                GIMessage *message;
                 
                 while (message = [enumerator nextObject]) {
                     [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];

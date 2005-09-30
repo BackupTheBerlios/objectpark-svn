@@ -7,9 +7,9 @@
 //
 
 #import "GIFulltextIndexCenter.h"
-#import "G3MessageGroup.h"
-#import "G3Thread.h"
-#import "G3Message.h"
+#import "GIMessageGroup.h"
+#import "GIThread.h"
+#import "GIMessage.h"
 #import "GIIndex.h"
 #import "NSApplication+OPExtensions.h"
 
@@ -81,7 +81,7 @@ GIIndex * contentIndex;
     indexDictionary = newIndexDictionary;
 }
 
-- (BOOL)addMessage:(G3Message *)aMessage
+- (BOOL)addMessage:(GIMessage *)aMessage
 {
     BOOL isIndexed = FALSE;
     NSLog(@"-[GIFulltextIndexCenter addMessage:%@", [aMessage messageId]);
@@ -114,7 +114,7 @@ GIIndex * contentIndex;
     return isIndexed;
 }
 
-- (BOOL)removeMessage:(G3Message *)aMessage
+- (BOOL)removeMessage:(GIMessage *)aMessage
 {
     BOOL isRemoveSuccessfull = NO;
     NSLog(@"-[GIFulltextIndexCenter removeMessage:%@", [aMessage messageId]);
@@ -153,12 +153,12 @@ GIIndex * contentIndex;
     BOOL isAddSuccessfull = YES;
     NSEnumerator* threadEnumerator;
     NSEnumerator* messageEnumerator;
-    G3Thread* tempThread;
-    G3Message* tempMessage;
+    GIThread* tempThread;
+    GIMessage* tempMessage;
     
     // get default MessageGroup
     #warning TODO -[GIFulltextIndexCenter reindexAllMessages] get all MessageGroups
-    G3MessageGroup* tempMessageGroup = [G3MessageGroup defaultMessageGroup];
+    GIMessageGroup* tempMessageGroup = [GIMessageGroup defaultMessageGroup];
     
     // get all threads
     threadEnumerator = [[tempMessageGroup valueForKey: @"threads"] objectEnumerator];

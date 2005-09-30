@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class G3Message;
+@class GIMessage;
 
 typedef enum GIMessageFilterExpressionCriteria GIMessageFilterExpressionCriteria;
 enum GIMessageFilterExpressionCriteria
@@ -70,6 +70,6 @@ enum GIMessageFilterExpressionSubjectType
 - (void)setFlagArgument:(int)flagArgument;
 
 /*" Matching "*/
-- (BOOL)matchesForMessage:(G3Message *)message flags:(int)flags;
+- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags;
 
 @end

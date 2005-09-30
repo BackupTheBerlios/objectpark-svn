@@ -22,8 +22,8 @@
 
 #import "GIMessageFilterAction.h"
 #import "GIMessageFilter.h"
-#import "G3Message.h"
-#import "G3MessageGroup.h"
+#import "GIMessage.h"
+#import "GIMessageGroup.h"
 #import "GIMessageBase.h"
 
 @implementation GIMessageFilterAction
@@ -96,7 +96,7 @@
 
 @implementation GIMessageFilterAction (Performer)
 
-+ (BOOL)performAction:(GIMessageFilterAction *)action withMessage:(G3Message *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox
++ (BOOL)performAction:(GIMessageFilterAction *)action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox
 {
     BOOL allowFurtherFiltering = YES;
     
@@ -106,15 +106,15 @@
     {
         case kGIMFActionTypePutInMessagebox: 
         {
-            G3MessageGroup *destinationGroup;
+            GIMessageGroup *destinationGroup;
             
             // get destination box
-            destinationGroup = [G3MessageGroup messageGroupWithURIReferenceString:[action parameter]];
+            destinationGroup = [GIMessageGroup messageGroupWithURIReferenceString:[action parameter]];
             
             // if destination box can not be found fallback to default box
             if (! destinationGroup) 
             {
-                destinationGroup = [G3MessageGroup defaultMessageGroup];
+                destinationGroup = [GIMessageGroup defaultMessageGroup];
                 
                 if (! destinationGroup) // fatal -> Exception
                 {

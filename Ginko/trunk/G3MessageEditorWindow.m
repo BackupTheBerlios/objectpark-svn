@@ -9,7 +9,7 @@
 #import "G3MessageEditorWindow.h"
 
 
-@implementation G3MessageEditorWindow
+@implementation GIMessageEditorWindow
 /*" Window for message editors. Special behavior. "*/
 
 #define TABKEY 0x30
