@@ -95,10 +95,10 @@
     GIMessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"GIMessageGroup" inManagedObjectContext:[NSManagedObjectContext threadContext]];
     
     [threadA addToMessages: messageA];
-    [threadA addGroup:group];
+    [threadA addToGroups: group];
     
-    STAssertTrue([[threadA valueForKey:@"groups"] containsObject:group], @"should contain group.");
-    STAssertTrue([[group valueForKey:@"threads"] containsObject:threadA], @"should contain thread.");
+    STAssertTrue([[threadA valueForKey: @"groups"] containsObject: group], @"should contain group.");
+    STAssertTrue([[group valueForKey: @"threads"] containsObject: threadA], @"should contain thread.");
 }
 
 @end

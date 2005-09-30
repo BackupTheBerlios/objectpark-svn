@@ -88,8 +88,8 @@
         oldMessage = [aMessage retain];
         referencedMessage = nil;
         
-        [self setHeadersFromMessage:oldMessage];
-        [self appendContentFromMessage:oldMessage];
+        [self setHeadersFromMessage: oldMessage];
+        [self appendContentFromMessage: oldMessage];
         
         shouldAppendSignature = NO;
         
@@ -1167,7 +1167,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [referencedMessage addFlags:OPAnsweredStatus];
     
     // set message in profile's messagesToSend:
-    [profile addMessageToSend: message];
+    [profile addValue: message forKey: @"messagesToSend"];
     
     [window setDocumentEdited:NO];
     

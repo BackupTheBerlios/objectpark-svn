@@ -131,11 +131,12 @@
     return NO;
 }
 
+
 - (NSString*) emailAddress
 {
-    [self willAccessValueForKey:@"mailaddress"];
-    id result = [self primitiveValueForKey:@"mailaddress"];
-    [self didAccessValueForKey:@"mailaddress"];
+    [self willAccessValueForKey: @"mailaddress"];
+    id result = [self primitiveValueForKey: @"mailaddress"];
+    [self didAccessValueForKey: @"mailaddress"];
     return result;
 }
 

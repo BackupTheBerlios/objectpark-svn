@@ -47,34 +47,34 @@
     return message;
 }
 
-+ (void)removeMessage:(GIMessage *)aMessage
++ (void) removeMessage: (GIMessage*) aMessage
 {	
     // remove message from index
     //[[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
 
-    GIThread *thread = [aMessage thread];
+    GIThread* thread = [aMessage thread];
         
     // delete thread also if it would become a thread without messages:
-    if ([thread messageCount] == 1)
-    {
-        [[NSManagedObjectContext threadContext] deleteObject:thread];		
+    if ([thread messageCount] == 1) {
+        [[aMessage context] deleteObject: thread];		
     }
     
     // delete message:
-    [[NSManagedObjectContext threadContext] deleteObject:aMessage];
+    [[aMessage context] deleteObject: aMessage];
 }
 
-+ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
++ (void) addMessage: (GIMessage *) aMessage toMessageGroup: (GIMessageGroup*) aGroup suppressThreading: (BOOL) suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-    GIThread *thread = [aMessage threadCreate:!suppressThreading];
-    if (!thread)
-    {
-        thread = [GIThread threadInManagedObjectContext: [aMessage managedObjectContext]];
+    GIThread *thread = [aMessage threadCreate: !suppressThreading];
+    if (!thread) {
+        thread = [[GIThread alloc] init];
+		[thread insertIntoContext: [aMessage context]];
         [thread setValue: [aMessage valueForKey: @"subject"] forKey: @"subject"];
         [aMessage setValue: thread forKey: @"thread"];
         [thread addToMessages: aMessage];
+		[thread release];
     }
     
     [aGroup addThread:thread];
@@ -115,7 +115,7 @@
     GIThread *thread = [aMessage thread];
     NSAssert(thread != nil, @"draft message without thread");
     
-    [thread removeGroup: [GIMessageGroup draftMessageGroup]];
+    [thread removeFromGroups: [GIMessageGroup draftMessageGroup]];
     [thread removeFromMessages: aMessage];
 }
 
