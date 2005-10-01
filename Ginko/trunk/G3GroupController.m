@@ -134,7 +134,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (id)valueForGroupProperty:(NSString *)prop
 /*" Used for accessing user defaults for current message group. "*/
 {
-    NSString *key = [[[[self group] objectID] URIRepresentation] absoluteString];
+    NSString *key = [[[self group] objectURL] absoluteString];
     if (key)
     {
         NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
@@ -147,7 +147,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 /*" Used for accessing user defaults for current message group. "*/
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSString *key = [[[[self group] objectID] URIRepresentation] absoluteString];
+    NSString *key = [[[self group] objectURL] absoluteString];
     
     NSMutableDictionary* groupProperties = [[ud objectForKey:key] mutableCopy];
     if (!groupProperties) groupProperties = [[NSMutableDictionary alloc] init];
@@ -200,7 +200,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // select responding item in threads view:
     if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     {
-        itemRow = [threadsView rowForItemEqualTo:[[[aThread objectID] URIRepresentation] absoluteString] startingAtRow:0];
+        itemRow = [threadsView rowForItemEqualTo:[[aThread objectURL] absoluteString] startingAtRow:0];
     }
     
     [threadsView selectRow:itemRow byExtendingSelection:NO];
@@ -899,7 +899,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     //NSLog(@"Merging other threads into %@", targetThread);    
 
     // prevent merge problems:
-    [[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+    //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
     NSString* nextThreadURI;
     while (nextThreadURI = [e nextObject]) 
@@ -957,7 +957,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     BOOL trashedAtLeastOne = NO;
     
     // Make sure we have a fresh group object and prevent merge problems:
-    [[NSManagedObjectContext threadContext] refreshObject:[self group] mergeChanges:YES];
+    //[[NSManagedObjectContext threadContext] refreshObject:[self group] mergeChanges:YES];
     
     while (uriString = [enumerator nextObject]) 
     {
@@ -1053,7 +1053,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         [threadsView reloadData];
         
-        [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[[group objectID] description] ? [[group objectID] description] : @"nil"]];
+        [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[[group objectURL] description] ? [[group objectURL] description] : @"nil"]];
         [threadsView setAutosaveTableColumns:YES];
         [threadsView setAutosaveExpandedItems:NO];
         
@@ -1078,7 +1078,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                     thread = [message thread];
                 }
                 
-                int itemRow = [threadsView rowForItemEqualTo:[[[thread objectID] URIRepresentation] absoluteString] startingAtRow:0];
+                int itemRow = [threadsView rowForItemEqualTo:[[thread objectURL] absoluteString] startingAtRow:0];
                 
                 if (itemRow >= 0) 
                 {
@@ -1618,7 +1618,7 @@ static NSAttributedString* spacer2()
         }
         else // message group
         {
-            [(GIMessageGroup *)[GIMessageGroup messageGroupWithURIReferenceString:item] setName:object];
+            [(GIMessageGroup *)[GIMessageGroup messageGroupWithURIReferenceString:item] setValue:object forKey:@"name"];
             [NSApp saveAction:self];
         }
     }
@@ -1681,12 +1681,12 @@ NSArray *commentsForMessage(GIMessage *aMessage, GIThread *aThread)
 {
     NSArray *result;
     
-    result = [commentsCache objectForKey:[aMessage objectID]];
+    result = [commentsCache objectForKey:[aMessage objectURL]];
     
     if (! result)
     {
         result = [aMessage commentsInThread:aThread];
-        [commentsCache setObject:result forKey:[aMessage objectID]];
+        [commentsCache setObject:result forKey:[aMessage objectURL]];
     }
     
     return result;
@@ -2024,25 +2024,26 @@ NSMutableArray* border = nil;
 
 @implementation G3GroupController (DragNDrop)
 
-- (void) moveThreadsWithURI: (NSArray*) threadURIs 
-                  fromGroup: (GIMessageGroup*) sourceGroup 
-                    toGroup: (GIMessageGroup*) destinationGroup
+- (void)moveThreadsWithURI:(NSArray *)threadURIs 
+                 fromGroup:(GIMessageGroup *)sourceGroup 
+                   toGroup:(GIMessageGroup *)destinationGroup
 {
-    NSEnumerator* enumerator = [threadURIs objectEnumerator];
-    NSString* threadURI;
+    NSEnumerator *enumerator = [threadURIs objectEnumerator];
+    NSString *threadURI;
     
     // Prevent merge problems:
-    [[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+    //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    while (threadURI = [enumerator nextObject]) {
-        GIThread* thread = [NSManagedObjectContext objectWithURIString: threadURI];
-        NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
+    while (threadURI = [enumerator nextObject]) 
+    {
+        GIThread *thread = [NSManagedObjectContext objectWithURIString:threadURI];
+        NSAssert([thread isKindOfClass:[GIThread class]], @"should be a thread");
         
         // remove thread from source group:
-        [thread removeGroup: sourceGroup];
+        [thread removeFromGroups:sourceGroup];
         
         // add thread to destination group:
-        [thread addGroup: destinationGroup];
+        [thread addToGroups:destinationGroup];
     }
 }
 

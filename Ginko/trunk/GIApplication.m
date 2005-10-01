@@ -56,31 +56,25 @@
 {
     if (aSelector == @selector(openNewGroupWindow:)) 
     {
-        if([self isGroupsDrawerMode])
-        {
-            return YES;
-        }
-        else
-        {
-            return NO;
-        }
+        if([self isGroupsDrawerMode]) return YES;
+        else return NO;
     }
 
     return YES;
 }
 
-+ (NSArray*) preferredContentTypes
++ (NSArray *)preferredContentTypes
 {
-    NSArray* types = [[NSUserDefaults standardUserDefaults] objectForKey: ContentTypePreferences];
+    NSArray *types = [[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences];
     return types;
 }
 
-- (BOOL) validateMenuItem: (id <NSMenuItem>) menuItem
+- (BOOL)validateMenuItem:(id<NSMenuItem>)menuItem
 {
-    return [self validateSelector: [menuItem action]];
+    return [self validateSelector:[menuItem action]];
 }
 
-- (void) restoreOpenWindowsFromLastSession
+- (void)restoreOpenWindowsFromLastSession
 {
     NSLog(@"-[GIApplication restoreOpenWindowsFromLastSession] (not yet implemented)");
     // TODO
@@ -101,45 +95,45 @@
 - (void) configureDatabaseAtPath: (NSString*) path
 {
 	NSLog(@"DB file %@ created.", path);
-		
+    
 	// add indexes:
 	sqlite3* db = NULL;
 	sqlite3_open([path UTF8String],   /* Database filename (UTF-8) */
 		&db);                /* OUT: SQLite db handle */
 	
 	if (db) {
-            int errorCode;
-            char* error;
-            NSLog(@"DB opened. Creating additional indexes...");
-            
-            if (errorCode = sqlite3_exec(db, /* An open database */
-                "CREATE UNIQUE INDEX MY_MESSAGE_ID_INDEX ON ZMESSAGE (ZMESSAGEID);", /* SQL to be executed */
-                NULL, /* Callback function */
-                NULL, /* 1st argument to callback function */
-                &error)) { /* Error msg written here */
-                if (error) {
-                    NSLog(@"Error creating index: %s", error);
-                }
+        int errorCode;
+        char* error;
+        NSLog(@"DB opened. Creating additional indexes...");
+        
+        if (errorCode = sqlite3_exec(db, /* An open database */
+            "CREATE UNIQUE INDEX MY_MESSAGE_ID_INDEX ON ZMESSAGE (ZMESSAGEID);", /* SQL to be executed */
+            NULL, /* Callback function */
+            NULL, /* 1st argument to callback function */
+            &error)) { /* Error msg written here */
+            if (error) {
+                NSLog(@"Error creating index: %s", error);
             }
-// This index is not used by sqlite.            
-//            if (errorCode = sqlite3_exec(db, /* An open database */
-//                "CREATE INDEX MY_THREAD_DATE_INDEX ON ZTHREAD (ZDATE);", /* SQL to be executed */
-//                NULL, /* Callback function */
-//                NULL, /* 1st argument to callback function */
-//                &error)) { /* Error msg written here */
-//                if (error) {
-//                    NSLog(@"Error creating index: %s", error);
-//                }
-//            }
-    if (errorCode = sqlite3_exec(db, /* An open database */
-    "PRAGMA default_cache_size = 8000;", /* SQL to be executed */
-    NULL, /* Callback function */
-    NULL, /* 1st argument to callback function */
-    &error)) { /* Error msg written here */
-    if (error) {
-        NSLog(@"Error setting cache size: %s", error);
-    }
-    }
+        }
+        // This index is not used by sqlite.            
+        //            if (errorCode = sqlite3_exec(db, /* An open database */
+        //                "CREATE INDEX MY_THREAD_DATE_INDEX ON ZTHREAD (ZDATE);", /* SQL to be executed */
+        //                NULL, /* Callback function */
+        //                NULL, /* 1st argument to callback function */
+        //                &error)) { /* Error msg written here */
+        //                if (error) {
+        //                    NSLog(@"Error creating index: %s", error);
+        //                }
+        //            }
+        if (errorCode = sqlite3_exec(db, /* An open database */
+            "PRAGMA default_cache_size = 8000;", /* SQL to be executed */
+            NULL, /* Callback function */
+            NULL, /* 1st argument to callback function */
+            &error)) { /* Error msg written here */
+            if (error) {
+                NSLog(@"Error setting cache size: %s", error);
+            }
+        }
 
 	}
 
@@ -149,7 +143,7 @@
 - (NSString *)databasePath
 {
     static NSString *path = nil;
-    if (!path) path = [[self applicationSupportPath] stringByAppendingPathComponent:@"GinkoBase.sqlite"];
+    if (!path) path = [[self applicationSupportPath] stringByAppendingPathComponent:@"MessageBase.sqlite"];
     return path;
 }
 
