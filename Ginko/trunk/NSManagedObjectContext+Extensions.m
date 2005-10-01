@@ -18,6 +18,8 @@ static volatile NSThread* mainThread = nil;
     NSManagedObjectContext *result;
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
 
+    if (mainThread!=[NSThread currentThread]) NSLog(@"Caution: Editing context called from outside main thread!");
+    
     result = [threadDict objectForKey:@"OPDefaultManagedObjectContext"];
     if (!result) {
         NSAssert(mainThread!=[NSThread currentThread], @"Need a mainThreadContext before any threadContext can be inqired.");

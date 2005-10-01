@@ -24,18 +24,48 @@
 
 @implementation GIMessageBase
 
-+ (GIMessage*) addMessageWithTransferData: (NSData*) someTransferData
+- (void)addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
+{
+    GIMessage *message = [GIMessage messageWithTransferData:[parameters objectAtIndex:0]];
+    
+    if (message) // if no dupe
+    {
+        if (![GIMessageFilter filterMessage:message flags:0])
+        {
+            [[self class] addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
+        }
+        
+        if ([message hasFlags:OPIsFromMeStatus])
+        {
+            [[self class] addMessage:message toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
+        }
+        
+        // add message to index
+        //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+        //[indexCenter addMessage:message];
+        NSLog(@"adding message in main thread... '%@'", [[message internetMessage] subject]);
+        [parameters addObject:message]; // out param
+    }
+    else
+    {
+        [parameters addObject:[NSNull null]];
+    }
+}
+
++ (GIMessage *)addMessageWithTransferData:(NSData *)someTransferData
 /*" Creates and returns a new GIMessage object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
 {
     GIMessage *message = [GIMessage messageWithTransferData:someTransferData];
     
     if (message) // if no dupe
     {
-        if (![GIMessageFilter filterMessage:message flags:0])  {
+        if (![GIMessageFilter filterMessage:message flags:0])  
+        {
             [self addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
         }
         
-        if ([message hasFlags:OPIsFromMeStatus]) {
+        if ([message hasFlags:OPIsFromMeStatus]) 
+        {
             [self addMessage:message toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
         }
         
@@ -47,33 +77,35 @@
     return message;
 }
 
-+ (void) removeMessage: (GIMessage*) aMessage
++ (void)removeMessage:(GIMessage *)aMessage
 {	
     // remove message from index
     //[[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
 
-    GIThread* thread = [aMessage thread];
+    GIThread *thread = [aMessage thread];
         
     // delete thread also if it would become a thread without messages:
-    if ([thread messageCount] == 1) {
-        [[aMessage context] deleteObject: thread];		
+    if ([thread messageCount] == 1) 
+    {
+        [[aMessage context] deleteObject:thread];		
     }
     
     // delete message:
-    [[aMessage context] deleteObject: aMessage];
+    [[aMessage context] deleteObject:aMessage];
 }
 
-+ (void) addMessage: (GIMessage *) aMessage toMessageGroup: (GIMessageGroup*) aGroup suppressThreading: (BOOL) suppressThreading
++ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-    GIThread *thread = [aMessage threadCreate: !suppressThreading];
-    if (!thread) {
+    GIThread *thread = [aMessage threadCreate:!suppressThreading];
+    if (!thread) 
+    {
         thread = [[GIThread alloc] init];
-		[thread insertIntoContext: [aMessage context]];
-        [thread setValue: [aMessage valueForKey: @"subject"] forKey: @"subject"];
-        [aMessage setValue: thread forKey: @"thread"];
-        [thread addToMessages: aMessage];
+		[thread insertIntoContext:[aMessage context]];
+        [thread setValue:[aMessage valueForKey: @"subject"] forKey:@"subject"];
+        [aMessage setValue:thread forKey:@"thread"];
+        [thread addToMessages:aMessage];
 		[thread release];
     }
     
@@ -109,14 +141,14 @@
     [[GIMessageGroup trashMessageGroup] addThread:aThread];
 }
 
-+ (void)removeDraftMessage: (GIMessage*) aMessage
++ (void)removeDraftMessage:(GIMessage *)aMessage
 /*" Removes group and message from aMessage's thread. "*/
 {
     GIThread *thread = [aMessage thread];
     NSAssert(thread != nil, @"draft message without thread");
     
-    [thread removeFromGroups: [GIMessageGroup draftMessageGroup]];
-    [thread removeFromMessages: aMessage];
+    [thread removeFromGroups:[GIMessageGroup draftMessageGroup]];
+    [thread removeFromMessages:aMessage];
 }
 
 + (NSSet *)defaultGroupsForMessage:(GIMessage *)aMessage
@@ -175,7 +207,14 @@ NSString *MboxImportJobName = @"mbox import";
             {;
                 @try 
                 {
-                    GIMessage *persistentMessage = [[self class] addMessageWithTransferData:transferData];
+                    NSMutableArray *args = [NSMutableArray arrayWithObject:transferData];
+                    [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject:args waitUntilDone:YES];
+                        
+                    GIMessage *persistentMessage = [args objectAtIndex:1];
+                    
+                    if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
+                    
+                    //GIMessage *persistentMessage = [[self class] addMessageWithTransferData:transferData];
                     if (persistentMessage) 
                     {
                         messagesWereAdded = YES;
