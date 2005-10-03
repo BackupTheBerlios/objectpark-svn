@@ -227,6 +227,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name:OPJobDidFinishNotification object:MboxImportJobName];
+
     // Some statistical messsages:
     //NSManagedObjectContext* context = [NSManagedObjectContext threadContext];	
     //NSArray *allMessages = [G3Message allObjects];
@@ -402,7 +404,9 @@
 {
     NSError *error = [self commitChanges];
     NSString *localizedDescription;
-        
+
+    if (NSDebugEnabled) NSLog(@"Database Commit");
+    
     if (error)
     {
         NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[NSManagedObjectContext threadContext] insertedObjects], [[NSManagedObjectContext threadContext] updatedObjects]);
@@ -486,6 +490,18 @@
         
         [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
     }
+}
+
+- (void)importJobFinished:(NSNotification *)aNotification
+{
+    if (NSDebugEnabled) NSLog(@"importJobFinished");
+    
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+        
+    [OPJobs removeFinishedJob:jobId]; // clean up
+    
+    [self saveAction:self];
 }
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification

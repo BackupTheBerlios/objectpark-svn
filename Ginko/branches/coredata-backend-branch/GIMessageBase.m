@@ -24,6 +24,34 @@
 
 @implementation GIMessageBase
 
+- (void)addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
+{
+    G3Message *message = [G3Message messageWithTransferData:[parameters objectAtIndex:0]];
+    
+    if (message) // if no dupe
+    {
+        if (![GIMessageFilter filterMessage:message flags:0])
+        {
+            [[self class] addMessage:message toMessageGroup:[G3MessageGroup defaultMessageGroup] suppressThreading:NO];
+        }
+        
+        if ([message hasFlags:OPIsFromMeStatus])
+        {
+            [[self class] addMessage:message toMessageGroup:[G3MessageGroup sentMessageGroup] suppressThreading:NO];
+        }
+        
+        // add message to index
+        //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+        //[indexCenter addMessage:message];
+        NSLog(@"adding message in main thread... '%@'", [[message internetMessage] subject]);
+        [parameters addObject:message]; // out param
+    }
+    else
+    {
+        [parameters addObject:[NSNull null]];
+    }
+}
+
 + (G3Message *)addMessageWithTransferData:(NSData *)someTransferData
 /*" Creates and returns a new G3Message object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
 {
@@ -177,7 +205,13 @@ NSString *MboxImportJobName = @"mbox import";
             {;
                 @try 
                 {
-                    G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
+                    NSMutableArray *args = [NSMutableArray arrayWithObject:transferData];
+                    [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject:args waitUntilDone:YES];
+                    
+                    G3Message *persistentMessage = [args objectAtIndex:1];
+                    
+                    if (persistentMessage == (G3Message *)[NSNull null]) persistentMessage = nil;
+                   // G3Message *persistentMessage = [[self class] addMessageWithTransferData:transferData];
                     if (persistentMessage) 
                     {
                         messagesWereAdded = YES;
