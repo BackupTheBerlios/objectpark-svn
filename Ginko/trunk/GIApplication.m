@@ -214,13 +214,15 @@
     return [managedObjectContext autorelease];
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [self setDelegate:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name:OPJobDidFinishNotification object:MboxImportJobName];
 
     // Some statistical messsages:
     //NSManagedObjectContext* context = [NSManagedObjectContext threadContext];	
@@ -481,6 +483,18 @@
         
         [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
     }
+}
+
+- (void)importJobFinished:(NSNotification *)aNotification
+{
+    if (NSDebugEnabled) NSLog(@"importJobFinished");
+    
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    
+    [OPJobs removeFinishedJob:jobId]; // clean up
+    
+    [self saveAction:self];
 }
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
