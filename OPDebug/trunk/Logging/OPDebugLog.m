@@ -18,13 +18,13 @@ static OPDebugLog *sharedInstance;
    on-off switch so you need to set this variable.
    For logging independent of that variable you should use !{NSLog} directly.
    
-   There are two items used for fine graded control of whether a message should be printed,
+   There are two items used for fine grained control of whether a message should be printed,
    %domains and %aspects:
    
    The %domain is intended to separate the parts of a project (subprojects or even finer).
    It can be any NSString.
    
-   The %aspects allow for a fine graded specification of the messages that should be logged
+   The %aspects allow for a fine grained specification of the messages that should be logged
    and are always used in conjunction with a domain.
    %Aspects are a bit vector with each bit representing a single aspect.
    
