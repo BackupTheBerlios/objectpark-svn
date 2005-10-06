@@ -44,9 +44,13 @@ static OPDebugLog *sharedInstance;
    !{-addAspects:forDomain:} method which can also be used activate an aspect
    independent of what other aspects have been activated.
    
+   Example:
+   
+   !{[[OPDebugLog sharedInstance] setAspects:OPXERROR|OPERROR forDomain:@"Some Domain"];}
+   
    If you are familiar with (hierarchical) debug levels and are missing them
    you can easily create them by activating all aspects that are relevant for
-   the level in question.
+   the level in question (like in the above example).
    "*/
 
 /*"Returns the single instance of the debug logger object."*/
