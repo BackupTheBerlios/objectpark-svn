@@ -7,7 +7,7 @@
 //
 
 #import "GIMessageGroup.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import "OPManagedObject.h"
 #import "GIThread.h"
 #import "GIProfile.h"
@@ -78,7 +78,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     }
     
     // creating new group and setting name:
-    result = [[[self alloc] initWithManagedObjectContext:[NSManagedObjectContext threadContext]] autorelease];
+    result = [[[self alloc] initWithManagedObjectContext: [OPPersistentObjectContext threadContext]] autorelease];
     [result setValue: aName forKey: @"name"];
 
     // placing new group in hierarchy:
@@ -109,7 +109,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     if ([anUrl length])
     {
         @try {
-            referencedGroup = [[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:anUrl]];
+            referencedGroup = [[OPPersistentObjectContext threadContext] objectWithURI:[NSURL URLWithString:anUrl]];
         }
         @catch (NSException *e) {
             NSLog(@"Could not find group for URI ''", anUrl);

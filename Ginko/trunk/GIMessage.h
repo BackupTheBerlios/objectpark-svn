@@ -6,7 +6,7 @@
 //  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 #import "OPPersistence.h"
 
 @class GIThread;

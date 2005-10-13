@@ -8,6 +8,7 @@
 
 #import <AppKit/AppKit.h>
 #import <AddressBook/AddressBook.h>
+#import <OPPersistence.h>
 
 @class GISearchController;
 
@@ -20,7 +21,7 @@
 
 - (BOOL)isGroupsDrawerMode;
 - (NSWindow *)standaloneGroupsWindow;
-- (NSManagedObjectContext*) newManagedObjectContext;
+- (OPPersistentObjectContext*) newManagedObjectContext;
 
 - (NSString *)databasePath;
 

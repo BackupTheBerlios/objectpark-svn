@@ -6,14 +6,22 @@
 //  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import "OPPersistentObject.h"
+#import <AppKit/AppKit.h>
+#import "OPPersistence.h"
 
-@interface OPPersistentObject (Extensions)
+@interface OPPersistentObject (OPExtensions)
 
 + (NSArray*) allObjects;
 
 - (BOOL) primitiveBoolForKey: (NSString*) key;
 
+
+@end
+
+@interface OPPersistentObjectContext (OPExtensions)
+
++ (OPPersistentObjectContext*) threadContext;
++ (void) setMainThreadContext: (OPPersistentObjectContext*) aContext;
++ (OPPersistentObjectContext*) mainThreadContext;
 
 @end

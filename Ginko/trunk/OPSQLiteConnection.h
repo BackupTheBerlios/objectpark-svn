@@ -32,7 +32,7 @@
 //  is charged for more than the price for shipping and handling.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 #include <sqlite3.h>
 #import "OPPersistenceConstants.h"
 

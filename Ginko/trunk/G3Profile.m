@@ -12,7 +12,7 @@
 #import "NSString+MessageUtils.h"
 #import "NSArray+Extensions.h"
 #import "OPInternetMessage.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation G3Profile
 

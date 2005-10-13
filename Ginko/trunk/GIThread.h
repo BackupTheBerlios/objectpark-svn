@@ -6,7 +6,7 @@
 //  Copyright 2005 Objectpark Group. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 #import "OPPersistentObject.h"
 
 @class GIMessageGroup;
@@ -17,7 +17,7 @@
 	int age; // since reference date (should be 1970)
 }
 
-//+ (id) threadInManagedObjectContext:(NSManagedObjectContext *)aContext;
+//+ (id) threadInManagedObjectContext:(OPPersistentObjectContext *)aContext;
 
 - (NSArray*) messages;
 - (void) addToMessages: (GIMessage*) message;

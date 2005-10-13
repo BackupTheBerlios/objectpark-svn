@@ -11,13 +11,13 @@
 #import "GIMessage.h"
 #import "GIMessageGroup.h"
 #import "OPMBoxFile.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation TestGIThread
 
 - (void)tearDown
 {
-    [[NSManagedObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] rollback];
 }
 
 - (GIMessage *)makeAMessage

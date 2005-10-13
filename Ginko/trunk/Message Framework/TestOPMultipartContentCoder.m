@@ -11,13 +11,13 @@
 #import "NSData+MessageUtils.h"
 #import "GIMessage.h"
 #import "OPInternetMessage.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation TestOPMultipartContentCoder
 
 - (void)tearDown
 {
-    [[NSManagedObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] rollback];
 }
 
 - (void)testAttributedString

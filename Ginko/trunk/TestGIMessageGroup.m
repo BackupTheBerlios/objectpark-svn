@@ -9,7 +9,7 @@
 #import "TestGIMessageGroup.h"
 #import "GIMessageGroup.h"
 #import "GIThread.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation TestGIMessageGroup
 

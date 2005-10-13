@@ -11,27 +11,26 @@
 
 @implementation GIFilteredThreads
 
-- (id)initWithGroupID:(NSManagedObjectID *)anGroupID
+- (id)initWithGroupID: (NSURL*) aGroupID
 {
     self = [super init];
     
-    groupID = [anGroupID retain];
+    groupID = [aGroupID retain];
         
     return self;
 }
 
 static NSMutableDictionary *filteredThreadsForGroupID = nil;
 
-+ (id)filteredThreadsForGroupID:(NSManagedObjectID *)aGroupID
++ (id) filteredThreadsForGroupID: (NSURL*) aGroupID
 {
     if (! filteredThreadsForGroupID) filteredThreadsForGroupID = [[NSMutableDictionary alloc] initWithCapacity:7];
     
-    id result = [filteredThreadsForGroupID objectForKey:aGroupID];
+    id result = [filteredThreadsForGroupID objectForKey: aGroupID];
     
-    if (! result) 
-    {
-        result = [[self alloc] initWithGroupID:aGroupID];
-        [filteredThreadsForGroupID setObject:result forKey:aGroupID];
+    if (! result) {
+        result = [[self alloc] initWithGroupID: aGroupID];
+        [filteredThreadsForGroupID setObject:result forKey: aGroupID];
         [result release];
     }
     
@@ -40,7 +39,7 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
 
 - (NSMutableDictionary *)properties
 {
-    NSString *defaultsKey = [[[groupID URIRepresentation] absoluteString] stringByAppendingString:@"-FilteredThreadProperties"];
+    NSString *defaultsKey = [[groupID absoluteString] stringByAppendingString:@"-FilteredThreadProperties"];
     
     if (! properties) properties = [[[NSUserDefaults standardUserDefaults] objectForKey:defaultsKey] mutableCopy];
     if (! properties) properties = [[NSMutableDictionary alloc] init];
@@ -50,7 +49,7 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
 
 - (void)commitProperties
 {
-    NSString *defaultsKey = [[[groupID URIRepresentation] absoluteString] stringByAppendingString:@"-FilteredThreadProperties"];
+    NSString *defaultsKey = [[groupID absoluteString] stringByAppendingString:@"-FilteredThreadProperties"];
     
     [[NSUserDefaults standardUserDefaults] setObject:[self properties] forKey:defaultsKey];
 }

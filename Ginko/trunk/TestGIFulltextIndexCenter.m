@@ -12,7 +12,7 @@
 #import "GIThread.h"
 #import "GIFulltextIndexCenter.h"
 #import "GIMessage.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation TestGIFulltextIndexCenter
 
@@ -62,7 +62,7 @@ NSMutableArray* tempMessageArray;
     NSLog(@"-[TestGIFulltextIndexCenter tearDown]");
     [tempMessage release];
     [tempMessageArray release];
-    [[NSManagedObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] rollback];
     //[tempIndexCenter release];
 }
 

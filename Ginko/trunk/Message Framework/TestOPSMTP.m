@@ -11,7 +11,7 @@
 #import <OPNetwork/OPStream+SSL.h>
 #import "NSString+MessageUtils.h"
 #import "GIMessage.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation TestOPSMTP
 
@@ -21,7 +21,7 @@
 
 - (void)tearDown
 {
-    [[NSManagedObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] rollback];
 }
 
 - (GIMessage *)makeAMessage

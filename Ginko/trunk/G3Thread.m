@@ -9,7 +9,7 @@
 #import "G3Thread.h"
 #import "GIMessage.h"
 #import "G3MessageGroup.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import "NSArray+Extensions.h"
 
 @implementation G3Thread

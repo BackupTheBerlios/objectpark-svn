@@ -7,7 +7,7 @@
 //
 
 #import "OPManagedObject.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 
 @implementation NSManagedObject (OPExtensions)

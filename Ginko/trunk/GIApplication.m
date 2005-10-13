@@ -11,11 +11,9 @@
 #import "GIUserDefaultsKeys.h"
 #import "G3GroupController.h"
 #import "GIMessageEditorController.h"
-#import "NSManagedObjectContext+Extensions.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIMessageBase.h"
 #import "OPMBoxFile.h"
-#import "OPManagedObject.h"
 #import "GIThread.h"
 #import "GIMessageGroup.h"
 #import "GISearchController.h"
@@ -147,7 +145,7 @@
     return path;
 }
 
-- (NSManagedObjectContext*) newManagedObjectContext
+- (OPPersistentObjectContext*) newManagedObjectContext
 /* Creates a new context according to the model. The result is not autoreleased! */
 {
     NSError*  error;
@@ -158,7 +156,7 @@
     
     
     NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-    NSManagedObjectContext* managedObjectContext = [[NSManagedObjectContext alloc] init];
+    OPPersistentObjectContext* managedObjectContext = [[OPPersistentObjectContext alloc] init];
     [managedObjectContext setPersistentStoreCoordinator: coordinator];
     [coordinator release];
     /* Change this path/code to point to your App's data store. */
@@ -180,7 +178,7 @@
     
     // Create Indexes, etc.
     if (isNewlyCreated) {
-        [managedObjectContext save: NULL];
+        [managedObjectContext saveChanges];
         [self configureDatabaseAtPath: dbPath];
         [managedObjectContext release];
         managedObjectContext = [self newManagedObjectContext];
@@ -193,17 +191,17 @@
     return managedObjectContext;
 }
 
-- (NSManagedObjectContext*) initialManagedObjectContext
+- (OPPersistentObjectContext*) initialManagedObjectContext
 {
     NSError*   error;
     NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"GinkoBase.sqlite"];
     BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
     
-    NSManagedObjectContext* managedObjectContext = [self newManagedObjectContext];
+    OPPersistentObjectContext* managedObjectContext = [self newManagedObjectContext];
     
     if (isNewlyCreated) {
         error = nil;
-        [managedObjectContext save: &error];
+        [managedObjectContext saveChanges];
         [managedObjectContext release]; // get rid of it
         NSLog(@"Commit errors: %@", error);
         [self configureDatabaseAtPath: path];
@@ -225,7 +223,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name:OPJobDidFinishNotification object:MboxImportJobName];
 
     // Some statistical messsages:
-    //NSManagedObjectContext* context = [NSManagedObjectContext threadContext];	
+    //OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	
     //NSArray *allMessages = [GIMessage allObjects];
     //GIMessage *aMessage  = [allMessages lastObject];
     
@@ -233,7 +231,7 @@
     
     //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
     //NSLog(@"last message = %@", aMessage);
-    [NSManagedObjectContext setMainThreadContext: [self newManagedObjectContext]];
+    [OPPersistentObjectContext setMainThreadContext: [self newManagedObjectContext]];
 
     [GIMessageGroup ensureDefaultGroups];
     //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);
@@ -241,7 +239,7 @@
     [self restoreOpenWindowsFromLastSession];
 
         // Make sure, we receive NSManagedObjectContextDidSaveNotifications:
-    //[[NSNotificationCenter defaultCenter] addObserver: [NSManagedObjectContext class] selector: @selector(objectsDidChange2:) 
+    //[[NSNotificationCenter defaultCenter] addObserver: [OPPersistentObjectContext class] selector: @selector(objectsDidChange2:) 
     //                                             name: NSManagedObjectContextDidSaveNotification 
     //                                           object: nil];  
     
@@ -373,7 +371,7 @@
                 }
                 
                 [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
-                [jobArguments setObject:[NSManagedObjectContext threadContext] forKey:@"parentContext"];
+                [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
                 [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
                 
                 [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
@@ -382,30 +380,31 @@
     }    
 }
 
+/*
 - (NSError*) commitChanges
 {
     NSError *error = nil;
     
     NSLog(@"committing database objects");
     
-    if (![(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error]) {
+    if (![[OPPersistentObjectContext threadContext] saveChanges]) {
         return error;
     } else {
         return nil;
     }
 }
+*/
 
 - (IBAction) saveAction: (id) sender
 {
-    NSError *error = [self commitChanges];
-    NSString *localizedDescription;
-        
-    if (error)
-    {
-        NSLog(@"Commit error: Affected objects = %@\nInserted objects = %@\nUpdated objects = %@", [[error userInfo] objectForKey:NSAffectedObjectsErrorKey], [[NSManagedObjectContext threadContext] insertedObjects], [[NSManagedObjectContext threadContext] updatedObjects]);
-        localizedDescription = [error localizedDescription];
-        error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
-        [[NSApplication sharedApplication] presentError:error];
+	@try {
+		[[OPPersistentObjectContext threadContext] saveChanges];
+	} @catch (NSException* exception) {
+		NSString *localizedDescription;
+        NSLog(@"Commit error: Affected objects = %@\nchanged objects = %@\nDeleted objects = %@", [[exception userInfo] objectForKey:NSAffectedObjectsErrorKey], [[OPPersistentObjectContext threadContext] changedObjects], [[OPPersistentObjectContext threadContext] deletedObjects]);
+        localizedDescription = [exception description]; // todo: was: localizedDescription!
+        NSError* error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
+        [self presentError: error];
     }
 }
 
@@ -478,10 +477,10 @@
         // import mbox at path mboxPath:
         NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
-        [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
-        [jobArguments setObject:[NSManagedObjectContext threadContext] forKey:@"parentContext"];
+        [jobArguments setObject: mboxPath forKey: @"mboxFilename"];
+        [jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
         
-        [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
+        [OPJobs scheduleJobWithName: MboxImportJobName target: [[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments: jobArguments synchronizedObject: @"mbox import"];
     }
 }
 

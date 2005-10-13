@@ -7,7 +7,7 @@
 //
 
 #import "G3MessageGroup.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import "OPManagedObject.h"
 #import "G3Thread.h"
 #import "G3Profile.h"

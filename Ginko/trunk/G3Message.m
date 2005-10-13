@@ -11,7 +11,7 @@
 #import "G3Profile.h"
 #import "OPInternetMessage.h"
 #import "NSString+MessageUtils.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import "OPInternetMessage+GinkoExtensions.h"
 #import "OPManagedObject.h"
 #import "G3MessageGroup.h"

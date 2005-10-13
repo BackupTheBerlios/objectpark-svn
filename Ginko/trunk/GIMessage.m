@@ -11,7 +11,7 @@
 #import "GIThread.h"
 #import "OPInternetMessage.h"
 #import "NSString+MessageUtils.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import "OPInternetMessage+GinkoExtensions.h"
 #import "OPManagedObject.h"
 #import "GIMessageGroup.h"
@@ -118,7 +118,7 @@
     if (insertMessage)
     {
         // Create a new message in the default context:
-        result = [[[GIMessage alloc] initWithManagedObjectContext:[NSManagedObjectContext threadContext]] autorelease];
+        result = [[[GIMessage alloc] initWithManagedObjectContext:[OPPersistentObjectContext threadContext]] autorelease];
         NSAssert(result != nil, @"Could not create message object");
         
         NSString *fromHeader = [im fromWithFallback: YES];

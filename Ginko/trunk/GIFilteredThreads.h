@@ -6,7 +6,8 @@
 //  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
+#import <OPPersistence.h>
 
 @class GIMessageGroup;
 
@@ -19,10 +20,10 @@ enum GIThreadFilterMode
 @interface GIFilteredThreads : NSObject 
 {
     NSMutableDictionary *properties;
-    NSManagedObjectID *groupID;
+    NSURL* groupID;
 }
 
-+ (id)filteredThreadsForGroupID:(NSManagedObjectID *)aGroupID;
++ (id)filteredThreadsForGroupID: (NSURL*) aGroupID;
 
 - (int)filterMode;
 - (void)setFilterMode:(int)theFilterMode;

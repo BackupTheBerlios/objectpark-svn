@@ -12,7 +12,7 @@
 #import "G3Account.h"
 #import "GIMessageGroup.h"
 #import "OPMBoxFile.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIFulltextIndexCenter.h"
 #import "NSData+MessageUtils.h"
@@ -180,7 +180,7 @@ NSString *MboxImportJobName = @"mbox import";
     
     // Get our own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
-    NSManagedObjectContext* context = [NSManagedObjectContext threadContext];  
+    OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];  
     [context setMergePolicy: NSMergeByPropertyObjectTrumpMergePolicy];
     
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
@@ -287,7 +287,7 @@ NSString *MboxImportJobName = @"mbox import";
     @finally 
     {
         [lastProgressSet release];
-        [NSManagedObjectContext resetThreadContext];
+        [OPPersistentObjectContext resetThreadContext];
         [pool release];
     }
     

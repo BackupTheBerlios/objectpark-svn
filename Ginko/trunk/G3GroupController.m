@@ -19,7 +19,7 @@
 #import "GIApplication.h"
 #import "NSArray+Extensions.h"
 #import "G3GroupInspectorController.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
 #import "OPJobs.h"
 #import "GIFulltextIndexCenter.h"
@@ -471,11 +471,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 message = item;
                 // find the thread above message:
                 while ([threadsView levelForRow:--selectedRow]){}
-                selectedThread = [NSManagedObjectContext objectWithURIString:[threadsView itemAtRow:selectedRow]];
+                selectedThread = [OPPersistentObjectContext objectWithURIString:[threadsView itemAtRow:selectedRow]];
             }
             else 
             {
-                selectedThread = [NSManagedObjectContext objectWithURIString: item];
+                selectedThread = [OPPersistentObjectContext objectWithURIString: item];
                 
                 if ([selectedThread containsSingleMessage]) 
                 {
@@ -627,7 +627,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     else
     {
-        result = [[[NSManagedObjectContext objectWithURIString: item] messagesByTree] lastObject];
+        result = [[[OPPersistentObjectContext objectWithURIString: item] messagesByTree] lastObject];
         if (! [result isKindOfClass:[GIMessage class]])
         {
             result = nil;
@@ -777,7 +777,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         if ([threadsView isRowSelected:i])
         {
             // get one of the selected threads:
-            GIThread *thread = [NSManagedObjectContext objectWithURIString:[threadsView itemAtRow:i]];
+            GIThread *thread = [OPPersistentObjectContext objectWithURIString:[threadsView itemAtRow:i]];
             NSAssert([thread isKindOfClass:[GIThread class]], @"assuming object is a thread");
             
             // remove selected thread from receiver's group:
@@ -891,7 +891,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     NSEnumerator *e = [[self selectedThreadURIs] objectEnumerator];
     NSString *targetThreadURI = [e nextObject];
-    GIThread *targetThread = [NSManagedObjectContext objectWithURIString: targetThreadURI];
+    GIThread *targetThread = [OPPersistentObjectContext objectWithURIString: targetThreadURI];
     [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
     [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
     [threadsView expandItem: targetThreadURI];
@@ -899,12 +899,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     //NSLog(@"Merging other threads into %@", targetThread);    
 
     // prevent merge problems:
-    //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+    //[[OPPersistentObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
     NSString* nextThreadURI;
     while (nextThreadURI = [e nextObject]) 
     {
-        GIThread* nextThread = [NSManagedObjectContext objectWithURIString: nextThreadURI];
+        GIThread* nextThread = [OPPersistentObjectContext objectWithURIString: nextThreadURI];
         [targetThread mergeMessagesFromThread: nextThread];
     }
     
@@ -918,7 +918,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSArray* uriStrings = [self selectedThreadURIs];
     if ([uriStrings count]) {
         NSString* uri = [uriStrings objectAtIndex: 0];
-        GIThread* thread = [NSManagedObjectContext objectWithURIString: uri];
+        GIThread* thread = [OPPersistentObjectContext objectWithURIString: uri];
         NSString* subject = [thread valueForKey: @"subject"];
         if (subject) {
             // query database
@@ -961,7 +961,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     while (uriString = [enumerator nextObject]) 
     {
-        GIThread *thread = [NSManagedObjectContext objectWithURIString:uriString];
+        GIThread *thread = [OPPersistentObjectContext objectWithURIString:uriString];
         NSAssert([thread isKindOfClass:[GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
@@ -1012,7 +1012,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 //#warning Is this clever? Maybe!
 /*    if ([self group])
     {
-        [[NSManagedObjectContext threadContext] refreshObject:[self group] mergeChanges:NO];
+        [[OPPersistentObjectContext threadContext] refreshObject:[self group] mergeChanges:NO];
     }
     */
     [threadsView reloadData];
@@ -1062,7 +1062,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         if (itemURI)
         {
-            id item = [NSManagedObjectContext objectWithURIString:itemURI];
+            id item = [OPPersistentObjectContext objectWithURIString:itemURI];
             if (item)
             {
                 GIMessage *message = nil;
@@ -1144,7 +1144,7 @@ static BOOL isThreadItem(id item)
         if ((! [self isStandaloneBoxesWindow])&& ([selectedIndexes count] == 1))
         {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[GIMessage class]]) || ([[NSManagedObjectContext objectWithURIString: item] containsSingleMessage]))
+            if (([item isKindOfClass:[GIMessage class]]) || ([[OPPersistentObjectContext objectWithURIString: item] containsSingleMessage]))
             {
                 return YES;
             }
@@ -1231,9 +1231,8 @@ static BOOL isThreadItem(id item)
     {
         id item = [threadsView itemAtRow:[threadsView selectedRow]];
         
-        if ([item isKindOfClass:[NSManagedObject class]])
-        {
-            item = [[[item objectID] URIRepresentation] absoluteString];
+        if ([item isKindOfClass: [OPPersistentObject class]]) {
+            item = [[item objectURL] absoluteString];
         }
         
         [self setValue:item forGroupProperty:@"LastSelectedMessageItem"];
@@ -1261,7 +1260,7 @@ static BOOL isThreadItem(id item)
         } 
         else 
         {
-            GIThread *thread = [NSManagedObjectContext objectWithURIString: item];
+            GIThread *thread = [OPPersistentObjectContext objectWithURIString: item];
             
             return [[thread messages] count];
         }
@@ -1314,7 +1313,7 @@ static BOOL isThreadItem(id item)
         } 
         else 
         {
-            GIThread *thread = [NSManagedObjectContext objectWithURIString: item];
+            GIThread *thread = [OPPersistentObjectContext objectWithURIString: item];
             
             return [[thread messagesByTree] objectAtIndex:index];
         }
@@ -1484,7 +1483,7 @@ static NSAttributedString* spacer2()
         {
             if ([item isKindOfClass:[NSString class]])
             {
-                item = [NSManagedObjectContext objectWithURIString: item];
+                item = [OPPersistentObjectContext objectWithURIString: item];
             }
 
             BOOL isRead = ([item isKindOfClass:[GIThread class]])? ![(GIThread *)item hasUnreadMessages] :[(GIMessage *)item hasFlags:OPSeenStatus];
@@ -1509,7 +1508,7 @@ static NSAttributedString* spacer2()
             if (level == 0) 
             {
 		// it's a thread:		
-                GIThread *thread = [NSManagedObjectContext objectWithURIString: item];
+                GIThread *thread = [OPPersistentObjectContext objectWithURIString: item];
                 
                 if ([thread containsSingleMessage]) 
                 {
@@ -2036,7 +2035,7 @@ NSMutableArray* border = nil;
     
     while (threadURI = [enumerator nextObject]) 
     {
-        GIThread *thread = [NSManagedObjectContext objectWithURIString:threadURI];
+        GIThread *thread = [OPPersistentObjectContext objectWithURIString:threadURI];
         NSAssert([thread isKindOfClass:[GIThread class]], @"should be a thread");
         
         // remove thread from source group:
@@ -2075,7 +2074,7 @@ NSMutableArray* border = nil;
         if ([threadURLs count])
         {
             GIMessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
-            GIMessageGroup *destinationGroup = [NSManagedObjectContext objectWithURIString:item];
+            GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURIString:item];
             
             [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
             
@@ -2100,7 +2099,7 @@ NSMutableArray* border = nil;
         
         while (threadURL = [enumerator nextObject])
         {
-            GIThread *thread = [NSManagedObjectContext objectWithURIString:threadURL];
+            GIThread *thread = [OPPersistentObjectContext objectWithURIString:threadURL];
             NSAssert([thread isKindOfClass:[GIThread class]], @"should be a thread");
             
             // remove thread from source group:

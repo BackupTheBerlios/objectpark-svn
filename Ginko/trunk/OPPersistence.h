@@ -1,5 +1,5 @@
 //
-//  OPPersistentObject.h
+//  OPPersistence.h
 //
 //  Created by Dirk Theisen on 22.07.05.
 //  Copyright 2005 Dirk Theisen <d.theisen@objectpark.org>. All rights reserved.
