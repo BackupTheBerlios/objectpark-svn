@@ -223,20 +223,14 @@ NSString *MboxImportJobName = @"mbox import";
 
                     [persistentMessage flushInternetMessageCache]; // free some memory
                     
-                    if ((++mboxDataCount % 100) == 0) 
-                    {
-                        if (messagesWereAdded) 
-                        {
+                    if ((++mboxDataCount % 100) == 0) {
+                        if (messagesWereAdded) {
                             if (NSDebugEnabled) NSLog(@"*** Committing changes (added %u messages)...", addedMessageCount);
                             
                             //[NSApp performSelectorOnMainThread: @selector(saveAction:) withObject: self waitUntilDone: YES];
                             NSError *error = nil;
-                            [context save:&error];
-                            if (error) 
-                            {
-                                NSLog(@"Error in Import Job. Committing of added messages failed (%@).", error);
-                            }
-                            
+                            [context saveChanges];
+
                             messagesWereAdded = NO;
                             //[context reset];
                         }
@@ -274,9 +268,8 @@ NSString *MboxImportJobName = @"mbox import";
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
         
         //[NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
-        NSError *error = nil;
-        [context save:&error];
-        NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
+        [context saveChanges];
+        //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
     } 
     @catch (NSException *localException) 
     {

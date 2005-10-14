@@ -153,6 +153,16 @@ static OPPersistentObjectContext* defaultContext = nil;
     return result;
 }
 
+- (OPPersistentObject*) objectWithURL: (NSURL*) url
+{
+	NSArray* pathComponents = [[url path] pathComponents];
+	char oidString[80];
+	[[pathComponents objectAtIndex: 2] getCString: oidString maxLength: 79];
+	OID oid = atoll(oidString);
+	NSString* className = [pathComponents objectAtIndex: 1];
+	return [self objectForOid: oid ofClass: NSClassFromString(className)];
+}
+
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object
 {
 	OID oid = [object currentOid];
@@ -505,12 +515,17 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[super dealloc];
 }
 
+
+
 @end
 
 
-NSURL* OPURLFromOidAndClass(OID oid, Class poClass)
+NSURL* OPURLFromOidAndClass(OID oid, Class poClass, NSString* databaseName)
 {
-	return [NSURL URLWithString: [NSString stringWithFormat: @"opo://%@/%@/%lld", @"GinkoVoyager", poClass, oid]];
+	NSString* uriString = [[NSString alloc] initWithFormat: @"opo://%@/%@/%lld", databaseName, poClass, oid];
+	id result = [NSURL URLWithString: uriString];
+	[uriString release];
+	return result;
 }
 
 

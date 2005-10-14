@@ -213,7 +213,7 @@
 
 - (NSURL*) objectURL
 {
-	return OPURLFromOidAndClass([self oid], isa);
+	return OPURLFromOidAndClass([self oid], isa, [[[self context] databaseConnection] name]);
 }
 
 - (void) setOid: (OID) theOid

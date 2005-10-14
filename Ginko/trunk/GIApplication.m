@@ -78,6 +78,7 @@
     // TODO
 }
 
+/*
 - (NSManagedObjectModel*) managedObjectModel
 {	
 	NSMutableSet *allBundles = [[NSMutableSet alloc] init];
@@ -89,6 +90,7 @@
     
     return managedObjectModel;
 }
+*/
 
 - (void) configureDatabaseAtPath: (NSString*) path
 {
@@ -141,7 +143,7 @@
 - (NSString *)databasePath
 {
     static NSString *path = nil;
-    if (!path) path = [[self applicationSupportPath] stringByAppendingPathComponent:@"MessageBase.sqlite"];
+    if (!path) path = [[self applicationSupportPath] stringByAppendingPathComponent: @"MessageBase.sqlite"];
     return path;
 }
 
@@ -155,14 +157,15 @@
     BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: dbPath]; // used to configure DB using SQL below (todo)
     
     
-    NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
+    //NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
     OPPersistentObjectContext* managedObjectContext = [[OPPersistentObjectContext alloc] init];
-    [managedObjectContext setPersistentStoreCoordinator: coordinator];
-    [coordinator release];
+    //[managedObjectContext setPersistentStoreCoordinator: coordinator];
+    //[coordinator release];
     /* Change this path/code to point to your App's data store. */
     //NSString *applicationSupportDir = [@"~/Library/Application Support/Ginko3" stringByStandardizingPath];
     //NSFileManager* fileManager = [NSFileManager defaultManager];	
     
+	/*
     if (![coordinator addPersistentStoreWithType: NSSQLiteStoreType // NSXMLStoreType
                                    configuration: nil
                                              URL: [NSURL fileURLWithPath: dbPath]
@@ -183,6 +186,7 @@
         [managedObjectContext release];
         managedObjectContext = [self newManagedObjectContext];
     }
+	 */
     
     //[managedObjectContext setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
 

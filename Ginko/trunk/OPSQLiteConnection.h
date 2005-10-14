@@ -43,6 +43,7 @@
     
     sqlite3* connection;
     NSString* dbPath;
+    NSString* dbName;
 
 	BOOL transactionInProgress;
 	
@@ -62,6 +63,7 @@
 - (BOOL) open;
 - (void) close;
 - (NSString*) path;
+- (NSString*) name; 
 
 - (void) beginTransaction;
 - (void) commitTransaction;

@@ -15,12 +15,12 @@
 
 @implementation TestGIThread
 
-- (void)tearDown
+- (void) tearDown
 {
-    [[OPPersistentObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] revertChanges];
 }
 
-- (GIMessage *)makeAMessage
+- (GIMessage*) makeAMessage
 {
     static int i = 1;
     NSString *messageId = [NSString stringWithFormat:@"<threadtest-message-%d@test.org>",i++];
@@ -36,7 +36,7 @@
     return message;
 }
 
-- (void)testSplit
+- (void) testSplit
 {
     GIThread *threadA = [[[GIThread alloc] init] autorelease];
     GIMessage *messageA = [self makeAMessage];
@@ -57,7 +57,7 @@
     STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
 }
 
-- (void)testMerge
+- (void) testMerge
 {
     GIThread *threadA = [[[GIThread alloc] init] autorelease];
     GIThread *threadB = [[[GIThread alloc] init] autorelease];
@@ -88,11 +88,11 @@
     }
 }
 
-- (void)disabledtestGroupAdding
+- (void) disabledtestGroupAdding
 {
-    GIThread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"GIThread" inManagedObjectContext:[NSManagedObjectContext threadContext]];
+    GIThread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"GIThread" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
     GIMessage *messageA = [self makeAMessage];
-    GIMessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"GIMessageGroup" inManagedObjectContext:[NSManagedObjectContext threadContext]];
+    GIMessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"GIMessageGroup" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
     
     [threadA addToMessages: messageA];
     [threadA addToGroups: group];

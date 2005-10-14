@@ -266,6 +266,7 @@
 {
     [self close];
     [dbPath release];
+	[dbName release];
     [super dealloc];
 }
 
@@ -296,6 +297,15 @@
 {
     return dbPath;
 }
+
+- (NSString*) name
+{
+	if (!dbName) {
+		dbName = [[[dbPath lastPathComponent] stringByDeletingPathExtension] retain];
+	}
+	return dbName;
+}
+
 
 - (void) performCommand: (NSString*) sql
 /*" A command is a SQL statement not returning rows. "*/

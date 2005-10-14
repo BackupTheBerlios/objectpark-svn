@@ -62,7 +62,7 @@ NSMutableArray* tempMessageArray;
     NSLog(@"-[TestGIFulltextIndexCenter tearDown]");
     [tempMessage release];
     [tempMessageArray release];
-    [[OPPersistentObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] revertChanges];
     //[tempIndexCenter release];
 }
 

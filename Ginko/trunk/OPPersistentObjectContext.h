@@ -124,4 +124,4 @@
 
 @end
 
-extern NSURL* OPURLFromOidAndClass(OID oid, Class poClass);
+extern NSURL* OPURLFromOidAndClass(OID oid, Class poClass, NSString* databaseName);

@@ -1475,15 +1475,13 @@ static NSAttributedString* spacer2()
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-    BOOL inSelectionAndAppActive = ([self isInSelection:item] && [NSApp isActive] && [window isMainWindow]);
+    BOOL inSelectionAndAppActive = ([self isInSelection: item] && [NSApp isActive] && [window isMainWindow]);
     
-    if (outlineView == threadsView)// subjects list
-    {
-        if ([[tableColumn identifier] isEqualToString:@"date"])
-        {
-            if ([item isKindOfClass:[NSString class]])
-            {
-                item = [OPPersistentObjectContext objectWithURIString: item];
+    if (outlineView == threadsView) {
+		// subjects list
+        if ([[tableColumn identifier] isEqualToString: @"date"]) {
+            if ([item isKindOfClass:[NSString class]]) {
+                item = [OPPersistentObjectContext objectWithURL: item];
             }
 
             BOOL isRead = ([item isKindOfClass:[GIThread class]])? ![(GIThread *)item hasUnreadMessages] :[(GIMessage *)item hasFlags:OPSeenStatus];

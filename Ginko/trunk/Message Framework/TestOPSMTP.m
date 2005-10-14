@@ -15,16 +15,16 @@
 
 @implementation TestOPSMTP
 
-- (void)setUp
+- (void) setUp
 {
 }
 
-- (void)tearDown
+- (void) tearDown
 {
-    [[OPPersistentObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] revertChanges];
 }
 
-- (GIMessage *)makeAMessage
+- (GIMessage*) makeAMessage
 {
     static int i = 1;
     NSString *messageId = [NSString stringWithFormat:@"<smtptest-message-%d@test.org>",i++];
@@ -35,12 +35,12 @@
     
     GIMessage *message = [GIMessage messageWithTransferData:transferData];
     STAssertNotNil(message, @"nee %@", messageId);
-    STAssertTrue([[message messageId] isEqual:messageId], @"nee");
+    STAssertTrue([[message messageId] isEqual: messageId], @"nee");
     
     return message;
 }
 
-- (void)testSMTPConnect
+- (void) testSMTPConnect
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     OPSMTP *SMTP;
@@ -56,26 +56,26 @@
     NSAssert(host != nil, @"host error");
     NSLog(@"host = %@", host);
     
-    smtpStream = [OPStream streamConnectedToHost:host port:25 sendTimeout:30.0 receiveTimeout:30.0];
+    smtpStream = [OPStream streamConnectedToHost: host port: 25 sendTimeout: 30.0 receiveTimeout: 30.0];
     NSAssert(smtpStream != nil, @"stream error");
     NSLog(@"smtpStream = %@", smtpStream);
 
     NSAssert(SMTP != nil, @"SMTP error");
     NSLog(@"SMTP = %@", SMTP);
   
-    [SMTP acceptMessage:[[self makeAMessage] internetMessage]];
+    [SMTP acceptMessage: [[self makeAMessage] internetMessage]];
     
     [SMTP release];
     [smtpStream close];
     [pool release];
 }
 
-- (NSString *)usernameForSMTP:(OPSMTP *)aSMTP
+- (NSString*) usernameForSMTP:(OPSMTP*) aSMTP
 {
     return @"axel@xn--heinz-knig-kcb.de";
 }
 
-- (NSString *)passwordForSMTP:(OPSMTP *)aSMTP
+- (NSString*) passwordForSMTP: (OPSMTP*) aSMTP
 {
     return @"axelTest";
 }

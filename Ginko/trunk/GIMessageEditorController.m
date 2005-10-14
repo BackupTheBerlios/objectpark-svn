@@ -22,7 +22,7 @@
 #import "OPURLFieldCoder.h"
 #import "EDTextFieldCoder.h"
 #import "EDObjectPair.h"
-#import "NSManagedObjectContext+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
 #import "GIAddressFormatter.h"
 
@@ -64,7 +64,7 @@
 {
     if (self = [self init]) 
     {        
-        [aMessage addFlags:OPSendingBlockedStatus];
+        [aMessage addFlags: OPSendingBlockedStatus];
         
         // get message's profile:
         NSError *error = nil;
