@@ -57,7 +57,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
         [NSBundle loadNibNamed:@"Group" owner:self];
         
         if (! aGroup) {
-            aGroup = [[GIMessageGroup allObjects] firstObject];
+            aGroup = [[GIMessageGroup allObjectsEnumerator] nextObject];
         }
         
         [self setGroup: aGroup];

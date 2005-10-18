@@ -78,7 +78,8 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     }
     
     // creating new group and setting name:
-    result = [[[self alloc] initWithManagedObjectContext: [OPPersistentObjectContext threadContext]] autorelease];
+    result = [[[self alloc] init] autorelease];
+	[result insertIntoContext: [OPPersistentObjectContext threadContext]];
     [result setValue: aName forKey: @"name"];
 
     // placing new group in hierarchy:
@@ -342,28 +343,21 @@ static NSMutableArray *root = nil;
     
     count = [hierarchy count];
     
-    for(i = 1; i < count; i++)
-    {
+    for(i = 1; i < count; i++) {
         id object;
         
         object = [hierarchy objectAtIndex:i];
         
-        if ([object isKindOfClass:[NSString class]])
-        {
-            if (! [groupUrlsToCheck containsObject:object])
-            {
+        if ([object isKindOfClass:[NSString class]]) {
+            if (! [groupUrlsToCheck containsObject:object]) {
                 // nonexistent group -> remove
                 [hierarchy removeObjectAtIndex:i];
                 i--;
                 count--;
-            }
-            else
-            {
+            } else {
                 [groupUrlsToCheck removeObject:object];
             }
-        }
-        else
-        {
+        } else {
             [self checkHierarchy:object withGroups:groupUrlsToCheck];
         }
     }
@@ -373,7 +367,7 @@ static NSMutableArray *root = nil;
 /*" Checks if all groups are in the hierarchy and that the hierarchy has no nonexistent groups in it. "*/
 {    
     NSMutableArray* groupUrlsToCheck = [NSMutableArray array];
-    NSEnumerator* enumerator = [[self allObjects] objectEnumerator];
+    NSEnumerator* enumerator = [self allObjectsEnumerator];
 	GIMessageGroup *group;
 
     // building array of Object ID URLs:

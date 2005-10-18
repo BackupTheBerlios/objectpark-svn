@@ -9,7 +9,7 @@
 #import "GIProfile.h"
 #import <Foundation/NSDebug.h>
 
-#import "G3Account.h"
+#import "GIAccount.h"
 #import "GIMessage.h"
 #import "NSString+MessageUtils.h"
 #import "NSArray+Extensions.h"
@@ -51,7 +51,7 @@
 #warning Todo: Cache +[GIProfile allObjects] for better performance of e.g. -isMyEmailAddress!
     @synchronized(self)
     {
-        result = [super allObjects];
+        result = [[self allObjectsEnumerator] allObjects];
         
         if (![result count]) {
             GIProfile* profile = [[[self alloc] init] autorelease];
@@ -62,7 +62,7 @@
 			
 			[NSApp saveChanges];
 			
-            result = [self allObjects];
+			result = [[super allObjectsEnumerator] allObjects];
         }
         
         result = [[result copy] autorelease];

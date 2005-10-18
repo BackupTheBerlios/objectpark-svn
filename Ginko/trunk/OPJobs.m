@@ -729,7 +729,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
 
 @end
 
-#import "G3Account.h"
+#import "GIAccount.h"
 #import "GIPasswordController.h"
 
 @implementation OPJobs (GinkoExtensions)
@@ -740,7 +740,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [[[GIPasswordController alloc] initWithParamenters:someParameters] autorelease];
 }
 
-- (NSString *)runPasswordPanelWithAccount:(G3Account *)anAccount forIncomingPassword:(BOOL)isIncoming
+- (NSString*) runPasswordPanelWithAccount: (GIAccount*) anAccount forIncomingPassword: (BOOL) isIncoming
 {
     NSParameterAssert(anAccount != nil);
 

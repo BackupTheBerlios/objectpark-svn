@@ -22,7 +22,7 @@
 #import "GIActivityPanelController.h"
 #import "GIPOPJob.h"
 #import "GISMTPJob.h"
-#import "G3Account.h"
+#import "GIAccount.h"
 #import <Foundation/NSDebug.h>
 #import "GIMessage.h"
 
@@ -441,7 +441,7 @@
 
 - (IBAction)getNewMailInAllAccounts:(id)sender
 {
-    NSEnumerator *enumerator = [[G3Account allObjects] objectEnumerator];
+    NSEnumerator *enumerator = [GIAccount allObjectsEnumerator];
     G3Account *account;
     
     while (account = [enumerator nextObject])

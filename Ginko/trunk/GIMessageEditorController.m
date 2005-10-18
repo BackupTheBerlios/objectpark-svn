@@ -12,7 +12,7 @@
 #import "NSString+MessageUtils.h"
 #import "GIApplication.h"
 #import "GIProfile.h"
-#import "G3Account.h"
+#import "GIAccount.h"
 #import "NSToolbar+OPExtensions.h"
 #import "GITextView.h"
 #import "OPInternetMessage.h"

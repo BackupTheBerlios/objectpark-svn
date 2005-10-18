@@ -8,7 +8,7 @@
 
 #import "ProfilePrefs.h"
 #import "GIProfile.h"
-#import "G3Account.h"
+#import "GIAccount.h"
 
 @implementation ProfilePrefs
 
@@ -18,29 +18,22 @@
     [self didChangeValueForKey:@"accounts"];
 }
 
-- (NSArray *)profiles
+- (NSArray*) profiles
 {
     return [GIProfile allObjects];
 }
 
-- (void)setProfiles:(NSArray *)profiles;
+- (void) setProfiles: (NSArray*) profiles;
 {
-    [GIProfile setProfiles:profiles];
+    [GIProfile setProfiles: profiles];
 }
 
-- (NSArray *)accounts
+- (NSArray*) accounts
 {
-/*    G3Account *noneAccount;
-    
-    noneAccount = [[[G3Account alloc] init] autorelease];
-    [noneAccount setName:NSLocalizedString(@"No Account", @"No Account selected in profile")];
-    
-    return [[G3Account accounts] arrayByAddingObject:noneAccount];
-    */
-    return [G3Account accounts];
+    return [GIAccount allObjects];
 }
 
-- (IBAction)setSendAccount:(id)sender
+- (IBAction) setSendAccount: (id) sender
 {
     GIProfile *selectedProfile = [[profileTableView dataSource] itemAtRow:[profileTableView selectedRow]];
     

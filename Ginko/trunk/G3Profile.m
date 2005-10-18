@@ -7,7 +7,7 @@
 //
 
 #import "G3Profile.h"
-#import "G3Account.h"
+#import "GIAccount.h"
 #import "GIMessage.h"
 #import "NSString+MessageUtils.h"
 #import "NSArray+Extensions.h"

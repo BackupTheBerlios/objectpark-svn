@@ -7,18 +7,14 @@
 //
 
 #import "AccountPrefs.h"
-#import "G3Account.h"
+#import "GIAccount.h"
 
 @implementation AccountPrefs
 
-- (NSArray *)accounts
+- (NSArray*) accounts
 {
-    return [G3Account accounts];
+    return [GIAccount allObjects];
 }
 
-- (void)setAccounts:(NSArray *)someAccounts
-{
-    [G3Account setAccounts:someAccounts];
-}
 
 @end

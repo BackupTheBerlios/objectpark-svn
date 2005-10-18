@@ -155,6 +155,8 @@
 		77F3181E077B327A0097096B /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F3181C077B327A0097096B /* GITextView.m */; };
 		8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D167D6009057508000F4F45 /* GIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D167D5E09057508000F4F45 /* GIAccount.h */; };
+		8D167D6109057508000F4F45 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D167D5F09057508000F4F45 /* GIAccount.m */; };
 		8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D17B5C70895BBC30057A1C6 /* GIProfile.h */; };
 		8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17B5C80895BBC30057A1C6 /* GIProfile.m */; };
 		8D2147AF085114B3004C44B9 /* GISearchController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D2147AD085114B2004C44B9 /* GISearchController.h */; };
@@ -533,6 +535,8 @@
 		77F3181C077B327A0097096B /* GITextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GITextView.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* GinkoVoyager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GinkoVoyager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D167D5E09057508000F4F45 /* GIAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccount.h; sourceTree = "<group>"; };
+		8D167D5F09057508000F4F45 /* GIAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIAccount.m; sourceTree = "<group>"; };
 		8D17B5C70895BBC30057A1C6 /* GIProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIProfile.h; sourceTree = "<group>"; };
 		8D17B5C80895BBC30057A1C6 /* GIProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIProfile.m; sourceTree = "<group>"; };
 		8D2147AD085114B2004C44B9 /* GISearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISearchController.h; sourceTree = "<group>"; };
@@ -750,6 +754,8 @@
 				8D9029B7077A54E1005365EA /* DebugConfig.h */,
 				77AD77B707CF1A8300A15B83 /* G3Account.h */,
 				77AD77B807CF1A8300A15B83 /* G3Account.m */,
+				8D167D5E09057508000F4F45 /* GIAccount.h */,
+				8D167D5F09057508000F4F45 /* GIAccount.m */,
 				777625A50760E0EC0066BE60 /* G3GroupController.h */,
 				777625A60760E0EC0066BE60 /* G3GroupController.m */,
 				8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */,
@@ -1276,6 +1282,7 @@
 				8D3EF46308B543C700EC41EC /* OPPersistence.h in Headers */,
 				8D3EF46408B543C900EC41EC /* OPPersistenceConstants.h in Headers */,
 				8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */,
+				8D167D6009057508000F4F45 /* GIAccount.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1637,6 +1644,7 @@
 				8D3EF45F08B543C300EC41EC /* OPPersistentObjectContext.m in Sources */,
 				8D3EF46108B543C400EC41EC /* OPPersistentObject.m in Sources */,
 				8D62DC2208C668BC0059ABB0 /* OPFaultingArray.m in Sources */,
+				8D167D6109057508000F4F45 /* GIAccount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

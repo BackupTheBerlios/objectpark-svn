@@ -10,7 +10,7 @@
 #import "OPManagedObject.h"
 
 @class OPInternetMessage;
-@class G3Account;
+@class GIAccount;
 @class G3Message;
 
 @interface G3Profile : NSManagedObject 
