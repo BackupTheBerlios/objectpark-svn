@@ -39,7 +39,7 @@ static volatile NSThread* mainThread = nil;
 
 + (OPPersistentObjectContext*) threadContext
 {
-    NSManagedObjectContext *result;
+    OPPersistentObjectContext *result;
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
 	
     if (mainThread!=[NSThread currentThread]) NSLog(@"Caution: Editing context called from outside main thread!");
@@ -50,7 +50,7 @@ static volatile NSThread* mainThread = nil;
 		return [self mainThreadContext]; // hack?
     }
     
-    NSAssert (result != nil, @"+[NSManagedObject (Extensions) threadContext]: context returned should never be nil");
+    NSAssert (result != nil, @"+[OPManagedObject (Extensions) threadContext]: context returned should never be nil");
     return result;
 }
 
@@ -75,11 +75,19 @@ static volatile NSThread* mainThread = nil;
     return result;
 }
 
-
-
-+ (OPPersistentObject*) objectWithURL: (NSURL*) url
+- (OPPersistentObject *)objectWithURL:(NSURL *)url
 {
-	return [[self threadContext] objectWithURL: url];
+    return [[self class] objectWithURL:url];
+}
+
++ (OPPersistentObject *)objectWithURL:(NSURL *)url
+{
+	return [[self threadContext] objectWithURL:url];
+}
+
++ (id)objectWithURIString:(NSString *)URIString
+{
+    return [self objectWithURL:[NSURL URLWithString:URIString]];
 }
 
 @end

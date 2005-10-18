@@ -109,7 +109,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     if ([anUrl length])
     {
         @try {
-            referencedGroup = [[OPPersistentObjectContext threadContext] objectWithURI:[NSURL URLWithString:anUrl]];
+            referencedGroup = [[OPPersistentObjectContext threadContext] objectWithURL:[NSURL URLWithString:anUrl]];
         }
         @catch (NSException *e) {
             NSLog(@"Could not find group for URI ''", anUrl);

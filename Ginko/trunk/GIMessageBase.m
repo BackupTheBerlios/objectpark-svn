@@ -181,7 +181,7 @@ NSString *MboxImportJobName = @"mbox import";
     // Get our own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
     OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];  
-    [context setMergePolicy: NSMergeByPropertyObjectTrumpMergePolicy];
+//    [context setMergePolicy: NSMergeByPropertyObjectTrumpMergePolicy];
     
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *mboxData;
@@ -190,7 +190,7 @@ NSString *MboxImportJobName = @"mbox import";
     unsigned mboxDataCount     = 0;
     unsigned addedMessageCount = 0;
     
-    [[context undoManager] disableUndoRegistration];
+//    [[context undoManager] disableUndoRegistration];
     
     [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
     

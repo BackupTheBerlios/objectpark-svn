@@ -90,6 +90,7 @@
 
 - (void) disabledtestGroupAdding
 {
+    /*
     GIThread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"GIThread" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
     GIMessage *messageA = [self makeAMessage];
     GIMessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"GIMessageGroup" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
@@ -99,6 +100,7 @@
     
     STAssertTrue([[threadA valueForKey: @"groups"] containsObject: group], @"should contain group.");
     STAssertTrue([[group valueForKey: @"threads"] containsObject: threadA], @"should contain thread.");
+     */
 }
 
 @end

@@ -15,7 +15,6 @@
 
 - (BOOL) primitiveBoolForKey: (NSString*) key;
 
-
 @end
 
 @interface OPPersistentObjectContext (OPExtensions)
@@ -26,5 +25,7 @@
 
 - (OPPersistentObject*) objectWithURL: (NSURL*) url;
 + (OPPersistentObject*) objectWithURL: (NSURL*) url;
+
++ (id)objectWithURIString:(NSString *)URIString;
 
 @end

@@ -66,6 +66,8 @@
     {        
         [aMessage addFlags: OPSendingBlockedStatus];
         
+#warning Reenable: getting of message's profile
+        /*
         // get message's profile:
         NSError *error = nil;
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
@@ -83,8 +85,14 @@
             NSAssert([result count] == 1, @"Should have exactly one profile");
             profile = [result lastObject];
         }
-                
+           
+         */
+        
+        // CAUTION just for now use default profile
+        profile = [GIProfile defaultProfile];
+
         profile = [profile retain];
+        
         oldMessage = [aMessage retain];
         referencedMessage = nil;
         

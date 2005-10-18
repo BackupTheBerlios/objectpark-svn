@@ -10,6 +10,7 @@
 #import "GIMessageGroup.h"
 #import "GIThread.h"
 #import "OPPersistentObject+Extensions.h"
+#import "OPPersistentObjectContext.h"
 
 @implementation TestGIMessageGroup
 
@@ -40,11 +41,11 @@
         
     NSEnumerator *enumerator = [result objectEnumerator];
     NSString *urlString;
-    NSManagedObjectContext *context = [NSManagedObjectContext threadContext];
+    OPPersistentObjectContext *context = [OPPersistentObjectContext threadContext];
     
     while (urlString = [enumerator nextObject])
     {
-        STAssertTrue([context objectWithURI:[NSURL URLWithString:urlString]] != nil, @"Url %@ failed.", urlString);
+        STAssertTrue([context objectWithURL:[NSURL URLWithString:urlString]] != nil, @"Url %@ failed.", urlString);
     }
     
     //NSLog(@"First Thread's name '%@'", [(GIThread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
