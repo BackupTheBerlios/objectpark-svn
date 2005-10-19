@@ -1489,8 +1489,8 @@ static NSAttributedString* spacer2()
     } else {
 		// boxes list
         if ([[tableColumn identifier] isEqualToString: @"box"]) {
-            if ([item isKindOfClass:[NSMutableArray class]]) {
-                return [[item objectAtIndex:0] valueForKey: @"name"];
+            if ([item isKindOfClass: [NSMutableArray class]]) {
+                return [[item objectAtIndex: 0] valueForKey: @"name"];
             } else if (item) {
 				GIMessageGroup* g = [OPPersistentObjectContext objectWithURLString: item];
                 return [g valueForKey: @"name"];

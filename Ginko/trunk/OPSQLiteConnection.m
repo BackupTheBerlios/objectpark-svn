@@ -273,9 +273,10 @@
 - (BOOL) open
 {
     NSLog(@"Opening database at '%@'.", dbPath);
-	updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-	insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-	fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	// Comment next three lines to disable statement caching:
+	//updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	//insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	//fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	
     return SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
 }
@@ -310,7 +311,6 @@
 - (void) performCommand: (NSString*) sql
 /*" A command is a SQL statement not returning rows. "*/
 {
-	// Simplistic implementation. Should use a statement class/object and cache that.
 	sqlite3_stmt* statement = NULL;
 	sqlite3_prepare(connection, [sql UTF8String], -1, &statement, NULL);
 	int result = sqlite3_step(statement);
@@ -321,18 +321,20 @@
 
 - (void) beginTransaction
 {
+	NSAssert(transactionInProgress==NO, @"Transaction already in progress.");
 	if (!transactionInProgress) {
-		[self performCommand: @"BEGIN TRANSACTION"];   
 		NSLog(@"Beginning db transaction.");
+		[self performCommand: @"BEGIN TRANSACTION"];   
 		transactionInProgress = YES;
 	}
 }
 
 - (void) commitTransaction
 {
+	// Simplistic implementation. Should use a statement class/object and cache that.
 	NSAssert(transactionInProgress, @"There seems to be no transaction to commit.");
-    [self performCommand: @"COMMIT TRANSACTION"];  
 	NSLog(@"Committing db transaction.");
+    [self performCommand: @"COMMIT TRANSACTION"];  
 	transactionInProgress = NO;
 }
 
@@ -580,6 +582,8 @@
 {
 	if (self = [super init]) {
 		
+		NSLog(@"Preparing new sql statement %@ '%@'", self, sql);
+
 		int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
 		
 		if (res!=SQLITE_OK || !statement) {
@@ -621,6 +625,8 @@
 
 - (void) dealloc
 {
+	NSLog(@"Deallocing sql statement %@.", self);
+
 	sqlite3_finalize(statement);
 	[connection release];
 	[super dealloc];
