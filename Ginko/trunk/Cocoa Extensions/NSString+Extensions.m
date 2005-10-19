@@ -237,17 +237,17 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns YES if the receiver is equal to string "yes", comparing case insensitive. "*/
 
-- (BOOL)boolValue
+- (BOOL) boolValue
 {
     if([self intValue] > 0)
         return YES;
-    return [self caseInsensitiveCompare:@"yes"] == NSOrderedSame;
+    return [self caseInsensitiveCompare: @"yes"] == NSOrderedSame;
 }
 
 
 /*" Assumes the string contains an integer written in hexadecimal notation and returns its value. Uses #scanHexInt in #NSScanner. "*/
 
-- (unsigned int)intValueForHex
+- (unsigned int) intValueForHex
 {
     unsigned int	value;
 

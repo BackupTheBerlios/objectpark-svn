@@ -43,6 +43,7 @@
 
 @interface OPPersistentObjectContext : NSObject {
     
+	@private
     NSHashTable* registeredObjects;
     NSMutableSet* changedObjects;
     //NSMutableSet* insertedObjects;
@@ -56,6 +57,7 @@
 
 - (id) objectRegisteredForOid: (OID) oid ofClass: (Class) poClass;
 - (id) objectForOid: (OID) oid ofClass: (Class) poClass;
+- (OPPersistentObject*) objectWithURLString: (NSString*) urlString;
 
 - (void) registerObject: (OPPersistentObject*) object;
 - (void) unregisterObject: (OPPersistentObject*) object;

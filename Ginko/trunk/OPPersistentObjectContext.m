@@ -153,14 +153,16 @@ static OPPersistentObjectContext* defaultContext = nil;
     return result;
 }
 
-- (OPPersistentObject*) objectWithURL: (NSURL*) url
+- (OPPersistentObject*) objectWithURLString: (NSString*) urlString
 {
-	NSArray* pathComponents = [[url path] pathComponents];
-	char oidString[80];
-	[[pathComponents objectAtIndex: 2] getCString: oidString maxLength: 79];
-	OID oid = atoll(oidString);
-	NSString* className = [pathComponents objectAtIndex: 1];
-	return [self objectForOid: oid ofClass: NSClassFromString(className)];
+	NSArray* pathComponents = [urlString pathComponents];
+	NSParameterAssert([pathComponents count]>=5);
+	NSParameterAssert([[pathComponents objectAtIndex: 0] isEqualToString: @"opo"]);
+	NSString* dbName = [pathComponents objectAtIndex: 2];
+	Class pClass = NSClassFromString([pathComponents objectAtIndex: 3]);
+	NSString* oidString = [pathComponents objectAtIndex: 4];
+	OID oid = [oidString intValue];
+	return [self objectForOid:  oid ofClass: pClass];
 }
 
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object
@@ -392,11 +394,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     [super dealloc];
 }
 
-- (OPSQLiteConnection*) dbConnection
-{
-	return db;
-}
-
 - (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
 													 where: (NSString*) clause
 {
@@ -518,6 +515,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 
 @end
+
+
 
 
 NSURL* OPURLFromOidAndClass(OID oid, Class poClass, NSString* databaseName)
