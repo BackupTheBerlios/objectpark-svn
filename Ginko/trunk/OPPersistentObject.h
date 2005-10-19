@@ -76,7 +76,7 @@
 - (void) willDelete;
 
 - (OID) oid;
-- (NSURL*) objectURL;
+- (NSString*) objectURLString;
 
 - (id) primitiveValueForKey: (NSString*) key;
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key;

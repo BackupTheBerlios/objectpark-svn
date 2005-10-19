@@ -44,7 +44,7 @@
 	@"}";
 }
 
-+ (int)defaultPortForIncomingServerType:(int)serverType
++ (int) defaultPortForIncomingServerType: (int) serverType
 {
     switch (serverType) 
     {
@@ -56,7 +56,7 @@
     }
 }
 
-+ (int)defaultPortForOutgoingServerType:(int)serverType
++ (int)defaultPortForOutgoingServerType: (int) serverType
 {
     switch (serverType) 
     {
@@ -81,88 +81,88 @@
     [super dealloc];
 }
 
-- (NSString *)name 
+- (NSString*) name 
 {
-    NSString *tmpValue;
+    NSString* tmpValue;
     
-    [self willAccessValueForKey:@"name"];
-    tmpValue = [self primitiveValueForKey:@"name"];
-    [self didAccessValueForKey:@"name"];
+    [self willAccessValueForKey: @"name"];
+    tmpValue = [self primitiveValueForKey: @"name"];
+    [self didAccessValueForKey: @"name"];
     
     return tmpValue;
 }
 
-- (void)setName:(NSString *)value 
+- (void) setName: (NSString*) value 
 {
-    [self willChangeValueForKey:@"name"];
-    [self setPrimitiveValue: value forKey:@"name"];
-    [self didChangeValueForKey:@"name"];
+    [self willChangeValueForKey: @"name"];
+    [self setPrimitiveValue: value forKey: @"name"];
+    [self didChangeValueForKey: @"name"];
 }
 
-- (BOOL)isEnabled 
+- (BOOL) isEnabled 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"isEnabled"];
-    tmpValue = [self primitiveValueForKey:@"isEnabled"];
-    [self didAccessValueForKey:@"isEnabled"];
+    [self willAccessValueForKey: @"isEnabled"];
+    tmpValue = [self primitiveValueForKey: @"isEnabled"];
+    [self didAccessValueForKey: @"isEnabled"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void)setIsEnabled:(BOOL)value 
+- (void) setIsEnabled: (BOOL) value 
 {
-    [self willChangeValueForKey:@"isEnabled"];
-    [self setPrimitiveValue:[NSNumber numberWithBool:value] forKey:@"isEnabled"];
-    [self didChangeValueForKey:@"isEnabled"];
+    [self willChangeValueForKey: @"isEnabled"];
+    [self setPrimitiveValue:[NSNumber numberWithBool:value] forKey: @"isEnabled"];
+    [self didChangeValueForKey: @"isEnabled"];
 }
 
-- (int)incomingServerType 
+- (int) incomingServerType 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"incomingServerType"];
-    tmpValue = [self primitiveValueForKey:@"incomingServerType"];
-    [self didAccessValueForKey:@"incomingServerType"];
+    [self willAccessValueForKey: @"incomingServerType"];
+    tmpValue = [self primitiveValueForKey: @"incomingServerType"];
+    [self didAccessValueForKey: @"incomingServerType"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
-- (void)setIncomingServerType:(int)value 
+- (void) setIncomingServerType: (int) value 
 {
-    [self willChangeValueForKey:@"incomingServerType"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"incomingServerType"];
-    [self didChangeValueForKey:@"incomingServerType"];
+    [self willChangeValueForKey: @"incomingServerType"];
+    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey: @"incomingServerType"];
+    [self didChangeValueForKey: @"incomingServerType"];
 
     // A change of the server type also has effect on the port. The Account is 'touched' to have bindings recognize the change.
     [self setIncomingServerPort:0];
-    [self willChangeValueForKey:@"incomingServerDefaultPort"];
-    [self didChangeValueForKey:@"incomingServerDefaultPort"];
-    [self willChangeValueForKey:@"POPAccount"];
-    [self didChangeValueForKey:@"POPAccount"];	
+    [self willChangeValueForKey: @"incomingServerDefaultPort"];
+    [self didChangeValueForKey: @"incomingServerDefaultPort"];
+    [self willChangeValueForKey: @"POPAccount"];
+    [self didChangeValueForKey: @"POPAccount"];	
 }
 
-- (NSString *)incomingServerName 
+- (NSString*) incomingServerName 
 {
-    NSString *tmpValue;
+    NSString* tmpValue;
     
-    [self willAccessValueForKey:@"incomingServerName"];
-    tmpValue = [self primitiveValueForKey:@"incomingServerName"];
-    [self didAccessValueForKey:@"incomingServerName"];
+    [self willAccessValueForKey: @"incomingServerName"];
+    tmpValue = [self primitiveValueForKey: @"incomingServerName"];
+    [self didAccessValueForKey: @"incomingServerName"];
     
     return tmpValue;
 }
 
-- (void)setIncomingServerName:(NSString *)value 
+- (void) setIncomingServerName: (NSString*) value 
 {
-    [self willChangeValueForKey:@"incomingServerName"];
-    [self setPrimitiveValue:value forKey:@"incomingServerName"];
-    [self didChangeValueForKey:@"incomingServerName"];
+    [self willChangeValueForKey: @"incomingServerName"];
+    [self setPrimitiveValue:value forKey: @"incomingServerName"];
+    [self didChangeValueForKey: @"incomingServerName"];
 }
 
-- (int)incomingServerPort 
+- (int) incomingServerPort 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
     [self willAccessValueForKey: @"incomingServerPort"];
     tmpValue = [self primitiveValueForKey: @"incomingServerPort"];
@@ -172,56 +172,56 @@
     return result ? result : [[self class] defaultPortForIncomingServerType:[self incomingServerType]];
 }
 
-- (void)setIncomingServerPort:(int)value 
+- (void) setIncomingServerPort: (int) value 
 {
     [self willChangeValueForKey: @"incomingServerPort"];
     [self setPrimitiveValue: [NSNumber numberWithInt: value] forKey: @"incomingServerPort"];
     [self didChangeValueForKey: @"incomingServerPort"];
 }
 
-- (int)incomingServerDefaultPort
+- (int) incomingServerDefaultPort
 {
     return [[self class] defaultPortForIncomingServerType:[self incomingServerType]];
 }
 
-- (int)incomingAuthenticationMethod 
+- (int) incomingAuthenticationMethod 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"incomingAuthenticationMethod"];
-    tmpValue = [self primitiveValueForKey:@"incomingAuthenticationMethod"];
-    [self didAccessValueForKey:@"incomingAuthenticationMethod"];
+    [self willAccessValueForKey: @"incomingAuthenticationMethod"];
+    tmpValue = [self primitiveValueForKey: @"incomingAuthenticationMethod"];
+    [self didAccessValueForKey: @"incomingAuthenticationMethod"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
-- (void)setIncomingAuthenticationMethod:(int)value 
+- (void) setIncomingAuthenticationMethod: (int) value 
 {
-    [self willChangeValueForKey:@"incomingAuthenticationMethod"];
+    [self willChangeValueForKey: @"incomingAuthenticationMethod"];
     [self setPrimitiveValue:[NSNumber numberWithInt: value]
-                     forKey:@"incomingAuthenticationMethod"];
-    [self didChangeValueForKey:@"incomingAuthenticationMethod"];
+                     forKey: @"incomingAuthenticationMethod"];
+    [self didChangeValueForKey: @"incomingAuthenticationMethod"];
 }
 
-- (NSString *)incomingUsername 
+- (NSString*) incomingUsername 
 {
-    NSString *tmpValue;
+    NSString* tmpValue;
     
-    [self willAccessValueForKey:@"incomingUsername"];
-    tmpValue = [self primitiveValueForKey:@"incomingUsername"];
-    [self didAccessValueForKey:@"incomingUsername"];
+    [self willAccessValueForKey: @"incomingUsername"];
+    tmpValue = [self primitiveValueForKey: @"incomingUsername"];
+    [self didAccessValueForKey: @"incomingUsername"];
     
     return tmpValue;
 }
 
-- (void)setIncomingUsername:(NSString *)value 
+- (void) setIncomingUsername: (NSString*) value 
 {
-    [self willChangeValueForKey:@"incomingUsername"];
-    [self setPrimitiveValue:value forKey:@"incomingUsername"];
-    [self didChangeValueForKey:@"incomingUsername"];
+    [self willChangeValueForKey: @"incomingUsername"];
+    [self setPrimitiveValue:value forKey: @"incomingUsername"];
+    [self didChangeValueForKey: @"incomingUsername"];
 }
 
-- (SecProtocolType)incomingSecProtocolType
+- (SecProtocolType) incomingSecProtocolType
 {
     switch ([self incomingServerType])
     {
@@ -238,14 +238,14 @@
     }    
 }
 
-- (NSString *)incomingPasswordItemRef:(SecKeychainItemRef *)itemRef
+- (NSString*) incomingPasswordItemRef: (SecKeychainItemRef*) itemRef
 /*" Accesses keychain to get password. "*/
 {
     const char *serverName = [[self incomingServerName] UTF8String];
     const char *accountName = [[self incomingUsername] UTF8String];
     UInt32 passwordLength;
     void *passwordData;
-    NSString *result = nil;
+    NSString* result = nil;
     
     OSStatus err = SecKeychainFindInternetPassword(NULL, //<#CFTypeRef keychainOrArray#>
                                                    strlen(serverName), //<#UInt32 serverNameLength#>
@@ -263,12 +263,9 @@
                                                    &passwordData, //<#void * * passwordData#>
                                                    itemRef //<#SecKeychainItemRef * itemRef#>
                                                    );
-    if (err != noErr)
-    {
+    if (err != noErr) {
         if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
-    }
-    else
-    {
+    } else {
         NSData *data = [NSData dataWithBytes:passwordData length:passwordLength];
         result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
         
@@ -277,8 +274,7 @@
                                          passwordData    //Release data buffer allocated 
                                          );
         
-        if (err != noErr)
-        {
+        if (err != noErr) {
             if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
         }
     }
@@ -286,14 +282,14 @@
     return result;
 }
 
-- (NSString *)incomingPassword
+- (NSString*) incomingPassword
 {
     SecKeychainItemRef itemRef;
-    NSString *result = [self incomingPasswordItemRef:&itemRef];
+    NSString* result = [self incomingPasswordItemRef:&itemRef];
     return result;
 }
 
-- (void)setIncomingPassword:(NSString *)aPassword
+- (void) setIncomingPassword: (NSString*) aPassword
 /*" Uses keychain to store password. "*/
 {
     const char *serverName = [[self incomingServerName] UTF8String];
@@ -310,9 +306,7 @@
                                                      strlen(password),  // length of password
                                                      password // pointer to password data
                                                      );
-    }
-    else
-    {
+    } else {
         err = SecKeychainAddInternetPassword (
                                               NULL, // SecKeychainRef keychain,
                                               strlen(serverName), // UInt32 serverNameLength,
@@ -335,7 +329,7 @@
     //if (itemRef) CFRelease(itemRef);
 }
 
-- (SecProtocolType)outgoingSecProtocolType
+- (SecProtocolType) outgoingSecProtocolType
 {
     switch ([self outgoingServerType])
     {
@@ -348,14 +342,14 @@
     }    
 }
 
-- (NSString *)outgoingPasswordItemRef:(SecKeychainItemRef *)itemRef
+- (NSString*) outgoingPasswordItemRef: (SecKeychainItemRef*) itemRef
     /*" Accesses keychain to get password. "*/
 {
     const char *serverName = [[self outgoingServerName] UTF8String];
     const char *accountName = [[self outgoingUsername] UTF8String];
     UInt32 passwordLength;
     void *passwordData;
-    NSString *result = nil;
+    NSString* result = nil;
     
     OSStatus err = SecKeychainFindInternetPassword(NULL, //<#CFTypeRef keychainOrArray#>
                                                    strlen(serverName), //<#UInt32 serverNameLength#>
@@ -373,12 +367,9 @@
                                                    &passwordData, //<#void * * passwordData#>
                                                    itemRef //<#SecKeychainItemRef * itemRef#>
                                                    );
-    if (err != noErr)
-    {
+    if (err != noErr) {
         if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
-    }
-    else
-    {
+    } else {
         NSData *data = [NSData dataWithBytes:passwordData length:passwordLength];
         result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
         
@@ -396,14 +387,14 @@
     return result;
 }
 
-- (NSString *)outgoingPassword
+- (NSString*) outgoingPassword
 {
     SecKeychainItemRef itemRef;
-    NSString *result = [self outgoingPasswordItemRef:&itemRef];
+    NSString* result = [self outgoingPasswordItemRef:&itemRef];
     return result;
 }
 
-- (void)setOutgoingPassword:(NSString *)aPassword
+- (void) setOutgoingPassword: (NSString*) aPassword
     /*" Uses keychain to store password. "*/
 {
     const char *serverName = [[self outgoingServerName] UTF8String];
@@ -420,9 +411,7 @@
                                                      strlen(password),  // length of password
                                                      password // pointer to password data
                                                      );
-    }
-    else
-    {
+    } else {
         err = SecKeychainAddInternetPassword (
                                               NULL, // SecKeychainRef keychain,
                                               strlen(serverName), // UInt32 serverNameLength,
@@ -445,213 +434,213 @@
     //if (itemRef) CFRelease(itemRef);
 }
 
-- (int)retrieveMessageInterval 
+- (int) retrieveMessageInterval 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"retrieveMessageInterval"];
-    tmpValue = [self primitiveValueForKey:@"retrieveMessageInterval"];
-    [self didAccessValueForKey:@"retrieveMessageInterval"];
+    [self willAccessValueForKey: @"retrieveMessageInterval"];
+    tmpValue = [self primitiveValueForKey: @"retrieveMessageInterval"];
+    [self didAccessValueForKey: @"retrieveMessageInterval"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
-- (void)setRetrieveMessageInterval:(int)value 
+- (void) setRetrieveMessageInterval: (int) value 
 {
-    [self willChangeValueForKey:@"retrieveMessageInterval"];
+    [self willChangeValueForKey: @"retrieveMessageInterval"];
     [self setPrimitiveValue:[NSNumber numberWithInt: value]
-                     forKey:@"retrieveMessageInterval"];
-    [self didChangeValueForKey:@"retrieveMessageInterval"];
+                     forKey: @"retrieveMessageInterval"];
+    [self didChangeValueForKey: @"retrieveMessageInterval"];
 }
 
-- (int)leaveOnServerDuration 
+- (int) leaveOnServerDuration 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"leaveOnServerDuration"];
-    tmpValue = [self primitiveValueForKey:@"leaveOnServerDuration"];
-    [self didAccessValueForKey:@"leaveOnServerDuration"];
-    
-    return (tmpValue != nil) ? [tmpValue intValue] : 0;
-}
-
-- (void)setLeaveOnServerDuration:(int)value 
-{
-    [self willChangeValueForKey:@"leaveOnServerDuration"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value]
-                     forKey:@"leaveOnServerDuration"];
-    [self didChangeValueForKey:@"leaveOnServerDuration"];
-}
-
-- (int)outgoingServerType 
-{
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"outgoingServerType"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerType"];
-    [self didAccessValueForKey:@"outgoingServerType"];
+    [self willAccessValueForKey: @"leaveOnServerDuration"];
+    tmpValue = [self primitiveValueForKey: @"leaveOnServerDuration"];
+    [self didAccessValueForKey: @"leaveOnServerDuration"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
-- (void)setOutgoingServerType:(int)value 
+- (void) setLeaveOnServerDuration: (int) value 
 {
-    [self willChangeValueForKey:@"outgoingServerType"];
+    [self willChangeValueForKey: @"leaveOnServerDuration"];
     [self setPrimitiveValue:[NSNumber numberWithInt:value]
-                     forKey:@"outgoingServerType"];
-    [self didChangeValueForKey:@"outgoingServerType"];
+                     forKey: @"leaveOnServerDuration"];
+    [self didChangeValueForKey: @"leaveOnServerDuration"];
+}
+
+- (int) outgoingServerType 
+{
+    NSNumber* tmpValue;
+    
+    [self willAccessValueForKey: @"outgoingServerType"];
+    tmpValue = [self primitiveValueForKey: @"outgoingServerType"];
+    [self didAccessValueForKey: @"outgoingServerType"];
+    
+    return (tmpValue != nil) ? [tmpValue intValue] : 0;
+}
+
+- (void) setOutgoingServerType: (int) value 
+{
+    [self willChangeValueForKey: @"outgoingServerType"];
+    [self setPrimitiveValue:[NSNumber numberWithInt:value]
+                     forKey: @"outgoingServerType"];
+    [self didChangeValueForKey: @"outgoingServerType"];
 
     [self setOutgoingServerPort:0];
-    [self willChangeValueForKey:@"outgoingServerDefaultPort"];
-    [self didChangeValueForKey:@"outgoingServerDefaultPort"];	
+    [self willChangeValueForKey: @"outgoingServerDefaultPort"];
+    [self didChangeValueForKey: @"outgoingServerDefaultPort"];	
 }
 
-- (NSString *)outgoingServerName 
+- (NSString*) outgoingServerName 
 {
-    NSString * tmpValue;
+    NSString*  tmpValue;
     
-    [self willAccessValueForKey:@"outgoingServerName"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerName"];
-    [self didAccessValueForKey:@"outgoingServerName"];
+    [self willAccessValueForKey: @"outgoingServerName"];
+    tmpValue = [self primitiveValueForKey: @"outgoingServerName"];
+    [self didAccessValueForKey: @"outgoingServerName"];
     
     return tmpValue;
 }
 
-- (void)setOutgoingServerName:(NSString *)value 
+- (void) setOutgoingServerName: (NSString*) value 
 {
-    [self willChangeValueForKey:@"outgoingServerName"];
-    [self setPrimitiveValue:value forKey:@"outgoingServerName"];
-    [self didChangeValueForKey:@"outgoingServerName"];
+    [self willChangeValueForKey: @"outgoingServerName"];
+    [self setPrimitiveValue:value forKey: @"outgoingServerName"];
+    [self didChangeValueForKey: @"outgoingServerName"];
 }
 
-- (int)outgoingServerPort 
+- (int) outgoingServerPort 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"outgoingServerPort"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerPort"];
-    [self didAccessValueForKey:@"outgoingServerPort"];
+    [self willAccessValueForKey: @"outgoingServerPort"];
+    tmpValue = [self primitiveValueForKey: @"outgoingServerPort"];
+    [self didAccessValueForKey: @"outgoingServerPort"];
     
     int result = (tmpValue != nil) ? [tmpValue intValue] : 0;
     return result ? result : [[self class] defaultPortForOutgoingServerType:[self outgoingServerType]];
 }
 
-- (void)setOutgoingServerPort:(int)value 
+- (void) setOutgoingServerPort: (int) value 
 {
-    [self willChangeValueForKey:@"outgoingServerPort"];
+    [self willChangeValueForKey: @"outgoingServerPort"];
     [self setPrimitiveValue:[NSNumber numberWithInt:value]
-                     forKey:@"outgoingServerPort"];
-    [self didChangeValueForKey:@"outgoingServerPort"];
+                     forKey: @"outgoingServerPort"];
+    [self didChangeValueForKey: @"outgoingServerPort"];
 }
 
-- (int)outgoingServerDefaultPort
+- (int) outgoingServerDefaultPort
 {
     return [[self class] defaultPortForOutgoingServerType:[self outgoingServerType]];
 }
 
-- (int)outgoingAuthenticationMethod 
+- (int) outgoingAuthenticationMethod 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"outgoingAuthenticationMethod"];
-    tmpValue = [self primitiveValueForKey:@"outgoingAuthenticationMethod"];
-    [self didAccessValueForKey:@"outgoingAuthenticationMethod"];
+    [self willAccessValueForKey: @"outgoingAuthenticationMethod"];
+    tmpValue = [self primitiveValueForKey: @"outgoingAuthenticationMethod"];
+    [self didAccessValueForKey: @"outgoingAuthenticationMethod"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
-- (void)setOutgoingAuthenticationMethod:(int)value 
+- (void) setOutgoingAuthenticationMethod: (int) value 
 {
-    [self willChangeValueForKey:@"outgoingAuthenticationMethod"];
+    [self willChangeValueForKey: @"outgoingAuthenticationMethod"];
     [self setPrimitiveValue:[NSNumber numberWithInt: value]
-                     forKey:@"outgoingAuthenticationMethod"];
-    [self didChangeValueForKey:@"outgoingAuthenticationMethod"];
+                     forKey: @"outgoingAuthenticationMethod"];
+    [self didChangeValueForKey: @"outgoingAuthenticationMethod"];
 	
-    [self willChangeValueForKey:@"outgoingUsernameNeeded"];
-    [self didChangeValueForKey:@"outgoingUsernameNeeded"];
+    [self willChangeValueForKey: @"outgoingUsernameNeeded"];
+    [self didChangeValueForKey: @"outgoingUsernameNeeded"];
 }
 
-- (NSString *)outgoingUsername 
+- (NSString*) outgoingUsername 
 {
-    NSString *tmpValue;
+    NSString* tmpValue;
     
-    [self willAccessValueForKey:@"outgoingUsername"];
-    tmpValue = [self primitiveValueForKey:@"outgoingUsername"];
-    [self didAccessValueForKey:@"outgoingUsername"];
+    [self willAccessValueForKey: @"outgoingUsername"];
+    tmpValue = [self primitiveValueForKey: @"outgoingUsername"];
+    [self didAccessValueForKey: @"outgoingUsername"];
     
     return tmpValue;
 }
 
-- (void)setOutgoingUsername:(NSString *)value 
+- (void) setOutgoingUsername: (NSString*) value 
 {
-    [self willChangeValueForKey:@"outgoingUsername"];
-    [self setPrimitiveValue:value forKey:@"outgoingUsername"];
-    [self didChangeValueForKey:@"outgoingUsername"];
+    [self willChangeValueForKey: @"outgoingUsername"];
+    [self setPrimitiveValue:value forKey: @"outgoingUsername"];
+    [self didChangeValueForKey: @"outgoingUsername"];
 }
 
-- (BOOL)outgoingUsernameNeeded
+- (BOOL) outgoingUsernameNeeded
 {
     return [self outgoingAuthenticationMethod] == SMTPAuthentication;
 }
 
-- (BOOL)allowExpiredSSLCertificates 
+- (BOOL) allowExpiredSSLCertificates 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"allowExpiredSSLCertificates"];
-    tmpValue = [self primitiveValueForKey:@"allowExpiredSSLCertificates"];
-    [self didAccessValueForKey:@"allowExpiredSSLCertificates"];
+    [self willAccessValueForKey: @"allowExpiredSSLCertificates"];
+    tmpValue = [self primitiveValueForKey: @"allowExpiredSSLCertificates"];
+    [self didAccessValueForKey: @"allowExpiredSSLCertificates"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void)setAllowExpiredSSLCertificates:(BOOL)value 
+- (void) setAllowExpiredSSLCertificates: (BOOL) value 
 {
-    [self willChangeValueForKey:@"allowExpiredSSLCertificates"];
+    [self willChangeValueForKey: @"allowExpiredSSLCertificates"];
     [self setPrimitiveValue:[NSNumber numberWithBool: value]
-                     forKey:@"allowExpiredSSLCertificates"];
-    [self didChangeValueForKey:@"allowExpiredSSLCertificates"];
+                     forKey: @"allowExpiredSSLCertificates"];
+    [self didChangeValueForKey: @"allowExpiredSSLCertificates"];
 }
 
-- (BOOL)allowAnyRootSSLCertificate 
+- (BOOL) allowAnyRootSSLCertificate 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"allowAnyRootSSLCertificate"];
-    tmpValue = [self primitiveValueForKey:@"allowAnyRootSSLCertificate"];
-    [self didAccessValueForKey:@"allowAnyRootSSLCertificate"];
+    [self willAccessValueForKey: @"allowAnyRootSSLCertificate"];
+    tmpValue = [self primitiveValueForKey: @"allowAnyRootSSLCertificate"];
+    [self didAccessValueForKey: @"allowAnyRootSSLCertificate"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
 - (void)setAllowAnyRootSSLCertificate:(BOOL)value 
 {
-    [self willChangeValueForKey:@"allowAnyRootSSLCertificate"];
+    [self willChangeValueForKey: @"allowAnyRootSSLCertificate"];
     [self setPrimitiveValue:[NSNumber numberWithBool:value]
-                     forKey:@"allowAnyRootSSLCertificate"];
-    [self didChangeValueForKey:@"allowAnyRootSSLCertificate"];
+                     forKey: @"allowAnyRootSSLCertificate"];
+    [self didChangeValueForKey: @"allowAnyRootSSLCertificate"];
 }
 
-- (BOOL)verifySSLCertificateChain 
+- (BOOL) verifySSLCertificateChain 
 {
-    NSNumber *tmpValue;
+    NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"verifySSLCertificateChain"];
-    tmpValue = [self primitiveValueForKey:@"verifySSLCertificateChain"];
-    [self didAccessValueForKey:@"verifySSLCertificateChain"];
+    [self willAccessValueForKey: @"verifySSLCertificateChain"];
+    tmpValue = [self primitiveValueForKey: @"verifySSLCertificateChain"];
+    [self didAccessValueForKey: @"verifySSLCertificateChain"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
 - (void)setVerifySSLCertificateChain:(BOOL)value 
 {
-    [self willChangeValueForKey:@"verifySSLCertificateChain"];
+    [self willChangeValueForKey: @"verifySSLCertificateChain"];
     [self setPrimitiveValue:[NSNumber numberWithBool: value]
-                     forKey:@"verifySSLCertificateChain"];
-    [self didChangeValueForKey:@"verifySSLCertificateChain"];
+                     forKey: @"verifySSLCertificateChain"];
+    [self didChangeValueForKey: @"verifySSLCertificateChain"];
 }
 
-- (BOOL)isPOPAccount
+- (BOOL) isPOPAccount
 {
     int type = [self incomingServerType];
     

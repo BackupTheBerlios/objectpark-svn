@@ -44,6 +44,7 @@
 /*" Conversions "*/
 - (BOOL) boolValue;
 - (unsigned int) intValueForHex;
+- (long long) longLongValue;
 
 /*" Using MIME encoding names "*/
 + (NSString*) stringWithData: (NSData*) data 

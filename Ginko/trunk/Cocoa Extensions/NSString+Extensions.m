@@ -244,6 +244,12 @@ static NSCharacterSet *iwsSet = nil;
     return [self caseInsensitiveCompare: @"yes"] == NSOrderedSame;
 }
 
+- (long long) longLongValue
+{
+	char buffer[100];
+	[self getCString: buffer maxLength: 99];
+	return atoll(buffer);
+}
 
 /*" Assumes the string contains an integer written in hexadecimal notation and returns its value. Uses #scanHexInt in #NSScanner. "*/
 

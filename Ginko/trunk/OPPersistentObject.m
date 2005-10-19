@@ -211,9 +211,9 @@
     return oid;
 }
 
-- (NSURL*) objectURL
+- (NSString*) objectURLString
 {
-	return OPURLFromOidAndClass([self oid], isa, [[[self context] databaseConnection] name]);
+	return OPURLStringFromOidAndClass([self oid], isa, [[[self context] databaseConnection] name]);
 }
 
 - (void) setOid: (OID) theOid

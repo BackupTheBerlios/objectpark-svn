@@ -56,11 +56,6 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     [self trashMessageGroup];
 }
 
-- (NSString*) URIReferenceString
-/*" Returns a string for referencing the receiver persistently. "*/ 
-{
-    return [[self objectURL] absoluteString];
-}
 
 + (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex
 /*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
@@ -85,7 +80,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     // placing new group in hierarchy:
     NSParameterAssert((anIndex >= 0) && (anIndex <= [aNode count]));
     anIndex += 1; // first position is node info
-    resultURLString = [result URIReferenceString];
+    resultURLString = [result objectURLString];
     
     if (anIndex = [aNode count]) {
         [aNode addObject: resultURLString];
@@ -100,19 +95,18 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     return result;
 }
 
-+ (id)messageGroupWithURIReferenceString:(NSString *)anUrl
++ (id) messageGroupWithURIReferenceString: (NSString*) anUrl
 /*" Returns the message group object referenced by the given reference string anUrl. See also: #{-URIReferenceString}. "*/
 {
     id referencedGroup = nil;
     
     NSParameterAssert([anUrl isKindOfClass:[NSString class]]);
     
-    if ([anUrl length])
-    {
+    if ([anUrl length]) {
         @try {
-            referencedGroup = [[OPPersistentObjectContext threadContext] objectWithURL:[NSURL URLWithString:anUrl]];
+            referencedGroup = [[OPPersistentObjectContext threadContext] objectWithURLString: anUrl];
         }
-        @catch (NSException *e) {
+        @catch (NSException* e) {
             NSLog(@"Could not find group for URI ''", anUrl);
         }
     }
@@ -372,7 +366,7 @@ static NSMutableArray *root = nil;
 
     // building array of Object ID URLs:
     while ((group = [enumerator nextObject])) {
-        [groupUrlsToCheck addObject: [group URIReferenceString]];
+        [groupUrlsToCheck addObject: [group objectURLString]];
     }
     
     [self checkHierarchy:[self hierarchyRootNode] withGroups:groupUrlsToCheck];
@@ -547,7 +541,7 @@ static NSMutableArray *root = nil;
     return [self hierarchyNodeForUid:anUid startHierarchyNode:[self hierarchyRootNode]];
 }
 
-+ (GIMessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
++ (GIMessageGroup*) standardMessageGroupWithUserDefaultsKey: (NSString* )defaultsKey defaultName: (NSString*) defaultName
 /*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
 {
     NSParameterAssert(defaultName != nil);
@@ -555,23 +549,21 @@ static NSMutableArray *root = nil;
     NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
     GIMessageGroup *result = nil;
         
-    if (URLString)
-    {
+    if (URLString) {
         result = [GIMessageGroup messageGroupWithURIReferenceString:URLString];
         if (!result) NSLog(@"Couldn't find standard box '%@'", defaultName);
     }
     
-    if (!result)
-    {
+    if (!result) {
         // not found creating new:
         result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:0];
                 
         NSAssert1([result valueForKey: @"name"] != nil, @"group should have a name: %@", defaultName);
         
-        [[NSUserDefaults standardUserDefaults] setObject:[result URIReferenceString] forKey:defaultsKey];
+        [[NSUserDefaults standardUserDefaults] setObject: [result objectURLString] forKey: defaultsKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result URIReferenceString]], @"Fatal error. User defaults are wrong.");
+        NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey: defaultsKey] isEqualToString: [result objectURLString]], @"Fatal error. User defaults are wrong.");
     }
     
     NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);

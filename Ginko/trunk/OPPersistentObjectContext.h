@@ -57,7 +57,7 @@
 
 - (id) objectRegisteredForOid: (OID) oid ofClass: (Class) poClass;
 - (id) objectForOid: (OID) oid ofClass: (Class) poClass;
-- (OPPersistentObject*) objectWithURLString: (NSString*) urlString;
+- (id) objectWithURLString: (NSString*) urlString;
 
 - (void) registerObject: (OPPersistentObject*) object;
 - (void) unregisterObject: (OPPersistentObject*) object;
@@ -88,8 +88,6 @@
 
 - (void) saveChanges;
 - (void) revertChanges;
-
-- (OPSQLiteConnection*) dbConnection;
 
 - (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
 													 where: (NSString*) clause;
@@ -126,4 +124,4 @@
 
 @end
 
-extern NSURL* OPURLFromOidAndClass(OID oid, Class poClass, NSString* databaseName);
+extern NSString* OPURLStringFromOidAndClass(OID oid, Class poClass, NSString* databaseName);

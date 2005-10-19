@@ -22,10 +22,6 @@
 + (OPPersistentObjectContext*) threadContext;
 + (void) setMainThreadContext: (OPPersistentObjectContext*) aContext;
 + (OPPersistentObjectContext*) mainThreadContext;
-
-- (OPPersistentObject*) objectWithURL: (NSURL*) url;
-+ (OPPersistentObject*) objectWithURL: (NSURL*) url;
-
-+ (id)objectWithURIString:(NSString *)URIString;
++ (OPPersistentObject*) objectWithURLString: (NSString*) url;
 
 @end

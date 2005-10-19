@@ -77,14 +77,10 @@ static volatile NSThread* mainThread = nil;
 
 
 
-+ (OPPersistentObject*) objectWithURL: (NSURL*) url
++ (OPPersistentObject*) objectWithURLString: (NSString*) url
 {
-	return [[self threadContext] objectWithURL:url];
+	return [[self threadContext] objectWithURLString:url];
 }
 
-+ (id)objectWithURIString:(NSString *)URIString
-{
-    return [self objectWithURL:[NSURL URLWithString:URIString]];
-}
 
 @end

@@ -38,7 +38,15 @@
 #import "OPClassDescription.h"
 #import "OPFaultingArray.h"
 
+
 @implementation OPPersistentObjectContext
+
+static long long OPLongLongStringValue(NSString* self)
+{
+	char buffer[100];
+	[self getCString: buffer maxLength: 99];
+	return atoll(buffer);	
+}
 
 static OPPersistentObjectContext* defaultContext = nil;
 
@@ -153,15 +161,26 @@ static OPPersistentObjectContext* defaultContext = nil;
     return result;
 }
 
-- (OPPersistentObject*) objectWithURLString: (NSString*) urlString
+- (id) objectWithURLString: (NSString*) urlString
+/*" Returns (possibly a fault object to) an OPPersistentObject. "*/
 {
-	NSArray* pathComponents = [urlString pathComponents];
-	NSParameterAssert([pathComponents count]>=5);
-	NSParameterAssert([[pathComponents objectAtIndex: 0] isEqualToString: @"opo"]);
-	NSString* dbName = [pathComponents objectAtIndex: 2];
-	Class pClass = NSClassFromString([pathComponents objectAtIndex: 3]);
-	NSString* oidString = [pathComponents objectAtIndex: 4];
-	OID oid = [oidString intValue];
+	NSArray* pathComponents = [[urlString stringByReplacingPercentEscapesUsingEncoding: NSISOLatin1StringEncoding] pathComponents];
+	NSParameterAssert([pathComponents count]>=4);
+	//NSParameterAssert([[pathComponents objectAtIndex: 0] isEqualToString: @"x-opo"]);
+	//NSParameterAssert([[db name] isEqualToString: [pathComponents objectAtIndex: 2]]);
+	NSString* className = [pathComponents objectAtIndex: 2];
+	Class pClass = NSClassFromString(className);
+	if (!pClass) {
+		// Fallback for transition from CoreData. Can be removed later:
+		pClass = NSClassFromString([@"GI" stringByAppendingString: className]);
+	}
+	NSString* oidString = [pathComponents objectAtIndex: 3];
+
+	OID oid = OPLongLongStringValue(oidString);
+	if (oid==0LL && [oidString hasPrefix: @"p"]) {
+		// Fallback for transition from CoreData. Can be removed later:
+		oid = OPLongLongStringValue([oidString substringFromIndex: 1]);
+	}
 	return [self objectForOid:  oid ofClass: pClass];
 }
 
@@ -416,10 +435,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		resultClass = poClass;
 		
 		[context lock];
-		sqlite3_prepare([[context dbConnection] database], [sql UTF8String], -1, &statement, NULL);	
+		sqlite3_prepare([[context databaseConnection] database], [sql UTF8String], -1, &statement, NULL);	
 		[context unlock];
 		if (!statement) {
-			NSLog(@"Error preparing statement: %@", [[context dbConnection] lastError]);
+			NSLog(@"Error preparing statement: %@", [[context databaseConnection] lastError]);
 			[self autorelease];
 			return nil;
 		}
@@ -519,12 +538,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 
 
-NSURL* OPURLFromOidAndClass(OID oid, Class poClass, NSString* databaseName)
+NSString* OPURLStringFromOidAndClass(OID oid, Class poClass, NSString* databaseName)
 {
-	NSString* uriString = [[NSString alloc] initWithFormat: @"opo://%@/%@/%lld", databaseName, poClass, oid];
-	id result = [NSURL URLWithString: uriString];
-	[uriString release];
-	return result;
+	NSString* uriString = [[[NSString alloc] initWithFormat: @"x-opo://%@/%@/%lld", 
+		[databaseName stringByAddingPercentEscapesUsingEncoding: NSISOLatin1StringEncoding], 
+		poClass, oid] autorelease];
+	return uriString;
 }
 
 

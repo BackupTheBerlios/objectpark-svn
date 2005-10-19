@@ -45,7 +45,7 @@
     
     while (urlString = [enumerator nextObject])
     {
-        STAssertTrue([context objectWithURL:[NSURL URLWithString:urlString]] != nil, @"Url %@ failed.", urlString);
+        STAssertTrue([context objectWithURLString: urlString] != nil, @"Url %@ failed.", urlString);
     }
     
     //NSLog(@"First Thread's name '%@'", [(GIThread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);

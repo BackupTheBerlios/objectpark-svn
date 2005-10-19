@@ -47,7 +47,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
 + (void) ensureDefaultGroups;
 
 	/*" Simple Accessors "*/
-- (NSString*) URIReferenceString;
+
 
 
 	/*" Complex Accessors "*/
