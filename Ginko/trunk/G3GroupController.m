@@ -307,8 +307,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-    GIMessageGroup *selectedGroup = [GIMessageGroup messageGroupWithURIReferenceString:[boxesView itemAtRow:[boxesView selectedRow]]];
-    
+    GIMessageGroup *selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow:[boxesView selectedRow]]];
+	    
     if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) {
         NSWindow *groupWindow = [[self class] windowForGroup:selectedGroup];
         
@@ -1167,7 +1167,7 @@ static BOOL isThreadItem(id item)
         id item = [boxesView itemAtRow: [boxesView selectedRow]];
         
         if ([item isKindOfClass:[NSString class]]) {
-            [self setGroup: [GIMessageGroup messageGroupWithURIReferenceString: item]];
+            [self setGroup: [[OPPersistentObjectContext defaultContext] objectWithURLString: item]];
         }
     } else if ([notification object] == threadsView) {
         id item = [threadsView itemAtRow: [threadsView selectedRow]];
@@ -1486,25 +1486,19 @@ static NSAttributedString* spacer2()
             
             return result;
         }
-    }
-    else // boxes list
-    {
-        if ([[tableColumn identifier] isEqualToString: @"box"]) 
-        {
-            if ([item isKindOfClass:[NSMutableArray class]])
-            {
+    } else {
+		// boxes list
+        if ([[tableColumn identifier] isEqualToString: @"box"]) {
+            if ([item isKindOfClass:[NSMutableArray class]]) {
                 return [[item objectAtIndex:0] valueForKey: @"name"];
-            }
-            else if (item)
-            {
-                return [[GIMessageGroup messageGroupWithURIReferenceString:item] name];
+            } else if (item) {
+				GIMessageGroup* g = [OPPersistentObjectContext objectWithURLString: item];
+                return [g valueForKey: @"name"];
             }
         }
-        if ([[tableColumn identifier] isEqualToString: @"info"])
-        {
-            if (![item isKindOfClass:[NSMutableArray class]])
-            {
-                GIMessageGroup *g = [GIMessageGroup messageGroupWithURIReferenceString:item];
+        if ([[tableColumn identifier] isEqualToString: @"info"]) {
+            if (![item isKindOfClass: [NSMutableArray class]]) {
+                GIMessageGroup* g = [OPPersistentObjectContext objectWithURLString: item];
                 NSMutableArray *threadURIs = [NSMutableArray array];
                 NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
                 
@@ -1524,30 +1518,26 @@ static NSAttributedString* spacer2()
 
 - (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-    if (outlineView == boxesView)
-    {
-        if ([item isKindOfClass:[NSMutableArray class]]) // folder
-        {
+    if (outlineView == boxesView) {
+        if ([item isKindOfClass:[NSMutableArray class]]) {
+			 // folder:
             [[item objectAtIndex:0] setObject:object forKey: @"name"];
             [GIMessageGroup commitChanges];
             //[outlineView selectRow:[outlineView rowForItem:item]+1 byExtendingSelection:NO];
             //[[outlineView window] endEditingFor:outlineView];
-        }
-        else // message group
-        {
-            [(GIMessageGroup *)[GIMessageGroup messageGroupWithURIReferenceString:item] setValue:object forKey: @"name"];
+        } else {
+			// message group:
+            [(GIMessageGroup *)[[OPPersistentObjectContext defaultContext] objectWithURLString: item] setValue:object forKey: @"name"];
             [NSApp saveAction:self];
         }
     }
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(id)object
+- (id)outlineView:(NSOutlineView*) outlineView itemForPersistentObject: (id) object
 {
-    if (outlineView == boxesView)
-    {
+    if (outlineView == boxesView) {
         return [GIMessageGroup hierarchyNodeForUid:object];
     }
-    
     return nil;
 }
 

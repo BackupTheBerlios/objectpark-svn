@@ -52,10 +52,12 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 + (OPPersistentObjectContext*) defaultContext
 {
+	/* better not - has no database
     if (!defaultContext) {
         [self setDefaultContext: [[[self alloc] init] autorelease]];
         NSLog(@"Created default %@", defaultContext);
     }
+	*/
     return defaultContext;
 }
 

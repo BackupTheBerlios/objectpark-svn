@@ -109,17 +109,15 @@
             insertMessage = YES;
         }
         //if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [im messageId]);        
-    } 
-    else
-    {
+    } else {
         insertMessage = YES;
     }
     
-    if (insertMessage)
-    {
+    if (insertMessage) {
         // Create a new message in the default context:
-        result = [[[GIMessage alloc] initWithManagedObjectContext:[OPPersistentObjectContext threadContext]] autorelease];
-        NSAssert(result != nil, @"Could not create message object");
+        result = [[[GIMessage alloc] init] autorelease];
+		[result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
+		NSAssert(result != nil, @"Could not create message object");
         
         NSString *fromHeader = [im fromWithFallback: YES];
         

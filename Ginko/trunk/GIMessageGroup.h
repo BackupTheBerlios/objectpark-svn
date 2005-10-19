@@ -18,23 +18,23 @@
 }
 
 /*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/
-extern NSString *GIMessageGroupWasAddedNotification;
+extern NSString* GIMessageGroupWasAddedNotification;
 
 
 /*" Handling message groups. Class methods. "*/
-+ (NSMutableArray *)hierarchyRootNode;
-+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName
-                            atHierarchyNode:(NSMutableArray *)aNode
-                                    atIndex:(int)anIndex;
-+ (id)messageGroupWithURIReferenceString:(NSString *)anUrl;
-+ (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
-+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)anUid;
-+ (BOOL)moveEntry:(id)entry 
-  toHierarchyNode:(NSMutableArray *)aHierarchy 
-          atIndex:(int)anIndex 
-         testOnly:(BOOL)testOnly;
-+ (NSMutableArray *)findHierarchyNodeForEntry:(id)entry
-                    startingWithHierarchyNode:(NSMutableArray *)aHierarchy;
++ (NSMutableArray*) hierarchyRootNode;
++ (GIMessageGroup*) newMessageGroupWithName: (NSString*) aName
+                            atHierarchyNode: (NSMutableArray*) aNode
+                                    atIndex: (int) anIndex;
+
++ (void) addNewHierarchyNodeAfterEntry: (id) anEntry;
++ (NSMutableArray*) hierarchyNodeForUid: (NSNumber*) anUid;
++ (BOOL)moveEntry: (id)entry 
+  toHierarchyNode: (NSMutableArray*) aHierarchy 
+          atIndex: (int) anIndex 
+         testOnly: (BOOL) testOnly;
++ (NSMutableArray*) findHierarchyNodeForEntry: (id) entry
+                    startingWithHierarchyNode: (NSMutableArray*) aHierarchy;
 
 	/*" Standard message groups "*/
 + (GIMessageGroup*) defaultMessageGroup;

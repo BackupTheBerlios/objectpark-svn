@@ -71,7 +71,7 @@
     return [(NSNumber *)[_actionDefinition objectForKey:@"type"] intValue];
 }
 
-- (void)setType:(int)aType
+- (void) setType: (int) aType
 {
     [_actionDefinition setObject:[NSNumber numberWithInt:aType] forKey:@"type"];
 
@@ -79,12 +79,12 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
 }
 
-- (NSString *)parameter
+- (NSString*) parameter
 {
     return [_actionDefinition objectForKey:@"parameter"];
 }
 
-- (void)setParameter:(NSString *)aString
+- (void) setParameter: (NSString*) aString
 {
     [_actionDefinition setObject:aString forKey:@"parameter"];
 
@@ -102,22 +102,20 @@
     
     if (putInBox) *putInBox = NO;
     
-    switch ([action type]) 
-    {
+    switch ([action type]) {
         case kGIMFActionTypePutInMessagebox: 
-        {
+		{
             GIMessageGroup *destinationGroup;
             
             // get destination box
-            destinationGroup = [GIMessageGroup messageGroupWithURIReferenceString:[action parameter]];
+            destinationGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [action parameter]];
             
             // if destination box can not be found fallback to default box
-            if (! destinationGroup) 
-            {
+            if (! destinationGroup) {
                 destinationGroup = [GIMessageGroup defaultMessageGroup];
                 
-                if (! destinationGroup) // fatal -> Exception
-                {
+                if (! destinationGroup) {
+					 // fatal -> Exception
                     [NSException raise:NSGenericException format:@"Default message group could neither be found nor created. FATAL ERROR! Aborting filtering."];
                 }
             }

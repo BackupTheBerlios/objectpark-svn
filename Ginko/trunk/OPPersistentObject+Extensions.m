@@ -39,6 +39,9 @@ static volatile NSThread* mainThread = nil;
 
 + (OPPersistentObjectContext*) threadContext
 {
+	return [self defaultContext];
+/*
+	
     OPPersistentObjectContext *result;
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
 	
@@ -52,10 +55,12 @@ static volatile NSThread* mainThread = nil;
     
     NSAssert (result != nil, @"+[OPManagedObject (Extensions) threadContext]: context returned should never be nil");
     return result;
+ */
 }
 
 + (void) setMainThreadContext: (OPPersistentObjectContext*) aContext
 {
+	/*
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
     if (aContext) {
         [threadDict setObject:aContext forKey: @"OPDefaultManagedObjectContext"];
@@ -63,21 +68,25 @@ static volatile NSThread* mainThread = nil;
         [threadDict removeObjectForKey: @"OPDefaultManagedObjectContext"];
     }
     mainThread = [NSThread currentThread];
+	 */
 }
 
 
 + (OPPersistentObjectContext*) mainThreadContext
     /*" Use carefully. "*/
 {
+	return [self defaultContext];
+	/*
 	NSParameterAssert(mainThread!=nil);
     NSDictionary* threadDict = [mainThread threadDictionary];
     OPPersistentObjectContext* result = [threadDict objectForKey:@"OPDefaultManagedObjectContext"];
     return result;
+	 */
 }
 
 
 
-+ (OPPersistentObject*) objectWithURLString: (NSString*) url
++ (id) objectWithURLString: (NSString*) url
 {
 	return [[self threadContext] objectWithURLString:url];
 }

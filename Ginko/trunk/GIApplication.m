@@ -147,8 +147,9 @@
     return path;
 }
 
+/*
 - (OPPersistentObjectContext*) newManagedObjectContext
-/* Creates a new context according to the model. The result is not autoreleased! */
+// Creates a new context according to the model. The result is not autoreleased! 
 {
     NSError*  error;
     NSString* localizedDescription;
@@ -161,11 +162,11 @@
     OPPersistentObjectContext* managedObjectContext = [[OPPersistentObjectContext alloc] init];
     //[managedObjectContext setPersistentStoreCoordinator: coordinator];
     //[coordinator release];
-    /* Change this path/code to point to your App's data store. */
+    // Change this path/code to point to your App's data store. 
     //NSString *applicationSupportDir = [@"~/Library/Application Support/Ginko3" stringByStandardizingPath];
     //NSFileManager* fileManager = [NSFileManager defaultManager];	
     
-	/*
+	
     if (![coordinator addPersistentStoreWithType: NSSQLiteStoreType // NSXMLStoreType
                                    configuration: nil
                                              URL: [NSURL fileURLWithPath: dbPath]
@@ -186,7 +187,7 @@
         [managedObjectContext release];
         managedObjectContext = [self newManagedObjectContext];
     }
-	 */
+	
     
     //[managedObjectContext setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
 
@@ -194,15 +195,20 @@
 
     return managedObjectContext;
 }
+*/
 
-- (OPPersistentObjectContext*) initialManagedObjectContext
+- (OPPersistentObjectContext*) initialPersistentObjectContext
 {
-    NSError*   error;
+    //NSError*   error;
     NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"GinkoBase.sqlite"];
     BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
     
-    OPPersistentObjectContext* managedObjectContext = [self newManagedObjectContext];
-    
+	NSAssert(!isNewlyCreated, @"Please supply an old database file. DB creation not implemented.");
+	
+    OPPersistentObjectContext* persistentObjectContext = [[OPPersistentObjectContext alloc] init];
+	[persistentObjectContext setDatabaseConnectionFromPath: path];
+	
+	/*
     if (isNewlyCreated) {
         error = nil;
         [managedObjectContext saveChanges];
@@ -211,9 +217,9 @@
         [self configureDatabaseAtPath: path];
         managedObjectContext = [self newManagedObjectContext];
     }
+	 */
     
-    //[[managedObjectContext undoManager] setLevelsOfUndo:0];
-    return [managedObjectContext autorelease];
+    return [persistentObjectContext autorelease];
 }
 
 - (void)awakeFromNib
@@ -235,7 +241,7 @@
     
     //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
     //NSLog(@"last message = %@", aMessage);
-    [OPPersistentObjectContext setMainThreadContext: [self newManagedObjectContext]];
+    [OPPersistentObjectContext setDefaultContext: [self initialPersistentObjectContext]];
 
     [GIMessageGroup ensureDefaultGroups];
     //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);

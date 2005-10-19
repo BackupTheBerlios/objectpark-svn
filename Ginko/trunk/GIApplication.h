@@ -16,20 +16,19 @@
 
 @interface GIApplication : NSApplication 
 {
-    IBOutlet GISearchController *searchController;
+    IBOutlet GISearchController* searchController;
 }
 
-- (BOOL)isGroupsDrawerMode;
-- (NSWindow *)standaloneGroupsWindow;
-- (OPPersistentObjectContext*) newManagedObjectContext;
+- (BOOL) isGroupsDrawerMode;
+- (NSWindow*) standaloneGroupsWindow;
 
-- (NSString *)databasePath;
+- (NSString*) databasePath;
 
 /*" Actions "*/
-- (IBAction)openNewGroupWindow:(id)sender;
+- (IBAction) openNewGroupWindow: (id) sender;
 
-- (IBAction)saveAction:(id)sender;
-- (IBAction)openSearchWindow:(id)sender;
-- (IBAction)showActivityPanel:(id)sender;
+- (IBAction) saveAction: (id) sender;
+- (IBAction) openSearchWindow: (id) sender;
+- (IBAction) showActivityPanel: (id) sender;
 
 @end

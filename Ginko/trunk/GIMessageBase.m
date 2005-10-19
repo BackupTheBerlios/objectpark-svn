@@ -270,17 +270,14 @@ NSString *MboxImportJobName = @"mbox import";
         //[NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
         [context saveChanges];
         //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
-    } 
-    @catch (NSException *localException) 
-    {
+		
+    } @catch (NSException *localException) {
         if (NSDebugEnabled) NSLog(@"Exception while adding messages in background: %@", localException);
         [[localException retain] autorelease];
         @throw;
-    } 
-    @finally 
-    {
+    } @finally {
         [lastProgressSet release];
-        [OPPersistentObjectContext resetThreadContext];
+        //[OPPersistentObjectContext resetThreadContext];
         [pool release];
     }
     
