@@ -44,9 +44,10 @@
 	@"}";
 }
 
-+ (int) defaultPortForIncomingServerType: (int) serverType
++ (int)defaultPortForIncomingServerType:(int)serverType
 {
-    switch (serverType) {
+    switch (serverType) 
+    {
         case POP3: return 110;
         case POP3S: return 995;
         case NNTP: return 119;
@@ -55,9 +56,10 @@
     }
 }
 
-+ (int) defaultPortForOutgoingServerType: (int) serverType
++ (int)defaultPortForOutgoingServerType:(int)serverType
 {
-    switch (serverType) {
+    switch (serverType) 
+    {
         case SMTP: return 25;
         case SMTPS: return 563;
         case SMTPTLS: return 25;
@@ -81,7 +83,7 @@
 
 - (NSString *)name 
 {
-    NSString * tmpValue;
+    NSString *tmpValue;
     
     [self willAccessValueForKey:@"name"];
     tmpValue = [self primitiveValueForKey:@"name"];
@@ -90,14 +92,14 @@
     return tmpValue;
 }
 
-- (void) setName: (NSString*) value 
+- (void)setName:(NSString *)value 
 {
     [self willChangeValueForKey:@"name"];
     [self setPrimitiveValue: value forKey:@"name"];
     [self didChangeValueForKey:@"name"];
 }
 
-- (BOOL) isEnabled 
+- (BOOL)isEnabled 
 {
     NSNumber *tmpValue;
     
@@ -108,15 +110,14 @@
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void) setIsEnabled: (BOOL) value 
+- (void)setIsEnabled:(BOOL)value 
 {
     [self willChangeValueForKey:@"isEnabled"];
-    [self setPrimitiveValue:[NSNumber numberWithBool:value]
-                     forKey:@"isEnabled"];
+    [self setPrimitiveValue:[NSNumber numberWithBool:value] forKey:@"isEnabled"];
     [self didChangeValueForKey:@"isEnabled"];
 }
 
-- (int) incomingServerType 
+- (int)incomingServerType 
 {
     NSNumber *tmpValue;
     
@@ -127,24 +128,23 @@
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
-- (void) setIncomingServerType: (int) value 
+- (void)setIncomingServerType:(int)value 
 {
     [self willChangeValueForKey:@"incomingServerType"];
-    [self setPrimitiveValue: [NSNumber numberWithInt:value]
-                     forKey: @"incomingServerType"];
-    [self didChangeValueForKey: @"incomingServerType"];
+    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"incomingServerType"];
+    [self didChangeValueForKey:@"incomingServerType"];
 
-#warning Please check the following code. It does not make sense to me! Dirk
-    [self setIncomingServerPort: 0];
-    [self willChangeValueForKey: @"incomingServerDefaultPort"];
-    [self didChangeValueForKey: @"incomingServerDefaultPort"];
-    [self willChangeValueForKey: @"POPAccount"];
-    [self didChangeValueForKey: @"POPAccount"];	
+    // A change of the server type also has effect on the port. The Account is 'touched' to have bindings recognize the change.
+    [self setIncomingServerPort:0];
+    [self willChangeValueForKey:@"incomingServerDefaultPort"];
+    [self didChangeValueForKey:@"incomingServerDefaultPort"];
+    [self willChangeValueForKey:@"POPAccount"];
+    [self didChangeValueForKey:@"POPAccount"];	
 }
 
 - (NSString *)incomingServerName 
 {
-    NSString * tmpValue;
+    NSString *tmpValue;
     
     [self willAccessValueForKey:@"incomingServerName"];
     tmpValue = [self primitiveValueForKey:@"incomingServerName"];
@@ -175,8 +175,7 @@
 - (void)setIncomingServerPort:(int)value 
 {
     [self willChangeValueForKey: @"incomingServerPort"];
-    [self setPrimitiveValue: [NSNumber numberWithInt: value]
-                     forKey: @"incomingServerPort"];
+    [self setPrimitiveValue: [NSNumber numberWithInt: value] forKey: @"incomingServerPort"];
     [self didChangeValueForKey: @"incomingServerPort"];
 }
 
@@ -206,7 +205,7 @@
 
 - (NSString *)incomingUsername 
 {
-    NSString * tmpValue;
+    NSString *tmpValue;
     
     [self willAccessValueForKey:@"incomingUsername"];
     tmpValue = [self primitiveValueForKey:@"incomingUsername"];
@@ -222,7 +221,7 @@
     [self didChangeValueForKey:@"incomingUsername"];
 }
 
-- (SecProtocolType) incomingSecProtocolType
+- (SecProtocolType)incomingSecProtocolType
 {
     switch ([self incomingServerType])
     {
