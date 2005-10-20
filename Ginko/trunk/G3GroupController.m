@@ -990,41 +990,46 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
         
-        int boxRow = [boxesView rowForItem:group];
-        [boxesView selectRow:boxRow byExtendingSelection:NO];
-        [boxesView scrollRowToVisible:boxRow];
+        /*
+         int boxRow = [boxesView rowForItem:group];
+         [boxesView selectRow:boxRow byExtendingSelection:NO];
+         [boxesView scrollRowToVisible:boxRow];
+         */
         
-        [threadsView reloadData];
-        
-        [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[group objectURLString] ? [group objectURLString] : @"nil"]];
-        [threadsView setAutosaveTableColumns:YES];
-        [threadsView setAutosaveExpandedItems:NO];
-        
-        // Show last selected item:
-        NSString *itemURI = [self valueForGroupProperty: @"LastSelectedMessageItem"];
-        
-        if (itemURI) {
-            id item = [OPPersistentObjectContext objectWithURLString:itemURI];
-            if (item) {
-                GIMessage *message = nil;
-                GIThread *thread = nil;
-                
-                if ([item isKindOfClass:[GIThread class]]) {
-                    thread = item;
-                } else {
-                    message = item;
-                    thread = [message thread];
-                }
-                
-                int itemRow = [threadsView rowForItemEqualTo: [thread objectURLString] startingAtRow: 0];
-                
-                if (itemRow >= 0) {
-                    [threadsView selectRow: itemRow byExtendingSelection: NO];
+        if ([self isStandaloneBoxesWindow])
+        {
+            [threadsView reloadData];
+            
+            [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[group objectURLString] ? [group objectURLString] : @"nil"]];
+            [threadsView setAutosaveTableColumns:YES];
+            [threadsView setAutosaveExpandedItems:NO];
+            
+            // Show last selected item:
+            NSString *itemURI = [self valueForGroupProperty: @"LastSelectedMessageItem"];
+            
+            if (itemURI) {
+                id item = [OPPersistentObjectContext objectWithURLString:itemURI];
+                if (item) {
+                    GIMessage *message = nil;
+                    GIThread *thread = nil;
                     
-                    if (![thread containsSingleMessage]) {
-                        [self openSelection:self];
+                    if ([item isKindOfClass:[GIThread class]]) {
+                        thread = item;
+                    } else {
+                        message = item;
+                        thread = [message thread];
                     }
-                    [threadsView scrollRowToVisible:itemRow];
+                    
+                    int itemRow = [threadsView rowForItemEqualTo: [thread objectURLString] startingAtRow: 0];
+                    
+                    if (itemRow >= 0) {
+                        [threadsView selectRow: itemRow byExtendingSelection: NO];
+                        
+                        if (![thread containsSingleMessage]) {
+                            [self openSelection:self];
+                        }
+                        [threadsView scrollRowToVisible:itemRow];
+                    }
                 }
             }
         }

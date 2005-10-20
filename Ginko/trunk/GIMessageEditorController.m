@@ -808,7 +808,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void)appendContentFromMessage:(GIMessage *)aMessage
 {
-    [content appendAttributedString:[aMessage contentAsAttributedString]];
+    [content appendAttributedString:[[aMessage internetMessage] editableBodyContent]];
 }
 
 - (void)setReplySubjectFromMessage:(GIMessage *)aMessage
