@@ -539,21 +539,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 
                 [self setDisplayedMessage:message thread:selectedThread];
                 
-                if ([self matrixIsVisible])
-                {
-                    [window makeFirstResponder:commentsMatrix];
-                } else {
-                    [window makeFirstResponder:messageTextView];                    
-                }
+                if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
+                else [window makeFirstResponder:messageTextView];                    
             }
         }
-        
-    } else {
+    } 
+    else 
+    {
         // message shown
-        if ([window firstResponder] == commentsMatrix)
-        {
-            [window makeFirstResponder:messageTextView];
-        }
+        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
+        else [window makeFirstResponder:commentsMatrix];
     }
     return YES;
 }
@@ -562,11 +557,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (sender == messageTextView)
     {
-        if ([self matrixIsVisible])
+/*        if ([self matrixIsVisible])
         {
             [window makeFirstResponder:commentsMatrix];
         }
-        else
+        else */
         {
             [tabView selectFirstTabViewItem:sender];
         }
@@ -577,11 +572,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         {
             if ([window firstResponder] == messageTextView)
             {
-                if ([self matrixIsVisible])
+/*                if ([self matrixIsVisible])
                 {
                     [window makeFirstResponder:commentsMatrix];
                 }
-                else
+                else */
                 {
                     [tabView selectFirstTabViewItem:sender];
                 }
@@ -598,6 +593,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             {
             // from threads switch back to the groups window:
                 [[GIApp standaloneGroupsWindow] makeKeyAndOrderFront:sender];
+                [window performClose:self];
             }
         }
     }
