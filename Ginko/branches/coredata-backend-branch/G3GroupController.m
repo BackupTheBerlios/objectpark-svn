@@ -1044,48 +1044,54 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
         
-        int boxRow = [boxesView rowForItem:group];
+        // short circuit for now -> disables drawer group list!!!
+        /*
+        int boxRow = [boxesView rowForItem:[[[group objectID] URIRepresentation] absoluteString]];
         [boxesView selectRow:boxRow byExtendingSelection:NO];
         [boxesView scrollRowToVisible:boxRow];
+        */
         
-        [threadsView reloadData];
-        
-        [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[[group objectID] description] ? [[group objectID] description] : @"nil"]];
-        [threadsView setAutosaveTableColumns:YES];
-        [threadsView setAutosaveExpandedItems:NO];
-        
-        // Show last selected item:
-        NSString *itemURI = [self valueForGroupProperty:@"LastSelectedMessageItem"];
-        
-        if (itemURI)
+        if (! [self isStandaloneBoxesWindow]) // short circuit for now -> disables drawer group list!!! WARNING
         {
-            id item = [NSManagedObjectContext objectWithURIString:itemURI];
-            if (item)
+            [threadsView reloadData];
+            
+            [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[[group objectID] description] ? [[group objectID] description] : @"nil"]];
+            [threadsView setAutosaveTableColumns:YES];
+            [threadsView setAutosaveExpandedItems:NO];
+            
+            // Show last selected item:
+            NSString *itemURI = [self valueForGroupProperty:@"LastSelectedMessageItem"];
+            
+            if (itemURI)
             {
-                G3Message *message = nil;
-                G3Thread *thread = nil;
-                
-                if ([item isKindOfClass:[G3Thread class]])
+                id item = [NSManagedObjectContext objectWithURIString:itemURI];
+                if (item)
                 {
-                    thread = item;
-                }
-                else
-                {
-                    message = item;
-                    thread = [message thread];
-                }
-                
-                int itemRow = [threadsView rowForItemEqualTo:[[[thread objectID] URIRepresentation] absoluteString] startingAtRow:0];
-                
-                if (itemRow >= 0) 
-                {
-                    [threadsView selectRow:itemRow byExtendingSelection:NO];
+                    G3Message *message = nil;
+                    G3Thread *thread = nil;
                     
-                    if (![thread containsSingleMessage])
+                    if ([item isKindOfClass:[G3Thread class]])
                     {
-                        [self openSelection:self];
+                        thread = item;
                     }
-                    [threadsView scrollRowToVisible:itemRow];
+                    else
+                    {
+                        message = item;
+                        thread = [message thread];
+                    }
+                    
+                    int itemRow = [threadsView rowForItemEqualTo:[[[thread objectID] URIRepresentation] absoluteString] startingAtRow:0];
+                    
+                    if (itemRow >= 0) 
+                    {
+                        [threadsView selectRow:itemRow byExtendingSelection:NO];
+                        
+                        if (![thread containsSingleMessage])
+                        {
+                            [self openSelection:self];
+                        }
+                        [threadsView scrollRowToVisible:itemRow];
+                    }
                 }
             }
         }

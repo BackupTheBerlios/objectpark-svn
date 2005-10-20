@@ -800,7 +800,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void)appendContentFromMessage:(G3Message *)aMessage
 {
-    [content appendAttributedString:[aMessage contentAsAttributedString]];
+    [content appendAttributedString:[[aMessage internetMessage] editableBodyContent]];
 }
 
 - (void)setReplySubjectFromMessage:(G3Message *)aMessage
