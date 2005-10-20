@@ -424,13 +424,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (BOOL) openSelection: (id) sender
 {    
-    if (sender == boxesView) {
+    if (sender == boxesView) 
+    {
         // open group window:
         [self showGroupWindow:sender];
         return YES;
     }
     
-    if ([self threadsShownCurrently]) {
+    if ([self threadsShownCurrently]) 
+    {
         int selectedRow = [threadsView selectedRow];
         
         if (selectedRow >= 0) {
@@ -500,21 +502,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 
                 [self setDisplayedMessage:message thread:selectedThread];
                 
-                if ([self matrixIsVisible])
-                {
-                    [window makeFirstResponder:commentsMatrix];
-                } else {
-                    [window makeFirstResponder:messageTextView];                    
-                }
+                if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
+                else [window makeFirstResponder:messageTextView];                    
             }
         }
-        
-    } else {
+    } 
+    else 
+    {
         // message shown
-        if ([window firstResponder] == commentsMatrix)
-        {
-            [window makeFirstResponder:messageTextView];
-        }
+        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
+        else [window makeFirstResponder:commentsMatrix];
     }
     return YES;
 }
@@ -523,33 +520,19 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (sender == messageTextView)
     {
-        if ([self matrixIsVisible])
-        {
-            [window makeFirstResponder:commentsMatrix];
-        }
-        else
-        {
-            [tabView selectFirstTabViewItem:sender];
-        }
+        [tabView selectFirstTabViewItem:sender];
     } 
     else 
     {
-        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"])
+        if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"])
         {
             if ([window firstResponder] == messageTextView)
             {
-                if ([self matrixIsVisible])
-                {
-                    [window makeFirstResponder:commentsMatrix];
-                }
-                else
-                {
-                    [tabView selectFirstTabViewItem:sender];
-                }
+                [tabView selectFirstTabViewItem:sender];
             } 
             else 
             {
-                 // from message switch back to threads:
+                // from message switch back to threads:
                 [tabView selectFirstTabViewItem:sender];
             }
         } 
@@ -557,8 +540,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         {
             if (![self isStandaloneBoxesWindow])
             {
-            // from threads switch back to the groups window:
+                // from threads switch back to the groups window:
                 [[GIApp standaloneGroupsWindow] makeKeyAndOrderFront:sender];
+                [window performClose:self];
             }
         }
     }
