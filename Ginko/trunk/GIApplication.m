@@ -200,7 +200,7 @@
 - (OPPersistentObjectContext*) initialPersistentObjectContext
 {
     //NSError*   error;
-    NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"GinkoBase.sqlite"];
+    NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"MessageBase.sqlite"];
     BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
     
 	NSAssert(!isNewlyCreated, @"Please supply an old database file. DB creation not implemented.");

@@ -1486,6 +1486,8 @@ static NSAttributedString* spacer2()
                 NSMutableArray *threadURIs = [NSMutableArray array];
                 NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
                 
+                return @"";
+                    /*
                 [g fetchThreadURIs:&threadURIs
                     trivialThreads:NULL
                          newerThan:[date timeIntervalSinceReferenceDate]
@@ -1493,6 +1495,7 @@ static NSAttributedString* spacer2()
                             author:nil
              sortedByDateAscending:YES];
                 return [NSNumber numberWithInt:[threadURIs count]];
+                     */
             }
         }
     }
