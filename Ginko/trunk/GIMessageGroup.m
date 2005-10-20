@@ -317,7 +317,7 @@ static NSMutableArray *root = nil;
     NSData *plistData;
     NSString *error;
     
-    plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"Hierarchy.plist"];
+    plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"GroupHierarchy.plist"];
     
     plistData = [NSPropertyListSerialization dataFromPropertyList:[self hierarchyRootNode] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
     if(plistData) {
@@ -386,7 +386,7 @@ static NSMutableArray *root = nil;
         NSPropertyListFormat format;
                 
         // read from application support folder:
-        plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"Hierarchy.plist"];
+        plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"GroupHierarchy.plist"];
         
         plistData = [NSData dataWithContentsOfFile:plistPath];
         root = [[NSPropertyListSerialization propertyListFromData:plistData
