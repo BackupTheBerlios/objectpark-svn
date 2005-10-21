@@ -120,9 +120,11 @@
 - (id) initFaultWithContext: (OPPersistentObjectContext*) context 
 						oid: (OID) anOid
 {
-	NSParameterAssert(anOid>0);
-	// Set the context here in the future
-	[self setOid: anOid];
+	if (self = [self init]) {
+		NSParameterAssert(anOid>0);
+		// Set the context here in the future
+		[self setOid: anOid];
+	}
     return self;
 }
 

@@ -40,9 +40,7 @@
 			8D27989909078CBE00DBD474 /* G3GroupController.m:1521 */,
 			8D27989B09078E5900DBD474 /* G3GroupController.m:678 */,
 			8D1540CA09086F5A0039DB71 /* OPFaultingArray.m:363 */,
-			8D1544CF090959860039DB71 /* GIMessage.m:202 */,
 			8D1544D609095A1A0039DB71 /* GIMessage.m:349 */,
-			8D1544D809095A2C0039DB71 /* GIMessage.m:185 */,
 		);
 		breakpointsGroup = 8D9E54AA0864469900AE9683 /* XCBreakpointsBucket */;
 		codeSenseManager = 8D9E89FF06AC42610055F87C /* Code sense */;
@@ -876,6 +874,15 @@
 			8D1544D4090959A50039DB71 /* PBXTextBookmark */ = 8D1544D4090959A50039DB71 /* PBXTextBookmark */;
 			8D1544D909095A2E0039DB71 /* PBXTextBookmark */ = 8D1544D909095A2E0039DB71 /* PBXTextBookmark */;
 			8D1544DA09095AD70039DB71 /* PBXTextBookmark */ = 8D1544DA09095AD70039DB71 /* PBXTextBookmark */;
+			8D1544DB09095B780039DB71 /* PBXTextBookmark */ = 8D1544DB09095B780039DB71 /* PBXTextBookmark */;
+			8D1544DC09095B780039DB71 /* PBXTextBookmark */ = 8D1544DC09095B780039DB71 /* PBXTextBookmark */;
+			8D1544DD09095B780039DB71 /* PBXTextBookmark */ = 8D1544DD09095B780039DB71 /* PBXTextBookmark */;
+			8D1544E009095BD80039DB71 /* PBXTextBookmark */ = 8D1544E009095BD80039DB71 /* PBXTextBookmark */;
+			8D1544E109095BD80039DB71 /* PBXTextBookmark */ = 8D1544E109095BD80039DB71 /* PBXTextBookmark */;
+			8D1544E209095BD80039DB71 /* PBXTextBookmark */ = 8D1544E209095BD80039DB71 /* PBXTextBookmark */;
+			8D1544E309095BD80039DB71 /* PBXTextBookmark */ = 8D1544E309095BD80039DB71 /* PBXTextBookmark */;
+			8D1544E409095BE60039DB71 /* PBXTextBookmark */ = 8D1544E409095BE60039DB71 /* PBXTextBookmark */;
+			8D1544E509095C010039DB71 /* PBXTextBookmark */ = 8D1544E509095C010039DB71 /* PBXTextBookmark */;
 			8D167F6809057B6B000F4F45 = 8D167F6809057B6B000F4F45 /* PBXTextBookmark */;
 			8D167F6F09057B6B000F4F45 = 8D167F6F09057B6B000F4F45 /* PBXTextBookmark */;
 			8D167F7009057B6B000F4F45 = 8D167F7009057B6B000F4F45 /* PBXTextBookmark */;
@@ -1515,7 +1522,7 @@
 		functionName = "-dealloc";
 		hitCount = 0;
 		lineNumber = 363;
-		modificationTime = 151607976.701019;
+		modificationTime = 151608281.75009;
 		state = 1;
 	};
 	8D1540E4090873AF0039DB71 /* PBXTextBookmark */ = {
@@ -1663,7 +1670,7 @@
 		fRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */;
 		name = "OPPersistentObject.m: 187";
 		rLen = 0;
-		rLoc = 5062;
+		rLoc = 5095;
 		rType = 0;
 		vrLen = 647;
 		vrLoc = 4689;
@@ -1733,7 +1740,7 @@
 		fRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */;
 		name = "OPPersistentObject.m: 187";
 		rLen = 0;
-		rLoc = 5062;
+		rLoc = 5095;
 		rType = 0;
 		vrLen = 647;
 		vrLoc = 4689;
@@ -2072,19 +2079,6 @@
 		vrLen = 669;
 		vrLoc = 30978;
 	};
-	8D1544CF090959860039DB71 /* GIMessage.m:202 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		continueAfterActions = 0;
-		delayBeforeContinue = 0;
-		fileReference = 8DCE35E70891900B00F705EF /* GIMessage.m */;
-		functionName = "-flags";
-		hitCount = 0;
-		lineNumber = 202;
-		modificationTime = 151607976.701103;
-		state = 1;
-	};
 	8D1544D0090959950039DB71 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 777625A60760E0EC0066BE60 /* G3GroupController.m */;
@@ -2145,20 +2139,7 @@
 		functionName = "-addFlags:";
 		hitCount = 0;
 		lineNumber = 349;
-		modificationTime = 151607976.701123;
-		state = 1;
-	};
-	8D1544D809095A2C0039DB71 /* GIMessage.m:185 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		continueAfterActions = 0;
-		delayBeforeContinue = 0;
-		fileReference = 8DCE35E70891900B00F705EF /* GIMessage.m */;
-		functionName = "-init";
-		hitCount = 0;
-		lineNumber = 185;
-		modificationTime = 151607976.701134;
+		modificationTime = 151608281.750113;
 		state = 1;
 	};
 	8D1544D909095A2E0039DB71 /* PBXTextBookmark */ = {
@@ -2180,6 +2161,93 @@
 		rType = 0;
 		vrLen = 1397;
 		vrLoc = 7233;
+	};
+	8D1544DB09095B780039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 777625A60760E0EC0066BE60 /* G3GroupController.m */;
+		name = "G3GroupController.m: 958";
+		rLen = 0;
+		rLoc = 31297;
+		rType = 0;
+		vrLen = 629;
+		vrLoc = 31062;
+	};
+	8D1544DC09095B780039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E70891900B00F705EF /* GIMessage.m */;
+		rLen = 0;
+		rLoc = 348;
+		rType = 1;
+	};
+	8D1544DD09095B780039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E70891900B00F705EF /* GIMessage.m */;
+		name = "- (id) init";
+		rLen = 13;
+		rLoc = 7190;
+		rType = 0;
+		vrLen = 527;
+		vrLoc = 6805;
+	};
+	8D1544E009095BD80039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E70891900B00F705EF /* GIMessage.m */;
+		name = "- (id) init";
+		rLen = 13;
+		rLoc = 7190;
+		rType = 0;
+		vrLen = 981;
+		vrLoc = 6474;
+	};
+	8D1544E109095BD80039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */;
+		name = "OPPersistentObject.m: 187";
+		rLen = 0;
+		rLoc = 5095;
+		rType = 0;
+		vrLen = 1007;
+		vrLoc = 4580;
+	};
+	8D1544E209095BD80039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E70891900B00F705EF /* GIMessage.m */;
+		name = "- (id) init";
+		rLen = 13;
+		rLoc = 7190;
+		rType = 0;
+		vrLen = 981;
+		vrLoc = 6474;
+	};
+	8D1544E309095BD80039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */;
+		name = "OPPersistentObject.m: 123";
+		rLen = 0;
+		rLoc = 3321;
+		rType = 0;
+		vrLen = 1047;
+		vrLoc = 2732;
+	};
+	8D1544E409095BE60039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */;
+		name = "OPPersistentObject.m: 123";
+		rLen = 0;
+		rLoc = 3321;
+		rType = 0;
+		vrLen = 1125;
+		vrLoc = 2747;
+	};
+	8D1544E509095C010039DB71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */;
+		name = "OPPersistentObject.m: 123";
+		rLen = 0;
+		rLoc = 3321;
+		rType = 0;
+		vrLen = 1125;
+		vrLoc = 2747;
 	};
 	8D167D5E09057508000F4F45 /* GIAccount.h */ = {
 		uiCtxt = {
@@ -2268,7 +2336,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607976.704486;
+		modificationTime = 151608281.753026;
 		state = 2;
 		symbolName = "-[NSSQLGenerator buildWhereClauseWithSelectPredicate:]";
 	};
@@ -2277,7 +2345,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607976.704509;
+		modificationTime = 151608281.753047;
 		state = 2;
 		symbolName = "-[NSSQLGenerator addJoinForManyToManyRelationship:sourcePath:]";
 	};
@@ -2286,7 +2354,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607976.704641;
+		modificationTime = 151608281.753059;
 		state = 2;
 		symbolName = "-[NSSQLGenerator sqlString]";
 	};
@@ -2295,7 +2363,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607976.704667;
+		modificationTime = 151608281.75307;
 		state = 2;
 		symbolName = "-[NSSQLGenerator addJoinForDirectToManyToMany:]";
 	};
@@ -2306,7 +2374,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607976.704755;
+		modificationTime = 151608281.753156;
 		state = 1;
 		symbolName = "-[_NSZombie release]";
 	};
@@ -2320,7 +2388,7 @@
 		functionName = "-initWithMessagePart:";
 		hitCount = 0;
 		lineNumber = 71;
-		modificationTime = 151607976.70021;
+		modificationTime = 151608281.749222;
 		state = 1;
 	};
 	8D21445F085037C1004C44B9 /* EDPlainTextContentCoder.m:200 */ = {
@@ -2370,7 +2438,7 @@
 		functionName = "-outlineView:setObjectValue:forTableColumn:byItem:";
 		hitCount = 0;
 		lineNumber = 1503;
-		modificationTime = 151607976.70093;
+		modificationTime = 151608281.750035;
 		state = 1;
 	};
 	8D27989709078CAB00DBD474 /* G3GroupController.m:1512 */ = {
@@ -2383,7 +2451,7 @@
 		functionName = "-outlineView:itemForPersistentObject:";
 		hitCount = 0;
 		lineNumber = 1512;
-		modificationTime = 151607976.700942;
+		modificationTime = 151608281.750054;
 		state = 1;
 	};
 	8D27989909078CBE00DBD474 /* G3GroupController.m:1521 */ = {
@@ -2396,7 +2464,7 @@
 		functionName = "-outlineView:persistentObjectForItem:";
 		hitCount = 0;
 		lineNumber = 1521;
-		modificationTime = 151607976.70099;
+		modificationTime = 151608281.750065;
 		state = 1;
 	};
 	8D27989B09078E5900DBD474 /* G3GroupController.m:678 */ = {
@@ -2409,7 +2477,7 @@
 		functionName = "-addMessageGroup:";
 		hitCount = 0;
 		lineNumber = 678;
-		modificationTime = 151607976.701007;
+		modificationTime = 151608281.750077;
 		state = 1;
 	};
 	8D2BA5B009068C9900D5BB0D /* NSString+Extensions.m:251 */ = {
@@ -2422,7 +2490,7 @@
 		functionName = "-longLongValue";
 		hitCount = 0;
 		lineNumber = 251;
-		modificationTime = 151607976.70091;
+		modificationTime = 151608281.749963;
 		state = 1;
 	};
 	8D2BA5BC09068DD600D5BB0D /* PBXTextBookmark */ = {
@@ -2450,7 +2518,7 @@
 		fRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */;
 		name = "#warning Record relationship change in persistent context somehow.";
 		rLen = 67;
-		rLoc = 10037;
+		rLoc = 10070;
 		rType = 0;
 		vrLen = 1002;
 		vrLoc = 9465;
@@ -2475,7 +2543,7 @@
 		functionName = "-testThreadsRelationship";
 		hitCount = 0;
 		lineNumber = 213;
-		modificationTime = 151607976.700662;
+		modificationTime = 151608281.749767;
 		state = 1;
 	};
 	8D484E8608DB098C001657AD /* TestPersistence.m:208 */ = {
@@ -2488,7 +2556,7 @@
 		functionName = "-testThreadsRelationship";
 		hitCount = 0;
 		lineNumber = 208;
-		modificationTime = 151607976.700753;
+		modificationTime = 151608281.749882;
 		state = 1;
 	};
 	8D4C5753076E3B6F000F46DA /* G3CommentTreeCell.h */ = {
@@ -2541,7 +2609,7 @@
 		functionName = "-sort";
 		hitCount = 0;
 		lineNumber = 64;
-		modificationTime = 151607976.700638;
+		modificationTime = 151608281.749743;
 		state = 1;
 	};
 	8D5885C908CE50C700760939 /* OPFaultingArray.m:194 */ = {
@@ -2554,7 +2622,7 @@
 		functionName = "-removeObjectAtIndex:";
 		hitCount = 0;
 		lineNumber = 194;
-		modificationTime = 151607976.70065;
+		modificationTime = 151608281.749756;
 		state = 2;
 	};
 	8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */ = {
@@ -2817,7 +2885,7 @@
 		functionName = "-restoreDefaultAction:";
 		hitCount = 0;
 		lineNumber = 72;
-		modificationTime = 151607976.699727;
+		modificationTime = 151608281.738515;
 		state = 1;
 	};
 	8D6E6A1007DA853900428E45 /* Localizable.strings */ = {
@@ -3464,7 +3532,7 @@
 		functionName = "-configureDatabaseAtPath:";
 		hitCount = 0;
 		lineNumber = 103;
-		modificationTime = 151607976.700339;
+		modificationTime = 151608281.749448;
 		state = 1;
 	};
 	8D9E54020864410F00AE9683 /* GIApplication.m:209 */ = {
@@ -3654,7 +3722,7 @@
 		functionName = "-sortObjectAtIndex:";
 		hitCount = 0;
 		lineNumber = 251;
-		modificationTime = 151607976.700823;
+		modificationTime = 151608281.749905;
 		state = 1;
 	};
 	8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */ = {
@@ -3709,7 +3777,7 @@
 		functionName = "-statementForClass:forId:relationship:";
 		hitCount = 0;
 		lineNumber = 118;
-		modificationTime = 151607992.662646;
+		modificationTime = 151608285.467243;
 		state = 0;
 	};
 	8DC771F806B1097500053CB7 /* -[NSException raise] */ = {
@@ -3719,7 +3787,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607976.704312;
+		modificationTime = 151608281.752908;
 		state = 1;
 		symbolName = "-[NSException raise]";
 	};
@@ -3748,7 +3816,7 @@
 		functionName = "-setFrame:";
 		hitCount = 0;
 		lineNumber = 156;
-		modificationTime = 151607976.699668;
+		modificationTime = 151608281.738282;
 		state = 1;
 	};
 	8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */ = {
@@ -3767,9 +3835,9 @@
 	};
 	8DCE35E70891900B00F705EF /* GIMessage.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {710, 6622}}";
-			sepNavSelRange = "{7333, 19}";
-			sepNavVisRect = "{{0, 2696}, {710, 531}}";
+			sepNavIntBoundsRect = "{{0, 0}, {997, 6552}}";
+			sepNavSelRange = "{7190, 13}";
+			sepNavVisRect = "{{0, 2450}, {997, 298}}";
 		};
 	};
 	8DCE35E80891900B00F705EF /* OPPersistentObject.h */ = {
@@ -3781,9 +3849,9 @@
 	};
 	8DCE35E90891900B00F705EF /* OPPersistentObject.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {968, 5586}}";
-			sepNavSelRange = "{5062, 0}";
-			sepNavVisRect = "{{0, 2462}, {968, 298}}";
+			sepNavIntBoundsRect = "{{0, 0}, {997, 5586}}";
+			sepNavSelRange = "{3321, 0}";
+			sepNavVisRect = "{{0, 1566}, {997, 298}}";
 			sepNavWindowFrame = "{{51, 183}, {750, 558}}";
 		};
 	};
@@ -3858,7 +3926,7 @@
 		functionName = "-dealloc";
 		hitCount = 0;
 		lineNumber = 377;
-		modificationTime = 151607976.700442;
+		modificationTime = 151608281.749593;
 		state = 1;
 	};
 	8DCFB61E0884261D004476CC /* GIFiltersPane.m:368 */ = {
@@ -3871,7 +3939,7 @@
 		functionName = "-willUnselect";
 		hitCount = 0;
 		lineNumber = 368;
-		modificationTime = 151607976.700462;
+		modificationTime = 151608281.749677;
 		state = 1;
 	};
 	8DD13E64085B02F000EB61FA /* OPInternetMessageAttachmentCell.m:48 */ = {
@@ -3911,7 +3979,7 @@
 		functionName = "-setSubview:isCollapsed:";
 		hitCount = 0;
 		lineNumber = 39;
-		modificationTime = 151607976.699932;
+		modificationTime = 151608281.738617;
 		state = 1;
 	};
 	8DD39BF3084B0D6400ACA18D /* OPCollapsingSplitView.m:20 */ = {
@@ -3924,7 +3992,7 @@
 		functionName = "-initWithFrame:";
 		hitCount = 0;
 		lineNumber = 20;
-		modificationTime = 151607976.700085;
+		modificationTime = 151608281.738733;
 		state = 1;
 	};
 	8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {
@@ -4021,7 +4089,7 @@
 		functionName = "-initWithPersistentClass:";
 		hitCount = 0;
 		lineNumber = 47;
-		modificationTime = 151607979.776968;
+		modificationTime = 151608285.368524;
 		state = 0;
 	};
 	8DE95F44089CFB5A0053ED6B /* OPSQLiteConnection.m:50 */ = {
@@ -4034,7 +4102,7 @@
 		functionName = "-raiseSQLiteError";
 		hitCount = 0;
 		lineNumber = 50;
-		modificationTime = 151607992.3726;
+		modificationTime = 151608285.419405;
 		state = 0;
 	};
 	8DE9625D089E118D0053ED6B /* OPSQLiteConnection.m:102 */ = {
@@ -4060,7 +4128,7 @@
 		functionName = "-performCommand:";
 		hitCount = 0;
 		lineNumber = 318;
-		modificationTime = 151607992.406029;
+		modificationTime = 151608285.444282;
 		state = 0;
 	};
 	8DE9646E089F9F1F0053ED6B /* GIThread.h */ = {
@@ -4141,7 +4209,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607993.673658;
+		modificationTime = 151608285.978132;
 		state = 0;
 		symbolName = "_NSZombie methodSignatureForSelector]";
 	};
@@ -4152,7 +4220,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 0;
-		modificationTime = 151607993.867792;
+		modificationTime = 151608286.087275;
 		state = 0;
 		symbolName = "NSZombie forward::";
 	};
