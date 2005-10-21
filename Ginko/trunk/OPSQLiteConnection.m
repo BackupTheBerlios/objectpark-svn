@@ -92,7 +92,7 @@
         while (i<attrCount) {
 			OPAttributeDescription* desc = [attributes objectAtIndex: i];
 			id value = [desc->theClass newFromStatement: [statement stmt] index: i];
-			NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
+			// if (NSDebugEnabled) NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
 			if (value) {
 				[result setObject: value forKey: desc->name];
 			} 

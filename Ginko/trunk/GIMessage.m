@@ -40,6 +40,7 @@
 	@"senderName = {ColumnName = ZAUTHOR; AttributeClass = NSString;};"
 	@"profile = {ColumnName = ZPROFILE; AttributeClass = GIProfile;};"
 	@"thread = {ColumnName = ZTHREAD; AttributeClass = GIThread;};"
+	@"reference = {ColumnName = ZREFERENCE; AttributeClass = GIMessage;};"
 	@"}";
 }
 

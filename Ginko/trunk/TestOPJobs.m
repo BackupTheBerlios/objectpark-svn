@@ -12,7 +12,7 @@
 
 @implementation TestOPJobs
 
-- (void)setUp
+- (void) setUp
 {
     [OPJobs setMaxThreads:2];
 }

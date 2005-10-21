@@ -16,35 +16,35 @@
 
 @interface G3GroupController : NSObject 
 {
-    IBOutlet NSWindow *window;
-    IBOutlet GIOutlineViewWithKeyboardSupport *threadsView;
-    IBOutlet NSTabView *tabView;
-    IBOutlet NSTextView *messageTextView;
-    IBOutlet NSMatrix *commentsMatrix;
-    IBOutlet NSTextField *groupInfoTextField;
-    IBOutlet NSDrawer *boxesDrawer;
-    IBOutlet NSOutlineView *boxesView;
-    IBOutlet OPCollapsingSplitView *treeBodySplitter;
-    IBOutlet NSPopUpButton *threadFilterPopUp;
-    IBOutlet NSProgressIndicator *progressIndicator;
+    IBOutlet NSWindow* window;
+    IBOutlet GIOutlineViewWithKeyboardSupport* threadsView;
+    IBOutlet NSTabView* tabView;
+    IBOutlet NSTextView* messageTextView;
+    IBOutlet NSMatrix* commentsMatrix;
+    IBOutlet NSTextField* groupInfoTextField;
+    IBOutlet NSDrawer* boxesDrawer;
+    IBOutlet NSOutlineView* boxesView;
+    IBOutlet OPCollapsingSplitView* treeBodySplitter;
+    IBOutlet NSPopUpButton* threadFilterPopUp;
+    IBOutlet NSProgressIndicator* progressIndicator;
 
-    GIMessageGroup *group;
-    GIThread *displayedThread; // displayed as comment tree
-    GIMessage *displayedMessage; // displayed with body
-    NSMutableArray *threadCache; // contains item uris
-    NSMutableSet *nonExpandableItemsCache; // contains item uris
+    GIMessageGroup* group;
+    GIThread* displayedThread; // displayed as comment tree
+    GIMessage* displayedMessage; // displayed with body
+    NSMutableArray* threadCache; // contains item uris
+    NSMutableSet* nonExpandableItemsCache; // contains GIThreads
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
     
     // -- Toolbar --
-    NSArray *toolbarItems;
-    NSArray *defaultIdentifiers;
+    NSArray* toolbarItems;
+    NSArray* defaultIdentifiers;
     
     // -- Comment Tree --
 }
 
-- (id)initWithGroup:(GIMessageGroup *)aGroup;
-- (id)initAsStandAloneBoxesWindow:(GIMessageGroup *)aGroup;
+- (id)initWithGroup: (GIMessageGroup*) aGroup;
+- (id)initAsStandAloneBoxesWindow: (GIMessageGroup*) aGroup;
 
 - (NSWindow *)window;
 - (GIMessageGroup *)group;

@@ -261,45 +261,38 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
 }
 */
 
-- (NSMutableAttributedString *)bodyContent 
+- (NSMutableAttributedString*) bodyContent 
 {
-    NSMutableAttributedString *bodyContent;
+    NSMutableAttributedString* bodyContent;
 
     @try {
-        bodyContent = [[NSMutableAttributedString alloc] initWithAttributedString:[self contentAsAttributedStringWithPreferredContentTypes:[EDMessagePart preferredContentTypes]]];
+        bodyContent = [[NSMutableAttributedString alloc] initWithAttributedString:[self contentAsAttributedStringWithPreferredContentTypes: [EDMessagePart preferredContentTypes]]];
     } @catch (NSException* localException) {
         NSLog(@"warning: [%@]\n", [localException reason]);
-        bodyContent = [[NSMutableAttributedString alloc] initWithString:@"Not decodable.\nFallback to text/plain:\n\n"];
+        bodyContent = [[NSMutableAttributedString alloc] initWithString: @"Not decodable.\nFallback to text/plain:\n\n"];
         [self setContentType: @"text/plain"];
-        [bodyContent appendAttributedString:[self contentAsAttributedString]];
+        [bodyContent appendAttributedString: [self contentAsAttributedString]];
     }
 
     return [bodyContent autorelease];
 }
 
-- (NSAttributedString *)editableBodyContent
+- (NSAttributedString*) editableBodyContent
 /*"Returns message in a format suitable for editing. That means the quoted lines are wrapped to 72 characters."*/
 {
-    NSMutableAttributedString *bodyContent, *result;
-    NSArray *partContentStrings;
-    NSEnumerator *enumerator;
-    EDObjectPair *typeAndContent;
-    
-    result = [[[NSMutableAttributedString alloc] init] autorelease];
-    bodyContent = [self bodyContent];
-    partContentStrings = [bodyContent divideContentStringTypedStrings];
-    
-    enumerator = [partContentStrings objectEnumerator];
-    while (typeAndContent = [enumerator nextObject])
-    {
-        if([typeAndContent firstObject] == nil) // text part
-        {
+    NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString* bodyContent = [self bodyContent];
+    NSArray* partContentStrings = [bodyContent divideContentStringTypedStrings];
+    NSEnumerator* enumerator = [partContentStrings objectEnumerator];
+	EDObjectPair *typeAndContent;
+
+    while (typeAndContent = [enumerator nextObject]){
+        if([typeAndContent firstObject] == nil) {   
+			// text part
             // Ginko currently only supports the creation of text/plain messages 
             // so the following line is OK.
             [result appendString:[[typeAndContent secondObject] quotedStringWithLineLength: 72 byIncreasingQuoteLevelBy: 0]];
-        }
-        else
-        {
+        } else {
             [result appendAttributedString:[typeAndContent secondObject]];
         }
     }
@@ -391,7 +384,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
 }
 */
 
-- (BOOL)isMultiHeader:(EDObjectPair *)headerField
+- (BOOL)isMultiHeader: (EDObjectPair*) headerField
 {
     NSEnumerator *enumerator;
     EDObjectPair *header;
@@ -401,10 +394,8 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
     compareString = [headerField firstObject];
     
     enumerator = [[self headerFields] objectEnumerator];
-    while (header = [enumerator nextObject])
-    {
-        if ([[header firstObject] isEqualToString:compareString])
-        {
+    while (header = [enumerator nextObject]) {
+        if ([[header firstObject] isEqualToString:compareString]) {
             if (foundOnce)
                 return YES;
             else

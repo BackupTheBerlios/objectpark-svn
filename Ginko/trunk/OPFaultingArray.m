@@ -394,6 +394,15 @@ int compareOids(OID o1, OID o2)
 	return [OPFaultingArrayEnumerator enumeratorWithArray: self];
 }
 
+- (void) makeObjectsPerformSelector: (SEL) selector
+{
+	NSEnumerator* e = [self objectEnumerator];
+	id entry;
+	while (entry = [e nextObject]) {
+		[entry performSelector: selector];
+	}
+}
+
 @end
 
 

@@ -46,6 +46,6 @@
 //- (void) replaceOidAtIndex: (unsigned) anIndex withOid: (OID) anInt;
 
 - (NSEnumerator*) objectEnumerator;
-
+- (void) makeObjectsPerformSelector: (SEL) selector;
 
 @end

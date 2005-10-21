@@ -123,7 +123,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
     [displayedMessage release];
     [displayedThread release];
-    [self setGroup:nil];
+    [self setGroup: nil];
     [threadCache release];
     [nonExpandableItemsCache release];
     
@@ -191,7 +191,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // select responding item in threads view:
     if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     {
-        itemRow = [threadsView rowForItemEqualTo: [aThread objectURLString] startingAtRow: 0];
+        itemRow = [threadsView rowForItemEqualTo: aThread startingAtRow: 0];
     }
     
     [threadsView selectRow:itemRow byExtendingSelection:NO];
@@ -442,74 +442,66 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                while ([threadsView levelForRow:--selectedRow]){}
-                selectedThread = [OPPersistentObjectContext objectWithURLString: [threadsView itemAtRow: selectedRow]];
+                while ([threadsView levelForRow: --selectedRow]){}
+                selectedThread = [threadsView itemAtRow: selectedRow];
             } else {
-                selectedThread = [OPPersistentObjectContext objectWithURLString: item];
+                selectedThread = item;
                 
                 if ([selectedThread containsSingleMessage]) {
-                    message = [[selectedThread valueForKey: @"messages"] anyObject];
+                    message = [[selectedThread valueForKey: @"messages"] lastObject];
                 } else {
-                    if ([threadsView isItemExpanded:item]) {
-                        [threadsView collapseItem:item];
+                    if ([threadsView isItemExpanded: item]) {
+                        [threadsView collapseItem: item];
                     } else {
-                        NSEnumerator *enumerator;
-                        GIMessage *message;
+                        NSEnumerator* enumerator;
+                        GIMessage* message;
                         
-                        [threadsView expandItem:item];                    
+                        [threadsView expandItem: item];                    
                         // ##TODO:select first "interesting" message of this thread
                         // perhaps the next/first unread message
                         
                         enumerator = [[selectedThread messagesByTree] objectEnumerator];
                         while (message = [enumerator nextObject]) {
-                            if (! [message hasFlags:OPSeenStatus]) {
-                                [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:message]] byExtendingSelection:NO];
+                            if (! [message hasFlags: OPSeenStatus]) {
+                                [threadsView selectRowIndexes: [NSIndexSet indexSetWithIndex: [threadsView rowForItem:message]] byExtendingSelection: NO];
                                 break;
                             }
                         }
                         
                         if (! message) {
                             // if no message found select last one:
-                            [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:[[selectedThread messagesByTree] lastObject]]] byExtendingSelection:NO];   
+                            [threadsView selectRowIndexes: [NSIndexSet indexSetWithIndex: [threadsView rowForItem: [[selectedThread messagesByTree] lastObject]]] byExtendingSelection: NO];   
                         }
                         
                         // make selection visible:
-                        [threadsView scrollRowToVisible:[threadsView selectedRow]];
+                        [threadsView scrollRowToVisible: [threadsView selectedRow]];
                     }
                     return YES;
                 }
             }
             
-            if ([message hasFlags: OPDraftStatus] || [message hasFlags:OPQueuedStatus])
-            {
-                if ([message hasFlags:OPInSendJobStatus])
-                {
+            if ([message hasFlags: OPDraftStatus] || [message hasFlags: OPQueuedStatus]) {
+                if ([message hasFlags: OPInSendJobStatus]) {
                     NSLog(@"message is in send job");
                     NSBeep();
-                }
-                else
-                {
+                } else {
                     [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
                 }
-            }
-            else
-            {
+            } else {
                 [tabView selectTabViewItemWithIdentifier: @"message"];
                 
-                [message addFlags:OPSeenStatus];
+                [message addFlags: OPSeenStatus];
                 
-                [self setDisplayedMessage:message thread:selectedThread];
+                [self setDisplayedMessage:message thread: selectedThread];
                 
-                if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
-                else [window makeFirstResponder:messageTextView];                    
+                if ([self matrixIsVisible]) [window makeFirstResponder: commentsMatrix];
+                else [window makeFirstResponder: messageTextView];                    
             }
         }
-    } 
-    else 
-    {
+	} else {
         // message shown
-        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
-        else [window makeFirstResponder:commentsMatrix];
+        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder: messageTextView];
+        else [window makeFirstResponder: commentsMatrix];
     }
     return YES;
 }
@@ -1073,7 +1065,7 @@ static BOOL isThreadItem(id item)
         selectedIndexes = [threadsView selectedRowIndexes];
         if ((! [self isStandaloneBoxesWindow])&& ([selectedIndexes count] == 1)) {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[GIMessage class]]) || ([[OPPersistentObjectContext objectWithURLString: item] containsSingleMessage])) {
+            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) {
                 return YES;
             }
         }
@@ -1161,9 +1153,10 @@ static BOOL isThreadItem(id item)
 - (BOOL) outlineView: (NSOutlineView*) outlineView shouldExpandItem: (id) item
 /*" Remembers last expanded thread for opening the next time. "*/
 {
-    if (outlineView == threadsView) // subjects list
-    {
+    if (outlineView == threadsView) {
         [tabView selectFirstTabViewItem:self];
+		// Retain all messages in thread item:
+		[[item messages] makeObjectsPerformSelector: @selector(retain)];
     }
     
     return YES;
@@ -1222,9 +1215,21 @@ static BOOL isThreadItem(id item)
         }
         return [item objectAtIndex:index + 1];
     }
-    
     return nil;
 }
+
+
+
+- (BOOL) outlineView: (NSOutlineView*) outlineView shouldCollapseItem: (id) item;
+{
+	if (threadsView == outlineView) {
+        // Retain all messages in thread item:
+		NSLog(@"Should release opened messages.");
+		//[[item messages] makeObjectsPerformSelector: @selector(autorelease)];
+	}
+	return YES;
+}
+
 
 // diverse attributes
 NSDictionary* unreadAttributes()
@@ -1560,17 +1565,17 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 
 NSMutableArray* border = nil;
 
-- (void)initializeBorderToDepth:(int)aDepth
+- (void)initializeBorderToDepth: (int) aDepth
 {
     int i;
     
     [border autorelease];
-    border = [[NSMutableArray alloc] initWithCapacity:aDepth];
+    border = [[NSMutableArray alloc] initWithCapacity: aDepth];
     for (i = 0; i < aDepth; i++)
-        [border addObject:[NSNumber numberWithInt:-1]];
+        [border addObject:[NSNumber numberWithInt: -1]];
 }
 
-- (int)placeTreeWithRootMessage:(GIMessage*)message atOrBelowRow:(int)row inColumn:(int)column
+- (int) placeTreeWithRootMessage: (GIMessage*) message atOrBelowRow: (int) row inColumn: (int) column
 {
     G3CommentTreeCell* cell;
     
@@ -1583,55 +1588,53 @@ NSMutableArray* border = nil;
     NSEnumerator* children = [comments objectEnumerator];
     GIMessage* child;
     
-    if (child = [children nextObject])
-    {
+    if (child = [children nextObject]) {
         int nextColumn = column + 1;
         int newRow;
         
-        row = newRow = [self placeTreeWithRootMessage:child atOrBelowRow:row inColumn:nextColumn];
+        row = newRow = [self placeTreeWithRootMessage: child atOrBelowRow: row inColumn: nextColumn];
         
-        cell = [commentsMatrix cellAtRow:newRow column:nextColumn];
+        cell = [commentsMatrix cellAtRow: newRow column: nextColumn];
         [cell addConnectionToEast];
         [cell addConnectionToWest];
         
-        while (child = [children nextObject])
-            {
+        while (child = [children nextObject]) {
             int i;
             int startRow = newRow;
             BOOL messageHasDummyParent = [[message reference] isDummy];
             
-            newRow = [self placeTreeWithRootMessage:child atOrBelowRow:newRow + 1 inColumn:nextColumn];
+            newRow = [self placeTreeWithRootMessage: child atOrBelowRow: newRow + 1 inColumn: nextColumn];
             
-            [[commentsMatrix cellAtRow:startRow column:nextColumn] addConnectionToSouth];
+            [[commentsMatrix cellAtRow: startRow column: nextColumn] addConnectionToSouth];
             
             for (i = startRow+1; i < newRow; i++)
             {
-                cell = [commentsMatrix cellAtRow:i column:nextColumn];
+                cell = [commentsMatrix cellAtRow: i column: nextColumn];
                 [cell addConnectionToNorth];
                 [cell addConnectionToSouth];
-                [cell setHasConnectionToDummyMessage:messageHasDummyParent];
+                [cell setHasConnectionToDummyMessage: messageHasDummyParent];
             }
             
-            cell = [commentsMatrix cellAtRow:newRow column:nextColumn];
+            cell = [commentsMatrix cellAtRow: newRow column: nextColumn];
             [cell addConnectionToNorth];
             [cell addConnectionToEast];
-            [cell setHasConnectionToDummyMessage:messageHasDummyParent];
+            [cell setHasConnectionToDummyMessage: messageHasDummyParent];
         }
     }
     
     // update the border
-    [border replaceObjectAtIndex:column withObject:[NSNumber numberWithInt:row]];
+    [border replaceObjectAtIndex: column withObject: [NSNumber numberWithInt: row]];
     
     
     while (row >= [commentsMatrix numberOfRows])
         [commentsMatrix addRow];
     
-    cell = [commentsMatrix cellAtRow:row column:column];
+    cell = [commentsMatrix cellAtRow: row column: column];
     
     
     
-    NSArray* siblings = [[message reference] commentsInThread:[self displayedThread]];
-    int indexOfMessage = [siblings indexOfObject:message];
+    NSArray* siblings = [[message reference] commentsInThread: [self displayedThread]];
+    int indexOfMessage = [siblings indexOfObject: message];
         
     if (commentCount > 0)
         [cell addNavigationToEast];
@@ -1643,17 +1646,16 @@ NSMutableArray* border = nil;
         [cell addNavigationToSouth];
 
     // set cell's message attributes
-    [cell setRepresentedObject:message];
-    [cell setSeen:[message hasFlags:OPSeenStatus]];
+    [cell setRepresentedObject: message];
+    [cell setSeen:[message hasFlags: OPSeenStatus]];
     [cell setIsDummyMessage: [message isDummy]];
     [cell setHasConnectionToDummyMessage: [[message reference] isDummy]];
     
-    [commentsMatrix setToolTip:[message valueForKey: @"author"] forCell:cell];
+    [commentsMatrix setToolTip: [message valueForKey: @"senderName"] forCell:cell];
         
     // for testing we are coloring the messages of David Stes and John C. Randolph
     NSString* senderName = [message senderName];
-    if (senderName)
-    {
+    if (senderName) {
         NSRange range = [senderName rangeOfString: @"David Stes"];
         if (range.location != NSNotFound)
             [cell setColorIndex:1];  // red
@@ -1665,12 +1667,11 @@ NSMutableArray* border = nil;
     return row;
 }
 
-- (void)updateCommentTree:(BOOL)rebuildThread
+- (void) updateCommentTree: (BOOL) rebuildThread
 {
-    if (rebuildThread)
-    {
+    if (rebuildThread) {
         [commentsMatrix deselectAllCells];
-        [commentsMatrix renewRows:1 columns:[displayedThread commentDepth]];
+        [commentsMatrix renewRows: 1 columns: [displayedThread commentDepth]];
         
         commentsCache = [[NSMutableDictionary alloc] init];
         
@@ -1679,7 +1680,7 @@ NSMutableArray* border = nil;
         
         //NSLog(@"Cells %@", [commentsMatrix cells]);
         
-        [[commentsMatrix cells] makeObjectsPerformSelector:@selector(reset)withObject:nil];
+        [[commentsMatrix cells] makeObjectsPerformSelector: @selector(reset)withObject: nil];
         
         // Usually this calls placeMessage:singleRootMessage row:0
         NSEnumerator* me = [[displayedThread rootMessages] objectEnumerator];
@@ -1688,7 +1689,7 @@ NSMutableArray* border = nil;
         
         [self initializeBorderToDepth:[displayedThread commentDepth]];
         while (rootMessage = [me nextObject])
-            row = [self placeTreeWithRootMessage:rootMessage atOrBelowRow:row inColumn:0];
+            row = [self placeTreeWithRootMessage: rootMessage atOrBelowRow: row inColumn: 0];
         
         //[commentsMatrix selectCell:[commentsMatrix cellForRepresentedObject:displayedMessage]];
         [commentsMatrix sizeToFit];
@@ -1700,16 +1701,16 @@ NSMutableArray* border = nil;
     }
     
     int row, column;
-    G3CommentTreeCell *cell;
+    G3CommentTreeCell* cell;
     
-    cell = (G3CommentTreeCell *)[commentsMatrix cellForRepresentedObject:displayedMessage];
+    cell = (G3CommentTreeCell*) [commentsMatrix cellForRepresentedObject: displayedMessage];
     [cell setSeen:YES];
     
-    [commentsMatrix selectCell:cell];
+    [commentsMatrix selectCell: cell];
     
-    [commentsMatrix getRow:&row column:&column ofCell:cell];
-    [commentsMatrix scrollCellToVisibleAtRow:MAX(row-1, 0)column:MAX(column-1,0)];
-    [commentsMatrix scrollCellToVisibleAtRow:row+1 column:column+1];
+    [commentsMatrix getRow: &row column: &column ofCell: cell];
+    [commentsMatrix scrollCellToVisibleAtRow: MAX(row-1, 0)column: MAX(column-1,0)];
+    [commentsMatrix scrollCellToVisibleAtRow: row+1 column: column+1];
 }
 
 - (IBAction)selectTreeCell:(id)sender
@@ -1717,65 +1718,55 @@ NSMutableArray* border = nil;
 {
     GIMessage *selectedMessage = [[sender selectedCell] representedObject];
     
-    if (selectedMessage)
-    {
+    if (selectedMessage) {
         [self setDisplayedMessage:selectedMessage thread:[self displayedThread]];
     }
 }
 
 // navigation (triggered by menu and keyboard shortcuts)
-- (IBAction)navigateUpInMatrix:(id)sender
+- (IBAction) navigateUpInMatrix: (id) sender
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently])
-    {
-        NSArray *comments;
+    if (![self threadsShownCurrently]) {
+        NSArray* comments;
         int indexOfDisplayedMessage;
         
-        comments = [[[self displayedMessage] reference] commentsInThread:[self displayedThread]];
-        indexOfDisplayedMessage = [comments indexOfObject:[self displayedMessage]];
+        comments = [[[self displayedMessage] reference] commentsInThread: [self displayedThread]];
+        indexOfDisplayedMessage = [comments indexOfObject: [self displayedMessage]];
         
-        if ((indexOfDisplayedMessage - 1)>= 0)
-        {
-            [self setDisplayedMessage:[comments objectAtIndex:indexOfDisplayedMessage - 1] thread:[self displayedThread]];
+        if ((indexOfDisplayedMessage - 1)>= 0) {
+            [self setDisplayedMessage: [comments objectAtIndex: indexOfDisplayedMessage - 1] thread: [self displayedThread]];
             return;
         }
         NSBeep();
     }
 }
 
-- (IBAction)navigateDownInMatrix:(id)sender
+- (IBAction) navigateDownInMatrix: (id) sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently])
-    {
-        NSArray *comments;
-        int indexOfDisplayedMessage;
+    if (![self threadsShownCurrently]) {
         
-        comments = [[[self displayedMessage] reference] commentsInThread:[self displayedThread]];
-        indexOfDisplayedMessage = [comments indexOfObject:[self displayedMessage]];
+        NSArray* comments = [[[self displayedMessage] reference] commentsInThread: [self displayedThread]];
+        int indexOfDisplayedMessage = [comments indexOfObject: [self displayedMessage]];
         
-        if ([comments count] > indexOfDisplayedMessage + 1)
-        {
-            [self setDisplayedMessage:[comments objectAtIndex:indexOfDisplayedMessage + 1] thread:[self displayedThread]];
+        if ([comments count] > indexOfDisplayedMessage + 1) {
+            [self setDisplayedMessage: [comments objectAtIndex: indexOfDisplayedMessage + 1] thread: [self displayedThread]];
             return;
         }
         NSBeep();
     }
 }
 
-- (IBAction)navigateLeftInMatrix:(id)sender
+- (IBAction)navigateLeftInMatrix: (id) sender
 /*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently])
-    {
+    if (![self threadsShownCurrently]) {
         GIMessage *newMessage;
         
-        if ((newMessage = [[self displayedMessage] reference]))
-        {
+        if ((newMessage = [[self displayedMessage] reference])) {
             // check if the current thread has the reference:
-            if ([[[self displayedThread] messages] containsObject:newMessage])
-            {
+            if ([[[self displayedThread] messages] containsObject:newMessage]) {
                 [self setDisplayedMessage:newMessage thread:[self displayedThread]];
                 return;
             }
@@ -1784,14 +1775,12 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction)navigateRightInMatrix:(id)sender
+- (IBAction) navigateRightInMatrix: (id) sender
 /*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
     if (![self threadsShownCurrently])
     {
-        NSArray *comments;
-        
-        comments = [[self displayedMessage] commentsInThread:[self displayedThread]];
+        NSArray *comments = [[self displayedMessage] commentsInThread:[self displayedThread]];
         
         if ([comments count])
         {
