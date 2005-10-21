@@ -30,7 +30,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 @implementation GIMessageFilter
 /*" Not thread safe! "*/
 
-- (void)_setDefaultValues
+- (void) _setDefaultValues
 /*" Initializes cache ivars to 'unknown' state. "*/
 {
     _isActiveCache = _allExpressionsMustMatchCache = -1;
@@ -45,13 +45,13 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 
     _filterDefinition = [[NSMutableDictionary alloc] init];
     [self _setDefaultValues];
-    [self setIsActive:YES];
+    [self setIsActive: YES];
     [self setName:NSLocalizedString(@"New Filter", name of a new filter)];
     
     return self;
 }
 
-- (id)initWithFilterDefinitionDictionary:(NSDictionary *)aDictionary
+- (id)initWithFilterDefinitionDictionary: (NSDictionary*) aDictionary
 /*" Initializes with the given dictionary. For keys and values see the defines/typedefs/enums. "*/
 {
     [super init];
@@ -61,7 +61,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 /*" Releases ivars. "*/
 {
     [_filterDefinition release];
@@ -88,7 +88,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     GIMessageFilterAction *action;
     GIMessageFilterExpression *expression;
     
-//    [_filterDefinition setObject:[[self expression] expressionDefinitionDictionary] forKey:@"expression"];
+//    [_filterDefinition setObject: [[self expression] expressionDefinitionDictionary] forKey: @"expression"];
 
     expressionDefinitions = [[NSMutableArray alloc] initWithCapacity:[[self expressions] count]];
 
@@ -98,7 +98,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
         [expressionDefinitions addObject:[expression expressionDefinitionDictionary]];
     }
 
-    [_filterDefinition setObject:expressionDefinitions forKey:@"expressions"];
+    [_filterDefinition setObject: expressionDefinitions forKey: @"expressions"];
 
     [expressionDefinitions release];
     
@@ -110,7 +110,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
         [actionDefinitions addObject:[action actionDefinitionDictionary]];
     }
 
-    [_filterDefinition setObject:actionDefinitions forKey:@"actions"];
+    [_filterDefinition setObject: actionDefinitions forKey: @"actions"];
 
     [actionDefinitions release];
     
@@ -123,44 +123,44 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return _filterDefinition;
 }
 
-- (NSString *)name
+- (NSString*) name
 /*" Returns the description of the receiver if given. nil otherwise. "*/
 {
-    return [_filterDefinition objectForKey:@"name"];
+    return [_filterDefinition objectForKey: @"name"];
 }
 
-- (void)setName:(NSString *)aName
+- (void) setName: (NSString*) aName
 /*" Sets the description of the receiver. "*/
 {
     NSParameterAssert(aName != nil);
-    [[self _filterDefinition] setObject:aName forKey:@"name"];
+    [[self _filterDefinition] setObject: aName forKey: @"name"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
 }
 
-- (NSDate *)lastUsed
+- (NSDate*) lastUsed
 /*" Returns the date of the last use of the receiver. "*/
 {
     id lastUsed;
 
-    if (lastUsed = [_filterDefinition objectForKey:@"lastUsed"])
+    if (lastUsed = [_filterDefinition objectForKey: @"lastUsed"])
     {
         if (! [lastUsed isKindOfClass:[NSDate class]])
         {
             lastUsed = [[NSDate alloc] initWithString:lastUsed];
-            [[self _filterDefinition] setObject:lastUsed forKey:@"lastUsed"];
+            [[self _filterDefinition] setObject: lastUsed forKey: @"lastUsed"];
             [lastUsed release];
         }
     }
-    return (NSDate *)lastUsed;
+    return (NSDate*) lastUsed;
 }
 
-- (void)setLastUsed:(NSDate *)aDate
+- (void) setLastUsed:(NSDate*) aDate
 /*" Sets the date of the last use of the receiver. "*/
 {
     NSParameterAssert(aDate != nil);
-    [[self _filterDefinition] setObject:aDate forKey:@"lastUsed"];
+    [[self _filterDefinition] setObject: aDate forKey: @"lastUsed"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
@@ -172,7 +172,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     NSDictionary *expressionDefinition;
     GIMessageFilterExpression *result = nil;
 
-    if ((expressionDefinition = [_filterDefinition objectForKey:@"expression"]))
+    if ((expressionDefinition = [_filterDefinition objectForKey: @"expression"]))
     {
         result = [[[GIMessageFilterExpression alloc] initWithExpressionDefinitionDictionary:expressionDefinition] autorelease];
     }
@@ -180,21 +180,21 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return result;
 }
 
-- (void)_setExpression:(GIMessageFilterExpression *)anExpression
+- (void) _setExpression: (GIMessageFilterExpression*) anExpression
 /*" Sets the expression of the receiver. "*/
 {
     NSParameterAssert(anExpression == nil);
-    [[self _filterDefinition] removeObjectForKey:@"expression"];
+    [[self _filterDefinition] removeObjectForKey: @"expression"];
 }
 
-- (NSArray *)actions
+- (NSArray*) actions
     /*" Returns an array of #{GIMessageFilterAction} objects if available. nil otherwise. "*/
 {
     if (_actionsCache == (id)self)
     {
         NSArray *actionDefinitions;
 
-        if (actionDefinitions = [_filterDefinition objectForKey:@"actions"])
+        if (actionDefinitions = [_filterDefinition objectForKey: @"actions"])
         {
             NSEnumerator *enumerator;
             NSDictionary *actionDefinition;
@@ -219,7 +219,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return _actionsCache;
 }
 
-- (void)setActions:(NSArray *)someActions
+- (void) setActions:(NSArray*) someActions
     /*" Sets the actions that are assiciated with the receiver. "*/
 {
     // build actionDefinitions array
@@ -236,7 +236,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
         [actionDefinitions addObject:[action actionDefinitionDictionary]];
     }
 
-    [[self _filterDefinition] setObject:actionDefinitions forKey:@"actions"];
+    [[self _filterDefinition] setObject: actionDefinitions forKey: @"actions"];
 
     // take care of cache
     if (_actionsCache != (id)self)
@@ -249,14 +249,14 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
 }
 
-- (NSArray *)expressions
+- (NSArray*) expressions
 /*" Returns an array of #{GIMessageFilterExpression} objects if available. nil otherwise. "*/
 {
     if (_expressionsCache == (id)self)
     {
         NSArray *expressionDefinitions;
 
-        if ((expressionDefinitions = [_filterDefinition objectForKey:@"expressions"]) || ([self _expression]))
+        if ((expressionDefinitions = [_filterDefinition objectForKey: @"expressions"]) || ([self _expression]))
         {
             NSEnumerator *enumerator;
             NSDictionary *expressionDefinition;
@@ -277,7 +277,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
             if ([self _expression])
             {
                 [(NSMutableArray *)_expressionsCache addObject:[self _expression]];
-                [self _setExpression:nil];
+                [self _setExpression: nil];
 
                 // model changed
                 [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
@@ -299,7 +299,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return _expressionsCache;
 }
 
-- (void)setExpressions:(NSArray *)someExpressions
+- (void) setExpressions:(NSArray*) someExpressions
 /*" Sets the expressions that are assiciated with the receiver. "*/
 {
     // build expressionDefinitions array
@@ -316,77 +316,67 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
         [expressionsDefinitions addObject:[expression expressionDefinitionDictionary]];
     }
 
-    [[self _filterDefinition] setObject:expressionsDefinitions forKey:@"expressions"];
+    [[self _filterDefinition] setObject: expressionsDefinitions forKey: @"expressions"];
 
     // take care of cache
-    if (_expressionsCache != (id)self)
-    {
+    if (_expressionsCache != (id)self) {
         [_expressionsCache autorelease];
     }
     _expressionsCache = [someExpressions retain];
 
     // model changed
-    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageFiltersDidChangeNotification object:self];
 }
 
-- (BOOL)isActive
+- (BOOL) isActive
 /*" Returns whether the receiver will be used in filtering operations or not. "*/
 {
-    if (_isActiveCache == -1)
-    {
-        _isActiveCache = [[_filterDefinition objectForKey:@"isActive"] intValue];
+    if (_isActiveCache == -1) {
+        _isActiveCache = [[_filterDefinition objectForKey: @"isActive"] intValue];
     }
 
     return _isActiveCache != 0;
 }
 
-- (void)setIsActive:(BOOL)aBool
+- (void) setIsActive: (BOOL) aBool
 /*" Sets whether the receiver will be used in filtering operations or not. "*/
 {
-    if (aBool)
-    {
+    if (aBool) {
         _isActiveCache = 1;
-    }
-    else
-    {
+    } else {
         _isActiveCache = 0;
     }
-    [[self _filterDefinition] setObject:[NSNumber numberWithInt:_isActiveCache] forKey:@"isActive"];
+    [[self _filterDefinition] setObject: [NSNumber numberWithInt:_isActiveCache] forKey: @"isActive"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
 }
 
-- (BOOL)allExpressionsMustMatch
+- (BOOL) allExpressionsMustMatch
 /*" Returns whether the receiver matches only if all expressions match. "*/
 {
-    if (_allExpressionsMustMatchCache == -1)
-    {
-        _allExpressionsMustMatchCache = [[_filterDefinition objectForKey:@"allExpressionsMustMatch"] intValue];
+    if (_allExpressionsMustMatchCache == -1) {
+        _allExpressionsMustMatchCache = [[_filterDefinition objectForKey: @"allExpressionsMustMatch"] intValue];
     }
-
     return _allExpressionsMustMatchCache != 0;
 }
 
-- (void)setAllExpressionsMustMatch:(BOOL)aBool
+- (void) setAllExpressionsMustMatch: (BOOL) aBool
 /*" Sets whether the receiver matches only if all expressions match. "*/
 {
-    if (aBool)
-    {
+    if (aBool) {
         _allExpressionsMustMatchCache = 1;
-    }
-    else
-    {
+    } else {
         _allExpressionsMustMatchCache = 0;
     }
-    [[self _filterDefinition] setObject:[NSNumber numberWithInt:_allExpressionsMustMatchCache] forKey:@"allExpressionsMustMatch"];
+    [[self _filterDefinition] setObject: [NSNumber numberWithInt:_allExpressionsMustMatchCache] forKey: @"allExpressionsMustMatch"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
 }
 
 // filtering
-- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags
+- (BOOL) matchesForMessage: (GIMessage*) message flags:(int)flags
 /*" Returns YES if the receiver matches for the given message and scope. NO otherwise. "*/
 {
     if ([self isActive]) 
@@ -423,7 +413,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 
 
 
-+ (void)moveFilter:(id)filter toIndex:(int)newIndex
++ (void) moveFilter:(id)filter toIndex:(int)newIndex
 /*"Changes order of the filters."*/
 {
     int diff;
@@ -436,9 +426,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     if (oldIndex < newIndex)
     {
         diff = -1;
-    }
-    else
-    {
+    } else {
         diff = 0;
     }
     
@@ -451,7 +439,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
 }
 
-+ (void)insertFilter:(id)filter atPosition:(int)anIndex
++ (void) insertFilter:(id)filter atPosition:(int)anIndex
 /*" Inserts a new filter at index anIndex. If the filter is already present nothing is done. "*/
 {
 	NSMutableArray *_filters;
@@ -467,7 +455,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     }
 }
 
-+ (void)removeFilterAtPosition:(int)anIndex
++ (void) removeFilterAtPosition:(int)anIndex
 /*" Removes filter from position anIndex. "*/
 {
 	NSMutableArray *_filters = (NSMutableArray *)[self filters];
@@ -481,16 +469,16 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 
 // notifications
 
-+ (void)filtersDidChange:(NSNotification *)aNotification
++ (void) filtersDidChange: (NSNotification*) aNotification
     /*" Saves the filter definitions delayed to disk. "*/
 {
     NSNotification *notification;
 	
     notification = [NSNotification notificationWithName:GIMessageFilterCenterDelayedWriteFilters object:self];
-    [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+    [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes: nil];
 }
 
-+ (void)delayedWriteFilters:(NSNotification *)aNotification
++ (void) delayedWriteFilters: (NSNotification*) aNotification
     /*" Saves the filter definitions to disk. "*/
 {
     [self writeFilters];
@@ -498,7 +486,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 
 // filtering
 
-+ (NSArray *)filtersMatchingForMessage:(GIMessage *)message flags:(int)flags
++ (NSArray*) filtersMatchingForMessage: (GIMessage*) message flags:(int)flags
 	/*" Returns a (sub)set of the receiver's filters which match for the given
     message for the given scope (see %{GIMessageFilter} for details). "*/
 {
@@ -517,7 +505,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return result;
 }
 
-+ (BOOL)filterMessage:(GIMessage *)message flags:(int)flags
++ (BOOL)filterMessage: (GIMessage*) message flags:(int)flags
 /*" Filters the given message. Returns YES if message was inserted/moved into a box
     different to currentBox. NO otherwise. "*/
 {
@@ -557,14 +545,14 @@ definition plist. "*/
     
     if (! path) 
     {
-        path = [[[NSApp applicationSupportPath] stringByAppendingPathComponent:@"FilterDefinitions.plist"] retain]; // once and for all
+        path = [[[NSApp applicationSupportPath] stringByAppendingPathComponent: @"FilterDefinitions.plist"] retain]; // once and for all
     }
     
     return path;
 }
 
 
-+ (NSMutableArray *)filtersFromPlist:(NSArray *)plist
++ (NSMutableArray *)filtersFromPlist:(NSArray*) plist
 	/*" Instantiates filters from definition dictionaries. "*/
 {
     NSEnumerator *enumerator;
@@ -590,7 +578,7 @@ definition plist. "*/
     return result;
 }
 
-+ (NSArray *)plistFromFilters:(NSArray *)filters
++ (NSArray*) plistFromFilters:(NSArray*) filters
 	/*" Gathers a list of definition dictionaries from the given filters. "*/
 {
     NSMutableArray *result;
@@ -611,10 +599,10 @@ definition plist. "*/
 + (BOOL) writeFilters
 	/*"Writes filter definitions to disk."*/
 {
-    return [[self plistFromFilters:[self filters]] writeToFile:_filterDefinitionsPath() atomically:YES];
+    return [[self plistFromFilters:[self filters]] writeToFile:_filterDefinitionsPath() atomically: YES];
 }
 
-+ (NSArray *)filters
++ (NSArray*) filters
 	/*"Simple accessor. An ordered array of filters"*/
 {
 	static NSMutableArray *_filters = nil;
@@ -625,9 +613,9 @@ definition plist. "*/
 		_filters = [[self filtersFromPlist:plist] retain];
 		
 		// observe changes
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filtersDidChange:) name:GIMessageFiltersDidChangeNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filtersDidChange:) name: GIMessageFiltersDidChangeNotification object: nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delayedWriteFilters:) name:GIMessageFilterCenterDelayedWriteFilters object:self];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delayedWriteFilters:) name: GIMessageFilterCenterDelayedWriteFilters object:self];
 	}
 	
     return _filters;

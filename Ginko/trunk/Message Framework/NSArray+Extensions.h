@@ -30,33 +30,33 @@
 - (id)firstObject;
 #ifndef EDCOMMON_OSXBUILD
 #ifdef __MACH__
-+ (void)applyFirstObjectPatch;
++ (void) applyFirstObjectPatch;
 #endif
 #endif
 
 /*" Handling subarrays "*/
-- (NSArray *)subarrayToIndex:(unsigned int)index;
-- (NSArray *)subarrayFromIndex:(unsigned int)index;
+- (NSArray*) subarrayToIndex:(unsigned int)index;
+- (NSArray*) subarrayFromIndex:(unsigned int)index;
 
-- (BOOL)isSubarrayOfArray:(NSArray *)other atOffset:(int)offset;
-- (unsigned int)indexOfSubarray:(NSArray *)other;
+- (BOOL)isSubarrayOfArray:(NSArray*) other atOffset:(int)offset;
+- (unsigned int)indexOfSubarray:(NSArray*) other;
 
 /*" Rearranging the array "*/
-- (NSArray *)reversedArray;
-- (NSArray *)shuffledArray;
-- (NSArray *)sortedArray;
-- (NSArray *)sortedArrayByComparingAttribute:(NSString *)attributeName;
-- (NSArray *)flattenedArray;
+- (NSArray*) reversedArray;
+- (NSArray*) shuffledArray;
+- (NSArray*) sortedArray;
+- (NSArray*) sortedArrayByComparingAttribute: (NSString*) attributeName;
+- (NSArray*) flattenedArray;
 
 /*" Mapping the array "*/
-- (NSArray *)arrayByMappingWithDictionary:(NSDictionary *)mapping;
-- (NSArray *)arrayByMappingWithSelector:(SEL)selector; // similar to valueForKey:
-- (NSArray *)arrayByMappingWithSelector:(SEL)selector withObject:(id)object;
+- (NSArray*) arrayByMappingWithDictionary: (NSDictionary*) mapping;
+- (NSArray*) arrayByMappingWithSelector:(SEL)selector; // similar to valueForKey:
+- (NSArray*) arrayByMappingWithSelector:(SEL)selector withObject:(id)object;
 
 /*" List files "*/
-+ (NSArray *)librarySearchPaths;
-+ (NSArray *)arrayWithFilesOfType:(NSString *)type inPath:(NSString *)aPath;
-+ (NSArray *)arrayWithFilesOfType:(NSString *)type inLibrary:(NSString *)libraryName;
++ (NSArray*) librarySearchPaths;
++ (NSArray*) arrayWithFilesOfType: (NSString*) type inPath: (NSString*) aPath;
++ (NSArray*) arrayWithFilesOfType: (NSString*) type inLibrary: (NSString*) libraryName;
 
 @end
 
@@ -67,7 +67,7 @@
 /*" Rearranging the array "*/
 - (void) shuffle;
 - (void) sort;
-- (void) sortByComparingAttribute:(NSString *)attributeName;
+- (void) sortByComparingAttribute: (NSString*) attributeName;
 
 // Stack methods:
 - (void) pushObject: (id) obj;

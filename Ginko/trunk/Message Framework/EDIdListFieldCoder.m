@@ -23,8 +23,8 @@
 #import "EDIdListFieldCoder.h"
 
 @interface EDIdListFieldCoder(PrivateAPI)
-- (void)_takeListFromString:(NSString *)string;
-- (NSString *)_getStringForList;
+- (void) _takeListFromString: (NSString*) string;
+- (NSString*) _getStringForList;
 @end
 
 
@@ -81,7 +81,7 @@
 
 - (NSString*) stringValue
 {
-    return [list componentsJoinedByString:@" "];
+    return [list componentsJoinedByString: @" "];
 }
 
 
@@ -104,7 +104,7 @@
 
     if(bracketSet == nil)
         {
-        bracketSet = [[NSCharacterSet characterSetWithCharactersInString:@"<>"] retain];
+        bracketSet = [[NSCharacterSet characterSetWithCharactersInString: @"<>"] retain];
         nonWhitespaceSet = [[[NSCharacterSet whitespaceCharacterSet] invertedSet] retain];
         }
 
@@ -152,7 +152,7 @@
     newList = [NSMutableArray arrayWithArray:list];
     newLength = -1; // first id doesn't have a leading space...
     for(i = 0; i < [list count]; i++)
-        newLength += [(NSString *)[list objectAtIndex:i] length] + 1; // one for space
+        newLength += [(NSString*) [list objectAtIndex:i] length] + 1; // one for space
 
     // we remove ids until the resulting string is short enough. note that
     // the first and the last three ids are not deleted even if the string
@@ -161,11 +161,11 @@
         {
         if([newList count] < 5)
             return nil;
-        newLength -= [(NSString *)[newList objectAtIndex:1] length] + 1;	
+        newLength -= [(NSString*) [newList objectAtIndex:1] length] + 1;	
         [newList removeObjectAtIndex:1];
         }
 
-    return [newList componentsJoinedByString:@" "];
+    return [newList componentsJoinedByString: @" "];
 }
 
 

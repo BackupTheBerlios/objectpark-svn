@@ -19,7 +19,7 @@
 GIMessage* tempMessage;
 NSMutableArray* tempMessageArray;
 
-- (void)setUp
+- (void) setUp
 {
     NSLog(@"-[TestGIFulltextIndexCenter setUp]");
     int maxTestMessageCount = 100;
@@ -29,7 +29,7 @@ NSMutableArray* tempMessageArray;
     // create test message array
     for (i=0; i<maxTestMessageCount; i++) {
         // create test GIMessage
-        NSString *messageId = [NSString stringWithFormat:@"<searchtest-message-%d>",i];
+        NSString *messageId = [NSString stringWithFormat: @"<searchtest-message-%d>",i];
         NSString *transferString = [NSString stringWithFormat:
                                                  @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
         NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
@@ -53,11 +53,11 @@ NSMutableArray* tempMessageArray;
     [tempMessage retain];
     STAssertNotNil(tempMessage, @"nee %@", messageId);
 
-    //[tempMessage setValue:messageId forKey:@"messageId"];  
+    //[tempMessage setValue:messageId forKey: @"messageId"];  
     STAssertTrue([[tempMessage messageId] isEqual:messageId], @"nee");
 }
 
-- (void)tearDown
+- (void) tearDown
 {
     NSLog(@"-[TestGIFulltextIndexCenter tearDown]");
     [tempMessage release];
@@ -66,7 +66,7 @@ NSMutableArray* tempMessageArray;
     //[tempIndexCenter release];
 }
 
-- (void)testAddMessage
+- (void) testAddMessage
 {
     NSLog(@"-[TestGIFulltextIndexCenter testAddOneMessage]");
     //NSLog(@"adding message '%@' with text: %@", [tempMessage messageId], [[tempMessage contentAsAttributedString] string]);
@@ -75,7 +75,7 @@ NSMutableArray* tempMessageArray;
     //STAssertTrue([tempIndexCenter flushIndex],@"[tempIndexCenter flushIndex] must return true");
 }
 
-- (void)testAddTwoMessages
+- (void) testAddTwoMessages
 {
     NSLog(@"-[TestGIFulltextIndexCenter testAddTwoMessages]");
     //NSLog(@"adding message '%@' with text: %@", [tempMessage messageId], [[tempMessage contentAsAttributedString] string]);
@@ -86,7 +86,7 @@ NSMutableArray* tempMessageArray;
     STAssertTrue([tempMessage hasFlags:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
 }
 
-- (void)testAddManyMessages
+- (void) testAddManyMessages
 {
     NSLog(@"-[TestGIFulltextIndexCenter testAddManyMessages]");
     //int i;
@@ -99,20 +99,20 @@ NSMutableArray* tempMessageArray;
 }
 
 /*
-- (void)testReindexAllMessages
+- (void) testReindexAllMessages
 {
     NSLog(@"-[TestGIFulltextIndexCenter reindexAllMessages]");
     STAssertTrue([tempIndexCenter reindexAllMessages],@"[tempIndexCenter reindexAllMessages] must return true");
 }
 */
 
-- (void)testSearch
+- (void) testSearch
 {
     NSLog(@"-[TestGIFulltextIndexCenter testSearch]");
-    STAssertTrue( 1 <= [[[GIFulltextIndexCenter defaultIndexCenter] hitsForQueryString:@"Ulf Licht"] count], @"search did not result in one hit");
+    STAssertTrue( 1 <= [[[GIFulltextIndexCenter defaultIndexCenter] hitsForQueryString: @"Ulf Licht"] count], @"search did not result in one hit");
 }
 
-- (void)testXRemoveMessage
+- (void) testXRemoveMessage
 {
     NSLog(@"-[TestGIFulltextIndexCenter testXRemoveMessage]");
     STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] removeMessage:tempMessage],@"removeMessage must return true");

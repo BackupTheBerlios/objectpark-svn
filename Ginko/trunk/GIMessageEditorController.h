@@ -51,11 +51,11 @@ typedef enum
     NSArray *defaultIdentifiers;
 }
 
-- (id)initWithMessage:(GIMessage *)aMessage;
-- (id)initNewMessageWithProfile:(GIProfile *)aProfile;
-- (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile;
-- (id)initFollowupTo:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
-- (id)initForward:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
+- (id)initWithMessage: (GIMessage*) aMessage;
+- (id)initNewMessageWithProfile: (GIProfile*) aProfile;
+- (id)initReplyTo: (GIMessage*) aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile;
+- (id)initFollowupTo: (GIMessage*) aMessage profile:(GIProfile *)aProfile;
+- (id)initForward: (GIMessage*) aMessage profile:(GIProfile *)aProfile;
 
 - (BOOL)validateSelector:(SEL)aSelector;
 - (GIProfile *)profile;
@@ -72,18 +72,18 @@ typedef enum
 
 @interface GIMessageEditorController (Headers)
 
-- (void)awakeHeaders;
-- (void)updateHeaders;
-- (BOOL)hasHeaderTextFieldWithFieldName:(NSString *)aFieldName;
-- (OPSizingTextField *)headerTextFieldWithFieldName:(NSString *)aFieldName;
+- (void) awakeHeaders;
+- (void) updateHeaders;
+- (BOOL)hasHeaderTextFieldWithFieldName: (NSString*) aFieldName;
+- (OPSizingTextField *)headerTextFieldWithFieldName: (NSString*) aFieldName;
 - (IBAction)switchProfile:(id)sender;
-- (void)takeValuesFromHeaderFields;
+- (void) takeValuesFromHeaderFields;
 
 @end
 
 @interface GIMessageEditorController (ToolbarDelegate)
 
-- (void)awakeToolbar;
-- (void)deallocToolbar;
+- (void) awakeToolbar;
+- (void) deallocToolbar;
 
 @end

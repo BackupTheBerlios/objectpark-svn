@@ -24,20 +24,20 @@
 @interface NSData (MessageUtils)
 
 
-- (BOOL)isValidTransferEncoding:(NSString *)encodingName;
+- (BOOL)isValidTransferEncoding: (NSString*) encodingName;
 
-- (NSData *)decodeContentWithTransferEncoding:(NSString *)encodingName;
-- (NSData *)encodeContentWithTransferEncoding:(NSString *)encodingName;
+- (NSData*) decodeContentWithTransferEncoding: (NSString*) encodingName;
+- (NSData*) encodeContentWithTransferEncoding: (NSString*) encodingName;
 
-- (NSData *)decodeQuotedPrintable;
-- (NSData *)encodeQuotedPrintable;
+- (NSData*) decodeQuotedPrintable;
+- (NSData*) encodeQuotedPrintable;
 
-- (NSData *)decodeHeaderQuotedPrintable;
-- (NSData *)encodeHeaderQuotedPrintable;
-- (NSData *)encodeHeaderQuotedPrintableMustEscapeCharactersInString:(NSString *)escChars;
+- (NSData*) decodeHeaderQuotedPrintable;
+- (NSData*) encodeHeaderQuotedPrintable;
+- (NSData*) encodeHeaderQuotedPrintableMustEscapeCharactersInString: (NSString*) escChars;
 
-- (NSData *)mboxDataFromTransferDataWithEnvSender:(NSString *)envsender;
-- (NSData *)transferDataFromMboxData;
+- (NSData*) mboxDataFromTransferDataWithEnvSender: (NSString*) envsender;
+- (NSData*) transferDataFromMboxData;
 
 @end
 

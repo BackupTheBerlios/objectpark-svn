@@ -34,16 +34,16 @@
 //	PRIVATE ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-- (void)_setValue: (NSString*) newValue
+- (void) _setValue: (NSString*) newValue
 {
     NSRange cRange = [newValue rangeOfCharacterFromSet:[NSCharacterSet MIMENonTokenCharacterSet]];
     if (cRange.length>1 || (cRange.length==1 && [newValue characterAtIndex: cRange.location] != '/'))
-        [NSException raise:NSInvalidArgumentException format:@"invalid char in '%@'", newValue];
+        [NSException raise:NSInvalidArgumentException format: @"invalid char in '%@'", newValue];
     fieldValue = [[newValue lowercaseString] retain];
 }
 
 
-- (void)_setParameters:(NSDictionary *)someParameters
+- (void) _setParameters: (NSDictionary*) someParameters
 {
     NSEnumerator *attrEnum;
     NSString	 *attr, *pvalue;
@@ -55,16 +55,16 @@
     {
         pvalue = [someParameters objectForKey:attr];
         if([attr rangeOfCharacterFromSet:[NSCharacterSet MIMENonTokenCharacterSet]].length != 0)
-            [NSException raise:NSInvalidArgumentException format:@"invalid char in parameter '%@'", attr];
+            [NSException raise:NSInvalidArgumentException format: @"invalid char in parameter '%@'", attr];
         if([pvalue rangeOfCharacterFromSet:[NSCharacterSet MIMENonTokenCharacterSet]].length != 0)
         {
             if([pvalue rangeOfCharacterFromSet:[[NSCharacterSet standardASCIICharacterSet] invertedSet]].length != 0)
-                [NSException raise:NSInvalidArgumentException format:@"invalid char in attribute value '%@'", pvalue];
+                [NSException raise:NSInvalidArgumentException format: @"invalid char in attribute value '%@'", pvalue];
             else if([pvalue rangeOfString:DOUBLEQUOTE].length != 0)
-                [NSException raise:NSInvalidArgumentException format:@"invalid doublequote in attribute value '%@'", pvalue];
+                [NSException raise:NSInvalidArgumentException format: @"invalid doublequote in attribute value '%@'", pvalue];
         }
         attr = [attr lowercaseString];
-        [(NSMutableDictionary *)parameters setObject:pvalue forKey:attr];
+        [(NSMutableDictionary *)parameters setObject: pvalue forKey:attr];
     }
 }
 
@@ -73,7 +73,7 @@
 //	CODING HELPER METHODS
 //---------------------------------------------------------------------------------------
 
-- (void)_takeValueFromString:(NSString *)body
+- (void) _takeValueFromString: (NSString*) body
 {
     NSArray				*fieldBodyParts;
     NSEnumerator			*fieldBodyPartEnum;
@@ -83,22 +83,22 @@
     NSMutableDictionary		*scannedParameters;
     
     body = [body stringByRemovingSurroundingWhitespace]; // I've seen this!
-    fieldBodyParts = [body componentsSeparatedByString:@";"];
+    fieldBodyParts = [body componentsSeparatedByString: @";"];
     fieldBodyPartEnum = [fieldBodyParts objectEnumerator];
     
     if((mainPart = [fieldBodyPartEnum nextObject]) == nil)
-        [NSException raise: EDMessageFormatException format:@"no value in '%@'", self];
+        [NSException raise: EDMessageFormatException format: @"no value in '%@'", self];
     
     scannedValues = [NSMutableArray array];
     scanner = [NSScanner scannerWithString:mainPart];
     do
     {
         if([scanner scanCharactersFromSet:[NSCharacterSet MIMETokenCharacterSet] intoString:&value] == NO)
-            [NSException raise:EDMessageFormatException format:@"invalid value format; found '%@'", body];
+            [NSException raise:EDMessageFormatException format: @"invalid value format; found '%@'", body];
         value = [value lowercaseString];
         [scannedValues addObject:value];
     }
-    while([scanner scanString:@"/" intoString:NULL] == YES);
+    while([scanner scanString: @"/" intoString: NULL] == YES);
     fieldValue = [[scannedValues componentsJoinedByString: @"/"] retain];
     
     // forgiving, ie. simply skips syntactially incorrect attribute/value pairs...
@@ -109,24 +109,24 @@
         if([scanner scanCharactersFromSet:[NSCharacterSet MIMETokenCharacterSet] intoString:&attr] == NO)
             continue;
         attr = [attr lowercaseString];
-        if([scanner scanString:@"=" intoString:NULL] == NO)
+        if([scanner scanString: @"=" intoString: NULL] == NO)
             continue;
-        if([scanner scanString:DOUBLEQUOTE intoString:NULL] == NO)
+        if([scanner scanString:DOUBLEQUOTE intoString: NULL] == NO)
         {
             if([scanner scanCharactersFromSet:[NSCharacterSet MIMETokenCharacterSet] intoString:&attrValue] == YES)
-                [scannedParameters setObject:attrValue forKey:attr];
+                [scannedParameters setObject: attrValue forKey:attr];
         }
         else
         {
             if([scanner scanUpToString:DOUBLEQUOTE intoString:&attrValue] == YES)
-                [scannedParameters setObject:attrValue forKey:attr];
+                [scannedParameters setObject: attrValue forKey:attr];
         }
     }
     parameters = [[NSDictionary allocWithZone:[self zone]] initWithDictionary:scannedParameters];
 }
 
 
-- (NSString *)_getFieldBody
+- (NSString*) _getFieldBody
 {
     NSMutableString	*fieldBody;
     NSString		*attr, *attrValue;
@@ -138,8 +138,8 @@
     while ((attr = [attrEnumerator nextObject]) != nil) {
         attrValue = [parameters objectForKey:attr];
         if ([attrValue rangeOfCharacterFromSet:[NSCharacterSet MIMENonTokenCharacterSet]].length != 0)
-            attrValue = [NSString stringWithFormat:@"\"%@\"", attrValue];
-        [fieldBody appendFormat:@"; %@=%@", attr, attrValue];
+            attrValue = [NSString stringWithFormat: @"\"%@\"", attrValue];
+        [fieldBody appendFormat: @"; %@=%@", attr, attrValue];
     }
     return fieldBody;
 }
@@ -155,7 +155,7 @@
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id)initWithFieldBody:(NSString *)body
+- (id)initWithFieldBody: (NSString*) body
 {
     [self init];
     NS_DURING
@@ -207,13 +207,13 @@
 }
 
 
-- (NSString *)stringValue
+- (NSString*) stringValue
 {
     return [self _getFieldBody];
 }
 
 
-- (NSString *)fieldBody
+- (NSString*) fieldBody
 {
     return [self _getFieldBody];
 }

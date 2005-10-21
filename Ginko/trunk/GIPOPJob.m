@@ -21,7 +21,7 @@
 // Socket timeout (60 secs)
 #define TIMEOUT 60
 
-- (void)retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
+- (void) retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
 /*" Retrieves using delegate for providing password. "*/
 {
     G3Account *theAccount = [[account retain] autorelease];
@@ -68,7 +68,7 @@
             NSString *mboxToImportDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"mboxes to import"];
             if (![[NSFileManager defaultManager] fileExistsAtPath:mboxToImportDirectory])
             {
-                NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:mboxToImportDirectory attributes:nil], @"Could not create directory %@", mboxToImportDirectory);
+                NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:mboxToImportDirectory attributes: nil], @"Could not create directory %@", mboxToImportDirectory);
             }
             
             NSString *pathTemplate = [mboxToImportDirectory stringByAppendingPathComponent:@"POP3Fetched-XXXXX"];
@@ -90,7 +90,7 @@
                     [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"fetching messages from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
                     
                     // putting onto disk:
-                    [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender:nil]];
+                    [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender: nil]];
                     
                     fetchCount++;
                     shouldTerminate = [OPJobs shouldTerminate];
@@ -108,13 +108,13 @@
                 }
                 else
                 {
-                    [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];               
+                    [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler: NULL];               
                 }
             }
-            @catch (NSException *localException)
+            @catch (NSException* localException)
             {
                 [pop3session abortSession];
-                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];               
+                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler: NULL];               
                 @throw;
             }
             @finally
@@ -133,7 +133,7 @@
                 [stream shutdownEncryption];
             }
         }
-        @catch (NSException *localException)
+        @catch (NSException* localException)
         {
             if ([[localException name] isEqualToString:OPPOP3AuthenticationFailedException])
             {
@@ -146,9 +146,7 @@
         {
             [stream close];
         }
-    }
-    else
-    {
+    } else {
         NSLog(@"Host %@ not reachable. Skipping retrieval.\n", [theAccount incomingServerName]);
     }
 }
@@ -162,25 +160,25 @@
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [account release];
     [super dealloc];
 }
 
-+ (NSString *)jobName
++ (NSString*) jobName
 {
     return @"POP3 fetch";
 }
 
-+ (void)retrieveMessagesFromPOPAccount:(G3Account *)anAccount
++ (void) retrieveMessagesFromPOPAccount:(G3Account *)anAccount
 /*" Starts a background job for retrieving messages from the given POP account anAccount. One account can only be 'popped' by at most one pop job at a time. "*/
 {
     NSParameterAssert([anAccount isPOPAccount]);
     
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    [jobArguments setObject:anAccount forKey:@"account"];
+    [jobArguments setObject: anAccount forKey:@"account"];
     
     [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[anAccount incomingServerName]];
 }
@@ -188,18 +186,18 @@
 /******** POP3 delegate methods **********/
 
 /*" required "*/
-- (NSString *)usernameForPOP3Session:(OPPOP3Session *)aSession
+- (NSString*) usernameForPOP3Session:(OPPOP3Session *)aSession
 {
     return [account incomingUsername];
 }
 
-- (NSString *)passwordForPOP3Session:(OPPOP3Session *)aSession
+- (NSString*) passwordForPOP3Session:(OPPOP3Session *)aSession
 {
     NSString *password = [account incomingPassword];
     
     if (![password length])
     {
-        password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:YES];
+        password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword: YES];
     }
     
     return password;
@@ -212,7 +210,7 @@
 }
 
 #ifdef _0
-- (BOOL)shouldTryAuthenticationMethod:(NSString *)authenticationMethod inPOP3Session:(OPPOP3Session *)aSession
+- (BOOL)shouldTryAuthenticationMethod: (NSString*) authenticationMethod inPOP3Session:(OPPOP3Session *)aSession
     /*" Optional. Returns whether the given POP3Session aSession should try the authentication type given
     in authenticationMethod. If not implemented at least plain text authentication is tried. "*/
 {
@@ -223,20 +221,20 @@
     return YES;
 }
 
-- (void)authenticationMethod:(NSString *)authenticationMethod succeededInPOP3Session:(OPPOP3Session *)aSession
+- (void) authenticationMethod: (NSString*) authenticationMethod succeededInPOP3Session:(OPPOP3Session *)aSession
     /*" Optional. Informs the receiver about what authentication type succeeded. "*/
 {
 }
 */
 #endif
 
-- (BOOL)shouldContinueWithOtherAuthenticationMethodAfterFailedAuthentication:(NSString *)authenticationMethod inPOP3Session:(OPPOP3Session *)aSession
+- (BOOL)shouldContinueWithOtherAuthenticationMethodAfterFailedAuthentication: (NSString*) authenticationMethod inPOP3Session:(OPPOP3Session *)aSession
     /*" Optional. Asks whether other authentication methods should be tried as the given authenticationMethod failed. "*/
 {
     return YES;
 }
 
-- (NSDate *)deletionDate
+- (NSDate*) deletionDate
 /*"Calculates the date for mail deletion. Mails older than this date wil be deleted."*/
 {
     int days = [account retrieveMessageInterval];
@@ -247,7 +245,7 @@
     return [NSDate dateWithTimeIntervalSinceNow:days * -86400]; // 86400 = seconds per day
 }
 
-- (BOOL)shouldDeleteMessageWithMessageId:(NSString *)messageId date:(NSDate *)messageDate size:(long)size inPOP3Session:(OPPOP3Session *)aSession
+- (BOOL)shouldDeleteMessageWithMessageId: (NSString*) messageId date:(NSDate*) messageDate size:(long)size inPOP3Session:(OPPOP3Session *)aSession
 {
     return [messageDate compare:[self deletionDate]] != NSOrderedDescending; /* date <= tooOldDate */
 }

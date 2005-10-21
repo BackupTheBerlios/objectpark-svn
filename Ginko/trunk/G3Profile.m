@@ -38,7 +38,7 @@
     return result;
 }
 
-+ (void)setProfiles:(NSArray *)someProfiles
++ (void) setProfiles:(NSArray*) someProfiles
 {
    // [profiles autorelease];
    // profiles = [someProfiles retain];
@@ -70,14 +70,14 @@
                 return YES;
             }
         }
-    } @catch (NSException *localException) {
+    } @catch (NSException* localException) {
         return NO; // Expect our users to have correct email addresses.
     }
     
     return NO;
 }
 
-+ (G3Profile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage
++ (G3Profile *)guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage
 /*" Tries to find a profile that matches the one meant by aMessage. Return nil if no profile could be guessed. "*/ 
 {
     NSArray *toList, *ccList, *addressList;
@@ -119,41 +119,41 @@
     return replyToCandidate;
 }
 
-- (NSString *)name
+- (NSString*) name
 {
-    [self willAccessValueForKey:@"name"];
-    id result = [self primitiveValueForKey:@"name"];
-    [self didAccessValueForKey:@"name"];
+    [self willAccessValueForKey: @"name"];
+    id result = [self primitiveValueForKey: @"name"];
+    [self didAccessValueForKey: @"name"];
     return result;
 }
 
-- (void)setName:(NSString *)aString
+- (void) setName: (NSString*) aString
 {
-    [self willChangeValueForKey:@"name"];
-    [self setPrimitiveValue: aString forKey:@"name"];
-    [self didChangeValueForKey:@"name"];
+    [self willChangeValueForKey: @"name"];
+    [self setPrimitiveValue: aString forKey: @"name"];
+    [self didChangeValueForKey: @"name"];
 }
 
-- (NSString *)realname
+- (NSString*) realname
 {
-    [self willAccessValueForKey:@"realname"];
-    id result = [self primitiveValueForKey:@"realname"];
-    [self didAccessValueForKey:@"realname"];
+    [self willAccessValueForKey: @"realname"];
+    id result = [self primitiveValueForKey: @"realname"];
+    [self didAccessValueForKey: @"realname"];
     return result;
 }
 
-- (void)setRealname:(NSString *)aString
+- (void) setRealname: (NSString*) aString
 {
-    [self willChangeValueForKey:@"realname"];
-    [self setPrimitiveValue: aString forKey:@"realname"];
-    [self didChangeValueForKey:@"realname"];
+    [self willChangeValueForKey: @"realname"];
+    [self setPrimitiveValue: aString forKey: @"realname"];
+    [self didChangeValueForKey: @"realname"];
 }
 
-- (NSString *)emailAddress
+- (NSString*) emailAddress
 {
-    [self willAccessValueForKey:@"mailaddress"];
-    id result = [self primitiveValueForKey:@"mailaddress"];
-    [self didAccessValueForKey:@"mailaddress"];
+    [self willAccessValueForKey: @"mailaddress"];
+    id result = [self primitiveValueForKey: @"mailaddress"];
+    [self didAccessValueForKey: @"mailaddress"];
     return result;
 }
 
@@ -163,82 +163,82 @@
 	[self removeMessageToSend: value];
 }
 
-- (void)setEmailAddress:(NSString *)aString
+- (void) setEmailAddress: (NSString*) aString
 {
-    [self willChangeValueForKey:@"mailaddress"];
-    [self setPrimitiveValue:aString forKey:@"mailaddress"];
-    [self didChangeValueForKey:@"mailaddress"];
+    [self willChangeValueForKey: @"mailaddress"];
+    [self setPrimitiveValue:aString forKey: @"mailaddress"];
+    [self didChangeValueForKey: @"mailaddress"];
 }
 
-- (NSString *)replyToAddress
+- (NSString*) replyToAddress
 {
-    [self willAccessValueForKey:@"defaultReplyTo"];
-    id result = [self primitiveValueForKey:@"defaultReplyTo"];
-    [self didAccessValueForKey:@"defaultReplyTo"];
+    [self willAccessValueForKey: @"defaultReplyTo"];
+    id result = [self primitiveValueForKey: @"defaultReplyTo"];
+    [self didAccessValueForKey: @"defaultReplyTo"];
     return result;
 }
 
-- (void)setReplyToAddress:(NSString *)aString
+- (void) setReplyToAddress: (NSString*) aString
 {
-    [self willChangeValueForKey:@"defaultReplyTo"];
-    [self setPrimitiveValue:aString forKey:@"defaultReplyTo"];
-    [self didChangeValueForKey:@"defaultReplyTo"];
+    [self willChangeValueForKey: @"defaultReplyTo"];
+    [self setPrimitiveValue:aString forKey: @"defaultReplyTo"];
+    [self didChangeValueForKey: @"defaultReplyTo"];
 }
 
-- (NSString *)organization
+- (NSString*) organization
 {
-    return [self primitiveValueForKey:@"organization"];
+    return [self primitiveValueForKey: @"organization"];
 }
 
-- (void)setOrganization:(NSString *)aString
+- (void) setOrganization: (NSString*) aString
 {
-    [self willChangeValueForKey:@"organization"];
-    [self setPrimitiveValue:aString forKey:@"organization"];
-    [self didChangeValueForKey:@"organization"];
+    [self willChangeValueForKey: @"organization"];
+    [self setPrimitiveValue:aString forKey: @"organization"];
+    [self didChangeValueForKey: @"organization"];
 }
 
-- (NSData *)signature
+- (NSData*) signature
 {
-    return [self primitiveValueForKey:@"signature"];
+    return [self primitiveValueForKey: @"signature"];
 }
 
 - (void) setSignature: (NSData*) aSig
 {
-    [self willChangeValueForKey:@"signature"];
-    [self setPrimitiveValue:aSig forKey:@"signature"];
-    [self didChangeValueForKey:@"signature"];
+    [self willChangeValueForKey: @"signature"];
+    [self setPrimitiveValue:aSig forKey: @"signature"];
+    [self didChangeValueForKey: @"signature"];
 }
 
 
-- (NSData *)messageTemplate
+- (NSData*) messageTemplate
 {
-    [self willAccessValueForKey:@"messageTemplate"];
-    id result = [self primitiveValueForKey:@"messageTemplate"];
-    [self didAccessValueForKey:@"messageTemplate"];
+    [self willAccessValueForKey: @"messageTemplate"];
+    id result = [self primitiveValueForKey: @"messageTemplate"];
+    [self didAccessValueForKey: @"messageTemplate"];
     return result;
 }
 
-- (void)setMessageTemplate:(NSData *)aTemp
+- (void) setMessageTemplate: (NSData*) aTemp
 {
-    [self willChangeValueForKey:@"messageTemplate"];
-    [self setPrimitiveValue:aTemp forKey:@"messageTemplate"];
-    [self didChangeValueForKey:@"messageTemplate"];
+    [self willChangeValueForKey: @"messageTemplate"];
+    [self setPrimitiveValue:aTemp forKey: @"messageTemplate"];
+    [self didChangeValueForKey: @"messageTemplate"];
 }
 
-- (void)addMessageToSend:(G3Message *)aMessage 
+- (void) addMessageToSend: (G3Message*) aMessage 
 {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
     
-    [self willChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey: @"messagesToSend" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     
-    [[self primitiveValueForKey:@"messagesToSend"] addObject:aMessage];
+    [[self primitiveValueForKey: @"messagesToSend"] addObject:aMessage];
     
-    [self didChangeValueForKey:@"messagesToSend" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self didChangeValueForKey: @"messagesToSend" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     
     [changedObjects release];
 }
 
-- (void)removeMessageToSend:(G3Message *)aMessage 
+- (void) removeMessageToSend: (G3Message*) aMessage 
 {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&aMessage count:1];
     

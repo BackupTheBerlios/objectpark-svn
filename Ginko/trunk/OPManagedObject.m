@@ -12,12 +12,12 @@
 
 @implementation NSManagedObject (OPExtensions)
 
-+ (void)lockStore
++ (void) lockStore
 {
     [[[NSManagedObjectContext threadContext] persistentStoreCoordinator] lock];
 }
 
-+ (void)unlockStore
++ (void) unlockStore
 {
     [[[NSManagedObjectContext threadContext] persistentStoreCoordinator] unlock];
 }

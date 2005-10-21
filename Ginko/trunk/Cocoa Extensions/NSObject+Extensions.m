@@ -21,10 +21,10 @@
 
 - (volatile void)methodIsAbstract:(SEL)selector
 {
-    [NSException raise:NSInternalInconsistencyException format:@"*** -[%@ %@]: Abstract definition must be overriden.", NSStringFromClass([self class]), NSStringFromSelector(selector)];
+    [NSException raise:NSInternalInconsistencyException format: @"*** -[%@ %@]: Abstract definition must be overriden.", NSStringFromClass([self class]), NSStringFromSelector(selector)];
 }
 
-- (NSString *)className
+- (NSString*) className
 {
     return NSStringFromClass([self class]);
 }

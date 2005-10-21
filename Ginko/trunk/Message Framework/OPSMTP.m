@@ -33,46 +33,46 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 @interface OPSMTP (PrivateAPI)
 
-- (void)_assertServerAcceptedCommand;
-- (NSArray *)_readResponse;
-- (NSString *)_pathFromAddress:(NSString *)address;
+- (void) _assertServerAcceptedCommand;
+- (NSArray*) _readResponse;
+- (NSString*) _pathFromAddress: (NSString*) address;
 - (BOOL)_handles8BitBodies;
 - (BOOL)_allowsPipelining;
 - (BOOL)_needsAuthentication;
-- (NSString *)_username;
-- (NSString *)_password;
+- (NSString*) _username;
+- (NSString*) _password;
 - (BOOL)_useSMTPS;
 - (BOOL)_allowAnyRootCertificate;
 - (BOOL)_allowExpiredCertificates;
-- (void)_writeSender:(NSString *)sender;
-- (void)_writeRecipient:(NSString *)recipient;
-- (void)_beginBody;
-- (void)_finishBody;
+- (void) _writeSender: (NSString*) sender;
+- (void) _writeRecipient: (NSString*) recipient;
+- (void) _beginBody;
+- (void) _finishBody;
 - (BOOL)_hasPendingResponses;
-- (void)_sendMail:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients;
+- (void) _sendMail: (NSData*) data from: (NSString*) sender to:(NSArray*) recipients;
 - (BOOL)_SASLAuthentication:(NSArray*) methods;
-- (BOOL)__authPlainWithUsername:(NSString*)aUsername andPassword:(NSString*)aPassword;
+- (BOOL)__authPlainWithUsername: (NSString*) aUsername andPassword:(NSString*) aPassword;
 @end
 
 @implementation OPSMTP
 
 //Factory Methods
 
-+ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream
++ (id)SMTPWithUsername: (NSString*) aUsername password: (NSString*) aPassword stream: (OPStream*) aStream
 {
-    return [[[OPSMTP alloc] initWithUsername:aUsername password:aPassword stream:aStream] autorelease];
+    return [[[OPSMTP alloc] initWithUsername: aUsername password:aPassword stream:aStream] autorelease];
 }
 
-+ (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject
++ (id)SMTPWithStream: (OPStream*) aStream andDelegate:(id)anObject
 {
     return [[[OPSMTP alloc] initWithStream:aStream andDelegate:anObject] autorelease];
 }
 
 // Initialization and Deallocation Methods
 
-- (void)_connect
+- (void) _connect
 {
-    NSHost *localhost;
+    NSHost* localhost;
     NSString *name, *domain, *responseCode;
     NSArray *response;     
     BOOL redoEHLO;
@@ -88,7 +88,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     
     
     // read initial greeting
-    [pendingResponses addObject:@"220"];
+    [pendingResponses addObject: @"220"];
     [self _assertServerAcceptedCommand];
     
     state = Connected;
@@ -99,9 +99,9 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     {
         name = [localhost name];
         domain = [NSHost localDomain];
-        if ( (! [name isEqualToString:@"localhost"]) && domain )
+        if ( (! [name isEqualToString: @"localhost"]) && domain )
             if (![name hasSuffix:domain])
-                name = [[name stringByAppendingString:@"."] stringByAppendingString:domain];
+                name = [[name stringByAppendingString: @"."] stringByAppendingString:domain];
     }
     
     NS_DURING
@@ -112,26 +112,26 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
             
             // first try if it's an extended SMTP server
             //OPDebugLog1(SMTPDEBUG, OPALL, @"EHLO %@\r\n", name);
-            [stream writeFormat:@"EHLO %@\r\n", name];
+            [stream writeFormat: @"EHLO %@\r\n", name];
             response = [self _readResponse];
             responseCode = [[response objectAtIndex:0] substringToIndex:3];
-            if (![responseCode isEqualToString:@"250"])
+            if (![responseCode isEqualToString: @"250"])
             {
-                if ([responseCode hasPrefix:@"5"]) // EHLO doesn't work, say HELO
+                if ([responseCode hasPrefix: @"5"]) // EHLO doesn't work, say HELO
                 {
                     //OPDebugLog1(SMTPDEBUG, OPALL, @"HELO %@\r\n", name);
-                    [stream writeFormat:@"HELO %@\r\n", name];
+                    [stream writeFormat: @"HELO %@\r\n", name];
                     response = [self _readResponse];
                     responseCode = [[response objectAtIndex:0] substringToIndex:3];
-                    if([responseCode isEqualToString:@"250"]) // okay!
+                    if([responseCode isEqualToString: @"250"]) // okay!
                         state = Authenticated;
                 }
                 break; // leave loop
             }
             else // okay, it's an extended server!
             {
-                NSEnumerator *lineEnum;
-                NSString *line;
+                NSEnumerator* lineEnum;
+                NSString* line;
                 
                 // parse extensions info
                 lineEnum = [response objectEnumerator];
@@ -141,7 +141,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                     NSString *key;
                     
                     //OPDebugLog1(SMTPDEBUG, OPINFO, @"%@", line);
-                    components = [[line substringFromIndex:4] componentsSeparatedByString:@" "];
+                    components = [[line substringFromIndex:4] componentsSeparatedByString: @" "];
                     key = [[components objectAtIndex:0] uppercaseString];
                     
                     if ([components count] > 1)
@@ -149,7 +149,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                     else
                         value = [NSArray array];
                     
-                    [capabilities setObject:value forKey:key];
+                    [capabilities setObject: value forKey:key];
                 }
                 
                 // STARTTLS (must be first negotiated extension due to RFC2487, well not really true but easier :-) )
@@ -161,12 +161,12 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                     [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:[self _allowAnyRootCertificate]];
                     [(OPSSLSocket*)[stream fileHandle] setAllowsExpiredCertificates:[self _allowExpiredCertificates]];
                     
-                    [stream writeFormat:@"STARTTLS\r\n"];
+                    [stream writeFormat: @"STARTTLS\r\n"];
                     response = [self _readResponse];
                     //OPDebugLog1(SMTPDEBUG, OPALL, @"Servers reply to STARTTLS comand: %@", [response objectAtIndex:0]);
                     
                     responseCode = [[response objectAtIndex:0] substringToIndex:3];
-                    if([responseCode isEqualToString:@"220"]) // okay!
+                    if([responseCode isEqualToString: @"220"]) // okay!
                     {
                         //OPDebugLog(SMTPDEBUG, OPINFO, @"Starting TLS encryption");
                         [stream negotiateEncryption]; // throws an exception on error
@@ -186,7 +186,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                 {
                     NSArray *methods;
                     
-                    if (methods = [capabilities objectForKey:@"AUTH"])
+                    if (methods = [capabilities objectForKey: @"AUTH"])
                     {
                         //OPDebugLog(SMTPDEBUG, OPINFO, @"Server supports AUTH. Trying to AUTHenticate"); 
                         if ([self _SASLAuthentication:methods])
@@ -216,7 +216,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
         if (state != Authenticated) // other error; most likely 421 - Service not available
         {
             //OPDebugLog(SMTPDEBUG, OPWARNING, @"Failed SMTP init. Exception!"); 
-            [NSException raise:OPSMTPException format:@"Failed to initialize SMTP connection; read \"%@\"", [response componentsJoinedByString:@" "]];
+            [NSException raise:OPSMTPException format: @"Failed to initialize SMTP connection; read \"%@\"", [response componentsJoinedByString:@" "]];
         }        
         
         NS_HANDLER
@@ -234,13 +234,13 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                 // a line in the response contains less than 4 characters. This is also
                 // counted as a broken server that doesn't really understand EHLO...
                 amendedUserInfo = [NSMutableDictionary dictionaryWithDictionary:[localException userInfo]];
-                [amendedUserInfo setObject:@"YES" forKey:OPBrokenSMPTServerHint];
+                [amendedUserInfo setObject: @"YES" forKey:OPBrokenSMPTServerHint];
                 [[NSException exceptionWithName:[localException name] reason:[localException reason] userInfo:amendedUserInfo] raise];
             }
             NS_ENDHANDLER
 }
 
-- (void)_commonInits
+- (void) _commonInits
 {
     pendingResponses = [[NSMutableArray allocWithZone:[self zone]] init];
     capabilities = [[NSMutableDictionary allocWithZone:[self zone]] init];
@@ -249,7 +249,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     state = Disconnected;
 }
 
-- (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject
+- (id)initWithStream: (OPStream*) aStream andDelegate:(id)anObject
 {
     if (self = [super init])
     {
@@ -261,7 +261,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     return self;  
 }
 
-- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream
+- (id)initWithUsername: (NSString*) aUsername password: (NSString*) aPassword stream: (OPStream*) aStream
 {
     NSParameterAssert(aStream);
     
@@ -279,7 +279,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 - (void) dealloc
 {
     if (state != Disconnected)
-        [stream writeString:@"QUIT\r\n"];
+        [stream writeString: @"QUIT\r\n"];
     
     //OPDebugLog(SMTPDEBUG, OPINFO, @"OPSMTP: shutting down encryption in dealloc");
     [stream shutdownEncryption];
@@ -302,7 +302,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 /* The receiver will consume 'message' if willing and able to (cf. -willAcceptMessage). Raises
 an exception if the 'message' will not be consumed. */
-- (void)acceptMessage:(OPInternetMessage *)message
+- (void) acceptMessage: (OPInternetMessage*) message
 {
     NSMutableArray *recipients;
     NSArray *authors;
@@ -311,10 +311,10 @@ an exception if the 'message' will not be consumed. */
     EDTextFieldCoder *coder;
     
     if (! [self willAcceptMessage])
-        [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: SMTP server will not accept messages.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: SMTP server will not accept messages.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
     recipients = [NSMutableArray array];
-    if (newRecipients = [message bodyForHeaderField:@"To"])
+    if (newRecipients = [message bodyForHeaderField: @"To"])
     {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
         [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
@@ -322,14 +322,14 @@ an exception if the 'message' will not be consumed. */
         [coder release];
     }
     
-    if (newRecipients = [message bodyForHeaderField:@"Cc"])
+    if (newRecipients = [message bodyForHeaderField: @"Cc"])
     {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
         [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
         [coder release];
     }
     
-    if (bccBody = [message bodyForHeaderField:@"Bcc"])
+    if (bccBody = [message bodyForHeaderField: @"Bcc"])
     {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:bccBody];
         [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
@@ -337,11 +337,11 @@ an exception if the 'message' will not be consumed. */
     }
     
     if (! [recipients count])
-        [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: No recipients in message headers.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: No recipients in message headers.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
     coder = nil; // guarantee that coder is harmless
     
-    if (sender = [message bodyForHeaderField:@"Sender"])
+    if (sender = [message bodyForHeaderField: @"Sender"])
     {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:sender];
         sender = [coder text];
@@ -353,10 +353,10 @@ an exception if the 'message' will not be consumed. */
         
         [coder release];
         
-        fromField = [message bodyForHeaderField:@"From"];
+        fromField = [message bodyForHeaderField: @"From"];
         authors = nil;
         
-        if (fromField = [message bodyForHeaderField:@"From"])
+        if (fromField = [message bodyForHeaderField: @"From"])
         {
             coder = [[EDTextFieldCoder alloc] initWithFieldBody:fromField];
             
@@ -365,12 +365,12 @@ an exception if the 'message' will not be consumed. */
         
         if (! [authors count])
         {
-            [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: No sender or from field in message headers.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+            [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: No sender or from field in message headers.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
         }
         
         if ([authors count] > 1)
         {
-            [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: Multiple from addresses and no sender field in message headers.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+            [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: Multiple from addresses and no sender field in message headers.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
         }
         sender = [authors objectAtIndex:0];
     }
@@ -382,13 +382,13 @@ an exception if the 'message' will not be consumed. */
         // we could try to recode the "offending" parts using Quoted-Printable and Base64...
         if (! [self _handles8BitBodies])
         {
-            [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: Message has 8-bit content transfer encoding but remote MTA only accepts 7-bit.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+            [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: Message has 8-bit content transfer encoding but remote MTA only accepts 7-bit.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
         }
     }
     
     if (bccBody)
     {
-        [message removeHeaderField:@"Bcc"];
+        [message removeHeaderField: @"Bcc"];
         MPWDebugLog(@"Bcc removed.");
     }
     
@@ -398,14 +398,14 @@ an exception if the 'message' will not be consumed. */
     NS_HANDLER
         if (bccBody)
         {
-            [message setBody:bccBody forHeaderField:@"Bcc"];
+            [message setBody:bccBody forHeaderField: @"Bcc"];
         }
         [localException raise];
     NS_ENDHANDLER
     
     if (bccBody)
     {
-        [message setBody:bccBody forHeaderField:@"Bcc"];
+        [message setBody:bccBody forHeaderField: @"Bcc"];
     }
 }
 
@@ -413,22 +413,22 @@ an exception if the 'message' will not be consumed. */
 
 @implementation OPSMTP (PrivateAPI)
 
-- (void)_assertServerAcceptedCommand
+- (void) _assertServerAcceptedCommand
 {
     NSString *expectedCode;
     NSArray *response;
     
     if (! [pendingResponses count])
-        [NSException raise:NSInternalInconsistencyException format:@"-[%@ %@]: No pending responses.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise:NSInternalInconsistencyException format: @"-[%@ %@]: No pending responses.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
     expectedCode = [[[pendingResponses objectAtIndex:0] retain] autorelease];
     [pendingResponses removeObjectAtIndex:0];
     response = [self _readResponse];
     if (! [[response objectAtIndex:0] hasPrefix:expectedCode])
-        [NSException raise:OPSMTPException format:@"Unexpected SMTP response code; expected %@, read \"%@\"", expectedCode, [response componentsJoinedByString:@" "]];
+        [NSException raise:OPSMTPException format: @"Unexpected SMTP response code; expected %@, read \"%@\"", expectedCode, [response componentsJoinedByString:@" "]];
 }
 
-- (NSArray *)_readResponse
+- (NSArray*) _readResponse
 {
     NSString *partialResponse;
     NSMutableArray *response;
@@ -444,12 +444,12 @@ an exception if the 'message' will not be consumed. */
     return response;
 }
 
-- (NSString *)_pathFromAddress:(NSString *)address
+- (NSString*) _pathFromAddress: (NSString*) address
 {
     NSString	*path;
     
-    if (! [address hasPrefix:@"<"])
-        path = [NSString stringWithFormat:@"<%@>", address];
+    if (! [address hasPrefix: @"<"])
+        path = [NSString stringWithFormat: @"<%@>", address];
     else
         path = address;
     
@@ -458,20 +458,20 @@ an exception if the 'message' will not be consumed. */
 
 - (BOOL)_handles8BitBodies
 {
-    return [capabilities objectForKey:@"8BITMIME"] != nil;
+    return [capabilities objectForKey: @"8BITMIME"] != nil;
 }
 
 - (BOOL)_allowsPipelining
 {
-    return [capabilities objectForKey:@"PIPELINING"] != nil;
+    return [capabilities objectForKey: @"PIPELINING"] != nil;
 }
 
 - (BOOL)_needsAuthentication
 {
-    return ([capabilities objectForKey:@"AUTH"] != nil) && (state != Authenticated);
+    return ([capabilities objectForKey: @"AUTH"] != nil) && (state != Authenticated);
 }
 
-- (NSString *)_username
+- (NSString*) _username
 {
     if (username)
     {
@@ -486,7 +486,7 @@ an exception if the 'message' will not be consumed. */
     return nil;
 }
 
-- (NSString *)_password
+- (NSString*) _password
 {
     if (password)
     {
@@ -532,32 +532,32 @@ an exception if the 'message' will not be consumed. */
     return NO;
 }
 
-- (void)_writeSender:(NSString *)sender
+- (void) _writeSender: (NSString*) sender
 {
     if([self _handles8BitBodies])
-        [stream writeFormat:@"MAIL FROM:%@ BODY=8BITMIME\r\n", [self _pathFromAddress:sender]];
+        [stream writeFormat: @"MAIL FROM:%@ BODY=8BITMIME\r\n", [self _pathFromAddress:sender]];
     else
-        [stream writeFormat:@"MAIL FROM:%@\r\n", [self _pathFromAddress:sender]];
-    [pendingResponses addObject:@"250"];
+        [stream writeFormat: @"MAIL FROM:%@\r\n", [self _pathFromAddress:sender]];
+    [pendingResponses addObject: @"250"];
 }
 
-- (void)_writeRecipient:(NSString *)recipient
+- (void) _writeRecipient: (NSString*) recipient
 {
     MPWDebugLog(@"RCPT TO:%@ (orig: %@)", [self _pathFromAddress:recipient], recipient);
-    [stream writeFormat:@"RCPT TO:%@\r\n", [self _pathFromAddress:recipient]];
-    [pendingResponses addObject:@"250"];
+    [stream writeFormat: @"RCPT TO:%@\r\n", [self _pathFromAddress:recipient]];
+    [pendingResponses addObject: @"250"];
 }
 
-- (void)_beginBody
+- (void) _beginBody
 {
-    [stream writeString:@"DATA\r\n"];
-    [pendingResponses addObject:@"354"];
+    [stream writeString: @"DATA\r\n"];
+    [pendingResponses addObject: @"354"];
 }
 
-- (void)_finishBody
+- (void) _finishBody
 {
-    [stream writeString:@"\r\n.\r\n"];
-    [pendingResponses addObject:@"250"];
+    [stream writeString: @"\r\n.\r\n"];
+    [pendingResponses addObject: @"250"];
 }
 
 - (BOOL)_hasPendingResponses
@@ -565,7 +565,7 @@ an exception if the 'message' will not be consumed. */
     return [pendingResponses count] > 0;
 }
 
-- (void)_sendMail:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients
+- (void) _sendMail: (NSData*) data from: (NSString*) sender to:(NSArray*) recipients
 {
     NSEnumerator *enumerator;
     NSString *recipient;
@@ -600,9 +600,9 @@ an exception if the 'message' will not be consumed. */
         [self _assertServerAcceptedCommand];
     }
     
-    [stream setEscapesLeadingDots:YES];
+    [stream setEscapesLeadingDots: YES];
     [stream writeData:data];
-    [stream setEscapesLeadingDots:NO];
+    [stream setEscapesLeadingDots: NO];
     [self _finishBody];
     [self _assertServerAcceptedCommand];
 }
@@ -624,8 +624,8 @@ an exception if the 'message' will not be consumed. */
     {
         method = [method uppercaseString];
         
-        if ([method isEqualToString:@"PLAIN"])
-            return [self __authPlainWithUsername:aUsername andPassword:aPassword];
+        if ([method isEqualToString: @"PLAIN"])
+            return [self __authPlainWithUsername: aUsername andPassword:aPassword];
         // add other AUTH methods here
     }
     
@@ -635,7 +635,7 @@ an exception if the 'message' will not be consumed. */
 
 
 // PLAIN authentication only
-- (BOOL) __authPlainWithUsername:(NSString*)aUsername andPassword:(NSString*)aPassword
+- (BOOL) __authPlainWithUsername: (NSString*) aUsername andPassword:(NSString*) aPassword
 {        
     NSData *sesame;
     NSString *authString;
@@ -643,14 +643,14 @@ an exception if the 'message' will not be consumed. */
     NSParameterAssert(aUsername && aPassword);
     
     // initiate auth        
-    sesame = [[[NSString stringWithFormat:@"\0%@\0%@", aUsername, aPassword] dataUsingEncoding:NSUTF8StringEncoding] encodeBase64];
+    sesame = [[[NSString stringWithFormat: @"\0%@\0%@", aUsername, aPassword] dataUsingEncoding:NSUTF8StringEncoding] encodeBase64];
     
-    authString = [NSString stringWithFormat:@"AUTH PLAIN %@", [NSString stringWithCString:[sesame bytes] length:[sesame length]]];
+    authString = [NSString stringWithFormat: @"AUTH PLAIN %@", [NSString stringWithCString:[sesame bytes] length:[sesame length]]];
     
     //OPDebugLog1(SMTPDEBUG, OPALL, @"auth string = (%@)", authString);
     [stream writeString:authString];
     
-    [pendingResponses addObject:@"235"];
+    [pendingResponses addObject: @"235"];
     
     [self _assertServerAcceptedCommand];
     

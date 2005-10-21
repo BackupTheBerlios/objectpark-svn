@@ -39,7 +39,7 @@
     NSString* fontName = [userDefaults objectForKey: MessageRendererFontName];
     float     fontSize = [userDefaults integerForKey: MessageRendererFontSize];
     
-    [fontDescription setStringValue: [NSString stringWithFormat:@"%@ Size: %f", fontName, fontSize]];
+    [fontDescription setStringValue: [NSString stringWithFormat: @"%@ Size: %f", fontName, fontSize]];
 }
 
 - (void) didSelect 
@@ -116,7 +116,7 @@ static NSFont* font()
     //MPWDebugLog(@"changeFont: %@", newFont);
         
     NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:[newFont fontName]   forKey: MessageRendererFontName];
+    [userDefaults setObject: [newFont fontName]   forKey: MessageRendererFontName];
     [userDefaults setInteger:[newFont pointSize] forKey: MessageRendererFontSize];
     
     [self updateFontDescription];
@@ -124,7 +124,7 @@ static NSFont* font()
 
 - (IBAction) showFontPanelAction: (id) sender
 {
-    [[NSFontManager sharedFontManager] setSelectedFont: font() isMultiple:NO];
+    [[NSFontManager sharedFontManager] setSelectedFont: font() isMultiple: NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:sender];
 }
 
@@ -228,11 +228,11 @@ static NSFont* font()
     return NSDragOperationNone;
 }
 
-- (BOOL) tableView:(NSTableView *)aTableView writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
+- (BOOL) tableView: (NSTableView*) aTableView writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
 {
     if (aTableView==tableView) {
 
-        [pboard declareTypes:[NSArray arrayWithObject:@"GinkoContentType"] owner:self];
+        [pboard declareTypes:[NSArray arrayWithObject: @"GinkoContentType"] owner:self];
 
         // Only write the first row:
         int rowNumber = [[[rows objectEnumerator] nextObject] intValue];

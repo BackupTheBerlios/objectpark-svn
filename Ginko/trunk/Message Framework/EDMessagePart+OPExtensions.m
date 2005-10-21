@@ -35,7 +35,7 @@
 
 @interface EDMessagePart(PrivateAPI)
 + (NSDictionary *)_defaultFallbackHeaders;
-- (NSData *)takeHeadersFromData:(NSData *)data;
+- (NSData*) takeHeadersFromData: (NSData*) data;
 @end
 
 
@@ -44,7 +44,7 @@
 @implementation EDMessagePart (TemporaryBugFix)
 
 // bufix: made robust for unknown content transfer encodings -> fallback to 7bit
-- (id)initWithTransferData:(NSData *)data fallbackHeaderFields:(NSDictionary *)fields
+- (id)initWithTransferData: (NSData*) data fallbackHeaderFields:(NSDictionary *)fields
 {
     NSString	*cte;
     NSData	  	*rawData;
@@ -65,7 +65,7 @@
         return self;
 
     rawData = [self takeHeadersFromData:data];
-    cte = [[(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:[self bodyForHeaderField:@"content-transfer-encoding"]] text] stringByRemovingSurroundingWhitespace];
+    cte = [[(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:[self bodyForHeaderField: @"content-transfer-encoding"]] text] stringByRemovingSurroundingWhitespace];
     
     NS_DURING
         [self setContentData:[rawData decodeContentWithTransferEncoding:cte]];
@@ -79,12 +79,12 @@
 */
 
 /*
-- (NSString *)contentDisposition
+- (NSString*) contentDisposition
 {
     NSString 			*fBody;
     EDEntityFieldCoder	*coder;
 
-    if((contentDisposition == nil) && ((fBody = [self bodyForHeaderField:@"content-disposition"]) != nil))
+    if((contentDisposition == nil) && ((fBody = [self bodyForHeaderField: @"content-disposition"]) != nil))
         {
         coder = [EDEntityFieldCoder decoderWithFieldBody:fBody];
         contentDisposition = [[[coder values] objectAtIndex:0] retain];
@@ -97,7 +97,7 @@
 /* Waht is the improvement over the EDM version?
 
 // make resistent agains missing header to body separators
-- (NSData *)takeHeadersFromData:(NSData *)data
+- (NSData*) takeHeadersFromData: (NSData*) data
 {
     const char		 *p, *pmax, *fnamePtr, *fbodyPtr, *eolPtr;
     NSMutableData	 *fbodyData;
@@ -156,7 +156,7 @@
                     // we know something about the implementation of addToHeaderFields
                     // by uniqueing the string here we avoid creating another pair.
                     name = [name sharedInstance];
-                    field = [[EDObjectPair allocWithZone:[self zone]] initWithObjects:name:fbodyContents];
+                    field = [[EDObjectPair allocWithZone:[self zone]] initWithObjects:name: fbodyContents];
                     [self addToHeaderFields:field];
                     [field release];
                     fbodyData = nil;
@@ -194,7 +194,7 @@
 
 /*
 #warning axel->axel: submit to Erik
-- (NSData *)transferData
+- (NSData*) transferData
 {
     NSMutableData	 		*transferData;
     NSData					*headerData;
@@ -221,24 +221,24 @@
 
         headerLine = [[NSMutableString alloc] initWithString:[field firstObject]];
 //        [stringBuffer appendString:[field firstObject]];
-        [headerLine appendString:@": "];
+        [headerLine appendString: @": "];
         [headerLine appendString:[field secondObject]];
-        [headerLine appendString:@"\r\n"];
+        [headerLine appendString: @"\r\n"];
 
         [stringBuffer appendString:[headerLine stringByFoldingStringToLimit:998]];
 
         [headerLine release];
         }
-    [stringBuffer appendString:@"\r\n"];
+    [stringBuffer appendString: @"\r\n"];
     
     if (! [stringBuffer canBeConvertedToEncoding:NSASCIIStringEncoding])
     {
         OPDebugLog2(MESSAGEDEBUG, OPWARNING, @"-[%@ %@]: Transfer representation of header fields contains non ASCII characters. Fallback to lossy conversion.", NSStringFromClass(isa), NSStringFromSelector(_cmd));
     }
         
-    if((headerData = [stringBuffer dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES]) == nil)
+    if((headerData = [stringBuffer dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion: YES]) == nil)
     {
-        [NSException raise:NSInternalInconsistencyException format:@"-[%@ %@]: Error converting header data to ASCII encoding (despite of use of lossy conversion).", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise:NSInternalInconsistencyException format: @"-[%@ %@]: Error converting header data to ASCII encoding (despite of use of lossy conversion).", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     }
     
     [transferData appendData:headerData];
@@ -282,10 +282,10 @@
 
 - (NSAttributedString *)contentAsAttributedString
 {
-    return [self contentAsAttributedStringWithPreferredContentTypes:nil];
+    return [self contentAsAttributedStringWithPreferredContentTypes: nil];
 }
 
-- (NSAttributedString *)contentAsAttributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (NSAttributedString *)contentAsAttributedStringWithPreferredContentTypes:(NSArray*) preferredContentTypes
 /*" Returns the receivers content as a user presentable attributed string. Returns nil if not decodable. "*/
 {
     NSAttributedString* content = nil;
@@ -311,7 +311,7 @@
             }
         } @catch (NSException* localException) {
             OPDebugLog3(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
-            content = [[[NSAttributedString alloc] initWithString:@"Exception while extracting contents as attributed string."] autorelease];
+            content = [[[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."] autorelease];
         } @finally {
         }
         
@@ -332,7 +332,7 @@
             content = result;
         } @catch (NSException* localException) {
             OPDebugLog3(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
-            content = [[NSAttributedString alloc] initWithString:@"Exception while extracting contents as attributed string."];
+            content = [[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."];
         }
 
         [contentCoder release];
@@ -342,7 +342,7 @@
     return [content autorelease];
 }
 
-- (NSString *)contentAsPlainString
+- (NSString*) contentAsPlainString
 /*" Returns the contents as a plain text string. Rich content is described as plain text. Suitable for fulltext indexing of the body content (not including the header texts). "*/
 {
 	// TODO: Improve! This is a very naive implementation
@@ -354,7 +354,7 @@
 /*
 @implementation EDMessagePart (Tests)
 
-- (void)testTakeHeaders
+- (void) testTakeHeaders
 {
     NSString *testString = @"From Hein Bloed\n\tfold me sucker\nSubject: Sowas\nContent-Type: multipart/mixed;\n   boundary=\"----_=_NextPart_000_01C12EF4.7146FC60\"\nThis message is in MIME format. Since your mail reader does not understand\nthis format, some or all of this message may not be legible.";
 
@@ -372,11 +372,11 @@
     return [NSArray arrayWithObjects: @"testTakeHeaders", nil];
 }
 
-- (void)testTeardown
+- (void) testTeardown
 {
 }
 
-- (void)testSetup
+- (void) testSetup
 {
 }
 

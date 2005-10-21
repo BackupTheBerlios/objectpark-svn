@@ -28,14 +28,14 @@
 
 }
 
-+ (id)decoderWithFieldBody:(NSString *)fieldBody;
-+ (NSString *)stringFromFieldBody:(NSString *)body withFallback:(BOOL)fallback;
++ (id)decoderWithFieldBody: (NSString*) fieldBody;
++ (NSString*) stringFromFieldBody: (NSString*) body withFallback:(BOOL)fallback;
 
-- (id)initWithFieldBody:(NSString *)body;
+- (id)initWithFieldBody: (NSString*) body;
 
-- (NSString *)fieldBody;
+- (NSString*) fieldBody;
 
-- (NSString *)stringValue;
+- (NSString*) stringValue;
 
 @end
 

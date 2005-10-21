@@ -30,8 +30,8 @@
     NSDictionary* parameters;
 }
 
-+ (id)encoderWithValue:(NSString*) someValue andParameters:(NSDictionary *)someParameters;
-- (id)initWithValue: (NSString*) someValue andParameters:(NSDictionary *)someParameters;
++ (id)encoderWithValue:(NSString*) someValue andParameters: (NSDictionary*) someParameters;
+- (id)initWithValue: (NSString*) someValue andParameters: (NSDictionary*) someParameters;
 - (NSString*) value;
 - (NSDictionary*) parameters;
 

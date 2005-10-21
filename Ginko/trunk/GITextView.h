@@ -35,7 +35,7 @@
 @end
 
 @protocol GITextViewDelegate
-- (void)textView:(NSTextView *)textView spaceKeyPressedWithModifierFlags:(int)modifierFlags;
+- (void) textView: (NSTextView*) textView spaceKeyPressedWithModifierFlags:(int)modifierFlags;
 @end
 
 extern NSString *OPAttributedStringPboardType;

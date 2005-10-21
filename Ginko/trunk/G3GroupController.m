@@ -33,10 +33,10 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @interface G3GroupController (CommentsTree)
 
-- (void)awakeCommentTree;
-- (void)deallocCommentTree;
+- (void) awakeCommentTree;
+- (void) deallocCommentTree;
 - (IBAction)selectTreeCell:(id)sender;
-- (void)updateCommentTree:(BOOL)rebuildThread;
+- (void) updateCommentTree:(BOOL)rebuildThread;
 - (BOOL)matrixIsVisible;
 
 @end
@@ -46,7 +46,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 - (id)init
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name: @"GroupContentChangedNotification" object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name: OPJobDidFinishNotification object:MboxImportJobName];
     return [[super init] retain]; // self retaining!
 }
 
@@ -66,14 +66,14 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     return self;
 }
 
-- (id)initAsStandAloneBoxesWindow:(GIMessageGroup *)aGroup
+- (id)initAsStandAloneBoxesWindow: (GIMessageGroup*) aGroup
 {
     if (self = [self init])
     {
         [NSBundle loadNibNamed: @"Boxes" owner:self];
         [self setGroup:aGroup];
 		
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name: GIMessageGroupWasAddedNotification object: nil];
     }
     
     return self;
@@ -112,11 +112,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window makeKeyAndOrderFront:self];    
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     NSLog(@"G3GroupController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [window setDelegate:nil];
+    [window setDelegate: nil];
     
     [self deallocCommentTree];
     [self deallocToolbar];
@@ -151,16 +151,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if (!groupProperties) groupProperties = [[NSMutableDictionary alloc] init];
     
     if (value) {
-        [groupProperties setObject:value forKey:prop];
+        [groupProperties setObject: value forKey:prop];
     } else {
         [groupProperties removeObjectForKey:prop];
     }
     
-    [ud setObject:groupProperties forKey:key];
+    [ud setObject: groupProperties forKey:key];
     [groupProperties release];
 }
 
-- (void)windowWillClose: (NSNotification*) notification 
+- (void) windowWillClose: (NSNotification*) notification 
 {
     lastTopLeftPoint = NSMakePoint(0.0, 0.0); // reset cascading
     [self autorelease]; // balance self-retaining
@@ -194,7 +194,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         itemRow = [threadsView rowForItemEqualTo: aThread startingAtRow: 0];
     }
     
-    [threadsView selectRow:itemRow byExtendingSelection:NO];
+    [threadsView selectRow:itemRow byExtendingSelection: NO];
     [threadsView scrollRowToVisible:itemRow];
     
     // message display string:
@@ -242,7 +242,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex: 0];
         //[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
         //[treeBodySplitter moveSplitterBy:[commentsMatrix frame].size.height+10-[scrollView frame].size.height];
-        //[scrollView setAutohidesScrollers:YES];
+        //[scrollView setAutohidesScrollers: YES];
         BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
         float newHeight = [commentsMatrix frame].size.height+3+(hasHorzontalScroller*[NSScroller scrollerWidth]); // scroller width could be different
         [scrollView setHasHorizontalScroller:hasHorzontalScroller];
@@ -250,10 +250,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             newHeight = 0;
         if (newHeight>200.0) {
             newHeight = 200.0;
-            [scrollView setHasVerticalScroller:YES];
-            //[scrollView setAutohidesScrollers:YES];
+            [scrollView setHasVerticalScroller: YES];
+            //[scrollView setAutohidesScrollers: YES];
         } else {
-            [scrollView setHasVerticalScroller:NO];
+            [scrollView setHasVerticalScroller: NO];
         }
         [treeBodySplitter setFirstSubviewSize:newHeight];
     }
@@ -352,17 +352,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     nonExpandableItemsCache = newCache;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void) observeValueForKeyPath: (NSString*) keyPath ofObject:(id)object change: (NSDictionary*) change context:(void *)context
 {
     if ([object isEqual:[self group]]) 
     {
         NSNotification *notification;
         
         NSLog(@"observeValueForKeyPath %@", keyPath);
-//        [self modelChanged:nil];
+//        [self modelChanged: nil];
         notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object:self];
         
-        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes: nil];
     }
     // the same change
     //    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -485,14 +485,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                     NSLog(@"message is in send job");
                     NSBeep();
                 } else {
-                    [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
+                    [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
                 }
             } else {
                 [tabView selectTabViewItemWithIdentifier: @"message"];
                 
-                [message addFlags: OPSeenStatus];
+                //[message addFlags: OPSeenStatus];
                 
-                [self setDisplayedMessage:message thread: selectedThread];
+                [self setDisplayedMessage: message thread: selectedThread];
                 
                 if ([self matrixIsVisible]) [window makeFirstResponder: commentsMatrix];
                 else [window makeFirstResponder: messageTextView];                    
@@ -514,7 +514,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     } 
     else 
     {
-        if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"])
+        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"])
         {
             if ([window firstResponder] == messageTextView)
             {
@@ -540,12 +540,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 // actions
 
-- (void)placeSelectedTextOnQuotePasteboard
+- (void) placeSelectedTextOnQuotePasteboard
 {
     NSArray *types = [messageTextView writablePasteboardTypes];
     NSPasteboard *quotePasteboard = [NSPasteboard pasteboardWithName: @"QuotePasteboard"];
     
-    [quotePasteboard declareTypes:types owner:nil];
+    [quotePasteboard declareTypes:types owner: nil];
     [messageTextView writeSelectionToPasteboard:quotePasteboard types:types];
 }
 
@@ -559,9 +559,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if ([item isKindOfClass:[GIMessage class]])
     {
         result = item;
-    }
-    else
-    {
+    } else {
         result = [[[OPPersistentObjectContext objectWithURLString: item] messagesByTree] lastObject];
         if (! [result isKindOfClass:[GIMessage class]])
         {
@@ -572,7 +570,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (GIProfile *)profileForMessage:(GIMessage *)aMessage
+- (GIProfile *)profileForMessage: (GIMessage*) aMessage
 /*" Return the profile to use for email replies. Tries first to guess a profile based on the replied email. If no matching profile can be found, the group default profile is chosen. May return nil in case of no group default and no match present. "*/
 {
     GIProfile *result;
@@ -621,9 +619,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if ([message isListMessage] || [message isUsenetMessage])
     {
         [self followup:sender];
-    }
-    else
-    {
+    } else {
         [self replySender:sender];
     }
 }
@@ -648,13 +644,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (IBAction) addFolder: (id) sender
 {
     int selectedRow = [boxesView selectedRow];
-    [boxesView setAutosaveName:nil];
+    [boxesView setAutosaveName: nil];
     [GIMessageGroup addNewHierarchyNodeAfterEntry:[boxesView itemAtRow:selectedRow]];
     [boxesView reloadData];
     [boxesView setAutosaveName: @"boxesView"];
     
-    [boxesView selectRow:selectedRow + 1 byExtendingSelection:NO];
-    [self rename:self];
+    [boxesView selectRow:selectedRow + 1 byExtendingSelection: NO];
+    [self rename: self];
 }
 
 - (IBAction) addMessageGroup: (id) sender
@@ -682,13 +678,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         }
     }
     
-    [GIMessageGroup newMessageGroupWithName:nil atHierarchyNode:node atIndex:index];
+    [GIMessageGroup newMessageGroupWithName: nil atHierarchyNode:node atIndex:index];
     
     [boxesView reloadData];
     
     [boxesView setAutosaveName: @"boxesView"];
-    [boxesView selectRow:selectedRow + 1 byExtendingSelection:NO];
-    [self rename:self];
+    [boxesView selectRow:selectedRow + 1 byExtendingSelection: NO];
+    [self rename: self];
 }
 
 - (IBAction) removeFolderMessageGroup: (id) sender
@@ -726,7 +722,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                     threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage:message flags:0];
                 }
             }
-            @catch (NSException *localException)
+            @catch (NSException* localException)
             {
                 @throw;
             }
@@ -750,11 +746,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     [self setValue:[NSNumber numberWithInt:[[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
 
-    [self modelChanged:nil];
+    [self modelChanged: nil];
 }
 
 /*
-- (void)moveToTrash:(id)sender
+- (void) moveToTrash:(id)sender
     /"Forwards command to move selected messages to trash message box."/
 {
     [messageListController trashSelectedMessages:self];
@@ -795,7 +791,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (NSArray *)selectedThreadURIs
+- (NSArray*) selectedThreadURIs
 {
     NSMutableArray* result = [NSMutableArray array];
     NSIndexSet* set = [threadsView selectedRowIndexes];
@@ -814,7 +810,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (void)joinThreadsWithURIs:(NSArray *)uriArray
+- (void) joinThreadsWithURIs:(NSArray*) uriArray
 {
     NSEnumerator *e = [[self selectedThreadURIs] objectEnumerator];
     NSString *targetThreadURI = [e nextObject];
@@ -884,7 +880,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     BOOL trashedAtLeastOne = NO;
     
     // Make sure we have a fresh group object and prevent merge problems:
-    //[[NSManagedObjectContext threadContext] refreshObject:[self group] mergeChanges:YES];
+    //[[NSManagedObjectContext threadContext] refreshObject:[self group] mergeChanges: YES];
     
     while (uriString = [enumerator nextObject]) 
     {
@@ -902,7 +898,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [NSApp saveAction:self];
         if (rowBefore >= 0)
         {
-            [threadsView selectRow:rowBefore byExtendingSelection:NO];
+            [threadsView selectRow:rowBefore byExtendingSelection: NO];
         }
     }
     
@@ -916,7 +912,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (void)updateGroupInfoTextField
+- (void) updateGroupInfoTextField
 {
     if (![self isStandaloneBoxesWindow])
     {
@@ -939,7 +935,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 //#warning Is this clever? Maybe!
 /*    if ([self group])
     {
-        [[OPPersistentObjectContext threadContext] refreshObject:[self group] mergeChanges:NO];
+        [[OPPersistentObjectContext threadContext] refreshObject:[self group] mergeChanges: NO];
     }
     */
     [threadsView reloadData];
@@ -962,7 +958,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 		 #warning What was the following good for?
         if (![self isStandaloneBoxesWindow]) {
             [group removeObserver: self forKeyPath: @"threads"];
-            [aGroup addObserver:self forKeyPath: @"threads" options:NSKeyValueObservingOptionNew context:NULL];
+            [aGroup addObserver:self forKeyPath: @"threads" options:NSKeyValueObservingOptionNew context: NULL];
         }
 		 */
         
@@ -1098,7 +1094,7 @@ static BOOL isThreadItem(id item)
     }
     
     if ( (aSelector == @selector(newMessagebox:))
-         || (aSelector == @selector(rename:))
+         || (aSelector == @selector(rename: ))
          || (aSelector == @selector(delete:))
          || (aSelector == @selector(newMessageboxFolder:)))
     {
@@ -1266,7 +1262,7 @@ NSDictionary* selectedReadAttributes()
     
     if (! attributes) {
         attributes = [[readAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject:[[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
+        [(NSMutableDictionary *)attributes setObject: [[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
         attributes = [attributes copy];
     }
     
@@ -1279,7 +1275,7 @@ NSDictionary *fromAttributes()
     
     if (! attributes) {
         attributes = [[readAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject:[[NSColor darkGrayColor] shadowWithLevel:0.3] forKey:NSForegroundColorAttributeName];
+        [(NSMutableDictionary *)attributes setObject: [[NSColor darkGrayColor] shadowWithLevel:0.3] forKey:NSForegroundColorAttributeName];
 
         attributes = [attributes copy];
     }
@@ -1308,7 +1304,7 @@ NSDictionary *selectedUnreadFromAttributes()
     if (! attributes)
     {
         attributes = [[unreadFromAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject:[[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
+        [(NSMutableDictionary *)attributes setObject: [[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
         attributes = [attributes copy];
     }
     
@@ -1323,7 +1319,7 @@ NSDictionary *readFromAttributes()
     {
         attributes = [[fromAttributes()mutableCopy] autorelease];
         [(NSMutableDictionary *)attributes addEntriesFromDictionary:readAttributes()];
-        [(NSMutableDictionary *)attributes setObject:[[NSColor darkGrayColor] highlightWithLevel:0.25] forKey:NSForegroundColorAttributeName];
+        [(NSMutableDictionary *)attributes setObject: [[NSColor darkGrayColor] highlightWithLevel:0.25] forKey:NSForegroundColorAttributeName];
         attributes = [attributes copy];
     }
     
@@ -1337,7 +1333,7 @@ NSDictionary *selectedReadFromAttributes()
     if (! attributes)
     {
         attributes = [[readFromAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject:[[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
+        [(NSMutableDictionary *)attributes setObject: [[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
         attributes = [attributes copy];
     }
     
@@ -1466,18 +1462,18 @@ static NSAttributedString* spacer2()
         }
         if ([[tableColumn identifier] isEqualToString: @"info"]) {
             if (![item isKindOfClass: [NSMutableArray class]]) {
-                GIMessageGroup* g = [OPPersistentObjectContext objectWithURLString: item];
-                NSMutableArray *threadURIs = [NSMutableArray array];
-                NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
+                //GIMessageGroup* g = item;
+                //NSMutableArray *threadURIs = [NSMutableArray array];
+                //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
                 
                 return @"";
                     /*
                 [g fetchThreadURIs:&threadURIs
-                    trivialThreads:NULL
+                    trivialThreads: NULL
                          newerThan:[date timeIntervalSinceReferenceDate]
-                       withSubject:nil
-                            author:nil
-             sortedByDateAscending:YES];
+                       withSubject: nil
+                            author: nil
+             sortedByDateAscending: YES];
                 return [NSNumber numberWithInt:[threadURIs count]];
                      */
             }
@@ -1491,9 +1487,9 @@ static NSAttributedString* spacer2()
     if (outlineView == boxesView) {
         if ([item isKindOfClass: [NSMutableArray class]]) {
 			 // folder:
-            [[item objectAtIndex:0] setObject:object forKey: @"name"];
+            [[item objectAtIndex:0] setObject: object forKey: @"name"];
             [GIMessageGroup commitChanges];
-            //[outlineView selectRow:[outlineView rowForItem:item]+1 byExtendingSelection:NO];
+            //[outlineView selectRow:[outlineView rowForItem:item]+1 byExtendingSelection: NO];
             //[[outlineView window] endEditingFor:outlineView];
         } else {
 			// message group:
@@ -1526,13 +1522,13 @@ static NSAttributedString* spacer2()
 
 @implementation G3GroupController (CommentsTree)
 
-- (void)awakeCommentTree
+- (void) awakeCommentTree
 /*" awakeFromNib part for the comment tree. Called from -awakeFromNib. "*/
 {
     G3CommentTreeCell* commentCell = [[[G3CommentTreeCell alloc] init] autorelease];
     
     [commentsMatrix putCell:commentCell atRow:0 column:0];
-    [commentsMatrix setCellClass:nil];
+    [commentsMatrix setCellClass: nil];
     [commentsMatrix setPrototype:commentCell];
     [commentsMatrix setCellSize:NSMakeSize(20,10)];
     [commentsMatrix setIntercellSpacing:NSMakeSize(0,0)]; 
@@ -1544,7 +1540,7 @@ static NSAttributedString* spacer2()
 
 }
 
-- (void)deallocCommentTree
+- (void) deallocCommentTree
 {
 }
 
@@ -1560,7 +1556,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     
     if (! result) {
         result = [aMessage commentsInThread:aThread];
-        [commentsCache setObject:result forKey: [aMessage objectURLString]];
+        [commentsCache setObject: result forKey: [aMessage objectURLString]];
     }
     
     return result;
@@ -1568,7 +1564,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 
 NSMutableArray* border = nil;
 
-- (void)initializeBorderToDepth: (int) aDepth
+- (void) initializeBorderToDepth: (int) aDepth
 {
     int i;
     
@@ -1696,7 +1692,7 @@ NSMutableArray* border = nil;
         
         //[commentsMatrix selectCell:[commentsMatrix cellForRepresentedObject:displayedMessage]];
         [commentsMatrix sizeToFit];
-        [commentsMatrix setNeedsDisplay:YES];
+        [commentsMatrix setNeedsDisplay: YES];
         //[commentsMatrix scrollCellToVisibleAtRow:<#(int)row#> column:<#(int)col#>]];
         
         [commentsCache release];
@@ -1707,7 +1703,7 @@ NSMutableArray* border = nil;
     G3CommentTreeCell* cell;
     
     cell = (G3CommentTreeCell*) [commentsMatrix cellForRepresentedObject: displayedMessage];
-    [cell setSeen:YES];
+    [cell setSeen: YES];
     
     [commentsMatrix selectCell: cell];
     
@@ -1807,7 +1803,7 @@ NSMutableArray* border = nil;
 @implementation G3GroupController (ToolbarDelegate)
 /*" Toolbar delegate methods and setup and teardown. "*/
 
-- (void)awakeToolbar
+- (void) awakeToolbar
 /*" Called from within -awakeFromNib. "*/
 {
     if (![self isStandaloneBoxesWindow])
@@ -1819,8 +1815,8 @@ NSMutableArray* border = nil;
         [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed: @"group"];
 
         [toolbar setDelegate:self];
-		[toolbar setAllowsUserCustomization:YES];
-		[toolbar setAutosavesConfiguration:YES];
+		[toolbar setAllowsUserCustomization: YES];
+		[toolbar setAutosavesConfiguration: YES];
 		
 		[toolbarItems retain];
 		[defaultIdentifiers retain];
@@ -1829,7 +1825,7 @@ NSMutableArray* border = nil;
 	}    
 }
 
-- (void)deallocToolbar
+- (void) deallocToolbar
 /*" Called within dealloc. "*/
 {
     [[window toolbar] release];
@@ -1837,22 +1833,22 @@ NSMutableArray* border = nil;
     [defaultIdentifiers release];
 }
 
-- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+- (BOOL)validateToolbarItem: (NSToolbarItem*) theItem
 {
     return [self validateSelector:[theItem action]];
 }
 
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+- (NSToolbarItem *)toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
     return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
 }
 
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
+- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*) toolbar
 {
     return defaultIdentifiers;
 }
 
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
+- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
 {
     static NSArray *allowedItemIdentifiers = nil;
     
@@ -1882,9 +1878,9 @@ NSMutableArray* border = nil;
 
 @implementation G3GroupController (DragNDrop)
 
-- (void)moveThreadsWithURI:(NSArray *)threadURIs 
-                 fromGroup:(GIMessageGroup *)sourceGroup 
-                   toGroup:(GIMessageGroup *)destinationGroup
+- (void) moveThreadsWithURI:(NSArray*) threadURIs 
+                 fromGroup: (GIMessageGroup*) sourceGroup 
+                   toGroup: (GIMessageGroup*) destinationGroup
 {
     NSEnumerator *enumerator = [threadURIs objectEnumerator];
     NSString *threadURI;
@@ -1918,7 +1914,7 @@ NSMutableArray* border = nil;
             // Hack (part 1)! Why is this necessary to archive almost 'normal' behavior?
             [boxesView setAutosaveName: nil];
             
-            [GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:NO];
+            [GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly: NO];
             
             [anOutlineView reloadData];
             
@@ -1938,7 +1934,7 @@ NSMutableArray* border = nil;
             
             // select all in dragging source:
             NSOutlineView *sourceView = [info draggingSource];        
-            [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
+            [sourceView selectRow:[sourceView selectedRow] byExtendingSelection: NO];
             
             [NSApp saveAction:self];
         }
@@ -1970,7 +1966,7 @@ NSMutableArray* border = nil;
         
         // select all in dragging source:
         NSOutlineView *sourceView = [info draggingSource];        
-        [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
+        [sourceView selectRow:[sourceView selectedRow] byExtendingSelection: NO];
         
         [NSApp saveAction:self];
     }
@@ -2009,7 +2005,7 @@ NSMutableArray* border = nil;
             NSArray *items = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
             
             if ([items count] > 0) {
-                [anOutlineView setDropItem:nil dropChildIndex:-1]; 
+                [anOutlineView setDropItem: nil dropChildIndex:-1]; 
                 return NSDragOperationMove;
             }
         }
@@ -2018,7 +2014,7 @@ NSMutableArray* border = nil;
     return NSDragOperationNone;
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
+- (BOOL)outlineView: (NSOutlineView*) outlineView writeItems:(NSArray*) items toPasteboard:(NSPasteboard *)pboard
 {
     if (outlineView == boxesView) // Message Groups list
     {
@@ -2039,14 +2035,12 @@ NSMutableArray* border = nil;
 }
 
 /*
-- (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
+- (NSImage *)dragImageForRowsWithIndexes: (NSIndexSet*) dragRows tableColumns:(NSArray*) tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
 {
     if (outlineView == threadsView) // threads list
     {
         return nil;
-    }
-    else
-    {
+    } else {
         return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
     }
 }
@@ -2056,7 +2050,7 @@ NSMutableArray* border = nil;
 
 @implementation G3GroupController (SplitViewDelegate)
 
-- (void)splitView:(NSSplitView*)sender resizeSubviewsWithOldSize:(NSSize)oldSize
+- (void) splitView:(NSSplitView*)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
     NSSize newSize = [sender frame].size;
     
@@ -2076,7 +2070,7 @@ NSMutableArray* border = nil;
 
 @implementation G3GroupController (TextViewDelegate)
 
-- (void)textView:(NSTextView *)textView doubleClickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(unsigned)charIndex
+- (void) textView: (NSTextView*) textView doubleClickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(unsigned)charIndex
 {
     NSTextAttachment *attachment;
     NSFileWrapper *fileWrapper;
@@ -2092,7 +2086,7 @@ NSMutableArray* border = nil;
     [[NSWorkspace sharedWorkspace] openFile:filename];
 }
 
-- (void)textView:(NSTextView *)view draggedCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)rect event:(NSEvent *)event atIndex:(unsigned)charIndex
+- (void) textView: (NSTextView*) view draggedCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)rect event:(NSEvent *)event atIndex:(unsigned)charIndex
 {
     NSTextAttachment *attachment;
     NSFileWrapper *fileWrapper;
@@ -2108,7 +2102,7 @@ NSMutableArray* border = nil;
     NSPoint mouseLocation = [event locationInWindow];
     mouseLocation.x -= 16; // file icons are guaranteed to have 32 by 32 pixels (Mac OS 10.4 NSWorkspace docs)
     mouseLocation.y -= 16;
-    mouseLocation = [view convertPoint:mouseLocation toView:nil];
+    mouseLocation = [view convertPoint:mouseLocation toView: nil];
      
     rect = NSMakeRect(mouseLocation.x, mouseLocation.y, 1, 1);
     [view dragFile:filename fromRect:rect slideBack:YES event:event];

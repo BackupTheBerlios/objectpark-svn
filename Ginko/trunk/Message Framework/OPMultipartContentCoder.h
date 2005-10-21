@@ -26,12 +26,12 @@
     NSString *subtype;
 }
 
-- (id)initWithMessagePart:(EDMessagePart *)mpart;
-//- (id)initWithSubparts:(NSArray *)someParts andSubtype:(NSString *)aSubtype;
+- (id)initWithMessagePart: (EDMessagePart*) mpart;
+//- (id)initWithSubparts:(NSArray*) someParts andSubtype: (NSString*) aSubtype;
 
-- (NSString *)subtype;
+- (NSString*) subtype;
 
 - (NSAttributedString *)attributedString;
-- (NSAttributedString *)attributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes;
+- (NSAttributedString *)attributedStringWithPreferredContentTypes:(NSArray*) preferredContentTypes;
 
 @end

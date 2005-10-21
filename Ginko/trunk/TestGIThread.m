@@ -23,7 +23,7 @@
 - (GIMessage*) makeAMessage
 {
     static int i = 1;
-    NSString *messageId = [NSString stringWithFormat:@"<threadtest-message-%d@test.org>",i++];
+    NSString *messageId = [NSString stringWithFormat: @"<threadtest-message-%d@test.org>",i++];
     NSString *transferString = [NSString stringWithFormat:
                                              @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nFrom: Laurent.Julliard@xrce.xerox.com (Laurent Julliard)\r\nMIME-Version: 1.0\r\nSubject: Re: GWorkspace - next steps\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
@@ -43,7 +43,7 @@
     GIMessage *messageB = [self makeAMessage];
     GIMessage *messageC = [self makeAMessage];
     
-    [messageC setValue:messageB forKey:@"reference"];
+    [messageC setValue:messageB forKey: @"reference"];
     
     [threadA addToMessages: messageA];
     [threadA addToMessages: messageB];
@@ -65,7 +65,7 @@
     GIMessage *messageB = [self makeAMessage];
     GIMessage *messageC = [self makeAMessage];
     
-    [messageC setValue:messageB forKey:@"reference"];
+    [messageC setValue:messageB forKey: @"reference"];
     
     [threadB addToMessages: messageA];
     [threadB addToMessages: messageB];
@@ -74,7 +74,7 @@
     STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
     STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
     
-    id groupsFromThreadB = [threadB valueForKey:@"groups"];
+    id groupsFromThreadB = [threadB valueForKey: @"groups"];
     
     [threadA mergeMessagesFromThread:threadB];
     
@@ -82,7 +82,7 @@
     
     NSEnumerator *enumerator = [groupsFromThreadB objectEnumerator];
     NSArray *threads;
-    while (threads = [[enumerator nextObject] objectForKey:@"threads"])
+    while (threads = [[enumerator nextObject] objectForKey: @"threads"])
     {
         STAssertTrue(![threads containsObject:threadB], @"Should not contain %@", threadB);
     }
@@ -91,9 +91,9 @@
 - (void) disabledtestGroupAdding
 {
     /*
-    GIThread *threadA = [NSEntityDescription insertNewObjectForEntityForName:@"GIThread" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
+    GIThread *threadA = [NSEntityDescription insertNewObjectForEntityForName: @"GIThread" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
     GIMessage *messageA = [self makeAMessage];
-    GIMessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"GIMessageGroup" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
+    GIMessageGroup *group = [NSEntityDescription insertNewObjectForEntityForName: @"GIMessageGroup" inManagedObjectContext:[OPPersistentObjectContext threadContext]];
     
     [threadA addToMessages: messageA];
     [threadA addToGroups: group];

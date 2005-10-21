@@ -65,7 +65,7 @@
     
     /*
 	 // disconnecting another thread from all groups:
-	 enumerator = [[otherThread valueForKey:@"groups"] objectEnumerator];
+	 enumerator = [[otherThread valueForKey: @"groups"] objectEnumerator];
 	 while (group = [enumerator nextObject])
 	 {
 		 [self removeFromGroups: group];

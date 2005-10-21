@@ -49,7 +49,7 @@
 }
 
 
-- (NSString *)quotedStringWithLineLength:(int)lineLength byIncreasingQuoteLevelBy:(int)levelDelta
+- (NSString*) quotedStringWithLineLength:(int)lineLength byIncreasingQuoteLevelBy:(int)levelDelta
 {
     NSMutableAttributedString *workString;
     NSMutableString *result;
@@ -118,13 +118,13 @@
             if (attributeValue != nil) // is quote
             {
                 // adjust quote depth by adding given quote depth
-                totalQuoteDepth += [(NSNumber *)attributeValue intValue];
+                totalQuoteDepth += [(NSNumber*) attributeValue intValue];
             }
             
             if (totalQuoteDepth > 0)
             {
                 BOOL endsWithLineBreak;
-                NSString *lineBreakSeq;
+                NSString* lineBreakSeq;
                 
                 lineBreakSeq = @"\r\n";
                 if([partialString rangeOfString:lineBreakSeq].length == 0)
@@ -137,10 +137,10 @@
                 
                 for (i = 0; i < totalQuoteDepth; i++)
                 {
-                    [quotePrefix appendString:@">"];
+                    [quotePrefix appendString: @">"];
                 }
                 
-                [quotePrefix appendString:@" "];
+                [quotePrefix appendString: @" "];
                 
                 //MPWDebugLog(@"wrapping");
                 
@@ -182,7 +182,7 @@
 
 @implementation NSMutableAttributedString (QuotationExtensions)
 
-- (NSParagraphStyle *)_paragraphStyleForQuotationPrefix:(NSAttributedString *)quotationPrefix firstParagraph:(BOOL)firstParagraph
+- (NSParagraphStyle *)_paragraphStyleForQuotationPrefix: (NSAttributedString*) quotationPrefix firstParagraph:(BOOL)firstParagraph
 {
     NSMutableParagraphStyle *result;
     
@@ -206,11 +206,11 @@
     result = [[[NSMutableAttributedString alloc] init] autorelease];
     for (i = 0; i < quotationLevel; i++)
     {
-        [result appendString:@">"];
+        [result appendString: @">"];
     }
     
     if (quotationLevel > 0)
-        [result appendString:@" "];
+        [result appendString: @" "];
     
     return result;
 }
@@ -256,7 +256,7 @@
     return color;
 }
 
-- (void)prepareQuotationsForDisplay
+- (void) prepareQuotationsForDisplay
 /*"Adds paragraph style attributes to quoted ranges."*/
 {
     NSRange limitRange;
@@ -284,18 +284,18 @@
             NSRange firstParEnd, firstParRange;
             int quotationLevel;
             
-            quotationLevel = [(NSNumber *)attributeValue intValue];
+            quotationLevel = [(NSNumber*) attributeValue intValue];
             
             // first paragraph
             quotationPrefix = [self _prefixForQuotationLevel:quotationLevel];
 
             [self insertAttributedString:quotationPrefix atIndex:effectiveRange.location];
-            [self addAttribute:OPQuotationPrefixAttributeName value:@"QuotationPrefix" range:NSMakeRange(effectiveRange.location, [quotationPrefix length])];
+            [self addAttribute:OPQuotationPrefixAttributeName value: @"QuotationPrefix" range:NSMakeRange(effectiveRange.location, [quotationPrefix length])];
     
             effectiveRange.length += [quotationPrefix length];
             limitRange.length     += [quotationPrefix length];
             
-            firstParEnd = [[[self attributedSubstringFromRange:effectiveRange] string] rangeOfString:@"\n"];
+            firstParEnd = [[[self attributedSubstringFromRange:effectiveRange] string] rangeOfString: @"\n"];
             
             if (firstParEnd.location == NSNotFound)
                 firstParRange = effectiveRange;
@@ -304,7 +304,7 @@
                 
             [self applyFontTraits:NSItalicFontMask range:firstParRange];
             [self addAttribute:NSForegroundColorAttributeName value:[self _colorForQuotationLevel:quotationLevel] range:firstParRange];
-            [self addAttribute:NSParagraphStyleAttributeName value:[self _paragraphStyleForQuotationPrefix:quotationPrefix firstParagraph:YES] range:firstParRange];
+            [self addAttribute:NSParagraphStyleAttributeName value:[self _paragraphStyleForQuotationPrefix:quotationPrefix firstParagraph: YES] range:firstParRange];
             
             // remaining paragraphs
             if (NSMaxRange(firstParRange) < NSMaxRange(effectiveRange))
@@ -314,7 +314,7 @@
                 
                 [self applyFontTraits:NSItalicFontMask range:remainingParRange];
                 [self addAttribute:NSForegroundColorAttributeName value:[self _colorForQuotationLevel:quotationLevel] range:remainingParRange];
-                [self addAttribute:NSParagraphStyleAttributeName value:[self _paragraphStyleForQuotationPrefix:quotationPrefix firstParagraph:NO] range:remainingParRange];
+                [self addAttribute:NSParagraphStyleAttributeName value:[self _paragraphStyleForQuotationPrefix:quotationPrefix firstParagraph: NO] range:remainingParRange];
             }
         }
                 
@@ -423,7 +423,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
 
 /*" Appends the string %aURL as a clickable, underlined URL in the default link color. "*/
 
-- (void)appendURL:(NSString *)aURL
+- (void) appendURL: (NSString*) aURL
 {
     [self appendURL:aURL linkColor:[[self class] defaultLinkColor]];
 }
@@ -431,7 +431,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
 
 /*" Appends the string %aURL as a clickable, underlined URL in the link color specified. "*/
 
-- (void)appendURL:(NSString *)aURL linkColor:(NSColor *)linkColor
+- (void) appendURL: (NSString*) aURL linkColor: (NSColor*) linkColor
 {
     NSRange	urlRange;
     
@@ -447,7 +447,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
 
 /*" Appends the image represented by %data with the filename %name to the string. The image is displayed inline if possible. "*/
 
-- (void)appendImage:(NSData *)data name:(NSString *)name
+- (void) appendImage: (NSData*) data name: (NSString*) name
 {
     NSFileWrapper	 	*wrapper;
     NSTextAttachment 	*attachment;
@@ -455,7 +455,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
     
     wrapper = [[[NSFileWrapper alloc] initRegularFileWithContents:data] autorelease];
     if(name != nil)
-        [wrapper setPreferredFilename:name];
+        [wrapper setPreferredFilename: name];
     // standard text attachment displays everything possible inline
     attachment = [[[NSTextAttachment alloc] initWithFileWrapper:wrapper] autorelease];
     attchString = [NSAttributedString attributedStringWithAttachment:attachment];
@@ -463,7 +463,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
 }
 
 /*" Appends the attachments represented by %data with the filename %name to the string. "*/
-- (void)appendAttachment:(NSData *)data name:(NSString *)name
+- (void) appendAttachment: (NSData*) data name: (NSString*) name
 {
     NSFileWrapper		*wrapper;
     NSTextAttachment 	*attachment;
@@ -472,7 +472,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
     
     wrapper = [[[NSFileWrapper alloc] initRegularFileWithContents:data] autorelease];
     if(name != nil)
-        [wrapper setPreferredFilename:name];
+        [wrapper setPreferredFilename: name];
     attachment = [[[NSTextAttachment alloc] initWithFileWrapper:wrapper] autorelease];
     cell = (NSCell *)[attachment attachmentCell];
     NSAssert([cell isKindOfClass:[NSCell class]], @"AttachmentCell must inherit from NSCell.");
@@ -484,7 +484,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
 
 //#warning axel->axel: should be obsolete
 /*
-- (void)appendAttachment:(NSData *)data name:(NSString *)name description:(NSString *)description
+- (void) appendAttachment: (NSData*) data name: (NSString*) name description: (NSString*) description
 {
     NSFileWrapper*      wrapper;
     NSTextAttachment*   attachment;
@@ -494,23 +494,23 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
 
     wrapper = [[[NSFileWrapper alloc] initRegularFileWithContents:data] autorelease];
     if(name != nil)
-        [wrapper setPreferredFilename:name];
+        [wrapper setPreferredFilename: name];
     attachment = [[[NSTextAttachment alloc] initWithFileWrapper:wrapper] autorelease];
     cell = [attachment attachmentCell];
     NSAssert([cell isKindOfClass:[NSCell class]], @"AttachmentCell must inherit from NSCell.");
     image = [[NSWorkspace sharedWorkspace] iconForFileType:[name pathExtension]];
     if(image == nil) {
       // use default image
-      image = [[NSWorkspace sharedWorkspace] iconForFileType:@"txt"];
+      image = [[NSWorkspace sharedWorkspace] iconForFileType: @"txt"];
     }
     [cell setImage:image];
     attchString = [NSAttributedString attributedStringWithAttachment:attachment];
     [self appendAttributedString:attchString];
-    [self appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"[%@]\n", description]] autorelease]];
+    [self appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithFormat: @"[%@]\n", description]] autorelease]];
 }
 */
 
-- (void)appendAttachmentWithFileWrapper:(NSFileWrapper *)aFileWrapper
+- (void) appendAttachmentWithFileWrapper: (NSFileWrapper*) aFileWrapper
     /*" The file wrapper is materialized in a temp location
     (it is taken care of a possibly existing resource fork). The attachment is then appended to the receiver.
     The filewrapper's contents are shown inline if possible and EDContentCoder says so.
@@ -577,13 +577,13 @@ NSString* bytes2Display(unsigned int bytes)
     do {
         directoryname = [NSString temporaryFilename];
     }
-    while (! [[NSFileManager defaultManager] createDirectoryAtPath:directoryname attributes:nil]);
+    while (! [[NSFileManager defaultManager] createDirectoryAtPath:directoryname attributes: nil]);
     
     path = [directoryname stringByAppendingPathComponent:[aFileWrapper preferredFilename]];
     
-    if (! [aFileWrapper writeForksToFile:path atomically:YES updateFilenames:YES])
+    if (! [aFileWrapper writeForksToFile:path atomically:YES updateFilenames: YES])
     {
-        [NSException raise:NSGenericException format:@"Error writing attachment to temporary directory"];
+        [NSException raise:NSGenericException format: @"Error writing attachment to temporary directory"];
     }
     
     path = [directoryname stringByAppendingPathComponent:[aFileWrapper filename]];
@@ -595,7 +595,7 @@ NSString* bytes2Display(unsigned int bytes)
     }
     else 
     {
-        [aFileWrapper setIcon:[NSImage imageNamed:@"NSApplicationIcon"]];
+        [aFileWrapper setIcon:[NSImage imageNamed: @"NSApplicationIcon"]];
     }
     */
     
@@ -646,13 +646,13 @@ NSString* bytes2Display(unsigned int bytes)
 }
 
 
-- (NSMutableAttributedString *)urlifyWithLinkColor:(NSColor *)linkColor
+- (NSMutableAttributedString *)urlifyWithLinkColor: (NSColor*) linkColor
 {
     return [self urlifyWithLinkColor:linkColor range:NSMakeRange(0, [self length])];
 }
 
 
-- (NSMutableAttributedString *)urlifyWithLinkColor:(NSColor *)linkColor range:(NSRange)range
+- (NSMutableAttributedString *)urlifyWithLinkColor: (NSColor*) linkColor range:(NSRange)range
 {
     static NSCharacterSet *colon = nil, *alpha, *urlstop, *ulfurlstop;
     static NSString   	  *scheme[] = { @"http", @"https", @"ftp", @"mailto", @"gopher", @"news", nil };
@@ -667,12 +667,12 @@ NSString* bytes2Display(unsigned int bytes)
     
     if(colon == nil)
     {
-        colon = [[NSCharacterSet characterSetWithCharactersInString:@":"] retain];
+        colon = [[NSCharacterSet characterSetWithCharactersInString: @":"] retain];
         alpha = [[NSCharacterSet alphanumericCharacterSet] retain];
-        //urlstop = [[NSCharacterSet characterSetWithCharactersInString:@"\"<>()[]',; \t\n\r"] retain];
-        urlstop = [[NSCharacterSet characterSetWithCharactersInString:@"\"<>()[]' \t\n\r"] retain];
+        //urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]',; \t\n\r"] retain];
+        urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]' \t\n\r"] retain];
         // if the url is wrapped by brackets we will use this one:
-        ulfurlstop = [[NSCharacterSet characterSetWithCharactersInString:@">"] retain];
+        ulfurlstop = [[NSCharacterSet characterSetWithCharactersInString: @">"] retain];
         // problem is that if there is no closing '>' everything until the end of string will be treated as url
     }
     
@@ -745,7 +745,7 @@ NSString* bytes2Display(unsigned int bytes)
     return self;
 }
 
-- (NSArray *)divideContentStringTypedStrings 
+- (NSArray*) divideContentStringTypedStrings 
 {
     unsigned int length, i, startLocation;
     NSMutableArray *partContentStrings;
@@ -754,7 +754,7 @@ NSString* bytes2Display(unsigned int bytes)
     if (! [self containsAttachments]) 
     {
         if (NSDebugEnabled) NSLog(@"does not contain an attachment");
-        return [NSArray arrayWithObject:[EDObjectPair pairWithObjects:nil :self]];
+        return [NSArray arrayWithObject:[EDObjectPair pairWithObjects: nil :self]];
     }
     
     if (NSDebugEnabled) NSLog(@"contains an attachment!");
@@ -794,7 +794,7 @@ NSString* bytes2Display(unsigned int bytes)
             } 
             else 
             {
-                NSMutableAttributedString *lastString;
+                NSMutableAttributedString* lastString;
                 lastString = [[partContentStrings objectAtIndex:partContentStringsCount - 1] secondObject];
                 
                 if ([lastString containsAttachments]) 
@@ -818,7 +818,7 @@ NSString* bytes2Display(unsigned int bytes)
     return NO;
 }
 
-- (NSArray *)singleAttributeStrings {
+- (NSArray*) singleAttributeStrings {
     unsigned int length;
     unsigned int i, startLocation;
     NSMutableArray *singleAttributeStrings;
@@ -863,13 +863,13 @@ NSString* bytes2Display(unsigned int bytes)
         NSString *value;
         
         attributedString = [singleAttributeStrings objectAtIndex:i];
-        attributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
+        attributes = [attributedString attributesAtIndex:0 effectiveRange: NULL];
         
         NSLog(@"Attributes: <%@>", [attributes description]);
     //underline
         if([attributes objectForKey:NSUnderlineStyleAttributeName] != nil) {
-            [text appendString:@"<underline>"];
-            [tagStack pushObject:@"</underline>"];
+            [text appendString: @"<underline>"];
+            [tagStack pushObject: @"</underline>"];
         }
         
     //font
@@ -879,14 +879,14 @@ NSString* bytes2Display(unsigned int bytes)
             
       // bold
             if(traitMask & NSBoldFontMask) {
-                [text appendString:@"<bold>"];
-                [tagStack pushObject:@"</bold>"];
+                [text appendString: @"<bold>"];
+                [tagStack pushObject: @"</bold>"];
             }
             
       // italic
             if(traitMask & NSItalicFontMask) {
-                [text appendString:@"<italic>"];
-                [tagStack pushObject:@"</italic>"];
+                [text appendString: @"<italic>"];
+                [tagStack pushObject: @"</italic>"];
             }
         }
         

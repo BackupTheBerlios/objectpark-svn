@@ -41,25 +41,25 @@ enum GIMessageFilterActionType
 }
 
 /*" Initializers "*/
-- (id)initWithActionDefinitionDictionary:(NSDictionary *)aDictionary;
+- (id)initWithActionDefinitionDictionary: (NSDictionary*) aDictionary;
 
 /*" Accessors "*/
 - (NSDictionary *)actionDefinitionDictionary;
 
 - (int)state;
-- (void)setState:(int)aState;
+- (void) setState:(int)aState;
 
 - (int)type;
-- (void)setType:(int)aType;
+- (void) setType:(int)aType;
 
-- (NSString *)parameter;
-- (void)setParameter:(NSString *)aString;
+- (NSString*) parameter;
+- (void) setParameter: (NSString*) aString;
 
 @end
 
 @protocol GIMessageFilterActionPerformer
 
-+ (BOOL)performAction:(GIMessageFilterAction *)action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox;
++ (BOOL)performAction: (GIMessageFilterAction*) action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox;
 /*" Performs the given action if capable. Returns NO if this action wants to prevent further filtering. YES otherwise.
 
     If putInBox is given (may be NULL) it is set to YES when the given

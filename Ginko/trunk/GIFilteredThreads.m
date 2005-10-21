@@ -30,7 +30,7 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     
     if (! result) {
         result = [[self alloc] initWithGroupID: aGroupID];
-        [filteredThreadsForGroupID setObject:result forKey: aGroupID];
+        [filteredThreadsForGroupID setObject: result forKey: aGroupID];
         [result release];
     }
     
@@ -47,28 +47,28 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     return properties;
 }
 
-- (void)commitProperties
+- (void) commitProperties
 {
     NSString *defaultsKey = [[groupID absoluteString] stringByAppendingString:@"-FilteredThreadProperties"];
     
-    [[NSUserDefaults standardUserDefaults] setObject:[self properties] forKey:defaultsKey];
+    [[NSUserDefaults standardUserDefaults] setObject: [self properties] forKey:defaultsKey];
 }
 
-- (id)propertyForName:(NSString *)aName
+- (id)propertyForName: (NSString*) aName
 {
     return [[self properties] objectForKey:aName];
 }
 
-- (void)setProperty:(id)aProperty forName:(NSString *)aName
+- (void) setProperty:(id)aProperty forName: (NSString*) aName
 {
-    if (aProperty) [[self properties] setObject:aProperty forKey:aName];
+    if (aProperty) [[self properties] setObject: aProperty forKey:aName];
     else [[self properties] removeObjectForKey:aName];
     
     [self commitProperties];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [properties release];
     [groupID release];
@@ -82,27 +82,27 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     return [[self propertyForName:@"Mode"] intValue];
 }
 
-- (void)setFilterMode:(int)theFilterMode
+- (void) setFilterMode:(int)theFilterMode
 {
     [self setProperty:[NSNumber numberWithInt:theFilterMode] forName:@"Mode"];
 }
 
-- (NSDate *)ageRestriction
+- (NSDate*) ageRestriction
 {
     return [self propertyForName:@"AgeRestriction"];
 }
 
-- (void)setAgeRestriction:(NSDate *)aDate
+- (void) setAgeRestriction:(NSDate*) aDate
 {
     [self setProperty:aDate forName:@"AgeRestriction"];
 }
 
-- (NSString *)conditions
+- (NSString*) conditions
 {
     return [self propertyForName:@"Conditions"];
 }
 
-- (void)setConditions:(NSString *)someConditions
+- (void) setConditions: (NSString*) someConditions
 {
     [self setProperty:someConditions forName:@"Conditions"];
 }
@@ -112,12 +112,12 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     return [[self propertyForName:@"IsAscending"] boolValue];
 }
 
-- (void)setSortingAscending:(BOOL)ascending
+- (void) setSortingAscending:(BOOL)ascending
 {
     [self setProperty:[NSNumber numberWithBool:ascending] forName:@"IsAscending"];
 }
 
-- (NSArray *)displayThreads
+- (NSArray*) displayThreads
 {
     NSMutableArray *conditions = [NSMutableArray array];
     
@@ -135,7 +135,7 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     
 }
     /*
-- (NSArray *)markThreads;
+- (NSArray*) markThreads;
     */
 
 @end

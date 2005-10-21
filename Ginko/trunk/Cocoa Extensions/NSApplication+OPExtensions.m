@@ -10,7 +10,7 @@
 
 @implementation NSApplication (AppSupportDirectory)
 
-- (NSString *)applicationSupportPath
+- (NSString*) applicationSupportPath
 /*" Ensures that the receivers Application Support folder is in place and returns the path. "*/
 {
     static NSString *path = nil;
@@ -20,13 +20,13 @@
         NSString *processName;
         
         processName = [[NSProcessInfo processInfo] processName];
-        path = [[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:processName] retain];
+        path = [[[[NSHomeDirectory() stringByAppendingPathComponent: @"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:processName] retain];
 
         if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) 
         {
-            if (! [[NSFileManager defaultManager] createDirectoryAtPath:path attributes:nil]) 
+            if (! [[NSFileManager defaultManager] createDirectoryAtPath:path attributes: nil]) 
             {
-                [NSException raise:NSGenericException format:@"Ginko's Application Support folder could not be created!"];
+                [NSException raise:NSGenericException format: @"Ginko's Application Support folder could not be created!"];
             }
         }
     }

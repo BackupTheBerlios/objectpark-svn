@@ -20,8 +20,8 @@
 
 + (NSEntityDescription*) entity;
 
-+ (void)lockStore;
-+ (void)unlockStore;
++ (void) lockStore;
++ (void) unlockStore;
 
 - (void) addValue: (id) value toRelationshipWithKey: (NSString*) key;
 

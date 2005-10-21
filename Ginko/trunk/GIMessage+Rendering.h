@@ -38,17 +38,17 @@
 */
 
 /*" Class methods "*/
-+ (NSMutableAttributedString*) renderedHeaders:(NSArray *)headers forMessage: (OPInternetMessage*) aMessage showOthers:(BOOL)showOthers;
++ (NSMutableAttributedString*) renderedHeaders:(NSArray*) headers forMessage: (OPInternetMessage*) aMessage showOthers:(BOOL)showOthers;
 //+ (NSAttributedString*) renderedMessage: (OPInternetMessage*) aMessage;
 + (NSMutableAttributedString*) renderedBodyForMessage: (OPInternetMessage*) aMessage;
 
     /*" Font settings "*/
 + (NSFont *)font;
-+ (void)setFont:(NSFont *)aFont;
++ (void) setFont: (NSFont*) aFont;
 
     /*" Inline display settings "*/
 + (BOOL)shouldRenderAttachmentsInlineIfPossible;
-+ (void)setShouldRenderAttachmentsInlineIfPossible:(BOOL)aBool;
++ (void) setShouldRenderAttachmentsInlineIfPossible:(BOOL)aBool;
 
     /*" Instance methods "*/
 - (NSAttributedString*) renderedMessageIncludingAllHeaders: (BOOL) allHeaders;

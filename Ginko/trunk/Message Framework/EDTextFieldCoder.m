@@ -46,7 +46,7 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 //	FACTORY
 //---------------------------------------------------------------------------------------
 
-+ (id)encoderWithText:(NSString *)value
++ (id)encoderWithText: (NSString*) value
 {
     return [[[self alloc] initWithText:value] autorelease];
 }
@@ -86,7 +86,7 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
     return [super autorelease];
 }
 
-- (void)release
+- (void) release
 {
     [super release];
 }
@@ -96,19 +96,19 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 //	CODING
 //---------------------------------------------------------------------------------------
 
-- (NSString *)text
+- (NSString*) text
 {
     return text;
 }
 
 
-- (NSString *)stringValue
+- (NSString*) stringValue
 {
     return text;
 }
 
 
-- (NSString *)fieldBody
+- (NSString*) fieldBody
 {
     return [[self class] stringByEncodingString:text];
 }
@@ -118,15 +118,15 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 //	OBSOLETE INTERFACE
 //---------------------------------------------------------------------------------------
 /*
-- (NSString *)_stringByDecodingMIMEWordsInString:(NSString *)fieldBody
+- (NSString*) _stringByDecodingMIMEWordsInString: (NSString*) fieldBody
 {
-    [self methodIsObsolete:_cmd hint:@"Use class method stringByDecodingMIMEWordsInString instead."];
+    [self methodIsObsolete:_cmd hint: @"Use class method stringByDecodingMIMEWordsInString instead."];
     return [[self class] _stringByDecodingMIMEWordsInString:fieldBody];
 }
     
-- (NSString *)_stringByEncodingString:(NSString *)string
+- (NSString*) _stringByEncodingString: (NSString*) string
 {
-    [self methodIsObsolete:_cmd hint:@"Use class method stringByEncodingString instead."];
+    [self methodIsObsolete:_cmd hint: @"Use class method stringByEncodingString instead."];
     return [[self class] _stringByEncodingString:string];
 }
 */
@@ -135,7 +135,7 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 //	HELPER METHODS
 //---------------------------------------------------------------------------------------
 
-+ (NSString *)stringByDecodingMIMEWordsInString:(NSString *)fieldBody
++ (NSString*) stringByDecodingMIMEWordsInString: (NSString*) fieldBody
 {
     NSMutableString		*result;
     NSScanner			*scanner;
@@ -147,23 +147,23 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
     result = [NSMutableString string];
     hasSeenEncodedWord = NO;
     scanner = [NSScanner scannerWithString:fieldBody];
-    [scanner setCharactersToBeSkipped:nil];
+    [scanner setCharactersToBeSkipped: nil];
     while([scanner isAtEnd] == NO)
     {
-        if([scanner scanUpToString:@"=?" intoString:&chunk] == YES)
+        if([scanner scanUpToString: @"=?" intoString:&chunk] == YES)
         {
             if((hasSeenEncodedWord == NO) || ([chunk isWhitespace] == NO))
                 [result appendString:chunk];
         }
-        if([scanner scanString:@"=?" intoString:NULL] == YES)
+        if([scanner scanString: @"=?" intoString: NULL] == YES)
         {
             previousChunk = chunk;
-            if(([scanner scanUpToString:@"?" intoString:&charset] == NO) ||
-               ([scanner scanString:@"?" intoString:NULL] == NO) ||
-               ([scanner scanUpToString:@"?" intoString:&transferEncoding] == NO) ||
-               ([scanner scanString:@"?" intoString:NULL] == NO) ||
-               ([scanner scanUpToString:@"?=" intoString:&chunk] == NO) ||
-               ([scanner scanString:@"?=" intoString:NULL] == NO))
+            if(([scanner scanUpToString: @"?" intoString:&charset] == NO) ||
+               ([scanner scanString: @"?" intoString: NULL] == NO) ||
+               ([scanner scanUpToString: @"?" intoString:&transferEncoding] == NO) ||
+               ([scanner scanString: @"?" intoString: NULL] == NO) ||
+               ([scanner scanUpToString: @"?=" intoString:&chunk] == NO) ||
+               ([scanner scanString: @"?=" intoString: NULL] == NO))
             {
                 [NSException raise:EDMessageFormatException format:EDLS_MALFORMED_MIME_HEADER_WORD, fieldBody];
                 if([previousChunk isWhitespace])
@@ -173,9 +173,9 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
             else
             {
                 wContents = [chunk dataUsingEncoding:NSASCIIStringEncoding];
-                if([transferEncoding caseInsensitiveCompare:@"Q"] == NSOrderedSame)
+                if([transferEncoding caseInsensitiveCompare: @"Q"] == NSOrderedSame)
                     wContents = [wContents decodeHeaderQuotedPrintable];
-                else if([transferEncoding caseInsensitiveCompare:@"B"] == NSOrderedSame)
+                else if([transferEncoding caseInsensitiveCompare: @"B"] == NSOrderedSame)
                     wContents = [wContents decodeBase64];
                 else
                     [NSException raise:EDMessageFormatException format:EDLS_UNKNOWN_ENCODING_SPEC, transferEncoding];
@@ -195,17 +195,17 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 }
 
 
-+ (NSString *)stringByEncodingString:(NSString *)string
++ (NSString*) stringByEncodingString: (NSString*) string
 {
     NSCharacterSet	*spaceCharacterSet;
     NSScanner		*scanner;
     NSMutableString	*buffer, *chunk;
     NSString		*currentEncoding, *nextEncoding, *word, *spaces;
 
-    spaceCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@" "];
+    spaceCharacterSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
     buffer = [[[NSMutableString allocWithZone:[(NSObject *)self zone]] init] autorelease];
     scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
+    [scanner setCharactersToBeSkipped: nil];
 
     chunk = [NSMutableString string];
     currentEncoding = nil;
@@ -246,14 +246,14 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 #define UINT_MAX 0xffffffff 
 #endif
 
-+ (NSString *)_wrappedWord:(NSString *)aString encoding:(NSString *)encoding
++ (NSString*) _wrappedWord: (NSString*) aString encoding: (NSString*) encoding
 {
     NSData			*stringData, *b64Rep, *qpRep, *transferRep;
     NSString		*result;
     unsigned int	b64Length, qpLength, length;
 
     stringData = [aString dataUsingMIMEEncoding:encoding];
-    b64Rep = [stringData encodeBase64WithLineLength:(UINT_MAX - 3) andNewlineAtEnd:NO];
+    b64Rep = [stringData encodeBase64WithLineLength:(UINT_MAX - 3) andNewlineAtEnd: NO];
     qpRep = [stringData encodeHeaderQuotedPrintable];
     b64Length = [b64Rep length]; qpLength = [qpRep length];
     if((qpLength < 6) || (qpLength < [stringData length] * 3/2) || (qpLength <= b64Length))
@@ -263,9 +263,9 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 
     // Note, that this might be wrong if QP was chosen even though it was longer than B64!
     if((length = [transferRep length] + 7 + [encoding length]) > 75)
-        [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: Encoding of this header field body results in a MIME word which exceeds the maximum length of 75 characters. Try to split it into components that are separated by whitespaces.", NSStringFromClass(self), NSStringFromSelector(_cmd)];
+        [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: Encoding of this header field body results in a MIME word which exceeds the maximum length of 75 characters. Try to split it into components that are separated by whitespaces.", NSStringFromClass(self), NSStringFromSelector(_cmd)];
 
-    result = [[[NSString allocWithZone:[(NSObject *)self zone]] initWithFormat:@"=?%@?%@?%@?=", encoding, (transferRep == qpRep) ? @"Q" : @"B", [NSString stringWithData:transferRep encoding:NSASCIIStringEncoding]] autorelease];
+    result = [[[NSString allocWithZone:[(NSObject *)self zone]] initWithFormat: @"=?%@?%@?%@?=", encoding, (transferRep == qpRep) ? @"Q" : @"B", [NSString stringWithData:transferRep encoding:NSASCIIStringEncoding]] autorelease];
 
     return result;
 }

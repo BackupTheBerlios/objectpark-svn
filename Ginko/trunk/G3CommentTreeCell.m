@@ -102,7 +102,7 @@ void ensureIntegrity()
 
 - (void) reset
 {
-    [self setRepresentedObject:nil];
+    [self setRepresentedObject: nil];
     
     flags.isSeen = 0;
     flags.isDummyMessage = 0;
@@ -293,12 +293,12 @@ void ensureIntegrity()
     // draw the crossing
     if (connections.north && connections.east) {
         [rootLine moveToPoint:crossingNorth];
-        [rootLine appendBezierPathWithArcWithCenter:crossingNorthEast radius:crossingRadius startAngle:(float)180.0 endAngle:90.0 clockwise:YES];
+        [rootLine appendBezierPathWithArcWithCenter:crossingNorthEast radius:crossingRadius startAngle:(float)180.0 endAngle:90.0 clockwise: YES];
     }
 
     if (connections.south && connections.west) {
         [rootLine moveToPoint:crossingSouth];
-        [rootLine appendBezierPathWithArcWithCenter:crossingSouthWest radius:crossingRadius startAngle:(float)0.0 endAngle:270.0 clockwise:YES];
+        [rootLine appendBezierPathWithArcWithCenter:crossingSouthWest radius:crossingRadius startAngle:(float)0.0 endAngle:270.0 clockwise: YES];
     }
     
     if (connections.north && connections.south) {

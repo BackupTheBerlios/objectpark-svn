@@ -29,7 +29,7 @@
 #import "MPWDebug.h"
 
 @interface EDPlainTextContentCoder(PrivateAPI)
-- (void)_takeTextFromMessagePart:(EDMessagePart *)mpart;
+- (void) _takeTextFromMessagePart: (EDMessagePart*) mpart;
 - (id)_encodeTextWithClass:(Class)targetClass;
 @end
 
@@ -49,7 +49,7 @@
     if([[mpart contentType] isEqualToString: @"text/plain"] == NO)
         return NO;
 
-    charset = [[mpart contentTypeParameters] objectForKey:@"charset"];
+    charset = [[mpart contentTypeParameters] objectForKey: @"charset"];
     if((charset != nil) && ([NSString stringEncodingForMIMEEncoding:charset] == 0))
         return NO;
 
@@ -70,7 +70,7 @@
 }
 
 
-- (id)initWithText:(NSString *)someText
+- (id)initWithText: (NSString*) someText
 {
     if (self = [self init]) {
         text = [someText retain];
@@ -112,7 +112,7 @@
 //	CODING ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-- (void)setDataMustBe7Bit:(BOOL)flag
+- (void) setDataMustBe7Bit:(BOOL)flag
 {
     dataMustBe7Bit = flag;
 }
@@ -128,7 +128,7 @@
 //	CODING
 //---------------------------------------------------------------------------------------
 
-+ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
++ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
 /*" Decides if anAttributedString can be encoded starting at anIndex. If YES is returned effectiveRange 
     designates the range which can be encoded by this class. If NO is returned effectiveRange indicates
     the range which can not be encoded by this class. "*/
@@ -143,7 +143,7 @@
     return (attributeValue == nil); // can encode if not an attachment at index anIndex
 }
 
-- (void)_takeTextFromMessagePart:(EDMessagePart *)mpart
+- (void) _takeTextFromMessagePart: (EDMessagePart*) mpart
 {
     NSString *charset, *format;
     NSData *contentData;
@@ -157,7 +157,7 @@
         return;
     }
     
-    if((charset = [[mpart contentTypeParameters] objectForKey:@"charset"]) == nil)
+    if((charset = [[mpart contentTypeParameters] objectForKey: @"charset"]) == nil)
         charset = MIMEAsciiStringEncoding;
     
     if((text = [NSString stringWithData:[mpart contentData] MIMEEncoding:charset]) == nil)
@@ -167,15 +167,15 @@
     }
     [text retain];
     
-    format = [[mpart contentTypeParameters] objectForKey:@"format"];
-    if ((format != nil) && ([format caseInsensitiveCompare:@"flowed"] == NSOrderedSame))
+    format = [[mpart contentTypeParameters] objectForKey: @"format"];
+    if ((format != nil) && ([format caseInsensitiveCompare: @"flowed"] == NSOrderedSame))
     {
         BOOL useDelSp = NO;
         NSString *delsp;
         NSString *deflowed;
         
-        delsp = [[mpart contentTypeParameters] objectForKey:@"delsp"];
-        if ((delsp != nil) && ([delsp caseInsensitiveCompare:@"yes"] == NSOrderedSame))
+        delsp = [[mpart contentTypeParameters] objectForKey: @"delsp"];
+        if ((delsp != nil) && ([delsp caseInsensitiveCompare: @"yes"] == NSOrderedSame))
         {
             useDelSp = YES;
         }
@@ -215,7 +215,7 @@
 
 
 
-- (id)initWithAttributedString:(NSAttributedString *)anAttributedString
+- (id)initWithAttributedString: (NSAttributedString*) anAttributedString
 {
     NSRange effectiveRange;
     
@@ -227,7 +227,7 @@
     }
     
     if (self = [self initWithText: [[anAttributedString string] stringWithUnixLinebreaks]]) {
-        [self setDataMustBe7Bit:YES]; // ensure 7bit compatibility
+        [self setDataMustBe7Bit: YES]; // ensure 7bit compatibility
     }
     return self;
 }

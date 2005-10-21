@@ -35,46 +35,46 @@
 
 /*" Initialization "*/
 - (id)init;
-- (id)initWithFilterDefinitionDictionary:(NSDictionary *)aDictionary;
+- (id)initWithFilterDefinitionDictionary: (NSDictionary*) aDictionary;
 
 /*" Accessors "*/
 - (NSDictionary *)filterDefinitionDictionary;
 
-- (NSString *)name;
-- (void)setName:(NSString *)aName;
+- (NSString*) name;
+- (void) setName: (NSString*) aName;
 
 - (BOOL)isActive;
-- (void)setIsActive:(BOOL)aBool;
+- (void) setIsActive:(BOOL)aBool;
 
-- (NSDate *)lastUsed;
-- (void)setLastUsed:(NSDate *)aDate;
+- (NSDate*) lastUsed;
+- (void) setLastUsed:(NSDate*) aDate;
 
 - (BOOL)allExpressionsMustMatch;
-- (void)setAllExpressionsMustMatch:(BOOL)aBool;
+- (void) setAllExpressionsMustMatch:(BOOL)aBool;
 
-- (NSArray *)expressions;
-- (void)setExpressions:(NSArray *)someExpressions;
+- (NSArray*) expressions;
+- (void) setExpressions:(NSArray*) someExpressions;
 
-- (NSArray *)actions;
-- (void)setActions:(NSArray *)someActions;
+- (NSArray*) actions;
+- (void) setActions:(NSArray*) someActions;
 
 /*" Filtering "*/
-- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags;
+- (BOOL)matchesForMessage: (GIMessage*) message flags:(int)flags;
 
 	/*" Accessors "*/
-+ (NSArray *)filters;
++ (NSArray*) filters;
 
 	/*" Filter list manipulation "*/
-+ (void)moveFilter:(id)filter toIndex:(int)newIndex;
-+ (void)insertFilter:(id)filter atPosition:(int)anIndex;
-+ (void)removeFilterAtPosition:(int)anIndex;
++ (void) moveFilter:(id)filter toIndex:(int)newIndex;
++ (void) insertFilter:(id)filter atPosition:(int)anIndex;
++ (void) removeFilterAtPosition:(int)anIndex;
 
 	/*" Persistence "*/
 + (BOOL)writeFilters;
 
 	/*" Filtering "*/
-+ (NSArray *)filtersMatchingForMessage:(GIMessage *)message flags:(int)flags;
-+ (BOOL)filterMessage:(GIMessage *)message flags:(int)flags;
++ (NSArray*) filtersMatchingForMessage: (GIMessage*) message flags:(int)flags;
++ (BOOL)filterMessage: (GIMessage*) message flags:(int)flags;
 
 extern NSString *GIMessageFiltersDidChangeNotification;
 /*" Informs that a change in the filter set has occurred. The notification object may be a

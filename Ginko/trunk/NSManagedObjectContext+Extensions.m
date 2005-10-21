@@ -20,11 +20,11 @@ static volatile NSThread* mainThread = nil;
 
     if (mainThread!=[NSThread currentThread]) NSLog(@"Caution: Editing context called from outside main thread!");
     
-    result = [threadDict objectForKey:@"OPDefaultManagedObjectContext"];
+    result = [threadDict objectForKey: @"OPDefaultManagedObjectContext"];
     if (!result) {
         NSAssert(mainThread!=[NSThread currentThread], @"Need a mainThreadContext before any threadContext can be inqired.");
         
-        NSManagedObjectContext* mainContext = [[mainThread threadDictionary] objectForKey:@"OPDefaultManagedObjectContext"];
+        NSManagedObjectContext* mainContext = [[mainThread threadDictionary] objectForKey: @"OPDefaultManagedObjectContext"];
         NSPersistentStoreCoordinator* psc = [mainContext persistentStoreCoordinator];
         result = [[NSManagedObjectContext alloc] init];
         [result setUndoManager: nil];
@@ -42,7 +42,7 @@ static volatile NSThread* mainThread = nil;
 {
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
     if (aContext) {
-        [threadDict setObject:aContext forKey: @"OPDefaultManagedObjectContext"];
+        [threadDict setObject: aContext forKey: @"OPDefaultManagedObjectContext"];
     } else {
         [threadDict removeObjectForKey: @"OPDefaultManagedObjectContext"];
     }
@@ -76,7 +76,7 @@ static volatile NSThread* mainThread = nil;
     /*" Use carefully. "*/
 {
     NSDictionary* threadDict = [mainThread threadDictionary];
-    NSManagedObjectContext* result = [threadDict objectForKey:@"OPDefaultManagedObjectContext"];
+    NSManagedObjectContext* result = [threadDict objectForKey: @"OPDefaultManagedObjectContext"];
     return result;
 }
 

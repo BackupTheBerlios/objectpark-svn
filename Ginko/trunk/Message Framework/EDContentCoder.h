@@ -28,14 +28,14 @@
 
 }
 
-+ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart;
-+ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
++ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart;
++ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
 
-- (id)initWithMessagePart:(EDMessagePart *)mpart;
+- (id)initWithMessagePart: (EDMessagePart*) mpart;
 - (EDMessagePart *)messagePart;
 - (OPInternetMessage *)message;
 
-- (id)initWithAttributedString:(NSAttributedString *)anAttributedString;
+- (id)initWithAttributedString: (NSAttributedString*) anAttributedString;
 - (NSAttributedString *)attributedString;
 
 @end

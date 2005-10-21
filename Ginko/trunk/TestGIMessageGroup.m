@@ -14,7 +14,7 @@
 
 @implementation TestGIMessageGroup
 
-- (void)testStandardGroups
+- (void) testStandardGroups
 {
     GIMessageGroup *group1, *group2;
     
@@ -24,7 +24,7 @@
     STAssertTrue([group1 isEqual:group2], @"Duplicate default group.");
 }
 
-- (void)testDefaultGroup
+- (void) testDefaultGroup
 {
     GIMessageGroup *tempDefaultGroup;
     
@@ -35,7 +35,7 @@
     //STAssertEqualObjects([tempDefaultGroup name], @"Default Inbox", @"Name of default group is not 'Default Inbox' but '%@'", [tempDefaultGroup name]);
 }
 
-- (void)testThreadIdsByDate
+- (void) testThreadIdsByDate
 {
     NSMutableArray *result = [NSMutableArray array];
         
@@ -48,7 +48,7 @@
         STAssertTrue([context objectWithURLString: urlString] != nil, @"Url %@ failed.", urlString);
     }
     
-    //NSLog(@"First Thread's name '%@'", [(GIThread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey:@"subject"]);
+    //NSLog(@"First Thread's name '%@'", [(GIThread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey: @"subject"]);
 }
 
 @end

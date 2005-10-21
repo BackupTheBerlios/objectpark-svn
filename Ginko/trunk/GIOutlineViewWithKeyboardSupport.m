@@ -56,7 +56,7 @@
     return item;
 }
 
-- (void)keyDown:(NSEvent *)theEvent 
+- (void) keyDown: (NSEvent*) theEvent 
 {
     NSString *characters;
     unichar firstChar;
@@ -93,7 +93,7 @@
             row = [self rowForItem:myItem];
             
             [self collapseItem:myItem];
-            [self selectRow:row byExtendingSelection:NO];
+            [self selectRow:row byExtendingSelection: NO];
             [self scrollRowToVisible:row];
             break;
         }
@@ -121,7 +121,7 @@
 
                 myItem = [self previousExpandedItem];
                 [self collapseItem:myItem];
-                [self selectRow:[self rowForItem:myItem] byExtendingSelection:NO];
+                [self selectRow:[self rowForItem:myItem] byExtendingSelection: NO];
             }
             break; */
 /*        case RETURN:
@@ -188,11 +188,11 @@
     if (highlightThreads != aBool)
     {
         highlightThreads = aBool;
-        [self setNeedsDisplay:YES];
+        [self setNeedsDisplay: YES];
     }
 }
 
-- (void)drawGridInClipRect:(NSRect)rect
+- (void) drawGridInClipRect:(NSRect)rect
 {
     if (highlightThreads)
     {
@@ -207,14 +207,12 @@
                                       toPoint: NSMakePoint(-0.5+rightEdge, -0.5+rect.origin.y + rect.size.height)];
         }
         [[self superview] setNeedsDisplayInRect:[[self superview] bounds]];
-    }
-    else
-    {
+    } else {
         [super drawGridInClipRect:rect];
     }
 }
 
-- (void)highlightSelectionInClipRect:(NSRect)clipRect
+- (void) highlightSelectionInClipRect:(NSRect)clipRect
 /*" Override to draw our background first "*/
 {
     if (highlightThreads)

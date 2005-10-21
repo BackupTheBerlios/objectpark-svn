@@ -27,13 +27,13 @@
 }
 
 +(OPContentCoderCenter *)contentCoderCenter;
-+(Class)contentDecoderClass:(EDMessagePart *)mpart;
-+(Class)contentEncoderClassForAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
++(Class)contentDecoderClass: (EDMessagePart*) mpart;
++(Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
 +(void)registerContentCoder:(Class)coderClass;
 
-- (void)registerContentCoder:(Class)coderClass;
-- (Class)contentDecoderClass:(EDMessagePart *)mpart;
-- (Class)contentEncoderClassForAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
+- (void) registerContentCoder:(Class)coderClass;
+- (Class)contentDecoderClass: (EDMessagePart*) mpart;
+- (Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
 
 
 @end

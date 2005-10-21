@@ -1,13 +1,13 @@
 /*
  $Id: GIJunkFilter.m,v 1.1 2005/04/14 17:28:14 theisen Exp $
 
- Copyright (c) 2001, 2002 by Björn Bubbat. All rights reserved.
+ Copyright (c) 2001, 2002 by Bj√∂rn Bubbat. All rights reserved.
 
  Permission to use, copy, modify and distribute this software and its documentation
  is hereby granted, provided that both the copyright notice and this permission
  notice appear in all copies of the software, derivative works or modified versions,
  and any portions thereof, and that both notices appear in supporting documentation,
- and that credit is given to Björn Bubbat in all documents and publicity
+ and that credit is given to Bj√∂rn Bubbat in all documents and publicity
  pertaining to direct or indirect use of this code or its derivatives.
 
  THIS IS EXPERIMENTAL SOFTWARE AND IT IS KNOWN TO HAVE BUGS, SOME OF WHICH MAY HAVE
@@ -76,7 +76,7 @@ NSString* GINewSpamWordsInSpamFilter = @"GINewSpamWordsInSpamFilter";
 
 NSString *_junkFilterDefinitionsPath()
 {
-    return [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"JunkFilterDefinitions.ginko"];
+    return [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"JunkFilterDefinitions.ginko"];
 }
 
 
@@ -102,13 +102,13 @@ NSString *_junkFilterDefinitionsPath()
                                               toFile:_junkFilterDefinitionsPath()];
     if (!result)
     {
-        [NSException raise:NSGenericException format:@"Couldn't write junk filter definition data to Ginko's Application Support folder!"];
+        [NSException raise:NSGenericException format: @"Couldn't write junk filter definition data to Ginko's Application Support folder!"];
     }
 
 }
 
 
--(id)initWithCoder:(NSCoder *)decoder
+-(id)initWithCoder: (NSCoder*) decoder
 {
     self = [super init];
     if (self)
@@ -124,7 +124,7 @@ NSString *_junkFilterDefinitionsPath()
 }
 
 
--(void)encodeWithCoder:(NSCoder *)encoder
+-(void)encodeWithCoder: (NSCoder*) encoder
 {
     [encoder encodeObject:hamWordList forKey:GIJunkFilterHamWordList];
     [encoder encodeObject:spamWordList forKey:GIJunkFilterSpamWordList];
@@ -202,7 +202,7 @@ NSString *_junkFilterDefinitionsPath()
     
     //workingSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
     //[workingSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
-    //[workingSet addCharactersInString:@"<>\"="];
+    //[workingSet addCharactersInString: @"<>\"="];
     //finalCharSet = [workingSet copy];
     //[workingSet release];
 
@@ -233,7 +233,7 @@ NSString *_junkFilterDefinitionsPath()
         NSAutoreleasePool * innerPool = [[NSAutoreleasePool alloc] init];
         NSString *aWord = nil;
         if ([theScanner scanUpToCharactersFromSet:finalCharSet intoString:&aWord] ||
-            [theScanner scanCharactersFromSet:finalCharSet intoString:nil])
+            [theScanner scanCharactersFromSet:finalCharSet intoString: nil])
         {
             NSNumber *wordCount;
             NSLog(@"NSScanner found word '%@'.", aWord);
@@ -247,14 +247,14 @@ NSString *_junkFilterDefinitionsPath()
                     if ([wordCount intValue] < MAX_REPEATS)
                     {
                         wordCount = [NSNumber numberWithInt:[wordCount intValue]+1];
-                        [privateWordList setObject:wordCount
+                        [privateWordList setObject: wordCount
                                             forKey:aWord];
                     }
                 }
                 else
                 {
                     wordCount = [NSNumber numberWithInt:1];
-                    [privateWordList setObject:wordCount
+                    [privateWordList setObject: wordCount
                                         forKey:aWord];
                 }
             }
@@ -266,7 +266,7 @@ NSString *_junkFilterDefinitionsPath()
     return privateWordList;
 }
 
--(void)merge:(NSDictionary *)sourceList withList:(NSMutableDictionary *)destinationList
+-(void)merge: (NSDictionary*) sourceList withList:(NSMutableDictionary *)destinationList
 {
     NSEnumerator *enumerator = [sourceList keyEnumerator];
     NSString *key;
@@ -282,14 +282,14 @@ NSString *_junkFilterDefinitionsPath()
         {
             count += [destinationValue intValue];
         }
-        [destinationList setObject:[NSNumber numberWithInt:count]
+        [destinationList setObject: [NSNumber numberWithInt:count]
                             forKey:key];
     }
 
 }
 
 
--(void)remove:(NSDictionary *)sourceList fromList:(NSMutableDictionary *)destinationList
+-(void)remove: (NSDictionary*) sourceList fromList:(NSMutableDictionary *)destinationList
 {
     NSEnumerator *enumerator = [sourceList keyEnumerator];
     NSString *key;
@@ -310,7 +310,7 @@ NSString *_junkFilterDefinitionsPath()
             }
             else
             {
-                [destinationList setObject:[NSNumber numberWithInt:count]
+                [destinationList setObject: [NSNumber numberWithInt:count]
                                     forKey:key];
             }
         }
@@ -383,7 +383,7 @@ NSString *_junkFilterDefinitionsPath()
 }
 
 
--(BOOL)isMessageSpam: (NSData*) aMessageData withUniqueId:(NSString *)aUniqueId
+-(BOOL)isMessageSpam: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId
 {
     //NSDictionary *wordList;
     NSEnumerator *enumerator;
@@ -502,7 +502,7 @@ static const BOOL* stopChars()
         unichar i;
         NSMutableCharacterSet* workingSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
         [workingSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
-        [workingSet addCharactersInString:@"<>\"=@-*\\"]; // additions to set by dth
+        [workingSet addCharactersInString: @"<>\"=@-*\\"]; // additions to set by dth
         
         _stopChars = NSZoneMalloc(nil, 128*sizeof(char));
         bzero(_stopChars,  128*sizeof(char));

@@ -16,7 +16,7 @@
     G3Account *account;
 }
 
-+ (void)sendMessages:(NSArray *)someMessages viaSMTPAccount:(G3Account *)anAccount;
-+ (NSString *)jobName;
++ (void) sendMessages:(NSArray*) someMessages viaSMTPAccount:(G3Account *)anAccount;
++ (NSString*) jobName;
 
 @end

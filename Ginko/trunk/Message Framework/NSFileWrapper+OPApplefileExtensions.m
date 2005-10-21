@@ -341,7 +341,7 @@ NSString *OPFinderInfo = @"OPFinderInfo";
 
 @implementation NSFileWrapper (OPApplefileExtensions)
 
-- (id)initWithPath:(NSString *)path forksAndFinderInfo:(BOOL)forksAndFinderInfo
+- (id)initWithPath: (NSString*) path forksAndFinderInfo:(BOOL)forksAndFinderInfo
 /*"
    If forksAndFinderInfo is YES then adds the resource fork and the finder info 
    to the file's attributes.
@@ -358,7 +358,7 @@ NSString *OPFinderInfo = @"OPFinderInfo";
     return self;
 }
 
-- (void)addForksAndFinderInfoWithPath:(NSString *)path
+- (void) addForksAndFinderInfoWithPath: (NSString*) path
 /*"Adds resource fork and finder info to the file attributes."*/
 {
     if (NSDebugEnabled) NSLog(@"addForksAndFinderInfoWithPath:%@", path);
@@ -485,7 +485,7 @@ NSString *OPFinderInfo = @"OPFinderInfo";
             {
 if (NSDebugEnabled) NSLog(@"adding resource fork.");
             
-                [attributes setObject:resourceForkData forKey:OPFileResourceForkData];
+                [attributes setObject: resourceForkData forKey:OPFileResourceForkData];
             }
             
             if (finderInfo)
@@ -498,11 +498,11 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
                 fInfo = (FInfo *)[finderInfo bytes];
                 type = [NSNumber numberWithUnsignedLong:fInfo->fdType];
                 creator = [NSNumber numberWithUnsignedLong:fInfo->fdCreator];
-    //            [attributes setObject:type forKey:NSFileHFSTypeCode];
-    //            [attributes setObject:creator forKey:NSFileHFSCreatorCode];
+    //            [attributes setObject: type forKey:NSFileHFSTypeCode];
+    //            [attributes setObject: creator forKey:NSFileHFSCreatorCode];
 //    #warning axel->axel: report NSFileWrapper bug (type and creator are not set and resource forks not supported)
                 //
-                [attributes setObject:finderInfo forKey:OPFinderInfo];
+                [attributes setObject: finderInfo forKey:OPFinderInfo];
             }
             
             [self setFileAttributes:attributes]; 
@@ -513,7 +513,7 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
 }
 
 //#warning axel->all: This is not atomic at the moment. Regardless of the atomicFlag.
-- (BOOL)writeForksToFile:(NSString *)path atomically:(BOOL)atomicFlag updateFilenames:(BOOL)updateNamesFlag
+- (BOOL)writeForksToFile: (NSString*) path atomically:(BOOL)atomicFlag updateFilenames:(BOOL)updateNamesFlag
 /*"
    In addition to the data fork it also writes the resource fork data given in the 
    attributes dictionary under the key OPFileResourceForkData and the finder info given

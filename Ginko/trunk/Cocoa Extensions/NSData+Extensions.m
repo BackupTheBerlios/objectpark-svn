@@ -195,7 +195,7 @@ static __inline__ unsigned int udivroundup(unsigned int a, unsigned int b)
 
 /*" Returns the data of which the receiver holds a base64 encoded version. "*/
 
-- (NSData *)decodeBase64
+- (NSData*) decodeBase64
 {
     NSMutableData 	*decodedData;
     const unsigned char      *source, *endOfSource;
@@ -246,9 +246,9 @@ static __inline__ unsigned int udivroundup(unsigned int a, unsigned int b)
 
 /*" Calls encodeBase64WithLineLength:andNewlineAtEnd: with 76 and YES as arguments. "*/
 
-- (NSData *)encodeBase64
+- (NSData*) encodeBase64
 {
-    return [self encodeBase64WithLineLength:76 andNewlineAtEnd:YES];
+    return [self encodeBase64WithLineLength:76 andNewlineAtEnd: YES];
 }
 
 
@@ -256,7 +256,7 @@ static __inline__ unsigned int udivroundup(unsigned int a, unsigned int b)
 
 If %lineLength is greater than 0, linebreaks are inserted after every %lineLength characters. The last line might be shorter, of course, and a linebreak is only added if %endWithNL is YES. "*/
 
-- (NSData *)encodeBase64WithLineLength:(unsigned int)lineLength andNewlineAtEnd:(BOOL)endWithNL
+- (NSData*) encodeBase64WithLineLength:(unsigned int)lineLength andNewlineAtEnd:(BOOL)endWithNL
 {
     NSMutableData 	*encodedData;
     const unsigned char		*source, *endOfSource;
@@ -272,7 +272,7 @@ If %lineLength is greater than 0, linebreaks are inserted after every %lineLengt
     numgroups = udivroundup([self length], 3);
     groupsPerLine = lineLength / 4;
     if(groupsPerLine == 0)
-        [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: Line length must be > 3", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: Line length must be > 3", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     dataLength = numgroups * 4;
     if(lineLength > 0)
         dataLength += udivroundup(numgroups, groupsPerLine) * 2;

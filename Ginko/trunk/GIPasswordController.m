@@ -28,14 +28,14 @@
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [account release];
     [result release];
     [super dealloc];
 }
 
-- (NSString *)serverTypeString
+- (NSString*) serverTypeString
 {
     NSString *serverType = @"UNKNOWN";
     
@@ -80,7 +80,7 @@
     return serverType;
 }
 
-- (NSString *)serviceTypeString
+- (NSString*) serviceTypeString
 {
     NSString *serviceType = @"UNKNOWN";
     
@@ -108,7 +108,7 @@
     return serviceType;
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
     [titleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ Password Needed", @"password panel"), [self serviceTypeString]]];
     
@@ -124,7 +124,7 @@
     [window makeKeyAndOrderFront:self];
 }
 
-- (void)windowWillClose:(NSNotification *)notification 
+- (void) windowWillClose:(NSNotification *)notification 
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self autorelease]; // balance self-retaining
@@ -136,8 +136,8 @@
     
     @synchronized(result)
     {
-        [result setObject:[passwordField stringValue] forKey:@"password"];
-        [result setObject:[NSNumber numberWithBool:YES] forKey:@"finished"];
+        [result setObject: [passwordField stringValue] forKey:@"password"];
+        [result setObject: [NSNumber numberWithBool: YES] forKey:@"finished"];
     }
     
     if ([storeInKeychainCheckbox state] == NSOnState)
@@ -163,7 +163,7 @@
     
     @synchronized(result)
     {
-        [result setObject:[NSNumber numberWithBool:YES] forKey:@"finished"];
+        [result setObject: [NSNumber numberWithBool: YES] forKey:@"finished"];
     }
     
     [window close];

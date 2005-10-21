@@ -24,11 +24,11 @@
 
 @interface NSFileWrapper (OPApplefileExtensions)
 
-- (id)initWithPath:(NSString *)path forksAndFinderInfo:(BOOL)forksAndFinderInfo;
+- (id)initWithPath: (NSString*) path forksAndFinderInfo:(BOOL)forksAndFinderInfo;
 
-- (void)addForksAndFinderInfoWithPath:(NSString *)path;
+- (void) addForksAndFinderInfoWithPath: (NSString*) path;
 
-- (BOOL)writeForksToFile:(NSString *)path atomically:(BOOL)atomicFlag updateFilenames:(BOOL)updateNamesFlag;
+- (BOOL)writeForksToFile: (NSString*) path atomically:(BOOL)atomicFlag updateFilenames:(BOOL)updateNamesFlag;
 
 @end
 

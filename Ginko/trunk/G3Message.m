@@ -23,7 +23,7 @@
 
 @implementation G3Message
 
-+ (id)messageForMessageId:(NSString *)messageId
++ (id)messageForMessageId: (NSString*) messageId
 /*" Returns either nil or the message specified by its messageId. "*/
 {
     if (messageId)
@@ -71,7 +71,7 @@
     return cache;
 }
 
-+ (id)messageWithTransferData:(NSData *)someTransferData
++ (id)messageWithTransferData: (NSData*) someTransferData
 /*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context nil is returned. "*/
 {
     id result = nil;
@@ -81,7 +81,7 @@
     G3Message *dupe = [self messageForMessageId:[im messageId]];
     if (dupe)
     {
-        if ([G3Profile isMyEmailAddress:[im fromWithFallback:YES]])
+        if ([G3Profile isMyEmailAddress:[im fromWithFallback: YES]])
         {
             //replace old message with new:
             [GIMessageBase removeMessage:dupe];
@@ -103,21 +103,21 @@
         
         NSString *fromHeader = [im fromWithFallback: YES];
         
-        [result setPrimitiveValue:im forKey:@"internetMessageCache"];
-        [result setValue:someTransferData forKey:@"transferData"];
-        [result setValue:[im messageId] forKey:@"messageId"];  
-        [result setValue:[im normalizedSubject] forKey:@"subject"];
-        [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"author"];
+        [result setPrimitiveValue:im forKey: @"internetMessageCache"];
+        [result setValue:someTransferData forKey: @"transferData"];
+        [result setValue:[im messageId] forKey: @"messageId"];  
+        [result setValue:[im normalizedSubject] forKey: @"subject"];
+        [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey: @"author"];
         
         // sanity check for date header field:
         NSCalendarDate *messageDate = [im date];
-        if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare:messageDate] != NSOrderedDescending) // if message's date is a future date
+        if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare:messageDate] != NSOrderedDescending) // if message's date is a future date
         {
         // broken message, set current date:
             messageDate = [NSCalendarDate date];
             if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
         }
-        [result setValue:messageDate forKey:@"date"];
+        [result setValue:messageDate forKey: @"date"];
         
         // Note that this method operates on the encoded header field. It's OK because email
         // addresses are 7bit only.
@@ -137,22 +137,22 @@
     return [super initWithEntity:entity insertIntoManagedObjectContext:context];
 }
 
-- (NSData *)transferData
+- (NSData*) transferData
 {
-    return [self valueForKeyPath:@"messageData.transferData"];
+    return [self valueForKeyPath: @"messageData.transferData"];
 }
 
-- (void)setTransferData:(NSData *)newData
+- (void) setTransferData: (NSData*) newData
 {
     NSManagedObjectContext *context = [self managedObjectContext];
-    NSEntityDescription *entity = [[[[context persistentStoreCoordinator] managedObjectModel] entitiesByName] objectForKey:@"MessageData"];
+    NSEntityDescription *entity = [[[[context persistentStoreCoordinator] managedObjectModel] entitiesByName] objectForKey: @"MessageData"];
     NSManagedObject* messageData = [[[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext: context] autorelease];
     
     [messageData setValue: newData forKey: @"transferData"];
     [self setValue: messageData forKey: @"messageData"];
 }
 
-- (NSString *)messageId
+- (NSString*) messageId
 {
     [self willAccessValueForKey: @"messageId"];
     id result = [self primitiveValueForKey: @"messageId"];
@@ -168,24 +168,24 @@
         {
             flagsCache = 0;
             
-            if ([[self valueForKey:@"isInSendJob"] boolValue]) flagsCache |= OPInSendJobStatus;
-            if ([[self valueForKey:@"isQueued"] boolValue]) flagsCache |= OPQueuedStatus;
-            if ([[self valueForKey:@"isInteresting"] boolValue]) flagsCache |= OPInterestingStatus;
-            if ([[self valueForKey:@"isSeen"] boolValue]) flagsCache |= OPSeenStatus;
-            if ([[self valueForKey:@"isJunk"] boolValue]) flagsCache |= OPJunkMailStatus;
-            if ([[self valueForKey:@"isSendingBlocked"] boolValue]) flagsCache |= OPSendingBlockedStatus;
-            if ([[self valueForKey:@"isFlagged"] boolValue]) flagsCache |= OPFlaggedStatus;
-            if ([[self valueForKey:@"isFromMe"] boolValue]) flagsCache |= OPIsFromMeStatus;
-            if ([[self valueForKey:@"isFulltextIndexed"] boolValue]) flagsCache |= OPFulltextIndexedStatus;
-            if ([[self valueForKey:@"isAnswered"] boolValue]) flagsCache |= OPAnsweredStatus;
-            if ([[self valueForKey:@"isDraft"] boolValue]) flagsCache |= OPDraftStatus;
+            if ([[self valueForKey: @"isInSendJob"] boolValue]) flagsCache |= OPInSendJobStatus;
+            if ([[self valueForKey: @"isQueued"] boolValue]) flagsCache |= OPQueuedStatus;
+            if ([[self valueForKey: @"isInteresting"] boolValue]) flagsCache |= OPInterestingStatus;
+            if ([[self valueForKey: @"isSeen"] boolValue]) flagsCache |= OPSeenStatus;
+            if ([[self valueForKey: @"isJunk"] boolValue]) flagsCache |= OPJunkMailStatus;
+            if ([[self valueForKey: @"isSendingBlocked"] boolValue]) flagsCache |= OPSendingBlockedStatus;
+            if ([[self valueForKey: @"isFlagged"] boolValue]) flagsCache |= OPFlaggedStatus;
+            if ([[self valueForKey: @"isFromMe"] boolValue]) flagsCache |= OPIsFromMeStatus;
+            if ([[self valueForKey: @"isFulltextIndexed"] boolValue]) flagsCache |= OPFulltextIndexedStatus;
+            if ([[self valueForKey: @"isAnswered"] boolValue]) flagsCache |= OPAnsweredStatus;
+            if ([[self valueForKey: @"isDraft"] boolValue]) flagsCache |= OPDraftStatus;
         }
     }
     
     return flagsCache;
 }
 
-- (NSString *)flagsString
+- (NSString*) flagsString
 /*" Returns a textual representation of some flags. Used for exporting messages, including their flags. Not all available flags are supported. "*/
 {
     char result[10]; 
@@ -201,7 +201,7 @@
     return [NSString stringWithCString:result];
 }
 
-- (void)addFlagsFromString:(NSString *)flagsString
+- (void) addFlagsFromString: (NSString*) flagsString
 /*" Not all available flags are supported. "*/
 {
     char flagcstr[20];
@@ -220,7 +220,7 @@
     return (someFlags & [self flags]) == someFlags;
 }
 
-- (void)addFlags:(unsigned)someFlags
+- (void) addFlags:(unsigned)someFlags
 {
     @synchronized(self)
     {
@@ -228,25 +228,25 @@
         if (someFlags | flags != flags)
         {
             // flags to set:
-            NSNumber *yes = [NSNumber numberWithBool:YES];
-            if (someFlags & OPInSendJobStatus) [self setValue:yes forKey:@"isInSendJob"];
-            if (someFlags & OPQueuedStatus) [self setValue:yes forKey:@"isQueued"];
-            if (someFlags & OPInterestingStatus) [self setValue:yes forKey:@"isInteresting"];
-            if (someFlags & OPSeenStatus) [self setValue:yes forKey:@"isSeen"];
-            if (someFlags & OPJunkMailStatus) [self setValue:yes forKey:@"isJunk"];
-            if (someFlags & OPSendingBlockedStatus) [self setValue:yes forKey:@"isSendingBlocked"];
-            if (someFlags & OPFlaggedStatus) [self setValue:yes forKey:@"isFlagged"];
-            if (someFlags & OPIsFromMeStatus) [self setValue:yes forKey:@"isFromMe"];
-            if (someFlags & OPFulltextIndexedStatus) [self setValue:yes forKey:@"isFulltextIndexed"];
-            if (someFlags & OPAnsweredStatus) [self setValue:yes forKey:@"isAnswered"];
-            if (someFlags & OPDraftStatus) [self setValue:yes forKey:@"isDraft"];
+            NSNumber *yes = [NSNumber numberWithBool: YES];
+            if (someFlags & OPInSendJobStatus) [self setValue:yes forKey: @"isInSendJob"];
+            if (someFlags & OPQueuedStatus) [self setValue:yes forKey: @"isQueued"];
+            if (someFlags & OPInterestingStatus) [self setValue:yes forKey: @"isInteresting"];
+            if (someFlags & OPSeenStatus) [self setValue:yes forKey: @"isSeen"];
+            if (someFlags & OPJunkMailStatus) [self setValue:yes forKey: @"isJunk"];
+            if (someFlags & OPSendingBlockedStatus) [self setValue:yes forKey: @"isSendingBlocked"];
+            if (someFlags & OPFlaggedStatus) [self setValue:yes forKey: @"isFlagged"];
+            if (someFlags & OPIsFromMeStatus) [self setValue:yes forKey: @"isFromMe"];
+            if (someFlags & OPFulltextIndexedStatus) [self setValue:yes forKey: @"isFulltextIndexed"];
+            if (someFlags & OPAnsweredStatus) [self setValue:yes forKey: @"isAnswered"];
+            if (someFlags & OPDraftStatus) [self setValue:yes forKey: @"isDraft"];
         
             flagsCache = someFlags | flags;
         }
     }
 }
 
-- (void)removeFlags:(unsigned)someFlags
+- (void) removeFlags:(unsigned)someFlags
 {
     @synchronized(self)
     {
@@ -255,18 +255,18 @@
         if ((flags & (~someFlags)) != flags)
         {
             // flags to remove:
-            NSNumber *no = [NSNumber numberWithBool:NO];
-            if (someFlags & OPInSendJobStatus) [self setValue:no forKey:@"isInSendJob"];
-            if (someFlags & OPQueuedStatus) [self setValue:no forKey:@"isQueued"];
-            if (someFlags & OPInterestingStatus) [self setValue:no forKey:@"isInteresting"];
-            if (someFlags & OPSeenStatus) [self setValue:no forKey:@"isSeen"];
-            if (someFlags & OPJunkMailStatus) [self setValue:no forKey:@"isJunk"];
-            if (someFlags & OPSendingBlockedStatus) [self setValue:no forKey:@"isSendingBlocked"];
-            if (someFlags & OPFlaggedStatus) [self setValue:no forKey:@"isFlagged"];
-            if (someFlags & OPIsFromMeStatus) [self setValue:no forKey:@"isFromMe"];
-            if (someFlags & OPFulltextIndexedStatus) [self setValue:no forKey:@"isFulltextIndexed"];
-            if (someFlags & OPAnsweredStatus) [self setValue:no forKey:@"isAnswered"];
-            if (someFlags & OPDraftStatus) [self setValue:no forKey:@"isDraft"];
+            NSNumber *no = [NSNumber numberWithBool: NO];
+            if (someFlags & OPInSendJobStatus) [self setValue:no forKey: @"isInSendJob"];
+            if (someFlags & OPQueuedStatus) [self setValue:no forKey: @"isQueued"];
+            if (someFlags & OPInterestingStatus) [self setValue:no forKey: @"isInteresting"];
+            if (someFlags & OPSeenStatus) [self setValue:no forKey: @"isSeen"];
+            if (someFlags & OPJunkMailStatus) [self setValue:no forKey: @"isJunk"];
+            if (someFlags & OPSendingBlockedStatus) [self setValue:no forKey: @"isSendingBlocked"];
+            if (someFlags & OPFlaggedStatus) [self setValue:no forKey: @"isFlagged"];
+            if (someFlags & OPIsFromMeStatus) [self setValue:no forKey: @"isFromMe"];
+            if (someFlags & OPFulltextIndexedStatus) [self setValue:no forKey: @"isFulltextIndexed"];
+            if (someFlags & OPAnsweredStatus) [self setValue:no forKey: @"isAnswered"];
+            if (someFlags & OPDraftStatus) [self setValue:no forKey: @"isDraft"];
             
             flagsCache = (flags & (~someFlags));
         }
@@ -275,9 +275,9 @@
 
 - (G3Message *)reference
 {
-    [self willAccessValueForKey:@"reference"];
-    id reference = [self primitiveValueForKey:@"reference"];
-    [self didAccessValueForKey:@"reference"];
+    [self willAccessValueForKey: @"reference"];
+    id reference = [self primitiveValueForKey: @"reference"];
+    [self didAccessValueForKey: @"reference"];
     return reference;
 }
 
@@ -304,9 +304,9 @@
 
 - (G3Thread *)thread
 {
-    [self willAccessValueForKey:@"thread"];
-    id thread = [self primitiveValueForKey:@"thread"];
-    [self didAccessValueForKey:@"thread"];
+    [self willAccessValueForKey: @"thread"];
+    id thread = [self primitiveValueForKey: @"thread"];
+    [self didAccessValueForKey: @"thread"];
     return thread;
 }
 
@@ -315,19 +315,19 @@
 {
     id tmpObject;
     
-    [self willAccessValueForKey:@"profile"];
-    tmpObject = [self primitiveValueForKey:@"profile"];
-    [self didAccessValueForKey:@"profile"];
+    [self willAccessValueForKey: @"profile"];
+    tmpObject = [self primitiveValueForKey: @"profile"];
+    [self didAccessValueForKey: @"profile"];
     
     return tmpObject;
 }
 
-- (void)setProfile:(G3Profile *)value 
+- (void) setProfile: (G3Profile*) value 
 {
-    [self willChangeValueForKey:@"profile"];
+    [self willChangeValueForKey: @"profile"];
     [self setPrimitiveValue:value
-                     forKey:@"profile"];
-    [self didChangeValueForKey:@"profile"];
+                     forKey: @"profile"];
+    [self didChangeValueForKey: @"profile"];
 }
 
 - (G3Thread*) threadCreate: (BOOL) doCreate
@@ -337,11 +337,11 @@
     
     if (doCreate && !thread) {
         // do threading by reference
-        thread = [[self referenceFind:YES] thread];
+        thread = [[self referenceFind: YES] thread];
         
         if (!thread) {
             thread = [G3Thread threadInManagedObjectContext:[self managedObjectContext]];
-            [thread setValue:[self valueForKey:@"subject"] forKey:@"subject"];
+            [thread setValue:[self valueForKey: @"subject"] forKey:@"subject"];
         } else {
             // NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
             // Set the thread's subject to be the first messages subject:
@@ -416,21 +416,21 @@
     OPInternetMessage *m = [self internetMessage];   
     
     // do more guesses here...
-    return (([m bodyForHeaderField:@"List-Post"] != nil)
-            || ([m bodyForHeaderField:@"List-Id"] != nil)
-            || ([m bodyForHeaderField:@"X-List-Post"] != nil));
+    return (([m bodyForHeaderField: @"List-Post"] != nil)
+            || ([m bodyForHeaderField: @"List-Id"] != nil)
+            || ([m bodyForHeaderField: @"X-List-Post"] != nil));
 }
 
 - (BOOL) isUsenetMessage
 /*" Returns YES, if Ginko thinks (from the message headers) that this message is an Usenet News article (note, that a message can be both, a usenet article and an email), "*/
 {
-    return ([[self internetMessage] bodyForHeaderField:@"Newsgroups"] != nil);
+    return ([[self internetMessage] bodyForHeaderField: @"Newsgroups"] != nil);
 }
 
 - (BOOL) isEMailMessage
 /*" Returns YES, if Ginko thinks (from the message headers) that this message is some kind of email (note, that a message can be both, a usenet article and an email). "*/
 {
-    return ([[self internetMessage] bodyForHeaderField:@"To"] != nil);
+    return ([[self internetMessage] bodyForHeaderField: @"To"] != nil);
 }
 
 - (BOOL) isPublicMessage 

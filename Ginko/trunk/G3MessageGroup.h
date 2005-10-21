@@ -22,18 +22,18 @@ extern NSString *G3MessageGroupWasAddedNotification;
 
 /*" Handling message groups. Class methods. "*/
 + (NSMutableArray *)hierarchyRootNode;
-+ (G3MessageGroup *)newMessageGroupWithName:(NSString *)aName
-                            atHierarchyNode:(NSMutableArray *)aNode
++ (G3MessageGroup *)newMessageGroupWithName: (NSString*) aName
+                            atHierarchyNode: (NSMutableArray*) aNode
                                     atIndex:(int)anIndex;
-+ (id)messageGroupWithURIReferenceString:(NSString *)anUrl;
-+ (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
-+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)anUid;
++ (id)messageGroupWithURIReferenceString: (NSString*) anUrl;
++ (void) addNewHierarchyNodeAfterEntry:(id)anEntry;
++ (NSMutableArray *)hierarchyNodeForUid:(NSNumber*) anUid;
 + (BOOL)moveEntry:(id)entry 
-  toHierarchyNode:(NSMutableArray *)aHierarchy 
+  toHierarchyNode: (NSMutableArray*) aHierarchy 
           atIndex:(int)anIndex 
          testOnly:(BOOL)testOnly;
 + (NSMutableArray *)findHierarchyNodeForEntry:(id)entry
-                    startingWithHierarchyNode:(NSMutableArray *)aHierarchy;
+                    startingWithHierarchyNode: (NSMutableArray*) aHierarchy;
 
 /*" Standard message groups "*/
 + (G3MessageGroup *)defaultMessageGroup;
@@ -46,13 +46,13 @@ extern NSString *G3MessageGroupWasAddedNotification;
 + (void) ensureDefaultGroups;
 
 /*" Simple Accessors "*/
-- (NSString *)URIReferenceString;
+- (NSString*) URIReferenceString;
 
-- (NSString *)name;
-- (void)setName:(NSString *)value;
+- (NSString*) name;
+- (void) setName: (NSString*) value;
 
 /*" Complex Accessors "*/
-//- (NSArray *)threadsByDate;
+//- (NSArray*) threadsByDate;
 
 -  (void) fetchThreadURIs: (NSMutableArray**) uris
            trivialThreads: (NSMutableSet**) trivialThreads
@@ -67,9 +67,9 @@ extern NSString *G3MessageGroupWasAddedNotification;
 
 /*" Profile handling "*/
 - (G3Profile *)defaultProfile;
-- (void)setDefaultProfile:(G3Profile *)aProfile;
+- (void) setDefaultProfile: (G3Profile*) aProfile;
 
 /*" Persistency handling "*/
-+ (void)commitChanges;
++ (void) commitChanges;
 
 @end

@@ -17,27 +17,27 @@
     
 }
 
-+ (id)indexWithName:(NSString*)aName atPath:(NSString*)aPath;
-- (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
++ (id)indexWithName:(NSString*) aName atPath:(NSString*) aPath;
+- (id)initWithName:(NSString*) aName atPath: (NSString*) aPath;
 
 - (SKIndexRef)index;
 
-- (NSString *)name;
-- (void)setName:(NSString * )newName;
+- (NSString*) name;
+- (void) setName:(NSString * )newName;
 
 
-- (BOOL)addDocumentWithName:(NSString *)aName andText:(NSString *)aText andProperties:(NSDictionary *) aPropertiesDictionary;
-- (BOOL)removeDocumentWithName:(NSString *)aName;
+- (BOOL)addDocumentWithName: (NSString*) aName andText: (NSString*) aText andProperties:(NSDictionary *) aPropertiesDictionary;
+- (BOOL)removeDocumentWithName: (NSString*) aName;
 
 - (BOOL)flushIndex;
 - (BOOL)compactIndex;
 - (CFIndex)documentCount;
 
-- (NSArray *)hitsForQueryString:(NSString *)aQuery;
+- (NSArray*) hitsForQueryString: (NSString*) aQuery;
 
 
 // internal helpers
-- (SKDocumentRef)createDocumentWithName:(NSString *)aName;
+- (SKDocumentRef)createDocumentWithName: (NSString*) aName;
 
 
 @end

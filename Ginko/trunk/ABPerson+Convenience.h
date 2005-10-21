@@ -26,14 +26,14 @@
 @interface ABPerson (Convenience)
 
 /*" vcf File support "*/
-+ (NSArray *)personsWithContentsFromVCardFile:(NSString *)filename;
++ (NSArray*) personsWithContentsFromVCardFile: (NSString*) filename;
 
 /*" convenience accessors "*/
-- (NSString *)firstname;
-- (NSString *)lastname;
-- (NSString *)fullname;
-- (NSString *)honorprefix;
-- (NSString *)honorpostfix;
-- (NSString *)email;
+- (NSString*) firstname;
+- (NSString*) lastname;
+- (NSString*) fullname;
+- (NSString*) honorprefix;
+- (NSString*) honorpostfix;
+- (NSString*) email;
 
 @end

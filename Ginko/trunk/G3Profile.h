@@ -18,35 +18,35 @@
 }
 
 + (NSArray*) allObjects;
-+ (void)setProfiles:(NSArray *)someProfiles;
++ (void) setProfiles:(NSArray*) someProfiles;
 + (G3Profile *)defaultProfile;
-+ (G3Profile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage;
++ (G3Profile *)guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage;
 
-+ (BOOL)isMyEmailAddress:(NSString *)aString;
++ (BOOL)isMyEmailAddress: (NSString*) aString;
 
 /*
-- (NSString *)name;
-- (void)setName:(NSString *)aString;
+- (NSString*) name;
+- (void) setName: (NSString*) aString;
 
-- (NSString *)realname;
-- (void)setRealname:(NSString *)aString;
+- (NSString*) realname;
+- (void) setRealname: (NSString*) aString;
 
-- (void)setEmailAddress:(NSString *)aString;
+- (void) setEmailAddress: (NSString*) aString;
 
-- (NSString *)replyToAddress;
-- (void)setReplyToAddress:(NSString *)aString;
+- (NSString*) replyToAddress;
+- (void) setReplyToAddress: (NSString*) aString;
 
-- (NSString *)organization;
-- (void)setOrganization:(NSString *)aString;
+- (NSString*) organization;
+- (void) setOrganization: (NSString*) aString;
 
-- (NSData *)signature;
-- (void)setSignature:(NSData *)aSig;
+- (NSData*) signature;
+- (void) setSignature: (NSData*) aSig;
 */
 
-- (NSString *)emailAddress;
+- (NSString*) emailAddress;
 
-- (void)addMessageToSend:(G3Message *)aMessage;
-- (void)removeMessageToSend:(G3Message *)aMessage;
+- (void) addMessageToSend: (G3Message*) aMessage;
+- (void) removeMessageToSend: (G3Message*) aMessage;
 
 - (void) removeValue: (id) value forKey: (NSString*) key; // for forward compatibility only
 

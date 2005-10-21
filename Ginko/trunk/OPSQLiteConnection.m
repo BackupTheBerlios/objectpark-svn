@@ -359,7 +359,7 @@
 
 /*
 
-- (SQLResult*)performQuery:(NSString*)inQuery
+- (SQLResult*) performQuery:(NSString*) inQuery
 {
     SQLResult*	sqlResult = nil;
     char**		results;
@@ -389,7 +389,7 @@
     return [[SQLTable alloc] initWithDatabase: self name: tableName];
 }
 
-- (SQLResult*)performQueryWithFormat:(NSString*)inFormat, ...
+- (SQLResult*) performQueryWithFormat:(NSString*) inFormat, ...
 {
     SQLResult*	sqlResult = nil;
     NSString*	query = nil;
@@ -516,9 +516,12 @@
     if (type!=SQLITE_NULL) {
         if (type==SQLITE_FLOAT) {
 			sqlite3_bind_double(statement, index, [self doubleValue]);
-        } else if (type==SQLITE_INTEGER) {
+        } else {
 			sqlite3_bind_int64(statement, index, [self longLongValue]);
-		}
+		} 
+		/*else {
+			NSLog(@"Warning! column type not handeled for save!");	
+		}*/
 	}
 }
 

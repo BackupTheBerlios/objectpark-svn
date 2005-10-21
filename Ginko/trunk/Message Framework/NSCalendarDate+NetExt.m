@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-+ (id)dateWithMessageTimeSpecification:(NSString *)timespec
++ (id)dateWithMessageTimeSpecification: (NSString*) timespec
     /*"
 Attempts to parse a date according to the rules in RFC 2822. However, some mailers don't follow that format as specified, so dateFromRFC2822String tries to guess correctly in such cases. The receiver is a string containing an RFC 2822 date, such as 'Mon, 20 Nov 1995 19:12:08 -0500'. If it succeeds in parsing the date, dateFromRFC2822String returns a NSCalendarDate. nil otherwise.
      "*/

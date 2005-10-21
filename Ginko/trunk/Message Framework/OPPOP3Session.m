@@ -34,27 +34,27 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 #define UIDLsDir @"Infos for UIDLs"
 
 @interface OPPOP3Session (Authentication)
-- (void)_authenticationWithServerGreeting:(NSString *)serverGreeting;
-- (void)_userPassAuthentication;
-- (void)_APOPAuthenticationWithServerGreeting:(NSString *)serverGreeting;
-- (NSString *)_digestForServerTimestamp:(NSString *)serverTimestamp andSecret:(NSString *)secret;
+- (void) _authenticationWithServerGreeting: (NSString*) serverGreeting;
+- (void) _userPassAuthentication;
+- (void) _APOPAuthenticationWithServerGreeting: (NSString*) serverGreeting;
+- (NSString*) _digestForServerTimestamp: (NSString*) serverTimestamp andSecret: (NSString*) secret;
 @end
 
 @interface OPPOP3Session (UIDL)
-- (void)_takeInfoFromTransferData:(NSData *)transferData forPosition:(int)position;
-- (void)_addMessageSizesToMessageInfo;
+- (void) _takeInfoFromTransferData: (NSData*) transferData forPosition:(int)position;
+- (void) _addMessageSizesToMessageInfo;
 - (int)_synchronizeUIDLs;
-- (void)_autosaveUIDLs;
+- (void) _autosaveUIDLs;
 @end
 
 @interface OPPOP3Session (ServerResponseAndSimpleCommands)
-- (BOOL)_isOKResponse:(NSString *)aResponse;
-- (NSString *)_readOKForCommand:(NSString *)command;
-- (NSString *)_serverGreeting;
+- (BOOL)_isOKResponse: (NSString*) aResponse;
+- (NSString*) _readOKForCommand: (NSString*) command;
+- (NSString*) _serverGreeting;
 - (int)_maildropSize;
-- (NSData *)_transferDataAtPosition:(int)position;
-- (NSData *)_headerDataAtPosition:(int)position;
-- (void)_gatherStatsIfNeeded;
+- (NSData*) _transferDataAtPosition:(int)position;
+- (NSData*) _headerDataAtPosition:(int)position;
+- (void) _gatherStatsIfNeeded;
 @end
 
 @implementation OPPOP3Session
@@ -66,18 +66,18 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 /*" Throws exception. Use the designated initWithStream init method instead. "*/
 {
     [self dealloc];
-    [NSException raise:OPPOP3SessionException format:@"Use of wrong init method. Use the designated -initWithStream:andDelegate: init method instead."];
+    [NSException raise:OPPOP3SessionException format: @"Use of wrong init method. Use the designated -initWithStream:andDelegate: init method instead."];
     return nil;
 }
 
-- (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject
+- (id)initWithStream: (OPStream*) aStream andDelegate:(id)anObject
 /*" Initializes the session for use with stream aStream and delegate anObject. The use
     of an delegate is optional but one doesn't get the benefits. "*/
 {
     [super init];
 
     _stream = [aStream retain];
-    [_stream setEscapesLeadingDots:YES];
+    [_stream setEscapesLeadingDots: YES];
     _delegate = anObject; 	// weak reference
     _maildropSize = -1;		// not requested yet
     _currentPosition = 1;	// first message
@@ -87,15 +87,15 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     return self;
 }
 
-- (id)initWithStream:(OPStream *)aStream username:(NSString *)username
-         andPassword:(NSString *)password
+- (id)initWithStream: (OPStream*) aStream username: (NSString*) username
+         andPassword: (NSString*) password
 /*" Alternative initializer. The initialized instance does not neccessarily need
     a delegate. "*/
 {
     [super init];
 
     _stream = [aStream retain];
-    [_stream setEscapesLeadingDots:YES];
+    [_stream setEscapesLeadingDots: YES];
     _username = [username retain];
     _password = [password retain];
     _maildropSize = -1;		// not requested yet
@@ -106,7 +106,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 /*" Closes the session and releases ivars. "*/
 {
     [self closeSession];
@@ -119,7 +119,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     [super dealloc];
 }
 
-- (void)openSession
+- (void) openSession
 /*" Logs the user in and lets the session enter TRANSACTION state. Throws an %{OPPOP3SessionException} otherwise. "*/
 {
     NSAssert(_state == DISCONNECTED, @"POP3 session can not be opened (DISCONNECTED state required).");
@@ -127,30 +127,28 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     [self _authenticationWithServerGreeting:[self _serverGreeting]];
 }
 
-- (void)closeSession
+- (void) closeSession
 /*" Closes session by sending the QUIT command if needed. "*/
 {
     if ((_state != UPDATE) && (_state != DISCONNECTED))
     {
         // stream needs closing
-        [self _readOKForCommand:@"QUIT"];
+        [self _readOKForCommand: @"QUIT"];
         [self _autosaveUIDLs];
         _state = UPDATE;
     }
 }
 
-- (void)abortSession
+- (void) abortSession
 /*" Aborts the session with rollback of DELEs. "*/
 {
     if (_state == TRANSACTION)
     {
         // stream needs closing
-        [self _readOKForCommand:@"RSET"];
-        [self _readOKForCommand:@"QUIT"];
+        [self _readOKForCommand: @"RSET"];
+        [self _readOKForCommand: @"QUIT"];
         _state = UPDATE;
-    }
-    else
-    {
+    } else {
         _state = DIRTY_ABORTED;
     }
 }
@@ -167,14 +165,14 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     return _currentPosition;
 }
 
-- (void)setCurrentPosition:(int)aPosition
+- (void) setCurrentPosition:(int)aPosition
 /*" Sets the current postion in the mail drop to aPosition. Raises if out of bounds. "*/
 {
     NSParameterAssert((aPosition > 0) && (aPosition <= [self maildropSize]));
     _currentPosition = aPosition;
 }
 
-- (void)resetCurrentPosition
+- (void) resetCurrentPosition
 /*" Resets the current position to the first message in the mail drop. "*/
 {
     _currentPosition = 1;
@@ -188,7 +186,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     return _maildropSize;
 }
 
-- (NSString *)UIDLForPosition:(int)aPosition
+- (NSString*) UIDLForPosition:(int)aPosition
 /*" Returns the UIDL for the given position aPosition, if the server supports
 UIDL. nil otherwise. "*/
 {
@@ -197,22 +195,22 @@ UIDL. nil otherwise. "*/
 
     [self _gatherStatsIfNeeded];
     
-    command = [@"UIDL" stringByAppendingFormat:@"%d", aPosition];
+    command = [@"UIDL" stringByAppendingFormat: @"%d", aPosition];
     NS_DURING
-        [self _readOKForCommand:@"command"]; 	// try to use UIDL command
+        [self _readOKForCommand: @"command"]; 	// try to use UIDL command
     NS_HANDLER
         if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.", self);
         while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
         return nil;				// UIDL command not understood.
     NS_ENDHANDLER
 
-    result = [[[_stream availableLine] componentsSeparatedByString:@" "] objectAtIndex:2];
+    result = [[[_stream availableLine] componentsSeparatedByString: @" "] objectAtIndex:2];
     while ([_stream availableLine]) ; 	// eat the rest response
     
     return result;
 }
 
-- (NSString *)peekMessageIdOfNextMessage
+- (NSString*) peekMessageIdOfNextMessage
 {
     NSString *result = nil;
 
@@ -221,7 +219,7 @@ UIDL. nil otherwise. "*/
     if ( (_currentPosition <= _maildropSize) && (_currentPosition > 0) )
     {
         NSMutableDictionary *infoDict = [_messageInfo objectAtIndex:_currentPosition - 1];
-        result = [infoDict objectForKey:@"messageId"];
+        result = [infoDict objectForKey: @"messageId"];
 
         if (NSDebugEnabled) NSLog(@"peeking id of message #%d in %@", _currentPosition, self);
 
@@ -229,14 +227,14 @@ UIDL. nil otherwise. "*/
         {
             [self _takeInfoFromTransferData:[self _headerDataAtPosition:_currentPosition] forPosition:_currentPosition];
             
-            result = [infoDict objectForKey:@"messageId"];
+            result = [infoDict objectForKey: @"messageId"];
         }
     }
 
     return result;
 }
 
-- (void)keepAlive
+- (void) keepAlive
 /*"Sends some command to the server to prevent the connection from timing out."*/
 {
     if (NSDebugEnabled) NSLog(@"sending 'keep alive' for %@", [self description]);
@@ -246,29 +244,29 @@ UIDL. nil otherwise. "*/
     if (NSDebugEnabled) NSLog(@"-keepAlive on %@ returned %d", [self description], size);
 }
 
-- (void)setAutosaveName:(NSString *)aName
+- (void) setAutosaveName: (NSString*) aName
 {
     [aName retain];
     [_autosaveName release];
     _autosaveName = aName;
 }
 
-- (NSString *)autosaveName
+- (NSString*) autosaveName
 {
     return _autosaveName;
 }
 
-- (NSString *)description
+- (NSString*) description
 /*" Overridden from %{NSObject}. Returns string containing information about the receiver. "*/
 {
-    return [NSMutableString stringWithFormat:@"<POP3Session %@: stream %@>", [super description], _stream]; 
+    return [NSMutableString stringWithFormat: @"<POP3Session %@: stream %@>", [super description], _stream]; 
 }
 
 @end
 
 @implementation OPPOP3Session (OPMessageProducer)
 
-- (NSData *)nextTransferData
+- (NSData*) nextTransferData
 {
     NSData *result;
     
@@ -292,12 +290,12 @@ UIDL. nil otherwise. "*/
 
     if ( (_currentPosition <= _maildropSize) && (_currentPosition > 0) )
     {
-        return [[[_messageInfo objectAtIndex:_currentPosition - 1] objectForKey:@"size"] longValue];
+        return [[[_messageInfo objectAtIndex:_currentPosition - 1] objectForKey: @"size"] longValue];
     }
     return -1;
 }
 
-- (void)skipNextMessage
+- (void) skipNextMessage
 /*" Skips the next message. "*/
 {
     _currentPosition += 1;
@@ -307,7 +305,7 @@ UIDL. nil otherwise. "*/
 
 @implementation OPPOP3Session (OPCleaning)
 
-- (void)cleanUp
+- (void) cleanUp
 {
     if (NSDebugEnabled) NSLog(@"Starting cleanup...");
     
@@ -320,9 +318,9 @@ UIDL. nil otherwise. "*/
         {
             NSMutableDictionary *infoDict = [_messageInfo objectAtIndex:i - 1];
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            long size = [[infoDict objectForKey:@"size"] longValue];
-            NSString *messageId = [infoDict objectForKey:@"messageId"];
-            NSDate *date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
+            long size = [[infoDict objectForKey: @"size"] longValue];
+            NSString *messageId = [infoDict objectForKey: @"messageId"];
+            NSDate *date = [NSDate dateWithString:[[infoDict objectForKey: @"date"] description]];
 
             //if (NSDebugEnabled) NSLog(@"Cleaning message #%d in %@", i, self);
             
@@ -337,8 +335,8 @@ UIDL. nil otherwise. "*/
                     {
                         [self _takeInfoFromTransferData:headerData forPosition:i];
 
-                        messageId = [infoDict objectForKey:@"messageId"];
-                        date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
+                        messageId = [infoDict objectForKey: @"messageId"];
+                        date = [NSDate dateWithString:[[infoDict objectForKey: @"date"] description]];
                     }
                 NS_HANDLER
                     ;
@@ -347,7 +345,7 @@ UIDL. nil otherwise. "*/
             
             if ([_delegate shouldDeleteMessageWithMessageId:messageId date:date size:size inPOP3Session:self])
             {
-                [self _readOKForCommand:[NSString stringWithFormat:@"DELE %d", i]];
+                [self _readOKForCommand:[NSString stringWithFormat: @"DELE %d", i]];
 
                 // remove message from message info
                 [_messageInfo replaceObjectAtIndex:i - 1 withObject:[NSNull null]];
@@ -363,7 +361,7 @@ UIDL. nil otherwise. "*/
 
 @implementation OPPOP3Session (Authentication)
 
-- (void)_authenticationWithServerGreeting:(NSString *)serverGreeting
+- (void) _authenticationWithServerGreeting: (NSString*) serverGreeting
 /*" Tries authentication with the server. Raises if no selected (by the delegate) method succeeds. "*/
 {
     BOOL shouldContinue = YES;
@@ -380,7 +378,7 @@ UIDL. nil otherwise. "*/
         }
         else
         {
-            [NSException raise:OPPOP3SessionException format:@"Delegate either not set or does not implement the required OPPOP3SessionDelegate method -usernameForPOP3Session: (POP3Session: %@).", self];
+            [NSException raise:OPPOP3SessionException format: @"Delegate either not set or does not implement the required OPPOP3SessionDelegate method -usernameForPOP3Session: (POP3Session: %@).", self];
         }
     }
 
@@ -392,13 +390,13 @@ UIDL. nil otherwise. "*/
         }
         else
         {
-            [NSException raise:OPPOP3SessionException format:@"Delegate either not set or does not implement the required OPPOP3SessionDelegate method -passwordForPOP3Session: (POP3Session: %@).", self];
+            [NSException raise:OPPOP3SessionException format: @"Delegate either not set or does not implement the required OPPOP3SessionDelegate method -passwordForPOP3Session: (POP3Session: %@).", self];
         }
     }
     
     if ((! _username) || (! _password))
     {
-        [NSException raise:OPPOP3SessionException format:@"username and/or password is/are nil in POP3Session %@.", self];
+        [NSException raise:OPPOP3SessionException format: @"username and/or password is/are nil in POP3Session %@.", self];
     }
 
     // APOP
@@ -408,7 +406,7 @@ UIDL. nil otherwise. "*/
         {
             if ([_delegate shouldTryAuthenticationMethod:OPPOP3APOPAuthenticationMethod inPOP3Session:self])
             {
-                [triedMethods addObject:@"APOP"];
+                [triedMethods addObject: @"APOP"];
                 [self _APOPAuthenticationWithServerGreeting:serverGreeting];
             }
             
@@ -424,7 +422,7 @@ UIDL. nil otherwise. "*/
     {
         if (NSDebugEnabled) NSLog(@"APOP failed for POP3Session %@.", self);
         
-        [triedMethods addObject:[NSString stringWithFormat:@"APOP failed (%@)", [localException reason]]];
+        [triedMethods addObject:[NSString stringWithFormat: @"APOP failed (%@)", [localException reason]]];
         
         if ([_delegate respondsToSelector:@selector(shouldContinueWithOtherAuthenticationMethodAfterFailedAuthentication:inPOP3Session:)])
         {
@@ -443,13 +441,13 @@ UIDL. nil otherwise. "*/
             {
                 if ([_delegate shouldTryAuthenticationMethod:OPPOP3USERPASSAuthenticationMethod inPOP3Session:self])
                 {
-                    [triedMethods addObject:@"Plain"];
+                    [triedMethods addObject: @"Plain"];
                     [self _userPassAuthentication];
                 }
             }
             else
             {
-                [triedMethods addObject:@"Plain"];
+                [triedMethods addObject: @"Plain"];
                 [self _userPassAuthentication];
             }
 
@@ -464,7 +462,7 @@ UIDL. nil otherwise. "*/
         {
             if (NSDebugEnabled) NSLog(@"USER/PASS failed for POP3Session %@.", self);
             
-            [triedMethods addObject:[NSString stringWithFormat:@"Plain failed (%@)", [localException reason]]];
+            [triedMethods addObject:[NSString stringWithFormat: @"Plain failed (%@)", [localException reason]]];
             
             if ([_delegate respondsToSelector:@selector(shouldContinueWithOtherAuthenticationMethodAfterFailedAuthentication:inPOP3Session:)])
             {
@@ -484,18 +482,18 @@ UIDL. nil otherwise. "*/
     {
         NSString *triedMessage;
 
-        triedMessage = [triedMethods componentsJoinedByString:@", "];
+        triedMessage = [triedMethods componentsJoinedByString: @", "];
         if (![triedMessage length])
         {
             triedMessage = @"None";
         }
         
         _state = DISCONNECTED;
-        [NSException raise:OPPOP3AuthenticationFailedException format:@"POP3 server authentication failed. Tried %@.", triedMessage];
+        [NSException raise:OPPOP3AuthenticationFailedException format: @"POP3 server authentication failed. Tried %@.", triedMessage];
     }
 }
 
-- (void)_userPassAuthentication
+- (void) _userPassAuthentication
 /*" Try to authenticate via the USER and PASS authentication scheme. If
     successfull, the session is in TRANSACTION state afterwards. Raises otherwise."*/
 {
@@ -504,7 +502,7 @@ UIDL. nil otherwise. "*/
     _state = TRANSACTION;
 }
 
-- (void)_APOPAuthenticationWithServerGreeting:(NSString *)serverGreeting
+- (void) _APOPAuthenticationWithServerGreeting: (NSString*) serverGreeting
 /*" If successfull, the session is in TRANSACTION state afterwards. Raises otherwise. "*/
 {
     NSString *serverTimestamp;
@@ -523,12 +521,12 @@ UIDL. nil otherwise. "*/
         // respond to challenge
         [self _readOKForCommand:
             [[[@"APOP " stringByAppendingString:_username]
-                     stringByAppendingString:@" "] stringByAppendingString:digest]];
+                     stringByAppendingString: @" "] stringByAppendingString:digest]];
         _state = TRANSACTION;
     }
 }
 
-- (NSString *)_digestForServerTimestamp:(NSString *)serverTimestamp andSecret:(NSString *)secret
+- (NSString*) _digestForServerTimestamp: (NSString*) serverTimestamp andSecret: (NSString*) secret
 /*" Returns the client response for the server challenge serverTimestamp and the secret. "*/
 {
     NSMutableString *result;
@@ -537,8 +535,8 @@ UIDL. nil otherwise. "*/
     md5_state_t state;
     md5_byte_t digest[16];
 
-    serverTimestamp = [[@"<" stringByAppendingString:serverTimestamp] stringByAppendingString:@">"];
-    md5Input = [[serverTimestamp stringByAppendingString:secret] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    serverTimestamp = [[@"<" stringByAppendingString:serverTimestamp] stringByAppendingString: @">"];
+    md5Input = [[serverTimestamp stringByAppendingString:secret] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion: YES];
 
     md5_init(&state);
     md5_append(&state, (const md5_byte_t *)[md5Input bytes], [md5Input length]);
@@ -547,7 +545,7 @@ UIDL. nil otherwise. "*/
     result = [NSMutableString string];
 
     for (di = 0; di < 16; di++)
-        [result appendFormat:@"%02x", digest[di]];
+        [result appendFormat: @"%02x", digest[di]];
 
     return result;
 }
@@ -556,14 +554,14 @@ UIDL. nil otherwise. "*/
 
 @implementation OPPOP3Session (UIDL)
 
-- (void)_setMessageInfo:(NSMutableArray *)anArray
+- (void) _setMessageInfo: (NSMutableArray*) anArray
 {
     [anArray retain];
     [_messageInfo release];
     _messageInfo = anArray;
 }
 
-- (void)_takeInfoFromTransferData:(NSData *)transferData forPosition:(int)position
+- (void) _takeInfoFromTransferData: (NSData*) transferData forPosition:(int)position
 {
     OPInternetMessage *message = nil;
     
@@ -576,10 +574,10 @@ UIDL. nil otherwise. "*/
         NSDate *date = [message date];
         
         if (messageId)
-            [infoDict setObject:messageId forKey:@"messageId"];
+            [infoDict setObject: messageId forKey: @"messageId"];
         
         if (date)
-            [infoDict setObject:date forKey:@"date"];
+            [infoDict setObject: date forKey: @"date"];
     }
     @finally
     {
@@ -587,25 +585,25 @@ UIDL. nil otherwise. "*/
     }
 }
 
-- (void)_addMessageSizesToMessageInfo
+- (void) _addMessageSizesToMessageInfo
 /*" Issues the LIST command and collects the size info in the message info dicts. "*/
 {
     NSString *response;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NS_DURING
-        [self _readOKForCommand:@"LIST"]; 	// try to use LIST command
+        [self _readOKForCommand: @"LIST"]; 	// try to use LIST command
 
         response = [_stream availableLine];
         while (response)
         {
-            NSArray *components = [response componentsSeparatedByString:@" "];
+            NSArray *components = [response componentsSeparatedByString: @" "];
             NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
             NSDecimalNumber *sizeNumber = [[NSDecimalNumber alloc] initWithString:
                 [components objectAtIndex:1]];
             int messageNumber = [[components objectAtIndex:0] intValue];
 
-            [[_messageInfo objectAtIndex:messageNumber - 1] setObject:sizeNumber forKey:@"size"];
+            [[_messageInfo objectAtIndex:messageNumber - 1] setObject: sizeNumber forKey: @"size"];
 
             [sizeNumber release];
             response = [_stream availableLine];
@@ -636,9 +634,7 @@ UIDL. nil otherwise. "*/
             [@"OPPOP3Session lastUIDL " stringByAppendingString:_autosaveName]];
         
         if (NSDebugEnabled) NSLog(@"%@: Read UIDL %@ for last position from user defaults.", self, UIDLFromLastPosition);
-    }
-    else
-    {
+    } else {
         if (NSDebugEnabled) NSLog(@"%@: No UIDLs read from user defaults. No autosave name given.", self);
     }
 
@@ -648,7 +644,7 @@ UIDL. nil otherwise. "*/
         [_messageInfo addObject:[NSMutableDictionary dictionaryWithCapacity:4]];
     
     NS_DURING
-        [self _readOKForCommand:@"UIDL"]; 	// try to use UIDL command
+        [self _readOKForCommand: @"UIDL"]; 	// try to use UIDL command
     NS_HANDLER
         if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.");
         while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
@@ -664,7 +660,7 @@ UIDL. nil otherwise. "*/
             NSString *UIDL;
             int messageNumber;
 
-            components = [response componentsSeparatedByString:@" "];
+            components = [response componentsSeparatedByString: @" "];
             NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
             messageNumber = [[components objectAtIndex:0] intValue];
             UIDL = [components objectAtIndex:1];
@@ -676,7 +672,7 @@ UIDL. nil otherwise. "*/
                 NSDictionary *contentFromInfoForUIDL;
 
                 // add info from infoForUIDL if present
-                [infoDict setObject:UIDL forKey:@"UIDL"];
+                [infoDict setObject: UIDL forKey: @"UIDL"];
                 if (contentFromInfoForUIDL = [infoForUIDL objectForKey:UIDL])
                     [infoDict addEntriesFromDictionary:contentFromInfoForUIDL];
             }
@@ -708,7 +704,7 @@ UIDL. nil otherwise. "*/
     return result;
 }
 
-- (void)_autosaveUIDLs
+- (void) _autosaveUIDLs
 {
     if (([_autosaveName length]) && (_maildropSize != -1))
     {
@@ -733,9 +729,9 @@ UIDL. nil otherwise. "*/
         {
             NSString *UIDLFromLastPosition;
             
-            if (UIDLFromLastPosition = [[_messageInfo objectAtIndex:UIDLPosition - 2] objectForKey:@"UIDL"])
+            if (UIDLFromLastPosition = [[_messageInfo objectAtIndex:UIDLPosition - 2] objectForKey: @"UIDL"])
             {
-                [defaults setObject:UIDLFromLastPosition forKey:key];
+                [defaults setObject: UIDLFromLastPosition forKey:key];
                 if (NSDebugEnabled) NSLog(@"%@: Saved last position UIDL %@ to user defaults.", self, UIDLFromLastPosition);
             }
             else
@@ -758,14 +754,14 @@ UIDL. nil otherwise. "*/
                 NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
                 
                 info = [[info mutableCopy] autorelease];
-                UIDL = [info objectForKey:@"UIDL"];
+                UIDL = [info objectForKey: @"UIDL"];
 
                 if (! UIDL) // no UIDLs given...nothing more to do
                     return;
 
-                [infoForUIDL setObject:info forKey:UIDL];
+                [infoForUIDL setObject: info forKey:UIDL];
 
-                [info removeObjectForKey:@"UIDL"];	// not needed...why waste space?
+                [info removeObjectForKey: @"UIDL"];	// not needed...why waste space?
                 
                 [pool release];
             }
@@ -774,12 +770,12 @@ UIDL. nil otherwise. "*/
         NSString *dir = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent:UIDLsDir];
         if (![[NSFileManager defaultManager] fileExistsAtPath:dir])
         {
-            [[NSFileManager defaultManager] createDirectoryAtPath:dir attributes:nil];
+            [[NSFileManager defaultManager] createDirectoryAtPath:dir attributes: nil];
         }
         
         NSString *path = [dir stringByAppendingPathComponent:_autosaveName];
         
-        if (![infoForUIDL writeToFile:path atomically:YES])
+        if (![infoForUIDL writeToFile:path atomically: YES])
         {
             NSLog(@"Could not save UIDLs for %@", _autosaveName);
         }
@@ -791,14 +787,14 @@ UIDL. nil otherwise. "*/
 
 @implementation OPPOP3Session (ServerResponseAndSimpleCommands)
 
-- (BOOL)_isOKResponse:(NSString *)aResponse
+- (BOOL)_isOKResponse: (NSString*) aResponse
 {
-    return [aResponse hasPrefix:@"+OK"];
+    return [aResponse hasPrefix: @"+OK"];
 }
 
-- (NSString *)_readOKForCommand:(NSString *)command
+- (NSString*) _readOKForCommand: (NSString*) command
 {
-    NSString *line = nil;
+    NSString* line = nil;
 
     if (command)
     {
@@ -809,19 +805,19 @@ UIDL. nil otherwise. "*/
     if (! [self _isOKResponse:line])
     {
         // prevent printing of password
-        if ([command hasPrefix:@"PASS "])
+        if ([command hasPrefix: @"PASS "])
         {
             command = @"PASS ********";
         }
         
         [NSException raise:OPPOP3SessionException
-                    format:@"The command \"%@\" was rejected by the POP3 server: \"%@\"", command, line];
+                    format: @"The command \"%@\" was rejected by the POP3 server: \"%@\"", command, line];
     }
     
     return line;
 }
 
-- (NSString *)_serverGreeting
+- (NSString*) _serverGreeting
 /*" Reads the initial greeting with the optional timestamp for APOP.
     Returns the server's greeting. After leaving this method the session is in
     AUTHORIZATION state. Throws an %{OPPOP3SessionException} otherwise. "*/
@@ -829,10 +825,10 @@ UIDL. nil otherwise. "*/
     NSString *response = nil;
     // Read greeting with optional timestamp:
     NS_DURING
-        response = [self _readOKForCommand:nil];
+        response = [self _readOKForCommand: nil];
     NS_HANDLER
         [NSException raise:OPPOP3SessionException
-                    format:@"The POP3 server does not respond (with a 'server greeting')."];
+                    format: @"The POP3 server does not respond (with a 'server greeting')."];
     NS_ENDHANDLER
         
     // Go in AUTHORIZATION state:
@@ -846,12 +842,12 @@ UIDL. nil otherwise. "*/
     NSString *response;
     NSAssert(_state == TRANSACTION, @"POP3 session is not in TRANSACTION state");
 
-    response = [self _readOKForCommand:@"STAT"];
+    response = [self _readOKForCommand: @"STAT"];
     return [[NSDecimalNumber decimalNumberWithString:
-        [[response componentsSeparatedByString:@" "] objectAtIndex:1]] intValue];
+        [[response componentsSeparatedByString: @" "] objectAtIndex:1]] intValue];
 }
 
-- (NSData *)_transferDataAtPosition:(int)position
+- (NSData*) _transferDataAtPosition:(int)position
 {
     NSData *transferData = nil;
 
@@ -867,7 +863,7 @@ UIDL. nil otherwise. "*/
     return transferData;
 }
 
-- (NSData *)_headerDataAtPosition:(int)position
+- (NSData*) _headerDataAtPosition:(int)position
 {
     NSData *headerData = nil;
 
@@ -884,7 +880,7 @@ UIDL. nil otherwise. "*/
     return headerData;
 }
 
-- (void)_gatherStatsIfNeeded
+- (void) _gatherStatsIfNeeded
 {
     if (_maildropSize == -1)
     {

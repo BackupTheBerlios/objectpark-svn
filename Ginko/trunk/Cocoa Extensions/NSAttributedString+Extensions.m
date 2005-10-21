@@ -58,7 +58,7 @@
 
 /*" Appends  %string to the receiver using the text attributes as set at the end of the receiver. "*/
 
-- (void)appendString:(NSString *)string
+- (void) appendString: (NSString*) string
 {
     if ([string length])
     {

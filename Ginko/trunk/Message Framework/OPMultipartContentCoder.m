@@ -31,17 +31,17 @@
 */
 
 @interface EDCompositeContentCoder(PrivateAPI)
-- (void)_takeSubpartsFromMultipartContent:(EDMessagePart *)mpart;
-- (void)_takeSubpartsFromMessageContent:(EDMessagePart *)mpart;
+- (void) _takeSubpartsFromMultipartContent: (EDMessagePart*) mpart;
+- (void) _takeSubpartsFromMessageContent: (EDMessagePart*) mpart;
 - (id)_encodeSubpartsWithClass:(Class)targetClass;
 @end
 
 @interface OPMultipartContentCoder (PrivateAPI)
 
-- (NSAttributedString *)_attributedStringFromMultipartAlternativeWithPreferredContentTypes:(NSArray *)preferredContentTypes;
-- (NSAttributedString *)_attributedStringFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes;
-- (NSAttributedString *)_attributedStringFromMultipartRelatedWithPreferredContentTypes:(NSArray *)preferredContentTypes;
-- (NSAttributedString *)_attributedStringFromMultipartReportWithPreferredContentTypes:(NSArray *)preferredContentTypes;
+- (NSAttributedString *)_attributedStringFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes;
+- (NSAttributedString *)_attributedStringFromMultipartMixedWithPreferredContentTypes:(NSArray*) preferredContentTypes;
+- (NSAttributedString *)_attributedStringFromMultipartRelatedWithPreferredContentTypes:(NSArray*) preferredContentTypes;
+- (NSAttributedString *)_attributedStringFromMultipartReportWithPreferredContentTypes:(NSArray*) preferredContentTypes;
 
 @end
 
@@ -62,29 +62,29 @@
     [super dealloc];
 }
 
-- (NSString *)subtype
+- (NSString*) subtype
 {
     return subtype;
 }
 
 - (NSAttributedString *)attributedString
 {
-    return [self attributedStringWithPreferredContentTypes:nil];
+    return [self attributedStringWithPreferredContentTypes: nil];
 }
 
-- (NSAttributedString *)attributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (NSAttributedString *)attributedStringWithPreferredContentTypes:(NSArray*) preferredContentTypes
 {
     
-    if ([subtype caseInsensitiveCompare:@"alternative"] == NSOrderedSame)
+    if ([subtype caseInsensitiveCompare: @"alternative"] == NSOrderedSame)
         return [self _attributedStringFromMultipartAlternativeWithPreferredContentTypes:preferredContentTypes];
-    else if ([subtype caseInsensitiveCompare:@"mixed"] == NSOrderedSame)
+    else if ([subtype caseInsensitiveCompare: @"mixed"] == NSOrderedSame)
         return [self _attributedStringFromMultipartMixedWithPreferredContentTypes:preferredContentTypes];
-    else if ([subtype caseInsensitiveCompare:@"related"] == NSOrderedSame)
+    else if ([subtype caseInsensitiveCompare: @"related"] == NSOrderedSame)
         return [self _attributedStringFromMultipartRelatedWithPreferredContentTypes:preferredContentTypes];
-    else if ([subtype caseInsensitiveCompare:@"report"] == NSOrderedSame)
+    else if ([subtype caseInsensitiveCompare: @"report"] == NSOrderedSame)
         return [self _attributedStringFromMultipartReportWithPreferredContentTypes:preferredContentTypes];
     
-    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"multipart/%@ not yet decodable. Fallback to multipart/mixed handling\n", subtype]];
+    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat: @"multipart/%@ not yet decodable. Fallback to multipart/mixed handling\n", subtype]];
     
     [result appendAttributedString:[self _attributedStringFromMultipartMixedWithPreferredContentTypes:preferredContentTypes]];
         
@@ -159,19 +159,19 @@
 }
 
 // alternative
-- (NSAttributedString *)_attributedStringFromMultipartAlternativeWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (NSAttributedString *)_attributedStringFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes
 {
     EDMessagePart *preferredSubpart = [self _mostPreferredSubpartWithPreferredContentTypes:preferredContentTypes];
     
     if (preferredSubpart) {
         return [preferredSubpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
     } else {
-        return [[[NSAttributedString alloc] initWithString:@"\nmultipart/alternative message part with no decodable alternative.\n"] autorelease];
+        return [[[NSAttributedString alloc] initWithString: @"\nmultipart/alternative message part with no decodable alternative.\n"] autorelease];
     }
 }
 
 // mixed
-- (NSAttributedString *)_attributedStringFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (NSAttributedString *)_attributedStringFromMultipartMixedWithPreferredContentTypes:(NSArray*) preferredContentTypes
 {
     NSMutableAttributedString* result = [[NSMutableAttributedString alloc] init];
     EDMessagePart* subpart;
@@ -182,12 +182,12 @@
         @try {
             NSAttributedString* subpartContent = [subpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
             if (!subpartContent) {
-                [result appendString: [NSString stringWithFormat:@"\nsubpart decoding error [%@]\n", subpart]];
+                [result appendString: [NSString stringWithFormat: @"\nsubpart decoding error [%@]\n", subpart]];
                 [subpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
             } else
                 [result appendAttributedString: subpartContent];
         } @catch (NSException* localException) {
-            [result appendString:[NSString stringWithFormat:@"\nsubpart decoding error [%@]\n", [localException reason]]];
+            [result appendString:[NSString stringWithFormat: @"\nsubpart decoding error [%@]\n", [localException reason]]];
             NSLog(@"subpart decoding error [%@]\n", [localException reason]);
         }
     }
@@ -196,22 +196,22 @@
 }
 
 // related
-- (NSAttributedString *)_attributedStringFromMultipartRelatedWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (NSAttributedString *)_attributedStringFromMultipartRelatedWithPreferredContentTypes:(NSArray*) preferredContentTypes
 {
     NSMutableAttributedString *result;
 
-    result = [[[NSMutableAttributedString alloc] initWithString:@"\nmultipart/related is not handled right at the moment. Fallback to multipart/mixed handling.\n"] autorelease];
+    result = [[[NSMutableAttributedString alloc] initWithString: @"\nmultipart/related is not handled right at the moment. Fallback to multipart/mixed handling.\n"] autorelease];
 
     [result appendAttributedString:[self _attributedStringFromMultipartMixedWithPreferredContentTypes:preferredContentTypes]];
 
     return result;
 }
 
-- (NSAttributedString *)_attributedStringFromMultipartReportWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (NSAttributedString *)_attributedStringFromMultipartReportWithPreferredContentTypes:(NSArray*) preferredContentTypes
 {
     NSMutableAttributedString *result;
     
-    result = [[[NSMutableAttributedString alloc] initWithString:@"\nmultipart/report is not handled right at the moment. Fallback to multipart/mixed handling.\n"] autorelease];
+    result = [[[NSMutableAttributedString alloc] initWithString: @"\nmultipart/report is not handled right at the moment. Fallback to multipart/mixed handling.\n"] autorelease];
     
     [result appendAttributedString:[self _attributedStringFromMultipartMixedWithPreferredContentTypes:preferredContentTypes]];
     

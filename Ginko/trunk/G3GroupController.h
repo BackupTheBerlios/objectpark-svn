@@ -48,14 +48,14 @@
 
 - (NSWindow *)window;
 - (GIMessageGroup *)group;
-- (void)setGroup:(GIMessageGroup *)aGroup;
+- (void) setGroup: (GIMessageGroup*) aGroup;
 
 - (BOOL)isStandaloneBoxesWindow;
 
-- (id)valueForGroupProperty:(NSString *)prop;
-- (void)setValue:(id)value forGroupProperty:(NSString *)prop;
+- (id)valueForGroupProperty: (NSString*) prop;
+- (void) setValue:(id)value forGroupProperty: (NSString*) prop;
 
-- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread;
+- (void) setDisplayedMessage: (GIMessage*) aMessage thread:(GIThread *)aThread;
 - (GIMessage *)displayedMessage;
 - (GIThread *)displayedThread;
 
@@ -63,7 +63,7 @@
 
 - (BOOL)validateSelector:(SEL)aSelector; // necessary?
 
-- (void)modelChanged:(NSNotification *)aNotification; // remove as soon as possible
+- (void) modelChanged: (NSNotification*) aNotification; // remove as soon as possible
 
 /*" Actions "*/
 - (IBAction) showThreads: (id) sender;
@@ -78,7 +78,7 @@
 
 @interface G3GroupController (ToolbarDelegate)
 
-- (void)awakeToolbar;
-- (void)deallocToolbar;
+- (void) awakeToolbar;
+- (void) deallocToolbar;
 
 @end

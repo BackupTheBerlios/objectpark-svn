@@ -28,22 +28,22 @@ extern NSString *EDMessageFormatException;
 {
 }
 
-- (BOOL)isEqualToMessage:(OPInternetMessage *)other;
+- (BOOL)isEqualToMessage: (OPInternetMessage*) other;
 
-+ (id)messageWithAttributedStringContent:(NSAttributedString *)someContent;
++ (id)messageWithAttributedStringContent: (NSAttributedString*) someContent;
 
-- (void)zapHeaderGremlins;
-- (void)generateMessageIdWithSuffix:(NSString *)aString;
+- (void) zapHeaderGremlins;
+- (void) generateMessageIdWithSuffix: (NSString*) aString;
 
 // The message ids of the messages the message refer to.
-- (NSArray *)references;
+- (NSArray*) references;
 
-- (NSString *)replyToWithFallback:(BOOL)fallback;
-- (NSString *)toWithFallback:(BOOL)fallback;
-- (NSString *)fromWithFallback:(BOOL)fallback;
-- (NSString *)ccWithFallback:(BOOL)fallback;
-- (NSString *)bccWithFallback:(BOOL)fallback;
+- (NSString*) replyToWithFallback:(BOOL)fallback;
+- (NSString*) toWithFallback:(BOOL)fallback;
+- (NSString*) fromWithFallback:(BOOL)fallback;
+- (NSString*) ccWithFallback:(BOOL)fallback;
+- (NSString*) bccWithFallback:(BOOL)fallback;
 
-- (NSString *)normalizedSubject;
+- (NSString*) normalizedSubject;
 
 @end

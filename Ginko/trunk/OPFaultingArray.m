@@ -103,7 +103,7 @@ int compareOids(OID o1, OID o2)
 	return *oidPtr(index);
 }
 
-- (void)_growTo: (unsigned) newCapacity
+- (void) _growTo: (unsigned) newCapacity
 {
 	capacity=MAX( capacity*2+2, newCapacity );
     if ( data ) {
@@ -449,7 +449,7 @@ int compareOids(OID o1, OID o2)
 	[array addInteger:42];
 	INTEXPECT( [array count],1 ,@"count after adding 1 element");
 	INTEXPECT( [array integerAtIndex:0],42 ,@"value of element I put");
-	[array addObject:@"50"];
+	[array addObject: @"50"];
 	INTEXPECT( [array count],2 ,@"count after adding 2nd element");
 	INTEXPECT( [array integerAtIndex:1],50 ,@"value of 2nd element I put");
 }

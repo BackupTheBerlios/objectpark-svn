@@ -29,7 +29,7 @@
 @implementation GIMessageFilterAction
 /*" Model for an action of a messge filter. "*/
 
-- (id)initWithActionDefinitionDictionary:(NSDictionary *)aDictionary
+- (id)initWithActionDefinitionDictionary: (NSDictionary*) aDictionary
 /*" Initializes the action with a defining dictionary "*/
 {
     [super init];
@@ -39,7 +39,7 @@
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 /*" Releases ivars. "*/
 {
     [_actionDefinition release];
@@ -55,12 +55,12 @@
 
 - (int)state
 {
-    return [(NSNumber *)[_actionDefinition objectForKey:@"state"] intValue];
+    return [(NSNumber*) [_actionDefinition objectForKey: @"state"] intValue];
 }
 
-- (void)setState:(int)aState
+- (void) setState:(int)aState
 {
-    [_actionDefinition setObject:[NSNumber numberWithInt:aState] forKey:@"state"];
+    [_actionDefinition setObject: [NSNumber numberWithInt:aState] forKey: @"state"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
@@ -68,12 +68,12 @@
 
 - (int)type
 {
-    return [(NSNumber *)[_actionDefinition objectForKey:@"type"] intValue];
+    return [(NSNumber*) [_actionDefinition objectForKey: @"type"] intValue];
 }
 
 - (void) setType: (int) aType
 {
-    [_actionDefinition setObject:[NSNumber numberWithInt:aType] forKey:@"type"];
+    [_actionDefinition setObject: [NSNumber numberWithInt:aType] forKey: @"type"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
@@ -81,12 +81,12 @@
 
 - (NSString*) parameter
 {
-    return [_actionDefinition objectForKey:@"parameter"];
+    return [_actionDefinition objectForKey: @"parameter"];
 }
 
 - (void) setParameter: (NSString*) aString
 {
-    [_actionDefinition setObject:aString forKey:@"parameter"];
+    [_actionDefinition setObject: aString forKey: @"parameter"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageFiltersDidChangeNotification object:self];
@@ -96,7 +96,7 @@
 
 @implementation GIMessageFilterAction (Performer)
 
-+ (BOOL)performAction:(GIMessageFilterAction *)action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox
++ (BOOL)performAction: (GIMessageFilterAction*) action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox
 {
     BOOL allowFurtherFiltering = YES;
     
@@ -116,12 +116,12 @@
                 
                 if (! destinationGroup) {
 					 // fatal -> Exception
-                    [NSException raise:NSGenericException format:@"Default message group could neither be found nor created. FATAL ERROR! Aborting filtering."];
+                    [NSException raise:NSGenericException format: @"Default message group could neither be found nor created. FATAL ERROR! Aborting filtering."];
                 }
             }
             
             // now that a destination box is present put message in
-            [GIMessageBase addMessage:message toMessageGroup:destinationGroup suppressThreading:NO];
+            [GIMessageBase addMessage:message toMessageGroup:destinationGroup suppressThreading: NO];
             if (putInBox) *putInBox = YES;
             break;
         }

@@ -34,32 +34,32 @@
     NSRange		bodyRange;
 }
 
-- (id)initWithTransferData:(NSData *)data;
-- (id)initWithTransferData:(NSData *)data fallbackStringEncoding:(NSStringEncoding)encoding;
-- (id)initWithTransferData:(NSData *)data fallbackHeaderFields:(NSDictionary *)fields;
+- (id)initWithTransferData: (NSData*) data;
+- (id)initWithTransferData: (NSData*) data fallbackStringEncoding:(NSStringEncoding)encoding;
+- (id)initWithTransferData: (NSData*) data fallbackHeaderFields:(NSDictionary *)fields;
 
 - (NSData*) transferData;
 - (BOOL) transferDataDidChange;
 
 - (NSRange) takeHeadersFromData: (NSData*) data;
 
-- (void)setContentType: (NSString*) aType;
-- (void)setContentType: (NSString*) aType withParameters: (NSDictionary*) someParameters;
-- (NSString *)contentType;
+- (void) setContentType: (NSString*) aType;
+- (void) setContentType: (NSString*) aType withParameters: (NSDictionary*) someParameters;
+- (NSString*) contentType;
 - (NSDictionary *)contentTypeParameters;
 
-- (void)setContentDisposition:(NSString *)aDispositionDirective;
-- (void)setContentDisposition:(NSString *)aDispositionDirective withParameters:(NSDictionary *)someParameters;
-- (NSString *)contentDisposition;
+- (void) setContentDisposition: (NSString*) aDispositionDirective;
+- (void) setContentDisposition: (NSString*) aDispositionDirective withParameters: (NSDictionary*) someParameters;
+- (NSString*) contentDisposition;
 - (NSDictionary *)contentDispositionParameters;
 
-- (void)setContentTransferEncoding:(NSString *)anEncoding;
-- (NSString *)contentTransferEncoding;
+- (void) setContentTransferEncoding: (NSString*) anEncoding;
+- (NSString*) contentTransferEncoding;
 
-- (void)setContentData:(NSData *)data;
-- (NSData *)contentData;
+- (void) setContentData: (NSData*) data;
+- (NSData*) contentData;
 
-- (NSString *)pathExtensionForContentType;
+- (NSString*) pathExtensionForContentType;
 
 @end
 

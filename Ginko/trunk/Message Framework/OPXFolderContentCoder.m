@@ -27,7 +27,7 @@
 #import "EDTextFieldCoder.h"
 
 @interface EDCompositeContentCoder (PrivateAPI)
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype;
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype;
 @end
 
 @implementation OPXFolderContentCoder
@@ -37,7 +37,7 @@
     return [[mpart contentType] isEqualToString: @"multipart/x-folder"];
 }
 
-+ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
++ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
 /*"
    Decides if anAttributedString can be encoded starting at anIndex. If YES is returned effectiveRange 
    designates the range which can be encoded by this class. If NO is returned effectiveRange indicates
@@ -66,7 +66,7 @@
     return NO;
 }
 
-- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper
+- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
     NSFileWrapper *fileWrapper;
     NSDictionary *attributes;
@@ -86,8 +86,8 @@
     {
         NSArray *components;
         
-        components = [filename componentsSeparatedByString:@"\""];
-        filename = [components componentsJoinedByString:@"'"];
+        components = [filename componentsSeparatedByString: @"\""];
+        filename = [components componentsJoinedByString: @"'"];
     }
     
     // get the permissions
@@ -135,7 +135,7 @@
     return [super initWithSubparts:someParts];
 }
 
-- (void)_ensureAttachmentDispositionForMessagePart:(EDMessagePart *)messagePart
+- (void) _ensureAttachmentDispositionForMessagePart: (EDMessagePart*) messagePart
 /*"Ensures "attachment" content-disposition for message part. Preserves the parameters."*/
 {    
     if ([[messagePart contentDisposition] caseInsensitiveCompare: MIMEAttachmentContentDisposition] != NSOrderedSame)
@@ -155,7 +155,7 @@
 }
 
 //#warning axel->axel: submit to Erik when stable
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype
 /*" overwritten by this category. beware. "*/
 {
     id messagePart;
@@ -170,17 +170,17 @@
         [self _ensureAttachmentDispositionForMessagePart:messagePart];
     }
     
-    messagePart = [super _encodeSubpartsWithClass:targetClass subtype:@"mixed"];
+    messagePart = [super _encodeSubpartsWithClass:targetClass subtype: @"mixed"];
     
     contentTypeParameters = [[messagePart contentTypeParameters] mutableCopy];
     
     if (xUnixMode)
     {
-        [contentTypeParameters setObject:xUnixMode forKey:@"x-unix-mode"];
+        [contentTypeParameters setObject: xUnixMode forKey: @"x-unix-mode"];
     }
     
     encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
-    [contentTypeParameters setObject:encodedFileName forKey:@"name"];
+    [contentTypeParameters setObject: encodedFileName forKey: @"name"];
     [messagePart setContentType: @"multipart/x-folder"
                  withParameters: contentTypeParameters];
     
@@ -191,7 +191,7 @@
     return messagePart;
 }
 
-- (id)initWithAttributedString:(NSAttributedString *)anAttributedString
+- (id)initWithAttributedString: (NSAttributedString*) anAttributedString
 {
     NSRange effectiveRange;
     NSTextAttachment *attachment;
@@ -206,13 +206,13 @@
     return [self initWithFileWrapper:[attachment fileWrapper]];
 }
 
-- (id)initWithMessagePart:(EDMessagePart *)mpart
+- (id)initWithMessagePart: (EDMessagePart*) mpart
 {
     [super initWithMessagePart:mpart];
 
-    if((filename = [[mpart contentDispositionParameters] objectForKey:@"filename"]) != nil)
+    if((filename = [[mpart contentDispositionParameters] objectForKey: @"filename"]) != nil)
         filename = [filename lastPathComponent];
-    else if((filename = [[mpart contentTypeParameters] objectForKey:@"name"]) != nil)
+    else if((filename = [[mpart contentTypeParameters] objectForKey: @"name"]) != nil)
         filename = [filename lastPathComponent];
     else
         filename = nil;
@@ -221,12 +221,12 @@
     if (filename)
         filename = [[(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:filename] text] retain];
 
-    xUnixMode = [[[mpart contentTypeParameters] objectForKey:@"x-unix-mode"] retain];
+    xUnixMode = [[[mpart contentTypeParameters] objectForKey: @"x-unix-mode"] retain];
         
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [filename release];
     [xUnixMode release];
@@ -245,8 +245,8 @@
     // use coder
     preferredFilename = [(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:rawPreferredFilename] text];
     
-    result = [[[NSFileWrapper alloc] initDirectoryWithFileWrappers:nil] autorelease];
-    [result setPreferredFilename:preferredFilename]; // file name
+    result = [[[NSFileWrapper alloc] initDirectoryWithFileWrappers: nil] autorelease];
+    [result setPreferredFilename: preferredFilename]; // file name
     
     
     if (xUnixMode) // unix permissions
@@ -254,7 +254,7 @@
         NSMutableDictionary *attributes;
         // attributes
         attributes = [[result fileAttributes] mutableCopy];
-        [attributes setObject:[NSNumber numberWithLong:[xUnixMode octalValue]] forKey:NSFilePosixPermissions];
+        [attributes setObject: [NSNumber numberWithLong:[xUnixMode octalValue]] forKey:NSFilePosixPermissions];
         [result setFileAttributes:attributes]; 
         [attributes release];
     }

@@ -49,7 +49,7 @@
 
 - (BOOL) isValidMessageID
 { 	
-	return [self hasPrefix:@"<"] && [self hasSuffix:@">"] && ([self rangeOfString:@"@"].length != 0);
+	return [self hasPrefix: @"<"] && [self hasSuffix:@">"] && ([self rangeOfString:@"@"].length != 0);
 }
 
 
@@ -59,9 +59,9 @@
     NSString  *articleId;
 
     scanner = [NSScanner scannerWithString:self];
-    if([scanner scanString:@"<" intoString:NULL])
-        if([scanner scanUpToString:@">" intoString:&articleId])
-            return [NSString stringWithFormat:@"news:%@", articleId];
+    if([scanner scanString: @"<" intoString: NULL])
+        if([scanner scanUpToString: @">" intoString:&articleId])
+            return [NSString stringWithFormat: @"news:%@", articleId];
     return nil;
 }
 
@@ -73,14 +73,14 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 
  */
 
-- (NSString *)stringByRemovingBracketComments
+- (NSString*) stringByRemovingBracketComments
 {
     //NSCharacterSet	*stopSet;
     NSString		*chunk;
     NSScanner		*scanner;
     NSMutableString	*result;
 
-    //stopSet = [NSCharacterSet characterSetWithCharactersInString:@"("];
+    //stopSet = [NSCharacterSet characterSetWithCharactersInString: @"("];
     result = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
     scanner = [NSScanner scannerWithString:self];
     while([scanner isAtEnd] == NO)
@@ -89,9 +89,9 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 		// This change needs testing:
 		if([scanner scanUpToString: @"(" intoString:&chunk] == YES)
             [result appendString:chunk];
-        if([scanner scanString:@"(" intoString:NULL] == YES)
-            if([scanner scanUpToClosingBracketIntoString:NULL] == YES)
-                [scanner scanString:@")" intoString:NULL];
+        if([scanner scanString: @"(" intoString: NULL] == YES)
+            if([scanner scanUpToClosingBracketIntoString: NULL] == YES)
+                [scanner scanString: @")" intoString: NULL];
         }
 
     return result;
@@ -106,15 +106,15 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
     if(skipChars == nil)
         skipChars = [[NSCharacterSet characterSetWithCharactersInString: @"\"' "] retain];
     
-    if((charPos = [self rangeOfString:@"@"]).length == 0) {
+    if((charPos = [self rangeOfString: @"@"]).length == 0) {
         nameRange = NSMakeRange(0, [self length]);
     }
-    else if((charPos = [self rangeOfString:@"<"]).length > 0) {
+    else if((charPos = [self rangeOfString: @"<"]).length > 0) {
         nameRange = NSMakeRange(0, charPos.location);
     }
-    else if((charPos = [self rangeOfString:@"("]).length > 0)
+    else if((charPos = [self rangeOfString: @"("]).length > 0)
     {
-        char2Pos = [self rangeOfString:@")"];          // empty brackets are ignored
+        char2Pos = [self rangeOfString: @")"];          // empty brackets are ignored
         if((char2Pos.length > 0) && (char2Pos.location > charPos.location + 1))
             nameRange = NSMakeRange(charPos.location + 1, char2Pos.location - charPos.location - 1);
         else
@@ -143,7 +143,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
     if(nonAddressChars == nil) {
         NSMutableCharacterSet *workingSet;
         
-        workingSet = [[[NSCharacterSet characterSetWithCharactersInString:@"()<>@,;:\\\"[]"] mutableCopy] autorelease];
+        workingSet = [[[NSCharacterSet characterSetWithCharactersInString: @"()<>@,;:\\\"[]"] mutableCopy] autorelease];
     [workingSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
     [workingSet formUnionWithCharacterSet:[NSCharacterSet linebreakCharacterSet]];
     [workingSet formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -156,16 +156,16 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
     nonAddressChars = [workingSet copy];
         }
 
-    if((d1Pos = [self rangeOfString:@"<"]).length > 0)
+    if((d1Pos = [self rangeOfString: @"<"]).length > 0)
         {
         searchRange = NSMakeRange(NSMaxRange(d1Pos), [self length] - NSMaxRange(d1Pos));
-        d2Pos = [self rangeOfString:@">" options:0 range:searchRange];
+        d2Pos = [self rangeOfString: @">" options:0 range:searchRange];
         if(d2Pos.length == 0)
-            [NSException raise:NSGenericException format:@"Invalid e-mail address string: \"%@\"", self];
+            [NSException raise:NSGenericException format: @"Invalid e-mail address string: \"%@\"", self];
         addrRange = NSMakeRange(NSMaxRange(d1Pos), d2Pos.location - NSMaxRange(d1Pos));
         addr = [[self substringWithRange:addrRange] stringByRemovingSurroundingWhitespace];
         }
-    else if((atPos = [self rangeOfString:@"@"]).length > 0)
+    else if((atPos = [self rangeOfString: @"@"]).length > 0)
         {
         searchRange = NSMakeRange(0, atPos.location);
         d1Pos = [self rangeOfCharacterFromSet:nonAddressChars options:NSBackwardsSearch range:searchRange];
@@ -191,25 +191,25 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 }
 
 /*
-- (NSArray *)addressListFromEMailString
+- (NSArray*) addressListFromEMailString
 {
     NSCharacterSet	*stopSet;
     NSString		*chunk;
     NSScanner		*scanner;
     NSMutableString	*result;
 
-    stopSet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
+    stopSet = [NSCharacterSet characterSetWithCharactersInString: @"\""];
     result = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
     scanner = [NSScanner scannerWithString:self];
     while([scanner isAtEnd] == NO)
         {
         if([scanner scanUpToCharactersFromSet:stopSet intoString:&chunk] == YES)
             [result appendString:chunk];
-        if([scanner scanString:@"\"" intoString:NULL] == YES)
+        if([scanner scanString: @"\"" intoString: NULL] == YES)
             if([scanner scanUpToCharactersFromSet:stopSet intoString:&chunk] == YES)
-                [scanner scanString:@"\"" intoString:NULL];
+                [scanner scanString: @"\"" intoString: NULL];
         }
-    return [[[result componentsSeparatedByString:@","] arrayByMappingWithSelector:@selector(stringByRemovingSurroundingWhitespace)] arrayByMappingWithSelector:@selector(addressFromEMailString)];
+    return [[[result componentsSeparatedByString: @","] arrayByMappingWithSelector:@selector(stringByRemovingSurroundingWhitespace)] arrayByMappingWithSelector:@selector(addressFromEMailString)];
 }
 */
 
@@ -326,7 +326,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
             {
             range = NSMakeRange(start, [scanner scanLocation] - 1 - start);
             [result appendString:[self substringWithRange:range]];
-            [result appendString:@"\r\n"];
+            [result appendString: @"\r\n"];
             start = [scanner scanLocation];
             }
         lc = c;
@@ -367,7 +367,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
     return result ? result : self;
 }
 
-- (NSString *)stringWithUnixLinebreaks
+- (NSString*) stringWithUnixLinebreaks
 /*" Returns an autoreleased copy of the receiver with CRLF chars replaced by single LF. "*/
 {
     unsigned length = [self length];
@@ -391,11 +391,11 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
             {
                 [result deleteCharactersInRange:NSMakeRange([result length] - 1, 1)];
             }
-            [result appendString:@"\n"];
+            [result appendString: @"\n"];
         } 
         else 
         {
-            [result appendFormat:@"%C",chr];
+            [result appendFormat: @"%C",chr];
         }
         lastChr = chr;
     }
@@ -426,7 +426,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
             
             range = NSMakeRange(start, [scanner scanLocation] - 2 - start);
             [result appendString:[self substringWithRange:range]];
-            [result appendString:@"\n"];
+            [result appendString: @"\n"];
             start = [scanner scanLocation];
             
             [innerPool release];
@@ -453,15 +453,15 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 {
     NSCharacterSet	*forceBreakSet, *separatorSet;
     NSMutableString	*buffer;
-    NSEnumerator	*lineEnum;
-    NSString		*lineBreakSeq, *currentLine, *nextLine;
+    NSEnumerator* lineEnum;
+    NSString* lineBreakSeq, *currentLine, *nextLine;
 
     lineBreakSeq = @"\r\n";
     if([self rangeOfString:lineBreakSeq].length == 0)
         lineBreakSeq = @"\n";
     
-    separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -\t"];
-    forceBreakSet = [NSCharacterSet characterSetWithCharactersInString:@" \t.?!:-∑1234567890>}#%|"];
+    separatorSet = [NSCharacterSet characterSetWithCharactersInString: @" -\t"];
+    forceBreakSet = [NSCharacterSet characterSetWithCharactersInString: @" \t.?!:-∑1234567890>}#%|"];
     buffer = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
     lineEnum = [[self componentsSeparatedByString:lineBreakSeq] objectEnumerator];
     currentLine = [lineEnum nextObject];
@@ -469,14 +469,14 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
         {
         [buffer appendString:currentLine];
 		// if any of these conditions is met we don't unwrap
-        if(([currentLine isEqualToString:@""]) || ([nextLine isEqualToString:@""]) || ([currentLine length] < 55) || ([forceBreakSet characterIsMember:[nextLine characterAtIndex:0]]))
+        if(([currentLine isEqualToString: @""]) || ([nextLine isEqualToString:@""]) || ([currentLine length] < 55) || ([forceBreakSet characterIsMember:[nextLine characterAtIndex:0]]))
             {
             [buffer appendString:lineBreakSeq];
             }
 		// if the line didn't end with a whitespace or hyphen we insert a space
         else if([separatorSet characterIsMember:[currentLine characterAtIndex:[currentLine length] - 1]] == NO)
             {
-            [buffer appendString:@" "];
+            [buffer appendString: @" "];
             }
         currentLine = nextLine;
         }
@@ -486,12 +486,12 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 }
 
 
-- (NSString *)stringByWrappingToLineLength:(unsigned int)length
+- (NSString*) stringByWrappingToLineLength:(unsigned int)length
 {
     NSCharacterSet	*breakSet, *textSet;
     NSMutableString	*buffer;
-    NSEnumerator	*lineEnum;
-    NSString		*lineBreakSeq, *originalLine, *prefix, *spillOver, *lastPrefix;
+    NSEnumerator* lineEnum;
+    NSString* lineBreakSeq, *originalLine, *prefix, *spillOver, *lastPrefix;
 	NSMutableString	*mcopy;
     NSRange			textStart, endOfLine;
     unsigned int	lineStart, nextLineStart, prefixLength;
@@ -500,8 +500,8 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
     if([self rangeOfString:lineBreakSeq].length == 0)
         lineBreakSeq = @"\n";
 
-    breakSet = [NSCharacterSet characterSetWithCharactersInString:@" \t-"];
-    textSet = [[NSCharacterSet characterSetWithCharactersInString:@" \t>}#%|"] invertedSet];
+    breakSet = [NSCharacterSet characterSetWithCharactersInString: @" \t-"];
+    textSet = [[NSCharacterSet characterSetWithCharactersInString: @" \t>}#%|"] invertedSet];
     buffer = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
 	spillOver = nil; lastPrefix = nil; // keep compiler happy...
     lineEnum = [[self componentsSeparatedByString:lineBreakSeq] objectEnumerator];
@@ -524,7 +524,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 			else
 				{
 				originalLine = mcopy = [[originalLine mutableCopy] autorelease];
-				[mcopy insertString:@" " atIndex:lineStart];
+				[mcopy insertString: @" " atIndex:lineStart];
 				[mcopy insertString:spillOver atIndex:lineStart];
 				}
             }
@@ -579,8 +579,8 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 - (NSString*) stringByPrefixingLinesWithString: (NSString*) prefix
 {
     NSMutableString *buffer;
-    NSEnumerator   	*lineEnum;
-    NSString		*lineBreakSeq, *line;
+    NSEnumerator* lineEnum;
+    NSString* lineBreakSeq, *line;
 
     lineBreakSeq = @"\r\n";
     if([self rangeOfString:lineBreakSeq].length == 0)
@@ -601,7 +601,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 
 /*" Returns a folded version of the receiver according to RFC 2822 to the hard limit length. "*/
 
-- (NSString *)stringByFoldingToLimit:(unsigned int)limit
+- (NSString*) stringByFoldingToLimit:(unsigned int)limit
 {
     NSMutableString *result;
     NSCharacterSet *whitespaces;
@@ -629,7 +629,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
             }
             
             [result appendString:[self substringWithRange:NSMakeRange(lineStart, lineEnd.location - lineStart)]];
-            [result appendString:@"\r\n "];
+            [result appendString: @"\r\n "];
             
             lineStart = NSMaxRange(lineEnd);
         }
@@ -663,7 +663,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
         {
         NSRange range;
 
-        range = [self rangeOfString:CRLFSequence options:NULL range:NSMakeRange(position, [self length] - position)];
+        range = [self rangeOfString:CRLFSequence options: NULL range:NSMakeRange(position, [self length] - position)];
 
         if (range.location == NSNotFound)
             {
@@ -728,8 +728,8 @@ static BOOL _fileExists(NSString *filePath)
     
     NSMutableAttributedString *result;
     NSAutoreleasePool *pool;
-    NSString *lineBreakSeq, *line;
-    NSArray *lines;
+    NSString* lineBreakSeq, *line;
+    NSArray* lines;
     NSMutableArray *ranges;
     NSEnumerator *enumerator;
     EDObjectPair *rangeObject;
@@ -742,7 +742,7 @@ static BOOL _fileExists(NSString *filePath)
 //        lineBreakSeq = @"\n";
     
     if (! quoteCharSet) // singleton
-        quoteCharSet = [[NSCharacterSet characterSetWithCharactersInString:@">"] retain];
+        quoteCharSet = [[NSCharacterSet characterSetWithCharactersInString: @">"] retain];
     
     ranges = [NSMutableArray array];
     
@@ -857,13 +857,13 @@ static BOOL _fileExists(NSString *filePath)
     result = [NSMutableString string];
     
     // 1st
-    [result appendFormat:@"%d", aNumber / 01000];
+    [result appendFormat: @"%d", aNumber / 01000];
     aNumber %= 01000;
-    [result appendFormat:@"%d", aNumber / 0100];
+    [result appendFormat: @"%d", aNumber / 0100];
     aNumber %= 0100;
-    [result appendFormat:@"%d", aNumber / 010];
+    [result appendFormat: @"%d", aNumber / 010];
     aNumber %= 010;
-    [result appendFormat:@"%d", aNumber / 01];
+    [result appendFormat: @"%d", aNumber / 01];
 
     return result;
 }
@@ -1213,7 +1213,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 @"mon", @"tue", @"wed", @"thu", @"fri", @"sat", @"sun", nil];
     }
     
-    dateStringComponents = [[[self componentsSeparatedByString:@" "] mutableCopy] autorelease];
+    dateStringComponents = [[[self componentsSeparatedByString: @" "] mutableCopy] autorelease];
 
     {
         // remove empty strings
@@ -1224,7 +1224,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             NSString *component;
             
             component = [dateStringComponents objectAtIndex:i];
-            if ([component isEqualToString:@""])
+            if ([component isEqualToString: @""])
             {
                 [dateStringComponents removeObjectAtIndex:i];
             }
@@ -1240,8 +1240,8 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         NSString *daynameCandidate;
         
         daynameCandidate = [dateStringComponents objectAtIndex:0];
-        if ([daynameCandidate hasSuffix:@","]
-            || [daynameCandidate hasSuffix:@"."]
+        if ([daynameCandidate hasSuffix: @","]
+            || [daynameCandidate hasSuffix: @"."]
             || [daynames containsObject:[daynameCandidate lowercaseString]])
         {
             // There's a dayname here. Skip it
@@ -1254,7 +1254,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     {
         NSArray *rfc850DateComponents;
         
-        rfc850DateComponents = [[dateStringComponents objectAtIndex:0] componentsSeparatedByString:@"-"];
+        rfc850DateComponents = [[dateStringComponents objectAtIndex:0] componentsSeparatedByString: @"-"];
         
         if ([rfc850DateComponents count] == 3) // it's most likely a RFC 820 date
         {
@@ -1271,7 +1271,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         NSRange rangeOfPlus;
         
         suspect = [dateStringComponents objectAtIndex:3];
-        rangeOfPlus = [suspect rangeOfString:@"+" options:0 range:NSMakeRange(0, [suspect length])];
+        rangeOfPlus = [suspect rangeOfString: @"+" options:0 range:NSMakeRange(0, [suspect length])];
         if (rangeOfPlus.location != NSNotFound)
         {
             NSString *time;
@@ -1285,7 +1285,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         }
         else
         {
-            [dateStringComponents addObject:@""];
+            [dateStringComponents addObject: @""];
         }
     }
             
@@ -1333,7 +1333,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     }
     
     // handle day
-    if ([dd hasSuffix:@","])
+    if ([dd hasSuffix: @","])
     {
         dd = [dd substringToIndex:[dd length] - 1]; // chop last character
     }
@@ -1350,7 +1350,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     {
         NSRange range;
         
-        range = [yy rangeOfString:@":" options:0 range:NSMakeRange(0, [yy length])];
+        range = [yy rangeOfString: @":" options:0 range:NSMakeRange(0, [yy length])];
         if (range.location != NSNotFound) // swap year and time
         {
             NSString *help;
@@ -1360,7 +1360,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             tm = help;
         }
         
-        if ([yy hasSuffix:@","])
+        if ([yy hasSuffix: @","])
         {
             yy = [yy substringToIndex:[yy length] -1]; // chop last character
         }
@@ -1394,12 +1394,12 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     {
         NSArray *timeComponents;
         
-        if ([tm hasSuffix:@","])
+        if ([tm hasSuffix: @","])
         {
             tm = [tm substringToIndex:[tm length] - 1]; // chop last char
         }
     
-        timeComponents = [tm componentsSeparatedByString:@":"];
+        timeComponents = [tm componentsSeparatedByString: @":"];
         
         if ([timeComponents count] == 2)
         {
@@ -1479,7 +1479,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         [innerPool release];
     }
 
-    result = [components componentsJoinedByString:@" "];
+    result = [components componentsJoinedByString: @" "];
 
     [components release];
     [scanner release];
@@ -1488,7 +1488,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 }
 
 #ifdef _0
-- (NSString *)stringByFoldingStringToLimit:(int)limit
+- (NSString*) stringByFoldingStringToLimit:(int)limit
 /*" Returns a folded version of the receiver according to RFC 2822 to the hard limit  length. "*/
 {
     // short cut a very common case
@@ -1518,7 +1518,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 }
 
                 [result appendString:[self substringWithRange:NSMakeRange(lineStart, lineEnd.location - lineStart)]];
-                [result appendString:@"\r\n "];
+                [result appendString: @"\r\n "];
                 
                 lineStart = NSMaxRange(lineEnd);
             }
@@ -1570,7 +1570,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 }
 
 
-- (NSArray *)fieldListFromEMailString 
+- (NSArray*) fieldListFromEMailString 
 {
     NSCharacterSet *stopSet, *quoteSet, *nonWhitespaceSet;
     NSString *chunk;
@@ -1580,8 +1580,8 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     
     result = [NSMutableArray array];
     nonWhitespaceSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] invertedSet];
-    stopSet = [NSCharacterSet characterSetWithCharactersInString:@"\","];
-    quoteSet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
+    stopSet = [NSCharacterSet characterSetWithCharactersInString: @"\","];
+    quoteSet = [NSCharacterSet characterSetWithCharactersInString: @"\""];
     part = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
     scanner = [NSScanner scannerWithString:self];
     
@@ -1591,19 +1591,19 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         {
             [part appendString:chunk];
         }
-        if([scanner scanString:@"\"" intoString:NULL] == YES)
+        if([scanner scanString: @"\"" intoString: NULL] == YES)
         {
             if([scanner scanUpToCharactersFromSet:quoteSet intoString:&chunk] == YES)
             {
-                [part appendString:@"\""];
+                [part appendString: @"\""];
                 [part appendString:chunk];
-                [part appendString:@"\" "];
-                [scanner scanString:@"\"" intoString:NULL];
+                [part appendString: @"\" "];
+                [scanner scanString: @"\"" intoString: NULL];
             }
         }
         else
         {
-            [scanner scanString:@"," intoString:NULL];
+            [scanner scanString: @"," intoString: NULL];
             [result addObject:[part stringByRemovingSurroundingWhitespace]];
             part = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
         }
@@ -1612,7 +1612,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return result;
 }
 
-- (NSArray *)addressListFromEMailString 
+- (NSArray*) addressListFromEMailString 
 {
     NSEnumerator *enumerator;
     NSString *field;
@@ -1644,8 +1644,8 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 {
     NSCharacterSet	*breakSet, *textSet;
     NSMutableString	*buffer;
-    NSEnumerator	*lineEnum;
-    NSString		*lineBreakSeq, *originalLine, *prefix, *spillOver, *lastPrefix;
+    NSEnumerator* lineEnum;
+    NSString* lineBreakSeq, *originalLine, *prefix, *spillOver, *lastPrefix;
     NSMutableString	*mcopy;
     NSRange			textStart, endOfLine;
     unsigned int	lineStart, nextLineStart, prefixLength;
@@ -1654,8 +1654,8 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     if([self rangeOfString:lineBreakSeq].length == 0)
         lineBreakSeq = @"\n";
 
-    breakSet = [NSCharacterSet characterSetWithCharactersInString:@" "];
-    textSet = [[NSCharacterSet characterSetWithCharactersInString:@""] invertedSet];
+    breakSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
+    textSet = [[NSCharacterSet characterSetWithCharactersInString: @""] invertedSet];
     buffer = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
     spillOver = nil; lastPrefix = nil; // keep compiler happy...
     lineEnum = [[self componentsSeparatedByString:lineBreakSeq] objectEnumerator];
@@ -1677,7 +1677,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 else
                 {
                     originalLine = mcopy = [[originalLine mutableCopy] autorelease];
-                    [mcopy insertString:@" " atIndex:lineStart];
+                    [mcopy insertString: @" " atIndex:lineStart];
                     [mcopy insertString:spillOver atIndex:lineStart];
                 }
 
@@ -1737,9 +1737,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     if ([self hasSuffix:lineBreakSeq])
     {
         return buffer;
-    }
-    else
-    {
+    } else {
         return [buffer substringToIndex:[buffer length] - [lineBreakSeq length]];
     }
 }
@@ -1777,7 +1775,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         //
         // 2.  Trim spaces before user-inserted hard line breaks.
         //
-        while ([paragraph hasSuffix:@" "])
+        while ([paragraph hasSuffix: @" "])
             paragraph = [paragraph substringToIndex:[paragraph length] - 1]; // chop the last character
 
         if ([paragraph length] > 79)
@@ -1799,7 +1797,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 
             for (i = 0; i < count; i++)
             {
-                NSString *line;
+                NSString* line;
 
                 line = [paragraphLines objectAtIndex:i];
 
@@ -1817,7 +1815,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 }
                 else
                 {
-                    while ([line hasSuffix:@" "])
+                    while ([line hasSuffix: @" "])
                     {
                         line = [line substringToIndex:[line length] - 1]; // chop the last character (space)
                     }
@@ -1845,7 +1843,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 }
 */
 
-- (NSString *)stringByEncodingFlowedFormat
+- (NSString*) stringByEncodingFlowedFormat
 {
     NSMutableString *flowedText;
     NSArray *paragraphs;
@@ -1878,7 +1876,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         /*
          2.  Trim spaces before user-inserted hard line breaks.
          */
-        while ([paragraph hasSuffix:@" "])
+        while ([paragraph hasSuffix: @" "])
             paragraph = [paragraph substringToIndex:[paragraph length] - 1]; // chop the last character
         
         if ([paragraph length] > 79)
@@ -1903,7 +1901,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             
             for (i = 0; i < count; i++)
             {	
-                NSString *line;
+                NSString* line;
                 
                 line = [paragraphLines objectAtIndex:i];
                 
@@ -1914,14 +1912,14 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 
                 if (i < (count-1) ) // ensure soft-break
                 {
-                    if (! [line hasSuffix:@" "])
+                    if (! [line hasSuffix: @" "])
                     {
-                        line = [line stringByAppendingString:@" "];
+                        line = [line stringByAppendingString: @" "];
                     }
                 }
                 else
                 {
-                    while ([line hasSuffix:@" "])
+                    while ([line hasSuffix: @" "])
                     {
                         line = [line substringToIndex:[line length] - 1]; // chop the last character (space)
                     }
@@ -1945,22 +1943,23 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     }
     
     // chop lineBreakSeq at the end
-    return [flowedText substringToIndex:[flowedText length] - [lineBreakSeq length]];
+    return [flowedText substringToIndex: [flowedText length] - [lineBreakSeq length]];
 }
 
-- (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp
+- (NSString*) stringByDecodingFlowedUsingDelSp: (BOOL) useDelSp
 /*" See RFC3676. "*/
 {
-    NSMutableString *flowedText, *paragraph;
-    NSArray *lines;
-    NSString *line, *lineBreakSeq;
-    NSEnumerator *lineEnumerator;
+    NSMutableString* flowedText;
+	NSMutableString* paragraph;
+    NSArray* lines;
+    NSString* line;
+	NSString* lineBreakSeq;
+    NSEnumerator* lineEnumerator;
     int paragraphQuoteDepth = 0;
     BOOL isFlowed;
     
     lineBreakSeq = @"\r\n";
-    if([self rangeOfString:lineBreakSeq].location == NSNotFound)
-    {
+    if([self rangeOfString:lineBreakSeq].location == NSNotFound) {
         lineBreakSeq = @"\n";
     }
     
@@ -1968,12 +1967,9 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     
     paragraph = [NSMutableString string];
     
-    if ([self hasSuffix:lineBreakSeq])
-    {
+    if ([self hasSuffix:lineBreakSeq]) {
         lines = [[self substringToIndex:[self length] - [lineBreakSeq length]] componentsSeparatedByString:lineBreakSeq];
-    }
-    else
-    {
+    } else {
         lines = [self componentsSeparatedByString:lineBreakSeq];
     }
     
@@ -1997,7 +1993,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         
         pool = [[NSAutoreleasePool alloc] init];
         
-        while ([line hasPrefix:@">"])
+        while ([line hasPrefix: @">"])
         {
             line = [line substringFromIndex:1]; // chop of the first character
             quoteDepth += 1;
@@ -2015,7 +2011,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                                                     for flowed).   
          */
         
-        if ([line hasPrefix:@" "])
+        if ([line hasPrefix: @" "])
         {
             line = [line substringFromIndex:1]; // chop of the first character
         }
@@ -2027,9 +2023,9 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
          flowed nor fixed.
          */
         
-        isFlowed = [line hasSuffix:@" "] 
+        isFlowed = [line hasSuffix: @" "] 
             && (paragraphQuoteDepth == quoteDepth) 
-            && ([line caseInsensitiveCompare:@"-- "] != NSOrderedSame);
+            && ([line caseInsensitiveCompare: @"-- "] != NSOrderedSame);
         
         /*
          If the line is flowed and DelSp is "yes", the trailing space
@@ -2063,10 +2059,10 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 
                 for (i=0; i<paragraphQuoteDepth; i++)
                 {
-                    [flowedText appendString:@">"];
+                    [flowedText appendString: @">"];
                 }
                 
-                [flowedText appendString:@" "];
+                [flowedText appendString: @" "];
             }
             
             [flowedText appendString:paragraph];
@@ -2074,7 +2070,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             
             // reset values for next paragraph
             paragraphQuoteDepth = 0;
-            [paragraph setString:@""];
+            [paragraph setString: @""];
         }
         
         [pool release];
@@ -2089,10 +2085,10 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             
             for (i=0; i<paragraphQuoteDepth; i++)
             {
-                [flowedText appendString:@">"];
+                [flowedText appendString: @">"];
             }
             
-            [flowedText appendString:@" "];
+            [flowedText appendString: @" "];
         }
         
         [flowedText appendString:paragraph];
@@ -2101,17 +2097,17 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return [[flowedText autorelease] substringToIndex:[flowedText length] - [lineBreakSeq length]];
 }
 
-- (NSString *)stringBySpaceStuffing
+- (NSString*) stringBySpaceStuffing
 {
-    if (([self hasPrefix:@" "]) || ([self hasPrefix:@"From "]))
+    if (([self hasPrefix: @" "]) || ([self hasPrefix:@"From "]))
     {
-        return [NSString stringWithFormat:@" %@", self];
+        return [NSString stringWithFormat: @" %@", self];
     }
     
     return self;
 }
 
-+ (NSString *)temporaryFilenameWithExtension:(NSString *)ext 
++ (NSString *)temporaryFilenameWithExtension: (NSString*) ext 
 {
     NSString* result = nil;
     do {
@@ -2151,15 +2147,15 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 
 - (NSString*) stringByRemovingLinebreaks
 {
-    NSString *lineBreakSeq = @"\r\n";
+    NSString* lineBreakSeq = @"\r\n";
     if([self rangeOfString:lineBreakSeq].length == 0)
         lineBreakSeq = @"\n";
     
-    return [[self componentsSeparatedByString:lineBreakSeq] componentsJoinedByString:@""];
+    return [[self componentsSeparatedByString:lineBreakSeq] componentsJoinedByString: @""];
 }
 
 
-- (NSString *)stringByRemovingAttachmentChars
+- (NSString*) stringByRemovingAttachmentChars
 {
     static NSCharacterSet *attachmentCharSet = nil;
     unichar attachmentChar = NSAttachmentCharacter;
@@ -2197,7 +2193,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 
 @implementation NSString (OPPunycode)
 
-- (NSString *)punycodeDecodedString
+- (NSString*) punycodeDecodedString
 /*" Assumes that the receiver contains a punycode encoded string (RFC 3492). Returns the content string in decoded form. Raises an exception if an error occurs. See punycode.h for error codes. 
 
     Note: For IDNs please use the -IDNA... methods."*/
@@ -2223,7 +2219,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         case punycode_bad_input:
         case punycode_big_output:
         case punycode_overflow:
-            [NSException raise:NSGenericException format:@"Punycode decode error %d.", status];
+            [NSException raise:NSGenericException format: @"Punycode decode error %d.", status];
             break;
         case punycode_success:
         default:
@@ -2235,7 +2231,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return result;
 }
 
-- (NSString *)punycodeEncodedString
+- (NSString*) punycodeEncodedString
 /*" Returns the receiver's content string in punycode encoded form (RFC 3492). Raises an exception if an error occurs. See punycode.h for error codes. 
 
     Note: For IDNs please use the -IDNA... methods."*/
@@ -2260,7 +2256,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         case punycode_bad_input:
         case punycode_big_output:
         case punycode_overflow:
-            [NSException raise:NSGenericException format:@"Punycode encode error %d.", status];
+            [NSException raise:NSGenericException format: @"Punycode encode error %d.", status];
             break;
         case punycode_success:
         default:
@@ -2270,14 +2266,14 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return [[[NSString alloc] initWithCString:output length:output_length] autorelease];
 }
 
-- (NSString *)IDNADecodedDomainName
+- (NSString*) IDNADecodedDomainName
 /*" Returns the receiver's content string in IDNA decoded form (RFC 3490). Shouldn't do any harm on domain names that are not IDNA encoded. If the receivers contents don't need decoding the receiver is returned. Raises an exception if an error occurs. See punycode.h for error codes."*/
 {
     NSMutableArray *components;
     int i;
     BOOL decodingNeeded = NO;
     
-    components = [[[self componentsSeparatedByString:@"."] mutableCopy] autorelease];
+    components = [[[self componentsSeparatedByString: @"."] mutableCopy] autorelease];
     
     for (i = [components count] - 1; i >= 0; i--)
     {
@@ -2285,24 +2281,24 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         
         component = [components objectAtIndex:i];
         
-        if (([component length] > 4) && ([[component substringToIndex:4] caseInsensitiveCompare:@"xn--"] == NSOrderedSame))
+        if (([component length] > 4) && ([[component substringToIndex:4] caseInsensitiveCompare: @"xn--"] == NSOrderedSame))
         {
             [components replaceObjectAtIndex:i withObject:[[component substringFromIndex:4] punycodeDecodedString]];
             decodingNeeded = YES;
         }
     }
     
-    return decodingNeeded ? [components componentsJoinedByString:@"."] : self;
+    return decodingNeeded ? [components componentsJoinedByString: @"."] : self;
 }
 
-- (NSString *)IDNAEncodedDomainName
+- (NSString*) IDNAEncodedDomainName
 /*" Returns the receiver's content string in IDNA encoded form (RFC 3490). Shouldn't do any harm on domain names that do not need IDNA encoding. If the receivers contents don't need encoding the receiver is returned. Raises an exception if an error occurs. See punycode.h for error codes."*/
 {
     NSMutableArray *components;
     int i;
     BOOL decodingNeeded = NO;
     
-    components = [[[self componentsSeparatedByString:@"."] mutableCopy] autorelease];
+    components = [[[self componentsSeparatedByString: @"."] mutableCopy] autorelease];
     
     for (i = [components count] - 1; i >= 0; i--)
     {
@@ -2317,7 +2313,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         }
     }
     
-    return decodingNeeded ? [components componentsJoinedByString:@"."] : self;
+    return decodingNeeded ? [components componentsJoinedByString: @"."] : self;
 }
 
 @end

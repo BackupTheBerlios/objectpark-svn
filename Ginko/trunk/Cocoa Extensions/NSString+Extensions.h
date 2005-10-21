@@ -3,6 +3,7 @@
 //  @(#)$Id: NSString+Extensions.h,v 1.3 2004/12/23 16:12:01 mikesch Exp $
 //
 //  Copyright (c) 1997-2000 by Erik Doernenburg. All rights reserved.
+//  Copyright (c) 2004 by Axel Katerbau & Dirk Theisen. All rights reserved.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission
@@ -29,16 +30,16 @@
 @interface NSString (OPExtensions)
 
 /*" Convenience factory methods "*/
-+ (NSString*) stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
++ (NSString*) stringWithData: (NSData*) data encoding:(NSStringEncoding)encoding;
 
 /*" Handling whitespace "*/
 - (NSString*) stringByRemovingSurroundingWhitespace;
 - (BOOL)isWhitespace;
 - (NSString*) stringByRemovingWhitespace;
-- (NSString*) stringByRemovingCharactersFromSet:(NSCharacterSet *)set;
+- (NSString*) stringByRemovingCharactersFromSet: (NSCharacterSet*) set;
 
 /*" Comparisons "*/
-- (BOOL) hasPrefixCaseInsensitive:(NSString *)string;
+- (BOOL) hasPrefixCaseInsensitive: (NSString*) string;
 - (BOOL) isEmpty;
 
 /*" Conversions "*/
@@ -54,16 +55,16 @@
                  MIMEEncoding: (NSString*) charsetName;
 
 - (id)initWithData:(NSData*) buffer MIMEEncoding: (NSString*) charsetName;
-- (NSData *)dataUsingMIMEEncoding:(NSString *)charsetName;
+- (NSData*) dataUsingMIMEEncoding: (NSString*) charsetName;
 
 + (NSStringEncoding)stringEncodingForMIMEEncoding: (NSString*) charsetName;
 + (NSString*) MIMEEncodingForStringEncoding:(NSStringEncoding)encoding;
 - (NSString*) recommendedMIMEEncoding;
 
 /*" Filename extensions for MIME types "*/
-+ (NSString*) pathExtensionForContentType:(NSString *)contentType;
-+ (NSString*) contentTypeForPathExtension:(NSString *)extension;
-+ (void)addContentTypePathExtensionPair:(EDObjectPair *)tePair;
++ (NSString*) pathExtensionForContentType: (NSString*) contentType;
++ (NSString*) contentTypeForPathExtension: (NSString*) extension;
++ (void) addContentTypePathExtensionPair: (EDObjectPair*) tePair;
 
 /*" Determining encoding of XML documents "*/
 + (NSString*) MIMEEncodingOfXMLDocument: (NSData*) xmlData;
@@ -78,18 +79,18 @@
 
 #ifndef EDCOMMON_WOBUILD
 /*" Abbreviating paths "*/
-- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forFont:(NSFont *)font;
-- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forAttributes:(NSDictionary *)attributes;
+- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forFont: (NSFont*) font;
+- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forAttributes: (NSDictionary*) attributes;
 #endif
 
 /*" Sharing instances "*/
 - (NSString*) sharedInstance;
 
 /*" Printing/formatting "*/
-+ (void)printf:(NSString *)format, ...;
-+ (void)fprintf:(NSFileHandle *)fileHandle:(NSString *)format, ...;
-- (void)printf;
-- (void)fprintf:(NSFileHandle *)fileHandle;
++ (void) printf: (NSString*) format, ...;
++ (void) fprintf: (NSFileHandle*) fileHandle: (NSString*) format, ...;
+- (void) printf;
+- (void) fprintf: (NSFileHandle*) fileHandle;
 
 @end
 

@@ -47,65 +47,65 @@ enum LeaveOnServerDuration
 - (id)init;
 
 /*" Class methods "*/
-+ (NSArray *)accounts;
-//+ (void)setAccounts:(NSArray *)someAccounts;
++ (NSArray*) accounts;
+//+ (void) setAccounts:(NSArray*) someAccounts;
 + (int)defaultPortForIncomingServerType:(int)serverType;
 + (int)defaultPortForOutgoingServerType:(int)serverType;
 
 /*" Accessors "*/
-- (NSString *)name;
-- (void)setName:(NSString *)aString;
+- (NSString*) name;
+- (void) setName: (NSString*) aString;
 
 - (BOOL)isEnabled;
-- (void)setIsEnabled:(BOOL)aBool;
+- (void) setIsEnabled:(BOOL)aBool;
 
 - (int)incomingServerType;
-- (void)setIncomingServerType:(int)aType;
+- (void) setIncomingServerType:(int)aType;
 
-- (NSString *)incomingServerName;
-- (void)setIncomingServerName:(NSString *)aName;
+- (NSString*) incomingServerName;
+- (void) setIncomingServerName: (NSString*) aName;
 
 - (int)incomingServerPort;
-- (void)setIncomingServerPort:(int)aPort;
+- (void) setIncomingServerPort:(int)aPort;
 
 - (int)incomingServerDefaultPort;
 
 - (int)incomingAuthenticationMethod;
-- (void)setIncomingAuthenticationMethod:(int)aMethod;
+- (void) setIncomingAuthenticationMethod:(int)aMethod;
 
-- (NSString *)incomingUsername;
-- (void)setIncomingUsername:(NSString *)aName;
+- (NSString*) incomingUsername;
+- (void) setIncomingUsername: (NSString*) aName;
 
-- (NSString *)incomingPassword;
-- (void)setIncomingPassword:(NSString *)aPassword;
+- (NSString*) incomingPassword;
+- (void) setIncomingPassword: (NSString*) aPassword;
 
 - (int)retrieveMessageInterval;
-- (void)setRetrieveMessageInterval:(int)minutes;
+- (void) setRetrieveMessageInterval:(int)minutes;
 
 - (int)leaveOnServerDuration;
-- (void)setLeaveOnServerDuration:(int)days;
+- (void) setLeaveOnServerDuration:(int)days;
 
 - (int)outgoingServerType;
-- (void)setOutgoingServerType:(int)aType;
+- (void) setOutgoingServerType:(int)aType;
 
 - (BOOL)isPOPAccount;
 
-- (NSString *)outgoingServerName;
-- (void)setOutgoingServerName:(NSString *)aName;
+- (NSString*) outgoingServerName;
+- (void) setOutgoingServerName: (NSString*) aName;
 
 - (int)outgoingServerPort;
-- (void)setOutgoingServerPort:(int)aPort;
+- (void) setOutgoingServerPort:(int)aPort;
 
 - (int)outgoingServerDefaultPort;
 
 - (int)outgoingAuthenticationMethod;
-- (void)setOutgoingAuthenticationMethod:(int)aMethod;
+- (void) setOutgoingAuthenticationMethod:(int)aMethod;
 
-- (NSString *)outgoingUsername;
-- (void)setOutgoingUsername:(NSString *)aName;
+- (NSString*) outgoingUsername;
+- (void) setOutgoingUsername: (NSString*) aName;
 
-- (NSString *)outgoingPassword;
-- (void)setOutgoingPassword:(NSString *)aPassword;
+- (NSString*) outgoingPassword;
+- (void) setOutgoingPassword: (NSString*) aPassword;
 
 - (BOOL)outgoingUsernameNeeded;
 

@@ -321,6 +321,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		OPPersistentObject* changedObject;
 		while (changedObject = [coe nextObject]) {
 			
+			[changedObject willSave];
+			
 			OID newOid = [db updateRowOfClass: [changedObject class] 
 										rowId: [changedObject currentOid] 
 									   values: [changedObject attributeValues]];

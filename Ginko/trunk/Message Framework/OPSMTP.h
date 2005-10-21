@@ -43,31 +43,31 @@ typedef enum _OPSMTPState
     int state;
 }
 
-+ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream;
-+ (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject;
++ (id)SMTPWithUsername: (NSString*) aUsername password: (NSString*) aPassword stream: (OPStream*) aStream;
++ (id)SMTPWithStream: (OPStream*) aStream andDelegate:(id)anObject;
 
-- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream;
-- (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject;
+- (id)initWithUsername: (NSString*) aUsername password: (NSString*) aPassword stream: (OPStream*) aStream;
+- (id)initWithStream: (OPStream*) aStream andDelegate:(id)anObject;
 
 @end
 
 @protocol OPSMTPDelegate
 
-- (NSString *)usernameForSMTP:(OPSMTP *)aSMTP;
+- (NSString*) usernameForSMTP: (OPSMTP*) aSMTP;
 /*" Required. Returns the username for use with the given SMTP aSMTP.
     SMTP sends this method paired with %{-passwordForSMTP:}. "*/
 
-- (NSString *)passwordForSMTP:(OPSMTP *)aSMTP;
+- (NSString*) passwordForSMTP: (OPSMTP*) aSMTP;
 /*" Required. Returns the password for use with the given SMTP aSMTP.
     SMTP sends this method paired with %{-usernameForSMTP:}."*/
 
-- (BOOL)useSMTPS:(OPSMTP *)aSMTP;
+- (BOOL)useSMTPS: (OPSMTP*) aSMTP;
 /*" Optional. Default is NO. "*/
 
-- (BOOL)allowAnyRootCertificateForSMTP:(OPSMTP *)aSMTP;
+- (BOOL)allowAnyRootCertificateForSMTP: (OPSMTP*) aSMTP;
 /*" Optional. Default is NO. "*/
 
-- (BOOL)allowExpiredCertificatesForSMTP:(OPSMTP *)aSMTP;
+- (BOOL)allowExpiredCertificatesForSMTP: (OPSMTP*) aSMTP;
 /*" Optional. Default is NO. "*/
 
 @end

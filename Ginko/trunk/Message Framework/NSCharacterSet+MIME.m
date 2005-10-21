@@ -42,7 +42,7 @@
     static NSCharacterSet *set = nil;
 
     if(set == nil)
-        set = [[NSCharacterSet characterSetWithCharactersInString:@"\r\n"] retain];
+        set = [[NSCharacterSet characterSetWithCharactersInString: @"\r\n"] retain];
 
     return set;
 }
@@ -57,7 +57,7 @@
     static NSCharacterSet *set = nil;
 
     if(set == nil)
-        set = [[NSCharacterSet characterSetWithCharactersInString:@"()<>@.,;:\\\"[]"] retain];
+        set = [[NSCharacterSet characterSetWithCharactersInString: @"()<>@.,;:\\\"[]"] retain];
 
     return set;
 }
@@ -108,7 +108,7 @@
         NSMutableCharacterSet *cs;
 
         cs = [[[self standardASCIICharacterSet] mutableCopy] autorelease];
-        [cs removeCharactersInString:@"[]\n\\"];
+        [cs removeCharactersInString: @"[]\n\\"];
         set = [cs copy];
         }
 
@@ -125,7 +125,7 @@
     static NSCharacterSet *set = nil;
 
     if(set == nil)
-        set = [[NSCharacterSet characterSetWithCharactersInString:@"()<>@,;:\\\"/[]?="] retain];
+        set = [[NSCharacterSet characterSetWithCharactersInString: @"()<>@,;:\\\"/[]?="] retain];
     
     return set;
 }
@@ -169,7 +169,7 @@
         NSMutableCharacterSet *workingSet;
 
         workingSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange(32, 95)] mutableCopy] autorelease];
-        [workingSet removeCharactersInString:@"=?_ "];
+        [workingSet removeCharactersInString: @"=?_ "];
         set = [workingSet copy];
         }
 

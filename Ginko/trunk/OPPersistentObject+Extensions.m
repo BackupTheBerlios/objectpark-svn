@@ -63,7 +63,7 @@ static volatile NSThread* mainThread = nil;
 	/*
     NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
     if (aContext) {
-        [threadDict setObject:aContext forKey: @"OPDefaultManagedObjectContext"];
+        [threadDict setObject: aContext forKey: @"OPDefaultManagedObjectContext"];
     } else {
         [threadDict removeObjectForKey: @"OPDefaultManagedObjectContext"];
     }
@@ -79,7 +79,7 @@ static volatile NSThread* mainThread = nil;
 	/*
 	NSParameterAssert(mainThread!=nil);
     NSDictionary* threadDict = [mainThread threadDictionary];
-    OPPersistentObjectContext* result = [threadDict objectForKey:@"OPDefaultManagedObjectContext"];
+    OPPersistentObjectContext* result = [threadDict objectForKey: @"OPDefaultManagedObjectContext"];
     return result;
 	 */
 }

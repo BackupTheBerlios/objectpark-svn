@@ -28,7 +28,7 @@ static NSComparisonResult compareAttributes(id object1, id object2, void *contex
 {
     // The cast of the first value to an NSString is merely to avoid a compiler warning that compare:
     // is declared in several classes. It does not limit the attribute values to strings.
-    return [(NSString *)[object1 valueForKey:(id)context] compare:[object2 valueForKey:(id)context]];
+    return [(NSString*) [object1 valueForKey:(id)context] compare:[object2 valueForKey:(id)context]];
 }
 
 
@@ -45,7 +45,7 @@ static NSComparisonResult compareAttributes(id object1, id object2, void *contex
 - (id)singleObject
 {
     if([self count] != 1)
-        [NSException raise:NSInternalInconsistencyException format:@"-[%@ %@]: Attempt to retrieve single object from an array that contains %d objects.", NSStringFromClass(isa), NSStringFromSelector(_cmd), [self count]];
+        [NSException raise:NSInternalInconsistencyException format: @"-[%@ %@]: Attempt to retrieve single object from an array that contains %d objects.", NSStringFromClass(isa), NSStringFromSelector(_cmd), [self count]];
     return [self objectAtIndex:0];
 }
 
@@ -68,17 +68,17 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" See description of #{firstObject}. "*/
 
-+ (void)applyFirstObjectPatch
++ (void) applyFirstObjectPatch
 {
     myFirstObjectMethod = EDObjcClassGetInstanceMethod([NSArray class], @selector(firstObject));
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bundleWasLoaded:) name:NSBundleDidLoadNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bundleWasLoaded:) name: NSBundleDidLoadNotification object: nil];
 }
 
-+ (void)_bundleWasLoaded:(NSNotification *)n
++ (void) _bundleWasLoaded: (NSNotification*) n
 {
     EDObjcMethodInfo evilFirstObjectMethod;
 
-    if([[[n object] bundlePath] hasSuffix:@"Library/PrivateFrameworks/HTML.framework"] == NO)
+    if([[[n object] bundlePath] hasSuffix: @"Library/PrivateFrameworks/HTML.framework"] == NO)
         return;
 
     evilFirstObjectMethod = EDObjcClassGetInstanceMethod([NSArray class], @selector(firstObject));
@@ -93,7 +93,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns a new array that is a copy of the receiver with the objects arranged in reverse. "*/
 
-- (NSArray *)reversedArray
+- (NSArray*) reversedArray
 {
     return [[self reverseObjectEnumerator] allObjects];
 }
@@ -101,7 +101,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns a new array that is a copy of the receiver with the objects rearranged randomly. "*/
 
-- (NSArray *)shuffledArray
+- (NSArray*) shuffledArray
 {
     NSMutableArray *copy = [[self mutableCopyWithZone:[self zone]] autorelease];
     [copy shuffle];
@@ -111,7 +111,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns a new array that is a copy of the receiver with the objects sorted objects according to their compare: method "*/
 
-- (NSArray *)sortedArray
+- (NSArray*) sortedArray
 {
     return [self sortedArrayUsingSelector:@selector(compare:)];
 }
@@ -119,7 +119,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns a new array that is a copy of the receiver with the objects sorted according to the values of their attribute %{attributeName}. These are retrieved using key/value coding. "*/
 
-- (NSArray *)sortedArrayByComparingAttribute:(NSString *)attributeName
+- (NSArray*) sortedArrayByComparingAttribute: (NSString*) attributeName
 {
     return [self sortedArrayUsingFunction:compareAttributes context:attributeName];
 }
@@ -127,7 +127,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" If the receiver contains instances of #NSArray the objects from the embedded array are transferred to the receiver and the embedded array is deleted. This method works recursively which means that embedded arrays are also flattened before their contents are transferred. "*/
 
-- (NSArray *)flattenedArray
+- (NSArray*) flattenedArray
 {
     NSMutableArray	*flattenedArray;
     id				object;
@@ -151,7 +151,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Uses each object in the receiver as a key and looks up the corresponding value in %mapping. All these values are added in the same order to the array returned. Note that this method raises an Exception if any of the objects in the receiver are not found as a key in %mapping."*/
 
-- (NSArray *)arrayByMappingWithDictionary:(NSDictionary *)mapping
+- (NSArray*) arrayByMappingWithDictionary: (NSDictionary*) mapping
 {
     NSMutableArray	*mappedArray;
     unsigned int	i, n = [self count];
@@ -166,7 +166,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Invokes the method described by %selector in each object in the receiver. All returned values are added in the same order to the array returned. "*/
 
-- (NSArray *)arrayByMappingWithSelector:(SEL)selector
+- (NSArray*) arrayByMappingWithSelector:(SEL)selector
 {
     NSMutableArray	*mappedArray;
     unsigned int	i, n = [self count];
@@ -181,7 +181,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Invokes the method described by %selector in each object in the receiver, passing %object as an argument. All returned values are added in the same order to the array returned. "*/
 
-- (NSArray *)arrayByMappingWithSelector:(SEL)selector withObject:(id)object
+- (NSArray*) arrayByMappingWithSelector:(SEL)selector withObject:(id)object
 {
     NSMutableArray	*mappedArray;
     unsigned int	i, n = [self count];
@@ -198,7 +198,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns an array containing all objects from the receiver up to (not including) the object at %index. "*/
 
-- (NSArray *)subarrayToIndex:(unsigned int)index
+- (NSArray*) subarrayToIndex:(unsigned int)index
 {
     return [self subarrayWithRange:NSMakeRange(0, index)];
 }
@@ -206,7 +206,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns an array containing all objects from the receiver starting with the object at %index. "*/
 
-- (NSArray *)subarrayFromIndex:(unsigned int)index
+- (NSArray*) subarrayFromIndex:(unsigned int)index
 {
     return [self subarrayWithRange:NSMakeRange(index, [self count] - index)];
 }
@@ -216,7 +216,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns YES if the receiver is contained in %otherArray at %offset. "*/
 
-- (BOOL)isSubarrayOfArray:(NSArray *)other atOffset:(int)offset
+- (BOOL)isSubarrayOfArray:(NSArray*) other atOffset:(int)offset
 {
     int	i, n = [self count];
 
@@ -232,7 +232,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns the first index at which %otherArray is contained in the receiver; or !{NSNotFound} otherwise. "*/
 
-- (unsigned int)indexOfSubarray:(NSArray *)other
+- (unsigned int)indexOfSubarray:(NSArray*) other
 {
     int		i, n = [self count], length, location = 0;
 
@@ -253,14 +253,14 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Creates and returns an array of NSString objects. These refer to all files of the type specified in %type that can be found in the directory %aPath. "*/
 
-+ (NSArray *)arrayWithFilesOfType:(NSString *)type inPath:(NSString *)aPath
++ (NSArray*) arrayWithFilesOfType: (NSString*) type inPath: (NSString*) aPath
 {
     NSString		*firstName;
     NSArray    	   	*allNames = nil;
     unsigned int	count;
 
-    if(![aPath hasSuffix:@"/"])
-        aPath = [aPath stringByAppendingString:@"/"];
+    if(![aPath hasSuffix: @"/"])
+        aPath = [aPath stringByAppendingString: @"/"];
 
     count = [aPath completePathIntoString:&firstName caseSensitive:YES matchesIntoArray:&allNames filterTypes:[NSArray arrayWithObject:type]];
     return allNames;
@@ -269,10 +269,10 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Creates and returns an array of NSString objects. These refer to all files of a type specified in %type that can be found in a directory named %libraryName in any of the standard library locations as returned by #NSSearchPathForDirectoriesInDomains. "*/
 
-+ (NSArray *)arrayWithFilesOfType:(NSString *)type inLibrary:(NSString *)libraryName
++ (NSArray*) arrayWithFilesOfType: (NSString*) type inLibrary: (NSString*) libraryName
 {
     NSMutableArray	*result;
-    NSArray			*libPathList;
+    NSArray* libPathList;
     NSEnumerator	*pathEnum;
     NSString		*path;
 
@@ -290,7 +290,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Returns an array containing all library paths. "*/
 
-+ (NSArray *)librarySearchPaths
++ (NSArray*) librarySearchPaths
 {
     static NSMutableArray *paths = nil;
 
@@ -318,7 +318,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Randomly changes the order of the objects in the receiving array. "*/
 
-- (void)shuffle
+- (void) shuffle
 {
     int i, j, n;
     id	d;
@@ -347,7 +347,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Sorts objects according to the values of their %{attributeName}. These are retrieved using key/value coding. "*/
 
-- (void)sortByComparingAttribute:(NSString *)attributeName
+- (void) sortByComparingAttribute: (NSString*) attributeName
 {
     [self sortUsingFunction:compareAttributes context:attributeName];
 }

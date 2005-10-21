@@ -3,6 +3,7 @@
 //  @(#)$Id: EDTextContentCoder.m,v 1.3 2005/03/25 23:39:34 theisen Exp $
 //
 //  Copyright (c) 1997-2000 by Erik Doernenburg. All rights reserved.
+//  Copyright (c) 2004 by Axel Katerbau & Dirk Theisen. All rights reserved.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission
@@ -31,10 +32,10 @@
 #import "GIMessage+Rendering.h"
 
 @interface EDTextContentCoder(PrivateAPI)
-- (NSString *)_stringFromMessagePart:(EDMessagePart *)mpart;
-- (void)_takeTextFromPlainTextMessagePart:(EDMessagePart *)mpart;
-- (void)_takeTextFromEnrichedTextMessagePart:(EDMessagePart *)mpart;
-- (void)_takeTextFromHTMLMessagePart:(EDMessagePart *)mpart;
+- (NSString*) _stringFromMessagePart: (EDMessagePart*) mpart;
+- (void) _takeTextFromPlainTextMessagePart: (EDMessagePart*) mpart;
+- (void) _takeTextFromEnrichedTextMessagePart: (EDMessagePart*) mpart;
+- (void) _takeTextFromHTMLMessagePart: (EDMessagePart*) mpart;
 @end
 
 
@@ -46,13 +47,13 @@
 //	CAPABILITIES
 //---------------------------------------------------------------------------------------
 
-+ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
++ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
 {
     NSString* type = [mpart contentType];
     
     if (![type hasPrefix: @"text/"]) return NO;
 
-    NSString* charset = [[mpart contentTypeParameters] objectForKey:@"charset"];
+    NSString* charset = [[mpart contentTypeParameters] objectForKey: @"charset"];
     if((charset != nil) && ([NSString stringEncodingForMIMEEncoding:charset] == 0))
         return NO;
 
@@ -72,11 +73,11 @@
     if (self = [super init]) {
         NSString* type = [mpart contentType];
         if([type hasPrefix: @"text/"]) {
-            if([type isEqualToString:@"text/plain"])
+            if([type isEqualToString: @"text/plain"])
                 [self _takeTextFromPlainTextMessagePart: mpart];
-            else if([type isEqualToString:@"text/enriched"])
+            else if([type isEqualToString: @"text/enriched"])
                 [self _takeTextFromEnrichedTextMessagePart: mpart];
-            else if([type isEqualToString:@"text/html"])
+            else if([type isEqualToString: @"text/html"])
                 [self _takeTextFromHTMLMessagePart: mpart];
         }
     }
@@ -105,12 +106,12 @@
 //	DECODING
 //---------------------------------------------------------------------------------------
 
-- (NSString *)_stringFromMessagePart:(EDMessagePart *)mpart
+- (NSString*) _stringFromMessagePart: (EDMessagePart*) mpart
 {
     NSString			*charset;
     NSStringEncoding	textEncoding;
 
-    if((charset = [[mpart contentTypeParameters] objectForKey:@"charset"]) == nil)
+    if((charset = [[mpart contentTypeParameters] objectForKey: @"charset"]) == nil)
         charset = MIMEAsciiStringEncoding;
     if((textEncoding = [NSString stringEncodingForMIMEEncoding:charset]) > 0)
         return [NSString stringWithData:[mpart contentData] encoding:textEncoding];
@@ -118,7 +119,7 @@
 }
 
 
-- (void)_takeTextFromPlainTextMessagePart:(EDMessagePart *)mpart
+- (void) _takeTextFromPlainTextMessagePart: (EDMessagePart*) mpart
 {
     NSString *string;
     
@@ -127,7 +128,7 @@
 }
 
 
-- (void)_takeTextFromEnrichedTextMessagePart:(EDMessagePart *)mpart
+- (void) _takeTextFromEnrichedTextMessagePart: (EDMessagePart*) mpart
 /*" In addition to the 'original' method bold and italics is no longer broken. The default font is respected also. (improved by Axel) "*/
 {
     static NSCharacterSet *etSpecialSet = nil, *newlineSet;
@@ -143,14 +144,14 @@
     
     if(etSpecialSet == nil)
     {
-        etSpecialSet = [[NSCharacterSet characterSetWithCharactersInString:@"\n\r<"] retain];
-        newlineSet = [[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] retain];
+        etSpecialSet = [[NSCharacterSet characterSetWithCharactersInString: @"\n\r<"] retain];
+        newlineSet = [[NSCharacterSet characterSetWithCharactersInString: @"\n\r"] retain];
     }
     
     if((string = [self _stringFromMessagePart:mpart]) == nil)
         return;
     scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
+    [scanner setCharactersToBeSkipped: nil];
     markerStack = [NSMutableArray array];
     rawString = [NSMutableString string];
     attributesToSet = [NSMutableArray array];
@@ -166,43 +167,43 @@
         {
             [output appendString:string];
         }
-        else if([scanner scanString:@"<" intoString:NULL])
+        else if([scanner scanString: @"<" intoString: NULL])
         {
-            if([scanner scanString:@"<" intoString:NULL])
+            if([scanner scanString: @"<" intoString: NULL])
             {
-                [output appendString:@"<"];
+                [output appendString: @"<"];
             }
             else
             {
-                if([scanner scanUpToString:@">" intoString:&string] == NO)
-                    [NSException raise:EDMessageFormatException format:@"Missing `>' in text/enriched body."];
-                [scanner scanString:@">" intoString:NULL];
+                if([scanner scanUpToString: @">" intoString:&string] == NO)
+                    [NSException raise:EDMessageFormatException format: @"Missing `>' in text/enriched body."];
+                [scanner scanString: @">" intoString: NULL];
                 tag = [string lowercaseString];
-                if([tag isEqualToString:@"param"])
+                if([tag isEqualToString: @"param"])
                 {
                     paramct += 1;
                 }
-                else if([tag isEqualToString:@"/param"])
+                else if([tag isEqualToString: @"/param"])
                 {
                     paramct -= 1;
                 }
-                else if([tag isEqualToString:@"nofill"])
+                else if([tag isEqualToString: @"nofill"])
                 {
                     nofillct += 1;
                 }
-                else if([tag isEqualToString:@"/nofill"])
+                else if([tag isEqualToString: @"/nofill"])
                 {
                     nofillct -= 1;
                 }
-                else if([tag isEqualToString:@"bold"])
+                else if([tag isEqualToString: @"bold"])
                 {
                     marker = [EDObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
                     [markerStack pushObject:marker];
                 }
-                else if([tag isEqualToString:@"/bold"])
+                else if([tag isEqualToString: @"/bold"])
                 {
                     marker = [markerStack popObject];
-                    NSAssert([[marker firstObject] isEqualToString:@"bold"], @"unbalanced tags...");
+                    NSAssert([[marker firstObject] isEqualToString: @"bold"], @"unbalanced tags...");
                     attributeAndRange = [NSDictionary dictionaryWithObjectsAndKeys:
                         [marker firstObject], @"tag",
                         [marker secondObject], @"location",
@@ -212,15 +213,15 @@
                     [attributesToSet addObject:attributeAndRange];
                     
                 }
-                else if([tag isEqualToString:@"italic"])
+                else if([tag isEqualToString: @"italic"])
                 {
                     marker = [EDObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
                     [markerStack pushObject:marker];
                 }
-                else if([tag isEqualToString:@"/italic"])
+                else if([tag isEqualToString: @"/italic"])
                 {
                     marker = [markerStack popObject];
-                    NSAssert([[marker firstObject] isEqualToString:@"italic"], @"unbalanced tags...");
+                    NSAssert([[marker firstObject] isEqualToString: @"italic"], @"unbalanced tags...");
                     attributeAndRange = [NSDictionary dictionaryWithObjectsAndKeys:
                         [marker firstObject], @"tag",
                         [marker secondObject], @"location",
@@ -229,7 +230,7 @@
                     
                     [attributesToSet addObject:attributeAndRange];
                 }
-                else if([tag isEqualToString:@"excerpt"])
+                else if([tag isEqualToString: @"excerpt"])
                 {
                     // take care of excerpt/quote marks
                     excerptct += 1;
@@ -238,10 +239,10 @@
                     [markerStack pushObject:marker];
                     MPWDebugLog(@"excerpt");
                 }
-                else if([tag isEqualToString:@"/excerpt"])
+                else if([tag isEqualToString: @"/excerpt"])
                 {
                     marker = [markerStack popObject];
-                    NSAssert([[marker firstObject] isEqualToString:@"excerpt"], @"unbalanced tags...");
+                    NSAssert([[marker firstObject] isEqualToString: @"excerpt"], @"unbalanced tags...");
                     attributeAndRange = [NSDictionary dictionaryWithObjectsAndKeys:
                         [marker firstObject], @"tag",
                         [marker secondObject], @"location",
@@ -263,9 +264,9 @@
             }
             else
             {
-                nlSeqLength = [string hasPrefix:@"\r\n"] ? 2 : 1;
+                nlSeqLength = [string hasPrefix: @"\r\n"] ? 2 : 1;
                 if([string length] == nlSeqLength)
-                    [output appendString:@" "];
+                    [output appendString: @" "];
                 else
                     [output appendString:[string substringFromIndex:nlSeqLength]];
             }
@@ -285,9 +286,9 @@
         NSRange range;
         
         
-        tag = [attributeAndRange objectForKey:@"tag"];
-        location = [[attributeAndRange objectForKey:@"location"] intValue] + offset;
-        length = [[attributeAndRange objectForKey:@"length"] intValue];
+        tag = [attributeAndRange objectForKey: @"tag"];
+        location = [[attributeAndRange objectForKey: @"location"] intValue] + offset;
+        length = [[attributeAndRange objectForKey: @"length"] intValue];
         range = NSMakeRange(location, length);
         
         while (NSMaxRange(range) >= [text length])
@@ -297,19 +298,19 @@
         
         [text fixAttributesInRange:NSMakeRange(0, [text length])];
         
-        if ([tag isEqualToString:@"bold"])
+        if ([tag isEqualToString: @"bold"])
         {
             [text applyFontTraits:NSBoldFontMask range:range]; 
         }
-        else if ([tag isEqualToString:@"italic"])
+        else if ([tag isEqualToString: @"italic"])
         {
             [text applyFontTraits:NSItalicFontMask range:range];
         }
-        else if ([tag isEqualToString:@"excerpt"])
+        else if ([tag isEqualToString: @"excerpt"])
         {
             NSNumber *excerptDepth;
             
-            excerptDepth = [attributeAndRange objectForKey:@"excerptDepth"];
+            excerptDepth = [attributeAndRange objectForKey: @"excerptDepth"];
             
             if (excerptDepth)
             {
@@ -323,24 +324,24 @@
 
 
 
-- (void)_takeTextFromHTMLMessagePart:(EDMessagePart *)mpart
+- (void) _takeTextFromHTMLMessagePart: (EDMessagePart*) mpart
 {
     NSString *charset;
     NSStringEncoding textEncoding;
     NSData *data;
 
-    if((charset = [[mpart contentTypeParameters] objectForKey:@"charset"]) == nil)
+    if((charset = [[mpart contentTypeParameters] objectForKey: @"charset"]) == nil)
     {
         charset = MIMEAsciiStringEncoding;
     }
     
     if((textEncoding = [NSString stringEncodingForMIMEEncoding:charset]) == 0)
     {
-        [NSException raise:EDMessageFormatException format:@"Invalid charset in message part; found '%@'", charset];
+        [NSException raise:EDMessageFormatException format: @"Invalid charset in message part; found '%@'", charset];
     }
     
     data = [[NSString stringWithData:[mpart contentData] encoding:textEncoding] dataUsingEncoding:NSUnicodeStringEncoding];
-    text = [[NSAttributedString allocWithZone:[self zone]] initWithHTML:data documentAttributes:NULL];
+    text = [[NSAttributedString allocWithZone:[self zone]] initWithHTML:data documentAttributes: NULL];
 }
 
 - (NSAttributedString *)attributedString

@@ -28,15 +28,15 @@
     NSString* text;
 }
 
-+ (id)encoderWithText:(NSString *)value;
-- (id)initWithText:(NSString *)value;
-- (NSString *)text;
++ (id)encoderWithText: (NSString*) value;
+- (id)initWithText: (NSString*) value;
+- (NSString*) text;
 
 
 // public interface to low-level coders
 
-+ (NSString *)stringByDecodingMIMEWordsInString:(NSString *)fieldBody;
-+ (NSString *)stringByEncodingString:(NSString *)string;
++ (NSString*) stringByDecodingMIMEWordsInString: (NSString*) fieldBody;
++ (NSString*) stringByEncodingString: (NSString*) string;
 + (NSString*) stringFromFieldBody: (NSString*) body
                      withFallback: (BOOL) fallback;
 @end

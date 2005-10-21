@@ -11,18 +11,18 @@
 
 @implementation TestEDTextFieldCoder
 
-- (void)setUp
+- (void) setUp
 {
 }
 
-- (void)tearDown
+- (void) tearDown
 {
 }
 
-- (void)testDecoding 
+- (void) testDecoding 
 {
     // This should not crash...
-    STAssertNotNil([EDTextFieldCoder stringFromFieldBody: @"=?utf-8?Q?Andr=E9?= Schneider <news.nospam@andre-schneider.net>" withFallback:NO], @"Shouldn't crash");
+    STAssertNotNil([EDTextFieldCoder stringFromFieldBody: @"=?utf-8?Q?Andr=E9?= Schneider <news.nospam@andre-schneider.net>" withFallback: NO], @"Shouldn't crash");
 }
 
 @end

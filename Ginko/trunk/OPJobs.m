@@ -50,7 +50,7 @@ static unsigned maxThreads = 2;
 static unsigned threadCount = 0;
 static unsigned nextJobId = 1;
 
-+ (void)initialize
++ (void) initialize
 {
     jobsLock = [[NSConditionLock alloc] initWithCondition:OPNoPendingJobs];
 
@@ -98,7 +98,7 @@ static unsigned nextJobId = 1;
     return result;
 }
 
-+ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
++ (NSNumber*) scheduleJobWithName: (NSString*) aName target: (NSObject*) aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
 /*" Schedules a job for being executed by a worker thread as soon as a unemployed worker thread is present and the execution of this job isn't mutual excluded by a currently running job. 
 
     aName is an arbitrary name for the job (doesn't need to be unique). This name is used as object when notifications are posted. This way an observer can easily filter by name.
@@ -120,15 +120,15 @@ static unsigned nextJobId = 1;
     NSMutableDictionary *jobDescription = [NSMutableDictionary dictionary];
     NSNumber *jobId = [NSNumber numberWithUnsignedInt:nextJobId++];
     
-    [jobDescription setObject:jobId forKey:OPJobId];
-    [jobDescription setObject:aName forKey:OPJobName];
-    [jobDescription setObject:aTarget forKey:OPJobTarget];
-    [jobDescription setObject:NSStringFromSelector(aSelector) forKey:OPJobSelector];
-    [jobDescription setObject:[[someArguments copy] autorelease] forKey:OPJobArguments];
+    [jobDescription setObject: jobId forKey:OPJobId];
+    [jobDescription setObject: aName forKey:OPJobName];
+    [jobDescription setObject: aTarget forKey:OPJobTarget];
+    [jobDescription setObject: NSStringFromSelector(aSelector) forKey:OPJobSelector];
+    [jobDescription setObject: [[someArguments copy] autorelease] forKey:OPJobArguments];
     
     if (aSynchronizedObject)
     {
-        [jobDescription setObject:aSynchronizedObject forKey:OPJobSynchronizedObject];
+        [jobDescription setObject: aSynchronizedObject forKey:OPJobSynchronizedObject];
     }
     
     [pendingJobs addObject:jobDescription];
@@ -137,7 +137,7 @@ static unsigned nextJobId = 1;
     // the maximum number of worker thread is not reached:
     if (([idleThreads count] == 0) && (threadCount < maxThreads))
     {
-        [NSThread detachNewThreadSelector:@selector(workerThread:) toTarget:self withObject:nil];
+        [NSThread detachNewThreadSelector:@selector(workerThread:) toTarget:self withObject: nil];
         threadCount++;
     }
     
@@ -174,7 +174,7 @@ static unsigned nextJobId = 1;
     return result;
 }
 
-+ (void)workerThread:(id)args
++ (void) workerThread:(id)args
 /*" The worker threads' detached method. "*/
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -193,7 +193,7 @@ static unsigned nextJobId = 1;
         
         [jobsLock lockWhenCondition:OPPendingJobs];
 
-        NSMutableDictionary *jobDescription = [self nextPendingJobUnlockingSynchronizedObject:nil];
+        NSMutableDictionary *jobDescription = [self nextPendingJobUnlockingSynchronizedObject: nil];
                         
         // this thread is no longer idle but working:
         [idleThreads removeObject:[NSThread currentThread]];
@@ -212,18 +212,18 @@ static unsigned nextJobId = 1;
                 NSObject *jobTarget = [jobDescription objectForKey:OPJobTarget];
                 SEL jobSelector = NSSelectorFromString([jobDescription objectForKey:OPJobSelector]);
                 
-                [jobDescription setObject:[NSThread currentThread] forKey:OPJobWorkerThread];
+                [jobDescription setObject: [NSThread currentThread] forKey:OPJobWorkerThread];
                                 
-                [self performSelectorOnMainThread:@selector(noteJobWillStart:) withObject:[jobDescription objectForKey:OPJobId] waitUntilDone:NO];
+                [self performSelectorOnMainThread:@selector(noteJobWillStart:) withObject:[jobDescription objectForKey:OPJobId] waitUntilDone: NO];
                 
                 [jobTarget performSelector:jobSelector withObject:[jobDescription objectForKey:OPJobArguments]];
             } 
-            @catch (NSException *localException) 
+            @catch (NSException* localException) 
             {
                 [localException retain];
 //#warning *** Selector 'isKindOfClass:' sent to dealloced instance 0x5581a80 of class NSException.
                 NSLog(@"Job (%@) caused Exception: %@", jobDescription, localException);
-                [jobDescription setObject:localException forKey:OPJobUnhandledException];
+                [jobDescription setObject: localException forKey:OPJobUnhandledException];
                 [localException autorelease];
             } 
             @finally 
@@ -235,7 +235,7 @@ static unsigned nextJobId = 1;
                 [finishedJobs addObject:jobDescription];
                 [runningJobs removeObject:jobDescription];
 
-                [self performSelectorOnMainThread:@selector(noteJobDidFinish:) withObject:[jobDescription objectForKey:OPJobId] waitUntilDone:NO];
+                [self performSelectorOnMainThread:@selector(noteJobDidFinish:) withObject:[jobDescription objectForKey:OPJobId] waitUntilDone: NO];
                 
                 // try to get next job:
                 jobDescription = [self nextPendingJobUnlockingSynchronizedObject:[jobDescription objectForKey:OPJobSynchronizedObject]];
@@ -275,19 +275,19 @@ static BOOL isJobInArray(NSNumber *anJobId, NSArray *anArray)
     return result;
 }
 
-+ (BOOL)isJobPending:(NSNumber *)anJobId
++ (BOOL)isJobPending:(NSNumber*) anJobId
 /*" Returns YES if the job denoted by anJobId is currently pending. NO otherwise. "*/
 {
     return isJobInArray(anJobId, pendingJobs);
 }
 
-+ (BOOL)isJobRunning:(NSNumber *)anJobId
++ (BOOL)isJobRunning:(NSNumber*) anJobId
 /*" Returns YES if the job denoted by anJobId is currently running. NO otherwise. "*/
 {
     return isJobInArray(anJobId, runningJobs);
 }
 
-+ (BOOL)isJobFinished:(NSNumber *)anJobId
++ (BOOL)isJobFinished:(NSNumber*) anJobId
 /*" Returns YES if the job denoted by anJobId is in the list of finished jobs. NO otherwise. "*/
 {
     return isJobInArray(anJobId, finishedJobs);
@@ -315,15 +315,15 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     return result;
 }
 
-+ (void)noteJobWillStart:(NSNumber *)anJobId
++ (void) noteJobWillStart:(NSNumber*) anJobId
 /*" Performed on main thread to notify of the upcoming start of a job. "*/
 {
     NSString *jobName = objectForKeyInJobInArray(anJobId, pendingJobs, OPJobName);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobWillStartNotification object:jobName userInfo:[NSDictionary dictionaryWithObject:anJobId forKey:@"jobId"]];    
+    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobWillStartNotification object:jobName userInfo:[NSDictionary dictionaryWithObject:anJobId forKey: @"jobId"]];    
 }
 
-+ (void)noteJobDidFinish:(NSNumber *)anJobId
++ (void) noteJobDidFinish:(NSNumber*) anJobId
 /*" Performed on main thread to notifiy of the finishing of a job. "*/
 {
     NSString *jobName = objectForKeyInJobInArray(anJobId, finishedJobs, OPJobName);
@@ -331,15 +331,15 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     id result = [self resultForJob:anJobId];
     id exception = [self exceptionForJob:anJobId];
     
-    if (result) [userInfo setObject:result forKey:@"result"];
-    if (exception) [userInfo setObject:exception forKey:@"exception"];
-    [userInfo setObject:anJobId forKey:@"jobId"];
+    if (result) [userInfo setObject: result forKey: @"result"];
+    if (exception) [userInfo setObject: exception forKey: @"exception"];
+    [userInfo setObject: anJobId forKey: @"jobId"];
     
     
     [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:jobName userInfo:userInfo];
 }
 
-+ (id)resultForJob:(NSNumber *)anJobId
++ (id)resultForJob:(NSNumber*) anJobId
 /*" Returns the result object for the job denoted by anJobId. nil, if no result was set. "*/
 {
     id result;
@@ -350,7 +350,7 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     return result;
 }
 
-+ (id)exceptionForJob:(NSNumber *)anJobId
++ (id)exceptionForJob:(NSNumber*) anJobId
 /*" Returns the exception object for the job denoted by anJobId. nil, if no exception was set. "*/
 {
     id result;
@@ -360,7 +360,7 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     return result;
 }
 
-+ (void)setResult:(id)aResult
++ (void) setResult:(id)aResult
 /*" Sets the result for the calling job. "*/
 {
     int i, count;
@@ -373,7 +373,7 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     {
         if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread)
         {
-            [[runningJobs objectAtIndex:i] setObject:[[aResult copy] autorelease] forKey:OPJobResult];
+            [[runningJobs objectAtIndex:i] setObject: [[aResult copy] autorelease] forKey:OPJobResult];
             break;
         }
     }
@@ -428,25 +428,25 @@ id objectForKeyForRunningJob(NSString *key)
     return result;
 }
 
-+ (NSNumber *)jobId
++ (NSNumber*) jobId
 /*" Returns the job's id. "*/
 {
     return objectForKeyForRunningJob(OPJobId);
 }
 
-+ (NSString *)jobName
++ (NSString*) jobName
 /*" Returns the job's name. "*/
 {
     return objectForKeyForRunningJob(OPJobName);
 }
 
-+ (void)postNotification:(NSNotification *)aNotification;
++ (void) postNotification: (NSNotification*) aNotification;
 /*" Called in main thread to post aNotification. "*/
 {
     [[NSNotificationCenter defaultCenter] postNotification:aNotification];    
 }
 
-+ (void)postNotificationInMainThreadWithName:(NSString *)aNotificationName andUserInfo:(NSMutableDictionary *)userInfo
++ (void) postNotificationInMainThreadWithName: (NSString*) aNotificationName andUserInfo: (NSMutableDictionary*) userInfo
 /*" Helper for jobs. Posts a notification where object is the job's name. The job's id is added to the userInfo dictionary with key @"jobId". "*/
 {
     NSNotification *notification;
@@ -454,12 +454,12 @@ id objectForKeyForRunningJob(NSString *key)
     
     nameObject = [self jobName];
     aNotificationName = [[aNotificationName copy] autorelease];
-    [userInfo setObject:[self jobId] forKey:@"jobId"];
+    [userInfo setObject: [self jobId] forKey: @"jobId"];
     userInfo = [[userInfo copy] autorelease];
     
     notification = [NSNotification notificationWithName:aNotificationName object:nameObject userInfo:userInfo];
     
-    [self performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone: NO];
 }
 
 + (int)idleThreadCount
@@ -504,19 +504,19 @@ static NSArray *jobIdsFromArray(NSArray *anArray)
     return result;
 }
 
-+ (NSArray *)pendingJobs
++ (NSArray*) pendingJobs
 /*" Returns the job ids of all pending jobs. "*/
 {
     return jobIdsFromArray(runningJobs);
 }
 
-+ (NSArray *)runningJobs
++ (NSArray*) runningJobs
 /*" Returns the job ids of all running jobs. "*/
 {
     return jobIdsFromArray(runningJobs);
 }
 
-+ (NSArray *)finishedJobs
++ (NSArray*) finishedJobs
 /*" Returns the job ids of all finished jobs. "*/
 {
     return jobIdsFromArray(finishedJobs);
@@ -542,7 +542,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     return result;
 }
 
-+ (BOOL)removeFinishedJob:(NSNumber *)anJobId
++ (BOOL)removeFinishedJob:(NSNumber*) anJobId
 /*" Removes the job denoted by anJobId including all job information (e.g. the job's result) from the list of finished jobs. "*/
 {
     BOOL result;
@@ -556,7 +556,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     return result;
 }
 
-+ (BOOL)cancelPendingJob:(NSNumber *)anJobId
++ (BOOL)cancelPendingJob:(NSNumber*) anJobId
 /*" Cancels the pending job denoted by anJobId. Returns YES if job could be cancelled, NO otherwise. "*/
 {
     BOOL result;
@@ -570,7 +570,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     return result;
 }
 
-+ (void)removeAllFinishedJobs
++ (void) removeAllFinishedJobs
 /*" Empties the list of finished jobs. "*/
 {
     [jobsLock lock];
@@ -578,7 +578,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [jobsLock unlockWithCondition:[jobsLock condition]];
 }
 
-+ (BOOL)suggestTerminatingJob:(NSNumber *)anJobId
++ (BOOL)suggestTerminatingJob:(NSNumber*) anJobId
 /*" Suggests that a job should terminate. While this does not enforce termination of a job denoted by anJobId, the job can see that termination is requested and can do so. Returns YES if the suggestion could be passed on, NO otherwise. "*/
 {
     BOOL result = NO;
@@ -591,7 +591,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     {
         if ([[jobDescription objectForKey:OPJobId] isEqualToNumber:anJobId])
         {
-            [jobDescription setObject:[NSNumber numberWithBool:YES] forKey:OPJobShouldTerminate];
+            [jobDescription setObject: [NSNumber numberWithBool: YES] forKey:OPJobShouldTerminate];
             result = YES;
             break;
         }
@@ -634,7 +634,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     return result;
 }
 
-+ (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription
++ (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description: (NSString*) aDescription
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
         [NSNumber numberWithDouble:aMinValue], OPJobProgressMinValue,
@@ -645,7 +645,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
         nil, nil];
 }
 
-+ (NSDictionary *)indeterminateProgressInfoWithDescription:(NSString *)aDescription
++ (NSDictionary *)indeterminateProgressInfoWithDescription: (NSString*) aDescription
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
         aDescription, OPJobProgressDescription,
@@ -653,7 +653,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
         nil, nil];
 }
 
-+ (void)setProgressInfo:(NSDictionary *)progressInfo;
++ (void) setProgressInfo: (NSDictionary*) progressInfo;
 /*" Sets the progress info for the calling job. "*/
 {
     int i, count;
@@ -666,7 +666,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     count = [runningJobs count];
     for (i = count - 1; i >= 0; i--) {
         if ([[runningJobs objectAtIndex:i] objectForKey:OPJobWorkerThread] == jobThread) {
-            [[runningJobs objectAtIndex:i] setObject:progressInfo forKey:OPJobProgressInfo];
+            [[runningJobs objectAtIndex:i] setObject: progressInfo forKey:OPJobProgressInfo];
             setInfo = YES;
             
             break;
@@ -676,11 +676,11 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [jobsLock unlockWithCondition:[jobsLock condition]];
     
     if (setInfo) {
-        [self postNotificationInMainThreadWithName:OPJobDidSetProgressInfoNotification andUserInfo:[NSMutableDictionary dictionaryWithObject:progressInfo forKey:@"progressInfo"]];
+        [self postNotificationInMainThreadWithName:OPJobDidSetProgressInfoNotification andUserInfo:[NSMutableDictionary dictionaryWithObject:progressInfo forKey: @"progressInfo"]];
     }
 }
 
-+ (NSDictionary *)progressInfoForJob:(NSNumber *)anJobId
++ (NSDictionary *)progressInfoForJob:(NSNumber*) anJobId
 /*" Returns the progress info dictionary for the job denoted by anJobId. nil, if no progress info was set. See #{NSDictinary (OPJobsExtensions)} for easy job progress info access. "*/
 {
     id result;
@@ -712,7 +712,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     return result ? [result doubleValue] : 0.0;
 }
 
-- (NSString *)jobProgressDescription
+- (NSString*) jobProgressDescription
 {
     return [self objectForKey:OPJobProgressDescription];
 }
@@ -722,7 +722,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     return [self objectForKey:OPJobProgressCurrentValue] == nil;
 }
 
-- (NSString *)jobProgressJobName
+- (NSString*) jobProgressJobName
 {
     return [self objectForKey:OPJobProgressJobName];    
 }
@@ -734,7 +734,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
 
 @implementation OPJobs (GinkoExtensions)
 
-- (void)openPasswordPanel:(NSMutableDictionary *)someParameters
+- (void) openPasswordPanel: (NSMutableDictionary*) someParameters
 /*" Called in main thread to open the panel. "*/
 {
     [[[GIPasswordController alloc] initWithParamenters:someParameters] autorelease];
@@ -747,12 +747,12 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     // prepare parameter dictionary for cross thread method call
     NSMutableDictionary *parameterDict = [NSMutableDictionary dictionary];
-    [parameterDict setObject:[NSNumber numberWithBool:isIncoming] forKey:@"isIncoming"];
-    [parameterDict setObject:anAccount forKey:@"account"];
-    [parameterDict setObject:result forKey:@"result"];
+    [parameterDict setObject: [NSNumber numberWithBool:isIncoming] forKey: @"isIncoming"];
+    [parameterDict setObject: anAccount forKey: @"account"];
+    [parameterDict setObject: result forKey: @"result"];
     
     // open panel in main thread
-    [self performSelectorOnMainThread:@selector(openPasswordPanel:) withObject:parameterDict waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(openPasswordPanel:) withObject:parameterDict waitUntilDone: YES];
     
     NSString *password = nil;
     
@@ -762,8 +762,8 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
         id finished;
         
         @synchronized(result) {
-            finished = [result objectForKey:@"finished"];
-            password = [result objectForKey:@"password"];
+            finished = [result objectForKey: @"finished"];
+            password = [result objectForKey: @"password"];
         }
     
         if (finished) break;

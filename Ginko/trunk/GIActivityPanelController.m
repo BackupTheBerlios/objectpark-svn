@@ -36,7 +36,7 @@ static BOOL showActivities = NO;
 - (void) dataChanged: (NSNotification*) aNotification
 {
     NSNotification *notification = [NSNotification notificationWithName:GIActivityPanelNeedsUpdateNotification object:self];
-    [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+    [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes: nil];
 }
 
 + (void) showActivityPanelInteractive: (BOOL) interactive
@@ -57,9 +57,9 @@ static BOOL showActivities = NO;
 
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         
-        [center addObserver: panel selector:@selector(updateData:) name:GIActivityPanelNeedsUpdateNotification object:nil];
-        [center addObserver: panel selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
-        [center addObserver: panel selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];
+        [center addObserver: panel selector:@selector(updateData:) name: GIActivityPanelNeedsUpdateNotification object: nil];
+        [center addObserver: panel selector:@selector(dataChanged:) name: OPJobDidFinishNotification object: nil];
+        [center addObserver: panel selector:@selector(dataChanged:) name: OPJobDidSetProgressInfoNotification object: nil];
     }
 }
 
@@ -73,11 +73,11 @@ static BOOL showActivities = NO;
         // register for notifications:
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         
-        [center addObserver:self selector:@selector(updateData:) name:GIActivityPanelNeedsUpdateNotification object:nil];
-        [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
-        [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];
+        [center addObserver:self selector:@selector(updateData:) name: GIActivityPanelNeedsUpdateNotification object: nil];
+        [center addObserver:self selector:@selector(dataChanged:) name: OPJobDidFinishNotification object: nil];
+        [center addObserver:self selector:@selector(dataChanged:) name: OPJobDidSetProgressInfoNotification object: nil];
         
-        [center addObserver: [self class] selector: @selector(activityStarted:) name:OPJobWillStartNotification object: nil]; // move into +initialize?
+        [center addObserver: [self class] selector: @selector(activityStarted:) name: OPJobWillStartNotification object: nil]; // move into +initialize?
     }
     
     return self;

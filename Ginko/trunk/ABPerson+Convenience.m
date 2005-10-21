@@ -32,14 +32,14 @@ static inline NSString *nilGuard(NSString *str)
 }
 
 @interface ABMultiValue (GIExtensions)
-- (int)firstIndexForLabel:(NSString *)label fallback:(BOOL)fallback;
-- (id)firstValueForLabel:(NSString *)label fallback:(BOOL)fallback;
+- (int)firstIndexForLabel: (NSString*) label fallback:(BOOL)fallback;
+- (id)firstValueForLabel: (NSString*) label fallback:(BOOL)fallback;
 @end
 
 @implementation ABMultiValue (GIExtensions)
 /*" Convenience methods. "*/
 
-- (int)firstIndexForLabel:(NSString *)label fallback:(BOOL)fallback
+- (int)firstIndexForLabel: (NSString*) label fallback:(BOOL)fallback
 {
     int count;
 
@@ -74,7 +74,7 @@ static inline NSString *nilGuard(NSString *str)
     return NSNotFound;
 }
 
-- (id)firstValueForLabel:(NSString *)label fallback:(BOOL)fallback
+- (id)firstValueForLabel: (NSString*) label fallback:(BOOL)fallback
 /*" Returns the first value for the label given. If non found, the primaryValue (or otherwise the first value found) is returned if fallback is YES, nil otherwise. " */
 {
 
@@ -90,7 +90,7 @@ static inline NSString *nilGuard(NSString *str)
 @implementation ABPerson (Convenience)
 /*" Some convenience methods for ABPerson. "*/
 
-+ (NSArray *)personsWithContentsFromVCardFile:(NSString *)filename
++ (NSArray*) personsWithContentsFromVCardFile: (NSString*) filename
 /*" Returns an array containing %{ABPerson} objects that could be read out of the file with the given filename. If no %{ABPerson} object could be read an empty array is returned. "*/
 {
     NSMutableArray *result;
@@ -108,7 +108,7 @@ static inline NSString *nilGuard(NSString *str)
     vcardString = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
     length = [vcardString length];
 
-    if ([vcardString rangeOfString:@"END:VCARD" options:NSCaseInsensitiveSearch].location == NSNotFound)
+    if ([vcardString rangeOfString: @"END:VCARD" options:NSCaseInsensitiveSearch].location == NSNotFound)
     {
         // try UTF16
         vcardString = [[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding];
@@ -128,7 +128,7 @@ static inline NSString *nilGuard(NSString *str)
 
         pool = [[NSAutoreleasePool alloc] init];
         searchRange = NSMakeRange(position, length - position);
-        foundRange = [vcardString rangeOfString:@"END:VCARD" options:NSCaseInsensitiveSearch range:searchRange];
+        foundRange = [vcardString rangeOfString: @"END:VCARD" options:NSCaseInsensitiveSearch range:searchRange];
 
         if (foundRange.location == NSNotFound)
         {
@@ -156,19 +156,19 @@ static inline NSString *nilGuard(NSString *str)
     return result;
 }
 
-- (NSString *)firstname
+- (NSString*) firstname
 /*" Returns the first name of the receiver. Returns at least an empty string (never nil). "*/
 {
     return nilGuard([self valueForProperty:kABFirstNameProperty]);
 }
 
-- (NSString *)lastname
+- (NSString*) lastname
 /*" Returns the last name of the receiver. Returns at least an empty string (never nil). "*/
 {
     return nilGuard([self valueForProperty:kABLastNameProperty]);
 }
 
-- (NSString *)fullname
+- (NSString*) fullname
 /*" Returns the formatted full name of a person including the honorprefix. Returns an empty string otherwise. "*/
 {
     NSString *next;
@@ -180,39 +180,39 @@ static inline NSString *nilGuard(NSString *str)
 
         if ([next = [self firstname] length])
         {
-            [formatted insertString:@" " atIndex:0];
+            [formatted insertString: @" " atIndex:0];
             [formatted insertString:next atIndex:0];
         }
         if ([next = [self honorprefix] length])
         {
-            [formatted insertString:@" " atIndex:0];
+            [formatted insertString: @" " atIndex:0];
             [formatted insertString:next atIndex:0];
         }
         if ([next = [self honorpostfix] length])
         {
-            [formatted appendString:@", "];
+            [formatted appendString: @", "];
             [formatted appendString:next];
         }
     }
     return formatted;
 }
 
-- (NSString *)honorprefix
+- (NSString*) honorprefix
 /*" Returns the honor prefix of the receiver. Returns at least an empty string (never nil). "*/
 {
-    return nilGuard([self valueForProperty:@"Title"]);
+    return nilGuard([self valueForProperty: @"Title"]);
 }
 
-- (NSString *)honorpostfix
+- (NSString*) honorpostfix
 /*" Returns the honor postfix of the receiver. Returns at least an empty string (never nil). "*/
 {
     return nilGuard([self valueForProperty:kABSuffixProperty]);
 }
 
-- (NSString *)email
+- (NSString*) email
 /*" Returns the email of the receiver. The work email address is preferred over the home email address. Returns at least an empty string (never nil). "*/
 {
-    return [[self valueForProperty:kABEmailProperty] firstValueForLabel:kABWorkLabel fallback:YES];
+    return [[self valueForProperty:kABEmailProperty] firstValueForLabel:kABWorkLabel fallback: YES];
 }
 
 @end

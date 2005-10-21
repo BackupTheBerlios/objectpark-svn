@@ -3,6 +3,7 @@
 //  @(#)$Id: NSString+Extensions.m,v 1.6 2005/04/01 23:38:11 theisen Exp $
 //
 //  Copyright (c) 1997-2000 by Erik Doernenburg. All rights reserved.
+//  Copyright (c) 2004 by Axel Katerbau & Dirk Theisen. All rights reserved.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission
@@ -48,14 +49,14 @@ The intended purpose of this category is storing and retrieving NSColor objects 
 {
     float red, green, blue, alpha;
     [color getRed:&red green:&green blue:&blue alpha:&alpha];    
-    return [NSString stringWithFormat:@"%f %f %f %f", red, green, blue, alpha];
+    return [NSString stringWithFormat: @"%f %f %f %f", red, green, blue, alpha];
 }
 
 
 /*"Returns a NSColor object with the RGB and alpha values encoded in the string (in the same format as created by #{+stringWithColor})."*/
 - (NSColor*) colorValue
 {
-    NSArray *rgba = [self componentsSeparatedByString:@" "];
+    NSArray *rgba = [self componentsSeparatedByString: @" "];
     
     if ([rgba count] != 4)
     {
@@ -114,7 +115,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Convenience factory method. "*/
 
-+ (NSString *)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding
++ (NSString*) stringWithData: (NSData*) data encoding:(NSStringEncoding)encoding
 {
     return [[[NSString alloc] initWithData:data encoding:encoding] autorelease];
 }
@@ -126,7 +127,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns a copy of the receiver with all whitespace left of the first non-whitespace character and right of the last whitespace character removed. "*/
 
-- (NSString *)stringByRemovingSurroundingWhitespace
+- (NSString*) stringByRemovingSurroundingWhitespace
 {
     NSRange		start, end, result;
 
@@ -161,7 +162,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns a copy of the receiver with all whitespace removed. "*/
 
-- (NSString *)stringByRemovingWhitespace
+- (NSString*) stringByRemovingWhitespace
 {
     return [self stringByRemovingCharactersFromSet:[NSCharacterSet whitespaceCharacterSet]];
 }
@@ -169,7 +170,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns a copy of the receiver with all characters from %set removed. "*/
 
-- (NSString *)stringByRemovingCharactersFromSet:(NSCharacterSet *)set
+- (NSString*) stringByRemovingCharactersFromSet: (NSCharacterSet*) set
 {
     NSMutableString	*temp;
 
@@ -186,14 +187,14 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns a string that is not wider than %maxWidths pixels. "*/
 
-- (NSString *)stringByAbbreviatingPathToWidth:(float)maxWidth forFont:(NSFont *)font
+- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forFont: (NSFont*) font
 {
     return [self stringByAbbreviatingPathToWidth:maxWidth forAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]];
 }
 
 /*" Returns a string that is not wider than %maxWidths pixels. "*/
 
-- (NSString *)stringByAbbreviatingPathToWidth:(float)maxWidth forAttributes:(NSDictionary *)attributes
+- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forAttributes: (NSDictionary*) attributes
 {
     NSString		*result;
     NSMutableArray	*components;
@@ -207,11 +208,11 @@ static NSCharacterSet *iwsSet = nil;
         return result;
 
     components = [[[result pathComponents] mutableCopy] autorelease];
-    if([[components objectAtIndex:0] isEqualToString:@"/"])
+    if([[components objectAtIndex:0] isEqualToString: @"/"])
         [components removeObjectAtIndex:0];
     if([components count] < 2)
         return nil;
-    [components replaceObjectAtIndex:0 withObject:@"..."];
+    [components replaceObjectAtIndex:0 withObject: @"..."];
 
     for(i = 1; i < [components count] - 1; i++)
         {
@@ -229,7 +230,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns YES if the receiver's prefix is equal to %string, comparing case insensitive. "*/
 
-- (BOOL)hasPrefixCaseInsensitive:(NSString *)string
+- (BOOL)hasPrefixCaseInsensitive: (NSString*) string
 {
     return (([string length] <= [self length]) && ([self compare:string options:(NSCaseInsensitiveSearch|NSAnchoredSearch) range:NSMakeRange(0, [string length])] == NSOrderedSame));
 }
@@ -267,7 +268,7 @@ static NSCharacterSet *iwsSet = nil;
 
 - (BOOL)isEmpty
 {
-  return [self isEqualToString:@""];
+  return [self isEqualToString: @""];
 }
 
 
@@ -277,7 +278,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Creates and returns a string by converting the bytes in data using the string encoding described by %charsetName. If no NSStringEncoding corresponds to %charsetName this method returns !{nil}. "*/
 
-+ (NSString *)stringWithData:(NSData *)data MIMEEncoding:(NSString *)charsetName
++ (NSString*) stringWithData: (NSData*) data MIMEEncoding: (NSString*) charsetName
 {
     return [[[NSString alloc] initWithData:data MIMEEncoding:charsetName] autorelease];
 }
@@ -285,7 +286,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Creates and returns a string by copying %length characters from %buffer and coverting these into a string using the string encoding described by %charsetName. If no NSStringEncoding corresponds to %charsetName this method returns !{nil}. "*/
 
-+ (NSString *)stringWithBytes:(const void *)buffer length:(unsigned int)length MIMEEncoding:(NSString *)charsetName
++ (NSString*) stringWithBytes:(const void *)buffer length:(unsigned int)length MIMEEncoding: (NSString*) charsetName
 {
     return [[[NSString alloc] initWithData:[NSData dataWithBytes:buffer length:length] MIMEEncoding:charsetName] autorelease];
 }
@@ -297,7 +298,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Initialises a newly allocated string by converting the bytes in buffer using the string encoding described by %charsetName. If no NSStringEncoding corresponds to %charsetName this method returns !{nil}. "*/
 
-- (id)initWithData:(NSData *)buffer MIMEEncoding:(NSString *)charsetName
+- (id)initWithData: (NSData*) buffer MIMEEncoding: (NSString*) charsetName
 {
     NSStringEncoding encoding;
 
@@ -309,7 +310,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns an NSData object containing a representation of the receiver in the encoding described by %charsetName. If no NSStringEncoding corresponds to %charsetName this method returns !{nil}. "*/
 
-- (NSData *)dataUsingMIMEEncoding:(NSString *)charsetName
+- (NSData*) dataUsingMIMEEncoding: (NSString*) charsetName
 {
     NSStringEncoding encoding;
 
@@ -325,7 +326,7 @@ static NSCharacterSet *iwsSet = nil;
 
 #ifdef EDCOMMON_OSXBUILD
 
-+ (NSStringEncoding)stringEncodingForMIMEEncoding:(NSString *)charsetName
++ (NSStringEncoding)stringEncodingForMIMEEncoding: (NSString*) charsetName
 {
     CFStringEncoding cfEncoding;
 
@@ -340,16 +341,16 @@ static NSCharacterSet *iwsSet = nil;
 }
 
 
-+ (NSString *)MIMEEncodingForStringEncoding:(NSStringEncoding)nsEncoding
++ (NSString*) MIMEEncodingForStringEncoding:(NSStringEncoding)nsEncoding
 {
     CFStringEncoding cfEncoding;
 
     cfEncoding = CFStringConvertNSStringEncodingToEncoding(nsEncoding);
-    return (NSString *)CFStringConvertEncodingToIANACharSetName(cfEncoding);
+    return (NSString*) CFStringConvertEncodingToIANACharSetName(cfEncoding);
 }
 
 
-- (NSString *)recommendedMIMEEncoding
+- (NSString*) recommendedMIMEEncoding
 {
     static NSStringEncoding preferredEncodings[] = {
         NSASCIIStringEncoding, NSISOLatin1StringEncoding, NSISOLatin2StringEncoding,
@@ -372,19 +373,19 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns the NSStringEncoding corresponding to the MIME character set %charsetName or 0 if no such encoding exists. On Mac OS X this wraps #CFStringConvertIANACharSetNameToEncoding and on other platforms hardcoded tables are used. "*/
 
-+ (NSStringEncoding)stringEncodingForMIMEEncoding:(NSString *)encoding
++ (NSStringEncoding)stringEncodingForMIMEEncoding: (NSString*) encoding
 {
     static NSMutableDictionary	*table = nil;
 
     if(table == nil)
         {
         table = [NSMutableDictionary dictionary];
-        [table setObject:[NSNumber numberWithUnsignedInt:NSASCIIStringEncoding] forKey:MIMEAsciiStringEncoding];
-        [table setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:MIMELatin1StringEncoding];
-        [table setObject:[NSNumber numberWithUnsignedInt:NSISOLatin2StringEncoding] forKey:MIMELatin2StringEncoding];
-        [table setObject:[NSNumber numberWithUnsignedInt:NSISO2022JPStringEncoding] forKey:MIME2022JPStringEncoding];
-        [table setObject:[NSNumber numberWithUnsignedInt:NSUTF8StringEncoding] forKey:MIMEUTF8StringEncoding];
-        [table setObject:[NSNumber numberWithUnsignedInt:NSWindowsCP1252StringEncoding] forKey:@"windows-1252"];
+        [table setObject: [NSNumber numberWithUnsignedInt:NSASCIIStringEncoding] forKey:MIMEAsciiStringEncoding];
+        [table setObject: [NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:MIMELatin1StringEncoding];
+        [table setObject: [NSNumber numberWithUnsignedInt:NSISOLatin2StringEncoding] forKey:MIMELatin2StringEncoding];
+        [table setObject: [NSNumber numberWithUnsignedInt:NSISO2022JPStringEncoding] forKey:MIME2022JPStringEncoding];
+        [table setObject: [NSNumber numberWithUnsignedInt:NSUTF8StringEncoding] forKey:MIMEUTF8StringEncoding];
+        [table setObject: [NSNumber numberWithUnsignedInt:NSWindowsCP1252StringEncoding] forKey: @"windows-1252"];
         table = [table copy];
         }
     return [[table objectForKey:[encoding lowercaseString]] unsignedIntValue];
@@ -393,19 +394,19 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns the MIME character set corresponding to the NSStringEncoding or !{nil} if no such encoding exists. On Mac OS X this wraps #CFStringConvertEncodingToIANACharSetName and on other platforms hardcoded tables are used. "*/
 
-+ (NSString *)MIMEEncodingForStringEncoding:(NSStringEncoding)encoding
++ (NSString*) MIMEEncodingForStringEncoding:(NSStringEncoding)encoding
 {
     static NSMutableDictionary	*table = nil;
 
     if(table == nil)
         {
         table = [NSMutableDictionary dictionary];
-        [table setObject:MIMEAsciiStringEncoding forKey:[NSNumber numberWithUnsignedInt:NSASCIIStringEncoding]];
-        [table setObject:MIMELatin1StringEncoding forKey:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding]];
-        [table setObject:MIMELatin2StringEncoding forKey:[NSNumber numberWithUnsignedInt:NSISOLatin2StringEncoding]];
-        [table setObject:MIME2022JPStringEncoding forKey:[NSNumber numberWithUnsignedInt:NSISO2022JPStringEncoding]];
-        [table setObject:MIMEUTF8StringEncoding forKey:[NSNumber numberWithUnsignedInt:NSUTF8StringEncoding]];
-        [table setObject:@"windows-1252" forKey:[NSNumber numberWithUnsignedInt:NSWindowsCP1252StringEncoding]];
+        [table setObject: MIMEAsciiStringEncoding forKey:[NSNumber numberWithUnsignedInt:NSASCIIStringEncoding]];
+        [table setObject: MIMELatin1StringEncoding forKey:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding]];
+        [table setObject: MIMELatin2StringEncoding forKey:[NSNumber numberWithUnsignedInt:NSISOLatin2StringEncoding]];
+        [table setObject: MIME2022JPStringEncoding forKey:[NSNumber numberWithUnsignedInt:NSISO2022JPStringEncoding]];
+        [table setObject: MIMEUTF8StringEncoding forKey:[NSNumber numberWithUnsignedInt:NSUTF8StringEncoding]];
+        [table setObject: @"windows-1252" forKey:[NSNumber numberWithUnsignedInt:NSWindowsCP1252StringEncoding]];
         table = [table copy];
         }
     return [table objectForKey:[NSNumber numberWithUnsignedInt:encoding]];
@@ -414,7 +415,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns the encoding, specified as a MIME character set, that the receiver should be converted to when being transferred on the Internet. This method prefers ASCII over ISO-Latin over the smallest encoding. "*/
 
-- (NSString *)recommendedMIMEEncoding
+- (NSString*) recommendedMIMEEncoding
 {
     if([self canBeConvertedToEncoding:NSASCIIStringEncoding])
         return MIMEAsciiStringEncoding;
@@ -446,7 +447,7 @@ static NSMutableDictionary *teTable = nil;
     if(teTable == nil)
     {
         // the following bundle description sucks big time, what to do?
-        path = [[NSBundle bundleForClass:NSClassFromString(@"GIApplication")] pathForResource:@"MIME" ofType:@"plist"];
+        path = [[NSBundle bundleForClass:NSClassFromString(@"GIApplication")] pathForResource: @"MIME" ofType:@"plist"];
         teTable = [[[NSString stringWithContentsOfFile:path] propertyList] retain];
         NSAssert([teTable isKindOfClass:[NSDictionary class]], @"Problem with MIME.plist");
     }
@@ -456,7 +457,7 @@ static NSMutableDictionary *teTable = nil;
 
 /*" Adds a mapping between a MIME content type/subtype and a file extension to the internal table; the MIME type/subtype being the first object and the file extension the second object in the pair. Note that one MIME type might be represented by several file extensions but a file extension must always map to exactly one MIME type; for example "image/jpeg" maps to "jpg" and "jpeg." A fairly extensive table is available by default. "*/
 
-+ (void)addContentTypePathExtensionPair:(EDObjectPair *)tePair
++ (void) addContentTypePathExtensionPair: (EDObjectPair*) tePair
 {
     [self _contentTypeExtensionMapping];
     if([teTable isKindOfClass:[NSMutableDictionary class]] == NO)
@@ -464,13 +465,13 @@ static NSMutableDictionary *teTable = nil;
         [teTable autorelease];
         teTable = [[NSMutableDictionary alloc] initWithDictionary:teTable];
         }
-    [teTable setObject:[tePair secondObject] forKey:[tePair firstObject]];
+    [teTable setObject: [tePair secondObject] forKey:[tePair firstObject]];
 }
 
 
 /*" Returns a file extension that is used for files of the MIME content type/subtype. Note that one MIME type might be represented by several file extensions. "*/
 
-+ (NSString *)pathExtensionForContentType:(NSString *)contentType
++ (NSString*) pathExtensionForContentType: (NSString*) contentType
 {
     NSDictionary   	*table;
     NSEnumerator	*extensionEnum;
@@ -490,7 +491,7 @@ static NSMutableDictionary *teTable = nil;
 
 /*" Returns the MIME content type/subtype for extension "*/
 
-+ (NSString *)contentTypeForPathExtension:(NSString *)extension
++ (NSString*) contentTypeForPathExtension: (NSString*) extension
 {
     return [[self _contentTypeExtensionMapping] objectForKey:[extension lowercaseString]];
 }
@@ -502,7 +503,7 @@ static NSMutableDictionary *teTable = nil;
 
 /*" Examines %xmlData and searches for an XML processing directive that specifies the document's encoding. If found returns the encoding, specified as a MIME character set, otherwise returns !{nil}. "*/
 
-+ (NSString *)MIMEEncodingOfXMLDocument:(NSData *)xmlData
++ (NSString*) MIMEEncodingOfXMLDocument: (NSData*) xmlData
 {
     NSScanner			*scanner;
     NSString			*pd, *encoding;
@@ -521,7 +522,7 @@ static NSMutableDictionary *teTable = nil;
 
     // grab processing directive
     if((p + 6 >= pmax) || (*p != '<') || (*p == '?'))
-        [NSException raise:NSGenericException format:@"Could not find processing directive in XML doc."];
+        [NSException raise:NSGenericException format: @"Could not find processing directive in XML doc."];
     pdStart = p + 2;
     inQuotes = 0;
     for(p = pdStart;p < pmax; p++)
@@ -532,25 +533,25 @@ static NSMutableDictionary *teTable = nil;
             break;
         }
     if((p == pmax) || (*(p - 1) != '?'))
-        [NSException raise:NSGenericException format:@"Malformed processing directive in XML doc."];
+        [NSException raise:NSGenericException format: @"Malformed processing directive in XML doc."];
     pdRange = NSMakeRange((int)pdStart - (int)[xmlData bytes], (int)p - 1 - (int)pdStart);
     pd = [NSString stringWithData:[xmlData subdataWithRange:pdRange] encoding:NSASCIIStringEncoding];
 
     // analyse and find encoding value
     scanner = [NSScanner scannerWithString:pd];
-    if([scanner scanString:@"xml" intoString:NULL] == NO)
-        [NSException raise:NSGenericException format:@"Could not find processing directive in XML doc."];
-    if([scanner scanUpToString:@"encoding" intoString:NULL] == NO || [scanner isAtEnd])
+    if([scanner scanString: @"xml" intoString: NULL] == NO)
+        [NSException raise:NSGenericException format: @"Could not find processing directive in XML doc."];
+    if([scanner scanUpToString: @"encoding" intoString: NULL] == NO || [scanner isAtEnd])
         {
         encoding = MIMEUTF8StringEncoding;
         }
     else
         {
-        [scanner scanString:@"encoding" intoString:NULL];
-        if(([scanner scanString:@"=" intoString:NULL] == NO) ||
-           ([scanner scanString:@"\"" intoString:NULL] == NO) ||
-           ([scanner scanUpToString:@"\"" intoString:&encoding] == NO))
-            [NSException raise:NSGenericException format:@"Malformed processing directive in XML doc."];
+        [scanner scanString: @"encoding" intoString: NULL];
+        if(([scanner scanString: @"=" intoString: NULL] == NO) ||
+           ([scanner scanString: @"\"" intoString: NULL] == NO) ||
+           ([scanner scanUpToString: @"\"" intoString:&encoding] == NO))
+            [NSException raise:NSGenericException format: @"Malformed processing directive in XML doc."];
         }
     return encoding;
 }
@@ -558,7 +559,7 @@ static NSMutableDictionary *teTable = nil;
 
 /*" Examines %xmlData and searches for an XML processing directive that specifies the document's encoding. If found returns the encoding, specified as an NSStringEncoding, otherwise returns 0. "*/
 
-+ (NSStringEncoding)encodingOfXMLDocument:(NSData *)xmlData
++ (NSStringEncoding)encodingOfXMLDocument: (NSData*) xmlData
 {
     return [self stringEncodingForMIMEEncoding:[self MIMEEncodingOfXMLDocument:xmlData]];
 }
@@ -576,7 +577,7 @@ This method is thread-safe.
 
 Note: This method is not available on Windows NT platforms. "*/
 
-- (NSString *)encryptedString
+- (NSString*) encryptedString
 {
     char 	salt[3];
 
@@ -594,7 +595,7 @@ This method is thread-safe.
 
 Note: This method is not available on Windows NT platforms. "*/
 
-- (NSString *)encryptedStringWithSalt:(const char *)salt
+- (NSString*) encryptedStringWithSalt:(const char *)salt
 {
     static NSLock	*encryptLock = nil;
     NSMutableData 	*sdata;
@@ -627,7 +628,7 @@ This method is thread-safe.
 
 Note: This method is not available on Windows NT platforms. "*/
 
-- (BOOL)isValidEncryptionOfString:(NSString *)aString
+- (BOOL)isValidEncryptionOfString: (NSString*) aString
 {
   char salt[3];
 
@@ -668,7 +669,7 @@ Note: This method is not available on Windows NT platforms. "*/
 
 /*" Writes the %printf format string to %stdout using the default C String encoding. "*/
 
-+ (void)printf:(NSString *)format, ...
++ (void) printf: (NSString*) format, ...
 {
     va_list   	args;
     NSString	*buffer;
@@ -683,7 +684,7 @@ Note: This method is not available on Windows NT platforms. "*/
 
 /*" Writes the %printf format string to %fileHandle using the default C String encoding. "*/
 
-+ (void)fprintf:(NSFileHandle *)fileHandle:(NSString *)format, ...
++ (void) fprintf: (NSFileHandle*) fileHandle: (NSString*) format, ...
 {
     va_list   	args;
     NSString	*buffer;
@@ -698,7 +699,7 @@ Note: This method is not available on Windows NT platforms. "*/
 
 /*" Writes the contents of the reciever to %stdout using the default C String encoding. "*/
 
-- (void)printf
+- (void) printf
 {
     if(printfLock == nil)
         printfLock = [[NSLock alloc] init];
@@ -713,7 +714,7 @@ Note: This method is not available on Windows NT platforms. "*/
 
 /*" Writes the contents of the reciever to %fileHandle using the default C String encoding. "*/
 
-- (void)fprintf:(NSFileHandle *)fileHandle
+- (void) fprintf: (NSFileHandle*) fileHandle
 {
     if(printfLock == nil)
         printfLock = [[NSLock alloc] init];
@@ -737,7 +738,7 @@ Note: This method is not available on Windows NT platforms. "*/
 
 /*" Removes all whitespace left of the first non-whitespace character and right of the last whitespace character. "*/
 
-- (void)removeSurroundingWhitespace
+- (void) removeSurroundingWhitespace
 {
     NSRange		start, end;
 
@@ -747,7 +748,7 @@ Note: This method is not available on Windows NT platforms. "*/
     start = [self rangeOfCharacterFromSet:iwsSet];
     if(start.length == 0)
         {
-        [self setString:@""];  // string is empty or consists of whitespace only
+        [self setString: @""];  // string is empty or consists of whitespace only
         return;
         }
 
@@ -762,7 +763,7 @@ Note: This method is not available on Windows NT platforms. "*/
 
 /*" Removes all whitespace from the string. "*/
 
-- (void)removeWhitespace
+- (void) removeWhitespace
 {
     [self removeCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
@@ -780,7 +781,7 @@ Note: This method is not available on Windows NT platforms. "*/
 
 /*" Removes all characters in %set from the string. "*/
 
-- (void)removeCharactersInSet:(NSCharacterSet *)set
+- (void) removeCharactersInSet: (NSCharacterSet*) set
 {
     NSRange			matchRange, searchRange, replaceRange;
     unsigned int    length;

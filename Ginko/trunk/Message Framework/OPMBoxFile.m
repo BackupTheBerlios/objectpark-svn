@@ -26,7 +26,7 @@ NSString *OPMBoxException = @"OPMBoxException";
 
 @implementation OPMBoxFile
 
-- (id)initWithPath:(NSString *)aPath andFileDescriptor:(int)aFileDescriptor
+- (id)initWithPath: (NSString*) aPath andFileDescriptor:(int)aFileDescriptor
 {
     self = [super init];
     
@@ -37,7 +37,7 @@ NSString *OPMBoxException = @"OPMBoxException";
     return self;
 }
 
-+ (id)createMboxFileWithPathTemplate:(NSString *)aTemplate
++ (id)createMboxFileWithPathTemplate: (NSString*) aTemplate
 /*" Creates an unique mbox file with the template given in aTemplate. The template has to have the form '/foo/barXXXX'. The suffix '.mboxfile is appended. "*/
 {
     id result = nil;
@@ -53,7 +53,7 @@ NSString *OPMBoxException = @"OPMBoxException";
         NSAssert(fd != -1, @"invalid filehandle");
         result = [[[self alloc] initWithPath:[NSString stringWithUTF8String:template] andFileDescriptor:fd] autorelease];
     }
-    @catch (NSException *localException)
+    @catch (NSException* localException)
     {
         @throw;
     }
@@ -65,24 +65,24 @@ NSString *OPMBoxException = @"OPMBoxException";
     return result;
 }
 
-+ (id)mboxWithPath:(NSString *)aPath
++ (id)mboxWithPath: (NSString*) aPath
 /*" Returns an autoreleased instance. The mbox file at path will be used. Standard index providers are used. If no mbox file exists at aPath an exception is raised. "*/
 {
     return [[[self alloc] initWithPath:aPath] autorelease];
 }
 
-+ (id)mboxWithPath:(NSString *)aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent
++ (id)mboxWithPath: (NSString*) aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent
 {
     return [[[self alloc] initWithPath:aPath createIfNotPresent:shouldCreateIfNotPresent] autorelease];
 }
 
-- (id)initWithPath:(NSString *)aPath
+- (id)initWithPath: (NSString*) aPath
 /*" Initialized the instance for use with the mbox file aPath. Standard index providers are used. If no mbox file exists at aPath an exception is raised. "*/
 {
-    return [self initWithPath:aPath createIfNotPresent:NO];
+    return [self initWithPath:aPath createIfNotPresent: NO];
 }
 
-- (id)initWithPath:(NSString *)aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent 
+- (id)initWithPath: (NSString*) aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent 
 {
     NSParameterAssert([aPath length]);
     
@@ -93,7 +93,7 @@ NSString *OPMBoxException = @"OPMBoxException";
         {
             if (shouldCreateIfNotPresent)
             {
-                if (! [fileManager createFileAtPath:aPath contents:nil attributes:nil])
+                if (! [fileManager createFileAtPath:aPath contents: nil attributes:nil])
                 {
                     [self release];
                     [NSException raise: OPMBoxException format: @"Cannot create mbox file at path '%@'.", aPath];
@@ -118,7 +118,7 @@ NSString *OPMBoxException = @"OPMBoxException";
     return [OPMessageDataEnumerator enumeratorWithMBox: self];
 }
 
-- (NSData *)mboxSubdataFromOffset:(unsigned)offset endOffset:(unsigned *)endOffset
+- (NSData*) mboxSubdataFromOffset:(unsigned)offset endOffset: (unsigned*) endOffset
     /*" Returns the mbox data for the message starting at offset in the mbox file.
     Returns nil, if no valid mbox data could be found. This method is not thread-safe. "*/
 {
@@ -136,7 +136,7 @@ NSString *OPMBoxException = @"OPMBoxException";
         
         if (fseek(file, offset, SEEK_SET) != 0)
         {
-            [NSException raise: NSRangeException format:@"The range's location is behind end of the file."];
+            [NSException raise: NSRangeException format: @"The range's location is behind end of the file."];
         }
         
         pos = offset;
@@ -195,7 +195,7 @@ NSString *OPMBoxException = @"OPMBoxException";
     return _isReadOnly;
 }
 
-- (NSString *)path
+- (NSString*) path
 {
     NSString *result;
     
@@ -210,7 +210,7 @@ NSString *OPMBoxException = @"OPMBoxException";
 }
 
 
-- (void)setPath:(NSString *)aPath
+- (void) setPath: (NSString*) aPath
 {
     @synchronized(self)
     {
@@ -255,7 +255,7 @@ NSString *OPMBoxException = @"OPMBoxException";
         
         if (fseek(file, 0, SEEK_END) != 0)
         {
-            [NSException raise:NSRangeException format:@"The range's location is behind end of the file."];
+            [NSException raise:NSRangeException format: @"The range's location is behind end of the file."];
         }
         
         result = ftell(file);
@@ -265,19 +265,19 @@ NSString *OPMBoxException = @"OPMBoxException";
 }
 
 
-- (NSString *)description
+- (NSString*) description
 {
     NSString *result;
     
     @synchronized(self)
     {
-        result = [NSString stringWithFormat:@"%@ at %@", [super description], [self path]];
+        result = [NSString stringWithFormat: @"%@ at %@", [super description], [self path]];
     }
     
     return result;
 }
 
-- (void)appendMBoxData:(NSData *)mboxData
+- (void) appendMBoxData: (NSData*) mboxData
 {
     @synchronized(self)
     {
@@ -287,7 +287,7 @@ NSString *OPMBoxException = @"OPMBoxException";
         
         if (fwrite([mboxData bytes], 1, [mboxData length], file) < [mboxData length])
         {
-            [NSException raise:NSObjectInaccessibleException format:@"Exception raised in -appendMBoxData: ! Could not write message to mbox file."];
+            [NSException raise:NSObjectInaccessibleException format: @"Exception raised in -appendMBoxData: ! Could not write message to mbox file."];
         }
         
         fflush(file);
@@ -307,12 +307,12 @@ NSString *OPMBoxException = @"OPMBoxException";
 
 @implementation OPMessageDataEnumerator
 
-+ (id)enumeratorWithMBox:(OPMBoxFile *)theMbox
++ (id)enumeratorWithMBox: (OPMBoxFile*) theMbox
 {
     return [[[self alloc] initWithMBox:theMbox] autorelease];
 }
 
-- (id)initWithMBox:(OPMBoxFile *)theMbox
+- (id)initWithMBox: (OPMBoxFile*) theMbox
 {
     if (self = [super init]) 
     {

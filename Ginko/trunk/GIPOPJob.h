@@ -15,7 +15,7 @@
     G3Account *account;
 }
 
-+ (void)retrieveMessagesFromPOPAccount:(G3Account *)anAccount;
-+ (NSString *)jobName;
++ (void) retrieveMessagesFromPOPAccount:(G3Account *)anAccount;
++ (NSString*) jobName;
 
 @end

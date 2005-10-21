@@ -24,7 +24,7 @@
 #import "NSString+Extensions.h"
 
 @interface EDDateFieldCoder(PrivateAPI)
-- (void)_takeDateFromString:(NSString *)string;
+- (void) _takeDateFromString: (NSString*) string;
 - (NSTimeZone *)_canonicalTimeZone;
 @end
 
@@ -37,7 +37,7 @@
 //	CLASS ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-+ (NSString *)dateFormat
++ (NSString*) dateFormat
 {
     return @"%a, %d %b %Y %H:%M:%S %z";
 }
@@ -47,7 +47,7 @@
 //	FACTORY
 //---------------------------------------------------------------------------------------
 
-+ (id)encoderWithDate:(NSCalendarDate *)value
++ (id)encoderWithDate: (NSCalendarDate*) value
 {
     return [[[self alloc] initWithDate:value] autorelease];
 }
@@ -57,7 +57,7 @@
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id)initWithFieldBody:(NSString *)body
+- (id)initWithFieldBody: (NSString*) body
 {
     [self init];
     [self _takeDateFromString:body];
@@ -65,7 +65,7 @@
 }
 
 
-- (id)initWithDate:(NSCalendarDate *)value
+- (id)initWithDate: (NSCalendarDate*) value
 {
     [self init];
     date = [value retain];
@@ -73,7 +73,7 @@
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
     [date release];
     [super dealloc];
@@ -92,7 +92,7 @@
 
 - (NSString*) stringValue
 {
-    NSString *format = [[NSUserDefaults standardUserDefaults] stringForKey:@"NSDateFormatString"];
+    NSString *format = [[NSUserDefaults standardUserDefaults] stringForKey: @"NSDateFormatString"];
     return [date descriptionWithCalendarFormat:format];
 }
 
@@ -114,7 +114,7 @@
 
 // Use parser written by Axel in Objective-C:  
 
-- (void)_takeDateFromString:(NSString *)string
+- (void) _takeDateFromString: (NSString*) string
 {
     string = [string stringByRemovingSurroundingWhitespace];
     date = [[NSCalendarDate dateWithMessageTimeSpecification:string] retain];
@@ -138,7 +138,7 @@
     static NSTimeZone *canonicalTimeZone = nil;
     
     if(canonicalTimeZone == nil) {
-        canonicalTimeZone = [[NSTimeZone alloc] initWithName:@"GMT"];
+        canonicalTimeZone = [[NSTimeZone alloc] initWithName: @"GMT"];
         NSAssert(canonicalTimeZone != nil, @"System does not know time zone GMT.");
     }
     return canonicalTimeZone;

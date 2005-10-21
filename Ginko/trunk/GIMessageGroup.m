@@ -57,7 +57,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 }
 
 
-+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex
++ (GIMessageGroup *)newMessageGroupWithName: (NSString*) aName atHierarchyNode: (NSMutableArray*) aNode atIndex:(int)anIndex
 /*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
 {
     GIMessageGroup *result = nil;
@@ -148,12 +148,12 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     NSArray *result = nil;
     
     NSLog(@"entered threadsByDate");
-    if (! dateDescriptor) dateDescriptor = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO] autorelease], nil];
+    if (! dateDescriptor) dateDescriptor = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey: @"date" ascending: NO] autorelease], nil];
 
-    //return [[(NSSet *)[self valueForKey:@"threads"] allObjects] sortedArrayUsingDescriptors:dateDescriptor];
+    //return [[(NSSet *)[self valueForKey: @"threads"] allObjects] sortedArrayUsingDescriptors:dateDescriptor];
 
     
-    //	return [[self valueForKey:@"threads"] allObjects];
+    //	return [[self valueForKey: @"threads"] allObjects];
     
 //f    [NSApp saveAction:self];
     
@@ -177,7 +177,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     if (error) NSLog(@"Error fetching threads: %@", error);
     
     //#warning for debugging only as it is inefficient
-    //NSAssert([result count] == [[self valueForKey:@"threads"] count], @"result != threadsCount");
+    //NSAssert([result count] == [[self valueForKey: @"threads"] count], @"result != threadsCount");
     NSLog(@"exited threadsByDate");
 
     return result;
@@ -185,7 +185,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 */
 
 /*
-- (NSString *)primaryKey
+- (NSString*) primaryKey
 {    
     if (!pk)
     { 
@@ -300,12 +300,12 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     return [[GIProfile allObjects] lastObject];
 }
 
-- (void)setDefaultProfile:(GIProfile *)aProfile
+- (void) setDefaultProfile: (GIProfile*) aProfile
 /*" Sets the default profile for the receiver. The default profile is used for replies on messages in this group. May set to nil. Then a more global default will be used. "*/
 {
 #warning implement setDefaultProfile
     
-    //[self setPrimitiveValue:[aProfile objectID] forKey:@"defaultProfileId"];
+    //[self setPrimitiveValue:[aProfile objectID] forKey: @"defaultProfileId"];
 }
 
 static NSMutableArray *root = nil;
@@ -317,11 +317,11 @@ static NSMutableArray *root = nil;
     NSData *plistData;
     NSString *error;
     
-    plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"GroupHierarchy.plist"];
+    plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"GroupHierarchy.plist"];
     
     plistData = [NSPropertyListSerialization dataFromPropertyList:[self hierarchyRootNode] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
     if(plistData) {
-        [plistData writeToFile:plistPath atomically:YES];
+        [plistData writeToFile:plistPath atomically: YES];
     } else {
         NSLog(error);
         [error release];
@@ -386,7 +386,7 @@ static NSMutableArray *root = nil;
         NSPropertyListFormat format;
                 
         // read from application support folder:
-        plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"GroupHierarchy.plist"];
+        plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"GroupHierarchy.plist"];
         
         plistData = [NSData dataWithContentsOfFile:plistPath];
         root = [[NSPropertyListSerialization propertyListFromData:plistData
@@ -411,7 +411,7 @@ static NSMutableArray *root = nil;
     return root;
 }
 
-+ (NSMutableArray *)findHierarchyNodeForEntry:(id)entry startingWithHierarchyNode:(NSMutableArray *)aHierarchy
++ (NSMutableArray *)findHierarchyNodeForEntry:(id)entry startingWithHierarchyNode: (NSMutableArray*) aHierarchy
 /*" Returns the hierarchy node in which entry is contained. Starts the search at the hierarchy node aHierarchy. Returns nil if entry couldn't be found in the hierarchy. "*/
 {
     NSMutableArray *result = nil;
@@ -435,7 +435,7 @@ static NSMutableArray *root = nil;
     return result;
 }
 
-+ (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly
++ (BOOL)moveEntry:(id)entry toHierarchyNode: (NSMutableArray*) aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly
 /*" Moves entry (either a hierarchy node or a group reference to another hierarchy node aHierarchy at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
 {
     NSMutableArray *entrysHierarchy;
@@ -488,7 +488,7 @@ static NSMutableArray *root = nil;
     return YES;
 }
 
-+ (void)addNewHierarchyNodeAfterEntry:(id)anEntry
++ (void) addNewHierarchyNodeAfterEntry:(id)anEntry
 /*" Adds a new hierarchy node below (as visually indicated in the groups list) the given entry anEntry. "*/ 
 {
     NSMutableArray *hierarchy = [self findHierarchyNodeForEntry:anEntry startingWithHierarchyNode:[self hierarchyRootNode]];
@@ -502,22 +502,20 @@ static NSMutableArray *root = nil;
     if (index < [hierarchy count])
     {
         [hierarchy insertObject:newHierarchy atIndex:index];
-    }
-    else
-    {
+    } else {
         [hierarchy addObject:newHierarchy];
     }
     
     [self commitChanges];
 }
 
-+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)anUid startHierarchyNode:(NSMutableArray *)aNode
++ (NSMutableArray *)hierarchyNodeForUid:(NSNumber*) anUid startHierarchyNode: (NSMutableArray*) aNode
 {
     NSMutableArray *result = nil;
     NSEnumerator *enumerator;
     id object;
     
-    if ([[[aNode objectAtIndex:0] valueForKey:@"uid"] isEqual:anUid])
+    if ([[[aNode objectAtIndex:0] valueForKey: @"uid"] isEqual:anUid])
     {
         return aNode;
     }
@@ -536,7 +534,7 @@ static NSMutableArray *root = nil;
     return result;
 }
 
-+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)anUid
++ (NSMutableArray *)hierarchyNodeForUid:(NSNumber*) anUid
 {
     return [self hierarchyNodeForUid:anUid startHierarchyNode:[self hierarchyRootNode]];
 }
@@ -556,7 +554,7 @@ static NSMutableArray *root = nil;
     
     if (!result) {
         // not found creating new:
-        result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:0];
+        result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode: nil atIndex:0];
                 
         NSAssert1([result valueForKey: @"name"] != nil, @"group should have a name: %@", defaultName);
         

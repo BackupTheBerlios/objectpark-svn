@@ -59,9 +59,9 @@
 - (G3Thread*) threadCreate: (BOOL) doCreate;
 
 - (G3Profile *)profile;
-- (void)setProfile: (G3Profile *)value;
+- (void) setProfile: (G3Profile *)value;
 
-- (NSArray*)commentsInThread: (G3Thread*)thread;
+- (NSArray*) commentsInThread: (G3Thread*)thread;
 
 - (BOOL) isListMessage;
 - (BOOL) isUsenetMessage;

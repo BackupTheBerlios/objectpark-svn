@@ -44,14 +44,14 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id)initWithTransferData:(NSData *)data fallbackHeaderFields:(NSDictionary *)fields
+- (id)initWithTransferData: (NSData*) data fallbackHeaderFields:(NSDictionary *)fields
 {
     NSString *version;
     
     [super initWithTransferData:data fallbackHeaderFields:fields];
 
     // a bit late maybe...
-    if(((version = [self bodyForHeaderField:@"mime-version"]) != nil) && ([version length] > 0))
+    if(((version = [self bodyForHeaderField: @"mime-version"]) != nil) && ([version length] > 0))
         if([[version stringByRemovingBracketComments] floatValue] > 1.0)
             NSLog(@"Warning: MIME Decoder: decoded version %@ as 1.0.", version);
 
@@ -63,14 +63,14 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 //	TRANSFER LEVEL ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-- (NSData *)transferData
+- (NSData*) transferData
 {
     // If we don't have a cached version we'll be constructing the transfer data. In this
     // case tag with our version.
-    if((originalTransferData == nil) && ([self bodyForHeaderField:@"mime-version"] == nil))
+    if((originalTransferData == nil) && ([self bodyForHeaderField: @"mime-version"] == nil))
     {
         NSString *desig = @"Ginko (www.objectpark.org)";
-        [self setBody:[NSString stringWithFormat:@"1.0 (%@)", desig] forHeaderField:@"MIME-Version"];
+        [self setBody:[NSString stringWithFormat: @"1.0 (%@)", desig] forHeaderField:@"MIME-Version"];
     }
     return [super transferData];
 }
@@ -127,7 +127,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     /*"If there is no "replyTo:" header found, this method returns the content of the "from:" header."*/
     NSString* replyBody = nil;
     
-    replyBody = [self bodyForHeaderField:@"reply-to"];
+    replyBody = [self bodyForHeaderField: @"reply-to"];
     if (![replyBody length]) // fall back to "from" header:
         return [self fromWithFallback: fallback];
     
@@ -136,22 +136,22 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 }
 
 - (NSString*) toWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField:@"to"]
+    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"to"]
                                      withFallback: YES] sharedInstance];
 }
 
 - (NSString*) fromWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField:@"from"]
+    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"from"]
                                      withFallback: YES] sharedInstance];
 }
 
 - (NSString*) ccWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField:@"cc"]
+    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"cc"]
                                      withFallback: YES] sharedInstance];
 }
 
 - (NSString*) bccWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField:@"bcc"]
+    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"bcc"]
                                      withFallback: YES] sharedInstance];
 }
 
@@ -169,16 +169,16 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
         if ([subj hasSuffix: @")"])
         {
             // english version
-            oldSubjRange = [subj rangeOfString:@"(was:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
+            oldSubjRange = [subj rangeOfString: @"(was:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
             if (oldSubjRange.location == NSNotFound)
                 // german version
-                oldSubjRange = [subj rangeOfString:@"(war:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
+                oldSubjRange = [subj rangeOfString: @"(war:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
             
             if (oldSubjRange.location != NSNotFound)
                 subj = [subj substringToIndex:oldSubjRange.location];
         }
 	NS_HANDLER
-            subj = [self bodyForHeaderField:@"subject"];
+            subj = [self bodyForHeaderField: @"subject"];
 	NS_ENDHANDLER
         
 	return [[[subj stringByRemovingSurroundingWhitespace] stringByNormalizingWhitespaces] sharedInstance];
@@ -197,7 +197,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 }
 
 
-- (BOOL)isEqualToMessage:(OPInternetMessage *)other
+- (BOOL)isEqualToMessage: (OPInternetMessage*) other
 {
     return [[self messageId] isEqualToString:[other messageId]];
 }
@@ -208,17 +208,17 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 
 // later maybe...
 
-- (void)addAttachment:(NSData *)data withName:(NSString *)name
+- (void) addAttachment: (NSData*) data withName: (NSString*) name
 {
     
 }
 
-- (void)addAttachment:(NSData *)data withName:(NSString *)name setInlineFlag:(BOOL)inlineFlag
+- (void) addAttachment: (NSData*) data withName: (NSString*) name setInlineFlag:(BOOL)inlineFlag
 {
 }
 
 
-+ (id)messageWithAttributedStringContent:(NSAttributedString *)someContent
++ (id)messageWithAttributedStringContent: (NSAttributedString*) someContent
 /*" Returns a message with the content corresponding to someContent and the corresponding header fields. 
     However, the message is not complete as vital header fields are missing. They have to be added before
     the message is a valid one. "*/
@@ -331,25 +331,25 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     return [message autorelease];
 }
 
-- (id)initWithTransferData:(NSData *)transferData 
+- (id)initWithTransferData: (NSData*) transferData 
 {
     NSParameterAssert(transferData != nil); // Adds this assertion.
     return [super initWithTransferData: transferData];
 }
 
-- (NSRange)takeHeadersFromData:(NSData *)data
+- (NSRange)takeHeadersFromData: (NSData*) data
 {
     NSRange result = [super takeHeadersFromData:data];
     
-    if (![[self bodyForHeaderField:@"message-id"] length]) 
+    if (![[self bodyForHeaderField: @"message-id"] length]) 
     {
-        [self generateMessageIdWithSuffix:@"FakedByOPMS2@objectpark.org"];
+        [self generateMessageIdWithSuffix: @"FakedByOPMS2@objectpark.org"];
     }
     return result;
 }
 
 /*"Returns a NSData containing the complete header as a string."*/
-- (NSData *)_headerData
+- (NSData*) _headerData
 {
     NSEnumerator *fieldEnum;
     EDObjectPair *field;
@@ -359,9 +359,9 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     while ((field = [fieldEnum nextObject]) != nil) 
     {
         [stringBuffer appendString:[field firstObject]];
-        [stringBuffer appendString:@": "];
+        [stringBuffer appendString: @": "];
         [stringBuffer appendString:[field secondObject]];
-        [stringBuffer appendString:@"\r\n"];
+        [stringBuffer appendString: @"\r\n"];
     }
     
     return [stringBuffer dataUsingEncoding:NSUTF8StringEncoding];
@@ -377,7 +377,7 @@ static NSCharacterSet *gremlinCharacterSet()
     return _gremlinCharacterSet;
 }
 
-- (void)zapHeaderGremlins
+- (void) zapHeaderGremlins
 /*" Removes non-ascii characters from header bodies. "*/
 {
     NSEnumerator *fieldEnum = [[self headerFields] objectEnumerator];
@@ -396,13 +396,13 @@ static NSCharacterSet *gremlinCharacterSet()
 }
 
 /*"Generates a message ID string (to use for messages without a message ID)."*/
-- (void)generateMessageIdWithSuffix:(NSString *)aString
+- (void) generateMessageIdWithSuffix: (NSString*) aString
 {
     static NSCharacterSet *equalsSet = nil;
-    if (!equalsSet) equalsSet = [[NSCharacterSet characterSetWithCharactersInString:@"="] retain];
+    if (!equalsSet) equalsSet = [[NSCharacterSet characterSetWithCharactersInString: @"="] retain];
     
     NSString *md5sum = [[[self _headerData] md5Base64String] stringByTrimmingCharactersInSet:equalsSet];
-    [self setBody:[NSString stringWithFormat:@"<GI%@%@>", md5sum, aString] forHeaderField:@"Message-ID"];
+    [self setBody:[NSString stringWithFormat: @"<GI%@%@>", md5sum, aString] forHeaderField:@"Message-ID"];
     // Make sure we can generate the transferData:
     [self zapHeaderGremlins]; // we destroyed the original transferData anyway
 }

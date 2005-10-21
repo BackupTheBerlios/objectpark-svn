@@ -37,7 +37,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
 /*"Support for a new pasteboard type OPAttributedStringPboardType. It uses NSCoding for transmitting so it is not crossplatform."*/
 
 /*
-+ (void)install
++ (void) install
 {
     static BOOL isInstalled = NO;
 
@@ -50,7 +50,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
 }
 */
 
-+ (NSAttributedString *)_attributedStringFromPasteboard:(NSPasteboard *)quotePasteboard
++ (NSAttributedString *)_attributedStringFromPasteboard: (NSPasteboard*) quotePasteboard
 {
     NSAttributedString* pbContent = nil;
 
@@ -66,11 +66,11 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     }
     else if ([pasteboardType isEqualToString:NSRTFDPboardType])
     {
-        pbContent = [[NSMutableAttributedString allocWithZone:[self zone]] initWithRTFD:[quotePasteboard dataForType:NSRTFDPboardType] documentAttributes:NULL];
+        pbContent = [[NSMutableAttributedString allocWithZone:[self zone]] initWithRTFD:[quotePasteboard dataForType:NSRTFDPboardType] documentAttributes: NULL];
     }
     else if ([pasteboardType isEqualToString:NSRTFPboardType])
     {
-        pbContent = [[NSMutableAttributedString allocWithZone:[self zone]] initWithRTF:[quotePasteboard dataForType:NSRTFPboardType] documentAttributes:NULL];
+        pbContent = [[NSMutableAttributedString allocWithZone:[self zone]] initWithRTF:[quotePasteboard dataForType:NSRTFPboardType] documentAttributes: NULL];
     }
     else if ([pasteboardType isEqualToString:NSStringPboardType])
     {
@@ -79,7 +79,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     return [pbContent autorelease];
 }
 
-+ (NSString *)plainTextQuoteFromPasteboard:(NSPasteboard *)quotePasteboard
++ (NSString*) plainTextQuoteFromPasteboard: (NSPasteboard*) quotePasteboard
 {
     NSAttributedString *quoteContent;
 
@@ -88,7 +88,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     return [[quoteContent quotedStringWithLineLength:72 byIncreasingQuoteLevelBy:1] stringByRemovingAttachmentChars];
 }
 
-- (void)_removeUnsupportedAttributesInRange:(NSRange)range
+- (void) _removeUnsupportedAttributesInRange:(NSRange)range
 {
     NSTextStorage* ts = [self textStorage];
     
@@ -103,7 +103,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     [ts endEditing];
 }
 
-- (void)paste:(id)sender
+- (void) paste:(id)sender
 {
 // ##WARNING This method disables some attributes to be pasted. This has to be configurable at one time in order to allow "styled" texts.
     NSRange pasteRange;
@@ -115,7 +115,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     [self _removeUnsupportedAttributesInRange:pasteRange];
 }
 
-- (void)pasteAsQuotation:(id)sender
+- (void) pasteAsQuotation:(id)sender
 {
     NSAttributedString *quoteContent;
     NSString *quote;
@@ -129,12 +129,12 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     }
 }
 
-- (NSArray *)writablePasteboardTypes
+- (NSArray*) writablePasteboardTypes
 {
     return [[super writablePasteboardTypes] arrayByAddingObject:OPAttributedStringPboardType];
 }
 
-- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard type:(NSString *)type
+- (BOOL)writeSelectionToPasteboard: (NSPasteboard*) pboard type: (NSString*) type
 {
     if ([type isEqualToString:OPAttributedStringPboardType])
     {
@@ -159,7 +159,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     return [super writeSelectionToPasteboard:pboard type:type];
 }
 
-- (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
+- (BOOL)readSelectionFromPasteboard: (NSPasteboard*) pboard type: (NSString*) type
 {
     if ([type isEqualToString:NSFilenamesPboardType]) // resource fork and finder info if given
     {
@@ -184,7 +184,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
             if (NSDebugEnabled) NSLog(@"Filename = %@", filename);
             
             // make file wrapper from filename
-            fileWrapper = [[NSFileWrapper alloc] initWithPath:filename forksAndFinderInfo:YES];
+            fileWrapper = [[NSFileWrapper alloc] initWithPath:filename forksAndFinderInfo: YES];
             
             // make text attachment from file wrapper
             attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
@@ -210,14 +210,12 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
 
         [result release];
         return YES;
-    }
-    else
-    {
+    } else {
         return [super readSelectionFromPasteboard:pboard type:type];
     }
 }
 
-- (void)toggleContinuousSpellChecking:(id)sender
+- (void) toggleContinuousSpellChecking:(id)sender
 /*" Invokes functionality of superclass and sends an OPContinuousSpellCheckingDidToggleNotification notification additionally. "*/
 {
     NSDictionary *userInfo;
@@ -225,9 +223,9 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     [super toggleContinuousSpellChecking:sender];
 
     if ([self isContinuousSpellCheckingEnabled])
-        userInfo = [NSDictionary dictionaryWithObject:@"enabled" forKey:@"status"];
+        userInfo = [NSDictionary dictionaryWithObject: @"enabled" forKey:@"status"];
     else
-        userInfo = [NSDictionary dictionaryWithObject:@"disabled" forKey:@"status"];
+        userInfo = [NSDictionary dictionaryWithObject: @"disabled" forKey:@"status"];
     
     [[NSNotificationCenter defaultCenter]
         postNotificationName:OPContinuousSpellCheckingDidToggleNotification
@@ -235,7 +233,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
                     userInfo:userInfo];
 }
 
-- (void)keyDown:(NSEvent *)theEvent
+- (void) keyDown: (NSEvent*) theEvent
 /*" Enables in the case of a non editable text view the use of the spacebar. "*/
 {
     if (! [self isEditable])

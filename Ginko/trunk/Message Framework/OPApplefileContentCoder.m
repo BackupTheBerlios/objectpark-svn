@@ -345,12 +345,12 @@
 
 @implementation OPApplefileContentCoder
 
-+ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
++ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
 {
     return [mpart isApplefile];
 }
 
-+ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
++ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
 /*"
    Decides if anAttributedString can be encoded starting at anIndex. If YES is returned effectiveRange 
    designates the range which can be encoded by this class. If NO is returned effectiveRange indicates
@@ -393,7 +393,7 @@
     return NO;
 }
 
-- (NSData *)_appleSingeDoubleFromFileWrapper:(NSFileWrapper *)aFileWrapper
+- (NSData*) _appleSingeDoubleFromFileWrapper: (NSFileWrapper*) aFileWrapper
 /*"
    Creates data containing an AppleSingle/AppleDouble structure with 3 entries:
      - resource fork
@@ -419,7 +419,7 @@
     finderInfo = [fileAttributes objectForKey:OPFinderInfo];
     
     // realname
-    realnameData = [[aFileWrapper filename] dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES];
+    realnameData = [[aFileWrapper filename] dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion: YES];
     
     realnameSize = [realnameData length];
         
@@ -543,7 +543,7 @@
     return result;
 }
 
-- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper
+- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
     NSString *theFilename;
     NSDictionary *attributes;
@@ -565,20 +565,20 @@
         xUnixMode = [[NSString xUnixModeString:[posixPermissions intValue]] retain];
     }
 
-	[self setContentType:@"application/applefile"];
-    return [super initWithData:[self _appleSingeDoubleFromFileWrapper:aFileWrapper] filename:theFilename];
+	[self setContentType: @"application/applefile"];
+    return [super initWithData:[self _appleSingeDoubleFromFileWrapper:aFileWrapper] filename: theFilename];
 }
 
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype
 {
     id messagePart = [super _encodeDataWithClass:targetClass];
         
-    [messagePart setContentType:@"application/applefile" withParameters:[messagePart contentTypeParameters]];
+    [messagePart setContentType: @"application/applefile" withParameters:[messagePart contentTypeParameters]];
          
     return messagePart;
 }
 
-- (NSData *)_dataForEntryID:(uint32)entryID
+- (NSData*) _dataForEntryID:(uint32)entryID
 /*"
 Returns the entry out of the applesingle/appledouble data. E.g. data fork or resource fork.
 For possible parameter values see applefile.h.
@@ -648,9 +648,7 @@ For possible parameter values see applefile.h.
     {
         // use coder
         preferredFilename = [(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:rawPreferredFilename] text];
-    }
-    else
-    {
+    } else {
         if (realnameData)
         {
             preferredFilename = [[[NSString alloc] initWithData:realnameData encoding:NSMacOSRomanStringEncoding] autorelease];
@@ -660,7 +658,7 @@ For possible parameter values see applefile.h.
     }
     
     result = [[[NSFileWrapper alloc] initRegularFileWithContents:dataFork] autorelease];
-    [result setPreferredFilename:preferredFilename]; // file name
+    [result setPreferredFilename: preferredFilename]; // file name
     
     if (resourceFork || finderInfo)
     {
@@ -670,7 +668,7 @@ For possible parameter values see applefile.h.
         attributes = [[result fileAttributes] mutableCopy];
         
         if (resourceFork)
-            [attributes setObject:resourceFork forKey:OPFileResourceForkData];
+            [attributes setObject: resourceFork forKey:OPFileResourceForkData];
             
         if (finderInfo)
         {
@@ -680,11 +678,11 @@ For possible parameter values see applefile.h.
             fInfo = (FInfo *)[finderInfo bytes];
             type = [NSNumber numberWithUnsignedLong:fInfo->fdType];
             creator = [NSNumber numberWithUnsignedLong:fInfo->fdCreator];
-//            [attributes setObject:type forKey:NSFileHFSTypeCode];
-//            [attributes setObject:creator forKey:NSFileHFSCreatorCode];
+//            [attributes setObject: type forKey:NSFileHFSTypeCode];
+//            [attributes setObject: creator forKey:NSFileHFSCreatorCode];
 //#warning axel->axel: report NSFileWrapper bug (type and creator are not set and resource forks not supported)
             //
-            [attributes setObject:finderInfo forKey:OPFinderInfo];
+            [attributes setObject: finderInfo forKey:OPFinderInfo];
         }
         
         [result setFileAttributes:attributes]; 

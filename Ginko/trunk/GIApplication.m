@@ -28,7 +28,7 @@
 
 @implementation GIApplication
 
-+ (void)initialize
++ (void) initialize
 {
     registerDefaultDefaults();
     NSAssert([[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences], @"Failed to register default Preferences.");
@@ -37,12 +37,12 @@
 - (IBAction)addressbook:(id)sender
 /*" Launches the Addressbook application. "*/
 {
-    [[NSWorkspace sharedWorkspace] launchApplication:@"Address Book"];
+    [[NSWorkspace sharedWorkspace] launchApplication: @"Address Book"];
 }
 
 - (IBAction)openNewGroupWindow:(id)sender
 {
-    [[[G3GroupController alloc] initWithGroup:nil] autorelease];
+    [[[G3GroupController alloc] initWithGroup: nil] autorelease];
 }
 
 - (IBAction)newMessage:(id)sender
@@ -61,7 +61,7 @@
     return YES;
 }
 
-+ (NSArray *)preferredContentTypes
++ (NSArray*) preferredContentTypes
 {
     NSArray *types = [[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences];
     return types;
@@ -72,7 +72,7 @@
     return [self validateSelector:[menuItem action]];
 }
 
-- (void)restoreOpenWindowsFromLastSession
+- (void) restoreOpenWindowsFromLastSession
 {
     NSLog(@"-[GIApplication restoreOpenWindowsFromLastSession] (not yet implemented)");
     // TODO
@@ -140,7 +140,7 @@
 	sqlite3_close(db);
 }
 
-- (NSString *)databasePath
+- (NSString*) databasePath
 {
     static NSString *path = nil;
     if (!path) path = [[self applicationSupportPath] stringByAppendingPathComponent: @"MessageBase.sqlite"];
@@ -176,7 +176,7 @@
         localizedDescription = [error localizedDescription];
         error = [NSError errorWithDomain: @"Ginko3Domain" 
                                     code: 0		
-                                userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
+                                userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat: @"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
     }
     //NSLog(@"Store: %@", [[coordinator persistentStores] lastObject]);
     
@@ -222,15 +222,15 @@
     return [persistentObjectContext autorelease];
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
     [self setDelegate:self];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name: OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name: OPJobDidFinishNotification object:[GIPOPJob jobName]];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name:OPJobDidFinishNotification object:MboxImportJobName];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name: OPJobDidFinishNotification object:MboxImportJobName];
 
     // Some statistical messsages:
     //OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	
@@ -310,32 +310,32 @@
     return NO;
 }
 
-- (void) applicationDidBecomeActive:(NSNotification *)aNotification
+- (void) applicationDidBecomeActive: (NSNotification*) aNotification
 {
 	//NSLog(@"Supergroup is %@", [GIMessageGroup superGroup]);
 
     if ([self isGroupsDrawerMode]) {
         if (! [self hasGroupWindow]) 
         {
-            [[[G3GroupController alloc] initWithGroup:nil] autorelease];
+            [[[G3GroupController alloc] initWithGroup: nil] autorelease];
         }
     } else {
         if (! [self standaloneGroupsWindow]) {
-            [[[G3GroupController alloc] initAsStandAloneBoxesWindow:nil] autorelease];
+            [[[G3GroupController alloc] initAsStandAloneBoxesWindow: nil] autorelease];
         }
     }
 //#warning leaking memory as hell:
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void) applicationDidFinishLaunching: (NSNotification*) aNotification
 /*" On launch, opens a group window. "*/
 {
     [self applicationDidBecomeActive:aNotification];
     [OPJobs setMaxThreads:4];
 }
 
-- (NSArray *)sortFilePathsByCreationDate:(NSArray *)someFilePaths
+- (NSArray*) sortFilePathsByCreationDate:(NSArray*) someFilePaths
 {
 #warning implement for better mbox restore
     return someFilePaths;
@@ -345,22 +345,22 @@
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
-    NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", @"mbx", nil];
+    NSArray *fileTypes = [NSArray arrayWithObjects: @"mboxfile", @"mbox", @"mbx", nil];
     NSOpenPanel *oPanel = [NSOpenPanel openPanel];
     NSString *directory = [[NSUserDefaults standardUserDefaults] objectForKey:ImportPanelLastDirectory];
     
     if (!directory) directory = NSHomeDirectory();
     
-    [oPanel setAllowsMultipleSelection:YES];
-    [oPanel setAllowsOtherFileTypes:YES];
+    [oPanel setAllowsMultipleSelection: YES];
+    [oPanel setAllowsOtherFileTypes: YES];
     [oPanel setPrompt:NSLocalizedString(@"Import", @"Import open panel OK button")];
     [oPanel setTitle:NSLocalizedString(@"Import mbox Files", @"Import open panel title")];
     
-    result = [oPanel runModalForDirectory:directory file:nil types:fileTypes];
+    result = [oPanel runModalForDirectory:directory file: nil types:fileTypes];
     
     if (result == NSOKButton) 
     {
-        [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
+        [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory] forKey:ImportPanelLastDirectory];
         
         NSArray *filesToOpen = [self sortFilePathsByCreationDate:[oPanel filenames]];
         if ([filesToOpen count]) 
@@ -375,16 +375,16 @@
                 NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
                 // support for 'mbox' bundles
-                if ([[boxFilename pathExtension] isEqualToString:@"mbox"])
+                if ([[boxFilename pathExtension] isEqualToString: @"mbox"])
                 {
-                    boxFilename = [boxFilename stringByAppendingPathComponent:@"mbox"];
+                    boxFilename = [boxFilename stringByAppendingPathComponent: @"mbox"];
                 }
                 
-                [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
-                [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
-                [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
+                [jobArguments setObject: boxFilename forKey: @"mboxFilename"];
+                [jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+                [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
                 
-                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
+                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject: @"mbox import"];
             }
         }
     }    
@@ -410,10 +410,10 @@
 	@try {
 		[[OPPersistentObjectContext threadContext] saveChanges];
 	} @catch (NSException* exception) {
-		NSString *localizedDescription;
+		NSString* localizedDescription;
 //        NSLog(@"Commit error: Affected objects = %@\nchanged objects = %@\nDeleted objects = %@", [[exception userInfo] objectForKey:NSAffectedObjectsErrorKey], [[OPPersistentObjectContext threadContext] changedObjects], [[OPPersistentObjectContext threadContext] deletedObjects]);
         localizedDescription = [exception description]; // todo: was: localizedDescription!
-        NSError* error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
+        NSError* error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat: @"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
         [self presentError: error];
     }
 }
@@ -456,20 +456,20 @@
     }
 }
 
-- (void)POPJobFinished:(NSNotification *)aNotification
+- (void) POPJobFinished: (NSNotification*) aNotification
 {
     if (NSDebugEnabled) NSLog(@"POPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
-    NSException *exception = [[aNotification userInfo] objectForKey:@"exception"];
+    NSException *exception = [[aNotification userInfo] objectForKey: @"exception"];
     
     if (exception)
     {
-        NSString *localizedDescription = [[exception userInfo] objectForKey:NSLocalizedDescriptionKey];
+        NSString* localizedDescription = [[exception userInfo] objectForKey:NSLocalizedDescriptionKey];
         
-        NSError *error = [NSError errorWithDomain:@"Ginko3Domain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+        NSError *error = [NSError errorWithDomain: @"Ginko3Domain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
             localizedDescription ? localizedDescription : [exception reason], NSLocalizedDescriptionKey, 
             nil]];
         [[NSApplication sharedApplication] presentError:error];
@@ -494,11 +494,11 @@
     }
 }
 
-- (void)importJobFinished:(NSNotification *)aNotification
+- (void) importJobFinished: (NSNotification*) aNotification
 {
     if (NSDebugEnabled) NSLog(@"importJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
     [OPJobs removeFinishedJob:jobId]; // clean up
@@ -506,11 +506,11 @@
     [self saveAction:self];
 }
 
-- (void)SMTPJobFinished:(NSNotification *)aNotification
+- (void) SMTPJobFinished: (NSNotification*) aNotification
 {
     if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
     NSDictionary *result = [OPJobs resultForJob:jobId];
@@ -518,10 +518,10 @@
     
     [OPJobs removeFinishedJob:jobId]; // clean up
     
-    NSArray *messages = [result objectForKey:@"messages"];
+    NSArray *messages = [result objectForKey: @"messages"];
     NSAssert(messages != nil, @"result does not contain 'messages'");
     
-    NSArray *sentMessages = [result objectForKey:@"sentMessages"];
+    NSArray *sentMessages = [result objectForKey: @"sentMessages"];
     NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 
     NSEnumerator *enumerator = [sentMessages objectEnumerator];
@@ -544,7 +544,7 @@
     [self saveAction:self];
 }
 
-- (void)sendQueuedMessagesWithFlag:(unsigned)flag
+- (void) sendQueuedMessagesWithFlag:(unsigned)flag
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). "*/
 {
     // iterate over all profiles:
@@ -553,7 +553,7 @@
     
     while (profile = [enumerator nextObject])
     {
-        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
         GIMessage *message;
         NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
             

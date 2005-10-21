@@ -76,7 +76,7 @@
 	return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [super dealloc];
 }
@@ -613,7 +613,7 @@
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void)setAllowAnyRootSSLCertificate:(BOOL)value 
+- (void) setAllowAnyRootSSLCertificate:(BOOL)value 
 {
     [self willChangeValueForKey: @"allowAnyRootSSLCertificate"];
     [self setPrimitiveValue:[NSNumber numberWithBool:value]
@@ -632,7 +632,7 @@
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void)setVerifySSLCertificateChain:(BOOL)value 
+- (void) setVerifySSLCertificateChain:(BOOL)value 
 {
     [self willChangeValueForKey: @"verifySSLCertificateChain"];
     [self setPrimitiveValue:[NSNumber numberWithBool: value]

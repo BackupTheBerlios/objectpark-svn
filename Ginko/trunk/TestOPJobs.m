@@ -17,31 +17,31 @@
     [OPJobs setMaxThreads:2];
 }
 
-- (void)jobToTest:(NSMutableDictionary *)arguments
+- (void) jobToTest: (NSMutableDictionary*) arguments
 {
     //NSDictionary *args = [jobDescription objectForKey:OPJobArguments];
-    //NSLog(@"Hello, I'm job with name: %@", [args objectForKey:@"name"]);
+    //NSLog(@"Hello, I'm job with name: %@", [args objectForKey: @"name"]);
     
     STAssertTrue([OPJobs jobId] != 0, @"not %u", [OPJobs jobId]);
     
-    [OPJobs setResult:@"TestResult"];
+    [OPJobs setResult: @"TestResult"];
     
     sleep(2);
     
     if ([OPJobs shouldTerminate])
     {
-        [OPJobs setResult:@"Terminated"];
+        [OPJobs setResult: @"Terminated"];
         return;
     }
     
     sleep(3);
 }
 
-- (void)testBasics
+- (void) testBasics
 {
-    NSNumber *jobId1 = [OPJobs scheduleJobWithName:@"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 1" forKey:@"name"] synchronizedObject:nil];
-    NSNumber *jobId2 = [OPJobs scheduleJobWithName:@"job2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject:nil];
-    NSNumber *jobId3 = [OPJobs scheduleJobWithName:@"job3" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject:nil];
+    NSNumber *jobId1 = [OPJobs scheduleJobWithName: @"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 1" forKey:@"name"] synchronizedObject: nil];
+    NSNumber *jobId2 = [OPJobs scheduleJobWithName: @"job2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject: nil];
+    NSNumber *jobId3 = [OPJobs scheduleJobWithName: @"job3" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject: nil];
     
    // sleep(1);
         
@@ -82,11 +82,11 @@
     STAssertTrue([OPJobs activeThreadCount] == 0, @"no thread should be active");
 }
 
-- (void)testSynchronizing
+- (void) testSynchronizing
 {
-    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName:@"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
-    NSNumber *jobKoeln2 = [OPJobs scheduleJobWithName:@"koeln2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln2" forKey:@"name"] synchronizedObject:@"Koeln"];
-    NSNumber *jobDuisburg = [OPJobs scheduleJobWithName:@"duisburg" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Duisburg" forKey:@"name"] synchronizedObject:@"Duisburg"];
+    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName: @"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
+    NSNumber *jobKoeln2 = [OPJobs scheduleJobWithName: @"koeln2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln2" forKey:@"name"] synchronizedObject:@"Koeln"];
+    NSNumber *jobDuisburg = [OPJobs scheduleJobWithName: @"duisburg" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Duisburg" forKey:@"name"] synchronizedObject:@"Duisburg"];
     
     sleep(1);
     
@@ -128,12 +128,12 @@
     STAssertTrue([OPJobs activeThreadCount] == 0, @"no thread should be active");
 }
 
-- (void)testResult
+- (void) testResult
 {
     [OPJobs removeAllFinishedJobs];
     STAssertTrue([[OPJobs finishedJobs] count] == 0, @"at least one finished job in place");
     
-    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName:@"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
+    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName: @"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
     
     sleep(1);
     
@@ -148,7 +148,7 @@
     
     //NSLog(@"jobKoeln1 completed");
     STAssertTrue([OPJobs isJobFinished:jobKoeln1], @"should be finished");
-    STAssertTrue([[OPJobs resultForJob:jobKoeln1] isEqual:@"TestResult"], @"wrong result %@ = TestResult", [OPJobs resultForJob:jobKoeln1]);
+    STAssertTrue([[OPJobs resultForJob:jobKoeln1] isEqual: @"TestResult"], @"wrong result %@ = TestResult", [OPJobs resultForJob:jobKoeln1]);
     STAssertTrue([OPJobs activeThreadCount] == 0, @"no thread should be active");
     
     STAssertTrue([[OPJobs finishedJobs] count] == 1, @"not one finished job in place");
@@ -156,9 +156,9 @@
     STAssertTrue([[OPJobs finishedJobs] count] == 0, @"at least one finished job in place");
 }
 
-- (void)testTermination
+- (void) testTermination
 {
-    NSNumber *job1 = [OPJobs scheduleJobWithName:@"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject:nil];
+    NSNumber *job1 = [OPJobs scheduleJobWithName: @"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject: nil];
     
     sleep(1);
     
@@ -170,7 +170,7 @@
         sleep(1);
     }
     
-    STAssertTrue([[OPJobs resultForJob:job1] isEqual:@"Terminated"], @"wrong result %@ = Terminated", [OPJobs resultForJob:job1]);
+    STAssertTrue([[OPJobs resultForJob:job1] isEqual: @"Terminated"], @"wrong result %@ = Terminated", [OPJobs resultForJob:job1]);
 }
 
 @end

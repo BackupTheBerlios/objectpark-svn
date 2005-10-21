@@ -17,13 +17,13 @@
 + (GIFulltextIndexCenter *)defaultIndexCenter;
 - (id)init;
 
-- (BOOL)addMessage:(GIMessage *)aMessage;
-- (BOOL)removeMessage:(GIMessage *)aMessage;
-- (NSArray *)hitsForQueryString:(NSString *)aQuery;
+- (BOOL)addMessage: (GIMessage*) aMessage;
+- (BOOL)removeMessage: (GIMessage*) aMessage;
+- (NSArray*) hitsForQueryString: (NSString*) aQuery;
 - (BOOL)reindexAllMessages;
 
 - (NSDictionary *)indexDictionary;
-- (void)setIndexDictionary:(NSDictionary *)newIndexDictionary;
+- (void) setIndexDictionary:(NSDictionary *)newIndexDictionary;
 
 
 @end

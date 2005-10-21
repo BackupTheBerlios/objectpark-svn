@@ -66,7 +66,7 @@ extern NSString* GIMessageGroupWasAddedNotification;
 
 	/*" Profile handling "*/
 - (GIProfile*) defaultProfile;
-- (void) setDefaultProfile:(GIProfile *)aProfile;
+- (void) setDefaultProfile: (GIProfile*) aProfile;
 
 	/*" Persistency handling "*/
 + (void) commitChanges;

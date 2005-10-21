@@ -3,6 +3,7 @@
 //  @(#)$Id: NSData+MIME.m,v 1.2 2005/04/02 12:27:57 theisen Exp $
 //
 //  Copyright (c) 1997-2000 by Erik Doernenburg. All rights reserved.
+//  Copyright (c) 2004 by Axel Katerbau & Dirk Theisen. All rights reserved.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission
@@ -26,8 +27,8 @@
 #import "NSData+MessageUtils.h"
 
 @interface NSData(EDMIMEExtensionsPrivateAPI)
-- (NSData *)_encodeQuotedPrintableStep1;
-- (NSData *)_encodeQuotedPrintableStep2;
+- (NSData*) _encodeQuotedPrintableStep1;
+- (NSData*) _encodeQuotedPrintableStep2;
 @end
 
 
@@ -71,7 +72,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
 
 @implementation NSData(MessageUtils)
 
-- (BOOL)isValidTransferEncoding:(NSString *)encodingName
+- (BOOL)isValidTransferEncoding: (NSString*) encodingName
 /*" Returns YES if encoding name describes an encoding scheme that is known to the framework. NO otherwise. "*/
 {
     encodingName = [encodingName lowercaseString];
@@ -89,7 +90,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     return NO;
 }
 
-- (NSData *)decodeContentWithTransferEncoding:(NSString *)encodingName
+- (NSData*) decodeContentWithTransferEncoding: (NSString*) encodingName
 {
     encodingName = [encodingName lowercaseString];
     if([encodingName isEqualToString:MIME7BitContentTransferEncoding])
@@ -106,7 +107,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     return self; 
 }
 
-- (NSData *)encodeContentWithTransferEncoding:(NSString *)encodingName
+- (NSData*) encodeContentWithTransferEncoding: (NSString*) encodingName
 {
     encodingName = [encodingName lowercaseString];
     if([encodingName isEqualToString:MIME7BitContentTransferEncoding])
@@ -119,7 +120,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
         return [self encodeQuotedPrintable];
     if([encodingName isEqualToString:MIMEBase64ContentTransferEncoding])
         return [self encodeBase64];
-    [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: Unknown content transfer encoding; found '%@'", NSStringFromClass(isa), NSStringFromSelector(_cmd), encodingName];
+    [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: Unknown content transfer encoding; found '%@'", NSStringFromClass(isa), NSStringFromSelector(_cmd), encodingName];
     return nil; // keep compiler happy
 }
 
@@ -128,7 +129,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
 //	QUOTED PRINTABLE (RFC 2045)
 //---------------------------------------------------------------------------------------
 
-- (NSData *)decodeQuotedPrintable
+- (NSData*) decodeQuotedPrintable
 {
     NSMutableData 	*decodedData;
     const char      *source, *endOfSource;
@@ -173,14 +174,14 @@ static __inline__ BOOL isqpliteral(unsigned char b)
 }
 
 
-- (NSData *)encodeQuotedPrintable
+- (NSData*) encodeQuotedPrintable
 {
     // this is a bit lame but doing it in one pass proved to be too mind-boggling
     return [[self _encodeQuotedPrintableStep1] _encodeQuotedPrintableStep2];
 }
 
 
-- (NSData *)_encodeQuotedPrintableStep1
+- (NSData*) _encodeQuotedPrintableStep1
 {
     NSMutableData	*dest;
     NSData			*chunk;
@@ -242,7 +243,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
 }
 
 
-- (NSData *)_encodeQuotedPrintableStep2
+- (NSData*) _encodeQuotedPrintableStep2
 {
     NSMutableData	*dest;
     NSData			*chunk;
@@ -307,7 +308,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
 //	QUOTED PRINTABLE FOR HEADERS (RFC ????)
 //---------------------------------------------------------------------------------------
 
-- (NSData *)decodeHeaderQuotedPrintable
+- (NSData*) decodeHeaderQuotedPrintable
 {
     NSMutableData 	*decodedData;
     const unsigned char      *source, *endOfSource;
@@ -337,15 +338,15 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     return decodedData;
 }
 
-- (NSData *)encodeHeaderQuotedPrintable
+- (NSData*) encodeHeaderQuotedPrintable
 {
-    return [self encodeHeaderQuotedPrintableMustEscapeCharactersInString:nil];
+    return [self encodeHeaderQuotedPrintableMustEscapeCharactersInString: nil];
 }
 
-- (NSData *)encodeHeaderQuotedPrintableMustEscapeCharactersInString:(NSString *)escChars
+- (NSData*) encodeHeaderQuotedPrintableMustEscapeCharactersInString: (NSString*) escChars
 {
-    NSMutableCharacterSet *tempCharacterSet;
-    NSCharacterSet		  *literalChars;
+    NSMutableCharacterSet    *tempCharacterSet;
+    NSCharacterSet* literalChars;
     NSMutableData		  *buffer;
     unsigned int		  length;
     const unsigned char		   	  *source, *chunkStart, *endOfSource;
@@ -357,9 +358,7 @@ static __inline__ BOOL isqpliteral(unsigned char b)
         [tempCharacterSet removeCharactersInString:escChars];
         literalChars = [[tempCharacterSet copy] autorelease];
         [tempCharacterSet release];
-    }
-    else
-    {
+    } else {
         literalChars = [NSCharacterSet MIMEHeaderDefaultLiteralCharacterSet];
     }
     
@@ -403,7 +402,7 @@ void doFrom_Quoting(NSMutableString* aString)
     
     do
     {
-        range = [aString rangeOfString:@"From " options:NSLiteralSearch range:range];
+        range = [aString rangeOfString: @"From " options:NSLiteralSearch range:range];
         if(range.location != NSNotFound)
         {
             unsigned int position;
@@ -417,7 +416,7 @@ void doFrom_Quoting(NSMutableString* aString)
                 character = [aString characterAtIndex:position];
                 if(character == '\n') {
                     // insert quote >
-                    [aString insertString:@">" atIndex:position+1];
+                    [aString insertString: @">" atIndex:position+1];
                     length++;
                     break;
                 }
@@ -437,7 +436,7 @@ void doFrom_Quoting(NSMutableString* aString)
     return;
 }
 
-- (NSData *)transferDataFromMboxData
+- (NSData*) transferDataFromMboxData
 {
     char *start, *end, *pos, *lfPos;
     char *buffer, *copyPos;
@@ -548,7 +547,7 @@ void doFrom_Quoting(NSMutableString* aString)
     return result;
 }
 
-- (NSData *)mboxDataFromTransferDataWithEnvSender:(NSString *)envsender
+- (NSData*) mboxDataFromTransferDataWithEnvSender: (NSString*) envsender
 {
     NSMutableData *mboxData;
     NSMutableString *fromQuoteBuffer;
@@ -568,20 +567,20 @@ void doFrom_Quoting(NSMutableString* aString)
         envsender = @"MAILER-DAEMON";
     }
     
-    from_ = [NSString stringWithFormat:@"From %@ %@\n", envsender, myDate];
+    from_ = [NSString stringWithFormat: @"From %@ %@\n", envsender, myDate];
     fromQuoteBuffer = [NSMutableString stringWithCString:[self bytes] length:[self length]];
     
     doFrom_Quoting(fromQuoteBuffer);
 
     /*
-    if (![fromQuoteBuffer hasSuffix:@"\n"])
+    if (![fromQuoteBuffer hasSuffix: @"\n"])
     {
-        [fromQuoteBuffer appendString:@"\n"];
+        [fromQuoteBuffer appendString: @"\n"];
     }
     */
     
     // ensure trailing blank line (e.g. procmail style):
-    [fromQuoteBuffer appendString: [fromQuoteBuffer hasSuffix:@"\n"] ? @"\n" : @"\n\n"];
+    [fromQuoteBuffer appendString: [fromQuoteBuffer hasSuffix: @"\n"] ? @"\n" : @"\n\n"];
     
     fromQuoted = [fromQuoteBuffer stringWithUnixLinebreaks];
     

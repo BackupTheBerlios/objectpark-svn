@@ -11,7 +11,7 @@
 
 @implementation GIIndex
 
-+ (id)indexWithName:(NSString*)aName atPath:(NSString*)aPath
++ (id)indexWithName:(NSString*) aName atPath:(NSString*) aPath
 {
     NSLog(@"+[GIIndex indexWithName:%@ atPath:%@]", aName, aPath);
     return [[[self alloc] initWithName:aName atPath:aPath] autorelease];
@@ -22,7 +22,7 @@
     return index;
 }
 
-- (void)setIndex:(SKIndexRef)newIndex
+- (void) setIndex:(SKIndexRef)newIndex
     // Sets a new index. Closes the previous one.
 {
     //NSLog(@"-[GIIndex(%@) setIndex]", [self name]);
@@ -42,7 +42,7 @@
 }
 
 
-- (id)initWithName:(NSString*)aName atPath:(NSString *)aPath;
+- (id)initWithName:(NSString*) aName atPath: (NSString*) aPath;
 {
     self = [super init];
     
@@ -57,9 +57,9 @@
     } else {        
         NSLog(@"-[GIIndex initWithName:%@ atPath:%@] creating new index ", aName, aPath);
         NSMutableDictionary * analysisDict = [[NSMutableDictionary alloc] init];
-        [analysisDict setObject:@"en" forKey:(NSString *)kSKLanguageTypes];
-        [analysisDict setObject:[NSNumber numberWithInt:2] 
-                         forKey:(NSString *)kSKMinTermLength];
+        [analysisDict setObject: @"en" forKey: (NSString*) kSKLanguageTypes];
+        [analysisDict setObject: [NSNumber numberWithInt:2] 
+                         forKey: (NSString*) kSKMinTermLength];
         
         // returns an retained index or nil, if failed:
         SKIndexRef theIndex = SKIndexCreateWithURL( 
@@ -88,20 +88,20 @@
 }
 
 /*
-- (void)retain
+- (void) retain
 {
     //[super retain];
     NSLog(@"-[GIIndex(%@) retain]", [self name]);
 }
 
-- (void)release
+- (void) release
 {
     NSLog(@"-[GIIndex(%@) release]", [self name]);
     //[super release];
 }
 */
 
-- (void)dealloc
+- (void) dealloc
 {
     NSLog(@"-[GIIndex dealloc]");
     [self setIndex: nil];
@@ -111,12 +111,12 @@
 }
 
 
-- (NSString *)name
+- (NSString*) name
 {
     return name;
 }
 
-- (void)setName:(NSString * )newName
+- (void) setName:(NSString * )newName
 {
     [newName retain];
     [name release];
@@ -124,7 +124,7 @@
 }
 
 
-- (BOOL)addDocumentWithName:(NSString *)aName andText:(NSString *)aText andProperties:(NSDictionary *) aPropertiesDictionary
+- (BOOL)addDocumentWithName: (NSString*) aName andText: (NSString*) aText andProperties:(NSDictionary *) aPropertiesDictionary
 {
     BOOL isIndexed = NO;
 //	NSLog(@"-[GIIndex(%@) addDocumentWithName:%@",[self name], aName);
@@ -145,7 +145,7 @@
     return isIndexed;
 }
 
-- (BOOL)removeDocumentWithName:(NSString *)aName
+- (BOOL)removeDocumentWithName: (NSString*) aName
 {
     BOOL isRemoveSuccessfull = NO;
     if ([self index])
@@ -175,7 +175,7 @@
     return SKIndexGetDocumentCount([self index]);
 }
 
-- (NSArray *)hitsForQueryString:(NSString *)aQuery
+- (NSArray*) hitsForQueryString: (NSString*) aQuery
 {
     NSLog(@"-[GIIndex(%@) hitsForQueryString:%@]",[self name], aQuery);
 
@@ -208,7 +208,7 @@
         //NSLog(@"hit: %d with score: %f", tempDocumentIDArray[i], tempScoresArray[i]);
         SKDocumentRef tempHitDocument =  SKIndexCopyDocumentForDocumentID ([self index], tempDocumentIDArray[i]);
         //CFDictionaryRef tempHitProperties = SKIndexCopyDocumentProperties ([self index], tempHitDocument);
-        NSString* tempHitName = (NSString*)SKDocumentGetName(tempHitDocument);
+        NSString* tempHitName = (NSString*) SKDocumentGetName(tempHitDocument);
         //NSLog(@"hitName: %@", tempHitName);
         [resultArray addObject:tempHitName];
     }
@@ -222,7 +222,7 @@
 
 // internal helpers
 
-- (SKDocumentRef)createDocumentWithName:(NSString *)aName
+- (SKDocumentRef)createDocumentWithName: (NSString*) aName
 {
     return SKDocumentCreate((CFStringRef)@"Ginko", NULL, (CFStringRef)aName);
 }

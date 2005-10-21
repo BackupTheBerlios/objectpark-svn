@@ -11,21 +11,21 @@
 
 @implementation TestOPAppleDoubleContentCoder
 
-- (void)setUp
+- (void) setUp
 {
 }
 
-- (void)tearDown
+- (void) tearDown
 {
 }
 
-- (void)testCoding 
+- (void) testCoding 
 {
 	NSFileWrapper *wrapper, *wrapper1;
 	OPAppleDoubleContentCoder *coder;
 	NSAttributedString *attString, *attString1;
 	
-	wrapper = [[[NSFileWrapper alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"MailIcon_queue" ofType:@"tiff"]] autorelease];
+	wrapper = [[[NSFileWrapper alloc] initWithPath:[[NSBundle mainBundle] pathForResource: @"MailIcon_queue" ofType:@"tiff"]] autorelease];
 	
 	coder = [[[OPAppleDoubleContentCoder alloc] initWithFileWrapper:wrapper] autorelease];
 	

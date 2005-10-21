@@ -63,21 +63,21 @@ static NSString *templatePrefix = nil;
 static NSString *templateRow = nil;
 static NSString *templatePostfix = nil;
 
-+ (void)initTemplate
++ (void) initTemplate
 {    
     if (!templatePrefix)
     {
         NSError *error = nil;
-        NSString *template = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"HeaderTemplate" ofType:@"html"] encoding:NSUTF8StringEncoding error:&error];
+        NSString *template = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource: @"HeaderTemplate" ofType:@"html"] encoding:NSUTF8StringEncoding error:&error];
         
         NSAssert(template != nil, @"header template could not be loaded");
 
-        NSRange range = [template rangeOfString:@"<tr>"];
+        NSRange range = [template rangeOfString: @"<tr>"];
         NSAssert(range.location != NSNotFound, @"table start not found");
         templatePrefix = [[template substringWithRange:NSMakeRange(0, range.location)] retain];
         NSAssert(templatePrefix != nil, @"header prefix could not be computed");   
         
-        NSRange rowRange = [template rangeOfString:@"</tr>"];
+        NSRange rowRange = [template rangeOfString: @"</tr>"];
         NSAssert(rowRange.location != NSNotFound, @"table row not found");        
         
         int position = rowRange.location + rowRange.length;
@@ -100,32 +100,32 @@ static NSString *templatePostfix = nil;
     
     [string appendString:templatePostfix];
     
-    return [[[NSMutableAttributedString alloc] initWithHTML:[string dataUsingEncoding:NSUTF8StringEncoding] documentAttributes:NULL] autorelease];
+    return [[[NSMutableAttributedString alloc] initWithHTML: [string dataUsingEncoding: NSUTF8StringEncoding] documentAttributes: NULL] autorelease];
 }
 
-+ (void)_appendFieldName:(NSString *)fieldName andDecodedHeader:(NSString *)decodedHeader  toAttributedString:(NSMutableAttributedString *)displayString
++ (void) _appendFieldName: (NSString*) fieldName andDecodedHeader: (NSString*) decodedHeader  toAttributedString: (NSMutableAttributedString*) displayString
 {
     /*
     NSMutableAttributedString *template = [self headerTemplate];
-    NSRange nameRange = [[template string] rangeOfString:@"$fieldname$"];
+    NSRange nameRange = [[template string] rangeOfString: @"$fieldname$"];
     
     NSAssert(nameRange.location != NSNotFound, @"name range not found");
     
     [template replaceCharactersInRange:nameRange withString:NSLocalizedString(fieldName, @"A field name in the message header like 'Subject'")];
     
-    NSRange valueRange = [[template string] rangeOfString:@"$fieldvalue$"];
+    NSRange valueRange = [[template string] rangeOfString: @"$fieldvalue$"];
     NSAssert(valueRange.location != NSNotFound, @"value range not found");
     [template replaceCharactersInRange:valueRange withString:decodedHeader];
     
     [displayString appendAttributedString:template];
-    //[displayString appendString:@"\n"];
+    //[displayString appendString: @"\n"];
     
 */
     int startLocation, endLocation;
     
     startLocation = [displayString length];
     [displayString appendString: NSLocalizedString(fieldName, @"A field name in the message header like 'Subject'")];
-    [displayString appendString:@": "];
+    [displayString appendString: @": "];
     
     endLocation = [displayString length] - 1;
     
@@ -137,19 +137,18 @@ static NSString *templatePostfix = nil;
     startLocation = [displayString length];
     
     [displayString appendString:decodedHeader];
-    [displayString appendString:@"\n"];
+    [displayString appendString: @"\n"];
     
     endLocation = [displayString length] - 1;
     
     [displayString applyFontTraits:NSUnboldFontMask range:NSMakeRange(startLocation, endLocation - startLocation)];
 }
 
-+ (NSMutableAttributedString *)renderedHeaders:(NSArray *)headers forMessage:(OPInternetMessage *)aMessage showOthers:(BOOL)showOthers
++ (NSMutableAttributedString *)renderedHeaders:(NSArray*) headers forMessage: (OPInternetMessage*) aMessage showOthers:(BOOL)showOthers
 /*" Returns empty string if aMessage is nil. "*/
 {
     NSMutableAttributedString *displayString = [[[NSMutableAttributedString alloc] init] autorelease];
-    if (aMessage) 
-    {
+    if (aMessage) {
         NSEnumerator *enumerator = [headers objectEnumerator];
         NSString *fieldName;
         EDHeaderFieldCoder *coder;
@@ -159,32 +158,26 @@ static NSString *templatePostfix = nil;
         
         while (fieldName = [enumerator nextObject])
         {
-            if ([fieldName isEqualToString:@"Date"]) 
+            if ([fieldName isEqualToString: @"Date"]) 
             {
                 NSCalendarDate *myDate;
                 
                 myDate = [[aMessage date] copy];
                 [myDate setTimeZone:[NSTimeZone localTimeZone]];
                 
-                decodedHeader = [myDate descriptionWithCalendarFormat:@"%A %B %e, %Y (%I:%M %p)"];
+                decodedHeader = [myDate descriptionWithCalendarFormat: @"%A %B %e, %Y (%I:%M %p)"];
                 
                 [myDate release];
-            } 
-            else 
-            {;
-                @try
-                {
+            } else {
+                @try {
                     coder = [aMessage decoderForHeaderField:fieldName];
                     decodedHeader = [coder stringValue];
-                }
-                @catch(NSException *localException)
-                {
+                } @catch(NSException* localException) {
                     decodedHeader = [aMessage bodyForHeaderField:fieldName];
                 }
             }
             
-            if (decodedHeader)
-            {
+            if (decodedHeader) {
                 [fieldNames addObject:fieldName];
                 [fieldValues addObject:decodedHeader];
             }
@@ -197,14 +190,14 @@ static NSString *templatePostfix = nil;
         // replace templates
         for (i = 0; i < count; i++)
         {
-            NSRange nameRange = [[fieldTable string] rangeOfString:@"$fieldname$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+            NSRange nameRange = [[fieldTable string] rangeOfString: @"$fieldname$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
             NSAssert(nameRange.location != NSNotFound, @"name template could not be found");
             NSString *nameString = NSLocalizedString([fieldNames objectAtIndex:i], @"A field name in the message header like 'Subject'");
             [fieldTable replaceCharactersInRange:nameRange withString:nameString];
             
             startPosition = nameRange.location + [nameString length];
             
-            NSRange valueRange = [[fieldTable string] rangeOfString:@"$fieldvalue$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+            NSRange valueRange = [[fieldTable string] rangeOfString: @"$fieldvalue$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
             NSAssert(valueRange.location != NSNotFound, @"value template could not be found");
             [fieldTable replaceCharactersInRange:valueRange withString:[fieldValues objectAtIndex:i]];
             
@@ -255,7 +248,7 @@ static NSString *templatePostfix = nil;
         /*
         if([displayString length] > 0) 
         {
-            [displayString appendString:@"\n"];
+            [displayString appendString: @"\n"];
         }
          */
     }
@@ -288,7 +281,7 @@ static NSString *templatePostfix = nil;
 - (NSImage*) personImage
 /*"Tries multiple way to aquire an image of the sender. Returns nil, if unsuccessful."*/
 {
-    NSImage *cachedImage = [self primitiveValueForKey:@"CachedImage"];
+    NSImage *cachedImage = [self primitiveValueForKey: @"CachedImage"];
     
     if (!cachedImage) 
     {
@@ -300,7 +293,7 @@ static NSString *templatePostfix = nil;
         else 
         {
             //cachedImage = [[GIPeopleImageCache sharedInstance] getImageForName: [[theMessage replyToWithFallback: YES] addressFromEMailString]];
-            NSLog(@"Searching personImage for %@", [[self internetMessage] replyToWithFallback:YES]);
+            NSLog(@"Searching personImage for %@", [[self internetMessage] replyToWithFallback: YES]);
             
             if (!cachedImage) 
             {
@@ -312,7 +305,7 @@ static NSString *templatePostfix = nil;
             }
         }
         
-        [self setPrimitiveValue:cachedImage forKey:@"CachedImage"];
+        [self setPrimitiveValue:cachedImage forKey: @"CachedImage"];
     }
     
     return cachedImage;
@@ -337,12 +330,12 @@ static NSString *templatePostfix = nil;
     
     NSParameterAssert(aFont != nil);
     
-    [userDefaults setObject:[aFont fontName] forKey: MessageRendererFontName];
+    [userDefaults setObject: [aFont fontName] forKey: MessageRendererFontName];
     [userDefaults setInteger:[aFont pointSize] forKey: MessageRendererFontSize];
     
     // synching the content coders' default font
     //[EDContentCoder setDefaultFont:aFont];
-    //[self flushCache:nil];
+    //[self flushCache: nil];
 }
 
 + (BOOL) shouldRenderAttachmentsInlineIfPossible

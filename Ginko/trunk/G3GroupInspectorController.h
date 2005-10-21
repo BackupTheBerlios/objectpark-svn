@@ -17,7 +17,7 @@
     GIMessageGroup *group;
 }
 
-+ (id)groupInspectorForGroup:(GIMessageGroup *)aGroup;
++ (id)groupInspectorForGroup: (GIMessageGroup*) aGroup;
 
 - (IBAction)switchProfile:(id)sender;
 

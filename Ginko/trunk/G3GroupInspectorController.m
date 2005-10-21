@@ -13,7 +13,7 @@
 
 static G3GroupInspectorController *sharedInspector = nil;
 
-- (void)setupProfilePopUpButton
+- (void) setupProfilePopUpButton
 {
     NSEnumerator *enumerator;
     GIProfile *aProfile;
@@ -24,12 +24,12 @@ static G3GroupInspectorController *sharedInspector = nil;
     enumerator = [[GIProfile allObjects] objectEnumerator];
     while ((aProfile = [enumerator nextObject]))
     {
-        [profileButton addItemWithTitle:[aProfile primitiveValueForKey:@"name"]];
+        [profileButton addItemWithTitle:[aProfile primitiveValueForKey: @"name"]];
         [[profileButton lastItem] setRepresentedObject:aProfile];
     }
 }
 
-- (void)setGroup:(GIMessageGroup *)aGroup
+- (void) setGroup: (GIMessageGroup*) aGroup
 {
     [group autorelease];
     group = [aGroup retain];
@@ -40,7 +40,7 @@ static G3GroupInspectorController *sharedInspector = nil;
     [window makeKeyAndOrderFront:self];
 }
 
-+ (id)groupInspectorForGroup:(GIMessageGroup *)aGroup
++ (id)groupInspectorForGroup: (GIMessageGroup*) aGroup
 {
     if (! sharedInspector)
     {
@@ -57,7 +57,7 @@ static G3GroupInspectorController *sharedInspector = nil;
     if ((self = [super init]))
     {
         NSLog(@"G3GroupInspectorController init");
-        [NSBundle loadNibNamed:@"GroupInspector" owner:self];
+        [NSBundle loadNibNamed: @"GroupInspector" owner:self];
     }
     
     return self;

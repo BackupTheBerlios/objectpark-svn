@@ -14,7 +14,7 @@
 #define FOLDERPATH @"/tmp/OPMSXFolderTestFolder"
 #define FILEPATH @"/tmp/OPMSXFolderTestFolder/Testfile"
 
-- (void)testEncodeAndDecode
+- (void) testEncodeAndDecode
 {
     NSFileManager *fileManager;
     OPXFolderContentCoder *coder;
@@ -25,8 +25,8 @@
     // make folder with file in it
     fileManager = [NSFileManager defaultManager];
     
-    STAssertTrue([fileManager createDirectoryAtPath:FOLDERPATH attributes:nil], @"Could not create folder.");
-    STAssertTrue([fileManager createFileAtPath:FILEPATH contents:[NSData data] attributes:nil], @"Could not create file.");
+    STAssertTrue([fileManager createDirectoryAtPath:FOLDERPATH attributes: nil], @"Could not create folder.");
+    STAssertTrue([fileManager createFileAtPath:FILEPATH contents:[NSData data] attributes: nil], @"Could not create file.");
     
     wrapper = [[[NSFileWrapper alloc] initWithPath:FOLDERPATH] autorelease];
     
@@ -49,14 +49,14 @@
     STAssertNotNil([fileWrappers objectForKey:[FILEPATH lastPathComponent]], @"file in folder has wrong name");
 }
 
-- (void)tearDown
+- (void) tearDown
 {
-    [[NSFileManager defaultManager] removeFileAtPath:FOLDERPATH handler:nil];
+    [[NSFileManager defaultManager] removeFileAtPath:FOLDERPATH handler: nil];
 }
 
-- (void)setUp
+- (void) setUp
 {
-    [[NSFileManager defaultManager] removeFileAtPath:FOLDERPATH handler:nil];
+    [[NSFileManager defaultManager] removeFileAtPath:FOLDERPATH handler: nil];
 }
 
 @end

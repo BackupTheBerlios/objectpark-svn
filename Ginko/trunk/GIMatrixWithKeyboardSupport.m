@@ -36,7 +36,7 @@
 }
 
 /*
-- (void)drawRect:(NSRect)rect {
+- (void) drawRect:(NSRect)rect {
     // Drawing code here.
 }
 */

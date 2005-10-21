@@ -49,7 +49,7 @@ unsigned int MessageIdCounter = 0;
         // in a given string. axel
         coder = [[EDPlainTextContentCoder allocWithZone:[self zone]] 
                 initWithText:[[[typeAndContent secondObject] string] stringWithUnixLinebreaks]];
-        [coder setDataMustBe7Bit:YES];
+        [coder setDataMustBe7Bit: YES];
         
         message = [coder message];
         
@@ -208,13 +208,13 @@ unsigned int MessageIdCounter = 0;
     return nil;
 }
 
-- (void)dealloc {
+- (void) dealloc {
 //    if (NSDebugEnabled) NSLog(@"RFMessage dealloc");
     [super dealloc];
 }
 */
 
-- (NSString *)description 
+- (NSString*) description 
 {
     return [NSString stringWithCString:[[self transferData] bytes] length:[[self transferData] length]];
 }
@@ -301,7 +301,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
 }
 
 /*
-- (void)generateMessageIdWithAccount:(OPMessageAccount *)anAccount
+- (void) generateMessageIdWithAccount:(OPMessageAccount *)anAccount
 /" Generates an unique message id given the account information anAccount. The message id consists of the fixed string Ginko, an session-unique number, the current time and date and the users email account information. The username will be hashed to hide user info. "/
 {
     NSString *email;
@@ -323,9 +323,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
     {
         domain = [email substringWithRange:NSMakeRange(range.location, [email length] - range.location)];
         username = [email substringWithRange:NSMakeRange(0, range.location)];
-    }
-    else
-    {
+    } else {
         domain = email;
         username = email;
     }
@@ -335,7 +333,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
     [stringToHash appendString:email];
     [stringToHash appendFormat:@"%u", MessageIdCounter++];
 
-    hash = [[stringToHash dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] md5Base64String];
+    hash = [[stringToHash dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion: YES] md5Base64String];
 
     while ([hash hasSuffix:@"="])
     {

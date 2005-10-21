@@ -76,7 +76,7 @@
     return [[self allObjects] firstObject]; // dth: why should this work?
 }
 
-+ (GIProfile*) guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage
++ (GIProfile*) guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage
 	/*" Tries to find a profile that matches the one meant by aMessage. Return nil if no profile could be guessed. "*/ 
 {    
     // All addressees:
@@ -124,7 +124,7 @@
                 return YES;
             }
         }
-    } @catch (NSException *localException) {
+    } @catch (NSException* localException) {
         return NO; // Expect our users to have correct email addresses.
     }
     

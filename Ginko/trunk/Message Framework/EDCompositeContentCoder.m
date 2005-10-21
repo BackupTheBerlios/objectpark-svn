@@ -29,9 +29,9 @@
 #import "utilities.h"
 
 @interface EDCompositeContentCoder(PrivateAPI)
-- (void)_takeSubpartsFromMultipartContent:(EDMessagePart *)mpart;
-- (void)_takeSubpartsFromMessageContent:(EDMessagePart *)mpart;
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype;
+- (void) _takeSubpartsFromMultipartContent: (EDMessagePart*) mpart;
+- (void) _takeSubpartsFromMessageContent: (EDMessagePart*) mpart;
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype;
 @end
 
 
@@ -46,11 +46,11 @@ static short boundaryId = 0;
 //	CAPABILITIES
 //---------------------------------------------------------------------------------------
 
-+ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
++ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
 {
     if ([[mpart contentType] hasPrefix: @"multipart/"]) return YES;
-    if ([[mpart contentType] isEqualToString:@"message/rfc822"]) return YES;
-    if ([[mpart contentType] isEqualToString:@"message/rfc2822"]) return YES;
+    if ([[mpart contentType] isEqualToString: @"message/rfc822"]) return YES;
+    if ([[mpart contentType] isEqualToString: @"message/rfc2822"]) return YES;
     return NO;
 }
 
@@ -59,23 +59,23 @@ static short boundaryId = 0;
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id)initWithMessagePart:(EDMessagePart *)mpart
+- (id)initWithMessagePart: (EDMessagePart*) mpart
 {
     if (self = [self init]) 
     {
-        if ([[mpart contentType] hasPrefix:@"multipart/"]) 
+        if ([[mpart contentType] hasPrefix: @"multipart/"]) 
         {
             [self _takeSubpartsFromMultipartContent:mpart];
         } 
-        else if([[mpart contentType] isEqualToString:@"message/rfc822"] || [[mpart contentType] isEqualToString:@"message/rfc2822"]) 
+        else if([[mpart contentType] isEqualToString: @"message/rfc822"] || [[mpart contentType] isEqualToString:@"message/rfc2822"]) 
         {
             [self _takeSubpartsFromMessageContent:mpart];
         } 
         else 
         {
             // need [self dealloc] here?
-            //[NSException raise:NSInvalidArgumentException format:@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]];
-            NSLog(@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]);
+            //[NSException raise:NSInvalidArgumentException format: @"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]];
+            NSLog(@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField: @"content-type"]);
             [self dealloc];
             return nil;
         }	
@@ -83,7 +83,7 @@ static short boundaryId = 0;
     return self;
 }
 
-- (id)initWithSubparts:(NSArray *)someParts
+- (id)initWithSubparts:(NSArray*) someParts
 {
     if (self = [self init]) 
     {
@@ -103,7 +103,7 @@ static short boundaryId = 0;
 //	ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-- (NSArray *)subparts
+- (NSArray*) subparts
 {
     return subparts;
 }
@@ -111,10 +111,10 @@ static short boundaryId = 0;
 
 - (EDMessagePart *)messagePart
 {
-    return [self _encodeSubpartsWithClass:[EDMessagePart class] subtype:@"mixed"];
+    return [self _encodeSubpartsWithClass:[EDMessagePart class] subtype: @"mixed"];
 }
 
-- (EDMessagePart *)messagePartWithSubtype:(NSString *)subtype
+- (EDMessagePart *)messagePartWithSubtype: (NSString*) subtype
 {
     return [self _encodeSubpartsWithClass:[EDMessagePart class] subtype:subtype];
 }
@@ -122,10 +122,10 @@ static short boundaryId = 0;
 
 - (OPInternetMessage*) message
 {
-    return [self _encodeSubpartsWithClass:[OPInternetMessage class] subtype:@"mixed"];
+    return [self _encodeSubpartsWithClass:[OPInternetMessage class] subtype: @"mixed"];
 }
 
-- (OPInternetMessage*) messageWithSubtype:(NSString *)subtype
+- (OPInternetMessage*) messageWithSubtype: (NSString*) subtype
 {
     return [self _encodeSubpartsWithClass:[OPInternetMessage class] subtype:subtype];
 }
@@ -135,7 +135,7 @@ static short boundaryId = 0;
 //	CODING
 //---------------------------------------------------------------------------------------
 
-- (void)_takeSubpartsFromMultipartContent:(EDMessagePart *)mpart
+- (void) _takeSubpartsFromMultipartContent: (EDMessagePart*) mpart
 {
     NSDictionary		*defaultHeadersFields;
     EDEntityFieldCoder	*fcoder;
@@ -146,17 +146,17 @@ static short boundaryId = 0;
     EDMessagePart 		*subpart;
     BOOL   				done = NO;
 
-    if((boundary = [[mpart contentTypeParameters] objectForKey:@"boundary"]) == nil)
-        [NSException raise:EDMessageFormatException format:@"no boundary for multipart"];
+    if((boundary = [[mpart contentTypeParameters] objectForKey: @"boundary"]) == nil)
+        [NSException raise:EDMessageFormatException format: @"no boundary for multipart"];
     btext = [boundary cString];
     blen = strlen(btext);
     if ([[mpart contentType] hasSuffix: @"/digest"]) {
         fcoder = [EDEntityFieldCoder encoderWithValue: @"message/rfc822" andParameters: nil];
-        defaultHeadersFields = [NSDictionary dictionaryWithObject:[fcoder fieldBody] forKey:@"content-type"];
+        defaultHeadersFields = [NSDictionary dictionaryWithObject:[fcoder fieldBody] forKey: @"content-type"];
     } else {
         charset = [NSString MIMEEncodingForStringEncoding:NSASCIIStringEncoding];
         fcoder = [EDEntityFieldCoder encoderWithValue: @"text/plain" andParameters:[NSDictionary dictionaryWithObject: charset forKey: @"charset"]];
-        defaultHeadersFields = [NSDictionary dictionaryWithObject:[fcoder fieldBody] forKey:@"content-type"];
+        defaultHeadersFields = [NSDictionary dictionaryWithObject:[fcoder fieldBody] forKey: @"content-type"];
         }
 
     subparts = [[NSMutableArray allocWithZone:[self zone]] init];
@@ -167,7 +167,7 @@ static short boundaryId = 0;
     while(done == NO)
         {  // p == 0 can occur if part was empty, ie. had no body
         if((p == 0) || (p > pmax - 5 - blen)) // --boundary--\n
-            [NSException raise:EDMessageFormatException format:@"final boundary not found"];
+            [NSException raise:EDMessageFormatException format: @"final boundary not found"];
         if((*p == '-') && (*(p+1) == '-') && (strncmp(p+2, btext, blen) == 0))
             {
             q = p + 2 + blen;
@@ -182,7 +182,7 @@ static short boundaryId = 0;
                 {
                 NSLog(@"Warning: ignoring junk after mime multipart boundary '%@'.", boundary);
                 if((q = skiptonewline(q, pmax)) == NULL)
-                    [NSException raise:EDMessageFormatException format:@"final boundary not found"];
+                    [NSException raise:EDMessageFormatException format: @"final boundary not found"];
                 }
 
             if(startPtr != NULL)
@@ -197,7 +197,7 @@ static short boundaryId = 0;
         else
             {
             if((p = skiptonewline(p, pmax)) == NULL)
-                [NSException raise:EDMessageFormatException format:@"final boundary not found"];
+                [NSException raise:EDMessageFormatException format: @"final boundary not found"];
             possibleEndPtr = p;
             p = skipnewline(p, pmax);
             }
@@ -205,7 +205,7 @@ static short boundaryId = 0;
 }
 
 
-- (void)_takeSubpartsFromMessageContent:(EDMessagePart *)mpart
+- (void) _takeSubpartsFromMessageContent: (EDMessagePart*) mpart
 {
     OPInternetMessage	*msg;
 
@@ -227,13 +227,13 @@ static short boundaryId = 0;
     result = [[[targetClass alloc] init] autorelease];
     
     // Is it okay to use a time stamp? (Conveys information which might not be known otherwise...) 
-    boundary = [NSString stringWithFormat:@"EDMessagePart-%ld%d", (long)[NSDate timeIntervalSinceReferenceDate] + 978307200, boundaryId];  // 978307200 is the difference between unix and foundation reference dates 
+    boundary = [NSString stringWithFormat: @"EDMessagePart-%ld%d", (long)[NSDate timeIntervalSinceReferenceDate] + 978307200, boundaryId];  // 978307200 is the difference between unix and foundation reference dates 
     boundaryId = (boundaryId + 1) % 10000;
     ctpDictionary = [NSMutableDictionary dictionary];
-    [ctpDictionary setObject:boundary forKey:@"boundary"];
-    if ([[subtype lowercaseString] isEqualToString:@"related"]) {
+    [ctpDictionary setObject: boundary forKey: @"boundary"];
+    if ([[subtype lowercaseString] isEqualToString: @"related"]) {
         rootPartType = [[subparts objectAtIndex:0] contentType];
-        [ctpDictionary setObject:rootPartType forKey:@"type"];
+        [ctpDictionary setObject: rootPartType forKey: @"type"];
     }
     [result setContentType: [@"multipart/" stringByAppendingString: subtype] 
             withParameters: ctpDictionary];

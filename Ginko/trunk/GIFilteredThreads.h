@@ -26,19 +26,19 @@ enum GIThreadFilterMode
 + (id)filteredThreadsForGroupID: (NSURL*) aGroupID;
 
 - (int)filterMode;
-- (void)setFilterMode:(int)theFilterMode;
+- (void) setFilterMode:(int)theFilterMode;
 
-- (NSDate *)ageRestriction;
-- (void)setAgeRestriction:(NSDate *)aDate;
+- (NSDate*) ageRestriction;
+- (void) setAgeRestriction:(NSDate*) aDate;
 
-- (NSString *)conditions;
-- (void)setConditions:(NSString *)someConditions;
+- (NSString*) conditions;
+- (void) setConditions: (NSString*) someConditions;
 
 - (BOOL)isSortingAscending;
-- (void)setSortingAscending:(BOOL)ascending;
+- (void) setSortingAscending:(BOOL)ascending;
 
-- (NSArray *)displayThreads;
-- (NSArray *)markThreads;
+- (NSArray*) displayThreads;
+- (NSArray*) markThreads;
 
 @end
 

@@ -17,7 +17,7 @@
 	int age; // since reference date (should be 1970)
 }
 
-//+ (id) threadInManagedObjectContext:(OPPersistentObjectContext *)aContext;
+//+ (id) threadInManagedObjectContext: (OPPersistentObjectContext*) aContext;
 
 - (NSArray*) messages;
 - (void) addToMessages: (GIMessage*) message;

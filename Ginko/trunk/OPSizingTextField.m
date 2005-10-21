@@ -68,7 +68,7 @@
 
 // use textContainerInset;
 
-- (void)moveSisterViewsBy:(float)diff
+- (void) moveSisterViewsBy:(float)diff
 {
     [[self superview] moveSubviewsWithinHeight:([self frame].origin.y - 1) verticallyBy:diff];
 
@@ -174,8 +174,8 @@
 }
 */
 
-//- (BOOL)textShouldEndEditing:(NSText *)textObject;
-- (void) textDidBeginEditing:(NSNotification *)notification
+//- (BOOL)textShouldEndEditing: (NSText*) textObject;
+- (void) textDidBeginEditing: (NSNotification*) notification
 {
     NSTextContainer* tc = [self textContainer];
     NSLayoutManager* lm = [tc layoutManager];
@@ -186,7 +186,7 @@
     //[self sizeToFit];
     [super textDidBeginEditing: notification];
 }
-//- (void)textDidEndEditing:(NSNotification *)notification;
+//- (void) textDidEndEditing: (NSNotification*) notification;
 
 - (void) textDidChange: (NSNotification*) notification
 {

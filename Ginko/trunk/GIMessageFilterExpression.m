@@ -36,7 +36,7 @@
 
     _expressionDefinition = [aDictionary mutableCopyWithZone:[self zone]];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filtersDidChange:) name:GIMessageFiltersDidChangeNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filtersDidChange:) name: GIMessageFiltersDidChangeNotification object:self];
     
     return self;
 }
@@ -90,10 +90,10 @@
     return [[_expressionDefinition objectForKey: @"criteria"] intValue];
 }
 
-- (void)setCriteria: (int) aCriteria
+- (void) setCriteria: (int) aCriteria
 /*" Sets the receiver's filter criteria (see %{GIMessageFilterExpressionCriteria})."*/
 {
-    [_expressionDefinition setObject:[NSNumber numberWithInt: aCriteria] forKey:@"criteria"];
+    [_expressionDefinition setObject: [NSNumber numberWithInt: aCriteria] forKey: @"criteria"];
 
     // model changed
     [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageFiltersDidChangeNotification 
@@ -103,7 +103,7 @@
 - (NSString*) argument
 /*" The receiver's filter argument (when subjectType is not kGIMFTypeFlag). "*/
 {
-    return [_expressionDefinition objectForKey:@"argument"];
+    return [_expressionDefinition objectForKey: @"argument"];
 }
 
 - (void) setArgument: (NSString*) aString
@@ -139,7 +139,7 @@
 }
 
 // matching
-- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags
+- (BOOL)matchesForMessage: (GIMessage*) message flags:(int)flags
 {
     NSEnumerator *enumerator;
     NSString *matchString, *argument;
@@ -156,7 +156,7 @@
 
             if (! _subjectsCache) 
 			{
-                _subjectsCache = [[[[self subjectValue] lowercaseString] componentsSeparatedByString:@" or "] retain];
+                _subjectsCache = [[[[self subjectValue] lowercaseString] componentsSeparatedByString: @" or "] retain];
             }
 
             matchStrings = [[NSMutableArray alloc] initWithCapacity:[_subjectsCache count]];
@@ -170,7 +170,7 @@
 
                 if (fieldBody) 
 				{
-                    [(NSMutableArray *)matchStrings addObject:[EDTextFieldCoder stringFromFieldBody:fieldBody withFallback:YES]];
+                    [(NSMutableArray *)matchStrings addObject:[EDTextFieldCoder stringFromFieldBody:fieldBody withFallback: YES]];
                 }
             }
             break;

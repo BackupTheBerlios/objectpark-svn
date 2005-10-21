@@ -47,11 +47,11 @@ GIIndex * contentIndex;
     contentIndex = [GIIndex indexWithName:@"contentIndex" atPath:CONTENT_INDEX_PATH];
     [contentIndex retain];
     /*
-    [tempIndexDictionary setObject:[GIIndex indexWithName:@"contentIndex" atPath:CONTENT_INDEX_PATH]
+    [tempIndexDictionary setObject: [GIIndex indexWithName:@"contentIndex" atPath:CONTENT_INDEX_PATH]
                             forKey:@"contentIndex"];
-    [tempIndexDictionary setObject:[GIIndex indexWithName:@"senderIndex" atPath:SENDER_INDEX_PATH]
+    [tempIndexDictionary setObject: [GIIndex indexWithName:@"senderIndex" atPath:SENDER_INDEX_PATH]
                             forKey:@"senderIndex"];
-    [tempIndexDictionary setObject:[GIIndex indexWithName:@"statusIndex" atPath:STATUS_INDEX_PATH]
+    [tempIndexDictionary setObject: [GIIndex indexWithName:@"statusIndex" atPath:STATUS_INDEX_PATH]
                             forKey:@"statusIndex"];
 
      [self setIndexDictionary:(NSDictionary *)tempIndexDictionary];
@@ -60,11 +60,11 @@ GIIndex * contentIndex;
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     NSLog(@"-[GIFulltextIndexCenter dealloc]");
     
-    [self setIndexDictionary:nil];
+    [self setIndexDictionary: nil];
     
     [super dealloc];
 }
@@ -74,19 +74,19 @@ GIIndex * contentIndex;
     return indexDictionary;
 }
 
-- (void)setIndexDictionary:(NSDictionary *)newIndexDictionary
+- (void) setIndexDictionary:(NSDictionary *)newIndexDictionary
 {
     [newIndexDictionary retain];
     [indexDictionary release];
     indexDictionary = newIndexDictionary;
 }
 
-- (BOOL)addMessage:(GIMessage *)aMessage
+- (BOOL)addMessage: (GIMessage*) aMessage
 {
     BOOL isIndexed = FALSE;
     NSLog(@"-[GIFulltextIndexCenter addMessage:%@", [aMessage messageId]);
     NSMutableDictionary* documentPropertiesDict = [NSMutableDictionary dictionaryWithCapacity:1];
-    [documentPropertiesDict setObject:[aMessage senderName] forKey:@"senderName"];
+    [documentPropertiesDict setObject: [aMessage senderName] forKey:@"senderName"];
     
     isIndexed = [contentIndex addDocumentWithName:[aMessage messageId]
                                           andText:[[aMessage contentAsAttributedString] string]
@@ -114,7 +114,7 @@ GIIndex * contentIndex;
     return isIndexed;
 }
 
-- (BOOL)removeMessage:(GIMessage *)aMessage
+- (BOOL)removeMessage: (GIMessage*) aMessage
 {
     BOOL isRemoveSuccessfull = NO;
     NSLog(@"-[GIFulltextIndexCenter removeMessage:%@", [aMessage messageId]);
@@ -130,7 +130,7 @@ GIIndex * contentIndex;
     return isRemoveSuccessfull;
 }
 
-- (NSArray *)hitsForQueryString:(NSString *)aQuery
+- (NSArray*) hitsForQueryString: (NSString*) aQuery
 {
  	NSLog(@"-[GIFulltextIndexCenter hitsForQueryString:%@]", aQuery);
     

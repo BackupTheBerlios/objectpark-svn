@@ -33,7 +33,7 @@
 @interface OPContentCoderCenter(PrivateAPI)
 
 -(void)registerContentCoder:(Class)coderClass;
-- (Class)contentDecoderClass:(EDMessagePart *)mpart;
+- (Class)contentDecoderClass: (EDMessagePart*) mpart;
 
 @end
 
@@ -79,7 +79,7 @@ This class returns a OPContentCoderCenter. If no one exists, it will also create
 }
 
 
-+(Class)contentDecoderClass:(EDMessagePart *)mpart
++(Class)contentDecoderClass: (EDMessagePart*) mpart
 /*"
 Returns the class of the message part or nil of none is available. Convenient method for [[OPContentCoderCenter contentCoderCenter] contentDecoderClass:mpart].
 "*/
@@ -88,7 +88,7 @@ Returns the class of the message part or nil of none is available. Convenient me
 }
 
 
-+(Class)contentEncoderClassForAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange {
++(Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange {
     return [[OPContentCoderCenter contentCoderCenter] contentEncoderClassForAttributedString:anAttributedString atIndex:anIndex effectiveRange:effectiveRange];    
 }
 
@@ -126,7 +126,7 @@ Returns the class of the message part or nil of none is available. Convenient me
 }
 
 
--(Class)contentDecoderClass:(EDMessagePart *)mpart {
+-(Class)contentDecoderClass: (EDMessagePart*) mpart {
     NSEnumerator *enumerator = [_contentCoder reverseObjectEnumerator];
     NSString *contentCoderName;
     Class contentCoder;
@@ -141,7 +141,7 @@ Returns the class of the message part or nil of none is available. Convenient me
     return nil;
 }
 
--(Class)contentEncoderClassForAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange {
+-(Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange {
     NSEnumerator *enumerator = [_contentCoder reverseObjectEnumerator];
     NSString *contentCoderName;
     Class contentCoder;

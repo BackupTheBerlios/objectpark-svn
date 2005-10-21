@@ -25,7 +25,7 @@
 
 @interface NSCalendarDate(EDNetExt)
 
-+ (id)dateWithMessageTimeSpecification:(NSString *)timespec;
++ (id)dateWithMessageTimeSpecification: (NSString*) timespec;
 
 @end
 

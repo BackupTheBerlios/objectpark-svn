@@ -15,17 +15,17 @@
 
 @implementation TestOPMultipartContentCoder
 
-- (void)tearDown
+- (void) tearDown
 {
-    [[OPPersistentObjectContext threadContext] rollback];
+    [[OPPersistentObjectContext threadContext] revertChanges];
 }
 
-- (void)testAttributedString
+- (void) testAttributedString
 {
     // read message from resources:
     OPMBoxFile *mboxFile;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    mboxFile = [OPMBoxFile mboxWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"multipartAlternativeTest-mbox" ofType:@"txt"]];
+    mboxFile = [OPMBoxFile mboxWithPath:[[NSBundle bundleForClass:[self class]] pathForResource: @"multipartAlternativeTest-mbox" ofType:@"txt"]];
     STAssertTrue(mboxFile != nil, @"mbox could not be read from resources.");
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *transferData = [[enumerator nextObject] transferDataFromMboxData];

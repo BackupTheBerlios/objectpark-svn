@@ -12,15 +12,15 @@
 
 @implementation TestNSString_MessageUtils
 
-- (void)setUp
+- (void) setUp
 {
 }
 
-- (void)tearDown
+- (void) tearDown
 {
 }
 
-- (void)testStringWithUnixLinebreaks
+- (void) testStringWithUnixLinebreaks
 {
     NSString *testString = @"This is a test string with mixed\nLinebreaks\r\nyou know?";
     NSString *stringWithUnixLinebreaks;
@@ -35,19 +35,19 @@
     STAssertEqualObjects(stringWithUnixLinebreaks, [stringWithCanonicalLinebreaks stringWithUnixLinebreaks], @"length %d != length %d.", [stringWithUnixLinebreaks length], [[stringWithCanonicalLinebreaks stringWithUnixLinebreaks] length]);
 }
 
-- (void)testFormatFlowed
+- (void) testFormatFlowed
 {
     NSString *testString = @"This is\n a test";
     
-    STAssertEqualObjects(testString, [[testString stringByEncodingFlowedFormat] stringByDecodingFlowedUsingDelSp:NO], @"should be same.");
+    STAssertEqualObjects(testString, [[testString stringByEncodingFlowedFormat] stringByDecodingFlowedUsingDelSp: NO], @"should be same.");
     
     testString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/ \r\nno/sucking/umlauts/for/making/a/good/example";
     NSString *expectedString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/no/sucking/umlauts/for/making/a/good/example";
     
-    STAssertTrue([[testString stringByDecodingFlowedUsingDelSp:YES] isEqualToString:expectedString], @"%@ is wrong", [testString stringByDecodingFlowedUsingDelSp:YES]);
+    STAssertTrue([[testString stringByDecodingFlowedUsingDelSp: YES] isEqualToString:expectedString], @"%@ is wrong", [testString stringByDecodingFlowedUsingDelSp: YES]);
 }
 
-- (void)testPunycode
+- (void) testPunycode
 {
     NSString *punycode = /* @"PorqunopuedensimplementehablarenEspaol-fmd56a"; */
     @"heinz-knig-kcb";
@@ -57,7 +57,7 @@
     shouldBeEqual(punycode, [[punycode punycodeDecodedString] punycodeEncodedString]);
 }
 
-- (void)testIDNAEncoding
+- (void) testIDNAEncoding
 {
     NSString *IDNAEncoded = @"mail.xn--heinz-knig-kcb.de";
     
@@ -69,8 +69,8 @@
 /*
 - (void) testEmptyFirstName
 {
-    [person setFirstName:@""];
-    [person setLastName:@"Picasso"];
+    [person setFirstName: @""];
+    [person setLastName: @"Picasso"];
     STAssertEqualObjects ([person fullName], [person lastName], 
                           @"Last name should equal full name.");
 }
@@ -78,8 +78,8 @@
 
 - (void) testNilFirstName
 {
-    [person setFirstName:nil];
-    [person setLastName:@"Picasso"];
+    [person setFirstName: nil];
+    [person setLastName: @"Picasso"];
     STAssertEqualObjects ([person firstName], @"",
                           @"First name should be empty.");
     STAssertEqualObjects ([person fullName], [person lastName], 
@@ -89,8 +89,8 @@
 
 - (void) testEmptyLastName
 {
-    [person setFirstName:@"Pablo"];
-    [person setLastName:@""];
+    [person setFirstName: @"Pablo"];
+    [person setLastName: @""];
     STAssertEqualObjects ([person fullName], [person firstName], 
                           @"Full name should equal first name.");
 }
@@ -98,8 +98,8 @@
 
 - (void) testNilLastName
 {
-    [person setFirstName:@"Pablo"];
-    [person setLastName:nil];
+    [person setFirstName: @"Pablo"];
+    [person setLastName: nil];
     STAssertEqualObjects ([person lastName], @"",
                           @"Last name should be empty.");
     STAssertEqualObjects ([person fullName], [person firstName], 

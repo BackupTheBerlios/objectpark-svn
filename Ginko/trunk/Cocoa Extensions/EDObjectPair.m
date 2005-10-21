@@ -33,7 +33,7 @@
 //	CLASS INITIALISATION
 //---------------------------------------------------------------------------------------
 
-+ (void)initialize
++ (void) initialize
 {
     [self setVersion:1];
 }
@@ -53,7 +53,7 @@
 
 /*" Creates and returns a pair containing the objects in aPair. "*/
 
-+ (id)pairWithObjectPair:(EDObjectPair *)aPair
++ (id)pairWithObjectPair: (EDObjectPair*) aPair
 {
     return [[[self alloc] initWithObjects:[aPair firstObject]:[aPair secondObject]] autorelease];
 }
@@ -73,7 +73,7 @@
 
 /*" Initialises a newly allocated pair by adding the objects from %aPair to it. Objects are, of course, retained. "*/
 
-- (id)initWithObjectPair:(EDObjectPair *)aPair
+- (id)initWithObjectPair: (EDObjectPair*) aPair
 {
     return [self initWithObjects:[aPair firstObject]:[aPair secondObject]];
 }
@@ -90,7 +90,7 @@
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
     [firstObject release];
     [secondObject release];
@@ -102,19 +102,19 @@
 //	NSCODING
 //---------------------------------------------------------------------------------------
 
-- (void)encodeWithCoder:(NSCoder *)encoder
+- (void) encodeWithCoder: (NSCoder*) encoder
 {
     [encoder encodeObject:firstObject];
     [encoder encodeObject:secondObject];
 }
 
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (id)initWithCoder: (NSCoder*) decoder
 {
     unsigned int version;
 
     [super init];
-    version = [decoder versionForClassName:@"EDObjectPair"];
+    version = [decoder versionForClassName: @"EDObjectPair"];
     if(version > 0)
         {
         firstObject = [[decoder decodeObject] retain];
@@ -128,7 +128,7 @@
 //	NSCOPYING
 //---------------------------------------------------------------------------------------
 
-- (id)copyWithZone:(NSZone *)zone
+- (id)copyWithZone: (NSZone*) zone
 {
     if(NSShouldRetainWithZone(self, zone))
         return [self retain];
@@ -136,7 +136,7 @@
 }
 
 
-- (id)mutableCopyWithZone:(NSZone *)zone
+- (id)mutableCopyWithZone: (NSZone*) zone
 {
     return [[EDMutableObjectPair allocWithZone:zone] initWithObjects:firstObject:secondObject];
 }
@@ -146,7 +146,7 @@
 //	DESCRIPTION & COMPARISONS
 //---------------------------------------------------------------------------------------
 
-- (NSString *)description
+- (NSString*) description
 {
     return [NSString stringWithFormat: @"<%@ 0x%x: (%@, %@)>", NSStringFromClass(isa), (void *)self, firstObject, secondObject];
 }
@@ -201,7 +201,7 @@
 
 /*" Returns an array containing all objects in the pair. Because a pair can contain !{nil} references, this array can have zero, one or two objects. If both objects in the pair are not !{nil} the first object preceedes the second in the array."*/
 
-- (NSArray *)allObjects
+- (NSArray*) allObjects
 {
     if(firstObject == nil)
         return [NSArray arrayWithObjects:secondObject, nil];
@@ -224,13 +224,13 @@
 //	NSCOPYING
 //---------------------------------------------------------------------------------------
 
-- (id)copyWithZone:(NSZone *)zone
+- (id)copyWithZone: (NSZone*) zone
 {
     return [[EDObjectPair allocWithZone:zone] initWithObjects:firstObject:secondObject];
 }
 
 
-- (id)mutableCopyWithZone:(NSZone *)zone
+- (id)mutableCopyWithZone: (NSZone*) zone
 {
     return [[EDMutableObjectPair allocWithZone:zone] initWithObjects:firstObject:secondObject];
 }
@@ -242,7 +242,7 @@
 
 /*" Sets the firstObject of the receiver to %anObject. "*/
 
-- (void)setFirstObject:(id)anObject
+- (void) setFirstObject:(id)anObject
 {
     [anObject retain];
     [firstObject release];
@@ -252,7 +252,7 @@
 
 /*" Sets the secondObject of the receiver to %anObject. "*/
 
-- (void)setSecondObject:(id)anObject
+- (void) setSecondObject:(id)anObject
 {
     [anObject retain];
     [secondObject release];

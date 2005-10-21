@@ -12,7 +12,7 @@
 /*" Informal protocol for ESCListerners "*/
 @protocol ESCListener
 
-- (void)switchKeyPressed:(id)sender;
+- (void) switchKeyPressed:(id)sender;
 
 @end
 
@@ -35,20 +35,20 @@
 #define BACKSPACEKEY 0x33
 #define ESCKEY 0x35
 
-- (void)dealloc
+- (void) dealloc
 {
     if (NSDebugEnabled) NSLog(@"G3GroupWindow dealloc");
     [super dealloc];
 }
 
-- (BOOL)makeFirstResponder:(NSResponder *)aResponder
+- (BOOL)makeFirstResponder: (NSResponder*) aResponder
 {
     BOOL result = [super makeFirstResponder:aResponder];
 //    NSLog(@"New first responder of %@ is %@ (success: %d)", self, [self firstResponder], result);
     return result;
 }
 
-- (void)sendActionSelector:(SEL)selector
+- (void) sendActionSelector:(SEL)selector
 {
     id delegate = [self delegate];
     if ([delegate respondsToSelector:selector]) 
@@ -59,7 +59,7 @@
     } 
 }
 
-- (void)sendEvent:(NSEvent *)theEvent
+- (void) sendEvent: (NSEvent*) theEvent
 /*" Intercept the 'switch key' and inform the delegate and don't send the event further along the responder chain if it has a selector -switchKeyPressed:(id)sender. Otherwise the event is send further along the responder chain. "*/ 
 {
     BOOL consumed = NO;

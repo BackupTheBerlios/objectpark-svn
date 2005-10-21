@@ -61,15 +61,15 @@ enum GIMessageFilterExpressionSubjectType
 - (void) setSubjectValue: (NSString*) aString;
 
 - (int) criteria;
-- (void)setCriteria: (int) aCriteria;
+- (void) setCriteria: (int) aCriteria;
 
-- (NSString *)argument;
-- (void) setArgument:(NSString *)aString;
+- (NSString*) argument;
+- (void) setArgument: (NSString*) aString;
 
 - (int)flagArgument;
-- (void)setFlagArgument:(int)flagArgument;
+- (void) setFlagArgument:(int)flagArgument;
 
 /*" Matching "*/
-- (BOOL)matchesForMessage:(GIMessage *)message flags:(int)flags;
+- (BOOL)matchesForMessage: (GIMessage*) message flags:(int)flags;
 
 @end

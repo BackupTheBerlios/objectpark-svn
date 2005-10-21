@@ -30,9 +30,9 @@
 
 /*" Base64 encoding "*/
 
-- (NSData *)decodeBase64;
-- (NSData *)encodeBase64;
-- (NSData *)encodeBase64WithLineLength:(unsigned int)lineLength andNewlineAtEnd:(BOOL)endWithNL;
+- (NSData*) decodeBase64;
+- (NSData*) encodeBase64;
+- (NSData*) encodeBase64WithLineLength:(unsigned int)lineLength andNewlineAtEnd:(BOOL)endWithNL;
 
 @end
 

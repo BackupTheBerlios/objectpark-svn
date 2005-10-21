@@ -16,30 +16,30 @@
 {
 }
 
-+ (G3Thread *)threadInManagedObjectContext:(NSManagedObjectContext *)aContext;
-+ (NSString *)URIStringPrefix;
++ (G3Thread *)threadInManagedObjectContext: (NSManagedObjectContext*) aContext;
++ (NSString*) URIStringPrefix;
 
 - (BOOL)containsSingleMessage;
 - (NSSet *)messages;
-- (void)addMessage:(G3Message *)message;
-- (void)removeMessage:(G3Message *)aMessage;
+- (void) addMessage: (G3Message*) message;
+- (void) removeMessage: (G3Message*) aMessage;
 
 - (NSArray*) messagesByDate;
 - (NSArray*) messagesByTree;
 
 
 /*" Groups handling "*/
-- (void)addGroup:(G3MessageGroup *)aGroup;
-- (void)addGroups:(NSSet *)someGroups;
-- (void)removeGroup:(G3MessageGroup *)aGroup; 
-- (void)removeFromAllGroups;
+- (void) addGroup: (G3MessageGroup*) aGroup;
+- (void) addGroups: (NSSet*) someGroups;
+- (void) removeGroup: (G3MessageGroup*) aGroup; 
+- (void) removeFromAllGroups;
 
 - (unsigned)messageCount;
-- (NSArray *)rootMessages;
+- (NSArray*) rootMessages;
 - (unsigned)commentDepth;
 - (BOOL)hasUnreadMessages;
 
-- (G3Thread *)splitWithMessage:(G3Message *)aMessage;
-- (void)mergeMessagesFromThread:(G3Thread *)anotherThread;
+- (G3Thread *)splitWithMessage: (G3Message*) aMessage;
+- (void) mergeMessagesFromThread: (G3Thread*) anotherThread;
 
 @end

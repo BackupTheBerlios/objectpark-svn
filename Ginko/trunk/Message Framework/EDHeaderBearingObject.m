@@ -50,7 +50,7 @@
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
     [headerFields release];
     [headerDictionary release];
@@ -67,7 +67,7 @@
 //	ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-- (void)addToHeaderFields:(EDObjectPair *)headerField
+- (void) addToHeaderFields: (EDObjectPair*) headerField
 {
     NSString	 *fieldName, *sharedName, *fieldBody;
 
@@ -77,11 +77,11 @@
     if((sharedName = [fieldName sharedInstance]) != fieldName)
         headerField = [[[EDObjectPair allocWithZone:[self zone]] initWithObjects:sharedName:fieldBody] autorelease];
     [headerFields addObject:headerField];
-    [headerDictionary setObject:fieldBody forKey:[[fieldName lowercaseString] sharedInstance]];
+    [headerDictionary setObject: fieldBody forKey:[[fieldName lowercaseString] sharedInstance]];
 }
 
 
-- (NSArray *)headerFields
+- (NSArray*) headerFields
 {
     return headerFields;
 }
@@ -107,12 +107,12 @@
     } else {
         [headerFields addObject:headerField];
     }
-    [headerDictionary setObject:fieldBody forKey:canonicalName];
+    [headerDictionary setObject: fieldBody forKey:canonicalName];
     [headerField release];
 }
 
 
-- (NSString *)bodyForHeaderField:(NSString *)fieldName
+- (NSString*) bodyForHeaderField: (NSString*) fieldName
 {
     NSString *fieldBody;
 
@@ -136,22 +136,22 @@
     messageId = value;
 
     fCoder = [[EDIdListFieldCoder alloc] initWithIdList:[NSArray arrayWithObject:messageId]];
-    [self setBody:[fCoder fieldBody] forHeaderField:@"Message-Id"];
+    [self setBody:[fCoder fieldBody] forHeaderField: @"Message-Id"];
     [fCoder release];
 }
 
 
-- (NSString *)messageId
+- (NSString*) messageId
 {
     NSString *fBody;
 
-    if((messageId == nil) && ((fBody = [self bodyForHeaderField:@"message-id"]) != nil))
+    if((messageId == nil) && ((fBody = [self bodyForHeaderField: @"message-id"]) != nil))
         messageId = [[[[EDIdListFieldCoder decoderWithFieldBody:fBody] list] lastObject] retain];
     return messageId;
 }
 
 
-- (void)setDate:(NSCalendarDate *)value
+- (void) setDate: (NSCalendarDate*) value
 {
     EDDateFieldCoder *fCoder;
     
@@ -160,7 +160,7 @@
     date = value;
 
     fCoder = [[EDDateFieldCoder alloc] initWithDate:date];
-    [self setBody:[fCoder fieldBody] forHeaderField:@"Date"];
+    [self setBody:[fCoder fieldBody] forHeaderField: @"Date"];
     [fCoder release];
 }
 
@@ -169,13 +169,13 @@
 {
     NSString *fBody;
 
-    if((date == nil) && ((fBody = [self bodyForHeaderField:@"date"]) != nil))
+    if((date == nil) && ((fBody = [self bodyForHeaderField: @"date"]) != nil))
         date = [[[EDDateFieldCoder decoderWithFieldBody:fBody] date] retain];
     return date;
 }	
 
 
-- (void)setSubject:(NSString *)value
+- (void) setSubject: (NSString*) value
 {
     EDTextFieldCoder *fCoder;
 
@@ -186,17 +186,17 @@
     originalSubject = nil;
 
     fCoder = [[EDTextFieldCoder alloc] initWithText:value];
-    [self setBody:[fCoder fieldBody] forHeaderField:@"Subject"];
+    [self setBody:[fCoder fieldBody] forHeaderField: @"Subject"];
     [fCoder release];
 
 }
 
 
-- (NSString *)subject
+- (NSString*) subject
 {
     NSString *fBody;
 
-    if((subject == nil) && ((fBody = [self bodyForHeaderField:@"subject"]) != nil))
+    if((subject == nil) && ((fBody = [self bodyForHeaderField: @"subject"]) != nil))
         subject = [[[EDTextFieldCoder decoderWithFieldBody:fBody] text] retain];
     return subject;
 }
@@ -225,7 +225,7 @@
 //	ACCESSORS FOR ATTRIBUTES DERIVED FROM HEADER FIELDS
 //---------------------------------------------------------------------------------------
 
-- (NSString *)originalSubject
+- (NSString*) originalSubject
 {
     if(originalSubject == nil)
         originalSubject = [[[self subject] stringByRemovingReplyPrefix] retain];
@@ -233,7 +233,7 @@
 }
 
 
-- (NSString *)replySubject
+- (NSString*) replySubject
 {
     // I do not want to see this localized!
     if([[self subject] isEqualToString:[self originalSubject]])
@@ -242,19 +242,19 @@
 }
 
 
-- (NSString *)forwardSubject
+- (NSString*) forwardSubject
 {
     // Maybe we should localize this.
-    return [[@"[FWD: " stringByAppendingString:[self subject]] stringByAppendingString:@"]"];
+    return [[@"[FWD: " stringByAppendingString:[self subject]] stringByAppendingString: @"]"];
 }
 
 
-- (NSString *)author
+- (NSString*) author
 {
     NSString *fBody;
 
     // Actually, a message can have multiple authors, but this will not look too bad...
-    if((author == nil) && ((fBody = [self bodyForHeaderField:@"from"]) != nil))
+    if((author == nil) && ((fBody = [self bodyForHeaderField: @"from"]) != nil))
         author = [[[[EDTextFieldCoder decoderWithFieldBody:fBody] text] realnameFromEMailString] retain];
     return author;
 }
@@ -267,18 +267,18 @@
 static NSMutableDictionary *coderClassCache = nil;
 
 
-+ (void)_setupCoderClassCache
++ (void) _setupCoderClassCache
 {
     coderClassCache = [[NSMutableDictionary alloc] init];
-    [coderClassCache setObject:[EDDateFieldCoder class] forKey:@"date"];
-    [coderClassCache setObject:[EDDateFieldCoder class] forKey:@"expires"];
-    [coderClassCache setObject:[EDIdListFieldCoder class] forKey:@"message-id"];
-    [coderClassCache setObject:[EDIdListFieldCoder class] forKey:@"references"];
-    //[coderClassCache setObject:[EDFaceFieldCoder class] forKey:@"x-face"];
+    [coderClassCache setObject: [EDDateFieldCoder class] forKey: @"date"];
+    [coderClassCache setObject: [EDDateFieldCoder class] forKey: @"expires"];
+    [coderClassCache setObject: [EDIdListFieldCoder class] forKey: @"message-id"];
+    [coderClassCache setObject: [EDIdListFieldCoder class] forKey: @"references"];
+    //[coderClassCache setObject: [EDFaceFieldCoder class] forKey: @"x-face"];
 }
 
 
-+ (EDHeaderFieldCoder *)decoderForHeaderField:(EDObjectPair *)headerField
++ (EDHeaderFieldCoder *)decoderForHeaderField: (EDObjectPair*) headerField
 {
     NSString	*name;
     Class 		coderClass;
@@ -289,7 +289,7 @@ static NSMutableDictionary *coderClassCache = nil;
     name = [[headerField firstObject] lowercaseString];
     if((coderClass = [coderClassCache objectForKey:name]) == nil)
         {
-        if([name hasPrefix:@"content-"])
+        if([name hasPrefix: @"content-"])
             coderClass = [EDEntityFieldCoder class];
         else
             coderClass = [EDTextFieldCoder class];
@@ -299,7 +299,7 @@ static NSMutableDictionary *coderClassCache = nil;
 }
 
 
-- (EDHeaderFieldCoder *)decoderForHeaderField:(NSString *)fieldName
+- (EDHeaderFieldCoder *)decoderForHeaderField: (NSString*) fieldName
 {
     NSString	*body;
 

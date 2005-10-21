@@ -43,7 +43,7 @@
 + (void) removeAllFinishedJobs;
 
 /*" Getting job results "*/
-+ (id)resultForJob:(NSNumber *)anJobId;
++ (id)resultForJob:(NSNumber*) anJobId;
 
 /*" Getting job exeption "*/
 + (id) exceptionForJob: (NSNumber*) anJobId;

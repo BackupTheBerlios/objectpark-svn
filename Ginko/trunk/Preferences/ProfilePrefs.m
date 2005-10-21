@@ -12,10 +12,10 @@
 
 @implementation ProfilePrefs
 
-- (void)didSelect 
+- (void) didSelect 
 {    
-    [self willChangeValueForKey:@"accounts"];
-    [self didChangeValueForKey:@"accounts"];
+    [self willChangeValueForKey: @"accounts"];
+    [self didChangeValueForKey: @"accounts"];
 }
 
 - (NSArray*) profiles

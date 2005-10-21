@@ -38,21 +38,21 @@
     result = [[[targetClass alloc] init] autorelease];
     
     if((filename != nil) && ((ctString = [self contentType]) != nil)) {
-        parameters = [NSDictionary dictionaryWithObject:filename forKey:@"name"];
+        parameters = [NSDictionary dictionaryWithObject:filename forKey: @"name"];
         [result setContentType:ctString withParameters:parameters];
     } else if(filename != nil) {
         encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
-        parameters = [NSDictionary dictionaryWithObject:encodedFileName forKey:@"name"];
-        [result setContentType:@"application/octet-stream" withParameters:parameters];
+        parameters = [NSDictionary dictionaryWithObject:encodedFileName forKey: @"name"];
+        [result setContentType: @"application/octet-stream" withParameters:parameters];
     } else {
-        [result setContentType:@"application/octet-stream"];
+        [result setContentType: @"application/octet-stream"];
     }
     
     if(shouldBeDisplayedInline != UNKNOWN)
     {
         cdString = (shouldBeDisplayedInline) ? MIMEInlineContentDisposition : MIMEAttachmentContentDisposition;
         if(filename != nil)
-            [result setContentDisposition:cdString withParameters:[NSDictionary dictionaryWithObject:filename forKey:@"filename"]];
+            [result setContentDisposition:cdString withParameters:[NSDictionary dictionaryWithObject:filename forKey: @"filename"]];
         else
             [result setContentDisposition:cdString];
     }
@@ -74,7 +74,7 @@
         
         contentTypeParameters = [[messagePart contentTypeParameters] mutableCopy];
         
-        [contentTypeParameters setObject:xUnixMode forKey:@"x-unix-mode"];
+        [contentTypeParameters setObject: xUnixMode forKey: @"x-unix-mode"];
         [messagePart setContentType:[messagePart contentType] withParameters:contentTypeParameters];
         
         [contentTypeParameters release];
@@ -83,17 +83,17 @@
     return messagePart;
 }
 
-+ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
++ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
 {
-    NSString *ct = [[[mpart contentType] componentsSeparatedByString:@"/"] objectAtIndex:0];
-    if ([ct isEqualToString:@"image"] || [ct isEqualToString:@"audio"] || [ct isEqualToString:@"video"] || [ct isEqualToString:@"application"])
+    NSString *ct = [[[mpart contentType] componentsSeparatedByString: @"/"] objectAtIndex:0];
+    if ([ct isEqualToString: @"image"] || [ct isEqualToString:@"audio"] || [ct isEqualToString:@"video"] || [ct isEqualToString:@"application"])
         return YES;
-    if ([[mpart contentDisposition] caseInsensitiveCompare:@"attachment"] == NSOrderedSame)
+    if ([[mpart contentDisposition] caseInsensitiveCompare: @"attachment"] == NSOrderedSame)
         return YES;
     return NO;
 }
 
-+ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
++ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
 /*"
    Decides if anAttributedString can be encoded starting at anIndex. If YES is returned effectiveRange 
    designates the range which can be encoded by this class. If NO is returned effectiveRange indicates
@@ -123,7 +123,7 @@
     return NO;
 }
 
-- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper
+- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
     NSData *fileContents;
     NSString *theFilename;
@@ -156,14 +156,14 @@
     {
         NSArray *components;
         
-        components = [theFilename componentsSeparatedByString:@"\""];
-        theFilename = [components componentsJoinedByString:@"'"];
+        components = [theFilename componentsSeparatedByString: @"\""];
+        theFilename = [components componentsJoinedByString: @"'"];
     }
     
-    return [self initWithData:fileContents filename:theFilename];
+    return [self initWithData:fileContents filename: theFilename];
 }
 
-- (id)initWithAttributedString:(NSAttributedString *)anAttributedString
+- (id)initWithAttributedString: (NSAttributedString*) anAttributedString
 {
     NSRange effectiveRange;
     NSTextAttachment *attachment;
@@ -182,13 +182,13 @@
 //	CONTENT ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-- (NSData *)data
+- (NSData*) data
 {
     return data;
 }
 
 
-- (NSString *)filename
+- (NSString*) filename
 {
     return filename;
 }
@@ -215,13 +215,13 @@
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id)initWithMessagePart:(EDMessagePart *)mpart
+- (id)initWithMessagePart: (EDMessagePart*) mpart
 {
     [super init];
     
-    if((filename = [[mpart contentDispositionParameters] objectForKey:@"filename"]) != nil)
+    if((filename = [[mpart contentDispositionParameters] objectForKey: @"filename"]) != nil)
         filename = [[filename lastPathComponent] retain];
-    else if((filename = [[mpart contentTypeParameters] objectForKey:@"name"]) != nil)
+    else if((filename = [[mpart contentTypeParameters] objectForKey: @"name"]) != nil)
         filename = [[filename lastPathComponent] retain];
     else
         filename = nil;
@@ -232,22 +232,20 @@
             shouldBeDisplayedInline = [data length] < (512 * 1024);
         else
             shouldBeDisplayedInline = NO; 
-    }
-    else
-    {
+    } else {
         shouldBeDisplayedInline = [[mpart contentDisposition] isEqualToString:MIMEInlineContentDisposition];
     }
-    xUnixMode = [[[mpart contentTypeParameters] objectForKey:@"x-unix-mode"] retain];
+    xUnixMode = [[[mpart contentTypeParameters] objectForKey: @"x-unix-mode"] retain];
 
     return self;
 }
 
-- (id)initWithData:(NSData *)someData filename:(NSString *)aFilename
+- (id)initWithData: (NSData*) someData filename: (NSString*) aFilename
 {
-    return [self initWithData:someData filename:aFilename inlineFlag:UNKNOWN];
+    return [self initWithData:someData filename: aFilename inlineFlag:UNKNOWN];
 }
 
-- (id)initWithData:(NSData *)someData filename:(NSString *)aFilename inlineFlag:(BOOL)inlineFlag
+- (id)initWithData: (NSData*) someData filename: (NSString*) aFilename inlineFlag:(BOOL)inlineFlag
 {
     [super init];
     data = [someData retain];
@@ -266,7 +264,7 @@
     [super dealloc];
 }
 
-- (NSString *)contentType
+- (NSString*) contentType
 {
 	if (!contentType && filename)
 	{
@@ -278,7 +276,7 @@
 	}
 }
 
-- (void)setContentType:(NSString *)aContentType
+- (void) setContentType: (NSString*) aContentType
 {
 	[aContentType retain];
 	[contentType release];
@@ -296,14 +294,14 @@
     preferredFilename = [(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:rawPreferredFilename] text];
     
     result = [[[NSFileWrapper alloc] initRegularFileWithContents:data] autorelease];
-    [result setPreferredFilename:preferredFilename]; // file name
+    [result setPreferredFilename: preferredFilename]; // file name
     
     if (xUnixMode)
     {
         NSMutableDictionary *attributes;
         // attributes
         attributes = [[result fileAttributes] mutableCopy];
-        [attributes setObject:[NSNumber numberWithLong:[xUnixMode octalValue]] forKey:NSFilePosixPermissions];
+        [attributes setObject: [NSNumber numberWithLong:[xUnixMode octalValue]] forKey:NSFilePosixPermissions];
         [result setFileAttributes:attributes]; 
         [attributes release];
     }

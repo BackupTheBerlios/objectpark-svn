@@ -18,20 +18,20 @@
 }
 
 /*" Factory Methods "*/
-+ (id)mboxWithPath:(NSString *)aPath;
-+ (id)mboxWithPath:(NSString *)aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent;
-+ (id)createMboxFileWithPathTemplate:(NSString *)aTemplate;
++ (id)mboxWithPath: (NSString*) aPath;
++ (id)mboxWithPath: (NSString*) aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent;
++ (id)createMboxFileWithPathTemplate: (NSString*) aTemplate;
 
 /*" Initialization Methods "*/
-- (id)initWithPath:(NSString *)aPath;
-- (id)initWithPath:(NSString *)aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent;
+- (id)initWithPath: (NSString*) aPath;
+- (id)initWithPath: (NSString*) aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent;
 
-- (NSData *)mboxSubdataFromOffset:(unsigned)offset endOffset:(unsigned *)endOffset;
-- (void)appendMBoxData:(NSData *)mboxData;
+- (NSData*) mboxSubdataFromOffset:(unsigned)offset endOffset: (unsigned*) endOffset;
+- (void) appendMBoxData: (NSData*) mboxData;
 
 - (FILE *)mboxFile;
-- (NSString *)path;
-- (void)setPath:(NSString *)aPath;
+- (NSString*) path;
+- (void) setPath: (NSString*) aPath;
 - (BOOL)isReadOnly;
 - (unsigned int)mboxFileSize;
 

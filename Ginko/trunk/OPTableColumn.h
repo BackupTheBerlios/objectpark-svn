@@ -24,7 +24,7 @@
 
 @protocol OPTableColumnCellSpecifier
 
-- (id)tableView:(NSTableView *)aTableView dataCellForTableColumn:(NSTableColumn *)aTableColumn row:(int)aRow;
+- (id)tableView: (NSTableView*) aTableView dataCellForTableColumn:(NSTableColumn *)aTableColumn row:(int)aRow;
 
 @end
 

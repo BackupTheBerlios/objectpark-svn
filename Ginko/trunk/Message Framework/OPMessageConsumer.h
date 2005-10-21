@@ -36,7 +36,7 @@
 
 /* The receiver will consume 'message' if willing and able to (cf. -willAcceptMessage). Raises
      an exception if the 'message' will not be consumed. */
-- (void)acceptMessage:(OPInternetMessage *)message;
+- (void) acceptMessage: (OPInternetMessage*) message;
 
 @end
 

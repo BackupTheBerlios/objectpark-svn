@@ -28,7 +28,7 @@
 #import "NSAttributedString+MessageUtils.h"
 
 @interface EDCompositeContentCoder (PrivateAPI)
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype;
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype;
 @end
 
    /* applefile.h - Data structures used by AppleSingle/AppleDouble
@@ -345,12 +345,12 @@
 
 @implementation OPAppleDoubleContentCoder
 
-+ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
++ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
 {
     return [mpart isAppleDouble];
 }
 
-+ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
++ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
 /*"
    Decides if anAttributedString can be encoded starting at anIndex. If YES is returned effectiveRange 
    designates the range which can be encoded by this class. If NO is returned effectiveRange indicates
@@ -386,7 +386,7 @@
     return NO;
 }
 
-- (id)initWithMessagePart:(EDMessagePart *)mpart
+- (id)initWithMessagePart: (EDMessagePart*) mpart
 {
     [super initWithMessagePart:mpart];
 
@@ -397,9 +397,9 @@
         NSLog(@"Corrupt AppleDouble Messagepart (!= 2 subparts)");
     }
     
-    if((filename = [[mpart contentDispositionParameters] objectForKey:@"filename"]) != nil)
+    if((filename = [[mpart contentDispositionParameters] objectForKey: @"filename"]) != nil)
         filename = [[filename lastPathComponent] retain];
-    else if((filename = [[mpart contentTypeParameters] objectForKey:@"name"]) != nil)
+    else if((filename = [[mpart contentTypeParameters] objectForKey: @"name"]) != nil)
         filename = [[filename lastPathComponent] retain];
     else
         filename = nil;
@@ -408,12 +408,12 @@
     if (filename)
         filename = [[(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:filename] text] retain];
         
-    xUnixMode = [[[mpart contentTypeParameters] objectForKey:@"x-unix-mode"] retain];
+    xUnixMode = [[[mpart contentTypeParameters] objectForKey: @"x-unix-mode"] retain];
         
     return self;
 }
 
-- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper
+- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
     NSDictionary *attributes;
     NSNumber *posixPermissions;
@@ -431,8 +431,8 @@
     {
         NSArray *components;
         
-        components = [filename componentsSeparatedByString:@"\""];
-        filename = [components componentsJoinedByString:@"'"];
+        components = [filename componentsSeparatedByString: @"\""];
+        filename = [components componentsJoinedByString: @"'"];
     }
 
     // get the permissions
@@ -473,7 +473,7 @@
     return [super initWithSubparts:someParts];
 }
 
-- (id)initWithAttributedString:(NSAttributedString *)anAttributedString
+- (id)initWithAttributedString: (NSAttributedString*) anAttributedString
 {
     NSRange effectiveRange;
     NSTextAttachment *attachment;
@@ -488,14 +488,14 @@
     return [self initWithFileWrapper:[attachment fileWrapper]];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [filename release];
     [xUnixMode release];
     [super dealloc];
 }
 
-- (void)_ensureAttachmentDispositionForMessagePart:(EDMessagePart *)messagePart
+- (void) _ensureAttachmentDispositionForMessagePart: (EDMessagePart*) messagePart
 /*"Ensures "attachment" content-disposition for message part. Preserves the parameters."*/
 {    
     if ([[messagePart contentDisposition] caseInsensitiveCompare:MIMEAttachmentContentDisposition] != NSOrderedSame)
@@ -512,7 +512,7 @@
     }
 }
 
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype
 {
     id messagePart;
     NSMutableDictionary *contentTypeParameters;
@@ -526,19 +526,19 @@
         [self _ensureAttachmentDispositionForMessagePart:messagePart];
     }
     
-    messagePart = [super _encodeSubpartsWithClass:targetClass subtype:@"mixed"];
+    messagePart = [super _encodeSubpartsWithClass:targetClass subtype: @"mixed"];
     
     contentTypeParameters = [[messagePart contentTypeParameters] mutableCopy];
     
     if (xUnixMode)
     {
-        [contentTypeParameters setObject:xUnixMode forKey:@"x-unix-mode"];
+        [contentTypeParameters setObject: xUnixMode forKey: @"x-unix-mode"];
     }
     
     encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
     
-    [contentTypeParameters setObject:encodedFileName forKey:@"name"];
-    [messagePart setContentType:@"multipart/appledouble" withParameters:contentTypeParameters];
+    [contentTypeParameters setObject: encodedFileName forKey: @"name"];
+    [messagePart setContentType: @"multipart/appledouble" withParameters:contentTypeParameters];
     
     [contentTypeParameters release];
 
@@ -601,9 +601,7 @@
             NSLog(@"Error in Appledouble subpart decoding. (%@)", [localException reason]);
             return nil;
         NS_ENDHANDLER
-    }
-    else
-    {
+    } else {
         NSLog(@"Appledouble contains dataForkPart that is not decodable.");
         return nil;
     }
@@ -629,9 +627,7 @@
             NSLog(@"Error in Appledouble subpart decoding. (%@)", [localException reason]);
             return nil;
         NS_ENDHANDLER
-    }
-    else
-    {
+    } else {
         NSLog(@"Appledouble contains headerPart that is not decodable.");
         return nil;
     }
@@ -641,10 +637,10 @@
     attributes = [[result fileAttributes] mutableCopy];
     
     if (resourceForkData = [headerAttributes objectForKey:OPFileResourceForkData])
-        [attributes setObject:resourceForkData forKey:OPFileResourceForkData];
+        [attributes setObject: resourceForkData forKey:OPFileResourceForkData];
     
     if (finderInfoData = [headerAttributes objectForKey:OPFinderInfo])
-        [attributes setObject:finderInfoData forKey:OPFinderInfo];
+        [attributes setObject: finderInfoData forKey:OPFinderInfo];
     
     [result setFileAttributes:attributes]; 
     [attributes release];

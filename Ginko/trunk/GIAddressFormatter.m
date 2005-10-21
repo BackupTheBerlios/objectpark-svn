@@ -37,29 +37,29 @@ Should match the following formats:
 
  lastname, firstname <email@address.org> 
 "*/
-- (NSString *)stringForObjectValue:(id)obj
+- (NSString*) stringForObjectValue:(id)obj
 {
     return [obj description];
 }
 
-- (NSAttributedString *)attributedStringForObjectValue:(id)obj withDefaultAttributes:(NSDictionary *)attrs
+- (NSAttributedString *)attributedStringForObjectValue:(id)obj withDefaultAttributes: (NSDictionary*) attrs
 {
     return [[[NSAttributedString alloc] initWithString:[obj description]] autorelease];
 }
 
-- (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error
+- (BOOL)getObjectValue: (id*) obj forString: (NSString*) string errorDescription:(NSString **)error
 {
     *obj = string;
     return YES;
 }
 
-- (BOOL)isPartialStringValid:(NSString **)partialStringPtr proposedSelectedRange:(NSRangePointer)proposedSelRangePtr originalString:(NSString *)origString originalSelectedRange:(NSRange)origSelRange errorDescription:(NSString **)error
+- (BOOL)isPartialStringValid:(NSString **)partialStringPtr proposedSelectedRange:(NSRangePointer)proposedSelRangePtr originalString: (NSString*) origString originalSelectedRange:(NSRange)origSelRange errorDescription:(NSString **)error
 {   
     static NSCharacterSet *separatorSet = nil;
     static NSMutableArray *candidates = nil;
     static int nextIndex = 0;
         
-    if (! separatorSet) separatorSet = [[NSCharacterSet characterSetWithCharactersInString:@",;\r\n"] retain];
+    if (! separatorSet) separatorSet = [[NSCharacterSet characterSetWithCharactersInString: @",;\r\n"] retain];
     
     // check whether completion should happen
     if ( 
@@ -75,9 +75,9 @@ Should match the following formats:
 //        NSEnumerator *enumerator;
         
         // test if comma was typed in
-        if ([*partialStringPtr hasSuffix:@","]) // comma found
+        if ([*partialStringPtr hasSuffix: @","]) // comma found
         {
-            *partialStringPtr = [origString stringByAppendingString:@", "];
+            *partialStringPtr = [origString stringByAppendingString: @", "];
             *proposedSelRangePtr = NSMakeRange([*partialStringPtr length], 0);
                         
             return NO;
@@ -88,7 +88,7 @@ Should match the following formats:
         if (prefixRange.location != NSNotFound)
         {
             completionPrefix = [*partialStringPtr substringFromIndex:prefixRange.location + 1];
-            while ([completionPrefix hasPrefix:@" "]) completionPrefix = [completionPrefix substringFromIndex:1];
+            while ([completionPrefix hasPrefix: @" "]) completionPrefix = [completionPrefix substringFromIndex:1];
         }
         else
         {
@@ -100,7 +100,7 @@ Should match the following formats:
             static char cycleChar = '+'; // +
             static NSString *cycleSuffix = nil;
             
-            if (!cycleSuffix) cycleSuffix = [[NSString alloc] initWithFormat:@"%c", cycleChar];
+            if (!cycleSuffix) cycleSuffix = [[NSString alloc] initWithFormat: @"%c", cycleChar];
             
             if ([completionPrefix hasSuffix:cycleSuffix])
             {                
@@ -162,7 +162,7 @@ Should match the following formats:
                 NSArray *searchResult;
                 id record;
                 
-                searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
+                searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label: nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
                 
                 searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
 
@@ -172,11 +172,11 @@ Should match the following formats:
                     if ([record isKindOfClass:[ABPerson class]])
                     {
                         static NSCharacterSet *problematicSet = nil;
-                        if (!problematicSet) problematicSet = [[NSCharacterSet characterSetWithCharactersInString:@"(),\""] retain];
+                        if (!problematicSet) problematicSet = [[NSCharacterSet characterSetWithCharactersInString: @"(),\""] retain];
                         
                         ABMultiValue *addresses = [record valueForProperty:kABEmailProperty];
                         NSString *fullname = [[record fullname] stringByRemovingCharactersFromSet:problematicSet];
-                        NSString *realname = [fullname length] ? [NSString stringWithFormat:@" (%@)", fullname] : @"";
+                        NSString *realname = [fullname length] ? [NSString stringWithFormat: @" (%@)", fullname] : @"";
                         int i, count = [addresses count];
                         
                         for (i = 0; i < count; i++)
@@ -200,17 +200,17 @@ Should match the following formats:
                                     
                 searchResult = [NSMutableArray array];
                 
-                NSArray *components = [completionPrefix componentsSeparatedByString:@" "];
+                NSArray *components = [completionPrefix componentsSeparatedByString: @" "];
                 int i;
                 
                 for (i = 0; i < [components count]; i++)
                 {
-                    NSString *currentSearchString = [[[components subarrayFromIndex:i] componentsJoinedByString:@" "] stringByRemovingSurroundingWhitespace];
+                    NSString *currentSearchString = [[[components subarrayFromIndex:i] componentsJoinedByString: @" "] stringByRemovingSurroundingWhitespace];
                     
                     if ([currentSearchString length])
                     {
-                        searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:currentSearchString comparison:kABPrefixMatchCaseInsensitive];
-                        searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:currentSearchString comparison:kABPrefixMatchCaseInsensitive];
+                        searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label: nil key:nil value:currentSearchString comparison:kABPrefixMatchCaseInsensitive];
+                        searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label: nil key:nil value:currentSearchString comparison:kABPrefixMatchCaseInsensitive];
                         searchElementConjunction = [ABSearchElement searchElementForConjunction:kABSearchOr children:[NSArray arrayWithObjects:searchElementFirstname, searchElementLastname, nil]];
                         
                         [searchResult addObjectsFromArray:[[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementConjunction]];
@@ -223,21 +223,21 @@ Should match the following formats:
                     if ([record isKindOfClass:[ABPerson class]])
                     {
                         static NSCharacterSet *problematicSet = nil;
-                        if (!problematicSet) problematicSet = [[NSCharacterSet characterSetWithCharactersInString:@"(),\""] retain];
+                        if (!problematicSet) problematicSet = [[NSCharacterSet characterSetWithCharactersInString: @"(),\""] retain];
                         
                         ABMultiValue *addresses = [record valueForProperty:kABEmailProperty];
-                        NSString *realnameA = [[NSString stringWithFormat:@"%@ %@", [record firstname], [record lastname]] stringByRemovingCharactersFromSet:problematicSet];
-                        NSString *realnameB = [[NSString stringWithFormat:@"%@ %@", [record lastname], [record firstname]] stringByRemovingCharactersFromSet:problematicSet];
+                        NSString *realnameA = [[NSString stringWithFormat: @"%@ %@", [record firstname], [record lastname]] stringByRemovingCharactersFromSet:problematicSet];
+                        NSString *realnameB = [[NSString stringWithFormat: @"%@ %@", [record lastname], [record firstname]] stringByRemovingCharactersFromSet:problematicSet];
                         int i, count = [addresses count];
                         
                         for (i = 0; i < count; i++)
                         {
                             NSString *address = [addresses valueAtIndex:i];
-                            NSString *candidate = [realnameA stringByAppendingFormat:@" <%@>", address];
+                            NSString *candidate = [realnameA stringByAppendingFormat: @" <%@>", address];
                             
                             if ([candidate hasPrefixCaseInsensitive:completionPrefix]) [candidates addObject:candidate];
                             
-                            candidate = [realnameB stringByAppendingFormat:@" <%@>", address];
+                            candidate = [realnameB stringByAppendingFormat: @" <%@>", address];
                             
                             if ([candidate hasPrefixCaseInsensitive:completionPrefix]) [candidates addObject:candidate];
                         }                        
@@ -259,9 +259,7 @@ Should match the following formats:
                 return NO;
             }
         }
-    }
-    else
-    {
+    } else {
         if (NSDebugEnabled) NSLog(@"no completion");
     }
     
@@ -269,7 +267,7 @@ Should match the following formats:
 /*
     NSRange range;
     NSLog(@"isPartialStringValid: partial = (%@), orig = (%@)", *partialStringPtr, origString);
-    *partialStringPtr = [NSString stringWithFormat:@"%@%@", *partialStringPtr, @"PARTIAL"];
+    *partialStringPtr = [NSString stringWithFormat: @"%@%@", *partialStringPtr, @"PARTIAL"];
     range = NSMakeRange(proposedSelRangePtr->location, [*partialStringPtr length] - proposedSelRangePtr->location);
     *proposedSelRangePtr = range;
     return NO;

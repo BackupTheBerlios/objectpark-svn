@@ -25,7 +25,7 @@
 
 }
 
-+ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
++ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
 
 - (NSAttributedString*) attributedString;
 - (NSFileWrapper*) fileWrapper;

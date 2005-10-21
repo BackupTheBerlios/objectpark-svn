@@ -21,7 +21,7 @@
 #define POPTimeInterval (60 * 5)
 #define TIMEOUT 60
 
-- (void)authenticateViaPOP:(G3Account *)anAccount
+- (void) authenticateViaPOP:(G3Account *)anAccount
 {
     [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"authorization 'SMTP after POP' with %@", @"progress description in SMTP job"), [anAccount incomingServerName]]]];
 
@@ -49,7 +49,7 @@
                 [stream negotiateEncryption];
             }
                         
-            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream username:[anAccount incomingUsername] andPassword:[anAccount incomingPassword]] autorelease];
+            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream username: [anAccount incomingUsername] andPassword:[anAccount incomingPassword]] autorelease];
             [pop3session openSession]; 
             [pop3session closeSession];
 
@@ -58,7 +58,7 @@
                 [stream shutdownEncryption];
             }
         }
-        @catch (NSException *localException)
+        @catch (NSException* localException)
         {
         }
         @finally
@@ -68,7 +68,7 @@
     }
 }
 
-- (void)sendMessagesViaSMTPAccountJob:(NSDictionary *)arguments
+- (void) sendMessagesViaSMTPAccountJob:(NSDictionary *)arguments
 {
     G3Account *theAccount = [[account retain] autorelease];
     NSArray *theMessages = [[messages retain] autorelease];
@@ -121,7 +121,7 @@
                     [pool release]; pool = [[NSAutoreleasePool alloc] init];
                 }
             }
-            @catch (NSException *localException)
+            @catch (NSException* localException)
             {
                 @throw;
             }
@@ -132,7 +132,7 @@
                 [stream close];
             }
         }
-        @catch (NSException *localException) {
+        @catch (NSException* localException) {
             @throw;
         } @finally {
             [OPJobs setResult:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -143,7 +143,7 @@
     }
 }
 
-- (id)initWithMessages:(NSArray *)someMessages andAccount:(G3Account *)anAccount
+- (id)initWithMessages:(NSArray*) someMessages andAccount:(G3Account *)anAccount
 {
     self = [super init];
     
@@ -153,7 +153,7 @@
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [messages release];
     [account release];
@@ -161,12 +161,12 @@
     [super dealloc];
 }
 
-+ (NSString *)jobName
++ (NSString*) jobName
 {
     return @"SMTP send";
 }
 
-+ (void)sendMessages:(NSArray *)someMessages viaSMTPAccount:(G3Account *)anAccount
++ (void) sendMessages:(NSArray*) someMessages viaSMTPAccount:(G3Account *)anAccount
 /*" Starts a background job for sending messages someMessages via the given SMTP account anAccount. One account can only be 'smtp'ed by at most one smtp job at a time. "*/
 {
     NSParameterAssert([someMessages count]);
@@ -182,7 +182,7 @@
 @implementation GISMTPJob (SMTPDelegate)
 
 /*" required "*/
-- (NSString *)usernameForSMTP:(OPSMTP *)aSMTP
+- (NSString*) usernameForSMTP:(OPSMTP *)aSMTP
 {
     if ([account outgoingAuthenticationMethod] == SMTPAuthentication)
     {
@@ -191,7 +191,7 @@
     else return nil;
 }
 
-- (NSString *)passwordForSMTP:(OPSMTP *)aSMTP
+- (NSString*) passwordForSMTP:(OPSMTP *)aSMTP
 {
     if ([account outgoingAuthenticationMethod] == SMTPAuthentication)
     {
