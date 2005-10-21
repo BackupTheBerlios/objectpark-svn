@@ -54,6 +54,7 @@ int compareOids(OID o1, OID o2)
 		entrySize    = sizeof(OID);
 		needsSorting = NO;
 		data         = malloc( (capacity+3) * entrySize );
+		NSLog(@"OPFaultingArray %@ created.", self);
 	}
     return self;
 }
@@ -367,10 +368,21 @@ int compareOids(OID o1, OID o2)
 	[super dealloc];
 }
 
+
+/*
 - (id) autorelease
 {
 	return [super autorelease];
 }
+- (void) release
+{
+	[super release];
+}
+- (id) retain
+{
+	return [super retain];
+}
+*/
 
 - (unsigned) count
 {
@@ -406,12 +418,13 @@ int compareOids(OID o1, OID o2)
 	if ([hostArray count]>eindex) {
 		return [[[hostArray objectAtIndex: eindex++] retain] autorelease];
 	}
+	[hostArray release]; hostArray = nil;
 	return nil;
 }
 
 - (void) dealloc
 {
-	[hostArray dealloc];
+	[hostArray release]; hostArray = nil;
 	[super dealloc];
 }
 

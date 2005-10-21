@@ -1212,10 +1212,8 @@ static BOOL isThreadItem(id item)
 		// thread list
         if (! item) {
             return [[self threadsByDate] objectAtIndex: index];
-        } else {
-            GIThread *thread = [OPPersistentObjectContext objectWithURLString: item];
-            
-            return [[thread messagesByTree] objectAtIndex: index];
+        } else {            
+            return [[item messagesByTree] objectAtIndex: index];
         }
     } else { 
 		// boxes list
