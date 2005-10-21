@@ -45,4 +45,7 @@
 - (void) addObject: (OPPersistentObject*) anObject;
 //- (void) replaceOidAtIndex: (unsigned) anIndex withOid: (OID) anInt;
 
+- (NSEnumerator*) objectEnumerator;
+
+
 @end

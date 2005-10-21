@@ -357,7 +357,7 @@ static NSMutableArray *root = nil;
     }
 }
 
-+ (void)enforceIntegrity
++ (void) enforceIntegrity
 /*" Checks if all groups are in the hierarchy and that the hierarchy has no nonexistent groups in it. "*/
 {    
     NSMutableArray* groupUrlsToCheck = [NSMutableArray array];
@@ -369,7 +369,7 @@ static NSMutableArray *root = nil;
         [groupUrlsToCheck addObject: [group objectURLString]];
     }
     
-    [self checkHierarchy:[self hierarchyRootNode] withGroups:groupUrlsToCheck];
+    [self checkHierarchy: [self hierarchyRootNode] withGroups: groupUrlsToCheck];
     
     [[self hierarchyRootNode] addObjectsFromArray: groupUrlsToCheck];
     
@@ -601,6 +601,52 @@ static NSMutableArray *root = nil;
     return [self standardMessageGroupWithUserDefaultsKey:TrashMessageGroupURLString defaultName:NSLocalizedString(@"Trash", @"default group name for trash")];
 }
 
-
+-  (void) fetchThreads: (NSMutableArray**) allThreads
+		trivialThreads: (NSMutableSet**) trivialThreads
+			 newerThan: (NSTimeInterval) sinceRefDate
+		   withSubject: (NSString*) subject
+				author: (NSString*) author
+ sortedByDateAscending: (BOOL) ascending
+{    
+    NSLog(@"Entered fetchThreadURIs query");
+	
+	
+	NSMutableArray* clauses = [NSMutableArray arrayWithObject: @"ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS"];
+	
+	// Find only threads belonging to self:
+	[clauses addObject: [NSString stringWithFormat: @"%lld = Z_4THREADS.Z_4GROUPS", [self oid]]];
+	
+	if ([subject length]) {
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZSUBJECT like '%@'", subject]];
+	}
+	if ([author length]) {
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZAUTHOR like '%@'", author]];
+	}
+	if (sinceRefDate>0.0) {
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= %f", sinceRefDate]];
+	}
+	
+	NSString* queryString = [NSString stringWithFormat: @"select ZTHREAD.ROWID, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
+	
+	
+	OPPersistentObjectEnumerator* poe = 
+		[[OPPersistentObjectEnumerator alloc] initWithContext: [OPPersistentObjectContext defaultContext]
+												  resultClass: [GIThread class] 
+												  queryString: queryString];
+	
+	GIThread* thread;
+	sqlite3_stmt* statement = [poe statement];
+	while (thread = [poe nextObject]) {
+		[*allThreads addObject: thread];
+		int messageCount = sqlite3_column_int(statement, 1);
+		if (messageCount<=1) {
+			[*trivialThreads addObject: thread];
+		}
+	}
+	
+	[poe release];
+	
+    NSLog(@"Exited fetchThreadURIs query. Found %d trivial threads out of %d.", [*trivialThreads count], [*allThreads count]);
+}
 
 @end

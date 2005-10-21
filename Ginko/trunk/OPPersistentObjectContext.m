@@ -507,6 +507,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return result;
 }
 
+- (sqlite3_stmt*) statement
+{
+	return statement;
+}
 
 - (id) nextObject
 	/*" Returns the next fetched object including all its attributes. "*/

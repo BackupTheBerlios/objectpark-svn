@@ -11,6 +11,13 @@
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentObject.h"
 
+@interface OPFaultingArrayEnumerator : NSEnumerator {
+	int eindex;
+	OPFaultingArray* hostArray;
+}
++ (id) enumeratorWithArray: (OPFaultingArray*) array;
+@end
+
 @implementation OPFaultingArray
 
 /*" Warning: This class is not thread-save! "*/
@@ -360,14 +367,56 @@ int compareOids(OID o1, OID o2)
 	[super dealloc];
 }
 
+- (id) autorelease
+{
+	return [super autorelease];
+}
+
 - (unsigned) count
 {
 	return count;
 }
 
+- (NSEnumerator*) objectEnumerator
+{
+	return [OPFaultingArrayEnumerator enumeratorWithArray: self];
+}
+
 @end
 
 
+@implementation OPFaultingArrayEnumerator
+
+- (id) initWithArray: (OPFaultingArray*) array
+{
+	if (self = [super init]) {
+		hostArray = [array retain];
+	}
+	return self;
+}
+
++ (id) enumeratorWithArray: (OPFaultingArray*) array
+{
+	return [[((OPFaultingArrayEnumerator*)[self alloc]) initWithArray: array] autorelease];
+}
+
+
+- (id) nextObject
+{	
+	if ([hostArray count]>eindex) {
+		return [[[hostArray objectAtIndex: eindex++] retain] autorelease];
+	}
+	return nil;
+}
+
+- (void) dealloc
+{
+	[hostArray dealloc];
+	[super dealloc];
+}
+
+
+@end
 /*
 @implementation OPFaultingArray (testing)
 

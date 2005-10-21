@@ -27,7 +27,7 @@
 	@"{"
 	@"numberOfMessages = {ColumnName = ZNUMBEROFMESSAGES; AttributeClass = NSNumber;};"
 	@"subject = {ColumnName = ZSUBJECT; AttributeClass = NSString;};"
-	@"date = {ColumnName = ZDATE; AttributeClass = NSNumber;};"
+	@"date = {ColumnName = ZDATE; AttributeClass = NSCalendarDate;};"
 	@"groups = {AttributeClass = GIMessageGroup; QueryString =\"select Z_4THREADS.Z_4GROUPS from Z_4THREADS where Z_4THREADS.Z_6THREADS=?\"; ContainerClass=NSMutableArray;};"
 	@"messages = {AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZTHREAD=?\";};"
 	//@"groups = {AttributeClass = GIMessageGroup; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_6THREADS; TargetKeyColumnName = Z_4GROUPS; ContainerClass=NSArray; SortAttribute = age};"

@@ -52,14 +52,13 @@ extern NSString* GIMessageGroupWasAddedNotification;
 
 	/*" Complex Accessors "*/
 
-	//- (NSArray *)threadsByDate;
 
--  (void) fetchThreadURIs: (NSMutableArray**) uris
-           trivialThreads: (NSMutableSet**) trivialThreads
-                newerThan: (NSTimeInterval) sinceRefDate
-              withSubject: (NSString*) subject
-                   author: (NSString*) author
-    sortedByDateAscending: (BOOL) ascending;
+-  (void) fetchThreads: (NSMutableArray**) allThreads
+		trivialThreads: (NSMutableSet**) trivialThreads
+			 newerThan: (NSTimeInterval) sinceRefDate
+		   withSubject: (NSString*) subject
+				author: (NSString*) author
+ sortedByDateAscending: (BOOL) ascending;
 
 - (void) addThread: (GIThread*) value;
 - (void) removeThread: (GIThread*) value;

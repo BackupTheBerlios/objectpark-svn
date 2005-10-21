@@ -165,6 +165,14 @@
     return [self isListMessage] || [self isUsenetMessage];
 }
 
+- (id) init 
+{
+	if (self = [super init]) {
+		flagsCache = -1;
+	}
+	return self;
+}
+
 - (BOOL) isDummy
 {
     return [self transferData] == nil;
@@ -267,7 +275,7 @@
 	/*" Returns the real name extracted from the 'From' header. "*/
 {
 	[self willAccessValueForKey: @"senderName"];
-    NSString* result = [self valueForKey: @"senderName"];
+    NSString* result = [self primitiveValueForKey: @"senderName"];
 	[self didAccessValueForKey: @"senderName"];
 
 	return result;
@@ -313,18 +321,16 @@
     [self addFlags:flags];
 }
 
-- (BOOL)hasFlags:(unsigned)someFlags
+- (BOOL) hasFlags: (unsigned) someFlags
 {
     return (someFlags & [self flags]) == someFlags;
 }
 
-- (void)addFlags:(unsigned)someFlags
+- (void) addFlags: (unsigned) someFlags
 {
-    @synchronized(self)
-    {
+    @synchronized(self) {
         int flags = [self flags];
-        if (someFlags | flags != flags)
-        {
+        if (someFlags | flags != flags) {
             // flags to set:
             NSNumber *yes = [NSNumber numberWithBool:YES];
             if (someFlags & OPInSendJobStatus) [self setValue:yes forKey:@"isInSendJob"];

@@ -116,6 +116,7 @@
 
 - (void) reset;
 - (BOOL) skipObject;
+- (sqlite3_stmt*) statement;
 
 - (void) bind: (id) variable, ...;
 
