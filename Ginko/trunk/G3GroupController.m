@@ -927,15 +927,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }    
 }
 
-- (void)modelChanged:(NSNotification *)aNotification
+- (void) modelChanged: (NSNotification*) aNotification
 {
     // Re-query all threads keeping the selection, if possible.
     NSArray* selectedItems = [threadsView selectedItems];
     if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
-    [self setThreadCache:nil];
-    [self setNonExpandableItemsCache:nil];
+    [self setThreadCache: nil];
+    [self setNonExpandableItemsCache: nil];
     [self updateGroupInfoTextField];
-    [threadsView deselectAll:nil];
+    [threadsView deselectAll: nil];
 //#warning Is this clever? Maybe!
 /*    if ([self group])
     {
@@ -944,30 +944,33 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     */
     [threadsView reloadData];
     //NSLog(@"Re-Selecting items %@", selectedItems);
-    [threadsView selectItems:selectedItems ordered:YES];
+    [threadsView selectItems: selectedItems ordered: YES];
 }
 
-- (GIMessageGroup *)group
+- (GIMessageGroup*) group
 {
     return group;
 }
 
-- (void)setGroup:(GIMessageGroup *)aGroup
+- (void) setGroup: (GIMessageGroup*) aGroup
 {
     if (aGroup != group) {
         //NSLog(@"Setting group for controller: %@", [aGroup description]);
         
         // key value observing:
+		/*
+		 #warning What was the following good for?
         if (![self isStandaloneBoxesWindow]) {
-            [group removeObserver:self forKeyPath: @"threads"];
+            [group removeObserver: self forKeyPath: @"threads"];
             [aGroup addObserver:self forKeyPath: @"threads" options:NSKeyValueObservingOptionNew context:NULL];
         }
+		 */
         
         [group autorelease];
         group = [aGroup retain];
         
         // thread filter popup:
-        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
+        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:  ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
@@ -1225,7 +1228,7 @@ static BOOL isThreadItem(id item)
 	if (threadsView == outlineView) {
         // Retain all messages in thread item:
 		NSLog(@"Should release opened messages.");
-		//[[item messages] makeObjectsPerformSelector: @selector(autorelease)];
+		[[item messages] makeObjectsPerformSelector: @selector(autorelease)]; // could be too early!?
 	}
 	return YES;
 }

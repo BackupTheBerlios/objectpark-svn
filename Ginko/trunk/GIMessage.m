@@ -41,6 +41,19 @@
 	@"profile = {ColumnName = ZPROFILE; AttributeClass = GIProfile;};"
 	@"thread = {ColumnName = ZTHREAD; AttributeClass = GIThread;};"
 	@"reference = {ColumnName = ZREFERENCE; AttributeClass = GIMessage;};"
+	// Flags
+	@"isSeen = {ColumnName = ZISSEEN; AttributeClass = NSNumber;};"
+	@"isQueued = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
+	@"isSendingBlocked = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
+	@"isDraft = {ColumnName = ZISDRAFT; AttributeClass = NSNumber;};"
+	@"isAnswered = {ColumnName = ZISANSWERED; AttributeClass = NSNumber;};"
+	@"isFulltextIndexed = {ColumnName = ZISFULLTEXTINDEXED; AttributeClass = NSNumber;};"
+	@"isFromMe = {ColumnName = ZISFROMME; AttributeClass = NSNumber;};"
+	@"isFlagged = {ColumnName = ZISFLAGGED; AttributeClass = NSNumber;};"
+	@"isJunk = {ColumnName = ZISJUNK; AttributeClass = NSNumber;};"
+	@"isInteresting = {ColumnName = ZISINTERESTING; AttributeClass = NSNumber;};"
+	//@"isInSendJob = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
+
 	@"}";
 }
 
@@ -188,7 +201,7 @@
             
 			[self willAccessValueForKey: @"isSeen"];
 
-            if ([self primitiveBoolForKey: @"isInSendJob"]) flagsCache |= OPInSendJobStatus;
+            if ([self primitiveBoolForKey: @"isInSendJob"]) flagsCache |= OPInSendJobStatus; // not in db schema!?
             if ([self primitiveBoolForKey: @"isQueued"]) flagsCache |= OPQueuedStatus;
             if ([self primitiveBoolForKey: @"isInteresting"]) flagsCache |= OPInterestingStatus;
             if ([self primitiveBoolForKey: @"isSeen"]) flagsCache |= OPSeenStatus;
@@ -333,8 +346,8 @@
         int flags = [self flags];
         if (someFlags | flags != flags) {
             // flags to set:
-            NSNumber *yes = [NSNumber numberWithBool:YES];
-            if (someFlags & OPInSendJobStatus) [self setValue:yes forKey:@"isInSendJob"];
+            NSNumber *yes = [NSNumber numberWithBool: YES];
+            if (someFlags & OPInSendJobStatus) [self setValue:yes forKey:@"isInSendJob"]; // not in DB schema!?
             if (someFlags & OPQueuedStatus) [self setValue:yes forKey:@"isQueued"];
             if (someFlags & OPInterestingStatus) [self setValue:yes forKey:@"isInteresting"];
             if (someFlags & OPSeenStatus) [self setValue:yes forKey:@"isSeen"];
