@@ -262,7 +262,7 @@ static EDObjcMethodInfo myFirstObjectMethod;
     if(![aPath hasSuffix: @"/"])
         aPath = [aPath stringByAppendingString: @"/"];
 
-    count = [aPath completePathIntoString:&firstName caseSensitive:YES matchesIntoArray:&allNames filterTypes:[NSArray arrayWithObject:type]];
+    count = [aPath completePathIntoString:&firstName caseSensitive: YES matchesIntoArray:&allNames filterTypes:[NSArray arrayWithObject:type]];
     return allNames;
 }
 

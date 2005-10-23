@@ -581,7 +581,7 @@ NSString* bytes2Display(unsigned int bytes)
     
     path = [directoryname stringByAppendingPathComponent:[aFileWrapper preferredFilename]];
     
-    if (! [aFileWrapper writeForksToFile:path atomically:YES updateFilenames: YES])
+    if (! [aFileWrapper writeForksToFile:path atomically: YES updateFilenames: YES])
     {
         [NSException raise:NSGenericException format: @"Error writing attachment to temporary directory"];
     }
