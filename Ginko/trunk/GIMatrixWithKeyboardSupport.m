@@ -36,14 +36,14 @@
 }
 
 /*
-- (void) drawRect:(NSRect)rect {
-    // Drawing code here.
-}
-*/
+ - (void)drawRect:(NSRect)rect {
+     // Drawing code here.
+ }
+ */
 
 - (BOOL) acceptsFirstResponder
 {
-    return YES;
+    return NO;
 }
 
 - (NSFocusRingType) focusRingType
@@ -67,7 +67,7 @@
 - (void) mouseDown: (NSEvent*) theEvent 
 {
     [super mouseDown: theEvent];
-    [[self window] makeFirstResponder: self];
+    //    [[self window] makeFirstResponder: self];
 }
 
 - (void) delegateAction: (SEL) selector
@@ -78,6 +78,7 @@
     }
 }
 
+#ifdef _0
 - (void) keyDown: (NSEvent*) theEvent 
 /*" Sends navigateRightInMatrix: etc. to the delegate to indicate that the selection should be moved as response to a keyboard action (e.g. arrow keys). "*/
 {
@@ -107,6 +108,6 @@
             [super keyDown: theEvent];
     }
 }
-
+#endif
 
 @end

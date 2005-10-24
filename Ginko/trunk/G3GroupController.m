@@ -494,15 +494,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 
                 [self setDisplayedMessage: message thread: selectedThread];
                 
-                if ([self matrixIsVisible]) [window makeFirstResponder: commentsMatrix];
-                else [window makeFirstResponder: messageTextView];                    
+                [window makeFirstResponder: messageTextView];                    
             }
         }
-	} else {
-        // message shown
-        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder: messageTextView];
-        else [window makeFirstResponder: commentsMatrix];
-    }
+	} 
     return YES;
 }
 
@@ -926,14 +921,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView selectItems: selectedItems ordered: YES];
 }
 
-- (GIMessageGroup*) group
+- (GIMessageGroup *)group
 {
     return group;
 }
 
-- (void) setGroup: (GIMessageGroup*) aGroup
+- (void)setGroup:(GIMessageGroup *)aGroup
 {
-    if (aGroup != group) {
+    if (aGroup != group) 
+    {
         //NSLog(@"Setting group for controller: %@", [aGroup description]);
         
         // key value observing:
@@ -949,7 +945,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         group = [aGroup retain];
         
         // thread filter popup:
-        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:  ShowOnlyRecentThreads] intValue]];
+        [threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
@@ -961,37 +957,44 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
          [boxesView scrollRowToVisible: boxRow];
          */
         
-        if ([self isStandaloneBoxesWindow]) {
-            
-            [threadsView setAutosaveName: [@"ThreadsOutline" stringByAppendingString: [group objectURLString] ? [group objectURLString] : @"nil"]];
-            [threadsView setAutosaveTableColumns: YES];
-            [threadsView setAutosaveExpandedItems: NO];
+        if ([self isStandaloneBoxesWindow]) 
+        {
+            [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[group objectURLString] ? [group objectURLString] : @"nil"]];
+            [threadsView setAutosaveTableColumns:YES];
+            [threadsView setAutosaveExpandedItems:NO];
             
             // Show last selected item:
-            NSString* itemURI = [self valueForGroupProperty: @"LastSelectedMessageItem"];
+            NSString *itemURI = [self valueForGroupProperty:@"LastSelectedMessageItem"];
             
-            if (itemURI) {
+            if (itemURI) 
+            {
                 id item = [OPPersistentObjectContext objectWithURLString: itemURI];
-                if (item) {
-                    GIMessage* message = nil;
-                    GIThread* thread = nil;
+                if (item) 
+                {
+                    GIMessage *message = nil;
+                    GIThread *thread = nil;
                     
-                    if ([item isKindOfClass: [GIThread class]]) {
+                    if ([item isKindOfClass:[GIThread class]]) 
+                    {
                         thread = item;
-                    } else {
+                    } 
+                    else 
+                    {
                         message = item;
                         thread = [message thread];
                     }
                     
-                    int itemRow = [threadsView rowForItemEqualTo: [thread objectURLString] startingAtRow: 0];
+                    int itemRow = [threadsView rowForItemEqualTo:[thread objectURLString] startingAtRow:0];
                     
-                    if (itemRow >= 0) {
-                        [threadsView selectRow: itemRow byExtendingSelection: NO];
+                    if (itemRow >= 0) 
+                    {
+                        [threadsView selectRow:itemRow byExtendingSelection:NO];
                         
-                        if (![thread containsSingleMessage]) {
+                        if (![thread containsSingleMessage]) 
+                        {
                             [self openSelection:self];
                         }
-                        [threadsView scrollRowToVisible: itemRow];
+                        [threadsView scrollRowToVisible:itemRow];
                     }
                 }
             }
@@ -1492,25 +1495,25 @@ static NSAttributedString* spacer2()
 
 @implementation G3GroupController (CommentsTree)
 
-- (void) awakeCommentTree
+- (void)awakeCommentTree
 /*" awakeFromNib part for the comment tree. Called from -awakeFromNib. "*/
 {
-    G3CommentTreeCell* commentCell = [[[G3CommentTreeCell alloc] init] autorelease];
+    G3CommentTreeCell *commentCell = [[[G3CommentTreeCell alloc] init] autorelease];
     
-    [commentsMatrix putCell: commentCell atRow: 0 column: 0];
-    [commentsMatrix setCellClass: nil];
-    [commentsMatrix setPrototype: commentCell];
-    [commentsMatrix setCellSize: NSMakeSize(20,10)];
-    [commentsMatrix setIntercellSpacing: NSMakeSize(0,0)]; 
-    [commentsMatrix setAction: @selector(selectTreeCell:)];
-    [commentsMatrix setTarget: self];
-    [commentsMatrix setNextKeyView: messageTextView];
-    [messageTextView setNextKeyView: commentsMatrix];
-    NSAssert([messageTextView nextKeyView]==commentsMatrix, @"setNExtKeyView did not work");
-
+    [commentsMatrix putCell:commentCell atRow:0 column:0];
+    [commentsMatrix setCellClass:nil];
+    [commentsMatrix setPrototype:commentCell];
+    [commentsMatrix setCellSize:NSMakeSize(20,10)];
+    [commentsMatrix setIntercellSpacing:NSMakeSize(0,0)]; 
+    [commentsMatrix setAction:@selector(selectTreeCell:)];
+    [commentsMatrix setTarget:self];
+    [commentsMatrix setNextKeyView:messageTextView];
+    [messageTextView setNextKeyView:commentsMatrix];
+    
+    NSAssert([messageTextView nextKeyView] == commentsMatrix, @"setNExtKeyView did not work");
 }
 
-- (void) deallocCommentTree
+- (void)deallocCommentTree
 {
 	 // Add code here to release all messages in expanded threads.
 }
