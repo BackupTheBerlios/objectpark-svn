@@ -1321,7 +1321,8 @@ static BOOL isThreadItem(id item)
         else 
         {
             G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
-            
+            return [[thread messagesByTree] objectAtIndex:index];
+            /*
             id child = nil;
             
             @try
@@ -1332,6 +1333,7 @@ static BOOL isThreadItem(id item)
             {
                 NSLog(@"Catched exception in -outlineView:child:ofItem: (%@)", localException);
             }
+             */
         }
     } 
     else // boxes list
