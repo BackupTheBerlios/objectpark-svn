@@ -59,6 +59,15 @@
     } 
 }
 
+- (void)delegateAction:(SEL)selector
+{
+    id delegate = [self delegate];
+    if ([delegate respondsToSelector:selector]) 
+    {
+        [delegate performSelector:selector withObject:self];
+    }
+}
+
 - (void)sendEvent:(NSEvent *)theEvent
 /*" Intercept the 'switch key' and inform the delegate and don't send the event further along the responder chain if it has a selector -switchKeyPressed:(id)sender. Otherwise the event is send further along the responder chain. "*/ 
 {
@@ -89,7 +98,26 @@
                 return;
             }
                 break;
-            
+            case KEYPAD6KEY:
+            case 42: // #
+                [self delegateAction: @selector(navigateRightInMatrix:)];
+                break;
+                
+            case 41: // Ö
+            case KEYPAD4KEY:
+                [self delegateAction: @selector(navigateLeftInMatrix:)];
+                break;
+                
+            case 33: // Ü
+            case KEYPAD8KEY:
+                [self delegateAction: @selector(navigateUpInMatrix:)];
+                break;
+                
+            case 39: // Ä
+            case KEYPAD2KEY:
+                [self delegateAction: @selector(navigateDownInMatrix:)];
+                break;
+                
             /*
             case LEFTARROWKEY:
             case KEYPAD4KEY:

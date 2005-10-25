@@ -43,7 +43,7 @@
 
 - (BOOL) acceptsFirstResponder
 {
-    return YES;
+    return NO;
 }
 
 - (NSFocusRingType) focusRingType
@@ -67,7 +67,7 @@
 - (void) mouseDown: (NSEvent*) theEvent 
 {
     [super mouseDown: theEvent];
-    [[self window] makeFirstResponder: self];
+//    [[self window] makeFirstResponder: self];
 }
 
 - (void) delegateAction: (SEL) selector

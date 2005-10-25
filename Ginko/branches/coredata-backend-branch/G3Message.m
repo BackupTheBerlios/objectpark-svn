@@ -259,7 +259,8 @@
             if (someFlags & OPInSendJobStatus) [self setValue:no forKey:@"isInSendJob"];
             if (someFlags & OPQueuedStatus) [self setValue:no forKey:@"isQueued"];
             if (someFlags & OPInterestingStatus) [self setValue:no forKey:@"isInteresting"];
-            if (someFlags & OPSeenStatus) [self setValue:no forKey:@"isSeen"];
+            if (someFlags & OPSeenStatus) 
+                [self setValue:no forKey:@"isSeen"];
             if (someFlags & OPJunkMailStatus) [self setValue:no forKey:@"isJunk"];
             if (someFlags & OPSendingBlockedStatus) [self setValue:no forKey:@"isSendingBlocked"];
             if (someFlags & OPFlaggedStatus) [self setValue:no forKey:@"isFlagged"];

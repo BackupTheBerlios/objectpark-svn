@@ -30,5 +30,6 @@
 - (IBAction)saveAction:(id)sender;
 - (IBAction)openSearchWindow:(id)sender;
 - (IBAction)showActivityPanel:(id)sender;
+- (IBAction)toggleAutomaticActivityPanel:(id)sender;
 
 @end

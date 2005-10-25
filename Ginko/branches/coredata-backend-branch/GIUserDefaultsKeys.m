@@ -12,11 +12,11 @@
 NSString *MessageRendererFontName = @"MessageRendererFontName";
 NSString *MessageRendererFontSize = @"MessageRendererFontSize";
 NSString *MessageRendererShouldRenderAttachmentsInlineIfPossible = @"MessageRendererShouldRenderAttachmentsInlineIfPossible";
-NSString *ShowAllHeaders          = @"ShowAllHeaders";
-NSString *ContentTypePreferences  = @"ContentTypePreferences";
-NSString *GroupsDrawerMode        = @"GroupsDrawerMode";
-NSString *HeadersShown            = @"GIHeadersShown";
-NSString *AdditionalHeadersShown  = @"GIAdditionalHeadersShown";
+NSString *ShowAllHeaders = @"ShowAllHeaders";
+NSString *ContentTypePreferences = @"ContentTypePreferences";
+NSString *GroupsDrawerMode = @"GroupsDrawerMode";
+NSString *HeadersShown = @"GIHeadersShown";
+NSString *AdditionalHeadersShown = @"GIAdditionalHeadersShown";
 NSString *SentMessageGroupURLString = @"SentMessageGroupURLString";
 NSString *DefaultMessageGroupURLString = @"DefaultMessageGroupURLString";
 NSString *DraftsMessageGroupURLString = @"DraftsMessageGroupURLString";
@@ -24,6 +24,7 @@ NSString *QueuedMessageGroupURLString = @"QueuedMessageGroupURLString";
 NSString *SpamMessageGroupURLString = @"SpamMessageGroupURLString";
 NSString *TrashMessageGroupURLString = @"TrashMessageGroupURLString";
 NSString *ImportPanelLastDirectory = @"ImportPanelLastDirectory";
+NSString *AutomaticActivityPanelEnabled = @"AutomaticActivityPanelEnabled";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 

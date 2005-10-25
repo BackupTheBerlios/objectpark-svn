@@ -539,16 +539,19 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 
                 [self setDisplayedMessage:message thread:selectedThread];
                 
-                if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
-                else [window makeFirstResponder:messageTextView];                    
+                //if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
+                //else 
+                [window makeFirstResponder:messageTextView];                    
             }
         }
     } 
     else 
     {
         // message shown
+        /*
         if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
         else [window makeFirstResponder:commentsMatrix];
+         */
     }
     return YES;
 }
@@ -1319,7 +1322,16 @@ static BOOL isThreadItem(id item)
         {
             G3Thread *thread = [NSManagedObjectContext objectWithURIString: item];
             
-            return [[thread messagesByTree] objectAtIndex:index];
+            id child = nil;
+            
+            @try
+            {
+                child = [[thread messagesByTree] objectAtIndex:index];
+            }
+            @catch (NSException *localException)
+            {
+                NSLog(@"Catched exception in -outlineView:child:ofItem: (%@)", localException);
+            }
         }
     } 
     else // boxes list
