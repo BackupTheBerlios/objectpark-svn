@@ -24,6 +24,7 @@ NSString *QueuedMessageGroupURLString = @"QueuedMessageGroupURLString";
 NSString *SpamMessageGroupURLString = @"SpamMessageGroupURLString";
 NSString *TrashMessageGroupURLString = @"TrashMessageGroupURLString";
 NSString *ImportPanelLastDirectory = @"ImportPanelLastDirectory";
+NSString *AutomaticActivityPanelEnabled = @"AutomaticActivityPanelEnabled";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 

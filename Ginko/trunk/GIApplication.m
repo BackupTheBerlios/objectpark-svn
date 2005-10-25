@@ -32,6 +32,7 @@
 {
     registerDefaultDefaults();
     NSAssert([[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences], @"Failed to register default Preferences.");
+    [GIActivityPanelController initialize];
 }
 
 - (IBAction)addressbook:(id)sender
@@ -61,18 +62,30 @@
     return YES;
 }
 
-+ (NSArray*) preferredContentTypes
++ (NSArray *)preferredContentTypes
 {
     NSArray *types = [[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences];
     return types;
 }
 
-- (BOOL)validateMenuItem:(id<NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(id <NSMenuItem>) menuItem
 {
-    return [self validateSelector:[menuItem action]];
+    if ([menuItem action] == @selector(toggleAutomaticActivityPanel:))
+    {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled])
+        {
+            [menuItem setState:NSOnState];
+        }
+        else
+        {
+            [menuItem setState:NSOffState];
+        }
+        return YES;
+    }
+    else return [self validateSelector:[menuItem action]];
 }
 
-- (void) restoreOpenWindowsFromLastSession
+- (void)restoreOpenWindowsFromLastSession
 {
     NSLog(@"-[GIApplication restoreOpenWindowsFromLastSession] (not yet implemented)");
     // TODO
@@ -440,11 +453,6 @@
 }
 */
 
-- (IBAction)showActivityPanel:(id)sender
-{
-    [GIActivityPanelController showActivityPanelInteractive: YES];
-}
-
 - (IBAction)getNewMailInAllAccounts:(id)sender
 {
     NSEnumerator *enumerator = [GIAccount allObjectsEnumerator];
@@ -576,6 +584,23 @@
 - (IBAction)sendQueuedMessages:(id)sender
 {
     [self sendQueuedMessagesWithFlag:OPQueuedStatus];
+}
+
+- (IBAction)showActivityPanel:(id)sender
+{
+    [GIActivityPanelController showActivityPanelInteractive:YES];
+    
+    // this action switches automatic activity panel functionality off:
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AutomaticActivityPanelEnabled];
+}
+
+- (IBAction)toggleAutomaticActivityPanel:(id)sender
+{
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud setBool:![ud boolForKey:AutomaticActivityPanelEnabled] forKey:AutomaticActivityPanelEnabled];
+    
+    // Hides activity panel if needed:
+    [GIActivityPanelController updateData];
 }
 
 @end

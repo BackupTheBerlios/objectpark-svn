@@ -23,7 +23,7 @@ extern NSString *SpamMessageGroupURLString;
 extern NSString *TrashMessageGroupURLString;
 extern NSString *DisableKeychainForPasswortDefault;
 extern NSString *ImportPanelLastDirectory;
+extern NSString *AutomaticActivityPanelEnabled;
+
 extern NSArray *allAdditionalHeadersForDisplay();
-
-
 extern void registerDefaultDefaults();

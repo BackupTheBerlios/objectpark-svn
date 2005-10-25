@@ -16,7 +16,8 @@
     NSArray *jobIds;
 }
 
-+ (void) showActivityPanelInteractive: (BOOL) interactive;
++ (void)showActivityPanelInteractive:(BOOL)interactive;
++ (void)updateData;
 
 - (NSWindow *)window;
 

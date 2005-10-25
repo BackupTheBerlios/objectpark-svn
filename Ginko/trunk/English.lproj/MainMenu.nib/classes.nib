@@ -37,10 +37,11 @@
         }, 
         {
             ACTIONS = {
-                importTestMBox = id; 
                 openNewGroupWindow = id; 
                 openSearchWindow = id; 
                 saveAction = id; 
+                showActivityPanel = id; 
+                toggleAutomaticActivityPanel = id; 
             }; 
             CLASS = GIApplication; 
             LANGUAGE = ObjC; 
