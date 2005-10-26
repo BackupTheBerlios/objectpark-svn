@@ -8,10 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "OPDebugLog.h"
+#import "OPLog.h"
 
 
-@interface OPLogMock : OPDebugLog {
+@interface OPLogMock : OPLog {
     NSString *loggedMessage;
 }
 

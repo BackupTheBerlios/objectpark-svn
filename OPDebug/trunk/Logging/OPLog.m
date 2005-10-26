@@ -6,11 +6,11 @@
 //  Copyright 2005 Objectpark.org. All rights reserved.
 //
 
-#import "OPDebugLog.h"
+#import "OPLog.h"
 
 
-@implementation OPDebugLog : NSObject
-/*"The OPDebugLog class provides a mechanism to control the extent of information logged.
+@implementation OPLog : NSObject
+/*"The OPLog class provides a mechanism to control the extent of information logged.
    It utilizes !{NSLog} for logging and uses the !{NSDebugEnabled} variable as a global
    on-off switch so you need to set this variable.
    For logging independent of that variable you should use !{NSLog} directly.
@@ -51,10 +51,10 @@
    "*/
 
 
-static OPDebugLog *sharedInstance;
+static OPLog *sharedInstance;
 
 /*"Returns the single instance of the debug logger object."*/
-+ (OPDebugLog*) sharedInstance
++ (OPLog*) sharedInstance
     {
     if (!sharedInstance)
         sharedInstance = [[self alloc] init];

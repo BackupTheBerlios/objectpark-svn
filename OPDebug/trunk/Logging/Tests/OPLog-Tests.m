@@ -1,5 +1,5 @@
 //
-//  OPDebug-Tests.m
+//  $Id:OPDebug-Tests.m$
 //  OPDebug
 //
 //  Created by Jörg Westheide on 29.09.2005.
@@ -7,17 +7,17 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-@interface OPDebugLog_Tests : SenTestCase
+@interface OPLog_Tests : SenTestCase
 @end
 
 
-#import "OPDebugLog.h"
+#import "OPLog.h"
 #import "OPLogMock.h"
 
 
 #define OPTestDebug  @"OPTestDebug"
 
-@implementation OPDebugLog_Tests
+@implementation OPLog_Tests
 
 - (void) setUp
     {
@@ -59,13 +59,13 @@
     
 - (void) testOPDebugLog
     {
-    [[OPDebugLog sharedInstance] setAspects:OPINFO forDomain:@"Some Domain"];
+    [[OPLog sharedInstance] setAspects:OPINFO forDomain:@"Some Domain"];
     
     NSString *message = @"Yes, this should be printed!";
     
     OPDebugLog(@"Some Domain", OPINFO, message);
     
-    [[OPDebugLog sharedInstance] removeAspects:OPINFO forDomain:@"Some Domain"];    
+    [[OPLog sharedInstance] removeAspects:OPINFO forDomain:@"Some Domain"];    
     
     STAssertNotNil([[OPLogMock sharedInstance] loggedMessage],
                    @"A message should have been logged but wasn't.");
@@ -76,11 +76,11 @@
     
 - (void) testOPDebugLogWithAdditionalArg
     {
-    [[OPDebugLog sharedInstance] setAspects:OPINFO forDomain:@"Some Domain"];
+    [[OPLog sharedInstance] setAspects:OPINFO forDomain:@"Some Domain"];
     
     OPDebugLog(@"Some Domain", OPINFO, @"Here we have an %@", @"argument");
     
-    [[OPDebugLog sharedInstance] removeAspects:OPINFO forDomain:@"Some Domain"];    
+    [[OPLog sharedInstance] removeAspects:OPINFO forDomain:@"Some Domain"];    
     
     STAssertNotNil([[OPLogMock sharedInstance] loggedMessage],
                    @"A message should have been logged but wasn't.");

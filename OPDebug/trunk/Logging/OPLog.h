@@ -39,7 +39,7 @@
 #define OPDebugLog(domain, aspects, format, ...)    {                                                                                        \
                                                     if (NSDebugEnabled)                                                                      \
                                                         {                                                                                    \
-                                                        OPDebugLog *sharedInstance = [OPDebugLog sharedInstance];                            \
+                                                        OPLog *sharedInstance = [OPLog sharedInstance];                            \
                                                         if ([sharedInstance aspectsForDomain:domain] & aspects)                              \
                                                             [sharedInstance log:[NSString stringWithFormat:[@"[%u] %@ (%s): " stringByAppendingString:format],         \
                                                                                               ((unsigned int*)[NSThread currentThread])[1],  \
@@ -47,13 +47,13 @@
                                                         }                                                                                    \
                                                     }
 
-@interface OPDebugLog : NSObject
+@interface OPLog : NSObject
     {
     NSMutableDictionary* settings;  /*"is the dictionary holding the current settings of aspects for the domains"*/
     }
 
 /*"Access to the logger"*/
-+ (OPDebugLog*) sharedInstance;
++ (OPLog*) sharedInstance;
 
 /*"Modifying aspects settings"*/
 - (void) addAspects:(long)anAspect forDomain:(NSString*)aDomain;

@@ -36,9 +36,9 @@
 /* Begin PBXBuildFile section */
 		3033E2E808EC97C8006346C0 /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* OPDebug.framework */; };
 		30450AC4091010630085A02F /* OPLogMock.m in Sources */ = {isa = PBXBuildFile; fileRef = 30450AC3091010630085A02F /* OPLogMock.m */; };
-		309B199708F0A9BE00CBA688 /* OPDebugLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 309B199408F0A9BE00CBA688 /* OPDebugLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		309B199808F0A9BE00CBA688 /* OPDebugLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199508F0A9BE00CBA688 /* OPDebugLog.m */; };
-		309B199908F0A9DA00CBA688 /* OPDebugLog-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */; };
+		309B199708F0A9BE00CBA688 /* OPLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 309B199408F0A9BE00CBA688 /* OPLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		309B199808F0A9BE00CBA688 /* OPLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199508F0A9BE00CBA688 /* OPLog.m */; };
+		309B199908F0A9DA00CBA688 /* OPLog-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199308F0A9BE00CBA688 /* OPLog-Tests.m */; };
 		309B19FF08F0B1ED00CBA688 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309B19FE08F0B1ED00CBA688 /* SenTestingKit.framework */; };
 		8DC2EF510486A6940098B216 /* OPDebug_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCF5E0370ADEE00C91783 /* OPDebug_Prefix.pch */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
@@ -105,9 +105,9 @@
 		3033E2C408EC93BF006346C0 /* Run Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Run Tests-Info.plist"; sourceTree = "<group>"; };
 		30450AC2091010630085A02F /* OPLogMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPLogMock.h; path = Logging/Tests/OPLogMock.h; sourceTree = "<group>"; };
 		30450AC3091010630085A02F /* OPLogMock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPLogMock.m; path = Logging/Tests/OPLogMock.m; sourceTree = "<group>"; };
-		309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPDebugLog-Tests.m"; path = "Logging/Tests/OPDebugLog-Tests.m"; sourceTree = "<group>"; };
-		309B199408F0A9BE00CBA688 /* OPDebugLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPDebugLog.h; path = Logging/OPDebugLog.h; sourceTree = "<group>"; };
-		309B199508F0A9BE00CBA688 /* OPDebugLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPDebugLog.m; path = Logging/OPDebugLog.m; sourceTree = "<group>"; };
+		309B199308F0A9BE00CBA688 /* OPLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPLog-Tests.m"; path = "Logging/Tests/OPLog-Tests.m"; sourceTree = "<group>"; };
+		309B199408F0A9BE00CBA688 /* OPLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPLog.h; path = Logging/OPLog.h; sourceTree = "<group>"; };
+		309B199508F0A9BE00CBA688 /* OPLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPLog.m; path = Logging/OPLog.m; sourceTree = "<group>"; };
 		309B19B508F0AB7300CBA688 /* AutoDoc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AutoDoc; sourceTree = "<group>"; };
 		309B19FE08F0B1ED00CBA688 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
 		32DBCF5E0370ADEE00C91783 /* OPDebug_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPDebug_Prefix.pch; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 			children = (
 				30450AC2091010630085A02F /* OPLogMock.h */,
 				30450AC3091010630085A02F /* OPLogMock.m */,
-				309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */,
+				309B199308F0A9BE00CBA688 /* OPLog-Tests.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -216,8 +216,8 @@
 		309B198A08F0A97900CBA688 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				309B199408F0A9BE00CBA688 /* OPDebugLog.h */,
-				309B199508F0A9BE00CBA688 /* OPDebugLog.m */,
+				309B199408F0A9BE00CBA688 /* OPLog.h */,
+				309B199508F0A9BE00CBA688 /* OPLog.m */,
 				30450ABF09100FF00085A02F /* Tests */,
 			);
 			name = Logging;
@@ -239,7 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF510486A6940098B216 /* OPDebug_Prefix.pch in Headers */,
-				309B199708F0A9BE00CBA688 /* OPDebugLog.h in Headers */,
+				309B199708F0A9BE00CBA688 /* OPLog.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +450,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				309B199908F0A9DA00CBA688 /* OPDebugLog-Tests.m in Sources */,
+				309B199908F0A9DA00CBA688 /* OPLog-Tests.m in Sources */,
 				30450AC4091010630085A02F /* OPLogMock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,7 +459,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				309B199808F0A9BE00CBA688 /* OPDebugLog.m in Sources */,
+				309B199808F0A9BE00CBA688 /* OPLog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
