@@ -103,9 +103,9 @@
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		3033E2C308EC93BF006346C0 /* Run Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Run Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3033E2C408EC93BF006346C0 /* Run Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Run Tests-Info.plist"; sourceTree = "<group>"; };
-		30450AC2091010630085A02F /* OPLogMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPLogMock.h; sourceTree = "<group>"; };
-		30450AC3091010630085A02F /* OPLogMock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPLogMock.m; sourceTree = "<group>"; };
-		309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPDebugLog-Tests.m"; path = "Logging/OPDebugLog-Tests.m"; sourceTree = "<group>"; };
+		30450AC2091010630085A02F /* OPLogMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPLogMock.h; path = Logging/Tests/OPLogMock.h; sourceTree = "<group>"; };
+		30450AC3091010630085A02F /* OPLogMock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPLogMock.m; path = Logging/Tests/OPLogMock.m; sourceTree = "<group>"; };
+		309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPDebugLog-Tests.m"; path = "Logging/Tests/OPDebugLog-Tests.m"; sourceTree = "<group>"; };
 		309B199408F0A9BE00CBA688 /* OPDebugLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPDebugLog.h; path = Logging/OPDebugLog.h; sourceTree = "<group>"; };
 		309B199508F0A9BE00CBA688 /* OPDebugLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPDebugLog.m; path = Logging/OPDebugLog.m; sourceTree = "<group>"; };
 		309B19B508F0AB7300CBA688 /* AutoDoc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AutoDoc; sourceTree = "<group>"; };
