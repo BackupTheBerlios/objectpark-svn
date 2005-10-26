@@ -9,9 +9,6 @@
 #import "OPDebugLog.h"
 
 
-static OPDebugLog *sharedInstance;
-
-
 @implementation OPDebugLog : NSObject
 /*"The OPDebugLog class provides a mechanism to control the extent of information logged.
    It utilizes !{NSLog} for logging and uses the !{NSDebugEnabled} variable as a global
@@ -53,11 +50,14 @@ static OPDebugLog *sharedInstance;
    the level in question (like in the above example).
    "*/
 
+
+static OPDebugLog *sharedInstance;
+
 /*"Returns the single instance of the debug logger object."*/
 + (OPDebugLog*) sharedInstance
     {
     if (!sharedInstance)
-        sharedInstance = [[OPDebugLog alloc] init];
+        sharedInstance = [[self alloc] init];
         
     return sharedInstance;
     }
@@ -72,7 +72,7 @@ static OPDebugLog *sharedInstance;
     return self;
     }
     
-
+    
 /*"Activates the logging of anAspect for aDomain in addition to the previously activated."*/
 - (void) addAspects:(long)anAspect forDomain:(NSString*)aDomain
     {
@@ -115,5 +115,11 @@ static OPDebugLog *sharedInstance;
     return [[settings objectForKey:aDomain] longValue];
     }
     
+    
+/*"Does the actual logging (of aMessage)."*/
+- (void) log:(NSString*)aMessage
+    {
+    NSLog(aMessage);
+    }
     
 @end

@@ -35,6 +35,7 @@
 
 /* Begin PBXBuildFile section */
 		3033E2E808EC97C8006346C0 /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* OPDebug.framework */; };
+		30450AC4091010630085A02F /* OPLogMock.m in Sources */ = {isa = PBXBuildFile; fileRef = 30450AC3091010630085A02F /* OPLogMock.m */; };
 		309B199708F0A9BE00CBA688 /* OPDebugLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 309B199408F0A9BE00CBA688 /* OPDebugLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		309B199808F0A9BE00CBA688 /* OPDebugLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199508F0A9BE00CBA688 /* OPDebugLog.m */; };
 		309B199908F0A9DA00CBA688 /* OPDebugLog-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */; };
@@ -102,6 +103,8 @@
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		3033E2C308EC93BF006346C0 /* Run Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Run Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3033E2C408EC93BF006346C0 /* Run Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Run Tests-Info.plist"; sourceTree = "<group>"; };
+		30450AC2091010630085A02F /* OPLogMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPLogMock.h; sourceTree = "<group>"; };
+		30450AC3091010630085A02F /* OPLogMock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPLogMock.m; sourceTree = "<group>"; };
 		309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPDebugLog-Tests.m"; path = "Logging/OPDebugLog-Tests.m"; sourceTree = "<group>"; };
 		309B199408F0A9BE00CBA688 /* OPDebugLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPDebugLog.h; path = Logging/OPDebugLog.h; sourceTree = "<group>"; };
 		309B199508F0A9BE00CBA688 /* OPDebugLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPDebugLog.m; path = Logging/OPDebugLog.m; sourceTree = "<group>"; };
@@ -200,12 +203,22 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
+		30450ABF09100FF00085A02F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				30450AC2091010630085A02F /* OPLogMock.h */,
+				30450AC3091010630085A02F /* OPLogMock.m */,
+				309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
 		309B198A08F0A97900CBA688 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
 				309B199408F0A9BE00CBA688 /* OPDebugLog.h */,
 				309B199508F0A9BE00CBA688 /* OPDebugLog.m */,
-				309B199308F0A9BE00CBA688 /* OPDebugLog-Tests.m */,
+				30450ABF09100FF00085A02F /* Tests */,
 			);
 			name = Logging;
 			sourceTree = "<group>";
@@ -438,6 +451,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				309B199908F0A9DA00CBA688 /* OPDebugLog-Tests.m in Sources */,
+				30450AC4091010630085A02F /* OPLogMock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,24 +637,40 @@
 		3033E26F08EC8A07006346C0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_PEDANTIC = NO;
 			};
 			name = Development;
 		};
 		3033E27008EC8A07006346C0 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_PEDANTIC = NO;
 			};
 			name = Deployment;
 		};
 		3033E27108EC8A07006346C0 /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_PEDANTIC = NO;
 			};
 			name = Test;
 		};
 		3033E27208EC8A07006346C0 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_PEDANTIC = NO;
 			};
 			name = Default;
 		};

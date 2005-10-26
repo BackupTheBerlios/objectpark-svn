@@ -36,11 +36,16 @@
    
    This will log the message 'Operation xyz() returned error: ACCESS DENIED' if
    the OPERROR aspect has been activated for the domain 'some domain'."*/
-#define OPDebugLog(domain, aspects, format, ...)  {                                                                                          \
-                                                  if (NSDebugEnabled && ([[OPDebugLog sharedInstance] aspectsForDomain:domain] & aspects))   \
-                                                      NSLog(@"[%u] %@ (%s): " format,                                                        \
-                                                            ((unsigned int*)[NSThread currentThread])[1], domain, #aspects, ##__VA_ARGS__);  \
-                                                  }
+#define OPDebugLog(domain, aspects, format, ...)    {                                                                                        \
+                                                    if (NSDebugEnabled)                                                                      \
+                                                        {                                                                                    \
+                                                        OPDebugLog *sharedInstance = [OPDebugLog sharedInstance];                            \
+                                                        if ([sharedInstance aspectsForDomain:domain] & aspects)                              \
+                                                            [sharedInstance log:[NSString stringWithFormat:[@"[%u] %@ (%s): " stringByAppendingString:format],         \
+                                                                                              ((unsigned int*)[NSThread currentThread])[1],  \
+                                                                                              domain, #aspects, ##__VA_ARGS__]];             \
+                                                        }                                                                                    \
+                                                    }
 
 @interface OPDebugLog : NSObject
     {
@@ -60,6 +65,9 @@
 
 /*"Inquiring domain aspects"*/
 - (long) aspectsForDomain:(NSString*)aDomain;
+
+/*"Logging"*/
+- (void) log:(NSString*)aMessage;
 
 @end
 
