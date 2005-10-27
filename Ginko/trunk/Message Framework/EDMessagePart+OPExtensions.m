@@ -21,7 +21,6 @@
 //#import "EDMessagePart+OPMboxExtensions.h"
 //#import "EDContentCoder+OPExtensions.h"
 #import "OPContentCoderCenter.h"
-#import "OPDebug.h"
 #import "NSString+MessageUtils.h"
 //#import "EDObjectPair.h"
 #import "OPMultimediaContentCoder.h"
@@ -32,6 +31,9 @@
 #import "EDPLainTextContentCoder.h"
 #import "utilities.h"
 #import "EDTextContentCoder.h" // can be removed
+
+#import <OPDebug/OPLog.h>
+#define MESSAGEDEBUG  @"MESSAGEDEBUG" 
 
 @interface EDMessagePart(PrivateAPI)
 + (NSDictionary *)_defaultFallbackHeaders;
@@ -233,7 +235,7 @@
     
     if (! [stringBuffer canBeConvertedToEncoding:NSASCIIStringEncoding])
     {
-        OPDebugLog2(MESSAGEDEBUG, OPWARNING, @"-[%@ %@]: Transfer representation of header fields contains non ASCII characters. Fallback to lossy conversion.", NSStringFromClass(isa), NSStringFromSelector(_cmd));
+        OPDebugLog(MESSAGEDEBUG, OPWARNING, @"-[%@ %@]: Transfer representation of header fields contains non ASCII characters. Fallback to lossy conversion.", NSStringFromClass(isa), NSStringFromSelector(_cmd));
     }
         
     if((headerData = [stringBuffer dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion: YES]) == nil)
@@ -310,7 +312,7 @@
                 [content retain];
             }
         } @catch (NSException* localException) {
-            OPDebugLog3(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
+            OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = [[[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."] autorelease];
         } @finally {
         }
@@ -331,7 +333,7 @@
             [result appendAttributedString: [contentCoder attributedString]];
             content = result;
         } @catch (NSException* localException) {
-            OPDebugLog3(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
+            OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = [[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."];
         }
 

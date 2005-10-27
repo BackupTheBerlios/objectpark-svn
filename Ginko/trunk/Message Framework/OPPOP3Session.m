@@ -20,7 +20,7 @@
 #import "OPPOP3Session.h"
 #import "OPInternetMessage.h"
 #import <OPNetwork/OPStream+SSL.h>
-#import <OPDebug.h>
+#import <OPDebug/OPLog.h>
 #import "NSData+OPMD5.h"
 #import "NSString+MessageUtils.h"
 #import "GIApplication.h"
