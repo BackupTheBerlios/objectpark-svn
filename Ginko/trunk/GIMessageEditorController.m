@@ -964,24 +964,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     type = MessageTypeFollowup;
 
     // Make usenet replies take precedence to list replies:
-    if ([replyMessage isUsenetMessage]) 
-    {
+    if ([replyMessage isUsenetMessage]) {
         // Set the Newsgroups: header to To. Primitive!! More checks needed!
         [headerFields setObject: [[replyMessage internetMessage] bodyForHeaderField: @"Newsgroups"] forKey: @"To"];
         return;
     }
     
-    if ([replyMessage isEMailMessage]) 
-    {
+    if ([replyMessage isEMailMessage]) {
         // try to identify a mailing list:
-        NSString *rawPostString = [[replyMessage internetMessage] bodyForHeaderField: @"List-Post"];
+        NSString* rawPostString = [[replyMessage internetMessage] bodyForHeaderField: @"List-Post"];
         
-        if ([rawPostString length]) 
-        {
+        if ([rawPostString length]) {
             NSString *postURLString = [OPURLFieldCoder stringFromFieldBody:rawPostString withFallback: YES];
             
-            if (postURLString) 
-            {
+            if (postURLString) {
                 [headerFields setObject: postURLString forKey: @"To"];
                 return;
             }

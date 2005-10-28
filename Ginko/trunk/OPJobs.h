@@ -56,7 +56,7 @@
 
 /*" Methods for use within jobs "*/
 + (NSNumber*) jobId;
-+ (void) setResult:(id)aResult;
++ (void) setResult: (id) aResult;
 + (BOOL) shouldTerminate;
 + (NSString*) jobName;
 + (void) postNotificationInMainThreadWithName: (NSString*) aNotificationName andUserInfo: (NSMutableDictionary*) userInfo;
@@ -73,13 +73,13 @@ extern NSString *OPJobWillStartNotification;
 extern NSString *OPJobDidFinishNotification;
 
 /*" Notification that a job has been set its progress information. object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". The job progress info dictionary is stored for the key "progressInfo". "*/
-extern NSString *OPJobDidSetProgressInfoNotification;
+extern NSString* OPJobDidSetProgressInfoNotification;
 
-extern NSString *OPJobProgressMinValue;
-extern NSString *OPJobProgressMaxValue;
-extern NSString *OPJobProgressCurrentValue;
-extern NSString *OPJobProgressDescription;
-extern NSString *OPJobProgressJobName;
+extern NSString* OPJobProgressMinValue;
+extern NSString* OPJobProgressMaxValue;
+extern NSString* OPJobProgressCurrentValue;
+extern NSString* OPJobProgressDescription;
+extern NSString* OPJobProgressJobName;
 
 @interface NSDictionary (OPJobsExtensions)
 

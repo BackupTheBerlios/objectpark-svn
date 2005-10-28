@@ -228,7 +228,7 @@
 }
 
 - (void) willDelete
-	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. "*/
+	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. Default implementation dies nothing. "*/
 {
 	
 }

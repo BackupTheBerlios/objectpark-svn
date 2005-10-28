@@ -15,6 +15,7 @@
 #import "NSApplication+OPExtensions.h"
 #import "GIUserDefaultsKeys.h"
 #import "OPPersistentObject+Extensions.h"
+#import "NSEnumerator+Extensions.h"
 
 
 @implementation GIMessageGroup
@@ -88,7 +89,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
         [aNode insertObject: resultURLString atIndex: anIndex];
     }
     
-    [self commitChanges];
+    [self saveHierarchy];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupWasAddedNotification object:result];
     
@@ -295,47 +296,43 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (GIProfile*) defaultProfile
 /*" Returns the default profile to use for replies on messages on this group. 
     Returns nil, if no default profile was specified. "*/
-{
-#warning implement defaultProfile
-    return [[GIProfile allObjects] lastObject];
+{	
+	[self willAccessValueForKey: @"defaultProfile"];
+	id profile = [self primitiveValueForKey: @"defaultProfile"];
+	[self didAccessValueForKey: @"defaultProfile"];
+	return profile;
 }
 
 - (void) setDefaultProfile: (GIProfile*) aProfile
 /*" Sets the default profile for the receiver. The default profile is used for replies on messages in this group. May set to nil. Then a more global default will be used. "*/
 {
-#warning implement setDefaultProfile
-    
-    //[self setPrimitiveValue:[aProfile objectID] forKey: @"defaultProfileId"];
+	[self willChangeValueForKey: @"defaultProfile"];
+    [self setPrimitiveValue: aProfile forKey: @"defaultProfile"];
+	[self willChangeValueForKey: @"defaultProfile"];
 }
 
-static NSMutableArray *root = nil;
+static NSMutableArray* root = nil;
 
-+ (void) commitChanges
++ (void) saveHierarchy
 /*" Saves the hierarchy information to disk. "*/
 {
-    NSString *plistPath;
-    NSData *plistData;
-    NSString *error;
-    
-    plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"GroupHierarchy.plist"];
-    
-    plistData = [NSPropertyListSerialization dataFromPropertyList:[self hierarchyRootNode] format:NSPropertyListXMLFormat_v1_0 errorDescription:&error];
-    if(plistData) {
+    NSString* error;
+	NSString* plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"GroupHierarchy.plist"];
+	NSData*   plistData = [NSPropertyListSerialization dataFromPropertyList: [self hierarchyRootNode] format: NSPropertyListXMLFormat_v1_0 errorDescription: &error];
+	
+    if (plistData) {
         [plistData writeToFile:plistPath atomically: YES];
     } else {
         NSLog(error);
         [error release];
     }
-    
-//    [NSApp saveAction:self];
 }
 
 + (void) checkHierarchy: (NSMutableArray*) hierarchy withGroups: (NSMutableArray*) groupUrlsToCheck
 /*" Checks the given hierarchy if all groups (referenced by groupUrlsToCheck) and no more are contained in the hierarchy. Adjusts the hierarchy accordingly. "*/
 {
-    int i, count;
-    
-    count = [hierarchy count];
+    int i;
+    int count = [hierarchy count];
     
     for(i = 1; i < count; i++) {
         id object;
@@ -361,8 +358,8 @@ static NSMutableArray *root = nil;
 /*" Checks if all groups are in the hierarchy and that the hierarchy has no nonexistent groups in it. "*/
 {    
     NSMutableArray* groupUrlsToCheck = [NSMutableArray array];
-    NSEnumerator* enumerator = [self allObjectsEnumerator];
-	GIMessageGroup *group;
+    NSEnumerator*   enumerator       = [self allObjectsEnumerator];
+	GIMessageGroup* group;
 
     // building array of Object ID URLs:
     while ((group = [enumerator nextObject])) {
@@ -373,31 +370,28 @@ static NSMutableArray *root = nil;
     
     [[self hierarchyRootNode] addObjectsFromArray: groupUrlsToCheck];
     
-    [self commitChanges];
+    [self saveHierarchy];
 }
 
 + (NSMutableArray*) hierarchyRootNode
 /*" Returns the root node of the message group hierarchy. The first entry in every node describes the hierarchy. It is a #{NSDictionary} with keys 'name' for the name of the hierarchy and 'uid' for an unique id of the hierarchy. "*/
 {
     if (! root) {
-        NSData *plistData;
-        NSString *plistPath;
-        NSString *error;
+        NSString* error;
         NSPropertyListFormat format;
                 
-        // read from application support folder:
-        plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"GroupHierarchy.plist"];
+        // Read from application support folder:
+        NSString* plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"GroupHierarchy.plist"];
         
-        plistData = [NSData dataWithContentsOfFile:plistPath];
-        root = [[NSPropertyListSerialization propertyListFromData:plistData
-                                                 mutabilityOption:NSPropertyListMutableContainers
-                                                           format:&format
-                                                 errorDescription:&error] retain];
-        if(!root)
-        {
-            root = [[NSMutableArray arrayWithObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+        NSData* plistData = [NSData dataWithContentsOfFile: plistPath];
+        root = [[NSPropertyListSerialization propertyListFromData: plistData
+                                                 mutabilityOption: NSPropertyListMutableContainers
+                                                           format: &format
+                                                 errorDescription: &error] retain];
+        if (! root) {
+            root = [[NSMutableArray arrayWithObject: [NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Root", @"name",
-                [NSNumber numberWithFloat:0.0], @"uid",
+                [NSNumber numberWithFloat: 0.0], @"uid",
                 nil, nil
                 ]] retain];
             
@@ -406,87 +400,119 @@ static NSMutableArray *root = nil;
         }
         
         [self enforceIntegrity];
+		
+		[[self allObjectsEnumerator] makeObjectsPerformSelector: @selector(retain)]; // Groups are retained to prevent them from being re-fetched every time.
     }
     
     return root;
 }
 
-+ (NSMutableArray *)findHierarchyNodeForEntry:(id)entry startingWithHierarchyNode: (NSMutableArray*) aHierarchy
++ (NSMutableArray*) findHierarchyNodeForEntry: (id) entry startingWithHierarchyNode: (NSMutableArray*) aHierarchy
 /*" Returns the hierarchy node in which entry is contained. Starts the search at the hierarchy node aHierarchy. Returns nil if entry couldn't be found in the hierarchy. "*/
 {
-    NSMutableArray *result = nil;
-    NSEnumerator *enumerator;
-    id object;
+    NSMutableArray* result = nil;
     
-    if ([aHierarchy containsObject:entry])
-    {
+    if ([aHierarchy containsObject: entry]) {
         return aHierarchy;
     }
     
-    enumerator = [aHierarchy objectEnumerator];
-    while ((! result) && ((object = [enumerator nextObject])))
-    {
-        if ([object isKindOfClass:[NSMutableArray class]])
-        {
+    NSEnumerator* enumerator = [aHierarchy objectEnumerator];
+	id object;
+    while ((! result) && ((object = [enumerator nextObject]))) {
+        if ([object isKindOfClass:[NSMutableArray class]]) {
             result = [self findHierarchyNodeForEntry:entry startingWithHierarchyNode:object];
         }
     }
-    
     return result;
 }
 
-+ (BOOL)moveEntry:(id)entry toHierarchyNode: (NSMutableArray*) aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly
++ (void) moveThreadsWithURI: (NSArray*) threadURIs 
+				  fromGroup: (GIMessageGroup*) sourceGroup 
+					toGroup: (GIMessageGroup*) destinationGroup
+{
+    NSEnumerator* enumerator = [threadURIs objectEnumerator];
+    NSString* threadURI;
+    
+    while (threadURI = [enumerator nextObject]) {
+        GIThread *thread = [OPPersistentObjectContext objectWithURLString:threadURI];
+        NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
+        
+        // remove thread from source group:
+        [thread removeFromGroups: sourceGroup];
+        
+        // add thread to destination group:
+        [thread addToGroups: destinationGroup];
+    }
+}
+
+
++ (void) removeHierarchyNode: (id) entry
+	/*" Moves entry (either a hierarchy node or a group reference to another hierarchy node aHierarchy at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
+{
+    // Find entry's hierarchy and index:
+    NSMutableArray* entrysHierarchy = [self findHierarchyNodeForEntry: entry startingWithHierarchyNode: [self hierarchyRootNode]];    
+	
+	[entrysHierarchy removeObject: entry];
+	
+	if (![entry isKindOfClass: [NSMutableArray class]]) {
+		[entry release]; // Groups are retained to prevent them from being re-fetched every time.
+	}
+	
+	[self saveHierarchy];
+}
+
+
++ (BOOL) moveEntry: (id) entry toHierarchyNode: (NSMutableArray*) aHierarchy atIndex: (int) anIndex testOnly: (BOOL) testOnly
 /*" Moves entry (either a hierarchy node or a group reference to another hierarchy node aHierarchy at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
 {
-    NSMutableArray *entrysHierarchy;
+    NSMutableArray* entrysHierarchy;
     int entrysIndex;
     
     // find entry's hierarchy and index
-    entrysHierarchy = [self findHierarchyNodeForEntry:entry startingWithHierarchyNode:[self hierarchyRootNode]];
-    entrysIndex = [entrysHierarchy indexOfObject:entry];
+    entrysHierarchy = [self findHierarchyNodeForEntry: entry startingWithHierarchyNode: [self hierarchyRootNode]];
+    entrysIndex = [entrysHierarchy indexOfObject: entry];
     
     // don't allow folders being moved to subfolders of themselves
-    if ([entry isKindOfClass:[NSMutableArray class]])
-    {
-        if ([entry isEqual:aHierarchy]) return NO;
-        if ([entry containsObject:aHierarchy]) return NO;
-        if ([self findHierarchyNodeForEntry:aHierarchy startingWithHierarchyNode:entry])
-        {
+    if ([entry isKindOfClass: [NSMutableArray class]]) {
+        if ([entry isEqual: aHierarchy]) return NO;
+        if ([entry containsObject: aHierarchy]) return NO;
+        if ([self findHierarchyNodeForEntry: aHierarchy startingWithHierarchyNode: entry]) {
             return NO;
         }
     }
     
-    if (! testOnly)
-    {
+    if (! testOnly) {
         anIndex += 1; // first entry is the folder name
         
         // is entry's hierarchy equal target hierarchy?
-        if (entrysHierarchy == aHierarchy)
-        {
+        if (entrysHierarchy == aHierarchy) {
             // take care of indexes:
             if (entrysIndex < anIndex) anIndex--;
         }
         
         [entry retain];
         
-        [entrysHierarchy removeObject:entry];
+        [entrysHierarchy removeObject: entry];
         
-        if (anIndex < [aHierarchy count])
-        {
-            [aHierarchy insertObject:entry atIndex:anIndex];
-        }
-        else
-        {
-            [aHierarchy addObject:entry];
+        if (anIndex < [aHierarchy count]) {
+            [aHierarchy insertObject: entry atIndex: anIndex];
+        } else {
+            [aHierarchy addObject: entry];
         }
         
         [entry release];
         
-        [self commitChanges];
+        [self saveHierarchy];
     }
     
     return YES;
 }
+
+- (void) willDelete
+{
+	// delete dependent objects
+}
+
 
 + (void) addNewHierarchyNodeAfterEntry:(id)anEntry
 /*" Adds a new hierarchy node below (as visually indicated in the groups list) the given entry anEntry. "*/ 
@@ -499,44 +525,40 @@ static NSMutableArray *root = nil;
         ]];
     int index = [hierarchy indexOfObject:anEntry] + 1;
     
-    if (index < [hierarchy count])
-    {
-        [hierarchy insertObject:newHierarchy atIndex:index];
+    if (index < [hierarchy count]) {
+        [hierarchy insertObject: newHierarchy atIndex: index];
     } else {
-        [hierarchy addObject:newHierarchy];
+        [hierarchy addObject: newHierarchy];
     }
     
-    [self commitChanges];
+    [self saveHierarchy];
 }
 
-+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber*) anUid startHierarchyNode: (NSMutableArray*) aNode
++ (NSMutableArray*) hierarchyNodeForUid: (NSNumber*) anUid startHierarchyNode: (NSMutableArray*) aNode
 {
-    NSMutableArray *result = nil;
-    NSEnumerator *enumerator;
+    NSMutableArray* result = nil;
+    NSEnumerator* enumerator;
     id object;
     
-    if ([[[aNode objectAtIndex:0] valueForKey: @"uid"] isEqual:anUid])
-    {
+    if ([[[aNode objectAtIndex: 0] valueForKey: @"uid"] isEqual: anUid]) {
         return aNode;
     }
     
     enumerator = [aNode objectEnumerator];
     [enumerator nextObject]; // skip position 0
     
-    while ((! result) && ((object = [enumerator nextObject])))
-    {
-        if ([object isKindOfClass:[NSMutableArray class]])
-        {
-            result = [self hierarchyNodeForUid:anUid startHierarchyNode:object];
+    while ((! result) && ((object = [enumerator nextObject]))) {
+        if ([object isKindOfClass: [NSMutableArray class]]) {
+            result = [self hierarchyNodeForUid: anUid startHierarchyNode: object];
         }
     }
     
     return result;
 }
 
-+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber*) anUid
++ (NSMutableArray*) hierarchyNodeForUid: (NSNumber*) anUid
 {
-    return [self hierarchyNodeForUid:anUid startHierarchyNode:[self hierarchyRootNode]];
+    return [self hierarchyNodeForUid:anUid startHierarchyNode: [self hierarchyRootNode]];
 }
 
 + (GIMessageGroup*) standardMessageGroupWithUserDefaultsKey: (NSString* )defaultsKey defaultName: (NSString*) defaultName

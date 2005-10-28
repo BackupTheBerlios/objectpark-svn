@@ -25,6 +25,7 @@
 #import "GIAccount.h"
 #import <Foundation/NSDebug.h>
 #import "GIMessage.h"
+#import "GIGroupListController.h"
 
 @implementation GIApplication
 
@@ -279,44 +280,33 @@
 }
 */
 
-- (BOOL)isGroupsDrawerMode
+- (BOOL) isGroupsDrawerMode
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:GroupsDrawerMode];
 }
 
-- (NSWindow *)standaloneGroupsWindow
+- (NSWindow*) standaloneGroupsWindow
 {
-    NSWindow *win;
-    NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
-    
-    while (win = [enumerator nextObject])
-    {
-        if ([[win delegate] isKindOfClass:[G3GroupController class]])
-        {
-            if ([[win delegate] isStandaloneBoxesWindow])
-            {
-                return win;
-            }
+    NSWindow* win;
+    NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
+	Class glcc = [GIGroupListController class];
+
+    while (win = [enumerator nextObject]) {
+        if ([[win delegate] isKindOfClass: glcc]) {
+			return win;
         }
     }
-    
     return nil;
 }
 
-- (BOOL)hasGroupWindow
+- (BOOL) hasGroupWindow
 {
-    NSWindow *win;
-    NSEnumerator *enumerator;
-    
-    enumerator = [[NSApp windows] objectEnumerator];
-    while (win = [enumerator nextObject])
-    {
-        if ([[win delegate] isKindOfClass:[G3GroupController class]])
-        {
-            if (! [[win delegate] isStandaloneBoxesWindow])
-            {
-                return YES;
-            }
+    NSWindow* win;
+    NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
+	Class gcc = [G3GroupController class];
+    while (win = [enumerator nextObject]) {
+        if ([[win delegate] isKindOfClass: gcc]) {
+			return YES;
         }
     }
     
@@ -328,13 +318,12 @@
 	//NSLog(@"Supergroup is %@", [GIMessageGroup superGroup]);
 
     if ([self isGroupsDrawerMode]) {
-        if (! [self hasGroupWindow]) 
-        {
+        if (! [self hasGroupWindow]) {
             [[[G3GroupController alloc] initWithGroup: nil] autorelease];
         }
     } else {
         if (! [self standaloneGroupsWindow]) {
-            [[[G3GroupController alloc] initAsStandAloneBoxesWindow: nil] autorelease];
+            [[[GIGroupListController alloc] init] autorelease]; // also opens group list
         }
     }
 //#warning leaking memory as hell:

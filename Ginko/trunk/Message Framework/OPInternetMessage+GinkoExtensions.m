@@ -234,14 +234,7 @@ unsigned int MessageIdCounter = 0;
     return ([self bodyForHeaderField:@"To"] != nil);
 }
 */
-/*
-- (BOOL) isListMessage
-/" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). "/
-{
-	// do more guesses here...
-    return ([self bodyForHeaderField:@"List-Post"] != nil || [self bodyForHeaderField:@"X-List-Post"]!=nil);
-}
-*/
+
 
 /*
 - (BOOL) isPublicMessage {

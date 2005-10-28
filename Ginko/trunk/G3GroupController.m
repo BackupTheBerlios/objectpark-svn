@@ -35,18 +35,18 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 - (void) awakeCommentTree;
 - (void) deallocCommentTree;
-- (IBAction)selectTreeCell:(id)sender;
-- (void) updateCommentTree:(BOOL)rebuildThread;
-- (BOOL)matrixIsVisible;
+- (IBAction) selectTreeCell: (id) sender;
+- (void) updateCommentTree: (BOOL) rebuildThread;
+- (BOOL) matrixIsVisible;
 
 @end
 
 @implementation G3GroupController
 
-- (id)init
+- (id) init
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name: @"GroupContentChangedNotification" object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name: OPJobDidFinishNotification object:MboxImportJobName];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: @"GroupContentChangedNotification" object: self];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: OPJobDidFinishNotification object: MboxImportJobName];
     return [[super init] retain]; // self retaining!
 }
 
@@ -66,22 +66,10 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     return self;
 }
 
-- (id)initAsStandAloneBoxesWindow: (GIMessageGroup*) aGroup
-{
-    if (self = [self init])
-    {
-        [NSBundle loadNibNamed: @"Boxes" owner:self];
-        [self setGroup:aGroup];
-		
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name: GIMessageGroupWasAddedNotification object: nil];
-    }
-    
-    return self;
-}
 
-- (BOOL)isStandaloneBoxesWindow
+- (BOOL) isStandaloneBoxesWindow
 {
-    return (threadsView == nil);
+    return NO; //(threadsView == nil);
 }
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
@@ -292,35 +280,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return nil;
 }
 
-/*
-- (IBAction) showThreads2: (id) sender
-{
-    GIMessageGroup *selectedGroup = [GIMessageGroup messageGroupWithURIReferenceString: [boxesView itemAtRow: [boxesView selectedRow]]];
-    
-    NSLog(@"Fetching Threads via CoreData...");
-    [selectedGroup threadsByDate];
-    NSLog(@"Fetched Threads via CoreData.");
-}
-   */
-
-- (IBAction) showGroupWindow: (id) sender
-/*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
-{
-    GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow: [boxesView selectedRow]]];
-	    
-    if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) {
-        NSWindow *groupWindow = [[self class] windowForGroup: selectedGroup];
-        
-        if (groupWindow) {
-            [groupWindow makeKeyAndOrderFront:self];
-        } else {
-            G3GroupController *newController = [[[G3GroupController alloc] initWithGroup:selectedGroup] autorelease];
-            groupWindow = [newController window];
-        }
-        
-        [[groupWindow delegate] showThreads:sender];
-    }
-}
 
 - (NSWindow*) window 
 {
@@ -420,17 +379,36 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
+
+- (IBAction) showGroupWindow: (id) sender
+	/*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
+{
+    GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow: [boxesView selectedRow]]];
+	
+    if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) {
+        NSWindow* groupWindow = [[G3GroupController class] windowForGroup: selectedGroup];
+        
+        if (groupWindow) {
+            [groupWindow makeKeyAndOrderFront: self];
+        } else {
+            G3GroupController* newController = [[[G3GroupController alloc] initWithGroup: selectedGroup] autorelease];
+            groupWindow = [newController window];
+        }
+        
+        [[groupWindow delegate] showThreads: sender];
+    }
+}
+
+
 - (BOOL) openSelection: (id) sender
 {    
-    if (sender == boxesView) 
-    {
+    if (sender == boxesView) {
         // open group window:
         [self showGroupWindow:sender];
         return YES;
     }
     
-    if ([self threadsShownCurrently]) 
-    {
+    if ([self threadsShownCurrently]) {
         int selectedRow = [threadsView selectedRow];
         
         if (selectedRow >= 0) {
@@ -494,37 +472,33 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 
                 [self setDisplayedMessage: message thread: selectedThread];
                 
-                [window makeFirstResponder: messageTextView];                    
+                if ([self matrixIsVisible]) [window makeFirstResponder: commentsMatrix];
+                else [window makeFirstResponder: messageTextView];                    
             }
         }
-	} 
+	} else {
+        // message shown
+        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder: messageTextView];
+        else [window makeFirstResponder: commentsMatrix];
+    }
     return YES;
 }
 
-- (IBAction)closeSelection:(id)sender
+- (IBAction) closeSelection: (id) sender
 {
-    if (sender == messageTextView)
-    {
+    if (sender == messageTextView) {
         [tabView selectFirstTabViewItem:sender];
-    } 
-    else 
-    {
-        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"])
-        {
-            if ([window firstResponder] == messageTextView)
-            {
+    } else {
+        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"]) {
+			
+            if ([window firstResponder] == messageTextView) {
                 [tabView selectFirstTabViewItem:sender];
-            } 
-            else 
-            {
+            } else {
                 // from message switch back to threads:
-                [tabView selectFirstTabViewItem:sender];
+                [tabView selectFirstTabViewItem: sender];
             }
-        } 
-        else 
-        {
-            if (![self isStandaloneBoxesWindow])
-            {
+        } else {
+            if (![self isStandaloneBoxesWindow]) {
                 // from threads switch back to the groups window:
                 [[GIApp standaloneGroupsWindow] makeKeyAndOrderFront:sender];
                 [window performClose:self];
@@ -637,7 +611,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     int selectedRow = [boxesView selectedRow];
     [boxesView setAutosaveName: nil];
-    [GIMessageGroup addNewHierarchyNodeAfterEntry: [boxesView itemAtRow:selectedRow]];
+    [GIMessageGroup addNewHierarchyNodeAfterEntry: [boxesView itemAtRow: selectedRow]];
     [boxesView reloadData];
     [boxesView setAutosaveName: @"boxesView"];
     
@@ -741,18 +715,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 */
 
-- (IBAction) showGroupInspector: (id) sender
-{
-    if ([self isStandaloneBoxesWindow]) {
-        GIMessageGroup* selectedGroup = [boxesView itemAtRow: [boxesView selectedRow]];
-        
-        if ([selectedGroup isKindOfClass: [GIMessageGroup class]]) {
-            [G3GroupInspectorController groupInspectorForGroup: selectedGroup];
-        }
-    } else {
-        [G3GroupInspectorController groupInspectorForGroup: [self group]];
-    }
-}
+
 
 - (BOOL) threadsShownCurrently
 /*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
@@ -921,15 +884,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView selectItems: selectedItems ordered: YES];
 }
 
-- (GIMessageGroup *)group
+- (GIMessageGroup*) group
 {
     return group;
 }
 
-- (void)setGroup:(GIMessageGroup *)aGroup
+- (void) setGroup: (GIMessageGroup*) aGroup
 {
-    if (aGroup != group) 
-    {
+    if (aGroup != group) {
         //NSLog(@"Setting group for controller: %@", [aGroup description]);
         
         // key value observing:
@@ -945,7 +907,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         group = [aGroup retain];
         
         // thread filter popup:
-        [threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
+        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:  ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
@@ -957,44 +919,37 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
          [boxesView scrollRowToVisible: boxRow];
          */
         
-        if ([self isStandaloneBoxesWindow]) 
-        {
-            [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[group objectURLString] ? [group objectURLString] : @"nil"]];
-            [threadsView setAutosaveTableColumns:YES];
-            [threadsView setAutosaveExpandedItems:NO];
+        if ([self isStandaloneBoxesWindow]) {
+            
+            [threadsView setAutosaveName: [@"ThreadsOutline" stringByAppendingString: [group objectURLString] ? [group objectURLString] : @"nil"]];
+            [threadsView setAutosaveTableColumns: YES];
+            [threadsView setAutosaveExpandedItems: NO];
             
             // Show last selected item:
-            NSString *itemURI = [self valueForGroupProperty:@"LastSelectedMessageItem"];
+            NSString* itemURI = [self valueForGroupProperty: @"LastSelectedMessageItem"];
             
-            if (itemURI) 
-            {
+            if (itemURI) {
                 id item = [OPPersistentObjectContext objectWithURLString: itemURI];
-                if (item) 
-                {
-                    GIMessage *message = nil;
-                    GIThread *thread = nil;
+                if (item) {
+                    GIMessage* message = nil;
+                    GIThread* thread = nil;
                     
-                    if ([item isKindOfClass:[GIThread class]]) 
-                    {
+                    if ([item isKindOfClass: [GIThread class]]) {
                         thread = item;
-                    } 
-                    else 
-                    {
+                    } else {
                         message = item;
                         thread = [message thread];
                     }
                     
-                    int itemRow = [threadsView rowForItemEqualTo:[thread objectURLString] startingAtRow:0];
+                    int itemRow = [threadsView rowForItemEqualTo: [thread objectURLString] startingAtRow: 0];
                     
-                    if (itemRow >= 0) 
-                    {
-                        [threadsView selectRow:itemRow byExtendingSelection:NO];
+                    if (itemRow >= 0) {
+                        [threadsView selectRow: itemRow byExtendingSelection: NO];
                         
-                        if (![thread containsSingleMessage]) 
-                        {
+                        if (![thread containsSingleMessage]) {
                             [self openSelection:self];
                         }
-                        [threadsView scrollRowToVisible:itemRow];
+                        [threadsView scrollRowToVisible: itemRow];
                     }
                 }
             }
@@ -1335,14 +1290,10 @@ static NSAttributedString* spacer2()
 
 #define MAX_INDENTATION 4
 
-- (BOOL) isInSelection: (id) item
-{
-    return [[threadsView selectedRowIndexes] containsIndex: [threadsView rowForItem:item]];
-}
 
 - (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
 {
-    BOOL inSelectionAndAppActive = ([self isInSelection: item] && [NSApp isActive] && [window isMainWindow]);
+    BOOL inSelectionAndAppActive = ([[threadsView selectedItems] containsObject: item] && [NSApp isActive] && [window isMainWindow]);
     
     if (outlineView == threadsView) {
 		// subjects list
@@ -1461,7 +1412,7 @@ static NSAttributedString* spacer2()
         if ([item isKindOfClass: [NSMutableArray class]]) {
 			 // folder:
             [[item objectAtIndex: 0] setObject: object forKey: @"name"];
-            [GIMessageGroup commitChanges];
+            [GIMessageGroup saveHierarchy];
             //[outlineView selectRow: [outlineView rowForItem:item]+1 byExtendingSelection: NO];
             //[[outlineView window] endEditingFor:outlineView];
         } else {
@@ -1495,25 +1446,25 @@ static NSAttributedString* spacer2()
 
 @implementation G3GroupController (CommentsTree)
 
-- (void)awakeCommentTree
+- (void) awakeCommentTree
 /*" awakeFromNib part for the comment tree. Called from -awakeFromNib. "*/
 {
-    G3CommentTreeCell *commentCell = [[[G3CommentTreeCell alloc] init] autorelease];
+    G3CommentTreeCell* commentCell = [[[G3CommentTreeCell alloc] init] autorelease];
     
-    [commentsMatrix putCell:commentCell atRow:0 column:0];
-    [commentsMatrix setCellClass:nil];
-    [commentsMatrix setPrototype:commentCell];
-    [commentsMatrix setCellSize:NSMakeSize(20,10)];
-    [commentsMatrix setIntercellSpacing:NSMakeSize(0,0)]; 
-    [commentsMatrix setAction:@selector(selectTreeCell:)];
-    [commentsMatrix setTarget:self];
-    [commentsMatrix setNextKeyView:messageTextView];
-    [messageTextView setNextKeyView:commentsMatrix];
-    
-    NSAssert([messageTextView nextKeyView] == commentsMatrix, @"setNExtKeyView did not work");
+    [commentsMatrix putCell: commentCell atRow: 0 column: 0];
+    [commentsMatrix setCellClass: nil];
+    [commentsMatrix setPrototype: commentCell];
+    [commentsMatrix setCellSize: NSMakeSize(20,10)];
+    [commentsMatrix setIntercellSpacing: NSMakeSize(0,0)]; 
+    [commentsMatrix setAction: @selector(selectTreeCell:)];
+    [commentsMatrix setTarget: self];
+    [commentsMatrix setNextKeyView: messageTextView];
+    [messageTextView setNextKeyView: commentsMatrix];
+    NSAssert([messageTextView nextKeyView]==commentsMatrix, @"setNExtKeyView did not work");
+
 }
 
-- (void)deallocCommentTree
+- (void) deallocCommentTree
 {
 	 // Add code here to release all messages in expanded threads.
 }
@@ -1987,7 +1938,7 @@ NSMutableArray* border = nil;
     return NSDragOperationNone;
 }
 
-- (BOOL)outlineView: (NSOutlineView*) outlineView writeItems:(NSArray*) items toPasteboard:(NSPasteboard *)pboard
+- (BOOL) outlineView: (NSOutlineView*) outlineView writeItems: (NSArray*) items toPasteboard: (NSPasteboard*) pboard
 {
     if (outlineView == boxesView) // Message Groups list
     {

@@ -29,6 +29,16 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            CLASS = GIGroupListController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                boxesView = NSOutlineView; 
+                progressIndicator = NSProgressIndicator; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
             CLASS = GIOutlineViewWithKeyboardSupport; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSOutlineView; 

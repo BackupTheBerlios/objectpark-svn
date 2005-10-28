@@ -21,12 +21,11 @@
 extern NSString* GIMessageGroupWasAddedNotification;
 
 
-/*" Handling message groups. Class methods. "*/
+/*" Dealing with the group hierarchie: "*/
 + (NSMutableArray*) hierarchyRootNode;
 + (GIMessageGroup*) newMessageGroupWithName: (NSString*) aName
                             atHierarchyNode: (NSMutableArray*) aNode
                                     atIndex: (int) anIndex;
-
 + (void) addNewHierarchyNodeAfterEntry: (id) anEntry;
 + (NSMutableArray*) hierarchyNodeForUid: (NSNumber*) anUid;
 + (BOOL)moveEntry: (id)entry 
@@ -35,6 +34,8 @@ extern NSString* GIMessageGroupWasAddedNotification;
          testOnly: (BOOL) testOnly;
 + (NSMutableArray*) findHierarchyNodeForEntry: (id) entry
                     startingWithHierarchyNode: (NSMutableArray*) aHierarchy;
++ (void) removeHierarchyNode: (id) entry;
+
 
 	/*" Standard message groups "*/
 + (GIMessageGroup*) defaultMessageGroup;
@@ -60,6 +61,10 @@ extern NSString* GIMessageGroupWasAddedNotification;
 				author: (NSString*) author
  sortedByDateAscending: (BOOL) ascending;
 
++ (void) moveThreadsWithURI: (NSArray*) threadURIs 
+				  fromGroup: (GIMessageGroup*) sourceGroup 
+					toGroup: (GIMessageGroup*) destinationGroup;
+
 - (void) addThread: (GIThread*) value;
 - (void) removeThread: (GIThread*) value;
 
@@ -69,7 +74,7 @@ extern NSString* GIMessageGroupWasAddedNotification;
 - (void) setDefaultProfile: (GIProfile*) aProfile;
 
 	/*" Persistency handling "*/
-+ (void) commitChanges;
++ (void) saveHierarchy;
 
 
 @end

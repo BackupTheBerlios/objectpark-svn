@@ -13,7 +13,7 @@
 
 - (NSArray*) accounts
 {
-    return [GIAccount allObjects];
+    return [GIAccount accounts];
 }
 
 

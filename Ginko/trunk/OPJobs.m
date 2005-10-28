@@ -717,7 +717,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     return [self objectForKey:OPJobProgressDescription];
 }
 
-- (BOOL)isJobProgressIndeterminate
+- (BOOL) isJobProgressIndeterminate
 {
     return [self objectForKey:OPJobProgressCurrentValue] == nil;
 }
