@@ -52,17 +52,11 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 + (OPPersistentObjectContext*) defaultContext
 {
-	/* better not - has no database
-    if (!defaultContext) {
-        [self setDefaultContext: [[[self alloc] init] autorelease]];
-        NSLog(@"Created default %@", defaultContext);
-    }
-	*/
     return defaultContext;
 }
 
 + (void) setDefaultContext: (OPPersistentObjectContext*) context
-/*" A default context can only be set once. Use -reset to trim memory usage after no persistent objects are us use any more. "*/
+/*" A default context can only be set once. Use -reset to trim memory usage after no persistent objects are in use any more. "*/
 {
     NSAssert(context == nil || defaultContext==nil || defaultContext==context, @"Default context can not be changed.");
     
@@ -221,7 +215,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 - (void) reset
-/*" Resets the internal state of the receiver, excluding the database connection. "*/
+/*" Resets the internal state of the receiver, excluding the database connection. The context can be used afterwards. "*/
 {
 	[self revertChanges]; // just to be sure
 
@@ -380,7 +374,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	OPPersistentObjectEnumerator* e = nil;
 	
-	if ([ad isRelationship] && sql!=nil) {
+	if ([ad isToManyRelationship] && sql!=nil) {
 		// We might want to cache these:
 		if (sortKey = [ad sortAttributeName]) {
 			sortKeyClass = [[[[ad attributeClass] persistentClassDescription] attributeWithName: sortKey] attributeClass];

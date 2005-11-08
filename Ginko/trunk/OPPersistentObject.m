@@ -234,21 +234,25 @@
 }
 
 
-- (void) willChangeValueForKey: (NSString*) key
-{
-    [self resolveFault]; // neccessary?
-    [[self context] willChangeObject: self];
-}
-
 - (void) willAccessValueForKey: (NSString*) key
 {
     [[self context] lock];
     [self resolveFault];
+	if (key && ![attributes objectForKey: key]) {
+		// Try to fetch and cache a relationship:
+		id result = [[self context] containerForObject: self
+									   relationShipKey: key];
+		
+		// Cache result container in attributes dictionary:
+		if (result) [attributes setObject: result forKey: key]; 
+	}
 }
 
-- (void) didChangeValueForKey: (NSString*) key
+
+- (void) willChangeValueForKey: (NSString*) key
 {
-    [[self context] didChangeObject: self];
+    [self willAccessValueForKey: key];
+    [[self context] willChangeObject: self];
 }
 
 - (void) didAccessValueForKey: (NSString*) key
@@ -256,23 +260,25 @@
     [[self context] unlock];
 } 
 
+- (void) didChangeValueForKey: (NSString*) key
+{
+	[self didAccessValueForKey: key];
+    [[self context] didChangeObject: self];
+}
+
+
+
 - (id) primitiveValueForKey: (NSString*) key
+/*" Returns nil, if the receiver is a fault. Call -willAccessValueForKey prior to this method to make sure, the object attributes are in place."*/
 {
     id result = [attributes objectForKey: key];
-	if (!result) {
-		result = [[self context] containerForObject: self
-									relationShipKey: key];
-		
-		// Cache result container in attributes dictionary:
-		if (result) [attributes setObject: result forKey: key]; 
-	}
 	
     return result;
 }
 
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key
 /*" Passing a nil value is allowed. "*/
-{
+{	
 	if (object) {
 		[attributes setObject: object forKey: key];
 	} else {
@@ -280,11 +286,92 @@
 	}
 }
 
+- (void) updateInverseRelationShipValue: (id) value forKey: (NSString*) key isRemove: (BOOL) isRemove
+/*" Updates the inverse relationship for the relation denoted by key, i.e. value->self via the inverseRelationshipKey for key. Does nothing, if key does not have an inverse relationship. 
+	
+	There are four kinds of relationships:
+	
+     1:1
+     1:n
+     n:1
+     n:m
+
+	"*/
+{
+	/*
+	OPAttributeDescription* ad = [[isa persistentClassDescription] attributeWithName: key];
+	if (!ad) [super setValue: value forUndefinedKey: key]; // throws exception
+	
+	NSString* inverseRelationshipKey = [ad inverseRelationshipKey];
+	if (inverseRelationshipKey) {
+		// We need to update an inverse relationship:
+		
+		// Find out what kind of relationship:
+		OPAttributeDescription* iad = [[[ad attributeClass] persistentClassDescription] attributeWithName: key];
+		
+		id oldValue = [self primitiveValueForKey: key];
+
+		if ([iad isRelationship]) {
+			// inverse is a :m relationship
+			[oldValue removePrimitiveValue: self forKey: key]; // oldValue may be nil
+			[value addPrimitiveValue: self forKey: key]; // value may be nil
+		} else {
+			NSAssert1(YES, @"Cannot update 1:n relationships. Update inverse %@ relation instead.", inverseRelationshipKey)
+			// inverse relationhip is a to-one relationship (e.g. one-to-one)
+			id oldSelf = [value valueForKey: inverseRelationshipKey];
+			[oldSelf setValue: nil forKey
+			
+			
+			//[oldValue setPrimitiveValue: nil forKey: inverseRelationshipKey]; // oldValue may be nil
+			//[value setPrimitiveValue: self forKey: inverseRelationshipKey]; // value may be nil
+		}
+	}
+*/
+}
+
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
-	[self willChangeValueForKey: key];
-	[self setPrimitiveValue: value forKey: key];
-	[self didChangeValueForKey: key];
+	[self willAccessValueForKey: key];
+	id oldValue = [self primitiveValueForKey: key];
+	[self didAccessValueForKey: key];
+	
+	if (oldValue != value) {	
+		[self willChangeValueForKey: key];
+		
+		// This is a to-one relationship, because to-many relationships use the add/removeValue methods.
+		
+		// The inverse relationship might be a to-many relationship. Examine that:	
+		OPAttributeDescription* ad = [[[self class] persistentClassDescription] attributeWithName: key];
+		if (!ad) [super setValue: value forUndefinedKey: key]; // throws exception, unknown attribute
+		
+		NSString* inverseKey = [ad inverseRelationshipKey];
+		if (inverseKey) {
+			// We need to update an inverse relationship:
+			
+			// Find out what kind of relationship:
+			OPAttributeDescription* iad = [[[ad attributeClass] persistentClassDescription] attributeWithName: inverseKey];
+			
+			if ([iad isToManyRelationship]) {
+				// inverse is a to-many relationship, so this is a many-to-one relationship
+				[oldValue willChangeValueForKey: inverseKey];
+				[oldValue removePrimitiveValue: self forKey: inverseKey]; // oldValue may be nil
+				[oldValue didChangeValueForKey: inverseKey];
+				[value willChangeValueForKey: inverseKey];
+				[value addPrimitiveValue: self forKey: inverseKey]; // value may be nil
+				[value didChangeValueForKey: inverseKey];
+			} else {
+#warning needs examination (esp willset... methods)
+				// inverse is a to-one relationship, so this is a one-to-one relationship
+				[oldValue setValue: nil forKey: inverseKey];
+				id oldSelf = [value objectForKey: inverseKey];
+				[oldSelf setValue: nil forKey: key];
+			}			
+		}
+		
+		[self setPrimitiveValue: value forKey: key]; 
+		
+		[self didChangeValueForKey: key];
+	}
 }
 
 - (NSDictionary*) attributeValues
@@ -375,22 +462,36 @@
     return [self descriptionIncludingAttributes: YES];
 }
 
-- (void) addValue: (id) value forKey: (NSString*) key
+- (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 {
-	OPFaultingArray* container = [self primitiveValueForKey: key];
-	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
-#warning Record relationship change in persistent context somehow.
-#warning Also update inverse relationship (if any)
-	
+	OPFaultingArray* container = [self primitiveValueForKey: key];	
 	[container addObject: value];	
 }
 
-- (void) removeValue: (id) value forKey: (NSString*) key
+
+- (void) addValue: (id) value forKey: (NSString*) key
+{
+	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
+#warning Record relationship change in persistent context somehow.
+#warning Also update inverse relationship (if any)
+	[self addPrimitiveValue: value forKey: key];
+	//[self updateInverseRelationShipValue: value forKey: key isRemove: NO];
+}
+
+- (void) removePrimitiveValue: (id) value forKey: (NSString*) key
 {
 	OPFaultingArray* container = [self primitiveValueForKey: key];
+	[container removeObject: value];
+}
+
+
+- (void) removeValue: (id) value forKey: (NSString*) key
+{
 #warning Record relationship change in persistent context somehow.
 #warning Also update inverse relationship.
-	[container removeObject: value];
+	[self removePrimitiveValue: value forKey: key];
+	//[self updateInverseRelationShipValue: value forKey: key isRemove: YES];
+
 }
 
 @end

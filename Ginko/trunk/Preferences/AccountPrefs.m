@@ -8,12 +8,13 @@
 
 #import "AccountPrefs.h"
 #import "GIAccount.h"
+#import "OPPersistentObject+Extensions.h"
 
 @implementation AccountPrefs
 
 - (NSArray*) accounts
 {
-    return [GIAccount accounts];
+    return [[GIAccount allObjectsEnumerator] allObjects];
 }
 
 

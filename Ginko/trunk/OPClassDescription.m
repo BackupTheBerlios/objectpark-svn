@@ -51,9 +51,10 @@
 				
 		// Create attributeDescriptions from plist
 		NSString* errors = nil;
-		NSDictionary* plist = [NSPropertyListSerialization propertyListFromData: [[poClass persistentAttributesPlist] dataUsingEncoding: NSISOLatin1StringEncoding] mutabilityOption: NSPropertyListImmutable format: NULL errorDescription: &errors];
+		NSString* plistString = [poClass persistentAttributesPlist];
+		NSDictionary* plist = [NSPropertyListSerialization propertyListFromData: [plistString dataUsingEncoding: NSISOLatin1StringEncoding] mutabilityOption: NSPropertyListImmutable format: NULL errorDescription: &errors];
 		
-		NSAssert2(!errors, @"Malformed attributes plist in %@: %@", self, errors);
+		NSAssert3(!errors, @"Malformed attributes plist %@ in %@: %@", plistString, poClass, errors);
 		
 		if (![plist count]) NSLog(@"Warning! Persistent class without persistent attributes.");
 		
@@ -64,7 +65,7 @@
 		NSString* key;
 		while (key = [keyEnumerator nextObject]) {
 			OPAttributeDescription* ad = [[[OPAttributeDescription alloc] initWithName: key properties: [plist objectForKey: key]] autorelease];
-			[([ad isRelationship] ? relations : attrs) addObject: ad];
+			[([ad isToManyRelationship] ? relations : attrs) addObject: ad];
 			[dict setObject: ad forKey: key];
 		}
 		//NSLog(@"Found relations in %@: %@", poClass, relations);
@@ -136,6 +137,7 @@
 		theClass          = NSClassFromString([dict objectForKey: @"AttributeClass"]);
 		queryString       = [[dict objectForKey: @"QueryString"] copy];
 		sortAttributeName = [[dict objectForKey: @"SortAttribute"] copy];
+		inverseRelationshipKey = [[dict objectForKey: @"InverseRelationshipKey"] copy];
 		
 		NSParameterAssert([theClass canPersist]);
 		
@@ -149,9 +151,25 @@
 	return queryString;
 }
 
-- (BOOL) isRelationship
+- (BOOL) isToManyRelationship
+/*" Returns wether the attribute is a to-many-relationship. "*/
 {
+	// Bad criteria?
 	return queryString!=nil;
+}
+
+
+- (NSString*) inverseRelationshipKey
+/*" The key pointing back to (a relationship) containing self. "*/
+{
+	return inverseRelationshipKey;
+}
+
+
+- (NSString*) joinTableName
+/*" Returns the name of the join table in case this is a many-to-many relationship, nil otherweise. "*/
+{
+	return nil;
 }
 
 - (NSString*) sortAttributeName

@@ -200,7 +200,7 @@
 
 	for (i=0; i<attrCount; i++) {
 		OPAttributeDescription* ad = [attributes objectAtIndex: i];
-		if (![ad isRelationship]) {
+		if (![ad isToManyRelationship]) {
 			NSString* key = ad->name;
 			id value = [values objectForKey: key];
 			//NSLog(@"Binding value %@ to attribute %@ of update statement.", value, key);

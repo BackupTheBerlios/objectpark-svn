@@ -21,10 +21,12 @@
 
     if (![context databaseConnection]) {
         
-        [context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Application Support/GinkoVoyager/GinkoBase.sqlite"]];
-
+		if (!context) {
+			context = [[[OPPersistentObjectContext alloc] init] autorelease];
+			[context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Application Support/GinkoVoyager/GinkoBase.sqlite"]];
+			[OPPersistentObjectContext setDefaultContext: context];
+		}
     }
-    
 }
 
 - (void) tearDown
@@ -50,7 +52,7 @@
 	
 	[newMessage setValue: [NSDate date] forKey: @"date"];
 	[newMessage setValue: @"BlaBla" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"author"];
+	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"senderName"];
 	
 	[context saveChanges];
 	
@@ -69,7 +71,7 @@
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
 	[newMessage setValue: @"BlaBla" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"author"];
+	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"senderName"];
 	
 	// This inserts the object into the database:
 	NSAssert1([newMessage oid], @"No oid was assigned during -saveChanges for %@", newMessage);
@@ -84,7 +86,7 @@
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
 	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"author"];
+	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"senderName"];
 	
 	[context saveChanges];
 	
@@ -93,6 +95,8 @@
 	[context reset];
 	
 	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
+	
+	NSAssert(newMessage, @"New message not retrievable.");
 	
 	[context deleteObject: newMessage];
 	
@@ -115,7 +119,7 @@
 	GIMessage* newMessage = [[GIMessage alloc] init];
 	
 	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"author"];
+	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"senderName"];
 	[newMessage setValue: messageId forKey: @"messageId"];
 	
 	[context saveChanges];
@@ -195,6 +199,23 @@
 
 	NSAssert([groups count] == groupCount, @"relationship removal failed.");
 
+}
+
+
+- (void) testThreadInverseRelationship
+{
+	GIMessageGroup* group = [context objectForOid: 2 ofClass: [GIMessageGroup class]];
+	NSAssert(group, @"Unable to fetch group 0.");
+	OPFaultingArray* threads = [group valueForKey: @"threadsByDate"];
+	GIThread* someThread = [threads lastObject];
+	GIThread* otherThread = [threads objectAtIndex: 0];
+	GIMessage* someMessage = [[someThread valueForKey: @"messages"] lastObject];
+	NSAssert(someThread!=otherThread, @"Bad test setup");
+
+	[someMessage setValue: otherThread forKey: @"thread"];
+	
+	NSAssert(![[someThread messages] containsObject: someMessage], @"someMessage not removed from [someThreads messages].");
+	NSAssert([[otherThread messages] containsObject: someMessage], @"someMessage not inserted into [otherThreads messages].");
 }
 
 

@@ -269,6 +269,8 @@
 		8D9032E8077B3BFC005365EA /* NSCalendarDate+NetExt.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9032E6077B3BFC005365EA /* NSCalendarDate+NetExt.h */; };
 		8D9E8A8606AC44080055F87C /* GIApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9E8A8406AC44080055F87C /* GIApplication.m */; };
 		8D9E9DC906AE215D0055F87C /* OPBanner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8D9E9DC806AE215C0055F87C /* OPBanner.jpg */; };
+		8DA23EF50920296A005D7154 /* OPFaultingArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */; };
+		8DA23EF60920296B005D7154 /* OPFaultingArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */; };
 		8DAB5CF30803C4FB0036C0BA /* GIMessageBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */; };
 		8DAB5CF40803C4FB0036C0BA /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */; };
 		8DB2D4F90796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB2D4F70796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h */; };
@@ -1313,6 +1315,7 @@
 				8DCE36080891918900F705EF /* OPSQLiteConnection.h in Headers */,
 				8DCE363E0891C71500F705EF /* OPPersistenceConstants.h in Headers */,
 				8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */,
+				8DA23EF50920296A005D7154 /* OPFaultingArray.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1676,6 +1679,7 @@
 				8DCE35FF0891905C00F705EF /* OPPersistentObjectContext.m in Sources */,
 				8DCE36090891918900F705EF /* OPSQLiteConnection.m in Sources */,
 				8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */,
+				8DA23EF60920296B005D7154 /* OPFaultingArray.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,8 @@
 #import "ProfilePrefs.h"
 #import "GIProfile.h"
 #import "GIAccount.h"
+#import "OPPersistentObject+Extensions.h"
+
 
 @implementation ProfilePrefs
 

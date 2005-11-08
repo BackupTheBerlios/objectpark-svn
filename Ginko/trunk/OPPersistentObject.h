@@ -85,6 +85,7 @@
 - (OID) currentOid; // internal method
 - (void) setOid: (OID) theOid; // for internal use
 
+- (void) willSave;
 - (void) willChangeValueForKey: (NSString*) key;
 - (void) willAccessValueForKey: (NSString*) key;
 - (void) didChangeValueForKey: (NSString*) key;
@@ -93,6 +94,9 @@
 - (NSString*) descriptionIncludingAttributes: (BOOL) printAttributes;
 
 - (void) addValue: (id) value forKey: (NSString*) key;
+- (void) addPrimitiveValue: (id) value forKey: (NSString*) key;
 - (void) removeValue: (id) value forKey: (NSString*) key;
+- (void) removePrimitiveValue: (id) value forKey: (NSString*) key;
+
 
 @end
