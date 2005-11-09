@@ -360,10 +360,10 @@
 				[value addPrimitiveValue: self forKey: inverseKey]; // value may be nil
 				[value didChangeValueForKey: inverseKey];
 			} else {
-#warning needs examination (esp willset... methods)
 				// inverse is a to-one relationship, so this is a one-to-one relationship
+#warning one-to-one (inverse) relationships create a retain cycle.
 				[oldValue setValue: nil forKey: inverseKey];
-				id oldSelf = [value objectForKey: inverseKey];
+				id oldSelf = [value objectForKey: inverseKey]; 
 				[oldSelf setValue: nil forKey: key];
 			}			
 		}
