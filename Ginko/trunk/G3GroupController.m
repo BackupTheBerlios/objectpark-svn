@@ -738,6 +738,79 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
+- (NSArray *)allSelectedMessages
+{
+    NSMutableArray *result = [NSMutableArray array];
+    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+    
+    if (! [selectedIndexes count]) return [NSArray array];
+    
+    unsigned int i = [selectedIndexes firstIndex];
+    
+    do
+    {
+        id item = [threadsView itemAtRow:i];
+        
+        if ([item isKindOfClass:[GIMessage class]])
+        {
+            [result addObject:item];
+        }
+        else
+        {
+            // it's a thread:
+            GIThread *thread = item;
+            NSEnumerator *enumerator = [[thread messages] objectEnumerator];
+            GIMessage *message;
+            
+            while (message = [enumerator nextObject])
+            {
+                [result addObject:message];
+            }
+        }
+        
+        i = [selectedIndexes indexGreaterThanIndex:i];
+    }
+    while (i != NSNotFound);
+    
+    return result;
+}
+
+- (BOOL)isAnySelectedItemNotHavingMessageflags:(unsigned int)flags allSelectedMessages:(NSArray **)allMessages
+{
+    (*allMessages) = [self allSelectedMessages];
+    NSEnumerator *enumerator = [(*allMessages) objectEnumerator];
+    GIMessage *message;
+    
+    while (message = [enumerator nextObject])
+    {
+        if (![message hasFlags:flags]) return YES;
+    }
+    
+    return NO;
+}
+
+- (void)toggleFlag:(unsigned int)flag
+{
+    NSArray *selectedMessages;
+    BOOL set = [self isAnySelectedItemNotHavingMessageflags:flag allSelectedMessages:&selectedMessages];
+    NSEnumerator *enumerator = [selectedMessages objectEnumerator];
+    GIMessage *message;
+    
+    while (message = [enumerator nextObject])
+    {
+        if (set) [message addFlags:flag];
+        else [message removeFlags:flag];
+    }
+    
+    // not necessary if flag changes would be recognized automatically:
+    [threadsView reloadData];
+}
+
+- (IBAction)toggleReadFlag:(id)sender
+{
+    [self toggleFlag:OPSeenStatus];
+}
+
 - (NSArray*) selectedThreadURIs
 {
     NSMutableArray* result = [NSMutableArray array];
@@ -985,7 +1058,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL) validateSelector: (SEL) aSelector
+- (BOOL)validateSelector:(SEL)aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -995,65 +1068,94 @@ static BOOL isThreadItem(id item)
          //|| (aSelector == @selector(showTransferData:))
          )
     {
-        NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
-		
-        if ((! [self isStandaloneBoxesWindow])&& ([selectedIndexes count] == 1)) {
-			
-            id item = [threadsView itemAtRow: [selectedIndexes firstIndex]];
-            if (([item isKindOfClass: [GIMessage class]]) || ([item containsSingleMessage])) {
+        NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+        
+        if ([selectedIndexes count] == 1)
+        {
+            id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
+            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage]))
+            {
                 return YES;
             }
         }
         return NO;
-    } else if (aSelector == @selector(applySortingAndFiltering:)) {
+    }
+    else if (aSelector == @selector(applySortingAndFiltering:))
+    {
         return [self isOnlyThreadsSelected];
     }
+    else if (aSelector == @selector(toggleReadFlag:))
+    {
+        return [[threadsView selectedRowIndexes] count] > 0;
+    }
+    
     /*
-    if ( 
-         (aSelector == @selector(catchup:))
-         || (aSelector == @selector(applySorters:))
-         || (aSelector == @selector(moveToTrash:))
-         )
-    {
-        if([[messageListController visibleSelectedMessageSummaries] count] > 0)
-            return YES;
-        else
-            return NO;
-    }
-    
-    if (aSelector == @selector(toggleShowListOfMessageboxes:))
-    {
-        if ([GIMessageboxesController isRememberedOpen])
-            return NO;
-        else
-            return YES;
-    }
-    
-    if ( (aSelector == @selector(newMessagebox:))
-         || (aSelector == @selector(rename: ))
-         || (aSelector == @selector(delete:))
-         || (aSelector == @selector(newMessageboxFolder:)))
-    {
-        if ([[[window drawers] objectAtIndex:0] state] == NSDrawerClosedState)
-        {
-            return NO;
-        }
-        else
-        {
-            return YES;
-        }
-    }
+     if ( 
+          (aSelector == @selector(catchup:))
+          || (aSelector == @selector(applySorters:))
+          || (aSelector == @selector(moveToTrash:))
+          )
+     {
+         if([[messageListController visibleSelectedMessageSummaries] count] > 0)
+             return YES;
+         else
+             return NO;
+     }
+     
+     if (aSelector == @selector(toggleShowListOfMessageboxes:))
+     {
+         if ([GIMessageboxesController isRememberedOpen])
+             return NO;
+         else
+             return YES;
+     }
+     
+     if ( (aSelector == @selector(newMessagebox:))
+          || (aSelector == @selector(rename:))
+          || (aSelector == @selector(delete:))
+          || (aSelector == @selector(newMessageboxFolder:)))
+     {
+         if ([[[window drawers] objectAtIndex:0] state] == NSDrawerClosedState)
+         {
+             return NO;
+         }
+         else
+         {
+             return YES;
+         }
+     }
      */
     return YES;
 }
 
-- (BOOL) validateMenuItem: (id <NSMenuItem>) menuItem
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    if ([menuItem action] == @selector(showRawSource:)) {
+    if ([menuItem action] == @selector(showRawSource:))
+    {
         [menuItem setState:showRawSource ? NSOnState : NSOffState];
         return ![self threadsShownCurrently];
-    } else {
-        return [self validateSelector: [menuItem action]];
+    }
+    else if ([menuItem action] == @selector(toggleReadFlag:))
+    {
+        if ([self validateSelector:[menuItem action]])
+        {
+            NSArray *selectedMessages;
+            
+            if ([self isAnySelectedItemNotHavingMessageflags:OPSeenStatus allSelectedMessages:&selectedMessages])
+            {
+                [menuItem setTitle:NSLocalizedString(@"As Read", @"Menu title for toggling messages to read")];
+            }
+            else
+            {
+                [menuItem setTitle:NSLocalizedString(@"As Unread", @"Menu title for toggling messages to read")];
+            }
+            return YES;
+        }
+        else return NO;
+    }
+    else
+    {
+        return [self validateSelector:[menuItem action]];
     }
 }
 
