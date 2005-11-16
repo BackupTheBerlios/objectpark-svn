@@ -14,6 +14,8 @@
     IBOutlet NSWindow *window;
     IBOutlet NSTableView *phraseTableView;
     IBOutlet NSArrayController *arrayController;
+    IBOutlet NSTextField *nameField;
+    
     @private
     NSTextView *textView;
     NSArray *sortDescriptors;

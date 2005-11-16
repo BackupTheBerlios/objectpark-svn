@@ -83,6 +83,7 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
     
     [arrayController insertObject:arrayObject atArrangedObjectIndex:0];		
     [arrayController setSelectionIndex:0];
+    [window makeFirstResponder:nameField];
 }
 
 - (IBAction)insertPhrase:(id)sender
