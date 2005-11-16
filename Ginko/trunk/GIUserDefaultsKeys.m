@@ -76,10 +76,9 @@ void registerDefaultDefaults()
             @"text/html",
             nil], ContentTypePreferences,
         
+        //[NSArray arrayWithObject:[NSArchiver archivedDataWithRootObject:[[[NSSortDescriptor alloc] initWithKey:@"phrasename" ascending:YES] autorelease]]], @"phrasesortdescriptors",
+    
         nil, nil];
-    
-    
-     ;
     
     [[NSUserDefaults standardUserDefaults] registerDefaults: appDefaults];
 }

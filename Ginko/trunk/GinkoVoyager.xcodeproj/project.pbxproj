@@ -134,10 +134,13 @@
 		77CD551007699AD1003354A0 /* MessageEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77CD550F07699AD1003354A0 /* MessageEditor.nib */; };
 		77CD551307699B4B003354A0 /* GIMessageEditorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CD551107699B4B003354A0 /* GIMessageEditorController.h */; };
 		77CD551407699B4B003354A0 /* GIMessageEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CD551207699B4B003354A0 /* GIMessageEditorController.m */; };
+		77CD6C14092B2BB500D7E986 /* GIPhraseBrowserController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CD6C12092B2BB500D7E986 /* GIPhraseBrowserController.h */; };
+		77CD6C15092B2BB500D7E986 /* GIPhraseBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CD6C13092B2BB500D7E986 /* GIPhraseBrowserController.m */; };
 		77CDEE7F07CBC05300675C49 /* Add_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7707CBC05300675C49 /* Add_Pressed.tiff */; };
 		77CDEE8007CBC05300675C49 /* Add.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7807CBC05300675C49 /* Add.tiff */; };
 		77CDEE8107CBC05300675C49 /* Remove_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */; };
 		77CDEE8207CBC05300675C49 /* Remove.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7A07CBC05300675C49 /* Remove.tiff */; };
+		77D33406092BB03E00F2BFAB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DE96297089E20CB0053ED6B /* libsqlite3.dylib */; };
 		77D52B670929E28700661A6D /* PhraseBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D52B660929E28700661A6D /* PhraseBrowser.nib */; };
 		77D79BD707F31BDB00C521CE /* punycode.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D79BD507F31BDB00C521CE /* punycode.h */; };
 		77D79BD807F31BDB00C521CE /* punycode.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D79BD607F31BDB00C521CE /* punycode.m */; };
@@ -184,7 +187,6 @@
 		8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */; };
 		8D62DC2208C668BC0059ABB0 /* OPFaultingArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */; };
-		8D666EF807D523C50076C74D /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D666EF607D523C50076C74D /* ActivePrefPanes.plist */; };
 		8D666F0207D5247A0076C74D /* GIContentPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D666EFE07D5247A0076C74D /* GIContentPane.h */; };
 		8D666F0307D5247B0076C74D /* GIContentPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D666EFF07D5247A0076C74D /* GIContentPane.m */; };
 		8D666F2607D526DA0076C74D /* GIContentPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8D666F0D07D526A80076C74D /* GIContentPane.nib */; };
@@ -316,7 +318,6 @@
 		8DDD227F080ECA4A006C902D /* GIFiltersPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD227E080ECA4A006C902D /* GIFiltersPane.h */; };
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
-		8DE962A0089E20D70053ED6B /* libsqlite3.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DE96297089E20CB0053ED6B /* libsqlite3.dylib */; };
 		8DE96470089F9F1F0053ED6B /* GIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE9646E089F9F1F0053ED6B /* GIThread.h */; };
 		8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE9646F089F9F1F0053ED6B /* GIThread.m */; };
 		8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */; };
@@ -400,7 +401,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8DE962A0089E20D70053ED6B /* libsqlite3.dylib in CopyFiles */,
 				30450DCC091059A90085A02F /* OPDebug.framework in CopyFiles */,
 				8DBFD4FF0826DE93006D29DE /* OPPreferences.framework in CopyFiles */,
 				8DBFD5000826DE98006D29DE /* OPNetwork.framework in CopyFiles */,
@@ -521,6 +521,8 @@
 		77CD550F07699AD1003354A0 /* MessageEditor.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MessageEditor.nib; sourceTree = "<group>"; };
 		77CD551107699B4B003354A0 /* GIMessageEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorController.h; sourceTree = "<group>"; };
 		77CD551207699B4B003354A0 /* GIMessageEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorController.m; sourceTree = "<group>"; };
+		77CD6C12092B2BB500D7E986 /* GIPhraseBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPhraseBrowserController.h; sourceTree = "<group>"; };
+		77CD6C13092B2BB500D7E986 /* GIPhraseBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPhraseBrowserController.m; sourceTree = "<group>"; };
 		77CDEE7707CBC05300675C49 /* Add_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Add_Pressed.tiff; sourceTree = "<group>"; };
 		77CDEE7807CBC05300675C49 /* Add.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Add.tiff; sourceTree = "<group>"; };
 		77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove_Pressed.tiff; sourceTree = "<group>"; };
@@ -728,6 +730,7 @@
 				8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */,
 				8DCE392B089423E000F705EF /* libsqlite3.0.dylib in Frameworks */,
 				30450D81091051910085A02F /* OPDebug.framework in Frameworks */,
+				77D33406092BB03E00F2BFAB /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -817,6 +820,8 @@
 				774791BC085DF0150001560D /* GISMTPJob.m */,
 				77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */,
 				77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */,
+				77CD6C12092B2BB500D7E986 /* GIPhraseBrowserController.h */,
+				77CD6C13092B2BB500D7E986 /* GIPhraseBrowserController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1305,6 +1310,7 @@
 				8D167D6009057508000F4F45 /* GIAccount.h in Headers */,
 				8D3CDEB7090D7ED3004657A0 /* GIGroupListController.h in Headers */,
 				8D840C02090F8DF50093CFAD /* NSEnumerator+Extensions.h in Headers */,
+				77CD6C14092B2BB500D7E986 /* GIPhraseBrowserController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1501,7 +1507,6 @@
 				77CDEE8207CBC05300675C49 /* Remove.tiff in Resources */,
 				7727484C07D45FB30056D08F /* Ginko-big.tiff in Resources */,
 				7727484D07D45FB30056D08F /* Ginko.icns in Resources */,
-				8D666EF807D523C50076C74D /* ActivePrefPanes.plist in Resources */,
 				8D666F2607D526DA0076C74D /* GIContentPane.nib in Resources */,
 				8D6E6A1207DA853900428E45 /* Localizable.strings in Resources */,
 				77EF03D207DC4AF9007CD721 /* GroupInspector.nib in Resources */,
@@ -1672,6 +1677,7 @@
 				8D1543D009092C440039DB71 /* OPInternetMessage+GinkoExtensions.m in Sources */,
 				8D3CDEB8090D7ED3004657A0 /* GIGroupListController.m in Sources */,
 				8D840C03090F8DF50093CFAD /* NSEnumerator+Extensions.m in Sources */,
+				77CD6C15092B2BB500D7E986 /* GIPhraseBrowserController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

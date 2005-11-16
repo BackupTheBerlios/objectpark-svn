@@ -26,6 +26,7 @@
 #import <Foundation/NSDebug.h>
 #import "GIMessage.h"
 #import "GIGroupListController.h"
+#import "GIPhraseBrowserController.h"
 
 @implementation GIApplication
 
@@ -581,6 +582,11 @@
     
     // this action switches automatic activity panel functionality off:
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AutomaticActivityPanelEnabled];
+}
+
+- (IBAction)showPhraseBrowser:(id)sender
+{
+    [GIPhraseBrowserController showPhraseBrowserForTextView:nil];
 }
 
 - (IBAction)toggleAutomaticActivityPanel:(id)sender

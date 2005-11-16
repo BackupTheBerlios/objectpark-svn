@@ -27,20 +27,20 @@
 #import "GIAddressFormatter.h"
 
 @interface GIMessageEditorController (PrivateAPI)
-- (OPInternetMessage*) message;
+- (OPInternetMessage *)message;
 - (GIMessage *)checkpointMessageWithStatus:(unsigned int)aType;
-- (void) addReferenceToMessage: (GIMessage*) aMessage;
-- (void) setHeadersFromMessage: (GIMessage*) aMessage;
-- (void) appendContentFromMessage: (GIMessage*) aMessage;
-- (void) appendForwardContentFromMessage: (GIMessage*) aMessage;
-- (void) switchToReplyToAll: (GIMessage*) replyMessage;
-- (void) switchToReplyToSender: (GIMessage*) replyMessage;
-- (void) switchToFollowup: (GIMessage*) replyMessage;
-- (void) appendQuotePasteboardContents;
-- (void) setReplySubjectFromMessage: (GIMessage*) aMessage;
-- (void) setReplyForwardSubjectFromMessage: (GIMessage*) aMessage;
-- (void) updateMessageTextView;
-- (void) updateWindowTitle;
+- (void)addReferenceToMessage:(GIMessage *)aMessage;
+- (void)setHeadersFromMessage:(GIMessage *)aMessage;
+- (void)appendContentFromMessage:(GIMessage *)aMessage;
+- (void)appendForwardContentFromMessage:(GIMessage *)aMessage;
+- (void)switchToReplyToAll:(GIMessage *)replyMessage;
+- (void)switchToReplyToSender:(GIMessage *)replyMessage;
+- (void)switchToFollowup:(GIMessage *)replyMessage;
+- (void)appendQuotePasteboardContents;
+- (void)setReplySubjectFromMessage:(GIMessage *)aMessage;
+- (void)setReplyForwardSubjectFromMessage:(GIMessage *)aMessage;
+- (void)updateMessageTextView;
+- (void)updateWindowTitle;
 - (BOOL)messageIsSendable;
 @end
 
@@ -59,12 +59,12 @@
     return self;
 }
 
-- (id)initWithMessage: (GIMessage*) aMessage
+- (id)initWithMessage:(GIMessage *)aMessage
 /*" For reopening an unsent message. "*/
 {
     if (self = [self init]) 
     {        
-        [aMessage addFlags: OPSendingBlockedStatus];
+        [aMessage addFlags:OPSendingBlockedStatus];
         
 #warning Reenable: getting of message's profile
         /*
@@ -96,14 +96,14 @@
         oldMessage = [aMessage retain];
         referencedMessage = nil;
         
-        [self setHeadersFromMessage: oldMessage];
-        [self appendContentFromMessage: oldMessage];
+        [self setHeadersFromMessage:oldMessage];
+        [self appendContentFromMessage:oldMessage];
         
         shouldAppendSignature = NO;
         
         type = MassageTypeRevisitedMessage;
         
-        [NSBundle loadNibNamed: @"MessageEditor" owner:self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
         
         [self updateHeaders];
         [self updateMessageTextView];
@@ -115,14 +115,11 @@
     return self;
 }
 
-- (id)initNewMessageWithProfile: (GIProfile*) aProfile
+- (id)initNewMessageWithProfile:(GIProfile *)aProfile
 {
     if (self = [self init]) 
     {
-        if (! aProfile)
-        {
-            aProfile = [GIProfile defaultProfile];
-        }
+        if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
         referencedMessage = nil;
@@ -131,7 +128,7 @@
                 
         type = MessageTypeNewMessage;
         
-        [NSBundle loadNibNamed: @"MessageEditor" owner:self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
         
         [self updateHeaders];
         [self updateMessageTextView];
@@ -143,14 +140,12 @@
     return self;
 }
 
-- (id)initReplyTo: (GIMessage*) aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
+- (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
 {
     if (self = [self init]) 
     {
-        if (! aProfile)
-        {
-            aProfile = [GIProfile defaultProfile];
-        }
+        if (! aProfile) aProfile = [GIProfile defaultProfile];
+        
         profile = [aProfile retain];
         referencedMessage = [aMessage retain];
 
@@ -171,7 +166,7 @@
             type = MessageTypeReplyToSender;
         }
         
-        [NSBundle loadNibNamed: @"MessageEditor" owner:self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
 
         [self updateHeaders];
         [self updateMessageTextView];
@@ -184,14 +179,12 @@
     return self;
 }
 
-- (id)initFollowupTo: (GIMessage*) aMessage profile:(GIProfile *)aProfile
+- (id)initFollowupTo:(GIMessage *)aMessage profile:(GIProfile *)aProfile
 {
     if (self = [self init]) 
     {
-        if (! aProfile)
-        {
-            aProfile = [GIProfile defaultProfile];
-        }
+        if (! aProfile) aProfile = [GIProfile defaultProfile];
+        
         profile = [aProfile retain];
         referencedMessage = [aMessage retain];
         
@@ -204,7 +197,7 @@
         
         [self switchToFollowup:aMessage];
         
-        [NSBundle loadNibNamed: @"MessageEditor" owner:self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
 
         [self updateHeaders];
         [self updateMessageTextView];
@@ -217,7 +210,7 @@
     return self;
 }
 
-- (id)initForward: (GIMessage*) aMessage profile:(GIProfile *)aProfile
+- (id)initForward:(GIMessage *)aMessage profile:(GIProfile *)aProfile
 {
     if (self = [self init]) 
     {
@@ -229,7 +222,7 @@
         type = MessageTypeForward;
         shouldAppendSignature = YES;
                 
-        [NSBundle loadNibNamed: @"MessageEditor" owner:self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
         
         [self updateHeaders];
         [self updateMessageTextView];
@@ -244,7 +237,7 @@
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [self awakeHeaders];
     [self awakeToolbar];
@@ -252,12 +245,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [[messageTextView layoutManager] setDefaultAttachmentScaling:NSScaleProportionally];
     
     // set up most recently used continuous spell check status:
-    [messageTextView setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey: @"ContinuousSpellCheckingEnabled"]];
+    [messageTextView setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"ContinuousSpellCheckingEnabled"]];
     
     lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
 }
 
-- (void) windowDidMove: (NSNotification*) aNotification
+- (void)windowDidMove:(NSNotification *)aNotification
 {
 //    lastTopLeftPoint = NSMakePoint(0.0, 0.0);
 }
@@ -286,19 +279,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return profile;
 }
 
-- (void) sendSheetDidEnd: (NSWindow*) sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)sendSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    if (returnCode == NSAlertDefaultReturn) {
+    if (returnCode == NSAlertDefaultReturn) 
+    {
         //GIMessage *message = [self checkpointMessageWithStatus:OPQueuedStatus];
-        
-        BOOL sendNow = [(NSNumber*) contextInfo boolValue];
-        if (sendNow) {
+        BOOL sendNow = [(NSNumber *)contextInfo boolValue];
+        if (sendNow) 
+        {
 #warning start message send job here
         }
         [window performClose:self];
     }
     
-    [(NSNumber*) contextInfo release];
+    [(NSNumber *)contextInfo release];
 }
 
 // actions

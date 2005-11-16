@@ -234,7 +234,7 @@
     if (cachedValue) return [cachedValue unsignedIntValue];
     if (![self reference]) return 0;
     cachedValue = [NSNumber numberWithUnsignedInt: [[self reference] numberOfReferences]+1];
-    [self setValue: cachedValue forKey: @"numberOfReferences"];
+    [self setPrimitiveValue: cachedValue forKey: @"numberOfReferences"];
     return [cachedValue unsignedIntValue];
 }
 
