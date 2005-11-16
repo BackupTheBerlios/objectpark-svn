@@ -141,6 +141,8 @@
 		77CDEE8107CBC05300675C49 /* Remove_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */; };
 		77CDEE8207CBC05300675C49 /* Remove.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7A07CBC05300675C49 /* Remove.tiff */; };
 		77D33406092BB03E00F2BFAB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DE96297089E20CB0053ED6B /* libsqlite3.dylib */; };
+		77D336A5092BE97500F2BFAB /* GIPhraseBrowserWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */; };
+		77D336A6092BE97500F2BFAB /* GIPhraseBrowserWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */; };
 		77D52B670929E28700661A6D /* PhraseBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D52B660929E28700661A6D /* PhraseBrowser.nib */; };
 		77D79BD707F31BDB00C521CE /* punycode.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D79BD507F31BDB00C521CE /* punycode.h */; };
 		77D79BD807F31BDB00C521CE /* punycode.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D79BD607F31BDB00C521CE /* punycode.m */; };
@@ -528,6 +530,8 @@
 		77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove_Pressed.tiff; sourceTree = "<group>"; };
 		77CDEE7A07CBC05300675C49 /* Remove.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove.tiff; sourceTree = "<group>"; };
 		77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GroupInspector.nib; sourceTree = "<group>"; };
+		77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPhraseBrowserWindow.h; sourceTree = "<group>"; };
+		77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPhraseBrowserWindow.m; sourceTree = "<group>"; };
 		77D52B660929E28700661A6D /* PhraseBrowser.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = PhraseBrowser.nib; sourceTree = "<group>"; };
 		77D79BD507F31BDB00C521CE /* punycode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = punycode.h; sourceTree = "<group>"; };
 		77D79BD607F31BDB00C521CE /* punycode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = punycode.m; sourceTree = "<group>"; };
@@ -822,6 +826,8 @@
 				77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */,
 				77CD6C12092B2BB500D7E986 /* GIPhraseBrowserController.h */,
 				77CD6C13092B2BB500D7E986 /* GIPhraseBrowserController.m */,
+				77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */,
+				77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1311,6 +1317,7 @@
 				8D3CDEB7090D7ED3004657A0 /* GIGroupListController.h in Headers */,
 				8D840C02090F8DF50093CFAD /* NSEnumerator+Extensions.h in Headers */,
 				77CD6C14092B2BB500D7E986 /* GIPhraseBrowserController.h in Headers */,
+				77D336A5092BE97500F2BFAB /* GIPhraseBrowserWindow.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1678,6 +1685,7 @@
 				8D3CDEB8090D7ED3004657A0 /* GIGroupListController.m in Sources */,
 				8D840C03090F8DF50093CFAD /* NSEnumerator+Extensions.m in Sources */,
 				77CD6C15092B2BB500D7E986 /* GIPhraseBrowserController.m in Sources */,
+				77D336A6092BE97500F2BFAB /* GIPhraseBrowserWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

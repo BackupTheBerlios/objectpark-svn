@@ -29,11 +29,14 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 
 + (void)setTextView:(NSTextView *)aTextView
 {
-    GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
-    
-    [controller willChangeValueForKey:@"hasTextView"];
-    controller->textView = aTextView;
-    [controller didChangeValueForKey:@"hasTextView"];
+    if (aTextView)
+    {
+        GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
+        
+        [controller willChangeValueForKey:@"hasTextView"];
+        controller->textView = aTextView;
+        [controller didChangeValueForKey:@"hasTextView"];
+    }
 }
 
 + (void)invalidateTextView:(NSTextView *)aTextView
@@ -109,7 +112,11 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 
 - (IBAction)insertPhrase:(id)sender
 {
-    [textView insertText:[phraseTextView textStorage]];    
+    if (textView)
+    {
+        [textView insertText:[phraseTextView textStorage]];    
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ClosePhraseBrowserAfterInsert"]) [window orderOut:self];
+    }
 }
 
 - (IBAction)hotkeySelected:(id)sender
@@ -121,6 +128,25 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 - (BOOL)hasTextView
 {
     return textView != nil;
+}
+
+- (void)hotkeyPressed:(int)hotkeyNumber
+{
+    NSArray *arrangedObjects = [arrayController arrangedObjects];
+    int i;
+    
+    for (i = 0; i < [arrangedObjects count]; i++)
+    {
+        NSDictionary *phraseDict = [arrangedObjects objectAtIndex:i];
+        NSString *hotkeyString = [phraseDict objectForKey:@"hotkey"];
+        
+        if (hotkeyString && ([hotkeyString intValue] == hotkeyNumber))
+        {
+            [arrayController setSelectionIndex:i];
+            [self insertPhrase:self];
+            break;
+        }
+    }
 }
 
 @end

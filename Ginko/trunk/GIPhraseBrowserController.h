@@ -31,4 +31,6 @@
 
 - (IBAction)addItem:(id)sender;
 
+- (void)hotkeyPressed:(int)hotkeyNumber;
+
 @end
