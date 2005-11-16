@@ -30,8 +30,8 @@
 {
 	return 
 	@"{"
-	@"defaultCC = {ColumnName = ZDEFAULTCC; AttributeClass = NSString;};"
-	@"defaultBCC = {ColumnName = ZDEFAULTBCC; AttributeClass = NSString;};"
+	@"defaultCc = {ColumnName = ZDEFAULTCC; AttributeClass = NSString;};"
+	@"defaultBcc = {ColumnName = ZDEFAULTBCC; AttributeClass = NSString;};"
 	@"enabled = {ColumnName = ZENABLED; AttributeClass = NSNumber;};"
 	@"defaultReplyTo = {ColumnName = ZDEFAULTREPLYTO; AttributeClass = NSString;};"
 	@"mailAddress = {ColumnName = ZMAILADDRESS; AttributeClass = NSString;};"

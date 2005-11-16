@@ -15,6 +15,7 @@
     IBOutlet NSTableView *phraseTableView;
     IBOutlet NSArrayController *arrayController;
     IBOutlet NSTextField *nameField;
+    IBOutlet NSTextView *phraseTextView;
     
     @private
     NSTextView *textView;
@@ -22,6 +23,8 @@
 }
 
 + (void)showPhraseBrowserForTextView:(NSTextView *)aTextView;
++ (void)setTextView:(NSTextView *)aTextView;
++ (void)invalidateTextView:(NSTextView *)aTextView;
 
 - (IBAction)insertPhrase:(id)sender;
 - (IBAction)hotkeySelected:(id)sender;

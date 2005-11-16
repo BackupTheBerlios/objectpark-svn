@@ -22,9 +22,30 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 + (void)showPhraseBrowserForTextView:(NSTextView *)aTextView
 {
     GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
-    controller->textView = aTextView;
     [controller->window makeFirstResponder:controller->phraseTableView];
+    [self setTextView:aTextView];
     [controller->window makeKeyAndOrderFront:self];
+}
+
++ (void)setTextView:(NSTextView *)aTextView
+{
+    GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
+    
+    [controller willChangeValueForKey:@"hasTextView"];
+    controller->textView = aTextView;
+    [controller didChangeValueForKey:@"hasTextView"];
+}
+
++ (void)invalidateTextView:(NSTextView *)aTextView
+{
+    GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
+     
+    if (aTextView == controller->textView)
+    {
+        [controller willChangeValueForKey:@"hasTextView"];
+        controller->textView = nil;
+        [controller didChangeValueForKey:@"hasTextView"];
+    }
 }
 
 - (id)init
@@ -88,13 +109,18 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 
 - (IBAction)insertPhrase:(id)sender
 {
-    [textView insertText:[NSUnarchiver unarchiveObjectWithData:[[[arrayController selectedObjects] lastObject] objectForKey:@"phrasedata"]]];
+    [textView insertText:[phraseTextView textStorage]];    
 }
 
 - (IBAction)hotkeySelected:(id)sender
 {
     [self willChangeValueForKey:@"hotkeys"];
     [self didChangeValueForKey:@"hotkeys"];
+}
+
+- (BOOL)hasTextView
+{
+    return textView != nil;
 }
 
 @end

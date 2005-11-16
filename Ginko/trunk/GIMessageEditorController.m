@@ -25,6 +25,7 @@
 #import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
 #import "GIAddressFormatter.h"
+#import "GIPhraseBrowserController.h"
 
 @interface GIMessageEditorController (PrivateAPI)
 - (OPInternetMessage *)message;
@@ -248,6 +249,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [messageTextView setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"ContinuousSpellCheckingEnabled"]];
     
     lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
+    
+    [GIPhraseBrowserController setTextView:messageTextView];
 }
 
 - (void)windowDidMove:(NSNotification *)aNotification
@@ -255,7 +258,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 //    lastTopLeftPoint = NSMakePoint(0.0, 0.0);
 }
 
-- (void) dealloc
+- (void)windowDidBecomeKey:(NSNotification *)aNotification
+{
+    [GIPhraseBrowserController setTextView:messageTextView];
+}
+
+/*
+- (void)windowDidResignKey:(NSNotification *)aNotification
+{
+    NSLog(@"Window did resign key.");
+    [GIPhraseBrowserController invalidateTextView:messageTextView];
+}
+*/
+
+- (void)dealloc
 {
     NSLog(@"GIMessageEditorController dealloc");
     
@@ -268,7 +284,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [windowController release];
     
     [self deallocToolbar];
-    [window setDelegate: nil];
+    [window setDelegate:nil];
 
     [super dealloc];
 }
@@ -520,8 +536,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return [self validateSelector:[menuItem action]];
 }
 
-- (void) windowWillClose: (NSNotification*) notification 
+- (void)windowWillClose:(NSNotification *)notification 
 {
+    [GIPhraseBrowserController invalidateTextView:messageTextView];
     lastTopLeftPoint = NSMakePoint(0.0, 0.0);
     
     [self autorelease]; // balance self-retaining
