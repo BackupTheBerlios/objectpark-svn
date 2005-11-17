@@ -15,7 +15,7 @@
 #import "OPLogMock.h"
 
 
-#define OPTestDebug  @"OPTestDebug"
+#define OPTestDebug  OPL_DOMAIN  @"OPTestDebug"
 
 @implementation OPLog_Tests
 
