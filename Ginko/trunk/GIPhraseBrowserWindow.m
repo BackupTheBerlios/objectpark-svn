@@ -13,7 +13,7 @@
 
 - (void)sendEvent:(NSEvent *)theEvent
 {
-    if ([theEvent type] == NSKeyDown)
+    if (([theEvent type] == NSKeyDown) && ([[self firstResponder] isKindOfClass:[NSTableView class]]))
     {
         switch ([[theEvent characters] characterAtIndex:0])
         {
