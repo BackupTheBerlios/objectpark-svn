@@ -33,9 +33,9 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
     {
         GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
         
-        [controller willChangeValueForKey:@"hasTextView"];
+        [controller willChangeValueForKey:@"textView"];
         controller->textView = aTextView;
-        [controller didChangeValueForKey:@"hasTextView"];
+        [controller didChangeValueForKey:@"textView"];
     }
 }
 
@@ -45,9 +45,9 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
      
     if (aTextView == controller->textView)
     {
-        [controller willChangeValueForKey:@"hasTextView"];
+        [controller willChangeValueForKey:@"textView"];
         controller->textView = nil;
-        [controller didChangeValueForKey:@"hasTextView"];
+        [controller didChangeValueForKey:@"textView"];
     }
 }
 
@@ -123,11 +123,6 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 {
     [self willChangeValueForKey:@"hotkeys"];
     [self didChangeValueForKey:@"hotkeys"];
-}
-
-- (BOOL)hasTextView
-{
-    return textView != nil;
 }
 
 - (void)hotkeyPressed:(int)hotkeyNumber
