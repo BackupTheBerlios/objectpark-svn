@@ -36,6 +36,7 @@
 /* Begin PBXBuildFile section */
 		3033E2E808EC97C8006346C0 /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* OPDebug.framework */; };
 		30450AC4091010630085A02F /* OPLogMock.m in Sources */ = {isa = PBXBuildFile; fileRef = 30450AC3091010630085A02F /* OPLogMock.m */; };
+		30804E0F092666B900174475 /* extractAspects.pl in Resources */ = {isa = PBXBuildFile; fileRef = 30804E0E092666B900174475 /* extractAspects.pl */; };
 		309B199708F0A9BE00CBA688 /* OPLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 309B199408F0A9BE00CBA688 /* OPLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		309B199808F0A9BE00CBA688 /* OPLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199508F0A9BE00CBA688 /* OPLog.m */; };
 		309B199908F0A9DA00CBA688 /* OPLog-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199308F0A9BE00CBA688 /* OPLog-Tests.m */; };
@@ -105,6 +106,7 @@
 		3033E2C408EC93BF006346C0 /* Run Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Run Tests-Info.plist"; sourceTree = "<group>"; };
 		30450AC2091010630085A02F /* OPLogMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPLogMock.h; path = Logging/Tests/OPLogMock.h; sourceTree = "<group>"; };
 		30450AC3091010630085A02F /* OPLogMock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPLogMock.m; path = Logging/Tests/OPLogMock.m; sourceTree = "<group>"; };
+		30804E0E092666B900174475 /* extractAspects.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = extractAspects.pl; path = bin/extractAspects.pl; sourceTree = "<group>"; };
 		309B199308F0A9BE00CBA688 /* OPLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPLog-Tests.m"; path = "Logging/Tests/OPLog-Tests.m"; sourceTree = "<group>"; };
 		309B199408F0A9BE00CBA688 /* OPLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPLog.h; path = Logging/OPLog.h; sourceTree = "<group>"; };
 		309B199508F0A9BE00CBA688 /* OPLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPLog.m; path = Logging/OPLog.m; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				30804E060926667B00174475 /* bin */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				3033E2C408EC93BF006346C0 /* Run Tests-Info.plist */,
 			);
@@ -211,6 +214,14 @@
 				309B199308F0A9BE00CBA688 /* OPLog-Tests.m */,
 			);
 			name = Tests;
+			sourceTree = "<group>";
+		};
+		30804E060926667B00174475 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				30804E0E092666B900174475 /* extractAspects.pl */,
+			);
+			name = bin;
 			sourceTree = "<group>";
 		};
 		309B198A08F0A97900CBA688 /* Logging */ = {
@@ -401,6 +412,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
+				30804E0F092666B900174475 /* extractAspects.pl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
