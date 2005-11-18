@@ -35,6 +35,7 @@
 /* Begin PBXBuildFile section */
 		30450D81091051910085A02F /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
 		30450DCC091059A90085A02F /* OPDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
+		30672F60092D3CB7005D7A7F /* OPL-Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */; };
 		6131DCD6083A85D10056FF9D /* TestGIFulltextIndexCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */; };
 		6131DCD7083A85D10056FF9D /* TestGIFulltextIndexCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */; };
 		617C2A77084632F700803758 /* GIIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 617C2A75084632F700803758 /* GIIndex.h */; };
@@ -417,6 +418,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		30450D7C091051910085A02F /* OPDebug.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPDebug.framework; path = ../OPDebug/build/Development/OPDebug.framework; sourceTree = SOURCE_ROOT; };
+		30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "OPL-Configuration.plist"; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GinkoVoyager_Prefix.pch; sourceTree = "<group>"; };
 		6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TestGIFulltextIndexCenter.h; sourceTree = "<group>"; };
 		6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TestGIFulltextIndexCenter.m; sourceTree = "<group>"; };
@@ -889,6 +891,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */,
 				770878C008B4FCD600FBB196 /* HeaderTemplate.html */,
 				8DE96297089E20CB0053ED6B /* libsqlite3.dylib */,
 				772F293C084F8249004D50E0 /* Test Resources */,
@@ -1343,11 +1346,12 @@
 			buildConfigurationList = 7749E6C70855CB04009EF4F3 /* Build configuration list for PBXNativeTarget "GinkoVoyager" */;
 			buildPhases = (
 				8D1107270486CEB800E47090 /* Headers */,
-				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
+				30672F8B092D4DA0005D7A7F /* Extract Aspects */,
+				8D1107290486CEB800E47090 /* Resources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				8D9E8F1006AC46540055F87C /* CopyFiles */,
-				8DF2D1B6087A8CEC008F8F6B /* ShellScript */,
+				8DF2D1B6087A8CEC008F8F6B /* Changing libsqlite load path */,
 			);
 			buildRules = (
 			);
@@ -1530,6 +1534,7 @@
 				773FFE970859778700E0767F /* Password.nib in Resources */,
 				770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */,
 				77D52B670929E28700661A6D /* PhraseBrowser.nib in Resources */,
+				30672F60092D3CB7005D7A7F /* OPL-Configuration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1543,6 +1548,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		30672F8B092D4DA0005D7A7F /* Extract Aspects */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Extract Aspects";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../OPDebug/bin/extractAspects.pl .\n";
+		};
 		77AD780107CF1CC200A15B83 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1556,13 +1575,14 @@
 			shellPath = /bin/sh;
 			shellScript = "# shell script goes here\n#headerdoc2html -t -o HeaderDoc *.h\n#cd \"Cocoa Extensions\"\n#headerdoc2html -t -o ../HeaderDoc/CocoaExtensions *.h\n#cd ..\n#cd \"Message Framework\"\n#headerdoc2html -t -o ../HeaderDoc/MessageFramework *.h\n#cd ..\n#gatherheaderdoc HeaderDoc\n\nrm -rf $SRCROOT/AutoDoc\n/usr/local/bin/autodoc -format html -tree -proj $SRCROOT -dest $SRCROOT/AutoDoc\n#perl \"$HOME/Developer/AutoDoc/contrib/LinkDocs/linkDocs.pl\" $SRCROOT/AutoDoc\n";
 		};
-		8DF2D1B6087A8CEC008F8F6B /* ShellScript */ = {
+		8DF2D1B6087A8CEC008F8F6B /* Changing libsqlite load path */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Changing libsqlite load path";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;

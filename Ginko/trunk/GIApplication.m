@@ -28,7 +28,29 @@
 #import "GIGroupListController.h"
 #import "GIPhraseBrowserController.h"
 
+#import <OPDebug/OPLog.h>
+
+
 @implementation GIApplication
+
++ (void)load
+    {
+    static BOOL didLoad = NO;
+    
+    if (didLoad == YES)
+        return;
+        
+    didLoad = YES;
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    NSLog(@"Loaded GinkoVoyager's GIApplication class");
+    
+    [[OPLog sharedInstance] addAspectsFromEnvironmentWithDefinitionsFromFile:[[NSBundle bundleForClass:NSClassFromString(@"GIApplication")] pathForResource: @"OPL-Configuration" ofType:@"plist"]];
+    
+    [pool release];
+    }
+
 
 + (void) initialize
 {
