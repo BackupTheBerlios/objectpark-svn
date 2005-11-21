@@ -18,12 +18,17 @@
 
 @implementation GIProfile
 
-// CREATE TABLE ZPROFILE ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZDEFAULTCC VARCHAR, ZDEFAULTBCC VARCHAR, ZENABLED INTEGER, ZDEFAULTREPLYTO VARCHAR, ZMAILADDRESS VARCHAR, ZORGANIZATION VARCHAR, ZNAME VARCHAR, ZSIGNATURE BLOB, ZMESSAGETEMPLATE BLOB, ZREALNAME VARCHAR, ZSENDACCOUNT INTEGER );
 
-
-+ (NSString*) databaseTableName
++ (NSString*) databaseProperties
 {
-    return @"ZPROFILE";
+	return 
+	@"{"
+	@"  TableName = ZPROFILE;"
+	@"  CreateStatements = \""
+	@"  CREATE TABLE ZPROFILE (Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZDEFAULTCC VARCHAR, ZDEFAULTBCC VARCHAR, ZENABLED INTEGER, ZDEFAULTREPLYTO VARCHAR, ZMAILADDRESS VARCHAR, ZORGANIZATION VARCHAR, ZNAME VARCHAR, ZSIGNATURE BLOB, ZMESSAGETEMPLATE BLOB, ZREALNAME VARCHAR, ZSENDACCOUNT INTEGER);"
+	@"  \";"
+	@""
+	@"}";
 }
 
 + (NSString*) persistentAttributesPlist
@@ -37,7 +42,7 @@
 	@"mailAddress = {ColumnName = ZMAILADDRESS; AttributeClass = NSString;};"
 	@"organization = {ColumnName = ZORGANIZATION; AttributeClass = NSString;};"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
-	@"signature = {ColumnName = ZSIGNATURE; AttributeClass = NSString;};"
+	@"signature = {ColumnName = ZSIGNATURE; AttributeClass = NSAttributedString;};"
 	@"messageTemplate = {ColumnName = ZMESSAGETEMPLATE; AttributeClass = NSData;};"
 	@"sendAccount = {ColumnName = ZSENDACCOUNT; AttributeClass = OPPersistentObject;};"
 	@"messagesToSend = {AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZPROFILE=?\";};"

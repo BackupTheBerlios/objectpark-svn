@@ -37,6 +37,7 @@
 #import "OPSQLiteConnection.h"
 #import "OPClassDescription.h"
 #import "OPFaultingArray.h"
+#import "NSString+Extensions.h"
 
 
 @implementation OPPersistentObjectContext
@@ -272,6 +273,22 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return deletedObjects;
 }
 
+- (void) checkDBSchemaForClasses: (NSString*) classListSeparatedByComma;
+{
+	NSMutableSet* classesChecked = [NSMutableSet set];
+	NSArray* classList = [classListSeparatedByComma componentsSeparatedByString: @","];
+	NSEnumerator* e = [classList objectEnumerator];
+	NSString* className;
+	while (className = [[e nextObject] stringByRemovingSurroundingWhitespace]) {
+		Class pClass = NSClassFromString(className);
+		if (pClass) {
+			[classesChecked addObject: pClass];
+			OPClassDescription* cd = [pClass persistentClassDescription];
+			[cd checkTableUsingConnection: db];
+		}
+	}
+}
+
 /*
 - (void) prepareSave
 {
@@ -441,7 +458,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			return nil;
 		}
 		
-		NSLog(@"Created enumerator statement %@ for table %@", sql, [resultClass databaseTableName]);
+		//NSLog(@"Created enumerator statement %@ for table %@", sql, [resultClass databaseTableName]);
 	} 
 	return self;
 }
@@ -450,7 +467,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		   resultClass: (Class) poClass 
 		   whereClause: (NSString*) clause
 {	
-	NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [poClass databaseTableName], clause];
+	NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [[poClass persistentClassDescription] tableName], clause];
 
 	return [self initWithContext: aContext resultClass: poClass queryString: queryString];
 }

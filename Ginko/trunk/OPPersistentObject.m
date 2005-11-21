@@ -48,17 +48,18 @@
 
 }
 
-+ (NSString*) persistentAttributesPlist
++ (NSString*) databaseProperties;
+	/*" Overwrite this in subclass. Default implementation returns empty dictionary. 
+	 *  Used keys are TableName and CreateStatements.
+ 	"*/
 {
 	return @"{}";
 }
-
-+ (NSString*) databaseTableName
-/*" Overwrite this in subclass. Default implementation returns class name. "*/
++ (NSString*) persistentAttributesPlist
+	/*" Overwrite this in subclass. Default implementation returns empty dictionary. "*/
 {
-    return NSStringFromClass(self); 
+	return @"{}";
 }
-
 
 + (OPClassDescription*) persistentClassDescription
 {
@@ -361,7 +362,7 @@
 				[value didChangeValueForKey: inverseKey];
 			} else {
 				// inverse is a to-one relationship, so this is a one-to-one relationship
-#warning one-to-one (inverse) relationships create a retain cycle.
+#warning one-to-one (inverse) relationships will create a retain cycle.
 				[oldValue setValue: nil forKey: inverseKey];
 				id oldSelf = [value objectForKey: inverseKey]; 
 				[oldSelf setValue: nil forKey: key];

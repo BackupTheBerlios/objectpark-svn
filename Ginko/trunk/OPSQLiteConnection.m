@@ -154,12 +154,12 @@
 		OPClassDescription* cd = [poClass persistentClassDescription];
 		
 		// Just create an empty entry to get a new ROWID:
-		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL);", [cd tableName]];
+		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL)", [cd tableName]];
 		//NSLog(@"Preparing statement for inserts: %@", queryString);
 		//sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
 
-		//NSAssert2(insertStatement, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);	
+		NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);	
 		
 		[insertStatements setObject: result forKey: poClass]; // cache it
 	}
@@ -235,7 +235,7 @@
 
 	if (!result) {
 		
-		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID=?;", [poClass databaseTableName]];
+		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID=?;", [[poClass persistentClassDescription] tableName]];
 
 		result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self]; 
 		
@@ -438,7 +438,36 @@
 
 @end
 
-@implementation NSMutableData (OPSQLiteSupport)
+
+@implementation NSAttributedString (OPSQLiteSupport)
+
++ (BOOL) canPersist
+{
+	return YES; 
+}
+
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+{
+	NSError* error = nil;
+	NSData* stringData = [self dataFromRange: NSMakeRange(0,[self length]) documentAttributes: nil error: &error];
+	if (error) NSLog(@"Warning! Unable to get data from attr. string: %@", error);
+
+	[stringData bindValueToStatement: statement index: index];
+}
+
++ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
+{
+	NSError* error = nil;
+	NSData* stringData = [NSData newFromStatement: statement index: index];
+	NSAttributedString* result = [[[NSAttributedString alloc] initWithData: stringData options: nil documentAttributes: nil error: &error] autorelease];
+	if (error) NSLog(@"Warning! Unable to deserialize attr. string: %@", error);
+	return result;
+}
+
+
+@end
+
+@implementation NSMutableAttributedString (OPSQLiteSupport)
 
 + (BOOL) canPersist
 {
@@ -446,6 +475,9 @@
 }
 
 @end
+
+
+
 
 @implementation NSObject (OPSQLiteSupport)
 
@@ -455,11 +487,6 @@
 	return NO;
 }
 
-+ (NSString*) prefetchedDatabaseColumns
-	/*" A comma-separated list of database column names to fetch. Those can be accessed in +newFromStatement at index two and up in a OPPersistentObject subclass to initialize instance variables. Can be used for sorting fault objects. "*/
-{
-	return @"";
-}
 
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
 /*" Returns an autoreleased instance, initialized with the sqlite column value at the sepcified index. Defaults to a string. "*/

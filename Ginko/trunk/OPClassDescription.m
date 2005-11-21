@@ -38,6 +38,34 @@
 
 @implementation OPClassDescription
 
+- (void) checkTableUsingConnection: (OPSQLiteConnection*) connection
+	/*" Checks with the master table, if the database table corresponding to the receiver does exists in the current database. Uses the dataase property's create statements to create one, iass needed. "*/
+{
+	NSString* queryString = [NSString stringWithFormat: @"select * from sqlite_master where tbl_name like \"%@\";", tableName];
+	OPSQLiteStatement* statement = [[[OPSQLiteStatement alloc] initWithSQL: queryString 
+																connection: connection] autorelease];
+	if ([statement execute] == SQLITE_ROW) {
+		[statement reset];
+		return; // we found a table with a matching name - good enough for now.
+	}
+	
+	[connection beginTransaction];
+	// Execute create statement(s) stored in the description:
+	NSEnumerator* cse = [createStatements objectEnumerator];
+	id statementSQL;
+	while (statementSQL = [cse nextObject]) {
+		OPSQLiteStatement* create = [[[OPSQLiteStatement alloc] initWithSQL: statementSQL 
+																 connection: connection] autorelease];
+		@try {
+			[create execute];
+		} @catch (NSException* exception) {
+			NSLog(@"Error: Unable to create table %@ using statements %@: %@", tableName, createStatements, exception);
+		}
+		[create reset];
+	}
+	[connection commitTransaction];
+}
+
 - (id) initWithPersistentClass: (Class) poClass
 {
 	if (self = [super init]) {
@@ -75,9 +103,21 @@
 		[attrs addObjectsFromArray: relations];
 		attributeDescriptions = [attrs copy];
 		attributeDescriptionsByName = [dict copy];
+		
+		// databaseProperties
+		
+		plistString = [poClass databaseProperties];
+		plist = [NSPropertyListSerialization propertyListFromData: [plistString dataUsingEncoding: NSISOLatin1StringEncoding] mutabilityOption: NSPropertyListImmutable format: NULL errorDescription: &errors];
+		tableName = [[plist objectForKey: @"TableName"] copy];
+		if (!tableName) 
+			tableName = [NSStringFromClass(poClass) copy];
+		
+		createStatements = [[plist objectForKey: @"CreateStatements"] retain];
+		
 	}
 	return self;
 }
+
 
 
 - (NSMutableArray*) columnNames
@@ -107,13 +147,15 @@
 
 - (NSString*) tableName
 {
-	return [persistentClass databaseTableName];
+	return tableName;
 }
 
 
 - (void) dealloc
 {
 	[attributeDescriptions release];
+	[tableName release];
+	[createStatements release];
 	[super dealloc];
 }
 

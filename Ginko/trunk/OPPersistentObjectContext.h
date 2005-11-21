@@ -95,6 +95,8 @@
 - (OPFaultingArray*) containerForObject: (id) object
 						relationShipKey: (NSString*) key;
 
+- (void) checkDBSchemaForClasses: (NSString*) classListSeparatedByComma;
+
 
 @end
 

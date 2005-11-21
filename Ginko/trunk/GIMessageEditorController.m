@@ -28,29 +28,28 @@
 #import "GIPhraseBrowserController.h"
 
 @interface GIMessageEditorController (PrivateAPI)
-- (OPInternetMessage *)message;
-- (GIMessage *)checkpointMessageWithStatus:(unsigned int)aType;
-- (void)addReferenceToMessage:(GIMessage *)aMessage;
-- (void)setHeadersFromMessage:(GIMessage *)aMessage;
-- (void)appendContentFromMessage:(GIMessage *)aMessage;
-- (void)appendForwardContentFromMessage:(GIMessage *)aMessage;
-- (void)switchToReplyToAll:(GIMessage *)replyMessage;
-- (void)switchToReplyToSender:(GIMessage *)replyMessage;
-- (void)switchToFollowup:(GIMessage *)replyMessage;
-- (void)appendQuotePasteboardContents;
-- (void)setReplySubjectFromMessage:(GIMessage *)aMessage;
-- (void)setReplyForwardSubjectFromMessage:(GIMessage *)aMessage;
-- (void)updateMessageTextView;
-- (void)updateWindowTitle;
-- (BOOL)messageIsSendable;
+- (OPInternetMessage*) message;
+- (GIMessage*) checkpointMessageWithStatus: (unsigned int) aType;
+- (void) addReferenceToMessage: (GIMessage*) aMessage;
+- (void) setHeadersFromMessage: (GIMessage*) aMessage;
+- (void) appendContentFromMessage: (GIMessage*) aMessage;
+- (void) appendForwardContentFromMessage: (GIMessage*) aMessage;
+- (void) switchToReplyToAll: (GIMessage*) replyMessage;
+- (void) switchToReplyToSender: (GIMessage*) replyMessage;
+- (void) switchToFollowup: (GIMessage*) replyMessage;
+- (void) appendQuotePasteboardContents;
+- (void) setReplySubjectFromMessage: (GIMessage*) aMessage;
+- (void) setReplyForwardSubjectFromMessage: (GIMessage*) aMessage;
+- (void) updateMessageTextView;
+- (void) updateWindowTitle;
+- (BOOL) messageIsSendable;
 @end
 
 @implementation GIMessageEditorController
 
-- (id)init
+- (id) init
 {
-    if (self = [super init])
-    {
+    if (self = [super init]) {
         // eager, isn't it?
         NSLog(@"GIMessageEditorController init");
         headerFields = [[NSMutableDictionary alloc] init];
@@ -60,11 +59,10 @@
     return self;
 }
 
-- (id)initWithMessage:(GIMessage *)aMessage
+- (id) initWithMessage: (GIMessage*) aMessage
 /*" For reopening an unsent message. "*/
 {
-    if (self = [self init]) 
-    {        
+    if (self = [self init]) {        
         [aMessage addFlags:OPSendingBlockedStatus];
         
 #warning Reenable: getting of message's profile
@@ -73,7 +71,7 @@
         NSError *error = nil;
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
         [request setEntity: [GIProfile entity]];
-        [request setPredicate:[NSPredicate predicateWithFormat: @"%@ IN messagesToSend", aMessage]];
+        [request setPredicate: [NSPredicate predicateWithFormat: @"%@ IN messagesToSend", aMessage]];
         NSArray *result = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
         
         if (error)
@@ -118,8 +116,7 @@
 
 - (id)initNewMessageWithProfile:(GIProfile *)aProfile
 {
-    if (self = [self init]) 
-    {
+    if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -141,10 +138,9 @@
     return self;
 }
 
-- (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
+- (id)initReplyTo: (GIMessage*) aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
 {
-    if (self = [self init]) 
-    {
+    if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -156,13 +152,10 @@
 
         shouldAppendSignature = YES;
         
-        if (toAll)
-        {
+        if (toAll) {
             [self switchToReplyToAll:aMessage];
             type = MessageTypeReplyToAll;
-        }
-        else
-        {
+        } else {
             [self switchToReplyToSender:aMessage];
             type = MessageTypeReplyToSender;
         }
@@ -180,10 +173,9 @@
     return self;
 }
 
-- (id)initFollowupTo:(GIMessage *)aMessage profile:(GIProfile *)aProfile
+- (id)initFollowupTo: (GIMessage*) aMessage profile:(GIProfile *)aProfile
 {
-    if (self = [self init]) 
-    {
+    if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -211,10 +203,9 @@
     return self;
 }
 
-- (id)initForward:(GIMessage *)aMessage profile:(GIProfile *)aProfile
+- (id)initForward: (GIMessage*) aMessage profile:(GIProfile *)aProfile
 {
-    if (self = [self init]) 
-    {
+    if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         profile = [aProfile retain];
         
@@ -238,7 +229,7 @@
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
     [self awakeHeaders];
     [self awakeToolbar];
@@ -246,7 +237,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [[messageTextView layoutManager] setDefaultAttachmentScaling:NSScaleProportionally];
     
     // set up most recently used continuous spell check status:
-    [messageTextView setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"ContinuousSpellCheckingEnabled"]];
+    [messageTextView setContinuousSpellCheckingEnabled: [[NSUserDefaults standardUserDefaults] boolForKey:@"ContinuousSpellCheckingEnabled"]];
     
     lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
     
@@ -271,7 +262,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 */
 
-- (void)dealloc
+- (void) dealloc
 {
     NSLog(@"GIMessageEditorController dealloc");
     
@@ -290,19 +281,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 
 // accessors
-- (GIProfile *)profile
+- (GIProfile*) profile
 {
     return profile;
 }
 
-- (void)sendSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void) sendSheetDidEnd: (NSWindow*)sheet returnCode: (int) returnCode contextInfo: (void*) contextInfo
 {
-    if (returnCode == NSAlertDefaultReturn) 
-    {
+    if (returnCode == NSAlertDefaultReturn) {
         //GIMessage *message = [self checkpointMessageWithStatus:OPQueuedStatus];
         BOOL sendNow = [(NSNumber *)contextInfo boolValue];
-        if (sendNow) 
-        {
+        if (sendNow) {
 #warning start message send job here
         }
         [window performClose:self];
@@ -316,8 +305,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
 	NSString *emailAddress = [[self profile] emailAddress];
 	
-    if (emailAddress && ([[toField stringValue] rangeOfString:emailAddress].location != NSNotFound))
-    {
+    if (emailAddress && ([[toField stringValue] rangeOfString:emailAddress].location != NSNotFound)) {
         NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
                           NSLocalizedString(@"Send", @"sendSoliloquySheet"),
                           NSLocalizedString(@"Edit", @"sendSoliloquySheet"),
@@ -333,15 +321,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     
     //GIMessage *message = 
-    [self checkpointMessageWithStatus:OPQueuedStatus];
+    [self checkpointMessageWithStatus: OPQueuedStatus];
 #warning start message send job here
 
     [window performClose:self];
 }
 
-- (IBAction)queue:(id)sender
+- (IBAction) queue: (id) sender
 {
-    if ([[toField stringValue] rangeOfString:[[self profile] emailAddress]].location != NSNotFound)
+    if ([[toField stringValue] rangeOfString: [[self profile] emailAddress]].location != NSNotFound)
     {
         NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
                           NSLocalizedString(@"Send", @"sendSoliloquySheet"),
@@ -357,12 +345,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         return;
     }
     
-    [self checkpointMessageWithStatus:OPQueuedStatus];
-    [window performClose:self];
+    [self checkpointMessageWithStatus: OPQueuedStatus];
+    [window performClose: self];
     [window close];
 }
 
-- (IBAction)saveMessage:(id)sender
+- (IBAction) saveMessage: (id) sender
 {
     unsigned int flags = OPDraftStatus;
     
@@ -374,40 +362,26 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     */
     
-    [self checkpointMessageWithStatus:flags];
+    [self checkpointMessageWithStatus: flags];
 }
 
-- (IBAction)addCc:(id)sender
+- (IBAction) addCc: (id) sender
 {
-    [window makeFirstResponder:[self headerTextFieldWithFieldName: @"Cc"]];
+    [window makeFirstResponder: [self headerTextFieldWithFieldName: @"Cc"]];
 }
 
-- (IBAction)addBcc:(id)sender
+- (IBAction) addBcc: (id) sender
 {
-    [window makeFirstResponder:[self headerTextFieldWithFieldName: @"Bcc"]];
+    [window makeFirstResponder: [self headerTextFieldWithFieldName: @"Bcc"]];
 }
 
-- (IBAction)addReplyTo:(id)sender
+- (IBAction) addReplyTo: (id) sender
 {
     NSTextField *replyToField;
     
     replyToField = [self headerTextFieldWithFieldName: @"Reply-To"];
-    /*
-     NSString *replyTo;
-     
-     replyTo = [[self _currentSelectedSMTPAccount] objectForKey:OPAReplyTo];
-     
-     if (! [replyTo length])
-     {
-         if(! (replyTo = [[NSUserDefaults standardUserDefaults] objectForKey: @"MainEMailAddress"]))
-         {
-             replyTo = @"";
-         }
-     }
-     
-    [replyToField setStringValue:replyTo];
-     */
-    [window makeFirstResponder:replyToField];
+
+    [window makeFirstResponder: replyToField];
 }
 
 - (IBAction)replySender:(id)sender
@@ -525,7 +499,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     /*
     if (aSelector == @selector(pasteAsQuotation:)) {
-        return [[[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSRTFDPboardType, NSRTFPboardType, NSStringPboardType, nil]] length] != 0;
+        return [[[NSPasteboard generalPasteboard] availableTypeFromArray: [NSArray arrayWithObjects:NSRTFDPboardType, NSRTFPboardType, NSStringPboardType, nil]] length] != 0;
     }
     */
     return YES;
@@ -533,7 +507,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    return [self validateSelector:[menuItem action]];
+    return [self validateSelector: [menuItem action]];
 }
 
 - (void)windowWillClose:(NSNotification *)notification 
@@ -637,7 +611,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if (! versionString)
     {
-        NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
+        NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
         // We replace spaces in the version number to make the version string compliant with RFC2616 and draft-ietf-usefor-article-09.txt (internet draft for news article format)
         [bundleVersion replaceOccurrencesOfString: @" " withString:@"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
         
@@ -674,7 +648,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [headerFields setObject: orga forKey: @"Organization"];
     }
     
-    result = [OPInternetMessage messageWithAttributedStringContent:[messageTextView textStorage]];
+    result = [OPInternetMessage messageWithAttributedStringContent: [messageTextView textStorage]];
     
     enumerator = [headerFields keyEnumerator];
     while(headerField = [enumerator nextObject])
@@ -686,7 +660,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         // by messageWithAttributedStringContent:)
         if (! [result bodyForHeaderField:headerField])
         {
-            fieldCoder = [[EDTextFieldCoder allocWithZone:[self zone]] initWithText:[[headerFields objectForKey:headerField] stringByRemovingLinebreaks]];
+            fieldCoder = [[EDTextFieldCoder allocWithZone: [self zone]] initWithText: [[headerFields objectForKey:headerField] stringByRemovingLinebreaks]];
             
             fieldBody = [fieldCoder fieldBody];
             
@@ -705,20 +679,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     
     // date
-    //    [message setBody:[[NSCalendarDate calendarDate] descriptionWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z (%Z)"] forHeaderField:@"Date"];
-    [result setDate:[NSCalendarDate calendarDate]];
+    //    [message setBody: [[NSCalendarDate calendarDate] descriptionWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z (%Z)"] forHeaderField:@"Date"];
+    [result setDate: [NSCalendarDate calendarDate]];
     
     // message id
-    [result generateMessageIdWithSuffix:[NSString stringWithFormat: @"@%@", [[theProfile valueForKey: @"sendAccount"] outgoingServerName]]];
+    [result generateMessageIdWithSuffix: [NSString stringWithFormat: @"@%@", [[theProfile valueForKey: @"sendAccount"] outgoingServerName]]];
     
     // mailer info
 /*     if([result isUsenetMessage])
      {
-         [result setBody:[self versionString] forHeaderField: @"User-Agent"];
+         [result setBody: [self versionString] forHeaderField: @"User-Agent"];
      }
      else
      {*/
-         [result setBody:[self versionString] forHeaderField: @"X-Mailer"];
+	[result setBody: [self versionString] forHeaderField: @"X-Mailer"];
 /*     }*/
     
     return result;
@@ -761,7 +735,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             {
                 NSEnumerator *referencesList = [referencesArray objectEnumerator];
                 
-                [references setString:[referencesList nextObject]];
+                [references setString: [referencesList nextObject]];
                 
                 while ((skipped < charactersToRemove) && (referenceToSkip = [referencesList nextObject]))
                 {
@@ -782,7 +756,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         if ([[[aMessage internetMessage] messageId] length])
         {
-            [references appendString:[[aMessage internetMessage] messageId]];
+            [references appendString: [[aMessage internetMessage] messageId]];
         }
         
         if ([references length])
@@ -819,7 +793,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) appendContentFromMessage: (GIMessage*) aMessage
 {
-    [content appendAttributedString:[[aMessage internetMessage] editableBodyContent]];
+    [content appendAttributedString: [[aMessage internetMessage] editableBodyContent]];
 }
 
 - (void) setReplySubjectFromMessage: (GIMessage*) aMessage
@@ -851,7 +825,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     @catch (NSException* localException)
     {
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
-        [headerFields setObject: [@"FWD: " stringByAppendingString:[internetMessage bodyForHeaderField: @"Subject"]] forKey:@"Subject"];
+        [headerFields setObject: [@"FWD: " stringByAppendingString: [internetMessage bodyForHeaderField: @"Subject"]] forKey:@"Subject"];
     }
 }
 
@@ -863,7 +837,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     enumerator = [[[aMessage internetMessage] headerFields] objectEnumerator];
     while ((header = [enumerator nextObject]))
     {
-        [headerFields setObject: [header secondObject] forKey:[header firstObject]];
+        [headerFields setObject: [header secondObject] forKey: [header firstObject]];
     }
 }
 
@@ -1003,42 +977,39 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) appendForwardContentFromMessage: (GIMessage*) aMessage
 {
-    NSAttributedString *forwardHeaders, *forwardPrefix, *forwardSuffix;
-    NSMutableAttributedString  *result;
-    OPInternetMessage *internetMessage = [aMessage internetMessage];
+    OPInternetMessage*internetMessage = [aMessage internetMessage];
     
-    forwardPrefix = [[[NSAttributedString allocWithZone:[self zone]] initWithString: @"\n\n==== BEGIN FORWARDED MESSAGE ====\n"] autorelease];
+    NSAttributedString* forwardPrefix = [[[NSAttributedString allocWithZone: [self zone]] initWithString: @"\n\n==== BEGIN FORWARDED MESSAGE ====\n"] autorelease];
     
-    forwardSuffix = [[[NSAttributedString allocWithZone:[self zone]] initWithString: @"\n==== END FORWARDED MESSAGE ====\n\n"] autorelease];
+    NSAttributedString* forwardSuffix = [[[NSAttributedString allocWithZone: [self zone]] initWithString: @"\n==== END FORWARDED MESSAGE ====\n\n"] autorelease];
     
-    forwardHeaders = [GIMessage renderedHeaders:[NSArray arrayWithObjects: @"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage:internetMessage showOthers: NO];
+    NSAttributedString* forwardHeaders = [GIMessage renderedHeaders: [NSArray arrayWithObjects: @"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage:internetMessage showOthers: NO];
     
-    result = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
     
-    [result appendAttributedString:forwardPrefix];
-    [result appendAttributedString:forwardSuffix];
-    [result insertAttributedString:[internetMessage editableBodyContent] atIndex:[forwardPrefix length]];
-    [result insertAttributedString:forwardHeaders atIndex:[forwardPrefix length]];
+    [result appendAttributedString: forwardPrefix];
+    [result appendAttributedString: forwardSuffix];
+    [result insertAttributedString: [internetMessage editableBodyContent] atIndex: [forwardPrefix length]];
+    [result insertAttributedString: forwardHeaders atIndex: [forwardPrefix length]];
     
     [content appendAttributedString:result];
 }
 
-- (NSAttributedString *)signature 
+- (NSAttributedString*) signature 
 /*"Returns the signature of the current profile."*/
-{
-    NSDictionary *attributes;
-    NSError *error;
-    
-    NSAttributedString* signature = [[[NSAttributedString alloc] initWithData: [[self profile] 
-		valueForKey: @"signature"] options: nil documentAttributes: &attributes error: &error] autorelease];
-    
-    if ([signature length])
-    {
-        NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] initWithString: @"\n-- \n"] autorelease];
-        [result appendAttributedString:signature];
-        
-        return result;
-    }
+{	
+	@try {
+		NSAttributedString* signature = [[self profile] valueForKey: @"signature"];
+		
+		if ([signature length]) {
+			NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] initWithString: @"\n-- \n"] autorelease];
+			[result appendAttributedString:signature];
+			
+			return result;
+		}
+	} @catch (NSException* exception) {
+		NSLog(@"Warning: Unable to append signature: %@", exception);
+	}
     
     return nil;
 }
@@ -1096,10 +1067,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [messageTextView setSelectedRange:selectedRange];
     
     // override font of the whole body text
-    [[messageTextView textStorage] addAttribute:NSFontAttributeName value:[GIMessage font] range:NSMakeRange(0, [[messageTextView textStorage] length])];
+    [[messageTextView textStorage] addAttribute:NSFontAttributeName value: [GIMessage font] range:NSMakeRange(0, [[messageTextView textStorage] length])];
     
     // set typing font
-    [messageTextView setTypingAttributes:[NSDictionary dictionaryWithObject:[GIMessage font] forKey:NSFontAttributeName]];    
+    [messageTextView setTypingAttributes: [NSDictionary dictionaryWithObject: [GIMessage font] forKey:NSFontAttributeName]];    
 }
 
 - (void) updateWindowTitle
@@ -1136,7 +1107,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         NSLocalizedString(@"%@ to %@ regarding '%@'", @"Message Window Title when subject is present") :
         NSLocalizedString(@"%@ to %@", @"Message Window Title when subject is not present");
         
-        [window setTitle:[NSString stringWithFormat:format, typeString, [to realnameFromEMailStringWithFallback], [subject stringByRemovingReplyPrefix]]];
+        [window setTitle: [NSString stringWithFormat:format, typeString, [to realnameFromEMailStringWithFallback], [subject stringByRemovingReplyPrefix]]];
     } 
     else 
     {
@@ -1148,11 +1119,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     GIMessage *message = nil;
     
-    message = [GIMessage messageWithTransferData:[[self message] transferData]];
+    message = [GIMessage messageWithTransferData: [[self message] transferData]];
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [[self message] transferData]);
     
     // status
-    if (oldMessage) [message addFlags:[oldMessage flags]];
+    if (oldMessage) [message addFlags: [oldMessage flags]];
     [message addFlags:OPSeenStatus | aType];
     
     // unmark message as blocked for sending
@@ -1293,7 +1264,7 @@ NSDictionary *maxLinesForCalendarName()
     enumerator = [[GIProfile allObjects] objectEnumerator];
     while (aProfile = [enumerator nextObject])
     {
-        [profileButton addItemWithTitle:[aProfile valueForKey: @"name"]];
+        [profileButton addItemWithTitle: [aProfile valueForKey: @"name"]];
         [[profileButton lastItem] setRepresentedObject:aProfile];
     }
 }
@@ -1311,7 +1282,7 @@ NSDictionary *maxLinesForCalendarName()
     if (profile)
     {
         // select active profile:
-        [profileButton selectItemAtIndex:[profileButton indexOfItemWithRepresentedObject:profile]];
+        [profileButton selectItemAtIndex: [profileButton indexOfItemWithRepresentedObject:profile]];
     }
     
     // Cc:
@@ -1433,7 +1404,7 @@ NSDictionary *maxLinesForCalendarName()
     [profileButton setAction:@selector(switchProfile:)];
     
     [self setupProfilePopUpButton];
-    [self selectProfile:[self profile]];
+    [self selectProfile: [self profile]];
 }
 
 - (void) updateHeaders
@@ -1549,7 +1520,7 @@ NSDictionary *maxLinesForCalendarName()
     // search for predecessor (the new entry should be placed behind a predecessor):
     for (i = [headerOrder() indexOfObject:aFieldName] - 1; i >= 0; i--)
     {
-        if ((predecessor = [headerTextFieldsForName objectForKey:[headerOrder() objectAtIndex:i]])) break;
+        if ((predecessor = [headerTextFieldsForName objectForKey: [headerOrder() objectAtIndex:i]])) break;
     }
     
     if (! predecessor) predecessor = bottomTextField;
@@ -1563,12 +1534,12 @@ NSDictionary *maxLinesForCalendarName()
     topY = predecessorFrame.origin.y - 8; // gap
 
     // configuring text field:
-    result = [[[OPSizingTextField alloc] initWithFrame:[hiddenTextFieldPrototype frame]] autorelease];
+    result = [[[OPSizingTextField alloc] initWithFrame: [hiddenTextFieldPrototype frame]] autorelease];
     frame = [result frame];
     frame.origin.y = topY - frame.size.height;
     [result setFrame:frame];
-    [result setNextKeyView:[predecessor nextKeyView]];
-    [result setAutoresizingMask:[hiddenTextFieldPrototype autoresizingMask]];  
+    [result setNextKeyView: [predecessor nextKeyView]];
+    [result setAutoresizingMask: [hiddenTextFieldPrototype autoresizingMask]];  
     maxLines = [[maxLinesForCalendarName() objectForKey:aFieldName] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [result setMaxLines:maxLines];
@@ -1576,16 +1547,16 @@ NSDictionary *maxLinesForCalendarName()
     [predecessor setNextKeyView:result];
 
     // configuring the caption:
-    caption = [[[NSTextField alloc] initWithFrame:[hiddenCaptionPrototype frame]] autorelease];
+    caption = [[[NSTextField alloc] initWithFrame: [hiddenCaptionPrototype frame]] autorelease];
     frame = [caption frame];
     frame.origin.y = topY - frame.size.height - 3; // center positionsa
     [caption setFrame:frame];
-    [caption setStringValue:[displayNameForHeaderField stringByAppendingString: @":"]];
+    [caption setStringValue: [displayNameForHeaderField stringByAppendingString: @":"]];
     [caption setAlignment:NSRightTextAlignment];
     [caption setEditable: NO];
     [caption setBezeled: NO];
-    [caption setBackgroundColor:[NSColor windowBackgroundColor]];
-    [caption setAutoresizingMask:[hiddenCaptionPrototype autoresizingMask]];
+    [caption setBackgroundColor: [NSColor windowBackgroundColor]];
+    [caption setAutoresizingMask: [hiddenCaptionPrototype autoresizingMask]];
     
     // moving other views down:
     [[predecessor superview] moveSubviewsWithinHeight:topY verticallyBy:-1 * ([result frame].size.height + 8)];
@@ -1652,7 +1623,7 @@ NSDictionary *maxLinesForCalendarName()
     enumerator = [searchResult objectEnumerator];
     while (record = [enumerator nextObject])
     {
-        if ([record isKindOfClass:[ABPerson class]]) // only persons (not groups!) at this time
+        if ([record isKindOfClass: [ABPerson class]]) // only persons (not groups!) at this time
         {
             ABPerson *person = record;
             NSString *fullname = [person fullname];
@@ -1715,7 +1686,7 @@ NSDictionary *maxLinesForCalendarName()
 
 - (BOOL)validateToolbarItem: (NSToolbarItem*) theItem
 {
-    return [self validateSelector:[theItem action]];
+    return [self validateSelector: [theItem action]];
 }
 
 - (NSToolbarItem *)toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
@@ -1738,15 +1709,15 @@ NSDictionary *maxLinesForCalendarName()
         NSToolbarItem *item;
         NSMutableArray *allowed;
         
-        allowed = [NSMutableArray arrayWithCapacity:[toolbarItems count] + 5];
+        allowed = [NSMutableArray arrayWithCapacity: [toolbarItems count] + 5];
         
         enumerator = [toolbarItems objectEnumerator];
         while (item = [enumerator nextObject])
         {
-            [allowed addObject:[item itemIdentifier]];
+            [allowed addObject: [item itemIdentifier]];
         }
         
-        [allowed addObjectsFromArray:[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
+        [allowed addObjectsFromArray: [NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
         
         allowedItemIdentifiers = [allowed copy];
     }

@@ -20,11 +20,17 @@
 
 @implementation GIMessageGroup
 
-// CREATE TABLE ZMESSAGEGROUP ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZNAME VARCHAR );
 
-+ (NSString*) databaseTableName
++ (NSString*) databaseProperties
 {
-	return @"ZMESSAGEGROUP";
+	return 
+	@"{"
+	@"  TableName = ZMESSAGEGROUP;"
+	@"  CreateStatements = \""
+	@"  CREATE TABLE ZMESSAGEGROUP ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZNAME VARCHAR );"
+	@"  \";"
+	@""
+	@"}";
 }
 
 + (NSString*) persistentAttributesPlist

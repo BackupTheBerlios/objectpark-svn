@@ -54,9 +54,8 @@
     NSMutableDictionary* attributes;
 }
 
-+ (NSString*) databaseTableName;
-
 + (NSString*) persistentAttributesPlist;
++ (NSString*) databaseProperties;
 
 + (OPClassDescription*) persistentClassDescription;
 

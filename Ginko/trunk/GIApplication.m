@@ -244,6 +244,7 @@
 	
     OPPersistentObjectContext* persistentObjectContext = [[OPPersistentObjectContext alloc] init];
 	[persistentObjectContext setDatabaseConnectionFromPath: path];
+	[persistentObjectContext checkDBSchemaForClasses: @"GIMessage,GIAccount,GIThread,GIMessageGroup,GIProfile,GIMessageData"];
 	
 	/*
     if (isNewlyCreated) {

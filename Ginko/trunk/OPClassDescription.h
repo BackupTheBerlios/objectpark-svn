@@ -46,9 +46,12 @@
 	NSArray* attributeDescriptions; // simple attributeDescriptions followed by relationship attributeDescriptions
 	NSDictionary* attributeDescriptionsByName;
 	unsigned simpleAttributeCount; // number of simple attributeDescriptions in attributeDescriptions array
-	NSString* columnList; // comma-separated list of column name
+	NSString* columnList; // comma-separated list of column names
+	NSString* tableName; // the name of the database table
+	NSArray* createStatements;
 }
 
+- (void) checkTableUsingConnection: (OPSQLiteConnection*) connection;
 - (id) initWithPersistentClass: (Class) poClass;
 
 - (OPAttributeDescription*) attributeWithName: (NSString*) name;

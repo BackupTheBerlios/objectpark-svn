@@ -35,7 +35,6 @@
 /* Begin PBXBuildFile section */
 		30450D81091051910085A02F /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
 		30450DCC091059A90085A02F /* OPDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
-		30672F60092D3CB7005D7A7F /* OPL-Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */; };
 		6131DCD6083A85D10056FF9D /* TestGIFulltextIndexCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */; };
 		6131DCD7083A85D10056FF9D /* TestGIFulltextIndexCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */; };
 		617C2A77084632F700803758 /* GIIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 617C2A75084632F700803758 /* GIIndex.h */; };
@@ -1351,7 +1350,6 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				8D9E8F1006AC46540055F87C /* CopyFiles */,
-				8DF2D1B6087A8CEC008F8F6B /* Changing libsqlite load path */,
 			);
 			buildRules = (
 			);
@@ -1534,7 +1532,6 @@
 				773FFE970859778700E0767F /* Password.nib in Resources */,
 				770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */,
 				77D52B670929E28700661A6D /* PhraseBrowser.nib in Resources */,
-				30672F60092D3CB7005D7A7F /* OPL-Configuration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1574,20 +1571,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# shell script goes here\n#headerdoc2html -t -o HeaderDoc *.h\n#cd \"Cocoa Extensions\"\n#headerdoc2html -t -o ../HeaderDoc/CocoaExtensions *.h\n#cd ..\n#cd \"Message Framework\"\n#headerdoc2html -t -o ../HeaderDoc/MessageFramework *.h\n#cd ..\n#gatherheaderdoc HeaderDoc\n\nrm -rf $SRCROOT/AutoDoc\n/usr/local/bin/autodoc -format html -tree -proj $SRCROOT -dest $SRCROOT/AutoDoc\n#perl \"$HOME/Developer/AutoDoc/contrib/LinkDocs/linkDocs.pl\" $SRCROOT/AutoDoc\n";
-		};
-		8DF2D1B6087A8CEC008F8F6B /* Changing libsqlite load path */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Changing libsqlite load path";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "echo Changing libsqlite load path...\n\n#install_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\n#install_name_tool -change /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData @executable_path/../Frameworks/CoreData.framework/Versions/A/CoreData \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\"\n\n#install_name_tool -change /usr/lib/libsqlite3.0.dylib @executable_path/../Frameworks/libsqlite3.dylib \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/CoreData.framework/Versions/A/CoreData\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
