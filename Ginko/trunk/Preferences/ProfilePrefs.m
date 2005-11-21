@@ -37,7 +37,7 @@
 
 - (IBAction) setSendAccount: (id) sender
 {
-    GIProfile *selectedProfile = [[profileTableView dataSource] itemAtRow:[profileTableView selectedRow]];
+    GIProfile* selectedProfile = [[profileTableView dataSource] itemAtRow: [profileTableView selectedRow]];
     
     [selectedProfile setValue: [sender objectValue] forKey: @"sendAccount"];
 }

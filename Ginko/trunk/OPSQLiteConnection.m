@@ -446,12 +446,10 @@
 	return YES; 
 }
 
+
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
 {
-	NSError* error = nil;
-	NSData* stringData = [self dataFromRange: NSMakeRange(0,[self length]) documentAttributes: nil error: &error];
-	if (error) NSLog(@"Warning! Unable to get data from attr. string: %@", error);
-
+	NSData* stringData = [self RTFDFromRange: NSMakeRange(0,[self length]) documentAttributes: nil];
 	[stringData bindValueToStatement: statement index: index];
 }
 
@@ -459,8 +457,11 @@
 {
 	NSError* error = nil;
 	NSData* stringData = [NSData newFromStatement: statement index: index];
-	NSAttributedString* result = [[[NSAttributedString alloc] initWithData: stringData options: nil documentAttributes: nil error: &error] autorelease];
-	if (error) NSLog(@"Warning! Unable to deserialize attr. string: %@", error);
+	NSAttributedString* result = nil;
+	if ([stringData length]) {
+		[[[NSAttributedString alloc] initWithData: stringData options: nil documentAttributes: nil error: &error] autorelease];
+		if (error) NSLog(@"Warning! Unable to deserialize attr. string: %@", error);
+	}
 	return result;
 }
 
@@ -601,6 +602,12 @@
     return result;
 }
 
+- (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+{
+#warning implement saving nsdatas!
+	//sqlite3_bind_int64(statement, index, (long long)[self timeIntervalSinceReferenceDate]);
+}
+
 @end
 
 
@@ -655,7 +662,7 @@
 
 - (void) dealloc
 {
-	NSLog(@"Deallocing sql statement %@.", self);
+	//NSLog(@"Deallocing sql statement %@.", self);
 
 	sqlite3_finalize(statement);
 	[connection release];

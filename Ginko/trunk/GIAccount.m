@@ -76,7 +76,7 @@
 /*" Designated initializer. Also inserts the receiver into the main thread context. "*/
 {
 	if (self = [super init]) {
-		[self insertIntoContext: [OPPersistentObjectContext mainThreadContext]];
+		//[self insertIntoContext: [OPPersistentObjectContext mainThreadContext]];
 	}
 	return self;
 }

@@ -37,6 +37,7 @@
 	@"{"
 	@"defaultCc = {ColumnName = ZDEFAULTCC; AttributeClass = NSString;};"
 	@"defaultBcc = {ColumnName = ZDEFAULTBCC; AttributeClass = NSString;};"
+	@"realname = {ColumnName = ZREALNAME; AttributeClass = NSString;};"
 	@"enabled = {ColumnName = ZENABLED; AttributeClass = NSNumber;};"
 	@"defaultReplyTo = {ColumnName = ZDEFAULTREPLYTO; AttributeClass = NSString;};"
 	@"mailAddress = {ColumnName = ZMAILADDRESS; AttributeClass = NSString;};"
@@ -96,7 +97,7 @@
 		
         if ([[profile valueForKey: @"enabled"] boolValue]) {
             NSString* email = [profile emailAddress];
-            NSString* replyTo = [profile valueForKey: @"replyToAddress"];
+            NSString* replyTo = [profile valueForKey: @"defaultReplyTo"];
             NSEnumerator* addressEnumerator = [addressList objectEnumerator];
             NSString* address;
             

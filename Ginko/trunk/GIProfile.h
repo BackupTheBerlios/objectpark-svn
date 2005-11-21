@@ -26,25 +26,6 @@
 
 + (BOOL) isMyEmailAddress: (NSString*) aString;
 
-/*
-- (NSString*) name;
-- (void) setName: (NSString*) aString;
-
-- (NSString*) realname;
-- (void) setRealname: (NSString*) aString;
-
-- (NSString*) emailAddress;
-- (void) setEmailAddress: (NSString*) aString;
-
-- (NSString*) replyToAddress;
-- (void) setReplyToAddress: (NSString*) aString;
-
-- (NSString*) organization;
-- (void) setOrganization: (NSString*) aString;
-
-- (NSData*) signature;
-- (void) setSignature: (NSData*) aSig;
-*/
 
 - (NSString*) emailAddress;
 
