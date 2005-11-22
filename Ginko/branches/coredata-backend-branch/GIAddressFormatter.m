@@ -1,7 +1,7 @@
 /* 
 $Id: GIAddressFormatter.m,v 1.2 2004/12/23 16:57:06 theisen Exp $
  
- Copyright (c) 2001 by Axel Katerbau. All rights reserved.
+ Copyright (c) 2001, 2005 by Axel Katerbau. All rights reserved.
  
  Permission to use, copy, modify and distribute this software and its documentation
  is hereby granted, provided that both the copyright notice and this permission
@@ -37,6 +37,44 @@ Should match the following formats:
  
  lastname, firstname <email@address.org> 
  "*/
+
+#define LRUCACHESIZE 100
+
+static NSMutableArray *LRUMailAddresses;
+
++ (NSMutableArray *)LRUMailAddresses
+{
+    if (!LRUMailAddresses)
+    {
+        LRUMailAddresses = [[[NSUserDefaults standardUserDefaults] objectForKey:@"LRUMailAddresses"] mutableCopy];
+        if (!LRUMailAddresses) LRUMailAddresses = [[NSMutableArray alloc] initWithCapacity:LRUCACHESIZE];
+    }
+    
+    return LRUMailAddresses;
+}
+
++ (void)addToLRUMailAddresses:(NSString *)anAddressString
+{
+    NSMutableArray *addresses = [self LRUMailAddresses];
+    
+    if ([addresses count] == LRUCACHESIZE) [addresses removeObjectAtIndex:0];
+    
+    [addresses addObject:anAddressString];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];
+}
+
++ (void)removeFromLRUMailAddresses:(NSString *)anAddressString
+{
+    NSMutableArray *addresses = [self LRUMailAddresses];
+
+    if ([addresses containsObject:anAddressString]) 
+    {
+        [addresses removeObject:anAddressString];
+        [[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];        
+    }
+}
+
 - (NSString *)stringForObjectValue:(id)obj
 {
     return [obj description];
@@ -134,6 +172,15 @@ Should match the following formats:
             // reset candidates
             if (candidates) [candidates release];
             candidates = [[NSMutableArray alloc] init];
+            
+            // LRU cache:
+            NSEnumerator *reverseEnumerator = [[[self class] LRUMailAddresses] reverseObjectEnumerator];
+            NSString *cachedAddress;
+            
+            while (cachedAddress = [reverseEnumerator nextObject])
+            {
+                if ([cachedAddress hasPrefix:completionPrefix]) [candidates addObject:cachedAddress];
+            }
             
             // try to find match
             /*

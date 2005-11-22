@@ -122,17 +122,23 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     }
 }
 
-- (NSString*) replyToWithFallback: (BOOL) fallback 
+- (NSString *)replyToWithFallback:(BOOL)fallback 
 {
     /*"If there is no "replyTo:" header found, this method returns the content of the "from:" header."*/
-    NSString* replyBody = nil;
+    NSString *replyBody = nil;
+    NSString *listIdBody = nil;
     
+    listIdBody = [self bodyForHeaderField:@"list-post"];
     replyBody = [self bodyForHeaderField:@"reply-to"];
-    if (![replyBody length]) // fall back to "from" header:
-        return [self fromWithFallback: fallback];
     
-    return [[EDTextFieldCoder stringFromFieldBody: replyBody
-                                     withFallback: YES] sharedInstance];
+    // take care of "strange" configured mailing lists, where the Reply-To header is equal to the List-Post header:
+    if ([listIdBody isEqualToString:replyBody]) replyBody = [self fromWithFallback:fallback];
+
+    // fall back to "from" header:
+    if (![replyBody length]) return [self fromWithFallback:fallback];
+    
+    return [[EDTextFieldCoder stringFromFieldBody:replyBody
+                                     withFallback:YES] sharedInstance];
 }
 
 - (NSString*) toWithFallback: (BOOL) fallback {

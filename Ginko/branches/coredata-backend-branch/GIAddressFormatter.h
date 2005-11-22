@@ -1,7 +1,7 @@
 /* 
      $Id: GIAddressFormatter.h,v 1.1 2004/12/13 13:20:41 mikesch Exp $
 
-     Copyright (c) 2001 by Axel Katerbau. All rights reserved.
+     Copyright (c) 2001, 2005 by Axel Katerbau. All rights reserved.
 
      Permission to use, copy, modify and distribute this software and its documentation
      is hereby granted, provided that both the copyright notice and this permission
@@ -26,5 +26,8 @@
 {
 
 }
+
++ (void)addToLRUMailAddresses:(NSString *)anAddressString;
++ (void)removeFromLRUMailAddresses:(NSString *)anAddressString;
 
 @end

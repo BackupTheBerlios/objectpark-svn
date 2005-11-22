@@ -104,6 +104,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView setDoubleAction:@selector(openSelection:)];
     [threadsView setHighlightThreads:YES];
     [threadsView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinkoThreads", nil]];
+    [threadsView setAutoresizesOutlineColumn:NO];
     
     [self awakeToolbar];
     [self awakeCommentTree];
@@ -867,7 +868,81 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
+- (NSArray *)allSelectedMessages
+{
+    NSMutableArray *result = [NSMutableArray array];
+    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+    
+    if (! [selectedIndexes count]) return [NSArray array];
+    
+    unsigned int i = [selectedIndexes firstIndex];
+    
+    do
+    {
+        id item = [threadsView itemAtRow:i];
+        
+        if ([item isKindOfClass:[G3Message class]])
+        {
+            [result addObject:item];
+        }
+        else
+        {
+            // it's a thread:
+            G3Thread *thread = [NSManagedObjectContext objectWithURIString:item];
+            NSEnumerator *enumerator = [[thread messages] objectEnumerator];
+            G3Message *message;
+            
+            while (message = [enumerator nextObject])
+            {
+                [result addObject:message];
+            }
+        }
+        
+        i = [selectedIndexes indexGreaterThanIndex:i];
+    }
+    while (i != NSNotFound);
+    
+    return result;
+}
+ 
+- (BOOL)isAnySelectedItemNotHavingMessageflags:(unsigned int)flags allSelectedMessages:(NSArray **)allMessages
+{
+    (*allMessages) = [self allSelectedMessages];
+    NSEnumerator *enumerator = [(*allMessages) objectEnumerator];
+    G3Message *message;
+    
+    while (message = [enumerator nextObject])
+    {
+        if (![message hasFlags:flags]) return YES;
+    }
+    
+    return NO;
+}
+
+- (void)toggleFlag:(unsigned int)flag
+{
+    NSArray *selectedMessages;
+    BOOL set = [self isAnySelectedItemNotHavingMessageflags:flag allSelectedMessages:&selectedMessages];
+    NSEnumerator *enumerator = [selectedMessages objectEnumerator];
+    G3Message *message;
+    
+    while (message = [enumerator nextObject])
+    {
+        if (set) [message addFlags:flag];
+        else [message removeFlags:flag];
+    }
+    
+    // not necessary if flag changes would be recognized automatically:
+    [threadsView reloadData];
+}
+
+- (IBAction)toggleReadFlag:(id)sender
+{
+    [self toggleFlag:OPSeenStatus];
+}
+
 - (NSArray *)selectedThreadURIs
+/** Returns the URIs of the selected thread objects. */
 {
     NSMutableArray* result = [NSMutableArray array];
     NSIndexSet* set = [threadsView selectedRowIndexes];
@@ -1144,10 +1219,9 @@ static BOOL isThreadItem(id item)
          //|| (aSelector == @selector(showTransferData:))
          )
     {
-        NSIndexSet *selectedIndexes;
+        NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
         
-        selectedIndexes = [threadsView selectedRowIndexes];
-        if ((! [self isStandaloneBoxesWindow])&& ([selectedIndexes count] == 1))
+        if ([selectedIndexes count] == 1)
         {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
             if (([item isKindOfClass:[G3Message class]]) || ([[NSManagedObjectContext objectWithURIString: item] containsSingleMessage]))
@@ -1161,6 +1235,11 @@ static BOOL isThreadItem(id item)
     {
         return [self isOnlyThreadsSelected];
     }
+    else if (aSelector == @selector(toggleReadFlag:))
+    {
+        return [[threadsView selectedRowIndexes] count] > 0;
+    }
+    
     /*
     if ( 
          (aSelector == @selector(catchup:))
@@ -1206,6 +1285,24 @@ static BOOL isThreadItem(id item)
     {
         [menuItem setState:showRawSource ? NSOnState : NSOffState];
         return ![self threadsShownCurrently];
+    }
+    else if ([menuItem action] == @selector(toggleReadFlag:))
+    {
+        if ([self validateSelector:[menuItem action]])
+        {
+            NSArray *selectedMessages;
+            
+            if ([self isAnySelectedItemNotHavingMessageflags:OPSeenStatus allSelectedMessages:&selectedMessages])
+            {
+                [menuItem setTitle:NSLocalizedString(@"As Read", @"Menu title for toggling messages to read")];
+            }
+            else
+            {
+                [menuItem setTitle:NSLocalizedString(@"As Unread", @"Menu title for toggling messages to read")];
+            }
+            return YES;
+        }
+        else return NO;
     }
     else
     {

@@ -137,7 +137,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 - (NSString*) addressFromEMailString
 {
     static NSCharacterSet 	*nonAddressChars = nil;
-    NSString 				*addr;
+    NSString 				*addr = nil;
     NSRange 				d1Pos, d2Pos, atPos, searchRange, addrRange;
 
     if(nonAddressChars == nil) {
