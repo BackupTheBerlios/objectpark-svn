@@ -1599,6 +1599,27 @@ NSDictionary *maxLinesForCalendarName()
     return result;
 }
 
+- (void)controlTextDidEndEditing:(NSNotification *)aNotification
+{
+    NSTextField *sender = [aNotification object];
+    
+    if ([sender isKindOfClass:[NSTextField class]] && [[sender formatter] isKindOfClass:[GIAddressFormatter class]]) 
+    {
+        NSString *addressList = [sender stringValue];
+        NSArray *components = [addressList componentsSeparatedByString:@","];
+        NSEnumerator *enumerator = [components objectEnumerator];
+        NSString *component;
+        
+        while (component = [enumerator nextObject])
+        {
+            if ([[component addressFromEMailString] length])
+            {
+                [GIAddressFormatter addToLRUMailAddresses:[component stringByRemovingSurroundingWhitespace]];
+            }
+        }
+    }
+}
+
 @end
 
 #import <AddressBook/AddressBook.h>
