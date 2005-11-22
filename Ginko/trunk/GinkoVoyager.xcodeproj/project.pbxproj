@@ -131,6 +131,7 @@
 		77BC58C80761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BC58C60761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h */; };
 		77BC58C90761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC58C70761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m */; };
 		77C386E907AE9F1F00420AE9 /* MIME.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77C386E807AE9F1F00420AE9 /* MIME.plist */; };
+		77CC67F109333E9C00E0F213 /* OPL-Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */; };
 		77CD551007699AD1003354A0 /* MessageEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77CD550F07699AD1003354A0 /* MessageEditor.nib */; };
 		77CD551307699B4B003354A0 /* GIMessageEditorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CD551107699B4B003354A0 /* GIMessageEditorController.h */; };
 		77CD551407699B4B003354A0 /* GIMessageEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CD551207699B4B003354A0 /* GIMessageEditorController.m */; };
@@ -1491,6 +1492,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77CC67F109333E9C00E0F213 /* OPL-Configuration.plist in Resources */,
 				7776BBAA07D0773E00822246 /* MainMenu.nib in Resources */,
 				8D9E9DC906AE215D0055F87C /* OPBanner.jpg in Resources */,
 				7776259D0760DEC20066BE60 /* Group.nib in Resources */,
@@ -1553,9 +1555,11 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/*.[h|m]",
 			);
 			name = "Extract Aspects";
 			outputPaths = (
+				"$(PROJECT_DIR)/OPL-Configuration.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
