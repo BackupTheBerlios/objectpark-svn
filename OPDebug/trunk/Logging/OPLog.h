@@ -21,9 +21,9 @@
 /*"This string is required as a prefix for environment variables that should be
    used for setting aspects for a domain by 
    !{-addAspectsFromEnvironmentWithDefinitionsFromFile:}.
-   E.g. !{setenv OPDL_MyDomain=MyAspect}
+   E.g. !{setenv OPL_MyDomain=MyAspect}
    "*/
-#define OPDebugLogEnvPrefix @"OPDL_"
+#define OPDebugLogEnvPrefix @"OPL_"
 
 
 /*"Disables logging for all aspects for a domain."*/
