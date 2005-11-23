@@ -11,7 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 309B198108F0A8FD00CBA688 /* Build configuration list for PBXAggregateTarget "Run AutoDoc" */;
 			buildPhases = (
-				309B198608F0A8FD00CBA688 /* ShellScript */,
+				309B198608F0A8FD00CBA688 /* Run AutoDoc */,
 			);
 			buildSettings = {
 				OPTIMIZATION_CFLAGS = "";
@@ -41,6 +41,7 @@
 		309B199808F0A9BE00CBA688 /* OPLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199508F0A9BE00CBA688 /* OPLog.m */; };
 		309B199908F0A9DA00CBA688 /* OPLog-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199308F0A9BE00CBA688 /* OPLog-Tests.m */; };
 		309B19FF08F0B1ED00CBA688 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309B19FE08F0B1ED00CBA688 /* SenTestingKit.framework */; };
+		30EB73EB093523CF00A50A61 /* OPL-Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30EB73EA093523CF00A50A61 /* OPL-Configuration.plist */; };
 		8DC2EF510486A6940098B216 /* OPDebug_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCF5E0370ADEE00C91783 /* OPDebug_Prefix.pch */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
@@ -104,14 +105,15 @@
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		3033E2C308EC93BF006346C0 /* Run Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Run Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3033E2C408EC93BF006346C0 /* Run Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Run Tests-Info.plist"; sourceTree = "<group>"; };
-		30450AC2091010630085A02F /* OPLogMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPLogMock.h; path = Logging/Tests/OPLogMock.h; sourceTree = "<group>"; };
-		30450AC3091010630085A02F /* OPLogMock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPLogMock.m; path = Logging/Tests/OPLogMock.m; sourceTree = "<group>"; };
-		30804E0E092666B900174475 /* extractAspects.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = extractAspects.pl; path = bin/extractAspects.pl; sourceTree = "<group>"; };
-		309B199308F0A9BE00CBA688 /* OPLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPLog-Tests.m"; path = "Logging/Tests/OPLog-Tests.m"; sourceTree = "<group>"; };
-		309B199408F0A9BE00CBA688 /* OPLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPLog.h; path = Logging/OPLog.h; sourceTree = "<group>"; };
-		309B199508F0A9BE00CBA688 /* OPLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPLog.m; path = Logging/OPLog.m; sourceTree = "<group>"; };
+		30450AC2091010630085A02F /* OPLogMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPLogMock.h; sourceTree = "<group>"; };
+		30450AC3091010630085A02F /* OPLogMock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPLogMock.m; sourceTree = "<group>"; };
+		30804E0E092666B900174475 /* extractAspects.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = extractAspects.pl; sourceTree = "<group>"; };
+		309B199308F0A9BE00CBA688 /* OPLog-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPLog-Tests.m"; sourceTree = "<group>"; };
+		309B199408F0A9BE00CBA688 /* OPLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPLog.h; sourceTree = "<group>"; };
+		309B199508F0A9BE00CBA688 /* OPLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPLog.m; sourceTree = "<group>"; };
 		309B19B508F0AB7300CBA688 /* AutoDoc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AutoDoc; sourceTree = "<group>"; };
 		309B19FE08F0B1ED00CBA688 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
+		30EB73EA093523CF00A50A61 /* OPL-Configuration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "OPL-Configuration.plist"; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* OPDebug_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPDebug_Prefix.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* OPDebug.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPDebug.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +176,7 @@
 		089C1665FE841158C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				30EB73EA093523CF00A50A61 /* OPL-Configuration.plist */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
 			);
@@ -213,7 +216,7 @@
 				30450AC3091010630085A02F /* OPLogMock.m */,
 				309B199308F0A9BE00CBA688 /* OPLog-Tests.m */,
 			);
-			name = Tests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		30804E060926667B00174475 /* bin */ = {
@@ -221,7 +224,7 @@
 			children = (
 				30804E0E092666B900174475 /* extractAspects.pl */,
 			);
-			name = bin;
+			path = bin;
 			sourceTree = "<group>";
 		};
 		309B198A08F0A97900CBA688 /* Logging */ = {
@@ -231,7 +234,7 @@
 				309B199508F0A9BE00CBA688 /* OPLog.m */,
 				30450ABF09100FF00085A02F /* Tests */,
 			);
-			name = Logging;
+			path = Logging;
 			sourceTree = "<group>";
 		};
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
@@ -264,7 +267,7 @@
 				3033E2BE08EC93BF006346C0 /* Resources */,
 				3033E2BF08EC93BF006346C0 /* Sources */,
 				3033E2C008EC93BF006346C0 /* Frameworks */,
-				3033E2C108EC93BF006346C0 /* ShellScript */,
+				3033E2C108EC93BF006346C0 /* Run Unit Tests */,
 			);
 			buildRules = (
 			);
@@ -329,9 +332,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3033E26908EC8A07006346C0 /* Build configuration list for PBXNativeTarget "OPDebug" */;
 			buildPhases = (
+				8DC2EF540486A6940098B216 /* Sources */,
+				30EB73E6093522FD00A50A61 /* Extract Aspects */,
 				8DC2EF500486A6940098B216 /* Headers */,
 				8DC2EF520486A6940098B216 /* Resources */,
-				8DC2EF540486A6940098B216 /* Sources */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
 				8DC2EF580486A6940098B216 /* Rez */,
 			);
@@ -412,6 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
+				30EB73EB093523CF00A50A61 /* OPL-Configuration.plist in Resources */,
 				30804E0F092666B900174475 /* extractAspects.pl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -429,31 +434,49 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3033E2C108EC93BF006346C0 /* ShellScript */ = {
+		3033E2C108EC93BF006346C0 /* Run Unit Tests */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run Unit Tests";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
-		309B198608F0A8FD00CBA688 /* ShellScript */ = {
+		309B198608F0A8FD00CBA688 /* Run AutoDoc */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run AutoDoc";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "loggingPath=\"Logging\"\n\nif [ ! -d \"$SRCROOT/AutoDoc\" ]; then\n    mkdir \"$SRCROOT/AutoDoc\"\nfi\n\nif [ ! -d \"$SRCROOT/AutoDoc/$loggingPath\" ]; then\n    mkdir \"$SRCROOT/AutoDoc/$loggingPath\"\nfi\n/usr/local/bin/autodoc -copyright Objectpark.org -format html -allclasses -tree -proj \"$SRCROOT/$loggingPath\" -dest \"$SRCROOT/AutoDoc/$loggingPath\"\n\n#perl \"$HOME/Developer/AutoDoc/contrib/LinkDocs/linkDocs.pl\" $SRCROOT/AutoDoc\n";
+		};
+		30EB73E6093522FD00A50A61 /* Extract Aspects */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"*.[mh]",
+			);
+			name = "Extract Aspects";
+			outputPaths = (
+				"$(PROJECT_DIR)/OPL_Configuration.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bin/extractAspects.pl .";
 		};
 /* End PBXShellScriptBuildPhase section */
 
