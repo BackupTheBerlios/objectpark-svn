@@ -7,6 +7,7 @@
 //
 
 #import "OPLog.h"
+#import "NSThread+OPThreadNames.h"
 
 
 @implementation OPLog : NSObject
@@ -268,7 +269,7 @@ static OPLog *sharedInstance;
 /*"Does the actual logging (of aMessage)."*/
 - (void) log:(NSString*)aMessage
     {
-    NSLog(aMessage);
+    NSLog(@"[%@] %@", [[NSThread currentThread] name], aMessage);
     }
     
     

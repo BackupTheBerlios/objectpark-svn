@@ -24,7 +24,8 @@
     NSDebugEnabled = 1;
     // using OPLogMock here ensures the shared instance to be a required mock object
     [[OPLogMock sharedInstance] log:nil];
-    STAssertTrue([[OPLogMock sharedInstance] loggedMessage] == nil, @"Could not reset the logged Message to nil");
+    STAssertTrue([[OPLogMock sharedInstance] loggedMessage] == nil,
+                 @"Could not reset the logged Message to nil");
     
     [[OPLogMock sharedInstance] setAspects:OPALL forDomain:OPTestDebug];
     }
@@ -50,10 +51,9 @@
 - (void) testOPDebugLogPrefix
     {
     OPDebugLog(@"Some Domain", OPINFO, @"");
-    STAssertTrue([[[OPLogMock sharedInstance] loggedMessage] hasPrefix:@"["],
-                 @"logged message should start with '[' but is %@", [[OPLogMock sharedInstance] loggedMessage]);
-    STAssertTrue([[[OPLogMock sharedInstance] loggedMessage] hasSuffix:@"] Some Domain (OPINFO): "],
-                 @"logged message should end with '] Some Domain (OPINFO): ' but is %@", [[OPLogMock sharedInstance] loggedMessage]);
+    STAssertEqualObjects([[OPLogMock sharedInstance] loggedMessage],
+                         @"Some Domain (OPINFO): ",
+                         @"log prefix doesn't match");
     }
     
     
@@ -69,7 +69,8 @@
     
     STAssertNotNil([[OPLogMock sharedInstance] loggedMessage],
                    @"A message should have been logged but wasn't.");
-    STAssertEqualObjects([[OPLogMock sharedInstance] loggedMessage], [@"[1] Some Domain (OPINFO): " stringByAppendingString:message],
+    STAssertEqualObjects([[OPLogMock sharedInstance] loggedMessage],
+                         [@"Some Domain (OPINFO): " stringByAppendingString:message],
                          @"A wrong message has been logged");
     }
     
@@ -84,7 +85,8 @@
     
     STAssertNotNil([[OPLogMock sharedInstance] loggedMessage],
                    @"A message should have been logged but wasn't.");
-    STAssertEqualObjects([[OPLogMock sharedInstance] loggedMessage], @"[1] Some Domain (OPINFO): Here we have an argument",
+    STAssertEqualObjects([[OPLogMock sharedInstance] loggedMessage],
+                         @"Some Domain (OPINFO): Here we have an argument",
                          @"A wrong message has been logged");
     }
     

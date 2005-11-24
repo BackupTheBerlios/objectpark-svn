@@ -42,6 +42,9 @@
 		309B199908F0A9DA00CBA688 /* OPLog-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199308F0A9BE00CBA688 /* OPLog-Tests.m */; };
 		309B19FF08F0B1ED00CBA688 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309B19FE08F0B1ED00CBA688 /* SenTestingKit.framework */; };
 		30EB73EB093523CF00A50A61 /* OPL-Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30EB73EA093523CF00A50A61 /* OPL-Configuration.plist */; };
+		30EB741509352F5800A50A61 /* NSThread+OPThreadNames.h in Headers */ = {isa = PBXBuildFile; fileRef = 30EB741309352F5800A50A61 /* NSThread+OPThreadNames.h */; };
+		30EB741609352F5800A50A61 /* NSThread+OPThreadNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EB741409352F5800A50A61 /* NSThread+OPThreadNames.m */; };
+		30EB7522093546E100A50A61 /* NSTask+OPThreadNames-Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EB75150935420000A50A61 /* NSTask+OPThreadNames-Test.m */; };
 		8DC2EF510486A6940098B216 /* OPDebug_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCF5E0370ADEE00C91783 /* OPDebug_Prefix.pch */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
@@ -114,6 +117,9 @@
 		309B19B508F0AB7300CBA688 /* AutoDoc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AutoDoc; sourceTree = "<group>"; };
 		309B19FE08F0B1ED00CBA688 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
 		30EB73EA093523CF00A50A61 /* OPL-Configuration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "OPL-Configuration.plist"; sourceTree = "<group>"; };
+		30EB741309352F5800A50A61 /* NSThread+OPThreadNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+OPThreadNames.h"; sourceTree = "<group>"; };
+		30EB741409352F5800A50A61 /* NSThread+OPThreadNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+OPThreadNames.m"; sourceTree = "<group>"; };
+		30EB75150935420000A50A61 /* NSTask+OPThreadNames-Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTask+OPThreadNames-Test.m"; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* OPDebug_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPDebug_Prefix.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* OPDebug.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPDebug.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +221,7 @@
 				30450AC2091010630085A02F /* OPLogMock.h */,
 				30450AC3091010630085A02F /* OPLogMock.m */,
 				309B199308F0A9BE00CBA688 /* OPLog-Tests.m */,
+				30EB75150935420000A50A61 /* NSTask+OPThreadNames-Test.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -232,6 +239,8 @@
 			children = (
 				309B199408F0A9BE00CBA688 /* OPLog.h */,
 				309B199508F0A9BE00CBA688 /* OPLog.m */,
+				30EB741309352F5800A50A61 /* NSThread+OPThreadNames.h */,
+				30EB741409352F5800A50A61 /* NSThread+OPThreadNames.m */,
 				30450ABF09100FF00085A02F /* Tests */,
 			);
 			path = Logging;
@@ -254,6 +263,7 @@
 			files = (
 				8DC2EF510486A6940098B216 /* OPDebug_Prefix.pch in Headers */,
 				309B199708F0A9BE00CBA688 /* OPLog.h in Headers */,
+				30EB741509352F5800A50A61 /* NSThread+OPThreadNames.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,6 +497,7 @@
 			files = (
 				309B199908F0A9DA00CBA688 /* OPLog-Tests.m in Sources */,
 				30450AC4091010630085A02F /* OPLogMock.m in Sources */,
+				30EB7522093546E100A50A61 /* NSTask+OPThreadNames-Test.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,6 +506,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				309B199808F0A9BE00CBA688 /* OPLog.m in Sources */,
+				30EB741609352F5800A50A61 /* NSThread+OPThreadNames.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

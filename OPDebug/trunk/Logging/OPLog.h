@@ -8,6 +8,7 @@
 
 #import <Foundation/NSDebug.h>
 
+
 /*"A marker for domains so they can be automatically extracted.
    In the code it just does nothing.
    Use it like this: !{\#define MyDomain OPL_DOMAIN @"MyDomain"}"*/
@@ -53,16 +54,16 @@
    
    This will log the message 'Operation xyz() returned error: ACCESS DENIED' if
    the OPERROR aspect has been activated for the domain 'some domain'."*/
-#define OPDebugLog(domain, aspects, format, ...)    {                                                                                                          \
-                                                    if (NSDebugEnabled)                                                                                        \
-                                                        {                                                                                                      \
-                                                        OPLog *sharedInstance = [OPLog sharedInstance];                                                        \
-                                                        if ([sharedInstance aspectsForDomain:domain] & aspects)                                                \
-                                                            [sharedInstance log:[NSString stringWithFormat:[@"[%u] %@ (%s): " stringByAppendingString:format], \
-                                                                                              ((unsigned int*)[NSThread currentThread])[1],                    \
-                                                                                              domain, #aspects, ##__VA_ARGS__]];                               \
-                                                        }                                                                                                      \
+#define OPDebugLog(domain, aspects, format, ...)    {                                                                                                     \
+                                                    if (NSDebugEnabled)                                                                                   \
+                                                        {                                                                                                 \
+                                                        OPLog *sharedInstance = [OPLog sharedInstance];                                                   \
+                                                        if ([sharedInstance aspectsForDomain:domain] & aspects)                                           \
+                                                            [sharedInstance log:[NSString stringWithFormat:[@"%@ (%s): " stringByAppendingString:format], \
+                                                                                              domain, #aspects, ##__VA_ARGS__]];                          \
+                                                        }                                                                                                 \
                                                     }
+
 
 @interface OPLog : NSObject
     {
