@@ -68,6 +68,8 @@
 - (void) beginTransaction;
 - (void) commitTransaction;
 - (void) rollBackTransaction;
+- (BOOL) transactionInProgress;
+
 - (ROWID) insertNewRowForClass: (Class) poClass;
 
 - (OPSQLiteStatement*) updateStatementForClass: (Class) poClass;

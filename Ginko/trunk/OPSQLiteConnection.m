@@ -354,6 +354,11 @@
 	sqlite3_reset(statement);
 }
 
+- (BOOL) transactionInProgress
+{
+	return transactionInProgress;
+}
+
 - (void) beginTransaction
 {
 	NSAssert(transactionInProgress==NO, @"Transaction already in progress.");
@@ -494,7 +499,7 @@
 	NSData* stringData = [NSData newFromStatement: statement index: index];
 	NSAttributedString* result = nil;
 	if ([stringData length]) {
-		[[[NSAttributedString alloc] initWithData: stringData options: nil documentAttributes: nil error: &error] autorelease];
+		result = [[[NSAttributedString alloc] initWithData: stringData options: nil documentAttributes: nil error: &error] autorelease];
 		if (error) NSLog(@"Warning! Unable to deserialize attr. string: %@", error);
 	}
 	return result;
@@ -641,7 +646,6 @@
 {
 	int result = sqlite3_bind_blob(statement, index, [self bytes], [self length], SQLITE_TRANSIENT);
 	NSAssert(result == SQLITE_OK, @"Failed to bind data in statement.");
-
 }
 
 @end

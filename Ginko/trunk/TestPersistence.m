@@ -139,7 +139,53 @@
 	
 }
 
-- (void) testManualUpdate
+
+- (void) testDataPersistence
+{
+	char bytes[256];
+	int i;
+	for (i=0;i<256;i++) bytes[i] = i % 32;
+	
+	NSData* writeData = [NSData dataWithBytes: bytes length: 255];
+	
+	GIProfile* testProfile = [[[GIProfile alloc] init] autorelease];
+	[testProfile setValue: @"TestProfileName" forKey: @"name"];
+	[testProfile insertIntoContext: context];
+	[testProfile setValue: writeData forKey: @"messageTemplate"];
+	//OID oid = [testProfile oid];
+	[context saveChanges];
+	// testProfile should be released
+	
+	[testProfile revert];
+	//testProfile = [context objectForOid: oid ofClass: [GIProfile class]];
+	
+	NSData* readData = [testProfile valueForKey: @"messageTemplate"];
+	
+	NSAssert([writeData isEqual: readData], @"NSData write-reread failed.");
+}
+
+- (void) testAttributedStringPersistence
+{	
+	NSAttributedString* writeData = [[[NSAttributedString alloc] initWithString: @"This is an Attributed Test\nString\n."] autorelease];
+	
+	GIProfile* testProfile = [[[GIProfile alloc] init] autorelease];
+	[testProfile setValue: @"TestProfileName" forKey: @"name"];
+	[testProfile insertIntoContext: context];
+	[testProfile setValue: writeData forKey: @"signature"];
+	//OID oid = [testProfile oid];
+	[context saveChanges];
+	// testProfile should be released
+	
+	[testProfile revert];
+	//testProfile = [context objectForOid: oid ofClass: [GIProfile class]];
+	
+	NSAttributedString* readData = [testProfile valueForKey: @"signature"];
+	
+	NSAssert([[writeData string] isEqualToString: [readData string]], @"NSAttributedString write-reread failed.");
+}
+
+
+- (void) notestManualUpdate
 {
 	[[context databaseConnection] beginTransaction];
 	//OPSQLiteStatement* statement = [[[OPSQLiteStatement alloc] initWithSQL: @"update ZPROFILE set ZENABLED=1 where ROWID=1;" connection: [context databaseConnection]] autorelease];

@@ -320,7 +320,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
 	[lock lock];
-	[db beginTransaction];
+	if (![db transactionInProgress]) [db beginTransaction];
 	
 	// do we need a local autoreleasepoool here?
 	

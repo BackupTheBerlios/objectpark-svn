@@ -157,7 +157,7 @@
 
 - (void) revert
 {
-/*" Turns the receiver in to a fault, releasing attribute values. 
+/*" Turns the receiver back into a fault, releasing attribute values. 
 	Changes done since the last -saveChanges are lost. "*/
 	id context = [self context];
 	[context willRevertObject: self];
