@@ -27,6 +27,7 @@
 #import "GIMessage.h"
 #import "GIGroupListController.h"
 #import "GIPhraseBrowserController.h"
+#import <OPPreferences/OPPreferences.h>
 
 #import <OPDebug/OPLog.h>
 
@@ -260,15 +261,24 @@
     return [persistentObjectContext autorelease];
 }
 
+- (void) prefpaneWillSelect: (NSNotification*) notification
+{
+	[self saveAction: nil];
+}
+
 - (void) awakeFromNib
 {
     [self setDelegate:self];
+	
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name: OPJobDidFinishNotification object:[GISMTPJob jobName]];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name: OPJobDidFinishNotification object:[GIPOPJob jobName]];
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(prefpaneWillSelect:) name: OPPreferenceWindowWillSelectPane object: nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name: OPJobDidFinishNotification object:MboxImportJobName];
+		
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(SMTPJobFinished:) name: OPJobDidFinishNotification object: [GISMTPJob jobName]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(POPJobFinished:) name: OPJobDidFinishNotification object: [GIPOPJob jobName]];
+
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importJobFinished:) name: OPJobDidFinishNotification object: MboxImportJobName];
 
     // Some statistical messsages:
     //OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	

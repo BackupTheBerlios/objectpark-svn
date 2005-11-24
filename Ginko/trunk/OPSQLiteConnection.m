@@ -120,21 +120,52 @@
 	return result;
 }
 
+ 
+ - (OPSQLiteStatement*) updateStatementForClass: (Class) poClass
+ {
+	 OPSQLiteStatement* result = [updateStatements objectForKey: poClass];
+	 if (!result) {
+		 // Create statement using class description and cache it in the updateStatements dictionary:
+		 OPClassDescription* cd = [poClass persistentClassDescription];
+		 NSMutableArray* columnNames = [cd columnNames];
+		 int i = [columnNames count] + 1;
+		 NSMutableArray* valuePlaceholders = [NSMutableArray array];
+		 while (i--) [valuePlaceholders addObject: @"?"];
+		 [columnNames addObject: @"ROWID"];
+		 
+		 NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [cd tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
+		 //NSLog(@"Preparing statement for updates: %@", queryString);
+		 
+		 result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
+		 
+		 [updateStatements setObject: result forKey: poClass]; // cache it
+		 
+	 }
+	 return result;
+ }
+ 
+ 
 
-
+/*
 - (OPSQLiteStatement*) updateStatementForClass: (Class) poClass
 {
 	OPSQLiteStatement* result = [updateStatements objectForKey: poClass];
 	if (!result) {
+		char* delimiter = "";
 		// Create statement using class description and cache it in the updateStatements dictionary:
 		OPClassDescription* cd = [poClass persistentClassDescription];
 		NSMutableArray* columnNames = [cd columnNames];
-		int i = [columnNames count] + 1;
-		NSMutableArray* valuePlaceholders = [NSMutableArray array];
-		while (i--) [valuePlaceholders addObject: @"?"];
-		[columnNames addObject: @"ROWID"];
+		NSMutableString* queryString = [NSMutableString string];
+		[queryString appendFormat: @"update %@ set ", [cd tableName]];
+		NSEnumerator* e = [columnNames objectEnumerator];
+		NSString* columnName;
+		while (columnName = [e nextObject]) {
+			[queryString appendFormat: @"%s%@=?", delimiter, columnName];
+			delimiter = ",";
+		}
 		
-		NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [cd tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
+		[queryString appendString: @" where ROWID=?;"];
+		//NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [cd tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
 		//NSLog(@"Preparing statement for updates: %@", queryString);
 		
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
@@ -144,6 +175,7 @@
 	}
 	return result;
 }
+*/
 
 - (OPSQLiteStatement*) insertStatementForClass: (Class) poClass
 {
@@ -196,24 +228,26 @@
 	OPSQLiteStatement* updateStatement = [self updateStatementForClass: poClass];		
 	
 	int attrCount = [attributes count];
-	int i;
+	int i, placeholder;
 
-	for (i=0; i<attrCount; i++) {
+	for (i=placeholder=0; i<attrCount; i++) {
 		OPAttributeDescription* ad = [attributes objectAtIndex: i];
 		if (![ad isToManyRelationship]) {
 			NSString* key = ad->name;
 			id value = [values objectForKey: key];
-			//NSLog(@"Binding value %@ to attribute %@ of update statement.", value, key);
-			[updateStatement bindPlaceholderAtIndex: i toValue: value];
+			//NSLog(@"Binding value %@ to attribute #%d(%@) of update statement.", value, placeholder, key);
+			[updateStatement bindPlaceholderAtIndex: placeholder++ toValue: value];
 		}
 	}
-	[updateStatement bindPlaceholderAtIndex: i toRowId: rid]; // fill in where clause
+			//	NSLog(@"Binding rowid to attribute #%d(%@) of update statement.", i);
+
+	[updateStatement bindPlaceholderAtIndex: placeholder toRowId: rid]; // fill in where clause
 	
 	[updateStatement execute];
 	[updateStatement reset];
 
 	if (!rid) {
-		rid = sqlite3_last_insert_rowid(connection);;
+		rid = sqlite3_last_insert_rowid(connection);
 		NSLog(@"Got new oid for %@ object: %lld", poClass, rid);
 	}
 	return rid;
@@ -317,6 +351,7 @@
 	if (result != SQLITE_DONE) {
 		[self raiseSQLiteError];
 	}
+	sqlite3_reset(statement);
 }
 
 - (void) beginTransaction
@@ -449,7 +484,7 @@
 
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
 {
-	NSData* stringData = [self RTFDFromRange: NSMakeRange(0,[self length]) documentAttributes: nil];
+	NSData* stringData = [self RTFFromRange: NSMakeRange(0,[self length]) documentAttributes: nil];
 	[stringData bindValueToStatement: statement index: index];
 }
 
@@ -604,8 +639,9 @@
 
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
 {
-#warning implement saving nsdatas!
-	//sqlite3_bind_int64(statement, index, (long long)[self timeIntervalSinceReferenceDate]);
+	int result = sqlite3_bind_blob(statement, index, [self bytes], [self length], SQLITE_TRANSIENT);
+	NSAssert(result == SQLITE_OK, @"Failed to bind data in statement.");
+
 }
 
 @end
@@ -646,6 +682,7 @@
 }
 
 - (void) bindPlaceholderAtIndex: (int) index toRowId: (ROWID) rid
+/*" Index is zero-based. "*/
 {
 	index++;
 	if (rid) {

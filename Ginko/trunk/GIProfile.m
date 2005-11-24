@@ -45,7 +45,7 @@
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
 	@"signature = {ColumnName = ZSIGNATURE; AttributeClass = NSAttributedString;};"
 	@"messageTemplate = {ColumnName = ZMESSAGETEMPLATE; AttributeClass = NSData;};"
-	@"sendAccount = {ColumnName = ZSENDACCOUNT; AttributeClass = OPPersistentObject;};"
+	@"sendAccount = {ColumnName = ZSENDACCOUNT; AttributeClass = GIAccount;};"
 	@"messagesToSend = {AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZPROFILE=?\";};"
 	@"}";
 }

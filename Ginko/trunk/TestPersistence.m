@@ -23,7 +23,7 @@
         
 		if (!context) {
 			context = [[[OPPersistentObjectContext alloc] init] autorelease];
-			[context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Application Support/GinkoVoyager/GinkoBase.sqlite"]];
+			[context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Application Support/GinkoVoyager/MessageBase.sqlite"]];
 			[OPPersistentObjectContext setDefaultContext: context];
 		}
     }
@@ -53,7 +53,9 @@
 	[newMessage setValue: [NSDate date] forKey: @"date"];
 	[newMessage setValue: @"BlaBla" forKey: @"subject"];
 	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"senderName"];
-	
+	[newMessage insertIntoContext: context];
+	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Inserted object value not set.");
+
 	[context saveChanges];
 	
 	NSAssert1([newMessage currentOid], @"No oid was assigned during -saveChanges for %@", newMessage);
@@ -121,6 +123,7 @@
 	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
 	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"senderName"];
 	[newMessage setValue: messageId forKey: @"messageId"];
+	[newMessage insertIntoContext: context];
 	
 	[context saveChanges];
 	
@@ -136,6 +139,15 @@
 	
 }
 
+- (void) testManualUpdate
+{
+	[[context databaseConnection] beginTransaction];
+	//OPSQLiteStatement* statement = [[[OPSQLiteStatement alloc] initWithSQL: @"update ZPROFILE set ZENABLED=1 where ROWID=1;" connection: [context databaseConnection]] autorelease];
+	//[statement execute];
+	
+	[[context databaseConnection] performCommand: @"update ZPROFILE set ZENABLED=1 where ROWID=1;"];
+	[[context databaseConnection] commitTransaction];
+}
 
 - (void) testManualFetch2
 {	

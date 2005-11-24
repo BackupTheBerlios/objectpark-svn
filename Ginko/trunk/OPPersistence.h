@@ -34,5 +34,6 @@
 
 #import "OPPersistentObject.h";
 #import "OPPersistentObjectContext.h";
+#import "OPSQLiteConnection.h"
 #import "OPPersistenceConstants.h"
 

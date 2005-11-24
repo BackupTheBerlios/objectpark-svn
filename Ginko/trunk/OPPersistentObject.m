@@ -111,10 +111,16 @@
 
 - (void) insertIntoContext: (OPPersistentObjectContext*) context
 {
+	OPPersistentObjectContext* previousContext = [self context];
+	NSParameterAssert(previousContext == context || previousContext == nil);
+
 	[context willChangeObject: self];
-	NSParameterAssert([self context]==nil);
-	attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
-	NSLog(@"Created attribute dictionary for object %@");
+	NSParameterAssert(oid==0);
+	// Create attributes dictionary as necessary
+	if (!attributes) {
+		attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
+		NSLog(@"Created attribute dictionary for object %@");
+	}
 	[context didChangeObject: self];
 }
 
@@ -141,6 +147,10 @@
     if (attributes==nil) {
         // implement using the default PersistentObjectContext:
         attributes = [[[self context] persistentValuesForObject: self] retain];
+		if (!attributes && oid==0) {
+			attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
+			NSLog(@"Created attribute dictionary for new object %@", self);
+		}
     }
 	return attributes != nil;
 }
