@@ -261,7 +261,7 @@
     return [persistentObjectContext autorelease];
 }
 
-- (void) prefpaneWillSelect: (NSNotification*) notification
+- (void) prefpaneDidEndEditing: (NSNotification*) notification
 {
 	[self saveAction: nil];
 }
@@ -271,7 +271,7 @@
     [self setDelegate:self];
 	
     
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(prefpaneWillSelect:) name: OPPreferenceWindowWillSelectPane object: nil];
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(prefpaneDidEndEditing:) name: OPPreferencePaneDidEndEditing object: nil];
 
 		
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(SMTPJobFinished:) name: OPJobDidFinishNotification object: [GISMTPJob jobName]];

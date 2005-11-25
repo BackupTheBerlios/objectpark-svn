@@ -1005,6 +1005,11 @@
 			8D2652E509367C4A00700556 /* PBXTextBookmark */ = 8D2652E509367C4A00700556 /* PBXTextBookmark */;
 			8D2652E609367C4B00700556 /* PBXTextBookmark */ = 8D2652E609367C4B00700556 /* PBXTextBookmark */;
 			8D2652E709367C4B00700556 /* PBXTextBookmark */ = 8D2652E709367C4B00700556 /* PBXTextBookmark */;
+			8D26530B09370BF400700556 /* PBXTextBookmark */ = 8D26530B09370BF400700556 /* PBXTextBookmark */;
+			8D26530C09370BF400700556 /* PBXTextBookmark */ = 8D26530C09370BF400700556 /* PBXTextBookmark */;
+			8D26530D09370BF400700556 /* PBXTextBookmark */ = 8D26530D09370BF400700556 /* PBXTextBookmark */;
+			8D26530E09370BF400700556 /* PBXTextBookmark */ = 8D26530E09370BF400700556 /* PBXTextBookmark */;
+			8D26530F09370BF400700556 /* PBXTextBookmark */ = 8D26530F09370BF400700556 /* PBXTextBookmark */;
 			8D2BA5BC09068DD600D5BB0D = 8D2BA5BC09068DD600D5BB0D /* PBXTextBookmark */;
 			8D2BA5C109068DD600D5BB0D = 8D2BA5C109068DD600D5BB0D /* PBXTextBookmark */;
 			8D320E1C092C104C00089F0A = 8D320E1C092C104C00089F0A /* PBXTextBookmark */;
@@ -3786,6 +3791,54 @@
 		vrLen = 853;
 		vrLoc = 14195;
 	};
+	8D26530B09370BF400700556 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE38FC08940F4000F705EF /* TestPersistence.m */;
+		name = "TestPersistence.m: testDataPersistence";
+		rLen = 0;
+		rLoc = 5022;
+		rType = 0;
+		vrLen = 837;
+		vrLoc = 4662;
+	};
+	8D26530C09370BF400700556 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE36070891918900F705EF /* OPSQLiteConnection.m */;
+		name = "OPSQLiteConnection.m: 487";
+		rLen = 0;
+		rLoc = 14233;
+		rType = 0;
+		vrLen = 853;
+		vrLoc = 14195;
+	};
+	8D26530D09370BF400700556 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: 'OPPreferenceWindowWillSelectPane' undeclared (first use in this function)";
+		fRef = 8D9E8A8406AC44080055F87C /* GIApplication.m */;
+		rLen = 1;
+		rLoc = 273;
+		rType = 1;
+	};
+	8D26530E09370BF400700556 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCE36070891918900F705EF /* OPSQLiteConnection.m */;
+		name = "OPSQLiteConnection.m: 487";
+		rLen = 0;
+		rLoc = 14233;
+		rType = 0;
+		vrLen = 853;
+		vrLoc = 14195;
+	};
+	8D26530F09370BF400700556 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D9E8A8406AC44080055F87C /* GIApplication.m */;
+		name = "GIApplication.m: initialPersistentObjectContext";
+		rLen = 0;
+		rLoc = 8832;
+		rType = 0;
+		vrLen = 1312;
+		vrLoc = 8624;
+	};
 	8D27989509078C3900DBD474 /* G3GroupController.m:1423 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
@@ -3981,7 +4034,7 @@
 		fRef = 8D9E8A8406AC44080055F87C /* GIApplication.m */;
 		name = "#warning implement for better mbox restore";
 		rLen = 43;
-		rLoc = 11526;
+		rLoc = 11529;
 		rType = 0;
 		vrLen = 1136;
 		vrLoc = 10649;
@@ -4273,7 +4326,7 @@
 		fRef = 8D9E8A8406AC44080055F87C /* GIApplication.m */;
 		name = "GIApplication.m: 277";
 		rLen = 0;
-		rLoc = 9246;
+		rLoc = 9249;
 		rType = 0;
 		vrLen = 941;
 		vrLoc = 8889;
@@ -4293,7 +4346,7 @@
 		fRef = 8D3FB5C80933F7B3001B2DE3 /* OPPreferenceController.m */;
 		name = "(null): 316";
 		rLen = 0;
-		rLoc = 10353;
+		rLoc = 10271;
 		rType = 0;
 		vrLen = 596;
 		vrLoc = 10183;
@@ -4310,7 +4363,7 @@
 		fRef = 8D3FB5CD0933F7B3001B2DE3 /* OPPreferenceController.m */;
 		name = "(null): 316";
 		rLen = 0;
-		rLoc = 10353;
+		rLoc = 10271;
 		rType = 0;
 		vrLen = 596;
 		vrLoc = 10183;
@@ -6137,9 +6190,9 @@
 	};
 	8D9E8A8406AC44080055F87C /* GIApplication.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {949, 9058}}";
-			sepNavSelRange = "{7791, 0}";
-			sepNavVisRect = "{{0, 3288}, {949, 214}}";
+			sepNavIntBoundsRect = "{{0, 0}, {647, 9478}}";
+			sepNavSelRange = "{8832, 0}";
+			sepNavVisRect = "{{0, 3809}, {647, 516}}";
 			sepNavWindowFrame = "{{220, 283}, {759, 458}}";
 		};
 	};
@@ -6856,8 +6909,8 @@
 	};
 	8DCE36070891918900F705EF /* OPSQLiteConnection.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {647, 8876}}";
-			sepNavSelRange = "{14678, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {647, 10444}}";
+			sepNavSelRange = "{14233, 0}";
 			sepNavVisRect = "{{0, 6945}, {647, 516}}";
 		};
 	};
