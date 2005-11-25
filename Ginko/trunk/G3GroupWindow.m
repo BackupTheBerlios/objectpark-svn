@@ -72,82 +72,85 @@
 /*" Intercept the 'switch key' and inform the delegate and don't send the event further along the responder chain if it has a selector -switchKeyPressed:(id)sender. Otherwise the event is send further along the responder chain. "*/ 
 {
     BOOL consumed = NO;
-    if ([theEvent type] == NSKeyDown)
-    {
-        switch ([theEvent keyCode])
-        {
-            case SWITCHKEY:
-            case ALTSWITCHKEY:
-                [self sendActionSelector:@selector(openSelection:)];
-                return;
-                break;
-                //case TABKEY:
-                //    [self sendActionSelector: @selector(tabKeyPressed:withmodifierFlags:)];
-                //    break;
-            case ESCKEY:
-            case BACKSPACEKEY:
-            {
-                if ([theEvent modifierFlags] & NSCommandKeyMask)
-                {
-                    [self sendActionSelector:@selector(moveSelectionToTrash:)];
-                }
-                else
-                {
-                    [self sendActionSelector:@selector(closeSelection:)];
-                }
-                return;
-            }
-                break;
-            case 2: // d
-            case KEYPAD6KEY:
-            case 42: // #
-                [self delegateAction: @selector(navigateRightInMatrix:)];
-                break;
-                
-            case 0: // a
-            case 41: // Ö
-            case KEYPAD4KEY:
-                [self delegateAction: @selector(navigateLeftInMatrix:)];
-                break;
-                
-            case 13: // w
-            case 33: // Ü
-            case KEYPAD8KEY:
-                [self delegateAction: @selector(navigateUpInMatrix:)];
-                break;
-                
-            case 1: // s
-            case 39: // Ä
-            case KEYPAD2KEY:
-                [self delegateAction: @selector(navigateDownInMatrix:)];
-                break;
-                
-                /*
-                 case LEFTARROWKEY:
-                 case KEYPAD4KEY:
-                     consumed = [self sendActionSelector:@selector(navigateLeft:)];
-                     break;
-                 case KEYPAD6KEY:
-                 case RIGHTARROWKEY:
-                     consumed = [self sendActionSelector:@selector(navigateRight:)];
-                     break;    
-                     
-                 case UPARROWKEY:
-                 case KEYPAD8KEY:
-                     consumed = [self sendActionSelector:@selector(navigateUp:)];
-                     break;            
-                 case DOWNARROWKEY:
-                 case KEYPAD2KEY:
-                     consumed = [self sendActionSelector:@selector(navigateDown:)];
-                     break; 
-                     */
-                
-            default:
-                //                NSLog(@"Key pressed. Code: %X", [theEvent keyCode]);
-                break;
-        }        
-    }
     
+    if (![[self firstResponder] isKindOfClass:[NSSearchField class]]) 
+    {
+        if ([theEvent type] == NSKeyDown)
+        {
+            switch ([theEvent keyCode])
+            {
+                case SWITCHKEY:
+                case ALTSWITCHKEY:
+                    [self sendActionSelector:@selector(openSelection:)];
+                    return;
+                    break;
+                    //case TABKEY:
+                    //    [self sendActionSelector: @selector(tabKeyPressed:withmodifierFlags:)];
+                    //    break;
+                case ESCKEY:
+                case BACKSPACEKEY:
+                {
+                    if ([theEvent modifierFlags] & NSCommandKeyMask)
+                    {
+                        [self sendActionSelector:@selector(moveSelectionToTrash:)];
+                    }
+                    else
+                    {
+                        [self sendActionSelector:@selector(closeSelection:)];
+                    }
+                    return;
+                }
+                    break;
+                case 2: // d
+                case KEYPAD6KEY:
+                case 42: // #
+                    [self delegateAction: @selector(navigateRightInMatrix:)];
+                    break;
+                    
+                case 0: // a
+                case 41: // Ö
+                case KEYPAD4KEY:
+                    [self delegateAction: @selector(navigateLeftInMatrix:)];
+                    break;
+                    
+                case 13: // w
+                case 33: // Ü
+                case KEYPAD8KEY:
+                    [self delegateAction: @selector(navigateUpInMatrix:)];
+                    break;
+                    
+                case 1: // s
+                case 39: // Ä
+                case KEYPAD2KEY:
+                    [self delegateAction: @selector(navigateDownInMatrix:)];
+                    break;
+                    
+                    /*
+                     case LEFTARROWKEY:
+                     case KEYPAD4KEY:
+                         consumed = [self sendActionSelector:@selector(navigateLeft:)];
+                         break;
+                     case KEYPAD6KEY:
+                     case RIGHTARROWKEY:
+                         consumed = [self sendActionSelector:@selector(navigateRight:)];
+                         break;    
+                         
+                     case UPARROWKEY:
+                     case KEYPAD8KEY:
+                         consumed = [self sendActionSelector:@selector(navigateUp:)];
+                         break;            
+                     case DOWNARROWKEY:
+                     case KEYPAD2KEY:
+                         consumed = [self sendActionSelector:@selector(navigateDown:)];
+                         break; 
+                         */
+                    
+                default:
+                    //                NSLog(@"Key pressed. Code: %X", [theEvent keyCode]);
+                    break;
+            }        
+        }
+    }
     if (!consumed) [super sendEvent:theEvent];
 }
 

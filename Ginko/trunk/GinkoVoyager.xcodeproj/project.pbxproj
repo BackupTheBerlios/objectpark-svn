@@ -153,8 +153,6 @@
 		77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */; };
 		77DFA5C90840B49C0068AD15 /* TestOPJobs.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DFA5C70840B49C0068AD15 /* TestOPJobs.h */; };
 		77DFA5CA0840B49C0068AD15 /* TestOPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5C80840B49C0068AD15 /* TestOPJobs.m */; };
-		77E05AA4088D64FB0008FC96 /* GIFilteredThreads.h in Headers */ = {isa = PBXBuildFile; fileRef = 77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */; };
-		77E05AA5088D64FB0008FC96 /* GIFilteredThreads.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */; };
 		77E5401D0785839D00265DBB /* GIApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9E8A8306AC44080055F87C /* GIApplication.h */; };
 		77E541AF0785AB9D00265DBB /* Boxes.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77E541AE0785AB9D00265DBB /* Boxes.nib */; };
 		77EF03D207DC4AF9007CD721 /* GroupInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */; };
@@ -602,8 +600,8 @@
 		8D9020D10779DAB3005365EA /* EDObjectPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDObjectPair.h; sourceTree = "<group>"; };
 		8D9021190779E6B9005365EA /* OPInternetMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPInternetMessage.m; sourceTree = "<group>"; };
 		8D90211B0779E6B9005365EA /* OPInternetMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPInternetMessage.h; sourceTree = "<group>"; };
-		8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OPInternetMessage+GinkoExtensions.m"; path = "Message Framework/OPInternetMessage+GinkoExtensions.m"; sourceTree = "<group>"; };
-		8D90211D0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "OPInternetMessage+GinkoExtensions.h"; path = "Message Framework/OPInternetMessage+GinkoExtensions.h"; sourceTree = "<group>"; };
+		8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPInternetMessage+GinkoExtensions.m"; sourceTree = "<group>"; };
+		8D90211D0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPInternetMessage+GinkoExtensions.h"; sourceTree = "<group>"; };
 		8D9021630779EC8A005365EA /* NSString+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MessageUtils.h"; sourceTree = "<group>"; };
 		8D9021640779EC8A005365EA /* NSString+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MessageUtils.m"; sourceTree = "<group>"; };
 		8D9021740779EE58005365EA /* EDMessagePart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDMessagePart.h; sourceTree = "<group>"; };
@@ -755,82 +753,24 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				8DCE35E508918FC200F705EF /* Persistence */,
-				617C2A74084632BA00803758 /* FulltextSearch */,
-				8DDD2258080EC983006C902D /* MessageFilter */,
-				8D666F0407D524E20076C74D /* Preferences */,
-				8D9020B50779D943005365EA /* Message Framework */,
 				8D901F890779D79A005365EA /* Cocoa Extensions */,
+				77CD8B630936983800C9030B /* Controller */,
 				8D857FEB0785CF2D00B0D669 /* CustomViews */,
+				617C2A74084632BA00803758 /* FulltextSearch */,
+				77CD8B650936992D00C9030B /* Jobs */,
+				8D9020B50779D943005365EA /* Message Framework */,
+				8DDD2258080EC983006C902D /* MessageFilter */,
+				773839360936976500C5FAE3 /* Model */,
+				77CD8B64093698E500C9030B /* Obsolete */,
+				8DCE35E508918FC200F705EF /* Persistence */,
+				8D666F0407D524E20076C74D /* Preferences */,
 				775A96DE0839D5C2008EC276 /* Tests */,
-				8DCE35E60891900B00F705EF /* GIMessage.h */,
-				8DCE35E70891900B00F705EF /* GIMessage.m */,
-				8DE9646E089F9F1F0053ED6B /* GIThread.h */,
-				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
-				8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */,
-				8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */,
-				8D17B5C70895BBC30057A1C6 /* GIProfile.h */,
-				8D17B5C80895BBC30057A1C6 /* GIProfile.m */,
-				8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */,
-				8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */,
-				77DFA5BD08409DF00068AD15 /* OPJobs.h */,
-				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
-				77EF040107DC4DEF007CD721 /* G3GroupInspectorController.h */,
-				77EF040207DC4DEF007CD721 /* G3GroupInspectorController.m */,
-				8D9029B7077A54E1005365EA /* DebugConfig.h */,
-				77AD77B707CF1A8300A15B83 /* G3Account.h */,
-				77AD77B807CF1A8300A15B83 /* G3Account.m */,
-				8D167D5E09057508000F4F45 /* GIAccount.h */,
-				8D167D5F09057508000F4F45 /* GIAccount.m */,
-				777625A50760E0EC0066BE60 /* G3GroupController.h */,
-				777625A60760E0EC0066BE60 /* G3GroupController.m */,
-				8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */,
-				8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */,
-				8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */,
-				8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */,
-				8D8A4983075D3EA9003189BF /* G3Message.h */,
-				8D8A4984075D3EA9003189BF /* G3Message.m */,
-				77CD551107699B4B003354A0 /* GIMessageEditorController.h */,
-				77CD551207699B4B003354A0 /* GIMessageEditorController.m */,
-				77A84B950771D32700112B7D /* G3MessageEditorWindow.h */,
-				77A84B960771D32700112B7D /* G3MessageEditorWindow.m */,
-				8D8A4EE2075FDE23003189BF /* G3MessageGroup.h */,
-				8D8A4EE3075FDE23003189BF /* G3MessageGroup.m */,
-				77C7581E0771888F00850E17 /* G3Profile.h */,
-				77C7581F0771888F00850E17 /* G3Profile.m */,
-				8D8A4AC1075E8B88003189BF /* G3Thread.h */,
-				8D8A4AC2075E8B88003189BF /* G3Thread.m */,
-				77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */,
-				77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */,
 				8D9E8A8306AC44080055F87C /* GIApplication.h */,
 				8D9E8A8406AC44080055F87C /* GIApplication.m */,
-				8D901F4F0778EC97005365EA /* GIUserDefaultsKeys.h */,
-				8D901F500778EC97005365EA /* GIUserDefaultsKeys.m */,
-				77BA923F076DCD0F0082F33F /* MPWDebug.h */,
-				8D90211D0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.h */,
-				8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */,
-				8D8A496C075D395C003189BF /* OPManagedObject.h */,
-				8D8A496D075D395C003189BF /* OPManagedObject.m */,
 				8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */,
 				8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */,
-				77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */,
-				77962BCB08142114005ADB94 /* GIFulltextIndexCenter.m */,
-				8D2147AD085114B2004C44B9 /* GISearchController.h */,
-				8D2147AE085114B3004C44B9 /* GISearchController.m */,
-				7759B41508535F830011B606 /* GIActivityPanelController.h */,
-				7759B41608535F830011B606 /* GIActivityPanelController.m */,
-				77006FF2085A08D400AB0064 /* GIPasswordController.h */,
-				77006FF3085A08D400AB0064 /* GIPasswordController.m */,
-				77049FE60858570800253732 /* GIPOPJob.h */,
-				77049FE70858570800253732 /* GIPOPJob.m */,
-				774791BB085DF0150001560D /* GISMTPJob.h */,
-				774791BC085DF0150001560D /* GISMTPJob.m */,
-				77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */,
-				77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */,
-				77CD6C12092B2BB500D7E986 /* GIPhraseBrowserController.h */,
-				77CD6C13092B2BB500D7E986 /* GIPhraseBrowserController.m */,
-				77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */,
-				77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */,
+				8D901F4F0778EC97005365EA /* GIUserDefaultsKeys.h */,
+				8D901F500778EC97005365EA /* GIUserDefaultsKeys.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -932,6 +872,8 @@
 			children = (
 				617C2A75084632F700803758 /* GIIndex.h */,
 				617C2A76084632F700803758 /* GIIndex.m */,
+				77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */,
+				77962BCB08142114005ADB94 /* GIFulltextIndexCenter.m */,
 			);
 			name = FulltextSearch;
 			sourceTree = "<group>";
@@ -942,6 +884,25 @@
 				772F293D084F826F004D50E0 /* multipartAlternativeTest-mbox.txt */,
 			);
 			name = "Test Resources";
+			sourceTree = "<group>";
+		};
+		773839360936976500C5FAE3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */,
+				8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */,
+				8D167D5E09057508000F4F45 /* GIAccount.h */,
+				8D167D5F09057508000F4F45 /* GIAccount.m */,
+				8DCE35E60891900B00F705EF /* GIMessage.h */,
+				8DCE35E70891900B00F705EF /* GIMessage.m */,
+				8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */,
+				8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */,
+				8D17B5C70895BBC30057A1C6 /* GIProfile.h */,
+				8D17B5C80895BBC30057A1C6 /* GIProfile.m */,
+				8DE9646E089F9F1F0053ED6B /* GIThread.h */,
+				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		775A96DE0839D5C2008EC276 /* Tests */ = {
@@ -984,6 +945,67 @@
 			name = Tests;
 			sourceTree = "<group>";
 		};
+		77CD8B630936983800C9030B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */,
+				77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */,
+				777625A50760E0EC0066BE60 /* G3GroupController.h */,
+				777625A60760E0EC0066BE60 /* G3GroupController.m */,
+				77EF040107DC4DEF007CD721 /* G3GroupInspectorController.h */,
+				77EF040207DC4DEF007CD721 /* G3GroupInspectorController.m */,
+				7759B41508535F830011B606 /* GIActivityPanelController.h */,
+				7759B41608535F830011B606 /* GIActivityPanelController.m */,
+				8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */,
+				8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */,
+				77CD551107699B4B003354A0 /* GIMessageEditorController.h */,
+				77CD551207699B4B003354A0 /* GIMessageEditorController.m */,
+				77006FF2085A08D400AB0064 /* GIPasswordController.h */,
+				77006FF3085A08D400AB0064 /* GIPasswordController.m */,
+				77CD6C12092B2BB500D7E986 /* GIPhraseBrowserController.h */,
+				77CD6C13092B2BB500D7E986 /* GIPhraseBrowserController.m */,
+				8D2147AD085114B2004C44B9 /* GISearchController.h */,
+				8D2147AE085114B3004C44B9 /* GISearchController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		77CD8B64093698E500C9030B /* Obsolete */ = {
+			isa = PBXGroup;
+			children = (
+				77BA923F076DCD0F0082F33F /* MPWDebug.h */,
+				77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */,
+				77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */,
+				8D9029B7077A54E1005365EA /* DebugConfig.h */,
+				77AD77B707CF1A8300A15B83 /* G3Account.h */,
+				77AD77B807CF1A8300A15B83 /* G3Account.m */,
+				8D8A4983075D3EA9003189BF /* G3Message.h */,
+				8D8A4984075D3EA9003189BF /* G3Message.m */,
+				8D8A4EE2075FDE23003189BF /* G3MessageGroup.h */,
+				8D8A4EE3075FDE23003189BF /* G3MessageGroup.m */,
+				77C7581E0771888F00850E17 /* G3Profile.h */,
+				77C7581F0771888F00850E17 /* G3Profile.m */,
+				8D8A4AC1075E8B88003189BF /* G3Thread.h */,
+				8D8A4AC2075E8B88003189BF /* G3Thread.m */,
+				8D8A496C075D395C003189BF /* OPManagedObject.h */,
+				8D8A496D075D395C003189BF /* OPManagedObject.m */,
+			);
+			name = Obsolete;
+			sourceTree = "<group>";
+		};
+		77CD8B650936992D00C9030B /* Jobs */ = {
+			isa = PBXGroup;
+			children = (
+				77049FE60858570800253732 /* GIPOPJob.h */,
+				77049FE70858570800253732 /* GIPOPJob.m */,
+				774791BB085DF0150001560D /* GISMTPJob.h */,
+				774791BC085DF0150001560D /* GISMTPJob.m */,
+				77DFA5BD08409DF00068AD15 /* OPJobs.h */,
+				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
+			);
+			name = Jobs;
+			sourceTree = "<group>";
+		};
 		8D666F0407D524E20076C74D /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -1011,10 +1033,14 @@
 				8D4C5754076E3B6F000F46DA /* G3CommentTreeCell.m */,
 				77BC581A07610AB700B70D8F /* G3GroupWindow.h */,
 				77BC581B07610AB700B70D8F /* G3GroupWindow.m */,
+				77A84B950771D32700112B7D /* G3MessageEditorWindow.h */,
+				77A84B960771D32700112B7D /* G3MessageEditorWindow.m */,
 				8DB2D4F70796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h */,
 				8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */,
 				77BC58C60761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h */,
 				77BC58C70761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m */,
+				77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */,
+				77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */,
 				77F3181B077B327A0097096B /* GITextView.h */,
 				77F3181C077B327A0097096B /* GITextView.m */,
 				8D857FC40785CD5500B0D669 /* OPCollapsingSplitView.h */,
@@ -1071,18 +1097,6 @@
 			isa = PBXGroup;
 			children = (
 				7779AC9907C40CC300F064D3 /* Tests */,
-				775597BD085506BE00E53108 /* OPPOP3Session.h */,
-				775597BE085506BE00E53108 /* OPPOP3Session.m */,
-				77DF88270849BB6D006CA19D /* NSData+MessageUtils.h */,
-				77DF88280849BB6D006CA19D /* NSData+MessageUtils.m */,
-				8D68416607F5C434003DB791 /* OPMBoxFile.h */,
-				8D68416707F5C434003DB791 /* OPMBoxFile.m */,
-				77D79BD507F31BDB00C521CE /* punycode.h */,
-				77D79BD607F31BDB00C521CE /* punycode.m */,
-				77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */,
-				77253D6007ECB83E00375AFC /* OPMessageConsumer.m */,
-				77253D6107ECB83E00375AFC /* OPSMTP.h */,
-				77253D6207ECB83E00375AFC /* OPSMTP.m */,
 				8D90220D077A0EF3005365EA /* EDCompositeContentCoder.h */,
 				8D90220C077A0EF3005365EA /* EDCompositeContentCoder.m */,
 				8D9021FB077A0DD8005365EA /* EDContentCoder.h */,
@@ -1113,6 +1127,8 @@
 				8D9032E5077B3BFC005365EA /* NSCalendarDate+NetExt.m */,
 				8D90229C077A3A55005365EA /* NSCharacterSet+MIME.h */,
 				8D90229D077A3A55005365EA /* NSCharacterSet+MIME.m */,
+				77DF88270849BB6D006CA19D /* NSData+MessageUtils.h */,
+				77DF88280849BB6D006CA19D /* NSData+MessageUtils.m */,
 				8D902DCE077B1048005365EA /* NSFileWrapper+OPApplefileExtensions.h */,
 				8D902DCD077B1048005365EA /* NSFileWrapper+OPApplefileExtensions.m */,
 				8D9021630779EC8A005365EA /* NSString+MessageUtils.h */,
@@ -1123,18 +1139,30 @@
 				8D9029BD077A553B005365EA /* OPApplefileContentCoder.m */,
 				8D90224F077A1212005365EA /* OPContentCoderCenter.h */,
 				8D902250077A1212005365EA /* OPContentCoderCenter.m */,
+				8D90211D0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.h */,
+				8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */,
 				8D90211B0779E6B9005365EA /* OPInternetMessage.h */,
 				8D9021190779E6B9005365EA /* OPInternetMessage.m */,
 				8D902E3F077B20D4005365EA /* OPInternetMessageAttachmentCell.h */,
 				8D902E3E077B20D4005365EA /* OPInternetMessageAttachmentCell.m */,
+				8D68416607F5C434003DB791 /* OPMBoxFile.h */,
+				8D68416707F5C434003DB791 /* OPMBoxFile.m */,
+				77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */,
+				77253D6007ECB83E00375AFC /* OPMessageConsumer.m */,
 				8D9021A6077A0588005365EA /* OPMultimediaContentCoder.h */,
 				8D9021A7077A0589005365EA /* OPMultimediaContentCoder.m */,
 				8D9021AA077A0589005365EA /* OPMultipartContentCoder.h */,
 				8D9021A9077A0589005365EA /* OPMultipartContentCoder.m */,
+				775597BD085506BE00E53108 /* OPPOP3Session.h */,
+				775597BE085506BE00E53108 /* OPPOP3Session.m */,
+				77253D6107ECB83E00375AFC /* OPSMTP.h */,
+				77253D6207ECB83E00375AFC /* OPSMTP.m */,
 				772DB3D7077DB231001665AB /* OPURLFieldCoder.h */,
 				772DB3D8077DB231001665AB /* OPURLFieldCoder.m */,
 				8D9021AB077A0589005365EA /* OPXFolderContentCoder.h */,
 				8D9021A8077A0589005365EA /* OPXFolderContentCoder.m */,
+				77D79BD507F31BDB00C521CE /* punycode.h */,
+				77D79BD607F31BDB00C521CE /* punycode.m */,
 			);
 			path = "Message Framework";
 			sourceTree = "<group>";
@@ -1143,18 +1171,20 @@
 			isa = PBXGroup;
 			children = (
 				8DD61AAD089448CD009ED3A5 /* sqlite3.h */,
-				8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */,
 				8DCE35F80891905600F705EF /* OPPersistence.h */,
+				8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */,
+				8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */,
+				8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */,
+				8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */,
+				8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */,
+				8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */,
+				8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */,
 				8DCE35E80891900B00F705EF /* OPPersistentObject.h */,
 				8DCE35E90891900B00F705EF /* OPPersistentObject.m */,
 				8DCE35EA0891900B00F705EF /* OPPersistentObjectContext.h */,
 				8DCE35EB0891900B00F705EF /* OPPersistentObjectContext.m */,
 				8DCE36060891918900F705EF /* OPSQLiteConnection.h */,
 				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
-				8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */,
-				8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */,
-				8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */,
-				8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */,
 			);
 			name = Persistence;
 			sourceTree = "<group>";
@@ -1303,7 +1333,6 @@
 				77049FE80858570800253732 /* GIPOPJob.h in Headers */,
 				77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */,
 				774791BD085DF0150001560D /* GISMTPJob.h in Headers */,
-				77E05AA4088D64FB0008FC96 /* GIFilteredThreads.h in Headers */,
 				8DCE38FD08940F4000F705EF /* TestPersistence.h in Headers */,
 				8DCE39030894116500F705EF /* GIMessage.h in Headers */,
 				8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */,
@@ -1677,7 +1706,6 @@
 				77049FE90858570800253732 /* GIPOPJob.m in Sources */,
 				77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */,
 				774791BE085DF0150001560D /* GISMTPJob.m in Sources */,
-				77E05AA5088D64FB0008FC96 /* GIFilteredThreads.m in Sources */,
 				8DCE38FE08940F4000F705EF /* TestPersistence.m in Sources */,
 				8DCE39040894116700F705EF /* GIMessage.m in Sources */,
 				8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */,

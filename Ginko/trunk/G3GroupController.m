@@ -1830,20 +1830,20 @@ NSMutableArray* border = nil;
 @implementation G3GroupController (ToolbarDelegate)
 /*" Toolbar delegate methods and setup and teardown. "*/
 
-- (void) awakeToolbar
+- (void)awakeToolbar
 /*" Called from within -awakeFromNib. "*/
 {
     if (![self isStandaloneBoxesWindow])
 	{
 		NSToolbar *toolbar;
 
-        toolbar = [[NSToolbar alloc] initWithIdentifier: @"GroupToolbar"];
+        toolbar = [[NSToolbar alloc] initWithIdentifier:@"GroupToolbar"];
         
-        [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed: @"group"];
+        [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed:@"group"];
 
         [toolbar setDelegate:self];
-		[toolbar setAllowsUserCustomization: YES];
-		[toolbar setAutosavesConfiguration: YES];
+		[toolbar setAllowsUserCustomization:YES];
+		[toolbar setAutosavesConfiguration:YES];
 		
 		[toolbarItems retain];
 		[defaultIdentifiers retain];
@@ -1852,7 +1852,7 @@ NSMutableArray* border = nil;
 	}    
 }
 
-- (void) deallocToolbar
+- (void)deallocToolbar
 /*" Called within dealloc. "*/
 {
     [[window toolbar] release];
@@ -1860,22 +1860,22 @@ NSMutableArray* border = nil;
     [defaultIdentifiers release];
 }
 
-- (BOOL)validateToolbarItem: (NSToolbarItem*) theItem
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
-    return [self validateSelector: [theItem action]];
+    return [self validateSelector:[theItem action]];
 }
 
-- (NSToolbarItem *)toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
     return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
 }
 
-- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*) toolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
     return defaultIdentifiers;
 }
 
-- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
 {
     static NSArray *allowedItemIdentifiers = nil;
     
@@ -1885,14 +1885,12 @@ NSMutableArray* border = nil;
         NSToolbarItem *item;
         NSMutableArray *allowed;
         
-        allowed = [NSMutableArray arrayWithCapacity: [toolbarItems count] + 5];
+        allowed = [NSMutableArray arrayWithCapacity:[toolbarItems count] + 5];
         
         enumerator = [toolbarItems objectEnumerator];
-        while (item = [enumerator nextObject]) {
-            [allowed addObject: [item itemIdentifier]];
-        }
+        while (item = [enumerator nextObject]) [allowed addObject:[item itemIdentifier]];
         
-        [allowed addObjectsFromArray: [NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
+        [allowed addObjectsFromArray:[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
         
         allowedItemIdentifiers = [allowed copy];
     }

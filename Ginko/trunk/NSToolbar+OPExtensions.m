@@ -12,7 +12,7 @@
 @implementation NSToolbar (OPExtensions)
 /*" Extension of NSToolbar for utilizing a plist as definition for toolbars instead of code. For the plist format just look at the .toolbar resource files which are likely part of this project. "*/
 
-- (BOOL)toolbarItems:(NSArray **)items defaultIdentifiers:(NSArray **)defaultIds forToolbarNamed: (NSString*) toolbarName
+- (BOOL)toolbarItems:(NSArray **)items defaultIdentifiers:(NSArray **)defaultIds forToolbarNamed:(NSString *)toolbarName
 /*" Fetches toolbar items and default identifiers from a plist definition. items and defaultIds are not retained. Localization is performed on user visible texts. "*/
 {
     NSToolbarItem *item;
@@ -58,9 +58,39 @@
             [item setLabel:NSLocalizedString([itemDefs objectForKey: @"label"], @"toolbar label")];
             [item setPaletteLabel:NSLocalizedString([itemDefs objectForKey: @"paletteLabel"], @"toolbar palette label")];
             [item setToolTip:NSLocalizedString([itemDefs objectForKey: @"toolTip"], @"toolbar tooltip")];
+            
+            NSDictionary *viewDefs = [itemDefs objectForKey: @"view"];
+            
+            if (viewDefs) 
+            {
+                Class viewClass = NSClassFromString([viewDefs objectForKey:@"class"]);
+                float minW = [[viewDefs objectForKey:@"minW"] floatValue];
+                float maxW = [[viewDefs objectForKey:@"maxW"] floatValue];
+                float minH = [[viewDefs objectForKey:@"minH"] floatValue];
+                float maxH = [[viewDefs objectForKey:@"maxH"] floatValue];
+                
+                NSView *view = [[[viewClass alloc] initWithFrame:NSMakeRect(0, 0, maxW, maxH)] autorelease];
+                NSRect fRect = [view frame];
+                [item setView:view];
+                
+                fRect.size.width = minW;
+                fRect.size.height = minH;
+                
+                [item setMinSize:fRect.size];
+                
+                fRect.size.width = maxW;
+                fRect.size.height = maxH;
+                
+                [item setMaxSize:fRect.size];
+            }
+            else
+            {
+                [item setImage:[NSImage imageNamed:[itemDefs objectForKey: @"imageName"]]];
+            }
+
             [item setAction:NSSelectorFromString([itemDefs objectForKey: @"action"])];
-            [item setImage:[NSImage imageNamed:[itemDefs objectForKey: @"imageName"]]];
             [item setTarget:target];
+
             [(NSMutableArray *)*items addObject:item];
             [item release];
         }
