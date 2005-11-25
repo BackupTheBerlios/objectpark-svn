@@ -37,14 +37,20 @@
     
     result = [[[targetClass alloc] init] autorelease];
     
-    if((filename != nil) && ((ctString = [self contentType]) != nil)) {
-        parameters = [NSDictionary dictionaryWithObject:filename forKey:@"name"];
+    if ((filename != nil) && ((ctString = [self contentType]) != nil)) 
+    {
+        encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
+        parameters = [NSDictionary dictionaryWithObject:encodedFileName forKey:@"name"];
         [result setContentType:ctString withParameters:parameters];
-    } else if(filename != nil) {
+    } 
+    else if (filename != nil) 
+    {
         encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
         parameters = [NSDictionary dictionaryWithObject:encodedFileName forKey:@"name"];
         [result setContentType:@"application/octet-stream" withParameters:parameters];
-    } else {
+    } 
+    else 
+    {
         [result setContentType:@"application/octet-stream"];
     }
     

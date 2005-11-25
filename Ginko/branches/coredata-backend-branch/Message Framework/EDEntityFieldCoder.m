@@ -42,7 +42,6 @@
     fieldValue = [[newValue lowercaseString] retain];
 }
 
-
 - (void)_setParameters:(NSDictionary *)someParameters
 {
     NSEnumerator *attrEnum;
