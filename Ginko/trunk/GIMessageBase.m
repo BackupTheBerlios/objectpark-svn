@@ -24,29 +24,38 @@
 
 @implementation GIMessageBase
 
-- (void) addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
+- (void)addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
 {
-    GIMessage *message = [GIMessage messageWithTransferData:[parameters objectAtIndex:0]];
-    
-    if (message) // if no dupe
+    @try 
     {
-        if (![GIMessageFilter filterMessage:message flags:0])
-        {
-            [[self class] addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading: NO];
-        }
+        GIMessage *message = [GIMessage messageWithTransferData:[parameters objectAtIndex:0]];
         
-        if ([message hasFlags:OPIsFromMeStatus])
+        if (message) // if no dupe
         {
-            [[self class] addMessage:message toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
-        }
-        
-        // add message to index
-        //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-        //[indexCenter addMessage:message];
-        NSLog(@"adding message in main thread... '%@'", [[message internetMessage] subject]);
-        [parameters addObject:message]; // out param
-    } else {
-        [parameters addObject:[NSNull null]];
+            if (![GIMessageFilter filterMessage:message flags:0])
+            {
+                [[self class] addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+            }
+            
+            if ([message hasFlags:OPIsFromMeStatus])
+            {
+                [[self class] addMessage:message toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
+            }
+            
+            // add message to index
+            //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+            //[indexCenter addMessage:message];
+            [parameters addObject:message]; // out param
+            NSLog(@"adding message in main thread... '%@'", [[message internetMessage] subject]);
+        } 
+    }
+    @catch(NSException *localException) 
+    {
+        NSLog(@"Exception while adding message in main thread: %@", [localException reason]);
+    }
+    @finally
+    {
+        while ([parameters count] < 2) [parameters addObject:[NSNull null]];
     }
 }
 

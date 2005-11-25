@@ -36,7 +36,8 @@
     result = [[[targetClass alloc] init] autorelease];
     
     if((filename != nil) && ((ctString = [self contentType]) != nil)) {
-        parameters = [NSDictionary dictionaryWithObject:filename forKey: @"name"];
+        encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
+        parameters = [NSDictionary dictionaryWithObject:encodedFileName forKey: @"name"];
         [result setContentType:ctString withParameters:parameters];
     } else if(filename != nil) {
         encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
