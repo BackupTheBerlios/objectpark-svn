@@ -25,6 +25,7 @@
 #import <Cocoa/Cocoa.h>
 #import "OPPreferencePane.h"
 
+
 @interface OPPreferenceController : NSObject
 {
 	@private

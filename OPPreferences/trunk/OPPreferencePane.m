@@ -65,6 +65,14 @@
 }
 
 
+NSString* OPPreferencePaneDidEndEditing = @"OPPreferencePaneDidEndEditing";
+
+- (void) didUnselect
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName: OPPreferencePaneDidEndEditing object: self];
+}
+
+
 
 - (NSString*) mainNibName
 {

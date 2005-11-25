@@ -25,6 +25,10 @@
 #import <Foundation/Foundation.h>
 #import <PreferencePanes/NSPreferencePane.h>
 
+// Posted on didUnselect
+extern NSString* OPPreferencePaneDidEndEditing;
+
+
 @interface OPPreferencePane : NSPreferencePane {
 }
 
