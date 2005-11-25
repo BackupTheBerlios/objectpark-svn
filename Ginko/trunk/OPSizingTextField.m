@@ -8,7 +8,7 @@
 
 #import "OPSizingTextField.h"
 #import "NSView+ViewMoving.h"
-#import "MPWDebug.h"
+#import <OPDebug/OPLog.h>
 
 @implementation OPSizingTextField
 
@@ -22,7 +22,6 @@
 
 - (id) initWithFrame: (NSRect) frame
 {
-    //MPWDebugLog(@"Init: Called!");
     if (self = [super initWithFrame: frame]) {
         //[self setDelegate: self];
     }
@@ -33,7 +32,6 @@
 
 - (void) awakeFromNib
 {
-    //MPWDebugLog(@"Awake Called!");
     maxlines = 5;
     _lineHeight = 17;
     //[self setDelegate: self];

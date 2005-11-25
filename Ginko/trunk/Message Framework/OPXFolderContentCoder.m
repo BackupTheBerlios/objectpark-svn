@@ -1,7 +1,5 @@
 /* 
-     $Id: OPXFolderContentCoder.m,v 1.5 2005/03/26 02:29:44 theisen Exp $
-
-     Copyright (c) 2001 by Axel Katerbau. All rights reserved.
+     Copyright (c) 2001, 2005 by Axel Katerbau. All rights reserved.
 
      Permission to use, copy, modify and distribute this software and its documentation
      is hereby granted, provided that both the copyright notice and this permission
@@ -22,22 +20,21 @@
 #import "EDMessagePart+OPExtensions.h"
 #import "NSAttributedString+MessageUtils.h"
 #import "NSString+MessageUtils.h"
-#import "MPWDebug.h"
 #import "EDObjectPair.h"
 #import "EDTextFieldCoder.h"
 
 @interface EDCompositeContentCoder (PrivateAPI)
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype;
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype;
 @end
 
 @implementation OPXFolderContentCoder
 
-+ (BOOL) canDecodeMessagePart: (EDMessagePart*) mpart
++ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
 {
-    return [[mpart contentType] isEqualToString: @"multipart/x-folder"];
+    return [[mpart contentType] isEqualToString:@"multipart/x-folder"];
 }
 
-+ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
++ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
 /*"
    Decides if anAttributedString can be encoded starting at anIndex. If YES is returned effectiveRange 
    designates the range which can be encoded by this class. If NO is returned effectiveRange indicates
@@ -53,20 +50,14 @@
     
     if (attachment)
     {
-        NSFileWrapper *fileWrapper;
-        
-        fileWrapper = [attachment fileWrapper];
-        
-        if ([fileWrapper isDirectory])
-        {
-            return YES;
-        }
+        NSFileWrapper *fileWrapper = [attachment fileWrapper];
+        if ([fileWrapper isDirectory]) return YES;
     }
     
     return NO;
 }
 
-- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper
+- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper
 {
     NSFileWrapper *fileWrapper;
     NSDictionary *attributes;
@@ -79,15 +70,14 @@
         filename = [[aFileWrapper preferredFilename] retain];
     }
     
-    if (! filename)
-        filename = @"";
+    if (! filename) filename = @"";
     
     // strip doublequotes from theFilename
     {
         NSArray *components;
         
-        components = [filename componentsSeparatedByString: @"\""];
-        filename = [components componentsJoinedByString: @"'"];
+        components = [filename componentsSeparatedByString:@"\""];
+        filename = [components componentsJoinedByString:@"'"];
     }
     
     // get the permissions
@@ -107,9 +97,7 @@
     {
         if ([fileWrapper isDirectory])
         {
-            OPXFolderContentCoder *coder;
-            
-            coder = [[OPXFolderContentCoder alloc] initWithFileWrapper:fileWrapper];
+            OPXFolderContentCoder *coder = [[OPXFolderContentCoder alloc] initWithFileWrapper:fileWrapper];
             
             [someParts addObject:[coder messagePart]];
             
@@ -117,9 +105,7 @@
         }
         else if ([fileWrapper isRegularFile])
         {
-            OPMultimediaContentCoder *coder;
-            
-            coder = [[OPMultimediaContentCoder alloc] initWithFileWrapper:fileWrapper];
+            OPMultimediaContentCoder *coder = [[OPMultimediaContentCoder alloc] initWithFileWrapper:fileWrapper];
             
             [someParts addObject:[coder messagePart]];
             
@@ -127,7 +113,7 @@
         }
         else
         {
-            NSLog(@"ouch. that shouldn't be the case");
+            NSLog(@"A symbolic link? Ouch. that shouldn't be the case");
         }
 //#warning axel->all: symbolic links are not supported yet
     }

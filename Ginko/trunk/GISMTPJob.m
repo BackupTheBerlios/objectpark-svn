@@ -9,7 +9,7 @@
 #import "GISMTPJob.h"
 #import "OPJobs.h"
 #import "G3Account.h"
-#import "MPWDebug.h"
+#import <OPDebug/OPLog.h>
 #import <OPNetwork/OPNetwork.h>
 #import "NSHost+GIReachability.h"
 #import "OPPOP3Session.h"

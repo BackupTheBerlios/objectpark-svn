@@ -242,13 +242,6 @@
     [matchStrings release];
     [pool release];
 
-    /*
-     if (matches)
-     {
-         MPWDebugLog(@"FilterExpression %@ matches for message %@.", self, [message messageId]);
-     }
-     */
-
     return matches;
 }
 

@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------
 //  EDHeaderFieldCoder.h created by erik on Sun 24-Oct-1999
-//  @(#)$Id: EDHeaderFieldCoder.h,v 1.2 2004/12/25 15:23:59 mikesch Exp $
 //
-//  Copyright (c) 1999 by Erik Doernenburg. All rights reserved.
+//  Original Copyright (c) 1999 by Erik Doernenburg. All rights reserved.
+//  Changes Copyright (c) 2005 by Axel Katerbau. All rights reserved.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission
@@ -21,21 +21,23 @@
 
 #ifndef	__EDHeaderFieldCoder_h_INCLUDE
 #define	__EDHeaderFieldCoder_h_INCLUDE
+#import <OPDebug/OPLog.h>
 
+#define FIELDCODER OPL_DOMAIN @"FIELDCODER"
 
 @interface EDHeaderFieldCoder : NSObject
 {
 
 }
 
-+ (id)decoderWithFieldBody: (NSString*) fieldBody;
-+ (NSString*) stringFromFieldBody: (NSString*) body withFallback:(BOOL)fallback;
++ (id)decoderWithFieldBody:(NSString *)fieldBody;
++ (NSString *)stringFromFieldBody:(NSString *)body withFallback:(BOOL)fallback;
 
-- (id)initWithFieldBody: (NSString*) body;
+- (id)initWithFieldBody:(NSString *)body;
 
-- (NSString*) fieldBody;
+- (NSString *)fieldBody;
 
-- (NSString*) stringValue;
+- (NSString *)stringValue;
 
 @end
 

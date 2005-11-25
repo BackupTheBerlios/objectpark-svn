@@ -8,14 +8,14 @@
 
 #import <AppKit/AppKit.h>
 
-@class G3Account;
+@class GIAccount;
 
 @interface GIPOPJob : NSObject 
 {
-    G3Account *account;
+    GIAccount *account;
 }
 
-+ (void) retrieveMessagesFromPOPAccount:(G3Account *)anAccount;
-+ (NSString*) jobName;
++ (void)retrieveMessagesFromPOPAccount:(GIAccount *)anAccount;
++ (NSString *)jobName;
 
 @end

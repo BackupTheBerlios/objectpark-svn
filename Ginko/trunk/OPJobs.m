@@ -740,16 +740,16 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [[[GIPasswordController alloc] initWithParamenters:someParameters] autorelease];
 }
 
-- (NSString*) runPasswordPanelWithAccount: (GIAccount*) anAccount forIncomingPassword: (BOOL) isIncoming
+- (NSString *)runPasswordPanelWithAccount:(GIAccount *)anAccount forIncomingPassword:(BOOL)isIncoming
 {
     NSParameterAssert(anAccount != nil);
 
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     // prepare parameter dictionary for cross thread method call
     NSMutableDictionary *parameterDict = [NSMutableDictionary dictionary];
-    [parameterDict setObject: [NSNumber numberWithBool:isIncoming] forKey: @"isIncoming"];
-    [parameterDict setObject: anAccount forKey: @"account"];
-    [parameterDict setObject: result forKey: @"result"];
+    [parameterDict setObject:[NSNumber numberWithBool:isIncoming] forKey:@"isIncoming"];
+    [parameterDict setObject:anAccount forKey:@"account"];
+    [parameterDict setObject:result forKey:@"result"];
     
     // open panel in main thread
     [self performSelectorOnMainThread:@selector(openPasswordPanel:) withObject:parameterDict waitUntilDone: YES];
@@ -761,12 +761,14 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     {
         id finished;
         
-        @synchronized(result) {
-            finished = [result objectForKey: @"finished"];
-            password = [result objectForKey: @"password"];
+        @synchronized(result) 
+        {
+            finished = [result objectForKey:@"finished"];
+            password = [result objectForKey:@"password"];
         }
     
         if (finished) break;
+        
         else
         {
             // sleep for 1 second

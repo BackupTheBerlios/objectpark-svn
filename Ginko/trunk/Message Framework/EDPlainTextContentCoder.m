@@ -26,7 +26,9 @@
 #import "EDPlainTextContentCoder.h"
 #import "GIMessage+Rendering.h"
 #import "NSAttributedString+MessageUtils.h"
-#import "MPWDebug.h"
+#import <OPDebug/OPLog.h>
+
+#define EDPLAINTEXTCONTENTCONTROLLER OPL_DOMAIN @"EDPLAINTEXTCONTENTCONTROLLER"
 
 @interface EDPlainTextContentCoder(PrivateAPI)
 - (void) _takeTextFromMessagePart: (EDMessagePart*) mpart;
@@ -149,7 +151,6 @@
     NSData *contentData;
     
     contentData = [mpart contentData];
-    // MPWDebugLog(@"contentData length= %lu", [contentData length]);
     // test if contentData exists
     if ([contentData length] > INT_MAX)
     {
@@ -162,7 +163,7 @@
     
     if((text = [NSString stringWithData:[mpart contentData] MIMEEncoding:charset]) == nil)
     {
-        MPWDebugLog(@"cannot decode charset %@", charset);
+        OPDebugLog(EDPLAINTEXTCONTENTCONTROLLER, OPERROR, @"cannot decode charset %@", charset);
         return;
     }
     [text retain];

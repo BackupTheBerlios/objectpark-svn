@@ -23,7 +23,9 @@
 #import "NSFileWrapper+OPApplefileExtensions.h"
 #import <Carbon/Carbon.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import "MPWDebug.h"
+#import <OPDebug/OPLog.h>
+
+#define NSFILEWRAPPEREXTENSIONS OPL_DOMAIN @"NSFILEWRAPPEREXTENSIONS"
 
    /* applefile.h - Data structures used by AppleSingle/AppleDouble
     * file format

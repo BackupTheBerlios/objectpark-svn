@@ -18,7 +18,9 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
+#import <OPDebug/OPLog.h>
 
+#define CONTENTCODER OPL_DOMAIN @"CONTENTCODER"
 
 @class EDMessagePart, OPInternetMessage;
 

@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------
 //  EDHeaderFieldCoder.m created by erik on Sun 24-Oct-1999
-//  @(#)$Id: EDHeaderFieldCoder.m,v 1.3 2004/12/25 15:23:59 mikesch Exp $
 //
-//  Copyright (c) 1999 by Erik Doernenburg. All rights reserved.
+//  Original Copyright (c) 1999 by Erik Doernenburg. All rights reserved.
+//  Changes Copyright (c) 2005 by Axel Katerbau. All rights reserved.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission

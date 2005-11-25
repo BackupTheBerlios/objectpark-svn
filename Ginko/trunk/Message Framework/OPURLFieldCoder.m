@@ -8,33 +8,36 @@
 
 #import "OPURLFieldCoder.h"
 #import "NSString+Extensions.h"
-#import "MPWDebug.h"
 
 @implementation OPURLFieldCoder
 
-static NSCharacterSet* backetSet1() {
-    static NSCharacterSet* _bracketSet1 = nil;
-    if (_bracketSet1==nil)
-        _bracketSet1 = [[NSCharacterSet characterSetWithCharactersInString: @"<>"] retain];
+static NSCharacterSet *backetSet1() 
+{
+    static NSCharacterSet *_bracketSet1 = nil;
+    if (_bracketSet1 == nil) _bracketSet1 = [[NSCharacterSet characterSetWithCharactersInString:@"<>"] retain];
     return _bracketSet1;
 }
 
-- (id) initWithFieldBody: (NSString*) body
+- (id)initWithFieldBody:(NSString *)body
 {
-    if (self = [super init]) {
-        MPWDebugLog(@"%@ stringByRemovingCharactersFromSet: %@  called.",
+    if (self = [super init]) 
+    {
+        OPDebugLog(FIELDCODER, OPINFO, @"%@ stringByRemovingCharactersFromSet: %@  called.",
                     body, backetSet1());
-        body = [body stringByRemovingCharactersFromSet: backetSet1()];
-        url  = [NSURL URLWithString: body];
+        body = [body stringByRemovingCharactersFromSet:backetSet1()];
+        url = [NSURL URLWithString:body];
     }
+    
     return self;
 }
 
-- (NSString*) stringValue {
+- (NSString *)stringValue 
+{
 	return [url resourceSpecifier];
 }
 
-- (NSURL*) url {
+- (NSURL *)url 
+{
 	return url;
 }
 

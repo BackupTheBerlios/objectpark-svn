@@ -28,7 +28,6 @@
 #import "EDObjectPair.h"
 #import "NSScanner+Extensions.h"
 #import "utilities.h"
-#import "MPWDebug.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -714,10 +713,9 @@ static BOOL _fileExists(NSString *filePath)
     return result;
 }
 
-- (NSString*) realnameFromEMailStringWithFallback 
+- (NSString *)realnameFromEMailStringWithFallback 
 {
-    NSString* realname = [self realnameFromEMailString];
-    //MPWDebugLog(@"-realnameFromEMailString found Realname to be \"%@\"", realname);
+    NSString *realname = [self realnameFromEMailString];
     return [realname length] ? realname : self;
 }
 

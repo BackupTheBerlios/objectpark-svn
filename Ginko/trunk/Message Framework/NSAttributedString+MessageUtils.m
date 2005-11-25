@@ -86,8 +86,6 @@
             
             [pool release];
         }
-        
-//        MPWDebugLog(@"quotedString: String without prefixes = %@", workString);
     }
     
     // split on quotation level
@@ -142,8 +140,6 @@
                 
                 [quotePrefix appendString: @" "];
                 
-                //MPWDebugLog(@"wrapping");
-                
                 // wrap to lineLength characters
                 partialString = [partialString stringByWrappingToLineLength:[quotePrefix length] < lineLength ? lineLength - [quotePrefix length] : lineLength];
                 
@@ -170,8 +166,6 @@
     }
     
     [workString release];
-    
-//    MPWDebugLog(@"quote look like = %@", result);
     
     return result;
 }
@@ -343,14 +337,7 @@
     prepared = [[[originalString attributedStringWithQuotationAttributes] mutableCopy] autorelease];
             
     [prepared prepareQuotationsForDisplay];
-    */
-//    MPWDebugLog(@"original:\n (%@)", originalString);
-//    MPWDebugLog(@"prepared:\n (%@)", [prepared string]);
-    
-    
-//    MPWDebugLog(@"encoded:\n (%@)", encodedString);
-//    MPWDebugLog(@"decoded:\n (%@)", decodedString);
-    
+    */    
 //    MPWAssertIsEqual(originalString, decodedString);
 }
 

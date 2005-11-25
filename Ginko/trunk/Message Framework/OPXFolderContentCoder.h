@@ -1,7 +1,5 @@
 /* 
-     $Id: OPXFolderContentCoder.h,v 1.1 2004/12/23 16:45:28 theisen Exp $
-
-     Copyright (c) 2001 by Axel Katerbau. All rights reserved.
+     Copyright (c) 2001, 2005 by Axel Katerbau. All rights reserved.
 
      Permission to use, copy, modify and distribute this software and its documentation
      is hereby granted, provided that both the copyright notice and this permission
@@ -26,11 +24,11 @@
     NSString *xUnixMode;
 }
 
-+ (BOOL) canEncodeAttributedString: (NSAttributedString*) anAttributedString 
-                           atIndex: (int) anIndex 
-                    effectiveRange: (NSRangePointer) effectiveRange;
++ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString 
+                          atIndex:(int)anIndex 
+                   effectiveRange:(NSRangePointer)effectiveRange;
 
-- (id) initWithFileWrapper: (NSFileWrapper*) aFileWrapper;
-- (NSFileWrapper*) fileWrapper;
+- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper;
+- (NSFileWrapper *)fileWrapper;
 
 @end

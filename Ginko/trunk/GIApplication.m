@@ -269,10 +269,8 @@
 - (void) awakeFromNib
 {
     [self setDelegate:self];
-	
-    
+	    
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(prefpaneDidEndEditing:) name: OPPreferencePaneDidEndEditing object: nil];
-
 		
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(SMTPJobFinished:) name: OPJobDidFinishNotification object: [GISMTPJob jobName]];
     

@@ -1,6 +1,5 @@
 /* 
 OPSMTP.m created by axel on Sat 02-Jun-2001
- $Id: OPSMTP.m,v 1.2 2005/03/25 23:39:34 theisen Exp $
  
  Copyright (c) 2001 by Axel Katerbau. All rights reserved.
  
@@ -19,14 +18,15 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
  */
 
 #import "OPSMTP.h"
-#import "MPWDebug.h"
-//#import "OPDebug.h"
 #import <OPNetwork/OPSSLSocket.h>
 #import <OPNetwork/NSHost+Extensions.h>
 #import "EDTextFieldCoder.h"
 #import "NSString+MessageUtils.h"
 #import "NSData+MessageUtils.h"
 #import "NSData+Extensions.h"
+#import <OPDebug/OPLog.h>
+
+#define GISMTP OPL_DOMAIN @"GISMTP"
 
 NSString *OPSMTPException = @"OPSMTPException";
 NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
@@ -389,7 +389,7 @@ an exception if the 'message' will not be consumed. */
     if (bccBody)
     {
         [message removeHeaderField: @"Bcc"];
-        MPWDebugLog(@"Bcc removed.");
+        OPDebugLog(GISMTP, OPINFO, @"Bcc removed.");
     }
     
     NS_DURING
@@ -543,7 +543,7 @@ an exception if the 'message' will not be consumed. */
 
 - (void) _writeRecipient: (NSString*) recipient
 {
-    MPWDebugLog(@"RCPT TO:%@ (orig: %@)", [self _pathFromAddress:recipient], recipient);
+    OPDebugLog(GISMTP, OPINFO, @"RCPT TO:%@ (orig: %@)", [self _pathFromAddress:recipient], recipient);
     [stream writeFormat: @"RCPT TO:%@\r\n", [self _pathFromAddress:recipient]];
     [pendingResponses addObject: @"250"];
 }
@@ -635,7 +635,7 @@ an exception if the 'message' will not be consumed. */
 
 
 // PLAIN authentication only
-- (BOOL) __authPlainWithUsername: (NSString*) aUsername andPassword:(NSString*) aPassword
+- (BOOL)__authPlainWithUsername:(NSString *)aUsername andPassword:(NSString *)aPassword
 {        
     NSData *sesame;
     NSString *authString;
@@ -643,7 +643,7 @@ an exception if the 'message' will not be consumed. */
     NSParameterAssert(aUsername && aPassword);
     
     // initiate auth        
-    sesame = [[[NSString stringWithFormat: @"\0%@\0%@", aUsername, aPassword] dataUsingEncoding:NSUTF8StringEncoding] encodeBase64];
+    sesame = [[[NSString stringWithFormat:@"\0%@\0%@", aUsername, aPassword] dataUsingEncoding:NSUTF8StringEncoding] encodeBase64];
     
     authString = [NSString stringWithFormat: @"AUTH PLAIN %@", [NSString stringWithCString:[sesame bytes] length:[sesame length]]];
     

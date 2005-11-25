@@ -23,7 +23,6 @@
 #import "NSData+MessageUtils.h"
 #import "NSData+Extensions.h"
 #import "EDTextFieldCoder.h"
-#import "MPWDebug.h"
 
 @interface EDTextFieldCoder(PrivateAPI)
 + (NSString*) _wrappedWord: (NSString*) aString encoding: (NSString*) encoding;

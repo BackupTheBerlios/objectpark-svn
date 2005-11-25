@@ -1193,7 +1193,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 enumerator = [recipients objectEnumerator];
                 while (recipient = [enumerator nextObject])
                 {
-                    //                    MPWDebugLog(@"recipient = %@", recipient);
                     // must contain no chars from "forbidden" set
                     if ([recipient rangeOfCharacterFromSet:forbiddenCharacters options:0 range:NSMakeRange(0, [recipient length])].location != NSNotFound)
                     {

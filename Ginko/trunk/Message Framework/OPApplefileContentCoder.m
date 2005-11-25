@@ -25,7 +25,6 @@
 #import "EDMessagePart+OPExtensions.h"
 #import "OPMultimediaContentCoder.h"
 #import "EDTextFieldCoder.h"
-#import "MPWDebug.h"
 
 @interface OPMultimediaContentCoder (PrivateAPI)
 - (id)_encodeDataWithClass:(Class)targetClass;
@@ -620,7 +619,7 @@ For possible parameter values see applefile.h.
     
     if (! result)
     {
-        if (NSDebugEnabled) NSLog(@"entry %lu not found", entryID);
+        OPDebugLog(CONTENTCODER, OPERROR, @"entry %lu not found", entryID);
     }
     
     return result;

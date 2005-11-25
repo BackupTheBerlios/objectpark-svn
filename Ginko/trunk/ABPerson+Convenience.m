@@ -21,7 +21,6 @@
  */
 
 #import "ABPerson+Convenience.h"
-#import "MPWDebug.h"
 
 /*" The nilGuard is used below in the accessors to provide a unified return value because the AB framework does not: Empty strings can be set and retrieved but revert to nil on AB save.
 
@@ -116,8 +115,6 @@ static inline NSString *nilGuard(NSString *str)
     }
 
     // Hopefully the vCard data could be decoded the right way.
-    //MPWDebugLog(@"vcardString = %@", vcardString);
-
     while (position < length)
     {
         NSRange searchRange, foundRange;
@@ -137,8 +134,6 @@ static inline NSString *nilGuard(NSString *str)
         }
 
         vcard = [vcardString substringWithRange:NSMakeRange(position, NSMaxRange(foundRange) - position)];
-
-        //MPWDebugLog(@"vcard = %@", vcard);
         
         personData = [vcard dataUsingEncoding:NSUnicodeStringEncoding];
         person = [[ABPerson alloc] initWithVCardRepresentation:personData];
@@ -150,8 +145,6 @@ static inline NSString *nilGuard(NSString *str)
     }
     
     [vcardString release];
-
-    //MPWDebugLog(@"ABPersons = %@", result);
     
     return result;
 }

@@ -28,8 +28,10 @@
 #import "NSAttributedString+Extensions.h"
 #import "NSAttributedString+MessageUtils.h"
 #import "OPInternetMessage.h"
-#import "MPWDebug.h"
 #import "GIMessage+Rendering.h"
+#import <OPDebug/OPLog.h>
+
+#define EDTEXTCONTENTCONTROLLER OPL_DOMAIN @"EDTEXTCONTENTCONTROLLER"
 
 @interface EDTextContentCoder(PrivateAPI)
 - (NSString*) _stringFromMessagePart: (EDMessagePart*) mpart;
@@ -237,7 +239,7 @@
                     
                     marker = [EDObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
                     [markerStack pushObject:marker];
-                    MPWDebugLog(@"excerpt");
+                    OPDebugLog(EDTEXTCONTENTCONTROLLER, OPINFO, @"excerpt");
                 }
                 else if([tag isEqualToString: @"/excerpt"])
                 {

@@ -113,7 +113,6 @@ static NSFont* font()
 - (void) changeFont: (id) sender
 {
     NSFont* newFont = [sender convertFont: font()];
-    //MPWDebugLog(@"changeFont: %@", newFont);
         
     NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject: [newFont fontName]   forKey: MessageRendererFontName];
