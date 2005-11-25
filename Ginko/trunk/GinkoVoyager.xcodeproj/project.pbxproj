@@ -761,7 +761,6 @@
 				77CD8B64093698E500C9030B /* Obsolete */,
 				8DCE35E508918FC200F705EF /* Persistence */,
 				8D666F0407D524E20076C74D /* Preferences */,
-				775A96DE0839D5C2008EC276 /* Tests */,
 				8D9E8A8306AC44080055F87C /* GIApplication.h */,
 				8D9E8A8406AC44080055F87C /* GIApplication.m */,
 				8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */,
@@ -801,11 +800,7 @@
 		29B97314FDCFA39411CA2CEA /* GinkoVoyager */ = {
 			isa = PBXGroup;
 			children = (
-				7708155707CF5FD90066A136 /* AutoDoc */,
-				77050B5F07F1653A009AD9D2 /* HowToBuild.rtf */,
-				776B7D2707C41518009DA8B8 /* HowToTest.rtf */,
-				8DF749FB085525B900049071 /* Bugs.txt */,
-				774A05B40859DAFD00AF321C /* Tasks.txt */,
+				77E2054C09376FEC00C0E6BF /* Documents */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -866,6 +861,7 @@
 		617C2A74084632BA00803758 /* FulltextSearch */ = {
 			isa = PBXGroup;
 			children = (
+				77E204FB09376F8800C0E6BF /* Tests */,
 				617C2A75084632F700803758 /* GIIndex.h */,
 				617C2A76084632F700803758 /* GIIndex.m */,
 				77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */,
@@ -885,6 +881,7 @@
 		773839360936976500C5FAE3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				77F5AF370937697E005DB871 /* Tests */,
 				8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */,
 				8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */,
 				8D167D5E09057508000F4F45 /* GIAccount.h */,
@@ -904,16 +901,8 @@
 		775A96DE0839D5C2008EC276 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				8DCE38FB08940F4000F705EF /* TestPersistence.h */,
-				8DCE38FC08940F4000F705EF /* TestPersistence.m */,
-				775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */,
-				775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */,
-				6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */,
-				6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */,
 				77DFA5C70840B49C0068AD15 /* TestOPJobs.h */,
 				77DFA5C80840B49C0068AD15 /* TestOPJobs.m */,
-				77136F3008438E2A002F9298 /* TestGIThread.h */,
-				77136F3108438E2A002F9298 /* TestGIThread.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -992,6 +981,7 @@
 		77CD8B650936992D00C9030B /* Jobs */ = {
 			isa = PBXGroup;
 			children = (
+				775A96DE0839D5C2008EC276 /* Tests */,
 				77049FE60858570800253732 /* GIPOPJob.h */,
 				77049FE70858570800253732 /* GIPOPJob.m */,
 				774791BB085DF0150001560D /* GISMTPJob.h */,
@@ -1000,6 +990,47 @@
 				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
 			);
 			name = Jobs;
+			sourceTree = "<group>";
+		};
+		77E204FB09376F8800C0E6BF /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */,
+				6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		77E2054C09376FEC00C0E6BF /* Documents */ = {
+			isa = PBXGroup;
+			children = (
+				7708155707CF5FD90066A136 /* AutoDoc */,
+				77050B5F07F1653A009AD9D2 /* HowToBuild.rtf */,
+				776B7D2707C41518009DA8B8 /* HowToTest.rtf */,
+				8DF749FB085525B900049071 /* Bugs.txt */,
+				774A05B40859DAFD00AF321C /* Tasks.txt */,
+			);
+			name = Documents;
+			sourceTree = "<group>";
+		};
+		77F5AF360937694B005DB871 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				8DCE38FB08940F4000F705EF /* TestPersistence.h */,
+				8DCE38FC08940F4000F705EF /* TestPersistence.m */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		77F5AF370937697E005DB871 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */,
+				775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */,
+				77136F3008438E2A002F9298 /* TestGIThread.h */,
+				77136F3108438E2A002F9298 /* TestGIThread.m */,
+			);
+			name = Tests;
 			sourceTree = "<group>";
 		};
 		8D666F0407D524E20076C74D /* Preferences */ = {
@@ -1166,6 +1197,7 @@
 		8DCE35E508918FC200F705EF /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				77F5AF360937694B005DB871 /* Tests */,
 				8DD61AAD089448CD009ED3A5 /* sqlite3.h */,
 				8DCE35F80891905600F705EF /* OPPersistence.h */,
 				8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */,
