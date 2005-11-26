@@ -1,6 +1,12 @@
 {
     IBClasses = (
-        {CLASS = AccountPrefs; LANGUAGE = ObjC; SUPERCLASS = OPPreferencePane; }, 
+        {
+            ACTIONS = {addAccount = id; removeAccount = id; }; 
+            CLASS = AccountPrefs; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {accountTableView = NSTableView; }; 
+            SUPERCLASS = OPPreferencePane; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = G3Account; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {

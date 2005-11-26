@@ -34,7 +34,8 @@
 
 #import "OPSQLiteConnection.h"
 #import "OPClassDescription.h"
-#import "OPPersistentObject.h"
+#import "OPPersistence.h"
+#import <OPDebug/OPLog.h>
 
 @implementation OPSQLiteConnection
 
@@ -652,14 +653,13 @@
 
 
 
-
 @implementation OPSQLiteStatement
 
 - (id) initWithSQL: (NSString*) sql connection: (OPSQLiteConnection*) aConnection 
 {
 	if (self = [super init]) {
 		
-		NSLog(@"Preparing new sql statement %@ '%@'", self, sql);
+		OPDebugLog(@"OPPersistence", OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
 
 		int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
 		

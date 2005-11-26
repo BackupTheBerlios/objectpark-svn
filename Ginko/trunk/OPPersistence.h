@@ -37,3 +37,4 @@
 #import "OPSQLiteConnection.h"
 #import "OPPersistenceConstants.h"
 
+#define OPL_MEMORYMANAGEMENT 1

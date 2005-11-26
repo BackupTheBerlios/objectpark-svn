@@ -11,6 +11,10 @@
 
 @interface AccountPrefs : OPPreferencePane 
 {
+	IBOutlet NSTableView* accountTableView;
 }
+
+- (IBAction) removeAccount: (id) sender;
+- (IBAction) addAccount: (id) sender;
 
 @end
