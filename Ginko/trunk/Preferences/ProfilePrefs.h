@@ -11,9 +11,11 @@
 
 @interface ProfilePrefs : OPPreferencePane 
 {
-    IBOutlet NSTableView *profileTableView;
+    IBOutlet NSTableView* profileTableView;
 }
 
-- (IBAction)setSendAccount:(id)sender;
+- (IBAction) setSendAccount: (id) sender;
+- (IBAction) removeProfile: (id) sender;
+- (IBAction) addProfile: (id) sender;
 
 @end

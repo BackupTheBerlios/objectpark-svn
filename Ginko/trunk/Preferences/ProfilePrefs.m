@@ -25,10 +25,29 @@
     return [GIProfile allObjects];
 }
 
-- (void) setProfiles: (NSArray*) profiles;
-{
-    [GIProfile setProfiles: profiles];
+- (IBAction) removeProfile: (id) sender
+{	
+	int selectedRow = [profileTableView selectedRow];
+	NSArray* oldList = [self profiles];
+	GIProfile* selectedProfile = [oldList objectAtIndex: [profileTableView selectedRow]];
+	[self willChangeValueForKey: @"profiles"];
+	[[selectedProfile context] deleteObject: selectedProfile];
+	[[selectedProfile context] saveChanges];
+	[self didChangeValueForKey: @"profiles"];
+	[profileTableView selectRow: MIN(selectedRow, [oldList count]-2) byExtendingSelection: NO];
 }
+
+- (IBAction) addProfile: (id) sender
+{
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	[self willChangeValueForKey: @"profiles"];
+	GIProfile* newProfile = [[[GIProfile alloc] init] autorelease];
+	[newProfile insertIntoContext: context];
+	[context saveChanges];
+	[self didChangeValueForKey: @"profiles"];
+	[profileTableView selectRow: [[self profiles] indexOfObject: newProfile] byExtendingSelection: NO];
+}
+
 
 - (NSArray*) accounts
 {

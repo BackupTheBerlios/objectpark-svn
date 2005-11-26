@@ -16,7 +16,7 @@
         }, 
         {CLASS = OPPreferencePane; LANGUAGE = ObjC; SUPERCLASS = NSPreferencePane; }, 
         {
-            ACTIONS = {setSendAccount = id; }; 
+            ACTIONS = {addProfile = id; removeProfile = id; setSendAccount = id; }; 
             CLASS = ProfilePrefs; 
             LANGUAGE = ObjC; 
             OUTLETS = {profileTableView = NSTableView; }; 

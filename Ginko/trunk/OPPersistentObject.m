@@ -118,8 +118,8 @@
 	NSParameterAssert(oid==0);
 	// Create attributes dictionary as necessary
 	if (!attributes) {
+		NSLog(@"Creating attribute dictionary for object %@", self);
 		attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
-		NSLog(@"Created attribute dictionary for object %@");
 	}
 	[context didChangeObject: self];
 }
