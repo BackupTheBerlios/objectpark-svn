@@ -24,9 +24,9 @@
 	return 
 	@"{"
 	@"  TableName = ZPROFILE;"
-	@"  CreateStatements = \""
+	@"  CreateStatements = (\""
 	@"  CREATE TABLE ZPROFILE (Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZDEFAULTCC VARCHAR, ZDEFAULTBCC VARCHAR, ZENABLED INTEGER, ZDEFAULTREPLYTO VARCHAR, ZMAILADDRESS VARCHAR, ZORGANIZATION VARCHAR, ZNAME VARCHAR, ZSIGNATURE BLOB, ZMESSAGETEMPLATE BLOB, ZREALNAME VARCHAR, ZSENDACCOUNT INTEGER);"
-	@"  \";"
+	@"  \");"
 	@""
 	@"}";
 }
@@ -63,10 +63,10 @@
             GIProfile* profile = [[[self alloc] init] autorelease];
             [profile setValue: @"Dummy Profile" forKey: @"name"];
             [profile setValue: [NSNumber numberWithBool: NO] forKey: @"enabled"];
-            [profile setValue: @"dummy@replace.this" forKey: @"emailAddress"];
+            [profile setValue: @"dummy@replace.this" forKey: @"mailAddress"];
 			[profile insertIntoContext: [OPPersistentObjectContext defaultContext]]; // make persistent.
 			
-			[NSApp saveChanges];
+			[[OPPersistentObjectContext defaultContext] saveChanges];
 			
 			result = [[super allObjectsEnumerator] allObjects];
         }

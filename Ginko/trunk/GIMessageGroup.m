@@ -26,9 +26,15 @@
 	return 
 	@"{"
 	@"  TableName = ZMESSAGEGROUP;"
-	@"  CreateStatements = \""
+	@"  CreateStatements = (\""
 	@"  CREATE TABLE ZMESSAGEGROUP ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZNAME VARCHAR );"
-	@"  \";"
+	@"  \",\""
+	@"  CREATE TABLE Z_4THREADS ( Z_4GROUPS, Z_6THREADS )"
+	@"  \",\""
+	@"  CREATE INDEX Z_4THREADS_Z_4GROUPS_INDEX ON Z_4THREADS (Z_4GROUPS)"
+	@"  \",\""
+	@"  CREATE INDEX Z_4THREADS_Z_6THREADS_INDEX ON Z_4THREADS (Z_6THREADS)"
+	@"  \");"
 	@""
 	@"}";
 }

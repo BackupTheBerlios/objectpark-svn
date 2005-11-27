@@ -241,7 +241,7 @@
     NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"MessageBase.sqlite"];
     BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
     
-	NSAssert(!isNewlyCreated, @"Please supply an old database file. DB creation not implemented.");
+	//NSAssert(!isNewlyCreated, @"Please supply an old database file. DB creation not implemented.");
 	
     OPPersistentObjectContext* persistentObjectContext = [[OPPersistentObjectContext alloc] init];
 	[persistentObjectContext setDatabaseConnectionFromPath: path];

@@ -52,9 +52,9 @@
 	[connection beginTransaction];
 	// Execute create statement(s) stored in the description:
 	NSEnumerator* cse = [createStatements objectEnumerator];
-	id statementSQL;
-	while (statementSQL = [cse nextObject]) {
-		OPSQLiteStatement* create = [[[OPSQLiteStatement alloc] initWithSQL: statementSQL 
+	NSString* sqlString;
+	while (sqlString = [cse nextObject]) {
+		OPSQLiteStatement* create = [[[OPSQLiteStatement alloc] initWithSQL: sqlString 
 																 connection: connection] autorelease];
 		@try {
 			[create execute];
@@ -113,6 +113,8 @@
 			tableName = [NSStringFromClass(poClass) copy];
 		
 		createStatements = [[plist objectForKey: @"CreateStatements"] retain];
+		if (createStatements) 
+			NSAssert([createStatements isKindOfClass: [NSArray class]], @"Please supply an array for the 'CreateStatements' key.");
 		
 	}
 	return self;

@@ -22,9 +22,9 @@
 	return 
 	@"{"
 	@"  TableName = ZTHREAD;"
-	@"  CreateStatements = \""
+	@"  CreateStatements = (\""
 	@"  CREATE TABLE ZTHREAD ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZSIZE INTEGER, ZSTATS INTEGER, ZNUMBEROFMESSAGES INTEGER, ZSUBJECT VARCHAR, ZDATE TIMESTAMP);"
-	@"  \";"
+	@"  \");"
 	@"}";
 }
 
