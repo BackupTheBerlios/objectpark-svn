@@ -362,59 +362,63 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
-- (void) applicationDidFinishLaunching: (NSNotification*) aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 /*" On launch, opens a group window. "*/
 {
-    [self applicationDidBecomeActive: aNotification];
-    [OPJobs setMaxThreads: 4];
+    [self applicationDidBecomeActive:aNotification];
+    [OPJobs setMaxThreads:4];
 }
 
-- (NSArray*) filePathsSortedByCreationDate: (NSArray*) someFilePaths
+- (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
 {
 #warning implement for better mbox restore
     return someFilePaths;
 }
 
-- (IBAction) importMboxFile: (id) sender
+- (IBAction)importMboxFile:(id)sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
-    NSArray* fileTypes = [NSArray arrayWithObjects: @"mboxfile", @"mbox", @"mbx", nil];
-    NSOpenPanel* oPanel = [NSOpenPanel openPanel];
-    NSString* directory = [[NSUserDefaults standardUserDefaults] objectForKey: ImportPanelLastDirectory];
+    NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", @"mbx", nil];
+    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+    NSString *directory = [[NSUserDefaults standardUserDefaults] objectForKey:ImportPanelLastDirectory];
     
     if (!directory) directory = NSHomeDirectory();
     
-    [oPanel setAllowsMultipleSelection: YES];
-    [oPanel setAllowsOtherFileTypes: YES];
-    [oPanel setPrompt: NSLocalizedString(@"Import", @"Import open panel OK button")];
-    [oPanel setTitle: NSLocalizedString(@"Import mbox Files", @"Import open panel title")];
+    [oPanel setAllowsMultipleSelection:YES];
+    [oPanel setAllowsOtherFileTypes:YES];
+    [oPanel setPrompt:NSLocalizedString(@"Import", @"Import open panel OK button")];
+    [oPanel setTitle:NSLocalizedString(@"Import mbox Files", @"Import open panel title")];
     
-    result = [oPanel runModalForDirectory: directory file: nil types: fileTypes];
+    result = [oPanel runModalForDirectory:directory file:nil types:fileTypes];
     
-    if (result == NSOKButton) {
-        [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory] forKey: ImportPanelLastDirectory];
+    if (result == NSOKButton) 
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
         
-        NSArray* filesToOpen = [self filePathsSortedByCreationDate: [oPanel filenames]];
-        if ([filesToOpen count]) {
-            [self showActivityPanel: sender];
+        NSArray *filesToOpen = [self filePathsSortedByCreationDate:[oPanel filenames]];
+        if ([filesToOpen count]) 
+        {
+            [self showActivityPanel:sender];
             
-            NSEnumerator* enumerator = [filesToOpen objectEnumerator];
-            NSString* boxFilename;
+            NSEnumerator *enumerator = [filesToOpen objectEnumerator];
+            NSString *boxFilename;
             
-            while (boxFilename = [enumerator nextObject]) {
-                NSMutableDictionary* jobArguments = [NSMutableDictionary dictionary];
+            while (boxFilename = [enumerator nextObject]) 
+            {
+                NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
                 // support for 'mbox' bundles
-                if ([[boxFilename pathExtension] isEqualToString: @"mbox"]) {
-                    boxFilename = [boxFilename stringByAppendingPathComponent: @"mbox"];
+                if ([[boxFilename pathExtension] isEqualToString:@"mbox"]) 
+                {
+                    boxFilename = [boxFilename stringByAppendingPathComponent:@"mbox"];
                 }
                 
-                [jobArguments setObject: boxFilename forKey: @"mboxFilename"];
-                [jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
-                [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
+                [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
+                [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
+                [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
                 
-                [OPJobs scheduleJobWithName:MboxImportJobName target: [[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments: jobArguments synchronizedObject: @"mbox import"];
+                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
             }
         }
     }    
@@ -473,7 +477,7 @@
 - (IBAction)getNewMailInAllAccounts:(id)sender
 {
     NSEnumerator *enumerator = [GIAccount allObjectsEnumerator];
-    G3Account *account;
+    GIAccount *account;
     
     while (account = [enumerator nextObject])
     {

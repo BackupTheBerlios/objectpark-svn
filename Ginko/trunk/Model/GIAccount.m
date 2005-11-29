@@ -139,12 +139,13 @@
     [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey: @"incomingServerType"];
     [self didChangeValueForKey: @"incomingServerType"];
 
+    [self willChangeValueForKey: @"POPAccount"];
+    [self didChangeValueForKey: @"POPAccount"];	
+
     // A change of the server type also has effect on the port. The Account is 'touched' to have bindings recognize the change.
     [self setIncomingServerPort:0];
     [self willChangeValueForKey: @"incomingServerDefaultPort"];
     [self didChangeValueForKey: @"incomingServerDefaultPort"];
-    [self willChangeValueForKey: @"POPAccount"];
-    [self didChangeValueForKey: @"POPAccount"];	
 }
 
 - (NSString*) incomingServerName 

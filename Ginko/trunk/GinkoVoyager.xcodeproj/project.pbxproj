@@ -895,8 +895,8 @@
 				8DE9646E089F9F1F0053ED6B /* GIThread.h */,
 				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
 			);
-			name = Model;
-			sourceTree = "<group>";
+			path = Model;
+			sourceTree = SOURCE_ROOT;
 		};
 		775A96DE0839D5C2008EC276 /* Tests */ = {
 			isa = PBXGroup;
@@ -928,7 +928,8 @@
 				772F2940084F82BA004D50E0 /* TestOPMultipartContentCoder.m */,
 			);
 			name = Tests;
-			sourceTree = "<group>";
+			path = "Message Framework/Tests";
+			sourceTree = SOURCE_ROOT;
 		};
 		77CD8B630936983800C9030B /* Controller */ = {
 			isa = PBXGroup;
@@ -952,8 +953,8 @@
 				8D2147AD085114B2004C44B9 /* GISearchController.h */,
 				8D2147AE085114B3004C44B9 /* GISearchController.m */,
 			);
-			name = Controller;
-			sourceTree = "<group>";
+			path = Controller;
+			sourceTree = SOURCE_ROOT;
 		};
 		77CD8B64093698E500C9030B /* Obsolete */ = {
 			isa = PBXGroup;
@@ -1020,7 +1021,8 @@
 				8DCE38FC08940F4000F705EF /* TestPersistence.m */,
 			);
 			name = Tests;
-			sourceTree = "<group>";
+			path = Persistence/Tests;
+			sourceTree = SOURCE_ROOT;
 		};
 		77F5AF370937697E005DB871 /* Tests */ = {
 			isa = PBXGroup;
@@ -1031,7 +1033,8 @@
 				77136F3108438E2A002F9298 /* TestGIThread.m */,
 			);
 			name = Tests;
-			sourceTree = "<group>";
+			path = Model/Tests;
+			sourceTree = SOURCE_ROOT;
 		};
 		8D666F0407D524E20076C74D /* Preferences */ = {
 			isa = PBXGroup;
@@ -1118,7 +1121,7 @@
 				8D840C01090F8DF50093CFAD /* NSEnumerator+Extensions.m */,
 			);
 			path = "Cocoa Extensions";
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		8D9020B50779D943005365EA /* Message Framework */ = {
 			isa = PBXGroup;
@@ -1192,7 +1195,7 @@
 				77D79BD607F31BDB00C521CE /* punycode.m */,
 			);
 			path = "Message Framework";
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		8DCE35E508918FC200F705EF /* Persistence */ = {
 			isa = PBXGroup;
@@ -1214,8 +1217,8 @@
 				8DCE36060891918900F705EF /* OPSQLiteConnection.h */,
 				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
 			);
-			name = Persistence;
-			sourceTree = "<group>";
+			path = Persistence;
+			sourceTree = SOURCE_ROOT;
 		};
 		8DD2BEA50773257B00587AAA /* Images */ = {
 			isa = PBXGroup;
@@ -1256,8 +1259,8 @@
 				8DDD2264080EC99B006C902D /* GIMessageFilterExpression.h */,
 				8DDD2265080EC99B006C902D /* GIMessageFilterExpression.m */,
 			);
-			name = MessageFilter;
-			sourceTree = "<group>";
+			path = MessageFilter;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
