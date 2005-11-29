@@ -123,8 +123,9 @@ static OPLog *sharedInstance;
    domains dictionary specified in the definitions file at path.
    If the domain does not exist in the dictionary the environment variable is
    ignored.
-   Otherwise the value of the variable is looked up in the aspects dictionary
-   of the definition file.
+   Otherwise the value of the variable is interpreted as a comma separated list 
+   (surrounding white space is allowed) of values which are looked up in the 
+   aspects dictionary of the definition file.
    If it is found its associated (numeric) aspects are added to the domain.
    If not the value is compared to the aspect names predefined in OPLog.h
    (!{OPINFO}, !{OPWARNING}, !{OPERROR}, !{OPXERROR}, !{OPNONE}, or !{OPALL})
@@ -145,10 +146,11 @@ static OPLog *sharedInstance;
    The environment variable is ignored since there is no definition for
    MyDomain1 in the domains dictionary
    
-   _{Environment: !{OPDL_MyDomain1=OPINFO}}
+   _{Environment: !{OPDL_MyDomain1=OPXERROR,OPERROR}}
    _{Domains-dictionary: !{{MyDomain1 = MyBasicDomain; \}}}
    
-   The aspect OPINFO is added to the active aspects of domain MyBasicDomain.
+   The aspects !{OPXERROR} and !{OPERROR} are added to the active aspects of 
+   domain MyBasicDomain.
    
    _{Environment: !{OPDL_MyDomain2=0x00000100}}
    _{Domains-dictionary: !{{MyDomain2 = MySpartanicDomain; \}}}
@@ -221,44 +223,48 @@ static OPLog *sharedInstance;
             if (domainValue == nil)
                 continue;
                 
-            NSString *aspectName  = [[env objectForKey:varName] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            NSNumber *aspectValue = [aspectDefs objectForKey:aspectName];
-            
-            long value = 0;
-            
-            // value from successfull lookup
-            if (aspectValue)
-                value = [aspectValue intValue];
-                
-            // predefined aspect names
-            else if ([aspectName isEqualToString:@"OPALL"])
-                value = OPALL;
-            else if ([aspectName isEqualToString:@"OPINFO"])
-                value = OPINFO;
-            else if ([aspectName isEqualToString:@"OPWARNING"])
-                value = OPWARNING;
-            else if ([aspectName isEqualToString:@"OPERROR"])
-                value = OPERROR;
-            else if ([aspectName isEqualToString:@"OPXERROR"])
-                value = OPXERROR;
-            else if ([aspectName isEqualToString:@"OPNONE"])
-                value = OPNONE;
-                
-            // numerical values
-            else if ([aspectName hasPrefix:@"0x"] && [[NSScanner scannerWithString:aspectName] scanHexInt:(unsigned*) &value])
-                /*NSLog(@"Found hex number with value %d", value)*/;
-            else if ([[NSScanner scannerWithString:aspectName] scanInt:(int*) &value])
-                /*NSLog(@"Found dez number with value %d", value)*/;
-            else
-            
-            // unknown aspects
+            NSString *aspectName; //   = [[env objectForKey:varName] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            NSEnumerator *aspectNames  = [[[env objectForKey:varName] componentsSeparatedByString:@","] objectEnumerator];
+            while (aspectName = [[aspectNames nextObject] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]])
                 {
-                NSLog(@"Ignoring unknown aspect value %@ for log domain %@.", aspectName, domainName);
-                continue;
-                }
+                NSNumber *aspectValue = [aspectDefs objectForKey:aspectName];
                 
-            NSLog(@"Adding aspect %@ (0x%x) for domain %@", aspectName, value, domainValue);
-            [self addAspects:value forDomain:domainValue];
+                long value = 0;
+                
+                // value from successfull lookup
+                if (aspectValue)
+                    value = [aspectValue intValue];
+                    
+                // predefined aspect names
+                else if ([aspectName isEqualToString:@"OPALL"])
+                    value = OPALL;
+                else if ([aspectName isEqualToString:@"OPINFO"])
+                    value = OPINFO;
+                else if ([aspectName isEqualToString:@"OPWARNING"])
+                    value = OPWARNING;
+                else if ([aspectName isEqualToString:@"OPERROR"])
+                    value = OPERROR;
+                else if ([aspectName isEqualToString:@"OPXERROR"])
+                    value = OPXERROR;
+                else if ([aspectName isEqualToString:@"OPNONE"])
+                    value = OPNONE;
+                    
+                // numerical values
+                else if ([aspectName hasPrefix:@"0x"] && [[NSScanner scannerWithString:aspectName] scanHexInt:(unsigned*) &value])
+                    /*NSLog(@"Found hex number with value %d", value)*/;
+                else if ([[NSScanner scannerWithString:aspectName] scanInt:(int*) &value])
+                    /*NSLog(@"Found dez number with value %d", value)*/;
+                else
+                
+                // unknown aspects
+                    {
+                    NSLog(@"Ignoring unknown aspect value %@ for log domain %@.", aspectName, domainName);
+                    continue;
+                    }
+                    
+                NSLog(@"Adding aspect %@ (0x%x) for domain %@", aspectName, value, domainValue);
+                [self addAspects:value forDomain:domainValue];
+                }
             }
         }
         
