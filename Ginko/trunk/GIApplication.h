@@ -8,7 +8,7 @@
 
 #import <AppKit/AppKit.h>
 #import <AddressBook/AddressBook.h>
-#import <OPPersistence.h>
+#import "OPPersistence.h"
 
 @class GISearchController;
 

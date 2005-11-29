@@ -8,8 +8,8 @@
 
 
 #import <AppKit/AppKit.h>
-#import "GIMessage.h"
-#import "GIThread.h"
+#import "Model/GIMessage.h"
+#import "Model/GIThread.h"
 //#include <stdlib.h>
 #import <SenTestingKit/SenTestProbe.h>
 

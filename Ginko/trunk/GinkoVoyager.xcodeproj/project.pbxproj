@@ -508,8 +508,8 @@
 		77B71CDF07CB30C9003A3BEF /* TestOPXFolderContentCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPXFolderContentCoder.m; sourceTree = "<group>"; };
 		77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GIAddressFormatter.h; sourceTree = "<group>"; };
 		77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GIAddressFormatter.m; sourceTree = "<group>"; };
-		77BA9233076DCCD80082F33F /* ABPerson+Convenience.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "ABPerson+Convenience.h"; sourceTree = SOURCE_ROOT; };
-		77BA9234076DCCD80082F33F /* ABPerson+Convenience.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "ABPerson+Convenience.m"; sourceTree = SOURCE_ROOT; };
+		77BA9233076DCCD80082F33F /* ABPerson+Convenience.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "ABPerson+Convenience.h"; sourceTree = "<group>"; };
+		77BA9234076DCCD80082F33F /* ABPerson+Convenience.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "ABPerson+Convenience.m"; sourceTree = "<group>"; };
 		77BC56C607F1D338009EF11D /* boxes.toolbar */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = boxes.toolbar; sourceTree = "<group>"; };
 		77BC581A07610AB700B70D8F /* G3GroupWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G3GroupWindow.h; sourceTree = "<group>"; };
 		77BC581B07610AB700B70D8F /* G3GroupWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G3GroupWindow.m; sourceTree = "<group>"; };
@@ -896,7 +896,7 @@
 				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
 			);
 			path = Model;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		775A96DE0839D5C2008EC276 /* Tests */ = {
 			isa = PBXGroup;
@@ -904,7 +904,7 @@
 				77DFA5C70840B49C0068AD15 /* TestOPJobs.h */,
 				77DFA5C80840B49C0068AD15 /* TestOPJobs.m */,
 			);
-			name = Tests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		7779AC9907C40CC300F064D3 /* Tests */ = {
@@ -927,9 +927,8 @@
 				772F293F084F82BA004D50E0 /* TestOPMultipartContentCoder.h */,
 				772F2940084F82BA004D50E0 /* TestOPMultipartContentCoder.m */,
 			);
-			name = Tests;
-			path = "Message Framework/Tests";
-			sourceTree = SOURCE_ROOT;
+			path = Tests;
+			sourceTree = "<group>";
 		};
 		77CD8B630936983800C9030B /* Controller */ = {
 			isa = PBXGroup;
@@ -954,7 +953,7 @@
 				8D2147AE085114B3004C44B9 /* GISearchController.m */,
 			);
 			path = Controller;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		77CD8B64093698E500C9030B /* Obsolete */ = {
 			isa = PBXGroup;
@@ -976,7 +975,7 @@
 				8D8A496C075D395C003189BF /* OPManagedObject.h */,
 				8D8A496D075D395C003189BF /* OPManagedObject.m */,
 			);
-			name = Obsolete;
+			path = Obsolete;
 			sourceTree = "<group>";
 		};
 		77CD8B650936992D00C9030B /* Jobs */ = {
@@ -990,7 +989,7 @@
 				77DFA5BD08409DF00068AD15 /* OPJobs.h */,
 				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
 			);
-			name = Jobs;
+			path = Jobs;
 			sourceTree = "<group>";
 		};
 		77E204FB09376F8800C0E6BF /* Tests */ = {
@@ -1020,9 +1019,8 @@
 				8DCE38FB08940F4000F705EF /* TestPersistence.h */,
 				8DCE38FC08940F4000F705EF /* TestPersistence.m */,
 			);
-			name = Tests;
-			path = Persistence/Tests;
-			sourceTree = SOURCE_ROOT;
+			path = Tests;
+			sourceTree = "<group>";
 		};
 		77F5AF370937697E005DB871 /* Tests */ = {
 			isa = PBXGroup;
@@ -1032,9 +1030,8 @@
 				77136F3008438E2A002F9298 /* TestGIThread.h */,
 				77136F3108438E2A002F9298 /* TestGIThread.m */,
 			);
-			name = Tests;
-			path = Model/Tests;
-			sourceTree = SOURCE_ROOT;
+			path = Tests;
+			sourceTree = "<group>";
 		};
 		8D666F0407D524E20076C74D /* Preferences */ = {
 			isa = PBXGroup;
@@ -1054,7 +1051,7 @@
 				8DDD227C080ECA3F006C902D /* GIFiltersPane.tiff */,
 			);
 			path = Preferences;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		8D857FEB0785CF2D00B0D669 /* CustomViews */ = {
 			isa = PBXGroup;
@@ -1080,7 +1077,7 @@
 				77B28DB1082E8A72007FA384 /* OPTableColumn.h */,
 				77B28DB2082E8A72007FA384 /* OPTableColumn.m */,
 			);
-			name = CustomViews;
+			path = CustomViews;
 			sourceTree = "<group>";
 		};
 		8D901F890779D79A005365EA /* Cocoa Extensions */ = {
@@ -1121,7 +1118,7 @@
 				8D840C01090F8DF50093CFAD /* NSEnumerator+Extensions.m */,
 			);
 			path = "Cocoa Extensions";
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		8D9020B50779D943005365EA /* Message Framework */ = {
 			isa = PBXGroup;
@@ -1195,7 +1192,7 @@
 				77D79BD607F31BDB00C521CE /* punycode.m */,
 			);
 			path = "Message Framework";
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		8DCE35E508918FC200F705EF /* Persistence */ = {
 			isa = PBXGroup;
@@ -1218,7 +1215,7 @@
 				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
 			);
 			path = Persistence;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		8DD2BEA50773257B00587AAA /* Images */ = {
 			isa = PBXGroup;
@@ -1260,7 +1257,7 @@
 				8DDD2265080EC99B006C902D /* GIMessageFilterExpression.m */,
 			);
 			path = MessageFilter;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -2096,6 +2093,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				UNSTRIPPED_PRODUCT = YES;
+				USER_HEADER_SEARCH_PATHS = "MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
 			};
 			name = Development;
 		};
@@ -2112,6 +2110,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				UNSTRIPPED_PRODUCT = YES;
+				USER_HEADER_SEARCH_PATHS = "MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
 			};
 			name = "Development (linked)";
 		};
@@ -2126,6 +2125,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				USER_HEADER_SEARCH_PATHS = "MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
 				YACC_INSERT_LINE_DIRECTIVES = NO;
 			};
 			name = Deployment;
@@ -2139,6 +2139,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				USER_HEADER_SEARCH_PATHS = "MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
 			};
 			name = Default;
 		};
