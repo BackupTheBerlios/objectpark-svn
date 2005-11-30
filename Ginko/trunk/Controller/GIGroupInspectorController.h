@@ -1,5 +1,5 @@
 //
-//  G3GroupInspectorController.h
+//  GIGroupInspectorController.h
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 07.03.05.
@@ -9,7 +9,7 @@
 #import <AppKit/AppKit.h>
 #import "GIMessageGroup.h"
 
-@interface G3GroupInspectorController : NSObject 
+@interface GIGroupInspectorController : NSObject 
 {
     IBOutlet NSWindow *window;
     IBOutlet NSPopUpButton *profileButton;

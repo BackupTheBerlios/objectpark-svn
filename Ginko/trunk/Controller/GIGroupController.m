@@ -1,15 +1,14 @@
 //
-//  $Id: G3GroupController.m,v 1.126 2005/05/17 18:34:19 mikesch Exp $
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 03.12.04.
 //  Copyright 2004, 2005 Objectpark.org. All rights reserved.
 //
 
-#import "G3GroupController.h"
+#import "GIGroupController.h"
 #import "GIMessage+Rendering.h"
 #import "GIThread.h"
-#import "G3CommentTreeCell.h"
+#import "GICommentTreeCell.h"
 #import <Foundation/NSDebug.h>
 #import "NSToolbar+OPExtensions.h"
 #import "GIMessageEditorController.h"
@@ -18,7 +17,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIApplication.h"
 #import "NSArray+Extensions.h"
-#import "G3GroupInspectorController.h"
+#import "GIGroupInspectorController.h"
 #import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
 #import "OPJobs.h"
@@ -31,7 +30,7 @@
 
 static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
-@interface G3GroupController (CommentsTree)
+@interface GIGroupController (CommentsTree)
 
 - (void) awakeCommentTree;
 - (void) deallocCommentTree;
@@ -41,7 +40,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @end
 
-@implementation G3GroupController
+@implementation GIGroupController
 
 - (id) init
 {
@@ -102,7 +101,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) dealloc
 {
-    NSLog(@"G3GroupController dealloc");
+    NSLog(@"GIGroupController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window setDelegate: nil];
     
@@ -386,12 +385,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow: [boxesView selectedRow]]];
 	
     if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) {
-        NSWindow* groupWindow = [[G3GroupController class] windowForGroup: selectedGroup];
+        NSWindow* groupWindow = [[GIGroupController class] windowForGroup: selectedGroup];
         
         if (groupWindow) {
             [groupWindow makeKeyAndOrderFront: self];
         } else {
-            G3GroupController* newController = [[[G3GroupController alloc] initWithGroup: selectedGroup] autorelease];
+            GIGroupController* newController = [[[GIGroupController alloc] initWithGroup: selectedGroup] autorelease];
             groupWindow = [newController window];
         }
         
@@ -1161,7 +1160,7 @@ static BOOL isThreadItem(id item)
 
 @end
 
-@implementation G3GroupController (OutlineViewDataSource)
+@implementation GIGroupController (OutlineViewDataSource)
 
 - (void) groupsChanged: (NSNotification*) aNotification
 {
@@ -1546,12 +1545,12 @@ static NSAttributedString* spacer2()
 
 @end
 
-@implementation G3GroupController (CommentsTree)
+@implementation GIGroupController (CommentsTree)
 
 - (void) awakeCommentTree
 /*" awakeFromNib part for the comment tree. Called from -awakeFromNib. "*/
 {
-    G3CommentTreeCell* commentCell = [[[G3CommentTreeCell alloc] init] autorelease];
+    GICommentTreeCell* commentCell = [[[GICommentTreeCell alloc] init] autorelease];
     
     [commentsMatrix putCell: commentCell atRow: 0 column: 0];
     [commentsMatrix setCellClass: nil];
@@ -1603,7 +1602,7 @@ NSMutableArray* border = nil;
 
 - (int) placeTreeWithRootMessage: (GIMessage*) message atOrBelowRow: (int) row inColumn: (int) column
 {
-    G3CommentTreeCell* cell;
+    GICommentTreeCell* cell;
     
     if (row <= [[border objectAtIndex:column] intValue])
         row = [[border objectAtIndex:column] intValue] + 1;
@@ -1727,9 +1726,9 @@ NSMutableArray* border = nil;
     }
     
     int row, column;
-    G3CommentTreeCell* cell;
+    GICommentTreeCell* cell;
     
-    cell = (G3CommentTreeCell*) [commentsMatrix cellForRepresentedObject: displayedMessage];
+    cell = (GICommentTreeCell*) [commentsMatrix cellForRepresentedObject: displayedMessage];
     [cell setSeen: YES];
     
     [commentsMatrix selectCell: cell];
@@ -1827,7 +1826,7 @@ NSMutableArray* border = nil;
 
 @end
 
-@implementation G3GroupController (ToolbarDelegate)
+@implementation GIGroupController (ToolbarDelegate)
 /*" Toolbar delegate methods and setup and teardown. "*/
 
 - (void)awakeToolbar
@@ -1900,7 +1899,7 @@ NSMutableArray* border = nil;
 
 @end
 
-@implementation G3GroupController (DragNDrop)
+@implementation GIGroupController (DragNDrop)
 
 - (void) moveThreadsWithURI:(NSArray*) threadURIs 
                  fromGroup: (GIMessageGroup*) sourceGroup 
@@ -1951,7 +1950,7 @@ NSMutableArray* border = nil;
         NSArray *threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
         if ([threadURLs count])
         {
-            GIMessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
+            GIMessageGroup *sourceGroup = [(GIGroupController *)[[info draggingSource] delegate] group];
             GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
             
             [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
@@ -1967,7 +1966,7 @@ NSMutableArray* border = nil;
     {
         // move threads from source group to destination group:
         NSArray *threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        GIMessageGroup *sourceGroup = [(G3GroupController *)[[info draggingSource] delegate] group];
+        GIMessageGroup *sourceGroup = [(GIGroupController *)[[info draggingSource] delegate] group];
         GIMessageGroup *destinationGroup = [self group];
         
         [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
@@ -2072,7 +2071,7 @@ NSMutableArray* border = nil;
 
 @end
 
-@implementation G3GroupController (SplitViewDelegate)
+@implementation GIGroupController (SplitViewDelegate)
 
 - (void) splitView:(NSSplitView*)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
@@ -2092,7 +2091,7 @@ NSMutableArray* border = nil;
 
 #import "NSAttributedString+MessageUtils.h"
 
-@implementation G3GroupController (TextViewDelegate)
+@implementation GIGroupController (TextViewDelegate)
 
 - (void) textView: (NSTextView*) textView doubleClickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(unsigned)charIndex
 {

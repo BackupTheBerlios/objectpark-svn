@@ -1,19 +1,19 @@
 //
-//  $Id: G3CommentTreeCell.m,v 1.27 2005/04/05 09:11:38 theisen Exp $
+//  $Id: GICommentTreeCell.m,v 1.27 2005/04/05 09:11:38 theisen Exp $
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 13.12.04.
 //  Copyright 2004, 2005 Objectpark.org. All rights reserved.
 //
 
-#import "G3CommentTreeCell.h"
+#import "GICommentTreeCell.h"
 //#import "NSView+FirstResponder.h"
 
 
 #define veryLightGray  0.75
 
 
-@implementation G3CommentTreeCell
+@implementation GICommentTreeCell
 
 
 // these globals and related stuff should be part of the view, so move them there...
@@ -69,9 +69,9 @@ void ensureIntegrity()
 + (void) initialize
 {
     // set some default values
-    [G3CommentTreeCell setCircleDiameter:11];
-    [G3CommentTreeCell setLineWidth:2];
-    [G3CommentTreeCell setCellWidth:33 andHeight:20];
+    [GICommentTreeCell setCircleDiameter:11];
+    [GICommentTreeCell setLineWidth:2];
+    [GICommentTreeCell setCellWidth:33 andHeight:20];
     
     messageColors = [[NSArray alloc] initWithObjects:[NSColor colorWithCalibratedRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0],  // 0: white
                                                      [NSColor colorWithCalibratedRed:255.0/255.0 green:180.0/255.0 blue:180.0/255.0 alpha:1.0],  // 1: pastel red

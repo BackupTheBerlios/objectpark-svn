@@ -1,17 +1,17 @@
 //
-//  G3GroupInspectorController.m
+//  GIGroupInspectorController.m
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 07.03.05.
 //  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import "G3GroupInspectorController.h"
+#import "GIGroupInspectorController.h"
 #import "GIProfile.h"
 
-@implementation G3GroupInspectorController
+@implementation GIGroupInspectorController
 
-static G3GroupInspectorController *sharedInspector = nil;
+static GIGroupInspectorController *sharedInspector = nil;
 
 - (void) setupProfilePopUpButton
 {
@@ -55,7 +55,7 @@ static G3GroupInspectorController *sharedInspector = nil;
 {
     if ((self = [super init]))
     {
-        NSLog(@"G3GroupInspectorController init");
+        NSLog(@"GIGroupInspectorController init");
         [NSBundle loadNibNamed: @"GroupInspector" owner:self];
     }
     

@@ -1,12 +1,12 @@
 //
-//  G3GroupWindow.m
+//  GIGroupWindow.m
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 03.12.04.
 //  Copyright 2004 Objectpark. All rights reserved.
 //
 
-#import "G3GroupWindow.h"
+#import "GIGroupWindow.h"
 #import <Foundation/NSDebug.h>
 
 /*" Informal protocol for ESCListerners "*/
@@ -16,7 +16,7 @@
 
 @end
 
-@implementation G3GroupWindow
+@implementation GIGroupWindow
 /*" Window for message groups. Special behavior. At this time, the 'switch key' is intercepted. "*/
 
 #define SWITCHKEY 0x24
@@ -37,7 +37,7 @@
 
 - (void) dealloc
 {
-    if (NSDebugEnabled) NSLog(@"G3GroupWindow dealloc");
+    if (NSDebugEnabled) NSLog(@"GIGroupWindow dealloc");
     [super dealloc];
 }
 

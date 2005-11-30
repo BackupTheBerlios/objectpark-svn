@@ -7,9 +7,9 @@
 //
 
 #import "GIApplication.h"
-#import "G3GroupController.h"
+#import "GIGroupController.h"
 #import "GIUserDefaultsKeys.h"
-#import "G3GroupController.h"
+#import "GIGroupController.h"
 #import "GIMessageEditorController.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIMessageBase.h"
@@ -68,7 +68,7 @@
 
 - (IBAction)openNewGroupWindow:(id)sender
 {
-    [[[G3GroupController alloc] initWithGroup: nil] autorelease];
+    [[[GIGroupController alloc] initWithGroup: nil] autorelease];
 }
 
 - (IBAction)newMessage:(id)sender
@@ -335,7 +335,7 @@
 {
     NSWindow* win;
     NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
-	Class gcc = [G3GroupController class];
+	Class gcc = [GIGroupController class];
     while (win = [enumerator nextObject]) {
         if ([[win delegate] isKindOfClass: gcc]) {
 			return YES;
@@ -351,7 +351,7 @@
 
     if ([self isGroupsDrawerMode]) {
         if (! [self hasGroupWindow]) {
-            [[[G3GroupController alloc] initWithGroup: nil] autorelease];
+            [[[GIGroupController alloc] initWithGroup: nil] autorelease];
         }
     } else {
         if (! [self standaloneGroupsWindow]) {

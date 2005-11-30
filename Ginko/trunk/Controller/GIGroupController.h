@@ -1,5 +1,5 @@
 //
-//  G3GroupController.h
+//  GIGroupController.h
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 03.12.04.
@@ -14,7 +14,7 @@
 @class GIMessage;
 @class GIThread;
 
-@interface G3GroupController : NSObject 
+@interface GIGroupController : NSObject 
 {
     IBOutlet NSWindow* window;
     IBOutlet GIOutlineViewWithKeyboardSupport* threadsView;
@@ -76,7 +76,7 @@
 
 @end
 
-@interface G3GroupController (ToolbarDelegate)
+@interface GIGroupController (ToolbarDelegate)
 
 - (void) awakeToolbar;
 - (void) deallocToolbar;

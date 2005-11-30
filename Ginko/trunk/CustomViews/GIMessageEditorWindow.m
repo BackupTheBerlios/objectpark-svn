@@ -1,12 +1,12 @@
 //
-//  G3MessageEditorWindow.m
+//  GIMessageEditorWindow.m
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 16.12.04.
 //  Copyright 2004 Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import "G3MessageEditorWindow.h"
+#import "GIMessageEditorWindow.h"
 
 
 @implementation GIMessageEditorWindow

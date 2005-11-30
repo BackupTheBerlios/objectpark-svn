@@ -1,5 +1,5 @@
 //
-//  $Id: G3CommentTreeCell.h,v 1.13 2005/04/05 09:11:38 theisen Exp $
+//  $Id: GICommentTreeCell.h,v 1.13 2005/04/05 09:11:38 theisen Exp $
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 13.12.04.
@@ -9,7 +9,7 @@
 #import <AppKit/AppKit.h>
 
 
-@interface G3CommentTreeCell : NSCell {
+@interface GICommentTreeCell : NSCell {
     struct {
         int isSeen:1;
         int isDummyMessage:1;

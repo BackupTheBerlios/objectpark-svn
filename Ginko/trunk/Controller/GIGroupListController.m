@@ -10,12 +10,12 @@
 #import <Foundation/NSDebug.h>
 //#import "NSToolbar+OPExtensions.h"
 #import "GIMessageEditorController.h"
-#import "G3GroupController.h"
+#import "GIGroupController.h"
 #import "OPCollapsingSplitView.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIApplication.h"
 #import "NSArray+Extensions.h"
-#import "G3GroupInspectorController.h"
+#import "GIGroupInspectorController.h"
 #import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
 #import "OPJobs.h"
@@ -67,12 +67,12 @@
     GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow: [boxesView selectedRow]]];
 	
     if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) {
-        NSWindow* groupWindow = [[G3GroupController class] windowForGroup: selectedGroup];
+        NSWindow* groupWindow = [[GIGroupController class] windowForGroup: selectedGroup];
         
         if (groupWindow) {
             [groupWindow makeKeyAndOrderFront: self];
         } else {
-            G3GroupController* newController = [[[G3GroupController alloc] initWithGroup: selectedGroup] autorelease];
+            GIGroupController* newController = [[[GIGroupController alloc] initWithGroup: selectedGroup] autorelease];
             groupWindow = [newController window];
         }
         
@@ -85,7 +85,7 @@
 	id selectedGroup = [boxesView itemAtRow: [boxesView selectedRow]];
 	
 	if (selectedGroup && ![selectedGroup isKindOfClass: [NSArray class]]) {
-		[G3GroupInspectorController groupInspectorForGroup: [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedGroup]];
+		[GIGroupInspectorController groupInspectorForGroup: [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedGroup]];
 	}
 }
 
@@ -335,7 +335,7 @@ return @"";
         NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
 		
         if ([threadURLs count]) {
-            GIMessageGroup* sourceGroup      = [(G3GroupController*)[[info draggingSource] delegate] group];
+            GIMessageGroup* sourceGroup      = [(GIGroupController*)[[info draggingSource] delegate] group];
             GIMessageGroup* destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
             
             [GIMessageGroup moveThreadsWithURI: threadURLs fromGroup: sourceGroup toGroup: destinationGroup];

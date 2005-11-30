@@ -1,5 +1,5 @@
 //
-//  G3GroupWindow.h
+//  GIGroupWindow.h
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 03.12.04.
@@ -8,7 +8,7 @@
 
 #import <AppKit/AppKit.h>
 
-@interface G3GroupWindow : NSWindow 
+@interface GIGroupWindow : NSWindow 
 {
 
 }
