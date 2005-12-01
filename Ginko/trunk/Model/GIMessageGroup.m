@@ -145,6 +145,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 
 - (void) addThread: (GIThread*) thread 
 {    
+#warning lots of work for Dirk here
     [thread addToGroups: self];
 }
 

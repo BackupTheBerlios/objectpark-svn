@@ -196,15 +196,15 @@
     
     flowedText = [[text stringWithCanonicalLinebreaks] stringByEncodingFlowedFormat];
     
-    NSLog(@"Encoding Text with Class %@", targetClass);
+    if (NSDebugEnabled) NSLog(@"Encoding Text with Class %@", targetClass);
     
     result = [[[targetClass alloc] init] autorelease];
     charset = [flowedText recommendedMIMEEncoding];
     parameters = [NSDictionary dictionaryWithObjectsAndKeys:charset ,@"charset", @"flowed", @"format", nil];
     [result setContentType: @"text/plain" withParameters:parameters];
-    if([charset caseInsensitiveCompare:MIMEAsciiStringEncoding] == NSOrderedSame)
+    if ([charset caseInsensitiveCompare:MIMEAsciiStringEncoding] == NSOrderedSame)
         [result setContentTransferEncoding:MIME7BitContentTransferEncoding];
-    else if(dataMustBe7Bit)
+    else if (dataMustBe7Bit)
         [result setContentTransferEncoding:MIMEQuotedPrintableContentTransferEncoding];
     else
         [result setContentTransferEncoding:MIME8BitContentTransferEncoding];

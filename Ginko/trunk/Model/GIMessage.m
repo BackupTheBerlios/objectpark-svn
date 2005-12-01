@@ -101,11 +101,25 @@
 	return [self valueForKeyPath: @"messageData.transferData"];
 }
 
+- (void) setTransferData: (NSData*) newData
+{
+	GIMessageData* messageData = [self valueForKey: @"messageData"];
+	if (!messageData) {
+		messageData = [[[GIMessageData alloc] init] autorelease];
+		[self willChangeValueForKey: @"transferData"];
+		[self setPrimitiveValue: messageData forKey: @"messageData"];
+		[self didChangeValueForKey: @"transferData"];
+	}
+	[self setPrimitiveValue: nil forKey: @"internetMessageCache"];
+	// We now have a valid messageData object to upate:
+	[messageData setValue: newData forKey: @"transferData"];	
+}
+
 - (OPInternetMessage*) internetMessage
 {
     OPInternetMessage* cache = [self primitiveValueForKey: @"internetMessageCache"];
     if (!cache) {
-        NSData *transferData = [self valueForKey: @"transferData"];
+        NSData* transferData = [self valueForKey: @"transferData"];
         
         if (transferData) {
             cache = [[OPInternetMessage alloc] initWithTransferData: transferData];
@@ -146,24 +160,24 @@
         NSString *fromHeader = [im fromWithFallback: YES];
         
         [result setPrimitiveValue:im forKey: @"internetMessageCache"];
-        [result setValue:someTransferData forKey: @"transferData"];
-        [result setValue:[im messageId] forKey: @"messageId"];  
-        [result setValue:[im normalizedSubject] forKey: @"subject"];
-        [result setValue:[fromHeader realnameFromEMailStringWithFallback] forKey: @"author"];
+        [result setValue: someTransferData forKey: @"transferData"];
+        [result setValue: [im messageId] forKey: @"messageId"];  
+        [result setValue: [im normalizedSubject] forKey: @"subject"];
+        [result setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
         
         // sanity check for date header field:
-        NSCalendarDate *messageDate = [im date];
-        if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare:messageDate] != NSOrderedDescending) // if message's date is a future date
-        {
+        NSCalendarDate* messageDate = [im date];
+        if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare:messageDate] != NSOrderedDescending) {
+			// if message's date is a future date
 			// broken message, set current date:
             messageDate = [NSCalendarDate date];
             if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
         }
-        [result setValue:messageDate forKey: @"date"];
+        [result setValue: messageDate forKey: @"date"];
         
         // Note that this method operates on the encoded header field. It's OK because email
         // addresses are 7bit only.
-        if ([GIProfile isMyEmailAddress:fromHeader]) {
+        if ([GIProfile isMyEmailAddress: fromHeader]) {
             [result addFlags: OPIsFromMeStatus];
         }
     }

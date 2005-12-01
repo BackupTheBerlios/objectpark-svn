@@ -136,7 +136,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 - (OID) newDatabaseObjectForObject: (OPPersistentObject*) object
 {
-	[db beginTransaction]; // transaction is committed on -saveChanges
+	if (![db transactionInProgress]) [db beginTransaction]; // transaction is committed on -saveChanges
 	OID newOid = [db insertNewRowForClass: [object class]];
 	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
 	[changedObjects addObject: object]; // make sure the values make it into the database

@@ -1115,9 +1115,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (GIMessage *)checkpointMessageWithStatus:(unsigned int)aType
+- (GIMessage*) checkpointMessageWithStatus: (unsigned int) aType
 {
-    GIMessage *message = nil;
+    GIMessage* message = nil;
     
     message = [GIMessage messageWithTransferData: [[self message] transferData]];
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [[self message] transferData]);
@@ -1137,9 +1137,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if (aType & OPDraftStatus) {
         //add new message to database
-        [GIMessageBase addDraftMessage:message];
+        [GIMessageBase addDraftMessage: message];
     } else {
-        [GIMessageBase addQueuedMessage:message];
+        [GIMessageBase addQueuedMessage: message];
     }
     
     [oldMessage autorelease];

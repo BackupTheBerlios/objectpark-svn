@@ -98,13 +98,12 @@
     NSParameterAssert(aMessage != nil);
     
     GIThread *thread = [aMessage threadCreate:!suppressThreading];
-    if (!thread) 
-    {
+    if (!thread) {
         thread = [[GIThread alloc] init];
-		[thread insertIntoContext:[aMessage context]];
-        [thread setValue:[aMessage valueForKey: @"subject"] forKey:@"subject"];
-        [aMessage setValue:thread forKey:@"thread"];
-        [thread addToMessages:aMessage];
+		[thread insertIntoContext: [aMessage context]];
+        [thread setValue:[aMessage valueForKey: @"subject"] forKey: @"subject"];
+        [aMessage setValue: thread forKey: @"thread"];
+        // automatic! [thread addToMessages: aMessage];
 		[thread release];
     }
     
@@ -129,7 +128,7 @@
 {
     GIThread *thread = [aMessage threadCreate: NO];
     if (thread) [[GIMessageGroup draftMessageGroup] removeThread:thread];
-    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup] suppressThreading: YES];
+    [self addMessage:aMessage toMessageGroup: [GIMessageGroup queuedMessageGroup] suppressThreading: YES];
 }
 
 + (void) addTrashThread:(GIThread *)aThread
