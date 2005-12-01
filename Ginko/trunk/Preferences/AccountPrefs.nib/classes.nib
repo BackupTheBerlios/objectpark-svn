@@ -1,10 +1,10 @@
 {
     IBClasses = (
         {
-            ACTIONS = {addAccount = id; removeAccount = id; }; 
+            ACTIONS = {addAccount = id; rearrangeObjects = id; removeAccount = id; }; 
             CLASS = AccountPrefs; 
             LANGUAGE = ObjC; 
-            OUTLETS = {accountTableView = NSTableView; }; 
+            OUTLETS = {accountTableView = NSTableView; accountsController = NSArrayController; }; 
             SUPERCLASS = OPPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
