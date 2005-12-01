@@ -19,7 +19,7 @@
     
     @private
     NSTextView *textView;
-    NSArray *sortDescriptors;
+    NSArray* sortDescriptors;
 }
 
 + (void)showPhraseBrowserForTextView:(NSTextView *)aTextView;

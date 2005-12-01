@@ -27,7 +27,7 @@
 + (BOOL) isMyEmailAddress: (NSString*) aString;
 
 
-- (NSString*) emailAddress;
+- (NSString*) mailAddress;
 
 
 @end

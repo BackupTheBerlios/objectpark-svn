@@ -60,17 +60,15 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 
 - (NSMutableArray *)hotkeysInUse
 {
-    NSMutableArray *result = [NSMutableArray array];
-    NSArray *phrasesArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"phrases"];
-    NSEnumerator *enumerator = [phrasesArray objectEnumerator];
-    NSDictionary *phraseDict;
+    NSMutableArray* result = [NSMutableArray array];
+    NSArray* phrasesArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"phrases"];
+    NSEnumerator* enumerator = [phrasesArray objectEnumerator];
+    NSDictionary* phraseDict;
     
-    while (phraseDict = [enumerator nextObject])
-    {
+    while (phraseDict = [enumerator nextObject]) {
         id hotkey = [phraseDict objectForKey:@"hotkey"];
         
-        if (hotkey)
-        {
+        if (hotkey) {
             if (![hotkey isKindOfClass:[NSString class]]) hotkey = [hotkey stringValue];
             NSAssert([hotkey isKindOfClass:[NSString class]], @"should be a string");
             [result addObject:hotkey];
@@ -80,9 +78,9 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
     return result;
 }
 
-- (NSArray *)hotkeys
+- (NSArray*) hotkeys
 {
-    static NSArray *hotkeys = nil;
+    static NSArray*hotkeys = nil;
     
     if (!hotkeys) hotkeys = [[NSArray alloc] initWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"0", nil];
 
@@ -127,7 +125,7 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 
 - (void)hotkeyPressed:(int)hotkeyNumber
 {
-    NSArray *arrangedObjects = [arrayController arrangedObjects];
+    NSArray* arrangedObjects = [arrayController arrangedObjects];
     int i;
     
     for (i = 0; i < [arrangedObjects count]; i++)

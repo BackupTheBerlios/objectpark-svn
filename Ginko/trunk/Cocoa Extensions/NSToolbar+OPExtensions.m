@@ -12,7 +12,7 @@
 @implementation NSToolbar (OPExtensions)
 /*" Extension of NSToolbar for utilizing a plist as definition for toolbars instead of code. For the plist format just look at the .toolbar resource files which are likely part of this project. "*/
 
-- (BOOL)toolbarItems:(NSArray **)items defaultIdentifiers:(NSArray **)defaultIds forToolbarNamed:(NSString *)toolbarName
+- (BOOL) toolbarItems: (NSArray**) items defaultIdentifiers: (NSArray**) defaultIds forToolbarNamed: (NSString*) toolbarName
 /*" Fetches toolbar items and default identifiers from a plist definition. items and defaultIds are not retained. Localization is performed on user visible texts. "*/
 {
     NSToolbarItem *item;

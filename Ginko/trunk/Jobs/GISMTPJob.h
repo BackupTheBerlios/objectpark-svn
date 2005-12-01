@@ -12,8 +12,8 @@
 
 @interface GISMTPJob : NSObject 
 {
-    NSArray *messages;
-    G3Account *account;
+    NSArray* messages;
+    G3Account* account;
 }
 
 + (void) sendMessages:(NSArray*) someMessages viaSMTPAccount:(G3Account *)anAccount;

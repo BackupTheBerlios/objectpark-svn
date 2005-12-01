@@ -19,12 +19,11 @@
 + (NSArray*) accounts
 /*" Returns all account objects (unordered). "*/
 {    
-	NSArray *result;
+	NSArray* result;
 	
     result = [self allObjects];
 	
-	if (![result count])
-	{
+	if (![result count]) {
 		[[[self alloc] init] autorelease];
 		result = [self allObjects];
 	}

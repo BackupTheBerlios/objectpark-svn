@@ -190,29 +190,23 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 - (NSArray*) actions
     /*" Returns an array of #{GIMessageFilterAction} objects if available. nil otherwise. "*/
 {
-    if (_actionsCache == (id)self)
-    {
-        NSArray *actionDefinitions;
+    if (_actionsCache == (id)self) {
+        NSArray* actionDefinitions;
 
-        if (actionDefinitions = [_filterDefinition objectForKey: @"actions"])
-        {
-            NSEnumerator *enumerator;
-            NSDictionary *actionDefinition;
+        if (actionDefinitions = [_filterDefinition objectForKey: @"actions"]) {
+			
+            NSDictionary* actionDefinition;
+            _actionsCache = [[NSMutableArray alloc] initWithCapacity: [actionDefinitions count]];
 
-            _actionsCache = [[NSMutableArray alloc] initWithCapacity:[actionDefinitions count]];
-
-            enumerator = [actionDefinitions objectEnumerator];
-            while (actionDefinition = [enumerator nextObject])
-            {
+            NSEnumerator* enumerator = [actionDefinitions objectEnumerator];
+            while (actionDefinition = [enumerator nextObject]) {
                 GIMessageFilterAction *action;
 
-                action = [[GIMessageFilterAction alloc] initWithActionDefinitionDictionary:actionDefinition];
-                [(NSMutableArray *)_actionsCache addObject:action];
+                action = [[GIMessageFilterAction alloc] initWithActionDefinitionDictionary: actionDefinition];
+                [(NSMutableArray*)_actionsCache addObject: action];
                 [action release];
             }
-        }
-        else
-        {
+        } else {
             _actionsCache = nil;
         }
     }
@@ -254,28 +248,23 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 {
     if (_expressionsCache == (id)self)
     {
-        NSArray *expressionDefinitions;
+        NSArray* expressionDefinitions;
 
-        if ((expressionDefinitions = [_filterDefinition objectForKey: @"expressions"]) || ([self _expression]))
-        {
-            NSEnumerator *enumerator;
-            NSDictionary *expressionDefinition;
-
+        if ((expressionDefinitions = [_filterDefinition objectForKey: @"expressions"]) || ([self _expression])) {
             _expressionsCache = [[NSMutableArray alloc] initWithCapacity:[expressionDefinitions count] ? [expressionDefinitions count] : 1];
 
-            enumerator = [expressionDefinitions objectEnumerator];
-            while (expressionDefinition = [enumerator nextObject])
-            {
+            NSEnumerator* enumerator = [expressionDefinitions objectEnumerator];
+			NSDictionary *expressionDefinition;
+            while (expressionDefinition = [enumerator nextObject]) {
                 GIMessageFilterExpression *expression;
 
-                expression = [[GIMessageFilterExpression alloc] initWithExpressionDefinitionDictionary:expressionDefinition];
-                [(NSMutableArray *)_expressionsCache addObject:expression];
+                expression = [[GIMessageFilterExpression alloc] initWithExpressionDefinitionDictionary: expressionDefinition];
+                [(NSMutableArray *)_expressionsCache addObject: expression];
                 [expression release];
             }
             
             // upwards compability
-            if ([self _expression])
-            {
+            if ([self _expression]) {
                 [(NSMutableArray *)_expressionsCache addObject:[self _expression]];
                 [self _setExpression: nil];
 

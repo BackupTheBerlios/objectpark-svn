@@ -10,15 +10,15 @@
 
 @interface GIActivityPanelController : NSObject 
 {
-    IBOutlet NSWindow *window;
-    IBOutlet NSTableView *tableView;
+    IBOutlet NSWindow* window;
+    IBOutlet NSTableView* tableView;
     
-    NSArray *jobIds;
+    NSArray* jobIds;
 }
 
-+ (void)showActivityPanelInteractive:(BOOL)interactive;
-+ (void)updateData;
++ (void) showActivityPanelInteractive: (BOOL) interactive;
++ (void) updateData;
 
-- (NSWindow *)window;
+- (NSWindow*) window;
 
 @end

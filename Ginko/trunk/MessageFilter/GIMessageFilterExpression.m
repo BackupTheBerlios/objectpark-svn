@@ -141,43 +141,37 @@
 // matching
 - (BOOL)matchesForMessage: (GIMessage*) message flags:(int)flags
 {
-    NSEnumerator *enumerator;
-    NSString *matchString, *argument;
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSArray *matchStrings = nil;
+    NSEnumerator* enumerator;
+    NSString* matchString, *argument;
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    NSArray* matchStrings = nil;
     BOOL matches = NO;
 
     // Step one: assembling of subjects (array of strings)
-    switch ([self subjectType]) 
-	{
-        case kGIMFTypeHeaderField: 
-		{
+    switch ([self subjectType]) {
+        case kGIMFTypeHeaderField: {
             NSString *header;
 
-            if (! _subjectsCache) 
-			{
+            if (! _subjectsCache) {
                 _subjectsCache = [[[[self subjectValue] lowercaseString] componentsSeparatedByString: @" or "] retain];
             }
 
             matchStrings = [[NSMutableArray alloc] initWithCapacity:[_subjectsCache count]];
 
             enumerator = [_subjectsCache objectEnumerator];
-            while (header = [enumerator nextObject]) 
-			{
+            while (header = [enumerator nextObject]) {
                 NSString *fieldBody;
 
                 fieldBody = [[message internetMessage] bodyForHeaderField:header];
 
-                if (fieldBody) 
-				{
+                if (fieldBody) {
                     [(NSMutableArray *)matchStrings addObject:[EDTextFieldCoder stringFromFieldBody:fieldBody withFallback: YES]];
                 }
             }
             break;
         };
         case kGIMFTypeFlag:
-            switch ([self criteria]) 
-			{
+            switch ([self criteria]) {
                 case kGIMFCriteriaContains:
                     return ([self flagArgument] & flags) != 0;
                     break;

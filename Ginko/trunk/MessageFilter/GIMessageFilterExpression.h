@@ -44,8 +44,8 @@ enum GIMessageFilterExpressionSubjectType
 
 @interface GIMessageFilterExpression : NSObject
 {
-    @private NSMutableDictionary *_expressionDefinition;	/*" a dictionary that defines the expression "*/
-    @private NSArray *_subjectsCache;				/*" a cache for the subjects (e.g. ("to", "cc")) "*/
+    @private NSMutableDictionary* _expressionDefinition;	/*" a dictionary that defines the expression "*/
+    @private NSArray* _subjectsCache;				/*" a cache for the subjects (e.g. ("to", "cc")) "*/
 }
 
 /*" Initializers "*/

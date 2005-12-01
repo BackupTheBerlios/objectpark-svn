@@ -56,10 +56,9 @@ The intended purpose of this category is storing and retrieving NSColor objects 
 /*"Returns a NSColor object with the RGB and alpha values encoded in the string (in the same format as created by #{+stringWithColor})."*/
 - (NSColor*) colorValue
 {
-    NSArray *rgba = [self componentsSeparatedByString: @" "];
+    NSArray* rgba = [self componentsSeparatedByString: @" "];
     
-    if ([rgba count] != 4)
-    {
+    if ([rgba count] != 4) {
         NSLog(@"[NSString colorWithString]: Illegal number of components in string for NSColor (%@)", self);
         return nil;
     }

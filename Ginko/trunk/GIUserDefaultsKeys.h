@@ -7,23 +7,23 @@
  *
  */
 
-extern NSString *MessageRendererFontName;
-extern NSString *MessageRendererFontSize;
-extern NSString *MessageRendererShouldRenderAttachmentsInlineIfPossible;
-extern NSString *ShowAllHeaders;
-extern NSString *ContentTypePreferences;
-extern NSString *GroupsDrawerMode;
-extern NSString *HeadersShown;
-extern NSString *AdditionalHeadersShown;
-extern NSString *SentMessageGroupURLString;
-extern NSString *DefaultMessageGroupURLString;
-extern NSString *DraftsMessageGroupURLString;
-extern NSString *QueuedMessageGroupURLString;
-extern NSString *SpamMessageGroupURLString;
-extern NSString *TrashMessageGroupURLString;
-extern NSString *DisableKeychainForPasswortDefault;
-extern NSString *ImportPanelLastDirectory;
-extern NSString *AutomaticActivityPanelEnabled;
+extern NSString* MessageRendererFontName;
+extern NSString* MessageRendererFontSize;
+extern NSString* MessageRendererShouldRenderAttachmentsInlineIfPossible;
+extern NSString* ShowAllHeaders;
+extern NSString* ContentTypePreferences;
+extern NSString* GroupsDrawerMode;
+extern NSString* HeadersShown;
+extern NSString* AdditionalHeadersShown;
+extern NSString* SentMessageGroupURLString;
+extern NSString* DefaultMessageGroupURLString;
+extern NSString* DraftsMessageGroupURLString;
+extern NSString* QueuedMessageGroupURLString;
+extern NSString* SpamMessageGroupURLString;
+extern NSString* TrashMessageGroupURLString;
+extern NSString* DisableKeychainForPasswortDefault;
+extern NSString* ImportPanelLastDirectory;
+extern NSString* AutomaticActivityPanelEnabled;
 
-extern NSArray *allAdditionalHeadersForDisplay();
+extern NSArray* allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

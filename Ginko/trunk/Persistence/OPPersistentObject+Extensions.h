@@ -25,3 +25,9 @@
 + (id) objectWithURLString: (NSString*) url;
 
 @end
+
+@interface NSError (OPExtensions)
+
++ (id) errorWithDomain: (NSString*) domain description: (NSString*) description;
+
+@end

@@ -32,3 +32,4 @@
 - (IBAction)toggleAutomaticActivityPanel:(id)sender;
 
 @end
+

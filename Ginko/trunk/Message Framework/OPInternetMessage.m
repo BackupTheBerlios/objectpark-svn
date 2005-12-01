@@ -80,31 +80,23 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 - (NSArray*) references 
 /*" Returns an array of messages in the reply-chain, either taken from the 'In-Reply-To' or 'References' header. "*/
 {
-    NSString *inReplyTo;
-    NSString *references;
-    NSArray *result;
-    EDIdListFieldCoder *coder;
-    NSAutoreleasePool *pool;
+    NSArray*            result = nil;
+    EDIdListFieldCoder* coder  = nil;
+    NSAutoreleasePool*  pool   = [[NSAutoreleasePool alloc] init];
     
-    pool = [[NSAutoreleasePool alloc] init];
+    NSString* inReplyTo = [self bodyForHeaderField: @"in-reply-to"];
+    NSString* references = [self bodyForHeaderField: @"references"];
     
-    result = nil;
-    inReplyTo = [self bodyForHeaderField: @"in-reply-to"];
-    references = [self bodyForHeaderField: @"references"];
-    
-    if(references) {
+    if (references) {
         coder = [[EDIdListFieldCoder alloc] initWithFieldBody:references];
         
         result = [[coder list] retain];
         [coder release];
     }
 	
-    if(inReplyTo) {
-        if (result)
-        {
-            NSArray *oldResult;
-            
-            oldResult = result;
+    if (inReplyTo) {
+        if (result) {
+            NSArray* oldResult = result;
             result = [[[NSArray arrayWithObject:inReplyTo] arrayByAddingObjectsFromArray:oldResult] retain];
             [oldResult release];
         }

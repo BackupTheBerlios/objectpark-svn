@@ -163,10 +163,10 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
 {
     if ([type isEqualToString:NSFilenamesPboardType]) // resource fork and finder info if given
     {
-        NSArray *filenames;
-        NSString *filename;
-        NSEnumerator *enumerator;
-        NSMutableAttributedString *result;
+        NSArray* filenames;
+        NSString* filename;
+        NSEnumerator* enumerator;
+        NSMutableAttributedString* result;
         
         if (NSDebugEnabled) NSLog(@"add resource fork and finder info to NSFileWrapper if given.");
         

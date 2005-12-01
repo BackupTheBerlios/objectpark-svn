@@ -73,15 +73,16 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 - (void) _connect
 {
     NSHost* localhost;
-    NSString *name, *domain, *responseCode;
-    NSArray *response;     
+    NSString* name;
+	NSString* domain;
+	NSString* responseCode;
+    NSArray* response;     
     BOOL redoEHLO;
     
-    if ([self _useSMTPS])
-    {
+    if ([self _useSMTPS]) {
         //OPDebugLog(SMTPDEBUG, OPINFO, @"Using SMTPS.");
         [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate: [self _allowAnyRootCertificate ]];
-        [(OPSSLSocket*)[stream fileHandle] setAllowsExpiredCertificates:[self _allowExpiredCertificates]];
+        [(OPSSLSocket*)[stream fileHandle] setAllowsExpiredCertificates: [self _allowExpiredCertificates]];
         
         [stream negotiateEncryption];
     }
@@ -95,8 +96,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     
     // preparing logon
     localhost = [NSHost currentHost];
-    if (! (name = [localhost fullyQualifiedName]) )
-    {
+    if (! (name = [localhost fullyQualifiedName]) ) {
         name = [localhost name];
         domain = [NSHost localDomain];
         if ( (! [name isEqualToString: @"localhost"]) && domain )
@@ -106,8 +106,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     
     NS_DURING
         state = NonAuthenticated;
-        do
-        {
+        do {
             redoEHLO = NO;  // default is only one pass of this loop
             
             // first try if it's an extended SMTP server
@@ -115,10 +114,9 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
             [stream writeFormat: @"EHLO %@\r\n", name];
             response = [self _readResponse];
             responseCode = [[response objectAtIndex:0] substringToIndex:3];
-            if (![responseCode isEqualToString: @"250"])
-            {
-                if ([responseCode hasPrefix: @"5"]) // EHLO doesn't work, say HELO
-                {
+            if (![responseCode isEqualToString: @"250"]) {
+                if ([responseCode hasPrefix: @"5"]) {
+					// EHLO doesn't work, say HELO
                     //OPDebugLog1(SMTPDEBUG, OPALL, @"HELO %@\r\n", name);
                     [stream writeFormat: @"HELO %@\r\n", name];
                     response = [self _readResponse];
@@ -127,29 +125,18 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                         state = Authenticated;
                 }
                 break; // leave loop
-            }
-            else // okay, it's an extended server!
-            {
-                NSEnumerator* lineEnum;
-                NSString* line;
-                
+            } else {
+				// okay, it's an extended server!                
                 // parse extensions info
-                lineEnum = [response objectEnumerator];
-                while (line = [lineEnum nextObject])
-                {
-                    NSArray *components, *value;
-                    NSString *key;
-                    
+                NSEnumerator* lineEnum = [response objectEnumerator];
+				NSString* line;
+                while (line = [lineEnum nextObject]) {
                     //OPDebugLog1(SMTPDEBUG, OPINFO, @"%@", line);
-                    components = [[line substringFromIndex:4] componentsSeparatedByString: @" "];
-                    key = [[components objectAtIndex:0] uppercaseString];
+                    NSArray* components = [[line substringFromIndex: 4] componentsSeparatedByString: @" "];
+                    NSString* key   = [[components objectAtIndex: 0] uppercaseString];
+                    NSArray*  value =  ([components count] > 1) ? [components subarrayWithRange: NSMakeRange(1, [components count] - 1)] : [NSArray array];
                     
-                    if ([components count] > 1)
-                        value = [components subarrayWithRange:NSMakeRange(1, [components count] - 1)];
-                    else
-                        value = [NSArray array];
-                    
-                    [capabilities setObject: value forKey:key];
+                    [capabilities setObject: value forKey: key];
                 }
                 
                 // STARTTLS (must be first negotiated extension due to RFC2487, well not really true but easier :-) )
@@ -184,26 +171,21 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                 // AUTH
                 if (state != Authenticated)
                 {
-                    NSArray *methods;
+                    NSArray* methods;
                     
-                    if (methods = [capabilities objectForKey: @"AUTH"])
-                    {
+                    if (methods = [capabilities objectForKey: @"AUTH"]) {
                         //OPDebugLog(SMTPDEBUG, OPINFO, @"Server supports AUTH. Trying to AUTHenticate"); 
-                        if ([self _SASLAuthentication:methods])
-                        {
+                        if ([self _SASLAuthentication:methods]) {
                             state = Authenticated;
-                        }
-                        else
-                        {
+                        } else {
                             //OPDebugLog(SMTPDEBUG, OPWARNING, @"AUTHentication failed!");
                         }
-                    }
-                    else
-                    {
-                        if ([[self _password] length] != 0)
+                    } else {
+                        if ([[self _password] length] != 0) {
                             //OPDebugLog(SMTPDEBUG, OPWARNING, @"Password provided but server does not support AUTHentication!");
                             
                             state = Authenticated;
+						}
                     }
                 }
                 
@@ -295,7 +277,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 // Methods of Interface OPMessageConsumer
 
 /* Returns YES if the receiver will accept at least one EDInternetMessage for consumption. NO otherwise.*/
-- (BOOL)willAcceptMessage
+- (BOOL) willAcceptMessage
 {
     return state == Authenticated;
 }
@@ -304,35 +286,34 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 an exception if the 'message' will not be consumed. */
 - (void) acceptMessage: (OPInternetMessage*) message
 {
-    NSMutableArray *recipients;
-    NSArray *authors;
-    NSString *newRecipients, *sender, *bccBody;
-    NSData *transferData;
-    EDTextFieldCoder *coder;
+    NSArray* authors;
+    NSString* newRecipients;
+	NSString* sender;
+	NSString* bccBody;
+    NSData* transferData;
+    EDTextFieldCoder* coder = nil;
     
     if (! [self willAcceptMessage])
-        [NSException raise:NSInvalidArgumentException format: @"-[%@ %@]: SMTP server will not accept messages.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise: NSInvalidArgumentException format: @"-[%@ %@]: SMTP server will not accept messages.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
-    recipients = [NSMutableArray array];
-    if (newRecipients = [message bodyForHeaderField: @"To"])
-    {
-        coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
-        [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
+    NSMutableArray* recipients = [NSMutableArray array];
+    if (newRecipients = [message bodyForHeaderField: @"To"]) {
+        coder = [[EDTextFieldCoder alloc] initWithFieldBody: newRecipients];
+        [recipients addObjectsFromArray: [[coder text] addressListFromEMailString]];
         NSLog(@"recipients = %@", recipients);
         [coder release];
     }
     
-    if (newRecipients = [message bodyForHeaderField: @"Cc"])
-    {
-        coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
-        [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
+    if (newRecipients = [message bodyForHeaderField: @"Cc"]) {
+        coder = [[EDTextFieldCoder alloc] initWithFieldBody: newRecipients];
+        [recipients addObjectsFromArray: [[coder text] addressListFromEMailString]];
         [coder release];
     }
     
     if (bccBody = [message bodyForHeaderField: @"Bcc"])
     {
-        coder = [[EDTextFieldCoder alloc] initWithFieldBody:bccBody];
-        [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
+        coder = [[EDTextFieldCoder alloc] initWithFieldBody: bccBody];
+        [recipients addObjectsFromArray: [[coder text] addressListFromEMailString]];
         [coder release];
     }
     
@@ -341,9 +322,8 @@ an exception if the 'message' will not be consumed. */
     
     coder = nil; // guarantee that coder is harmless
     
-    if (sender = [message bodyForHeaderField: @"Sender"])
-    {
-        coder = [[EDTextFieldCoder alloc] initWithFieldBody:sender];
+    if (sender = [message bodyForHeaderField: @"Sender"]) {
+        coder = [[EDTextFieldCoder alloc] initWithFieldBody: sender];
         sender = [coder text];
     }
     
@@ -414,18 +394,15 @@ an exception if the 'message' will not be consumed. */
 @implementation OPSMTP (PrivateAPI)
 
 - (void) _assertServerAcceptedCommand
-{
-    NSString *expectedCode;
-    NSArray *response;
-    
+{    
     if (! [pendingResponses count])
-        [NSException raise:NSInternalInconsistencyException format: @"-[%@ %@]: No pending responses.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise: NSInternalInconsistencyException format: @"-[%@ %@]: No pending responses.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
-    expectedCode = [[[pendingResponses objectAtIndex:0] retain] autorelease];
-    [pendingResponses removeObjectAtIndex:0];
-    response = [self _readResponse];
-    if (! [[response objectAtIndex:0] hasPrefix:expectedCode])
-        [NSException raise:OPSMTPException format: @"Unexpected SMTP response code; expected %@, read \"%@\"", expectedCode, [response componentsJoinedByString:@" "]];
+    NSString* expectedCode = [[[pendingResponses objectAtIndex: 0] retain] autorelease];
+    [pendingResponses removeObjectAtIndex: 0];
+    NSArray* response = [self _readResponse];
+    if (! [[response objectAtIndex: 0] hasPrefix: expectedCode])
+        [NSException raise: OPSMTPException format: @"Unexpected SMTP response code; expected %@, read \"%@\"", expectedCode, [response componentsJoinedByString: @" "]];
 }
 
 - (NSArray*) _readResponse

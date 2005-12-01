@@ -206,33 +206,27 @@ static NSMutableArray *LRUMailAddresses;
             
             // try address book (mail address)
             {
-                ABSearchElement *searchElementEmailAddress;
-                NSEnumerator *enumerator;
-                NSArray *searchResult;
                 id record;
                 
-                searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
+                ABSearchElement* searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:completionPrefix comparison:kABPrefixMatchCaseInsensitive];
                 
-                searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
+                NSArray* searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
                 
-                enumerator = [searchResult objectEnumerator];
-                while (record = [enumerator nextObject])
-                {
-                    if ([record isKindOfClass:[ABPerson class]])
-                    {
+                NSEnumerator* enumerator = [searchResult objectEnumerator];
+                while (record = [enumerator nextObject]) {
+					
+                    if ([record isKindOfClass: [ABPerson class]]) {
                         static NSCharacterSet *problematicSet = nil;
                         if (!problematicSet) problematicSet = [[NSCharacterSet characterSetWithCharactersInString:@"(),\""] retain];
                         
-                        ABMultiValue *addresses = [record valueForProperty:kABEmailProperty];
-                        NSString *fullname = [[record fullname] stringByRemovingCharactersFromSet:problematicSet];
-                        NSString *realname = [fullname length] ? [NSString stringWithFormat:@" (%@)", fullname] : @"";
+                        ABMultiValue* addresses = [record valueForProperty: kABEmailProperty];
+                        NSString* fullname = [[record fullname] stringByRemovingCharactersFromSet: problematicSet];
+                        NSString *realname = [fullname length] ? [NSString stringWithFormat: @" (%@)", fullname] : @"";
                         int i, count = [addresses count];
                         
-                        for (i = 0; i < count; i++)
-                        {
-                            NSString *address = [addresses valueAtIndex:i];
-                            if ([address hasPrefix:completionPrefix])
-                            {
+                        for (i = 0; i < count; i++) {
+                            NSString* address = [addresses valueAtIndex: i];
+                            if ([address hasPrefix:completionPrefix]) {
                                 [candidates addObject:[address stringByAppendingString:realname]];
                             }
                         }                        
@@ -249,7 +243,7 @@ static NSMutableArray *LRUMailAddresses;
                 
                 searchResult = [NSMutableArray array];
                 
-                NSArray *components = [completionPrefix componentsSeparatedByString:@" "];
+                NSArray* components = [completionPrefix componentsSeparatedByString: @" "];
                 int i;
                 
                 for (i = 0; i < [components count]; i++)

@@ -25,6 +25,12 @@
     return [GIProfile allObjects];
 }
 
+- (void) setProfiles: (id) accounts
+{
+	// NOP, only to keep controller happy
+}
+
+
 - (IBAction) removeProfile: (id) sender
 {	
 	int selectedRow = [profileTableView selectedRow];

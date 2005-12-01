@@ -67,7 +67,7 @@ unsigned int MessageIdCounter = 0;
         filename = [fileWrapper preferredFilename];
 
         {
-            NSArray *components;
+            NSArray*components;
 
             components = [filename componentsSeparatedByString:@"."];
             suffix = [components objectAtIndex:[components count]-1];

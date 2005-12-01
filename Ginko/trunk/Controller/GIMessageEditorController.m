@@ -10,6 +10,7 @@
 #import "NSView+ViewMoving.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSString+MessageUtils.h"
+#import "NSArray+Extensions.h"
 #import "GIApplication.h"
 #import "GIProfile.h"
 #import "GIAccount.h"
@@ -72,7 +73,7 @@
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
         [request setEntity: [GIProfile entity]];
         [request setPredicate: [NSPredicate predicateWithFormat: @"%@ IN messagesToSend", aMessage]];
-        NSArray *result = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
+        NSArray*result = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
         
         if (error)
         {
@@ -196,8 +197,8 @@
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeFirstResponder:messageTextView];
-        [window makeKeyAndOrderFront:self];
+        [window makeFirstResponder: messageTextView];
+        [window makeKeyAndOrderFront: self];
     }
         
     return self;
@@ -220,8 +221,8 @@
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeFirstResponder:messageTextView];
-        [window makeKeyAndOrderFront:self];
+        [window makeFirstResponder: messageTextView];
+        [window makeKeyAndOrderFront: self];
     }
     
     return self;
@@ -239,19 +240,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // set up most recently used continuous spell check status:
     [messageTextView setContinuousSpellCheckingEnabled: [[NSUserDefaults standardUserDefaults] boolForKey:@"ContinuousSpellCheckingEnabled"]];
     
-    lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
+    lastTopLeftPoint = [window cascadeTopLeftFromPoint: lastTopLeftPoint];
     
-    [GIPhraseBrowserController setTextView:messageTextView];
+    [GIPhraseBrowserController setTextView: messageTextView];
 }
 
-- (void)windowDidMove:(NSNotification *)aNotification
+- (void)windowDidMove: (NSNotification*) aNotification
 {
 //    lastTopLeftPoint = NSMakePoint(0.0, 0.0);
 }
 
-- (void)windowDidBecomeKey:(NSNotification *)aNotification
+- (void) windowDidBecomeKey: (NSNotification*) aNotification
 {
-    [GIPhraseBrowserController setTextView:messageTextView];
+    [GIPhraseBrowserController setTextView: messageTextView];
+	[self validateSelectedProfile];
 }
 
 /*
@@ -301,9 +303,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 
 // actions
-- (IBAction)send:(id)sender
+- (IBAction)send: (id) sender
 {
-	NSString *emailAddress = [[self profile] emailAddress];
+	NSString* emailAddress = [[self profile] mailAddress];
 	
     if (emailAddress && ([[toField stringValue] rangeOfString:emailAddress].location != NSNotFound)) {
         NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
@@ -329,7 +331,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction) queue: (id) sender
 {
-    if ([[toField stringValue] rangeOfString: [[self profile] emailAddress]].location != NSNotFound)
+    if ([[toField stringValue] rangeOfString: [[self profile] mailAddress]].location != NSNotFound)
     {
         NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
                           NSLocalizedString(@"Send", @"sendSoliloquySheet"),
@@ -636,9 +638,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // create from header:
 	if ([[theProfile valueForKey: @"realname"] length]) {
-		from = [NSString stringWithFormat: @"%@ <%@>", [theProfile valueForKey: @"realname"], [theProfile emailAddress]];
+		from = [NSString stringWithFormat: @"%@ <%@>", [theProfile valueForKey: @"realname"], [theProfile mailAddress]];
 	} else {
-		from = [theProfile emailAddress];
+		from = [theProfile mailAddress];
 	}
 	[headerFields setObject: from forKey: @"From"];
     
@@ -728,23 +730,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             // draft which allows CFWS insteac of a space between the mids
             int skipped = 0;
             int charactersToRemove = [references length] + [[[aMessage internetMessage] messageId] length] + 13 - 998;
-            NSString *referenceToSkip, *reference;
-            NSArray *referencesArray = [references componentsSeparatedByString: @" "];
+            NSString* referenceToSkip;
+			NSString* reference;
+            NSArray* referencesArray = [references componentsSeparatedByString: @" "];
             
-            if ([referencesArray count])
-            {
+            if ([referencesArray count]) {
                 NSEnumerator *referencesList = [referencesArray objectEnumerator];
                 
                 [references setString: [referencesList nextObject]];
                 
-                while ((skipped < charactersToRemove) && (referenceToSkip = [referencesList nextObject]))
-                {
+                while ((skipped < charactersToRemove) && (referenceToSkip = [referencesList nextObject])) {
                     skipped += [referenceToSkip length] + 1;
                 }
-                while (reference = [referencesList nextObject])
-                {
+                while (reference = [referencesList nextObject]) {
                     [references appendString: @" "];
-                    [references appendString:reference];
+                    [references appendString: reference];
                 }
             }
         }
@@ -843,10 +843,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (NSMutableString *)stringByRemovingOwnAddressesFromString: (NSString*) addr
 {
-    NSArray *parts = [addr fieldListFromEMailString];
-    NSMutableString *result = [NSMutableString string];
-    NSEnumerator *enumerator;
-    NSString *part;
+    NSArray* parts = [addr fieldListFromEMailString];
+    NSMutableString* result = [NSMutableString string];
+    NSEnumerator* enumerator;
+    NSString* part;
     
     enumerator = [parts objectEnumerator];
     while (part = [enumerator nextObject])
@@ -1176,8 +1176,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if (([to length]) && ([subject length]))
     {
-        NSArray *recipients;
-        static NSCharacterSet *forbiddenCharacters = nil;
+        NSArray* recipients;
+        static NSCharacterSet* forbiddenCharacters = nil;
         
         if (! forbiddenCharacters)
             forbiddenCharacters = [[NSCharacterSet characterSetWithCharactersInString:FORBIDDENCHARS] retain];
@@ -1218,13 +1218,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 @implementation GIMessageEditorController (Headers)
 /*" All things message header. "*/
 
-NSArray *headerOrder()
+NSArray* headerOrder()
 /*" Returns an array which denotes the order in which the header fields should be displayed. Where the first header field name is to displayed topmost and the last bottommost. If the field name is not in this list it is to be append at the bottom without a preference for ordering. "*/
 {
-    static NSArray *order = nil;
+    static NSArray* order = nil;
     
-    if (! order)
-    {
+    if (! order) {
         order = [[NSArray alloc] initWithObjects: @"Newsgroups", @"To", @"Subject", @"Cc", @"Bcc", @"Reply-To", nil];
     }
     
@@ -1254,46 +1253,53 @@ NSDictionary *maxLinesForCalendarName()
 
 - (void) setupProfilePopUpButton
 {
-    NSEnumerator *enumerator;
-    GIProfile *aProfile;
+    NSEnumerator* enumerator;
+    GIProfile* aProfile;
     
     [profileButton removeAllItems];
     
     // fill profiles in:
     enumerator = [[GIProfile allObjects] objectEnumerator];
-    while (aProfile = [enumerator nextObject])
-    {
+    while (aProfile = [enumerator nextObject]) {
         [profileButton addItemWithTitle: [aProfile valueForKey: @"name"]];
         [[profileButton lastItem] setRepresentedObject:aProfile];
     }
 }
 
+- (void) validateSelectedProfile
+{
+	// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
+	NSArray* validationErrors = [profile validationErrors];	
+	[profileValidationButton setHidden: validationErrors == nil];
+	if (validationErrors) [profileValidationButton setToolTip: [[validationErrors arrayByMappingWithSelector: @selector(localizedDescription)] componentsJoinedByString: @"\n"]];	
+}
+
 - (void) selectProfile: (GIProfile*) aProfile
 {
-    NSString *text, *oldText;
-    GIProfile *oldProfile;
-    NSTextField *field;
+    NSString* text;
+	NSString* oldText;
+    NSTextField* field;
     
-    oldProfile = profile;
+    GIProfile* oldProfile = profile;
     [profile autorelease];
     profile = [aProfile retain];
     
-    if (profile)
-    {
+	
+    if (profile) {
         // select active profile:
         [profileButton selectItemAtIndex: [profileButton indexOfItemWithRepresentedObject:profile]];
     }
+	
+	[self validateSelectedProfile];
     
     // Cc:
-    if ([self hasHeaderTextFieldWithFieldName: @"Cc"])
-    {
+    if ([self hasHeaderTextFieldWithFieldName: @"Cc"]) {
         field = [self headerTextFieldWithFieldName: @"Cc"];
         
         oldText = [oldProfile valueForKey: @"defaultCc"];
         oldText = oldText ? oldText : @"";
         
-        if ([[field stringValue] isEqualToString:oldText])
-        {
+        if ([[field stringValue] isEqualToString:oldText]) {
             [field setStringValue: @""];
         }
     }
@@ -1308,61 +1314,51 @@ NSDictionary *maxLinesForCalendarName()
     }
     
     // Bcc:
-    if ([self hasHeaderTextFieldWithFieldName: @"Bcc"])
-    {
+    if ([self hasHeaderTextFieldWithFieldName: @"Bcc"]) {
         field = [self headerTextFieldWithFieldName: @"Bcc"];
         
         oldText = [oldProfile valueForKey: @"defaultBcc"];
         oldText = oldText ? oldText : @"";
         
-        if ([[field stringValue] isEqualToString:oldText])
-        {
+        if ([[field stringValue] isEqualToString:oldText]) {
             [field setStringValue: @""];
         }
     }
 
-    if ((text = [profile valueForKey: @"defaultBcc"]))
-    {
+    if ((text = [profile valueForKey: @"defaultBcc"])) {
         NSTextField *field = [self headerTextFieldWithFieldName: @"Bcc"];
-        if (! [[field stringValue] length])
-        {
+        if (! [[field stringValue] length]) {
             [field setStringValue:text];
         }
     }
     
     // Reply-To:
-    if ([self hasHeaderTextFieldWithFieldName: @"Reply-To"])
-    {
+    if ([self hasHeaderTextFieldWithFieldName: @"Reply-To"]) {
         field = [self headerTextFieldWithFieldName: @"Reply-To"];
         
         oldText = [oldProfile valueForKey: @"defaultReplyTo"];
         oldText = oldText ? oldText : @"";
         
-        if ([[field stringValue] isEqualToString:oldText])
-        {
+        if ([[field stringValue] isEqualToString: oldText]) {
             [field setStringValue: @""];
         }
     }
     
-    if ((text = [profile valueForKey: @"defaultReplyTo"]))
-    {
+    if ((text = [profile valueForKey: @"defaultReplyTo"])) {
         NSTextField *field = [self headerTextFieldWithFieldName: @"Reply-To"];
-        if (! [[field stringValue] length])
-        {
+        if (! [[field stringValue] length]) {
             [field setStringValue:text];
         }
     }
 }
 
-- (IBAction)switchProfile:(id)sender
+- (IBAction) switchProfile: (id) sender
 /*" Triggered by the profile select popup. "*/
 {
-    GIProfile *newProfile;
-    
-    newProfile = [[profileButton selectedItem] representedObject];
-    if ([self profile] != newProfile) // check if something to do
-    {
-        [self selectProfile:newProfile];
+    GIProfile* newProfile = [[profileButton selectedItem] representedObject];
+	// Check if something to do:
+    if ([self profile] != newProfile)  {
+        [self selectProfile: newProfile];
         [self updateSignature];
         [window setDocumentEdited: YES];
     }
@@ -1449,7 +1445,7 @@ NSDictionary *maxLinesForCalendarName()
     
     // account info
     {
-        NSArray *allSMTPAccounts;
+        NSArray*allSMTPAccounts;
         NSEnumerator *enumerator;
         OPMessageAccount *SMTPAccount;
         
@@ -1604,16 +1600,16 @@ NSDictionary *maxLinesForCalendarName()
     
     if ([sender isKindOfClass:[NSTextField class]] && [[sender formatter] isKindOfClass:[GIAddressFormatter class]]) 
     {
-        NSString *addressList = [sender stringValue];
-        NSArray *components = [addressList componentsSeparatedByString:@","];
-        NSEnumerator *enumerator = [components objectEnumerator];
-        NSString *component;
+        NSString* addressList = [sender stringValue];
+        NSArray* components = [addressList componentsSeparatedByString: @","];
+        NSEnumerator* enumerator = [components objectEnumerator];
+        NSString*component;
         
         while (component = [enumerator nextObject])
         {
             if ([[component addressFromEMailString] length])
             {
-                [GIAddressFormatter addToLRUMailAddresses:[component stringByRemovingSurroundingWhitespace]];
+                [GIAddressFormatter addToLRUMailAddresses: [component stringByRemovingSurroundingWhitespace]];
             }
         }
     }
@@ -1628,33 +1624,27 @@ NSDictionary *maxLinesForCalendarName()
 
 - (NSArray*) tokenField: (NSTokenField*) tokenField completionsForSubstring: (NSString*) substring indexOfToken:(int)tokenIndex indexOfSelectedItem:(int *)selectedIndex
 {
-    ABSearchElement *searchElementEmailAddress, *searchElementFirstname, *searchElementLastname;
-    NSArray *searchResult;
-    NSMutableArray *result = [NSMutableArray array];
-    NSEnumerator *enumerator;
-    id record;
+    NSMutableArray* result = [NSMutableArray array];
 
-    searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-    searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-    searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    ABSearchElement* searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    ABSearchElement* searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    ABSearchElement* searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
     
-    searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
+    NSArray* searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
 
-    enumerator = [searchResult objectEnumerator];
-    while (record = [enumerator nextObject])
-    {
+    NSEnumerator* enumerator = [searchResult objectEnumerator];
+	id record;
+    while (record = [enumerator nextObject]) {
         if ([record isKindOfClass: [ABPerson class]]) // only persons (not groups!) at this time
         {
-            ABPerson *person = record;
-            NSString *fullname = [person fullname];
-            ABMultiValue *emails = [person valueForProperty:kABEmailProperty];
+            ABPerson* person   = record;
+            NSString* fullname = [person fullname];
+            ABMultiValue* emails = [person valueForProperty: kABEmailProperty];
             int i;
             NSString *entryCandidate = nil;
             
-            for (i = 0; i < [emails count]; i++)
-            {
-                if ([fullname length])
-                {
+            for (i = 0; i < [emails count]; i++) {
+                if ([fullname length]) {
                     entryCandidate = [NSString stringWithFormat: @"%@ (%@)", [emails valueAtIndex:i], fullname];
                 }
                 else
@@ -1662,12 +1652,12 @@ NSDictionary *maxLinesForCalendarName()
                     entryCandidate = [person email];
                 }
                 
-                if ([entryCandidate hasPrefix:substring]) [result addObject:entryCandidate];
+                if ([entryCandidate hasPrefix: substring]) [result addObject: entryCandidate];
             }
         }
     }
         
-    NSArray *r = [result sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    NSArray* r = [result sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
     return [r count] ? r : nil;
 }
 
@@ -1721,19 +1711,17 @@ NSDictionary *maxLinesForCalendarName()
 
 - (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
 {
-    static NSArray *allowedItemIdentifiers = nil;
+    static NSArray* allowedItemIdentifiers = nil;
     
-    if (! allowedItemIdentifiers)
-    {
-        NSEnumerator *enumerator;
-        NSToolbarItem *item;
-        NSMutableArray *allowed;
+    if (! allowedItemIdentifiers) {
+        NSEnumerator* enumerator;
+        NSToolbarItem* item;
+        NSMutableArray* allowed;
         
         allowed = [NSMutableArray arrayWithCapacity: [toolbarItems count] + 5];
         
         enumerator = [toolbarItems objectEnumerator];
-        while (item = [enumerator nextObject])
-        {
+        while (item = [enumerator nextObject]) {
             [allowed addObject: [item itemIdentifier]];
         }
         

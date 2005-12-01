@@ -93,3 +93,15 @@ static volatile NSThread* mainThread = nil;
 
 
 @end
+
+@implementation NSError (OPExtensions)
+
++ (id) errorWithDomain: (NSString*) domain description: (NSString*) description
+{
+	NSString* ldescription = NSLocalizedString(description, @"");
+	NSDictionary* userInfo = [NSDictionary dictionaryWithObjectsAndKeys: ldescription, NSLocalizedDescriptionKey, nil, nil];
+	return [self errorWithDomain: domain code: 0 userInfo: userInfo];
+}
+
+
+@end

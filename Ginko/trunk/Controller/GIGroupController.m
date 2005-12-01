@@ -737,17 +737,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (NSArray *)allSelectedMessages
+- (NSArray*) allSelectedMessages
 {
-    NSMutableArray *result = [NSMutableArray array];
-    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+    NSMutableArray* result = [NSMutableArray array];
+    NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
     
     if (! [selectedIndexes count]) return [NSArray array];
     
     unsigned int i = [selectedIndexes firstIndex];
     
-    do
-    {
+    do {
         id item = [threadsView itemAtRow:i];
         
         if ([item isKindOfClass:[GIMessage class]])
@@ -774,7 +773,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (BOOL)isAnySelectedItemNotHavingMessageflags:(unsigned int)flags allSelectedMessages:(NSArray **)allMessages
+- (BOOL) isAnySelectedItemNotHavingMessageflags: (unsigned int) flags allSelectedMessages: (NSArray**) allMessages
 {
     (*allMessages) = [self allSelectedMessages];
     NSEnumerator *enumerator = [(*allMessages) objectEnumerator];
@@ -790,7 +789,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void)toggleFlag:(unsigned int)flag
 {
-    NSArray *selectedMessages;
+    NSArray* selectedMessages;
     BOOL set = [self isAnySelectedItemNotHavingMessageflags:flag allSelectedMessages:&selectedMessages];
     NSEnumerator *enumerator = [selectedMessages objectEnumerator];
     GIMessage *message;
@@ -1129,32 +1128,25 @@ static BOOL isThreadItem(id item)
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    if ([menuItem action] == @selector(showRawSource:))
-    {
-        [menuItem setState:showRawSource ? NSOnState : NSOffState];
+    if ([menuItem action] == @selector(showRawSource:)) {
+		
+        [menuItem setState: showRawSource ? NSOnState : NSOffState];
         return ![self threadsShownCurrently];
-    }
-    else if ([menuItem action] == @selector(toggleReadFlag:))
-    {
-        if ([self validateSelector:[menuItem action]])
-        {
-            NSArray *selectedMessages;
+		
+    } else if ([menuItem action] == @selector(toggleReadFlag:)) {
+		
+        if ([self validateSelector: [menuItem action]]) {
+            NSArray* selectedMessages;
             
-            if ([self isAnySelectedItemNotHavingMessageflags:OPSeenStatus allSelectedMessages:&selectedMessages])
-            {
-                [menuItem setTitle:NSLocalizedString(@"As Read", @"Menu title for toggling messages to read")];
-            }
-            else
-            {
-                [menuItem setTitle:NSLocalizedString(@"As Unread", @"Menu title for toggling messages to read")];
+            if ([self isAnySelectedItemNotHavingMessageflags: OPSeenStatus allSelectedMessages: &selectedMessages]) {
+                [menuItem setTitle: NSLocalizedString(@"As Read", @"Menu title for toggling messages to read")];
+            } else {
+                [menuItem setTitle: NSLocalizedString(@"As Unread", @"Menu title for toggling messages to read")];
             }
             return YES;
-        }
-        else return NO;
-    }
-    else
-    {
-        return [self validateSelector:[menuItem action]];
+        } else return NO;
+    } else {
+        return [self validateSelector: [menuItem action]];
     }
 }
 
@@ -1576,7 +1568,7 @@ static NSMutableDictionary *commentsCache = nil;
 
 NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 {
-    NSArray *result;
+    NSArray* result;
     
     result = [commentsCache objectForKey: [aMessage objectURLString]];
     
@@ -1805,10 +1797,9 @@ NSMutableArray* border = nil;
 {
     if (![self threadsShownCurrently])
     {
-        NSArray *comments = [[self displayedMessage] commentsInThread: [self displayedThread]];
+        NSArray* comments = [[self displayedMessage] commentsInThread: [self displayedThread]];
         
-        if ([comments count])
-        {
+        if ([comments count]) {
             [self setDisplayedMessage: [comments objectAtIndex:0] thread: [self displayedThread]];
             return;
         }
@@ -1864,29 +1855,25 @@ NSMutableArray* border = nil;
     return [self validateSelector:[theItem action]];
 }
 
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+- (NSToolbarItem*) toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar: (BOOL) flag
 {
     return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
 }
 
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
+- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*) toolbar
 {
     return defaultIdentifiers;
 }
 
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
+- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
 {
-    static NSArray *allowedItemIdentifiers = nil;
+    static NSArray* allowedItemIdentifiers = nil;
     
-    if (! allowedItemIdentifiers)
-    {
-        NSEnumerator *enumerator;
-        NSToolbarItem *item;
-        NSMutableArray *allowed;
-        
-        allowed = [NSMutableArray arrayWithCapacity:[toolbarItems count] + 5];
-        
-        enumerator = [toolbarItems objectEnumerator];
+    if (! allowedItemIdentifiers) {
+        NSToolbarItem*  item;
+        NSMutableArray* allowed = [NSMutableArray arrayWithCapacity:[toolbarItems count] + 5];
+        NSEnumerator*   enumerator = [toolbarItems objectEnumerator];
+		
         while (item = [enumerator nextObject]) [allowed addObject:[item itemIdentifier]];
         
         [allowed addObjectsFromArray:[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
@@ -1901,26 +1888,26 @@ NSMutableArray* border = nil;
 
 @implementation GIGroupController (DragNDrop)
 
-- (void) moveThreadsWithURI:(NSArray*) threadURIs 
-                 fromGroup: (GIMessageGroup*) sourceGroup 
-                   toGroup: (GIMessageGroup*) destinationGroup
+- (void) moveThreadsWithURI: (NSArray*) threadURIs 
+				  fromGroup: (GIMessageGroup*) sourceGroup 
+					toGroup: (GIMessageGroup*) destinationGroup
 {
-    NSEnumerator *enumerator = [threadURIs objectEnumerator];
-    NSString *threadURI;
+    NSEnumerator* enumerator = [threadURIs objectEnumerator];
+    NSString* threadURI;
     
     // Prevent merge problems:
     //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
     while (threadURI = [enumerator nextObject]) 
     {
-        GIThread *thread = [OPPersistentObjectContext objectWithURLString:threadURI];
+        GIThread *thread = [OPPersistentObjectContext objectWithURLString: threadURI];
         NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
         
         // remove thread from source group:
-        [thread removeFromGroups:sourceGroup];
+        [thread removeFromGroups: sourceGroup];
         
         // add thread to destination group:
-        [thread addToGroups:destinationGroup];
+        [thread addToGroups: destinationGroup];
     }
 }
 
@@ -1947,9 +1934,9 @@ NSMutableArray* border = nil;
             return YES;
         }
         
-        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        if ([threadURLs count])
-        {
+        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
+        if ([threadURLs count]) {
+			
             GIMessageGroup *sourceGroup = [(GIGroupController *)[[info draggingSource] delegate] group];
             GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
             
@@ -1965,11 +1952,11 @@ NSMutableArray* border = nil;
     else if (anOutlineView == threadsView)
     {
         // move threads from source group to destination group:
-        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        GIMessageGroup *sourceGroup = [(GIGroupController *)[[info draggingSource] delegate] group];
-        GIMessageGroup *destinationGroup = [self group];
+        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
+        GIMessageGroup* sourceGroup = [(GIGroupController*)[[info draggingSource] delegate] group];
+        GIMessageGroup* destinationGroup = [self group];
         
-        [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
+        [self moveThreadsWithURI: threadURLs fromGroup: sourceGroup toGroup: destinationGroup];
         /*
         NSEnumerator *enumerator = [threadURLs objectEnumerator];
         NSString *threadURL;
@@ -2001,7 +1988,7 @@ NSMutableArray* border = nil;
 {
     if (anOutlineView == boxesView) {
 		// Message Groups
-        NSArray *items = [[info draggingPasteboard] propertyListForType: @"GinkoMessageboxes"];
+        NSArray* items = [[info draggingPasteboard] propertyListForType: @"GinkoMessageboxes"];
         
         if ([items count] == 1) {
             if (index != NSOutlineViewDropOnItemIndex) {
@@ -2014,7 +2001,7 @@ NSMutableArray* border = nil;
             }
         }
         
-        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
+        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
         if ([threadURLs count]) {
             if (index == NSOutlineViewDropOnItemIndex) {
                 return NSDragOperationMove;
@@ -2025,7 +2012,7 @@ NSMutableArray* border = nil;
     } else if (anOutlineView == threadsView) {
         if ([info draggingSource] != threadsView) // don't let drop on itself
         {
-            NSArray *items = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
+            NSArray* items = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
             
             if ([items count] > 0) {
                 [anOutlineView setDropItem: nil dropChildIndex:-1]; 

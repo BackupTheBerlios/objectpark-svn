@@ -428,20 +428,15 @@
         filename = @"";
         
     // strip doublequotes from theFilename
-    {
-        NSArray *components;
-        
-        components = [filename componentsSeparatedByString: @"\""];
-        filename = [components componentsJoinedByString: @"'"];
-    }
+	NSArray* components = [filename componentsSeparatedByString: @"\""];
+	filename = [components componentsJoinedByString: @"'"];
 
     // get the permissions
     attributes = [aFileWrapper fileAttributes];
-    posixPermissions = [attributes objectForKey:NSFilePosixPermissions];
+    posixPermissions = [attributes objectForKey: NSFilePosixPermissions];
     
-    if (posixPermissions)
-    {
-        xUnixMode = [[NSString xUnixModeString:[posixPermissions intValue]] retain];
+    if (posixPermissions) {
+        xUnixMode = [[NSString xUnixModeString: [posixPermissions intValue]] retain];
     }
     
     // collect subparts

@@ -11,7 +11,7 @@
 
 @interface NSToolbar (OPExtensions)
 
-- (BOOL)toolbarItems:(NSArray **)items defaultIdentifiers:(NSArray **)defaultIds forToolbarNamed: (NSString*) toolbarName;
+- (BOOL)toolbarItems:(NSArray**) items defaultIdentifiers:(NSArray**) defaultIds forToolbarNamed: (NSString*) toolbarName;
 
 + (NSToolbarItem *)toolbarItemForItemIdentifier: (NSString*) itemIdentifier fromToolbarItemArray:(NSArray*) items;
 

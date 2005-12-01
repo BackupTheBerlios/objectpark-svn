@@ -157,8 +157,8 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 - (NSArray*) threadsByDate
 //" Returns an ordered list of all message threads of the receiver, ordered by date. "
 {
-    static NSArray *dateDescriptor = nil;
-    NSArray *result = nil;
+    static NSArray*dateDescriptor = nil;
+    NSArray*result = nil;
     
     NSLog(@"entered threadsByDate");
     if (! dateDescriptor) dateDescriptor = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey: @"date" ascending: NO] autorelease], nil];

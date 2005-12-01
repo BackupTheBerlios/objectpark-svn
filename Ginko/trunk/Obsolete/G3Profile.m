@@ -19,7 +19,7 @@
 + (NSArray*) allObjects
 /*" Returns all profile instances, assuring there is at least one (by creating it). "*/
 {    
-    NSArray *result;
+    NSArray* result;
     
     @synchronized(self)
     {
@@ -29,7 +29,7 @@
             G3Profile *profile = [[[self alloc] init] autorelease];
             [profile setValue: @"Dummy Profile" forKey: @"name"];
             [profile setValue: [NSNumber numberWithBool: NO] forKey: @"enabled"];
-            [profile setValue: @"dummy@profile.org" forKey: @"emailAddress"];
+            [profile setValue: @"dummy@profile.org" forKey: @"mailAddress"];
             result = [self allObjects];
         }
         
@@ -77,32 +77,25 @@
     return NO;
 }
 
-+ (G3Profile *)guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage
++ (G3Profile*) guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage
 /*" Tries to find a profile that matches the one meant by aMessage. Return nil if no profile could be guessed. "*/ 
 {
-    NSArray *toList, *ccList, *addressList;
-    NSEnumerator *enumerator;
-    G3Profile *profile;
     G3Profile* replyToCandidate = nil;
     
     // all addressees:
-    toList = [[aMessage bodyForHeaderField: @"To"] addressListFromEMailString];
-    ccList = [[aMessage bodyForHeaderField: @"Cc"] addressListFromEMailString];
-    
-    if ([ccList count]) {
-        addressList = [toList arrayByAddingObjectsFromArray:ccList];
-    } else {
-        addressList = toList;
-    }
+    NSArray* toList = [[aMessage bodyForHeaderField: @"To"] addressListFromEMailString];
+    NSArray* ccList = [[aMessage bodyForHeaderField: @"Cc"] addressListFromEMailString];
+	NSArray* addressList = ([ccList count]) ? [toList arrayByAddingObjectsFromArray: ccList] : toList;
             
-    enumerator = [[self allObjects] objectEnumerator];
+    NSEnumerator* enumerator = [[self allObjects] objectEnumerator];
+	G3Profile* profile;
     while ((profile = [enumerator nextObject])) {
 		
         if ([[profile valueForKey: @"enabled"] boolValue]) {
-            NSString *email = [profile emailAddress];
-            NSString *replyTo = [profile valueForKey: @"replyToAddress"];
-            NSEnumerator *addressEnumerator = [addressList objectEnumerator];
-            NSString *address;
+            NSString* email = [profile mailAddress];
+            NSString* replyTo = [profile valueForKey: @"replyToAddress"];
+            NSEnumerator* addressEnumerator = [addressList objectEnumerator];
+            NSString* address;
             
             while ((address = [addressEnumerator nextObject])) {
                 if (email && [email caseInsensitiveCompare:address] == NSOrderedSame) {

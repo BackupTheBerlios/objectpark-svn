@@ -25,30 +25,32 @@ typedef enum
 
 @interface GIMessageEditorController : NSObject 
 {
-    IBOutlet NSWindow *window;
-    IBOutlet OPSizingTextField *toField;
-    IBOutlet OPSizingTextField *subjectField;
-    IBOutlet OPSizingTextField *hiddenTextFieldPrototype; /*" prototype for dynamic text fields "*/
-    IBOutlet NSTextField *hiddenCaptionPrototype;
-    IBOutlet NSPopUpButton *profileButton;
-    IBOutlet GITextView *messageTextView;
-    IBOutlet NSPopUpButton *toFieldOptionsButton;
+    IBOutlet NSWindow* window;
+    IBOutlet OPSizingTextField* toField;
+    IBOutlet OPSizingTextField* subjectField;
+    IBOutlet OPSizingTextField* hiddenTextFieldPrototype; /*" prototype for dynamic text fields "*/
+    IBOutlet NSTextField* hiddenCaptionPrototype;
+    IBOutlet NSPopUpButton* profileButton;
+    IBOutlet GITextView* messageTextView;
+    IBOutlet NSPopUpButton* toFieldOptionsButton;
+    IBOutlet NSButton* profileValidationButton;
     
-    NSWindowController *windowController;
-    GIProfile *profile;
-    GIMessage *referencedMessage, *oldMessage;
-    NSMutableDictionary *headerFields;	/*" Maps header names to header field content values "*/
-    NSMutableAttributedString *content;
+    NSWindowController* windowController;
+    GIProfile* profile;
+    GIMessage* referencedMessage;
+	GIMessage* oldMessage;
+    NSMutableDictionary* headerFields;	/*" Maps header names to header field content values "*/
+    NSMutableAttributedString* content;
     BOOL shouldAppendSignature;
     int type;
     
     // -- Headers --
-    NSMutableDictionary *headerTextFieldsForName;
-    OPSizingTextField *bottomTextField;
+    NSMutableDictionary* headerTextFieldsForName;
+    OPSizingTextField* bottomTextField;
     
     // -- Toolbar --
-    NSArray *toolbarItems;
-    NSArray *defaultIdentifiers;
+    NSArray* toolbarItems;
+    NSArray* defaultIdentifiers;
 }
 
 - (id)initWithMessage: (GIMessage*) aMessage;
@@ -74,10 +76,12 @@ typedef enum
 
 - (void) awakeHeaders;
 - (void) updateHeaders;
-- (BOOL)hasHeaderTextFieldWithFieldName: (NSString*) aFieldName;
-- (OPSizingTextField *)headerTextFieldWithFieldName: (NSString*) aFieldName;
-- (IBAction)switchProfile:(id)sender;
+- (BOOL) hasHeaderTextFieldWithFieldName: (NSString*) aFieldName;
+- (OPSizingTextField*) headerTextFieldWithFieldName: (NSString*) aFieldName;
+- (IBAction) switchProfile: (id) sender;
 - (void) takeValuesFromHeaderFields;
+- (void) validateSelectedProfile;
+
 
 @end
 

@@ -97,5 +97,7 @@
 - (void) removeValue: (id) value forKey: (NSString*) key;
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key;
 
+- (NSArray*) validationErrors;
+
 
 @end

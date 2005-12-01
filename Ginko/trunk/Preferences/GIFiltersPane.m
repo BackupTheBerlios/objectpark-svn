@@ -394,24 +394,19 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     }
 }
 
-- (id)tableView: (NSTableView*) aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id) tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
 {
-    if (aTableView == filtersTableView)
-    {
-        NSArray *filters = [GIMessageFilter filters];
+    if (aTableView == filtersTableView) {
+        NSArray* filters = [GIMessageFilter filters];
         
-        if (rowIndex >= [filters count]) 
-        {
+        if (rowIndex >= [filters count]) {
             return nil;
         }
         
-        if ([[aTableColumn identifier] isEqualToString: @"enabled"]) 
-        {
-            return [NSNumber numberWithBool:[[filters objectAtIndex:rowIndex] isActive]];
-        } 
-        else 
-        {
-            return [[filters objectAtIndex:rowIndex] name];
+        if ([[aTableColumn identifier] isEqualToString: @"enabled"]) {
+            return [NSNumber numberWithBool: [[filters objectAtIndex:rowIndex] isActive]];
+        } else {
+            return [[filters objectAtIndex: rowIndex] name];
         }
     }
     else // matching table view
@@ -574,33 +569,28 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
                 }
             }
             
-            [expression setSubjectValue:object];
-        }
-        else if ([[aTableColumn identifier] isEqual: @"argument"])
-        {
-            switch ([expression subjectType])
-            {
+            [expression setSubjectValue: object];
+			
+        } else if ([[aTableColumn identifier] isEqual: @"argument"]) {
+			
+            switch ([expression subjectType]) {
                 case kGIMFTypeHeaderField:
                     [expression setArgument:object];
                     break;
-                case kGIMFTypeFlag:
-                {
-                    NSArray *tags;
-                    
-                    tags = [self messageStatusPopUpTags];
+                case kGIMFTypeFlag: {
+                    NSArray* tags = [self messageStatusPopUpTags];
                     [expression setFlagArgument:[[tags objectAtIndex:[object intValue]] intValue]];
                 }
                     break;
                 default:
                     break;
             }
-        }
-        else if ([[aTableColumn identifier] isEqual: @"criteria"])
-        {
-            NSArray *tags = nil;
+			
+        } else if ([[aTableColumn identifier] isEqual: @"criteria"]) {
+			
+            NSArray* tags = nil;
             
-            switch ([expression subjectType])
-            {
+            switch ([expression subjectType]) {
                 case kGIMFTypeHeaderField:
                     tags = [self popUpButtonCellTagsForHeaderFields];
                     break;
@@ -628,22 +618,20 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         
         expression = [[[self _selectedFilter] expressions] objectAtIndex:rowIndex];
         
-        if ([[aTableColumn identifier] isEqual: @"target"]) 
-        {
+        if ([[aTableColumn identifier] isEqual: @"target"])  {
             [aCell setUsesDataSource: YES];
-            [aCell setDataSource:self];
+            [aCell setDataSource: self];
             [aCell setEditable: YES];
-        }
-        else if ([[aTableColumn identifier] isEqual: @"criteria"])
-        {
-            NSArray *items = nil;
-            NSArray *tags = nil;
+			
+        } else if ([[aTableColumn identifier] isEqual: @"criteria"]) {
+			
+            NSArray* items = nil;
+            NSArray* tags = nil;
             int count, i;
             
             [aCell removeAllItems];
             
-            switch ([expression subjectType])
-            {
+            switch ([expression subjectType]) {
                 case kGIMFTypeHeaderField:
                     items = [self popUpButtonCellItemsForHeaderFields];
                     tags = [self popUpButtonCellTagsForHeaderFields];
@@ -657,8 +645,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
             }
             
             count = [items count];
-            for (i = 0; i < count; i++)
-            {
+            for (i = 0; i < count; i++) {
                 [aCell addItemWithTitle:[items objectAtIndex:i]];
                 [[aCell lastItem] setTag:[[tags objectAtIndex:i] intValue]];
             }
@@ -675,8 +662,8 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
                     break;
                 case kGIMFTypeFlag:
                 {
-                    NSArray *items = nil;
-                    NSArray *tags = nil;
+                    NSArray* items = nil;
+                    NSArray* tags = nil;
                     int count, i;
                     
                     [aCell removeAllItems];
@@ -736,16 +723,12 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 
 - (BOOL)tableView: (NSTableView*) aTableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
 {
-    int index;
-    NSArray *rows;
-    GIMessageFilter *filter;
-    
-    rows = [[info draggingPasteboard] propertyListForType:GIFILTERPREFTYPE];
+    NSArray* rows = [[info draggingPasteboard] propertyListForType:GIFILTERPREFTYPE];
     
     NSAssert([rows count] == 1, @"More than one filter per drag is not supported");
     
-    index = [[rows objectAtIndex:0] intValue];
-    filter = [[GIMessageFilter filters] objectAtIndex:index];
+    int index = [[rows objectAtIndex:0] intValue];
+    GIMessageFilter* filter = [[GIMessageFilter filters] objectAtIndex:index];
     [GIMessageFilter moveFilter:filter toIndex:row];
     
     [filtersTableView selectRow:row byExtendingSelection: NO];

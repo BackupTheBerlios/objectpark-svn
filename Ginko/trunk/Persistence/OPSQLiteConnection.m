@@ -208,7 +208,7 @@
 		OPClassDescription* cd = [poClass persistentClassDescription];
 		
 		NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[cd columnNames] componentsJoinedByString: @","], [cd tableName]];
-		NSLog(@"Preparing statement for fetches: %@", queryString);
+		OPDebugLog(@"OPPersistence", OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 		
 		[fetchStatements setObject: result forKey: poClass]; // cache it

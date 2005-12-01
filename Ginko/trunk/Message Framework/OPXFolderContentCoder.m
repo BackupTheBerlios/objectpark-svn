@@ -57,57 +57,48 @@
     return NO;
 }
 
-- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper
+- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
-    NSFileWrapper *fileWrapper;
-    NSDictionary *attributes;
-    NSNumber *posixPermissions;
-    NSMutableArray *someParts;
-    NSEnumerator *enumerator;
+    NSFileWrapper* fileWrapper;
+    NSDictionary* attributes;
+    NSNumber* posixPermissions;
+    NSMutableArray* someParts;
+    NSEnumerator* enumerator;
     
-    if (! (filename = [[aFileWrapper filename] retain]))
-    {
+    if (! (filename = [[aFileWrapper filename] retain])) {
         filename = [[aFileWrapper preferredFilename] retain];
     }
     
     if (! filename) filename = @"";
     
     // strip doublequotes from theFilename
-    {
-        NSArray *components;
-        
-        components = [filename componentsSeparatedByString:@"\""];
-        filename = [components componentsJoinedByString:@"'"];
-    }
+	NSArray* components = [filename componentsSeparatedByString: @"\""];
+	filename = [components componentsJoinedByString: @"'"];
+    
     
     // get the permissions
     attributes = [aFileWrapper fileAttributes];
-    posixPermissions = [attributes objectForKey:NSFilePosixPermissions];
+    posixPermissions = [attributes objectForKey: NSFilePosixPermissions];
     
-    if (posixPermissions)
-    {
-        xUnixMode = [[NSString xUnixModeString:[posixPermissions intValue]] retain];
+    if (posixPermissions) {
+        xUnixMode = [[NSString xUnixModeString: [posixPermissions intValue]] retain];
     }
     
     // collect subparts
     someParts = [NSMutableArray array];
     
     enumerator = [[aFileWrapper fileWrappers] objectEnumerator];
-    while (fileWrapper = [enumerator nextObject])
-    {
-        if ([fileWrapper isDirectory])
-        {
-            OPXFolderContentCoder *coder = [[OPXFolderContentCoder alloc] initWithFileWrapper:fileWrapper];
+    while (fileWrapper = [enumerator nextObject]) {
+        if ([fileWrapper isDirectory]) {
+            OPXFolderContentCoder* coder = [[OPXFolderContentCoder alloc] initWithFileWrapper: fileWrapper];
             
             [someParts addObject:[coder messagePart]];
             
             [coder release];
-        }
-        else if ([fileWrapper isRegularFile])
-        {
-            OPMultimediaContentCoder *coder = [[OPMultimediaContentCoder alloc] initWithFileWrapper:fileWrapper];
+        } else if ([fileWrapper isRegularFile]) {
+            OPMultimediaContentCoder *coder = [[OPMultimediaContentCoder alloc] initWithFileWrapper: fileWrapper];
             
-            [someParts addObject:[coder messagePart]];
+            [someParts addObject: [coder messagePart]];
             
             [coder release];
         }
@@ -118,7 +109,7 @@
 //#warning axel->all: symbolic links are not supported yet
     }
     
-    return [super initWithSubparts:someParts];
+    return [super initWithSubparts: someParts];
 }
 
 - (void) _ensureAttachmentDispositionForMessagePart: (EDMessagePart*) messagePart

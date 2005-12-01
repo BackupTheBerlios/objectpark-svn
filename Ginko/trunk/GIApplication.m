@@ -87,9 +87,9 @@
     return YES;
 }
 
-+ (NSArray *)preferredContentTypes
++ (NSArray*) preferredContentTypes
 {
-    NSArray *types = [[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences];
+    NSArray* types = [[NSUserDefaults standardUserDefaults] objectForKey: ContentTypePreferences];
     return types;
 }
 
@@ -239,7 +239,7 @@
 {
     //NSError*   error;
     NSString* path      = [[self applicationSupportPath] stringByAppendingPathComponent: @"MessageBase.sqlite"];
-    BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
+    //BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: path]; // used to configure DB using SQL below (todo)
     
 	//NSAssert(!isNewlyCreated, @"Please supply an old database file. DB creation not implemented.");
 	
@@ -280,7 +280,7 @@
 
     // Some statistical messsages:
     //OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	
-    //NSArray *allMessages = [GIMessage allObjects];
+    //NSArray*allMessages = [GIMessage allObjects];
     //GIMessage *aMessage  = [allMessages lastObject];
     
     //NSLog(@"MessageBase contains %d message objects in %d threads.", [allMessages count], [[GIThread allObjects] count]);
@@ -362,63 +362,59 @@
   //  [NSAutoreleasePool enableRelease: NO];
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void) applicationDidFinishLaunching: (NSNotification*) aNotification
 /*" On launch, opens a group window. "*/
 {
-    [self applicationDidBecomeActive:aNotification];
-    [OPJobs setMaxThreads:4];
+    [self applicationDidBecomeActive: aNotification];
+    [OPJobs setMaxThreads: 4];
 }
 
-- (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
+- (NSArray*) filePathsSortedByCreationDate: (NSArray*) someFilePaths
 {
 #warning implement for better mbox restore
     return someFilePaths;
 }
 
-- (IBAction)importMboxFile:(id)sender
+- (IBAction)importMboxFile: (id)sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
-    NSArray *fileTypes = [NSArray arrayWithObjects:@"mboxfile", @"mbox", @"mbx", nil];
-    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
-    NSString *directory = [[NSUserDefaults standardUserDefaults] objectForKey:ImportPanelLastDirectory];
+    NSArray* fileTypes = [NSArray arrayWithObjects: @"mboxfile", @"mbox", @"mbx", nil];
+    NSOpenPanel* oPanel = [NSOpenPanel openPanel];
+    NSString* directory = [[NSUserDefaults standardUserDefaults] objectForKey: ImportPanelLastDirectory];
     
     if (!directory) directory = NSHomeDirectory();
     
-    [oPanel setAllowsMultipleSelection:YES];
-    [oPanel setAllowsOtherFileTypes:YES];
-    [oPanel setPrompt:NSLocalizedString(@"Import", @"Import open panel OK button")];
-    [oPanel setTitle:NSLocalizedString(@"Import mbox Files", @"Import open panel title")];
+    [oPanel setAllowsMultipleSelection: YES];
+    [oPanel setAllowsOtherFileTypes: YES];
+    [oPanel setPrompt: NSLocalizedString(@"Import", @"Import open panel OK button")];
+    [oPanel setTitle: NSLocalizedString(@"Import mbox Files", @"Import open panel title")];
     
-    result = [oPanel runModalForDirectory:directory file:nil types:fileTypes];
+    result = [oPanel runModalForDirectory:directory file: nil types: fileTypes];
     
-    if (result == NSOKButton) 
-    {
-        [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
+    if (result == NSOKButton) {
+        [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory] forKey: ImportPanelLastDirectory];
         
-        NSArray *filesToOpen = [self filePathsSortedByCreationDate:[oPanel filenames]];
-        if ([filesToOpen count]) 
-        {
-            [self showActivityPanel:sender];
+        NSArray* filesToOpen = [self filePathsSortedByCreationDate: [oPanel filenames]];
+        if ([filesToOpen count]) {
+            [self showActivityPanel: sender];
             
-            NSEnumerator *enumerator = [filesToOpen objectEnumerator];
-            NSString *boxFilename;
+            NSEnumerator* enumerator = [filesToOpen objectEnumerator];
+            NSString* boxFilename;
             
-            while (boxFilename = [enumerator nextObject]) 
-            {
+            while (boxFilename = [enumerator nextObject]) {
                 NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
                 // support for 'mbox' bundles
-                if ([[boxFilename pathExtension] isEqualToString:@"mbox"]) 
-                {
-                    boxFilename = [boxFilename stringByAppendingPathComponent:@"mbox"];
+                if ([[boxFilename pathExtension] isEqualToString: @"mbox"]) {
+                    boxFilename = [boxFilename stringByAppendingPathComponent: @"mbox"];
                 }
                 
-                [jobArguments setObject:boxFilename forKey:@"mboxFilename"];
-                [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
-                [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
+                [jobArguments setObject: boxFilename forKey: @"mboxFilename"];
+                [jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+                [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
                 
-                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
+                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector: @selector(importMessagesFromMboxFileJob:) arguments: jobArguments synchronizedObject: @"mbox import"];
             }
         }
     }    
@@ -539,28 +535,26 @@
 {
     if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    NSNumber* jobId = [[aNotification userInfo] objectForKey: @"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass: [NSNumber class]]);
     
-    NSDictionary *result = [OPJobs resultForJob:jobId];
+    NSDictionary* result = [OPJobs resultForJob: jobId];
     NSAssert1(result != nil, @"no result for job with id %@", jobId);
     
     [OPJobs removeFinishedJob:jobId]; // clean up
     
-    NSArray *messages = [result objectForKey: @"messages"];
+    NSArray* messages = [result objectForKey: @"messages"];
     NSAssert(messages != nil, @"result does not contain 'messages'");
     
-    NSArray *sentMessages = [result objectForKey: @"sentMessages"];
+    NSArray* sentMessages = [result objectForKey: @"sentMessages"];
     NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 
-    NSEnumerator *enumerator = [sentMessages objectEnumerator];
-    GIMessage *message;
-    
-    while (message = [enumerator nextObject])
-    {
-        [message removeFlags:OPDraftStatus | OPQueuedStatus];
-        [GIMessageBase removeDraftMessage:message];
-        [GIMessageBase addSentMessage:message];
+    NSEnumerator* enumerator = [sentMessages objectEnumerator];
+    GIMessage*message;
+    while (message = [enumerator nextObject]) {
+        [message removeFlags: OPDraftStatus | OPQueuedStatus];
+        [GIMessageBase removeDraftMessage: message];
+        [GIMessageBase addSentMessage: message];
         
         /*    
             [messageCenter performSelector:@selector(addRecipientsToLRUMailAddresses:)
@@ -602,31 +596,33 @@
     }
 }
 
-- (IBAction)sendQueuedMessages:(id)sender
+- (IBAction) sendQueuedMessages: (id)sender
 {
-    [self sendQueuedMessagesWithFlag:OPQueuedStatus];
+    [self sendQueuedMessagesWithFlag: OPQueuedStatus];
 }
 
-- (IBAction)showActivityPanel:(id)sender
+- (IBAction) showActivityPanel: (id)sender
 {
-    [GIActivityPanelController showActivityPanelInteractive:YES];
+    [GIActivityPanelController showActivityPanelInteractive: YES];
     
     // this action switches automatic activity panel functionality off:
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AutomaticActivityPanelEnabled];
+    [[NSUserDefaults standardUserDefaults] setBool: NO forKey: AutomaticActivityPanelEnabled];
 }
 
-- (IBAction)showPhraseBrowser:(id)sender
+- (IBAction) showPhraseBrowser:(id)sender
 {
     [GIPhraseBrowserController showPhraseBrowserForTextView:nil];
 }
 
-- (IBAction)toggleAutomaticActivityPanel:(id)sender
+- (IBAction) toggleAutomaticActivityPanel:(id)sender
 {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    [ud setBool:![ud boolForKey:AutomaticActivityPanelEnabled] forKey:AutomaticActivityPanelEnabled];
+    [ud setBool:![ud boolForKey:AutomaticActivityPanelEnabled] forKey: AutomaticActivityPanelEnabled];
     
     // Hides activity panel if needed:
     [GIActivityPanelController updateData];
 }
 
 @end
+
+

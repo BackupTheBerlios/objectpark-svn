@@ -80,11 +80,11 @@
     
     STAssertTrue([[threadA messages] count] == 3, @"not %d", [[threadA messages] count]);
     
-    NSEnumerator *enumerator = [groupsFromThreadB objectEnumerator];
-    NSArray *threads;
+    NSEnumerator* enumerator = [groupsFromThreadB objectEnumerator];
+    NSArray* threads;
     while (threads = [[enumerator nextObject] objectForKey: @"threads"])
     {
-        STAssertTrue(![threads containsObject:threadB], @"Should not contain %@", threadB);
+        STAssertTrue(![threads containsObject: threadB], @"Should not contain %@", threadB);
     }
 }
 

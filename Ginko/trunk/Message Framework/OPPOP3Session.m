@@ -597,7 +597,7 @@ UIDL. nil otherwise. "*/
         response = [_stream availableLine];
         while (response)
         {
-            NSArray *components = [response componentsSeparatedByString: @" "];
+            NSArray* components = [response componentsSeparatedByString: @" "];
             NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
             NSDecimalNumber *sizeNumber = [[NSDecimalNumber alloc] initWithString:
                 [components objectAtIndex:1]];
@@ -656,8 +656,8 @@ UIDL. nil otherwise. "*/
         while (response = [_stream availableLine])
         {
             NSMutableDictionary *infoDict;
-            NSArray *components;
-            NSString *UIDL;
+            NSArray* components;
+            NSString* UIDL;
             int messageNumber;
 
             components = [response componentsSeparatedByString: @" "];

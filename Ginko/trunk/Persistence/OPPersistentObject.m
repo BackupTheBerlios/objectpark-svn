@@ -43,10 +43,12 @@
 @implementation OPPersistentObject
 
 
+/*
 + (void) initialize
 {
 
 }
+*/
 
 + (NSString*) databaseProperties;
 	/*" Overwrite this in subclass. Default implementation returns empty dictionary. 
@@ -247,7 +249,7 @@
 
 - (void) willAccessValueForKey: (NSString*) key
 {
-    [[self context] lock];
+
     [self resolveFault];
 	if (key && ![attributes objectForKey: key]) {
 		// Try to fetch and cache a relationship:
@@ -504,5 +506,28 @@
 	//[self updateInverseRelationShipValue: value forKey: key isRemove: YES];
 
 }
+
+- (NSArray*) validationErrors
+/*" Returns an array of validation errors for simple keys attribute keys or nil if no such errors were found. Implement -validate<AttrName>:error: to fill this array. "*/
+{
+	NSMutableArray* validationErrors = nil;
+	OPClassDescription* cd = [isa persistentClassDescription];
+	int i = cd->simpleAttributeCount;
+	while (--i) {
+		OPAttributeDescription* ad = [cd->attributeDescriptions objectAtIndex: i];
+		NSError* error = nil;
+		NSString* key = ad->name;
+		id value = [self valueForKey: key];
+		[self validateValue: &value forKey: key error: &error];
+		if (error) {
+			//id value = [self valueForKey: key];
+			if (!validationErrors) validationErrors = [NSMutableArray array];
+			[validationErrors addObject: error];
+		}
+	}
+	
+	return validationErrors;
+}
+
 
 @end

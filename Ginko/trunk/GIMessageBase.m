@@ -16,46 +16,39 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIFulltextIndexCenter.h"
 #import "NSData+MessageUtils.h"
-#import <Foundation/NSDebug.h>
 #import "OPJobs.h"
 #import "GIMessageFilter.h"
 #import "OPPOP3Session.h"
 #import "NSApplication+OPExtensions.h"
+#import <OPDebug/OPLog.h>
 
 @implementation GIMessageBase
 
-- (void)addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
+- (void) addMessageInMainThreadWithTransferData: (NSMutableArray*) parameters
 {
-    @try 
-    {
-        GIMessage *message = [GIMessage messageWithTransferData:[parameters objectAtIndex:0]];
+    @try {
+        GIMessage* message = [GIMessage messageWithTransferData: [parameters objectAtIndex: 0]];
         
-        if (message) // if no dupe
-        {
-            if (![GIMessageFilter filterMessage:message flags:0])
-            {
-                [[self class] addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+        if (message) {
+			 // it's not a dupe
+            if (![GIMessageFilter filterMessage: message flags: 0]) {
+                [[self class] addMessage: message toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
             }
             
-            if ([message hasFlags:OPIsFromMeStatus])
-            {
-                [[self class] addMessage:message toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
+            if ([message hasFlags: OPIsFromMeStatus]) {
+                [[self class] addMessage: message toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
             }
             
             // add message to index
             //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
             //[indexCenter addMessage:message];
-            [parameters addObject:message]; // out param
+            [parameters addObject: message]; // out param
             NSLog(@"adding message in main thread... '%@'", [[message internetMessage] subject]);
         } 
-    }
-    @catch(NSException *localException) 
-    {
+    } @catch (NSException* localException) {
         NSLog(@"Exception while adding message in main thread: %@", [localException reason]);
-    }
-    @finally
-    {
-        while ([parameters count] < 2) [parameters addObject:[NSNull null]];
+    } @finally {
+        while ([parameters count] < 2) [parameters addObject: [NSNull null]];
     }
 }
 
@@ -231,7 +224,7 @@ NSString *MboxImportJobName = @"mbox import";
                     
                     if ((++mboxDataCount % 100) == 0) {
                         if (messagesWereAdded) {
-                            if (NSDebugEnabled) NSLog(@"*** Committing changes (added %u messages)...", addedMessageCount);
+                            OPDebugLog(@"OPPersistence", OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
                             
                             //[NSApp performSelectorOnMainThread: @selector(saveAction:) withObject: self waitUntilDone: YES];
                             NSError *error = nil;

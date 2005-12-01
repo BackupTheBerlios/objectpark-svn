@@ -53,7 +53,7 @@
 + (NSArray*) allObjects
 	/*" Returns all profile instances, assuring there is at least one (by creating it). "*/
 {    
-    NSArray *result;
+    NSArray* result;
 #warning Todo: Cache +[GIProfile allObjects] for better performance of e.g. -isMyEmailAddress!
     @synchronized(self)
     {
@@ -76,6 +76,15 @@
     return result;
 }
 
+- (BOOL) validateMailAddress: (NSString**) address error: (NSError**) outError
+{
+	if ([*address length]<3) {
+		// illegal email address
+		*outError = [NSError errorWithDomain: @"GIProfile" description: @"No valid email address has been set in the  selected profile."];
+	}
+	return  *outError == nil;
+}
+
 + (GIProfile*) defaultProfile
 	/*" Returns the default Profile. "*/
 {
@@ -96,7 +105,7 @@
     while ((profile = [enumerator nextObject])) {
 		
         if ([[profile valueForKey: @"enabled"] boolValue]) {
-            NSString* email = [profile emailAddress];
+            NSString* email = [profile mailAddress];
             NSString* replyTo = [profile valueForKey: @"defaultReplyTo"];
             NSEnumerator* addressEnumerator = [addressList objectEnumerator];
             NSString* address;
@@ -126,7 +135,7 @@
         
         enumerator = [[GIProfile allObjects] objectEnumerator];
         while (profile = [enumerator nextObject]) {
-            if ([[[profile emailAddress] addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch] .location != NSNotFound) {
+            if ([[[profile mailAddress] addressFromEMailString] rangeOfString: anAddress options:NSCaseInsensitiveSearch] .location != NSNotFound) {
                 return YES;
             }
         }
@@ -138,11 +147,11 @@
 }
 
 
-- (NSString*) emailAddress
+- (NSString*) mailAddress
 {
-    [self willAccessValueForKey: @"mailaddress"];
-    id result = [self primitiveValueForKey: @"mailaddress"];
-    [self didAccessValueForKey: @"mailaddress"];
+    [self willAccessValueForKey: @"mailAddress"];
+    id result = [self primitiveValueForKey: @"mailAddress"];
+    [self didAccessValueForKey: @"mailAddress"];
     return result;
 }
 

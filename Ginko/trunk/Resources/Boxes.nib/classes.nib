@@ -29,6 +29,13 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            ACTIONS = {
+                addFolder = id; 
+                addMessageGroup = id; 
+                delete = id; 
+                removeFolderMessageGroup = id; 
+                rename = id; 
+            }; 
             CLASS = GIGroupListController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

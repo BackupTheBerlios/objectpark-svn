@@ -34,13 +34,12 @@
         NSPredicate *predicate = [NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForKeyPath: @"messageId"] rightExpression:[NSExpression expressionForConstantValue:messageId] modifier:NSDirectPredicateModifier type:NSEqualToPredicateOperatorType options:0];
         [request setPredicate:predicate];
         
-        NSError *error = nil;
-        NSArray *results = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
+        NSError* error = nil;
+        NSArray* results = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
         
         NSAssert1(!error, @"+[G3Message messageForMessageId:inManagedObjectContext:] error while fetching (%@).", error);    
         
-        if (results != nil) 
-        {
+        if (results != nil) {
             return [results count] ? [results lastObject] : nil;						
         } 
     }

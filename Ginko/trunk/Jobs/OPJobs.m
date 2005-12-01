@@ -253,7 +253,7 @@ static unsigned nextJobId = 1;
     }
 }
 
-static BOOL isJobInArray(NSNumber *anJobId, NSArray *anArray)
+static BOOL isJobInArray(NSNumber* anJobId, NSArray* anArray)
 {
     BOOL result = NO;
     int i, count;
@@ -261,10 +261,8 @@ static BOOL isJobInArray(NSNumber *anJobId, NSArray *anArray)
     [jobsLock lock];
     
     count = [anArray count];
-    for (i = 0; i < count; i++)
-    {
-        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] isEqualToNumber:anJobId])
-        {
+    for (i = 0; i < count; i++) {
+        if ([[[anArray objectAtIndex: i] objectForKey: OPJobId] isEqualToNumber: anJobId]) {
             result = YES;
             break;
         }
@@ -293,7 +291,7 @@ static BOOL isJobInArray(NSNumber *anJobId, NSArray *anArray)
     return isJobInArray(anJobId, finishedJobs);
 }
 
-id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
+id objectForKeyInJobInArray(NSNumber* anJobId, NSArray* anArray, NSString* key)
 {
     id result = nil;
     int i, count;
@@ -301,21 +299,19 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     [jobsLock lock];
     
     count = [anArray count];
-    for (i = count - 1; i >= 0; i--)
-    {
-        if ([[[anArray objectAtIndex:i] objectForKey:OPJobId] isEqualToNumber:anJobId])
-        {
-            result = [[anArray objectAtIndex:i] objectForKey:key];
+    for (i = count - 1; i >= 0; i--) {
+        if ([[[anArray objectAtIndex: i] objectForKey:OPJobId] isEqualToNumber: anJobId]) {
+            result = [[anArray objectAtIndex: i] objectForKey: key];
             break;
         }
     }
     
-    [jobsLock unlockWithCondition:[jobsLock condition]];
+    [jobsLock unlockWithCondition: [jobsLock condition]];
     
     return result;
 }
 
-+ (void) noteJobWillStart:(NSNumber*) anJobId
++ (void) noteJobWillStart: (NSNumber*) anJobId
 /*" Performed on main thread to notify of the upcoming start of a job. "*/
 {
     NSString *jobName = objectForKeyInJobInArray(anJobId, pendingJobs, OPJobName);
@@ -486,17 +482,16 @@ id objectForKeyForRunningJob(NSString *key)
     return result;
 }
 
-static NSArray *jobIdsFromArray(NSArray *anArray)
+static NSArray* jobIdsFromArray(NSArray* anArray)
 {
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:[anArray count]];
+    NSMutableArray* result = [NSMutableArray arrayWithCapacity: [anArray count]];
     
     [jobsLock lock];
-    NSEnumerator *enumerator = [anArray objectEnumerator];
-    NSDictionary *jobDescription;
+    NSEnumerator* enumerator = [anArray objectEnumerator];
+    NSDictionary* jobDescription;
     
-    while (jobDescription = [enumerator nextObject])
-    {
-        [result addObject:[jobDescription objectForKey:OPJobId]];
+    while (jobDescription = [enumerator nextObject]) {
+        [result addObject: [jobDescription objectForKey: OPJobId]];
     }
     
     [jobsLock unlockWithCondition:[jobsLock condition]];

@@ -24,7 +24,7 @@
 //#import "GIMessage.h"
 #import "GIMessageBase.h"
 #import "NSString+Extensions.h"
-//#import "GIMessageFilter.h"
+#import "GIApplication.h"
 
 
 @implementation GIGroupListController
@@ -153,31 +153,33 @@
 {
     int selectedRow = [boxesView selectedRow];
     id item = [boxesView itemAtRow: selectedRow];
-    NSMutableArray *node = nil;
-    int index;
+	
+    NSMutableArray* node = item;
+    int index; // insertion index under node
     
-    if ([item isKindOfClass: [NSMutableArray class]]) {
-        node = item;
+    if ([boxesView isExpandable: item]) {
+		// Expand any selected folder:
         index = 0;
         [boxesView expandItem: item];
     } else {
         node = [GIMessageGroup findHierarchyNodeForEntry: item startingWithHierarchyNode: [GIMessageGroup hierarchyRootNode]];
         
         if (node) {
-            index = [node indexOfObject:item]; // +1 correction already in!
+            index = [node indexOfObject: item]; // +1 correction already in!
         } else {
             node = [GIMessageGroup hierarchyRootNode];
             index = 0;
         }
     }
     
-    [GIMessageGroup newMessageGroupWithName: nil atHierarchyNode: node atIndex: index];
+    GIMessageGroup* newGroup = [GIMessageGroup newMessageGroupWithName: nil atHierarchyNode: node atIndex: index];
     
     [boxesView reloadData];
     
     [boxesView setAutosaveName: @"boxesView"];
-    [boxesView selectRow: selectedRow + 1 byExtendingSelection: NO];
+    [boxesView selectRow: [boxesView rowForItem: newGroup] byExtendingSelection: NO];
     [self rename: self];
+	[GIApp saveAction: nil]; // commit new database entry
 }
 
 - (IBAction) removeFolderMessageGroup: (id) sender

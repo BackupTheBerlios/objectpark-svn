@@ -26,51 +26,51 @@
 
 @interface GIMessageFilter : NSObject
 {
-    @private NSMutableDictionary *_filterDefinition;		/*" a dictionary that defines the filter "*/
+    @private NSMutableDictionary* _filterDefinition;		/*" a dictionary that defines the filter "*/
     @private int _isActiveCache;				/*" a cache for active status (efficiency). "*/
     @private int _allExpressionsMustMatchCache;			/*" a cache for matching mode (efficiency). "*/
-    @private NSArray *_actionsCache; 				/*" a cache for the actions (efficiency). "*/
-    @private NSArray *_expressionsCache;			/*" a cache for the expressions (efficiency). "*/
+    @private NSArray* _actionsCache; 				/*" a cache for the actions (efficiency). "*/
+    @private NSArray* _expressionsCache;			/*" a cache for the expressions (efficiency). "*/
 }
 
 /*" Initialization "*/
-- (id)init;
-- (id)initWithFilterDefinitionDictionary: (NSDictionary*) aDictionary;
+- (id) init;
+- (id) initWithFilterDefinitionDictionary: (NSDictionary*) aDictionary;
 
 /*" Accessors "*/
-- (NSDictionary *)filterDefinitionDictionary;
+- (NSDictionary*) filterDefinitionDictionary;
 
 - (NSString*) name;
 - (void) setName: (NSString*) aName;
 
-- (BOOL)isActive;
-- (void) setIsActive:(BOOL)aBool;
+- (BOOL) isActive;
+- (void) setIsActive: (BOOL) aBool;
 
 - (NSDate*) lastUsed;
 - (void) setLastUsed:(NSDate*) aDate;
 
-- (BOOL)allExpressionsMustMatch;
-- (void) setAllExpressionsMustMatch:(BOOL)aBool;
+- (BOOL) allExpressionsMustMatch;
+- (void) setAllExpressionsMustMatch: (BOOL) aBool;
 
 - (NSArray*) expressions;
-- (void) setExpressions:(NSArray*) someExpressions;
+- (void) setExpressions: (NSArray*) someExpressions;
 
 - (NSArray*) actions;
-- (void) setActions:(NSArray*) someActions;
+- (void) setActions: (NSArray*) someActions;
 
 /*" Filtering "*/
-- (BOOL)matchesForMessage: (GIMessage*) message flags:(int)flags;
+- (BOOL) matchesForMessage: (GIMessage*) message flags: (int) flags;
 
 	/*" Accessors "*/
 + (NSArray*) filters;
 
 	/*" Filter list manipulation "*/
-+ (void) moveFilter:(id)filter toIndex:(int)newIndex;
-+ (void) insertFilter:(id)filter atPosition:(int)anIndex;
-+ (void) removeFilterAtPosition:(int)anIndex;
++ (void) moveFilter: (id) filter toIndex: (int) newIndex;
++ (void) insertFilter: (id) filter atPosition: (int) anIndex;
++ (void) removeFilterAtPosition: (int) anIndex;
 
 	/*" Persistence "*/
-+ (BOOL)writeFilters;
++ (BOOL) writeFilters;
 
 	/*" Filtering "*/
 + (NSArray*) filtersMatchingForMessage: (GIMessage*) message flags:(int)flags;

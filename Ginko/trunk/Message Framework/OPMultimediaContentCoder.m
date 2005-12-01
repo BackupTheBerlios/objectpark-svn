@@ -146,18 +146,13 @@
     attributes = [aFileWrapper fileAttributes];
     posixPermissions = [attributes objectForKey:NSFilePosixPermissions];
     
-    if (posixPermissions)
-    {
+    if (posixPermissions) {
         xUnixMode = [[NSString xUnixModeString:[posixPermissions intValue]] retain];
     }
     
     // strip doublequotes from theFilename
-    {
-        NSArray *components;
-        
-        components = [theFilename componentsSeparatedByString: @"\""];
-        theFilename = [components componentsJoinedByString: @"'"];
-    }
+	NSArray* components = [theFilename componentsSeparatedByString: @"\""];
+	theFilename = [components componentsJoinedByString: @"'"];
     
     return [self initWithData:fileContents filename: theFilename];
 }

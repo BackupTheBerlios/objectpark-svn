@@ -1185,17 +1185,21 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return [NSCalendarDate dateWithYear:year month:month day:day hour:thh minute:tmm second:tss timeZone:timezone];
 }
 
-- (NSCalendarDate *)slowDateFromRFC2822String
+- (NSCalendarDate*) slowDateFromRFC2822String
 /*"
 Attempts to parse a date according to the rules in RFC 2822. However, some mailers don't follow that format as specified, so dateFromRFC2822String tries to guess correctly in such cases. Date is a string containing an RFC 2822 date, such as 'Mon, 20 Nov 1995 19:12:08 -0500'. If it succeeds in parsing the date, dateFromRFC2822String returns a NSDate. nil otherwise.
 "*/
 {
-    NSMutableArray *dateStringComponents;
-    NSString *dd, *mm, *yy, *tm, *tz;
-    NSTimeZone *timezone;
-    NSAutoreleasePool *pool;
-    static NSArray *monthnames = nil;
-    static NSArray *daynames = nil;
+    NSMutableArray* dateStringComponents;
+    NSString* dd;
+	NSString* mm;
+	NSString* yy;
+	NSString* tm;
+	NSString* tz;
+    NSTimeZone* timezone;
+    NSAutoreleasePool* pool;
+    static NSArray* monthnames = nil;
+    static NSArray* daynames = nil;
     int month, day, year, thh, tmm, tss;
     
     pool = [[NSAutoreleasePool alloc] init];
@@ -1240,17 +1244,15 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         daynameCandidate = [dateStringComponents objectAtIndex:0];
         if ([daynameCandidate hasSuffix: @","]
             || [daynameCandidate hasSuffix: @"."]
-            || [daynames containsObject:[daynameCandidate lowercaseString]])
-        {
+            || [daynames containsObject:[daynameCandidate lowercaseString]]) {
             // There's a dayname here. Skip it
             [dateStringComponents removeObjectAtIndex:0];
         }
     }
         
     // RFC 850 date, deprecated
-    if ([dateStringComponents count] == 3)
-    {
-        NSArray *rfc850DateComponents;
+    if ([dateStringComponents count] == 3) {
+        NSArray* rfc850DateComponents;
         
         rfc850DateComponents = [[dateStringComponents objectAtIndex:0] componentsSeparatedByString: @"-"];
         
@@ -1390,19 +1392,17 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     
     // handle time
     {
-        NSArray *timeComponents;
+        NSArray* timeComponents;
         
-        if ([tm hasSuffix: @","])
-        {
+        if ([tm hasSuffix: @","]) {
             tm = [tm substringToIndex:[tm length] - 1]; // chop last char
         }
     
         timeComponents = [tm componentsSeparatedByString: @":"];
         
-        if ([timeComponents count] == 2)
-        {
-            thh = [[timeComponents objectAtIndex:0] intValue];
-            tmm = [[timeComponents objectAtIndex:1] intValue];
+        if ([timeComponents count] == 2) {
+            thh = [[timeComponents objectAtIndex: 0] intValue];
+            tmm = [[timeComponents objectAtIndex: 1] intValue];
             tss = 0;
         }
         else if ([timeComponents count] == 3)
@@ -1744,7 +1744,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 - (NSString*) stringByEncodingFlowedFormat
 {
     NSMutableString *flowedText;
-    NSArray *paragraphs;
+    NSArray*paragraphs;
     NSString *paragraph, *lineBreakSeq;
     NSEnumerator *paragraphEnumerator;
 
@@ -1779,7 +1779,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         if ([paragraph length] > 79)
         {
             NSString *wrappedParagraph;
-            NSArray *paragraphLines;
+            NSArray*paragraphLines;
             int i, count;
             
              //When creating flowed text, the generating agent wraps, that is,
@@ -1842,27 +1842,20 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 */
 
 - (NSString*) stringByEncodingFlowedFormat
-{
-    NSMutableString *flowedText;
-    NSArray *paragraphs;
-    NSString *paragraph, *lineBreakSeq;
-    NSEnumerator *paragraphEnumerator;
-    
-    lineBreakSeq = @"\r\n";
-    if([self rangeOfString:lineBreakSeq].location == NSNotFound)
+{    
+    NSString* lineBreakSeq = @"\r\n";
+    if([self rangeOfString: lineBreakSeq].location == NSNotFound)
         lineBreakSeq = @"\n";
     
-    flowedText = [[[NSMutableString allocWithZone:[self zone]] initWithCapacity:[self length]] autorelease];
+    NSMutableString* flowedText = [[[NSMutableString allocWithZone:[self zone]] initWithCapacity:[self length]] autorelease];
     
-    paragraphs = [self componentsSeparatedByString:lineBreakSeq];
+    NSArray* paragraphs = [self componentsSeparatedByString:lineBreakSeq];
     
-    paragraphEnumerator = [paragraphs objectEnumerator];
-    
-    while ((paragraph = [paragraphEnumerator nextObject]) != nil)
-    {
-        NSAutoreleasePool *pool;
-        
-        pool = [[NSAutoreleasePool alloc] init];
+    NSEnumerator* paragraphEnumerator = [paragraphs objectEnumerator];
+	NSString* paragraph;
+    while ((paragraph = [paragraphEnumerator nextObject]) != nil) {
+		
+        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
         
         /*
          1.  Ensure all lines (fixed and flowed) are 79 characters or
@@ -1877,10 +1870,9 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         while ([paragraph hasSuffix: @" "])
             paragraph = [paragraph substringToIndex:[paragraph length] - 1]; // chop the last character
         
-        if ([paragraph length] > 79)
-        {
-            NSString *wrappedParagraph;
-            NSArray *paragraphLines;
+        if ([paragraph length] > 79) {
+            NSString* wrappedParagraph;
+            NSArray* paragraphLines;
             int i, count;
             /*
              When creating flowed text, the generating agent wraps, that is,
@@ -1897,8 +1889,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             
             count = [paragraphLines count];
             
-            for (i = 0; i < count; i++)
-            {	
+            for (i = 0; i < count; i++) {	
                 NSString* line;
                 
                 line = [paragraphLines objectAtIndex:i];
@@ -1908,17 +1899,13 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                  */  
                 line = [line stringBySpaceStuffing];
                 
-                if (i < (count-1) ) // ensure soft-break
-                {
-                    if (! [line hasSuffix: @" "])
-                    {
+                if (i < (count-1) ) {
+					// ensure soft-break:
+                    if (! [line hasSuffix: @" "]) {
                         line = [line stringByAppendingString: @" "];
                     }
-                }
-                else
-                {
-                    while ([line hasSuffix: @" "])
-                    {
+                } else {
+                    while ([line hasSuffix: @" "]) {
                         line = [line substringToIndex:[line length] - 1]; // chop the last character (space)
                     }
                 }
