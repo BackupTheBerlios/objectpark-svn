@@ -144,8 +144,8 @@
 
     // A change of the server type also has effect on the port. The Account is 'touched' to have bindings recognize the change.
     [self setIncomingServerPort:0];
-    //[self willChangeValueForKey: @"incomingServerDefaultPort"];
-    //[self didChangeValueForKey: @"incomingServerDefaultPort"];
+    [self willChangeValueForKey: @"incomingServerDefaultPort"];
+    [self didChangeValueForKey: @"incomingServerDefaultPort"];
 }
 
 - (NSString*) incomingServerName 
@@ -175,7 +175,7 @@
     [self didAccessValueForKey: @"incomingServerPort"];
     
     int result = (tmpValue != nil) ? [tmpValue intValue] : 0;
-    return result; // ? result : [[self class] defaultPortForIncomingServerType:[self incomingServerType]];
+    return result ? result : [[self class] defaultPortForIncomingServerType:[self incomingServerType]];
 }
 
 - (void) setIncomingServerPort: (int) value 
