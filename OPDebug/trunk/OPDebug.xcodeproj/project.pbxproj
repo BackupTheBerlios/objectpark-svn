@@ -42,7 +42,7 @@
 		309B199908F0A9DA00CBA688 /* OPLog-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309B199308F0A9BE00CBA688 /* OPLog-Tests.m */; };
 		309B19FF08F0B1ED00CBA688 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309B19FE08F0B1ED00CBA688 /* SenTestingKit.framework */; };
 		30EB73EB093523CF00A50A61 /* OPL-Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30EB73EA093523CF00A50A61 /* OPL-Configuration.plist */; };
-		30EB741509352F5800A50A61 /* NSThread+OPThreadNames.h in Headers */ = {isa = PBXBuildFile; fileRef = 30EB741309352F5800A50A61 /* NSThread+OPThreadNames.h */; };
+		30EB741509352F5800A50A61 /* NSThread+OPThreadNames.h in Headers */ = {isa = PBXBuildFile; fileRef = 30EB741309352F5800A50A61 /* NSThread+OPThreadNames.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		30EB741609352F5800A50A61 /* NSThread+OPThreadNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EB741409352F5800A50A61 /* NSThread+OPThreadNames.m */; };
 		30EB7522093546E100A50A61 /* NSTask+OPThreadNames-Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EB75150935420000A50A61 /* NSTask+OPThreadNames-Test.m */; };
 		8DC2EF510486A6940098B216 /* OPDebug_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCF5E0370ADEE00C91783 /* OPDebug_Prefix.pch */; };
@@ -486,7 +486,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "bin/extractAspects.pl .";
+			shellScript = "bin/extractAspects.pl --outputdir ${PROJECT_DIR} .";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -543,6 +543,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -558,7 +559,7 @@
 				LIBRARY_STYLE = Dynamic;
 				MACH_O_TYPE = mh_dylib;
 				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "-fobjc-exceptions";
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = OPDebug;
 				SECTORDER_FLAGS = "";
@@ -569,7 +570,7 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			name = Development;
 		};
@@ -582,6 +583,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks";
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -595,7 +597,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Dynamic;
 				MACH_O_TYPE = mh_dylib;
-				OTHER_CFLAGS = "-fobjc-exceptions";
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = OPDebug;
 				SECTORDER_FLAGS = "";
@@ -621,6 +623,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -636,7 +639,7 @@
 				LIBRARY_STYLE = Dynamic;
 				MACH_O_TYPE = mh_dylib;
 				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "-fobjc-exceptions";
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = OPDebug;
 				SECTORDER_FLAGS = "";
@@ -658,6 +661,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks";
 				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -671,7 +675,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Dynamic;
 				MACH_O_TYPE = mh_dylib;
-				OTHER_CFLAGS = "-fobjc-exceptions";
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = OPDebug;
 				SECTORDER_FLAGS = "";
@@ -682,6 +686,7 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
 			};
 			name = Default;
 		};

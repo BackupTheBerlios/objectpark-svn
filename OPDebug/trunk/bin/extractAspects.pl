@@ -6,10 +6,22 @@
 #
 use strict;
 use File::Find;
-
+use Getopt::Long;
 use Data::Dumper;
 
+my $outputDir;
+
+GetOptions(
+           'outputdir=s'        => \$outputDir
+          );
+
+
 my $cacheFile = "OPL-Configuration.cached";
+$cacheFile = "$outputDir/$cacheFile" if $outputDir;
+my $outputFile = "OPL-Configuration.plist";
+$outputFile = "$outputDir/$outputFile" if $outputDir;
+
+
 my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$cacheMTime,$ctime,$blksize,$blocks) = stat $cacheFile;
 $cacheMTime = -1 unless defined $cacheMTime;
 
@@ -69,7 +81,7 @@ foreach my $filename (@files) {
 
 writeCacheFile($cacheFile, $cache);
 
-writePlist($allDomains, $allAspects, "OPL-Configuration.plist");
+writePlist($allDomains, $allAspects, $outputFile);
 
 exit 0;
 
