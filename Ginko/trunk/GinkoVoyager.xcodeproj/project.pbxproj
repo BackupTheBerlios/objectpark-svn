@@ -11,7 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 7749E6CC0855CB04009EF4F3 /* Build configuration list for PBXAggregateTarget "Run AutoDoc" */;
 			buildPhases = (
-				77AD780107CF1CC200A15B83 /* ShellScript */,
+				77AD780107CF1CC200A15B83 /* Run AutoDoc */,
 			);
 			buildSettings = {
 				OTHER_CFLAGS = "";
@@ -34,7 +34,6 @@
 
 /* Begin PBXBuildFile section */
 		30450D81091051910085A02F /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
-		30450DCC091059A90085A02F /* OPDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
 		30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5553B093D148F00BCACCB /* OPDebug.framework */; };
 		30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5555D093D1C2500BCACCB /* OPPreferences.framework */; };
 		6131DCD6083A85D10056FF9D /* TestGIFulltextIndexCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */; };
@@ -284,8 +283,6 @@
 		8DBBABC808B393DF002566B9 /* GIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */; };
 		8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */; };
 		8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */; };
-		8DBFD4FF0826DE93006D29DE /* OPPreferences.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */; };
-		8DBFD5000826DE98006D29DE /* OPNetwork.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */; };
 		8DC773C506B27FCB00053CB7 /* OPSizingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */; };
 		8DC773C606B27FCB00053CB7 /* OPSizingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */; };
 		8DCA9ABE08015F7600EEA49F /* SQLConfig.sqlstatements in Resources */ = {isa = PBXBuildFile; fileRef = 8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */; };
@@ -447,21 +444,6 @@
 			remoteInfo = OPNetwork;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		8D9E8F1006AC46540055F87C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				30450DCC091059A90085A02F /* OPDebug.framework in CopyFiles */,
-				8DBFD4FF0826DE93006D29DE /* OPPreferences.framework in CopyFiles */,
-				8DBFD5000826DE98006D29DE /* OPNetwork.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1502,7 +1484,7 @@
 				30672F8B092D4DA0005D7A7F /* Extract Aspects */,
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				8D9E8F1006AC46540055F87C /* CopyFiles */,
+				303DCD6A0943C3A100D8BCBE /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1748,6 +1730,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		303DCD6A0943C3A100D8BCBE /* Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# copy a single frameworks\ncopyFramework()\n{\necho -n $1\n#echo cp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\ncp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\necho \n}\n\n# ensure there's an empty frameworks directory in the application bundle\nrm -rf \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\nmkdir -p \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\n\n# copy the frameworks\necho Copying frameworks...\ncopyFramework \"OPDebug\"\ncopyFramework \"OPNetwork\"\ncopyFramework \"OPPreferences\"\n";
+		};
 		30672F8B092D4DA0005D7A7F /* Extract Aspects */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1762,15 +1758,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../OPDebug/bin/extractAspects.pl .\n";
+			shellScript = "../OPDebug/bin/extractAspects.pl --outputdir ${PROJECT_DIR} .\n";
 		};
-		77AD780107CF1CC200A15B83 /* ShellScript */ = {
+		77AD780107CF1CC200A15B83 /* Run AutoDoc */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run AutoDoc";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
