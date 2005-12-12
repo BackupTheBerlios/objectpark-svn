@@ -23,7 +23,7 @@
 
 #import <Foundation/NSString.h>
 
-@class NSFileHandle, EDObjectPair;
+@class NSFileHandle, OPObjectPair;
 
 /*" Various common extensions to #NSString. "*/
 
@@ -64,7 +64,7 @@
 /*" Filename extensions for MIME types "*/
 + (NSString*) pathExtensionForContentType: (NSString*) contentType;
 + (NSString*) contentTypeForPathExtension: (NSString*) extension;
-+ (void) addContentTypePathExtensionPair: (EDObjectPair*) tePair;
++ (void) addContentTypePathExtensionPair: (OPObjectPair*) tePair;
 
 /*" Determining encoding of XML documents "*/
 + (NSString*) MIMEEncodingOfXMLDocument: (NSData*) xmlData;

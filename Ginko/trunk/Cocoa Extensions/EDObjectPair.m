@@ -1,8 +1,9 @@
 //---------------------------------------------------------------------------------------
-//  EDKeyValuePair.m created by erik on Sat 29-Aug-1998
-//  @(#)$Id: EDObjectPair.m,v 1.1 2004/12/22 17:11:05 theisen Exp $
+//  ED-ObjectPair.m created by erik on Sat 29-Aug-1998
+//  @(#)$Id: OPObjectPair.m,v 1.1 2004/12/22 17:11:05 theisen Exp $
 //
 //  Copyright (c) 1998-1999 by Erik Doernenburg. All rights reserved.
+//  Changes by Dirk Theisen, Objectpark Group.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission
@@ -19,14 +20,14 @@
 //---------------------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 
 
 //---------------------------------------------------------------------------------------
-    @implementation EDObjectPair
+    @implementation OPObjectPair
 //---------------------------------------------------------------------------------------
 
-/*" From a purely functional point EDObjectPair does not add anything to NSArray. However, EDObjectPair can be used when a design explicitly deals with a relationship between two objects, typically an association of a value or an object with another object. An array of EDObjectPairs can be used instead of an NSDictionary when the order of key/value pairs is relevant and lookups of values by key do not need to be fast. EDObjectPairs also use less memory than NSArray and have a better hash function. (If you know LISP you probably use pairs for all sorts of other structures.) "*/
+/*" From a purely functional point OPObjectPair does not add anything to NSArray. However, OPObjectPair can be used when a design explicitly deals with a relationship between two objects, typically an association of a value or an object with another object. An array of OPObjectPairs can be used instead of an NSDictionary when the order of key/value pairs is relevant and lookups of values by key do not need to be fast. OPObjectPairs also use less memory than NSArray and have a better hash function. (If you know LISP you probably use pairs for all sorts of other structures.) "*/
 
 
 //---------------------------------------------------------------------------------------
@@ -53,7 +54,7 @@
 
 /*" Creates and returns a pair containing the objects in aPair. "*/
 
-+ (id)pairWithObjectPair: (EDObjectPair*) aPair
++ (id)pairWithObjectPair: (OPObjectPair*) aPair
 {
     return [[[self alloc] initWithObjects:[aPair firstObject]:[aPair secondObject]] autorelease];
 }
@@ -73,7 +74,7 @@
 
 /*" Initialises a newly allocated pair by adding the objects from %aPair to it. Objects are, of course, retained. "*/
 
-- (id)initWithObjectPair: (EDObjectPair*) aPair
+- (id)initWithObjectPair: (OPObjectPair*) aPair
 {
     return [self initWithObjects:[aPair firstObject]:[aPair secondObject]];
 }
@@ -114,7 +115,7 @@
     unsigned int version;
 
     [super init];
-    version = [decoder versionForClassName: @"EDObjectPair"];
+    version = [decoder versionForClassName: @"OPObjectPair"];
     if(version > 0)
         {
         firstObject = [[decoder decodeObject] retain];
@@ -132,7 +133,7 @@
 {
     if(NSShouldRetainWithZone(self, zone))
         return [self retain];
-    return [[EDObjectPair allocWithZone:zone] initWithObjects:firstObject:secondObject];
+    return [[OPObjectPair allocWithZone:zone] initWithObjects:firstObject:secondObject];
 }
 
 
@@ -152,23 +153,23 @@
 }
 
 
-- (unsigned int)hash
+- (unsigned) hash
 {
     return [firstObject hash] ^ [secondObject hash];
 }
 
 
-- (BOOL)isEqual:(id)otherObject
+- (BOOL) isEqual: (id) otherObject
 {
     id otherFirstObject, otherSecondObject;
 
     if(otherObject == nil)
         return NO;
-    else if((isa != ((EDObjectPair *)otherObject)->isa) && ([otherObject isKindOfClass:[EDObjectPair class]] == NO))
+    else if((isa != ((OPObjectPair *)otherObject)->isa) && ([otherObject isKindOfClass:[OPObjectPair class]] == NO))
         return NO;
 
-    otherFirstObject = ((EDObjectPair *)otherObject)->firstObject;
-    otherSecondObject = ((EDObjectPair *)otherObject)->secondObject;
+    otherFirstObject = ((OPObjectPair *)otherObject)->firstObject;
+    otherSecondObject = ((OPObjectPair *)otherObject)->secondObject;
 
     return ( (((firstObject == nil) && (otherFirstObject == nil)) || [firstObject isEqual:otherFirstObject]) &&
              (((secondObject == nil) && (otherSecondObject == nil)) || [secondObject isEqual:otherSecondObject]) );
@@ -226,7 +227,7 @@
 
 - (id)copyWithZone: (NSZone*) zone
 {
-    return [[EDObjectPair allocWithZone:zone] initWithObjects:firstObject:secondObject];
+    return [[OPObjectPair allocWithZone:zone] initWithObjects:firstObject:secondObject];
 }
 
 

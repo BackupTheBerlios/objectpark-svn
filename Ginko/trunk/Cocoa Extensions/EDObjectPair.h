@@ -1,8 +1,9 @@
 //---------------------------------------------------------------------------------------
-//  EDObjectPair.h created by erik on Sat 29-Aug-1998
-//  @(#)$Id: EDObjectPair.h,v 1.1 2004/12/22 17:11:05 theisen Exp $
+//  ED-ObjectPair.h created by erik on Sat 29-Aug-1998
+//  @(#)$Id: OPObjectPair.h,v 1.1 2004/12/22 17:11:05 theisen Exp $
 //
-//  Copyright (c) 1998-1999 by Erik Doernenburg. All rights reserved.
+//  Original Copyright (c) 1998-1999 by Erik Doernenburg. All rights reserved.
+//  Changes by Dirk Theisen, Objectpark Group.
 //
 //  Permission to use, copy, modify and distribute this software and its documentation
 //  is hereby granted, provided that both the copyright notice and this permission
@@ -21,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface EDObjectPair : NSObject <NSCopying, NSMutableCopying, NSCoding>
+@interface OPObjectPair : NSObject <NSCopying, NSMutableCopying, NSCoding>
 {
     id 	firstObject;	/*" First object of the pair. "*/
     id 	secondObject;   /*" Second object of the pair. "*/
@@ -29,10 +30,10 @@
 
 /*" Creating new pair objects "*/
 + (id)pair;
-+ (id)pairWithObjectPair: (EDObjectPair*) aPair;
++ (id)pairWithObjectPair: (OPObjectPair*) aPair;
 + (id)pairWithObjects:(id)anObject:(id)anotherObject;
 
-- (id)initWithObjectPair: (EDObjectPair*) aPair;
+- (id)initWithObjectPair: (OPObjectPair*) aPair;
 - (id)initWithObjects:(id)anObject:(id)anotherObject; // designated initializer
 
 /*" Retrieving objects "*/
@@ -43,7 +44,7 @@
 
 @end
 
-@interface EDMutableObjectPair : EDObjectPair
+@interface EDMutableObjectPair : OPObjectPair
 
 - (void) setFirstObject:(id)anObject;
 - (void) setSecondObject:(id)anObject;

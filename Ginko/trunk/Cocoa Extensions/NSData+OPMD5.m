@@ -21,7 +21,6 @@
  */
 
 #import "NSData+OPMD5.h"
-#import "NSData+Extensions.h"
 
 #include <string.h>
 
