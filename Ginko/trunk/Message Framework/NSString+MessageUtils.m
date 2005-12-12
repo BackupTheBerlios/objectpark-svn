@@ -25,7 +25,7 @@
 #import "NSAttributedString+MessageUtils.h"
 #import "NSAttributedString+Extensions.h"
 //#import "NSArray+Extensions.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "NSScanner+Extensions.h"
 #import "utilities.h"
 
@@ -730,7 +730,7 @@ static BOOL _fileExists(NSString *filePath)
     NSArray* lines;
     NSMutableArray *ranges;
     NSEnumerator *enumerator;
-    EDObjectPair *rangeObject;
+    OPObjectPair *rangeObject;
     
     result = [[[NSMutableAttributedString alloc] init] autorelease];
     pool = [[NSAutoreleasePool alloc] init];
@@ -783,8 +783,8 @@ static BOOL _fileExists(NSString *filePath)
             
             if (excerptDepth)
             {
-                //[ranges addObject:[EDObjectPair pairWithObjects:[EDRange rangeWithRangeValue:range] :excerptDepth]];
-                [ranges addObject:[EDObjectPair pairWithObjects:NSStringFromRange(range) :excerptDepth]];
+                //[ranges addObject:[OPObjectPair pairWithObjects:[EDRange rangeWithRangeValue:range] :excerptDepth]];
+                [ranges addObject:[OPObjectPair pairWithObjects:NSStringFromRange(range) :excerptDepth]];
             }
         }
         else

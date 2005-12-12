@@ -107,7 +107,7 @@
 		[thread release];
     }
     
-    [aGroup addThread:thread];
+    [aGroup addThread: thread];
     //[thread addGroup:aGroup];    
 }
 

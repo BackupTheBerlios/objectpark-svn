@@ -29,7 +29,7 @@
 #import "EDIdListFieldCoder.h"
 //#import "EDFaceFieldCoder.h"
 #import "EDHeaderBearingObject.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 
 
 //---------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@
 //	ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-- (void) addToHeaderFields: (EDObjectPair*) headerField
+- (void) addToHeaderFields: (OPObjectPair*) headerField
 {
     NSString	 *fieldName, *sharedName, *fieldBody;
 
@@ -75,7 +75,7 @@
     fieldBody = [headerField secondObject];
 	// todo: optimize by setting the firstObject to sharedName
     if((sharedName = [fieldName sharedInstance]) != fieldName)
-        headerField = [[[EDObjectPair allocWithZone:[self zone]] initWithObjects:sharedName:fieldBody] autorelease];
+        headerField = [[[OPObjectPair allocWithZone:[self zone]] initWithObjects:sharedName:fieldBody] autorelease];
     [headerFields addObject:headerField];
     [headerDictionary setObject: fieldBody forKey:[[fieldName lowercaseString] sharedInstance]];
 }
@@ -89,13 +89,13 @@
 
 - (void) setBody: (NSString*) fieldBody forHeaderField: (NSString*) fieldName
 {
-    EDObjectPair	*headerField;
+    OPObjectPair	*headerField;
     NSString 		*canonicalName;
     unsigned int	i, n;
     
     fieldName = [fieldName sharedInstance];
     canonicalName = [[fieldName lowercaseString] sharedInstance];
-    headerField = [[EDObjectPair allocWithZone:[self zone]] initWithObjects:fieldName:fieldBody];
+    headerField = [[OPObjectPair allocWithZone:[self zone]] initWithObjects:fieldName:fieldBody];
     if ([headerDictionary objectForKey:canonicalName] != nil)
     {
         //NSLog(@"will replace body for header field %@", fieldName);
@@ -278,7 +278,7 @@ static NSMutableDictionary *coderClassCache = nil;
 }
 
 
-+ (EDHeaderFieldCoder *)decoderForHeaderField: (EDObjectPair*) headerField
++ (EDHeaderFieldCoder *)decoderForHeaderField: (OPObjectPair*) headerField
 {
     NSString	*name;
     Class 		coderClass;
@@ -305,7 +305,7 @@ static NSMutableDictionary *coderClassCache = nil;
 
     if((body = [self bodyForHeaderField:fieldName]) == nil)
         return nil;
-    return [[self class] decoderForHeaderField:[EDObjectPair pairWithObjects:fieldName:body]];
+    return [[self class] decoderForHeaderField:[OPObjectPair pairWithObjects:fieldName:body]];
 }
 
 

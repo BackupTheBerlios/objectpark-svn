@@ -22,7 +22,7 @@
 #import "GIMessageBase.h"
 #import "OPURLFieldCoder.h"
 #import "EDTextFieldCoder.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
 #import "GIAddressFormatter.h"
@@ -832,7 +832,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void) setHeadersFromMessage: (GIMessage*) aMessage
 {
     NSEnumerator *enumerator;
-    EDObjectPair *header;
+    OPObjectPair *header;
     
     enumerator = [[[aMessage internetMessage] headerFields] objectEnumerator];
     while ((header = [enumerator nextObject]))

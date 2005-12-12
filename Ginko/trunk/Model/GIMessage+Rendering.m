@@ -25,7 +25,7 @@
 //#import "GIPeopleImageCache.h"
 #import "GIUserDefaultsKeys.h"
 #import "NSAttributedString+Extensions.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "OPInternetMessage.h"
 #import "OPInternetMessage+GinkoExtensions.h"
 #import "NSString+MessageUtils.h"
@@ -212,7 +212,7 @@ static NSString *templatePostfix = nil;
         if (showOthers) 
         {
             NSEnumerator *enumerator;
-            EDObjectPair *headerField;
+            OPObjectPair *headerField;
             
             enumerator = [[aMessage headerFields] objectEnumerator];
             while (headerField = [enumerator nextObject])

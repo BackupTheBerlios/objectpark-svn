@@ -554,7 +554,56 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 @end
 
+/*" Object describing a n:m relation between two persistent objects. Used to keep track of changes to n:m relationships. There is one container for deleted and one for inserted/changed relations. "*/
 
+@interface OPObjectRelationShip : NSObject {
+
+	OPClassDescription* leftClass;
+	OPClassDescription* rightClass;
+	
+	NSMutableSet*       addedRelations;
+	NSMutableSet*       removedRelations;
+}
+
+- (NSEnumerator*) relationEnumerator;
+
+@end
+
+@implementation OPObjectRelationShip
+/*" Objects of this class keeps track of n:m relatioship changes. "*/
+
+
+- (NSEnumerator*) addedRelationsEnumerator
+	/*" Enumerates all OPObjectRelation objects in no particular order. "*/
+{
+	return [addedRelations objectEnumerator];
+}
+
+- (void) addRelation: (OPPersistentObject*) firstObject : (OPPersistentObject*) secondObject
+{
+	OPObjectPair* newRelation = [[OPObjectPair alloc] initWithObjects: firstObject : secondObject];
+	[removedRelations removeObject: newRelation];
+	[addedRelations addObject: newRelation];
+	[newRelation release];
+}
+
+- (void) removeRelation: (OPPersistentObject*) firstObject : (OPPersistentObject*) secondObject
+{
+	OPObjectPair* removedRelation = [[OPObjectPair alloc] initWithObjects: firstObject : secondObject]; // Optimize by faking object with stack allocated struct.
+	[removedRelations addObject: removedRelation];
+	[addedRelations removeObject: removedRelation];
+	[removedRelation release];
+}
+
+
+- (NSEnumerator*) removedRelationsEnumerator
+	/*" Enumerates all OPObjectPair objects in no particular order. "*/
+{
+	return [addedRelations objectEnumerator];
+}
+
+
+@end
 
 
 NSString* OPURLStringFromOidAndClass(OID oid, Class poClass, NSString* databaseName)

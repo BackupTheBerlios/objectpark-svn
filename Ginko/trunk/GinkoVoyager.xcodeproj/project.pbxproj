@@ -172,6 +172,10 @@
 		8D2147AF085114B3004C44B9 /* GISearchController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D2147AD085114B2004C44B9 /* GISearchController.h */; };
 		8D2147B0085114B3004C44B9 /* GISearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D2147AE085114B3004C44B9 /* GISearchController.m */; };
 		8D2147CF0851182E004C44B9 /* Search.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2147CE0851182E004C44B9 /* Search.nib */; };
+		8D313AE2094E3E39007D668A /* OPObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D313AE0094E3E39007D668A /* OPObjectPair.h */; };
+		8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D313AE1094E3E39007D668A /* OPObjectPair.m */; };
+		8D313AE4094E3E39007D668A /* OPObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D313AE0094E3E39007D668A /* OPObjectPair.h */; };
+		8D313AE5094E3E39007D668A /* OPObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D313AE1094E3E39007D668A /* OPObjectPair.m */; };
 		8D3CDEB7090D7ED3004657A0 /* GIGroupListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */; };
 		8D3CDEB8090D7ED3004657A0 /* GIGroupListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */; };
 		8D3EF45B08B543BD00EC41EC /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
@@ -210,8 +214,6 @@
 		8D901F950779D7F5005365EA /* NSAttributedString+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D901F940779D7F5005365EA /* NSAttributedString+Extensions.h */; };
 		8D9020BF0779D9E8005365EA /* EDHeaderFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9020BE0779D9E8005365EA /* EDHeaderFieldCoder.m */; };
 		8D9020C30779DA0A005365EA /* EDHeaderFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9020C20779DA0A005365EA /* EDHeaderFieldCoder.h */; };
-		8D9020CB0779DAA7005365EA /* EDObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9020CA0779DAA7005365EA /* EDObjectPair.m */; };
-		8D9020D20779DAB3005365EA /* EDObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9020D10779DAB3005365EA /* EDObjectPair.h */; };
 		8D90211F0779E6B9005365EA /* OPInternetMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9021190779E6B9005365EA /* OPInternetMessage.m */; };
 		8D9021210779E6B9005365EA /* OPInternetMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D90211B0779E6B9005365EA /* OPInternetMessage.h */; };
 		8D9021650779EC8A005365EA /* NSString+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9021630779EC8A005365EA /* NSString+MessageUtils.h */; };
@@ -600,6 +602,8 @@
 		8D2147AD085114B2004C44B9 /* GISearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISearchController.h; sourceTree = "<group>"; };
 		8D2147AE085114B3004C44B9 /* GISearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISearchController.m; sourceTree = "<group>"; };
 		8D2147CE0851182E004C44B9 /* Search.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Search.nib; sourceTree = "<group>"; };
+		8D313AE0094E3E39007D668A /* OPObjectPair.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = OPObjectPair.h; sourceTree = "<group>"; };
+		8D313AE1094E3E39007D668A /* OPObjectPair.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = OPObjectPair.m; sourceTree = "<group>"; };
 		8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGroupListController.h; sourceTree = "<group>"; };
 		8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupListController.m; sourceTree = "<group>"; };
 		8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -636,8 +640,6 @@
 		8D901F940779D7F5005365EA /* NSAttributedString+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Extensions.h"; sourceTree = "<group>"; };
 		8D9020BE0779D9E8005365EA /* EDHeaderFieldCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EDHeaderFieldCoder.m; sourceTree = "<group>"; };
 		8D9020C20779DA0A005365EA /* EDHeaderFieldCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDHeaderFieldCoder.h; sourceTree = "<group>"; };
-		8D9020CA0779DAA7005365EA /* EDObjectPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EDObjectPair.m; sourceTree = "<group>"; };
-		8D9020D10779DAB3005365EA /* EDObjectPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDObjectPair.h; sourceTree = "<group>"; };
 		8D9021190779E6B9005365EA /* OPInternetMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPInternetMessage.m; sourceTree = "<group>"; };
 		8D90211B0779E6B9005365EA /* OPInternetMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPInternetMessage.h; sourceTree = "<group>"; };
 		8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPInternetMessage+GinkoExtensions.m"; sourceTree = "<group>"; };
@@ -1166,6 +1168,8 @@
 		8D901F890779D79A005365EA /* Cocoa Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				8D313AE0094E3E39007D668A /* OPObjectPair.h */,
+				8D313AE1094E3E39007D668A /* OPObjectPair.m */,
 				7709374A08574DF200A29008 /* NSHost+GIReachability.h */,
 				7709374B08574DF200A29008 /* NSHost+GIReachability.m */,
 				8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */,
@@ -1175,8 +1179,6 @@
 				77BA9233076DCCD80082F33F /* ABPerson+Convenience.h */,
 				77BA9234076DCCD80082F33F /* ABPerson+Convenience.m */,
 				8D902D78077AFBCD005365EA /* EDObjcRuntime.h */,
-				8D9020D10779DAB3005365EA /* EDObjectPair.h */,
-				8D9020CA0779DAA7005365EA /* EDObjectPair.m */,
 				8D9022BA077A426A005365EA /* NSArray+Extensions.h */,
 				8D9022B9077A426A005365EA /* NSArray+Extensions.m */,
 				8D901F940779D7F5005365EA /* NSAttributedString+Extensions.h */,
@@ -1365,7 +1367,6 @@
 				8D901F510778EC97005365EA /* GIUserDefaultsKeys.h in Headers */,
 				8D901F950779D7F5005365EA /* NSAttributedString+Extensions.h in Headers */,
 				8D9020C30779DA0A005365EA /* EDHeaderFieldCoder.h in Headers */,
-				8D9020D20779DAB3005365EA /* EDObjectPair.h in Headers */,
 				8D9021210779E6B9005365EA /* OPInternetMessage.h in Headers */,
 				8D9021650779EC8A005365EA /* NSString+MessageUtils.h in Headers */,
 				8D9021780779EE58005365EA /* EDMessagePart.h in Headers */,
@@ -1462,6 +1463,7 @@
 				77CD6C14092B2BB500D7E986 /* GIPhraseBrowserController.h in Headers */,
 				77D336A5092BE97500F2BFAB /* GIPhraseBrowserWindow.h in Headers */,
 				772D9525094435EA00456485 /* GIMessageGroup+Statistics.h in Headers */,
+				8D313AE2094E3E39007D668A /* OPObjectPair.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1476,6 +1478,7 @@
 				8DCE363E0891C71500F705EF /* OPPersistenceConstants.h in Headers */,
 				8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */,
 				8DA23EF50920296A005D7154 /* OPFaultingArray.h in Headers */,
+				8D313AE4094E3E39007D668A /* OPObjectPair.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1805,7 +1808,6 @@
 				8D901F520778EC97005365EA /* GIUserDefaultsKeys.m in Sources */,
 				8D901F8E0779D7DD005365EA /* NSAttributedString+Extensions.m in Sources */,
 				8D9020BF0779D9E8005365EA /* EDHeaderFieldCoder.m in Sources */,
-				8D9020CB0779DAA7005365EA /* EDObjectPair.m in Sources */,
 				8D90211F0779E6B9005365EA /* OPInternetMessage.m in Sources */,
 				8D9021660779EC8A005365EA /* NSString+MessageUtils.m in Sources */,
 				8D90217A0779EE58005365EA /* EDMessagePart.m in Sources */,
@@ -1897,6 +1899,7 @@
 				77CD6C15092B2BB500D7E986 /* GIPhraseBrowserController.m in Sources */,
 				77D336A6092BE97500F2BFAB /* GIPhraseBrowserWindow.m in Sources */,
 				772D9526094435EA00456485 /* GIMessageGroup+Statistics.m in Sources */,
+				8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1909,6 +1912,7 @@
 				8DCE36090891918900F705EF /* OPSQLiteConnection.m in Sources */,
 				8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */,
 				8DA23EF60920296B005D7154 /* OPFaultingArray.m in Sources */,
+				8D313AE5094E3E39007D668A /* OPObjectPair.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

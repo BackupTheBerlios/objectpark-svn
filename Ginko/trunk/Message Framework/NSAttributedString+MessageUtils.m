@@ -29,7 +29,7 @@
 #import "EDContentCoder.h"
 #import "NSFileWrapper+OPAppleFileExtensions.h"
 #import "OPInternetMessageAttachmentCell.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "NSArray+Extensions.h"
 
 #define QuotationLevel0Color      @"QuotationLevel0Color"
@@ -741,7 +741,7 @@ NSString* bytes2Display(unsigned int bytes)
     if (! [self containsAttachments]) 
     {
         if (NSDebugEnabled) NSLog(@"does not contain an attachment");
-        return [NSArray arrayWithObject:[EDObjectPair pairWithObjects: nil :self]];
+        return [NSArray arrayWithObject:[OPObjectPair pairWithObjects: nil :self]];
     }
     
     if (NSDebugEnabled) NSLog(@"contains an attachment!");
@@ -753,7 +753,7 @@ NSString* bytes2Display(unsigned int bytes)
     {
         NSRange range;
         NSMutableAttributedString *string;
-        EDObjectPair *typeAndContent;
+        OPObjectPair *typeAndContent;
         unsigned int partContentStringsCount;
         id attribute;
         
@@ -769,14 +769,14 @@ NSString* bytes2Display(unsigned int bytes)
         
         if (partContentStringsCount == 0) 
         {
-            typeAndContent = [EDObjectPair pairWithObjects:attribute :string];
+            typeAndContent = [OPObjectPair pairWithObjects:attribute :string];
             [partContentStrings addObject:typeAndContent];
         } 
         else 
         {
             if(attribute) 
             {
-                typeAndContent = [EDObjectPair pairWithObjects:attribute :string];
+                typeAndContent = [OPObjectPair pairWithObjects:attribute :string];
                 [partContentStrings addObject:typeAndContent];
             } 
             else 
@@ -786,7 +786,7 @@ NSString* bytes2Display(unsigned int bytes)
                 
                 if ([lastString containsAttachments]) 
                 {
-                    typeAndContent = [EDObjectPair pairWithObjects:attribute :string];
+                    typeAndContent = [OPObjectPair pairWithObjects:attribute :string];
                     [partContentStrings addObject:typeAndContent];
                 } 
                 else {

@@ -23,7 +23,7 @@
 #import "NSString+MessageUtils.h"
 #import "EDMessagePart.h"
 #import "EDTextContentCoder.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "NSArray+Extensions.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSAttributedString+MessageUtils.h"
@@ -137,7 +137,7 @@
     NSScanner *scanner;
     NSMutableString *output, *rawString;
     NSMutableArray *markerStack;
-    EDObjectPair *marker;
+    OPObjectPair *marker;
     NSString *string, *tag;
     NSMutableArray *attributesToSet;
     NSMutableDictionary *attributeAndRange;
@@ -199,7 +199,7 @@
                 }
                 else if([tag isEqualToString: @"bold"])
                 {
-                    marker = [EDObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
+                    marker = [OPObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
                     [markerStack pushObject:marker];
                 }
                 else if([tag isEqualToString: @"/bold"])
@@ -217,7 +217,7 @@
                 }
                 else if([tag isEqualToString: @"italic"])
                 {
-                    marker = [EDObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
+                    marker = [OPObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
                     [markerStack pushObject:marker];
                 }
                 else if([tag isEqualToString: @"/italic"])
@@ -237,7 +237,7 @@
                     // take care of excerpt/quote marks
                     excerptct += 1;
                     
-                    marker = [EDObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
+                    marker = [OPObjectPair pairWithObjects:string:[NSNumber numberWithInt:[rawString length]]];
                     [markerStack pushObject:marker];
                     OPDebugLog(EDTEXTCONTENTCONTROLLER, OPINFO, @"excerpt");
                 }

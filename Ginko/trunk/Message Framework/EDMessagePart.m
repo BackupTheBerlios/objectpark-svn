@@ -26,7 +26,7 @@
 #import "EDTextFieldCoder.h"
 #import "EDEntityFieldCoder.h"
 #import "EDMessagePart.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "NSString+Extensions.h"
 
 @interface EDMessagePart(PrivateAPI)
@@ -132,7 +132,7 @@
     NSData			*headerData;
     NSMutableString	*stringBuffer, *headerLine;
     NSEnumerator	*fieldEnum;
-    EDObjectPair	*field;
+    OPObjectPair	*field;
 
     if(originalTransferData != nil) return originalTransferData;
 
@@ -196,7 +196,7 @@
 }
 
 
-- (void) addToHeaderFields: (EDObjectPair*) headerField
+- (void) addToHeaderFields: (OPObjectPair*) headerField
 {
     [self _forgetOriginalTransferData];
     [super addToHeaderFields:headerField];
@@ -399,7 +399,7 @@
     const char		 *p, *pmax, *fnamePtr, *fbodyPtr, *eolPtr;
     NSMutableData	 *fbodyData;
     NSString 		 *name, *fbodyContents;
-    EDObjectPair	 *field;
+    OPObjectPair	 *field;
     NSStringEncoding     encoding = NSISOLatin1StringEncoding;
     
     name = nil;
@@ -446,7 +446,7 @@
                 // we know something about the implementation of addToHeaderFields ;-)
                 // by uniqueing the string here we avoid creating another pair.
                 name = [name sharedInstance];
-                field = [[EDObjectPair allocWithZone:[self zone]] initWithObjects:name: fbodyContents];
+                field = [[OPObjectPair allocWithZone:[self zone]] initWithObjects:name: fbodyContents];
                 [self addToHeaderFields:field];
                 [field release];
                 fbodyData = nil;

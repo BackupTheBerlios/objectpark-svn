@@ -27,7 +27,7 @@
 #import "Foundation/Foundation.h"
 
 @class EDHeaderFieldCoder;
-@class EDObjectPair;
+@class OPObjectPair;
 
 @interface EDHeaderBearingObject : NSObject
 {
@@ -40,12 +40,12 @@
     NSString *author;
 }
 
-- (void) addToHeaderFields: (EDObjectPair*) headerField;
+- (void) addToHeaderFields: (OPObjectPair*) headerField;
 - (void) removeHeaderField: (NSString*) fieldName;
 
 - (NSArray*) headerFields;
 
-+ (EDHeaderFieldCoder *)decoderForHeaderField: (EDObjectPair*) headerField;
++ (EDHeaderFieldCoder *)decoderForHeaderField: (OPObjectPair*) headerField;
 - (EDHeaderFieldCoder *)decoderForHeaderField: (NSString*) headerField;
 
 - (void) setBody: (NSString*) fieldBody forHeaderField: (NSString*) fieldName;

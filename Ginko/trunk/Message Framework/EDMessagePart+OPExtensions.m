@@ -22,7 +22,7 @@
 //#import "EDContentCoder+OPExtensions.h"
 #import "OPContentCoderCenter.h"
 #import "NSString+MessageUtils.h"
-//#import "EDObjectPair.h"
+//#import "OPObjectPair.h"
 #import "OPMultimediaContentCoder.h"
 #import "OPApplefileContentCoder.h"
 #import "OPAppleDoubleContentCoder.h"
@@ -104,7 +104,7 @@
     const char		 *p, *pmax, *fnamePtr, *fbodyPtr, *eolPtr;
     NSMutableData	 *fbodyData;
     NSString 		 *name, *fbodyContents;
-    EDObjectPair	 *field;
+    OPObjectPair	 *field;
     NSRange		 bodyRange;
     NSStringEncoding encoding;
 
@@ -158,7 +158,7 @@
                     // we know something about the implementation of addToHeaderFields
                     // by uniqueing the string here we avoid creating another pair.
                     name = [name sharedInstance];
-                    field = [[EDObjectPair allocWithZone:[self zone]] initWithObjects:name: fbodyContents];
+                    field = [[OPObjectPair allocWithZone:[self zone]] initWithObjects:name: fbodyContents];
                     [self addToHeaderFields:field];
                     [field release];
                     fbodyData = nil;
@@ -202,7 +202,7 @@
     NSData					*headerData;
     NSMutableString			*stringBuffer;
     NSEnumerator			*fieldEnum;
-    EDObjectPair			*field;
+    OPObjectPair			*field;
 
 
     // Make sure we have some encoding set that we can use:

@@ -722,17 +722,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
 }
 
-- (IBAction)showThreads:(id)sender
+- (IBAction)showThreads: (id) sender
 {
-    [tabView selectFirstTabViewItem:sender];
+    [tabView selectFirstTabViewItem: sender];
 }
 
 - (IBAction)showRawSource: (id) sender
 {
     showRawSource = !showRawSource;
     
-    if (displayedMessage && displayedThread)
-    {
+	if (displayedMessage && displayedThread) {
         [self setDisplayedMessage: displayedMessage thread: displayedThread];
     }
 }
@@ -1240,21 +1239,11 @@ static BOOL isThreadItem(id item)
 
 - (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item
 {
-    if (outlineView == threadsView) {
-		// thread list
-        if (! item) {
-            return [[self threadsByDate] objectAtIndex: index];
-        } else {            
-            return [[item messagesByTree] objectAtIndex: index];
-        }
-    } else { 
-		// boxes list
-        if (!item) {
-            item = [GIMessageGroup hierarchyRootNode];
-        }
-        return [item objectAtIndex:index + 1];
-    }
-    return nil;
+	if (! item) {
+		return [[self threadsByDate] objectAtIndex: index];
+	} else {            
+		return [[item messagesByTree] objectAtIndex: index];
+	}
 }
 
 

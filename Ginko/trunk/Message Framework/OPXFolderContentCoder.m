@@ -20,7 +20,7 @@
 #import "EDMessagePart+OPExtensions.h"
 #import "NSAttributedString+MessageUtils.h"
 #import "NSString+MessageUtils.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "EDTextFieldCoder.h"
 
 @interface EDCompositeContentCoder (PrivateAPI)

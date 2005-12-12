@@ -25,7 +25,7 @@
 #import "OPInternetMessage.h"
 
 @class OPMessageAccount;
-@class EDObjectPair;
+@class OPObjectPair;
 
 @interface OPInternetMessage (GinkoExtensions)
 
@@ -42,6 +42,6 @@
 
 //- (BOOL) isGinkoMessage;
 
-- (BOOL) isMultiHeader: (EDObjectPair*) headerField;
+- (BOOL) isMultiHeader: (OPObjectPair*) headerField;
 
 @end

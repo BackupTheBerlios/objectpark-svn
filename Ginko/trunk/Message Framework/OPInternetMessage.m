@@ -29,7 +29,7 @@
 #import "OPMultimediaContentCoder.h"
 #import "OPMultipartContentCoder.h"
 #import "OPXFolderContentCoder.h"
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "OPContentCoderCenter.h"
 #import "NSData+OPMD5.h"
 
@@ -254,7 +254,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
         {
             effectiveRange.location = localEffectiveRange.location;
             effectiveRange.length = localEffectiveRange.length;
-            [encodersAndRanges addObject:[EDObjectPair pairWithObjects:NSStringFromClass(encoderClass) :NSStringFromRange(effectiveRange)]];
+            [encodersAndRanges addObject:[OPObjectPair pairWithObjects:NSStringFromClass(encoderClass) :NSStringFromRange(effectiveRange)]];
         }
         else
         {
@@ -275,7 +275,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     {
         Class encoderClass;
         NSRange range;
-        EDObjectPair *encoderAndRange;
+        OPObjectPair *encoderAndRange;
         EDContentCoder *encoder; 
         
         encoderAndRange = [encodersAndRanges lastObject];
@@ -293,7 +293,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     {
         NSMutableArray *subparts;
         NSEnumerator *enumerator;
-        EDObjectPair *encoderAndRange;
+        OPObjectPair *encoderAndRange;
         OPMultipartContentCoder *multipartCoder;
         
         subparts = [NSMutableArray array];
@@ -350,7 +350,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 - (NSData*) _headerData
 {
     NSEnumerator *fieldEnum;
-    EDObjectPair *field;
+    OPObjectPair *field;
     NSMutableString *stringBuffer = [[[NSMutableString alloc] init] autorelease];
     
     fieldEnum = [[self headerFields] objectEnumerator];
@@ -379,7 +379,7 @@ static NSCharacterSet *gremlinCharacterSet()
 /*" Removes non-ascii characters from header bodies. "*/
 {
     NSEnumerator *fieldEnum = [[self headerFields] objectEnumerator];
-    EDObjectPair *field;    
+    OPObjectPair *field;    
     while ((field = [fieldEnum nextObject]) != nil) 
     {
         NSString *body = [field secondObject];

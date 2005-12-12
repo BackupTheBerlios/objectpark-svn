@@ -26,7 +26,7 @@
 #import "string.h"
 #import "NSString+MessageUtils.h"
 #import "NSAttributedString+MessageUtils.h";
-#import "EDObjectPair.h"
+#import "OPObjectPair.h"
 #import "NSData+OPMD5.h"
 #import "EDMessagePart+OPExtensions.h"
 #import "NSAttributedString+Extensions.h"
@@ -36,7 +36,7 @@ unsigned int MessageIdCounter = 0;
 @implementation OPInternetMessage (GinkoExtensions)
 
 /*
-+ (OPInternetMessage *)messagePartForContent:(EDObjectPair *)typeAndContent 
++ (OPInternetMessage *)messagePartForContent:(OPObjectPair *)typeAndContent 
 {
     if([typeAndContent firstObject] == nil) 
     {
@@ -95,7 +95,7 @@ unsigned int MessageIdCounter = 0;
             [messagePart autorelease];
 
             // Content-Type
-            [messagePart setContentType:[EDObjectPair pairWithObjects:@"image":suffix]
+            [messagePart setContentType:[OPObjectPair pairWithObjects:@"image":suffix]
                          withParameters:[NSDictionary dictionaryWithObject:filename forKey:@"name"]];
 
             // Content-Transfer-Encoding
@@ -114,7 +114,7 @@ unsigned int MessageIdCounter = 0;
             [messagePart autorelease];
 
             // Content-Type
-            [messagePart setContentType:[EDObjectPair pairWithObjects:@"application":@"octet-stream"]
+            [messagePart setContentType:[OPObjectPair pairWithObjects:@"application":@"octet-stream"]
                          withParameters:[NSDictionary dictionaryWithObject:filename forKey:@"name"]];
 
             // Content-Transfer-Encoding
@@ -193,7 +193,7 @@ unsigned int MessageIdCounter = 0;
         [msg autorelease];
 
         // Content-Type
-        [msg setContentType:[EDObjectPair pairWithObjects:@"multipart":@"mixed"]
+        [msg setContentType:[OPObjectPair pairWithObjects:@"multipart":@"mixed"]
                      withParameters:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@", boundary] forKey:@"boundary"]];
 
         // Content-Transfer-Encoding
@@ -277,7 +277,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
     NSMutableAttributedString* bodyContent = [self bodyContent];
     NSArray* partContentStrings = [bodyContent divideContentStringTypedStrings];
     NSEnumerator* enumerator = [partContentStrings objectEnumerator];
-	EDObjectPair *typeAndContent;
+	OPObjectPair *typeAndContent;
 
     while (typeAndContent = [enumerator nextObject]){
         if([typeAndContent firstObject] == nil) {   
@@ -375,10 +375,10 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
 }
 */
 
-- (BOOL)isMultiHeader: (EDObjectPair*) headerField
+- (BOOL)isMultiHeader: (OPObjectPair*) headerField
 {
     NSEnumerator *enumerator;
-    EDObjectPair *header;
+    OPObjectPair *header;
     BOOL foundOnce = NO;
     NSString *compareString;
     
