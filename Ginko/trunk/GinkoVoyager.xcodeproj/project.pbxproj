@@ -60,6 +60,8 @@
 		77253D6607ECB83E00375AFC /* OPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */; };
 		7727484C07D45FB30056D08F /* Ginko-big.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7727484A07D45FB30056D08F /* Ginko-big.tiff */; };
 		7727484D07D45FB30056D08F /* Ginko.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7727484B07D45FB30056D08F /* Ginko.icns */; };
+		772D9525094435EA00456485 /* GIMessageGroup+Statistics.h in Headers */ = {isa = PBXBuildFile; fileRef = 772D9523094435EA00456485 /* GIMessageGroup+Statistics.h */; };
+		772D9526094435EA00456485 /* GIMessageGroup+Statistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 772D9524094435EA00456485 /* GIMessageGroup+Statistics.m */; };
 		772DB2FD077D9860001665AB /* NSObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 772DB2FB077D9860001665AB /* NSObject+Extensions.h */; };
 		772DB2FE077D9860001665AB /* NSObject+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 772DB2FC077D9860001665AB /* NSObject+Extensions.m */; };
 		772DB3D9077DB231001665AB /* OPURLFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 772DB3D7077DB231001665AB /* OPURLFieldCoder.h */; };
@@ -482,6 +484,8 @@
 		77253D6207ECB83E00375AFC /* OPSMTP.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPSMTP.m; sourceTree = "<group>"; };
 		7727484A07D45FB30056D08F /* Ginko-big.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Ginko-big.tiff"; sourceTree = "<group>"; };
 		7727484B07D45FB30056D08F /* Ginko.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Ginko.icns; sourceTree = "<group>"; };
+		772D9523094435EA00456485 /* GIMessageGroup+Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GIMessageGroup+Statistics.h"; sourceTree = "<group>"; };
+		772D9524094435EA00456485 /* GIMessageGroup+Statistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GIMessageGroup+Statistics.m"; sourceTree = "<group>"; };
 		772DB2FB077D9860001665AB /* NSObject+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Extensions.h"; sourceTree = "<group>"; };
 		772DB2FC077D9860001665AB /* NSObject+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Extensions.m"; sourceTree = "<group>"; };
 		772DB3D7077DB231001665AB /* OPURLFieldCoder.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPURLFieldCoder.h; sourceTree = "<group>"; };
@@ -971,6 +975,8 @@
 				8D17B5C80895BBC30057A1C6 /* GIProfile.m */,
 				8DE9646E089F9F1F0053ED6B /* GIThread.h */,
 				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
+				772D9523094435EA00456485 /* GIMessageGroup+Statistics.h */,
+				772D9524094435EA00456485 /* GIMessageGroup+Statistics.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1455,6 +1461,7 @@
 				8D840C02090F8DF50093CFAD /* NSEnumerator+Extensions.h in Headers */,
 				77CD6C14092B2BB500D7E986 /* GIPhraseBrowserController.h in Headers */,
 				77D336A5092BE97500F2BFAB /* GIPhraseBrowserWindow.h in Headers */,
+				772D9525094435EA00456485 /* GIMessageGroup+Statistics.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1889,6 +1896,7 @@
 				8D840C03090F8DF50093CFAD /* NSEnumerator+Extensions.m in Sources */,
 				77CD6C15092B2BB500D7E986 /* GIPhraseBrowserController.m in Sources */,
 				77D336A6092BE97500F2BFAB /* GIPhraseBrowserWindow.m in Sources */,
+				772D9526094435EA00456485 /* GIMessageGroup+Statistics.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

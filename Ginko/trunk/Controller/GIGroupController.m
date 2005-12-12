@@ -955,14 +955,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView selectItems: selectedItems ordered: YES];
 }
 
-- (GIMessageGroup*) group
+- (GIMessageGroup *)group
 {
     return group;
 }
 
-- (void) setGroup: (GIMessageGroup*) aGroup
+- (void)setGroup:(GIMessageGroup *)aGroup
 {
-    if (aGroup != group) {
+    if (aGroup != group) 
+    {
         //NSLog(@"Setting group for controller: %@", [aGroup description]);
         
         // key value observing:
@@ -978,7 +979,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         group = [aGroup retain];
         
         // thread filter popup:
-        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:  ShowOnlyRecentThreads] intValue]];
+        [threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
@@ -990,37 +991,45 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
          [boxesView scrollRowToVisible: boxRow];
          */
         
-        if ([self isStandaloneBoxesWindow]) {
-            
-            [threadsView setAutosaveName: [@"ThreadsOutline" stringByAppendingString: [group objectURLString] ? [group objectURLString] : @"nil"]];
-            [threadsView setAutosaveTableColumns: YES];
-            [threadsView setAutosaveExpandedItems: NO];
+        if ([self isStandaloneBoxesWindow]) 
+        {
+            [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[group objectURLString] ? [group objectURLString] : @"nil"]];
+            [threadsView setAutosaveTableColumns:YES];
+            [threadsView setAutosaveExpandedItems:NO];
             
             // Show last selected item:
-            NSString* itemURI = [self valueForGroupProperty: @"LastSelectedMessageItem"];
+            NSString *itemURI = [self valueForGroupProperty:@"LastSelectedMessageItem"];
             
-            if (itemURI) {
-                id item = [OPPersistentObjectContext objectWithURLString: itemURI];
-                if (item) {
-                    GIMessage* message = nil;
-                    GIThread* thread = nil;
+            if (itemURI) 
+            {
+                id item = [OPPersistentObjectContext objectWithURLString:itemURI];
+                if (item) 
+                {
+                    GIMessage *message = nil;
+                    GIThread *thread = nil;
                     
-                    if ([item isKindOfClass: [GIThread class]]) {
+                    if ([item isKindOfClass: [GIThread class]]) 
+                    {
                         thread = item;
-                    } else {
+                    } 
+                    else 
+                    {
                         message = item;
                         thread = [message thread];
                     }
                     
-                    int itemRow = [threadsView rowForItemEqualTo: [thread objectURLString] startingAtRow: 0];
+                    int itemRow = [threadsView rowForItemEqualTo:[thread objectURLString] startingAtRow:0];
                     
-                    if (itemRow >= 0) {
-                        [threadsView selectRow: itemRow byExtendingSelection: NO];
+                    if (itemRow >= 0) 
+                    {
+                        [threadsView selectRow:itemRow byExtendingSelection:NO];
                         
-                        if (![thread containsSingleMessage]) {
+                        if (![thread containsSingleMessage]) 
+                        {
                             [self openSelection:self];
                         }
-                        [threadsView scrollRowToVisible: itemRow];
+                        
+                        [threadsView scrollRowToVisible:itemRow];
                     }
                 }
             }
@@ -1035,19 +1044,22 @@ static BOOL isThreadItem(id item)
 
 // validation
 
-- (BOOL) isOnlyThreadsSelected
+- (BOOL)isOnlyThreadsSelected
 {
     // true when only threads are selected; false otherwise
     NSIndexSet *selectedIndexes;
     
     selectedIndexes = [threadsView selectedRowIndexes];
-    if ((! [self isStandaloneBoxesWindow]) && ([selectedIndexes count] > 0)) {
+    if ((! [self isStandaloneBoxesWindow]) && ([selectedIndexes count] > 0)) 
+    {
         int i, lastIndex;
         
         lastIndex = [selectedIndexes lastIndex];
         
-        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) {
-            if ([threadsView isRowSelected:i]) {
+        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) 
+        {
+            if ([threadsView isRowSelected:i]) 
+            {
                 if (!isThreadItem([threadsView itemAtRow:i])) return NO;
             }
         }

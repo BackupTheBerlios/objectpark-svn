@@ -19,13 +19,10 @@
 #import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
 #import "OPJobs.h"
-//#import "GIFulltextIndexCenter.h"
 #import "GIOutlineViewWithKeyboardSupport.h"
-//#import "GIMessage.h"
 #import "GIMessageBase.h"
 #import "NSString+Extensions.h"
 #import "GIApplication.h"
-
 
 @implementation GIGroupListController
 

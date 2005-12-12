@@ -73,7 +73,21 @@
 
 - (IBAction)newMessage:(id)sender
 {
-    [[[GIMessageEditorController alloc] initNewMessageWithProfile:[[GIProfile allObjects] lastObject]] autorelease];
+    // determine message group of frontmost window:
+    GIProfile *groupProfile = nil;
+    
+    id frontmostWindowDelegate = [[NSApp mainWindow] delegate];
+    
+    if ([frontmostWindowDelegate respondsToSelector:@selector(group)])
+    {
+        groupProfile = [[frontmostWindowDelegate group] defaultProfile];
+    }
+    else
+    {
+        groupProfile = [[GIProfile allObjects] lastObject];
+    }
+    
+    [[[GIMessageEditorController alloc] initNewMessageWithProfile:groupProfile] autorelease];
 }
 
 - (BOOL)validateSelector:(SEL)aSelector
