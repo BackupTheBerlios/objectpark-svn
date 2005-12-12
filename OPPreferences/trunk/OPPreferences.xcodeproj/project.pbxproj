@@ -316,7 +316,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		30C0C2DF085B4A6300133D2E /* Development */ = {
+		30C0C2E1085B4A6300133D2E /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
@@ -324,29 +324,13 @@
 			};
 			name = Development;
 		};
-		30C0C2E0085B4A6300133D2E /* Deployment */ = {
+		30C0C2E2085B4A6300133D2E /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				SDKROOT = /Developer/SDKs/MacOSX10.2.8.sdk;
 			};
 			name = Deployment;
-		};
-		30C0C2E1085B4A6300133D2E /* Appwrapper Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.2.8.sdk;
-			};
-			name = "Appwrapper Development";
-		};
-		30C0C2E2085B4A6300133D2E /* Appwrapper Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.2.8.sdk;
-			};
-			name = "Appwrapper Deployment";
 		};
 		30C0C2E3085B4A6300133D2E /* Default */ = {
 			isa = XCBuildConfiguration;
@@ -356,72 +340,7 @@
 			};
 			name = Default;
 		};
-		8D3FB56F0933E8CA001B2DE3 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "";
-				FRAMEWORK_VERSION = A;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x36000000,
-				);
-				PREBINDING = YES;
-				PRODUCT_NAME = OPPreferences;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		8D3FB5700933E8CA001B2DE3 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "";
-				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = $HOME/Library/Frameworks;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x36000000,
-				);
-				PREBINDING = YES;
-				PRODUCT_NAME = OPPreferences;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		8D3FB5710933E8CA001B2DE3 /* Appwrapper Development */ = {
+		8D3FB5710933E8CA001B2DE3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -451,9 +370,9 @@
 				);
 				WRAPPER_EXTENSION = framework;
 			};
-			name = "Appwrapper Development";
+			name = Development;
 		};
-		8D3FB5720933E8CA001B2DE3 /* Appwrapper Deployment */ = {
+		8D3FB5720933E8CA001B2DE3 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -488,7 +407,7 @@
 				);
 				WRAPPER_EXTENSION = framework;
 			};
-			name = "Appwrapper Deployment";
+			name = Deployment;
 		};
 		8D3FB5730933E8CA001B2DE3 /* Default */ = {
 			isa = XCBuildConfiguration;
@@ -524,10 +443,8 @@
 		30C0C2DE085B4A6300133D2E /* Build configuration list for PBXProject "OPPreferences" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				30C0C2DF085B4A6300133D2E /* Development */,
-				30C0C2E0085B4A6300133D2E /* Deployment */,
-				30C0C2E1085B4A6300133D2E /* Appwrapper Development */,
-				30C0C2E2085B4A6300133D2E /* Appwrapper Deployment */,
+				30C0C2E1085B4A6300133D2E /* Development */,
+				30C0C2E2085B4A6300133D2E /* Deployment */,
 				30C0C2E3085B4A6300133D2E /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -536,10 +453,8 @@
 		8D3FB56E0933E8CA001B2DE3 /* Build configuration list for PBXNativeTarget "OPPreferences" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8D3FB56F0933E8CA001B2DE3 /* Development */,
-				8D3FB5700933E8CA001B2DE3 /* Deployment */,
-				8D3FB5710933E8CA001B2DE3 /* Appwrapper Development */,
-				8D3FB5720933E8CA001B2DE3 /* Appwrapper Deployment */,
+				8D3FB5710933E8CA001B2DE3 /* Development */,
+				8D3FB5720933E8CA001B2DE3 /* Deployment */,
 				8D3FB5730933E8CA001B2DE3 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
