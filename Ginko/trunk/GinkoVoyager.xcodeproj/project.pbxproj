@@ -1954,7 +1954,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"../OPPreferences/build/Appwrapper Development",
+					"../OPPreferences/build/$(BUILD_STYLE)",
 					"../OPNetwork/build/$(BUILD_STYLE)",
 					"../OPDebug/build/$(BUILD_STYLE)",
 					$USER_LIBRARY_DIR/Frameworks/,
@@ -2003,7 +2003,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"../OPPreferences/build/Appwrapper Development",
+					../OPPreferences/build/Development,
 					../OPNetwork/build/Development,
 					../OPDebug/build/Development,
 					$USER_LIBRARY_DIR/Frameworks/,
@@ -2053,7 +2053,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"../OPPreferences/build/Appwrapper Deployment",
+					"../OPPreferences/build/$(BUILD_STYLE)",
 					"../OPNetwork/build/$(BUILD_STYLE)",
 					"../OPDebug/build/$(BUILD_STYLE)",
 					$USER_LIBRARY_DIR/Frameworks/,
@@ -2104,7 +2104,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"../OPPreferences/build/Appwrapper Development",
+					"../OPPreferences/build/$(BUILD_STYLE)",
 					"../OPNetwork/build/$(BUILD_STYLE)",
 					"../OPDebug/build/$(BUILD_STYLE)",
 					$USER_LIBRARY_DIR/Frameworks/,
