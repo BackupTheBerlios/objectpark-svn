@@ -192,7 +192,7 @@
 		//sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
 
-		NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [connection lastError]);	
+		NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);	
 		
 		[insertStatements setObject: result forKey: poClass]; // cache it
 	}
