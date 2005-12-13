@@ -58,22 +58,35 @@
 	return [self retain]; // self retaining!
 }
   
-- (IBAction) showGroupWindow: (id) sender
-	/*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
+- (GIMessageGroup *)group
+/*" Returns the selected message group if one and only one is selected. nil otherwise. "*/
 {
-    GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow: [boxesView selectedRow]]];
+    GIMessageGroup *selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:[boxesView itemAtRow:[boxesView selectedRow]]];
 	
-    if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) {
-        NSWindow* groupWindow = [[GIGroupController class] windowForGroup: selectedGroup];
+    if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) return selectedGroup;
+    else return nil;
+}
+
+- (IBAction)showGroupWindow:(id)sender
+/*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
+{
+    GIMessageGroup *selectedGroup = [self group];
+	
+    if (selectedGroup) 
+    {
+        NSWindow *groupWindow = [[GIGroupController class] windowForGroup:selectedGroup];
         
-        if (groupWindow) {
-            [groupWindow makeKeyAndOrderFront: self];
-        } else {
-            GIGroupController* newController = [[[GIGroupController alloc] initWithGroup: selectedGroup] autorelease];
+        if (groupWindow) 
+        {
+            [groupWindow makeKeyAndOrderFront:self];
+        } 
+        else 
+        {
+            GIGroupController *newController = [[[GIGroupController alloc] initWithGroup:selectedGroup] autorelease];
             groupWindow = [newController window];
         }
         
-        [[groupWindow delegate] showThreads: sender];
+        [[groupWindow delegate] showThreads:sender];
     }
 }
 
@@ -86,12 +99,9 @@
 	}
 }
 
-- (BOOL) openSelection: (id) sender
+- (BOOL)openSelection:(id)sender
 {    
-    if (sender == boxesView) {
-        // open group window:
-        [self showGroupWindow: sender];
-    }
+    [self showGroupWindow:sender];
 	return YES;
 }
 
@@ -189,7 +199,7 @@
 
 @implementation GIGroupListController (OutlineViewDataSource)
 
-- (void) groupsChanged: (NSNotification*) aNotification
+- (void)groupsChanged:(NSNotification *)aNotification
 {
     [boxesView reloadData];
 }
@@ -207,93 +217,93 @@
 }
 */
 
-- (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
 	// boxes list
-	if (! item) {
-		return [[GIMessageGroup hierarchyRootNode] count] - 1;
-	} else if ([item isKindOfClass: [NSMutableArray class]]) {
-		return [item count] - 1;
-	}
+	if (! item) return [[GIMessageGroup hierarchyRootNode] count] - 1;
+	else if ([item isKindOfClass:[NSMutableArray class]]) return [item count] - 1;
+
     return 0;
 }
 
-- (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-	return [item isKindOfClass: [NSMutableArray class]];
+	return [item isKindOfClass:[NSMutableArray class]];
 }
 
-- (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
-	// boxes list
-	if (!item) {
-		item = [GIMessageGroup hierarchyRootNode];
-	}
-	return [item objectAtIndex: index + 1];
+	if (!item) item = [GIMessageGroup hierarchyRootNode];
+	return [item objectAtIndex:index + 1];
 }
 
-- (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {    
-    if (outlineView == boxesView) {
-		// boxes list
-        if ([[tableColumn identifier] isEqualToString: @"box"]) {
-            if ([item isKindOfClass: [NSMutableArray class]]) {
-                return [[item objectAtIndex: 0] valueForKey: @"name"];
-            } else if (item) {
-				GIMessageGroup* g = [OPPersistentObjectContext objectWithURLString: item];
-                return [g valueForKey: @"name"];
-            }
+    if ([[tableColumn identifier] isEqualToString:@"box"]) 
+    {
+        if ([item isKindOfClass:[NSMutableArray class]]) 
+        {
+            return [[item objectAtIndex:0] valueForKey:@"name"];
+        } 
+        else if (item) 
+        {
+            GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:item];
+            return [group valueForKey:@"name"];
         }
-        if ([[tableColumn identifier] isEqualToString: @"info"]) {
-            if (![item isKindOfClass: [NSMutableArray class]]) {
-                //GIMessageGroup* g = item;
-                //NSMutableArray *threadURIs = [NSMutableArray array];
-                //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
-                
-                return @"";
-				/*
-				 [g fetchThreadURIs:&threadURIs
-					 trivialThreads: NULL
-						  newerThan: [date timeIntervalSinceReferenceDate]
-						withSubject: nil
-							 author: nil
-			  sortedByDateAscending: YES];
-				 return [NSNumber numberWithInt: [threadURIs count]];
-				 */
-            }
+    }
+    
+    if ([[tableColumn identifier] isEqualToString:@"info"]) 
+    {
+        if (![item isKindOfClass:[NSMutableArray class]]) 
+        {
+            //GIMessageGroup* g = item;
+            //NSMutableArray *threadURIs = [NSMutableArray array];
+            //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
+            
+            return @"";
+            /*
+             [g fetchThreadURIs:&threadURIs
+                 trivialThreads: NULL
+                      newerThan: [date timeIntervalSinceReferenceDate]
+                    withSubject: nil
+                         author: nil
+          sortedByDateAscending: YES];
+             return [NSNumber numberWithInt: [threadURIs count]];
+             */
         }
-}
-return @"";
+    }
+    return @"";
 }
 
-- (void) outlineView: (NSOutlineView*) outlineView setObjectValue: (id) object forTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
+- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *) tableColumn byItem:(id)item
 {
-    if (outlineView == boxesView) {
-        if ([item isKindOfClass: [NSMutableArray class]]) {
-			// folder:
-            [[item objectAtIndex: 0] setObject: object forKey: @"name"];
-            [GIMessageGroup saveHierarchy];
-            //[outlineView selectRow: [outlineView rowForItem:item]+1 byExtendingSelection: NO];
-            //[[outlineView window] endEditingFor:outlineView];
-        } else {
-			// message group:
-			GIMessageGroup* itemGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: item];
-            [itemGroup setValue: object forKey: @"name"];
-            [NSApp saveAction: self];
-        }
+    if ([item isKindOfClass:[NSMutableArray class]]) // folder:
+    {
+        [[item objectAtIndex:0] setObject:object forKey:@"name"];
+        [GIMessageGroup saveHierarchy];
+        //[outlineView selectRow: [outlineView rowForItem:item]+1 byExtendingSelection: NO];
+        //[[outlineView window] endEditingFor:outlineView];
+    } 
+    else // message group:
+    {
+        GIMessageGroup *itemGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:item];
+        [itemGroup setValue:object forKey:@"name"];
+        [NSApp saveAction:self];
     }
 }
 
-- (id) outlineView: (NSOutlineView*) outlineView itemForPersistentObject: (id) object
+- (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(id)object
 {
-	return [GIMessageGroup hierarchyNodeForUid: object];
+	return [GIMessageGroup hierarchyNodeForUid:object];
 }
 
-- (id) outlineView: (NSOutlineView*) outlineView persistentObjectForItem: (id) item
+- (id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item
 {
-	if ([item isKindOfClass: [NSMutableArray class]]) {
-		return [[item objectAtIndex: 0] objectForKey: @"uid"];
+	if ([item isKindOfClass:[NSMutableArray class]]) 
+    {
+		return [[item objectAtIndex:0] objectForKey:@"uid"];
 	}
+    
     return nil;
 }
 
@@ -302,75 +312,75 @@ return @"";
 
 @implementation GIGroupListController (DragNDrop)
 
-
-- (BOOL) outlineView: (NSOutlineView*) anOutlineView acceptDrop: (id <NSDraggingInfo>) info item: (id) item childIndex: (int) index
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
-    if (anOutlineView == boxesView) {
+    if (anOutlineView == boxesView) 
+    {
 		// Message Groups list
-        
         if (! item) item = [GIMessageGroup hierarchyRootNode];
         
-        NSArray* items = [[info draggingPasteboard] propertyListForType: @"GinkoMessageboxes"];
-        if ([items count] == 1) {
+        NSArray* items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
+        if ([items count] == 1) 
+        {
 			// only single selection supported at this time!
             // Hack (part 1)! Why is this necessary to archive almost 'normal' behavior?
-            [boxesView setAutosaveName: nil];
+            [boxesView setAutosaveName:nil];
             
-            [GIMessageGroup moveEntry: [items lastObject] 
-					  toHierarchyNode: item 
-							  atIndex: index 
-							 testOnly: NO];
+            [GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:NO];
             
             [anOutlineView reloadData];
-			int row = [anOutlineView rowForItemEqualTo: [items lastObject] startingAtRow: 0];
-			[anOutlineView selectRow: row byExtendingSelection: NO];
+			int row = [anOutlineView rowForItemEqualTo:[items lastObject] startingAtRow:0];
+			[anOutlineView selectRow:row byExtendingSelection:NO];
             
             // Hack (part 2)! Why is this necessary to archive almost 'normal' behavior?
-            [boxesView setAutosaveName: @"boxesView"];
+            [boxesView setAutosaveName:@"boxesView"];
             
             return YES;
         }
         
-        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
+        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
 		
-        if ([threadURLs count]) {
-            GIMessageGroup* sourceGroup      = [(GIGroupController*)[[info draggingSource] delegate] group];
-            GIMessageGroup* destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
+        if ([threadURLs count]) 
+        {
+            GIMessageGroup *sourceGroup = [(GIGroupController *)[[info draggingSource] delegate] group];
+            GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
             
-            [GIMessageGroup moveThreadsWithURI: threadURLs fromGroup: sourceGroup toGroup: destinationGroup];
+            [GIMessageGroup moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
             
             // select all in dragging source:
             NSOutlineView *sourceView = [info draggingSource];        
-            [sourceView selectRow: [sourceView selectedRow] byExtendingSelection: NO];
+            [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
             
-            [NSApp saveAction: self];
+            [NSApp saveAction:self];
         }
     }
     return NO;
 }
 
-- (NSDragOperation) outlineView: (NSOutlineView*) anOutlineView validateDrop: (id <NSDraggingInfo>) info proposedItem: (id) item proposedChildIndex: (int) index
+- (NSDragOperation)outlineView:(NSOutlineView *)anOutlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
-    if (anOutlineView == boxesView) {
+    if (anOutlineView == boxesView) 
+    {
 		// Message Groups
-        NSArray* items = [[info draggingPasteboard] propertyListForType: @"GinkoMessageboxes"];
+        NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
         
-        if ([items count] == 1) {
-            if (index != NSOutlineViewDropOnItemIndex) {
+        if ([items count] == 1) 
+        {
+            if (index != NSOutlineViewDropOnItemIndex) 
+            {
 				// accept only when no on item:
-                if ([GIMessageGroup moveEntry: [items lastObject] toHierarchyNode: item atIndex: index testOnly: YES]) {
-                    [anOutlineView setDropItem: item dropChildIndex: index]; 
-                    
+                if ([GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:YES]) 
+                {
+                    [anOutlineView setDropItem:item dropChildIndex:index]; 
                     return NSDragOperationMove;
                 }
             }
         }
         
-        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        if ([threadURLs count]) {
-            if (index == NSOutlineViewDropOnItemIndex) {
-                return NSDragOperationMove;
-            }
+        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        if ([threadURLs count]) 
+        {
+            if (index == NSOutlineViewDropOnItemIndex) return NSDragOperationMove;
         }
         
         return NSDragOperationNone;
@@ -378,14 +388,16 @@ return @"";
     return NSDragOperationNone;
 }
 
-- (BOOL) outlineView: (NSOutlineView*) outlineView writeItems: (NSArray*) items toPasteboard: (NSPasteboard*) pboard
+- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
 {
-    if (outlineView == boxesView) {
+    if (outlineView == boxesView) 
+    {
         // ##WARNING works only for single selections. Not for multi selection!
         
-        [pboard declareTypes: [NSArray arrayWithObject: @"GinkoMessageboxes"] owner: self];    
-        [pboard setPropertyList: items forType: @"GinkoMessageboxes"];
+        [pboard declareTypes:[NSArray arrayWithObject:@"GinkoMessageboxes"] owner:self];    
+        [pboard setPropertyList:items forType:@"GinkoMessageboxes"];
     }
+    
     return YES;
 }
 

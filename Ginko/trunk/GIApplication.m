@@ -82,10 +82,6 @@
     {
         groupProfile = [[frontmostWindowDelegate group] defaultProfile];
     }
-    else
-    {
-        groupProfile = [[GIProfile allObjects] lastObject];
-    }
     
     [[[GIMessageEditorController alloc] initNewMessageWithProfile:groupProfile] autorelease];
 }

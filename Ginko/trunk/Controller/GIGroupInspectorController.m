@@ -8,6 +8,7 @@
 
 #import "GIGroupInspectorController.h"
 #import "GIProfile.h"
+#import "GIApplication.h"
 
 @implementation GIGroupInspectorController
 
@@ -75,6 +76,7 @@ static GIGroupInspectorController *sharedInspector = nil;
     if ([group defaultProfile] != newProfile) // check if something to do
     {
         [group setDefaultProfile:newProfile];
+        [NSApp saveAction:self];
     }
 }
 
