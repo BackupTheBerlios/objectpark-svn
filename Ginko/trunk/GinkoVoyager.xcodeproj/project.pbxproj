@@ -49,6 +49,7 @@
 		770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 770878C008B4FCD600FBB196 /* HeaderTemplate.html */; };
 		7709374C08574DF200A29008 /* NSHost+GIReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 7709374A08574DF200A29008 /* NSHost+GIReachability.h */; };
 		7709374D08574DF200A29008 /* NSHost+GIReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7709374B08574DF200A29008 /* NSHost+GIReachability.m */; };
+		770E4D75095583BC007F1158 /* lucene-1.4.3.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 770E4D74095583BC007F1158 /* lucene-1.4.3.jar */; };
 		77136F3208438E2A002F9298 /* TestGIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 77136F3008438E2A002F9298 /* TestGIThread.h */; };
 		77136F3308438E2A002F9298 /* TestGIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 77136F3108438E2A002F9298 /* TestGIThread.m */; };
 		7717AECA07DF30C700B0B0F5 /* ProfilePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */; };
@@ -85,6 +86,7 @@
 		7759B41808535F830011B606 /* GIActivityPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7759B41608535F830011B606 /* GIActivityPanelController.m */; };
 		775A96E30839D5EB008EC276 /* TestGIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */; };
 		775A96E40839D5EB008EC276 /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */; };
+		77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77738B0B0955B02000BAAB51 /* JavaVM.framework */; };
 		777435CB077755A000899957 /* group.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777435CA077755A000899957 /* group.toolbar */; };
 		777436300778055900899957 /* NSToolbar+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7774362E0778055900899957 /* NSToolbar+OPExtensions.h */; };
 		777436310778055900899957 /* NSToolbar+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7774362F0778055900899957 /* NSToolbar+OPExtensions.m */; };
@@ -99,6 +101,7 @@
 		777625A80760E0EC0066BE60 /* GIGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777625A60760E0EC0066BE60 /* GIGroupController.m */; };
 		7776BBAA07D0773E00822246 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7776BBA907D0773E00822246 /* MainMenu.nib */; };
 		7781EBAA0833B55100830729 /* newDirectory.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781EBA90833B55100830729 /* newDirectory.tiff */; };
+		7782AE31095593D7005F1DC4 /* Lucene.h in Headers */ = {isa = PBXBuildFile; fileRef = 7782AE30095593D7005F1DC4 /* Lucene.h */; };
 		7786DC5007DE2F7200C5F9F7 /* ProfilePrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */; };
 		7786DC5107DE2F7200C5F9F7 /* ProfilePrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */; };
 		77962BCC08142114005ADB94 /* GIFulltextIndexCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */; };
@@ -127,6 +130,8 @@
 		77BA8F50076DCC480082F33F /* GIAddressFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */; };
 		77BA9235076DCCD80082F33F /* ABPerson+Convenience.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BA9233076DCCD80082F33F /* ABPerson+Convenience.h */; };
 		77BA9236076DCCD80082F33F /* ABPerson+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BA9234076DCCD80082F33F /* ABPerson+Convenience.m */; };
+		77BBA51909558792005C4915 /* lucene-1.4.3.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 770E4D74095583BC007F1158 /* lucene-1.4.3.jar */; };
+		77BBA52C095587D6005C4915 /* lucene-1.4.3.jar in Resources */ = {isa = PBXBuildFile; fileRef = 770E4D74095583BC007F1158 /* lucene-1.4.3.jar */; };
 		77BC56C707F1D338009EF11D /* boxes.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 77BC56C607F1D338009EF11D /* boxes.toolbar */; };
 		77BC581C07610AB700B70D8F /* GIGroupWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BC581A07610AB700B70D8F /* GIGroupWindow.h */; };
 		77BC581D07610AB700B70D8F /* GIGroupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC581B07610AB700B70D8F /* GIGroupWindow.m */; };
@@ -475,6 +480,7 @@
 		770878C008B4FCD600FBB196 /* HeaderTemplate.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = HeaderTemplate.html; sourceTree = "<group>"; };
 		7709374A08574DF200A29008 /* NSHost+GIReachability.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSHost+GIReachability.h"; sourceTree = "<group>"; };
 		7709374B08574DF200A29008 /* NSHost+GIReachability.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSHost+GIReachability.m"; sourceTree = "<group>"; };
+		770E4D74095583BC007F1158 /* lucene-1.4.3.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "lucene-1.4.3.jar"; path = "Resources/lucene-1.4.3.jar"; sourceTree = "<group>"; };
 		77136F3008438E2A002F9298 /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
 		77136F3108438E2A002F9298 /* TestGIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIThread.m; sourceTree = "<group>"; };
 		7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ProfilePrefs.nib; sourceTree = "<group>"; };
@@ -514,6 +520,7 @@
 		775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessageGroup.m; sourceTree = "<group>"; };
 		776B7D2707C41518009DA8B8 /* HowToTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = HowToTest.rtf; sourceTree = "<group>"; };
 		776B7DA007C41673009DA8B8 /* SenTestingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SenTestingKit.framework; path = /Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
+		77738B0B0955B02000BAAB51 /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
 		777435CA077755A000899957 /* group.toolbar */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = group.toolbar; sourceTree = "<group>"; };
 		7774362E0778055900899957 /* NSToolbar+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSToolbar+OPExtensions.h"; sourceTree = "<group>"; };
 		7774362F0778055900899957 /* NSToolbar+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSToolbar+OPExtensions.m"; sourceTree = "<group>"; };
@@ -530,6 +537,7 @@
 		7779AC9A07C40D1B00F064D3 /* TestNSString+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSString+MessageUtils.h"; sourceTree = "<group>"; };
 		7779AC9B07C40D1B00F064D3 /* TestNSString+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSString+MessageUtils.m"; sourceTree = "<group>"; };
 		7781EBA90833B55100830729 /* newDirectory.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = newDirectory.tiff; sourceTree = "<group>"; };
+		7782AE30095593D7005F1DC4 /* Lucene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lucene.h; path = FulltextSearch/Lucene.h; sourceTree = "<group>"; };
 		7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilePrefs.h; sourceTree = "<group>"; };
 		7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilePrefs.m; sourceTree = "<group>"; };
 		77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFulltextIndexCenter.h; sourceTree = "<group>"; };
@@ -780,6 +788,9 @@
 				77D33406092BB03E00F2BFAB /* libsqlite3.dylib in Frameworks */,
 				30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */,
 				30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */,
+				770E4D75095583BC007F1158 /* lucene-1.4.3.jar in Frameworks */,
+				77BBA51909558792005C4915 /* lucene-1.4.3.jar in Frameworks */,
+				77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,6 +832,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				77738B0B0955B02000BAAB51 /* JavaVM.framework */,
 				8DCE392A089423E000F705EF /* libsqlite3.0.dylib */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
@@ -863,6 +875,7 @@
 			children = (
 				32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				7782AE30095593D7005F1DC4 /* Lucene.h */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -901,6 +914,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				770E4D74095583BC007F1158 /* lucene-1.4.3.jar */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 			);
 			name = Frameworks;
@@ -1464,6 +1478,7 @@
 				77D336A5092BE97500F2BFAB /* GIPhraseBrowserWindow.h in Headers */,
 				772D9525094435EA00456485 /* GIMessageGroup+Statistics.h in Headers */,
 				8D313AE2094E3E39007D668A /* OPObjectPair.h in Headers */,
+				7782AE31095593D7005F1DC4 /* Lucene.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1683,6 +1698,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77BBA52C095587D6005C4915 /* lucene-1.4.3.jar in Resources */,
 				77CC67F109333E9C00E0F213 /* OPL-Configuration.plist in Resources */,
 				7776BBAA07D0773E00822246 /* MainMenu.nib in Resources */,
 				8D9E9DC906AE215D0055F87C /* OPBanner.jpg in Resources */,

@@ -7,6 +7,7 @@
 //
 
 #import <AppKit/AppKit.h>
+#import "Lucene.h"
 
 @class GIMessage;
 
@@ -25,5 +26,7 @@
 - (NSDictionary *)indexDictionary;
 - (void) setIndexDictionary:(NSDictionary *)newIndexDictionary;
 
+- (LuceneDocument *)luceneDocumentFromMessage:(GIMessage *)aMessage;
 
 @end
+

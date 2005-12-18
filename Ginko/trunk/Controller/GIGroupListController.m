@@ -26,33 +26,34 @@
 
 @implementation GIGroupListController
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {    
-    [boxesView setTarget: self];
-    [boxesView setDoubleAction: @selector(showGroupWindow:)];
-    // Register to grok GinkoMessages and GinkoMessageboxes drags
-    [boxesView registerForDraggedTypes: [NSArray arrayWithObjects: @"GinkoThreads", @"GinkoMessageboxes", nil]];
-    [boxesView setAutosaveName: @"boxesView"];
-    [boxesView setAutosaveExpandedItems: YES];
-
+    [boxesView setTarget:self];
+    [boxesView setDoubleAction:@selector(showGroupWindow:)];
     
+    // Register to grok GinkoMessages and GinkoMessageboxes drags:
+    [boxesView registerForDraggedTypes:[NSArray arrayWithObjects: @"GinkoThreads", @"GinkoMessageboxes", nil]];
+    
+    [boxesView setAutosaveName:@"boxesView"];
+    [boxesView setAutosaveExpandedItems:YES];
+
     //[self awakeToolbar];
 	
-    //lastTopLeftPoint = [window cascadeTopLeftFromPoint: lastTopLeftPoint];
+    //lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
     
-    [window makeKeyAndOrderFront: self];    
+    [window makeKeyAndOrderFront:self];    
 }
 
-- (id) init
+- (id)init
 {
-    if (self = [super init]) {
+    if (self = [super init]) 
+    {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
 		
-		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: @"GroupContentChangedNotification" object: self];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(modelChanged:) name: OPJobDidFinishNotification object: MboxImportJobName];
+        [NSBundle loadNibNamed:@"Boxes" owner:self];
 		
-        [NSBundle loadNibNamed: @"Boxes" owner: self];
-		
-        [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(groupsChanged:) name: GIMessageGroupWasAddedNotification object: nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
     }
     
 	return [self retain]; // self retaining!
@@ -90,12 +91,13 @@
     }
 }
 
-- (IBAction) showGroupInspector: (id) sender
+- (IBAction)showGroupInspector:(id)sender
 {
-	id selectedGroup = [boxesView itemAtRow: [boxesView selectedRow]];
+	id selectedGroup = [self group];
 	
-	if (selectedGroup && ![selectedGroup isKindOfClass: [NSArray class]]) {
-		[GIGroupInspectorController groupInspectorForGroup: [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedGroup]];
+	if (selectedGroup) 
+    {
+		[GIGroupInspectorController groupInspectorForGroup:[[OPPersistentObjectContext defaultContext] objectWithURLString:selectedGroup]];
 	}
 }
 
@@ -105,95 +107,104 @@
 	return YES;
 }
 
-- (IBAction) rename: (id) sender
+- (IBAction)rename:(id)sender
 /*" Renames the selected item (folder or group). "*/
 {
     int lastSelectedRow  = [boxesView selectedRow];
     
-    if (lastSelectedRow != -1) {
-        [boxesView editColumn: 0 row: lastSelectedRow withEvent: nil select: YES];
-    }
+    if (lastSelectedRow != -1) [boxesView editColumn:0 row:lastSelectedRow withEvent:nil select:YES];
 }
 
-- (IBAction) delete: (id) sender
+- (IBAction)delete:(id)sender
 {
 	id item = [[boxesView selectedItems] lastObject];
-	if (item) {
-		if ([item isKindOfClass: [NSArray class]]) {
-			if ([item count]==0) {
-				[GIMessageGroup removeHierarchyNode: item];
-				[GIMessageGroup saveHierarchy];
-			} else {
-				NSBeep();
-				NSLog(@"Unable to remove folder containing groups.");
-			}
-		} else {
-			[GIMessageGroup removeHierarchyNode: item];
-			if ([[item valueForKey: @"threadsByDate"] count] == 0) {
-				
-				[GIMessageGroup removeHierarchyNode: item];
-				// Delete the group object:
-				[[(GIMessageGroup*)item context] deleteObject: item];
-				[GIMessageGroup saveHierarchy];
-
-			} else {
-				NSBeep();
-				NSLog(@"Unable to remove group containing threads.");
-			}
-		} 
-	}
+    if ([item isKindOfClass:[NSArray class]]) 
+    {
+        if ([item count] == 0) 
+        {
+            [GIMessageGroup removeHierarchyNode:item];
+            [GIMessageGroup saveHierarchy];
+        } 
+        else 
+        {
+            NSBeep();
+            NSLog(@"Unable to remove folder containing groups.");
+        }
+    } 
+    else 
+    {
+        [GIMessageGroup removeHierarchyNode:item];
+        if ([[item valueForKey:@"threadsByDate"] count] == 0) 
+        {
+            [GIMessageGroup removeHierarchyNode:item];
+            // Delete the group object:
+            [[(GIMessageGroup *)item context] deleteObject:item];
+            [GIMessageGroup saveHierarchy];
+            
+        } 
+        else 
+        {
+            NSBeep();
+            NSLog(@"Unable to remove group containing threads.");
+        }
+    } 
 }
 
-- (IBAction) addFolder: (id) sender
+- (IBAction)addFolder:(id)sender
 {
     int selectedRow = [boxesView selectedRow];
-    [boxesView setAutosaveName: nil];
-    [GIMessageGroup addNewHierarchyNodeAfterEntry: [boxesView itemAtRow:selectedRow]];
+    [boxesView setAutosaveName:nil];
+    [GIMessageGroup addNewHierarchyNodeAfterEntry:[boxesView itemAtRow:selectedRow]];
     [boxesView reloadData];
-    [boxesView setAutosaveName: @"boxesView"];
+    [boxesView setAutosaveName:@"boxesView"];
     
-    [boxesView selectRow: selectedRow + 1 byExtendingSelection: NO];
-    [self rename: self];
+    [boxesView selectRow:selectedRow + 1 byExtendingSelection:NO];
+    [self rename:self];
 }
 
-- (IBAction) addMessageGroup: (id) sender
+- (IBAction)addMessageGroup:(id)sender
 {
     int selectedRow = [boxesView selectedRow];
-    id item = [boxesView itemAtRow: selectedRow];
+    id item = [boxesView itemAtRow:selectedRow];
 	
-    NSMutableArray* node = item;
+    NSMutableArray *node = item;
     int index; // insertion index under node
     
-    if ([boxesView isExpandable: item]) {
+    if ([boxesView isExpandable:item]) 
+    {
 		// Expand any selected folder:
         index = 0;
-        [boxesView expandItem: item];
-    } else {
-        node = [GIMessageGroup findHierarchyNodeForEntry: item startingWithHierarchyNode: [GIMessageGroup hierarchyRootNode]];
+        [boxesView expandItem:item];
+    } 
+    else 
+    {
+        node = [GIMessageGroup findHierarchyNodeForEntry:item startingWithHierarchyNode:[GIMessageGroup hierarchyRootNode]];
         
-        if (node) {
-            index = [node indexOfObject: item]; // +1 correction already in!
-        } else {
+        if (node) 
+        {
+            index = [node indexOfObject:item]; // +1 correction already in!
+        } 
+        else 
+        {
             node = [GIMessageGroup hierarchyRootNode];
             index = 0;
         }
     }
     
-    GIMessageGroup* newGroup = [GIMessageGroup newMessageGroupWithName: nil atHierarchyNode: node atIndex: index];
+    GIMessageGroup *newGroup = [GIMessageGroup newMessageGroupWithName:nil atHierarchyNode:node atIndex:index];
     
     [boxesView reloadData];
     
-    [boxesView setAutosaveName: @"boxesView"];
-    [boxesView selectRow: [boxesView rowForItem: newGroup] byExtendingSelection: NO];
-    [self rename: self];
-	[GIApp saveAction: nil]; // commit new database entry
+    [boxesView setAutosaveName:@"boxesView"];
+    [boxesView selectRow:[boxesView rowForItem:newGroup] byExtendingSelection:NO];
+    [self rename:self];
+	[GIApp saveAction:nil]; // commit new database entry
 }
 
-- (IBAction) removeFolderMessageGroup: (id) sender
+- (IBAction)removeFolderMessageGroup:(id)sender
 {
     NSLog(@"-removeFolderMessageGroup: needs to be implemented");
 }
-
 
 @end
 

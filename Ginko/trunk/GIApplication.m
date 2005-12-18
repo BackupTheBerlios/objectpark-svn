@@ -30,7 +30,8 @@
 #import <OPPreferences/OPPreferences.h>
 
 #import <OPDebug/OPLog.h>
-
+#import <JavaVM/JavaVM.h>
+#import "GIFullTextIndexCenter.h"
 
 @implementation GIApplication
 
@@ -276,8 +277,61 @@
 	[self saveAction: nil];
 }
 
+- (void)playWithLucene
+{
+    NSString *lucenePath = [@":" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
+    
+    //NSLog(@"lucenepath = %@", lucenePath); 
+    [[NSJavaVirtualMachine alloc] initWithClassPath:[[NSJavaVirtualMachine defaultClassPath] stringByAppendingString:lucenePath]];
+        
+    //NSLog(@"properties = %@", [NSClassFromString(@"java.lang.System") getProperties]);
+    GIFulltextIndexCenter *defaultIndexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+    
+    id standardAnalyzer = [[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init];
+    
+    LuceneIndexWriter *indexWriter = [[LuceneIndexWriterClass newWithSignature:@"(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z)", @"LuceneIndex", standardAnalyzer, [NSNumber numberWithBool:YES]] autorelease];
+        
+    LuceneDocument *doc = [defaultIndexCenter luceneDocumentFromMessage:nil];
+
+    //NSLog(@"standardAnalyzer = %@", standardAnalyzer);    
+
+    @try
+    {
+        [indexWriter setUseCompoundFile:NO];
+        [indexWriter addDocument:doc];
+        [indexWriter close];
+    } 
+    @catch (NSException *localException)
+    {
+        NSLog(@"EXCEPTION reason = %@", localException);
+    }
+    
+    //NSLog(@"doc = %@", doc);    
+    //NSLog(@"index writer = %@ with count = %d", indexWriter, [indexWriter docCount]);    
+
+    LuceneIndexSearcher *indexSearcher = [[LuceneIndexSearcherClass newWithSignature:@"(Ljava/lang/String;)", @"LuceneIndex"] autorelease];
+
+    //NSLog(@"indexSearcher = %@", indexSearcher);   
+    
+    id query = [LuceneQueryParserClass parse:@"Lucene" :@"test" :standardAnalyzer];
+    //NSLog(@"query = %@", query);   
+
+	//System.out.println("Searching for: " + query.toString("contents"));
+    
+    id hits = [indexSearcher search:query];
+    
+    NSLog(@"hits = %d", [hits length]);   
+
+	//Hits hits = searcher.search(query);
+	//System.out.println(hits.length() + " total matching documents");
+    
+
+}
+
 - (void) awakeFromNib
 {
+//    [self playWithLucene];
+    
     [self setDelegate:self];
 	    
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(prefpaneDidEndEditing:) name: OPPreferencePaneDidEndEditing object: nil];

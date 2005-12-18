@@ -13,6 +13,7 @@
 #import "GIIndex.h"
 #import "NSApplication+OPExtensions.h"
 
+
 // Dear Ulf, this is only a proposal to start and methods etc. will likely be changed by you...
 
 @implementation GIFulltextIndexCenter
@@ -79,6 +80,16 @@ GIIndex * contentIndex;
     [newIndexDictionary retain];
     [indexDictionary release];
     indexDictionary = newIndexDictionary;
+}
+
+- (LuceneDocument *)luceneDocumentFromMessage:(GIMessage *)aMessage
+{
+    LuceneDocument *result = [[[LuceneDocumentClass alloc] init] autorelease];
+    Class fieldClass = LuceneFieldClass;
+    
+    [result add:[fieldClass Text:@"test" :@"A test string for testing out Lucene in Ginko."]];
+    
+    return result;
 }
 
 - (BOOL)addMessage: (GIMessage*) aMessage
