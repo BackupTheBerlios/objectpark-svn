@@ -7,9 +7,9 @@
 //
 
 #import "GIApplication.h"
-#import "GIGroupController.h"
+#import "GIThreadListController.h"
 #import "GIUserDefaultsKeys.h"
-#import "GIGroupController.h"
+#import "GIThreadListController.h"
 #import "GIMessageEditorController.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIMessageBase.h"
@@ -69,7 +69,7 @@
 
 - (IBAction)openNewGroupWindow:(id)sender
 {
-    [[[GIGroupController alloc] initWithGroup: nil] autorelease];
+    [[[GIThreadListController alloc] initWithGroup: nil] autorelease];
 }
 
 - (IBAction)newMessage:(id)sender
@@ -104,16 +104,12 @@
     return types;
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>) menuItem
+- (BOOL) validateMenuItem: (id <NSMenuItem>) menuItem
 {
-    if ([menuItem action] == @selector(toggleAutomaticActivityPanel:))
-    {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled])
-        {
+    if ([menuItem action] == @selector(toggleAutomaticActivityPanel:)) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled]) {
             [menuItem setState:NSOnState];
-        }
-        else
-        {
+        } else {
             [menuItem setState:NSOffState];
         }
         return YES;
@@ -121,7 +117,7 @@
     else return [self validateSelector:[menuItem action]];
 }
 
-- (void)restoreOpenWindowsFromLastSession
+- (void) restoreOpenWindowsFromLastSession
 {
     NSLog(@"-[GIApplication restoreOpenWindowsFromLastSession] (not yet implemented)");
     // TODO
@@ -399,7 +395,7 @@
 {
     NSWindow* win;
     NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
-	Class gcc = [GIGroupController class];
+	Class gcc = [GIThreadListController class];
     while (win = [enumerator nextObject]) {
         if ([[win delegate] isKindOfClass: gcc]) {
 			return YES;
@@ -415,7 +411,7 @@
 
     if ([self isGroupsDrawerMode]) {
         if (! [self hasGroupWindow]) {
-            [[[GIGroupController alloc] initWithGroup: nil] autorelease];
+            [[[GIThreadListController alloc] initWithGroup: nil] autorelease];
         }
     } else {
         if (! [self standaloneGroupsWindow]) {

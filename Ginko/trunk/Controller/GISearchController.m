@@ -28,13 +28,13 @@
 
 - (NSArray*) searchResults
 {
-    //NSLog(@"-[GIGroupController searchResults]");
+    //NSLog(@"-[GIThreadListController searchResults]");
     return searchResults;
 }
 
 - (void) setSearchResults: (NSArray*) newSearchResults
 {
-    NSLog(@"-[GIGroupController setSearchResults:(NSArray*)newSearchResults]");
+    NSLog(@"-[GIThreadListController setSearchResults:(NSArray*)newSearchResults]");
     [newSearchResults retain];
     [searchResults release];
     searchResults = newSearchResults;
@@ -43,7 +43,7 @@
 
 - (IBAction)search:(id)sender
 {
-    NSLog(@"[GIGroupController search] will search for %@", [sender stringValue]);
+    NSLog(@"[GIThreadListController search] will search for %@", [sender stringValue]);
     // set searchResults
     [self setSearchResults:[[GIFulltextIndexCenter defaultIndexCenter] hitsForQueryString:[sender stringValue]]];
 }

@@ -44,7 +44,7 @@
 	return 
 	@"{"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
-    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; SortAttribute = date;};"
+    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; SortAttribute = date; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS; targetKeyColumnName = Z_6THREADS; InverseRelationshipKey=groups;};"
     //@"defaultProfile = {AttributeClass = GIProfile; ColumnName = ZDEFAULTPROFILE; }
 	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; SortAttributeName = date};"
 	@"}";
@@ -53,7 +53,7 @@
 
 
 
-NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
+NSString* GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
 
 /*" GIMessageGroup is a collection of G3Thread objects (which in turn are a collection of GIMessage objects). GIMessageGroup is an entity in the datamodel (see %{Ginko3_DataModel.xcdatamodel} file).
 
@@ -103,8 +103,9 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     }
     
     [self saveHierarchy];
+	[GIApp saveAction: nil]; // hack
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupWasAddedNotification object:result];
+    [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageGroupWasAddedNotification object:result];
     
     return result;
 }
@@ -584,7 +585,11 @@ static NSMutableArray* root = nil;
     GIMessageGroup *result = nil;
         
     if (URLString) {
-        result = [GIMessageGroup messageGroupWithURIReferenceString:URLString];
+        result = [GIMessageGroup messageGroupWithURIReferenceString: URLString];
+		// Test, if the URL is still valid:
+		if (![result resolveFault]) {
+			result = nil;
+		}
         if (!result) NSLog(@"Couldn't find standard box '%@'", defaultName);
     }
     
@@ -610,29 +615,29 @@ static NSMutableArray* root = nil;
     return [self standardMessageGroupWithUserDefaultsKey:DefaultMessageGroupURLString defaultName:NSLocalizedString(@"Default Inbox", @"default group name for default inbox")];
 }
 
-+ (GIMessageGroup *)sentMessageGroup
++ (GIMessageGroup*) sentMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:SentMessageGroupURLString defaultName:NSLocalizedString(@"Sent Messages", @"default group name for outgoing messages")];
+    return [self standardMessageGroupWithUserDefaultsKey: SentMessageGroupURLString defaultName: NSLocalizedString(@"Sent Messages", @"default group name for outgoing messages")];
 }
 
-+ (GIMessageGroup *)draftMessageGroup
++ (GIMessageGroup*) draftMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:DraftsMessageGroupURLString defaultName:NSLocalizedString(@"Draft Messages", @"default group name for drafts")];
+    return [self standardMessageGroupWithUserDefaultsKey: DraftsMessageGroupURLString defaultName: NSLocalizedString(@"Draft Messages", @"default group name for drafts")];
 }
 
-+ (GIMessageGroup *)queuedMessageGroup
++ (GIMessageGroup*) queuedMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:QueuedMessageGroupURLString defaultName:NSLocalizedString(@"Queued Messages", @"default group name for queued")];
+    return [self standardMessageGroupWithUserDefaultsKey: QueuedMessageGroupURLString defaultName: NSLocalizedString(@"Queued Messages", @"default group name for queued")];
 }
 
-+ (GIMessageGroup *)spamMessageGroup
++ (GIMessageGroup*) spamMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:SpamMessageGroupURLString defaultName:NSLocalizedString(@"Spam Messages", @"default group name for spam")];
+    return [self standardMessageGroupWithUserDefaultsKey: SpamMessageGroupURLString defaultName: NSLocalizedString(@"Spam Messages", @"default group name for spam")];
 }
 
-+ (GIMessageGroup *)trashMessageGroup
++ (GIMessageGroup*) trashMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:TrashMessageGroupURLString defaultName:NSLocalizedString(@"Trash", @"default group name for trash")];
+    return [self standardMessageGroupWithUserDefaultsKey: TrashMessageGroupURLString defaultName: NSLocalizedString(@"Trash", @"default group name for trash")];
 }
 
 -  (void) fetchThreads: (NSMutableArray**) allThreads

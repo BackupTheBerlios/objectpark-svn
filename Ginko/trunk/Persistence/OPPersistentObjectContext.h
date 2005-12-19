@@ -40,6 +40,8 @@
 @class OPSQLiteConnection;
 @class OPPersistentObjectEnumerator;
 @class OPFaultingArray;
+@class OPObjectRelationship;
+@class OPAttributeDescription;
 
 @interface OPPersistentObjectContext : NSObject {
     
@@ -51,6 +53,9 @@
     NSRecursiveLock* lock; // unused so far
     
     OPSQLiteConnection* db;
+	
+	/*" Maps join table names to OPObjectReleationship objects, recording the n:m relationship changes for that join table. Used to update fetched n:m relationships. "*/
+	NSMutableDictionary* relationshipChangesByJoinTable;
 }
 
 // Methods for internal use:
@@ -96,6 +101,8 @@
 						relationShipKey: (NSString*) key;
 
 - (void) checkDBSchemaForClasses: (NSString*) classListSeparatedByComma;
+
+- (OPObjectRelationship*) manyToManyRelationshipForAttribute: (OPAttributeDescription*) ad;
 
 
 @end

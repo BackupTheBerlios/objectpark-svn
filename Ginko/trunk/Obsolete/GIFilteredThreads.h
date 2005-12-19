@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 19.07.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group. All rights reserved.
 //
 
 #import <AppKit/AppKit.h>

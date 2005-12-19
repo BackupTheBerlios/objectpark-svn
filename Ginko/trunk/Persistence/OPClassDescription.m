@@ -182,12 +182,18 @@
 		queryString       = [[dict objectForKey: @"QueryString"] copy];
 		sortAttributeName = [[dict objectForKey: @"SortAttribute"] copy];
 		inverseRelationshipKey = [[dict objectForKey: @"InverseRelationshipKey"] copy];
+		joinTableName     = [[dict objectForKey: @"JoinTableName"] copy];
 		
 		NSParameterAssert([theClass canPersist]);
 		
 	}
 	
 	return self;
+}
+
+- (NSString*) name
+{
+	return name;
 }
 
 - (NSString*) queryString
@@ -213,7 +219,7 @@
 - (NSString*) joinTableName
 /*" Returns the name of the join table in case this is a many-to-many relationship, nil otherweise. "*/
 {
-	return nil;
+	return joinTableName;
 }
 
 - (NSString*) sortAttributeName
@@ -243,6 +249,7 @@
 	[name release];
 	[columnName release];
 	[queryString release];
+	[joinTableName release];
 	//sqlite3_finalize(fetchStatement);
 	[super dealloc];
 }

@@ -5,7 +5,7 @@
 //  Copyright 2004, 2005 Objectpark.org. All rights reserved.
 //
 
-#import "GIGroupController.h"
+#import "GIThreadListController.h"
 #import "GIMessage+Rendering.h"
 #import "GIThread.h"
 #import "GICommentTreeCell.h"
@@ -30,7 +30,7 @@
 
 static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
-@interface GIGroupController (CommentsTree)
+@interface GIThreadListController (CommentsTree)
 
 - (void) awakeCommentTree;
 - (void) deallocCommentTree;
@@ -40,7 +40,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @end
 
-@implementation GIGroupController
+@implementation GIThreadListController
 
 - (id) init
 {
@@ -50,6 +50,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 }
 
 - (id) initWithGroup: (GIMessageGroup*) aGroup
+/*" aGroup may be nil, any group will be used then. "*/
 {
     if (self = [self init]) {
         
@@ -101,7 +102,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) dealloc
 {
-    NSLog(@"GIGroupController dealloc");
+    NSLog(@"GIThreadListController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window setDelegate: nil];
     
@@ -293,9 +294,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) setThreadCache: (NSMutableArray*) newCache
 {
+	/*
     [newCache retain];
     [threadCache release];
     threadCache = newCache;
+	 */
 }
 
 - (NSMutableSet*) nonExpandableItemsCache
@@ -305,9 +308,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) setNonExpandableItemsCache: (NSMutableSet*) newCache
 {
+	/*
     [newCache retain];
     [nonExpandableItemsCache release];
     nonExpandableItemsCache = newCache;
+	 */
 }
 
 - (void) observeValueForKeyPath: (NSString*) keyPath ofObject:(id)object change: (NSDictionary*) change context:(void *)context
@@ -339,6 +344,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) cacheThreadsAndExpandableItems
 {
+	/*
     if ([self group]) {
         NSMutableArray* results      = [NSMutableArray arrayWithCapacity: 500];
         NSMutableSet* trivialThreads = [NSMutableSet setWithCapacity: 250];
@@ -353,11 +359,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 							author: nil 
 			 sortedByDateAscending: YES];
     }
+	 */
 }
 
 - (NSArray*) threadsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
+	return [group valueForKey: @"threadsByDate"];
+	
+	/*
     NSMutableArray* result = [self threadCache];
     
     if (!result) {
@@ -365,6 +375,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         result = [self threadCache];
     }
     return result;
+	 */
 }
 
 - (NSSet*) nonExpandableItems
@@ -385,12 +396,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow: [boxesView selectedRow]]];
 	
     if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) {
-        NSWindow* groupWindow = [[GIGroupController class] windowForGroup: selectedGroup];
+        NSWindow* groupWindow = [[GIThreadListController class] windowForGroup: selectedGroup];
         
         if (groupWindow) {
             [groupWindow makeKeyAndOrderFront: self];
         } else {
-            GIGroupController* newController = [[[GIGroupController alloc] initWithGroup: selectedGroup] autorelease];
+            GIThreadListController* newController = [[[GIThreadListController alloc] initWithGroup: selectedGroup] autorelease];
             groupWindow = [newController window];
         }
         
@@ -1163,7 +1174,7 @@ static BOOL isThreadItem(id item)
 
 @end
 
-@implementation GIGroupController (OutlineViewDataSource)
+@implementation GIThreadListController (OutlineViewDataSource)
 
 - (void) groupsChanged: (NSNotification*) aNotification
 {
@@ -1538,7 +1549,7 @@ static NSAttributedString* spacer2()
 
 @end
 
-@implementation GIGroupController (CommentsTree)
+@implementation GIThreadListController (CommentsTree)
 
 - (void) awakeCommentTree
 /*" awakeFromNib part for the comment tree. Called from -awakeFromNib. "*/
@@ -1818,7 +1829,7 @@ NSMutableArray* border = nil;
 
 @end
 
-@implementation GIGroupController (ToolbarDelegate)
+@implementation GIThreadListController (ToolbarDelegate)
 /*" Toolbar delegate methods and setup and teardown. "*/
 
 - (void)awakeToolbar
@@ -1887,7 +1898,7 @@ NSMutableArray* border = nil;
 
 @end
 
-@implementation GIGroupController (DragNDrop)
+@implementation GIThreadListController (DragNDrop)
 
 - (void) moveThreadsWithURI: (NSArray*) threadURIs 
 				  fromGroup: (GIMessageGroup*) sourceGroup 
@@ -1938,7 +1949,7 @@ NSMutableArray* border = nil;
         NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
         if ([threadURLs count]) {
 			
-            GIMessageGroup *sourceGroup = [(GIGroupController *)[[info draggingSource] delegate] group];
+            GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
             GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
             
             [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
@@ -1954,7 +1965,7 @@ NSMutableArray* border = nil;
     {
         // move threads from source group to destination group:
         NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        GIMessageGroup* sourceGroup = [(GIGroupController*)[[info draggingSource] delegate] group];
+        GIMessageGroup* sourceGroup = [(GIThreadListController*)[[info draggingSource] delegate] group];
         GIMessageGroup* destinationGroup = [self group];
         
         [self moveThreadsWithURI: threadURLs fromGroup: sourceGroup toGroup: destinationGroup];
@@ -2059,7 +2070,7 @@ NSMutableArray* border = nil;
 
 @end
 
-@implementation GIGroupController (SplitViewDelegate)
+@implementation GIThreadListController (SplitViewDelegate)
 
 - (void) splitView:(NSSplitView*)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
@@ -2079,7 +2090,7 @@ NSMutableArray* border = nil;
 
 #import "NSAttributedString+MessageUtils.h"
 
-@implementation GIGroupController (TextViewDelegate)
+@implementation GIThreadListController (TextViewDelegate)
 
 - (void) textView: (NSTextView*) textView doubleClickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(unsigned)charIndex
 {

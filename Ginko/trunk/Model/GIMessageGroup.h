@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 02.08.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group. All rights reserved.
 //
 
 #import <AppKit/AppKit.h>
@@ -54,12 +54,14 @@ extern NSString* GIMessageGroupWasAddedNotification;
 	/*" Complex Accessors "*/
 
 
+/*
 -  (void) fetchThreads: (NSMutableArray**) allThreads
 		trivialThreads: (NSMutableSet**) trivialThreads
 			 newerThan: (NSTimeInterval) sinceRefDate
 		   withSubject: (NSString*) subject
 				author: (NSString*) author
  sortedByDateAscending: (BOOL) ascending;
+*/
 
 + (void) moveThreadsWithURI: (NSArray*) threadURIs 
 				  fromGroup: (GIMessageGroup*) sourceGroup 

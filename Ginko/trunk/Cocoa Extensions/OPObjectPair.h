@@ -29,16 +29,17 @@
 }
 
 /*" Creating new pair objects "*/
-+ (id)pair;
-+ (id)pairWithObjectPair: (OPObjectPair*) aPair;
-+ (id)pairWithObjects:(id)anObject:(id)anotherObject;
++ (id) pair;
++ (id) pairWithObjectPair: (OPObjectPair*) aPair;
++ (id) pairWithObjects:(id)anObject:(id)anotherObject;
 
-- (id)initWithObjectPair: (OPObjectPair*) aPair;
-- (id)initWithObjects:(id)anObject:(id)anotherObject; // designated initializer
+- (id) initWithObjectPair: (OPObjectPair*) aPair;
+- (id) initWithObjects:(id)anObject:(id)anotherObject; // designated initializer
 
 /*" Retrieving objects "*/
-- (id)firstObject;
-- (id)secondObject;
+- (id) firstObject;
+- (id) secondObject;
+- (id) objectAtIndex: (unsigned) index;
 
 - (NSArray*) allObjects;
 

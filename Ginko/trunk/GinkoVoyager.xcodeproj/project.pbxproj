@@ -97,8 +97,6 @@
 		7774368D0778082A00899957 /* MailIcon_less.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7774368C0778082A00899957 /* MailIcon_less.tiff */; };
 		777436EF07780D7300899957 /* editor.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777436EE07780D7300899957 /* editor.toolbar */; };
 		7776259D0760DEC20066BE60 /* Group.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7776259C0760DEC20066BE60 /* Group.nib */; };
-		777625A70760E0EC0066BE60 /* GIGroupController.h in Headers */ = {isa = PBXBuildFile; fileRef = 777625A50760E0EC0066BE60 /* GIGroupController.h */; };
-		777625A80760E0EC0066BE60 /* GIGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777625A60760E0EC0066BE60 /* GIGroupController.m */; };
 		7776BBAA07D0773E00822246 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7776BBA907D0773E00822246 /* MainMenu.nib */; };
 		7781EBAA0833B55100830729 /* newDirectory.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781EBA90833B55100830729 /* newDirectory.tiff */; };
 		7782AE31095593D7005F1DC4 /* Lucene.h in Headers */ = {isa = PBXBuildFile; fileRef = 7782AE30095593D7005F1DC4 /* Lucene.h */; };
@@ -181,6 +179,12 @@
 		8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D313AE1094E3E39007D668A /* OPObjectPair.m */; };
 		8D313AE4094E3E39007D668A /* OPObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D313AE0094E3E39007D668A /* OPObjectPair.h */; };
 		8D313AE5094E3E39007D668A /* OPObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D313AE1094E3E39007D668A /* OPObjectPair.m */; };
+		8D31443F09562178007D668A /* GIThreadListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D31443D09562178007D668A /* GIThreadListController.h */; };
+		8D31444009562178007D668A /* GIThreadListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D31443E09562178007D668A /* GIThreadListController.m */; };
+		8D314458095622E2007D668A /* OPObjectRelationship.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D314456095622E2007D668A /* OPObjectRelationship.h */; };
+		8D314459095622E2007D668A /* OPObjectRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D314457095622E2007D668A /* OPObjectRelationship.m */; };
+		8D31445A095622E2007D668A /* OPObjectRelationship.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D314456095622E2007D668A /* OPObjectRelationship.h */; };
+		8D31445B095622E2007D668A /* OPObjectRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D314457095622E2007D668A /* OPObjectRelationship.m */; };
 		8D3CDEB7090D7ED3004657A0 /* GIGroupListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */; };
 		8D3CDEB8090D7ED3004657A0 /* GIGroupListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */; };
 		8D3EF45B08B543BD00EC41EC /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
@@ -531,8 +535,6 @@
 		7774368C0778082A00899957 /* MailIcon_less.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_less.tiff; sourceTree = "<group>"; };
 		777436EE07780D7300899957 /* editor.toolbar */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = editor.toolbar; sourceTree = "<group>"; };
 		7776259C0760DEC20066BE60 /* Group.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Group.nib; sourceTree = "<group>"; };
-		777625A50760E0EC0066BE60 /* GIGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGroupController.h; sourceTree = "<group>"; };
-		777625A60760E0EC0066BE60 /* GIGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupController.m; sourceTree = "<group>"; };
 		7779A7AB07C409E600F064D3 /* Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Test-Info.plist"; sourceTree = "<group>"; };
 		7779AC9A07C40D1B00F064D3 /* TestNSString+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSString+MessageUtils.h"; sourceTree = "<group>"; };
 		7779AC9B07C40D1B00F064D3 /* TestNSString+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSString+MessageUtils.m"; sourceTree = "<group>"; };
@@ -612,6 +614,10 @@
 		8D2147CE0851182E004C44B9 /* Search.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Search.nib; sourceTree = "<group>"; };
 		8D313AE0094E3E39007D668A /* OPObjectPair.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = OPObjectPair.h; sourceTree = "<group>"; };
 		8D313AE1094E3E39007D668A /* OPObjectPair.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = OPObjectPair.m; sourceTree = "<group>"; };
+		8D31443D09562178007D668A /* GIThreadListController.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = GIThreadListController.h; sourceTree = "<group>"; };
+		8D31443E09562178007D668A /* GIThreadListController.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = GIThreadListController.m; sourceTree = "<group>"; };
+		8D314456095622E2007D668A /* OPObjectRelationship.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; path = OPObjectRelationship.h; sourceTree = "<group>"; };
+		8D314457095622E2007D668A /* OPObjectRelationship.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = OPObjectRelationship.m; sourceTree = "<group>"; };
 		8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGroupListController.h; sourceTree = "<group>"; };
 		8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupListController.m; sourceTree = "<group>"; };
 		8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -712,8 +718,8 @@
 		8D902E3F077B20D4005365EA /* OPInternetMessageAttachmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPInternetMessageAttachmentCell.h; sourceTree = "<group>"; };
 		8D9032E5077B3BFC005365EA /* NSCalendarDate+NetExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSCalendarDate+NetExt.m"; sourceTree = "<group>"; };
 		8D9032E6077B3BFC005365EA /* NSCalendarDate+NetExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSCalendarDate+NetExt.h"; sourceTree = "<group>"; };
-		8D9E8A8306AC44080055F87C /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
-		8D9E8A8406AC44080055F87C /* GIApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIApplication.m; sourceTree = "<group>"; };
+		8D9E8A8306AC44080055F87C /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIApplication.h; path = ../GIApplication.h; sourceTree = "<group>"; };
+		8D9E8A8406AC44080055F87C /* GIApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIApplication.m; path = ../GIApplication.m; sourceTree = "<group>"; };
 		8D9E9DC806AE215C0055F87C /* OPBanner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = OPBanner.jpg; sourceTree = "<group>"; };
 		8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageBase.h; sourceTree = "<group>"; };
 		8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageBase.m; sourceTree = "<group>"; };
@@ -819,8 +825,6 @@
 				77CD8B64093698E500C9030B /* Obsolete */,
 				8DCE35E508918FC200F705EF /* Persistence */,
 				8D666F0407D524E20076C74D /* Preferences */,
-				8D9E8A8306AC44080055F87C /* GIApplication.h */,
-				8D9E8A8406AC44080055F87C /* GIApplication.m */,
 				8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */,
 				8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */,
 				8D901F4F0778EC97005365EA /* GIUserDefaultsKeys.h */,
@@ -1032,10 +1036,10 @@
 		77CD8B630936983800C9030B /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				8D31443D09562178007D668A /* GIThreadListController.h */,
+				8D31443E09562178007D668A /* GIThreadListController.m */,
 				77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */,
 				77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */,
-				777625A50760E0EC0066BE60 /* GIGroupController.h */,
-				777625A60760E0EC0066BE60 /* GIGroupController.m */,
 				77EF040107DC4DEF007CD721 /* GIGroupInspectorController.h */,
 				77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */,
 				7759B41508535F830011B606 /* GIActivityPanelController.h */,
@@ -1050,6 +1054,8 @@
 				77CD6C13092B2BB500D7E986 /* GIPhraseBrowserController.m */,
 				8D2147AD085114B2004C44B9 /* GISearchController.h */,
 				8D2147AE085114B3004C44B9 /* GISearchController.m */,
+				8D9E8A8306AC44080055F87C /* GIApplication.h */,
+				8D9E8A8406AC44080055F87C /* GIApplication.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1312,6 +1318,8 @@
 				8DCE35EB0891900B00F705EF /* OPPersistentObjectContext.m */,
 				8DCE36060891918900F705EF /* OPSQLiteConnection.h */,
 				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
+				8D314456095622E2007D668A /* OPObjectRelationship.h */,
+				8D314457095622E2007D668A /* OPObjectRelationship.m */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -1367,7 +1375,6 @@
 			files = (
 				8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */,
 				8DC773C506B27FCB00053CB7 /* OPSizingTextField.h in Headers */,
-				777625A70760E0EC0066BE60 /* GIGroupController.h in Headers */,
 				77BC581C07610AB700B70D8F /* GIGroupWindow.h in Headers */,
 				77BC58C80761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h in Headers */,
 				77CD551307699B4B003354A0 /* GIMessageEditorController.h in Headers */,
@@ -1479,6 +1486,8 @@
 				772D9525094435EA00456485 /* GIMessageGroup+Statistics.h in Headers */,
 				8D313AE2094E3E39007D668A /* OPObjectPair.h in Headers */,
 				7782AE31095593D7005F1DC4 /* Lucene.h in Headers */,
+				8D31443F09562178007D668A /* GIThreadListController.h in Headers */,
+				8D314458095622E2007D668A /* OPObjectRelationship.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1494,6 +1503,7 @@
 				8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */,
 				8DA23EF50920296A005D7154 /* OPFaultingArray.h in Headers */,
 				8D313AE4094E3E39007D668A /* OPObjectPair.h in Headers */,
+				8D31445A095622E2007D668A /* OPObjectRelationship.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1810,7 +1820,6 @@
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				8D9E8A8606AC44080055F87C /* GIApplication.m in Sources */,
 				8DC773C606B27FCB00053CB7 /* OPSizingTextField.m in Sources */,
-				777625A80760E0EC0066BE60 /* GIGroupController.m in Sources */,
 				77BC581D07610AB700B70D8F /* GIGroupWindow.m in Sources */,
 				77BC58C90761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m in Sources */,
 				77CD551407699B4B003354A0 /* GIMessageEditorController.m in Sources */,
@@ -1916,6 +1925,8 @@
 				77D336A6092BE97500F2BFAB /* GIPhraseBrowserWindow.m in Sources */,
 				772D9526094435EA00456485 /* GIMessageGroup+Statistics.m in Sources */,
 				8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */,
+				8D31444009562178007D668A /* GIThreadListController.m in Sources */,
+				8D314459095622E2007D668A /* OPObjectRelationship.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1929,6 +1940,7 @@
 				8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */,
 				8DA23EF60920296B005D7154 /* OPFaultingArray.m in Sources */,
 				8D313AE5094E3E39007D668A /* OPObjectPair.m in Sources */,
+				8D31445B095622E2007D668A /* OPObjectRelationship.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

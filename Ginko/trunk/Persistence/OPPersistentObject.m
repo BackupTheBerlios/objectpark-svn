@@ -37,7 +37,7 @@
 #import "OPPersistentObjectContext.h"
 #import "OPClassDescription.h"
 #import <Foundation/NSDebug.h>
-
+#import "OPObjectRelationship.h"
 #import "GIThread.h"
 
 @implementation OPPersistentObject
@@ -255,9 +255,10 @@
 		// Try to fetch and cache a relationship:
 		id result = [[self context] containerForObject: self
 									   relationShipKey: key];
-		
-		// Cache result container in attributes dictionary:
-		if (result) [attributes setObject: result forKey: key]; 
+			if (result) {
+				// Cache result container in attributes dictionary:
+				[attributes setObject: result forKey: key]; 
+			}
 	}
 }
 
@@ -285,6 +286,11 @@
 /*" Returns nil, if the receiver is a fault. Call -willAccessValueForKey prior to this method to make sure, the object attributes are in place."*/
 {
     id result = [attributes objectForKey: key];
+	if (!result) {
+		// Test, if we need to fetch a *** todo??
+		
+	}
+	
 	
     return result;
 }
@@ -478,6 +484,9 @@
 - (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 {
 	OPFaultingArray* container = [self primitiveValueForKey: key];	
+	// container may be nil, if the relationship was never fetched. 
+	// This is ok, since addValue:forKey: already updated the relationship object
+	// so we'll pick up any changes later.
 	[container addObject: value];	
 }
 
@@ -485,15 +494,31 @@
 - (void) addValue: (id) value forKey: (NSString*) key
 {
 	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
-#warning Record relationship change in persistent context somehow.
-#warning Also update inverse relationship (if any)
-	[self addPrimitiveValue: value forKey: key];
+	// Todo: For to-many relationships, we do not need to fire a fault in order to update its relationship values!
 	//[self updateInverseRelationShipValue: value forKey: key isRemove: NO];
+	OPClassDescription* cd = [[self class] persistentClassDescription];
+	OPAttributeDescription* ad = [cd attributeWithName: key];
+	OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+	if (r) {
+		// Record relationship change in persistent context:
+		[r addRelationNamed: key from: self to: value];
+	
+#warning Todo: Also update inverse relationship (if any)
+		if ([self isFault]) {
+			return; // we'll pick up the change the next time this fault is fired.
+		}
+	}
+	
+	[self addPrimitiveValue: value forKey: key];
+
 }
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key
 {
 	OPFaultingArray* container = [self primitiveValueForKey: key];
+	// container may be nil, if the relationship was never fetched. 
+	// This is ok, since addValue:forKey: already updated the relationship object
+	// so we'll pick up any changes later.
 	[container removeObject: value];
 }
 

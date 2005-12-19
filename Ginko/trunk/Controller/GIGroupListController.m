@@ -3,14 +3,14 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 24.10.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group. All rights reserved.
 //
 
 #import "GIGroupListController.h"
 #import <Foundation/NSDebug.h>
 //#import "NSToolbar+OPExtensions.h"
 #import "GIMessageEditorController.h"
-#import "GIGroupController.h"
+#import "GIThreadListController.h"
 #import "OPCollapsingSplitView.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIApplication.h"
@@ -59,74 +59,68 @@
 	return [self retain]; // self retaining!
 }
   
-- (GIMessageGroup *)group
+- (GIMessageGroup*) group
 /*" Returns the selected message group if one and only one is selected. nil otherwise. "*/
 {
-    GIMessageGroup *selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:[boxesView itemAtRow:[boxesView selectedRow]]];
-	
-    if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) return selectedGroup;
-    else return nil;
+	id selectedItem = [boxesView itemAtRow: [boxesView selectedRow]];
+	if ([selectedItem isKindOfClass: [NSString class]]) {
+		GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedItem];
+		
+		if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) return selectedGroup;
+		
+	}
+	return nil;
 }
 
-- (IBAction)showGroupWindow:(id)sender
+- (IBAction) showGroupWindow: (id) sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-    GIMessageGroup *selectedGroup = [self group];
+    GIMessageGroup* selectedGroup = [self group];
 	
-    if (selectedGroup) 
-    {
-        NSWindow *groupWindow = [[GIGroupController class] windowForGroup:selectedGroup];
+    if (selectedGroup) {
+        NSWindow* groupWindow = [[GIThreadListController class] windowForGroup: selectedGroup];
         
-        if (groupWindow) 
-        {
+        if (groupWindow) {
             [groupWindow makeKeyAndOrderFront:self];
-        } 
-        else 
-        {
-            GIGroupController *newController = [[[GIGroupController alloc] initWithGroup:selectedGroup] autorelease];
+        } else {
+            GIThreadListController* newController = [[[GIThreadListController alloc] initWithGroup: selectedGroup] autorelease];
             groupWindow = [newController window];
         }
-        
-        [[groupWindow delegate] showThreads:sender];
+        [[groupWindow delegate] showThreads: sender];
     }
 }
 
-- (IBAction)showGroupInspector:(id)sender
+- (IBAction) showGroupInspector: (id) sender
 {
 	id selectedGroup = [self group];
 	
-	if (selectedGroup) 
-    {
-		[GIGroupInspectorController groupInspectorForGroup:[[OPPersistentObjectContext defaultContext] objectWithURLString:selectedGroup]];
+	if (selectedGroup) {
+		[GIGroupInspectorController groupInspectorForGroup: [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedGroup]];
 	}
 }
 
-- (BOOL)openSelection:(id)sender
+- (BOOL) openSelection: (id) sender
 {    
-    [self showGroupWindow:sender];
+    [self showGroupWindow: sender];
 	return YES;
 }
 
-- (IBAction)rename:(id)sender
+- (IBAction) rename: (id) sender
 /*" Renames the selected item (folder or group). "*/
 {
     int lastSelectedRow  = [boxesView selectedRow];
     
-    if (lastSelectedRow != -1) [boxesView editColumn:0 row:lastSelectedRow withEvent:nil select:YES];
+    if (lastSelectedRow != -1) [boxesView editColumn: 0 row: lastSelectedRow withEvent: nil select: YES];
 }
 
-- (IBAction)delete:(id)sender
+- (IBAction) delete: (id)sender
 {
 	id item = [[boxesView selectedItems] lastObject];
-    if ([item isKindOfClass:[NSArray class]]) 
-    {
-        if ([item count] == 0) 
-        {
+    if ([item isKindOfClass:[NSArray class]]) {
+        if ([item count] == 0) {
             [GIMessageGroup removeHierarchyNode:item];
             [GIMessageGroup saveHierarchy];
-        } 
-        else 
-        {
+        } else {
             NSBeep();
             NSLog(@"Unable to remove folder containing groups.");
         }
@@ -353,7 +347,7 @@
 		
         if ([threadURLs count]) 
         {
-            GIMessageGroup *sourceGroup = [(GIGroupController *)[[info draggingSource] delegate] group];
+            GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
             GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
             
             [GIMessageGroup moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];

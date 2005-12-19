@@ -38,6 +38,8 @@
 #import "OPClassDescription.h"
 #import "OPFaultingArray.h"
 #import "NSString+Extensions.h"
+#import <OPObjectPair.h>
+#import "OPObjectRelationship.h"
 
 
 @implementation OPPersistentObjectContext
@@ -232,6 +234,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     [deletedObjects release];
     deletedObjects = [[NSMutableSet alloc] init];
 	
+	[relationshipChangesByJoinTable release];
+	relationshipChangesByJoinTable = [[NSMutableDictionary alloc] init];
+	
 	[db close];
 	[db open];
 	
@@ -380,14 +385,15 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (OPFaultingArray*) containerForObject: (id) object
 						relationShipKey: (NSString*) key
-/*" Returns the container specified in the attribute description. Currently, only NSArray is supported or nil if key does not
-	denote a to-many relationship. "*/
+/*" Returns the container specified in the attribute description. Currently, only OPFaultingArray is supported or nil if key does not
+	denote a to-many relationship. Called from OPPersistentObject willAccessValueForKey... "*/
 {
 	OPClassDescription* cd          = [[object class] persistentClassDescription];
 	OPAttributeDescription* ad      = [cd attributeWithName: key];
 	NSString* sql                   = [ad queryString];
-	NSString* sortKey               = nil; [ad sortAttributeName];
+	NSString* sortKey               = nil; 
 	Class     sortKeyClass          = nil;
+	id        result                = nil;
 	
 	OPPersistentObjectEnumerator* e = nil;
 	
@@ -396,17 +402,38 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		if (sortKey = [ad sortAttributeName]) {
 			sortKeyClass = [[[[ad attributeClass] persistentClassDescription] attributeWithName: sortKey] attributeClass];
 		}
-
+		
 		e = [[[OPPersistentObjectEnumerator alloc] initWithContext: self 
-													  resultClass: [ad attributeClass] 
-													  queryString: sql] autorelease];
+													   resultClass: [ad attributeClass] 
+													   queryString: sql] autorelease];
 		[e bind: object, nil];
+		
+		result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];				
+		
+		OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
+		if (rchanges) {
+			// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
+			[rchanges updateRelationshipNamed: key from: object values: result];
+		}
+		
 	}
-	
-	return [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];
+	return result;
 }
 
-
+- (OPObjectRelationship*) manyToManyRelationshipForAttribute: (OPAttributeDescription*) ad 
+{
+	OPObjectRelationship* result = nil;
+	NSString* joinTableName = [ad joinTableName];
+	if (joinTableName) {
+		result = [relationshipChangesByJoinTable objectForKey: joinTableName];
+		if (!result) {
+			// Create it on demand:
+			result = [[[OPObjectRelationship alloc] initWithRelationshipNames: [ad name] : [ad inverseRelationshipKey]] autorelease];			
+			[relationshipChangesByJoinTable setObject: result forKey: joinTableName];
+		}
+	}
+	return result;
+}
 
 - (void) revertChanges
 {
@@ -554,56 +581,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 @end
 
-/*" Object describing a n:m relation between two persistent objects. Used to keep track of changes to n:m relationships. There is one container for deleted and one for inserted/changed relations. "*/
-
-@interface OPObjectRelationShip : NSObject {
-
-	OPClassDescription* leftClass;
-	OPClassDescription* rightClass;
-	
-	NSMutableSet*       addedRelations;
-	NSMutableSet*       removedRelations;
-}
-
-- (NSEnumerator*) relationEnumerator;
-
-@end
-
-@implementation OPObjectRelationShip
-/*" Objects of this class keeps track of n:m relatioship changes. "*/
-
-
-- (NSEnumerator*) addedRelationsEnumerator
-	/*" Enumerates all OPObjectRelation objects in no particular order. "*/
-{
-	return [addedRelations objectEnumerator];
-}
-
-- (void) addRelation: (OPPersistentObject*) firstObject : (OPPersistentObject*) secondObject
-{
-	OPObjectPair* newRelation = [[OPObjectPair alloc] initWithObjects: firstObject : secondObject];
-	[removedRelations removeObject: newRelation];
-	[addedRelations addObject: newRelation];
-	[newRelation release];
-}
-
-- (void) removeRelation: (OPPersistentObject*) firstObject : (OPPersistentObject*) secondObject
-{
-	OPObjectPair* removedRelation = [[OPObjectPair alloc] initWithObjects: firstObject : secondObject]; // Optimize by faking object with stack allocated struct.
-	[removedRelations addObject: removedRelation];
-	[addedRelations removeObject: removedRelation];
-	[removedRelation release];
-}
-
-
-- (NSEnumerator*) removedRelationsEnumerator
-	/*" Enumerates all OPObjectPair objects in no particular order. "*/
-{
-	return [addedRelations objectEnumerator];
-}
-
-
-@end
 
 
 NSString* OPURLStringFromOidAndClass(OID oid, Class poClass, NSString* databaseName)

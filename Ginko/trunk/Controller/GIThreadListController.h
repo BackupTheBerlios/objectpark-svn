@@ -1,5 +1,5 @@
 //
-//  GIGroupController.h
+//  GIThreadListController.h
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 03.12.04.
@@ -14,7 +14,7 @@
 @class GIMessage;
 @class GIThread;
 
-@interface GIGroupController : NSObject 
+@interface GIThreadListController : NSObject 
 {
     IBOutlet NSWindow* window;
     IBOutlet GIOutlineViewWithKeyboardSupport* threadsView;
@@ -76,7 +76,7 @@
 
 @end
 
-@interface GIGroupController (ToolbarDelegate)
+@interface GIThreadListController (ToolbarDelegate)
 
 - (void) awakeToolbar;
 - (void) deallocToolbar;

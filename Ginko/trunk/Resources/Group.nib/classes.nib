@@ -33,6 +33,33 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = G3GroupWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {
+            ACTIONS = {
+                addFolder = id; 
+                addMessageGroup = id; 
+                removeFolderMessageGroup = id; 
+                rename = id; 
+                selectThreadsWithCurrentSubject = id; 
+                showThreads = id; 
+                threadFilterPopUpChanged = id; 
+            }; 
+            CLASS = GIGroupController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                boxesDrawer = NSDrawer; 
+                boxesView = NSOutlineView; 
+                commentsMatrix = NSMatrix; 
+                groupInfoTextField = NSTextField; 
+                messageTextView = NSTextView; 
+                progressIndicator = NSProgressIndicator; 
+                tabView = NSTabView; 
+                threadFilterPopUp = NSPopUpButton; 
+                threadsView = GIOutlineViewWithKeyboardSupport; 
+                treeBodySplitter = OPCollapsingSplitView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
         {CLASS = GIGroupWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {CLASS = GIMatrixWithKeyboardSupport; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
         {
@@ -41,6 +68,33 @@
             SUPERCLASS = NSOutlineView; 
         }, 
         {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {
+            ACTIONS = {
+                addFolder = id; 
+                addMessageGroup = id; 
+                removeFolderMessageGroup = id; 
+                rename = id; 
+                selectThreadsWithCurrentSubject = id; 
+                showThreads = id; 
+                threadFilterPopUpChanged = id; 
+            }; 
+            CLASS = GIThreadListController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                boxesDrawer = NSDrawer; 
+                boxesView = NSOutlineView; 
+                commentsMatrix = NSMatrix; 
+                groupInfoTextField = NSTextField; 
+                messageTextView = NSTextView; 
+                progressIndicator = NSProgressIndicator; 
+                tabView = NSTabView; 
+                threadFilterPopUp = NSPopUpButton; 
+                threadsView = GIOutlineViewWithKeyboardSupport; 
+                treeBodySplitter = OPCollapsingSplitView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
         {CLASS = OPCollapsingSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }
     ); 
     IBVersion = 1; 

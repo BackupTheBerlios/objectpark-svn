@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 01.09.05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 The Objectpark Group. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

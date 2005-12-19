@@ -1129,7 +1129,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // unmark message as blocked for sending
     [message removeFlags:OPSendingBlockedStatus];
     
-    // remove old message from database if present
+    // Remove old message from database if present:
     if (oldMessage) {
         [profile removeValue: oldMessage forKey: @"messagesToSend"];
         [GIMessageBase removeMessage: oldMessage];
@@ -1145,15 +1145,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [oldMessage autorelease];
     oldMessage = [message retain];
     
-    // set answered status if reply
-    [referencedMessage addFlags:OPAnsweredStatus];
+    // Set answered status if reply:
+    [referencedMessage addFlags: OPAnsweredStatus];
     
-    // set message in profile's messagesToSend:
+    // Set message in profile's messagesToSend:
     [profile addValue: message forKey: @"messagesToSend"];
     
     [window setDocumentEdited: NO];
     
-    [NSApp saveAction:self];
+    [NSApp saveAction: self];
     /*
     NSError *error;
     [(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error];

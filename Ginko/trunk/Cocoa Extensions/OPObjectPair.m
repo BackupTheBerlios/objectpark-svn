@@ -182,9 +182,16 @@
 
 /*" Returns the first object. Note that this can be !{nil}. "*/
 
-- (id)firstObject
+- (id) firstObject
 {
     return firstObject;
+}
+
+- (id) objectAtIndex: (unsigned) index
+/*" Index must be 0 (firstObject) or 1 (secondObject). "*/
+{
+	NSParameterAssert(index<2);
+	return index == 0 ? firstObject : secondObject;
 }
 
 
