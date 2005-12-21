@@ -26,33 +26,23 @@
 
 @interface GIMessage (Rendering) 
 
-/*
-{
-    @private
-    OPInternetMessage*  theMessage;
-    int                 _headerLength; //" length of the header area in characters. Used to change headers displayed. "
-    NSMutableAttributedString* messageContent;
-    BOOL                _includeAllHeaders;
-    NSImage*            cachedImage;
-}
-*/
-
 /*" Class methods "*/
-+ (NSMutableAttributedString*) renderedHeaders:(NSArray*) headers forMessage: (OPInternetMessage*) aMessage showOthers:(BOOL)showOthers;
-//+ (NSAttributedString*) renderedMessage: (OPInternetMessage*) aMessage;
-+ (NSMutableAttributedString*) renderedBodyForMessage: (OPInternetMessage*) aMessage;
++ (NSMutableAttributedString *)renderedHeaders:(NSArray *)headers forMessage:(OPInternetMessage *)aMessage showOthers:(BOOL)showOthers;
++ (NSMutableAttributedString *)renderedBodyForMessage:(OPInternetMessage *)aMessage;
 
-    /*" Font settings "*/
+/*" Font settings "*/
 + (NSFont *)font;
-+ (void) setFont: (NSFont*) aFont;
++ (void)setFont:(NSFont *)aFont;
 
-    /*" Inline display settings "*/
+/*" Inline display settings "*/
 + (BOOL)shouldRenderAttachmentsInlineIfPossible;
 + (void) setShouldRenderAttachmentsInlineIfPossible:(BOOL)aBool;
 
-    /*" Instance methods "*/
-- (NSAttributedString*) renderedMessageIncludingAllHeaders: (BOOL) allHeaders;
-- (NSImage*) personImage;
+/*" Instance methods "*/
+- (NSAttributedString *)renderedMessageIncludingAllHeaders:(BOOL)allHeaders;
+- (NSImage *)personImage;
 
+/*" Fulltext index support "*/
+- (NSString *)messageBodyAsPlainString;
 
 @end

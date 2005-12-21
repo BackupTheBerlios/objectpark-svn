@@ -13,70 +13,41 @@
 @class GIProfile;
 @class GIThread;
 
-@interface GIMessageGroup : OPPersistentObject {
-
+@interface GIMessageGroup : OPPersistentObject 
+{
 }
 
 /*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/
-extern NSString* GIMessageGroupWasAddedNotification;
-
+extern NSString *GIMessageGroupWasAddedNotification;
 
 /*" Dealing with the group hierarchie: "*/
-+ (NSMutableArray*) hierarchyRootNode;
-+ (GIMessageGroup*) newMessageGroupWithName: (NSString*) aName
-                            atHierarchyNode: (NSMutableArray*) aNode
-                                    atIndex: (int) anIndex;
-+ (void) addNewHierarchyNodeAfterEntry: (id) anEntry;
-+ (NSMutableArray*) hierarchyNodeForUid: (NSNumber*) anUid;
-+ (BOOL)moveEntry: (id)entry 
-  toHierarchyNode: (NSMutableArray*) aHierarchy 
-          atIndex: (int) anIndex 
-         testOnly: (BOOL) testOnly;
-+ (NSMutableArray*) findHierarchyNodeForEntry: (id) entry
-                    startingWithHierarchyNode: (NSMutableArray*) aHierarchy;
-+ (void) removeHierarchyNode: (id) entry;
++ (NSMutableArray *)hierarchyRootNode;
++ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex;
++ (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
++ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)anUid;
++ (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly;
++ (NSMutableArray *)findHierarchyNodeForEntry:(id)entry startingWithHierarchyNode:(NSMutableArray *)aHierarchy;
++ (void)removeHierarchyNode:(id)entry;
 
+/*" Standard message groups "*/
++ (GIMessageGroup *)defaultMessageGroup;
++ (GIMessageGroup *)sentMessageGroup;
++ (GIMessageGroup *)queuedMessageGroup;
++ (GIMessageGroup *)draftMessageGroup;
++ (GIMessageGroup *)spamMessageGroup;
++ (GIMessageGroup *)trashMessageGroup;
++ (void)ensureDefaultGroups;
 
-	/*" Standard message groups "*/
-+ (GIMessageGroup*) defaultMessageGroup;
-+ (GIMessageGroup*) sentMessageGroup;
-+ (GIMessageGroup*) queuedMessageGroup;
-+ (GIMessageGroup*) draftMessageGroup;
-+ (GIMessageGroup*) spamMessageGroup;
-+ (GIMessageGroup*) trashMessageGroup;
+/*" Thread handling "*/
++ (void)moveThreadsWithURI:(NSArray *)threadURIs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup;
+- (void)addThread:(GIThread *)value;
+- (void)removeThread:(GIThread *)value;
 
-+ (void) ensureDefaultGroups;
+/*" Profile handling "*/
+- (GIProfile *)defaultProfile;
+- (void)setDefaultProfile:(GIProfile *)aProfile;
 
-	/*" Simple Accessors "*/
-
-
-
-	/*" Complex Accessors "*/
-
-
-/*
--  (void) fetchThreads: (NSMutableArray**) allThreads
-		trivialThreads: (NSMutableSet**) trivialThreads
-			 newerThan: (NSTimeInterval) sinceRefDate
-		   withSubject: (NSString*) subject
-				author: (NSString*) author
- sortedByDateAscending: (BOOL) ascending;
-*/
-
-+ (void) moveThreadsWithURI: (NSArray*) threadURIs 
-				  fromGroup: (GIMessageGroup*) sourceGroup 
-					toGroup: (GIMessageGroup*) destinationGroup;
-
-- (void) addThread: (GIThread*) value;
-- (void) removeThread: (GIThread*) value;
-
-
-	/*" Profile handling "*/
-- (GIProfile*) defaultProfile;
-- (void) setDefaultProfile: (GIProfile*) aProfile;
-
-	/*" Persistency handling "*/
-+ (void) saveHierarchy;
-
+/*" Persistency handling "*/
++ (void)saveHierarchy;
 
 @end

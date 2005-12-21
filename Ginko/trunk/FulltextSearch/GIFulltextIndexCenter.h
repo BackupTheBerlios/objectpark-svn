@@ -15,18 +15,11 @@
 {
 }
 
-+ (GIFulltextIndexCenter *)defaultIndexCenter;
-- (id)init;
++ (GIFulltextIndexCenter *)sharedFulltextIndex;
+- (NSString *)fulltextIndexPath;
 
-- (BOOL)addMessage: (GIMessage*) aMessage;
-- (BOOL)removeMessage: (GIMessage*) aMessage;
-- (NSArray*) hitsForQueryString: (NSString*) aQuery;
-- (BOOL)reindexAllMessages;
-
-- (NSDictionary *)indexDictionary;
-- (void) setIndexDictionary:(NSDictionary *)newIndexDictionary;
-
-- (LuceneDocument *)luceneDocumentFromMessage:(GIMessage *)aMessage;
+- (LuceneDocument *)luceneDocumentFromMessage:(id)aMessage;
+- (BOOL)addMessages:(NSArray *)someMessages;
 
 @end
 

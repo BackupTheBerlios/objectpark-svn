@@ -274,42 +274,39 @@
 }
 
 - (void)playWithLucene
-{
-    NSString *lucenePath = [@":" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
+{        
+    GIFulltextIndexCenter *sharedFulltextIndex = [GIFulltextIndexCenter sharedFulltextIndex];
     
-    //NSLog(@"lucenepath = %@", lucenePath); 
-    [[NSJavaVirtualMachine alloc] initWithClassPath:[[NSJavaVirtualMachine defaultClassPath] stringByAppendingString:lucenePath]];
+    [[NSFileManager defaultManager] removeFileAtPath:[sharedFulltextIndex fulltextIndexPath] handler:NULL];
+    
+    NSArray *allGroups = [[GIMessageGroup allObjectsEnumerator] allObjects];
         
-    //NSLog(@"properties = %@", [NSClassFromString(@"java.lang.System") getProperties]);
-    GIFulltextIndexCenter *defaultIndexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+    GIMessageGroup *defaultGroup = [allGroups objectAtIndex:1];
     
-    id standardAnalyzer = [[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init];
+    NSLog(@"group = %@", defaultGroup);
     
-    LuceneIndexWriter *indexWriter = [[LuceneIndexWriterClass newWithSignature:@"(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z)", @"LuceneIndex", standardAnalyzer, [NSNumber numberWithBool:YES]] autorelease];
+    OPFaultingArray *threads = [defaultGroup valueForKey:@"threadsByDate"];
+
+    NSLog(@"threads = %@", threads);
+
+    GIThread *aThread = [threads lastObject];
+    NSArray *messages = [aThread messages];
+    
+    NSLog(@"messages = %@", messages);
+
+    //messages = [NSArray arrayWithObject:[messages objectAtIndex:0]];
+    [sharedFulltextIndex addMessages:messages];
         
-    LuceneDocument *doc = [defaultIndexCenter luceneDocumentFromMessage:nil];
-
-    //NSLog(@"standardAnalyzer = %@", standardAnalyzer);    
-
-    @try
-    {
-        [indexWriter setUseCompoundFile:NO];
-        [indexWriter addDocument:doc];
-        [indexWriter close];
-    } 
-    @catch (NSException *localException)
-    {
-        NSLog(@"EXCEPTION reason = %@", localException);
-    }
-    
     //NSLog(@"doc = %@", doc);    
     //NSLog(@"index writer = %@ with count = %d", indexWriter, [indexWriter docCount]);    
 
-    LuceneIndexSearcher *indexSearcher = [[LuceneIndexSearcherClass newWithSignature:@"(Ljava/lang/String;)", @"LuceneIndex"] autorelease];
+    LuceneIndexSearcher *indexSearcher = [[LuceneIndexSearcherClass newWithSignature:@"(Ljava/lang/String;)", [sharedFulltextIndex fulltextIndexPath]] autorelease];
 
     //NSLog(@"indexSearcher = %@", indexSearcher);   
     
-    id query = [LuceneQueryParserClass parse:@"Lucene" :@"test" :standardAnalyzer];
+    id standardAnalyzer = [[[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init] autorelease];
+
+    id query = [LuceneQueryParserClass parse:@"yahoo" :@"body" :standardAnalyzer];
     //NSLog(@"query = %@", query);   
 
 	//System.out.println("Searching for: " + query.toString("contents"));
@@ -326,8 +323,6 @@
 
 - (void) awakeFromNib
 {
-//    [self playWithLucene];
-    
     [self setDelegate:self];
 	    
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(prefpaneDidEndEditing:) name: OPPreferencePaneDidEndEditing object: nil];
@@ -359,6 +354,7 @@
     //                                             name: NSManagedObjectContextDidSaveNotification 
     //                                           object: nil];  
     
+    //[self playWithLucene];
 }
 
 

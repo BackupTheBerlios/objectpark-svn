@@ -358,7 +358,9 @@ static NSString *templatePostfix = nil;
     }
 }
 
-
-
+- (NSString *)messageBodyAsPlainString
+{
+    return [[self contentAsAttributedString] string];
+}
 
 @end

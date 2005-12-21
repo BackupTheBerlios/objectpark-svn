@@ -7,183 +7,130 @@
 //
 
 #import "GIFulltextIndexCenter.h"
-#import "GIMessageGroup.h"
-#import "GIThread.h"
-#import "GIMessage.h"
-#import "GIIndex.h"
 #import "NSApplication+OPExtensions.h"
-
-
-// Dear Ulf, this is only a proposal to start and methods etc. will likely be changed by you...
+#import "GIApplication.h"
+#import <JavaVM/JavaVM.h>
 
 @implementation GIFulltextIndexCenter
 
-NSDictionary* indexDictionary;
-GIIndex * contentIndex;
-
-+ (GIFulltextIndexCenter *)defaultIndexCenter
++ (GIFulltextIndexCenter *)sharedFulltextIndex
 {
-    static GIFulltextIndexCenter *defaultCenter = nil;
+    static GIFulltextIndexCenter *sharedFulltextIndex = nil;
     
-    //NSLog(@"-[GIFulltextIndexCenter defaultIndexCenter]");
-
-	if (!defaultCenter)
+	if (!sharedFulltextIndex)
 	{
-		defaultCenter = [[self alloc] init]; // no autorelease, because it is a sigleton?
+		sharedFulltextIndex = [[self alloc] init];
     }
     
-    return defaultCenter;
+    return sharedFulltextIndex;
+}
+
+- (NSString *)fulltextIndexPath
+{
+    static NSString *path = nil;
+    if (!path) path = [[GIApp applicationSupportPath] stringByAppendingPathComponent:@"FulltextIndex"];
+    return path;
 }
 
 - (id)init
 {
+    static NSJavaVirtualMachine *jvm = nil;
+    
     self = [super init];
  
-    //NSMutableDictionary* tempIndexDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
+    if (!jvm) 
+    {
+        NSString *lucenePath = [@":" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
     
-    NSString* CONTENT_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"content.index"];
-    //NSString* SENDER_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"sender.index"];
-    //NSString* STATUS_INDEX_PATH = [[[NSApplication sharedApplication] applicationSupportPath] stringByAppendingPathComponent: @"status.index"];
-
-    contentIndex = [GIIndex indexWithName:@"contentIndex" atPath:CONTENT_INDEX_PATH];
-    [contentIndex retain];
-    /*
-    [tempIndexDictionary setObject: [GIIndex indexWithName:@"contentIndex" atPath:CONTENT_INDEX_PATH]
-                            forKey:@"contentIndex"];
-    [tempIndexDictionary setObject: [GIIndex indexWithName:@"senderIndex" atPath:SENDER_INDEX_PATH]
-                            forKey:@"senderIndex"];
-    [tempIndexDictionary setObject: [GIIndex indexWithName:@"statusIndex" atPath:STATUS_INDEX_PATH]
-                            forKey:@"statusIndex"];
-
-     [self setIndexDictionary:(NSDictionary *)tempIndexDictionary];
-     */
-
+        jvm = [[NSJavaVirtualMachine alloc] initWithClassPath:[[NSJavaVirtualMachine defaultClassPath] stringByAppendingString:lucenePath]];
+    }
+    
     return self;
 }
 
-- (void) dealloc
-{
-    NSLog(@"-[GIFulltextIndexCenter dealloc]");
-    
-    [self setIndexDictionary: nil];
-    
-    [super dealloc];
-}
-
-- (NSDictionary *)indexDictionary
-{
-    return indexDictionary;
-}
-
-- (void) setIndexDictionary:(NSDictionary *)newIndexDictionary
-{
-    [newIndexDictionary retain];
-    [indexDictionary release];
-    indexDictionary = newIndexDictionary;
-}
-
-- (LuceneDocument *)luceneDocumentFromMessage:(GIMessage *)aMessage
+- (LuceneDocument *)luceneDocumentFromMessage:(id)aMessage
 {
     LuceneDocument *result = [[[LuceneDocumentClass alloc] init] autorelease];
     Class fieldClass = LuceneFieldClass;
     
-    [result add:[fieldClass Text:@"test" :@"A test string for testing out Lucene in Ginko."]];
+    // message id
+    NSString *messageId = [aMessage valueForKey:@"messageId"];
+    [result add:[fieldClass Keyword:@"id" :messageId]];
+    
+    // date
+    NSCalendarDate *date = [aMessage valueForKey:@"date"];
+    double millis = (double)([date timeIntervalSince1970] * 1000.0);
+    @try
+    {
+        [result add:[fieldClass Keyword:@"date" :[NSClassFromString(@"org.apache.lucene.document.DateField") timeToString:(unsigned long long)millis]]];
+    }
+    @catch(NSException *localException)
+    {
+        NSLog(@"Date %@ could not be fulltext indexed", date);
+    }
+                                                                                                                                    
+    // subject
+    NSString *subject = [aMessage valueForKey:@"subject"];
+    [result add:[fieldClass Keyword:@"subject" :subject]];
+
+    // author
+    NSString *author = [aMessage valueForKey:@"senderName"];
+    [result add:[fieldClass Keyword:@"author" :author]];
+
+    // body
+    NSString *body = [aMessage valueForKey:@"messageBodyAsPlainString"];
+    [result add:[fieldClass Text:@"body" :body]];
+    
+    NSLog(@"\nindexing body = %@\n", body);
     
     return result;
 }
 
-- (BOOL)addMessage: (GIMessage*) aMessage
+- (LuceneIndexWriter *)indexWriter
+/*" Private method. Should only be used inside a synchronized context. "*/
 {
-    BOOL isIndexed = FALSE;
-    NSLog(@"-[GIFulltextIndexCenter addMessage:%@", [aMessage messageId]);
-    NSMutableDictionary* documentPropertiesDict = [NSMutableDictionary dictionaryWithCapacity:1];
-    [documentPropertiesDict setObject: [aMessage senderName] forKey:@"senderName"];
+    BOOL shouldCreateNewIndex = YES;
     
-    isIndexed = [contentIndex addDocumentWithName:[aMessage messageId]
-                                          andText:[[aMessage contentAsAttributedString] string]
-                                    andProperties:documentPropertiesDict];
-    /*
-    isIndexed = [[indexDictionary objectForKey:@"contentIndex"] addDocumentWithName:[aMessage messageId]
-                                          andText:[[aMessage contentAsAttributedString] string]
-                                    andProperties:documentPropertiesDict];
-    isIndexed = [[indexDictionary objectForKey:@"senderIndex"] addDocumentWithName:[aMessage messageId]
-                                          andText:[aMessage senderName]
-                                    andProperties:documentPropertiesDict];
-    if ( [aMessage hasFlag:OPSeenStatus] ) {
-        isIndexed = [[indexDictionary objectForKey:@"statusIndex"] addDocumentWithName:[aMessage messageId]
-                                             andText:@"OPSeenStatus"
-                                       andProperties:documentPropertiesDict];
-        #warning TODO GIFulltextIndexCenter when does status change?
-        #warning TODO GIFulltextIndexCenter how to handle more stati
-    }
-         
-     */
-    if (isIndexed) {
-        [aMessage addFlags:OPFulltextIndexedStatus];
-    }
+    id standardAnalyzer = [[[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init] autorelease];
     
-    return isIndexed;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[self fulltextIndexPath]]) shouldCreateNewIndex = NO;
+    
+    LuceneIndexWriter *indexWriter = [[LuceneIndexWriterClass newWithSignature:@"(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z)", [self fulltextIndexPath], standardAnalyzer, [NSNumber numberWithBool:shouldCreateNewIndex]] autorelease];
+    
+    return indexWriter;
 }
 
-- (BOOL)removeMessage: (GIMessage*) aMessage
+- (BOOL)addMessages:(NSArray *)someMessages
 {
-    BOOL isRemoveSuccessfull = NO;
-    NSLog(@"-[GIFulltextIndexCenter removeMessage:%@", [aMessage messageId]);
-    isRemoveSuccessfull = [contentIndex removeDocumentWithName:[aMessage messageId]];
-    /*
-    isRemoveSuccessfull = [[indexDictionary objectForKey:@"contentIndex"] removeDocumentWithName:[aMessage messageId]];
-    isRemoveSuccessfull = [[indexDictionary objectForKey:@"senderIndex"] removeDocumentWithName:[aMessage messageId]];
-    isRemoveSuccessfull = [[indexDictionary objectForKey:@"statusIndex"] removeDocumentWithName:[aMessage messageId]];
-     */
-    if (isRemoveSuccessfull) {
-        [aMessage removeFlags:OPFulltextIndexedStatus];
-    }
-    return isRemoveSuccessfull;
-}
-
-- (NSArray*) hitsForQueryString: (NSString*) aQuery
-{
- 	NSLog(@"-[GIFulltextIndexCenter hitsForQueryString:%@]", aQuery);
-    
-	return [contentIndex hitsForQueryString:aQuery];
-    /*
-    GIIndex* tempContentIndex = [indexDictionary objectForKey:@"contentIndex"];
-	return [tempContentIndex hitsForQueryString:aQuery];
-     */
-    
-    
-    //NSMutableArray* resultArray = [NSMutableArray arrayWithArray:[[indexDictionary objectForKey:@"contentIndex"] hitsForQueryString:aQuery]];
-    //[resultArray addObjectsFromArray:[[indexDictionary objectForKey:@"senderIndex"] hitsForQueryString:aQuery]];
-    //[resultArray addObjectsFromArray:[[indexDictionary objectForKey:@"statusIndex"] hitsForQueryString:aQuery]];
-    // return resultArray;
-}
-
-
-- (BOOL) reindexAllMessages
-{
-    BOOL isAddSuccessfull = YES;
-    NSEnumerator* threadEnumerator;
-    NSEnumerator* messageEnumerator;
-    GIThread* tempThread;
-    GIMessage* tempMessage;
-    
-    // get default MessageGroup
-    #warning TODO -[GIFulltextIndexCenter reindexAllMessages] get all MessageGroups
-    GIMessageGroup* tempMessageGroup = [GIMessageGroup defaultMessageGroup];
-    
-    // get all threads
-    threadEnumerator = [[tempMessageGroup valueForKey: @"threads"] objectEnumerator];
-    while ( tempThread = [threadEnumerator nextObject] ) {
-        messageEnumerator = [[tempThread messages] objectEnumerator];
-        while ( tempMessage = [messageEnumerator nextObject] ) {
-            if ( [self addMessage:tempMessage] ) {
-                isAddSuccessfull = YES;
-            } else {
+    @synchronized(self)
+    {
+        LuceneIndexWriter *indexWriter = [self indexWriter];
+        
+        NSAssert(indexWriter != nil, @"IndexWriter could not be created.");
+        
+        NSEnumerator *enumerator = [someMessages objectEnumerator];
+        id message;
+        
+        while (message = [enumerator nextObject])
+        {
+            LuceneDocument *doc = [self luceneDocumentFromMessage:message];
+                
+            @try
+            {
+                [indexWriter addDocument:doc];
+            } 
+            @catch (NSException *localException)
+            {
+                NSLog(@"EXCEPTION reason = %@", localException);
+                [indexWriter close];
                 return NO;
             }
         }
+        
+        [indexWriter close];
     }
-    return isAddSuccessfull;
+    
+    return YES;
 }
 
 @end

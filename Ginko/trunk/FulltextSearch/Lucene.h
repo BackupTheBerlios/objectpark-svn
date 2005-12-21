@@ -32,6 +32,16 @@
 
 @end
 
+#define LuceneFieldClassname @"org.apache.lucene.document.Field"
+#define LuceneFieldClass (NSClassFromString(LuceneFieldClassname))
+@interface LuceneDateField : NSObject
+{
+}
+
++ (NSString *)timeToString:(unsigned long long)time;
+
+@end
+
 #define LuceneDocumentClassname @"org.apache.lucene.document.Document"
 #define LuceneDocumentClass (NSClassFromString(LuceneDocumentClassname))
 @interface LuceneDocument : NSObject
