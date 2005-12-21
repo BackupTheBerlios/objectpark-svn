@@ -92,6 +92,8 @@
 - (NSString*) targetColumnName;
 
 - (NSString*) inverseRelationshipKey;
+- (OPAttributeDescription*) inverseRelationshipAttribute;
+
 - (NSString*) joinTableName;
 
 @end

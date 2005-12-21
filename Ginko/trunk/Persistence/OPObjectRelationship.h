@@ -34,6 +34,9 @@
 - (NSString*) firstColumnName;
 - (NSString*) secondColumnName;
 
+- (unsigned) changeCount;
+
+
 /*" Updating Relations "*/
 
 - (void) addRelationNamed: (NSString*) relationName 

@@ -463,10 +463,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	if (joinTableName) {
 		result = [relationshipChangesByJoinTable objectForKey: joinTableName];
 		if (!result) {
-			//NSString* inverseRelationshipKey = [ad inverseRelationshipKey];
-			//OPAttributeDescription* inverseAttribute = nil;
+			OPAttributeDescription* iad = [ad inverseRelationshipAttribute]; // may return nil
 			// Create it on demand:
-			result = [[[OPObjectRelationship alloc] initWithAttributeDescriptions: ad : nil] autorelease];			
+			result = [[[OPObjectRelationship alloc] initWithAttributeDescriptions: ad : iad] autorelease];			
 			[relationshipChangesByJoinTable setObject: result forKey: joinTableName];
 		}
 	}

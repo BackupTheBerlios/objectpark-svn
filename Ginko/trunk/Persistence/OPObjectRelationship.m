@@ -138,6 +138,11 @@
 	return [removedRelations objectEnumerator];
 }
 
+- (unsigned) changeCount
+{
+	return [removedRelations count] + [addedRelations count];
+}
+
 - (void) reset
 /*" Removes all relations recorded. "*/
 {

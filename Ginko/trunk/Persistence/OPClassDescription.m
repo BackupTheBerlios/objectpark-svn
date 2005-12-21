@@ -135,13 +135,16 @@
 
 
 - (OPAttributeDescription*) attributeWithName: (NSString*) name
+/*" Returns the persistent attribute with the name given, or nil, if no such attribute exists. "*/
 {
-	// improve over linear search?
-	int count = [attributeDescriptions count];
-	int i;
-	for (i=0; i<count; i++) {
-		OPAttributeDescription* ad = [attributeDescriptions objectAtIndex: i];
-		if ([ad->name isEqualToString: name]) return ad;
+	if (name) {
+		// improve over linear search?
+		int count = [attributeDescriptions count];
+		int i;
+		for (i=0; i<count; i++) {
+			OPAttributeDescription* ad = [attributeDescriptions objectAtIndex: i];
+			if ([ad->name isEqualToString: name]) return ad;
+		}
 	}
 	return nil;
 }
@@ -248,6 +251,12 @@
 - (NSString*) targetColumnName
 {
 	return targetColumnName;
+}
+
+- (OPAttributeDescription*) inverseRelationshipAttribute
+/*" Returns the attribute for the inverse relationship of the receiver, if one exists. nil otherwise. "*/
+{
+	return [[[self attributeClass] persistentClassDescription] attributeWithName: [self inverseRelationshipKey]];
 }
 
 - (NSString*) description
