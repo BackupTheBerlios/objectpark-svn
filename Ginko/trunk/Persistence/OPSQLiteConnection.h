@@ -38,6 +38,7 @@
 
 @class OPPersistentObject;
 @class OPSQLiteStatement;
+@class OPAttributeDescription;
 
 @interface OPSQLiteConnection : NSObject {
     
@@ -52,7 +53,10 @@
 	NSMutableDictionary* deleteStatements; // keyed by Class
 	NSMutableDictionary* fetchStatements;  // keyed by Class
 	
-	NSMutableDictionary* fetchRelationStatements;
+	NSMutableDictionary* fetchRelationStatements; // not used yet
+	
+	NSMutableDictionary* addRelationStatements; // keyed by JoinTableName
+	NSMutableDictionary* removeRelationStatements; // keyed by JoinTableName
 	
 }
 
@@ -74,7 +78,13 @@
 
 - (OPSQLiteStatement*) updateStatementForClass: (Class) poClass;
 - (OPSQLiteStatement*) fetchStatementForClass: (Class) poClass;
+- (OPSQLiteStatement*) addStatementForJoinTableName: (NSString*) joinTableName
+									firstColumnName: (NSString*) firstColumnName 
+								   secondColumnName: (NSString*) secondColumName;
 
+- (OPSQLiteStatement*) removeStatementForJoinTableName: (NSString*) joinTableName
+									   firstColumnName: (NSString*) firstColumnName 
+									  secondColumnName: (NSString*) secondColumName;
 
 - (int) lastErrorNumber;
 - (NSString*) lastError;

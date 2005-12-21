@@ -77,6 +77,8 @@
 	NSString* queryString;
 	NSString* sortAttributeName; // set this to use a sorted array container instead of a set.
 	NSString* inverseRelationshipKey; 
+	NSString* sourceColumnName;
+	NSString* targetColumnName;
 }
 
 
@@ -86,6 +88,8 @@
 - (BOOL) isToManyRelationship;
 - (NSString*) sortAttributeName;
 - (NSString*) columnName;
+- (NSString*) sourceColumnName;
+- (NSString*) targetColumnName;
 
 - (NSString*) inverseRelationshipKey;
 - (NSString*) joinTableName;

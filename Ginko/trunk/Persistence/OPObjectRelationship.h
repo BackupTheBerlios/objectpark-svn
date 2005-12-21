@@ -14,30 +14,45 @@
 
 @interface OPObjectRelationship : NSObject {
 	
-	NSString* firstRelationshipName;
-	NSString* secondRelationshipName;
+	OPAttributeDescription* firstAttribute;
+	OPAttributeDescription* secondAttribute;
 	
 	NSMutableSet* addedRelations;
 	NSMutableSet* removedRelations;
 }
 
-- (id) initWithRelationshipNames: (NSString*) firstName : (NSString*) secondName;
+- (id) initWithAttributeDescriptions: (OPAttributeDescription*) firstAttr 
+									: (OPAttributeDescription*) secondAttr;
 
 - (NSEnumerator*) removedRelationsEnumerator;
 - (NSEnumerator*) addedRelationsEnumerator;
+
+- (OPAttributeDescription*) firstAttributeDescription;
+- (OPAttributeDescription*) secondAttributeDescription;
+
+- (NSString*) joinTableName;
+- (NSString*) firstColumnName;
+- (NSString*) secondColumnName;
+
+/*" Updating Relations "*/
 
 - (void) addRelationNamed: (NSString*) relationName 
 					 from: (OPPersistentObject*) sourceObject
 					   to: (OPPersistentObject*) targetObject;
 
+- (void) removeRelationNamed: (NSString*) relationName 
+						from: (OPPersistentObject*) sourceObject
+						  to: (OPPersistentObject*) targetObject;
+
+- (void) reset;
+
+
+/*" Redoing Relationship Changes "*/
 
 - (void) updateRelationshipNamed: (NSString*) relationName 
 							from: (OPPersistentObject*) anObject 
 						  values: (OPFaultingArray*) array;
 
-- (void) removeRelationNamed: (NSString*) relationName 
-						from: (OPPersistentObject*) sourceObject
-						  to: (OPPersistentObject*) targetObject;
 
 
 @end

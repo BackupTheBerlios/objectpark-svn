@@ -183,6 +183,8 @@
 		sortAttributeName = [[dict objectForKey: @"SortAttribute"] copy];
 		inverseRelationshipKey = [[dict objectForKey: @"InverseRelationshipKey"] copy];
 		joinTableName     = [[dict objectForKey: @"JoinTableName"] copy];
+		sourceColumnName  = [[dict objectForKey: @"SourceColumnName"] copy];
+		targetColumnName  = [[dict objectForKey: @"TargetColumnName"] copy];
 		
 		NSParameterAssert([theClass canPersist]);
 		
@@ -238,11 +240,20 @@
 	return theClass;
 }
 
+- (NSString*) sourceColumnName
+{
+	return sourceColumnName;
+}
+
+- (NSString*) targetColumnName
+{
+	return targetColumnName;
+}
+
 - (NSString*) description
 {
 	return [NSString stringWithFormat: @"%@ name: %@", [super description], name];
 }
-
 
 - (void) dealloc
 {

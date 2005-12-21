@@ -1001,8 +1001,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
          [boxesView scrollRowToVisible: boxRow];
          */
         
-        if ([self isStandaloneBoxesWindow]) 
-        {
+        if ([self isStandaloneBoxesWindow]) {
             [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[group objectURLString] ? [group objectURLString] : @"nil"]];
             [threadsView setAutosaveTableColumns:YES];
             [threadsView setAutosaveExpandedItems:NO];

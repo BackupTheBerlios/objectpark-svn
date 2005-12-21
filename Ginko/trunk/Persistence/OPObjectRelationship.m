@@ -14,18 +14,46 @@
 
 
 @implementation OPObjectRelationship
-/*" Objects of this class keeps track of n:m relatioship changes. "*/
+/*" Objects of this class keeps track of n:m relationship changes. "*/
 
-- (id) initWithRelationshipNames: (NSString*) firstName : (NSString*) secondName
+- (id) initWithAttributeDescriptions: (OPAttributeDescription*) firstAttr 
+									: (OPAttributeDescription*) secondAttr
 {
 	if (self = [super init]) {
 		
-		firstRelationshipName  = [firstName retain];
-		secondRelationshipName = [secondName retain];
-		addedRelations = [[NSMutableSet alloc] init];
+		NSParameterAssert([firstAttr joinTableName] != nil || [firstAttr joinTableName] != nil);
+		
+		firstAttribute   = [firstAttr retain];
+		secondAttribute  = [secondAttr retain];
+		addedRelations   = [[NSMutableSet alloc] init];
 		removedRelations = [[NSMutableSet alloc] init];
 	}
 	return self;
+}
+
+- (OPAttributeDescription*) firstAttributeDescription
+{
+	return firstAttribute;
+}
+
+- (OPAttributeDescription*) secondAttributeDescription
+{
+	return secondAttribute;
+}
+
+- (NSString*) joinTableName
+{
+	return firstAttribute ? [firstAttribute joinTableName] : [secondAttribute joinTableName];
+}
+
+- (NSString*) firstColumnName 
+{
+	return firstAttribute ? [firstAttribute sourceColumnName] : [secondAttribute targetColumnName];
+}
+
+- (NSString*) secondColumnName 
+{
+	return firstAttribute ? [firstAttribute targetColumnName] : [secondAttribute sourceColumnName];
 }
 
 
@@ -40,10 +68,10 @@
 					   to: (OPPersistentObject*) targetObject
 {
 	// Swap 1st, 2nd as needed:
-	if ([relationName isEqualToString: secondRelationshipName]) {
+	if (secondAttribute && [relationName isEqualToString: secondAttribute->name]) {
 		swap(sourceObject, targetObject);
 	} else {
-		NSParameterAssert([relationName isEqualToString: firstRelationshipName]);
+		NSParameterAssert(firstAttribute && [relationName isEqualToString: firstAttribute->name]);
 	}
 	OPObjectPair* newRelation = [[OPObjectPair alloc] initWithObjects: sourceObject : targetObject];
 	[removedRelations removeObject: newRelation];
@@ -56,10 +84,10 @@
 						  to: (OPPersistentObject*) targetObject
 {
 	// Swap 1st, 2nd as needed:
-	if ([relationName isEqualToString: secondRelationshipName]) {
+	if (secondAttribute && [relationName isEqualToString: secondAttribute->name]) {
 		swap(sourceObject, targetObject);
 	} else {
-		NSParameterAssert([relationName isEqualToString: firstRelationshipName]);
+		NSParameterAssert(firstAttribute && [relationName isEqualToString: firstAttribute->name]);
 	}
 	OPObjectPair* removedRelation = [[OPObjectPair alloc] initWithObjects: sourceObject : targetObject]; // Optimize by faking object with stack allocated struct.
 	[removedRelations addObject: removedRelation];
@@ -78,11 +106,11 @@
 	// Determine which column to look for:
 	// todo
 	int objectColumn = -1;
-	if ([relationName isEqualToString: secondRelationshipName]) {
+	if (secondAttribute && [relationName isEqualToString: secondAttribute->name]) {
 		objectColumn = 1;
 	} else {
 		objectColumn = 0;
-		NSParameterAssert([relationName isEqualToString: firstRelationshipName]);
+		NSParameterAssert(firstAttribute && [relationName isEqualToString: firstAttribute->name]);
 	}
 	
 	NSAssert1(objectColumn>=0, @"Unable to determine source column for object %@.", anObject);
@@ -110,10 +138,17 @@
 	return [removedRelations objectEnumerator];
 }
 
+- (void) reset
+/*" Removes all relations recorded. "*/
+{
+	[addedRelations removeAllObjects];
+	[removedRelations removeAllObjects];
+}
+
 - (void) dealloc 
 {
-	[firstRelationshipName release];
-	[secondRelationshipName release];
+	[firstAttribute release];
+	[secondAttribute release];
 	[addedRelations release];
 	[removedRelations release];
 	[super dealloc];

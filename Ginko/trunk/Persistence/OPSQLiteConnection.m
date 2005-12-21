@@ -171,7 +171,8 @@
 		
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
 		
-		[updateStatements setObject: result forKey: poClass]; // cache it
+		// Cache statement for later use:
+		[updateStatements setObject: result forKey: poClass];
 		
 	}
 	return result;
@@ -193,8 +194,28 @@
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
 
 		NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);	
+		// Cache statement for later use:
+		[insertStatements setObject: result forKey: poClass]; 
+	}
+	return result;
+}
+
+
+- (OPSQLiteStatement*) addStatementForJoinTableName: (NSString*) joinTableName
+									firstColumnName: (NSString*) firstColumnName 
+								   secondColumnName: (NSString*) secondColumnName
+/*" Bind source oid to index 0 and target oid to index 1. "*/
+{
+	OPSQLiteStatement* result = [addRelationStatements objectForKey: joinTableName];
+	if (!result) {
+		NSParameterAssert(joinTableName != nil); // make sure this is a many-to-many attribute
+
+		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (%@,%@) values (?,?);", joinTableName, firstColumnName, secondColumnName];
 		
-		[insertStatements setObject: result forKey: poClass]; // cache it
+		OPDebugLog(@"OPPersistence", OPINFO, @"Preparing statement for fetches: %@", queryString);
+		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+		// Cache statement for later use:
+		[addRelationStatements setObject: result forKey: joinTableName];
 	}
 	return result;
 }
@@ -210,7 +231,7 @@
 		NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[cd columnNames] componentsJoinedByString: @","], [cd tableName]];
 		OPDebugLog(@"OPPersistence", OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
-		
+		// Cache statement for later use:
 		[fetchStatements setObject: result forKey: poClass]; // cache it
 
 	}
@@ -327,6 +348,9 @@
 	[insertStatements release]; insertStatements = nil; 
 	[deleteStatements release]; deleteStatements = nil; 
 	[fetchStatements release];  fetchStatements  = nil; 
+	
+	[addRelationStatements release];    addRelationStatements    = nil;
+	[removeRelationStatements release]; removeRelationStatements = nil;
 }
 
 - (NSString*) path

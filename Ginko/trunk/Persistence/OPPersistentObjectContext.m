@@ -41,7 +41,6 @@
 #import <OPObjectPair.h>
 #import "OPObjectRelationship.h"
 
-
 @implementation OPPersistentObjectContext
 
 static long long OPLongLongStringValue(NSString* self)
@@ -325,6 +324,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
 	[lock lock];
+	
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
+	
 	if (![db transactionInProgress]) [db beginTransaction];
 	
 	// do we need a local autoreleasepoool here?
@@ -367,7 +369,41 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		[deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
 	}
 	
+	NSEnumerator* renum = [relationshipChangesByJoinTable objectEnumerator];
+	OPObjectRelationship* relationshipChanges;
+	while (relationshipChanges = [renum nextObject]) {
+	
+		// Add a row in the join table for each relation added:
+		OPSQLiteStatement* addStatement = [db addStatementForJoinTableName: [relationshipChanges joinTableName] 
+														   firstColumnName: [relationshipChanges firstColumnName] 
+														  secondColumnName: [relationshipChanges secondColumnName]];
+		
+		NSEnumerator* pairEnum = [relationshipChanges addedRelationsEnumerator];
+		OPObjectPair* pair;
+
+		while (pair = [pairEnum nextObject]) {
+			
+			OPPersistentObject* firstObject  = [pair firstObject];
+			OPPersistentObject* secondObject = [pair secondObject];
+			
+			[addStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
+			[addStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
+			
+			[addStatement execute];
+		}
+		
+		// Remove a row in the join table to each relation removed:
+		
+#warning todo: Remove a row in the join table to each relation removed
+		
+		
+		[relationshipChanges reset];
+	}
+	
+	
 	[db commitTransaction];
+	
+	[pool release];
 	[lock unlock];
 }
 
@@ -427,8 +463,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	if (joinTableName) {
 		result = [relationshipChangesByJoinTable objectForKey: joinTableName];
 		if (!result) {
+			//NSString* inverseRelationshipKey = [ad inverseRelationshipKey];
+			//OPAttributeDescription* inverseAttribute = nil;
 			// Create it on demand:
-			result = [[[OPObjectRelationship alloc] initWithRelationshipNames: [ad name] : [ad inverseRelationshipKey]] autorelease];			
+			result = [[[OPObjectRelationship alloc] initWithAttributeDescriptions: ad : nil] autorelease];			
 			[relationshipChangesByJoinTable setObject: result forKey: joinTableName];
 		}
 	}
