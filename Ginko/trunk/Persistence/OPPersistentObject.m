@@ -503,7 +503,13 @@
 		// Record relationship change in persistent context:
 		[r addRelationNamed: key from: self to: value];
 	
-#warning Todo: Also update inverse relationship (if any)
+		// Do we need to check, if value is a fault and not do anything then? Does addPrimitiveValue already handle this?
+		// Also update inverse relationship (if any):
+		NSString* inverseKey = [ad inverseRelationshipKey];
+		if (inverseKey) {
+			[value addPrimitiveValue: self forKey: inverseKey];
+		}
+		
 		if ([self isFault]) {
 			return; // we'll pick up the change the next time this fault is fired.
 		}
