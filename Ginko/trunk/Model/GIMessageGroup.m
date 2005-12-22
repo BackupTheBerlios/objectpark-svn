@@ -528,6 +528,25 @@ static NSMutableArray* root = nil;
 	// delete dependent objects
 }
 
+- (NSEnumerator*) allMessagesEnumerator
+{
+	OPPersistentObjectEnumerator* result;
+
+	NSString* queryString = @"select ZMESSAGE.ROWID from Z_4THREADS, ZMESSAGE where ZMESSAGE.ZTHREAD = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=?";
+
+#warning needs testing.
+	
+	
+	// todo: Cache enumerator object
+	result = [[[OPPersistentObjectEnumerator alloc] initWithContext: [self context]
+														resultClass: [GIMessage class] 
+														queryString: queryString] autorelease];
+	
+	[result bind: self]; // fill "?" above with own oid;
+	
+	return result;
+}
+
 
 + (void) addNewHierarchyNodeAfterEntry:(id)anEntry
 /*" Adds a new hierarchy node below (as visually indicated in the groups list) the given entry anEntry. "*/ 
