@@ -7,20 +7,6 @@
  *
  */
 
-@interface NSObject (InstantiatingJavaObjects)
-
-// Instantiating java objects for when no -init/constructor mapping works.
-// The class these methods are invoked on *must* be a class returned by the
-// -findClass: method (or NSClassFromString() function), otherwise
-// NSInvalidJavaClassException is raised. The signature is specified using the
-// rather counter-intuitive format defined by the Java Virtual Machine
-// specification.  Try looking in JavaVM/vm-interface.h for help.
-
-+ (id) newWithSignature:(NSString *)signature, ...;
-+ (id) newWithSignature:(NSString *)signature arguments:(va_list)args;
-
-@end
-
 #define LuceneFieldClassname @"org.apache.lucene.document.Field"
 #define LuceneFieldClass (NSClassFromString(LuceneFieldClassname))
 @interface LuceneField : NSObject
@@ -87,5 +73,17 @@
 }
 
 + (id)parse:(NSString *)aQueryString :(NSString *)defaultField :(id)anAnalyzer;
+
+@end
+
+#define LuceneHitsClassname @"org.apache.lucene.search.Hits"
+#define LuceneHitsClass (NSClassFromString(LuceneHitsClassname))
+@interface LuceneHits : NSObject
+{
+}
+
+- (LuceneDocument *)doc:(int)n;
+- (int)length;
+- (float)score:(int)n;
 
 @end

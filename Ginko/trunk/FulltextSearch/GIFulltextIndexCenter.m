@@ -10,51 +10,43 @@
 #import "NSApplication+OPExtensions.h"
 #import "GIApplication.h"
 #import <JavaVM/JavaVM.h>
+#import <OPDebug/OPLog.h>
 
 @implementation GIFulltextIndexCenter
 
-+ (GIFulltextIndexCenter *)sharedFulltextIndex
+static NSJavaVirtualMachine *jvm = nil;
+
++ (void)initialize
 {
-    static GIFulltextIndexCenter *sharedFulltextIndex = nil;
+    NSString *lucenePath = [@":" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
     
-	if (!sharedFulltextIndex)
-	{
-		sharedFulltextIndex = [[self alloc] init];
-    }
-    
-    return sharedFulltextIndex;
+    jvm = [[NSJavaVirtualMachine alloc] initWithClassPath:[[NSJavaVirtualMachine defaultClassPath] stringByAppendingString:lucenePath]];    
 }
 
-- (NSString *)fulltextIndexPath
++ (NSString *)fulltextIndexPath
 {
     static NSString *path = nil;
-    if (!path) path = [[GIApp applicationSupportPath] stringByAppendingPathComponent:@"FulltextIndex"];
+    
+    @synchronized(self)
+    {
+        if (!path) path = [[GIApp applicationSupportPath] stringByAppendingPathComponent:@"FulltextIndex"];
+    }
     return path;
 }
 
 - (id)init
 {
-    static NSJavaVirtualMachine *jvm = nil;
-    
-    self = [super init];
- 
-    if (!jvm) 
-    {
-        NSString *lucenePath = [@":" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
-    
-        jvm = [[NSJavaVirtualMachine alloc] initWithClassPath:[[NSJavaVirtualMachine defaultClassPath] stringByAppendingString:lucenePath]];
-    }
-    
-    return self;
+    return nil;
 }
 
-- (LuceneDocument *)luceneDocumentFromMessage:(id)aMessage
++ (LuceneDocument *)luceneDocumentFromMessage:(id)aMessage
 {
     LuceneDocument *result = [[[LuceneDocumentClass alloc] init] autorelease];
     Class fieldClass = LuceneFieldClass;
     
     // message id
     NSString *messageId = [aMessage valueForKey:@"messageId"];
+    NSAssert([messageId length] > 0, @"fatal error: message id not present.");
     [result add:[fieldClass Keyword:@"id" :messageId]];
     
     // date
@@ -81,12 +73,12 @@
     NSString *body = [aMessage valueForKey:@"messageBodyAsPlainString"];
     [result add:[fieldClass Text:@"body" :body]];
     
-    NSLog(@"\nindexing body = %@\n", body);
+    //NSLog(@"\nindexing body = %@\n", body);
     
     return result;
 }
 
-- (LuceneIndexWriter *)indexWriter
++ (LuceneIndexWriter *)indexWriter
 /*" Private method. Should only be used inside a synchronized context. "*/
 {
     BOOL shouldCreateNewIndex = YES;
@@ -100,7 +92,7 @@
     return indexWriter;
 }
 
-- (BOOL)addMessages:(NSArray *)someMessages
++ (BOOL)addMessages:(NSArray *)someMessages
 {
     @synchronized(self)
     {
@@ -126,11 +118,41 @@
                 return NO;
             }
         }
-        
         [indexWriter close];
     }
     
     return YES;
+}
+
++ (void)optimize
+{
+    @synchronized(self)
+    {
+        LuceneIndexWriter *indexWriter = [self indexWriter];
+        [indexWriter optimize];
+        [indexWriter close];
+    }
+}
+
++ (LuceneHits *)hitsForQueryString:(NSString *)aQueryString
+{
+    LuceneHits *hits = nil;
+    
+    @synchronized(self)
+    {
+        LuceneIndexSearcher *indexSearcher = [[LuceneIndexSearcherClass newWithSignature:@"(Ljava/lang/String;)", [GIFulltextIndexCenter fulltextIndexPath]] autorelease];
+        
+        //NSLog(@"indexSearcher = %@", indexSearcher);   
+        
+        id standardAnalyzer = [[[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init] autorelease];
+        
+        id query = [LuceneQueryParserClass parse:aQueryString :@"body" :standardAnalyzer];
+        //NSLog(@"query = %@", query);   
+        
+        hits = [indexSearcher search:query];
+    }
+    
+    return hits;
 }
 
 @end

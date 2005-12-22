@@ -15,11 +15,13 @@
 {
 }
 
-+ (GIFulltextIndexCenter *)sharedFulltextIndex;
-- (NSString *)fulltextIndexPath;
++ (NSString *)fulltextIndexPath;
 
-- (LuceneDocument *)luceneDocumentFromMessage:(id)aMessage;
-- (BOOL)addMessages:(NSArray *)someMessages;
++ (BOOL)addMessages:(NSArray *)someMessages;
+
++ (LuceneHits *)hitsForQueryString:(NSString *)aQueryString;
+
++ (void)optimize;
 
 @end
 
