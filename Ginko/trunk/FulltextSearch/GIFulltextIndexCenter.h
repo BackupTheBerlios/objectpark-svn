@@ -17,11 +17,11 @@
 
 + (NSString *)fulltextIndexPath;
 
-+ (BOOL)addMessages:(NSArray *)someMessages;
++ (void)addMessages:(NSArray *)someMessages;
++ (void)removeMessagesWithIds:(NSArray *)someMessageIds;
 
 + (LuceneHits *)hitsForQueryString:(NSString *)aQueryString;
 
 + (void)optimize;
 
 @end
-

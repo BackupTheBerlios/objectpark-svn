@@ -92,7 +92,7 @@ static NSJavaVirtualMachine *jvm = nil;
     return indexWriter;
 }
 
-+ (BOOL)addMessages:(NSArray *)someMessages
++ (void)addMessages:(NSArray *)someMessages
 {
     @synchronized(self)
     {
@@ -100,28 +100,65 @@ static NSJavaVirtualMachine *jvm = nil;
         
         NSAssert(indexWriter != nil, @"IndexWriter could not be created.");
         
-        NSEnumerator *enumerator = [someMessages objectEnumerator];
-        id message;
-        
-        while (message = [enumerator nextObject])
+        @try
         {
-            LuceneDocument *doc = [self luceneDocumentFromMessage:message];
+            NSEnumerator *enumerator = [someMessages objectEnumerator];
+            id message;
+            
+            while (message = [enumerator nextObject])
+            {
+                LuceneDocument *doc = [self luceneDocumentFromMessage:message];
                 
-            @try
-            {
                 [indexWriter addDocument:doc];
-            } 
-            @catch (NSException *localException)
-            {
-                NSLog(@"EXCEPTION reason = %@", localException);
-                [indexWriter close];
-                return NO;
             }
         }
-        [indexWriter close];
+        @catch (NSException *localException)
+        {
+            @throw localException;
+        }
+        @finally
+        {
+            [indexWriter close];
+        }
     }
-    
-    return YES;
+}
+
++ (void)removeMessagesWithIds:(NSArray *)someMessageIds
+{
+    if ([someMessageIds count])
+    {;
+        @synchronized(self)
+        {
+            LuceneFSDirectory *directory = [LuceneFSDirectoryClass getDirectory:[self fulltextIndexPath] :NO];
+            NSAssert(directory != nil, @"Could not create Lucene directory.");
+            
+            LuceneIndexReader *indexReader = [LuceneIndexReaderClass open:directory];
+            NSAssert(indexReader != nil, @"Could not create Lucene index reader.");
+            
+            @try
+            {
+                NSEnumerator *enumerator = [someMessageIds objectEnumerator];
+                NSString *messageId;
+                
+                while (messageId = [enumerator nextObject])
+                {
+                    LuceneTerm *term = [[LuceneTermClass newWithSignature:@"(Ljava/lang/String;Ljava/lang/String;)", @"id", messageId] autorelease];
+                    
+                    int count = [indexReader delete:term];
+                    NSAssert(count <= 1, @"Fatal error: Deleted more than one message for a single message id from fulltext index.");
+                }
+            }
+            @catch (NSException *localException)
+            {
+                @throw localException;
+            }
+            @finally
+            {
+                [indexReader close];
+                [directory close];
+            }
+        }
+    }
 }
 
 + (void)optimize

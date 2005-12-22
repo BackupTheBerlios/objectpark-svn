@@ -87,3 +87,36 @@
 - (float)score:(int)n;
 
 @end
+
+#define LuceneTermClassname @"org.apache.lucene.index.Term"
+#define LuceneTermClass (NSClassFromString(LuceneTermClassname))
+@interface LuceneTerm : NSObject
+{
+}
+
+@end
+
+#define LuceneIndexReaderClassname @"org.apache.lucene.index.IndexReader"
+#define LuceneIndexReaderClass (NSClassFromString(LuceneIndexReaderClassname))
+@interface LuceneIndexReader : NSObject
+{
+}
+
++ (LuceneIndexReader *)open:(id)aDirectory;
+
+- (void)close;
+- (int)delete:(LuceneTerm *)aTerm;
+
+@end
+
+#define LuceneFSDirectoryClassname @"org.apache.lucene.store.FSDirectory"
+#define LuceneFSDirectoryClass (NSClassFromString(LuceneFSDirectoryClassname))
+@interface LuceneFSDirectory : NSObject
+{
+}
+
++ (LuceneFSDirectory *)getDirectory:(NSString *)path :(NSNumber *)create;
+
+- (void)close;
+
+@end
