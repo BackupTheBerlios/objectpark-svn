@@ -44,7 +44,7 @@
 	return 
 	@"{"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
-    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; SortAttribute = date; JoinTableName = Z_4THREADS; SourceColumnName = Z_4GROUPS; targetColumnName = Z_6THREADS; InverseRelationshipKey=groups;};"
+    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; SortAttribute = date; JoinTableName = Z_4THREADS; SourceColumnName = Z_4GROUPS; TargetColumnName = Z_6THREADS; InverseRelationshipKey=groups;};"
     //@"defaultProfile = {AttributeClass = GIProfile; ColumnName = ZDEFAULTPROFILE; }
 	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; SortAttributeName = date};"
 	@"}";

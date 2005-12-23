@@ -206,6 +206,10 @@
 								   secondColumnName: (NSString*) secondColumnName
 /*" Bind source oid to index 0 and target oid to index 1. "*/
 {
+	NSParameterAssert([joinTableName length]);
+	NSParameterAssert([firstColumnName length]);
+	NSParameterAssert([secondColumnName length]);
+	
 	OPSQLiteStatement* result = [addRelationStatements objectForKey: joinTableName];
 	if (!result) {
 		NSParameterAssert(joinTableName != nil); // make sure this is a many-to-many attribute
