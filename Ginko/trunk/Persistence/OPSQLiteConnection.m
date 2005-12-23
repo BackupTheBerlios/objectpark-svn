@@ -224,6 +224,30 @@
 	return result;
 }
 
+- (OPSQLiteStatement*) removeStatementForJoinTableName: (NSString*) joinTableName
+									   firstColumnName: (NSString*) firstColumnName 
+									  secondColumnName: (NSString*) secondColumnName
+	/*" Bind source oid to index 0 and target oid to index 1. "*/
+{
+	NSParameterAssert([joinTableName length]);
+	NSParameterAssert([firstColumnName length]);
+	NSParameterAssert([secondColumnName length]);
+	
+	OPSQLiteStatement* result = [removeRelationStatements objectForKey: joinTableName];
+	if (!result) {
+		NSParameterAssert(joinTableName != nil); // make sure this is a many-to-many attribute
+		
+		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where \"%@\"=? and \"%@\"=?;", joinTableName, firstColumnName, secondColumnName];
+		
+		OPDebugLog(@"OPPersistence", OPINFO, @"Preparing statement for fetches: %@", queryString);
+		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+		// Cache statement for later use:
+		[removeRelationStatements setObject: result forKey: joinTableName];
+	}
+	return result;
+}
+
+
 - (OPSQLiteStatement*) fetchStatementForClass: (Class) poClass
 {
 	OPSQLiteStatement* result = [fetchStatements objectForKey: poClass];

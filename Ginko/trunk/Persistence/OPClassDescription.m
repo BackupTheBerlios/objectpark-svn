@@ -189,6 +189,11 @@
 		sourceColumnName  = [[dict objectForKey: @"SourceColumnName"] copy];
 		targetColumnName  = [[dict objectForKey: @"TargetColumnName"] copy];
 		
+		if (joinTableName) {
+			NSAssert2(sourceColumnName, @"Many-to-many relationships (like %@) need to specify a source column name for %@ using the SourceColumnName key.", name, joinTableName);
+			NSAssert2(targetColumnName, @"Many-to-many relationships (like %@) need to specify a target column name for %@ using the TargetColumnName key.", name, joinTableName);
+		}
+		
 		NSParameterAssert([theClass canPersist]);
 		
 	}

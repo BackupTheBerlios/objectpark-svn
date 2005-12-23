@@ -376,9 +376,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		if ([relationshipChanges changeCount]) {
 			
 			// Add a row in the join table for each relation added:
-			OPSQLiteStatement* addStatement = [db addStatementForJoinTableName: [relationshipChanges joinTableName] 
-															   firstColumnName: [relationshipChanges firstColumnName] 
-															  secondColumnName: [relationshipChanges secondColumnName]];
+			OPSQLiteStatement* addStatement;
+			addStatement = [db addStatementForJoinTableName: [relationshipChanges joinTableName] 
+											firstColumnName: [relationshipChanges firstColumnName] 
+										   secondColumnName: [relationshipChanges secondColumnName]];
 			
 			NSEnumerator* pairEnum = [relationshipChanges addedRelationsEnumerator];
 			OPObjectPair* pair;
@@ -396,10 +397,25 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			
 			// Remove a row in the join table to each relation removed:
 			
-#warning todo: Remove a row in the join table to each relation removed
+			OPSQLiteStatement* removeStatement;
+			removeStatement = [db removeStatementForJoinTableName: [relationshipChanges joinTableName] 
+												  firstColumnName: [relationshipChanges firstColumnName] 
+												 secondColumnName: [relationshipChanges secondColumnName]];
 			
+			pairEnum = [relationshipChanges removedRelationsEnumerator];
 			
-			[relationshipChanges reset];
+			while (pair = [pairEnum nextObject]) {
+				
+				OPPersistentObject* firstObject  = [pair firstObject];
+				OPPersistentObject* secondObject = [pair secondObject];
+				
+				[removeStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
+				[removeStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
+				
+				[removeStatement execute];
+			}			
+			
+			[relationshipChanges reset]; // delete all changes as they are now recorded in the database
 		}
 	}
 	
