@@ -35,6 +35,8 @@
     NSMutableSet* nonExpandableItemsCache; // contains GIThreads
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
+
+    NSMutableSet* itemRetainer;
     
     // -- Toolbar --
     NSArray* toolbarItems;

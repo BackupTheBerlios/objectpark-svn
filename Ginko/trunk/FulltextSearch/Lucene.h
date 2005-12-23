@@ -102,7 +102,7 @@
 {
 }
 
-+ (LuceneIndexReader *)open:(id)aDirectory;
++ (LuceneIndexReader *)open:(NSString *)aDirectory;
 
 - (void)close;
 - (int)delete:(LuceneTerm *)aTerm;

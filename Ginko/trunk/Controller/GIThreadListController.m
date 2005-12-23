@@ -46,6 +46,9 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 {
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: @"GroupContentChangedNotification" object: self];
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: OPJobDidFinishNotification object: MboxImportJobName];
+    
+    itemRetainer = [[NSMutableSet alloc] init];
+    
     return [[super init] retain]; // self retaining!
 }
 
@@ -114,6 +117,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self setGroup: nil];
     [threadCache release];
     [nonExpandableItemsCache release];
+    [itemRetainer release];
     
     [super dealloc];
 }
@@ -1202,11 +1206,13 @@ static BOOL isThreadItem(id item)
 - (BOOL) outlineView: (NSOutlineView*) outlineView shouldExpandItem: (id) item
 /*" Remembers last expanded thread for opening the next time. "*/
 {
+    /* hack obsoleted by workaround with itemRetainer
     if (outlineView == threadsView) {
         [tabView selectFirstTabViewItem: self];
 		// Retain all messages in thread item:
 		[[item messages] makeObjectsPerformSelector: @selector(retain)];
     }
+     */
     
     return YES;
 }
@@ -1249,22 +1255,27 @@ static BOOL isThreadItem(id item)
 
 - (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item
 {
+    id result = nil;
 	if (! item) {
-		return [[self threadsByDate] objectAtIndex: index];
+		result = [[self threadsByDate] objectAtIndex: index];
 	} else {            
-		return [[item messagesByTree] objectAtIndex: index];
+		result = [[item messagesByTree] objectAtIndex: index];
 	}
+    [itemRetainer addObject: result];
+    return result;
 }
 
 
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView shouldCollapseItem: (id) item;
 {
+    /* hack obsoleted by itemRetainer workaround :-)
 	if (threadsView == outlineView) {
         // Retain all messages in thread item:
 		NSLog(@"Should release opened messages.");
 		[[item messages] makeObjectsPerformSelector: @selector(autorelease)]; // could be too early!?
 	}
+     */
 	return YES;
 }
 

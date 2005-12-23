@@ -275,63 +275,79 @@
 
 - (void)playWithLucene
 {        
-    GIFulltextIndexCenter *sharedFulltextIndex = [GIFulltextIndexCenter sharedFulltextIndex];
+    // Delete existing fulltext index:
+    [[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
     
-    [[NSFileManager defaultManager] removeFileAtPath:[sharedFulltextIndex fulltextIndexPath] handler:NULL];
-    
+    // Get a group:
     NSArray *allGroups = [[GIMessageGroup allObjectsEnumerator] allObjects];
-        
     GIMessageGroup *defaultGroup = [allGroups objectAtIndex:1];
-    
     NSLog(@"group = %@", defaultGroup);
     
+    // Get messages:
     OPFaultingArray *threads = [defaultGroup valueForKey:@"threadsByDate"];
-
     NSLog(@"threads = %@", threads);
-
     GIThread *aThread = [threads lastObject];
     NSArray *messages = [aThread messages];
-    
     NSLog(@"messages = %@", messages);
 
-    //messages = [NSArray arrayWithObject:[messages objectAtIndex:0]];
-    [sharedFulltextIndex addMessages:messages];
-        
-    //NSLog(@"doc = %@", doc);    
-    //NSLog(@"index writer = %@ with count = %d", indexWriter, [indexWriter docCount]);    
+    [GIFulltextIndexCenter luceneDocumentFromMessage:[messages lastObject]];
 
-    LuceneIndexSearcher *indexSearcher = [[LuceneIndexSearcherClass newWithSignature:@"(Ljava/lang/String;)", [sharedFulltextIndex fulltextIndexPath]] autorelease];
+    /*
 
-    //NSLog(@"indexSearcher = %@", indexSearcher);   
+    // Add messages to fulltext index:
+    [GIFulltextIndexCenter addMessages:messages];
     
-    id standardAnalyzer = [[[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init] autorelease];
-
-    id query = [LuceneQueryParserClass parse:@"yahoo" :@"body" :standardAnalyzer];
-    //NSLog(@"query = %@", query);   
-
-	//System.out.println("Searching for: " + query.toString("contents"));
+    // Search in fulltext index:
+    LuceneHits *hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
     
-    id hits = [indexSearcher search:query];
+    int i, hitsCount = [hits length];
     
-    NSLog(@"hits = %d", [hits length]);   
-
-	//Hits hits = searcher.search(query);
-	//System.out.println(hits.length() + " total matching documents");
+    NSLog(@"hits count = %d", hitsCount);
     
-
+    for (i = 0; i < hitsCount; i++)
+    {
+        LuceneDocument *doc = [hits doc:i];
+        NSLog(@"hit doc = %@", doc);
+    }
+    
+    // Remove messages:
+    NSEnumerator *enumerator = [messages objectEnumerator];
+    GIMessage *message;
+    NSMutableArray *messageIds = [NSMutableArray array];
+    
+    while (message = [enumerator nextObject])
+    {
+        [messageIds addObject:[message messageId]];
+    }
+    
+    [GIFulltextIndexCenter removeMessagesWithIds:messageIds];
+    
+    // Search in fulltext index:
+    hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
+    
+    hitsCount = [hits length];
+    
+    NSLog(@"hits count = %d", hitsCount);
+    
+    for (i = 0; i < hitsCount; i++)
+    {
+        LuceneDocument *doc = [hits doc:i];
+        NSLog(@"hit doc = %@", doc);
+    }    
+     */
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [self setDelegate:self];
 	    
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(prefpaneDidEndEditing:) name: OPPreferencePaneDidEndEditing object: nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prefpaneDidEndEditing:) name:OPPreferencePaneDidEndEditing object:nil];
 		
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(SMTPJobFinished:) name: OPJobDidFinishNotification object: [GISMTPJob jobName]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(POPJobFinished:) name: OPJobDidFinishNotification object: [GIPOPJob jobName]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
 
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importJobFinished:) name: OPJobDidFinishNotification object: MboxImportJobName];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name:OPJobDidFinishNotification object:MboxImportJobName];
 
     // Some statistical messsages:
     //OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	
@@ -342,7 +358,7 @@
     
     //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
     //NSLog(@"last message = %@", aMessage);
-    [OPPersistentObjectContext setDefaultContext: [self initialPersistentObjectContext]];
+    [OPPersistentObjectContext setDefaultContext:[self initialPersistentObjectContext]];
 
     [GIMessageGroup ensureDefaultGroups];
     //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);

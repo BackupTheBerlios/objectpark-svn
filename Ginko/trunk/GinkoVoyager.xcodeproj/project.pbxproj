@@ -149,6 +149,9 @@
 		77D33406092BB03E00F2BFAB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DE96297089E20CB0053ED6B /* libsqlite3.dylib */; };
 		77D336A5092BE97500F2BFAB /* GIPhraseBrowserWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */; };
 		77D336A6092BE97500F2BFAB /* GIPhraseBrowserWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */; };
+		77D471DF095BF0E2003CEAEA /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 77D471DD095BF0E2003CEAEA /* utils.c */; };
+		77D471E0095BF0E2003CEAEA /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D471DE095BF0E2003CEAEA /* utils.h */; };
+		77D471E4095BF12E003CEAEA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77D471E3095BF12E003CEAEA /* CoreFoundation.framework */; };
 		77D52B670929E28700661A6D /* PhraseBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D52B660929E28700661A6D /* PhraseBrowser.nib */; };
 		77D79BD707F31BDB00C521CE /* punycode.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D79BD507F31BDB00C521CE /* punycode.h */; };
 		77D79BD807F31BDB00C521CE /* punycode.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D79BD607F31BDB00C521CE /* punycode.m */; };
@@ -539,7 +542,7 @@
 		7779AC9A07C40D1B00F064D3 /* TestNSString+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSString+MessageUtils.h"; sourceTree = "<group>"; };
 		7779AC9B07C40D1B00F064D3 /* TestNSString+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSString+MessageUtils.m"; sourceTree = "<group>"; };
 		7781EBA90833B55100830729 /* newDirectory.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = newDirectory.tiff; sourceTree = "<group>"; };
-		7782AE30095593D7005F1DC4 /* Lucene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lucene.h; path = FulltextSearch/Lucene.h; sourceTree = "<group>"; };
+		7782AE30095593D7005F1DC4 /* Lucene.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.java; fileEncoding = 4; name = Lucene.h; path = FulltextSearch/Lucene.h; sourceTree = "<group>"; };
 		7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilePrefs.h; sourceTree = "<group>"; };
 		7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilePrefs.m; sourceTree = "<group>"; };
 		77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFulltextIndexCenter.h; sourceTree = "<group>"; };
@@ -585,6 +588,9 @@
 		77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GroupInspector.nib; sourceTree = "<group>"; };
 		77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPhraseBrowserWindow.h; sourceTree = "<group>"; };
 		77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPhraseBrowserWindow.m; sourceTree = "<group>"; };
+		77D471DD095BF0E2003CEAEA /* utils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
+		77D471DE095BF0E2003CEAEA /* utils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		77D471E3095BF12E003CEAEA /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		77D52B660929E28700661A6D /* PhraseBrowser.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = PhraseBrowser.nib; sourceTree = "<group>"; };
 		77D79BD507F31BDB00C521CE /* punycode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = punycode.h; sourceTree = "<group>"; };
 		77D79BD607F31BDB00C521CE /* punycode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = punycode.m; sourceTree = "<group>"; };
@@ -795,6 +801,7 @@
 				770E4D75095583BC007F1158 /* lucene-1.4.3.jar in Frameworks */,
 				77BBA51909558792005C4915 /* lucene-1.4.3.jar in Frameworks */,
 				77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */,
+				77D471E4095BF12E003CEAEA /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +841,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				77D471E3095BF12E003CEAEA /* CoreFoundation.framework */,
 				77738B0B0955B02000BAAB51 /* JavaVM.framework */,
 				8DCE392A089423E000F705EF /* libsqlite3.0.dylib */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
@@ -960,6 +968,8 @@
 		617C2A74084632BA00803758 /* FulltextSearch */ = {
 			isa = PBXGroup;
 			children = (
+				77D471DD095BF0E2003CEAEA /* utils.c */,
+				77D471DE095BF0E2003CEAEA /* utils.h */,
 				77E204FB09376F8800C0E6BF /* Tests */,
 				617C2A75084632F700803758 /* GIIndex.h */,
 				617C2A76084632F700803758 /* GIIndex.m */,
@@ -1484,6 +1494,7 @@
 				7782AE31095593D7005F1DC4 /* Lucene.h in Headers */,
 				8D31443F09562178007D668A /* GIThreadListController.h in Headers */,
 				8D314458095622E2007D668A /* OPObjectRelationship.h in Headers */,
+				77D471E0095BF0E2003CEAEA /* utils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1923,6 +1934,7 @@
 				8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */,
 				8D31444009562178007D668A /* GIThreadListController.m in Sources */,
 				8D314459095622E2007D668A /* OPObjectRelationship.m in Sources */,
+				77D471DF095BF0E2003CEAEA /* utils.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

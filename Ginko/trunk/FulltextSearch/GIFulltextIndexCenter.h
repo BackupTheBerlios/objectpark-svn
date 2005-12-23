@@ -8,6 +8,7 @@
 
 #import <AppKit/AppKit.h>
 #import "Lucene.h"
+#include <JavaVM/jni.h>
 
 @class GIMessage;
 
@@ -23,5 +24,7 @@
 + (LuceneHits *)hitsForQueryString:(NSString *)aQueryString;
 
 + (void)optimize;
+
++ (jobject)luceneDocumentFromMessage:(id)aMessage;
 
 @end
