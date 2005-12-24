@@ -50,7 +50,7 @@ static JNIEnv *env = nil;
 
 + (jclass)documentClass
 {
-    static jclass documentClass = NULL;
+    jclass documentClass = NULL;
 
     if (! documentClass)
     {
@@ -64,7 +64,7 @@ static JNIEnv *env = nil;
 + (jobject)documentNew 
 {
     jobject document = NULL;
-    static jmethodID cid = NULL;
+    jmethodID cid = NULL;
     
     if (! cid)
     {
@@ -79,7 +79,7 @@ static JNIEnv *env = nil;
 
 + (jclass)fieldClass
 {
-    static jclass fieldClass = NULL;
+    jclass fieldClass = NULL;
     
     if (! fieldClass)
     {
@@ -92,7 +92,7 @@ static JNIEnv *env = nil;
 
 + (jclass)dateFieldClass
 {
-    static jclass dateFieldClass = NULL;
+    jclass dateFieldClass = NULL;
     
     if (! dateFieldClass)
     {
@@ -105,7 +105,7 @@ static JNIEnv *env = nil;
 
 + (void)document:(jobject)aDocument addField:(jobject)aField
 {
-    static jmethodID mid = NULL;
+    jmethodID mid = NULL;
     
     if (! mid)
     {
@@ -117,7 +117,7 @@ static JNIEnv *env = nil;
 
 + (void)document:(jobject)document addTextFieldWithName:(NSString *)name text:(jstring)textString
 {
-    static jmethodID mid = NULL;
+    jmethodID mid = NULL;
     
     if (! mid)
     {
@@ -131,14 +131,14 @@ static JNIEnv *env = nil;
     jobject result = (*env)->CallStaticObjectMethod(env, [self fieldClass], mid, nameString, textString);
     NSAssert(result != NULL, @"Text static method doesn't generate a Field object.");
     
-    (*env)->DeleteLocalRef(env, nameString);
+    //(*env)->DeleteLocalRef(env, nameString);
     
     [self document:document addField:result];
 }
 
 + (void)document:(jobject)document addKeywordFieldWithName:(NSString *)name text:(jstring)textString
 {
-    static jmethodID mid = NULL;
+    jmethodID mid = NULL;
     
     if (! mid)
     {
@@ -152,7 +152,7 @@ static JNIEnv *env = nil;
     jobject result = (*env)->CallStaticObjectMethod(env, [self fieldClass], mid, nameString, textString);
     NSAssert(result != NULL, @"Keyword static method doesn't generate a Field object.");
     
-    (*env)->DeleteLocalRef(env, nameString);
+    //(*env)->DeleteLocalRef(env, nameString);
 
     [self document:document addField:result];
 }
@@ -170,26 +170,26 @@ NSString *stringFromJstring(jstring aJstring) {
     return result;
 }
 
-+ (NSString *)documentToString:(jobject)aDocument
++ (NSString *)objectToString:(jobject)anObject
 {
-    static jmethodID mid = NULL;
+    jmethodID mid = NULL;
 
     if (! mid)
     {
-        mid = (*env)->GetMethodID(env, [self documentClass], "toString", "()Ljava/lang/String;");
+        mid = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, anObject), "toString", "()Ljava/lang/String;");
         NSAssert(mid != NULL, @"toString not found");
     }
     
-    jstring javaResult = (*env)->CallObjectMethod(env, aDocument, mid);
+    jstring javaResult = (*env)->CallObjectMethod(env, anObject, mid);
     NSString *result = stringFromJstring(javaResult);
-    (*env)->DeleteLocalRef(env, javaResult);
+    //(*env)->DeleteLocalRef(env, javaResult);
     
     return result;
 }
 
 + (jstring)dateFieldTimeToString:(unsigned long long)millis
 {
-    static jmethodID mid = NULL;
+    jmethodID mid = NULL;
     
     if (! mid)
     {
@@ -218,7 +218,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
     [self document:document addKeywordFieldWithName:@"id" text:messageIdJavaString];
     
-    (*env)->DeleteLocalRef(env, messageIdJavaString);
+    //(*env)->DeleteLocalRef(env, messageIdJavaString);
     
     // date
     NSCalendarDate *date = [aMessage valueForKey:@"date"];
@@ -227,7 +227,7 @@ NSString *stringFromJstring(jstring aJstring) {
     {
         jstring dateJavaString = [self dateFieldTimeToString:(unsigned long long)millis];
         [self document:document addKeywordFieldWithName:@"date" text:dateJavaString];
-        (*env)->DeleteLocalRef(env, dateJavaString);
+        //(*env)->DeleteLocalRef(env, dateJavaString);
     }
     @catch(NSException *localException)
     {
@@ -239,48 +239,162 @@ NSString *stringFromJstring(jstring aJstring) {
     if (![subject length]) subject = @"";
     jstring subjectJavaString = (*env)->NewStringUTF(env, [subject UTF8String]);
     [self document:document addKeywordFieldWithName:@"subject" text:subjectJavaString];
-    (*env)->DeleteLocalRef(env, subjectJavaString);
+    //(*env)->DeleteLocalRef(env, subjectJavaString);
     
     // author
     NSString *author = [aMessage valueForKey:@"senderName"];
     jstring authorJavaString = (*env)->NewStringUTF(env, [author UTF8String]);
     [self document:document addKeywordFieldWithName:@"author" text:authorJavaString];
-    (*env)->DeleteLocalRef(env, authorJavaString);
+    //(*env)->DeleteLocalRef(env, authorJavaString);
     
     // body
     NSString *body = [aMessage valueForKey:@"messageBodyAsPlainString"];
     jstring bodyJavaString = (*env)->NewStringUTF(env, [body UTF8String]);
     [self document:document addTextFieldWithName:@"body" text:bodyJavaString];
-    (*env)->DeleteLocalRef(env, bodyJavaString);
+    //(*env)->DeleteLocalRef(env, bodyJavaString);
     
-    NSLog(@"\nmade document = %@\n", [self documentToString:document]);
+    NSLog(@"\nmade document = %@\n", [self objectToString:document]);
 
     return document;
+}
+
++ (jclass)standardAnalyzerClass
+{
+    static jclass analyzerClass = NULL;
+    
+    if (! analyzerClass)
+    {
+        analyzerClass = (*env)->FindClass(env, "org/apache/lucene/analysis/standard/StandardAnalyzer");
+        NSAssert(analyzerClass != NULL, @"org.apache.lucene.analysis.standard.StandardAnalyzer couldn't be found.");
+    }
+    
+    return analyzerClass;
+}
+
++ (jobject)standardAnalyzerNew
+{
+    jobject analyzer = NULL;
+    static jmethodID cid = NULL;
+    
+    if (! cid)
+    {
+        cid = (*env)->GetMethodID(env, [self standardAnalyzerClass], "<init>", "()V");
+        NSAssert(cid != NULL, @"org.apache.lucene.analysis.standard.StandardAnalyzer constructor couldn't be found.");
+    }
+    
+    analyzer = (*env)->NewObject(env, [self standardAnalyzerClass], cid);
+    NSAssert(analyzer != NULL, @"org.apache.lucene.analysis.standard.StandardAnalyzer couldn't be instantiated.");
+    
+    return analyzer;
+}
+
++ (jclass)indexWriterClass
+{
+    static jclass indexWriterClass = NULL;
+    
+    if (! indexWriterClass)
+    {
+        indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
+        NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
+    }
+    
+    return indexWriterClass;
 }
 
 + (jobject)indexWriter
 /*" Private method. Should only be used inside a synchronized context. "*/
 {
     jboolean shouldCreateNewIndex = YES;
-    
-    id standardAnalyzer = [[[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init] autorelease];
-    
+        
     if ([[NSFileManager defaultManager] fileExistsAtPath:[self fulltextIndexPath]]) shouldCreateNewIndex = NO;
     
-    LuceneIndexWriter *indexWriter = [[LuceneIndexWriterClass newWithSignature:@"(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z)", [self fulltextIndexPath], standardAnalyzer, [NSNumber numberWithBool:shouldCreateNewIndex]] autorelease];
+    static jmethodID cid = NULL;
+    
+    if (! cid)
+    {
+        cid = (*env)->GetMethodID(env, [self indexWriterClass], "<init>", "(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z)V");
+        NSAssert(cid != NULL, @"(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z) constructor couldn't be found.");
+    }
+    
+    jstring javaIndexPath = NULL;
+    
+    javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+    
+    jobject analyzer = [self standardAnalyzerNew];
+    
+    //NSLog(@"ANALYZER CLASS = %s", (*env)->GetObjectClass(env, analyzer));
+    
+    jobject indexWriter = (*env)->NewObject(env, [self indexWriterClass], cid, javaIndexPath, analyzer, shouldCreateNewIndex);
+    //(*env)->DeleteLocalRef(env, javaIndexPath);
     
     return indexWriter;
 }
 
++ (void)indexWriter:(jobject)writer addDocument:(jobject)document
+{    
+//    if ((*env)->PushLocalFrame(env, 500) < 0) {NSLog(@"out of mem");}
+    
+    jclass indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
+    NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
+    
+    jmethodID mid = (*env)->GetMethodID(env, indexWriterClass, "addDocument", "(Lorg/apache/lucene/document/Document;)V");
+    NSAssert(mid != NULL, @"addDocument method couldn't be found.");
+
+    (*env)->CallVoidMethod(env, writer, mid, document);
+    
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+//    (*env)->PopLocalFrame(env, NULL);
+}
+
++ (void)indexWriterClose:(jobject)writer
+{
+    jclass indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
+    NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
+    
+    jmethodID mid = (*env)->GetMethodID(env, indexWriterClass, "close", "()V");
+    NSLog(@"got close method id %lu", mid);
+    NSAssert(mid != NULL, @"close method couldn't be found.");
+    
+    (*env)->CallVoidMethod(env, writer, mid);
+}
+
++ (void)indexWriterOptimize:(jobject)writer
+{
+    static jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetMethodID(env, [self indexWriterClass], "optimize", "()V");
+        NSAssert(mid != NULL, @"optimize method couldn't be found.");
+    }
+    
+    (*env)->CallVoidMethod(env, writer, mid);
+}
+
 + (void)addMessages:(NSArray *)someMessages
 {
-    @synchronized(self)
+//    @synchronized(self)
     {
         jobject indexWriter = [self indexWriter];
+        NSAssert(indexWriter != NULL, @"IndexWriter could not be created.");
         
-        NSAssert(indexWriter != nil, @"IndexWriter could not be created.");
-        
-        @try
+        NSLog(@"IndexWriter = %@", [self objectToString:indexWriter]);
+        //@try
         {
             NSEnumerator *enumerator = [someMessages objectEnumerator];
             id message;
@@ -288,19 +402,23 @@ NSString *stringFromJstring(jstring aJstring) {
             while (message = [enumerator nextObject])
             {
                 jobject doc = [self luceneDocumentFromMessage:message];
-                [indexWriter addDocument:doc];
-                (*env)->DeleteLocalRef(env, doc);
+                [self indexWriter:indexWriter addDocument:doc];
+                //(*env)->DeleteLocalRef(env, doc);
             }
         }
-        @catch (NSException *localException)
+        /*@catch (NSException *localException)
         {
+            [self indexWriterClose:indexWriter];
+            //(*env)->DeleteLocalRef(env, indexWriter);            
             @throw localException;
         }
-        @finally
-        {
-            [indexWriter close];
-            (*env)->DeleteLocalRef(env, indexWriter);            
-        }
+        */
+        NSLog(@"before closing");
+        [self indexWriterOptimize:indexWriter];
+        [self indexWriterClose:indexWriter];
+        NSLog(@"after closing");
+
+        //(*env)->DeleteLocalRef(env, indexWriter);            
     }
 }
 
@@ -380,9 +498,10 @@ NSString *stringFromJstring(jstring aJstring) {
 {
     @synchronized(self)
     {
-        LuceneIndexWriter *indexWriter = [self indexWriter];
-        [indexWriter optimize];
-        [indexWriter close];
+        jobject indexWriter = [self indexWriter];
+        [self indexWriterOptimize:indexWriter];
+        [self indexWriterClose:indexWriter];
+        //(*env)->DeleteLocalRef(env, indexWriter);            
     }
 }
 

@@ -288,15 +288,14 @@
     NSLog(@"threads = %@", threads);
     GIThread *aThread = [threads lastObject];
     NSArray *messages = [aThread messages];
+    
+   // messages = [NSArray arrayWithObject:[messages lastObject]];
     NSLog(@"messages = %@", messages);
-
-    [GIFulltextIndexCenter luceneDocumentFromMessage:[messages lastObject]];
-
-    /*
 
     // Add messages to fulltext index:
     [GIFulltextIndexCenter addMessages:messages];
     
+    /*
     // Search in fulltext index:
     LuceneHits *hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
     
