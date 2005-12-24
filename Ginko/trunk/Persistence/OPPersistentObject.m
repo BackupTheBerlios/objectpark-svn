@@ -240,10 +240,37 @@
 	}
 }
 
-- (void) willDelete
-	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. Default implementation dies nothing. "*/
+- (void) removeAllValuesForKey: (NSString*) key 
+/*" Removes all values for key, where key denotes a to-many relationship. "*/
 {
+	NSEnumerator* relatedObjectsEnumerator = [[self valueForKey: key] objectEnumerator];
+	id relatedObject;
+	while (relatedObject = [relatedObjectsEnumerator nextObject]) {
+		[self removeValue: relatedObject forKey: key];
+	}
+}
+
+- (void) willDelete
+	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. Default implementation nullifies all object relations. "*/
+{
+	OPClassDescription* cd = [[self class] persistentClassDescription];
 	
+	NSArray* ads = cd->attributeDescriptions;
+	int adIndex;
+	for (adIndex = [ads count]-1; adIndex>=0; adIndex--) {
+	
+		OPAttributeDescription* ad  = [ads objectAtIndex: adIndex];
+		NSString* irk = [ad inverseRelationshipKey];
+		if (irk) {
+			// There is an inverse relationship that needs to have self removed:
+			if ([ad isToManyRelationship]) {
+				[self removeAllValuesForKey: ad->name];
+			} else {
+				// Warning: We may fire a fault here - bad!
+				[self setValue: nil forKey: ad->name];
+			}
+		}
+	}
 }
 
 
@@ -495,21 +522,23 @@
 {
 	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
 	// Todo: For to-many relationships, we do not need to fire a fault in order to update its relationship values!
-	//[self updateInverseRelationShipValue: value forKey: key isRemove: NO];
+
 	OPClassDescription* cd = [[self class] persistentClassDescription];
 	OPAttributeDescription* ad = [cd attributeWithName: key];
 	OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+	// Check, if it is a many-to-many relation:
 	if (r) {
 		// Record relationship change in persistent context:
 		[r addRelationNamed: key from: self to: value];
 	
-		// Do we need to check, if value is a fault and not do anything then? Does addPrimitiveValue already handle this?
+
 		// Also update inverse relationship (if any):
 		NSString* inverseKey = [ad inverseRelationshipKey];
 		if (inverseKey) {
 			[value addPrimitiveValue: self forKey: inverseKey];
 		}
 		
+		// Do we need to check, if value is a fault and not do anything then? Does addPrimitiveValue already handle this?
 		if ([self isFault]) {
 			return; // we'll pick up the change the next time this fault is fired.
 		}
@@ -531,11 +560,28 @@
 
 - (void) removeValue: (id) value forKey: (NSString*) key
 {
-#warning Record relationship change in persistent context somehow.
-#warning Also update inverse relationship.
-	[self removePrimitiveValue: value forKey: key];
-	//[self updateInverseRelationShipValue: value forKey: key isRemove: YES];
+	OPClassDescription* cd = [[self class] persistentClassDescription];
+	OPAttributeDescription* ad = [cd attributeWithName: key];
+	OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+	// Check, if it is a many-to-many relation:
+	if (r) {
+		// Record relationship change in persistent context:
+		[r removeRelationNamed: key from: self to: value];
+		
 
+		// Also update inverse relationship (if any):
+		NSString* inverseKey = [ad inverseRelationshipKey];
+		if (inverseKey) {
+			[value removePrimitiveValue: self forKey: inverseKey];
+		}
+		
+		// Do we need to check, if value is a fault and not do anything then? Does removePrimitiveValue already handle this?
+		if ([self isFault]) {
+			return; // we'll pick up the change the next time this fault is fired.
+		}
+	}
+	
+	[self removePrimitiveValue: value forKey: key];
 }
 
 - (NSArray*) validationErrors

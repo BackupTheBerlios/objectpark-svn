@@ -144,58 +144,53 @@
     } 
 }
 
-- (IBAction)addFolder:(id)sender
+- (IBAction) addFolder: (id) sender
 {
     int selectedRow = [boxesView selectedRow];
-    [boxesView setAutosaveName:nil];
-    [GIMessageGroup addNewHierarchyNodeAfterEntry:[boxesView itemAtRow:selectedRow]];
+    [boxesView setAutosaveName: nil];
+    [GIMessageGroup addNewHierarchyNodeAfterEntry: [boxesView itemAtRow: selectedRow]];
     [boxesView reloadData];
-    [boxesView setAutosaveName:@"boxesView"];
+    [boxesView setAutosaveName: @"boxesView"];
     
-    [boxesView selectRow:selectedRow + 1 byExtendingSelection:NO];
-    [self rename:self];
+    [boxesView selectRow: selectedRow + 1 byExtendingSelection: NO];
+    [self rename: self];
 }
 
-- (IBAction)addMessageGroup:(id)sender
+- (IBAction) addMessageGroup: (id) sender
 {
     int selectedRow = [boxesView selectedRow];
-    id item = [boxesView itemAtRow:selectedRow];
+    id item = [boxesView itemAtRow: selectedRow];
 	
-    NSMutableArray *node = item;
+    NSMutableArray* node = item;
     int index; // insertion index under node
     
-    if ([boxesView isExpandable:item]) 
-    {
+    if ([boxesView isExpandable: item]) {
 		// Expand any selected folder:
         index = 0;
-        [boxesView expandItem:item];
-    } 
-    else 
-    {
-        node = [GIMessageGroup findHierarchyNodeForEntry:item startingWithHierarchyNode:[GIMessageGroup hierarchyRootNode]];
+        [boxesView expandItem: item];
+    } else {
+        node = [GIMessageGroup findHierarchyNodeForEntry: item 
+							   startingWithHierarchyNode: [GIMessageGroup hierarchyRootNode]];
         
-        if (node) 
-        {
-            index = [node indexOfObject:item]; // +1 correction already in!
-        } 
-        else 
-        {
+        if (node) {
+            index = [node indexOfObject: item]; // +1 correction already in!
+        } else {
             node = [GIMessageGroup hierarchyRootNode];
             index = 0;
         }
     }
     
-    GIMessageGroup *newGroup = [GIMessageGroup newMessageGroupWithName:nil atHierarchyNode:node atIndex:index];
+    GIMessageGroup* newGroup = [GIMessageGroup newMessageGroupWithName: nil atHierarchyNode: node atIndex: index];
     
     [boxesView reloadData];
     
-    [boxesView setAutosaveName:@"boxesView"];
-    [boxesView selectRow:[boxesView rowForItem:newGroup] byExtendingSelection:NO];
-    [self rename:self];
-	[GIApp saveAction:nil]; // commit new database entry
+    [boxesView setAutosaveName: @"boxesView"];
+    [boxesView selectRow: [boxesView rowForItem: newGroup] byExtendingSelection: NO];
+    [self rename: self];
+	[GIApp saveAction: nil]; // commit new database entry
 }
 
-- (IBAction)removeFolderMessageGroup:(id)sender
+- (IBAction) removeFolderMessageGroup: (id) sender
 {
     NSLog(@"-removeFolderMessageGroup: needs to be implemented");
 }
@@ -367,24 +362,22 @@
     if (anOutlineView == boxesView) 
     {
 		// Message Groups
-        NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
+        NSArray* items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
         
         if ([items count] == 1) 
-        {
+{
             if (index != NSOutlineViewDropOnItemIndex) 
             {
 				// accept only when no on item:
-                if ([GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:YES]) 
-                {
+                if ([GIMessageGroup moveEntry: [items lastObject] toHierarchyNode: item atIndex: index testOnly: YES]) {
                     [anOutlineView setDropItem:item dropChildIndex:index]; 
                     return NSDragOperationMove;
                 }
             }
         }
         
-        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
-        if ([threadURLs count]) 
-        {
+        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
+        if ([threadURLs count]) {
             if (index == NSOutlineViewDropOnItemIndex) return NSDragOperationMove;
         }
         
@@ -393,16 +386,14 @@
     return NSDragOperationNone;
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
+- (BOOL) outlineView: (NSOutlineView*) outlineView writeItems: (NSArray*) items toPasteboard: (NSPasteboard*) pboard
 {
-    if (outlineView == boxesView) 
-    {
+    if (outlineView == boxesView) {
         // ##WARNING works only for single selections. Not for multi selection!
         
         [pboard declareTypes:[NSArray arrayWithObject:@"GinkoMessageboxes"] owner:self];    
         [pboard setPropertyList:items forType:@"GinkoMessageboxes"];
     }
-    
     return YES;
 }
 

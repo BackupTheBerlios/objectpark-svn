@@ -90,6 +90,19 @@
 	return result;
 }
 
+- (void) willDelete
+{
+	GIThread* thread = [self valueForKey: @"thread"];
+	if (thread) {
+		//[self setValue: nil forKey: @"thread"];
+
+		if ([thread messageCount]==0) {
+			[[thread context] deleteObject: thread]; 
+		}
+	}
+	[super willDelete];
+}
+
 - (void) flushInternetMessageCache
 	/*" Flushes the cache for the internetMessageCache transient attribute. Used for optimized memory usage. "*/
 {

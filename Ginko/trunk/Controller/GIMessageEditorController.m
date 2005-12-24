@@ -1124,10 +1124,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // status
     if (oldMessage) [message addFlags: [oldMessage flags]];
-    [message addFlags:OPSeenStatus | aType];
+    [message addFlags: OPSeenStatus | aType];
     
     // unmark message as blocked for sending
-    [message removeFlags:OPSendingBlockedStatus];
+    [message removeFlags: OPSendingBlockedStatus];
     
     // Remove old message from database if present:
     if (oldMessage) {
