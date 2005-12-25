@@ -22,6 +22,7 @@
 + (void)removeMessagesWithIds:(NSArray *)someMessageIds;
 
 + (jobject)hitsForQueryString:(NSString *)aQueryString;
++ (int)hitsLength:(jobject)hits;
 
 + (void)optimize;
 

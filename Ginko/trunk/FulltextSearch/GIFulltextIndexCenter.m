@@ -407,7 +407,7 @@ NSString *stringFromJstring(jstring aJstring) {
         {
             NSEnumerator *enumerator = [someMessages objectEnumerator];
             id message;
-            
+            int counter = 1;
             while (message = [enumerator nextObject])
             {;
                 @try
@@ -415,6 +415,8 @@ NSString *stringFromJstring(jstring aJstring) {
                     if ((*env)->PushLocalFrame(env, 500) < 0) {NSLog(@"Out of memory!"); break;}
                     jobject doc = [self luceneDocumentFromMessage:message];
                     NSLog(@"\nmade document = %@\n", [self objectToString:doc]);
+                    NSLog(@"\nmade document no = %d\n", counter++);
+
                     [self indexWriter:indexWriter addDocument:doc];
                 }
                 @catch (NSException *localException)
@@ -617,7 +619,7 @@ NSString *stringFromJstring(jstring aJstring) {
     {;
         @try
         {
-            if ((*env)->PushLocalFrame(env, 2500) < 0) {NSLog(@"Out of memory!"); exit(1);}
+            if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
             jobject indexSearcher = [self indexSearcherNew];
 
             jobject standardAnalyzer = [self standardAnalyzerNew];
@@ -643,6 +645,25 @@ NSString *stringFromJstring(jstring aJstring) {
     }
     
     return hits;
+}
+
++ (int)hitsLength:(jobject)hits
+{
+    if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
+    
+    jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, hits), "length", "()I");
+        NSAssert(mid != NULL, @"length not found");
+    }
+    
+    jint result = (*env)->CallIntMethod(env, hits, mid);
+    
+    (*env)->PopLocalFrame(env, NULL);
+    
+    return (int)result;
 }
 
 @end

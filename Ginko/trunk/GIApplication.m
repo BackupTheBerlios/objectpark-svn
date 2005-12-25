@@ -276,7 +276,8 @@
 #import <JavaVM/jni.h>
 
 - (void)playWithLucene
-{        
+{   
+    /*
     // Delete existing fulltext index:
     [[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
     
@@ -286,25 +287,28 @@
     NSLog(@"group = %@", defaultGroup);
     
     // Get messages:
-    OPFaultingArray *threads = [defaultGroup valueForKey:@"threadsByDate"];
-    NSLog(@"threads = %@", threads);
-    GIThread *aThread = [threads lastObject];
-    NSArray *messages = [aThread messages];
+    NSEnumerator *enumerator = [GIMessage allObjectsEnumerator];
     
-   // messages = [NSArray arrayWithObject:[messages lastObject]];
-    NSLog(@"messages = %@", messages);
-
+    int i = 0;
+    NSMutableArray *messages = [NSMutableArray array];
+    GIMessage *message;
+    
+    while ((message = [enumerator nextObject]) && (i++ < 100))
+    {
+        [messages addObject:message];
+    }
+    
     // Add messages to fulltext index:
     [GIFulltextIndexCenter addMessages:messages];
-    
+    */
     // Search in fulltext index:
     jobject hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
     
-    /*
-    int i, hitsCount = [hits length];
+    int i, hitsCount = [GIFulltextIndexCenter hitsLength:hits];
     
     NSLog(@"hits count = %d", hitsCount);
     
+    /*
     for (i = 0; i < hitsCount; i++)
     {
         LuceneDocument *doc = [hits doc:i];
