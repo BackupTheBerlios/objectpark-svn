@@ -273,6 +273,8 @@
 	[self saveAction: nil];
 }
 
+#import <JavaVM/jni.h>
+
 - (void)playWithLucene
 {        
     // Delete existing fulltext index:
@@ -295,10 +297,10 @@
     // Add messages to fulltext index:
     [GIFulltextIndexCenter addMessages:messages];
     
-    /*
     // Search in fulltext index:
-    LuceneHits *hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
+    jobject hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
     
+    /*
     int i, hitsCount = [hits length];
     
     NSLog(@"hits count = %d", hitsCount);

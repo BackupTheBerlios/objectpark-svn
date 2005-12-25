@@ -9,7 +9,6 @@
 #import "GIFulltextIndexCenter.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIApplication.h"
-#import <JavaVM/JavaVM.h>
 #import <OPDebug/OPLog.h>
 
 @interface GIFulltextIndexCenter (JVMStuff)
@@ -195,10 +194,26 @@ NSString *stringFromJstring(jstring aJstring) {
     {
         mid = (*env)->GetStaticMethodID(env, [self dateFieldClass], "timeToString", "(J)Ljava/lang/String;");
         NSAssert(mid != NULL, @"timeToString static method couldn't be found.");
+        jthrowable exc = (*env)->ExceptionOccurred(env);
+        if (exc) 
+        {
+            /* We don't do much with the exception, except that
+            we print a debug message for it, clear it. */
+            (*env)->ExceptionDescribe(env);
+            (*env)->ExceptionClear(env);
+        }
     }
     
     jlong javaMillis = (jlong)millis;
     jstring result = (*env)->CallStaticObjectMethod(env, [self dateFieldClass], mid, javaMillis);
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
     NSAssert(result != NULL, @"timeToString static method doesn't generate a string object.");
     
     return result;
@@ -253,14 +268,12 @@ NSString *stringFromJstring(jstring aJstring) {
     [self document:document addTextFieldWithName:@"body" text:bodyJavaString];
     //(*env)->DeleteLocalRef(env, bodyJavaString);
     
-    NSLog(@"\nmade document = %@\n", [self objectToString:document]);
-
     return document;
 }
 
 + (jclass)standardAnalyzerClass
 {
-    static jclass analyzerClass = NULL;
+    jclass analyzerClass = NULL;
     
     if (! analyzerClass)
     {
@@ -274,7 +287,7 @@ NSString *stringFromJstring(jstring aJstring) {
 + (jobject)standardAnalyzerNew
 {
     jobject analyzer = NULL;
-    static jmethodID cid = NULL;
+    jmethodID cid = NULL;
     
     if (! cid)
     {
@@ -290,7 +303,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jclass)indexWriterClass
 {
-    static jclass indexWriterClass = NULL;
+    jclass indexWriterClass = NULL;
     
     if (! indexWriterClass)
     {
@@ -308,7 +321,7 @@ NSString *stringFromJstring(jstring aJstring) {
         
     if ([[NSFileManager defaultManager] fileExistsAtPath:[self fulltextIndexPath]]) shouldCreateNewIndex = NO;
     
-    static jmethodID cid = NULL;
+    jmethodID cid = NULL;
     
     if (! cid)
     {
@@ -340,8 +353,6 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)indexWriter:(jobject)writer addDocument:(jobject)document
 {    
-//    if ((*env)->PushLocalFrame(env, 500) < 0) {NSLog(@"out of mem");}
-    
     jclass indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
     NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
     
@@ -358,7 +369,6 @@ NSString *stringFromJstring(jstring aJstring) {
         (*env)->ExceptionDescribe(env);
         (*env)->ExceptionClear(env);
     }
-//    (*env)->PopLocalFrame(env, NULL);
 }
 
 + (void)indexWriterClose:(jobject)writer
@@ -367,7 +377,6 @@ NSString *stringFromJstring(jstring aJstring) {
     NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
     
     jmethodID mid = (*env)->GetMethodID(env, indexWriterClass, "close", "()V");
-    NSLog(@"got close method id %lu", mid);
     NSAssert(mid != NULL, @"close method couldn't be found.");
     
     (*env)->CallVoidMethod(env, writer, mid);
@@ -375,7 +384,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)indexWriterOptimize:(jobject)writer
 {
-    static jmethodID mid = NULL;
+    jmethodID mid = NULL;
     
     if (! mid)
     {
@@ -388,37 +397,45 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)addMessages:(NSArray *)someMessages
 {
-//    @synchronized(self)
+    @synchronized(self)
     {
+        if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
         jobject indexWriter = [self indexWriter];
         NSAssert(indexWriter != NULL, @"IndexWriter could not be created.");
         
-        NSLog(@"IndexWriter = %@", [self objectToString:indexWriter]);
-        //@try
+        @try
         {
             NSEnumerator *enumerator = [someMessages objectEnumerator];
             id message;
             
             while (message = [enumerator nextObject])
-            {
-                jobject doc = [self luceneDocumentFromMessage:message];
-                [self indexWriter:indexWriter addDocument:doc];
-                //(*env)->DeleteLocalRef(env, doc);
+            {;
+                @try
+                {
+                    if ((*env)->PushLocalFrame(env, 500) < 0) {NSLog(@"Out of memory!"); break;}
+                    jobject doc = [self luceneDocumentFromMessage:message];
+                    NSLog(@"\nmade document = %@\n", [self objectToString:doc]);
+                    [self indexWriter:indexWriter addDocument:doc];
+                }
+                @catch (NSException *localException)
+                {
+                    @throw localException;
+                }
+                @finally
+                {
+                    (*env)->PopLocalFrame(env, NULL);
+                }
             }
         }
-        /*@catch (NSException *localException)
+        @catch (NSException *localException)
         {
-            [self indexWriterClose:indexWriter];
-            //(*env)->DeleteLocalRef(env, indexWriter);            
             @throw localException;
         }
-        */
-        NSLog(@"before closing");
-        [self indexWriterOptimize:indexWriter];
-        [self indexWriterClose:indexWriter];
-        NSLog(@"after closing");
-
-        //(*env)->DeleteLocalRef(env, indexWriter);            
+        @finally
+        {
+            [self indexWriterClose:indexWriter];
+            (*env)->PopLocalFrame(env, NULL);
+        }
     }
 }
 
@@ -497,30 +514,132 @@ NSString *stringFromJstring(jstring aJstring) {
 + (void)optimize
 {
     @synchronized(self)
-    {
-        jobject indexWriter = [self indexWriter];
-        [self indexWriterOptimize:indexWriter];
-        [self indexWriterClose:indexWriter];
-        //(*env)->DeleteLocalRef(env, indexWriter);            
+    {;
+        @try
+        {
+            if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
+            jobject indexWriter = [self indexWriter];
+            [self indexWriterOptimize:indexWriter];
+            [self indexWriterClose:indexWriter];
+        }
+        @catch (NSException *localException)
+        {
+            @throw localException;
+        }
+        @finally
+        {
+            (*env)->PopLocalFrame(env, NULL);
+        }
     }
 }
 
-+ (LuceneHits *)hitsForQueryString:(NSString *)aQueryString
++ (jclass)indexSearcherClass
 {
-    LuceneHits *hits = nil;
+    jclass indexSearcherClass = NULL;
+    
+    if (! indexSearcherClass)
+    {
+        indexSearcherClass = (*env)->FindClass(env, "org/apache/lucene/search/IndexSearcher");
+        NSAssert(indexSearcherClass != NULL, @"org.apache.lucene.search.IndexSearcher couldn't be found.");
+    }
+    
+    return indexSearcherClass;
+}
+
++ (jobject)indexSearcherNew
+{
+    jmethodID cid = NULL;
+    
+    if (! cid)
+    {
+        cid = (*env)->GetMethodID(env, [self indexSearcherClass], "<init>", "(Ljava/lang/String;)V");
+        NSAssert(cid != NULL, @"(Ljava/lang/String;) constructor couldn't be found.");
+    }
+    
+    jstring javaIndexPath = NULL;
+    
+    javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
+        
+    jobject indexSearcher = (*env)->NewObject(env, [self indexSearcherClass], cid, javaIndexPath);
+    
+    return indexSearcher;
+}
+
++ (jobject)indexSearcher:(jobject)searcher search:(jobject)aQuery
+{
+    jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetMethodID(env, [self indexSearcherClass], "search", "(Lorg/apache/lucene/search/Query;)Lorg/apache/lucene/search/Hits;");
+        NSAssert(mid != NULL, @"search not found");
+    }
+    
+    jobject result = (*env)->CallObjectMethod(env, searcher, mid, aQuery);
+    
+    return result;
+}
+
++ (jclass)queryParserClass
+{
+    jclass queryParserClass = NULL;
+    
+    if (! queryParserClass)
+    {
+        queryParserClass = (*env)->FindClass(env, "org/apache/lucene/queryParser/QueryParser");
+        NSAssert(queryParserClass != NULL, @"org.apache.lucene.queryParser.QueryParser couldn't be found.");
+    }
+    
+    return queryParserClass;
+}
+
++ (jobject)queryParserClassParseQueryString:(jstring)aQueryString defaultField:(jstring)defaultFieldName analyzer:(jstring)anAnalyzer
+{
+    jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetStaticMethodID(env, [self queryParserClass], "parse", "(Ljava/lang/String;Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;)Lorg/apache/lucene/search/Query;");
+        NSAssert(mid != NULL, @"parse static method couldn't be found.");
+    }
+        
+    jobject result = (*env)->CallStaticObjectMethod(env, [self queryParserClass], mid, aQueryString, defaultFieldName, anAnalyzer);
+    NSAssert(result != NULL, @"parse static method doesn't generate a Query object.");
+        
+    return result;
+}
+
++ (jobject)hitsForQueryString:(NSString *)aQueryString
+{
+    jobject hits = NULL;
     
     @synchronized(self)
-    {
-        LuceneIndexSearcher *indexSearcher = [[LuceneIndexSearcherClass newWithSignature:@"(Ljava/lang/String;)", [GIFulltextIndexCenter fulltextIndexPath]] autorelease];
-        
-        //NSLog(@"indexSearcher = %@", indexSearcher);   
-        
-        id standardAnalyzer = [[[NSClassFromString(@"org.apache.lucene.analysis.standard.StandardAnalyzer") alloc] init] autorelease];
-        
-        id query = [LuceneQueryParserClass parse:aQueryString :@"body" :standardAnalyzer];
-        //NSLog(@"query = %@", query);   
-        
-        hits = [indexSearcher search:query];
+    {;
+        @try
+        {
+            if ((*env)->PushLocalFrame(env, 2500) < 0) {NSLog(@"Out of memory!"); exit(1);}
+            jobject indexSearcher = [self indexSearcherNew];
+
+            jobject standardAnalyzer = [self standardAnalyzerNew];
+            jstring aQueryJavaString = (*env)->NewStringUTF(env, [aQueryString UTF8String]);
+            jstring defaultFieldName = (*env)->NewStringUTF(env, "body");
+            
+            jobject query = [self queryParserClassParseQueryString:aQueryJavaString defaultField:defaultFieldName analyzer:standardAnalyzer];
+            
+            NSLog(@"query = %@", [self objectToString:query]);   
+            
+            hits = [self indexSearcher:indexSearcher search:query];
+            
+            NSLog(@"hits = %@", [self objectToString:hits]);   
+        }
+        @catch (NSException *localException)
+        {
+            @throw localException;
+        }
+        @finally
+        {
+            (*env)->PopLocalFrame(env, NULL);
+        }        
     }
     
     return hits;

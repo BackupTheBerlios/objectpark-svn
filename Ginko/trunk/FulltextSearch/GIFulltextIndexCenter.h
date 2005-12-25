@@ -21,10 +21,8 @@
 + (void)addMessages:(NSArray *)someMessages;
 + (void)removeMessagesWithIds:(NSArray *)someMessageIds;
 
-+ (LuceneHits *)hitsForQueryString:(NSString *)aQueryString;
++ (jobject)hitsForQueryString:(NSString *)aQueryString;
 
 + (void)optimize;
-
-+ (jobject)luceneDocumentFromMessage:(id)aMessage;
 
 @end
