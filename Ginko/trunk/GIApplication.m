@@ -280,11 +280,7 @@
     /*
     // Delete existing fulltext index:
     [[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
-    
-    // Get a group:
-    NSArray *allGroups = [[GIMessageGroup allObjectsEnumerator] allObjects];
-    GIMessageGroup *defaultGroup = [allGroups objectAtIndex:1];
-    NSLog(@"group = %@", defaultGroup);
+    */
     
     // Get messages:
     NSEnumerator *enumerator = [GIMessage allObjectsEnumerator];
@@ -300,24 +296,23 @@
     
     // Add messages to fulltext index:
     [GIFulltextIndexCenter addMessages:messages];
-    */
+    
     // Search in fulltext index:
     jobject hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
     
-    int i, hitsCount = [GIFulltextIndexCenter hitsLength:hits];
+    int hitsCount = [GIFulltextIndexCenter hitsLength:hits];
     
     NSLog(@"hits count = %d", hitsCount);
     
-    /*
     for (i = 0; i < hitsCount; i++)
     {
-        LuceneDocument *doc = [hits doc:i];
-        NSLog(@"hit doc = %@", doc);
+        jobject doc = [GIFulltextIndexCenter hits:hits document:(jint)i];
+
+        NSLog(@"hit doc = %@", [GIFulltextIndexCenter objectToString:doc]);
     }
     
     // Remove messages:
-    NSEnumerator *enumerator = [messages objectEnumerator];
-    GIMessage *message;
+    enumerator = [messages objectEnumerator];
     NSMutableArray *messageIds = [NSMutableArray array];
     
     while (message = [enumerator nextObject])
@@ -329,17 +324,17 @@
     
     // Search in fulltext index:
     hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
-    
-    hitsCount = [hits length];
+        
+    hitsCount = [GIFulltextIndexCenter hitsLength:hits];
     
     NSLog(@"hits count = %d", hitsCount);
     
     for (i = 0; i < hitsCount; i++)
     {
-        LuceneDocument *doc = [hits doc:i];
-        NSLog(@"hit doc = %@", doc);
-    }    
-     */
+        jobject doc = [GIFulltextIndexCenter hits:hits document:(jint)i];
+        
+        NSLog(@"hit doc = %@", [GIFulltextIndexCenter objectToString:doc]);
+    }
 }
 
 - (void)awakeFromNib

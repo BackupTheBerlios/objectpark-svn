@@ -412,7 +412,7 @@ NSString *stringFromJstring(jstring aJstring) {
             {;
                 @try
                 {
-                    if ((*env)->PushLocalFrame(env, 500) < 0) {NSLog(@"Out of memory!"); break;}
+                    if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
                     jobject doc = [self luceneDocumentFromMessage:message];
                     NSLog(@"\nmade document = %@\n", [self objectToString:doc]);
                     NSLog(@"\nmade document no = %d\n", counter++);
@@ -441,63 +441,130 @@ NSString *stringFromJstring(jstring aJstring) {
     }
 }
 
++ (jclass)indexReaderClass
+{
+    jclass indexReaderClass = NULL;
+    
+    if (! indexReaderClass)
+    {
+        indexReaderClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexReader");
+        NSAssert(indexReaderClass != NULL, @"org.apache.lucene.index.IndexReader couldn't be found.");
+    }
+    
+    return indexReaderClass;
+}
+
++ (jobject)indexReaderOpen:(jstring)path
+{
+    jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetStaticMethodID(env, [self indexReaderClass], "open", "(Ljava/lang/String;)Lorg/apache/lucene/index/IndexReader;");
+        NSAssert(mid != NULL, @"open static method couldn't be found.");
+    }
+        
+    jobject result = (*env)->CallStaticObjectMethod(env, [self indexReaderClass], mid, path);
+    NSAssert(result != NULL, @"open static method doesn't generate a IndexReader object.");
+        
+    return result;
+}
+
++ (void)indexReaderClose:(jobject)reader
+{
+    jmethodID mid = (*env)->GetMethodID(env, [self indexReaderClass], "close", "()V");
+    NSAssert(mid != NULL, @"close method couldn't be found.");
+    
+    (*env)->CallVoidMethod(env, reader, mid);
+}
+
++ (jclass)termClass
+{
+    jclass termClass = NULL;
+    
+    if (! termClass)
+    {
+        termClass = (*env)->FindClass(env, "org/apache/lucene/index/Term");
+        NSAssert(termClass != NULL, @"org.apache.lucene.index.Term couldn't be found.");
+    }
+    
+    return termClass;
+}
+
++ (jint)indexReader:(jobject)reader delete:(jobject)term
+{
+    jmethodID mid = (*env)->GetMethodID(env, [self indexReaderClass], "delete", "(Lorg/apache/lucene/index/Term;)I");
+    NSAssert(mid != NULL, @"delete method couldn't be found.");
+    
+    jint result = 0;
+    result = (*env)->CallIntMethod(env, reader, mid, term);
+
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+    return result;
+}
+
++ (jobject)termNewWithFieldname:(jstring)fieldName text:(jstring)text
+{
+    jmethodID cid = NULL;
+    
+    if (! cid)
+    {
+        cid = (*env)->GetMethodID(env, [self termClass], "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
+        NSAssert(cid != NULL, @"Term constructor couldn't be found.");
+    }
+    
+    jobject term = (*env)->NewObject(env, [self termClass], cid, fieldName, text);
+    NSAssert(term != NULL, @"Term couldn't be instantiated.");
+    
+    return term;
+}
+
 + (void)removeMessagesWithIds:(NSArray *)someMessageIds
 {
     if ([someMessageIds count])
     {;
         @synchronized(self)
         {
-            JNIEnv *env = [self getJNIEnvironment];
-            jclass cls;
-            jmethodID mid;
-            jstring jstr;
-            jclass stringClass;
-            jobjectArray args;
+            if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
             
-            cls = (*env)->FindClass(env, "Prog");
-            if (cls == NULL) {
-                exit(4);
-            }
+            jstring javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
+            jobject indexReader = [self indexReaderOpen:javaIndexPath];             
+            NSAssert(indexReader != NULL, @"Could not create Lucene index reader.");
             
-            mid = (*env)->GetStaticMethodID(env, cls, "main",
-                                            "([Ljava/lang/String;)V");
-            if (mid == NULL) {
-                exit(1);
-            }
-            jstr = (*env)->NewStringUTF(env, " from C!");
-            if (jstr == NULL) {
-                exit(2);
-            }
-            stringClass = (*env)->FindClass(env, "java/lang/String");
-            args = (*env)->NewObjectArray(env, 1, stringClass, jstr);
-            if (args == NULL) {
-                exit(3);
-            }
-            (*env)->CallStaticVoidMethod(env, cls, mid, args);
-            
-            /*
-             //LuceneFSDirectory *directory = [LuceneFSDirectoryClass getDirectory:[self fulltextIndexPath] :NO];
-             //id javaString = [[NSClassFromString(@"java.lang.StringBuffer") newWithSignature:@"(Ljava/lang/String;)", [self fulltextIndexPath]] autorelease];
-             //LuceneIndexReader *indexReader = [LuceneIndexReaderClass open:[self fulltextIndexPath]];
-             id javaString = [[NSClassFromString(@"java.lang.StringBuffer") newWithSignature:@"(Ljava/lang/String;)", [self fulltextIndexPath]] autorelease];
-             
-             LuceneIndexReader *indexReader = [LuceneIndexReaderClass open:javaString];
-             NSAssert(indexReader != nil, @"Could not create Lucene index reader.");
-             
              @try
              {
                  NSEnumerator *enumerator = [someMessageIds objectEnumerator];
                  NSString *messageId;
                  
                  while (messageId = [enumerator nextObject])
-                 {
-                     //LuceneTerm *term = [[LuceneTermClass newWithSignature:@"(Ljava/lang/String;Ljava/lang/String;)", @"id", messageId] autorelease];
-                     
-                     id fld = [[NSClassFromString(@"java.lang.StringBuffer") newWithSignature:@"(Ljava/lang/String;)", @"id"] autorelease];
-                     id txt = [[NSClassFromString(@"java.lang.StringBuffer") newWithSignature:@"(Ljava/lang/String;)", messageId] autorelease];
-                     
-                     int count = [indexReader delete:fld :txt];
-                     NSAssert(count <= 1, @"Fatal error: Deleted more than one message for a single message id from fulltext index.");
+                 {;
+                     @try
+                     {
+                         if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
+
+                         jstring fieldName = (*env)->NewStringUTF(env, "id");
+                         jstring text = (*env)->NewStringUTF(env, [messageId UTF8String]);
+
+                         jobject term = [self termNewWithFieldname:fieldName text:text];
+                         
+                         jint count = [self indexReader:indexReader delete:term];
+                         NSAssert(count <= 1, @"Fatal error: Deleted more than one message for a single message id from fulltext index.");
+                     }
+                     @catch (NSException *localException)
+                     {
+                         @throw localException;
+                     }
+                     @finally
+                     {
+                         (*env)->PopLocalFrame(env, NULL);
+                     }
                  }
              }
              @catch (NSException *localException)
@@ -506,9 +573,9 @@ NSString *stringFromJstring(jstring aJstring) {
              }
              @finally
              {
-                 [indexReader close];
+                 [self indexReaderClose:indexReader];
+                 (*env)->PopLocalFrame(env, NULL);
              }
-             */
         }
     }
 }
@@ -666,6 +733,25 @@ NSString *stringFromJstring(jstring aJstring) {
     return (int)result;
 }
 
++ (jobject)hits:(jobject)hits document:(jint)n
+{
+    if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
+    
+    jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, hits), "doc", "(I)Lorg/apache/lucene/document/Document;");
+        NSAssert(mid != NULL, @"doc not found");
+    }
+    
+    jobject result = (*env)->CallObjectMethod(env, hits, mid, n);
+    
+    (*env)->PopLocalFrame(env, NULL);
+    
+    return result;
+}
+
 @end
 
 #include <sys/stat.h>
@@ -697,7 +783,7 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
      If the environment variable JAVA_JVM_VERSION is not set, and JNI_VERSION_1_4 is passed into JNI_CreateJavaVM as the vm_args.version, JNI_CreateJavaVM will return the current preferred JDK. Java 1.4.2 is the preferred JDK as of the release of this sample and the release of Mac OS X 10.4.
      */
 	{
-		CFStringRef targetJVM = CFSTR("1.5");
+		CFStringRef targetJVM = CFSTR("1.4");
 		CFBundleRef JavaVMBundle;
 		CFURLRef    JavaVMBundleURL;
 		CFURLRef    JavaVMBundlerVersionsDirURL;
