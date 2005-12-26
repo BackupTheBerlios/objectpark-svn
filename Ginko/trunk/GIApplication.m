@@ -28,6 +28,7 @@
 #import "GIGroupListController.h"
 #import "GIPhraseBrowserController.h"
 #import <OPPreferences/OPPreferences.h>
+#import "OPObjectPair.h"
 
 #import <OPDebug/OPLog.h>
 #import <JavaVM/JavaVM.h>
@@ -273,14 +274,10 @@
 	[self saveAction: nil];
 }
 
-#import <JavaVM/jni.h>
-
 - (void)playWithLucene
 {   
-    /*
     // Delete existing fulltext index:
     [[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
-    */
     
     // Get messages:
     NSEnumerator *enumerator = [GIMessage allObjectsEnumerator];
@@ -289,7 +286,7 @@
     NSMutableArray *messages = [NSMutableArray array];
     GIMessage *message;
     
-    while ((message = [enumerator nextObject]) && (i++ < 100))
+    while ((message = [enumerator nextObject]) && (i++ < 10000))
     {
         [messages addObject:message];
     }
@@ -298,17 +295,19 @@
     [GIFulltextIndexCenter addMessages:messages];
     
     // Search in fulltext index:
-    jobject hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
+    NSArray *hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
     
-    int hitsCount = [GIFulltextIndexCenter hitsLength:hits];
+    int hitsCount = [hits count];
     
     NSLog(@"hits count = %d", hitsCount);
     
     for (i = 0; i < hitsCount; i++)
     {
-        jobject doc = [GIFulltextIndexCenter hits:hits document:(jint)i];
-
-        NSLog(@"hit doc = %@", [GIFulltextIndexCenter objectToString:doc]);
+        OPObjectPair *hit = [hits objectAtIndex:i];
+        NSString *oid = [hit firstObject];
+        NSNumber *score = [hit secondObject];
+        
+        NSLog(@"hit oid = %@, score = %@", oid, score);
     }
     
     // Remove messages:
@@ -317,23 +316,25 @@
     
     while (message = [enumerator nextObject])
     {
-        [messageIds addObject:[message messageId]];
+        [messageIds addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
     }
     
-    [GIFulltextIndexCenter removeMessagesWithIds:messageIds];
+    [GIFulltextIndexCenter removeMessagesWithOids:messageIds];
     
     // Search in fulltext index:
     hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
-        
-    hitsCount = [GIFulltextIndexCenter hitsLength:hits];
+    
+    hitsCount = [hits count];
     
     NSLog(@"hits count = %d", hitsCount);
     
     for (i = 0; i < hitsCount; i++)
     {
-        jobject doc = [GIFulltextIndexCenter hits:hits document:(jint)i];
+        OPObjectPair *hit = [hits objectAtIndex:i];
+        NSString *oid = [hit firstObject];
+        NSNumber *score = [hit secondObject];
         
-        NSLog(@"hit doc = %@", [GIFulltextIndexCenter objectToString:doc]);
+        NSLog(@"hit oid = %@, score = %@", oid, score);
     }
 }
 

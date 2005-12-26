@@ -9,6 +9,7 @@
 #import "GIFulltextIndexCenter.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIApplication.h"
+#import "OPObjectPair.h"
 #import <OPDebug/OPLog.h>
 
 @interface GIFulltextIndexCenter (JVMStuff)
@@ -72,7 +73,15 @@ static JNIEnv *env = nil;
     }
     
     document = (*env)->NewObject(env, [self documentClass], cid);
-        
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+    
     return document;
 }
 
@@ -111,7 +120,22 @@ static JNIEnv *env = nil;
         mid = (*env)->GetMethodID(env, [self documentClass], "add", "(Lorg/apache/lucene/document/Field;)V");
     }
     
-    (*env)->CallObjectMethod(env, aDocument, mid, aField);
+    (*env)->CallVoidMethod(env, aDocument, mid, aField);
+}
+
++ (jstring)document:(jobject)aDocument get:(jstring)aFieldName
+{
+    jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetMethodID(env, [self documentClass], "get", "(Ljava/lang/String;)Ljava/lang/String;");
+    }
+    
+    jstring result = (*env)->CallObjectMethod(env, aDocument, mid, aFieldName);
+    NSAssert(result != NULL, @"get with no result.");
+    
+    return result;
 }
 
 + (void)document:(jobject)document addTextFieldWithName:(NSString *)name text:(jstring)textString
@@ -130,7 +154,14 @@ static JNIEnv *env = nil;
     jobject result = (*env)->CallStaticObjectMethod(env, [self fieldClass], mid, nameString, textString);
     NSAssert(result != NULL, @"Text static method doesn't generate a Field object.");
     
-    //(*env)->DeleteLocalRef(env, nameString);
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
     
     [self document:document addField:result];
 }
@@ -150,9 +181,15 @@ static JNIEnv *env = nil;
 
     jobject result = (*env)->CallStaticObjectMethod(env, [self fieldClass], mid, nameString, textString);
     NSAssert(result != NULL, @"Keyword static method doesn't generate a Field object.");
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
     
-    //(*env)->DeleteLocalRef(env, nameString);
-
     [self document:document addField:result];
 }
 
@@ -225,24 +262,36 @@ NSString *stringFromJstring(jstring aJstring) {
     
     jobject document = [self documentNew];
     
-    // message id
-    NSString *messageId = [aMessage valueForKey:@"messageId"];
-    NSAssert([messageId length] > 0, @"fatal error: message id not present.");
-    jstring messageIdJavaString = (*env)->NewStringUTF(env, [messageId UTF8String]);
-    NSAssert(messageIdJavaString != NULL, @"textString not converted.");
+    // id
+    NSString *oidString = [[NSNumber numberWithUnsignedLongLong:[aMessage oid]] description];
+    jstring oidJavaString = (*env)->NewStringUTF(env, [oidString UTF8String]);
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+    NSAssert(oidJavaString != NULL, @"textString not converted.");
 
-    [self document:document addKeywordFieldWithName:@"id" text:messageIdJavaString];
-    
-    //(*env)->DeleteLocalRef(env, messageIdJavaString);
-    
+    [self document:document addKeywordFieldWithName:@"id" text:oidJavaString];
+        
     // date
     NSCalendarDate *date = [aMessage valueForKey:@"date"];
     double millis = (double)([date timeIntervalSince1970] * 1000.0);
     @try
     {
         jstring dateJavaString = [self dateFieldTimeToString:(unsigned long long)millis];
+        jthrowable exc = (*env)->ExceptionOccurred(env);
+        if (exc) 
+        {
+            /* We don't do much with the exception, except that
+            we print a debug message for it, clear it. */
+            (*env)->ExceptionDescribe(env);
+            (*env)->ExceptionClear(env);
+        }
         [self document:document addKeywordFieldWithName:@"date" text:dateJavaString];
-        //(*env)->DeleteLocalRef(env, dateJavaString);
     }
     @catch(NSException *localException)
     {
@@ -251,22 +300,55 @@ NSString *stringFromJstring(jstring aJstring) {
     
     // subject
     NSString *subject = [aMessage valueForKey:@"subject"];
-    if (![subject length]) subject = @"";
-    jstring subjectJavaString = (*env)->NewStringUTF(env, [subject UTF8String]);
-    [self document:document addKeywordFieldWithName:@"subject" text:subjectJavaString];
-    //(*env)->DeleteLocalRef(env, subjectJavaString);
+    if (subject) 
+    {
+        jstring subjectJavaString = (*env)->NewStringUTF(env, [subject UTF8String]);
+        exc = (*env)->ExceptionOccurred(env);
+        if (exc) 
+        {
+            /* We don't do much with the exception, except that
+            we print a debug message for it, clear it. */
+            (*env)->ExceptionDescribe(env);
+            (*env)->ExceptionClear(env);
+        }
+        
+        [self document:document addKeywordFieldWithName:@"subject" text:subjectJavaString];
+    }
     
     // author
     NSString *author = [aMessage valueForKey:@"senderName"];
-    jstring authorJavaString = (*env)->NewStringUTF(env, [author UTF8String]);
-    [self document:document addKeywordFieldWithName:@"author" text:authorJavaString];
-    //(*env)->DeleteLocalRef(env, authorJavaString);
+    if (author)
+    {
+        jstring authorJavaString = (*env)->NewStringUTF(env, [author UTF8String]);
+        exc = (*env)->ExceptionOccurred(env);
+        if (exc) 
+        {
+            /* We don't do much with the exception, except that
+            we print a debug message for it, clear it. */
+            (*env)->ExceptionDescribe(env);
+            (*env)->ExceptionClear(env);
+        }
+        
+        [self document:document addKeywordFieldWithName:@"author" text:authorJavaString];
+    }
     
     // body
     NSString *body = [aMessage valueForKey:@"messageBodyAsPlainString"];
-    jstring bodyJavaString = (*env)->NewStringUTF(env, [body UTF8String]);
-    [self document:document addTextFieldWithName:@"body" text:bodyJavaString];
-    //(*env)->DeleteLocalRef(env, bodyJavaString);
+    if (body)
+    {
+        jstring bodyJavaString = (*env)->NewStringUTF(env, [body UTF8String]);
+        exc = (*env)->ExceptionOccurred(env);
+        if (exc) 
+        {
+            /* We don't do much with the exception, except that
+            we print a debug message for it, clear it. */
+            (*env)->ExceptionDescribe(env);
+            (*env)->ExceptionClear(env);
+        }
+        
+        
+        [self document:document addTextFieldWithName:@"body" text:bodyJavaString];
+    }    
     
     return document;
 }
@@ -342,11 +424,17 @@ NSString *stringFromJstring(jstring aJstring) {
     }
     
     jobject analyzer = [self standardAnalyzerNew];
-    
-    //NSLog(@"ANALYZER CLASS = %s", (*env)->GetObjectClass(env, analyzer));
-    
+        
     jobject indexWriter = (*env)->NewObject(env, [self indexWriterClass], cid, javaIndexPath, analyzer, shouldCreateNewIndex);
-    //(*env)->DeleteLocalRef(env, javaIndexPath);
+    
+    exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
     
     return indexWriter;
 }
@@ -399,6 +487,7 @@ NSString *stringFromJstring(jstring aJstring) {
 {
     @synchronized(self)
     {
+        NSAutoreleasePool *pool = nil;
         if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
         jobject indexWriter = [self indexWriter];
         NSAssert(indexWriter != NULL, @"IndexWriter could not be created.");
@@ -406,18 +495,24 @@ NSString *stringFromJstring(jstring aJstring) {
         @try
         {
             NSEnumerator *enumerator = [someMessages objectEnumerator];
+            pool = [[NSAutoreleasePool alloc] init];
             id message;
             int counter = 1;
             while (message = [enumerator nextObject])
-            {;
+            {
                 @try
                 {
                     if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
+                    
                     jobject doc = [self luceneDocumentFromMessage:message];
-                    NSLog(@"\nmade document = %@\n", [self objectToString:doc]);
+                    //NSLog(@"\nmade document = %@\n", [self objectToString:doc]);
                     NSLog(@"\nmade document no = %d\n", counter++);
-
                     [self indexWriter:indexWriter addDocument:doc];
+                    if ((counter % 1000) == 0) 
+                    {
+                        NSLog(@"optimizing index\n");
+                        [self indexWriterOptimize:indexWriter];
+                    }
                 }
                 @catch (NSException *localException)
                 {
@@ -426,6 +521,8 @@ NSString *stringFromJstring(jstring aJstring) {
                 @finally
                 {
                     (*env)->PopLocalFrame(env, NULL);
+                    [pool release];
+                    pool = [[NSAutoreleasePool alloc] init];
                 }
             }
         }
@@ -435,7 +532,9 @@ NSString *stringFromJstring(jstring aJstring) {
         }
         @finally
         {
+            [self indexWriterOptimize:indexWriter];
             [self indexWriterClose:indexWriter];
+            [pool release];
             (*env)->PopLocalFrame(env, NULL);
         }
     }
@@ -526,9 +625,9 @@ NSString *stringFromJstring(jstring aJstring) {
     return term;
 }
 
-+ (void)removeMessagesWithIds:(NSArray *)someMessageIds
++ (void)removeMessagesWithOids:(NSArray *)someOids
 {
-    if ([someMessageIds count])
+    if ([someOids count])
     {;
         @synchronized(self)
         {
@@ -540,17 +639,17 @@ NSString *stringFromJstring(jstring aJstring) {
             
              @try
              {
-                 NSEnumerator *enumerator = [someMessageIds objectEnumerator];
-                 NSString *messageId;
+                 NSEnumerator *enumerator = [someOids objectEnumerator];
+                 NSString *Oid;
                  
-                 while (messageId = [enumerator nextObject])
+                 while (Oid = [enumerator nextObject])
                  {;
                      @try
                      {
                          if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
 
                          jstring fieldName = (*env)->NewStringUTF(env, "id");
-                         jstring text = (*env)->NewStringUTF(env, [messageId UTF8String]);
+                         jstring text = (*env)->NewStringUTF(env, [[Oid description] UTF8String]);
 
                          jobject term = [self termNewWithFieldname:fieldName text:text];
                          
@@ -678,43 +777,29 @@ NSString *stringFromJstring(jstring aJstring) {
     return result;
 }
 
-+ (jobject)hitsForQueryString:(NSString *)aQueryString
++ (jobject)luceneHitsForQueryString:(NSString *)aQueryString
+/*" Caution: Use only internally in a 'garbage collected' context. "*/
 {
     jobject hits = NULL;
     
-    @synchronized(self)
-    {;
-        @try
-        {
-            if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
-            jobject indexSearcher = [self indexSearcherNew];
-
-            jobject standardAnalyzer = [self standardAnalyzerNew];
-            jstring aQueryJavaString = (*env)->NewStringUTF(env, [aQueryString UTF8String]);
-            jstring defaultFieldName = (*env)->NewStringUTF(env, "body");
-            
-            jobject query = [self queryParserClassParseQueryString:aQueryJavaString defaultField:defaultFieldName analyzer:standardAnalyzer];
-            
-            NSLog(@"query = %@", [self objectToString:query]);   
-            
-            hits = [self indexSearcher:indexSearcher search:query];
-            
-            NSLog(@"hits = %@", [self objectToString:hits]);   
-        }
-        @catch (NSException *localException)
-        {
-            @throw localException;
-        }
-        @finally
-        {
-            (*env)->PopLocalFrame(env, NULL);
-        }        
-    }
+    jobject indexSearcher = [self indexSearcherNew];
+    
+    jobject standardAnalyzer = [self standardAnalyzerNew];
+    jstring aQueryJavaString = (*env)->NewStringUTF(env, [aQueryString UTF8String]);
+    jstring defaultFieldName = (*env)->NewStringUTF(env, "body");
+    
+    jobject query = [self queryParserClassParseQueryString:aQueryJavaString defaultField:defaultFieldName analyzer:standardAnalyzer];
+    
+    //NSLog(@"query = %@", [self objectToString:query]);   
+    
+    hits = [self indexSearcher:indexSearcher search:query];
+    
+    //NSLog(@"hits = %@", [self objectToString:hits]);   
     
     return hits;
 }
 
-+ (int)hitsLength:(jobject)hits
++ (jint)hitsLength:(jobject)hits
 {
     if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
     
@@ -730,13 +815,26 @@ NSString *stringFromJstring(jstring aJstring) {
     
     (*env)->PopLocalFrame(env, NULL);
     
-    return (int)result;
+    return result;
+}
+
++ (jfloat)hits:(jobject)hits score:(jint)n
+{    
+    jmethodID mid = NULL;
+    
+    if (! mid)
+    {
+        mid = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, hits), "score", "(I)F");
+        NSAssert(mid != NULL, @"doc not found");
+    }
+    
+    jfloat result = (*env)->CallFloatMethod(env, hits, mid, n);
+    
+    return result;
 }
 
 + (jobject)hits:(jobject)hits document:(jint)n
 {
-    if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
-    
     jmethodID mid = NULL;
     
     if (! mid)
@@ -746,9 +844,52 @@ NSString *stringFromJstring(jstring aJstring) {
     }
     
     jobject result = (*env)->CallObjectMethod(env, hits, mid, n);
+        
+    return result;
+}
+
++ (NSArray *)hitsForQueryString:(NSString *)aQuery
+{
+    NSMutableArray *result = nil;
     
-    (*env)->PopLocalFrame(env, NULL);
-    
+    @synchronized(self)
+    {
+        if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
+
+        jobject hits = [self luceneHitsForQueryString:aQuery];
+        NSAssert(hits != NULL, @"Error. No hits object was created!");
+        
+        jint i, hitsCount = [GIFulltextIndexCenter hitsLength:hits];
+        
+        result = [NSMutableArray arrayWithCapacity:(int)hitsCount];
+        
+        for (i = 0; i < hitsCount; i++)
+        {
+            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+            if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
+            
+            jobject doc = [self hits:hits document:i];
+            //NSLog(@"hit doc = %@", [self objectToString:doc]);
+            
+            // oid
+            jstring fieldName = (*env)->NewStringUTF(env, "id");
+            jstring javaOid = [self document:doc get:fieldName];
+            NSString *oidString = stringFromJstring(javaOid);
+            
+            // score
+            jfloat javaScore = [self hits:hits score:i];
+            NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
+            
+            OPObjectPair *hit = [OPObjectPair pairWithObjects:oidString :score];
+            [result addObject:hit];
+            
+            (*env)->PopLocalFrame(env, NULL);
+            [pool release];
+        }
+        
+        (*env)->PopLocalFrame(env, NULL);
+    }
+
     return result;
 }
 

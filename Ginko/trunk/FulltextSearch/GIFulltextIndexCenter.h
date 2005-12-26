@@ -19,10 +19,9 @@
 + (NSString *)fulltextIndexPath;
 
 + (void)addMessages:(NSArray *)someMessages;
-+ (void)removeMessagesWithIds:(NSArray *)someMessageIds;
++ (void)removeMessagesWithOids:(NSArray *)someOids;
 
-+ (jobject)hitsForQueryString:(NSString *)aQueryString;
-+ (int)hitsLength:(jobject)hits;
++ (NSArray *)hitsForQueryString:(NSString *)aQuery;
 
 + (void)optimize;
 
