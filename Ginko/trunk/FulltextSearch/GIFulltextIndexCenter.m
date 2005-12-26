@@ -10,6 +10,7 @@
 #import "NSApplication+OPExtensions.h"
 #import "GIApplication.h"
 #import "OPObjectPair.h"
+#import "NSString+Extensions.h"
 #import <OPDebug/OPLog.h>
 
 @interface GIFulltextIndexCenter (JVMStuff)
@@ -312,7 +313,7 @@ NSString *stringFromJstring(jstring aJstring) {
             (*env)->ExceptionClear(env);
         }
         
-        [self document:document addKeywordFieldWithName:@"subject" text:subjectJavaString];
+        [self document:document addTextFieldWithName:@"subject" text:subjectJavaString];
     }
     
     // author
@@ -329,7 +330,7 @@ NSString *stringFromJstring(jstring aJstring) {
             (*env)->ExceptionClear(env);
         }
         
-        [self document:document addKeywordFieldWithName:@"author" text:authorJavaString];
+        [self document:document addTextFieldWithName:@"author" text:authorJavaString];
     }
     
     // body
@@ -676,6 +677,8 @@ NSString *stringFromJstring(jstring aJstring) {
                  (*env)->PopLocalFrame(env, NULL);
              }
         }
+        
+        [self optimize];
     }
 }
 
@@ -771,7 +774,19 @@ NSString *stringFromJstring(jstring aJstring) {
         NSAssert(mid != NULL, @"parse static method couldn't be found.");
     }
         
-    jobject result = (*env)->CallStaticObjectMethod(env, [self queryParserClass], mid, aQueryString, defaultFieldName, anAnalyzer);
+    jobject result = NULL;
+        
+    result = (*env)->CallStaticObjectMethod(env, [self queryParserClass], mid, aQueryString, defaultFieldName, anAnalyzer);
+    
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }    
+    
     NSAssert(result != NULL, @"parse static method doesn't generate a Query object.");
         
     return result;
@@ -790,6 +805,7 @@ NSString *stringFromJstring(jstring aJstring) {
     
     jobject query = [self queryParserClassParseQueryString:aQueryJavaString defaultField:defaultFieldName analyzer:standardAnalyzer];
     
+    if (query == NULL) return NULL;
     //NSLog(@"query = %@", [self objectToString:query]);   
     
     hits = [self indexSearcher:indexSearcher search:query];
@@ -857,7 +873,8 @@ NSString *stringFromJstring(jstring aJstring) {
         if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
 
         jobject hits = [self luceneHitsForQueryString:aQuery];
-        NSAssert(hits != NULL, @"Error. No hits object was created!");
+        
+        if (hits == NULL) return nil;
         
         jint i, hitsCount = [GIFulltextIndexCenter hitsLength:hits];
         
@@ -875,12 +892,14 @@ NSString *stringFromJstring(jstring aJstring) {
             jstring fieldName = (*env)->NewStringUTF(env, "id");
             jstring javaOid = [self document:doc get:fieldName];
             NSString *oidString = stringFromJstring(javaOid);
+#warning HACK: Do better with converting to unsigned long long (not correct here)
+            NSNumber *oid = [NSNumber numberWithUnsignedLongLong:[oidString longLongValue]];
             
             // score
             jfloat javaScore = [self hits:hits score:i];
             NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
             
-            OPObjectPair *hit = [OPObjectPair pairWithObjects:oidString :score];
+            OPObjectPair *hit = [OPObjectPair pairWithObjects:oid :score];
             [result addObject:hit];
             
             (*env)->PopLocalFrame(env, NULL);

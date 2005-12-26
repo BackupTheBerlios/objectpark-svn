@@ -27,6 +27,7 @@
     IBOutlet OPCollapsingSplitView* treeBodySplitter;
     IBOutlet NSPopUpButton* threadFilterPopUp;
     IBOutlet NSProgressIndicator* progressIndicator;
+    IBOutlet NSTableView *searchHitsTableView;
 
     GIMessageGroup* group;
     GIThread* displayedThread; // displayed as comment tree
@@ -42,7 +43,8 @@
     NSArray* toolbarItems;
     NSArray* defaultIdentifiers;
     
-    // -- Comment Tree --
+    // -- Searching --
+    NSArray *hits;
 }
 
 - (id) initWithGroup: (GIMessageGroup*) aGroup;

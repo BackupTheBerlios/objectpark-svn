@@ -310,6 +310,7 @@
         NSLog(@"hit oid = %@, score = %@", oid, score);
     }
     
+    /*
     // Remove messages:
     enumerator = [messages objectEnumerator];
     NSMutableArray *messageIds = [NSMutableArray array];
@@ -336,6 +337,7 @@
         
         NSLog(@"hit oid = %@, score = %@", oid, score);
     }
+     */
 }
 
 - (void)awakeFromNib

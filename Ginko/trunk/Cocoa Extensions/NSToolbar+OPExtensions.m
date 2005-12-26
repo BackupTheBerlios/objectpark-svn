@@ -82,6 +82,19 @@
                 fRect.size.height = maxH;
                 
                 [item setMaxSize:fRect.size];
+                
+                if ([view isKindOfClass:[NSControl class]])
+                {
+                    NSControl *control = (NSControl *)view;
+                    
+                    [control setAction:NSSelectorFromString([itemDefs objectForKey: @"action"])];
+                    [control setTarget:target];
+                    
+                    if ([control isKindOfClass:[NSSearchField class]])
+                    {
+                        [[control cell] setSendsSearchStringImmediately:YES];
+                    }
+                }
             }
             else
             {

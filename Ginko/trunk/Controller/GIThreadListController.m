@@ -27,6 +27,7 @@
 #import "GIMessageBase.h"
 #import "NSString+Extensions.h"
 #import "GIMessageFilter.h"
+#import "OPPersistence.h"
 
 static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
@@ -120,6 +121,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadCache release];
     [nonExpandableItemsCache release];
     [itemRetainer release];
+    [hits release];
     
     [super dealloc];
 }
@@ -499,11 +501,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return YES;
 }
 
-- (IBAction) closeSelection: (id) sender
+- (IBAction)closeSelection:(id)sender
 {
-    if (sender == messageTextView) {
+    if (sender == messageTextView) 
+    {
         [tabView selectFirstTabViewItem:sender];
-    } else {
+    } 
+    else 
+    {
         if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"]) {
 			
             if ([window firstResponder] == messageTextView) {
@@ -720,6 +725,41 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self setValue: [NSNumber numberWithInt: [[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
 
     [self modelChanged: nil];
+}
+
+- (NSArray *)hits
+{
+    return hits;
+}
+
+- (void)setHits:(NSArray *)someHits
+{
+    if (hits != someHits)
+    {
+        [hits release];
+        hits = [someHits retain];
+    }
+}
+
+- (IBAction)search:(id)sender
+{
+    NSString *query = [sender stringValue];
+    
+    if ([query length])
+    {
+        [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+        
+        [self setHits:[GIFulltextIndexCenter hitsForQueryString:query]];
+        
+        NSLog(@"hits count = %d", [hits count]);
+        
+        [searchHitsTableView reloadData];
+    }
+    else
+    {
+        [self setHits:nil];
+        [tabView selectTabViewItemWithIdentifier:@"threads"];
+    }
 }
 
 /*
@@ -1553,6 +1593,68 @@ static NSAttributedString* spacer2()
         }
     }
     return nil;
+}
+
+@end
+
+@implementation GIThreadListController (TableViewDataSource)
+
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+    return [hits count];
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+    OPObjectPair *hit = [hits objectAtIndex:rowIndex];
+    OID oid = [(NSNumber *)[hit firstObject] unsignedLongLongValue];
+    GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:oid ofClass:[GIMessage class]];
+    BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
+
+    if ([[aTableColumn identifier] isEqualToString:@"date"])
+    {
+        BOOL isRead = [message hasFlags:OPSeenStatus];
+        NSCalendarDate *date = [message valueForKey:@"date"];
+                
+        NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+        
+        return [[[NSAttributedString alloc] initWithString:dateString attributes:isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
+    }
+    else if ([[aTableColumn identifier] isEqualToString:@"subjectauthor"])
+    {
+        NSString *from;
+        NSAttributedString *aFrom;
+        NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
+        
+        BOOL isRead  = [message hasFlags:OPSeenStatus];
+        NSString *subject = [message valueForKey: @"subject"];
+        
+        if (!subject) subject = @"";
+        
+        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? (isAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+        
+        [result appendAttributedString:aSubject];
+        
+        from = [message senderName];
+        from = from ? from : @"- sender missing -";
+        
+        from = [NSString stringWithFormat: @" (%@)", from];
+        
+        aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (isAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
+        
+        [result appendAttributedString:aFrom];
+        
+        [aSubject release];
+        [aFrom release];
+        
+        return result;
+    }
+    else if ([[aTableColumn identifier] isEqualToString:@"relevance"])
+    {
+        return [(OPObjectPair *)hit secondObject]; // the score
+    }
+    
+    return @"";
 }
 
 @end

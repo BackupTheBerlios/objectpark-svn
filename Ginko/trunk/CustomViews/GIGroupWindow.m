@@ -8,6 +8,7 @@
 
 #import "GIGroupWindow.h"
 #import <Foundation/NSDebug.h>
+#import "GITextView.h"
 
 /*" Informal protocol for ESCListerners "*/
 @protocol ESCListener
@@ -93,12 +94,14 @@
                     if ([theEvent modifierFlags] & NSCommandKeyMask)
                     {
                         [self sendActionSelector:@selector(moveSelectionToTrash:)];
+                        return;
                     }
-                    else
+                    else if ((![[self firstResponder] isKindOfClass:[NSTextView class]])
+                             || [[self firstResponder] isKindOfClass:[GITextView class]])
                     {
                         [self sendActionSelector:@selector(closeSelection:)];
+                        return;
                     }
-                    return;
                 }
                     break;
                 case 2: // d
