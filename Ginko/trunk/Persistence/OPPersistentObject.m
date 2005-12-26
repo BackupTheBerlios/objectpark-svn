@@ -262,6 +262,7 @@
 		OPAttributeDescription* ad  = [ads objectAtIndex: adIndex];
 		NSString* irk = [ad inverseRelationshipKey];
 		if (irk) {
+			NSLog(@"Removing '%@'-relation from %@.", [ad name], self);
 			// There is an inverse relationship that needs to have self removed:
 			if ([ad isToManyRelationship]) {
 				[self removeAllValuesForKey: ad->name];
@@ -276,24 +277,36 @@
 
 - (void) willAccessValueForKey: (NSString*) key
 {
-
     [self resolveFault];
 	if (key && ![attributes objectForKey: key]) {
 		// Try to fetch and cache a relationship:
 		id result = [[self context] containerForObject: self
 									   relationShipKey: key];
-			if (result) {
-				// Cache result container in attributes dictionary:
-				[attributes setObject: result forKey: key]; 
-			}
+		if (result) {
+			// Cache result container in attributes dictionary:
+			[attributes setObject: result forKey: key]; 
+		}
 	}
 }
 
 
 - (void) willChangeValueForKey: (NSString*) key
 {
-    [self willAccessValueForKey: key];
+    [self willAccessValueForKey: key]; // not necessary for relationships!
     [[self context] willChangeObject: self];
+	[super willChangeValueForKey: key]; // notify observers
+}
+
+- (void) willChangeToManyRelationshipForKey: (NSString*) key 
+{
+	// We do not need to fire a fault - changes are recorded in the OPObjectRelationship object
+	[super willChangeValueForKey: key]; // notify observers
+}
+
+- (void) didChangeToManyRelationshipForKey: (NSString*) key 
+{
+	// We do not need to fire a fault - changes are recorded in the OPObjectRelationship object
+	[super didChangeValueForKey: key]; // notify observers
 }
 
 - (void) didAccessValueForKey: (NSString*) key
@@ -572,7 +585,9 @@
 		// Also update inverse relationship (if any):
 		NSString* inverseKey = [ad inverseRelationshipKey];
 		if (inverseKey) {
+			[value willChangeValueForKey: inverseKey];
 			[value removePrimitiveValue: self forKey: inverseKey];
+			[value didChangeValueForKey: inverseKey];
 		}
 		
 		// Do we need to check, if value is a fault and not do anything then? Does removePrimitiveValue already handle this?
@@ -581,7 +596,10 @@
 		}
 	}
 	
+	[value willChangeValueForKey: key];
 	[self removePrimitiveValue: value forKey: key];
+	[value didChangeValueForKey: key];
+	
 }
 
 - (NSArray*) validationErrors

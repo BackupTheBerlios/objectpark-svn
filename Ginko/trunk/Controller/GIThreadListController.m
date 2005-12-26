@@ -42,10 +42,12 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @implementation GIThreadListController
 
+
 - (id) init
 {
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: @"GroupContentChangedNotification" object: self];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: OPJobDidFinishNotification object: MboxImportJobName];
+	
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: OPJobDidFinishNotification object: MboxImportJobName];
     
     itemRetainer = [[NSMutableSet alloc] init];
     
@@ -319,20 +321,19 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	 */
 }
 
-- (void) observeValueForKeyPath: (NSString*) keyPath ofObject:(id)object change: (NSDictionary*) change context:(void *)context
+- (void) observeValueForKeyPath: (NSString*) keyPath 
+					   ofObject: (id) object 
+						 change: (NSDictionary*) change 
+						context: (void*) context
 {
-    if ([object isEqual: [self group]]) 
-    {
-        NSNotification *notification;
+    if ([object isEqual: [self group]]) {
+        NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" 
+																	object: self];
         
         NSLog(@"observeValueForKeyPath %@", keyPath);
-//        [self modelChanged: nil];
-        notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object:self];
-        
-        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes: nil];
+
+        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle: NSPostWhenIdle coalesceMask: NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes: nil];
     }
-    // the same change
-    //    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (NSTimeInterval) nowForThreadFiltering
@@ -949,24 +950,24 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }    
 }
 
-- (void) modelChanged: (NSNotification*) aNotification
+- (void) modelChanged
 {
     // Re-query all threads keeping the selection, if possible.
     NSArray* selectedItems = [threadsView selectedItems];
     if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
-    [self setThreadCache: nil];
-    [self setNonExpandableItemsCache: nil];
+    //[self setThreadCache: nil];
+    //[self setNonExpandableItemsCache: nil];
     [self updateGroupInfoTextField];
     [threadsView deselectAll: nil];
-//#warning Is this clever? Maybe!
-/*    if ([self group])
-    {
-        [[OPPersistentObjectContext threadContext] refreshObject: [self group] mergeChanges: NO];
-    }
-    */
+	
     [threadsView reloadData];
     //NSLog(@"Re-Selecting items %@", selectedItems);
     [threadsView selectItems: selectedItems ordered: YES];
+}
+
+- (void) modelChanged: (NSNotification*) aNotification
+{
+	[self modelChanged];
 }
 
 - (GIMessageGroup *)group
@@ -974,26 +975,23 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return group;
 }
 
-- (void)setGroup:(GIMessageGroup *)aGroup
+- (void) setGroup: (GIMessageGroup*) aGroup
 {
-    if (aGroup != group) 
-    {
+    if (aGroup != group) {
         //NSLog(@"Setting group for controller: %@", [aGroup description]);
         
-        // key value observing:
-		/*
-		 #warning What was the following good for?
-        if (![self isStandaloneBoxesWindow]) {
-            [group removeObserver: self forKeyPath: @"threads"];
-            [aGroup addObserver:self forKeyPath: @"threads" options:NSKeyValueObservingOptionNew context: NULL];
-        }
-		 */
+		[group removeObserver: self forKeyPath: @"threadsByDate"];
+		
+		[aGroup addObserver: self 
+				 forKeyPath: @"threadsByDate" 
+					options: NSKeyValueObservingOptionNew 
+					context: NULL];
         
         [group autorelease];
         group = [aGroup retain];
         
         // thread filter popup:
-        [threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
+        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];

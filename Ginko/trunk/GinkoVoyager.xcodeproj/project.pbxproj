@@ -1785,7 +1785,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# copy a single frameworks\ncopyFramework()\n{\necho -n $1\n#echo cp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\ncp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\necho \n}\n\n# ensure there's an empty frameworks directory in the application bundle\nrm -rf \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\nmkdir -p \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\n\n# copy the frameworks\necho Copying frameworks...\ncopyFramework \"OPDebug\"\ncopyFramework \"OPNetwork\"\ncopyFramework \"OPPreferences\"\n";
+			shellScript = "# copy a single framework\ncopyFramework()\n{\necho -n $1\n#echo cp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\ncp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\necho \n}\n\n# ensure there's an empty frameworks directory in the application bundle\nrm -rf \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\nmkdir -p \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\n\n# copy the frameworks\necho Copying frameworks...\ncopyFramework \"OPDebug\"\ncopyFramework \"OPNetwork\"\ncopyFramework \"OPPreferences\"\n";
 		};
 		30672F8B092D4DA0005D7A7F /* Extract Aspects */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2030,7 +2030,7 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			name = Development;
 		};

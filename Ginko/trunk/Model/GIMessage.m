@@ -19,6 +19,7 @@
 #import "GIApplication.h"
 #import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
+#import "GIFulltextIndexCenter.h"
 
 @implementation GIMessage
 
@@ -92,11 +93,14 @@
 
 - (void) willDelete
 {
+	// remove message from fulltext index
+    //[GIFulltextIndexCenter removeMessagesWithIds: [NSArray arrayWithObject: [self messageId]]];
+	
 	GIThread* thread = [self valueForKey: @"thread"];
 	if (thread) {
 		//[self setValue: nil forKey: @"thread"];
 
-		if ([thread messageCount]==0) {
+		if ([thread messageCount]<=1) {
 			[[thread context] deleteObject: thread]; 
 		}
 	}

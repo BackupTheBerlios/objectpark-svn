@@ -43,6 +43,13 @@
 	@"}";
 }
 
+- (void) willDelete
+{
+	NSLog(@"Will delete Thread!");
+	[super willDelete];
+}
+
+
 - (void) addToGroups: (GIMessageGroup*) group
 {
 	[self willChangeValueForKey: @"groups"];

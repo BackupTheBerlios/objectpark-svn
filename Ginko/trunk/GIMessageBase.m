@@ -77,21 +77,6 @@
     return message;
 }
 
-+ (void) removeMessage: (GIMessage*) aMessage
-{	
-    // remove message from index
-    //[[GIFulltextIndexCenter defaultIndexCenter] removeMessage:aMessage];
-
-    GIThread *thread = [aMessage thread];
-        
-    // delete thread also if it would become a thread without messages:
-    if ([thread messageCount] == 1) {
-        [[aMessage context] deleteObject: thread];		
-    }
-    
-    // delete message:
-    [[aMessage context] deleteObject: aMessage];
-}
 
 + (void) addMessage: (GIMessage*) aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
 {

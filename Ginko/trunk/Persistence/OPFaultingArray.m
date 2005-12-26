@@ -165,7 +165,7 @@ int compareOids(OID o1, OID o2)
 				*indexSearched = i;
 				return YES;
 			}
-			if (oidFound>oid) break;
+			//if (oidFound>oid) break;
 		}
 	}	
 	*indexSearched = i;

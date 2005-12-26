@@ -1131,8 +1131,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // Remove old message from database if present:
     if (oldMessage) {
-        [profile removeValue: oldMessage forKey: @"messagesToSend"];
-        [GIMessageBase removeMessage: oldMessage];
+        //[profile removeValue: oldMessage forKey: @"messagesToSend"]; // should be automatic now
+        [[oldMessage context] deleteObject: oldMessage];
     }
     
     if (aType & OPDraftStatus) {

@@ -430,10 +430,14 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" Marks object for deletion on the next -saveChanges call. "*/
 {
 	if ([object currentOid]) {
-		[deletedObjects addObject: object];
-	} // otherwise it has not been stored persistently, so we do not need to delete it
-	[changedObjects removeObject: object]; // make sure, it is not inserted again
-	[object willDelete];
+		// otherwise it has not been stored persistently, so we do not need to delete it
+		if (![deletedObjects containsObject: object]) {
+			
+			[deletedObjects addObject: object];
+			[changedObjects removeObject: object]; // make sure, it is not inserted again
+			[object willDelete];
+		}
+	}
 }
 
 

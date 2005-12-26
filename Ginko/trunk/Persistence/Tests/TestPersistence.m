@@ -83,7 +83,7 @@
 }
 
 
-- (void) testDelete
+- (void) testSimpleDelete
 {
     GIMessage* newMessage = [[GIMessage alloc] init];
 	
@@ -105,6 +105,49 @@
 	NSAssert([newMessage isDeleted], @"Deleted message not marked deleted.");
 	
 	[context saveChanges];
+	[context reset];
+	
+	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
+	
+	NSAssert1(![newMessage resolveFault], @"deleted object still accessible from the database: %@", newMessage);
+	
+}
+
+- (void) testDeleteNullify
+{
+	
+	// Creation:
+    GIMessage* newMessage = [[GIMessage alloc] init];
+	GIThread* aThread = [context objectForOid: 1 ofClass: [GIThread class]];
+	
+	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
+	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"senderName"];
+	[newMessage setValue: aThread forKey: @"thread"];
+	
+	[context saveChanges];
+	
+	OID oid = [newMessage oid];
+	
+	[context reset];
+	
+	// Deletion
+	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
+	aThread = [context objectForOid: 1 ofClass: [GIThread class]];
+	unsigned messageCount = [[aThread valueForKey: @"messages"] count];
+	
+	NSAssert(newMessage, @"New message not retrievable.");
+	
+	[context deleteObject: newMessage];
+	
+	NSAssert([newMessage isDeleted], @"Deleted message not marked deleted.");
+	
+	[context saveChanges];
+	
+	
+
+	NSAssert1([[aThread valueForKey: @"messages"] count] == messageCount-1, @"Relationship 'messages' not nullified: ", [aThread valueForKey: @"messages"]);
+	
+	
 	[context reset];
 	
 	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
