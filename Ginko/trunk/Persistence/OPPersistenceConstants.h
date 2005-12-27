@@ -31,7 +31,7 @@
 //#include <stdlib.h>
 //#include <string.h>
 //#include <unistd.h>
-
+#import <OPDebug/OPLog.h>
 
 // Class ID (CID), index in the transient class table
 //#define CID unsigned
@@ -50,3 +50,6 @@
 //#define CIDFromOID(x) (x>>LIDBITS)
 //#define LIDFromOID(x) ((x<<8)>>8)
 //#define MakeOID(c,l)  ((((OID)c)<<LIDBITS)+l)
+
+// Debug Domain
+#define OPPERSISTENCE OPL_DOMAIN @"OPPersistence"

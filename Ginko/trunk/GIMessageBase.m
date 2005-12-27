@@ -208,7 +208,7 @@ NSString *MboxImportJobName = @"mbox import";
                     
                     if ((++mboxDataCount % 100) == 0) {
                         if (messagesWereAdded) {
-                            OPDebugLog(@"OPPersistence", OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
+                            OPDebugLog(OPPERSISTENCE, OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
                             
                             //[NSApp performSelectorOnMainThread: @selector(saveAction:) withObject: self waitUntilDone: YES];
                             //NSError *error = nil;

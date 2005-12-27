@@ -1282,7 +1282,8 @@ static BOOL isThreadItem(id item)
         // thread list
         if ([item isKindOfClass: [GIThread class]]) {
             //NSLog(@"isItemExpandable");
-            return ![[self nonExpandableItems] containsObject: item];
+            return [item messageCount]>1;
+            //return ![[self nonExpandableItems] containsObject: item];
         }
     } else {
 		// boxes list

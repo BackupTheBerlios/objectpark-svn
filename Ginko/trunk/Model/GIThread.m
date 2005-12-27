@@ -49,6 +49,14 @@
 	[super willDelete];
 }
 
+- (void) willSave
+{
+    OPFaultingArray* messages = [attributes objectForKey: @"messages"];
+    if (messages) {
+        [self setValue: [NSNumber numberWithUnsignedInt: [messages count]] forKey: @"numberOfMessages"];
+    }
+}
+
 
 - (void) addToGroups: (GIMessageGroup*) group
 {

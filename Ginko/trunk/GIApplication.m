@@ -286,7 +286,7 @@
     NSMutableArray *messages = [NSMutableArray array];
     GIMessage *message;
     
-    while ((message = [enumerator nextObject]) && (i++ < 10000))
+    while ((message = [enumerator nextObject]) && (i++ < 100000))
     {
         [messages addObject:message];
     }

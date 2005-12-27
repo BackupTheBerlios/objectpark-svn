@@ -10,11 +10,13 @@
 #import <Foundation/Foundation.h>
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentObject.h"
+//#import <OPDebug/OPLog.h>
 
 @interface OPFaultingArrayEnumerator : NSEnumerator {
 	int eindex;
 	OPFaultingArray* hostArray;
 }
+
 + (id) enumeratorWithArray: (OPFaultingArray*) array;
 @end
 
@@ -46,6 +48,7 @@ int compareOids(OID o1, OID o2)
 	return [[[self alloc] init] autorelease];
 }
 
+
 - (id) initWithCapacity: (unsigned) newCapacity
 {
     if ( self = [super init] ) {
@@ -54,16 +57,18 @@ int compareOids(OID o1, OID o2)
 		entrySize    = sizeof(OID);
 		needsSorting = NO;
 		data         = malloc( (capacity+3) * entrySize );
-		NSLog(@"OPFaultingArray %@ created.", self);
-	}
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"OPFaultingArray %@ created.", self);
+    }
     return self;
 }
 
-- (void) sort
-{
+
+- (void) sort {
+
 #warning todo: implement sorting! 
 	NSLog(@"Should sort array: %@", self);	
 }
+
 
 
 - (void) setElementClass: (Class) eClass

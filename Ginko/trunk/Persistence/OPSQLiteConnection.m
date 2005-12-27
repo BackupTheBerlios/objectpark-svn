@@ -216,7 +216,7 @@
 
 		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (%@,%@) values (?,?);", joinTableName, firstColumnName, secondColumnName];
 		
-		OPDebugLog(@"OPPersistence", OPINFO, @"Preparing statement for fetches: %@", queryString);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 		// Cache statement for later use:
 		[addRelationStatements setObject: result forKey: joinTableName];
@@ -239,7 +239,7 @@
 		
 		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where \"%@\"=? and \"%@\"=?;", joinTableName, firstColumnName, secondColumnName];
 		
-		OPDebugLog(@"OPPersistence", OPINFO, @"Preparing statement for fetches: %@", queryString);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 		// Cache statement for later use:
 		[removeRelationStatements setObject: result forKey: joinTableName];
@@ -257,7 +257,7 @@
 		OPClassDescription* cd = [poClass persistentClassDescription];
 		
 		NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[cd columnNames] componentsJoinedByString: @","], [cd tableName]];
-		OPDebugLog(@"OPPersistence", OPINFO, @"Preparing statement for fetches: %@", queryString);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 		// Cache statement for later use:
 		[fetchStatements setObject: result forKey: poClass]; // cache it
@@ -711,7 +711,7 @@
 {
 	if (self = [super init]) {
 		
-		OPDebugLog(@"OPPersistence", OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
+		OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
 
 		int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
 		
