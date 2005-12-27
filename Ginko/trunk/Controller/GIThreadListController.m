@@ -82,23 +82,15 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) awakeFromNib
-{
-    if ([GIApp isGroupsDrawerMode]) {
-        [boxesDrawer open: self]; 
-    }
+{    
+    [threadsView setTarget:self];
+    [threadsView setDoubleAction:@selector(openSelection:)];
+    [threadsView setHighlightThreads:YES];
+    [threadsView registerForDraggedTypes:[NSArray arrayWithObjects: @"GinkoThreads", nil]];
     
-    [boxesView setTarget: self];
-    [boxesView setDoubleAction: @selector(showGroupWindow:)];
-    // Register to grok GinkoMessages and GinkoMessageboxes drags
-    [boxesView registerForDraggedTypes: [NSArray arrayWithObjects: @"GinkoThreads", @"GinkoMessageboxes", nil]];
-    [boxesView setAutosaveName: @"boxesView"];
-    [boxesView setAutosaveExpandedItems: YES];
-    
-    [threadsView setTarget: self];
-    [threadsView setDoubleAction: @selector(openSelection:)];
-    [threadsView setHighlightThreads: YES];
-    [threadsView registerForDraggedTypes: [NSArray arrayWithObjects: @"GinkoThreads", nil]];
-    
+    [searchHitsTableView setTarget:self];
+    [searchHitsTableView setDoubleAction:@selector(openHitMessage:)];
+
     [self awakeToolbar];
     [self awakeCommentTree];
 
@@ -397,35 +389,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-
-- (IBAction) showGroupWindow: (id) sender
-	/*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
-{
-    GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [boxesView itemAtRow: [boxesView selectedRow]]];
-	
-    if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) {
-        NSWindow* groupWindow = [[GIThreadListController class] windowForGroup: selectedGroup];
-        
-        if (groupWindow) {
-            [groupWindow makeKeyAndOrderFront: self];
-        } else {
-            GIThreadListController* newController = [[[GIThreadListController alloc] initWithGroup: selectedGroup] autorelease];
-            groupWindow = [newController window];
-        }
-        
-        [[groupWindow delegate] showThreads: sender];
-    }
-}
-
-
 - (BOOL) openSelection: (id) sender
 {    
-    if (sender == boxesView) {
-        // open group window:
-        [self showGroupWindow:sender];
-        return YES;
-    }
-    
     if ([self threadsShownCurrently]) {
         int selectedRow = [threadsView selectedRow];
         
@@ -611,110 +576,58 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (IBAction) forward: (id) sender
+- (IBAction)forward:(id)sender
 {
     GIMessage *message = [self selectedMessage];
         
-    [[[GIMessageEditorController alloc] initForward: message profile: [self profileForMessage: message]] autorelease];
+    [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
 }
 
-- (IBAction) rename: (id) sender
-/*" Renames the selected item (folder or group). "*/
-{
-    int lastSelectedRow;
-    
-    if ( (lastSelectedRow = [boxesView selectedRow]) != -1) {
-        [boxesView editColumn: 0 row: lastSelectedRow withEvent: nil select: YES];
-    }
-}
-
-- (IBAction) addFolder: (id) sender
-{
-    int selectedRow = [boxesView selectedRow];
-    [boxesView setAutosaveName: nil];
-    [GIMessageGroup addNewHierarchyNodeAfterEntry: [boxesView itemAtRow: selectedRow]];
-    [boxesView reloadData];
-    [boxesView setAutosaveName: @"boxesView"];
-    
-    [boxesView selectRow:selectedRow + 1 byExtendingSelection: NO];
-    [self rename: self];
-}
-
-- (IBAction) addMessageGroup: (id) sender
-{
-    int selectedRow = [boxesView selectedRow];
-    id item = [boxesView itemAtRow: selectedRow];
-    NSMutableArray *node = nil;
-    int index;
-    
-    if ([item isKindOfClass: [NSMutableArray class]]) {
-        node = item;
-        index = 0;
-        [boxesView expandItem: item];
-    } else {
-        node = [GIMessageGroup findHierarchyNodeForEntry: item startingWithHierarchyNode: [GIMessageGroup hierarchyRootNode]];
-        
-        if (node) {
-            index = [node indexOfObject:item]; // +1 correction already in!
-        } else {
-            node = [GIMessageGroup hierarchyRootNode];
-            index = 0;
-        }
-    }
-    
-    [GIMessageGroup newMessageGroupWithName: nil atHierarchyNode:node atIndex:index];
-    
-    [boxesView reloadData];
-    
-    [boxesView setAutosaveName: @"boxesView"];
-    [boxesView selectRow:selectedRow + 1 byExtendingSelection: NO];
-    [self rename: self];
-}
-
-- (IBAction) removeFolderMessageGroup: (id) sender
-{
-    NSLog(@"-removeFolderMessageGroup: needs to be implemented");
-}
-
-- (IBAction) applySortingAndFiltering: (id) sender
+- (IBAction)applySortingAndFiltering:(id)sender
 /*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
 {
-    NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
-    int lastIndex  = [selectedIndexes lastIndex];
+    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+    int lastIndex = [selectedIndexes lastIndex];
     int firstIndex = [selectedIndexes firstIndex];
     int i;
 	
-    for (i = firstIndex; i <= lastIndex; i++) {
-		
-        if ([threadsView isRowSelected:i]) {
-	
+    for (i = firstIndex; i <= lastIndex; i++) 
+    {
+        if ([threadsView isRowSelected:i]) 
+        {
             // get one of the selected threads:
             GIThread *thread = [OPPersistentObjectContext objectWithURLString: [threadsView itemAtRow:i]];
-            NSAssert([thread isKindOfClass: [GIThread class]], @"assuming object is a thread");
+            NSAssert([thread isKindOfClass:[GIThread class]], @"assuming object is a thread");
             
             // remove selected thread from receiver's group:
             [[self group] removeThread:thread];
             BOOL threadWasPutIntoAtLeastOneGroup = NO;
             
-            @try {
+            @try 
+            {
                 // apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
                 NSEnumerator *enumerator = [[thread messages] objectEnumerator];
                 GIMessage *message;
                 
-                while (message = [enumerator nextObject]) {
+                while (message = [enumerator nextObject]) 
+                {
                     threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage:message flags:0];
                 }
-            } @catch (NSException* localException) {
+            } 
+            @catch (NSException* localException) 
+            {
                 @throw;
-            } @finally {
+            } 
+            @finally 
+            {
                 if (!threadWasPutIntoAtLeastOneGroup) [[self group] addThread:thread];
             }
         }
     }
     // commit changes:
-    [NSApp saveAction: self];
-    [threadsView selectRow: firstIndex byExtendingSelection: NO];
-    [threadsView scrollRowToVisible: firstIndex];
+    [NSApp saveAction:self];
+    [threadsView selectRow:firstIndex byExtendingSelection:NO];
+    [threadsView scrollRowToVisible:firstIndex];
 }
 
 - (IBAction)threadFilterPopUpChanged:(id)sender
@@ -1218,27 +1131,18 @@ static BOOL isThreadItem(id item)
 
 @implementation GIThreadListController (OutlineViewDataSource)
 
-- (void) groupsChanged: (NSNotification*) aNotification
-{
-    [boxesView reloadData];
-}
-
 - (void) outlineViewSelectionDidChange: (NSNotification*) notification
 {
-    if ([notification object] == boxesView) {
-        id item = [boxesView itemAtRow: [boxesView selectedRow]];
+  if ([notification object] == threadsView) 
+  {
+        id item = [threadsView itemAtRow:[threadsView selectedRow]];
         
-        if ([item isKindOfClass: [NSString class]]) {
-            [self setGroup: [[OPPersistentObjectContext defaultContext] objectWithURLString: item]];
-        }
-    } else if ([notification object] == threadsView) {
-        id item = [threadsView itemAtRow: [threadsView selectedRow]];
-        
-        if ([item isKindOfClass: [OPPersistentObject class]]) {
+        if ([item isKindOfClass:[OPPersistentObject class]]) 
+        {
             item = [item objectURLString];
         }
         
-        [self setValue: item forGroupProperty: @"LastSelectedMessageItem"];
+        [self setValue:item forGroupProperty:@"LastSelectedMessageItem"];
     }
 }
 
@@ -1559,42 +1463,6 @@ static NSAttributedString* spacer2()
         }
     }
     return @"";
-}
-
-- (void) outlineView: (NSOutlineView*) outlineView setObjectValue: (id) object forTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
-{
-    if (outlineView == boxesView) {
-        if ([item isKindOfClass: [NSMutableArray class]]) {
-			 // folder:
-            [[item objectAtIndex: 0] setObject: object forKey: @"name"];
-            [GIMessageGroup saveHierarchy];
-            //[outlineView selectRow: [outlineView rowForItem:item]+1 byExtendingSelection: NO];
-            //[[outlineView window] endEditingFor:outlineView];
-        } else {
-			// message group:
-			GIMessageGroup* itemGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: item];
-            [itemGroup setValue: object forKey: @"name"];
-            [NSApp saveAction: self];
-        }
-    }
-}
-
-- (id) outlineView: (NSOutlineView*) outlineView itemForPersistentObject: (id) object
-{
-    if (outlineView == boxesView) {
-        return [GIMessageGroup hierarchyNodeForUid: object];
-    }
-    return nil;
-}
-
-- (id) outlineView: (NSOutlineView*) outlineView persistentObjectForItem: (id) item
-{
-    if (outlineView == boxesView) {
-        if ([item isKindOfClass: [NSMutableArray class]]) {
-            return [[item objectAtIndex: 0] objectForKey: @"uid"];
-        }
-    }
-    return nil;
 }
 
 @end
@@ -2012,75 +1880,34 @@ NSMutableArray* border = nil;
 
 @implementation GIThreadListController (DragNDrop)
 
-- (void) moveThreadsWithURI: (NSArray*) threadURIs 
-				  fromGroup: (GIMessageGroup*) sourceGroup 
-					toGroup: (GIMessageGroup*) destinationGroup
+- (void) moveThreadsWithURI:(NSArray *)threadURIs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup
 {
-    NSEnumerator* enumerator = [threadURIs objectEnumerator];
-    NSString* threadURI;
-    
-    // Prevent merge problems:
-    //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
-    
+    NSEnumerator *enumerator = [threadURIs objectEnumerator];
+    NSString *threadURI;
+        
     while (threadURI = [enumerator nextObject]) 
     {
-        GIThread *thread = [OPPersistentObjectContext objectWithURLString: threadURI];
-        NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
+        GIThread *thread = [OPPersistentObjectContext objectWithURLString:threadURI];
+        NSAssert([thread isKindOfClass:[GIThread class]], @"should be a thread");
         
         // remove thread from source group:
-        [thread removeFromGroups: sourceGroup];
+        [thread removeFromGroups:sourceGroup];
         
         // add thread to destination group:
-        [thread addToGroups: destinationGroup];
+        [thread addToGroups:destinationGroup];
     }
 }
 
-- (BOOL) outlineView: (NSOutlineView*) anOutlineView acceptDrop: (id <NSDraggingInfo>) info item: (id) item childIndex: (int) index
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
-    if (anOutlineView == boxesView) {
-		// Message Groups list
-        
-        if (! item) item = [GIMessageGroup hierarchyRootNode];
-        
-        NSArray* items = [[info draggingPasteboard] propertyListForType: @"GinkoMessageboxes"];
-        if ([items count] == 1) // only single selection supported at this time!
-        {
-            // Hack (part 1)! Why is this necessary to archive almost 'normal' behavior?
-            [boxesView setAutosaveName: nil];
-            
-            [GIMessageGroup moveEntry: [items lastObject] toHierarchyNode:item atIndex:index testOnly: NO];
-            
-            [anOutlineView reloadData];
-            
-            // Hack (part 2)! Why is this necessary to archive almost 'normal' behavior?
-            [boxesView setAutosaveName: @"boxesView"];
-            
-            return YES;
-        }
-        
-        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        if ([threadURLs count]) {
-			
-            GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
-            GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
-            
-            [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
-            
-            // select all in dragging source:
-            NSOutlineView *sourceView = [info draggingSource];        
-            [sourceView selectRow: [sourceView selectedRow] byExtendingSelection: NO];
-            
-            [NSApp saveAction:self];
-        }
-    }
-    else if (anOutlineView == threadsView)
+    if (anOutlineView == threadsView)
     {
         // move threads from source group to destination group:
-        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        GIMessageGroup* sourceGroup = [(GIThreadListController*)[[info draggingSource] delegate] group];
-        GIMessageGroup* destinationGroup = [self group];
+        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
+        GIMessageGroup *destinationGroup = [self group];
         
-        [self moveThreadsWithURI: threadURLs fromGroup: sourceGroup toGroup: destinationGroup];
+        [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
         /*
         NSEnumerator *enumerator = [threadURLs objectEnumerator];
         NSString *threadURL;
@@ -2100,7 +1927,7 @@ NSMutableArray* border = nil;
         
         // select all in dragging source:
         NSOutlineView *sourceView = [info draggingSource];        
-        [sourceView selectRow: [sourceView selectedRow] byExtendingSelection: NO];
+        [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
         
         [NSApp saveAction:self];
     }
@@ -2108,38 +1935,17 @@ NSMutableArray* border = nil;
     return NO;
 }
 
-- (NSDragOperation) outlineView: (NSOutlineView*) anOutlineView validateDrop: (id <NSDraggingInfo>) info proposedItem: (id) item proposedChildIndex: (int) index
+- (NSDragOperation)outlineView:(NSOutlineView *)anOutlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
-    if (anOutlineView == boxesView) {
-		// Message Groups
-        NSArray* items = [[info draggingPasteboard] propertyListForType: @"GinkoMessageboxes"];
-        
-        if ([items count] == 1) {
-            if (index != NSOutlineViewDropOnItemIndex) {
-				// accept only when no on item:
-                if ([GIMessageGroup moveEntry: [items lastObject] toHierarchyNode: item atIndex: index testOnly: YES]) {
-                    [anOutlineView setDropItem: item dropChildIndex: index]; 
-                    
-                    return NSDragOperationMove;
-                }
-            }
-        }
-        
-        NSArray* threadURLs = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
-        if ([threadURLs count]) {
-            if (index == NSOutlineViewDropOnItemIndex) {
-                return NSDragOperationMove;
-            }
-        }
-        
-        return NSDragOperationNone;
-    } else if (anOutlineView == threadsView) {
+    if (anOutlineView == threadsView) 
+    {
         if ([info draggingSource] != threadsView) // don't let drop on itself
         {
-            NSArray* items = [[info draggingPasteboard] propertyListForType: @"GinkoThreads"];
+            NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
             
-            if ([items count] > 0) {
-                [anOutlineView setDropItem: nil dropChildIndex:-1]; 
+            if ([items count] > 0) 
+            {
+                [anOutlineView setDropItem:nil dropChildIndex:-1]; 
                 return NSDragOperationMove;
             }
         }
@@ -2148,21 +1954,14 @@ NSMutableArray* border = nil;
     return NSDragOperationNone;
 }
 
-- (BOOL) outlineView: (NSOutlineView*) outlineView writeItems: (NSArray*) items toPasteboard: (NSPasteboard*) pboard
+- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
 {
-    if (outlineView == boxesView) // Message Groups list
-    {
-        // ##WARNING works only for single selections. Not for multi selection!
-        
-        [pboard declareTypes: [NSArray arrayWithObject: @"GinkoMessageboxes"] owner:self];    
-        [pboard setPropertyList:items forType: @"GinkoMessageboxes"];
-    }
-    else if (outlineView == threadsView) // threads list
+    if (outlineView == threadsView) // threads list
     {
         if (! [self isOnlyThreadsSelected]) return NO;
         
-        [pboard declareTypes: [NSArray arrayWithObject: @"GinkoThreads"] owner:self];
-        [pboard setPropertyList:items forType: @"GinkoThreads"];
+        [pboard declareTypes:[NSArray arrayWithObject:@"GinkoThreads"] owner:self];
+        [pboard setPropertyList:items forType:@"GinkoThreads"];
     }
     
     return YES;

@@ -22,8 +22,6 @@
     IBOutlet NSTextView* messageTextView;
     IBOutlet NSMatrix* commentsMatrix;
     IBOutlet NSTextField* groupInfoTextField;
-    IBOutlet NSDrawer* boxesDrawer;
-    IBOutlet NSOutlineView* boxesView;
     IBOutlet OPCollapsingSplitView* treeBodySplitter;
     IBOutlet NSPopUpButton* threadFilterPopUp;
     IBOutlet NSProgressIndicator* progressIndicator;
@@ -71,10 +69,6 @@
 
 /*" Actions "*/
 - (IBAction) showThreads: (id) sender;
-- (IBAction) addFolder: (id) sender;
-- (IBAction) rename: (id) sender;
-- (IBAction) addMessageGroup: (id) sender;
-- (IBAction) removeFolderMessageGroup: (id) sender;
 - (IBAction) threadFilterPopUpChanged: (id) sender;
 - (IBAction) selectThreadsWithCurrentSubject: (id) sender;
 
