@@ -484,7 +484,7 @@ NSString *stringFromJstring(jstring aJstring) {
     (*env)->CallVoidMethod(env, writer, mid);
 }
 
-+ (void)addMessages:(NSArray *)someMessages
++ (void)addMessages:(NSEnumerator *)messageEnumerator
 {
     @synchronized(self)
     {
@@ -495,11 +495,10 @@ NSString *stringFromJstring(jstring aJstring) {
         
         @try
         {
-            NSEnumerator *enumerator = [someMessages objectEnumerator];
             pool = [[NSAutoreleasePool alloc] init];
             id message;
             int counter = 1;
-            while (message = [enumerator nextObject])
+            while (message = [messageEnumerator nextObject])
             {
                 @try
                 {
@@ -514,6 +513,8 @@ NSString *stringFromJstring(jstring aJstring) {
                         NSLog(@"optimizing index\n");
                         [self indexWriterOptimize:indexWriter];
                     }
+                    
+                    [message setValue: [NSNumber numberWithBool: YES] forKey:@"isFulltextIndexed"];
                 }
                 @catch (NSException *localException)
                 {

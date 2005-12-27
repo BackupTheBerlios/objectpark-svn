@@ -277,22 +277,18 @@
 - (void)playWithLucene
 {   
     // Delete existing fulltext index:
-    [[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
+    //[[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
     
     // Get messages:
-    NSEnumerator *enumerator = [GIMessage allObjectsEnumerator];
+    
+    OPPersistentObjectEnumerator *enumerator = [GIMessage messageEnumeratorForFulltextIndexerWithLimit:250];
     
     int i = 0;
-    NSMutableArray *messages = [NSMutableArray array];
-    GIMessage *message;
-    
-    while ((message = [enumerator nextObject]) && (i++ < 100000))
-    {
-        [messages addObject:message];
-    }
     
     // Add messages to fulltext index:
-    [GIFulltextIndexCenter addMessages:messages];
+    [GIFulltextIndexCenter addMessages:enumerator];
+//    [enumerator reset];
+//    [self saveAction:self];
     
     // Search in fulltext index:
     NSArray *hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
@@ -312,6 +308,7 @@
     
     /*
     // Remove messages:
+    NSMutableArray *messages = [enumerator allObjects];
     enumerator = [messages objectEnumerator];
     NSMutableArray *messageIds = [NSMutableArray array];
     
@@ -373,7 +370,7 @@
     //                                             name: NSManagedObjectContextDidSaveNotification 
     //                                           object: nil];  
     
-    //[self playWithLucene];
+    [self playWithLucene];
 }
 
 

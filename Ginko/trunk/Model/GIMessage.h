@@ -35,6 +35,8 @@
 
 + (id) messageForMessageId: (NSString*) messageId;
 + (id) messageWithTransferData: (NSData*) someTransferData;
++ (OPPersistentObjectEnumerator*) messageEnumeratorForFulltextIndexerWithLimit: (unsigned) limit;
+
 
 - (NSData*) transferData;
 

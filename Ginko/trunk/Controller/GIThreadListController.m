@@ -28,6 +28,7 @@
 #import "NSString+Extensions.h"
 #import "GIMessageFilter.h"
 #import "OPPersistence.h"
+#import "OPObjectPair.h"
 
 static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 

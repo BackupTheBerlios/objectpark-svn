@@ -70,6 +70,15 @@
 	@"}";
 }
 
++ (OPPersistentObjectEnumerator*) messageEnumeratorForFulltextIndexerWithLimit: (unsigned) limit
+{
+    OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+    
+    OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where:  @"ZISFULLTEXTINDEXED<>1 and ZISJUNK<>1 limit ?"];
+    [objectEnum bind: [NSNumber numberWithUnsignedInt: limit]];
+    return objectEnum;
+}
+
 
 + (id) messageForMessageId: (NSString*) messageId
 	/*" Returns either nil or the message specified by its messageId. "*/
