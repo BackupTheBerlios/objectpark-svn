@@ -74,7 +74,7 @@
 {
     OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where:  @"ZISFULLTEXTINDEXED<>1 and ZISJUNK<>1 limit ?"];
+    OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where:  @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?"];
     [objectEnum bind: [NSNumber numberWithUnsignedInt: limit]];
     return objectEnum;
 }
@@ -115,6 +115,19 @@
 	}
 	[super willDelete];
 }
+
+/* not necessary -threads are re-created on change 
+- (void) setSubject: (NSString*) subject
+{
+	[self willAccessValueForKey: @"subject"];
+	[self setPrimitiveValue: subject forKey: @"subject"];
+	[self didAccessValueForKey: @"subject"];
+	GIThread* thread = [self valueVorKey: @"thread"];
+	if ([thread containsSingleMessage]) {
+		[thread setValue: subject forKey: @"subject"];
+	}
+}
+*/
 
 - (void) flushInternetMessageCache
 	/*" Flushes the cache for the internetMessageCache transient attribute. Used for optimized memory usage. "*/

@@ -1163,17 +1163,12 @@ static BOOL isThreadItem(id item)
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item
 {
-    if (outlineView == threadsView) {
-        // thread list
-        if ([item isKindOfClass: [GIThread class]]) {
-            //NSLog(@"isItemExpandable");
-            return [item messageCount]>1;
-            //return ![[self nonExpandableItems] containsObject: item];
-        }
-    } else {
-		// boxes list
-        return [item isKindOfClass: [NSMutableArray class]];
-    }
+	// thread list
+	if ([item isKindOfClass: [GIThread class]]) {
+		//NSLog(@"isItemExpandable");
+		return [item messageCount]>1;
+		//return ![[self nonExpandableItems] containsObject: item];
+	}
     return NO;
 }
 
