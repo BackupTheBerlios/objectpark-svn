@@ -73,12 +73,6 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     return self;
 }
 
-
-- (BOOL) isStandaloneBoxesWindow
-{
-    return NO; //(threadsView == nil);
-}
-
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) awakeFromNib
@@ -89,7 +83,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [threadsView registerForDraggedTypes:[NSArray arrayWithObjects: @"GinkoThreads", nil]];
     
     [searchHitsTableView setTarget:self];
-    [searchHitsTableView setDoubleAction:@selector(openHitMessage:)];
+    [searchHitsTableView setDoubleAction:@selector(openSelection:)];
 
     [self awakeToolbar];
     [self awakeCommentTree];
@@ -261,20 +255,18 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return displayedThread;
 }
 
-+ (NSWindow*) windowForGroup: (GIMessageGroup*) aGroup
++ (NSWindow *)windowForGroup:(GIMessageGroup *)aGroup
 /*" Returns the window for the group aGroup. nil if no such window exists. "*/
 {
     NSWindow *win;
     NSEnumerator *enumerator;
     
     enumerator = [[NSApp windows] objectEnumerator];
-    while (win = [enumerator nextObject]) {
-        if ([[win delegate] isKindOfClass:self]) {
-            if (! [[win delegate] isStandaloneBoxesWindow]) {
-                if ([[win delegate] group] == aGroup) {
-                    return win;
-                }
-            }
+    while (win = [enumerator nextObject]) 
+    {
+        if ([[win delegate] isKindOfClass:self]) 
+        {
+            if ([[win delegate] group] == aGroup) return win;
         }
     }
     
@@ -389,22 +381,25 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (BOOL) openSelection: (id) sender
+- (BOOL)openSelection:(id)sender
 {    
-    if ([self threadsShownCurrently]) {
+    if ([self threadsShownCurrently]) 
+    {
         int selectedRow = [threadsView selectedRow];
         
-        if (selectedRow >= 0) {
-            GIMessage* message = nil;
-            GIThread* selectedThread = nil;
-            id item = [threadsView itemAtRow: selectedRow];
+        if (selectedRow >= 0) 
+        {
+            GIMessage *message = nil;
+            GIThread *selectedThread = nil;
+            id item = [threadsView itemAtRow:selectedRow];
             
-            if ([threadsView levelForRow: selectedRow] > 0) {
+            if ([threadsView levelForRow:selectedRow] > 0) 
+            {
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                while ([threadsView levelForRow: --selectedRow]){}
-                selectedThread = [threadsView itemAtRow: selectedRow];
+                while ([threadsView levelForRow:--selectedRow]){}
+                selectedThread = [threadsView itemAtRow:selectedRow];
             } else {
                 selectedThread = item;
                 
@@ -459,10 +454,46 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 else [window makeFirstResponder: messageTextView];                    
             }
         }
-	} else {
-        // message shown
-        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder: messageTextView];
-        else [window makeFirstResponder: commentsMatrix];
+	} 
+    else if ([self searchHitsShownCurrently])
+    {
+        int selectedIndex = [searchHitsTableView selectedRow];
+        if ((selectedIndex >= 0) && (selectedIndex < [hits count]))
+        {
+            OID messageOid = [(NSNumber *)[[hits objectAtIndex:selectedIndex] firstObject] unsignedLongLongValue];
+            
+            GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:messageOid ofClass:[GIMessage class]];
+            
+            
+            if ([message hasFlags: OPDraftStatus] || [message hasFlags: OPQueuedStatus]) 
+            {
+                if ([message hasFlags: OPInSendJobStatus]) 
+                {
+                    NSLog(@"message is in send job");
+                    NSBeep();
+                } 
+                else 
+                {
+                    [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
+                }
+            } 
+            else 
+            {
+                [tabView selectTabViewItemWithIdentifier: @"message"];
+                
+                //[message addFlags: OPSeenStatus];
+                GIThread *thread = [message thread];
+                [self setDisplayedMessage:message thread:thread];
+                
+                if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
+                else [window makeFirstResponder:messageTextView];                    
+            }       
+        }
+    }
+    else // message shown
+    {
+        if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
+        else [window makeFirstResponder:commentsMatrix];
     }
     return YES;
 }
@@ -471,24 +502,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (sender == messageTextView) 
     {
-        [tabView selectFirstTabViewItem:sender];
+        if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+        else [tabView selectTabViewItemWithIdentifier:@"threads"];
     } 
     else 
     {
-        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"]) {
-			
-            if ([window firstResponder] == messageTextView) {
-                [tabView selectFirstTabViewItem:sender];
-            } else {
-                // from message switch back to threads:
-                [tabView selectFirstTabViewItem: sender];
-            }
-        } else {
-            if (![self isStandaloneBoxesWindow]) {
-                // from threads switch back to the groups window:
-                [[GIApp standaloneGroupsWindow] makeKeyAndOrderFront:sender];
-                [window performClose:self];
-            }
+        if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"]) 
+        {
+            // from message switch back to threads:
+            if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+            else [tabView selectTabViewItemWithIdentifier:@"threads"];
+        } 
+        else 
+        {
+            // from threads switch back to the groups window:
+            [[GIApp standaloneGroupsWindow] makeKeyAndOrderFront:sender];
+            [window performClose:self];
         }
     }
 }
@@ -684,12 +713,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 */
 
-
-
-- (BOOL) threadsShownCurrently
+- (BOOL)threadsShownCurrently
 /*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
 {
     return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
+}
+
+- (BOOL)searchHitsShownCurrently
+/*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
+{
+    return (hits != nil);
 }
 
 - (IBAction)showThreads: (id) sender
@@ -890,18 +923,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     else NSBeep();
 }
 
-- (void) updateWindowTitle
+- (void)updateWindowTitle
 {
-    if (! [self isStandaloneBoxesWindow]) {
-        [window setTitle: [NSString stringWithFormat: @"%@", [group valueForKey: @"name"]]];
-    }
+    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
 }
 
 - (void) updateGroupInfoTextField
 {
-    if (![self isStandaloneBoxesWindow]) {
-        [groupInfoTextField setStringValue: [NSString stringWithFormat: NSLocalizedString(@"%u threads", "group info text template"), [[self threadsByDate] count]]];
-    }    
+    [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%u threads", "group info text template"), [[self threadsByDate] count]]];
 }
 
 - (void) modelChanged
@@ -950,55 +979,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
 		[threadsView reloadData];
-
-        /*
-         int boxRow = [boxesView rowForItem: group];
-         [boxesView selectRow: boxRow byExtendingSelection: NO];
-         [boxesView scrollRowToVisible: boxRow];
-         */
-        
-        if ([self isStandaloneBoxesWindow]) {
-            [threadsView setAutosaveName:[@"ThreadsOutline" stringByAppendingString:[group objectURLString] ? [group objectURLString] : @"nil"]];
-            [threadsView setAutosaveTableColumns:YES];
-            [threadsView setAutosaveExpandedItems:NO];
-            
-            // Show last selected item:
-            NSString *itemURI = [self valueForGroupProperty:@"LastSelectedMessageItem"];
-            
-            if (itemURI) 
-            {
-                id item = [OPPersistentObjectContext objectWithURLString:itemURI];
-                if (item) 
-                {
-                    GIMessage *message = nil;
-                    GIThread *thread = nil;
-                    
-                    if ([item isKindOfClass: [GIThread class]]) 
-                    {
-                        thread = item;
-                    } 
-                    else 
-                    {
-                        message = item;
-                        thread = [message thread];
-                    }
-                    
-                    int itemRow = [threadsView rowForItemEqualTo:[thread objectURLString] startingAtRow:0];
-                    
-                    if (itemRow >= 0) 
-                    {
-                        [threadsView selectRow:itemRow byExtendingSelection:NO];
-                        
-                        if (![thread containsSingleMessage]) 
-                        {
-                            [self openSelection:self];
-                        }
-                        
-                        [threadsView scrollRowToVisible:itemRow];
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -1015,7 +995,7 @@ static BOOL isThreadItem(id item)
     NSIndexSet *selectedIndexes;
     
     selectedIndexes = [threadsView selectedRowIndexes];
-    if ((! [self isStandaloneBoxesWindow]) && ([selectedIndexes count] > 0)) 
+    if ([selectedIndexes count] > 0)
     {
         int i, lastIndex;
         
@@ -1815,23 +1795,20 @@ NSMutableArray* border = nil;
 - (void)awakeToolbar
 /*" Called from within -awakeFromNib. "*/
 {
-    if (![self isStandaloneBoxesWindow])
-	{
-		NSToolbar *toolbar;
-
-        toolbar = [[NSToolbar alloc] initWithIdentifier:@"GroupToolbar"];
-        
-        [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed:@"group"];
-
-        [toolbar setDelegate:self];
-		[toolbar setAllowsUserCustomization:YES];
-		[toolbar setAutosavesConfiguration:YES];
-		
-		[toolbarItems retain];
-		[defaultIdentifiers retain];
-		
-		[window setToolbar:toolbar];
-	}    
+    NSToolbar *toolbar;
+    
+    toolbar = [[NSToolbar alloc] initWithIdentifier:@"GroupToolbar"];
+    
+    [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed:@"group"];
+    
+    [toolbar setDelegate:self];
+    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAutosavesConfiguration:YES];
+    
+    [toolbarItems retain];
+    [defaultIdentifiers retain];
+    
+    [window setToolbar:toolbar];
 }
 
 - (void)deallocToolbar
