@@ -291,6 +291,7 @@
 //    [self saveAction:self];
     
     // Search in fulltext index:
+    /*
     NSArray *hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
     
     int hitsCount = [hits count];
@@ -305,7 +306,7 @@
         
         NSLog(@"hit oid = %@, score = %@", oid, score);
     }
-    
+    */
     /*
     // Remove messages:
     NSMutableArray *messages = [enumerator allObjects];
