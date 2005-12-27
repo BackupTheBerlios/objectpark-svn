@@ -32,7 +32,8 @@ enum GIMessageFilterActionType
     kGIMFActionTypePutInMessagebox,
     kGIMFActionTypeForwardTo,
     kGIMFActionTypeDelete,
-    kGIMFActionTypePreventFurtherFiltering
+    kGIMFActionTypePreventFurtherFiltering,
+    kGIMFActionTypeMarkAsSpam
 };
 
 @interface GIMessageFilterAction : NSObject

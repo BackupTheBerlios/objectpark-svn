@@ -221,7 +221,8 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     // switch checkboxes to default
     [actionMoveCheckbox setState:NSOffState];
     [actionPreventCheckbox setState:NSOffState];
-    
+    [markAsSpamCheckbox setState:NSOffState];
+
      enumerator = [[filter actions] objectEnumerator];
      while (action = [enumerator nextObject])
      {
@@ -245,6 +246,11 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
                  [actionPreventCheckbox setState:[action state]];
                  break;
              }
+             case kGIMFActionTypeMarkAsSpam:
+             {
+                 [markAsSpamCheckbox setState:[action state]];
+                 break;
+             }
                  // ## other types not yet implemented
              default:
                  break;
@@ -253,7 +259,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 }
 
 // notifications
-- (void) filtersDidChange: (NSNotification*) aNotification
+- (void)filtersDidChange:(NSNotification *)aNotification
     /*" Triggers delayed notification. "*/
 {
     NSNotification *notification;
@@ -262,8 +268,8 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes: nil];
 }
 
-- (void) delayedFiltersDidChange: (NSNotification*) aNotification
-    /*" Reloads table data. "*/
+- (void)delayedFiltersDidChange:(NSNotification *)aNotification
+/*" Reloads table data. "*/
 {
     [filtersTableView reloadData];
     [filtersTableView scrollRowToVisible:[filtersTableView selectedRow]];
@@ -301,6 +307,13 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [actions addObject:action];
     [action release];
 
+    // mark as spam action
+    action = [[GIMessageFilterAction alloc] initWithActionDefinitionDictionary:defDict];
+    [action setState:[markAsSpamCheckbox state]];
+    [action setType:kGIMFActionTypeMarkAsSpam];
+    [actions addObject:action];
+    [action release];
+    
     [[self _selectedFilter] setActions:actions];
 }
 

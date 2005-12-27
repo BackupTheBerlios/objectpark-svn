@@ -33,6 +33,7 @@
     IBOutlet NSButton *actionMoveCheckbox;
     IBOutlet NSPopUpButton *actionMoveParameter;
     IBOutlet NSButton *actionPreventCheckbox;
+    IBOutlet NSButton *markAsSpamCheckbox;
     
     NSMutableArray *headerFieldsForPopup; /*" Caching header fields. "*/
 }

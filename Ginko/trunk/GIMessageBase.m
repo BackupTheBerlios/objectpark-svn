@@ -61,7 +61,7 @@
     {
         if (![GIMessageFilter filterMessage:message flags:0])  
         {
-            [self addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+            [self addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
         }
         
         if ([message hasFlags:OPIsFromMeStatus]) 

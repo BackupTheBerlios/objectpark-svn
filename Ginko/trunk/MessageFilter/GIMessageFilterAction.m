@@ -129,6 +129,9 @@
         case kGIMFActionTypePreventFurtherFiltering:
             allowFurtherFiltering = NO;
             break;
+        case kGIMFActionTypeMarkAsSpam:
+            [message addFlags:OPJunkMailStatus];
+            break;
             // ## missing code for other types
         default:
             //OPDebugLog1(FILTERDEBUG, OPINFO, @"filter action %d not yet supported, sorry.", [action type]);
