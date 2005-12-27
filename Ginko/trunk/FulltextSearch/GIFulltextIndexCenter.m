@@ -278,6 +278,21 @@ NSString *stringFromJstring(jstring aJstring) {
 
     [self document:document addKeywordFieldWithName:@"id" text:oidJavaString];
         
+    // thread-id
+    oidString = [[NSNumber numberWithUnsignedLongLong:[[aMessage thread] oid]] description];
+    oidJavaString = (*env)->NewStringUTF(env, [oidString UTF8String]);
+    exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+    NSAssert(oidJavaString != NULL, @"textString not converted.");
+    
+    [self document:document addKeywordFieldWithName:@"thread" text:oidJavaString];
+    
     // date
     NSCalendarDate *date = [aMessage valueForKey:@"date"];
     double millis = (double)([date timeIntervalSince1970] * 1000.0);
