@@ -152,7 +152,7 @@
 
 - (BOOL) containsSingleMessage
 {
-	return [[self valueForKey: @"numberOfMessages"] intValue] == 1;
+	return [self messageCount] <= 1;
 }
 
 - (void) treeWalkFrom: (GIMessage*) localRoot addTo: (NSMutableArray*) result

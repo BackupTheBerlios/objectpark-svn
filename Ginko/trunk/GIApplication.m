@@ -337,7 +337,7 @@
      */
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
     [self setDelegate:self];
 	    
