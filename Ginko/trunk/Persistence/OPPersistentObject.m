@@ -345,7 +345,7 @@
 	}
 }
 
-- (void) updateInverseRelationShipValue: (id) value forKey: (NSString*) key isRemove: (BOOL) isRemove
+//- (void) updateInverseRelationShipValue: (id) value forKey: (NSString*) key isRemove: (BOOL) isRemove
 /*" Updates the inverse relationship for the relation denoted by key, i.e. value->self via the inverseRelationshipKey for key. Does nothing, if key does not have an inverse relationship. 
 	
 	There are four kinds of relationships:
@@ -356,7 +356,7 @@
      n:m
 
 	"*/
-{
+//{
 	/*
 	OPAttributeDescription* ad = [[isa persistentClassDescription] attributeWithName: key];
 	if (!ad) [super setValue: value forUndefinedKey: key]; // throws exception
@@ -386,7 +386,7 @@
 		}
 	}
 */
-}
+//}
 
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
@@ -585,6 +585,8 @@
 		// Also update inverse relationship (if any):
 		NSString* inverseKey = [ad inverseRelationshipKey];
 		if (inverseKey) {
+			if ([inverseKey isEqualToString: @"threadsByDate"]) 
+				NSLog(@"Removing from threadsByDate!");
 			[value willChangeValueForKey: inverseKey];
 			[value removePrimitiveValue: self forKey: inverseKey];
 			[value didChangeValueForKey: inverseKey];

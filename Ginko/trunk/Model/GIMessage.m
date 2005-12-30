@@ -323,26 +323,28 @@
 }
 
 
-- (GIThread*) threadCreate: (BOOL) doCreate
-	/*" Returns the one thread the message belongs to. If doCreate is yes, this method creates a new thread in the receiver's context containing just the receiver. "*/
+- (GIThread*) assignThreadUseExisting: (BOOL) useExisting
+	/*" Returns the one thread the message belongs to. If useExisting is NO, this method creates a new thread in the receiver's context containing just the receiver, otherwise, it uses the message reference to find an existing thread object. "*/
 {
-    GIThread *thread = [self thread];
+    GIThread* thread = [self thread];
     
-    if (doCreate && !thread) {
-        // do threading by reference
-        thread = [[self referenceFind: YES] thread];
-        
-        if (!thread) {
+	if (!thread) {
+		if (useExisting) {
+			// do threading by reference
+			thread = [[self referenceFind: YES] thread];
+        }
+		if (!thread) {
             thread = [[[GIThread alloc] init] autorelease];
 			[thread insertIntoContext: [self context]];
             [thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
+			[thread setValue: [self valueForKey: @"date"] forKey: @"date"];
         } else {
             // NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
             // Set the thread's subject to be the first messages subject:
         }
         // We got one, so set it:
         [self setValue: thread forKey: @"thread"];
-        [thread addToMessages: self];
+		//[thread addValue: self forKey: @"messages"];
     }
     
     return thread;

@@ -648,38 +648,32 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         if ([threadsView isRowSelected:i]) 
         {
             // get one of the selected threads:
-            GIThread *thread = [OPPersistentObjectContext objectWithURLString: [threadsView itemAtRow:i]];
+            GIThread *thread = [OPPersistentObjectContext objectWithURLString: [threadsView itemAtRow: i]];
             NSAssert([thread isKindOfClass:[GIThread class]], @"assuming object is a thread");
             
             // remove selected thread from receiver's group:
-            [[self group] removeThread:thread];
+            [[self group] removeThread: thread];
             BOOL threadWasPutIntoAtLeastOneGroup = NO;
             
-            @try 
-            {
+            @try {
                 // apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
-                NSEnumerator *enumerator = [[thread messages] objectEnumerator];
-                GIMessage *message;
+                NSEnumerator* enumerator = [[thread messages] objectEnumerator];
+                GIMessage* message;
                 
-                while (message = [enumerator nextObject]) 
-                {
-                    threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage:message flags:0];
+                while (message = [enumerator nextObject]) {
+                    threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage: message flags: 0];
                 }
-            } 
-            @catch (NSException* localException) 
-            {
+            } @catch (NSException* localException) {
                 @throw;
-            } 
-            @finally 
-            {
+            } @finally {
                 if (!threadWasPutIntoAtLeastOneGroup) [[self group] addThread:thread];
             }
         }
     }
     // commit changes:
-    [NSApp saveAction:self];
-    [threadsView selectRow:firstIndex byExtendingSelection:NO];
-    [threadsView scrollRowToVisible:firstIndex];
+    [NSApp saveAction: self];
+    [threadsView selectRow: firstIndex byExtendingSelection: NO];
+    [threadsView scrollRowToVisible: firstIndex];
 }
 
 - (IBAction)threadFilterPopUpChanged:(id)sender
@@ -983,7 +977,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         [group autorelease];
         group = [aGroup retain];
-        
+		
+		//#########
+		[aGroup refault]; // just for testing!!
+        //#########
         // thread filter popup:
         [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
         
@@ -995,28 +992,25 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 static BOOL isThreadItem(id item)
 {
-    return [item isKindOfClass: [NSString class]];
+    return [item isKindOfClass: [GIThread class]];
 }
 
 // validation
 
-- (BOOL)isOnlyThreadsSelected
+- (BOOL) isOnlyThreadsSelected
 {
     // true when only threads are selected; false otherwise
     NSIndexSet *selectedIndexes;
     
     selectedIndexes = [threadsView selectedRowIndexes];
-    if ([selectedIndexes count] > 0)
-    {
-        int i, lastIndex;
+    if ([selectedIndexes count] > 0) {
+		
+        int i;
+        int lastIndex = [selectedIndexes lastIndex];
         
-        lastIndex = [selectedIndexes lastIndex];
-        
-        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) 
-        {
-            if ([threadsView isRowSelected:i]) 
-            {
-                if (!isThreadItem([threadsView itemAtRow:i])) return NO;
+        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) {
+            if ([threadsView isRowSelected:i]) {
+                if (!isThreadItem([threadsView itemAtRow: i])) return NO;
             }
         }
         return YES;
@@ -1024,7 +1018,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL)validateSelector:(SEL)aSelector
+- (BOOL) validateSelector: (SEL) aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -1343,15 +1337,12 @@ static NSAttributedString* spacer2()
     if (outlineView == threadsView) {
 		// subjects list
         if ([[tableColumn identifier] isEqualToString: @"date"]) {
-            //if ([item isKindOfClass: [NSString class]]) {
-            //    item = [OPPersistentObjectContext objectWithURLString: item];
-            //}
 
             BOOL isRead = ([item isKindOfClass: [GIThread class]]) ? ![(GIThread*)item hasUnreadMessages] : [(GIMessage*)item hasFlags: OPSeenStatus];
             
-            NSCalendarDate* date = [item valueForKey: @"date"];
+            NSCalendarDate* date = [item valueForKey: @"date"]; // both thread an message respond to "date"
             
-//            NSAssert1([date isKindOfClass: [NSCalendarDate class]], @"NSCalendarDate expected but got %@", NSStringFromClass([date class]));
+			NSAssert2(date==nil || [date isKindOfClass: [NSCalendarDate class]], @"NSCalendarDate expected but got %@ from %@", NSStringFromClass([date class]), item);
             
             NSString* dateString = [date descriptionWithCalendarFormat: [[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone: [NSTimeZone localTimeZone] locale: [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
                             
@@ -1418,34 +1409,6 @@ static NSAttributedString* spacer2()
             }
             
             return result;
-        }
-    } else {
-		// boxes list
-        if ([[tableColumn identifier] isEqualToString: @"box"]) {
-            if ([item isKindOfClass: [NSMutableArray class]]) {
-                return [[item objectAtIndex: 0] valueForKey: @"name"];
-            } else if (item) {
-				GIMessageGroup* g = [OPPersistentObjectContext objectWithURLString: item];
-                return [g valueForKey: @"name"];
-            }
-        }
-        if ([[tableColumn identifier] isEqualToString: @"info"]) {
-            if (![item isKindOfClass: [NSMutableArray class]]) {
-                //GIMessageGroup* g = item;
-                //NSMutableArray *threadURIs = [NSMutableArray array];
-                //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
-                
-                return @"";
-                    /*
-                [g fetchThreadURIs:&threadURIs
-                    trivialThreads: NULL
-                         newerThan: [date timeIntervalSinceReferenceDate]
-                       withSubject: nil
-                            author: nil
-             sortedByDateAscending: YES];
-                return [NSNumber numberWithInt: [threadURIs count]];
-                     */
-            }
         }
     }
     return @"";

@@ -51,12 +51,12 @@
 
 - (void) willSave
 {
-    OPFaultingArray* messages = [attributes objectForKey: @"messages"];
+    OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
     if (messages) {
-        [self setValue: [NSNumber numberWithUnsignedInt: [messages count]] forKey: @"numberOfMessages"];
+		int messageCount = [messages count];
+        [self setValue: [NSNumber numberWithUnsignedInt: messageCount] forKey: @"numberOfMessages"];
     }
 }
-
 
 - (void) addToGroups: (GIMessageGroup*) group
 {
@@ -225,19 +225,6 @@
     return result;
 }
 
-- (void) addToMessages: (GIMessage*) message
-{
-	[self willAccessValueForKey: @"messages"];
-	[self addValue: message forKey: @"messages"];
-	[self didAccessValueForKey: @"messages"];
-}
-
-- (void) removeFromMessages: (GIMessage*) message
-{
-	[self willAccessValueForKey: @"messages"];
-	[self removeValue: message forKey: @"messages"];
-	[self didAccessValueForKey: @"messages"];
-}
 
 - (unsigned) commentDepth
 	/*" Returns the the length of the longest comment chain in this thread. "*/

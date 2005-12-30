@@ -57,7 +57,7 @@
 - (NSAttributedString*) contentAsAttributedString;
 
 - (GIThread*) thread;
-- (GIThread*) threadCreate: (BOOL) doCreate;
+- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
 
 - (NSArray*) commentsInThread: (GIThread*) thread;
 

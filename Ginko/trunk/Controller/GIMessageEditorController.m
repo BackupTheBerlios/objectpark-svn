@@ -801,12 +801,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSString *replySubject;
     OPInternetMessage *internetMessage = [aMessage internetMessage];
     
-    @try
-    {
+    @try {
         replySubject = [internetMessage replySubject];
-    }
-    @catch (NSException* localException)
-    {
+		
+    } @catch (NSException* localException) {
+		
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
         replySubject = [internetMessage bodyForHeaderField: @"Subject"];
     }
@@ -818,12 +817,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     OPInternetMessage *internetMessage = [aMessage internetMessage];
     
-    @try
-    {
+    @try {
         [headerFields setObject: [internetMessage forwardSubject] forKey: @"Subject"];
-    }
-    @catch (NSException* localException)
-    {
+		
+    } @catch (NSException* localException) {
+		
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
         [headerFields setObject: [@"FWD: " stringByAppendingString: [internetMessage bodyForHeaderField: @"Subject"]] forKey:@"Subject"];
     }
@@ -1146,7 +1144,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     oldMessage = [message retain];
     
     // Set answered status if reply:
-    [referencedMessage addFlags: OPAnsweredStatus];
+    [referencedMessage addFlags: OPAnsweredStatus]; // dth: shouldn't we do that on send?
     
     // Set message in profile's messagesToSend:
     [profile addValue: message forKey: @"messagesToSend"];
@@ -1154,11 +1152,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window setDocumentEdited: NO];
     
     [NSApp saveAction: self];
-    /*
-    NSError *error;
-    [(NSManagedObjectContext *)[NSManagedObjectContext threadContext] save:&error];
-    NSAssert1(!error, @"Error checkpointing message: %@", error);
-    */
+
     if (NSDebugEnabled) NSLog(@"checkpointed message");
     
     return message;
@@ -1166,27 +1160,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 #define FORBIDDENCHARS @" []\\"
 
-- (BOOL)messageIsSendable
+- (BOOL) messageIsSendable
+	/*" A message is sendable if "to" and "subject" is filled out (nonempty). "*/
 {
-    // a message is sendable if "to" and "subject" is filled out (nonempty)
-    NSString *to, *subject;
+    NSString* to = [toField stringValue];
+    NSString* subject = [subjectField stringValue];
     
-    to = [toField stringValue];
-    subject = [subjectField stringValue];
-    
-    if (([to length]) && ([subject length]))
-    {
-        NSArray* recipients;
+    if (([to length]) && ([subject length])) {
+				
         static NSCharacterSet* forbiddenCharacters = nil;
-        
         if (! forbiddenCharacters)
             forbiddenCharacters = [[NSCharacterSet characterSetWithCharactersInString:FORBIDDENCHARS] retain];
         
-        NS_DURING
-            recipients = [to addressListFromEMailString];
+        @try {
+            NSArray* recipients = [to addressListFromEMailString];
             
-            if ([recipients count])
-            {
+            if ([recipients count]) {
                 NSEnumerator *enumerator;
                 NSString *recipient;
                 
@@ -1194,21 +1183,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 while (recipient = [enumerator nextObject])
                 {
                     // must contain no chars from "forbidden" set
-                    if ([recipient rangeOfCharacterFromSet:forbiddenCharacters options:0 range:NSMakeRange(0, [recipient length])].location != NSNotFound)
-                    {
-                        NS_VALUERETURN(NO, BOOL);
+                    if ([recipient rangeOfCharacterFromSet: forbiddenCharacters 
+												   options: 0 
+													 range: NSMakeRange(0, [recipient length])].location != NSNotFound) {
+                        return NO;
                     }
                     
-                    if (! [recipient canBeConvertedToEncoding:NSASCIIStringEncoding])
-                    {
-                        NS_VALUERETURN(NO, BOOL);
+                    if (! [recipient canBeConvertedToEncoding: NSASCIIStringEncoding]) {
+                        return NO;
                     }
                 }
-                NS_VALUERETURN(YES, BOOL);
-            };
-        NS_HANDLER
-            return NO;
-        NS_ENDHANDLER
+				return YES;
+            }
+        } @catch (NSException* localException) {
+			// Returns NO
+		}
     }
     return NO;
 }

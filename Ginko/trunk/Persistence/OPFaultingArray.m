@@ -196,17 +196,35 @@ int compareOids(OID o1, OID o2)
 
 - (void) removeObjectAtIndex: (unsigned) index
 {
-	if (index!=NSNotFound) {
+	if (index!=NSNotFound && count>0) {
+		NSParameterAssert(index<count);
 		if (sortKey) [*sortObjectPtr(index) release];
-		memccpy(oidPtr(index), oidPtr(index+1),(count-index)-1, entrySize);
+		
+		NSLog(@"Removing element %#u of %@", index, self);
+		// Test, if we need to move elements:
+		if (index<count-1) {
+			OID movedoid = *oidPtr(index+1); 
+			
+			memccpy(oidPtr(index), oidPtr(index+1),(count-index)-1, entrySize);
+			// Will there be an entry left?
+			if (count>2) {
+				NSAssert2(movedoid == *oidPtr(index), @"move did not work for index %d in %@", index, self);
+			}
+		}
 		count--;
+	}
 #warning Implement array shrinking!
-	}	
 }
 
 - (void) removeObject: (OPPersistentObject*) anObject
 {
-	[self removeObjectAtIndex: [self indexOfObject: anObject]];
+	if (anObject) {
+		unsigned index = [self indexOfObject: anObject];
+		if (index==NSNotFound) {
+			NSLog(@"Warning: Try to remove a nonexisting object %@.", anObject);
+		}
+		[self removeObjectAtIndex: index];
+	}
 }
 
 /*
@@ -352,11 +370,12 @@ int compareOids(OID o1, OID o2)
 {
 	// Keys are just for testing...
 	NSMutableString* keys = [NSMutableString string];
-	if (NO && sortKey) {
+	if (sortKey) {
 		int i;
 		for (i=0; i<count;i++) {
+			id value = [[self sortObjectAtIndex: i] description];
 			[keys appendString: @", "];
-			[keys appendString: [[self sortObjectAtIndex: i] description]];
+			[keys appendString: value ? value : @"--nil--"];
 		}
 	}
 	return [NSString stringWithFormat: @"<%@ with %d elements, sortkey: %@ %@>", [super description], count, sortKey, keys];
@@ -366,7 +385,10 @@ int compareOids(OID o1, OID o2)
 {
 	// Make sure, all sortObjects are released
 	if (sortKey) {
-		while (count) [self removeObjectAtIndex: count-1];
+		while (count>0) {
+			// Remove last element till empty, which is efficient:
+			[self removeObjectAtIndex: (count-1)];
+		}
 	}
 	
 	if (data) free(data);

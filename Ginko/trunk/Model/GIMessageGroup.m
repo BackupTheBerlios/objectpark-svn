@@ -536,7 +536,6 @@ static NSMutableArray* root = nil;
 
 #warning needs testing.
 	
-	
 	// todo: Cache enumerator object
 	result = [[[OPPersistentObjectEnumerator alloc] initWithContext: [self context]
 														resultClass: [GIMessage class] 
