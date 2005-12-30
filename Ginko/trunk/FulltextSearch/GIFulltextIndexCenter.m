@@ -11,6 +11,8 @@
 #import "GIApplication.h"
 #import "OPObjectPair.h"
 #import "NSString+Extensions.h"
+#import "GIMessage.h"
+#import "OPPersistentObject+Extensions.h"
 #import <OPDebug/OPLog.h>
 
 @interface GIFulltextIndexCenter (JVMStuff)
@@ -257,7 +259,7 @@ NSString *stringFromJstring(jstring aJstring) {
     return result;
 }
 
-+ (jobject)luceneDocumentFromMessage:(id)aMessage
++ (jobject)luceneDocumentFromMessage:(GIMessage *)aMessage
 {
     NSParameterAssert(aMessage != nil);
     
@@ -350,6 +352,7 @@ NSString *stringFromJstring(jstring aJstring) {
     
     // body
     NSString *body = [aMessage valueForKey:@"messageBodyAsPlainString"];
+    [aMessage flushInternetMessageCache]; // get rid of the message's data
     if (body)
     {
         jstring bodyJavaString = (*env)->NewStringUTF(env, [body UTF8String]);
@@ -655,7 +658,7 @@ static BOOL shouldStopAdding = NO;
     return term;
 }
 
-+ (void)removeMessagesWithOids:(NSArray *)someOids
++ (void)removeMessagesWithOids:(NSSet *)someOids
 {
     if ([someOids count])
     {;
@@ -670,21 +673,29 @@ static BOOL shouldStopAdding = NO;
              @try
              {
                  NSEnumerator *enumerator = [someOids objectEnumerator];
-                 NSString *Oid;
+                 NSNumber *oidNumber;
                  
-                 while (Oid = [enumerator nextObject])
-                 {;
+                 while (oidNumber = [enumerator nextObject])
+                 {
+                     OID oid = [oidNumber unsignedLongLongValue];
+                     GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:oid ofClass:[GIMessage class]];
+                     
+                     [message setValue:[NSNumber numberWithBool:NO] forKey:@"isFulltextIndexed"];
+                     
                      @try
                      {
                          if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
 
                          jstring fieldName = (*env)->NewStringUTF(env, "id");
-                         jstring text = (*env)->NewStringUTF(env, [[Oid description] UTF8String]);
+                         jstring text = (*env)->NewStringUTF(env, [[oidNumber description] UTF8String]);
 
                          jobject term = [self termNewWithFieldname:fieldName text:text];
                          
                          jint count = [self indexReader:indexReader delete:term];
-                         NSAssert(count <= 1, @"Fatal error: Deleted more than one message for a single message id from fulltext index.");
+                         if(count > 1)
+                         {
+                             NSLog(@"Deleted more than one message for a single message id from fulltext index.");
+                         }
                      }
                      @catch (NSException *localException)
                      {
@@ -896,48 +907,62 @@ static BOOL shouldStopAdding = NO;
 + (NSArray *)hitsForQueryString:(NSString *)aQuery
 {
     NSMutableArray *result = nil;
+    NSMutableSet *dupeCheck;
+    NSMutableSet *dupeOids;
     
-    @synchronized(self)
+    if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
+    
+    jobject hits = [self luceneHitsForQueryString:aQuery];
+    
+    if (hits == NULL) return nil;
+    
+    jint i, hitsCount = [GIFulltextIndexCenter hitsLength:hits];
+    
+    result = [NSMutableArray arrayWithCapacity:(int)hitsCount];
+    dupeCheck = [NSMutableSet set];
+    dupeOids = [NSMutableSet set];
+    for (i = 0; i < hitsCount; i++)
     {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
-
-        jobject hits = [self luceneHitsForQueryString:aQuery];
         
-        if (hits == NULL) return nil;
+        jobject doc = [self hits:hits document:i];
+        //NSLog(@"hit doc = %@", [self objectToString:doc]);
         
-        jint i, hitsCount = [GIFulltextIndexCenter hitsLength:hits];
-        
-        result = [NSMutableArray arrayWithCapacity:(int)hitsCount];
-        
-        for (i = 0; i < hitsCount; i++)
-        {
-            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
-            
-            jobject doc = [self hits:hits document:i];
-            //NSLog(@"hit doc = %@", [self objectToString:doc]);
-            
-            // oid
-            jstring fieldName = (*env)->NewStringUTF(env, "id");
-            jstring javaOid = [self document:doc get:fieldName];
-            NSString *oidString = stringFromJstring(javaOid);
+        // oid
+        jstring fieldName = (*env)->NewStringUTF(env, "id");
+        jstring javaOid = [self document:doc get:fieldName];
+        NSString *oidString = stringFromJstring(javaOid);
 #warning HACK: Do better with converting to unsigned long long (not correct here)
-            NSNumber *oid = [NSNumber numberWithUnsignedLongLong:[oidString longLongValue]];
-            
-            // score
-            jfloat javaScore = [self hits:hits score:i];
-            NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
-            
-            OPObjectPair *hit = [OPObjectPair pairWithObjects:oid :score];
-            [result addObject:hit];
-            
-            (*env)->PopLocalFrame(env, NULL);
-            [pool release];
+        NSNumber *oid = [NSNumber numberWithUnsignedLongLong:[oidString longLongValue]];
+        
+        // dupe check:
+        if ([dupeCheck containsObject:oid])
+        {
+            // remove from fulltext index:
+            [dupeOids addObject:oid];
+        }
+        else
+        {
+            [dupeCheck addObject:oid];
         }
         
+        // score
+        jfloat javaScore = [self hits:hits score:i];
+        NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
+        
+        OPObjectPair *hit = [OPObjectPair pairWithObjects:oid :score];
+        [result addObject:hit];
+        
         (*env)->PopLocalFrame(env, NULL);
+        [pool release];
     }
-
+    
+    (*env)->PopLocalFrame(env, NULL);
+    
+    // remove dupes:
+    [self removeMessagesWithOids:dupeOids];
+    
     return result;
 }
 
