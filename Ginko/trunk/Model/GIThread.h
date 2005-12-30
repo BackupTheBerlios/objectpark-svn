@@ -28,8 +28,8 @@
 
 
 /*" Groups handling "*/
-- (void) addToGroups: (GIMessageGroup*) group;
-- (void) removeFromGroups: (GIMessageGroup*) group;
+//- (void) addToGroups: (GIMessageGroup*) group;
+//- (void) removeFromGroups: (GIMessageGroup*) group;
 //- (void) removeAllFromGroups;
 
 - (unsigned) messageCount;

@@ -146,6 +146,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void) windowWillClose: (NSNotification*) notification 
 {
     lastTopLeftPoint = NSMakePoint(0.0, 0.0); // reset cascading
+	[self setGroup: nil];
     [self autorelease]; // balance self-retaining
 }
 
@@ -652,7 +653,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             NSAssert([thread isKindOfClass:[GIThread class]], @"assuming object is a thread");
             
             // remove selected thread from receiver's group:
-            [[self group] removeThread: thread];
+            [[self group] removeValue: thread forKey: @"threadsByDate"];
             BOOL threadWasPutIntoAtLeastOneGroup = NO;
             
             @try {
@@ -666,7 +667,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             } @catch (NSException* localException) {
                 @throw;
             } @finally {
-                if (!threadWasPutIntoAtLeastOneGroup) [[self group] addThread:thread];
+                if (!threadWasPutIntoAtLeastOneGroup) {
+					[[self group] addValue: thread forKey: @"threadsByDate"];
+				}
             }
         }
     }
@@ -913,8 +916,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
-        [[self group] removeThread:thread];
-        [GIMessageBase addTrashThread:thread];
+        [[self group] removeValue: thread forKey: @"threadsByDate"];
+        [GIMessageBase addTrashThread: thread];
         trashedAtLeastOne = YES;
     }
     
@@ -1118,16 +1121,14 @@ static BOOL isThreadItem(id item)
 
 - (void) outlineViewSelectionDidChange: (NSNotification*) notification
 {
-  if ([notification object] == threadsView) 
-  {
-        id item = [threadsView itemAtRow:[threadsView selectedRow]];
+  if ([notification object] == threadsView) {
+	  
+        id item = [threadsView itemAtRow: [threadsView selectedRow]];
         
-        if ([item isKindOfClass:[OPPersistentObject class]]) 
-        {
+        if ([item isKindOfClass: [OPPersistentObject class]]) {
             item = [item objectURLString];
+			[self setValue:item forGroupProperty: @"LastSelectedMessageItem"];
         }
-        
-        [self setValue:item forGroupProperty:@"LastSelectedMessageItem"];
     }
 }
 
@@ -1837,10 +1838,10 @@ NSMutableArray* border = nil;
         NSAssert([thread isKindOfClass:[GIThread class]], @"should be a thread");
         
         // remove thread from source group:
-        [thread removeFromGroups:sourceGroup];
+        [thread removeValue: sourceGroup forKey: @"groups"];
         
         // add thread to destination group:
-        [thread addToGroups:destinationGroup];
+        [thread addValue: destinationGroup forKey: @"groups"];
     }
 }
 

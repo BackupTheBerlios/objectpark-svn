@@ -456,7 +456,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	OPPersistentObjectEnumerator* e = nil;
 	
-	if ([ad isToManyRelationship] && sql!=nil) {
+	if ([ad isToManyRelationship] && sql != nil) {
 		// We might want to cache these:
 		if (sortKey = [ad sortAttributeName]) {
 			sortKeyClass = [[[[ad attributeClass] persistentClassDescription] attributeWithName: sortKey] attributeClass];

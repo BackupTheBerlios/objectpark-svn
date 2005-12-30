@@ -40,8 +40,8 @@ extern NSString* GIMessageGroupWasAddedNotification;
 
 /*" Thread handling "*/
 + (void) moveThreadsWithURI: (NSArray*) threadURIs fromGroup: (GIMessageGroup*) sourceGroup toGroup:(GIMessageGroup*) destinationGroup;
-- (void) addThread:(GIThread*) value;
-- (void) removeThread:(GIThread*) value;
+//- (void) addThread:(GIThread*) value;
+//- (void) removeThread:(GIThread*) value;
 
 /*" Profile handling "*/
 - (GIProfile*) defaultProfile;

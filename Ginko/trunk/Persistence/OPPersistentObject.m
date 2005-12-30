@@ -318,6 +318,7 @@
 {
 	[self didAccessValueForKey: key];
     [[self context] didChangeObject: self];
+	[super didChangeValueForKey: key];
 }
 
 
@@ -548,7 +549,9 @@
 		// Also update inverse relationship (if any):
 		NSString* inverseKey = [ad inverseRelationshipKey];
 		if (inverseKey) {
+			[value willChangeValueForKey: inverseKey];
 			[value addPrimitiveValue: self forKey: inverseKey];
+			[value didChangeValueForKey: inverseKey];
 		}
 		
 		// Do we need to check, if value is a fault and not do anything then? Does addPrimitiveValue already handle this?
@@ -557,8 +560,9 @@
 		}
 	}
 	
+	[self willChangeValueForKey: key];
 	[self addPrimitiveValue: value forKey: key];
-
+	[self didChangeValueForKey: key];
 }
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key
@@ -585,8 +589,8 @@
 		// Also update inverse relationship (if any):
 		NSString* inverseKey = [ad inverseRelationshipKey];
 		if (inverseKey) {
-			if ([inverseKey isEqualToString: @"threadsByDate"]) 
-				NSLog(@"Removing from threadsByDate!");
+			//if ([inverseKey isEqualToString: @"threadsByDate"]) 
+			//	NSLog(@"Removing from threadsByDate!");
 			[value willChangeValueForKey: inverseKey];
 			[value removePrimitiveValue: self forKey: inverseKey];
 			[value didChangeValueForKey: inverseKey];

@@ -78,24 +78,13 @@
 }
 
 
-+ (void) addMessage: (GIMessage*) aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
++ (void) addMessage: (GIMessage*) aMessage toMessageGroup: (GIMessageGroup*) aGroup suppressThreading: (BOOL) suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-    GIThread *thread = [aMessage assignThreadUseExisting: !suppressThreading];
-	/*
-    if (!thread) {
-        thread = [[GIThread alloc] init];
-		[thread insertIntoContext: [aMessage context]];
-        [thread setValue:[aMessage valueForKey: @"subject"] forKey: @"subject"];
-        [aMessage setValue: thread forKey: @"thread"];
-        // automatic! [thread addToMessages: aMessage];
-		[thread release];
-    }
-	 */
+    GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
     
-    [aGroup addThread: thread];
-    //[thread addGroup:aGroup];    
+    [aGroup addValue: thread forKey: @"threadsByDate"];
 }
 
 + (void) addSentMessage: (GIMessage*) aMessage

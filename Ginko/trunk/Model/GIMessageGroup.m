@@ -145,6 +145,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
      */
 }
 
+/*
 - (void) addThread: (GIThread*) thread 
 {    
 #warning lots of work for Dirk here
@@ -155,6 +156,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 {
     [thread removeFromGroups: self];
 }
+*/
 
 /*
 - (NSArray*) threadsByDate
@@ -453,10 +455,10 @@ static NSMutableArray* root = nil;
         NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
         
         // remove thread from source group:
-        [thread removeFromGroups: sourceGroup];
+        [thread removValue: sourceGroup forKey: @"groups"];
         
         // add thread to destination group:
-        [thread addToGroups: destinationGroup];
+        [thread addValue: destinationGroup forKey: @"groups"];
     }
 }
 
@@ -526,7 +528,15 @@ static NSMutableArray* root = nil;
 - (void) willDelete
 {
 	// delete dependent objects
+	[super willDelete];
 }
+
+- (void) willChangeValueForKey: (NSString*) key
+{
+	NSLog(@"MessageGroup changes value for key %@", key);
+	[super willChangeValueForKey: key];
+}
+
 
 - (NSEnumerator*) allMessagesEnumerator
 {

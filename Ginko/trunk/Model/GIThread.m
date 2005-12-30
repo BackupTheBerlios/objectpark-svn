@@ -58,6 +58,7 @@
     }
 }
 
+/*
 - (void) addToGroups: (GIMessageGroup*) group
 {
 	[self willChangeValueForKey: @"groups"];
@@ -73,6 +74,7 @@
 	[self removeValue: group forKey: @"groups"];
 	[self didChangeValueForKey: @"groups"];
 }
+*/
 
 
 - (void) mergeMessagesFromThread: (GIThread*) otherThread
