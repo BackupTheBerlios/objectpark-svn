@@ -180,7 +180,7 @@
     
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    [jobArguments setObject: anAccount forKey:@"account"];
+    [jobArguments setObject:anAccount forKey:@"account"];
     
     [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) arguments:jobArguments synchronizedObject:[anAccount incomingServerName]];
 }

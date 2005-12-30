@@ -149,71 +149,79 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self autorelease]; // balance self-retaining
 }
 
-- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
-    NSParameterAssert([aThread isKindOfClass: [GIThread class]]);
+    NSParameterAssert([aThread isKindOfClass:[GIThread class]]);
     
     int itemRow;
-    BOOL isNewThread = ![aThread isEqual: displayedThread];
+    BOOL isNewThread = ![aThread isEqual:displayedThread];
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
-    [displayedMessage addFlags: OPSeenStatus];
+    [displayedMessage addFlags:OPSeenStatus];
     
-    if (isNewThread) {
+    if (isNewThread) 
+    {
         [displayedThread autorelease];
         displayedThread = [aThread retain];
     }
     
     // make sure that thread is expanded in threads outline view:
-    if (aThread && (![aThread containsSingleMessage])) {
+    if (aThread && (![aThread containsSingleMessage])) 
+    {
         [threadsView expandItem:aThread];
     }
     
     // select responding item in threads view:
     if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     {
-        itemRow = [threadsView rowForItemEqualTo: aThread startingAtRow: 0];
+        itemRow = [threadsView rowForItemEqualTo:aThread startingAtRow:0];
     }
     
-    [threadsView selectRow:itemRow byExtendingSelection: NO];
+    [threadsView selectRow:itemRow byExtendingSelection:NO];
     [threadsView scrollRowToVisible:itemRow];
     
     // message display string:
     NSAttributedString *messageText = nil;
     
-    if (showRawSource) {
+    if (showRawSource) 
+    {
         NSData *transferData;
         NSString *transferString;
         
         static NSDictionary *fixedFont = nil;
         
-        if (!fixedFont) {
-            fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys: [NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
+        if (!fixedFont) 
+        {
+            fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
         }
         
         transferData = [displayedMessage transferData];
         
         // joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
-        if (!(transferString = [NSString stringWithData: [displayedMessage transferData] encoding:NSUTF8StringEncoding]))
-            transferString = [NSString stringWithData: [displayedMessage transferData] encoding:NSISOLatin1StringEncoding];
+        if (!(transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSUTF8StringEncoding]))
+            transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSISOLatin1StringEncoding];
         
         messageText = [[[NSAttributedString alloc] initWithString:transferString attributes:fixedFont] autorelease]; 
-    } else {
-        messageText = [displayedMessage renderedMessageIncludingAllHeaders: [[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
+    } 
+    else 
+    {
+        messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
     }
     
     if (!messageText)
-        messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText == nil."];
+    {
+        messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
+    }
     
     [[messageTextView textStorage] setAttributedString:messageText];
     
     // set the insertion point (cursor)to 0, 0
-    [messageTextView setSelectedRange: NSMakeRange(0, 0)];
+    [messageTextView setSelectedRange:NSMakeRange(0, 0)];
     [messageTextView sizeToFit];
     // make sure that the message's header is displayed:
-    [messageTextView scrollRangeToVisible: NSMakeRange(0, 0)];
+    [messageTextView scrollRangeToVisible:NSMakeRange(0, 0)];
 
     [self updateCommentTree:isNewThread];
     
@@ -221,36 +229,38 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // Hide comment tree, if trivial:
     //[treeBodySplitter setSubview: [[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
     //if (YES && !collapseTree){
-    if (isNewThread) {
-        NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex: 0];
+    if (isNewThread) 
+    {
+        NSScrollView *scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
         //[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
         //[treeBodySplitter moveSplitterBy: [commentsMatrix frame].size.height+10-[scrollView frame].size.height];
         //[scrollView setAutohidesScrollers: YES];
         BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
-        float newHeight = [commentsMatrix frame].size.height+3+(hasHorzontalScroller*[NSScroller scrollerWidth]); // scroller width could be different
+        float newHeight = [commentsMatrix frame].size.height + 3 + (hasHorzontalScroller * [NSScroller scrollerWidth]); // scroller width could be different
         [scrollView setHasHorizontalScroller:hasHorzontalScroller];
-        if ([commentsMatrix numberOfColumns]<=1)
-            newHeight = 0;
-        if (newHeight>200.0) {
+        if ([commentsMatrix numberOfColumns] <= 1) newHeight = 0;
+        if (newHeight>200.0) 
+        {
             newHeight = 200.0;
-            [scrollView setHasVerticalScroller: YES];
+            [scrollView setHasVerticalScroller:YES];
             //[scrollView setAutohidesScrollers: YES];
-        } else {
-            [scrollView setHasVerticalScroller: NO];
+        } 
+        else 
+        {
+            [scrollView setHasVerticalScroller:NO];
         }
         [treeBodySplitter setFirstSubviewSize:newHeight];
     }
     //}
     //[commentsMatrix scrollCellToVisibleAtRow: [commentsMatrix selectedRow] column: [commentsMatrix selectedRow]];
-
 }
 
-- (GIMessage*) displayedMessage
+- (GIMessage *)displayedMessage
 {
     return displayedMessage;
 }
 
-- (GIThread*) displayedThread
+- (GIThread *)displayedThread
 {
     return displayedThread;
 }
@@ -273,19 +283,18 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return nil;
 }
 
-
-- (NSWindow*) window 
+- (NSWindow *)window 
 {
     return window;
 }
 
-- (NSMutableArray*) threadCache
+- (NSMutableArray *)threadCache
 /* Returns an array of thread URI strings. */
 {
     return threadCache;
 }
 
-- (void) setThreadCache: (NSMutableArray*) newCache
+- (void)setThreadCache:(NSMutableArray *)newCache
 {
 	/*
     [newCache retain];
@@ -294,12 +303,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	 */
 }
 
-- (NSMutableSet*) nonExpandableItemsCache
+- (NSMutableSet *)nonExpandableItemsCache
 {
     return nonExpandableItemsCache;
 }
 
-- (void) setNonExpandableItemsCache: (NSMutableSet*) newCache
+- (void)setNonExpandableItemsCache:(NSMutableSet *)newCache
 {
 	/*
     [newCache retain];
@@ -308,33 +317,34 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	 */
 }
 
-- (void) observeValueForKeyPath: (NSString*) keyPath 
-					   ofObject: (id) object 
-						 change: (NSDictionary*) change 
-						context: (void*) context
+- (void)observeValueForKeyPath:(NSString *)keyPath 
+                      ofObject:(id)object 
+                        change:(NSDictionary *)change 
+                       context:(void *)context
 {
-    if ([object isEqual: [self group]]) {
-        NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" 
-																	object: self];
+    if ([object isEqual:[self group]]) 
+    {
+        NSNotification *notification = [NSNotification notificationWithName:@"GroupContentChangedNotification" object:self];
         
         NSLog(@"observeValueForKeyPath %@", keyPath);
 
-        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle: NSPostWhenIdle coalesceMask: NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes: nil];
+        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
     }
 }
 
-- (NSTimeInterval) nowForThreadFiltering
+- (NSTimeInterval)nowForThreadFiltering
 {
-    if (![[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]) return 0;
+    if (![[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]) return 0;
     
-    if (nowForThreadFiltering == 0) {
+    if (nowForThreadFiltering == 0) 
+    {
         nowForThreadFiltering = [[NSDate date] timeIntervalSinceReferenceDate] - 60 * 60 * 24 * 28;
     }
     
     return nowForThreadFiltering;
 }
 
-- (void) cacheThreadsAndExpandableItems
+- (void)cacheThreadsAndExpandableItems
 {
 	/*
     if ([self group]) {
@@ -354,10 +364,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	 */
 }
 
-- (NSArray*) threadsByDate
+- (NSArray *)threadsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-	return [group valueForKey: @"threadsByDate"];
+	return [group valueForKey:@"threadsByDate"];
 	
 	/*
     NSMutableArray* result = [self threadCache];
@@ -370,15 +380,28 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	 */
 }
 
-- (NSSet*) nonExpandableItems
+- (NSSet *)nonExpandableItems
 {
-    NSMutableSet* result = [self nonExpandableItemsCache];
+    NSMutableSet *result = [self nonExpandableItemsCache];
     
-    if (!result) {
+    if (!result) 
+    {
         [self cacheThreadsAndExpandableItems];
         result = [self nonExpandableItemsCache];
     }
     return result;
+}
+
+- (BOOL)threadsShownCurrently
+    /*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
+{
+    return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
+}
+
+- (BOOL)searchHitsShownCurrently
+    /*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
+{
+    return (hits != nil);
 }
 
 - (BOOL)openSelection:(id)sender
@@ -712,18 +735,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [messageListController trashSelectedMessages:self];
 }
 */
-
-- (BOOL)threadsShownCurrently
-/*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
-{
-    return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
-}
-
-- (BOOL)searchHitsShownCurrently
-/*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
-{
-    return (hits != nil);
-}
 
 - (IBAction)showThreads: (id) sender
 {

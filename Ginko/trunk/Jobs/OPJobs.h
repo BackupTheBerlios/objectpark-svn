@@ -13,56 +13,52 @@
 }
 
 /*" Scheduling new Jobs "*/
-+ (NSNumber*) scheduleJobWithName: (NSString*) aName 
-						   target: (NSObject*) aTarget 
-						 selector: (SEL) aSelector 
-						arguments: (NSDictionary*) someArguments 
-			   synchronizedObject: (id <NSCopying>) aSynchronizedObject;
++ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
 /*" Worker Threads "*/
-+ (unsigned) maxThreads;
-+ (BOOL) setMaxThreads: (unsigned) newMax;
++ (unsigned)maxThreads;
++ (BOOL)setMaxThreads:(unsigned)newMax;
 
 /*" Statistics "*/
-+ (int) idleThreadCount;
-+ (int) activeThreadCount;
++ (int)idleThreadCount;
++ (int)activeThreadCount;
 
 /*" Inquiring job state "*/
-+ (BOOL) isJobPending: (NSNumber*) aJobId;
-+ (NSArray*) pendingJobs;
-+ (BOOL) isJobRunning: (NSNumber*) aJobId;
-+ (NSArray*) runningJobs;
-+ (BOOL)isJobFinished: (NSNumber*) aJobId;
-+ (NSArray*) finishedJobs;
++ (BOOL)isJobPending:(NSNumber *)aJobId;
++ (NSArray *)pendingJobs;
++ (BOOL)isJobRunning:(NSNumber *)aJobId;
++ (NSArray *)runningJobs;
++ (BOOL)isJobFinished:(NSNumber *)aJobId;
++ (NSArray *)finishedJobs;
 
 /*" Cancelling pending jobs "*/
-+ (BOOL) cancelPendingJob: (NSNumber*) aJobId;
++ (BOOL)cancelPendingJob:(NSNumber *)aJobId;
 
 /*" Handling finished jobs "*/
-+ (BOOL) removeFinishedJob: (NSNumber*) aJobId;
-+ (void) removeAllFinishedJobs;
++ (BOOL)removeFinishedJob:(NSNumber *)aJobId;
++ (void)removeAllFinishedJobs;
 
 /*" Getting job results "*/
-+ (id)resultForJob:(NSNumber*) anJobId;
++ (id)resultForJob:(NSNumber *)anJobId;
 
 /*" Getting job exeption "*/
-+ (id) exceptionForJob: (NSNumber*) anJobId;
++ (id)exceptionForJob:(NSNumber *)anJobId;
 
 /*" Aborting jobs "*/
-+ (BOOL) suggestTerminatingJob: (NSNumber*) anJobId;
++ (BOOL)suggestTerminatingJob:(NSNumber *)anJobId;
 
 /*" Accessing job progress info "*/ 
-+ (NSDictionary*) progressInfoForJob: (NSNumber*) anJobId;
++ (NSDictionary *)progressInfoForJob:(NSNumber *)anJobId;
 
 /*" Methods for use within jobs "*/
-+ (NSNumber*) jobId;
-+ (void) setResult: (id) aResult;
-+ (BOOL) shouldTerminate;
-+ (NSString*) jobName;
-+ (void) postNotificationInMainThreadWithName: (NSString*) aNotificationName andUserInfo: (NSMutableDictionary*) userInfo;
-+ (NSDictionary*) progressInfoWithMinValue: (double) aMinValue maxValue: (double) aMaxValue currentValue: (double) currentValue description: (NSString*) aDescription;
-+ (NSDictionary*) indeterminateProgressInfoWithDescription: (NSString*) aDescription;
-+ (void) setProgressInfo: (NSDictionary*) progressInfo;
++ (NSNumber *)jobId;
++ (void)setResult:(id)aResult;
++ (BOOL)shouldTerminate;
++ (NSString *)jobName;
++ (void)postNotificationInMainThreadWithName:(NSString *)aNotificationName andUserInfo:(NSMutableDictionary *)userInfo;
++ (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription;
++ (NSDictionary *)indeterminateProgressInfoWithDescription:(NSString *)aDescription;
++ (void)setProgressInfo:(NSDictionary *)progressInfo;
 
 @end
 
@@ -73,22 +69,22 @@ extern NSString *OPJobWillStartNotification;
 extern NSString *OPJobDidFinishNotification;
 
 /*" Notification that a job has been set its progress information. object is the job's name and userInfo has a NSNumber object which hold the job's id as an unsigned for the key "jobId". The job progress info dictionary is stored for the key "progressInfo". "*/
-extern NSString* OPJobDidSetProgressInfoNotification;
+extern NSString *OPJobDidSetProgressInfoNotification;
 
-extern NSString* OPJobProgressMinValue;
-extern NSString* OPJobProgressMaxValue;
-extern NSString* OPJobProgressCurrentValue;
-extern NSString* OPJobProgressDescription;
-extern NSString* OPJobProgressJobName;
+extern NSString *OPJobProgressMinValue;
+extern NSString *OPJobProgressMaxValue;
+extern NSString *OPJobProgressCurrentValue;
+extern NSString *OPJobProgressDescription;
+extern NSString *OPJobProgressJobName;
 
 @interface NSDictionary (OPJobsExtensions)
 
-- (double) jobProgressMinValue;
-- (double) jobProgressMaxValue;
-- (double) jobProgressCurrentValue;
-- (NSString*) jobProgressDescription;
-- (NSString*) jobProgressJobName;
-- (BOOL) isJobProgressIndeterminate;
+- (double)jobProgressMinValue;
+- (double)jobProgressMaxValue;
+- (double)jobProgressCurrentValue;
+- (NSString *)jobProgressDescription;
+- (NSString *)jobProgressJobName;
+- (BOOL)isJobProgressIndeterminate;
 
 @end
 
@@ -96,6 +92,6 @@ extern NSString* OPJobProgressJobName;
 
 @interface OPJobs (GinkoExtensions)
 
-- (NSString*) runPasswordPanelWithAccount: (GIAccount*) anAccount forIncomingPassword: (BOOL) isIncoming;
+- (NSString *)runPasswordPanelWithAccount:(GIAccount *)anAccount forIncomingPassword:(BOOL)isIncoming;
 
 @end

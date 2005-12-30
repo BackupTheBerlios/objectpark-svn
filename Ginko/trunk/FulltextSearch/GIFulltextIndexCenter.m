@@ -499,6 +499,18 @@ NSString *stringFromJstring(jstring aJstring) {
     (*env)->CallVoidMethod(env, writer, mid);
 }
 
+static BOOL shouldStopAdding = NO;
+
++ (void)setShouldStopAdding:(BOOL)stop
+{
+    shouldStopAdding = stop;
+}
+
++ (BOOL)shouldStopAdding
+{
+    return shouldStopAdding;
+}
+
 + (void)addMessages:(NSEnumerator *)messageEnumerator
 {
     @synchronized(self)
@@ -513,7 +525,7 @@ NSString *stringFromJstring(jstring aJstring) {
             pool = [[NSAutoreleasePool alloc] init];
             id message;
             int counter = 1;
-            while (message = [messageEnumerator nextObject])
+            while ((message = [messageEnumerator nextObject]) && (![self shouldStopAdding]))
             {
                 @try
                 {
@@ -529,7 +541,7 @@ NSString *stringFromJstring(jstring aJstring) {
                         [self indexWriterOptimize:indexWriter];
                     }
                     
-                    [message setValue: [NSNumber numberWithBool: YES] forKey:@"isFulltextIndexed"];
+                    [message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
                 }
                 @catch (NSException *localException)
                 {
@@ -540,6 +552,7 @@ NSString *stringFromJstring(jstring aJstring) {
                     (*env)->PopLocalFrame(env, NULL);
                     [pool release];
                     pool = [[NSAutoreleasePool alloc] init];
+                    [self setShouldStopAdding:NO];
                 }
             }
         }

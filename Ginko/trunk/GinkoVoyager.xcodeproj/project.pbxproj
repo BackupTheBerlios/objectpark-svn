@@ -102,6 +102,8 @@
 		7782AE31095593D7005F1DC4 /* Lucene.h in Headers */ = {isa = PBXBuildFile; fileRef = 7782AE30095593D7005F1DC4 /* Lucene.h */; };
 		7786DC5007DE2F7200C5F9F7 /* ProfilePrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */; };
 		7786DC5107DE2F7200C5F9F7 /* ProfilePrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */; };
+		7790BB9E0962F7F900988B3C /* GIFulltextIndexJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 7790BB9C0962F7F900988B3C /* GIFulltextIndexJob.h */; };
+		7790BB9F0962F7F900988B3C /* GIFulltextIndexJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 7790BB9D0962F7F900988B3C /* GIFulltextIndexJob.m */; };
 		77962BCC08142114005ADB94 /* GIFulltextIndexCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */; };
 		77962BCD08142114005ADB94 /* GIFulltextIndexCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 77962BCB08142114005ADB94 /* GIFulltextIndexCenter.m */; };
 		77A84B970771D32700112B7D /* GIMessageEditorWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 77A84B950771D32700112B7D /* GIMessageEditorWindow.h */; };
@@ -545,6 +547,8 @@
 		7782AE30095593D7005F1DC4 /* Lucene.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.java; fileEncoding = 4; name = Lucene.h; path = FulltextSearch/Lucene.h; sourceTree = "<group>"; };
 		7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilePrefs.h; sourceTree = "<group>"; };
 		7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilePrefs.m; sourceTree = "<group>"; };
+		7790BB9C0962F7F900988B3C /* GIFulltextIndexJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFulltextIndexJob.h; sourceTree = "<group>"; };
+		7790BB9D0962F7F900988B3C /* GIFulltextIndexJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFulltextIndexJob.m; sourceTree = "<group>"; };
 		77962BCA08142114005ADB94 /* GIFulltextIndexCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFulltextIndexCenter.h; sourceTree = "<group>"; };
 		77962BCB08142114005ADB94 /* GIFulltextIndexCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFulltextIndexCenter.m; sourceTree = "<group>"; };
 		77A84B950771D32700112B7D /* GIMessageEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorWindow.h; sourceTree = "<group>"; };
@@ -1101,6 +1105,8 @@
 				774791BC085DF0150001560D /* GISMTPJob.m */,
 				77DFA5BD08409DF00068AD15 /* OPJobs.h */,
 				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
+				7790BB9C0962F7F900988B3C /* GIFulltextIndexJob.h */,
+				7790BB9D0962F7F900988B3C /* GIFulltextIndexJob.m */,
 			);
 			path = Jobs;
 			sourceTree = "<group>";
@@ -1495,6 +1501,7 @@
 				8D31443F09562178007D668A /* GIThreadListController.h in Headers */,
 				8D314458095622E2007D668A /* OPObjectRelationship.h in Headers */,
 				77D471E0095BF0E2003CEAEA /* utils.h in Headers */,
+				7790BB9E0962F7F900988B3C /* GIFulltextIndexJob.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1935,6 +1942,7 @@
 				8D31444009562178007D668A /* GIThreadListController.m in Sources */,
 				8D314459095622E2007D668A /* OPObjectRelationship.m in Sources */,
 				77D471DF095BF0E2003CEAEA /* utils.c in Sources */,
+				7790BB9F0962F7F900988B3C /* GIFulltextIndexJob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
