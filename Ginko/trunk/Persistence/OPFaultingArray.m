@@ -37,9 +37,9 @@ int compareOids(OID o1, OID o2)
 */
 
 
-#define oidPtr(oindex) (OID*)(data+(oindex*entrySize))
+#define oidPtr(oindex) (OID*)(data+((oindex)*entrySize))
 
-#define sortObjectPtr(oindex) (id*)(data+(oindex*entrySize)+sizeof(OID))
+#define sortObjectPtr(oindex) (id*)(data+((oindex)*entrySize)+sizeof(OID))
 
 //#define setSortObjectAtIndex(newValue, aindex) {id* oldValuePtr=sortObjectAdr(aindex); if (*oldValuePtr!=newValue) {[*oldValuePtr autorelease]; *oldValuePtr=[newValue retain];}}
 

@@ -945,15 +945,15 @@ static BOOL shouldStopAdding = NO;
         else
         {
             [dupeCheck addObject:oid];
+            
+            // score
+            jfloat javaScore = [self hits:hits score:i];
+            NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
+            
+            OPObjectPair *hit = [OPObjectPair pairWithObjects:oid :score];
+            [result addObject:hit];
         }
-        
-        // score
-        jfloat javaScore = [self hits:hits score:i];
-        NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
-        
-        OPObjectPair *hit = [OPObjectPair pairWithObjects:oid :score];
-        [result addObject:hit];
-        
+
         (*env)->PopLocalFrame(env, NULL);
         [pool release];
     }

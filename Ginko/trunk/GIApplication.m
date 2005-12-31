@@ -371,7 +371,7 @@
     //                                             name: NSManagedObjectContextDidSaveNotification 
     //                                           object: nil];  
     
-    [self playWithLucene];
+    //[self playWithLucene];
 }
 
 
