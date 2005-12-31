@@ -372,7 +372,7 @@ int compareOids(OID o1, OID o2)
 {
 	// Keys are just for testing...
 	NSMutableString* keys = [NSMutableString string];
-	if (sortKey) {
+	if (NO && sortKey) {
 		int i;
 		for (i=0; i<count;i++) {
 			id value = [[self sortObjectAtIndex: i] description];
