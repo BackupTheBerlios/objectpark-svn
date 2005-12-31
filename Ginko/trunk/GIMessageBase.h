@@ -18,7 +18,7 @@
 
 + (GIMessage *)addMessageWithTransferData:(NSData *)someTransferData;
 
-+ (void) removeMessage: (GIMessage*) aMessage;
+//+ (void) removeMessage: (GIMessage*) aMessage;
 
 + (NSSet *)defaultGroupsForMessage: (GIMessage*) aMessage;
 

@@ -95,24 +95,24 @@
 
 + (void) addDraftMessage: (GIMessage*) aMessage
 {
-    GIThread *thread = [aMessage threadCreate: NO];
-    if (thread) [[GIMessageGroup queuedMessageGroup] removeThread:thread];
-    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup] suppressThreading: YES];
+    GIThread* thread = [aMessage thread];
+    if (thread) [[GIMessageGroup queuedMessageGroup] removeValue: thread forKey: @"threadsByDate"];
+    [self addMessage:aMessage toMessageGroup: [GIMessageGroup draftMessageGroup] suppressThreading: YES];
 }
 
 + (void) addQueuedMessage: (GIMessage*) aMessage
 {
     GIThread* thread = [aMessage thread];
-    if (thread) [[GIMessageGroup draftMessageGroup] removeThread: thread];
+    if (thread) [[GIMessageGroup draftMessageGroup] removeValue: thread forKey: @"threadsByDate"];
     [self addMessage: aMessage toMessageGroup: [GIMessageGroup queuedMessageGroup] suppressThreading: YES];
 }
 
-+ (void) addTrashThread:(GIThread *)aThread
++ (void) addTrashThread: (GIThread*) thread
 {
-    [[GIMessageGroup draftMessageGroup] removeThread:aThread];
-    [[GIMessageGroup queuedMessageGroup] removeThread:aThread];
+    [[GIMessageGroup draftMessageGroup] removeValue: thread forKey: @"threadsByDate"];
+    [[GIMessageGroup queuedMessageGroup] removeValue: thread forKey: @"threadsByDate"];
     
-    [[GIMessageGroup trashMessageGroup] addThread:aThread];
+    [[GIMessageGroup trashMessageGroup] addValue: thread forKey: @"threadsByDate"];
 }
 
 + (void) removeDraftMessage: (GIMessage*) aMessage

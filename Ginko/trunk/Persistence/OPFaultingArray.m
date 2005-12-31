@@ -198,30 +198,21 @@ int compareOids(OID o1, OID o2)
 {
 	if (index!=NSNotFound && count>0) {
 		NSParameterAssert(index<count);
-		NSLog(@"Removing element %#u of %@", index, self);
+		//NSLog(@"Removing element %#u of %@", index, self);
 		
 		if (sortKey) [*sortObjectPtr(index) release];
 		// Test, if we need to move elements:
 		if (index<count-1) {
-			//OID movedoid = *oidPtr(index+1); 
+			OID movedoid = *oidPtr(index+1); 
 			
-			int i = index+1;
-			
-			// move up all elements below
-			while (i<count) {
-				*oidPtr(i-1) = *oidPtr(i);
-				if (sortKey) *sortObjectPtr(i-1) = *sortObjectPtr(i); 
-				i++;
-			}
-			
-			//memmove(oidPtr(index), oidPtr(index+1), ((count-index)-1) * entrySize);
+			memmove(oidPtr(index), oidPtr(index+1), ((count-index)-1) * entrySize);
 			// Will there be an entry left?
-			//if (count>2) {
-			//	NSAssert2(movedoid == *oidPtr(index), @"move did not work for index %d in %@", index, self);
-			//}
+			if (count>2) {
+				NSAssert2(movedoid == *oidPtr(index), @"move did not work for index %d in %@", index, self);
+			}
 		}
 		count--;
-		NSLog(@"Removed element. Now %@.", self);
+		//NSLog(@"Removed element. Now %@.", self);
 	}
 #warning Implement array shrinking!
 }
@@ -322,7 +313,7 @@ int compareOids(OID o1, OID o2)
 	
 	if (sortKey) {
 		// Cache the sortObject:
-		NSLog(@"Adding sortObject: %@", sortObject);
+		//NSLog(@"Adding sortObject: %@", sortObject);
 		[sortObject retain];
 		//NSLog(@"Adding Sortkey %@ at index: %d", sortObject, count);
 		*sortObjectPtr(count) = sortObject;

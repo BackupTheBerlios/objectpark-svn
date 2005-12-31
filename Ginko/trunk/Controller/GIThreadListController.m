@@ -982,7 +982,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         group = [aGroup retain];
 		
 		//#########
-		[aGroup refault]; // just for testing!!
+		//[aGroup refault]; // just for testing!!
         //#########
         // thread filter popup:
         [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];

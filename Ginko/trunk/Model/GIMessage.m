@@ -177,12 +177,12 @@
     OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData: someTransferData];
     BOOL insertMessage = NO;
     
-    GIMessage *dupe = [self messageForMessageId: [im messageId]];
+    GIMessage* dupe = [self messageForMessageId: [im messageId]];
     if (dupe) {
         if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
             //replace old message with new:
-            [GIMessageBase removeMessage: dupe];
-            [NSApp saveAction: self];
+            [[dupe context] deleteObject: dupe];
+            //[NSApp saveAction: self]; // needed here?
             insertMessage = YES;
         }
         //if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [im messageId]);        
@@ -198,7 +198,7 @@
         
         NSString *fromHeader = [im fromWithFallback: YES];
         
-        [result setPrimitiveValue:im forKey: @"internetMessageCache"];
+        [result setPrimitiveValue: im forKey: @"internetMessageCache"];
         [result setValue: someTransferData forKey: @"transferData"];
         [result setValue: [im messageId] forKey: @"messageId"];  
         [result setValue: [im normalizedSubject] forKey: @"subject"];
@@ -206,7 +206,7 @@
         
         // sanity check for date header field:
         NSCalendarDate* messageDate = [im date];
-        if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare:messageDate] != NSOrderedDescending) {
+        if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare: messageDate] != NSOrderedDescending) {
 			// if message's date is a future date
 			// broken message, set current date:
             messageDate = [NSCalendarDate date];
