@@ -415,18 +415,19 @@
 - (void) beginTransaction
 {
 	NSAssert(transactionInProgress==NO, @"Transaction already in progress.");
-	if (!transactionInProgress) {
-		NSLog(@"Beginning db transaction.");
-		[self performCommand: @"BEGIN TRANSACTION"];   
-		transactionInProgress = YES;
-	}
+	//if (!transactionInProgress) {
+	OPDebugLog(OPPERSISTENCE, OPINFO, @"Beginning db transaction for %@", self);
+	// Simplistic implementation. Should use a statement class/object and cache that:
+	[self performCommand: @"BEGIN TRANSACTION"];   
+	transactionInProgress = YES;
+	//}
 }
 
 - (void) commitTransaction
 {
-	// Simplistic implementation. Should use a statement class/object and cache that.
-	NSAssert(transactionInProgress, @"There seems to be no transaction to commit.");
-	NSLog(@"Committing db transaction.");
+	NSAssert(transactionInProgress==YES, @"There seems to be no transaction to commit.");
+	OPDebugLog(OPPERSISTENCE, OPINFO, @"Committing db transaction for %@", self);
+	// Simplistic implementation. Should use a statement class/object and cache that:
     [self performCommand: @"COMMIT TRANSACTION"];  
 	transactionInProgress = NO;
 }
@@ -435,7 +436,7 @@
 {
 	if (transactionInProgress) {
 		[self performCommand: @"ROLLBACK TRANSACTION"];   
-		NSLog(@"Rolled back db transaction.");
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Rolled back db transaction.");
 		transactionInProgress = NO;
 	}
 }
@@ -721,9 +722,14 @@
 			return nil;
 		}
 		connection = [aConnection retain];
-		
+		if (NSDebugEnabled) sqlString = [sql copy];
 	}
 	return self;
+}
+
+- (NSString*) description 
+{
+	return [NSString stringWithFormat: @"%@ sql: '%@' connection: %@.", [super description], sqlString, connection]; 
 }
 
 - (void) bindPlaceholderAtIndex: (int) index toValue: (id) value
@@ -759,6 +765,7 @@
 
 	sqlite3_finalize(statement);
 	[connection release];
+	[sqlString release];
 	[super dealloc];
 }
 

@@ -329,10 +329,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	if (![db transactionInProgress]) [db beginTransaction];
 	
-	// do we need a local autoreleasepoool here?
+	// do we need a local autoreleasepool here?
 	
 	if ([changedObjects count]) {
-		NSLog(@"Saving %u object(s).", [changedObjects count]);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Saving %u object(s).", [changedObjects count]);
 		
 		// Process all updated objects and save their changed attribute sets:
 		NSEnumerator* coe = [changedObjects objectEnumerator];
@@ -352,6 +352,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		// Release all changed objects:
 		[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
 	}	
+	
+	[pool release]; pool = [[NSAutoreleasePool alloc] init];
 	
 	if ([deletedObjects count]) {
 		NSEnumerator* coe = [deletedObjects objectEnumerator];
@@ -419,6 +421,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		}
 	}
 	
+	[pool release]; pool = [[NSAutoreleasePool alloc] init];
 	
 	[db commitTransaction];
 	

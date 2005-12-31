@@ -119,6 +119,7 @@
 @interface OPSQLiteStatement: NSObject {
 	sqlite3_stmt* statement;
 	OPSQLiteConnection* connection;
+	NSString* sqlString;
 }
 
 - (void) bindPlaceholderAtIndex: (int) index toValue: (id) value;

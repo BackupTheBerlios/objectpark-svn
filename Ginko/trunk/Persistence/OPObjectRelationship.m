@@ -126,7 +126,7 @@
 	e = [removedRelations objectEnumerator];
 	while (relation = [e nextObject]) {
 		if ([relation objectAtIndex: objectColumn] == anObject) {
-			// Add related object to array:
+			// Remove related object from array:
 			[array removeObject: [relation objectAtIndex: 1-objectColumn]];
 		}
 	}

@@ -911,24 +911,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     while (thread = [enumerator nextObject]) 
     {
-        NSAssert([thread isKindOfClass:[GIThread class]], @"got non-thread object");
+        NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
-        [[self group] removeValue:thread forKey:@"threadsByDate"];
+        [[self group] removeValue: thread forKey: @"threadsByDate"];
         [GIMessageBase addTrashThread:thread];
         trashedAtLeastOne = YES;
     }
     
-    if (trashedAtLeastOne) 
-    {
-        [NSApp saveAction:self];
-        if (rowBefore >= 0) 
-        {
+    if (trashedAtLeastOne) {
+        [NSApp saveAction: self];
+        if (rowBefore >= 0) {
             [threadsView selectRow:rowBefore byExtendingSelection:NO];
         }
-    }
-    else 
-    {
+    } else {
         NSBeep();
     }
 }

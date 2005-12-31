@@ -584,13 +584,10 @@
 	if (r) {
 		// Record relationship change in persistent context:
 		[r removeRelationNamed: key from: self to: value];
-		
 
 		// Also update inverse relationship (if any):
 		NSString* inverseKey = [ad inverseRelationshipKey];
 		if (inverseKey) {
-			//if ([inverseKey isEqualToString: @"threadsByDate"]) 
-			//	NSLog(@"Removing from threadsByDate!");
 			[value willChangeValueForKey: inverseKey];
 			[value removePrimitiveValue: self forKey: inverseKey];
 			[value didChangeValueForKey: inverseKey];
