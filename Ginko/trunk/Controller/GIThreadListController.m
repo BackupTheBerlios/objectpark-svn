@@ -819,20 +819,23 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self toggleFlag:OPSeenStatus];
 }
 
-- (NSArray*) selectedThreadURIs
+- (NSArray *)selectedThreads
 {
-    NSMutableArray* result = [NSMutableArray array];
-    NSIndexSet* set = [threadsView selectedRowIndexes];
+    NSMutableArray *result = [NSMutableArray array];
+    NSIndexSet *set = [threadsView selectedRowIndexes];
 	
-    if ([set count]) {
+    if ([set count]) 
+    {
         int lastIndex = [set lastIndex];
         int i;
-        for (i=[set firstIndex]; i<=lastIndex; i++) {
-			
-            if ([set containsIndex: i]) {
-                if ([threadsView levelForRow: i]==0) {
-                    NSString* nextThreadURI = [threadsView itemAtRow: i];
-                    [result addObject: nextThreadURI];
+        for (i = [set firstIndex]; i<=lastIndex; i++) 
+        {
+            if ([set containsIndex:i]) 
+            {
+                if ([threadsView levelForRow:i] == 0) // is it a thread?
+                {
+                    GIThread *thread = [threadsView itemAtRow:i];
+                    [result addObject:thread];
                 }
             }
         }
@@ -840,95 +843,94 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (void) joinThreadsWithURIs:(NSArray*) uriArray
+- (void)joinThreads
 {
-    NSEnumerator* e = [[self selectedThreadURIs] objectEnumerator];
-    NSString* targetThreadURI = [e nextObject];
-    GIThread* targetThread = [OPPersistentObjectContext objectWithURLString: targetThreadURI];
-    [threadsView selectRow: [threadsView rowForItem: targetThreadURI] byExtendingSelection: NO];
-    [[self nonExpandableItemsCache] removeObject: targetThreadURI]; 
-    [threadsView expandItem: targetThreadURI];
+    NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
+    GIThread *targetThread = [enumerator nextObject];
+    [threadsView selectRow:[threadsView rowForItem:targetThread] byExtendingSelection:NO];
+    [[self nonExpandableItemsCache] removeObject:targetThread]; 
+    [threadsView expandItem:targetThread];
 
     //NSLog(@"Merging other threads into %@", targetThread);    
 
     // prevent merge problems:
     //[[OPPersistentObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    NSString* nextThreadURI;
-    while (nextThreadURI = [e nextObject])  {
-        GIThread* nextThread = [OPPersistentObjectContext objectWithURLString: nextThreadURI];
-        [targetThread mergeMessagesFromThread: nextThread];
-    }
+    GIThread *nextThread;
+    while (nextThread = [enumerator nextObject]) [targetThread mergeMessagesFromThread:nextThread];
     
-    [GIApp saveAction: self];
+    [GIApp saveAction:self];
 }
 
-
-- (IBAction) selectThreadsWithCurrentSubject: (id) sender
-    /*" Joins all threads with the subject of the selected thread. "*/
+- (IBAction)selectThreadsWithCurrentSubject:(id)sender
+/*" Joins all threads with the subject of the selected thread. "*/
 {
-    NSArray* uriStrings = [self selectedThreadURIs];
-    if ([uriStrings count]) {
-        NSString* uri = [uriStrings objectAtIndex: 0];
-        GIThread* thread = [OPPersistentObjectContext objectWithURLString: uri];
-        NSString* subject = [thread valueForKey: @"subject"];
-        if (subject) {
+    NSArray *selectedThreads = [self selectedThreads];
+    if ([selectedThreads count]) 
+    {
+        GIThread *thread = [selectedThreads objectAtIndex:0];
+        NSString *subject = [thread valueForKey:@"subject"];
+        if (subject) 
+        {
             // query database
-            NSMutableArray* result = [NSMutableArray array];
+            NSMutableArray *result = [NSMutableArray array];
             
-            [[self group] fetchThreads: &result 
-						trivialThreads: NULL 
-							 newerThan: [self nowForThreadFiltering]
-						   withSubject: subject
-								author: nil 
-				 sortedByDateAscending: YES];
+            [[self group] fetchThreads:&result 
+						trivialThreads:NULL 
+							 newerThan:[self nowForThreadFiltering]
+						   withSubject:subject
+								author:nil 
+				 sortedByDateAscending:YES];
 
-            [threadsView selectItems: result ordered: YES];
+            [threadsView selectItems:result ordered:YES];
         }
     }
 }
 
-- (IBAction) joinThreads: (id) sender
+- (IBAction)joinThreads:(id)sender
 /*" Joins the selected threads into one. "*/
 {
-    [self joinThreadsWithURIs: [self selectedThreadURIs]];
+    [self joinThreads];
 }
 
 - (IBAction) extractThread: (id) sender
 /*" Creates a new thread for the selected messages. "*/
 {
     NSLog(@"Should extractThread here.");
-    
 }
 
-- (IBAction) moveSelectionToTrash: (id) sender
+- (IBAction)moveSelectionToTrash:(id)sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
-    NSEnumerator* enumerator = [[self selectedThreadURIs] objectEnumerator];
-    NSString* uriString;
+    NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
+    GIThread *thread;
     BOOL trashedAtLeastOne = NO;
     
     // Make sure we have a fresh group object and prevent merge problems:
     //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    while (uriString = [enumerator nextObject]) {
-        GIThread *thread = [OPPersistentObjectContext objectWithURLString:uriString];
-        NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
+    while (thread = [enumerator nextObject]) 
+    {
+        NSAssert([thread isKindOfClass:[GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
-        [[self group] removeValue: thread forKey: @"threadsByDate"];
-        [GIMessageBase addTrashThread: thread];
+        [[self group] removeValue:thread forKey:@"threadsByDate"];
+        [GIMessageBase addTrashThread:thread];
         trashedAtLeastOne = YES;
     }
     
-    if (trashedAtLeastOne) {
+    if (trashedAtLeastOne) 
+    {
         [NSApp saveAction:self];
-        if (rowBefore >= 0) {
-            [threadsView selectRow:rowBefore byExtendingSelection: NO];
+        if (rowBefore >= 0) 
+        {
+            [threadsView selectRow:rowBefore byExtendingSelection:NO];
         }
     }
-    
-    else NSBeep();
+    else 
+    {
+        NSBeep();
+    }
 }
 
 - (void)updateWindowTitle
