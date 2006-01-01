@@ -57,7 +57,7 @@ int compareOids(OID o1, OID o2)
 		entrySize    = sizeof(OID);
 		needsSorting = NO;
 		data         = malloc( (capacity+3) * entrySize );
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"OPFaultingArray %@ created.", self);
+		//OPDebugLog(OPPERSISTENCE, OPINFO, @"OPFaultingArray %@ created.", self);
     }
     return self;
 }

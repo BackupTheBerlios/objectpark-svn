@@ -216,7 +216,7 @@
 
 		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (%@,%@) values (?,?);", joinTableName, firstColumnName, secondColumnName];
 		
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
+		//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 		// Cache statement for later use:
 		[addRelationStatements setObject: result forKey: joinTableName];
@@ -239,7 +239,7 @@
 		
 		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where \"%@\"=? and \"%@\"=?;", joinTableName, firstColumnName, secondColumnName];
 		
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
+		//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 		// Cache statement for later use:
 		[removeRelationStatements setObject: result forKey: joinTableName];
@@ -257,7 +257,7 @@
 		OPClassDescription* cd = [poClass persistentClassDescription];
 		
 		NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[cd columnNames] componentsJoinedByString: @","], [cd tableName]];
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
+		//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
 		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 		// Cache statement for later use:
 		[fetchStatements setObject: result forKey: poClass]; // cache it
@@ -330,7 +330,7 @@
 	
 	[result bindPlaceholderAtIndex: 0 toRowId: rid];
 	[result execute];
-	
+	[result reset];
 }
 
 /*
@@ -400,6 +400,7 @@
 {
 	sqlite3_stmt* statement = NULL;
 	sqlite3_prepare(connection, [sql UTF8String], -1, &statement, NULL);
+	OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing Command: '%@'", sql);
 	int result = sqlite3_step(statement);
 	if (result != SQLITE_DONE) {
 		[self raiseSQLiteError];
@@ -416,7 +417,7 @@
 {
 	NSAssert(transactionInProgress==NO, @"Transaction already in progress.");
 	//if (!transactionInProgress) {
-	OPDebugLog(OPPERSISTENCE, OPINFO, @"Beginning db transaction for %@", self);
+	//OPDebugLog(OPPERSISTENCE, OPINFO, @"Beginning db transaction for %@", self);
 	// Simplistic implementation. Should use a statement class/object and cache that:
 	[self performCommand: @"BEGIN TRANSACTION"];   
 	transactionInProgress = YES;
@@ -426,7 +427,7 @@
 - (void) commitTransaction
 {
 	NSAssert(transactionInProgress==YES, @"There seems to be no transaction to commit.");
-	OPDebugLog(OPPERSISTENCE, OPINFO, @"Committing db transaction for %@", self);
+	//OPDebugLog(OPPERSISTENCE, OPINFO, @"Committing db transaction for %@", self);
 	// Simplistic implementation. Should use a statement class/object and cache that:
     [self performCommand: @"COMMIT TRANSACTION"];  
 	transactionInProgress = NO;
@@ -436,7 +437,7 @@
 {
 	if (transactionInProgress) {
 		[self performCommand: @"ROLLBACK TRANSACTION"];   
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"Rolled back db transaction.");
+		//OPDebugLog(OPPERSISTENCE, OPINFO, @"Rolled back db transaction.");
 		transactionInProgress = NO;
 	}
 }
@@ -733,7 +734,7 @@
 }
 
 - (void) bindPlaceholderAtIndex: (int) index toValue: (id) value
-/*" Index is zero-based. "*/
+/*" Index is zero-based. Be sure to call -reset before binding the first value. "*/
 {
 	index++;
 	if (value) {
@@ -744,7 +745,7 @@
 }
 
 - (void) bindPlaceholderAtIndex: (int) index toRowId: (ROWID) rid
-/*" Index is zero-based. "*/
+/*" Index is zero-based. Be sure to call -reset before binding the first value. "*/
 {
 	index++;
 	if (rid) {
@@ -777,6 +778,7 @@
 - (int) execute
 /*" Raises exception on error. "*/
 {
+	OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing %@", self);
 	int result = sqlite3_step(statement);
 		
 	if (result != SQLITE_DONE && result != SQLITE_ROW) {

@@ -391,11 +391,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				OPPersistentObject* firstObject  = [pair firstObject];
 				OPPersistentObject* secondObject = [pair secondObject];
 				
+				[addStatement reset];
 				[addStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
 				[addStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
 				
 				[addStatement execute];
 			}
+			[addStatement reset];
 			
 			// Remove a row in the join table to each relation removed:
 			
@@ -411,11 +413,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				OPPersistentObject* firstObject  = [pair firstObject];
 				OPPersistentObject* secondObject = [pair secondObject];
 				
+				[removeStatement reset];
 				[removeStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
 				[removeStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
 				
 				[removeStatement execute];
-			}			
+			}		
+			[removeStatement reset];
 			
 			[relationshipChanges reset]; // delete all changes as they are now recorded in the database
 		}
