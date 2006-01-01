@@ -83,6 +83,7 @@
 
 
 - (id) initWithName: (NSString*) aName properties: (NSDictionary*) dict;
+- (NSString*) name;
 - (NSString*) queryString;
 - (Class) attributeClass;
 - (BOOL) isToManyRelationship;

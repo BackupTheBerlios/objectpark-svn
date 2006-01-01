@@ -81,6 +81,8 @@
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key;
 - (void) refault;
 - (void) revert;
+- (void) delete;
+
 - (OID) currentOid; // internal method
 - (void) setOid: (OID) theOid; // for internal use
 

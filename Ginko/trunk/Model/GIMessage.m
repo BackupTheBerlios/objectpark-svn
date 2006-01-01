@@ -110,9 +110,10 @@
 		//[self setValue: nil forKey: @"thread"];
 
 		if ([thread messageCount]<=1) {
-			[[thread context] deleteObject: thread]; 
+			[thread delete]; 
 		}
 	}
+	[[self valueForKey: @"messageData"] delete];
 	[super willDelete];
 }
 
@@ -181,7 +182,7 @@
     if (dupe) {
         if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
             //replace old message with new:
-            [[dupe context] deleteObject: dupe];
+            [dupe delete];
             //[NSApp saveAction: self]; // needed here?
             insertMessage = YES;
         }

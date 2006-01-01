@@ -70,7 +70,7 @@
 - (NSSet*) deletedObjects;
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object;
 - (OID) newDatabaseObjectForObject: (OPPersistentObject*) object;
-- (void) deleteObject: (OPPersistentObject*) object;
+- (void) shouldDeleteObject: (OPPersistentObject*) object;
 
 + (void) setDefaultContext: (OPPersistentObjectContext*) context;
 

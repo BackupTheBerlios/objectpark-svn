@@ -1128,10 +1128,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [message removeFlags: OPSendingBlockedStatus];
     
     // Remove old message from database if present:
-    if (oldMessage) {
-        //[profile removeValue: oldMessage forKey: @"messagesToSend"]; // should be automatic now
-        [[oldMessage context] deleteObject: oldMessage];
-    }
+	[oldMessage delete];
     
     if (aType & OPDraftStatus) {
         //add new message to database

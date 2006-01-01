@@ -22,10 +22,11 @@
 	int selectedRow = [accountTableView selectedRow];
 	NSArray *oldList = [self accounts];
 	GIAccount *selectedAccount = [oldList objectAtIndex:[accountTableView selectedRow]];
-    
+	OPPersistentObjectContext* context = [selectedAccount context];
+
 	[self willChangeValueForKey:@"accounts"];
-	[[selectedAccount context] deleteObject:selectedAccount];
-	[[selectedAccount context] saveChanges];
+	[selectedAccount delete];
+	[context saveChanges];
 	[self didChangeValueForKey:@"accounts"];
     
 	[accountTableView selectRow:MIN(selectedRow, [oldList count] - 2) byExtendingSelection:NO];

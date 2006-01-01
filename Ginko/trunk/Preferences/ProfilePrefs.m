@@ -36,9 +36,10 @@
 	int selectedRow = [profileTableView selectedRow];
 	NSArray* oldList = [self profiles];
 	GIProfile* selectedProfile = [oldList objectAtIndex: [profileTableView selectedRow]];
+	OPPersistentObjectContext* context = [selectedProfile context];
 	[self willChangeValueForKey: @"profiles"];
-	[[selectedProfile context] deleteObject: selectedProfile];
-	[[selectedProfile context] saveChanges];
+	[selectedProfile delete];
+	[context saveChanges];
 	[self didChangeValueForKey: @"profiles"];
 	[profileTableView selectRow: MIN(selectedRow, [oldList count]-2) byExtendingSelection: NO];
 }

@@ -100,7 +100,7 @@
 	
 	NSAssert(newMessage, @"New message not retrievable.");
 	
-	[context deleteObject: newMessage];
+	[newMessage delete];
 	
 	NSAssert([newMessage isDeleted], @"Deleted message not marked deleted.");
 	
@@ -137,7 +137,7 @@
 	
 	NSAssert(newMessage, @"New message not retrievable.");
 	
-	[context deleteObject: newMessage];
+	[newMessage delete];
 	
 	NSAssert([newMessage isDeleted], @"Deleted message not marked deleted.");
 	
@@ -290,13 +290,13 @@
 	
 	NSAssert(![groups containsObject: additionalGroup], @"Bad test data.");
 	
-	[thread addToGroups: additionalGroup];
+	[thread addValue: additionalGroup forKey: @"groups"];
 	
 	groups = [thread valueForKey: @"groups"];
 	
 	NSAssert([groups count] == groupCount+1, @"relationship addition failed.");
 		
-	[thread removeFromGroups: additionalGroup];
+	[thread removeValue: additionalGroup forKey: @"groups"];
 
 	NSAssert([groups count] == groupCount, @"relationship removal failed.");
 

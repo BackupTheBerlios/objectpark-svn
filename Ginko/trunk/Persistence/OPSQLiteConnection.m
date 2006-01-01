@@ -139,7 +139,7 @@
 		 
 		 result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
 		 
-		 [updateStatements setObject: result forKey: poClass]; // cache it
+		 //disabled [updateStatements setObject: result forKey: poClass]; // cache it
 		 
 	 }
 	 return result;
@@ -280,6 +280,8 @@
 	int attrCount = [attributes count];
 	int i, placeholder;
 
+	[updateStatement reset];
+	// Bind all placeholders in updateStatement:
 	for (i=placeholder=0; i<attrCount; i++) {
 		OPAttributeDescription* ad = [attributes objectAtIndex: i];
 		if (![ad isToManyRelationship]) {
@@ -328,6 +330,7 @@
 		[deleteStatements setObject: result forKey: poClass];
 	}
 	
+	[result reset];
 	[result bindPlaceholderAtIndex: 0 toRowId: rid];
 	[result execute];
 	[result reset];
@@ -361,6 +364,7 @@
 	//updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	//insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	//fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	//deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	
     return SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
 }
@@ -402,10 +406,10 @@
 	sqlite3_prepare(connection, [sql UTF8String], -1, &statement, NULL);
 	OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing Command: '%@'", sql);
 	int result = sqlite3_step(statement);
+	sqlite3_reset(statement);
 	if (result != SQLITE_DONE) {
 		[self raiseSQLiteError];
 	}
-	sqlite3_reset(statement);
 }
 
 - (BOOL) transactionInProgress

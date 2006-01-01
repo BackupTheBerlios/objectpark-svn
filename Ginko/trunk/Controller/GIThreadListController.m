@@ -62,7 +62,9 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     if (self = [self init]) {
         
         if (! aGroup) {
-            aGroup = [[GIMessageGroup allObjectsEnumerator] nextObject];
+			NSEnumerator* e = [GIMessageGroup allObjectsEnumerator];
+            aGroup = [e nextObject];
+			[(OPPersistentObjectEnumerator*)e reset];
         }
 		
 		[NSBundle loadNibNamed: @"Group" owner: self]; // sets threadsView
@@ -273,10 +275,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSEnumerator *enumerator;
     
     enumerator = [[NSApp windows] objectEnumerator];
-    while (win = [enumerator nextObject]) 
-    {
-        if ([[win delegate] isKindOfClass:self]) 
-        {
+    while (win = [enumerator nextObject]) {
+        if ([[win delegate] isKindOfClass:self]) {
             if ([[win delegate] group] == aGroup) return win;
         }
     }
@@ -414,15 +414,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 } else {
                     if ([threadsView isItemExpanded: item]) {
                         [threadsView collapseItem: item];
-                    } else {
-                        NSEnumerator* enumerator;
-                        GIMessage* message;
-                        
+                    } else {                        
                         [threadsView expandItem: item];                    
                         // ##TODO:select first "interesting" message of this thread
                         // perhaps the next/first unread message
                         
-                        enumerator = [[selectedThread messagesByTree] objectEnumerator];
+                        NSEnumerator* enumerator = [[selectedThread messagesByTree] objectEnumerator];
+						GIMessage* message;
+
                         while (message = [enumerator nextObject]) {
                             if (! [message hasFlags: OPSeenStatus]) {
                                 [threadsView selectRowIndexes: [NSIndexSet indexSetWithIndex: [threadsView rowForItem:message]] byExtendingSelection: NO];
@@ -748,12 +747,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         else
         {
             // it's a thread:
-            GIThread *thread = item;
-            NSEnumerator *enumerator = [[thread messages] objectEnumerator];
-            GIMessage *message;
+            GIThread* thread = item;
+            NSEnumerator* enumerator = [[thread messages] objectEnumerator];
+            GIMessage* message;
             
-            while (message = [enumerator nextObject])
-            {
+            while (message = [enumerator nextObject]) {
                 [result addObject:message];
             }
         }
@@ -771,34 +769,33 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSEnumerator *enumerator = [(*allMessages) objectEnumerator];
     GIMessage *message;
     
-    while (message = [enumerator nextObject])
-    {
-        if (![message hasFlags:flags]) return YES;
+    while (message = [enumerator nextObject]) {
+        if (![message hasFlags: flags]) return YES;
     }
     
     return NO;
 }
 
-- (void)toggleFlag:(unsigned int)flag
+- (void) toggleFlag: (unsigned int) flag
 {
     NSArray* selectedMessages;
-    BOOL set = [self isAnySelectedItemNotHavingMessageflags:flag allSelectedMessages:&selectedMessages];
-    NSEnumerator *enumerator = [selectedMessages objectEnumerator];
-    GIMessage *message;
+    BOOL set = [self isAnySelectedItemNotHavingMessageflags: flag 
+										allSelectedMessages: &selectedMessages];
+    NSEnumerator* enumerator = [selectedMessages objectEnumerator];
+    GIMessage* message;
     
-    while (message = [enumerator nextObject])
-    {
-        if (set) [message addFlags:flag];
-        else [message removeFlags:flag];
+    while (message = [enumerator nextObject]) {
+        if (set) [message addFlags: flag];
+        else [message removeFlags: flag];
     }
     
     // not necessary if flag changes would be recognized automatically:
     [threadsView reloadData];
 }
 
-- (IBAction)toggleReadFlag:(id)sender
+- (IBAction) toggleReadFlag: (id) sender
 {
-    [self toggleFlag:OPSeenStatus];
+    [self toggleFlag: OPSeenStatus];
 }
 
 - (NSArray *)selectedThreads
@@ -828,20 +825,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void) joinThreads
 {
     NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
-    GIThread *targetThread = [enumerator nextObject];
-    [threadsView selectRow:[threadsView rowForItem:targetThread] byExtendingSelection:NO];
+    GIThread* targetThread = [enumerator nextObject];
+    [threadsView selectRow: [threadsView rowForItem: targetThread] byExtendingSelection: NO];
     //[[self nonExpandableItemsCache] removeObject:targetThread]; 
-    [threadsView expandItem:targetThread];
+    [threadsView expandItem: targetThread];
 
     //NSLog(@"Merging other threads into %@", targetThread);    
 
     // prevent merge problems:
     //[[OPPersistentObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    GIThread *nextThread;
-    while (nextThread = [enumerator nextObject]) [targetThread mergeMessagesFromThread:nextThread];
+    GIThread* nextThread;
+    while (nextThread = [enumerator nextObject]) [targetThread mergeMessagesFromThread: nextThread];
     
-    [GIApp saveAction:self];
+    [GIApp saveAction: self];
 }
 
 - (IBAction)selectThreadsWithCurrentSubject:(id)sender
@@ -881,18 +878,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSLog(@"Should extractThread here.");
 }
 
-- (IBAction)moveSelectionToTrash:(id)sender
+- (IBAction) moveSelectionToTrash: (id) sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
-    NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
-    GIThread *thread;
+    NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
+    GIThread* thread;
     BOOL trashedAtLeastOne = NO;
     
     // Make sure we have a fresh group object and prevent merge problems:
     //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    while (thread = [enumerator nextObject]) 
-    {
+    while (thread = [enumerator nextObject]) {
         NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];

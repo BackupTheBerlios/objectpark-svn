@@ -48,6 +48,7 @@
 		[statement reset];
 		return; // we found a table with a matching name - good enough for now.
 	}
+	[statement reset];
 	
 	[connection beginTransaction];
 	// Execute create statement(s) stored in the description:

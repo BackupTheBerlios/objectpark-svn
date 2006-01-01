@@ -455,7 +455,7 @@ static NSMutableArray* root = nil;
         NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
         
         // remove thread from source group:
-        [thread removValue: sourceGroup forKey: @"groups"];
+        [thread removeValue: sourceGroup forKey: @"groups"];
         
         // add thread to destination group:
         [thread addValue: destinationGroup forKey: @"groups"];

@@ -38,20 +38,20 @@
 
 - (void) testSplit
 {
-    GIThread *threadA = [[[GIThread alloc] init] autorelease];
-    GIMessage *messageA = [self makeAMessage];
-    GIMessage *messageB = [self makeAMessage];
-    GIMessage *messageC = [self makeAMessage];
+    GIThread* threadA = [[[GIThread alloc] init] autorelease];
+    GIMessage* messageA = [self makeAMessage];
+    GIMessage* messageB = [self makeAMessage];
+    GIMessage* messageC = [self makeAMessage];
     
-    [messageC setValue:messageB forKey: @"reference"];
+    [messageC setValue: messageB forKey: @"reference"];
     
-    [threadA addToMessages: messageA];
-    [threadA addToMessages: messageB];
-    [threadA addToMessages: messageC];
+    [threadA addValue: messageA forKey: @"messages"];
+    [threadA addValue: messageB forKey: @"messages"];
+    [threadA addValue: messageC forKey: @"messages"];
         
     STAssertTrue([[threadA messages] count] == 3, @"not %d", [[threadA messages] count]);
     
-    GIThread *threadB = [threadA splitWithMessage:messageB];
+    GIThread* threadB = [threadA splitWithMessage: messageB];
     
     STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
     STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
@@ -67,9 +67,9 @@
     
     [messageC setValue:messageB forKey: @"reference"];
     
-    [threadB addToMessages: messageA];
-    [threadB addToMessages: messageB];
-    [threadA addToMessages: messageC];
+    [threadB addValue: messageA forKey: @"messages"];
+    [threadB addValue: messageB forKey: @"messages"];
+    [threadA addValue: messageC forKey: @"messages"];
     
     STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
     STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);

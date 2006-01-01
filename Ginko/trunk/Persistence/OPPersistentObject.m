@@ -321,7 +321,14 @@
 	[super didChangeValueForKey: key];
 }
 
-
+- (void) delete
+/*" Deletes the receiver from the persistent store associated with it's context. Does nothing, if the reciever does have no context or has never been stored persistently. "*/
+{
+	if (oid) {
+		[[self context] shouldDeleteObject: self];
+	}
+	[self refault]; // free attribute resources
+}
 
 - (id) primitiveValueForKey: (NSString*) key
 /*" Returns nil, if the receiver is a fault. Call -willAccessValueForKey prior to this method to make sure, the object attributes are in place."*/
@@ -594,9 +601,9 @@
 		}
 		
 		// Do we need to check, if value is a fault and not do anything then? Does removePrimitiveValue already handle this?
-		if ([self isFault]) {
-			return; // we'll pick up the change the next time this fault is fired.
-		}
+		//if ([self isFault]) {
+		//	return; // we'll pick up the change the next time this fault is fired.
+		//}
 	}
 	
 	[self willChangeValueForKey: key];

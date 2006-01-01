@@ -176,12 +176,11 @@ static NSMutableArray *LRUMailAddresses;
             candidates = [[NSMutableArray alloc] init];
             
             // LRU cache:
-            NSEnumerator *reverseEnumerator = [[[self class] LRUMailAddresses] reverseObjectEnumerator];
-            NSString *cachedAddress;
+            NSEnumerator* reverseEnumerator = [[[self class] LRUMailAddresses] reverseObjectEnumerator];
+            NSString* cachedAddress;
             
-            while (cachedAddress = [reverseEnumerator nextObject])
-            {
-                if ([cachedAddress hasPrefix:completionPrefix]) [candidates addObject:cachedAddress];
+            while (cachedAddress = [reverseEnumerator nextObject]) {
+                if ([cachedAddress hasPrefix: completionPrefix]) [candidates addObject: cachedAddress];
             }
             
             // try to find match

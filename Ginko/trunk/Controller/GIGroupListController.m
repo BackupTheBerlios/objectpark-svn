@@ -44,16 +44,24 @@
     [window makeKeyAndOrderFront:self];    
 }
 
-- (id)init
+- (id) init
 {
-    if (self = [super init]) 
-    {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
+    if (self = [super init]) {
+		[[NSNotificationCenter defaultCenter] addObserver: self 
+												 selector: @selector(groupsChanged:) 
+													 name: @"GroupContentChangedNotification" 
+												   object: self];
+		[[NSNotificationCenter defaultCenter] addObserver: self 
+												 selector: @selector(groupsChanged:) 
+													 name: OPJobDidFinishNotification 
+												   object: MboxImportJobName];
 		
-        [NSBundle loadNibNamed:@"Boxes" owner:self];
+        [NSBundle loadNibNamed: @"Boxes" owner: self];
 		
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver: self 
+												 selector: @selector(groupsChanged:) 
+													 name: GIMessageGroupWasAddedNotification 
+												   object: nil];
     }
     
 	return [self retain]; // self retaining!
@@ -113,10 +121,10 @@
     if (lastSelectedRow != -1) [boxesView editColumn: 0 row: lastSelectedRow withEvent: nil select: YES];
 }
 
-- (IBAction) delete: (id)sender
+- (IBAction) delete: (id) sender
 {
 	id item = [[boxesView selectedItems] lastObject];
-    if ([item isKindOfClass:[NSArray class]]) {
+    if ([item isKindOfClass: [NSArray class]]) {
         if ([item count] == 0) {
             [GIMessageGroup removeHierarchyNode:item];
             [GIMessageGroup saveHierarchy];
@@ -124,20 +132,15 @@
             NSBeep();
             NSLog(@"Unable to remove folder containing groups.");
         }
-    } 
-    else 
-    {
+    } else {
         [GIMessageGroup removeHierarchyNode:item];
-        if ([[item valueForKey:@"threadsByDate"] count] == 0) 
-        {
-            [GIMessageGroup removeHierarchyNode:item];
+        if ([[item valueForKey: @"threadsByDate"] count] == 0) {
+            [GIMessageGroup removeHierarchyNode: item];
             // Delete the group object:
-            [[(GIMessageGroup *)item context] deleteObject:item];
+            [item delete];
             [GIMessageGroup saveHierarchy];
             
-        } 
-        else 
-        {
+        } else {
             NSBeep();
             NSLog(@"Unable to remove group containing threads.");
         }
@@ -199,7 +202,7 @@
 
 @implementation GIGroupListController (OutlineViewDataSource)
 
-- (void)groupsChanged:(NSNotification *)aNotification
+- (void) groupsChanged: (NSNotification*) aNotification
 {
     [boxesView reloadData];
 }

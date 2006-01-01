@@ -81,11 +81,11 @@
 /*" Includes all messages from otherThread. otherThread is being deleted. "*/
 {
     // put all messages from otherThread into self and remove otherThread
-    GIMessage *message;
-    NSEnumerator *enumerator = [[otherThread messages] objectEnumerator];
+    GIMessage* message;
+    NSEnumerator* enumerator = [[otherThread messages] objectEnumerator];
     
     while (message = [enumerator nextObject]) {
-        [self addToMessages: message];
+        [self addValue: message forKey: @"messages"];
     }
     
     /*
@@ -97,19 +97,19 @@
 	 }
      */
 	
-    [[self context] deleteObject: otherThread];		
+    [otherThread delete];		
 }
 
 - (GIThread*) splitWithMessage: (GIMessage*) aMessage
 	/*" Splits the receiver into two threads. Returns a thread containing aMessage and comments and removes these messages from the receiver. "*/
 {
-    GIThread *newThread = [[[[self class] alloc] init] autorelease];
-    NSEnumerator *enumerator;
-    GIMessage *message;
+    GIThread* newThread = [[[[self class] alloc] init] autorelease];
+    NSEnumerator* enumerator;
+    GIMessage* message;
     
     enumerator = [[self subthreadWithMessage: aMessage] objectEnumerator];
     while (message = [enumerator nextObject]) {
-        [newThread addToMessages: message];
+        [newThread addValue: message forKey: @"messages"];
     }
 	
     // update numberOfMessages attribute:
@@ -118,13 +118,14 @@
     
     if (newValue == 0) {
         // Disconnect self from all groups:
+		/* nullify is now automatic
         NSEnumerator *enumerator = [[self valueForKey: @"groups"] objectEnumerator];
         GIMessageGroup *group;
         while (group = [enumerator nextObject]) {
-            [self removeFromGroups: group];
+            [self removeValue: group forKey: @"groups"];
         }
-        
-        [[self context] deleteObject: self];		
+		*/        
+        [self delete];		
     }
     return newThread;
 }

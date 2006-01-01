@@ -336,7 +336,7 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     [userInfo setObject:anJobId forKey:@"jobId"];
     
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:OPJobDidFinishNotification object:jobName userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postNotificationName: OPJobDidFinishNotification object: jobName userInfo: userInfo];
 }
 
 + (id)resultForJob:(NSNumber *)anJobId

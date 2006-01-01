@@ -121,18 +121,18 @@
     GIThread *thread = [aMessage thread];
     NSAssert(thread != nil, @"draft message without thread");
     
-    [thread removeFromGroups:[GIMessageGroup draftMessageGroup]];
-    [thread removeFromMessages:aMessage];
+    [thread removeValue: [GIMessageGroup draftMessageGroup] forKey: @"groups"];
+    [thread removeValue: aMessage forKey: @"messages"];
 }
 
-+ (NSSet *)defaultGroupsForMessage: (GIMessage*) aMessage
++ (NSSet*) defaultGroupsForMessage: (GIMessage*) aMessage
 /*" Returns an array of GIMessageGroup objects where the given message should go into per the user's filter setting. "*/
 {
     // TODO: just a dummy here!
-    return [NSSet setWithObjects:[GIMessageGroup defaultMessageGroup], nil];
+    return [NSSet setWithObjects: [GIMessageGroup defaultMessageGroup], nil];
 }
 
-NSString *MboxImportJobName = @"mbox import";
+NSString* MboxImportJobName = @"mbox import";
 
 - (void) importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 

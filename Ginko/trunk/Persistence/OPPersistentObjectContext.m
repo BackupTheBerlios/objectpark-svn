@@ -433,7 +433,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[lock unlock];
 }
 
-- (void) deleteObject: (OPPersistentObject*) object
+- (void) shouldDeleteObject: (OPPersistentObject*) object
 /*" Marks object for deletion on the next -saveChanges call. "*/
 {
 	if ([object currentOid]) {
@@ -593,7 +593,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	int res = sqlite3_step(statement);
 	[context unlock];
 	if (res!=SQLITE_ROW) {
-		sqlite3_reset(statement); // finished
+		[self reset]; // finished
 	}
 	return (res==SQLITE_ROW);
 }
@@ -636,7 +636,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 
-
 - (void) dealloc
 {
 	sqlite3_finalize(statement);
@@ -645,9 +644,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 
-
 @end
-
 
 
 NSString* OPURLStringFromOidAndClass(OID oid, Class poClass, NSString* databaseName)
