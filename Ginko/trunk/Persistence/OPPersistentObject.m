@@ -599,9 +599,9 @@
 		}
 	}
 	
-	[value willChangeValueForKey: key];
+	[self willChangeValueForKey: key];
 	[self removePrimitiveValue: value forKey: key];
-	[value didChangeValueForKey: key];
+	[self didChangeValueForKey: key];
 	
 }
 

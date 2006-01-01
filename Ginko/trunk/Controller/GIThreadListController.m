@@ -106,7 +106,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [displayedThread release];
     [self setGroup: nil];
     [threadCache release];
-    [nonExpandableItemsCache release];
+    //[nonExpandableItemsCache release];
     [itemRetainer release];
     [hits release];
     
@@ -318,52 +318,34 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	 */
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath 
-                      ofObject:(id)object 
-                        change:(NSDictionary *)change 
-                       context:(void *)context
+- (void) observeValueForKeyPath: (NSString*) keyPath 
+					   ofObject: (id) object 
+						 change: (NSDictionary*) change 
+						context: (void*) context
 {
-    if ([object isEqual:[self group]]) 
+    if ([object isEqual: [self group]]) 
     {
-        NSNotification *notification = [NSNotification notificationWithName:@"GroupContentChangedNotification" object:self];
+        NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
         NSLog(@"observeValueForKeyPath %@", keyPath);
 
-        [[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+        [[NSNotificationQueue defaultQueue] enqueueNotification: notification 
+												   postingStyle: NSPostWhenIdle 
+												   coalesceMask: NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender 
+													   forModes: nil];
     }
 }
 
-- (NSTimeInterval)nowForThreadFiltering
+- (NSTimeInterval) nowForThreadFiltering
 {
-    if (![[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]) return 0;
+    if (![[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]) return 0;
     
-    if (nowForThreadFiltering == 0) 
-    {
+    if (nowForThreadFiltering == 0) {
         nowForThreadFiltering = [[NSDate date] timeIntervalSinceReferenceDate] - 60 * 60 * 24 * 28;
     }
-    
     return nowForThreadFiltering;
 }
 
-- (void)cacheThreadsAndExpandableItems
-{
-	/*
-    if ([self group]) {
-        NSMutableArray* results      = [NSMutableArray arrayWithCapacity: 500];
-        NSMutableSet* trivialThreads = [NSMutableSet setWithCapacity: 250];
-        
-        [self setThreadCache: results];
-        [self setNonExpandableItemsCache: trivialThreads];
-        
-        [[self group] fetchThreads: &results
-					trivialThreads: &trivialThreads
-						 newerThan: [self nowForThreadFiltering]
-					   withSubject: nil
-							author: nil 
-			 sortedByDateAscending: YES];
-    }
-	 */
-}
 
 - (NSArray *)threadsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
@@ -381,13 +363,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	 */
 }
 
-- (NSSet *)nonExpandableItems
+- (NSSet*) nonExpandableItems
 {
     NSMutableSet *result = [self nonExpandableItemsCache];
     
     if (!result) 
     {
-        [self cacheThreadsAndExpandableItems];
+        //[self cacheThreadsAndExpandableItems];
         result = [self nonExpandableItemsCache];
     }
     return result;
@@ -843,12 +825,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (void)joinThreads
+- (void) joinThreads
 {
     NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
     GIThread *targetThread = [enumerator nextObject];
     [threadsView selectRow:[threadsView rowForItem:targetThread] byExtendingSelection:NO];
-    [[self nonExpandableItemsCache] removeObject:targetThread]; 
+    //[[self nonExpandableItemsCache] removeObject:targetThread]; 
     [threadsView expandItem:targetThread];
 
     //NSLog(@"Merging other threads into %@", targetThread);    
