@@ -878,31 +878,36 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSLog(@"Should extractThread here.");
 }
 
-- (IBAction) moveSelectionToTrash: (id) sender
+- (IBAction)moveSelectionToTrash:(id)sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
-    NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
-    GIThread* thread;
+    NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
+    GIThread *thread;
     BOOL trashedAtLeastOne = NO;
     
     // Make sure we have a fresh group object and prevent merge problems:
     //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    while (thread = [enumerator nextObject]) {
+    while (thread = [enumerator nextObject]) 
+    {
         NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
-        [[self group] removeValue: thread forKey: @"threadsByDate"];
+        [[self group] removeValue:thread forKey:@"threadsByDate"];
         [GIMessageBase addTrashThread:thread];
         trashedAtLeastOne = YES;
     }
     
-    if (trashedAtLeastOne) {
+    if (trashedAtLeastOne) 
+    {
         [NSApp saveAction: self];
-        if (rowBefore >= 0) {
+        if (rowBefore >= 0) 
+        {
             [threadsView selectRow:rowBefore byExtendingSelection:NO];
         }
-    } else {
+    } 
+    else 
+    {
         NSBeep();
     }
 }
@@ -997,7 +1002,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL) validateSelector: (SEL) aSelector
+- (BOOL)validateSelector:(SEL)aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -1027,7 +1032,14 @@ static BOOL isThreadItem(id item)
     {
         return [[threadsView selectedRowIndexes] count] > 0;
     }
-    
+    else if (aSelector == @selector(moveSelectionToTrash:))
+    {
+        return [[threadsView selectedRowIndexes] count] > 0;
+    }
+    else if (aSelector == @selector(delete:))
+    {
+        return [[threadsView selectedRowIndexes] count] > 0;
+    }
     /*
      if ( 
           (aSelector == @selector(catchup:))
@@ -1069,25 +1081,32 @@ static BOOL isThreadItem(id item)
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    if ([menuItem action] == @selector(showRawSource:)) {
-		
-        [menuItem setState: showRawSource ? NSOnState : NSOffState];
+    if ([menuItem action] == @selector(showRawSource:)) 
+    {
+        [menuItem setState:showRawSource ? NSOnState : NSOffState];
         return ![self threadsShownCurrently];
-		
-    } else if ([menuItem action] == @selector(toggleReadFlag:)) {
-		
-        if ([self validateSelector: [menuItem action]]) {
-            NSArray* selectedMessages;
+    } 
+    else if ([menuItem action] == @selector(toggleReadFlag:)) 
+    {
+        if ([self validateSelector:[menuItem action]]) 
+        {
+            NSArray *selectedMessages;
             
-            if ([self isAnySelectedItemNotHavingMessageflags: OPSeenStatus allSelectedMessages: &selectedMessages]) {
-                [menuItem setTitle: NSLocalizedString(@"As Read", @"Menu title for toggling messages to read")];
-            } else {
-                [menuItem setTitle: NSLocalizedString(@"As Unread", @"Menu title for toggling messages to read")];
+            if ([self isAnySelectedItemNotHavingMessageflags:OPSeenStatus allSelectedMessages:&selectedMessages]) 
+            {
+                [menuItem setTitle:NSLocalizedString(@"As Read", @"Menu title for toggling messages to read")];
+            } 
+            else 
+            {
+                [menuItem setTitle:NSLocalizedString(@"As Unread", @"Menu title for toggling messages to read")];
             }
             return YES;
-        } else return NO;
-    } else {
-        return [self validateSelector: [menuItem action]];
+        } 
+        else return NO;
+    } 
+    else 
+    {
+        return [self validateSelector:[menuItem action]];
     }
 }
 

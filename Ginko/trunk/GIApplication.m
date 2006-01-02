@@ -46,9 +46,7 @@
     didLoad = YES;
     
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    NSLog(@"Loaded GinkoVoyager's GIApplication class");
-    
+        
     [[OPLog sharedInstance] addAspectsFromEnvironmentWithDefinitionsFromFile:[[NSBundle bundleForClass:NSClassFromString(@"GIApplication")] pathForResource: @"OPL-Configuration" ofType:@"plist"]];
     
     [pool release];
@@ -667,31 +665,36 @@
     }
 }
 
-- (IBAction) sendQueuedMessages: (id)sender
+- (IBAction)sendQueuedMessages:(id)sender
 {
-    [self sendQueuedMessagesWithFlag: OPQueuedStatus];
+    [self sendQueuedMessagesWithFlag:OPQueuedStatus];
 }
 
-- (IBAction) showActivityPanel: (id)sender
+- (IBAction)showActivityPanel:(id)sender
 {
-    [GIActivityPanelController showActivityPanelInteractive: YES];
+    [GIActivityPanelController showActivityPanelInteractive:YES];
     
     // this action switches automatic activity panel functionality off:
-    [[NSUserDefaults standardUserDefaults] setBool: NO forKey: AutomaticActivityPanelEnabled];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AutomaticActivityPanelEnabled];
 }
 
-- (IBAction) showPhraseBrowser:(id)sender
+- (IBAction)showPhraseBrowser:(id)sender
 {
     [GIPhraseBrowserController showPhraseBrowserForTextView:nil];
 }
 
-- (IBAction) toggleAutomaticActivityPanel:(id)sender
+- (IBAction)toggleAutomaticActivityPanel:(id)sender
 {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    [ud setBool:![ud boolForKey:AutomaticActivityPanelEnabled] forKey: AutomaticActivityPanelEnabled];
+    [ud setBool:![ud boolForKey:AutomaticActivityPanelEnabled] forKey:AutomaticActivityPanelEnabled];
     
     // Hides activity panel if needed:
     [GIActivityPanelController updateData];
+}
+
+- (IBAction)emtpyTrashMailbox:(id)sender
+{
+    NSLog(@"-[GIApplication emtpyTrashMailbox:] not yet implemented.");
 }
 
 @end

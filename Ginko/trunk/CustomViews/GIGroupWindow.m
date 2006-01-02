@@ -91,16 +91,14 @@
                 case ESCKEY:
                 case BACKSPACEKEY:
                 {
-                    if ([theEvent modifierFlags] & NSCommandKeyMask)
+                    if (([theEvent modifierFlags] & NSCommandKeyMask) == 0)
                     {
-                        [self sendActionSelector:@selector(moveSelectionToTrash:)];
-                        return;
-                    }
-                    else if ((![[self firstResponder] isKindOfClass:[NSTextView class]])
-                             || [[self firstResponder] isKindOfClass:[GITextView class]])
-                    {
-                        [self sendActionSelector:@selector(closeSelection:)];
-                        return;
+                        if ((![[self firstResponder] isKindOfClass:[NSTextView class]])
+                            || [[self firstResponder] isKindOfClass:[GITextView class]])
+                        {
+                            [self sendActionSelector:@selector(closeSelection:)];
+                            return;
+                        }
                     }
                 }
                     break;
