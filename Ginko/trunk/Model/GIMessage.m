@@ -57,7 +57,7 @@
 	// Flags
 	@"isSeen = {ColumnName = ZISSEEN; AttributeClass = NSNumber;};"
 	@"isQueued = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
-	@"isSendingBlocked = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
+	//@"isSendingBlocked = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
 	@"isDraft = {ColumnName = ZISDRAFT; AttributeClass = NSNumber;};"
 	@"isAnswered = {ColumnName = ZISANSWERED; AttributeClass = NSNumber;};"
 	@"isFulltextIndexed = {ColumnName = ZISFULLTEXTINDEXED; AttributeClass = NSNumber;};"
@@ -270,7 +270,7 @@
             if ([self primitiveBoolForKey: @"isInteresting"]) flagsCache |= OPInterestingStatus;
             if ([self primitiveBoolForKey: @"isSeen"]) flagsCache |= OPSeenStatus;
             if ([self primitiveBoolForKey: @"isJunk"]) flagsCache |= OPJunkMailStatus;
-            if ([self primitiveBoolForKey: @"isSendingBlocked"]) flagsCache |= OPSendingBlockedStatus;
+            //if ([self primitiveBoolForKey: @"isSendingBlocked"]) flagsCache |= OPSendingBlockedStatus;
 			if ([self primitiveBoolForKey: @"isFlagged"]) flagsCache |= OPFlaggedStatus;
 			if ([self primitiveBoolForKey: @"isFromMe"]) flagsCache |= OPIsFromMeStatus;
             if ([self primitiveBoolForKey: @"isFulltextIndexed"]) flagsCache |= OPFulltextIndexedStatus;
@@ -414,12 +414,14 @@
         if (someFlags) {
             // flags to set:
             NSNumber* yes = [NSNumber numberWithBool: YES];
-            if ((someFlags & OPInSendJobStatus)) [self setValue: yes forKey: @"isInSendJob"]; // not in DB schema!?
+#warning isInSendJob not in DB schema ignored.
+            //if ((someFlags & OPInSendJobStatus)) [self setValue: yes forKey: @"isInSendJob"]; // not in DB schema!?
             if ((someFlags & OPQueuedStatus)) [self setValue: yes forKey: @"isQueued"];
             if ((someFlags & OPInterestingStatus)) [self setValue: yes forKey: @"isInteresting"];
             if ((someFlags & OPSeenStatus)) [self setValue: yes forKey: @"isSeen"];
             if ((someFlags & OPJunkMailStatus)) [self setValue: yes forKey: @"isJunk"];
-            if ((someFlags & OPSendingBlockedStatus)) [self setValue: yes forKey: @"isSendingBlocked"];
+#warning isSendingBlocked not in DB schema ignored.
+            //if ((someFlags & OPSendingBlockedStatus)) [self setValue: yes forKey: @"isSendingBlocked"];
             if ((someFlags & OPFlaggedStatus)) [self setValue: yes forKey: @"isFlagged"];
             if ((someFlags & OPIsFromMeStatus)) [self setValue: yes forKey: @"isFromMe"];
             if ((someFlags & OPFulltextIndexedStatus)) [self setValue: yes forKey: @"isFulltextIndexed"];

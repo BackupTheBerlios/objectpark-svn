@@ -8,15 +8,15 @@
 
 #import <AppKit/AppKit.h>
 
-@class G3Account;
+@class GIAccount;
 
 @interface GISMTPJob : NSObject 
 {
     NSArray* messages;
-    G3Account* account;
+    GIAccount* account;
 }
 
-+ (void) sendMessages:(NSArray*) someMessages viaSMTPAccount:(G3Account *)anAccount;
++ (void) sendMessages:(NSArray*) someMessages viaSMTPAccount:(GIAccount *)anAccount;
 + (NSString*) jobName;
 
 @end

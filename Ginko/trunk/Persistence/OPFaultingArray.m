@@ -222,7 +222,7 @@ int compareOids(OID o1, OID o2)
 	if (anObject) {
 		unsigned index = [self indexOfObject: anObject];
 		if (index==NSNotFound) {
-			NSLog(@"Warning: Try to remove a nonexisting object %@.", anObject);
+			//NSLog(@"Warning: Try to remove a nonexisting object %@.", anObject);
 		}
 		[self removeObjectAtIndex: index];
 	}

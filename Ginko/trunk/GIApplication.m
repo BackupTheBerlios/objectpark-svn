@@ -543,7 +543,7 @@
 }
 */
 
-- (IBAction)getNewMailInAllAccounts:(id)sender
+- (IBAction) getNewMailInAllAccounts:(id)sender
 {
     NSEnumerator *enumerator = [GIAccount allObjectsEnumerator];
     GIAccount *account;
@@ -552,6 +552,7 @@
     {
         if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount:account];
     }
+	
 }
 
 - (void) POPJobFinished: (NSNotification*) aNotification
@@ -644,27 +645,24 @@
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). "*/
 {
     // iterate over all profiles:
-    NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
-    GIProfile *profile;
+    NSEnumerator* enumerator = [[GIProfile allObjects] objectEnumerator];
+    GIProfile* profile;
     
-    while (profile = [enumerator nextObject])
-    {
-        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
-        GIMessage *message;
-        NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
+    while (profile = [enumerator nextObject]) {
+        NSEnumerator* messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
+        GIMessage* message;
+        NSMutableArray* messagesQualifyingForSend = [NSMutableArray array];
             
-        while (message = [messagesToSendEnumerator nextObject])
-        {
-            if (![message hasFlags:OPSendingBlockedStatus] && ![message hasFlags:OPDraftStatus] && [message hasFlags:OPQueuedStatus])
-            {
-                [messagesQualifyingForSend addObject:message];
+        while (message = [messagesToSendEnumerator nextObject]) {
+            if (![message hasFlags: OPSendingBlockedStatus] && ![message hasFlags: OPDraftStatus] && [message hasFlags: OPQueuedStatus]) {
+                [messagesQualifyingForSend addObject: message];
             }
         }
         
-        if ([messagesQualifyingForSend count]) // something to send for the account?
-        {
-            [messagesQualifyingForSend makeObjectsPerformSelector:@selector(setSendJobStatus)];
-            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile valueForKey: @"sendAccount"]];
+		// something to send for the account?
+        if ([messagesQualifyingForSend count]) {
+            [messagesQualifyingForSend makeObjectsPerformSelector: @selector(setSendJobStatus)];
+            [GISMTPJob sendMessages: messagesQualifyingForSend viaSMTPAccount: [profile valueForKey: @"sendAccount"]];
         }
     }
 }

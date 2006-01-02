@@ -122,6 +122,8 @@
 	NSString* sqlString;
 }
 
++ (NSArray*) runningStatements;
+
 - (void) bindPlaceholderAtIndex: (int) index toValue: (id) value;
 - (void) bindPlaceholderAtIndex: (int) index toRowId: (ROWID) rid;
 

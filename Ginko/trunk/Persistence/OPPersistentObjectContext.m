@@ -325,10 +325,16 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 {
 	[lock lock];
 	
+	//[OPPersistentObjectEnumerator printAllRunningEnumerators];
+	NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
+	
+	//[[OPSQLiteStatement runningStatements] makeObjectsPerformSelector: @selector(reset)];
+	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
 	
 	if (![db transactionInProgress]) [db beginTransaction];
-	
+	[db commitTransaction]; [db beginTransaction]; // just for testing
+
 	// do we need a local autoreleasepool here?
 	
 	if ([changedObjects count]) {
@@ -355,12 +361,16 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	[pool release]; pool = [[NSAutoreleasePool alloc] init];
 	
+	[db commitTransaction]; [db beginTransaction]; // just for testing
+	
 	if ([deletedObjects count]) {
+		
+		NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
 		NSEnumerator* coe = [deletedObjects objectEnumerator];
 		OPPersistentObject* deletedObject;
 		while (deletedObject = [coe nextObject]) {
 			
-			NSLog(@"Will honk %@", deletedObject);
+			//NSLog(@"Will honk %@", deletedObject);
 			[db deleteRowOfClass: [deletedObject class] 
 						   rowId: [deletedObject currentOid]];
 			
@@ -534,6 +544,15 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 @implementation OPPersistentObjectEnumerator 
 
+static NSHashTable* allInstances;
+
++ (void) initialize
+{
+	if (!allInstances) {
+		allInstances = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 10);
+	}
+}
+
 - (id) initWithContext: (OPPersistentObjectContext*) aContext
 		   resultClass: (Class) poClass 
 		   queryString: (NSString*) sql
@@ -551,6 +570,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			[self autorelease];
 			return nil;
 		}
+		
+		NSHashInsert(allInstances, self);
 		
 		//NSLog(@"Created enumerator statement %@ for table %@", sql, [resultClass databaseTableName]);
 	} 
@@ -577,12 +598,14 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	//NSParameterAssert([[variable class] canPersist]);
 	[variable bindValueToStatement: statement index: 1];
 #warning todo: Implement vararg to support more than one variable binding.
+	NSHashInsert(allInstances, self);
 }
 
 - (void) reset
 {
 	[context lock];
 	sqlite3_reset(statement);
+	NSHashRemove(allInstances, self);
 	[context unlock];
 }
 
@@ -628,19 +651,29 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		result = [resultClass newFromStatement: statement index: 0];
 	} else {
 		//NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
-		sqlite3_reset(statement); // finished
+		[self reset]; // finished
 	}
 	[context unlock];
 	//NSLog(@"%@: Enumerated object %@", self, result);
 	return result;
 }
 
++ (void) printAllRunningEnumerators
+{
+	NSHashEnumerator e = NSEnumerateHashTable(allInstances);
+	id item;
+	while (item = NSNextHashEnumeratorItem(&e)) {
+		NSLog(@"Running Enumerator: %@", item);
+	}
+	NSEndHashTableEnumeration(&e);
+}
 
 - (void) dealloc
 {
 	sqlite3_finalize(statement);
 	[context release]; context = nil;
 	[super dealloc];
+	NSHashRemove(allInstances, self);
 }
 
 

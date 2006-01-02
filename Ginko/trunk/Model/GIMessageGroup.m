@@ -705,15 +705,17 @@ static NSMutableArray* root = nil;
 	sqlite3_stmt* statement = [poe statement];
 	while (thread = [poe nextObject]) {
 		[*allThreads addObject: thread];
-		int messageCount = sqlite3_column_int(statement, 1);
-		if (messageCount<=1) {
-			[*trivialThreads addObject: thread];
+		if (trivialThreads) {
+			int messageCount = sqlite3_column_int(statement, 1);
+			if (messageCount<=1) {
+				[*trivialThreads addObject: thread];
+			}
 		}
 	}
 	
 	[poe release];
 	
-    NSLog(@"Exited fetchThreadURIs query. Found %d trivial threads out of %d.", [*trivialThreads count], [*allThreads count]);
+    //NSLog(@"Exited fetchThreadURIs query. Found %d trivial threads out of %d.", [*trivialThreads count], [*allThreads count]);
 }
 
 @end

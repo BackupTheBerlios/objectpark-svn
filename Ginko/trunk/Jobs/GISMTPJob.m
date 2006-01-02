@@ -8,7 +8,7 @@
 
 #import "GISMTPJob.h"
 #import "OPJobs.h"
-#import "G3Account.h"
+#import "GIAccount.h"
 #import <OPDebug/OPLog.h>
 #import <OPNetwork/OPNetwork.h>
 #import "NSHost+GIReachability.h"
@@ -21,71 +21,63 @@
 #define POPTimeInterval (60 * 5)
 #define TIMEOUT 60
 
-- (void) authenticateViaPOP:(G3Account *)anAccount
+- (void) authenticateViaPOP: (GIAccount*) anAccount
 {
-    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"authorization 'SMTP after POP' with %@", @"progress description in SMTP job"), [anAccount incomingServerName]]]];
+    [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat:NSLocalizedString(@"authorization 'SMTP after POP' with %@", @"progress description in SMTP job"), [anAccount incomingServerName]]]];
 
-    NSHost *host = [NSHost hostWithName:[anAccount incomingServerName]];
+    NSHost* host = [NSHost hostWithName: [anAccount incomingServerName]];
     [host name]; // I remember that was important, but I can't remember why
     NSAssert(host != nil, @"host should be created");
     
-    if ([host isReachableWithNoStringsAttached])
-    {
+    if ([host isReachableWithNoStringsAttached]) {
         // connecting to host:
-        OPStream *stream = [OPStream streamConnectedToHost:host
-                                                      port:[anAccount incomingServerPort]
-                                               sendTimeout:TIMEOUT
-                                            receiveTimeout:TIMEOUT];
+        OPStream *stream = [OPStream streamConnectedToHost: host
+                                                      port: [anAccount incomingServerPort]
+                                               sendTimeout: TIMEOUT
+                                            receiveTimeout: TIMEOUT];
         
         NSAssert2(stream != nil, @"could not connect to server %@:%d", [anAccount incomingServerName], [anAccount incomingServerPort]);
         
-        @try
-        {
+        @try {
             // starting SSL if needed:
-            if ([anAccount incomingServerType] == POP3S)
-            {
-                [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:[anAccount allowAnyRootSSLCertificate]];
+            if ([anAccount incomingServerType] == POP3S) {
+                [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate: [anAccount allowAnyRootSSLCertificate]];
                 
                 [stream negotiateEncryption];
             }
                         
-            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream username: [anAccount incomingUsername] andPassword:[anAccount incomingPassword]] autorelease];
+            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream username: [anAccount incomingUsername] andPassword: [anAccount incomingPassword]] autorelease];
             [pop3session openSession]; 
             [pop3session closeSession];
 
-            if ([anAccount incomingServerType] == POP3S)
-            {                
+            if ([anAccount incomingServerType] == POP3S) {                
                 [stream shutdownEncryption];
             }
-        }
-        @catch (NSException* localException)
-        {
-        }
-        @finally
-        {
+        } @catch (NSException* localException) {
+        } @finally {
             [stream close];
         }
     }
 }
 
-- (void) sendMessagesViaSMTPAccountJob:(NSDictionary *)arguments
+- (void) sendMessagesViaSMTPAccountJob: (NSDictionary*) arguments
 {
-    G3Account* theAccount = [[account retain] autorelease];
+    GIAccount* theAccount = [[account retain] autorelease];
     NSArray* theMessages = [[messages retain] autorelease];
     NSMutableArray* sentMessages = [NSMutableArray array];
     
     // is theAccount an SMTP after POP account?
     if ([theAccount outgoingAuthenticationMethod] == SMTPAfterPOP) {
         NSAssert([theAccount isPOPAccount], @"SMTP requires 'SMTP after POP' authentication but the given account is no POP account.");
-        [self authenticateViaPOP:theAccount];
+        [self authenticateViaPOP: theAccount];
     }
     
-    NSHost* host = [NSHost hostWithName:[theAccount outgoingServerName]];
+    NSHost* host = [NSHost hostWithName: [theAccount outgoingServerName]];
     [host name];
     
     if ([host isReachableWithNoStringsAttached]) {
         // connecting to host:
-        [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), [theAccount outgoingServerName], [theAccount outgoingServerPort]]]];
+        [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat: NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), [theAccount outgoingServerName], [theAccount outgoingServerPort]]]];
         
         OPStream* stream = [OPStream streamConnectedToHost: host
                                                       port: [theAccount outgoingServerPort]
@@ -108,7 +100,7 @@
                 GIMessage* message;
                 
                 while (message = [enumerator nextObject]) {
-                    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
+                    [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat:NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
                     
                     @try {
                         [SMTP acceptMessage: [message internetMessage]];
@@ -122,14 +114,14 @@
                 @throw;
             } @finally {
                 [pool drain];
-                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
+                [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
                 [stream close];
             }
         }
         @catch (NSException* localException) {
             @throw;
         } @finally {
-            [OPJobs setResult:[NSDictionary dictionaryWithObjectsAndKeys:
+            [OPJobs setResult: [NSDictionary dictionaryWithObjectsAndKeys:
                 sentMessages, @"sentMessages",
                 theMessages, @"messages",
                 nil, nil]];
@@ -137,7 +129,7 @@
     }
 }
 
-- (id)initWithMessages:(NSArray*) someMessages andAccount:(G3Account *)anAccount
+- (id) initWithMessages: (NSArray*) someMessages andAccount: (GIAccount*) anAccount
 {
     self = [super init];
     
@@ -160,7 +152,7 @@
     return @"SMTP send";
 }
 
-+ (void) sendMessages:(NSArray*) someMessages viaSMTPAccount:(G3Account *)anAccount
++ (void) sendMessages: (NSArray*) someMessages viaSMTPAccount: (GIAccount*) anAccount
 /*" Starts a background job for sending messages someMessages via the given SMTP account anAccount. One account can only be 'smtp'ed by at most one smtp job at a time. "*/
 {
     NSParameterAssert([someMessages count]);
@@ -168,7 +160,7 @@
     
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) arguments:jobArguments synchronizedObject:[anAccount outgoingServerName]];
+    [OPJobs scheduleJobWithName: [self jobName] target: [[[self alloc] initWithMessages: someMessages andAccount: anAccount] autorelease] selector: @selector(sendMessagesViaSMTPAccountJob:) arguments: jobArguments synchronizedObject: [anAccount outgoingServerName]];
 }
 
 @end
@@ -185,14 +177,19 @@
     else return nil;
 }
 
-- (NSString*) passwordForSMTP:(OPSMTP *)aSMTP
+- (NSString*) passwordForSMTP: (OPSMTP*) aSMTP
 {
-    if ([account outgoingAuthenticationMethod] == SMTPAuthentication)
-    {
-        return [account outgoingPassword];
+    if ([account outgoingAuthenticationMethod] == SMTPAuthentication) {
+        NSString* password = [account outgoingPassword];
+		if (![password length]) {
+			password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount: account forIncomingPassword: NO];
+		}
+		return password;
     }
     else return nil;
 }
+
+
 
 /*" optional "*/
 - (BOOL)useSMTPS:(OPSMTP*)aSMTP

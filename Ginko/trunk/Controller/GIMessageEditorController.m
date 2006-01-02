@@ -355,15 +355,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (IBAction) saveMessage: (id) sender
 {
     unsigned int flags = OPDraftStatus;
-    
-    /* Should always be a draft as long as it is opened or get I something wrong?
-    if (oldMessage)
-    {
-        unsigned int oldFlags = [oldMessage flags];
-        flags = (oldFlags & OPQueuedStatus) ? OPQueuedStatus : OPDraftStatus;
-    }
-    */
-    
+
     [self checkpointMessageWithStatus: flags];
 }
 
@@ -1150,7 +1142,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     [NSApp saveAction: self];
 
-    if (NSDebugEnabled) NSLog(@"checkpointed message");
+    //if (NSDebugEnabled) NSLog(@"checkpointed message");
     
     return message;
 }

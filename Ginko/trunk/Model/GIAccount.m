@@ -351,8 +351,7 @@
 
 - (SecProtocolType) outgoingSecProtocolType
 {
-    switch ([self outgoingServerType])
-    {
+    switch ([self outgoingServerType]) {
         case SMTP:
         case SMTPS:
         case SMTPTLS:
@@ -387,22 +386,17 @@
                                                    &passwordData, //<#void * * passwordData#>
                                                    itemRef //<#SecKeychainItemRef * itemRef#>
                                                    );
-    if (err != noErr) 
-    {
-        if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
-    } 
-    else 
-    {
+    if (err != noErr) {
+        if (NSDebugEnabled) NSLog(@"Error getting password from keychain (%d)", err);
+    } else {
         NSData *data = [NSData dataWithBytes:passwordData length:passwordLength];
         result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
         
-        err = SecKeychainItemFreeContent(
-                                         NULL,           //No attribute data to release
-                                         passwordData    //Release data buffer allocated 
-                                         );
+        err = SecKeychainItemFreeContent(NULL,           //No attribute data to release
+                                         passwordData);  //Release data buffer allocated 
+                                         
         
-        if (err != noErr)
-        {
+        if (err != noErr) {
             if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
         }
     }

@@ -127,6 +127,8 @@
 - (BOOL) skipObject;
 - (sqlite3_stmt*) statement;
 
++ (void) printAllRunningEnumerators;
+
 - (void) bind: (id) variable, ...;
 
 - (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey ofClass: (Class) sortKeyClass;

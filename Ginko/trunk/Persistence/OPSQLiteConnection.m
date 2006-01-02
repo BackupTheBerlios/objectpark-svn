@@ -101,6 +101,8 @@
             i++;
         }
     } 
+	[statement reset];
+
     return result;
 }
 
@@ -713,6 +715,30 @@
 
 @implementation OPSQLiteStatement
 
+
+static NSHashTable* allInstances;
+
++ (void) initialize
+{
+	if (!allInstances) {
+		allInstances = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 10);
+	}
+}
+
++ (NSArray*) runningStatements
+{
+	NSMutableArray* allStatements = [NSMutableArray array];
+	NSHashEnumerator e = NSEnumerateHashTable(allInstances);
+	id item;
+	while (item = NSNextHashEnumeratorItem(&e)) {
+		//NSLog(@"Running Enumerator: %@", item);
+		[allStatements addObject: item];
+	}
+	NSEndHashTableEnumeration(&e);
+	return allStatements;
+}
+
+
 - (id) initWithSQL: (NSString*) sql connection: (OPSQLiteConnection*) aConnection 
 {
 	if (self = [super init]) {
@@ -728,6 +754,8 @@
 		}
 		connection = [aConnection retain];
 		if (NSDebugEnabled) sqlString = [sql copy];
+		
+		NSHashInsert(allInstances, self);
 	}
 	return self;
 }
@@ -746,6 +774,7 @@
 	} else {
 		sqlite3_bind_null(statement, index);
 	}
+	NSHashInsert(allInstances, self);
 }
 
 - (void) bindPlaceholderAtIndex: (int) index toRowId: (ROWID) rid
@@ -757,11 +786,13 @@
 	} else {
 		sqlite3_bind_null(statement, index);
 	}
+	NSHashInsert(allInstances, self);
 }
 
 - (void) reset
 {
 	sqlite3_reset(statement);
+	NSHashRemove(allInstances, self);
 }
 
 - (void) dealloc
@@ -771,6 +802,7 @@
 	sqlite3_finalize(statement);
 	[connection release];
 	[sqlString release];
+	NSHashRemove(allInstances, self);
 	[super dealloc];
 }
 
