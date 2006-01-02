@@ -341,14 +341,14 @@
             return YES;
         }
         
-        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        NSArray *threadOids = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
 		
-        if ([threadURLs count]) 
+        if ([threadOids count]) 
         {
             GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
             GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
             
-            [GIMessageGroup moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
+            [GIMessageGroup moveThreadsWithOids:threadOids fromGroup:sourceGroup toGroup:destinationGroup];
             
             // select all in dragging source:
             NSOutlineView *sourceView = [info draggingSource];        

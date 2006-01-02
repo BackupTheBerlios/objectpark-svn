@@ -1822,34 +1822,16 @@ NSMutableArray* border = nil;
 
 @implementation GIThreadListController (DragNDrop)
 
-- (void) moveThreadsWithURI:(NSArray *)threadURIs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup
-{
-    NSEnumerator *enumerator = [threadURIs objectEnumerator];
-    NSString *threadURI;
-        
-    while (threadURI = [enumerator nextObject]) 
-    {
-        GIThread *thread = [OPPersistentObjectContext objectWithURLString:threadURI];
-        NSAssert([thread isKindOfClass:[GIThread class]], @"should be a thread");
-        
-        // remove thread from source group:
-        [thread removeValue: sourceGroup forKey: @"groups"];
-        
-        // add thread to destination group:
-        [thread addValue: destinationGroup forKey: @"groups"];
-    }
-}
-
 - (BOOL)outlineView:(NSOutlineView *)anOutlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
     if (anOutlineView == threadsView)
     {
         // move threads from source group to destination group:
-        NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        NSArray *threadOids = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
         GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
         GIMessageGroup *destinationGroup = [self group];
         
-        [self moveThreadsWithURI:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
+        [GIMessageGroup moveThreadsWithOids:threadOids fromGroup:sourceGroup toGroup:destinationGroup];
         /*
         NSEnumerator *enumerator = [threadURLs objectEnumerator];
         NSString *threadURL;
@@ -1903,7 +1885,19 @@ NSMutableArray* border = nil;
         if (! [self isOnlyThreadsSelected]) return NO;
         
         [pboard declareTypes:[NSArray arrayWithObject:@"GinkoThreads"] owner:self];
-        [pboard setPropertyList:items forType:@"GinkoThreads"];
+        
+        NSArray *selectedThreads = [self selectedThreads];
+        NSEnumerator *enumerator = [selectedThreads objectEnumerator];
+        NSMutableArray *pbItems = [NSMutableArray arrayWithCapacity:[selectedThreads count]];
+        GIThread *thread;
+        
+        while (thread = [enumerator nextObject])
+        {
+            NSNumber *oid = [NSNumber numberWithUnsignedLongLong:[thread oid]];
+            [pbItems addObject:oid];
+        }
+        
+        [pboard setPropertyList:pbItems forType:@"GinkoThreads"];
     }
     
     return YES;

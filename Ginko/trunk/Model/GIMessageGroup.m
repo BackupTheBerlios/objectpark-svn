@@ -443,25 +443,24 @@ static NSMutableArray* root = nil;
     return result;
 }
 
-+ (void) moveThreadsWithURI: (NSArray*) threadURIs 
-				  fromGroup: (GIMessageGroup*) sourceGroup 
-					toGroup: (GIMessageGroup*) destinationGroup
++ (void)moveThreadsWithOids:(NSArray *)threadOids 
+				  fromGroup:(GIMessageGroup *)sourceGroup 
+					toGroup:(GIMessageGroup *)destinationGroup
 {
-    NSEnumerator* enumerator = [threadURIs objectEnumerator];
-    NSString* threadURI;
+    NSEnumerator *enumerator = [threadOids objectEnumerator];
+    NSNumber *oid;
     
-    while (threadURI = [enumerator nextObject]) {
-        GIThread *thread = [OPPersistentObjectContext objectWithURLString:threadURI];
-        NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
+    while (oid = [enumerator nextObject]) 
+    {
+        GIThread *thread = [[OPPersistentObjectContext threadContext] objectForOid:[oid unsignedLongLongValue] ofClass:[GIThread class]];
         
         // remove thread from source group:
-        [thread removeValue: sourceGroup forKey: @"groups"];
+        [thread removeValue:sourceGroup forKey:@"groups"];
         
         // add thread to destination group:
-        [thread addValue: destinationGroup forKey: @"groups"];
+        [thread addValue:destinationGroup forKey:@"groups"];
     }
 }
-
 
 + (void) removeHierarchyNode: (id) entry
 	/*" Moves entry (either a hierarchy node or a group reference to another hierarchy node aHierarchy at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
