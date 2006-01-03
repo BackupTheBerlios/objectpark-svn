@@ -622,11 +622,13 @@
     NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 
     NSEnumerator* enumerator = [sentMessages objectEnumerator];
-    GIMessage*message;
+    GIMessage* message;
+	
     while (message = [enumerator nextObject]) {
         [message setSendStatus: OPSendStatusNone];
-        [GIMessageBase removeDraftMessage: message];
+        [GIMessageBase addMessage: message];
         [GIMessageBase addSentMessage: message];
+		[message removeValue: [GIMessageGroup queuedMessageGroup] forKey: @"groups"];
     }
     
     [self saveAction: self];
@@ -685,18 +687,16 @@
     [GIActivityPanelController updateData];
 }
 
-- (IBAction)emtpyTrashMailbox:(id)sender
+- (IBAction) emtpyTrashMailbox: (id) sender
 {
-    GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
-    NSEnumerator *enumerator = [[trashgroup valueForKey:@"threadsByDate"] objectEnumerator];
+    GIMessageGroup* trashgroup = [GIMessageGroup trashMessageGroup];
+    OPFaultingArray* threads = [trashgroup valueForKey: @"threadsByDate"];
     GIThread *thread;
     
-    while (thread = [enumerator nextObject])
-    {
+    while (thread = [threads lastObject]) {
         // remove thread from source group:
-        [thread removeValue:trashgroup forKey:@"groups"];
-        if ([[thread valueForKey:@"groups"] count] == 0)
-        {
+        [thread removeValue: trashgroup forKey: @"groups"];
+        if ([[thread valueForKey: @"groups"] count] == 0) {
             [thread delete];
         }
     }    

@@ -51,7 +51,7 @@
 	@"subject = {ColumnName = ZSUBJECT; AttributeClass = NSString;};"
 	@"date = {ColumnName = ZDATE; AttributeClass = NSCalendarDate;};"
 	@"senderName = {ColumnName = ZAUTHOR; AttributeClass = NSString;};"
-	@"profile = {ColumnName = ZPROFILE; AttributeClass = GIProfile;};"
+	@"sendProfile = {ColumnName = ZPROFILE; AttributeClass = GIProfile; InverseRelationshipKey = messagesToSend;};"
 	@"thread = {ColumnName = ZTHREAD; AttributeClass = GIThread; InverseRelationshipKey = messages;};"
 	@"reference = {ColumnName = ZREFERENCE; AttributeClass = GIMessage;};"
 	// Flags

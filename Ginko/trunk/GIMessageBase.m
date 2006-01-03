@@ -24,27 +24,39 @@
 
 @implementation GIMessageBase
 
+- (void) addMessage: (GIMessage*) aMessage
+{
+	[[self class] addMessage: aMessage];
+}
+
++ (void) addMessage: (GIMessage*) aMessage
+{
+	if (aMessage) {
+
+		if (![GIMessageFilter filterMessage: aMessage flags: 0]) {
+			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+		}
+		
+		if ([aMessage hasFlags: OPIsFromMeStatus]) {
+			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
+		}
+		
+		// add message to index
+		//GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+		//[indexCenter addMessage:message];
+		NSLog(@"adding message... '%@'", [[aMessage internetMessage] subject]);
+	} 	
+}
+
 - (void) addMessageInMainThreadWithTransferData: (NSMutableArray*) parameters
 {
     @try {
         GIMessage* message = [GIMessage messageWithTransferData: [parameters objectAtIndex: 0]];
-        
-        if (message) {
-			 // it's not a dupe
-            if (![GIMessageFilter filterMessage: message flags: 0]) {
-                [[self class] addMessage: message toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
-            }
-            
-            if ([message hasFlags: OPIsFromMeStatus]) {
-                [[self class] addMessage: message toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
-            }
-            
-            // add message to index
-            //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-            //[indexCenter addMessage:message];
-            [parameters addObject: message]; // out param
-            NSLog(@"adding message in main thread... '%@'", [[message internetMessage] subject]);
-        } 
+		if (message)
+		{
+			[self addMessage: message];
+			[parameters addObject:message]; // out param
+		}
     } @catch (NSException* localException) {
         NSLog(@"Exception while adding message in main thread: %@", [localException reason]);
     } @finally {
@@ -52,6 +64,7 @@
     }
 }
 
+#ifdef _0
 + (GIMessage *)addMessageWithTransferData:(NSData *)someTransferData
 /*" Creates and returns a new GIMessage object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
 {
@@ -76,7 +89,7 @@
     
     return message;
 }
-
+#endif
 
 + (void) addMessage: (GIMessage*) aMessage toMessageGroup: (GIMessageGroup*) aGroup suppressThreading: (BOOL) suppressThreading
 {

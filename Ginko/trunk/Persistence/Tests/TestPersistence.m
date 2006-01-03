@@ -42,8 +42,8 @@
     [message resolveFault];
     NSLog(@"Got message: %@", message);
 	NSAssert(![message isFault], @"Faulting did not work for oid 2.");
-	[[message valueForKey: @"profile"] resolveFault]; // make sure we do not print a profile fault below
-	NSLog(@"Message has profile: %@", [message valueForKey: @"profile"]);
+	[[message valueForKey: @"sendProfile"] resolveFault]; // make sure we do not print a profile fault below
+	NSLog(@"Message has profile: %@", [message valueForKey: @"sendProfile"]);
 }
 
 - (void) testInsert

@@ -16,7 +16,7 @@
 
 }
 
-+ (GIMessage *)addMessageWithTransferData:(NSData *)someTransferData;
++ (void) addMessage: (GIMessage*) aMessage;
 
 //+ (void) removeMessage: (GIMessage*) aMessage;
 

@@ -66,6 +66,7 @@ NSMutableArray* tempMessageArray;
     //[tempIndexCenter release];
 }
 
+/*
 - (void) testAddMessage
 {
     NSLog(@"-[TestGIFulltextIndexCenter testAddOneMessage]");
@@ -85,7 +86,8 @@ NSMutableArray* tempMessageArray;
     STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
     STAssertTrue([tempMessage hasFlags:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
 }
-
+*/
+ 
 - (void) testAddManyMessages
 {
     NSLog(@"-[TestGIFulltextIndexCenter testAddManyMessages]");
