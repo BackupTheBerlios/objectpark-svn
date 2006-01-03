@@ -547,6 +547,7 @@
 	OPClassDescription* cd = [[self class] persistentClassDescription];
 	OPAttributeDescription* ad = [cd attributeWithName: key];
 	OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+	NSString* inverseKey = [ad inverseRelationshipKey];
 	// Check, if it is a many-to-many relation:
 	if (r) {
 		// Record relationship change in persistent context:
@@ -554,7 +555,6 @@
 	
 
 		// Also update inverse relationship (if any):
-		NSString* inverseKey = [ad inverseRelationshipKey];
 		if (inverseKey) {
 			[value willChangeValueForKey: inverseKey];
 			[value addPrimitiveValue: self forKey: inverseKey];
@@ -564,6 +564,13 @@
 		// Do we need to check, if value is a fault and not do anything then? Does addPrimitiveValue already handle this?
 		if ([self isFault]) {
 			return; // we'll pick up the change the next time this fault is fired.
+		}
+	} else {
+		if (inverseKey) {
+			// many-to-one relationship
+			[value willChangeValueForKey: key];
+			[value setPrimitiveValue: self forKey: inverseKey];
+			[value didChangeValueForKey: key];
 		}
 	}
 	
