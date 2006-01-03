@@ -694,7 +694,21 @@
 
 - (IBAction)emtpyTrashMailbox:(id)sender
 {
-    NSLog(@"-[GIApplication emtpyTrashMailbox:] not yet implemented.");
+    GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
+    NSEnumerator *enumerator = [[trashgroup valueForKey:@"threadsByDate"] objectEnumerator];
+    GIThread *thread;
+    
+    while (thread = [enumerator nextObject])
+    {
+        // remove thread from source group:
+        [thread removeValue:trashgroup forKey:@"groups"];
+        if ([[thread valueForKey:@"groups"] count] == 0)
+        {
+            [thread delete];
+        }
+    }    
+    
+    [self saveAction:self];
 }
 
 @end

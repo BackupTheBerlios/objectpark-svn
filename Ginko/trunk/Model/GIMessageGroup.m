@@ -371,42 +371,45 @@ static NSMutableArray* root = nil;
     }
 }
 
-+ (void) enforceIntegrity
++ (void)enforceIntegrity
 /*" Checks if all groups are in the hierarchy and that the hierarchy has no nonexistent groups in it. "*/
 {    
-    NSMutableArray* groupUrlsToCheck = [NSMutableArray array];
-    NSEnumerator*   enumerator       = [self allObjectsEnumerator];
-	GIMessageGroup* group;
+    NSMutableArray *groupUrlsToCheck = [NSMutableArray array];
+    NSEnumerator *enumerator = [self allObjectsEnumerator];
+	GIMessageGroup *group;
 
     // building array of Object ID URLs:
-    while ((group = [enumerator nextObject])) {
-        [groupUrlsToCheck addObject: [group objectURLString]];
+    while ((group = [enumerator nextObject])) 
+    {
+        [groupUrlsToCheck addObject:[group objectURLString]];
     }
     
-    [self checkHierarchy: [self hierarchyRootNode] withGroups: groupUrlsToCheck];
+    [self checkHierarchy:[self hierarchyRootNode] withGroups:groupUrlsToCheck];
     
-    [[self hierarchyRootNode] addObjectsFromArray: groupUrlsToCheck];
+    [[self hierarchyRootNode] addObjectsFromArray:groupUrlsToCheck];
     
     [self saveHierarchy];
 }
 
-+ (NSMutableArray*) hierarchyRootNode
++ (NSMutableArray *)hierarchyRootNode
 /*" Returns the root node of the message group hierarchy. The first entry in every node describes the hierarchy. It is a #{NSDictionary} with keys 'name' for the name of the hierarchy and 'uid' for an unique id of the hierarchy. "*/
 {
-    if (! root) {
-        NSString* error;
+    if (! root) 
+    {
+        NSString *error;
         NSPropertyListFormat format;
                 
         // Read from application support folder:
-        NSString* plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent: @"GroupHierarchy.plist"];
+        NSString *plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"GroupHierarchy.plist"];
         
-        NSData* plistData = [NSData dataWithContentsOfFile: plistPath];
-        root = [[NSPropertyListSerialization propertyListFromData: plistData
-                                                 mutabilityOption: NSPropertyListMutableContainers
-                                                           format: &format
-                                                 errorDescription: &error] retain];
-        if (! root) {
-            root = [[NSMutableArray arrayWithObject: [NSMutableDictionary dictionaryWithObjectsAndKeys:
+        NSData *plistData = [NSData dataWithContentsOfFile:plistPath];
+        root = [[NSPropertyListSerialization propertyListFromData:plistData
+                                                 mutabilityOption:NSPropertyListMutableContainers
+                                                           format:&format
+                                                 errorDescription:&error] retain];
+        if (! root) 
+        {
+            root = [[NSMutableArray arrayWithObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Root", @"name",
                 [NSNumber numberWithFloat: 0.0], @"uid",
                 nil, nil
@@ -418,7 +421,7 @@ static NSMutableArray* root = nil;
         
         [self enforceIntegrity];
 		
-		[[self allObjectsEnumerator] makeObjectsPerformSelector: @selector(retain)]; // Groups are retained to prevent them from being re-fetched every time.
+		[[self allObjectsEnumerator] makeObjectsPerformSelector:@selector(retain)]; // Groups are retained to prevent them from being re-fetched every time.
     }
     
     return root;
