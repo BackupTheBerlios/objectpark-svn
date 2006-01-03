@@ -603,35 +603,59 @@
     [self saveAction:self];
 }
 
-- (void) SMTPJobFinished: (NSNotification*) aNotification
+- (void)SMTPJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
     
-    NSNumber* jobId = [[aNotification userInfo] objectForKey: @"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass: [NSNumber class]]);
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
-    NSDictionary* result = [OPJobs resultForJob: jobId];
-    NSAssert1(result != nil, @"no result for job with id %@", jobId);
-    
-    [OPJobs removeFinishedJob: jobId]; // clean up
-    
-    NSArray* messages = [result objectForKey: @"messages"];
-    NSAssert(messages != nil, @"result does not contain 'messages'");
-    
-    NSArray* sentMessages = [result objectForKey: @"sentMessages"];
-    NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
-
-    NSEnumerator* enumerator = [sentMessages objectEnumerator];
-    GIMessage* message;
-	
-    while (message = [enumerator nextObject]) {
-        [message setSendStatus: OPSendStatusNone];
-        [GIMessageBase addMessage: message];
-        [GIMessageBase addSentMessage: message];
-		[message removeValue: [GIMessageGroup queuedMessageGroup] forKey: @"groups"];
+    NSDictionary *result = [OPJobs resultForJob:jobId];
+    if (!result) // nonregular finishing of job
+    {
+        // set status of all messages with OPSendStatusSending to OPSendStatusQueuedReady:
+        NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
+        GIProfile *profile;
+        
+        while (profile = [enumerator nextObject]) 
+        {
+            NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+            GIMessage *message;
+            NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
+            
+            while (message = [messagesToSendEnumerator nextObject]) 
+            {
+                if ([message sendStatus] == OPSendStatusSending) 
+                {
+                    [message setSendStatus:OPSendStatusQueuedReady];
+                    [messagesQualifyingForSend addObject:message];
+                }
+            }            
+        }
+    }
+    else
+    {
+        [OPJobs removeFinishedJob:jobId]; // clean up
+        
+        NSArray *messages = [result objectForKey: @"messages"];
+        NSAssert(messages != nil, @"result does not contain 'messages'");
+        
+        NSArray *sentMessages = [result objectForKey: @"sentMessages"];
+        NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
+        
+        NSEnumerator *enumerator = [sentMessages objectEnumerator];
+        GIMessage *message;
+        
+        while (message = [enumerator nextObject]) 
+        {
+            [message setSendStatus:OPSendStatusNone];
+            [GIMessageBase addMessage:message];
+            [GIMessageBase addSentMessage:message];
+            [message removeValue:[GIMessageGroup queuedMessageGroup] forKey:@"groups"];
+        }
     }
     
-    [self saveAction: self];
+    [self saveAction:self];
 }
 
 - (void) sendQueuedMessagesWithFlag:(unsigned)flag
@@ -687,16 +711,18 @@
     [GIActivityPanelController updateData];
 }
 
-- (IBAction) emtpyTrashMailbox: (id) sender
+- (IBAction)emtpyTrashMailbox:(id)sender
 {
-    GIMessageGroup* trashgroup = [GIMessageGroup trashMessageGroup];
-    OPFaultingArray* threads = [trashgroup valueForKey: @"threadsByDate"];
+    GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
+    OPFaultingArray *threads = [trashgroup valueForKey:@"threadsByDate"];
     GIThread *thread;
     
-    while (thread = [threads lastObject]) {
+    while (thread = [threads lastObject]) 
+    {
         // remove thread from source group:
-        [thread removeValue: trashgroup forKey: @"groups"];
-        if ([[thread valueForKey: @"groups"] count] == 0) {
+        [thread removeValue:trashgroup forKey:@"groups"];
+        if ([[thread valueForKey:@"groups"] count] == 0) 
+        {
             [thread delete];
         }
     }    
