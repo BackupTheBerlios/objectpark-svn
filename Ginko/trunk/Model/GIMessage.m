@@ -407,6 +407,13 @@
     return (someFlags & [self flags]) == someFlags;
 }
 
++ (void) resetSendStatus
+/*" Run during startup to set the sendStatus of OPSendStatusSending or OPSendStatusQueuedBlocked back to OPSendStatusQueuedReady "*/
+{
+	NSString* command = @"update ZMESSAGE set ZISQUEUED=3 where ZISQUEUED=2 or ZISQUEUED=4;";
+	[[[OPPersistentObjectContext defaultContext] databaseConnection] performCommand: command];
+}
+
 - (unsigned) sendStatus
 {
 	[self willAccessValueForKey: @"sendStatus"];

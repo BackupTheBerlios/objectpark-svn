@@ -281,7 +281,7 @@
     
     OPPersistentObjectEnumerator *enumerator = [GIMessage messageEnumeratorForFulltextIndexerWithLimit:250];
     
-    int i = 0;
+    //int i = 0;
     
     // Add messages to fulltext index:
     [GIFulltextIndexCenter addMessages:enumerator];
@@ -357,11 +357,12 @@
     
     //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
     //NSLog(@"last message = %@", aMessage);
-    [OPPersistentObjectContext setDefaultContext:[self initialPersistentObjectContext]];
+    [OPPersistentObjectContext setDefaultContext: [self initialPersistentObjectContext]];
 
     [GIMessageGroup ensureDefaultGroups];
     //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);
-    
+    [GIMessage resetSendStatus];
+	
     [self restoreOpenWindowsFromLastSession];
 
         // Make sure, we receive NSManagedObjectContextDidSaveNotifications:
@@ -603,62 +604,54 @@
     [self saveAction:self];
 }
 
-- (void)SMTPJobFinished:(NSNotification *)aNotification
+- (void) SMTPJobFinished: (NSNotification*) aNotification
 {
     if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    NSNumber* jobId = [[aNotification userInfo] objectForKey: @"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass: [NSNumber class]]);
     
-    NSDictionary *result = [OPJobs resultForJob:jobId];
-    if (!result) // nonregular finishing of job
-    {
-        // set status of all messages with OPSendStatusSending to OPSendStatusQueuedReady:
-        NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
-        GIProfile *profile;
-        
-        while (profile = [enumerator nextObject]) 
-        {
-            NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
-            GIMessage *message;
-            NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
-            
-            while (message = [messagesToSendEnumerator nextObject]) 
-            {
-                if ([message sendStatus] == OPSendStatusSending) 
-                {
-                    [message setSendStatus:OPSendStatusQueuedReady];
-                    [messagesQualifyingForSend addObject:message];
-                }
-            }            
-        }
-    }
-    else
-    {
-        [OPJobs removeFinishedJob:jobId]; // clean up
-        
-        NSArray *messages = [result objectForKey: @"messages"];
-        NSAssert(messages != nil, @"result does not contain 'messages'");
-        
-        NSArray *sentMessages = [result objectForKey: @"sentMessages"];
-        NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
-        
-        NSEnumerator *enumerator = [sentMessages objectEnumerator];
-        GIMessage *message;
-        
-        while (message = [enumerator nextObject]) 
-        {
-            [message setSendStatus:OPSendStatusNone];
-            [GIMessageBase addMessage:message];
-            [GIMessageBase addSentMessage:message];
-            [message removeValue:[GIMessageGroup queuedMessageGroup] forKey:@"groups"];
-        }
-    }
+    NSDictionary* result = [OPJobs resultForJob: jobId];
+
+	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
+	NSEnumerator* enumerator = [[GIProfile allObjects] objectEnumerator];
+	GIProfile* profile;
+	while (profile = [enumerator nextObject]) {
+		NSEnumerator* messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+		GIMessage* message;
+		while (message = [messagesToSendEnumerator nextObject]) {
+			if ([message sendStatus] == OPSendStatusSending) {
+				[message setSendStatus: OPSendStatusQueuedReady];
+			}
+		}            
+	}
+	
+	[OPJobs removeFinishedJob: jobId]; // clean up
+	
+	// Process all messages sent successfully:
+	
+	NSArray* messages = [result objectForKey: @"messages"];
+	NSAssert(messages != nil, @"result does not contain 'messages'");
+	
+	NSArray* sentMessages = [result objectForKey: @"sentMessages"];
+	NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
+	
+	enumerator = [sentMessages objectEnumerator];
+	GIMessage* message;
+	
+	while (message = [enumerator nextObject]) {
+		[message setSendStatus: OPSendStatusNone];
+		// Disconnect message from its dummy thread:
+		[[message valueForKey: @"thread"] removeValue: [GIMessageGroup queuedMessageGroup] forKey: @"groups"];
+		[message setValue: nil forKey: @"thread"];
+		// Re-Insert message wherever it belongs:
+		[GIMessageBase addMessage: message];
+	}
     
-    [self saveAction:self];
+    [self saveAction: self];
 }
 
-- (void) sendQueuedMessagesWithFlag:(unsigned)flag
+- (void) sendQueuedMessagesWithFlag: (unsigned) flag
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Flag is currently ignored. "*/
 {
     // iterate over all profiles:
@@ -686,10 +679,10 @@
 
 - (IBAction) sendQueuedMessages: (id) sender
 {
-    [self sendQueuedMessagesWithFlag: 0];
+    [self sendQueuedMessagesWithFlag: OPSendStatusQueuedReady];
 }
 
-- (IBAction)showActivityPanel:(id)sender
+- (IBAction) showActivityPanel: (id) sender
 {
     [GIActivityPanelController showActivityPanelInteractive:YES];
     

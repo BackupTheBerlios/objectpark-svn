@@ -100,11 +100,13 @@
     [aGroup addValue: thread forKey: @"threadsByDate"];
 }
 
+/*
 + (void) addSentMessage: (GIMessage*) aMessage
 {
     [GIMessageFilter filterMessage:aMessage flags:0]; // put the message where it belongs
     [self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
 }
+*/
 
 + (void) addDraftMessage: (GIMessage*) aMessage
 {

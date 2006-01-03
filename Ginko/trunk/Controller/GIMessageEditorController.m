@@ -64,58 +64,34 @@
 /*" For reopening an unsent message. "*/
 {
     if (self = [self init]) {        
-        // no longer needed? [aMessage addFlags:OPSendingBlockedStatus];
+		// Make sure, aMessage is not send during edit:
+        if ([aMessage sendStatus]==OPSendStatusQueuedReady) [aMessage setSendStatus: OPSendStatusQueuedBlocked];
         
-#warning Reenable: getting of message's profile
-        /*
-        // get message's profile:
-        NSError *error = nil;
-        NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-        [request setEntity: [GIProfile entity]];
-        [request setPredicate: [NSPredicate predicateWithFormat: @"%@ IN messagesToSend", aMessage]];
-        NSArray*result = [[NSManagedObjectContext threadContext] executeFetchRequest:request error:&error];
-        
-        if (error)
-        {
-            NSLog(@"Error fetching threads: %@", error);
-            profile = [GIProfile defaultProfile];
-        }
-        else
-        {
-            NSAssert([result count] == 1, @"Should have exactly one profile");
-            profile = [result lastObject];
-        }
-           
-         */
-        
-        // CAUTION just for now use default profile
-        profile = [GIProfile defaultProfile];
-
-        profile = [profile retain];
+        profile = [[aMessage valueForKey: @"sendProfile"] retain];
         
         oldMessage = [aMessage retain];
         referencedMessage = nil;
         
-        [self setHeadersFromMessage:oldMessage];
-        [self appendContentFromMessage:oldMessage];
+        [self setHeadersFromMessage: oldMessage];
+        [self appendContentFromMessage: oldMessage];
         
         shouldAppendSignature = NO;
         
         type = MassageTypeRevisitedMessage;
         
-        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
+        [NSBundle loadNibNamed: @"MessageEditor" owner: self];
         
         [self updateHeaders];
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeKeyAndOrderFront:self];
+        [window makeKeyAndOrderFront: self];
     }
     
     return self;
 }
 
-- (id)initNewMessageWithProfile:(GIProfile *)aProfile
+- (id) initNewMessageWithProfile: (GIProfile*) aProfile
 {
     if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
@@ -127,13 +103,13 @@
                 
         type = MessageTypeNewMessage;
         
-        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
+        [NSBundle loadNibNamed: @"MessageEditor" owner: self];
         
         [self updateHeaders];
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeKeyAndOrderFront:self];
+        [window makeKeyAndOrderFront: self];
     }
     
     return self;
@@ -802,7 +778,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) setReplyForwardSubjectFromMessage: (GIMessage*) aMessage
 {
-    OPInternetMessage *internetMessage = [aMessage internetMessage];
+    OPInternetMessage* internetMessage = [aMessage internetMessage];
     
     @try {
         [headerFields setObject: [internetMessage forwardSubject] forKey: @"Subject"];
@@ -810,23 +786,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     } @catch (NSException* localException) {
 		
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
-        [headerFields setObject: [@"FWD: " stringByAppendingString: [internetMessage bodyForHeaderField: @"Subject"]] forKey:@"Subject"];
+        [headerFields setObject: [@"FWD: " stringByAppendingString: [internetMessage bodyForHeaderField: @"Subject"]] forKey: @"Subject"];
     }
 }
 
 - (void) setHeadersFromMessage: (GIMessage*) aMessage
 {
-    NSEnumerator *enumerator;
-    OPObjectPair *header;
-    
-    enumerator = [[[aMessage internetMessage] headerFields] objectEnumerator];
-    while ((header = [enumerator nextObject]))
-    {
+    NSEnumerator* enumerator = [[[aMessage internetMessage] headerFields] objectEnumerator];
+	OPObjectPair* header;
+
+    while ((header = [enumerator nextObject])) {
         [headerFields setObject: [header secondObject] forKey: [header firstObject]];
     }
 }
 
-- (NSMutableString *)stringByRemovingOwnAddressesFromString: (NSString*) addr
+- (NSMutableString*) stringByRemovingOwnAddressesFromString: (NSString*) addr
 {
     NSArray* parts = [addr fieldListFromEMailString];
     NSMutableString* result = [NSMutableString string];
@@ -838,12 +812,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         part = [part stringByRemovingSurroundingWhitespace];
         
-        if ([part length])
-        {
-            if (! [GIProfile isMyEmailAddress:part])
-            {
+        if ([part length]) {
+            if (! [GIProfile isMyEmailAddress: part]) {
                 if ([result length]) [result appendString: @", "]; // skip first time
-                [result appendString:part];
+                [result appendString: part];
             }
         }
     }
@@ -857,7 +829,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // Build the new to: header line. This includes the original to: content
     // sans myself plus the sender's ReplyTo:
     NSString *oldTo;
-    NSMutableString *toAllButMe;
+    NSMutableString* toAllButMe;
     
     oldTo = [NSString stringWithFormat: @"%@, %@", [[replyMessage internetMessage] replyToWithFallback: YES], makeStringIfNil([[replyMessage internetMessage] toWithFallback: YES])];
     
@@ -872,10 +844,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSString *oldCC = [[replyMessage internetMessage] ccWithFallback: YES];
     
     // Try to remove myself from list (if included):
-    NSMutableString *ccAllButMe = [self stringByRemovingOwnAddressesFromString:oldCC];
+    NSMutableString* ccAllButMe = [self stringByRemovingOwnAddressesFromString: oldCC];
     
-    if ([ccAllButMe length])
-    {
+    if ([ccAllButMe length]) {
         [headerFields setObject: ccAllButMe forKey: @"Cc"];
     } else {
         [headerFields setObject: @"" forKey:@"Cc"];
@@ -887,37 +858,30 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void) switchToReplyToSender: (GIMessage*) replyMessage
 {
     // If we are replying to our own message, we probably want is to send a message to the recients (to header)
-    NSString *preSetTo = [[replyMessage internetMessage] replyToWithFallback: YES];
+    NSString* preSetTo = [[replyMessage internetMessage] replyToWithFallback: YES];
     
-    if ([replyMessage hasFlags:OPIsFromMeStatus]) 
-    {
-        NSString *preSetCc = [[replyMessage internetMessage] ccWithFallback: YES];
+    if ([replyMessage hasFlags:OPIsFromMeStatus])  {
+        NSString* preSetCc = [[replyMessage internetMessage] ccWithFallback: YES];
         
-        if ([preSetCc length])
-        {
+        if ([preSetCc length]) {
             [headerFields setObject: preSetCc forKey: @"Cc"];
-        }
-        else
-        {
-            [headerFields setObject: @"" forKey:@"Cc"];
+        } else {
+            [headerFields setObject: @"" forKey: @"Cc"];
         }
         
         preSetCc = [[replyMessage internetMessage] bccWithFallback: YES];
         
-        if ([preSetCc length])
-        {
+        if ([preSetCc length]) {
             [headerFields setObject: preSetCc forKey: @"Bcc"];
-        }
-        else
-        {
+        } else {
             [headerFields setObject: @"" forKey:@"Bcc"];
         }
         
         preSetTo = [[replyMessage internetMessage] toWithFallback: YES];
     } else {
-        NSString *Cc = [[self profile] valueForKey: @"defaultCc"];
+        NSString* Cc = [[self profile] valueForKey: @"defaultCc"];
         if (![Cc length]) Cc = @"";
-        NSString *Bcc = [[self profile] valueForKey: @"defaultBcc"];
+        NSString* Bcc = [[self profile] valueForKey: @"defaultBcc"];
         if (![Bcc length]) Bcc = @"";
         
         [headerFields setObject: Cc forKey: @"Cc"];
@@ -968,7 +932,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     NSAttributedString* forwardSuffix = [[[NSAttributedString allocWithZone: [self zone]] initWithString: @"\n==== END FORWARDED MESSAGE ====\n\n"] autorelease];
     
-    NSAttributedString* forwardHeaders = [GIMessage renderedHeaders: [NSArray arrayWithObjects: @"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage:internetMessage showOthers: NO];
+    NSAttributedString* forwardHeaders = [GIMessage renderedHeaders: [NSArray arrayWithObjects: @"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage: internetMessage showOthers: NO];
     
     NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
     
@@ -977,7 +941,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [result insertAttributedString: [internetMessage editableBodyContent] atIndex: [forwardPrefix length]];
     [result insertAttributedString: forwardHeaders atIndex: [forwardPrefix length]];
     
-    [content appendAttributedString:result];
+    [content appendAttributedString: result];
 }
 
 - (NSAttributedString*) signature 
@@ -987,8 +951,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 		NSAttributedString* signature = [[self profile] valueForKey: @"signature"];
 		
 		if ([signature length]) {
-			NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] initWithString: @"\n-- \n"] autorelease];
-			[result appendAttributedString:signature];
+			NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] initWithString: @"\n-- \n"] autorelease];
+			[result appendAttributedString: signature];
 			
 			return result;
 		}
@@ -1001,25 +965,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) updateSignature
 {
-    NSMutableAttributedString *messageText = [messageTextView textStorage];
+    NSMutableAttributedString* messageText = [messageTextView textStorage];
     NSRange signatureRange = [[messageText string] rangeOfString: @"\n-- \n" options:NSBackwardsSearch | NSLiteralSearch];
     
-    if (signatureRange.location != NSNotFound)
-    {
+    if (signatureRange.location != NSNotFound) {
         signatureRange.length = [messageText length] - signatureRange.location;
-        [messageText deleteCharactersInRange:signatureRange];
+        [messageText deleteCharactersInRange: signatureRange];
     }
     
-    NSAttributedString *signature = [self signature];
+    NSAttributedString* signature = [self signature];
     
-    if ([signature length])
-    {
+    if ([signature length]) {
         NSRange selectedRange = [messageTextView selectedRange];
         [messageText appendAttributedString:signature];
         
-        if ((selectedRange.location + selectedRange.length) < [messageText length])
-        {
-            [messageTextView setSelectedRange:selectedRange];
+        if ((selectedRange.location + selectedRange.length) < [messageText length]) {
+            [messageTextView setSelectedRange: selectedRange];
         }
     }    
 }

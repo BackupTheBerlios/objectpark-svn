@@ -726,8 +726,8 @@
 		8D9E8A8306AC44080055F87C /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIApplication.h; path = ../GIApplication.h; sourceTree = "<group>"; };
 		8D9E8A8406AC44080055F87C /* GIApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIApplication.m; path = ../GIApplication.m; sourceTree = "<group>"; };
 		8D9E9DC806AE215C0055F87C /* OPBanner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = OPBanner.jpg; sourceTree = "<group>"; };
-		8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageBase.h; sourceTree = "<group>"; };
-		8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageBase.m; sourceTree = "<group>"; };
+		8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIMessageBase.h; path = ../GIMessageBase.h; sourceTree = "<group>"; };
+		8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIMessageBase.m; path = ../GIMessageBase.m; sourceTree = "<group>"; };
 		8DB2D4F70796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMatrixWithKeyboardSupport.h; sourceTree = "<group>"; };
 		8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
 		8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = ../OPPreferences/build/Development/OPPreferences.framework; sourceTree = SOURCE_ROOT; };
@@ -829,8 +829,6 @@
 				77CD8B64093698E500C9030B /* Obsolete */,
 				8DCE35E508918FC200F705EF /* Persistence */,
 				8D666F0407D524E20076C74D /* Preferences */,
-				8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */,
-				8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */,
 				8D901F4F0778EC97005365EA /* GIUserDefaultsKeys.h */,
 				8D901F500778EC97005365EA /* GIUserDefaultsKeys.m */,
 			);
@@ -1004,6 +1002,8 @@
 				8DE9646F089F9F1F0053ED6B /* GIThread.m */,
 				772D9523094435EA00456485 /* GIMessageGroup+Statistics.h */,
 				772D9524094435EA00456485 /* GIMessageGroup+Statistics.m */,
+				8DAB5CF10803C4FB0036C0BA /* GIMessageBase.h */,
+				8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";

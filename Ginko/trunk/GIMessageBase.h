@@ -25,11 +25,11 @@
 - (void) importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments;
 
 + (void) addMessage: (GIMessage*) aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading;
-+ (void) addSentMessage: (GIMessage*) aMessage;
+//+ (void) addSentMessage: (GIMessage*) aMessage;
 + (void) addDraftMessage: (GIMessage*) aMessage;
 + (void) addQueuedMessage: (GIMessage*) aMessage;
 + (void) addTrashThread:(GIThread *)aThread;
-+ (void) removeDraftMessage: (GIMessage*) aMessage;
+//+ (void) removeDraftMessage: (GIMessage*) aMessage;
 
 @end
 

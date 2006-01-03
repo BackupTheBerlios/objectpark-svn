@@ -48,6 +48,7 @@
     int flagsCache; // should move to attributes dictionary so it does not put load onto the faults?
 }
 
++ (void) resetSendStatus;
 + (id) messageForMessageId: (NSString*) messageId;
 + (id) messageWithTransferData: (NSData*) someTransferData;
 + (OPPersistentObjectEnumerator*) messageEnumeratorForFulltextIndexerWithLimit: (unsigned) limit;

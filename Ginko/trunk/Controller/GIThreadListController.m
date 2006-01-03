@@ -535,17 +535,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (GIMessage*) selectedMessage
 /*" Returns selected message, iff one message is selected. nil otherwise. "*/
 {
-    GIMessage *result = nil;
-    id item;
-    
-    item = [threadsView itemAtRow: [threadsView selectedRow]];
+    GIMessage* result = nil;
+    id item = [threadsView itemAtRow: [threadsView selectedRow]];
+	
     if ([item isKindOfClass: [GIMessage class]]) {
         result = item;
     } else {
-        result = [[[OPPersistentObjectContext objectWithURLString: item] messagesByTree] lastObject];
-        if (! [result isKindOfClass: [GIMessage class]]) {
-            result = nil;
-        }
+        result = [[item messagesByTree] lastObject];
     }    
     
     return result;
