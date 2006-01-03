@@ -1113,7 +1113,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // unmark message as blocked for sending
     [message setSendStatus: sendStatus];
-    [message setValue: [self profile] forKey: @"sendProfile"];
 	
     // Remove old message from database if present:
 	[oldMessage delete];
