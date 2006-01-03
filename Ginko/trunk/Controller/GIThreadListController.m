@@ -814,7 +814,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) joinThreads
 {
-    NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
+    NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
     GIThread* targetThread = [enumerator nextObject];
     [threadsView selectRow: [threadsView rowForItem: targetThread] byExtendingSelection: NO];
     //[[self nonExpandableItemsCache] removeObject:targetThread]; 
@@ -831,7 +831,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [GIApp saveAction: self];
 }
 
-- (IBAction)selectThreadsWithCurrentSubject:(id)sender
+- (IBAction) selectThreadsWithCurrentSubject: (id) sender
 /*" Joins all threads with the subject of the selected thread. "*/
 {
     NSArray *selectedThreads = [self selectedThreads];

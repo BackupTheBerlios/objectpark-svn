@@ -89,13 +89,13 @@
     }
     
     /*
-	 // disconnecting another thread from all groups:
-	 enumerator = [[otherThread valueForKey: @"groups"] objectEnumerator];
-	 while (group = [enumerator nextObject])
-	 {
-		 [self removeFromGroups: group];
-	 }
-     */
+	// disconnecting another thread from all groups - not necessary! Should be done in - willDelete
+	enumerator = [[otherThread valueForKey: @"groups"] objectEnumerator];
+	GIMessageGroup* group;
+	while (group = [enumerator nextObject]) {
+		[self removeValue: group forKey: @"groups"];
+	}
+	 */
 	
     [otherThread delete];		
 }
