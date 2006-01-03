@@ -387,25 +387,23 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return (hits != nil);
 }
 
-- (BOOL)openSelection:(id)sender
+- (BOOL) openSelection: (id) sender
 {    
-    if ([self threadsShownCurrently]) 
-    {
+    if ([self threadsShownCurrently])  {
         int selectedRow = [threadsView selectedRow];
         
-        if (selectedRow >= 0) 
-        {
-            GIMessage *message = nil;
-            GIThread *selectedThread = nil;
-            id item = [threadsView itemAtRow:selectedRow];
+        if (selectedRow >= 0) {
+            GIMessage* message = nil;
+            GIThread* selectedThread = nil;
+            id item = [threadsView itemAtRow: selectedRow];
             
-            if ([threadsView levelForRow:selectedRow] > 0) 
+            if ([threadsView levelForRow: selectedRow] > 0) 
             {
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                while ([threadsView levelForRow:--selectedRow]){}
-                selectedThread = [threadsView itemAtRow:selectedRow];
+                while ([threadsView levelForRow: --selectedRow]){}
+                selectedThread = [threadsView itemAtRow: selectedRow];
             } else {
                 selectedThread = item;
                 
@@ -441,9 +439,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 }
             }
             
-            if ([message hasFlags: OPDraftStatus] || [message hasFlags: OPQueuedStatus]) {
-                if ([message hasFlags: OPInSendJobStatus]) {
-                    NSLog(@"message is in send job");
+			unsigned messageSendStatus = [message sendStatus];
+            if (messageSendStatus > OPSendStatusNone) {
+                if (messageSendStatus >= OPSendStatusSending) {
+					NSLog(@"message is in send job");
                     NSBeep();
                 } else {
                     [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
@@ -459,31 +458,26 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 else [window makeFirstResponder: messageTextView];                    
             }
         }
-	} 
-    else if ([self searchHitsShownCurrently])
-    {
+		
+	} else if ([self searchHitsShownCurrently]) {
+		
         int selectedIndex = [searchHitsTableView selectedRow];
-        if ((selectedIndex >= 0) && (selectedIndex < [hits count]))
-        {
-            OID messageOid = [(NSNumber *)[[hits objectAtIndex:selectedIndex] firstObject] unsignedLongLongValue];
+        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) {
+            OID messageOid = [(NSNumber*) [[hits objectAtIndex: selectedIndex] firstObject] unsignedLongLongValue];
             
-            GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:messageOid ofClass:[GIMessage class]];
+            GIMessage* message = [[OPPersistentObjectContext threadContext] objectForOid: messageOid ofClass: [GIMessage class]];
             
             
-            if ([message hasFlags: OPDraftStatus] || [message hasFlags: OPQueuedStatus]) 
-            {
-                if ([message hasFlags: OPInSendJobStatus]) 
-                {
+			unsigned messageSendStatus = [message sendStatus];
+            if (messageSendStatus>OPSendStatusNone) {
+                if (messageSendStatus >= OPSendStatusSending) {
                     NSLog(@"message is in send job");
                     NSBeep();
-                } 
-                else 
-                {
-                    [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
+                } else {
+                    [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
                 }
-            } 
-            else 
-            {
+            } else {
+				
                 [tabView selectTabViewItemWithIdentifier: @"message"];
                 
                 //[message addFlags: OPSeenStatus];

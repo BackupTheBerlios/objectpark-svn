@@ -613,7 +613,7 @@
     NSDictionary* result = [OPJobs resultForJob: jobId];
     NSAssert1(result != nil, @"no result for job with id %@", jobId);
     
-    [OPJobs removeFinishedJob:jobId]; // clean up
+    [OPJobs removeFinishedJob: jobId]; // clean up
     
     NSArray* messages = [result objectForKey: @"messages"];
     NSAssert(messages != nil, @"result does not contain 'messages'");
@@ -624,23 +624,16 @@
     NSEnumerator* enumerator = [sentMessages objectEnumerator];
     GIMessage*message;
     while (message = [enumerator nextObject]) {
-        [message removeFlags: OPDraftStatus | OPQueuedStatus];
+        [message setSendStatus: OPSendStatusNone];
         [GIMessageBase removeDraftMessage: message];
         [GIMessageBase addSentMessage: message];
-        
-        /*    
-            [messageCenter performSelector:@selector(addRecipientsToLRUMailAddresses:)
-                                withObject:message
-                                  inThread:parentThread];
-        */
     }
     
-    [messages makeObjectsPerformSelector:@selector(resetSendJobStatus)];
-    [self saveAction:self];
+    [self saveAction: self];
 }
 
 - (void) sendQueuedMessagesWithFlag:(unsigned)flag
-/*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). "*/
+/*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Flag is currently ignored. "*/
 {
     // iterate over all profiles:
     NSEnumerator* enumerator = [[GIProfile allObjects] objectEnumerator];
@@ -652,22 +645,22 @@
         NSMutableArray* messagesQualifyingForSend = [NSMutableArray array];
             
         while (message = [messagesToSendEnumerator nextObject]) {
-            if (![message hasFlags: OPSendingBlockedStatus] && ![message hasFlags: OPDraftStatus] && [message hasFlags: OPQueuedStatus]) {
+            if ([message sendStatus] == OPSendStatusQueuedReady) {
+				[message setSendStatus: OPSendStatusSending];
                 [messagesQualifyingForSend addObject: message];
             }
         }
         
 		// something to send for the account?
         if ([messagesQualifyingForSend count]) {
-            [messagesQualifyingForSend makeObjectsPerformSelector: @selector(setSendJobStatus)];
             [GISMTPJob sendMessages: messagesQualifyingForSend viaSMTPAccount: [profile valueForKey: @"sendAccount"]];
         }
     }
 }
 
-- (IBAction)sendQueuedMessages:(id)sender
+- (IBAction) sendQueuedMessages: (id) sender
 {
-    [self sendQueuedMessagesWithFlag:OPQueuedStatus];
+    [self sendQueuedMessagesWithFlag: 0];
 }
 
 - (IBAction)showActivityPanel:(id)sender

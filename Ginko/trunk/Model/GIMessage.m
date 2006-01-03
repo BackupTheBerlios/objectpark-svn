@@ -56,9 +56,9 @@
 	@"reference = {ColumnName = ZREFERENCE; AttributeClass = GIMessage;};"
 	// Flags
 	@"isSeen = {ColumnName = ZISSEEN; AttributeClass = NSNumber;};"
-	@"isQueued = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
+	//@"isQueued = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
 	//@"isSendingBlocked = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
-	@"isDraft = {ColumnName = ZISDRAFT; AttributeClass = NSNumber;};"
+	//@"isDraft = {ColumnName = ZISDRAFT; AttributeClass = NSNumber;};"
 	@"isAnswered = {ColumnName = ZISANSWERED; AttributeClass = NSNumber;};"
 	@"isFulltextIndexed = {ColumnName = ZISFULLTEXTINDEXED; AttributeClass = NSNumber;};"
 	@"isFromMe = {ColumnName = ZISFROMME; AttributeClass = NSNumber;};"
@@ -66,6 +66,7 @@
 	@"isJunk = {ColumnName = ZISJUNK; AttributeClass = NSNumber;};"
 	@"isInteresting = {ColumnName = ZISINTERESTING; AttributeClass = NSNumber;};"
 	//@"isInSendJob = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
+	@"sendStatus = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
 
 	@"}";
 }
@@ -265,8 +266,8 @@
             
 			[self willAccessValueForKey: @"isSeen"];
 
-            if ([self primitiveBoolForKey: @"isInSendJob"]) flagsCache |= OPInSendJobStatus; // not in db schema!?
-            if ([self primitiveBoolForKey: @"isQueued"]) flagsCache |= OPQueuedStatus;
+            //if ([self primitiveBoolForKey: @"isInSendJob"]) flagsCache |= OPInSendJobStatus; // not in db schema!?
+            //if ([self primitiveBoolForKey: @"isQueued"]) flagsCache |= OPQueuedStatus;
             if ([self primitiveBoolForKey: @"isInteresting"]) flagsCache |= OPInterestingStatus;
             if ([self primitiveBoolForKey: @"isSeen"]) flagsCache |= OPSeenStatus;
             if ([self primitiveBoolForKey: @"isJunk"]) flagsCache |= OPJunkMailStatus;
@@ -275,7 +276,7 @@
 			if ([self primitiveBoolForKey: @"isFromMe"]) flagsCache |= OPIsFromMeStatus;
             if ([self primitiveBoolForKey: @"isFulltextIndexed"]) flagsCache |= OPFulltextIndexedStatus;
             if ([self primitiveBoolForKey: @"isAnswered"]) flagsCache |= OPAnsweredStatus;
-            if ([self primitiveBoolForKey: @"isDraft"]) flagsCache |= OPDraftStatus;
+            //if ([self primitiveBoolForKey: @"isDraft"]) flagsCache |= OPDraftStatus;
 			
 			[self didAccessValueForKey: @"isSeen"];
         }
@@ -382,7 +383,7 @@
     if (flags & OPAnsweredStatus) result[i++] = 'A';
     if (flags & OPJunkMailStatus) result[i++] = 'J';
     if (flags & OPSeenStatus) result[i++] = 'R';
-    if (flags & OPDraftStatus) result[i++] = 'D';
+    //if (flags & OPDraftStatus) result[i++] = 'D';
     result[i++] = '\0'; // terminate string
     return [NSString stringWithCString:result];
 }
@@ -397,7 +398,7 @@
     if (strchr(flagcstr, 'A')) flags |= OPAnsweredStatus;
     if (strchr(flagcstr, 'J')) flags |= OPJunkMailStatus;
     if (strchr(flagcstr, 'R')) flags |= OPSeenStatus;
-    if (strchr(flagcstr, 'D')) flags |= OPDraftStatus;
+    //if (strchr(flagcstr, 'D')) flags |= OPDraftStatus;
     [self addFlags:flags];
 }
 
@@ -405,6 +406,28 @@
 {
     return (someFlags & [self flags]) == someFlags;
 }
+
+- (unsigned) sendStatus
+{
+	[self willAccessValueForKey: @"sendStatus"];
+	id result = [self primitiveValueForKey: @"sendStatus"];
+	[self didAccessValueForKey: @"sendStatus"];	
+	unsigned intResult = [result intValue];
+	NSLog(@"SendStatus of %@ is %u", self, result);
+	NSAssert2(intResult<=OPSendStatusSending, @"Illegal send status of %@: %@ detected.", self, result);
+	NSAssert(intResult==0 || [self valueForKey: @"sendProfile"] !=nil, @"No profile set, but send status");
+	return intResult;
+}
+
+- (void) setSendStatus: (unsigned) newStatus
+{
+	NSParameterAssert(newStatus<=OPSendStatusSending);
+	[self willChangeValueForKey: @"sendStatus"];
+	[self setPrimitiveValue: newStatus == 0 ? nil : [NSNumber numberWithInt: newStatus] forKey: @"sendStatus"];
+	[self didChangeValueForKey: @"sendStatus"];
+	NSLog(@"SendStatus of %@ changed to %u", self, newStatus);
+}
+
 
 - (void) addFlags: (unsigned) someFlags
 {
@@ -414,19 +437,19 @@
         if (someFlags) {
             // flags to set:
             NSNumber* yes = [NSNumber numberWithBool: YES];
-#warning isInSendJob not in DB schema ignored.
+//#warning isInSendJob not in DB schema ignored.
             //if ((someFlags & OPInSendJobStatus)) [self setValue: yes forKey: @"isInSendJob"]; // not in DB schema!?
-            if ((someFlags & OPQueuedStatus)) [self setValue: yes forKey: @"isQueued"];
+//            if ((someFlags & OPQueuedStatus)) [self setValue: yes forKey: @"isQueued"];
             if ((someFlags & OPInterestingStatus)) [self setValue: yes forKey: @"isInteresting"];
             if ((someFlags & OPSeenStatus)) [self setValue: yes forKey: @"isSeen"];
             if ((someFlags & OPJunkMailStatus)) [self setValue: yes forKey: @"isJunk"];
-#warning isSendingBlocked not in DB schema ignored.
+//#warning isSendingBlocked not in DB schema ignored.
             //if ((someFlags & OPSendingBlockedStatus)) [self setValue: yes forKey: @"isSendingBlocked"];
             if ((someFlags & OPFlaggedStatus)) [self setValue: yes forKey: @"isFlagged"];
             if ((someFlags & OPIsFromMeStatus)) [self setValue: yes forKey: @"isFromMe"];
             if ((someFlags & OPFulltextIndexedStatus)) [self setValue: yes forKey: @"isFulltextIndexed"];
             if ((someFlags & OPAnsweredStatus)) [self setValue: yes forKey: @"isAnswered"];
-            if ((someFlags & OPDraftStatus)) [self setValue: yes forKey: @"isDraft"];
+//            if ((someFlags & OPDraftStatus)) [self setValue: yes forKey: @"isDraft"];
 			
             flagsCache = someFlags | flags;
         }
@@ -453,17 +476,17 @@
         if ((flags & (~someFlags)) != flags) {
             // flags to remove:
             //NSNumber* no = [NSNumber numberWithBool: NO];
-            if (someFlags & OPInSendJobStatus) [self setValue: nil forKey: @"isInSendJob"];
-            if (someFlags & OPQueuedStatus) [self setValue: nil forKey: @"isQueued"];
+            //if (someFlags & OPInSendJobStatus) [self setValue: nil forKey: @"isInSendJob"];
+            //if (someFlags & OPQueuedStatus) [self setValue: nil forKey: @"isQueued"];
             if (someFlags & OPInterestingStatus) [self setValue: nil forKey: @"isInteresting"];
             if (someFlags & OPSeenStatus) [self setValue: nil forKey: @"isSeen"];
             if (someFlags & OPJunkMailStatus) [self setValue: nil forKey: @"isJunk"];
-            if (someFlags & OPSendingBlockedStatus) [self setValue: nil forKey: @"isSendingBlocked"];
+            //if (someFlags & OPSendingBlockedStatus) [self setValue: nil forKey: @"isSendingBlocked"];
             if (someFlags & OPFlaggedStatus) [self setValue: nil forKey: @"isFlagged"];
             if (someFlags & OPIsFromMeStatus) [self setValue: nil forKey: @"isFromMe"];
             if (someFlags & OPFulltextIndexedStatus) [self setValue: nil forKey: @"isFulltextIndexed"];
             if (someFlags & OPAnsweredStatus) [self setValue: nil forKey: @"isAnswered"];
-            if (someFlags & OPDraftStatus) [self setValue: nil forKey: @"isDraft"];
+            //if (someFlags & OPDraftStatus) [self setValue: nil forKey: @"isDraft"];
             
             flagsCache = (flags & (~someFlags));
         }
@@ -506,16 +529,6 @@
     return (([m bodyForHeaderField: @"List-Post"] != nil)
             || ([m bodyForHeaderField: @"List-Id"] != nil)
             || ([m bodyForHeaderField: @"X-List-Post"] != nil));
-}
-
-- (void) setSendJobStatus
-{
-    [self addFlags: OPInSendJobStatus];
-}
-
-- (void) resetSendJobStatus
-{
-    [self removeFlags: OPInSendJobStatus];
 }
 
 @end

@@ -64,7 +64,7 @@
 /*" For reopening an unsent message. "*/
 {
     if (self = [self init]) {        
-        [aMessage addFlags:OPSendingBlockedStatus];
+        // no longer needed? [aMessage addFlags:OPSendingBlockedStatus];
         
 #warning Reenable: getting of message's profile
         /*
@@ -323,10 +323,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     
     //GIMessage *message = 
-    [self checkpointMessageWithStatus: OPQueuedStatus];
+    [self checkpointMessageWithStatus: OPSendStatusQueuedReady];
 #warning start message send job here
 
-    [window performClose:self];
+    [window performClose: self];
 }
 
 - (IBAction) queue: (id) sender
@@ -347,16 +347,14 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         return;
     }
     
-    [self checkpointMessageWithStatus: OPQueuedStatus];
+    [self checkpointMessageWithStatus: OPSendStatusQueuedReady];
     [window performClose: self];
     [window close];
 }
 
 - (IBAction) saveMessage: (id) sender
 {
-    unsigned int flags = OPDraftStatus;
-
-    [self checkpointMessageWithStatus: flags];
+    [self checkpointMessageWithStatus: OPSendStatusDraft];
 }
 
 - (IBAction) addCc: (id) sender
@@ -526,24 +524,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             
             if (contextInfo == [NSApp delegate])
             {
-                [NSApp terminate:self];
+                [NSApp terminate: self];
             }
             break;
         }
         case NSAlertOtherReturn:
         {
             // dismiss
-            if (oldMessage) // remove blocked status
-            {
-                // unmark message as blocked for sending
-                [oldMessage removeFlags:OPSendingBlockedStatus];
-            }
+			// unmark message as blocked for sending
+			if ([oldMessage sendStatus] == OPSendStatusQueuedBlocked) {
+				[oldMessage setSendStatus: OPSendStatusQueuedReady]; 
+			}
             
             [window close];
             
-            if (contextInfo == [NSApp delegate])
-            {
-                [NSApp terminate:self];
+            if (contextInfo == [NSApp delegate]) {
+                [NSApp terminate: self];
             }
             break;
         }
@@ -552,10 +548,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (BOOL)windowShouldClose:(id)sender
+- (BOOL) windowShouldClose: (id) sender
 {
-    if (! [window isDocumentEdited])
-    {
+    if (! [window isDocumentEdited]) {
         return YES;
     }
     
@@ -1105,7 +1100,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (GIMessage*) checkpointMessageWithStatus: (unsigned int) aType
+- (GIMessage*) checkpointMessageWithStatus: (unsigned) sendStatus
 {
     GIMessage* message = nil;
     
@@ -1114,15 +1109,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // status
     if (oldMessage) [message addFlags: [oldMessage flags]];
-    [message addFlags: OPSeenStatus | aType];
+    [message addFlags: OPSeenStatus];
     
     // unmark message as blocked for sending
-    [message removeFlags: OPSendingBlockedStatus];
+    [message setSendStatus: sendStatus];
     
     // Remove old message from database if present:
 	[oldMessage delete];
     
-    if (aType & OPDraftStatus) {
+    if (sendStatus == OPSendStatusDraft) {
         //add new message to database
         [GIMessageBase addDraftMessage: message];
     } else {

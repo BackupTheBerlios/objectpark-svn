@@ -158,7 +158,7 @@
     NSParameterAssert([someMessages count]);
     NSParameterAssert(anAccount != nil);
     
-    NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+    NSMutableDictionary* jobArguments = [NSMutableDictionary dictionary];
     
     [OPJobs scheduleJobWithName: [self jobName] target: [[[self alloc] initWithMessages: someMessages andAccount: anAccount] autorelease] selector: @selector(sendMessagesViaSMTPAccountJob:) arguments: jobArguments synchronizedObject: [anAccount outgoingServerName]];
 }
