@@ -364,9 +364,9 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 /*" Invoked when the pref panel was selected. Initialization stuff. "*/
 {
     // register for notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filtersDidChange:) name: GIMessageFiltersDidChangeNotification object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(filtersDidChange:) name: GIMessageFiltersDidChangeNotification object: nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delayedFiltersDidChange:) name: GIFiltersPaneDelayedFiltersDidChange object:self];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(delayedFiltersDidChange:) name: GIFiltersPaneDelayedFiltersDidChange object: self];
     
     // Register to grok GIFILTERPREFTYPE drags
     [filtersTableView registerForDraggedTypes:[NSArray arrayWithObject:GIFILTERPREFTYPE]];

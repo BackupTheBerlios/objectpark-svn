@@ -741,6 +741,8 @@ static NSHashTable* allInstances;
 
 - (id) initWithSQL: (NSString*) sql connection: (OPSQLiteConnection*) aConnection 
 {
+	NSParameterAssert(sql != nil);
+	NSParameterAssert(aConnection != nil);
 	if (self = [super init]) {
 		
 		OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);

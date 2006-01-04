@@ -89,7 +89,7 @@
 		
 		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 		
-		OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where: @"$messageId=?"];
+		OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where: @"ZMESSAGEID=?"];
 		
 		[objectEnum reset]; // optional
 		[objectEnum bind: messageId, nil]; // only necessary for requests containing question mark placeholders
@@ -511,10 +511,10 @@
 - (GIMessage*) referenceFind: (BOOL) find
 /*" Returns the direct message reference stored. If there is none and find is YES, looks up the references header(s) in the internet message object and caches the result (if any). "*/
 {
-    GIMessage *result = [self reference];
+    GIMessage* result = [self reference];
     if (!result && find) {
         NSEnumerator* e = [[[self internetMessage] references] reverseObjectEnumerator];
-        NSString *refId;
+        NSString* refId;
         while (refId = [e nextObject]) {
 			
             if (result = [[self class] messageForMessageId: refId]) {
