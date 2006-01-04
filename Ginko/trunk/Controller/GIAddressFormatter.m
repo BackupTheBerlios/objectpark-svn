@@ -1,7 +1,5 @@
-/* 
-$Id: GIAddressFormatter.m,v 1.2 2004/12/23 16:57:06 theisen Exp $
- 
- Copyright (c) 2001, 2005 by Axel Katerbau. All rights reserved.
+/*  
+ Copyright (c) 2001, 2005, 2006 by Axel Katerbau. All rights reserved.
  
  Permission to use, copy, modify and distribute this software and its documentation
  is hereby granted, provided that both the copyright notice and this permission
@@ -58,6 +56,8 @@ static NSMutableArray *LRUMailAddresses;
 + (void)addToLRUMailAddresses:(NSString *)anAddressString
 {
     NSMutableArray *addresses = [self LRUMailAddresses];
+ 
+    [addresses removeObject:anAddressString];
     
     if ([addresses count] == LRUCACHESIZE) [addresses removeObjectAtIndex:0];
     

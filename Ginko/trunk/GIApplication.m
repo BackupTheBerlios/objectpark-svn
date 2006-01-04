@@ -284,7 +284,7 @@
     //int i = 0;
     
     // Add messages to fulltext index:
-    [GIFulltextIndexCenter addMessages:enumerator];
+    [GIFulltextIndexCenter addMessagesInBackground:[enumerator allObjects]];
 //    [enumerator reset];
 //    [self saveAction:self];
     

@@ -13,11 +13,13 @@
 #import "NSString+Extensions.h"
 #import "GIMessage.h"
 #import "OPPersistentObject+Extensions.h"
+#import "OPJobs.h"
 #import <OPDebug/OPLog.h>
 
 @interface GIFulltextIndexCenter (JVMStuff)
 
 + (JNIEnv *)getJNIEnvironment;
++ (void)attachCurrentThread:(JNIEnv *)env;
 
 @end
 
@@ -44,11 +46,6 @@ static JNIEnv *env = nil;
         if (!path) path = [[[GIApp applicationSupportPath] stringByAppendingPathComponent:@"FulltextIndex"] retain];
     }
     return path;
-}
-
-- (id)init
-{
-    return nil;
 }
 
 + (jclass)documentClass
@@ -502,19 +499,7 @@ NSString *stringFromJstring(jstring aJstring) {
     (*env)->CallVoidMethod(env, writer, mid);
 }
 
-static BOOL shouldStopAdding = NO;
-
-+ (void)setShouldStopAdding:(BOOL)stop
-{
-    shouldStopAdding = stop;
-}
-
-+ (BOOL)shouldStopAdding
-{
-    return shouldStopAdding;
-}
-
-+ (void)addMessages:(NSEnumerator *)messageEnumerator
++ (void)addMessages:(NSArray *)someMessages
 {
     @synchronized(self)
     {
@@ -526,9 +511,11 @@ static BOOL shouldStopAdding = NO;
         @try
         {
             pool = [[NSAutoreleasePool alloc] init];
+            NSEnumerator *messageEnumerator = [someMessages objectEnumerator];
+            BOOL shouldTerminate = NO;
             id message;
             int counter = 1;
-            while ((message = [messageEnumerator nextObject]) && (![self shouldStopAdding]))
+            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate))
             {
                 @try
                 {
@@ -555,7 +542,7 @@ static BOOL shouldStopAdding = NO;
                     (*env)->PopLocalFrame(env, NULL);
                     [pool release];
                     pool = [[NSAutoreleasePool alloc] init];
-                    [self setShouldStopAdding:NO];
+                    shouldTerminate = [OPJobs shouldTerminate];
                 }
             }
         }
@@ -966,6 +953,31 @@ static BOOL shouldStopAdding = NO;
     return result;
 }
 
+- (void)fulltextIndexMessagesJob:(NSDictionary *)arguments
+{
+    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+    
+    [[self class] attachCurrentThread:[[self class] getJNIEnvironment]];
+    [GIFulltextIndexCenter addMessages:[arguments objectForKey:@"messagesToIndex"]];
+    
+    //jint (JNICALL *DetachCurrentThread)(JavaVM *vm);
+}
+
++ (NSString *)jobName
+{
+    return @"Fulltext indexing";
+}
+
++ (void)addMessagesInBackground:(NSArray *)someMessages
+/*" Starts a background job for fulltext indexing someMessages. Only one indexing job can be active at one time. "*/
+{
+    NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+    
+    [jobArguments setObject:someMessages forKey:@"messagesToIndex"];
+    
+    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) arguments:jobArguments synchronizedObject:@"fulltextIndexing"];
+}
+
 @end
 
 #include <sys/stat.h>
@@ -975,17 +987,17 @@ static BOOL shouldStopAdding = NO;
 #include "utils.h"
 
 @implementation GIFulltextIndexCenter (JVMStuff)
+static JavaVM *theVM;
 
 /*Starts a JVM using the options,classpath,main class, and args stored in a VMLauchOptions structure */ 
 static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {    
     int result = 0;
     JNIEnv *env;
-    JavaVM *theVM;
     
 //    VMLaunchOptions *launchOptions = (VMLaunchOptions*)options;
     
     /* default vm args */
-    JavaVMInitArgs	vm_args;
+    JavaVMInitArgs vm_args;
     
     /*
      To invoke Java 1.4.1 or the currently preferred JDK as defined by the operating system (1.4.2 as of the release of this sample and the release of Mac OS X 10.4) nothing changes in 10.4 vs 10.3 in that when a JNI_VERSION_1_4 is passed into JNI_CreateJavaVM as the vm_args.version it returns the current preferred JDK.
@@ -1046,7 +1058,7 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
     vm_args.version	= JNI_VERSION_1_4;
     vm_args.options	= launchOptions->options;
     vm_args.nOptions = launchOptions->nOptions;
-    vm_args.ignoreUnrecognized	= JNI_TRUE;
+    vm_args.ignoreUnrecognized = JNI_TRUE;
     
     /* start a VM session */    
     result = JNI_CreateJavaVM(&theVM, (void**)&env, &vm_args);
@@ -1088,6 +1100,19 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
     }
     
     return env;
+}
+
++ (void)attachCurrentThread:(JNIEnv *)env
+{
+    JavaVMAttachArgs vm_attachArgs;
+    
+    vm_attachArgs.version = JNI_VERSION_1_4;
+    vm_attachArgs.name = NULL;
+    vm_attachArgs.group = NULL;
+    
+    jint result = (*theVM)->AttachCurrentThread(theVM, (void **)&env, &vm_attachArgs);
+    
+    NSLog(@"result = %d", result);
 }
 
 @end

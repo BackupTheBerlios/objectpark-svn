@@ -18,7 +18,7 @@
 
 + (NSString *)fulltextIndexPath;
 
-+ (void)addMessages:(NSEnumerator *)messageEnumerator;
++ (void)addMessagesInBackground:(NSArray *)someMessages;
 + (void)removeMessagesWithOids:(NSSet *)someOids;
 
 + (NSArray *)hitsForQueryString:(NSString *)aQuery;

@@ -252,10 +252,12 @@
     }    
 }
 
-- (NSString *)incomingPasswordItemRef: (SecKeychainItemRef *)itemRef
+- (NSString *)incomingPasswordItemRef:(SecKeychainItemRef *)itemRef
 /*" Accesses keychain to get password. "*/
 {
+    NSAssert([self incomingServerName] > 0, @"server name not set");
     const char *serverName = [[self incomingServerName] UTF8String];
+    NSAssert([self incomingUsername] > 0, @"user name not set");
     const char *accountName = [[self incomingUsername] UTF8String];
     UInt32 passwordLength;
     void *passwordData;
@@ -307,7 +309,7 @@
     return result;
 }
 
-- (void) setIncomingPassword: (NSString *)aPassword
+- (void) setIncomingPassword:(NSString *)aPassword
 /*" Uses keychain to store password. "*/
 {
     const char *serverName = [[self incomingServerName] UTF8String];
