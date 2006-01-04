@@ -746,16 +746,17 @@ static NSHashTable* allInstances;
 	if (self = [super init]) {
 		
 		OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
-
+		connection = [aConnection retain];
+		if (NSDebugEnabled) sqlString = [sql copy];
+		
 		int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
 		
 		if (res!=SQLITE_OK || !statement) {
-			NSLog(@"Error preparing sql statement %@ '%@': %@", self, sql, [connection lastError]);
+			NSLog(@"Error preparing sql statement %@: %@", self, [aConnection lastError]);
 			[self autorelease];
 			return nil;
 		}
-		connection = [aConnection retain];
-		if (NSDebugEnabled) sqlString = [sql copy];
+
 		
 		NSHashInsert(allInstances, self);
 	}

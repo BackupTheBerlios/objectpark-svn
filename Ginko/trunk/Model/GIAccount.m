@@ -252,7 +252,7 @@
     }    
 }
 
-- (NSString *)incomingPasswordItemRef:(SecKeychainItemRef *)itemRef
+- (NSString *)incomingPasswordItemRef: (SecKeychainItemRef*)itemRef
 /*" Accesses keychain to get password. "*/
 {
     NSAssert([self incomingServerName] > 0, @"server name not set");
@@ -277,24 +277,18 @@
                                                    kSecAuthenticationTypeDefault, //<#SecAuthenticationType authenticationType#>
                                                    &passwordLength, //<#UInt32 * passwordLength#>
                                                    &passwordData, //<#void * * passwordData#>
-                                                   itemRef //<#SecKeychainItemRef * itemRef#>
-                                                   );
-    if (err != noErr) 
-    {
+                                                   itemRef); //<#SecKeychainItemRef * itemRef#>
+    if (err != noErr) {
         if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
-    } 
-    else 
-    {
-        NSData *data = [NSData dataWithBytes:passwordData length:passwordLength];
-        result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
+    } else {
+        NSData *data = [NSData dataWithBytes:passwordData length: passwordLength];
+        result = [NSString stringWithData:data encoding: NSUTF8StringEncoding]; 
         
-        err = SecKeychainItemFreeContent(
-                                         NULL,           //No attribute data to release
-                                         passwordData    //Release data buffer allocated 
-                                         );
+        err = SecKeychainItemFreeContent(NULL,           //No attribute data to release
+                                         passwordData);    //Release data buffer allocated 
+                                         
         
-        if (err != noErr) 
-        {
+        if (err != noErr) {
             if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
         }
     }

@@ -50,7 +50,7 @@
     NSMutableSet* changedObjects;
     //NSMutableSet* insertedObjects;
     NSMutableSet* deletedObjects;
-    NSRecursiveLock* lock; // unused so far
+    //NSLock* lock; 
     
     OPSQLiteConnection* db;
 	
@@ -82,8 +82,8 @@
 + (OPPersistentObjectContext*) defaultContext;
 - (void) reset;
 
-- (void) lock;
-- (void) unlock;
+//- (void) lock;
+//- (void) unlock;
 
 - (void) willChangeObject: (OPPersistentObject*) object;
 - (void) didChangeObject: (OPPersistentObject*) object;

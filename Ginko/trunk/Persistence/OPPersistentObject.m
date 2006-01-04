@@ -119,9 +119,11 @@
 	[context willChangeObject: self];
 	NSParameterAssert(oid==0);
 	// Create attributes dictionary as necessary
-	if (!attributes) {
-		NSLog(@"Creating attribute dictionary for object %@", self);
-		attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
+	@synchronized(self) {
+		if (!attributes) {
+			//NSLog(@"Creating attribute dictionary for object %@", self);
+			attributes = [[NSMutableDictionary alloc] init]; // should we set default values here?
+		}
 	}
 	[context didChangeObject: self];
 }
@@ -158,21 +160,29 @@
 }
 
 - (void) revert
-{
 /*" Turns the receiver back into a fault, releasing attribute values. 
 	Changes done since the last -saveChanges are lost. "*/
+{
 	id context = [self context];
-	[context willRevertObject: self];
-	[attributes release]; attributes = nil;
-	[context didRevertObject: self];
+	@synchronized(self) {
+		
+		[context willRevertObject: self];
+		
+		[attributes release]; attributes = nil;
+		
+		[context didRevertObject: self];
+	}
 }
 
 - (void) refault
 /*" Turns the receiver in to a fault, releasing attribute values. 
-	If the reveiver -hasChanges, does nothing. "*/
+	If the reveiver -hasChanged, this method does nothing. "*/
 {
-	if (![self hasChanged]) {
-		[attributes release]; attributes = nil; // better call -revert?
+	@synchronized(self) {
+		if (![self hasChanged]) {
+			[attributes release]; attributes = nil; // better call -revert?
+#warning todo: remove all cached many-to-many relationships on re-fault
+		}
 	}
 }
 
@@ -311,7 +321,7 @@
 
 - (void) didAccessValueForKey: (NSString*) key
 {
-    [[self context] unlock];
+    //[[self context] unlock];
 } 
 
 - (void) didChangeValueForKey: (NSString*) key
@@ -333,23 +343,22 @@
 - (id) primitiveValueForKey: (NSString*) key
 /*" Returns nil, if the receiver is a fault. Call -willAccessValueForKey prior to this method to make sure, the object attributes are in place."*/
 {
-    id result = [attributes objectForKey: key];
-	if (!result) {
-		// Test, if we need to fetch a *** todo??
-		
-	}
-	
-	
-    return result;
+	id result;
+	@synchronized(self) {
+		result = [attributes objectForKey: key];
+	}	
+	return result;
 }
 
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key
 /*" Passing a nil value is allowed. "*/
 {	
-	if (object) {
-		[attributes setObject: object forKey: key];
-	} else {
-		[attributes removeObjectForKey: key];
+	@synchronized(self) {
+		if (object) {
+			[attributes setObject: object forKey: key];
+		} else {
+			[attributes removeObjectForKey: key];
+		}
 	}
 }
 
@@ -531,11 +540,13 @@
 
 - (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 {
-	OPFaultingArray* container = [self primitiveValueForKey: key];	
-	// container may be nil, if the relationship was never fetched. 
-	// This is ok, since addValue:forKey: already updated the relationship object
-	// so we'll pick up any changes later.
-	[container addObject: value];	
+	@synchronized(self) {
+		OPFaultingArray* container = [self primitiveValueForKey: key];	
+		// container may be nil, if the relationship was never fetched. 
+		// This is ok, since addValue:forKey: already updated the relationship object
+		// so we'll pick up any changes later.
+		[container addObject: value];	
+	}
 }
 
 
@@ -582,11 +593,13 @@
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key
 {
-	OPFaultingArray* container = [self primitiveValueForKey: key];
-	// container may be nil, if the relationship was never fetched. 
-	// This is ok, since addValue:forKey: already updated the relationship object
-	// so we'll pick up any changes later.
-	[container removeObject: value];
+	@synchronized(self) {
+		OPFaultingArray* container = [self primitiveValueForKey: key];
+		// container may be nil, if the relationship was never fetched. 
+		// This is ok, since addValue:forKey: already updated the relationship object
+		// so we'll pick up any changes later.
+		[container removeObject: value];
+	}
 }
 
 

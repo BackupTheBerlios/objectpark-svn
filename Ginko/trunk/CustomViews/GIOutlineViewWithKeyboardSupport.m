@@ -291,7 +291,8 @@
     while (item = [e nextObject]) {
         row = [self rowForItemEqualTo: item startingAtRow: ordered ? row : 0];
         if (row>=0) [self selectRow: row byExtendingSelection: YES];
-        else if (NSDebugEnabled) NSLog(@"Warning: Unable to select row for item: %@", item);
+        else 
+			if (NSDebugEnabled) NSLog(@"Warning: Unable to select row for item: %@", item);
     }
 }
 

@@ -323,8 +323,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 						 change: (NSDictionary*) change 
 						context: (void*) context
 {
-    if ([object isEqual: [self group]]) 
-    {
+    if ([object isEqual: [self group]]) {
         NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
         NSLog(@"observeValueForKeyPath %@", keyPath);
@@ -696,13 +695,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-/*
-- (void) moveToTrash:(id)sender
-    /"Forwards command to move selected messages to trash message box."/
-{
-    [messageListController trashSelectedMessages:self];
-}
-*/
 
 - (IBAction)showThreads: (id) sender
 {
@@ -788,22 +780,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self toggleFlag: OPSeenStatus];
 }
 
-- (NSArray *)selectedThreads
+- (NSArray*) selectedThreads
+/*" Returns a newly created array of threads selected. "*/
 {
-    NSMutableArray *result = [NSMutableArray array];
-    NSIndexSet *set = [threadsView selectedRowIndexes];
+    NSMutableArray* result = [NSMutableArray array];
+    NSIndexSet* set = [threadsView selectedRowIndexes];
 	
-    if ([set count]) 
-    {
+    if ([set count]) {
         int lastIndex = [set lastIndex];
         int i;
-        for (i = [set firstIndex]; i<=lastIndex; i++) 
-        {
-            if ([set containsIndex:i]) 
-            {
-                if ([threadsView levelForRow:i] == 0) // is it a thread?
-                {
-                    GIThread *thread = [threadsView itemAtRow:i];
+        for (i = [set firstIndex]; i<=lastIndex; i++) {
+            if ([set containsIndex: i]) {
+				// Is it a thread?
+                if ([threadsView levelForRow:i] == 0) {
+                    GIThread* thread = [threadsView itemAtRow: i];
                     [result addObject:thread];
                 }
             }
@@ -856,7 +846,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (IBAction)joinThreads:(id)sender
+- (IBAction) joinThreads: (id) sender
 /*" Joins the selected threads into one. "*/
 {
     [self joinThreads];
@@ -868,36 +858,31 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSLog(@"Should extractThread here.");
 }
 
-- (IBAction)moveSelectionToTrash:(id)sender
+- (IBAction) moveSelectionToTrash: (id) sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
-    NSEnumerator *enumerator = [[self selectedThreads] objectEnumerator];
-    GIThread *thread;
+    NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
+    GIThread* thread;
     BOOL trashedAtLeastOne = NO;
     
-    // Make sure we have a fresh group object and prevent merge problems:
-    //[[NSManagedObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
+	// Make sure, update notifications do not try to re-select threads that no longer exist:
+	[threadsView deselectAll: nil]; 
     
-    while (thread = [enumerator nextObject]) 
-    {
+    while (thread = [enumerator nextObject]) {
         NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
         [[self group] removeValue:thread forKey:@"threadsByDate"];
-        [GIMessageBase addTrashThread:thread];
+        [GIMessageBase addTrashThread: thread];
         trashedAtLeastOne = YES;
     }
     
-    if (trashedAtLeastOne) 
-    {
+    if (trashedAtLeastOne)  {
         [NSApp saveAction: self];
-        if (rowBefore >= 0) 
-        {
-            [threadsView selectRow:rowBefore byExtendingSelection:NO];
+        if (rowBefore >= 0)  {
+            [threadsView selectRow: rowBefore byExtendingSelection: NO];
         }
-    } 
-    else 
-    {
+    } else  {
         NSBeep();
     }
 }
@@ -932,7 +917,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	[self modelChanged];
 }
 
-- (GIMessageGroup *)group
+- (GIMessageGroup*) group
 {
     return group;
 }
@@ -992,7 +977,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL)validateSelector:(SEL)aSelector
+- (BOOL) validateSelector: (SEL) aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -1000,34 +985,24 @@ static BOOL isThreadItem(id item)
          || (aSelector == @selector(forward:))
          || (aSelector == @selector(followup:))
          //|| (aSelector == @selector(showTransferData:))
-         )
-    {
+         ) {
+		
         NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
         
-        if ([selectedIndexes count] == 1)
-        {
+        if ([selectedIndexes count] == 1) {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage]))
-            {
+            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) {
                 return YES;
             }
         }
         return NO;
-    }
-    else if (aSelector == @selector(applySortingAndFiltering:))
-    {
-        return [self isOnlyThreadsSelected];
-    }
-    else if (aSelector == @selector(toggleReadFlag:))
-    {
+    } else if (aSelector == @selector(applySortingAndFiltering:)) {
+        return [self isOnlyThreadsSelected]; 
+	} else if (aSelector == @selector(toggleReadFlag:)) {
         return [[threadsView selectedRowIndexes] count] > 0;
-    }
-    else if (aSelector == @selector(moveSelectionToTrash:))
-    {
+    } else if (aSelector == @selector(moveSelectionToTrash:)) {
         return [[threadsView selectedRowIndexes] count] > 0;
-    }
-    else if (aSelector == @selector(delete:))
-    {
+    } else if (aSelector == @selector(delete:)) {
         return [[threadsView selectedRowIndexes] count] > 0;
     }
     /*

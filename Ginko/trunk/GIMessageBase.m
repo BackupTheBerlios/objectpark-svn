@@ -65,21 +65,19 @@
 }
 
 #ifdef _0
-+ (GIMessage *)addMessageWithTransferData:(NSData *)someTransferData
++ (GIMessage*) addMessageWithTransferData: (NSData*) someTransferData
 /*" Creates and returns a new GIMessage object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
 {
-    GIMessage *message = [GIMessage messageWithTransferData:someTransferData];
+    GIMessage *message = [GIMessage messageWithTransferData: someTransferData];
     
-    if (message) // if no dupe
-    {
-        if (![GIMessageFilter filterMessage:message flags:0])  
-        {
+    if (message) {
+		//  no dupe
+        if (![GIMessageFilter filterMessage:message flags:0]) {
             [self addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
         }
         
-        if ([message hasFlags:OPIsFromMeStatus]) 
-        {
-            [self addMessage:message toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
+        if ([message hasFlags: OPIsFromMeStatus]) {
+            [self addMessage: message toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
         }
         
         // add message to index
@@ -95,9 +93,12 @@
 {
     NSParameterAssert(aMessage != nil);
     
-    GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
+	GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
     
-    [aGroup addValue: thread forKey: @"threadsByDate"];
+	// Add the thread to the group, if not already present:
+	if (![[aGroup valueForKey: @"threadsByDate"] containsObject: thread]) {
+		[aGroup addValue: thread forKey: @"threadsByDate"];
+	}
 }
 
 /*
@@ -192,20 +193,17 @@ NSString* MboxImportJobName = @"mbox import";
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
             
-            if (transferData)
-            {;
-                @try 
-                {
+            if (transferData) {
+                @try {
                     NSMutableArray *args = [NSMutableArray arrayWithObject:transferData];
-                    [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject:args waitUntilDone: YES];
+                    [self performSelectorOnMainThread: @selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
                         
-                    GIMessage *persistentMessage = [args objectAtIndex:1];
+                    GIMessage* persistentMessage = [args objectAtIndex: 1];
                     
                     if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
                     
                     //GIMessage *persistentMessage = [[self class] addMessageWithTransferData:transferData];
-                    if (persistentMessage) 
-                    {
+                    if (persistentMessage) {
                         messagesWereAdded = YES;
                         ++addedMessageCount;
                     }
@@ -221,21 +219,19 @@ NSString* MboxImportJobName = @"mbox import";
                             [context saveChanges];
 
                             messagesWereAdded = NO;
-                            //[context reset];
                         }
                         
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
                     }
-                } 
-                @catch (NSException* localException) 
-                {
+					
+                } @catch (NSException* localException) {
                     [localException retain]; [localException autorelease]; // Try to avoid zombie exception object
                     [localException raise];
                 }
             }
             
-            if (mboxFileSize > 0) // avoid division by zero
-            {
+			// Avoid division by zero:
+            if (mboxFileSize > 0) {
                 int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
                 NSDate *now = [[NSDate alloc] init];
                 BOOL timeIsRipe = [now timeIntervalSinceDate:lastProgressSet] > 1.5;

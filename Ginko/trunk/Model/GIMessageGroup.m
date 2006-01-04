@@ -535,7 +535,7 @@ static NSMutableArray* root = nil;
 
 - (void) willChangeValueForKey: (NSString*) key
 {
-	NSLog(@"MessageGroup changes value for key %@", key);
+	//NSLog(@"MessageGroup changes value for key %@", key);
 	[super willChangeValueForKey: key];
 }
 

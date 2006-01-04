@@ -447,7 +447,7 @@
     return someFilePaths;
 }
 
-- (IBAction)importMboxFile: (id)sender
+- (IBAction) importMboxFile: (id) sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
@@ -475,18 +475,19 @@
             NSString* boxFilename;
             
             while (boxFilename = [enumerator nextObject]) {
-                NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+				
+                NSMutableDictionary* jobArguments = [NSMutableDictionary dictionary];
                 
-                // support for 'mbox' bundles
+				[jobArguments setObject: boxFilename forKey: @"mboxFilename"];
+				[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+                [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
+				
+                // Support for 'mbox' bundles - better test for folder!!
                 if ([[boxFilename pathExtension] isEqualToString: @"mbox"]) {
                     boxFilename = [boxFilename stringByAppendingPathComponent: @"mbox"];
                 }
                 
-                [jobArguments setObject: boxFilename forKey: @"mboxFilename"];
-                [jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
-                [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
-                
-                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector: @selector(importMessagesFromMboxFileJob:) arguments: jobArguments synchronizedObject: @"mbox import"];
+                [OPJobs scheduleJobWithName: MboxImportJobName target: [[[GIMessageBase alloc] init] autorelease] selector: @selector(importMessagesFromMboxFileJob:) arguments: jobArguments synchronizedObject: @"mbox import"];
             }
         }
     }    

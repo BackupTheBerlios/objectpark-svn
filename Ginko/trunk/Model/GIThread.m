@@ -85,6 +85,7 @@
     NSEnumerator* enumerator = [[otherThread messages] objectEnumerator];
     
     while (message = [enumerator nextObject]) {
+		[message referenceFind: YES];
         [self addValue: message forKey: @"messages"];
     }
     
@@ -204,8 +205,8 @@
 
 - (BOOL) hasUnreadMessages
 {    
-	NSEnumerator *enumerator = [[self messages] objectEnumerator];
-	GIMessage *message;
+	NSEnumerator* enumerator = [[self messages] objectEnumerator];
+	GIMessage* message;
     while (message = [enumerator nextObject]) {
         if (![message hasFlags: OPSeenStatus]) {
             return YES;
