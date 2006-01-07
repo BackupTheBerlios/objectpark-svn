@@ -1774,7 +1774,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# copy a single framework\ncopyFramework()\n{\necho -n $1\n#echo cp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\ncp -RHpf \"$PROJECT_DIR/../$1/build/$BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\necho \n}\n\n# ensure there's an empty frameworks directory in the application bundle\nrm -rf \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\nmkdir -p \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\n\n# copy the frameworks\necho Copying frameworks...\ncopyFramework \"OPDebug\"\ncopyFramework \"OPNetwork\"\ncopyFramework \"OPPreferences\"\n";
+			shellScript = "# copy a single framework\ncopyFramework()\n{\necho -n $1\n#echo cp -RHpf \"$PROJECT_DIR/../$1/build/$SOURCE_BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\ncp -RHpf \"$PROJECT_DIR/../$1/build/$SOURCE_BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\necho \n}\n\nif [ \"$BUILD_STYLE\" = 'Development (linked)' ]; then\n    SOURCE_BUILD_STYLE=\"Development\"\nelse\n    SOURCE_BUILD_STYLE=$BUILD_STYLE\nfi\n\n# ensure there's an empty frameworks directory in the application bundle\nrm -rf \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\nmkdir -p \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\n\n# copy the frameworks\necho Copying frameworks...\ncopyFramework \"OPDebug\"\ncopyFramework \"OPNetwork\"\ncopyFramework \"OPPreferences\"\n";
 		};
 		30672F8B092D4DA0005D7A7F /* Extract Aspects */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2284,6 +2284,7 @@
 					../OPPreferences/build/$BUILD_STYLE/,
 					../OPDebug/build/$BUILD_STYLE/,
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -2301,6 +2302,7 @@
 					../OPPreferences/build/$BUILD_STYLE/,
 					../OPDebug/build/$BUILD_STYLE/,
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -2319,6 +2321,7 @@
 					../OPPreferences/build/$BUILD_STYLE/,
 					../OPDebug/build/$BUILD_STYLE/,
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
@@ -2333,6 +2336,7 @@
 					../OPPreferences/build/$BUILD_STYLE/,
 					../OPDebug/build/$BUILD_STYLE/,
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
