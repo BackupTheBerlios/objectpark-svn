@@ -309,7 +309,7 @@
 	/* Returns all directly commenting messages in the thread given. */
 {
     NSEnumerator* me = [[thread messages] objectEnumerator];
-    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray* result = [NSMutableArray array];
     GIMessage* other;
     while (other = [me nextObject]) {
         if ([other reference] == self) {
@@ -319,7 +319,7 @@
     return result;
 }
 
-- (NSAttributedString *)contentAsAttributedString
+- (NSAttributedString*) contentAsAttributedString
 {
     return [[self internetMessage] bodyContent];
 }

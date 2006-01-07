@@ -63,10 +63,12 @@ int compareOids(OID o1, OID o2)
 }
 
 
-- (void) sort {
-
-#warning todo: implement sorting! 
-	NSLog(@"Should sort array: %@", self);	
+- (void) sort 
+{
+	if (needsSorting) {
+#warning todo: implement sorting in OPFaultedArray! 
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Should sort array: %@", self);	
+	}
 }
 
 
@@ -275,7 +277,7 @@ int compareOids(OID o1, OID o2)
 			// Update stored sortObject:
 			[*storedSortObjectPtr release];
 			*storedSortObjectPtr = [result retain];
-#warning Updating sortObjects may make array unsorted
+#warning Updating sortObjects may make array unsorted. check that!
 		}
 	} else {
 		// fall back to cached sortObject:

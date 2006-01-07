@@ -302,7 +302,7 @@
 
 	if (!rid) {
 		rid = sqlite3_last_insert_rowid(connection);
-		NSLog(@"Got new oid for %@ object: %lld", poClass, rid);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Got new oid for %@ object: %lld", poClass, rid);
 	}
 	return rid;
 }

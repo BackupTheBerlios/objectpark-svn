@@ -22,6 +22,7 @@
 
 #import "GIOutlineViewWithKeyboardSupport.h"
 #import <Foundation/NSDebug.h>
+#import <Foundation/Foundation.h>
 
 #define TAB ((char)'\x09')
 #define SPACE ((char)'\x20')
@@ -29,7 +30,34 @@
 #define RETURN 13
 #define ENTER 0x0003
 
+
 @implementation GIOutlineViewWithKeyboardSupport
+
+/* <hacks> */
+
+
+
+- (int) numberOfRows
+{
+	//NSLog(@"Instance variable _numberOfRows: %d", (FakeOutlineView*)self->_numberOfRows);
+	return [super numberOfRows];	
+}
+
+- (void) reloadData 
+{
+	[super reloadData];
+}
+
+
+ - (void)_verifySelectionIsOK
+ {
+	 if ([[self selectedRowIndexes] count]) {
+		 [(FakeOutlineView*)super _verifySelectionIsOK];
+	 }
+ }
+ 
+
+/* </hacks> */
 
 - (id)previousExpandedItem
 {
@@ -71,15 +99,11 @@
     characters = [theEvent characters];
     firstChar = [characters characterAtIndex:0];
 
-    switch (firstChar)
-    {
+    switch (firstChar) {
         case RETURN:
-            if ([[self delegate] respondsToSelector:@selector(openSelection:)]) 
-            {
+            if ([[self delegate] respondsToSelector:@selector(openSelection:)]) {
                 [[self delegate] performSelector:@selector(openSelection:) withObject:self];
-            } 
-            else 
-            {
+            } else {
                 [self expandItem:item];
             }
             break;
@@ -90,18 +114,17 @@
             int row;
             
             myItem = [self previousExpandedItem];
-            row = [self rowForItem:myItem];
+            row = [self rowForItem: myItem];
             
-            [self collapseItem:myItem];
-            [self selectRow:row byExtendingSelection: NO];
-            [self scrollRowToVisible:row];
+            [self collapseItem: myItem];
+            [self selectRow: row byExtendingSelection: NO];
+            [self scrollRowToVisible: row];
             break;
         }
         case SPACE:
-            if ([[self delegate] respondsToSelector:@selector(spacebarHitInOutlineView:)])
-            {
-                [[self delegate] performSelector:@selector(spacebarHitInOutlineView:)
-                                      withObject:self];
+            if ([[self delegate] respondsToSelector: @selector(spacebarHitInOutlineView:)]) {
+                [[self delegate] performSelector: @selector(spacebarHitInOutlineView:)
+                                      withObject: self];
             }
             break;
 /*            if([self isExpandable:item])
@@ -295,6 +318,7 @@
 			if (NSDebugEnabled) NSLog(@"Warning: Unable to select row for item: %@", item);
     }
 }
+
 
 
 @end

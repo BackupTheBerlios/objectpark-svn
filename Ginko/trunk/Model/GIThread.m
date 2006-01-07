@@ -51,11 +51,7 @@
 
 - (void) willSave
 {
-    OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
-    if (messages) {
-		int messageCount = [messages count];
-        [self setValue: [NSNumber numberWithUnsignedInt: messageCount] forKey: @"numberOfMessages"];
-    }
+	[super willSave];
 }
 
 /*
@@ -99,6 +95,18 @@
 	 */
 	
     [otherThread delete];		
+}
+
+- (void) didChangeValueForKey: (NSString*) key 
+{
+	[super didChangeValueForKey: key];
+	if ([key isEqualToString: @"messages"]) {
+		OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
+		if (messages) {
+			int messageCount = [messages count];
+			[self setValue: [NSNumber numberWithUnsignedInt: messageCount] forKey: @"numberOfMessages"];
+		}
+	}
 }
 
 - (GIThread*) splitWithMessage: (GIMessage*) aMessage

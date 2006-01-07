@@ -24,5 +24,8 @@ int main(int argc, const char *argv[])
     //setenv("LD_LIBRARY_PATH", [[[NSBundle mainBundle] privateFrameworksPath] cString], 1);
     
     //[pool release];
+	// Hack to enable desktop launching:
+	if (argc>1 && [[[NSString alloc] initWithCString: argv[1]] hasPrefix: @"-psn"]) argc = 1;
+	
 	return argc>1 ? SenSelfTestMain() : NSApplicationMain(argc, argv);
 }

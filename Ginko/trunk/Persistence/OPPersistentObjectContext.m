@@ -121,6 +121,19 @@ static OPPersistentObjectContext* defaultContext = nil;
     [changedObjects addObject: object];  
 }
 
+	/*
+- (void) willAccessObject: (OPPersistentObject*) fault forKey: (NSString*) key 
+{
+
+}
+	 */
+
+- (void) willFireFault: (OPPersistentObject*) fault forKey: (NSString*) key
+/*" The key parameter denotes the reason fault is fired (a key-value-coding key). Currently only used for statistics. "*/
+{
+	[faultFireCountsByKey addObject: key];
+}
+
 - (void) didChangeObject: (OPPersistentObject*) object
 {
     //[lock unlock];
@@ -155,10 +168,19 @@ static OPPersistentObjectContext* defaultContext = nil;
     OPPersistentObject* result = [[self objectRegisteredForOid: oid ofClass: poClass] retain];
     if (!result) { 
         // not found - create a fault object:
-        result = [[poClass alloc] initFaultWithContext: self oid: oid];
+		numberOfFaultsCreated++;
+        result = [[poClass alloc] initFaultWithContext: self oid: oid]; // also registers result with self
 		//NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
-        NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
-    } 
+        //NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
+    } else {
+		// We already know this object.
+		// Put it in the fault cache:
+		unsigned retainCount = [result retainCount];
+		[faultCache addObject: result]; // cache result
+		if ([faultCache count]>=faultCacheSize) {
+			[faultCache removeObjectAtIndex: 0]; // release some object
+		}	
+	}
     return [result autorelease];
 }
 
@@ -191,7 +213,6 @@ static OPPersistentObjectContext* defaultContext = nil;
 	OID oid = [object currentOid];
 	id result = nil;
 	@synchronized(self) {
-		//[lock lock];
 		if (oid) {
 			result = [db attributesForRowId: oid ofClass: [object class]];
 			if (!result) {
@@ -200,7 +221,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 		} else {
 			result = [NSMutableDictionary dictionary];
 		}
-		//[lock unlock];
+		numberOfFaultsFired++;
 	}
 	return result;
 }
@@ -235,14 +256,21 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     if (registeredObjects) NSFreeHashTable(registeredObjects);
     registeredObjects = NSCreateHashTable(htCallBacks, 1000);
     
-    [changedObjects release];
-    changedObjects = [[NSMutableSet alloc] init]; 
-        
-    [deletedObjects release];
-    deletedObjects = [[NSMutableSet alloc] init];
+	// Reset statistics:
+	 numberOfFaultsFired = 0; 
+	 numberOfRelationshipsFired = 0;
+	 numberOfFaultsCreated = 0;
+	 numberOfObjectsSaved = 0;
+	 numberOfObjectsDeleted = 0;
+	 [faultFireCountsByKey release]; faultFireCountsByKey = [[NSCountedSet alloc] init];
+	
+    [changedObjects release]; changedObjects = [[NSMutableSet alloc] init]; 
+    [deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
 	
 	[relationshipChangesByJoinTable release];
 	relationshipChangesByJoinTable = [[NSMutableDictionary alloc] init];
+	faultCacheSize = 50;
+	[faultCache release]; faultCache = [[NSMutableArray alloc] initWithCapacity: faultCacheSize+1];
 	
 	[db close];
 	[db open];
@@ -363,6 +391,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				
 			}
 			
+			numberOfObjectsSaved += [changedObjects count];
 			// Release all changed objects:
 			[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
 		}	
@@ -385,6 +414,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				[changedObjects removeObject: deletedObject];
 			}
 			
+			numberOfObjectsDeleted += [deletedObjects count];
 			// Release all changed objects:
 			[deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
 		}
@@ -488,12 +518,14 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			sortKeyClass = [[[[ad attributeClass] persistentClassDescription] attributeWithName: sortKey] attributeClass];
 		}
 		
-		e = [[[OPPersistentObjectEnumerator alloc] initWithContext: self 
-													   resultClass: [ad attributeClass] 
-													   queryString: sql] autorelease];
-		[e bind: object, nil];
+		numberOfRelationshipsFired++;
 		
+		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
+													   resultClass: [ad attributeClass] 
+													   queryString: sql];
+		[e bind: object, nil];
 		result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];				
+		[e release];
 		
 		OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
 		if (rchanges) {
@@ -540,9 +572,19 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (void) dealloc
 {
     [self reset];
-	//[lock release];
-    [super dealloc];
+
+    [faultFireCountsByKey release];
+	[deletedObjects release];
+	[changedObjects release];
+		
+	[super dealloc];
 }
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ #faults registered/created: %u/%u, #r'ships fired: %u, #saved: %u, #deleted: %u, \nfireKeys: %@", [super description], NSCountHashTable(registeredObjects), numberOfFaultsCreated, numberOfRelationshipsFired, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
+}
+
 
 - (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
 													 where: (NSString*) clause
@@ -694,8 +736,8 @@ static NSHashTable* allInstances;
 {
 	sqlite3_finalize(statement);
 	[context release]; context = nil;
-	[super dealloc];
 	NSHashRemove(allInstances, self);
+	[super dealloc];
 }
 
 

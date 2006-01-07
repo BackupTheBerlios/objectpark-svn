@@ -272,7 +272,7 @@
 		OPAttributeDescription* ad  = [ads objectAtIndex: adIndex];
 		NSString* irk = [ad inverseRelationshipKey];
 		if (irk) {
-			NSLog(@"Removing '%@'-relation from %@.", [ad name], self);
+			//NSLog(@"Removing '%@'-relation from %@.", [ad name], self);
 			// There is an inverse relationship that needs to have self removed:
 			if ([ad isToManyRelationship]) {
 				[self removeAllValuesForKey: ad->name];
@@ -287,7 +287,9 @@
 
 - (void) willAccessValueForKey: (NSString*) key
 {
+	if (!attributes) [[self context] willFireFault: self forKey: key]; // statistics - not elegant	
     [self resolveFault];
+		
 	if (key && ![attributes objectForKey: key]) {
 		// Try to fetch and cache a relationship:
 		id result = [[self context] containerForObject: self

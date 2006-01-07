@@ -177,26 +177,25 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     
     // select responding item in threads view:
-    if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
-    {
-        itemRow = [threadsView rowForItemEqualTo:aThread startingAtRow:0];
-    }
+    //if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
+    //{ 
+		itemRow = [[self threadsByDate] indexOfObject: aThread];
+        itemRow = [threadsView rowForItemEqualTo: aThread startingAtRow: itemRow];
+    //}
     
-    [threadsView selectRow:itemRow byExtendingSelection:NO];
-    [threadsView scrollRowToVisible:itemRow];
+    [threadsView selectRow: itemRow byExtendingSelection: NO];
+    [threadsView scrollRowToVisible: itemRow];
     
     // message display string:
-    NSAttributedString *messageText = nil;
+    NSAttributedString* messageText = nil;
     
-    if (showRawSource) 
-    {
-        NSData *transferData;
-        NSString *transferString;
+    if (showRawSource) {
+        NSData* transferData;
+        NSString* transferString;
+
+        static NSDictionary* fixedFont = nil;
         
-        static NSDictionary *fixedFont = nil;
-        
-        if (!fixedFont) 
-        {
+        if (!fixedFont) {
             fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
         }
         
@@ -346,7 +345,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 
 
-- (NSArray *)threadsByDate
+- (NSArray*) threadsByDate
 /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
 	return [group valueForKey:@"threadsByDate"];
@@ -441,7 +440,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 			unsigned messageSendStatus = [message sendStatus];
             if (messageSendStatus > OPSendStatusNone) {
                 if (messageSendStatus >= OPSendStatusSending) {
-					NSLog(@"message is in send job");
+					NSLog(@"message is in send job"); // replace by alert
                     NSBeep();
                 } else {
                     [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
@@ -769,10 +768,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     while (message = [enumerator nextObject]) {
         if (set) [message addFlags: flag];
         else [message removeFlags: flag];
+		[threadsView reloadItem: message reloadChildren: NO];
     }
     
     // not necessary if flag changes would be recognized automatically:
-    [threadsView reloadData];
+    //[threadsView reloadData];
 }
 
 - (IBAction) toggleReadFlag: (id) sender
@@ -887,29 +887,53 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (void)updateWindowTitle
+- (void) updateWindowTitle
 {
-    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
+    [window setTitle: [NSString stringWithFormat: @"%@", [group valueForKey: @"name"]]];
 }
 
 - (void) updateGroupInfoTextField
 {
-    [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%u threads", "group info text template"), [[self threadsByDate] count]]];
+    [groupInfoTextField setStringValue: [NSString stringWithFormat: NSLocalizedString(@"%u threads", "group info text template"), [[self threadsByDate] count]]];
+}
+
+- (void) reloadData
+{
+	NSLog(@"Reloading outlineview data");
+	// Alternative to 
+	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
+	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
+	[threadsView reloadData];
+	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
+
+	
+	//[threadsView setDataSource: nil];
+	//[threadsView setDataSource: self];
+	
+	/*
+	NSEnumerator* e = [itemRetainer objectEnumerator];
+
+	id item;
+	while (item=[e nextObject]) {
+		[threadsView reloadItem: item reloadChildren: YES];
+	}
+	[threadsView noteNumberOfRowsChanged];
+	 */
+
 }
 
 - (void) modelChanged
 {
     // Re-query all threads keeping the selection, if possible.
-    NSArray* selectedItems = [threadsView selectedItems];
+    //NSArray* selectedItems = [threadsView selectedItems];
     if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
     //[self setThreadCache: nil];
     //[self setNonExpandableItemsCache: nil];
     [self updateGroupInfoTextField];
     [threadsView deselectAll: nil];
 	
-    [threadsView reloadData];
-    //NSLog(@"Re-Selecting items %@", selectedItems);
-    [threadsView selectItems: selectedItems ordered: YES];
+	[self reloadData];
+    //[threadsView selectItems: selectedItems ordered: YES];
 }
 
 - (void) modelChanged: (NSNotification*) aNotification
@@ -1116,26 +1140,19 @@ static BOOL isThreadItem(id item)
 			// item should be a thread
             return [[item messages] count];
         }
-    } else {
-		// boxes list
-        if (! item) {
-            return [[GIMessageGroup hierarchyRootNode] count] - 1;
-        } else if ([item isKindOfClass: [NSMutableArray class]]) {
-            return [item count] - 1;
-        }
     }
     return 0;
 }
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item
 {
-	// thread list
-	if ([item isKindOfClass: [GIThread class]]) {
+	// Thread items are always expandable!
+	return isThreadItem(item) && [[item messages] count]>1;
 		//NSLog(@"isItemExpandable");
-		return [item messageCount]>1;
+		//return YES; // [[item messages] count]>1;
 		//return ![[self nonExpandableItems] containsObject: item];
-	}
-    return NO;
+	//}
+    //return NO;
 }
 
 - (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item
@@ -1144,7 +1161,7 @@ static BOOL isThreadItem(id item)
 	if (! item) {
 		result = [[self threadsByDate] objectAtIndex: index];
 	} else {            
-		result = [[item messagesByTree] objectAtIndex: index];
+		result = [[item messages/*byTree*/] objectAtIndex: index];
 	}
     [itemRetainer addObject: result];
     return result;

@@ -54,8 +54,17 @@
     
     OPSQLiteConnection* db;
 	
+	unsigned numberOfFaultsFired; // statistics
+	unsigned numberOfRelationshipsFired; // statistics
+	unsigned numberOfFaultsCreated; // statistics
+	unsigned numberOfObjectsSaved; // statistics
+	unsigned numberOfObjectsDeleted; // statistics
+	NSCountedSet* faultFireCountsByKey; // statistics
+	
 	/*" Maps join table names to OPObjectReleationship objects, recording the n:m relationship changes for that join table. Used to update fetched n:m relationships. "*/
 	NSMutableDictionary* relationshipChangesByJoinTable;
+	unsigned faultCacheSize;
+	NSMutableArray* faultCache; // array of constant size retaining some often used objects so they do not get instantiated over and over again. 
 }
 
 // Methods for internal use:
@@ -90,6 +99,10 @@
 
 - (void) willRevertObject: (OPPersistentObject*) object;
 - (void) didRevertObject: (OPPersistentObject*) object;
+
+- (void) willFireFault: (OPPersistentObject*) fault forKey: (NSString*) key;
+//- (void) willAccessObject: (OPPersistentObject*) fault forKey: (NSString*) key;
+
 
 - (void) saveChanges;
 - (void) revertChanges;
