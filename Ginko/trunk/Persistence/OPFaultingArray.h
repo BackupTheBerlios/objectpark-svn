@@ -15,10 +15,11 @@
 
 @interface OPFaultingArray : NSObject {
 	char* data;
-	unsigned count,capacity;
-	unsigned entrySize;
-	Class elementClass;
-	NSString* sortKey; // the key to sort the array. may be null
+	unsigned count; // number of objects contained
+	unsigned capacity; // max number of objects without reallocing
+	unsigned entrySize; // size of a single entry
+	Class elementClass; // OPPersistentObject subclass
+	NSString* sortKey; // The key to sort the array. May be null.
 	//int (*compare)(id, id, OPFaultingArray*);
 	BOOL needsSorting;
 }

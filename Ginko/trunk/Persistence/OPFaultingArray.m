@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentObject.h"
-//#import <OPDebug/OPLog.h>
+#import <OPDebug/OPLog.h>
 
 @interface OPFaultingArrayEnumerator : NSEnumerator {
 	int eindex;
@@ -24,10 +24,12 @@
 
 /*" Warning: This class is not thread-save! "*/
 
-int compareOids(OID o1, OID o2)
+/*
+static int compareOids(OID o1, OID o2)
 {
 	return o1==o2 ? 0 : (o1<o2 ? -1 : 1);
 }
+*/
 
 /*
 - (void) setSortFunction: (int (*)(id, id)) compareFunction
@@ -63,13 +65,8 @@ int compareOids(OID o1, OID o2)
 }
 
 
-- (void) sort 
-{
-	if (needsSorting) {
-#warning todo: implement sorting in OPFaultedArray! 
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"Should sort array: %@", self);	
-	}
-}
+
+
 
 
 
@@ -184,17 +181,6 @@ int compareOids(OID o1, OID o2)
 	return [self indexOfObject: anObject] != NSNotFound;
 }
 
-- (unsigned) indexOfObject: (OPPersistentObject*) anObject
-/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. "*/
-{
-	unsigned result;	
-	if (needsSorting) [self sort]; // does nothing, currently
-
-	if ([self findObject: anObject index: &result]) {
-		return result;
-	}
-	return NSNotFound;
-}
 
 - (void) removeObjectAtIndex: (unsigned) index
 {
@@ -286,6 +272,83 @@ int compareOids(OID o1, OID o2)
 	
 	return result;
 }
+
+
+
+
+static int compare_oids(const void* entry1, const void* entry2)
+{
+	// Compare OIDs:
+	OID oid1 = *((OID*)entry1);
+	OID oid2 = *((OID*)entry2);
+	return oid1==oid2 ? 0 : oid1<oid2 ? -1 : 1; // can math lib do this?	
+}
+
+
+static int compare_sort_objects(const void* entry1, const void* entry2)
+{
+	// Compare sort objects (pointers located behind the OIDs):
+	id obj1 = *((id*)(entry1+sizeof(OID)));
+	id obj2 = *((id*)(entry2+sizeof(OID)));
+	return [obj1 compare: obj2];	
+}
+
+
+
+
+
+- (void) sort 
+{
+	if (needsSorting) {
+		int err = mergesort(data, 
+							count, 
+							entrySize, 
+							sortKey ? compare_sort_objects : compare_oids);
+		
+		NSAssert2(err==0, @"Sorting error in %@: %s", self, strerror(err));
+	}
+}
+
+static int compare_sort_object_with_entry(const void* sortObject, const void* entry)
+{
+	id obj1 = *((id*)sortObject);
+	id obj2 = *((id*)(entry+sizeof(OID)));
+	return [obj1 compare: obj2];	
+}
+
+
+- (unsigned) indexOfObject: (OPPersistentObject*) anObject
+	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/
+{
+	char* result = NULL;
+	// Make sure, we are sorted:
+	if (needsSorting) [self sort]; 
+	
+	if (sortKey) {
+		id key = [anObject valueForKey: sortKey];
+		
+		result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
+		
+		// We found a matching sort-key.
+		// Now compare oids to be sure...
+		
+	} else {
+		OID oidKey = [anObject oid];
+		
+		result = bsearch(&oidKey, data, count, entrySize, compare_oids);
+		
+		//if ([self findObject: anObject index: &result]) {
+		//	return result;
+		//}
+	}
+	if (result) {
+		// Calculate result index from the result pointer:
+		return (result-data)/entrySize;
+	}
+	return NSNotFound;
+}
+
+
 
 /*" Compares the sort attribute (sort key or oid) of the objects at the specified indices. Warning: Equality may not mean they are the same objects, they just have equal sort attributes. "*/
 - (int) compareObjectAtIndex: (unsigned) index1 

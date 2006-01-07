@@ -325,7 +325,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if ([object isEqual: [self group]]) {
         NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
-        NSLog(@"observeValueForKeyPath %@", keyPath);
+        //NSLog(@"observeValueForKeyPath %@", keyPath);
 
         [[NSNotificationQueue defaultQueue] enqueueNotification: notification 
 												   postingStyle: NSPostWhenIdle 
