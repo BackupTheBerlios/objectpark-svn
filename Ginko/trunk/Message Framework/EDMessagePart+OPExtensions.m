@@ -33,7 +33,9 @@
 #import "EDTextContentCoder.h" // can be removed
 
 #import <OPDebug/OPLog.h>
-#define MESSAGEDEBUG  @"MESSAGEDEBUG" 
+
+#define MESSAGEDEBUG  OPL_DOMAIN  @"MESSAGEDEBUG"
+
 
 @interface EDMessagePart(PrivateAPI)
 + (NSDictionary *)_defaultFallbackHeaders;
