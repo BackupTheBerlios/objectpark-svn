@@ -98,21 +98,24 @@
 		[objectEnum reset]; // might free some memory.
         
         if (! result)
-        {
-            // look in changed objects
-            NSEnumerator *enumerator = [[context changedObjects] objectEnumerator];
-			OPPersistentObject *changedObject;
-			while (changedObject = [enumerator nextObject]) 
+        {;
+            @synchronized(context)
             {
-				if ([changedObject isKindOfClass:[GIMessage class]])
+                // look in changed objects
+                NSEnumerator *enumerator = [[context changedObjects] objectEnumerator];
+                OPPersistentObject *changedObject;
+                while (changedObject = [enumerator nextObject]) 
                 {
-                    if ([[changedObject valueForKey:@"messageId"] isEqualToString:messageId])
+                    if ([changedObject isKindOfClass:[GIMessage class]])
                     {
-                        result = (GIMessage *)changedObject;
-                        break;
+                        if ([[changedObject valueForKey:@"messageId"] isEqualToString:messageId])
+                        {
+                            result = (GIMessage *)changedObject;
+                            break;
+                        }
                     }
-				}
-			}
+                }
+            }
         }
 	}
     
