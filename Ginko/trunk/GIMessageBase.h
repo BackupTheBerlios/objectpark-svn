@@ -12,24 +12,20 @@
 @class GIMessageGroup;
 @class GIThread;
 
-@interface GIMessageBase : NSObject {
-
+@interface GIMessageBase : NSObject 
+{
 }
 
-+ (void) addMessage: (GIMessage*) aMessage;
++ (void)addMessage:(GIMessage *)aMessage;
 
-//+ (void) removeMessage: (GIMessage*) aMessage;
++ (NSSet *)defaultGroupsForMessage:(GIMessage *)aMessage;
 
-+ (NSSet *)defaultGroupsForMessage: (GIMessage*) aMessage;
+- (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments;
 
-- (void) importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments;
-
-+ (void) addMessage: (GIMessage*) aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading;
-//+ (void) addSentMessage: (GIMessage*) aMessage;
-+ (void) addDraftMessage: (GIMessage*) aMessage;
-+ (void) addQueuedMessage: (GIMessage*) aMessage;
-+ (void) addTrashThread:(GIThread *)aThread;
-//+ (void) removeDraftMessage: (GIMessage*) aMessage;
++ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading;
++ (void)addDraftMessage: (GIMessage *)aMessage;
++ (void)addQueuedMessage: (GIMessage *)aMessage;
++ (void)addTrashThread:(GIThread *)aThread;
 
 @end
 

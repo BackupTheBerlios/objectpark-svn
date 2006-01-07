@@ -24,21 +24,23 @@
 
 @implementation GIMessageBase
 
-- (void) addMessage: (GIMessage*) aMessage
+- (void)addMessage:(GIMessage *)aMessage
 {
-	[[self class] addMessage: aMessage];
+	[[self class] addMessage:aMessage];
 }
 
-+ (void) addMessage: (GIMessage*) aMessage
++ (void)addMessage:(GIMessage *)aMessage
 {
-	if (aMessage) {
-
-		if (![GIMessageFilter filterMessage: aMessage flags: 0]) {
-			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+	if (aMessage) 
+    {
+		if (![GIMessageFilter filterMessage:aMessage flags:0]) 
+        {
+			[[self class] addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
 		}
 		
-		if ([aMessage hasFlags: OPIsFromMeStatus]) {
-			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
+		if ([aMessage hasFlags:OPIsFromMeStatus]) 
+        {
+			[[self class] addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
 		}
 		
 		// add message to index
@@ -48,109 +50,90 @@
 	} 	
 }
 
-- (void) addMessageInMainThreadWithTransferData: (NSMutableArray*) parameters
+- (void)addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
 {
-    @try {
-        GIMessage* message = [GIMessage messageWithTransferData: [parameters objectAtIndex: 0]];
+    @try 
+    {
+        GIMessage *message = [GIMessage messageWithTransferData:[parameters objectAtIndex:0]];
 		if (message)
 		{
-			[self addMessage: message];
+			[self addMessage:message];
 			[parameters addObject:message]; // out param
 		}
-    } @catch (NSException* localException) {
+    } 
+    @catch (NSException *localException) 
+    {
         NSLog(@"Exception while adding message in main thread: %@", [localException reason]);
-    } @finally {
-        while ([parameters count] < 2) [parameters addObject: [NSNull null]];
+    } 
+    @finally 
+    {
+        while ([parameters count] < 2) [parameters addObject:[NSNull null]];
     }
 }
 
-#ifdef _0
-+ (GIMessage*) addMessageWithTransferData: (NSData*) someTransferData
-/*" Creates and returns a new GIMessage object from someTransferData in the managed object context aContext and adds it to the message base, applying filter rules and threading as necessary. Returns nil if message was a dupe messsage. "*/
-{
-    GIMessage *message = [GIMessage messageWithTransferData: someTransferData];
-    
-    if (message) {
-		//  no dupe
-        if (![GIMessageFilter filterMessage:message flags:0]) {
-            [self addMessage:message toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
-        }
-        
-        if ([message hasFlags: OPIsFromMeStatus]) {
-            [self addMessage: message toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
-        }
-        
-        // add message to index
-        //GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
-        //[indexCenter addMessage:message];
-    }
-    
-    return message;
-}
-#endif
-
-+ (void) addMessage: (GIMessage*) aMessage toMessageGroup: (GIMessageGroup*) aGroup suppressThreading: (BOOL) suppressThreading
++ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-	GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
+	GIThread *thread = [aMessage assignThreadUseExisting:!suppressThreading];
     
 	// Add the thread to the group, if not already present:
-	if (![[aGroup valueForKey: @"threadsByDate"] containsObject: thread]) {
-		[aGroup addValue: thread forKey: @"threadsByDate"];
+	if (![[aGroup valueForKey:@"threadsByDate"] containsObject:thread]) 
+    {
+		[aGroup addValue:thread forKey:@"threadsByDate"];
 	}
 }
 
 /*
-+ (void) addSentMessage: (GIMessage*) aMessage
++ (void)addSentMessage:(GIMessage *)aMessage
 {
     [GIMessageFilter filterMessage:aMessage flags:0]; // put the message where it belongs
-    [self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
 }
 */
 
-+ (void) addDraftMessage: (GIMessage*) aMessage
++ (void)addDraftMessage:(GIMessage *)aMessage
 {
-    GIThread* thread = [aMessage thread];
-    if (thread) [[GIMessageGroup queuedMessageGroup] removeValue: thread forKey: @"threadsByDate"];
-    [self addMessage:aMessage toMessageGroup: [GIMessageGroup draftMessageGroup] suppressThreading: YES];
+    GIThread *thread = [aMessage thread];
+    if (thread) [[GIMessageGroup queuedMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup] suppressThreading:YES];
 }
 
-+ (void) addQueuedMessage: (GIMessage*) aMessage
++ (void)addQueuedMessage:(GIMessage *)aMessage
 {
-    GIThread* thread = [aMessage thread];
-    if (thread) [[GIMessageGroup draftMessageGroup] removeValue: thread forKey: @"threadsByDate"];
-    [self addMessage: aMessage toMessageGroup: [GIMessageGroup queuedMessageGroup] suppressThreading: YES];
+    GIThread *thread = [aMessage thread];
+    if (thread) [[GIMessageGroup draftMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup] suppressThreading:YES];
 }
 
-+ (void) addTrashThread: (GIThread*) thread
++ (void)addTrashThread:(GIThread *)thread
 {
-    [[GIMessageGroup draftMessageGroup] removeValue: thread forKey: @"threadsByDate"];
-    [[GIMessageGroup queuedMessageGroup] removeValue: thread forKey: @"threadsByDate"];
+    [[GIMessageGroup draftMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+    [[GIMessageGroup queuedMessageGroup] removeValue:thread forKey:@"threadsByDate"];
     
-    [[GIMessageGroup trashMessageGroup] addValue: thread forKey: @"threadsByDate"];
+    [[GIMessageGroup trashMessageGroup] addValue:thread forKey:@"threadsByDate"];
 }
 
-+ (void) removeDraftMessage: (GIMessage*) aMessage
++ (void)removeDraftMessage:(GIMessage *)aMessage
 /*" Removes group and message from aMessage's thread. "*/
 {
     GIThread *thread = [aMessage thread];
     NSAssert(thread != nil, @"draft message without thread");
     
-    [thread removeValue: [GIMessageGroup draftMessageGroup] forKey: @"groups"];
-    [thread removeValue: aMessage forKey: @"messages"];
+    [thread removeValue:[GIMessageGroup draftMessageGroup] forKey:@"groups"];
+    [thread removeValue:aMessage forKey:@"messages"];
 }
 
-+ (NSSet*) defaultGroupsForMessage: (GIMessage*) aMessage
++ (NSSet *)defaultGroupsForMessage:(GIMessage *)aMessage
 /*" Returns an array of GIMessageGroup objects where the given message should go into per the user's filter setting. "*/
 {
     // TODO: just a dummy here!
-    return [NSSet setWithObjects: [GIMessageGroup defaultMessageGroup], nil];
+    return [NSSet setWithObjects:[GIMessageGroup defaultMessageGroup], nil];
 }
 
-NSString* MboxImportJobName = @"mbox import";
+NSString *MboxImportJobName = @"mbox import";
 
-- (void) importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
+- (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
 
     Should run as job (#{see OPJobs})."*/
@@ -193,11 +176,12 @@ NSString* MboxImportJobName = @"mbox import";
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
             
-            if (transferData) {
+            if (transferData) 
+            {
                 @try {
                     NSMutableArray *args = [NSMutableArray arrayWithObject:transferData];
-                    [self performSelectorOnMainThread: @selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
-                        
+                    [self performSelectorOnMainThread: @selector(addMessageInMainThreadWithTransferData:) withObject:args waitUntilDone: YES];
+                    
                     GIMessage* persistentMessage = [args objectAtIndex: 1];
                     
                     if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
@@ -207,31 +191,35 @@ NSString* MboxImportJobName = @"mbox import";
                         messagesWereAdded = YES;
                         ++addedMessageCount;
                     }
-
+                    
                     [persistentMessage flushInternetMessageCache]; // free some memory
                     
-                    if ((++mboxDataCount % 100) == 0) {
-                        if (messagesWereAdded) {
+                    if ((++mboxDataCount % 100) == 0) 
+                    {
+                        if (messagesWereAdded) 
+                        {
                             OPDebugLog(OPPERSISTENCE, OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
                             
                             //[NSApp performSelectorOnMainThread: @selector(saveAction:) withObject: self waitUntilDone: YES];
                             //NSError *error = nil;
                             [context saveChanges];
-
+                            
                             messagesWereAdded = NO;
                         }
                         
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
                     }
 					
-                } @catch (NSException* localException) {
+                } 
+                @catch (NSException *localException) {
                     [localException retain]; [localException autorelease]; // Try to avoid zombie exception object
                     [localException raise];
                 }
             }
             
 			// Avoid division by zero:
-            if (mboxFileSize > 0) {
+            if (mboxFileSize > 0) 
+            {
                 int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
                 NSDate *now = [[NSDate alloc] init];
                 BOOL timeIsRipe = [now timeIntervalSinceDate:lastProgressSet] > 1.5;

@@ -81,23 +81,41 @@
 }
 
 
-+ (id) messageForMessageId: (NSString*) messageId
-	/*" Returns either nil or the message specified by its messageId. "*/
++ (id)messageForMessageId:(NSString *)messageId
+/*" Returns either nil or the message specified by its messageId. "*/
 {
-	GIMessage* result = nil;
-    if (messageId) {
-		
-		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-		
-		OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where: @"ZMESSAGEID=?"];
+	GIMessage *result = nil;
+
+    if (messageId) 
+    {
+		OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+		OPPersistentObjectEnumerator *objectEnum = [context objectEnumeratorForClass:self where:@"ZMESSAGEID=?"];
 		
 		[objectEnum reset]; // optional
-		[objectEnum bind: messageId, nil]; // only necessary for requests containing question mark placeholders
+		[objectEnum bind:messageId, nil]; // only necessary for requests containing question mark placeholders
 		
 		result = [objectEnum nextObject];
 		[objectEnum reset]; // might free some memory.
-		
+        
+        if (! result)
+        {
+            // look in changed objects
+            NSEnumerator *enumerator = [[context changedObjects] objectEnumerator];
+			OPPersistentObject *changedObject;
+			while (changedObject = [enumerator nextObject]) 
+            {
+				if ([changedObject isKindOfClass:[GIMessage class]])
+                {
+                    if ([[changedObject valueForKey:@"messageId"] isEqualToString:messageId])
+                    {
+                        result = (GIMessage *)changedObject;
+                        break;
+                    }
+				}
+			}
+        }
 	}
+    
 	return result;
 }
 
@@ -499,31 +517,34 @@
     }
 }
 
-- (GIMessage*) reference
+- (GIMessage *)reference
 /*" Returns the direct message reference stored. "*/
 {
-    [self willAccessValueForKey: @"reference"];
-    id reference = [self primitiveValueForKey: @"reference"];
-    [self didAccessValueForKey: @"reference"];
+    [self willAccessValueForKey:@"reference"];
+    id reference = [self primitiveValueForKey:@"reference"];
+    [self didAccessValueForKey:@"reference"];
     return reference;
 }
 
-- (GIMessage*) referenceFind: (BOOL) find
+- (GIMessage *)referenceFind:(BOOL)find
 /*" Returns the direct message reference stored. If there is none and find is YES, looks up the references header(s) in the internet message object and caches the result (if any). "*/
 {
-    GIMessage* result = [self reference];
-    if (!result && find) {
-        NSEnumerator* e = [[[self internetMessage] references] reverseObjectEnumerator];
-        NSString* refId;
-        while (refId = [e nextObject]) {
-			
-            if (result = [[self class] messageForMessageId: refId]) {
-                [self setValue: result forKey: @"reference"];
+    GIMessage *result = [self reference];
+    
+    if (!result && find) 
+    {
+        NSEnumerator *enumerator = [[[self internetMessage] references] reverseObjectEnumerator];
+        NSString *refId;
+        while (refId = [enumerator nextObject]) 
+        {
+            if (result = [[self class] messageForMessageId:refId]) 
+            {
+                [self setValue:result forKey:@"reference"];
                 return result;
             }
         }
     }
-    return nil;
+    return result;
 }
 
 - (BOOL) isListMessage
