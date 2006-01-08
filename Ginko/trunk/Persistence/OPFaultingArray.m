@@ -24,26 +24,12 @@
 
 /*" Warning: This class is not thread-save! "*/
 
-/*
-static int compareOids(OID o1, OID o2)
-{
-	return o1==o2 ? 0 : (o1<o2 ? -1 : 1);
-}
-*/
-
-/*
-- (void) setSortFunction: (int (*)(id, id)) compareFunction
-{
-	compare = compareFunction;
-}
-*/
-
+/* Macros for accessing the two fields in the array entries */
 
 #define oidPtr(oindex) (OID*)(data+((oindex)*entrySize))
 
 #define sortObjectPtr(oindex) (id*)(data+((oindex)*entrySize)+sizeof(OID))
 
-//#define setSortObjectAtIndex(newValue, aindex) {id* oldValuePtr=sortObjectAdr(aindex); if (*oldValuePtr!=newValue) {[*oldValuePtr autorelease]; *oldValuePtr=[newValue retain];}}
 
 + (id) array
 {
@@ -136,45 +122,7 @@ static int compareOids(OID o1, OID o2)
 */
 
 
-- (BOOL) findObject: (OPPersistentObject*) anObject index: (unsigned*) indexSearched
-{
-	
-	int i = 0;
-#warning linear oid search! replace by binary-search using sort keys!
-	if (NO && sortKey) {
-		/*
-		 optimization
-		// Expect the array to be sorted. Use sort key:
-		id searchSortObject = [anObject valueForKey: sortKey];
-		
-		int res = -1;
-		for (; res<=0 && i<count;i++) {
-			id otherSortObject = [self sortObjectAtIndex: i];
-			res = [searchSortObject compare: otherSortObject];
-			if (res == 0) {
-				OID oidFound = *oidAdr(i);
-				if (oidFound==[anObject oid]) {
-					*indexSearched = i;
-					return YES;
-				}
-			}
-		}
-*/
-	} else {
-		// Just compare oids:
-		OID oid = [anObject oid];
-		for (;i<count;i++) {
-			OID oidFound = *oidPtr(i);
-			if (oidFound==oid) {
-				*indexSearched = i;
-				return YES;
-			}
-			//if (oidFound>oid) break;
-		}
-	}	
-	*indexSearched = i;
-	return NO;
-}
+
 
 - (BOOL) containsObject: (OPPersistentObject*) anObject
 {
@@ -261,12 +209,15 @@ static int compareOids(OID o1, OID o2)
 		id* storedSortObjectPtr = sortObjectPtr(index);
 		if (result != *storedSortObjectPtr) {
 			// Update stored sortObject:
+			
+			if (![*storedSortObjectPtr isEqual: result]) needsSorting = YES;
+			
+			// Free the stored object if favor of the object's attribute:
 			[*storedSortObjectPtr release];
 			*storedSortObjectPtr = [result retain];
-#warning Updating sortObjects may make array unsorted. check that!
 		}
 	} else {
-		// fall back to cached sortObject:
+		// Fall back to cached sortObject:
 		result = *sortObjectPtr(index);
 	}
 	
@@ -320,32 +271,47 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/
 {
-	char* result = NULL;
+	unsigned resultIndex = NSNotFound;
+	OID oid = [anObject oid]; // should be efficient
+
 	// Make sure, we are sorted:
 	if (needsSorting) [self sort]; 
+	
 	
 	if (sortKey) {
 		id key = [anObject valueForKey: sortKey];
 		
-		result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
-		
-		// We found a matching sort-key.
-		// Now compare oids to be sure...
-		
+		char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
+		if (result) {
+			// We found a matching sort-key.		
+			
+			resultIndex = (result-data)/entrySize;
+			
+			if (*((OID*)result) == oid) return resultIndex; // found using only bsearch on the keys
+			
+			// Walk backward until the sortKey no longer matches or oid found: 
+			unsigned searchIndex = resultIndex-1;
+			while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
+				if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+				searchIndex--;
+			}
+			// Walk forward until the sortKey no longer matches or oid found: 
+			searchIndex = resultIndex+1;
+			while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
+				if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+				searchIndex++;
+			}
+		}
+				
 	} else {
-		OID oidKey = [anObject oid];
 		
-		result = bsearch(&oidKey, data, count, entrySize, compare_oids);
-		
-		//if ([self findObject: anObject index: &result]) {
-		//	return result;
-		//}
+		// Search for oid:
+		char* result = bsearch(&oid, data, count, entrySize, compare_oids);
+		if (result) {
+			resultIndex =  (result-data)/entrySize;
+		}
 	}
-	if (result) {
-		// Calculate result index from the result pointer:
-		return (result-data)/entrySize;
-	}
-	return NSNotFound;
+	return resultIndex;
 }
 
 
@@ -569,3 +535,43 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	 count=newCount;
  }
  */
+
+//- (BOOL) findObject: (OPPersistentObject*) anObject index: (unsigned*) indexSearched
+//{
+//	
+//	int i = 0;
+//#warning linear oid search! replace by binary-search using sort keys!
+//	if (NO && sortKey) {
+//		/*
+//		 optimization
+//		// Expect the array to be sorted. Use sort key:
+//		id searchSortObject = [anObject valueForKey: sortKey];
+//		
+//		int res = -1;
+//		for (; res<=0 && i<count;i++) {
+//			id otherSortObject = [self sortObjectAtIndex: i];
+//			res = [searchSortObject compare: otherSortObject];
+//			if (res == 0) {
+//				OID oidFound = *oidAdr(i);
+//				if (oidFound==[anObject oid]) {
+//					*indexSearched = i;
+//					return YES;
+//				}
+//			}
+//		}
+//*/
+//	} else {
+//		// Just compare oids:
+//		OID oid = [anObject oid];
+//		for (;i<count;i++) {
+//			OID oidFound = *oidPtr(i);
+//			if (oidFound==oid) {
+//				*indexSearched = i;
+//				return YES;
+//			}
+//			//if (oidFound>oid) break;
+//		}
+//	}	
+//	*indexSearched = i;
+//	return NO;
+//}
