@@ -23,6 +23,7 @@
 #import "GIMessageBase.h"
 #import "NSString+Extensions.h"
 #import "GIApplication.h"
+#import "OPImageAndTextCell.h"
 
 @implementation GIGroupListController
 
@@ -37,6 +38,15 @@
     [boxesView setAutosaveName:@"boxesView"];
     [boxesView setAutosaveExpandedItems:YES];
 
+    // set cell for first table column
+    {
+        id cell;
+        
+        cell = [[[OPImageAndTextCell alloc] init] autorelease];
+        [cell setEditable:YES];
+        [[boxesView tableColumnWithIdentifier:@"box"] setDataCell:cell];
+    }
+    
     //[self awakeToolbar];
 	
     //lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
@@ -324,6 +334,19 @@
     return nil;
 }
 
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    if ([[tableColumn identifier] isEqualToString:@"box"])
+    {
+        if (![item isKindOfClass:[NSMutableArray class]])
+        {
+            NSImage *image = [GIMessageGroup imageForMessageGroup:[OPPersistentObjectContext objectWithURLString:item]];
+            
+            [cell setImage:image];
+        }
+        else [cell setImage:[NSImage imageNamed:@"Folder"]];
+    }
+}
 
 @end
 

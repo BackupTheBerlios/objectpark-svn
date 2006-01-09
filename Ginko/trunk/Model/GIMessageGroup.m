@@ -689,30 +689,46 @@ nil, //                                                     [[[NSString alloc] i
     return [self standardMessageGroupWithUserDefaultsKey:DefaultMessageGroupURLString defaultName:NSLocalizedString(@"Default Inbox", @"default group name for default inbox")];
 }
 
-+ (GIMessageGroup*) sentMessageGroup
++ (GIMessageGroup *)sentMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey: SentMessageGroupURLString defaultName: NSLocalizedString(@"Sent Messages", @"default group name for outgoing messages")];
+    return [self standardMessageGroupWithUserDefaultsKey:SentMessageGroupURLString defaultName:NSLocalizedString(@"Sent Messages", @"default group name for outgoing messages")];
 }
 
-+ (GIMessageGroup*) draftMessageGroup
++ (GIMessageGroup *)draftMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey: DraftsMessageGroupURLString defaultName: NSLocalizedString(@"Draft Messages", @"default group name for drafts")];
+    return [self standardMessageGroupWithUserDefaultsKey:DraftsMessageGroupURLString defaultName:NSLocalizedString(@"Draft Messages", @"default group name for drafts")];
 }
 
-+ (GIMessageGroup*) queuedMessageGroup
++ (GIMessageGroup *)queuedMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey: QueuedMessageGroupURLString defaultName: NSLocalizedString(@"Queued Messages", @"default group name for queued")];
+    return [self standardMessageGroupWithUserDefaultsKey:QueuedMessageGroupURLString defaultName:NSLocalizedString(@"Queued Messages", @"default group name for queued")];
 }
 
-+ (GIMessageGroup*) spamMessageGroup
++ (GIMessageGroup *)spamMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey: SpamMessageGroupURLString defaultName: NSLocalizedString(@"Spam Messages", @"default group name for spam")];
+    return [self standardMessageGroupWithUserDefaultsKey:SpamMessageGroupURLString defaultName:NSLocalizedString(@"Spam Messages", @"default group name for spam")];
 }
 
-+ (GIMessageGroup*) trashMessageGroup
++ (GIMessageGroup *)trashMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey: TrashMessageGroupURLString defaultName: NSLocalizedString(@"Trash", @"default group name for trash")];
+    return [self standardMessageGroupWithUserDefaultsKey:TrashMessageGroupURLString defaultName:NSLocalizedString(@"Trash", @"default group name for trash")];
 }
+
++ (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+    NSString *imageName = nil;
+    
+    if (aMessageGroup == [self defaultMessageGroup]) imageName = @"InMailbox";
+    else if (aMessageGroup == [self sentMessageGroup]) imageName = @"OutMailbox";
+    else if (aMessageGroup == [self queuedMessageGroup]) imageName = @"ToBeDeliveredMailbox";
+    else if (aMessageGroup == [self draftMessageGroup]) imageName = @"DraftsMailbox";
+    else if (aMessageGroup == [self spamMessageGroup]) imageName = @"JunkMailbox";
+    else if (aMessageGroup == [self trashMessageGroup]) imageName = @"TrashMailbox";
+    else imageName = @"OtherMailbox";
+    
+    return [NSImage imageNamed:imageName];
+}
+
 
 -  (void) fetchThreads: (NSMutableArray**) allThreads
 		trivialThreads: (NSMutableSet**) trivialThreads

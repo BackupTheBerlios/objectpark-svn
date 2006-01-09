@@ -82,6 +82,8 @@
 		7759B41808535F830011B606 /* GIActivityPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7759B41608535F830011B606 /* GIActivityPanelController.m */; };
 		775A96E30839D5EB008EC276 /* TestGIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */; };
 		775A96E40839D5EB008EC276 /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */; };
+		77608AE30972F4030071A01F /* OPImageAndTextCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 77608AE10972F4030071A01F /* OPImageAndTextCell.h */; };
+		77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77608AE20972F4030071A01F /* OPImageAndTextCell.m */; };
 		77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77738B0B0955B02000BAAB51 /* JavaVM.framework */; };
 		777435CB077755A000899957 /* group.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777435CA077755A000899957 /* group.toolbar */; };
 		777436300778055900899957 /* NSToolbar+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7774362E0778055900899957 /* NSToolbar+OPExtensions.h */; };
@@ -142,6 +144,13 @@
 		77CDEE8007CBC05300675C49 /* Add.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7807CBC05300675C49 /* Add.tiff */; };
 		77CDEE8107CBC05300675C49 /* Remove_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */; };
 		77CDEE8207CBC05300675C49 /* Remove.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7A07CBC05300675C49 /* Remove.tiff */; };
+		77D2A04C0972E50B0044E464 /* DraftsMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04B0972E50B0044E464 /* DraftsMailbox.tiff */; };
+		77D2A04E0972E52A0044E464 /* drag.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04D0972E52A0044E464 /* drag.tiff */; };
+		77D2A0500972E57C0044E464 /* InMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04F0972E57C0044E464 /* InMailbox.tiff */; };
+		77D2A0520972E62E0044E464 /* OutMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A0510972E62E0044E464 /* OutMailbox.tiff */; };
+		77D2A0540972E6EE0044E464 /* ToBeDeliveredMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A0530972E6EE0044E464 /* ToBeDeliveredMailbox.tiff */; };
+		77D2A0560972E7040044E464 /* TrashMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A0550972E7040044E464 /* TrashMailbox.tiff */; };
+		77D2A0580972E71E0044E464 /* JunkMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A0570972E71E0044E464 /* JunkMailbox.tiff */; };
 		77D33406092BB03E00F2BFAB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DE96297089E20CB0053ED6B /* libsqlite3.dylib */; };
 		77D336A5092BE97500F2BFAB /* GIPhraseBrowserWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */; };
 		77D336A6092BE97500F2BFAB /* GIPhraseBrowserWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */; };
@@ -164,6 +173,8 @@
 		77EF040407DC4DEF007CD721 /* GIGroupInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */; };
 		77F3181D077B327A0097096B /* GITextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 77F3181B077B327A0097096B /* GITextView.h */; };
 		77F3181E077B327A0097096B /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F3181C077B327A0097096B /* GITextView.m */; };
+		77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */; };
+		77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF35940972FFA300AFD0DF /* Folder.tiff */; };
 		8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D1543D009092C440039DB71 /* OPInternetMessage+GinkoExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */; };
@@ -518,6 +529,8 @@
 		7759B41608535F830011B606 /* GIActivityPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIActivityPanelController.m; sourceTree = "<group>"; };
 		775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIMessageGroup.h; sourceTree = "<group>"; };
 		775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessageGroup.m; sourceTree = "<group>"; };
+		77608AE10972F4030071A01F /* OPImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPImageAndTextCell.h; sourceTree = "<group>"; };
+		77608AE20972F4030071A01F /* OPImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPImageAndTextCell.m; sourceTree = "<group>"; };
 		776B7D2707C41518009DA8B8 /* HowToTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = HowToTest.rtf; sourceTree = "<group>"; };
 		776B7DA007C41673009DA8B8 /* SenTestingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SenTestingKit.framework; path = /Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
 		77738B0B0955B02000BAAB51 /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
@@ -580,6 +593,13 @@
 		77CDEE7807CBC05300675C49 /* Add.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Add.tiff; sourceTree = "<group>"; };
 		77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove_Pressed.tiff; sourceTree = "<group>"; };
 		77CDEE7A07CBC05300675C49 /* Remove.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove.tiff; sourceTree = "<group>"; };
+		77D2A04B0972E50B0044E464 /* DraftsMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = DraftsMailbox.tiff; sourceTree = "<group>"; };
+		77D2A04D0972E52A0044E464 /* drag.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = drag.tiff; path = ../../../../../../Applications/Mail.app/Contents/Resources/drag.tiff; sourceTree = "<group>"; };
+		77D2A04F0972E57C0044E464 /* InMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = InMailbox.tiff; sourceTree = "<group>"; };
+		77D2A0510972E62E0044E464 /* OutMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OutMailbox.tiff; sourceTree = "<group>"; };
+		77D2A0530972E6EE0044E464 /* ToBeDeliveredMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ToBeDeliveredMailbox.tiff; sourceTree = "<group>"; };
+		77D2A0550972E7040044E464 /* TrashMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = TrashMailbox.tiff; sourceTree = "<group>"; };
+		77D2A0570972E71E0044E464 /* JunkMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = JunkMailbox.tiff; sourceTree = "<group>"; };
 		77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GroupInspector.nib; sourceTree = "<group>"; };
 		77D336A3092BE97500F2BFAB /* GIPhraseBrowserWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPhraseBrowserWindow.h; sourceTree = "<group>"; };
 		77D336A4092BE97500F2BFAB /* GIPhraseBrowserWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPhraseBrowserWindow.m; sourceTree = "<group>"; };
@@ -604,6 +624,8 @@
 		77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupInspectorController.m; sourceTree = "<group>"; };
 		77F3181B077B327A0097096B /* GITextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GITextView.h; sourceTree = "<group>"; };
 		77F3181C077B327A0097096B /* GITextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GITextView.m; sourceTree = "<group>"; };
+		77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OtherMailbox.tiff; sourceTree = "<group>"; };
+		77FF35940972FFA300AFD0DF /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Ginko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginko.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D167D5E09057508000F4F45 /* GIAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccount.h; sourceTree = "<group>"; };
@@ -1183,6 +1205,8 @@
 				8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */,
 				77B28DB1082E8A72007FA384 /* OPTableColumn.h */,
 				77B28DB2082E8A72007FA384 /* OPTableColumn.m */,
+				77608AE10972F4030071A01F /* OPImageAndTextCell.h */,
+				77608AE20972F4030071A01F /* OPImageAndTextCell.m */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -1326,6 +1350,15 @@
 		8DD2BEA50773257B00587AAA /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				77FF35940972FFA300AFD0DF /* Folder.tiff */,
+				77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */,
+				77D2A04D0972E52A0044E464 /* drag.tiff */,
+				77D2A04F0972E57C0044E464 /* InMailbox.tiff */,
+				77D2A0510972E62E0044E464 /* OutMailbox.tiff */,
+				77D2A04B0972E50B0044E464 /* DraftsMailbox.tiff */,
+				77D2A0570972E71E0044E464 /* JunkMailbox.tiff */,
+				77D2A0550972E7040044E464 /* TrashMailbox.tiff */,
+				77D2A0530972E6EE0044E464 /* ToBeDeliveredMailbox.tiff */,
 				7781EBA90833B55100830729 /* newDirectory.tiff */,
 				7727484A07D45FB30056D08F /* Ginko-big.tiff */,
 				7727484B07D45FB30056D08F /* Ginko.icns */,
@@ -1485,6 +1518,7 @@
 				8D31443F09562178007D668A /* GIThreadListController.h in Headers */,
 				8D314458095622E2007D668A /* OPObjectRelationship.h in Headers */,
 				77D471E0095BF0E2003CEAEA /* utils.h in Headers */,
+				77608AE30972F4030071A01F /* OPImageAndTextCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1749,6 +1783,15 @@
 				770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */,
 				77D52B670929E28700661A6D /* PhraseBrowser.nib in Resources */,
 				8D77114D0931C39B005D7DE3 /* ActivePrefPanes.plist in Resources */,
+				77D2A04C0972E50B0044E464 /* DraftsMailbox.tiff in Resources */,
+				77D2A04E0972E52A0044E464 /* drag.tiff in Resources */,
+				77D2A0500972E57C0044E464 /* InMailbox.tiff in Resources */,
+				77D2A0520972E62E0044E464 /* OutMailbox.tiff in Resources */,
+				77D2A0540972E6EE0044E464 /* ToBeDeliveredMailbox.tiff in Resources */,
+				77D2A0560972E7040044E464 /* TrashMailbox.tiff in Resources */,
+				77D2A0580972E71E0044E464 /* JunkMailbox.tiff in Resources */,
+				77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */,
+				77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1921,6 +1964,7 @@
 				8D31444009562178007D668A /* GIThreadListController.m in Sources */,
 				8D314459095622E2007D668A /* OPObjectRelationship.m in Sources */,
 				77D471DF095BF0E2003CEAEA /* utils.c in Sources */,
+				77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

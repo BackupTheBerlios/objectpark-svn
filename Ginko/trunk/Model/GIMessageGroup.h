@@ -36,6 +36,7 @@ extern NSString *GIMessageGroupWasAddedNotification;
 + (GIMessageGroup *)draftMessageGroup;
 + (GIMessageGroup *)spamMessageGroup;
 + (GIMessageGroup *)trashMessageGroup;
++ (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup;
 + (void)ensureDefaultGroups;
 
 /*" Thread handling "*/
