@@ -605,7 +605,7 @@
 		77F3181B077B327A0097096B /* GITextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GITextView.h; sourceTree = "<group>"; };
 		77F3181C077B327A0097096B /* GITextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GITextView.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* GinkoVoyager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GinkoVoyager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* Ginko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginko.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D167D5E09057508000F4F45 /* GIAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccount.h; sourceTree = "<group>"; };
 		8D167D5F09057508000F4F45 /* GIAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIAccount.m; sourceTree = "<group>"; };
 		8D17B5C70895BBC30057A1C6 /* GIProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIProfile.h; sourceTree = "<group>"; };
@@ -851,7 +851,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* GinkoVoyager.app */,
+				8D1107320486CEB800E47090 /* Ginko.app */,
 				8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */,
 			);
 			name = Products;
@@ -1561,7 +1561,7 @@
 			name = GinkoVoyager;
 			productInstallPath = "$(HOME)/Applications";
 			productName = GinkoVoyager;
-			productReference = 8D1107320486CEB800E47090 /* GinkoVoyager.app */;
+			productReference = 8D1107320486CEB800E47090 /* Ginko.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8DCE35F00891902600F705EF /* OPPersistence */ = {
@@ -2006,7 +2006,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = GinkoVoyager;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -2054,7 +2054,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = GinkoVoyager;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -2107,7 +2107,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = GinkoVoyager;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = NO;
@@ -2154,7 +2154,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = GinkoVoyager;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;

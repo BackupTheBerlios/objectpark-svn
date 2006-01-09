@@ -144,7 +144,7 @@ NSString *MboxImportJobName = @"mbox import";
     //NSParameterAssert(parentContext != nil);
     BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
-    NSDate* lastProgressSet = [[NSDate alloc] init];
+    NSDate *lastProgressSet = [[NSDate alloc] init];
     
     // Create mbox file object for enumerating the contained messages:
     OPMBoxFile *mboxFile = [OPMBoxFile mboxWithPath:mboxFilePath];
@@ -153,14 +153,13 @@ NSString *MboxImportJobName = @"mbox import";
     
     // Get our own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
-    OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];  
-//    [context setMergePolicy: NSMergeByPropertyObjectTrumpMergePolicy];
+    OPPersistentObjectContext *context = [OPPersistentObjectContext threadContext];  
     
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *mboxData;
 
-    BOOL     messagesWereAdded = NO;
-    unsigned mboxDataCount     = 0;
+    BOOL messagesWereAdded = NO;
+    unsigned mboxDataCount = 0;
     unsigned addedMessageCount = 0;
     
 //    [[context undoManager] disableUndoRegistration];
@@ -180,14 +179,14 @@ NSString *MboxImportJobName = @"mbox import";
             {
                 @try {
                     NSMutableArray *args = [NSMutableArray arrayWithObject:transferData];
-                    [self performSelectorOnMainThread: @selector(addMessageInMainThreadWithTransferData:) withObject:args waitUntilDone: YES];
+                    [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject:args waitUntilDone:YES];
                     
-                    GIMessage* persistentMessage = [args objectAtIndex: 1];
+                    GIMessage *persistentMessage = [args objectAtIndex:1];
                     
                     if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
                     
-                    //GIMessage *persistentMessage = [[self class] addMessageWithTransferData:transferData];
-                    if (persistentMessage) {
+                    if (persistentMessage) 
+                    {
                         messagesWereAdded = YES;
                         ++addedMessageCount;
                     }
@@ -200,8 +199,6 @@ NSString *MboxImportJobName = @"mbox import";
                         {
                             OPDebugLog(OPPERSISTENCE, OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
                             
-                            //[NSApp performSelectorOnMainThread: @selector(saveAction:) withObject: self waitUntilDone: YES];
-                            //NSError *error = nil;
                             [context saveChanges];
                             
                             messagesWereAdded = NO;
@@ -244,13 +241,16 @@ NSString *MboxImportJobName = @"mbox import";
         [context saveChanges];
         //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
 		
-    } @catch (NSException* localException) {
+    } 
+    @catch (NSException* localException) 
+    {
         if (NSDebugEnabled) NSLog(@"Exception while adding messages in background: %@", localException);
         [[localException retain] autorelease];
         @throw;
-    } @finally {
+    } 
+    @finally 
+    {
         [lastProgressSet release];
-        //[OPPersistentObjectContext resetThreadContext];
         [pool release];
     }
     
