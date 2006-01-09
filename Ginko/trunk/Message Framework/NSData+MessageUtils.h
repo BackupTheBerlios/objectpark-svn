@@ -36,6 +36,8 @@
 - (NSData*) encodeHeaderQuotedPrintable;
 - (NSData*) encodeHeaderQuotedPrintableMustEscapeCharactersInString: (NSString*) escChars;
 
+- (NSData*) fromQuote;
+
 - (NSData*) mboxDataFromTransferDataWithEnvSender: (NSString*) envsender;
 - (NSData*) transferDataFromMboxData;
 

@@ -18,6 +18,7 @@
 
 - (IBAction) addFolder: (id) sender;
 - (IBAction) rename: (id) sender;
+- (IBAction) exportGroup: (id) sender;
 - (IBAction) addMessageGroup: (id) sender;
 - (IBAction) removeFolderMessageGroup: (id) sender;
 - (IBAction) delete: (id) sender;

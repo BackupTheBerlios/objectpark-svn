@@ -51,5 +51,6 @@ extern NSString *GIMessageGroupWasAddedNotification;
 + (void)saveHierarchy;
 
 - (NSEnumerator *)allMessagesEnumerator;
+- (void) exportAsMboxFile;
 
 @end

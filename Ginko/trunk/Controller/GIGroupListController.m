@@ -147,6 +147,20 @@
     } 
 }
 
+
+- (IBAction) exportGroup: (id) sender
+{
+    GIMessageGroup *group = [self group];
+    
+    NSLog(@"MBox export for group %@ triggered", group);
+    
+    if (group)
+        [group exportAsMboxFile];
+    else
+        NSBeep();
+}
+
+
 - (IBAction) addFolder: (id) sender
 {
     int selectedRow = [boxesView selectedRow];

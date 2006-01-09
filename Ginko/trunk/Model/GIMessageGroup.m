@@ -16,6 +16,9 @@
 #import "GIUserDefaultsKeys.h"
 #import "OPPersistentObject+Extensions.h"
 #import "NSEnumerator+Extensions.h"
+#import "OPMBoxFile.h"
+#import "GIMessage.h"
+#import "NSData+MessageUtils.h"
 
 
 @implementation GIMessageGroup
@@ -556,6 +559,47 @@ static NSMutableArray* root = nil;
 	[result bind: self]; // fill "?" above with own oid;
 	
 	return result;
+}
+
+
+- (void) exportAsMboxFile
+{
+    // get name of mbox file by opening a file selector
+    NSString *path = [[NSString stringWithFormat:@"~/Desktop/%@.mbox", [self valueForKey:@"name"]] stringByExpandingTildeInPath];
+    
+    NSLog(@"Exporting to mbox file at %@", path);
+    
+    OPMBoxFile *mbox = [OPMBoxFile mboxWithPath:path createIfNotPresent:YES];
+    NSEnumerator *messages = [self allMessagesEnumerator];
+    GIMessage *msg;
+    int exportedMessages = 0;
+    
+    while (msg = [messages nextObject])
+    {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        
+#warning Improve From_ line
+        NSString *head = [NSString stringWithFormat:@"From %@\r\n"
+                                                    @"X-Ginko-Flags: %@\r\n",
+nil, //                                                     [[[NSString alloc] initWithData:[[[msg senderName] dataUsingEncoding:NSISOLatin1StringEncoding] encodeHeaderQuotedPrintable]
+//                                                               encoding:NSISOLatin1StringEncoding] autorelease],
+                                                    [msg flagsString]
+                                                    ];
+                                                    
+        NSData *transferData = [[msg transferData] fromQuote];
+        
+        [mbox appendMBoxData:[head dataUsingEncoding:NSISOLatin1StringEncoding]];
+        [mbox appendMBoxData:transferData];
+        [mbox appendMBoxData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]];
+        exportedMessages++;
+        if (exportedMessages % 100 == 0)
+            NSLog(@"%d messages exported", exportedMessages);
+            
+        [pool release];
+        
+        [msg refault];
+    }
+    NSLog(@"%d messages exported", exportedMessages);
 }
 
 

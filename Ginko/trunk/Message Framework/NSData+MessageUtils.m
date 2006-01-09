@@ -26,6 +26,9 @@
 #import "NSString+MessageUtils.h"
 #import "NSData+MessageUtils.h"
 
+#include <string.h>
+
+
 @interface NSData(EDMIMEExtensionsPrivateAPI)
 - (NSData*) _encodeQuotedPrintableStep1;
 - (NSData*) _encodeQuotedPrintableStep2;
@@ -390,6 +393,60 @@ static __inline__ BOOL isqpliteral(unsigned char b)
     
     return buffer;
 }
+
+
+- (NSData*) fromQuote
+{
+    if ([self length] < 5)
+        return self;
+    
+    // This all could much easier been done with a regular expression :-(
+    
+    NSMutableData *result = [NSMutableData dataWithLength:[self length] * 6 / 5]; // This will be large enough
+    char *deststart = (char*) [result bytes];
+    char *dest = deststart;
+    const char *src = [self bytes];
+    const char *end = src + [self length];
+    
+    int quote = 0;
+    if (! strncasecmp(src, "From ", 5))
+        {
+        *dest++ = '>';
+        quote++;
+        }
+        
+    while (src < end)
+        {
+        if ((*dest++ = *src++) == LF)
+            {
+            const char *temp = src;
+            
+            while (*temp == '>')
+                temp++;
+                
+            if ((temp[0] == 'F' || temp[0] == 'f')
+             && (temp[1] == 'R' || temp[1] == 'r')
+             && (temp[2] == 'O' || temp[2] == 'o')
+             && (temp[3] == 'M' || temp[3] == 'm')
+             && (temp[4] == ' '))
+                {
+                *dest++ = '>';
+                quote++;
+                }
+            }
+        }
+    
+    if (end[-1] != LF || end[-2] != CR)
+        {
+        *dest++ = CR;
+        *dest++ = LF;
+        }
+        
+    [result setLength:dest - deststart];
+    
+    return result;
+}
+
 
 void doFrom_Quoting(NSMutableString* aString) 
 /*" From_ quoting for generating mbox data. "*/
