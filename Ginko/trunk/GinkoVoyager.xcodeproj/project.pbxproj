@@ -627,7 +627,7 @@
 		77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OtherMailbox.tiff; sourceTree = "<group>"; };
 		77FF35940972FFA300AFD0DF /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Ginko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginko.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* GinkoAlpha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GinkoAlpha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D167D5E09057508000F4F45 /* GIAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccount.h; sourceTree = "<group>"; };
 		8D167D5F09057508000F4F45 /* GIAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIAccount.m; sourceTree = "<group>"; };
 		8D17B5C70895BBC30057A1C6 /* GIProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIProfile.h; sourceTree = "<group>"; };
@@ -873,7 +873,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* Ginko.app */,
+				8D1107320486CEB800E47090 /* GinkoAlpha.app */,
 				8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */,
 			);
 			name = Products;
@@ -1595,7 +1595,7 @@
 			name = GinkoVoyager;
 			productInstallPath = "$(HOME)/Applications";
 			productName = GinkoVoyager;
-			productReference = 8D1107320486CEB800E47090 /* Ginko.app */;
+			productReference = 8D1107320486CEB800E47090 /* GinkoAlpha.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8DCE35F00891902600F705EF /* OPPersistence */ = {
@@ -2050,7 +2050,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = Ginko;
+				PRODUCT_NAME = GinkoAlpha;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -2098,7 +2098,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = Ginko;
+				PRODUCT_NAME = GinkoAlpha;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -2151,7 +2151,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = Ginko;
+				PRODUCT_NAME = GinkoAlpha;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = NO;
@@ -2198,7 +2198,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = Ginko;
+				PRODUCT_NAME = GinkoAlpha;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
