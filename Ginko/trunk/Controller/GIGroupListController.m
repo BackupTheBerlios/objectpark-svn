@@ -143,7 +143,6 @@
             NSLog(@"Unable to remove folder containing groups.");
         }
     } else {
-        [GIMessageGroup removeHierarchyNode:item];
         if ([[item valueForKey: @"threadsByDate"] count] == 0) {
             [GIMessageGroup removeHierarchyNode: item];
             // Delete the group object:
@@ -154,6 +153,7 @@
             NSBeep();
             NSLog(@"Unable to remove group containing threads.");
         }
+		[GIMessageGroup removeHierarchyNode: item];
     } 
 }
 

@@ -155,7 +155,7 @@
 - (void) flushInternetMessageCache
 	/*" Flushes the cache for the internetMessageCache transient attribute. Used for optimized memory usage. "*/
 {
-    [self setPrimitiveValue: nil forKey: @"internetMessageCache"];
+    [attributes removeObjectForKey: @"internetMessageCache"];
 }
 
 - (NSData*) transferData
@@ -326,6 +326,11 @@
     return [cachedValue unsignedIntValue];
 }
 
+- (void) flushNumberOfReferencesCache
+{
+	[attributes removeObjectForKey: @"numberOfReferences"];
+}
+
 - (NSArray*) commentsInThread: (GIThread*) thread
 	/* Returns all directly commenting messages in the thread given. */
 {
@@ -405,7 +410,7 @@
     if (flags & OPSeenStatus) result[i++] = 'R';
     //if (flags & OPDraftStatus) result[i++] = 'D';
     result[i++] = '\0'; // terminate string
-    return [NSString stringWithCString:result];
+    return [NSString stringWithCString: result];
 }
 
 - (void) addFlagsFromString: (NSString*) flagsString
@@ -529,20 +534,17 @@
     return reference;
 }
 
-- (GIMessage *)referenceFind:(BOOL)find
+- (GIMessage*) referenceFind: (BOOL) find
 /*" Returns the direct message reference stored. If there is none and find is YES, looks up the references header(s) in the internet message object and caches the result (if any). "*/
 {
-    GIMessage *result = [self reference];
+    GIMessage* result = [self reference];
     
-    if (!result && find) 
-    {
-        NSEnumerator *enumerator = [[[self internetMessage] references] reverseObjectEnumerator];
-        NSString *refId;
-        while (refId = [enumerator nextObject]) 
-        {
-            if (result = [[self class] messageForMessageId:refId]) 
-            {
-                [self setValue:result forKey:@"reference"];
+    if (!result && find) {
+        NSEnumerator* enumerator = [[[self internetMessage] references] reverseObjectEnumerator];
+        NSString* refId;
+        while (refId = [enumerator nextObject])  {
+            if (result = [[self class] messageForMessageId: refId])  {
+                [self setValue: result forKey: @"reference"];
                 return result;
             }
         }

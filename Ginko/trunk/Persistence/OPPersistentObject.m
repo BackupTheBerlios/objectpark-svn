@@ -181,7 +181,7 @@
 	@synchronized(self) {
 		if (![self hasChanged]) {
 			[attributes release]; attributes = nil; // better call -revert?
-#warning todo: remove all cached many-to-many relationships on re-fault
+//#warning todo: remove all cached many-to-many relationships on re-fault
 		}
 	}
 }
@@ -582,15 +582,21 @@
 	} else {
 		if (inverseKey) {
 			// many-to-one relationship
-			[value willChangeValueForKey: key];
+			id oldIValue = [value valueForKey: inverseKey];
+
+			if (oldIValue)
+				[oldIValue removeValue: value forKey: key]; // remove from inverse inverse relationship (if any). This might fire oldIValue. :-(
+
+			[value willChangeValueForKey: inverseKey];
 			[value setPrimitiveValue: self forKey: inverseKey];
-			[value didChangeValueForKey: key];
+			[value didChangeValueForKey: inverseKey];
+			
 		}
 	}
 	
 	[self willChangeValueForKey: key];
 	[self addPrimitiveValue: value forKey: key];
-	[self didChangeValueForKey: key];
+	[self didChangeToManyRelationshipForKey: key];
 }
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key

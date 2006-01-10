@@ -61,6 +61,8 @@
 - (GIMessage*) referenceFind: (BOOL)find;
 
 - (unsigned) numberOfReferences;
+- (void) flushNumberOfReferencesCache;
+
 
 - (unsigned) flags;
 - (BOOL) hasFlags: (unsigned) someFlags;

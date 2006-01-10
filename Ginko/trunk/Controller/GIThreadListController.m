@@ -115,6 +115,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [super dealloc];
 }
 
+static BOOL isThreadItem(id item)
+{
+    return [item isKindOfClass: [GIThread class]];
+}
+
 - (id) valueForGroupProperty: (NSString*) prop
 /*" Used for accessing user defaults for current message group. "*/
 {
@@ -152,35 +157,33 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self autorelease]; // balance self-retaining
 }
 
-- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
+- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
-    NSParameterAssert([aThread isKindOfClass:[GIThread class]]);
+    NSParameterAssert(isThreadItem(aThread));
     
     int itemRow;
-    BOOL isNewThread = ![aThread isEqual:displayedThread];
+    BOOL isNewThread = ![aThread isEqual: displayedThread];
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
-    [displayedMessage addFlags:OPSeenStatus];
+    [displayedMessage addFlags: OPSeenStatus];
     
-    if (isNewThread) 
-    {
+    if (isNewThread) {
         [displayedThread autorelease];
         displayedThread = [aThread retain];
     }
     
     // make sure that thread is expanded in threads outline view:
-    if (aThread && (![aThread containsSingleMessage])) 
-    {
-        [threadsView expandItem:aThread];
+    if (aThread && (![aThread containsSingleMessage])) {
+        [threadsView expandItem: aThread];
     }
     
     // select responding item in threads view:
     //if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     //{ 
-		itemRow = [[self threadsByDate] indexOfObject: aThread];
-        itemRow = [threadsView rowForItemEqualTo: aThread startingAtRow: itemRow];
+	itemRow = [[group valueForKey: @"threadsByDate"] indexOfObject: aThread];
+	itemRow = [threadsView rowForItemEqualTo: aThread startingAtRow: itemRow];
     //}
     
     [threadsView selectRow: itemRow byExtendingSelection: NO];
@@ -202,22 +205,19 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         transferData = [displayedMessage transferData];
         
         // joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
-        if (!(transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSUTF8StringEncoding]))
-            transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSISOLatin1StringEncoding];
+        if (!(transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSUTF8StringEncoding]))
+            transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSISOLatin1StringEncoding];
         
-        messageText = [[[NSAttributedString alloc] initWithString:transferString attributes:fixedFont] autorelease]; 
-    } 
-    else 
-    {
-        messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
+        messageText = [[[NSAttributedString alloc] initWithString: transferString attributes: fixedFont] autorelease]; 
+    } else {
+        messageText = [displayedMessage renderedMessageIncludingAllHeaders: [[NSUserDefaults standardUserDefaults] boolForKey: ShowAllHeaders]];
     }
     
-    if (!messageText)
-    {
-        messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
+    if (!messageText) {
+        messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText == nil."];
     }
     
-    [[messageTextView textStorage] setAttributedString:messageText];
+    [[messageTextView textStorage] setAttributedString: messageText];
     
     // set the insertion point (cursor)to 0, 0
     [messageTextView setSelectedRange:NSMakeRange(0, 0)];
@@ -225,7 +225,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // make sure that the message's header is displayed:
     [messageTextView scrollRangeToVisible:NSMakeRange(0, 0)];
 
-    [self updateCommentTree:isNewThread];
+    [self updateCommentTree: isNewThread];
     
     //BOOL collapseTree = [commentsMatrix numberOfColumns]<=1;
     // Hide comment tree, if trivial:
@@ -395,13 +395,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             GIThread* selectedThread = nil;
             id item = [threadsView itemAtRow: selectedRow];
             
-            if ([threadsView levelForRow: selectedRow] > 0) 
-            {
+            if (!isThreadItem(item)) {
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                while ([threadsView levelForRow: --selectedRow]){}
-                selectedThread = [threadsView itemAtRow: selectedRow];
+                selectedThread = [message valueForKey: @"thread"];
             } else {
                 selectedThread = item;
                 
@@ -452,8 +450,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 
                 [self setDisplayedMessage: message thread: selectedThread];
                 
-                if ([self matrixIsVisible]) [window makeFirstResponder: commentsMatrix];
-                else [window makeFirstResponder: messageTextView];                    
+                //if ([self matrixIsVisible]) [window makeFirstResponder: commentsMatrix];
+                //else 
+				[window makeFirstResponder: messageTextView];                    
             }
         }
 		
@@ -792,9 +791,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         for (i = [set firstIndex]; i<=lastIndex; i++) {
             if ([set containsIndex: i]) {
 				// Is it a thread?
-                if ([threadsView levelForRow:i] == 0) {
-                    GIThread* thread = [threadsView itemAtRow: i];
-                    [result addObject:thread];
+				id item = [threadsView itemAtRow: i];
+
+                if (isThreadItem(item)) {
+                    [result addObject: item];
                 }
             }
         }
@@ -804,19 +804,31 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) joinThreads
 {
-    NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
+	NSArray* selectedThread = [self selectedThreads];
+    NSEnumerator* enumerator = [selectedThread objectEnumerator];
     GIThread* targetThread = [enumerator nextObject];
+	// Find the most recent thread and store it in targetThread. This thread object will survive.
+	GIThread* nextThread;
+	while (nextThread = [enumerator nextObject]) {
+		if ([[nextThread valueForKey: @"date"] compare: [targetThread valueForKey: @"date"]]>0) {
+			targetThread = nextThread; // aThread is nore recent
+		}
+	}
     [threadsView selectRow: [threadsView rowForItem: targetThread] byExtendingSelection: NO];
     //[[self nonExpandableItemsCache] removeObject:targetThread]; 
     [threadsView expandItem: targetThread];
 
-    //NSLog(@"Merging other threads into %@", targetThread);    
+    NSLog(@"Merging other threads into %@", targetThread);    
 
     // prevent merge problems:
     //[[OPPersistentObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    GIThread* nextThread;
-    while (nextThread = [enumerator nextObject]) [targetThread mergeMessagesFromThread: nextThread];
+    enumerator = [selectedThread objectEnumerator];
+    while (nextThread = [enumerator nextObject]) {
+		if (nextThread != targetThread) {
+			[targetThread mergeMessagesFromThread: nextThread];
+		}
+	}
     
     [GIApp saveAction: self];
 }
@@ -973,10 +985,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-static BOOL isThreadItem(id item)
-{
-    return [item isKindOfClass: [GIThread class]];
-}
 
 // validation
 
@@ -1330,9 +1338,8 @@ static NSAttributedString* spacer2()
         if ([[tableColumn identifier] isEqualToString: @"subject"]) {
 			int i;
             NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
-            int level = [outlineView levelForItem: item]; // really needed? may be slow!
             
-            if (level == 0) {
+            if (isThreadItem(item)) {
 	        	// it's a thread:		
                 GIThread* thread = item;
                 
@@ -1605,7 +1612,7 @@ NSMutableArray* border = nil;
 
 - (void) updateCommentTree: (BOOL) rebuildThread
 {
-    if (rebuildThread) {
+    if (YES || rebuildThread) {
         [commentsMatrix deselectAllCells];
         [commentsMatrix renewRows: 1 columns: [displayedThread commentDepth]];
         

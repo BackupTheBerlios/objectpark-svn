@@ -54,6 +54,19 @@
 	[super willSave];
 }
 
+- (void) didChangeValueForKey: (NSString*) key 
+{
+	[super didChangeValueForKey: key];
+	if ([key isEqualToString: @"messages"]) {
+		OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
+		if (messages) {
+			int messageCount = [messages count];
+			[self setValue: [NSNumber numberWithUnsignedInt: messageCount] forKey: @"numberOfMessages"];
+		}
+		[messages makeObjectsPerformSelector: @selector(flushNumberOfReferencesCache)];
+	}
+}
+
 /*
 - (void) addToGroups: (GIMessageGroup*) group
 {
@@ -97,17 +110,6 @@
     [otherThread delete];		
 }
 
-- (void) didChangeValueForKey: (NSString*) key 
-{
-	[super didChangeValueForKey: key];
-	if ([key isEqualToString: @"messages"]) {
-		OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
-		if (messages) {
-			int messageCount = [messages count];
-			[self setValue: [NSNumber numberWithUnsignedInt: messageCount] forKey: @"numberOfMessages"];
-		}
-	}
-}
 
 - (GIThread*) splitWithMessage: (GIMessage*) aMessage
 	/*" Splits the receiver into two threads. Returns a thread containing aMessage and comments and removes these messages from the receiver. "*/
@@ -143,8 +145,6 @@
 + (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
 //" Overwritten from OPPersistentObject to support fetching the age attribute used for sorting together with the oid on fault creation time. This allows us to update e.g. the threadsByDate relation in GIMessageGroup without re-fetching all threads (which is slow). "/
 {
-#warning Note, that we also want to set the age when the fault already existed (without age).
-
 	GIThread* result = [super newFromStatement: statement index: index];
 	
 	if (result) {
@@ -226,11 +226,12 @@
 - (NSArray*) rootMessages
 /*" Returns all messages without reference in the receiver. "*/
 {
-    NSMutableArray *result = [NSMutableArray array];
-    NSEnumerator *me = [[self messages] objectEnumerator];
+    NSMutableArray* result = [NSMutableArray array];
+	NSArray* messages = [self messages];
+    NSEnumerator* me = [messages objectEnumerator];
     GIMessage *message;
     while (message = [me nextObject]) {
-        if (![message reference]) {
+        if (![message reference] || ![messages containsObject: message]) {
             [result addObject:message];
         }
     }

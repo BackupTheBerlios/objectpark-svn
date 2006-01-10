@@ -36,25 +36,27 @@
 /* <hacks> */
 
 
-
+/*
 - (int) numberOfRows
 {
 	//NSLog(@"Instance variable _numberOfRows: %d", (FakeOutlineView*)self->_numberOfRows);
 	return [super numberOfRows];	
 }
+*/
 
 - (void) reloadData 
 {
 	[super reloadData];
 }
 
-
+/*
  - (void)_verifySelectionIsOK
  {
 	 if ([[self selectedRowIndexes] count]) {
 		 [(FakeOutlineView*)super _verifySelectionIsOK];
 	 }
  }
+ */
  
 
 /* </hacks> */
