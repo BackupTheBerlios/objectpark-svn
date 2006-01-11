@@ -231,8 +231,9 @@
     NSEnumerator* me = [messages objectEnumerator];
     GIMessage *message;
     while (message = [me nextObject]) {
-        if (![message reference] || ![messages containsObject: message]) {
-            [result addObject:message];
+		GIMessage* reference = [message reference];
+        if (!reference || ![messages containsObject: [message reference]]) {
+            [result addObject: message];
         }
     }
     return result;

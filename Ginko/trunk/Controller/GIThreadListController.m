@@ -1522,8 +1522,8 @@ NSMutableArray* border = nil;
 {
     GICommentTreeCell* cell;
     
-    if (row <= [[border objectAtIndex:column] intValue])
-        row = [[border objectAtIndex:column] intValue] + 1;
+    if (row <= [[border objectAtIndex: column] intValue])
+        row = [[border objectAtIndex: column] intValue] + 1;
         
     NSArray* comments = commentsForMessage(message, displayedThread);
     int commentCount = [comments count];
@@ -1612,7 +1612,7 @@ NSMutableArray* border = nil;
 
 - (void) updateCommentTree: (BOOL) rebuildThread
 {
-    if (YES || rebuildThread) {
+    if (rebuildThread) {
         [commentsMatrix deselectAllCells];
         [commentsMatrix renewRows: 1 columns: [displayedThread commentDepth]];
         
