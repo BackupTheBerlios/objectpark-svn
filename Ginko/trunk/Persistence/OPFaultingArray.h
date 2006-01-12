@@ -13,7 +13,7 @@
 @class OPFaultingArray;
 @class OPPersistentObjectContext;
 
-@interface OPFaultingArray : NSObject {
+@interface OPFaultingArray : NSArray {
 	char* data;
 	unsigned count; // number of objects contained
 	unsigned capacity; // max number of objects without reallocing

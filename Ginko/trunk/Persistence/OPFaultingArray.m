@@ -50,8 +50,45 @@
     return self;
 }
 
+- (id) initWithArray: (NSArray*) otherArray {
+    if (self = [self init]) {
+        NSEnumerator* e = [otherArray objectEnumerator];
+        id element;
+
+        while (element = [e nextObject]) {
+            [self addObject: element];
+        }
+    }
+    return self;
+}
+
+- (id) initWithObjects: (id) firstObject, ... {
+
+	 if (self = [super init]) {
+		 
+		 va_list	ap;
+		 id		object;
+		 
+		 va_start(ap, firstObject);
+		 for (object = firstObject; object != nil; object = va_arg(ap, id)) {
+			 [self addObject: object];
+		 }
+		 
+		 va_end(ap);
+	 }
+	 return self;
+}
 
 
+- (id) initWithContentsOfFile: (NSString*) path {
+    // There may be more efficient implementations.
+    return [self initWithArray: [NSArray arrayWithContentsOfFile: path]];
+}
+
+- (id) initWithObjects: (id*) objects count: (unsigned) count {
+    NSParameterAssert(NO);
+    return nil;
+}
 
 
 
