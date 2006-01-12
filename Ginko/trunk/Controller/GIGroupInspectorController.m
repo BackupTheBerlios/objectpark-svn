@@ -22,7 +22,7 @@ static GIGroupInspectorController *sharedInspector = nil;
     [profileButton removeAllItems];
     
     // fill profiles in:
-    enumerator = [GIProfile allObjectsEnumerator];
+    enumerator = [[GIProfile allObjects] objectEnumerator];
     while ((aProfile = [enumerator nextObject])) {
         [profileButton addItemWithTitle: [aProfile valueForKey: @"name"]];
         [[profileButton lastItem] setRepresentedObject: aProfile];

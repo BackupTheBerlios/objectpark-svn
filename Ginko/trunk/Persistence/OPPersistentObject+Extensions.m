@@ -20,11 +20,11 @@ static volatile NSThread* mainThread = nil;
 	}
 }
 
-+ (NSEnumerator*) allObjectsEnumerator
++ (NSArray*) allObjects
 /*" Returns all committed persistent object instances of the reciever class in their current (transient) 
 	state. "*/
 {
-	return [[OPPersistentObjectContext defaultContext] objectEnumeratorForClass: self where: nil];
+	return [[OPPersistentObjectContext defaultContext] objectsForClass: self whereFormat: nil, nil];
 }
 
 - (BOOL) primitiveBoolForKey: (NSString*) key

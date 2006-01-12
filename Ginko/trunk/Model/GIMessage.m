@@ -71,31 +71,30 @@
 	@"}";
 }
 
-+ (OPPersistentObjectEnumerator*) messageEnumeratorForFulltextIndexerWithLimit: (unsigned) limit
++ (NSArray*) messagesForFulltextIndexerWithLimit: (unsigned) limit
 {
     OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    OPPersistentObjectEnumerator* objectEnum = [context objectEnumeratorForClass: self where:  @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?"];
-    [objectEnum bind: [NSNumber numberWithUnsignedInt: limit]];
-    return objectEnum;
+    NSArray* result = [context objectsForClass: self whereFormat: @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+
+    return result;
 }
 
 
-+ (id)messageForMessageId:(NSString *)messageId
++ (id) messageForMessageId: (NSString*) messageId
 /*" Returns either nil or the message specified by its messageId. "*/
 {
-	GIMessage *result = nil;
+	GIMessage* result = nil;
 
-    if (messageId) 
-    {
-		OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-		OPPersistentObjectEnumerator *objectEnum = [context objectEnumeratorForClass:self where:@"ZMESSAGEID=?"];
+    if (messageId) {
+		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+		NSArray* objects = [context objectsForClass: self whereFormat: @"ZMESSAGEID=?", messageId, nil];
 		
-		[objectEnum reset]; // optional
-		[objectEnum bind:messageId, nil]; // only necessary for requests containing question mark placeholders
+		//[objectEnum reset]; // optional
+		//[objectEnum bind:messageId, nil]; // only necessary for requests containing question mark placeholders
 		
-		result = [objectEnum nextObject];
-		[objectEnum reset]; // might free some memory.
+		result = [objects lastObject];
+		//[objectEnum reset]; // might free some memory.
         
         if (! result)
         {;

@@ -175,7 +175,7 @@ static OPPersistentObjectContext* defaultContext = nil;
     } else {
 		// We already know this object.
 		// Put it in the fault cache:
-		unsigned retainCount = [result retainCount];
+		//unsigned retainCount = [result retainCount];
 		[faultCache addObject: result]; // cache result
 		if ([faultCache count]>=faultCacheSize) {
 			[faultCache removeObjectAtIndex: 0]; // release some object
@@ -585,14 +585,67 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return [NSString stringWithFormat: @"%@ #faults registered/created: %u/%u, #r'ships fired: %u, #saved: %u, #deleted: %u, \nfireKeys: %@", [super description], NSCountHashTable(registeredObjects), numberOfFaultsCreated, numberOfRelationshipsFired, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
 }
 
+- (NSArray*) objectsForClass: (Class) poClass
+				 queryFormat: (NSString*) sql, ...
+{
+	NSArray* result;
+	@synchronized(self) {
+		OPPersistentObjectEnumerator* e;
+		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
+													  resultClass: poClass
+													  queryString: sql];
+		
+		va_list ap; /* points to each unamed arg in turn */
+		va_start(ap, sql); /* make ap point to 1st unnamed arg */
+		unsigned index = 1; // change that! make it 0 based!
+		id binding;
+		while (binding = va_arg(ap, id)) {
+			[binding bindValueToStatement: [e statement] index: index++];
+		}
+		va_end(ap); /* clean up when done */
+		
+		result = [e allObjects];
+		[e release];
+	}
+	return result;
+}
 
-- (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
-													 where: (NSString*) clause
+- (NSArray*) objectsForClass: (Class) poClass
+				 whereFormat: (NSString*) clause, ...
+	/*" Replaces all the question marks in the whereFormat string with the object 
+	values passed. Valid object classes return YES to +[canPersist]. "*/
+{
+	NSArray* result;
+	@synchronized(self) {
+		OPPersistentObjectEnumerator* e;
+		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
+													  resultClass: poClass
+													  whereClause: clause];
+		
+		va_list ap; /* points to each unamed arg in turn */
+		va_start(ap, clause); /* make ap point to 1st unnamed arg */
+		unsigned index = 1; // change that! make it 0 based!
+		id binding;
+		while (binding = va_arg(ap, id)) {
+			[binding bindValueToStatement: [e statement] index: index++];
+		}
+		va_end(ap); /* clean up when done */
+		
+		result = [e allObjects];
+		[e release];
+	}
+	return result;
+}
+
+/*
+- (NSArray*) objectsForClass: (Class) poClass
+					   where: (NSString*) clause
 {
 	return [[[OPPersistentObjectEnumerator alloc] initWithContext: self 
 													  resultClass: poClass
-													  whereClause: clause] autorelease];
+													  whereClause: clause] allObjects];
 }
+*/
 
 @end
 
@@ -645,10 +698,9 @@ static NSHashTable* allInstances;
 
 // "select ZMESSAGE.ROWID from ZMESSAGE, ZJOIN where aaa=bbb;"
 
+
 - (void) bind: (id) variable, ...;
-/*" Replaces all the question marks in the where string with the object values passed.
-	Valid object classes return YES to +[canPersist].
-	Current implementation only uses the first variable. "*/
+
 {
 	// locking?
 	//NSParameterAssert([[variable class] canPersist]);
@@ -656,6 +708,7 @@ static NSHashTable* allInstances;
 #warning todo: Implement vararg to support more than one variable binding.
 	NSHashInsert(allInstances, self);
 }
+
 
 - (void) reset
 {

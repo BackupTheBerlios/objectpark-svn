@@ -57,7 +57,7 @@ extern NSString* GIMessageGroupWasAddedNotification;
 /*" Persistency handling "*/
 + (void) saveHierarchy;
 
-- (NSEnumerator*) allMessagesEnumerator;
+- (NSEnumerator*) allMessages;
 - (void) exportAsMboxFile;
 
 @end

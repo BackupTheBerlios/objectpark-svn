@@ -51,7 +51,7 @@
 + (void) resetSendStatus;
 + (id) messageForMessageId: (NSString*) messageId;
 + (id) messageWithTransferData: (NSData*) someTransferData;
-+ (OPPersistentObjectEnumerator*) messageEnumeratorForFulltextIndexerWithLimit: (unsigned) limit;
++ (NSArray*) messagesForFulltextIndexerWithLimit: (unsigned) limit;
 
 
 - (NSData*) transferData;

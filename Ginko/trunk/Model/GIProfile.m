@@ -57,7 +57,7 @@
 #warning Todo: Cache +[GIProfile allObjects] for better performance of e.g. -isMyEmailAddress!
     @synchronized(self)
     {
-        result = [[self allObjectsEnumerator] allObjects];
+        result = [self allObjects];
         
         if (![result count]) {
             GIProfile* profile = [[[self alloc] init] autorelease];
@@ -68,7 +68,7 @@
 			
 			[[OPPersistentObjectContext defaultContext] saveChanges];
 			
-			result = [[super allObjectsEnumerator] allObjects];
+			result = [super allObjects];
         }
         
         result = [[result copy] autorelease];

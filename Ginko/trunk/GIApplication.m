@@ -272,19 +272,19 @@
 	[self saveAction: nil];
 }
 
-- (void)playWithLucene
+- (void) playWithLucene
 {   
     // Delete existing fulltext index:
     //[[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
     
     // Get messages:
     
-    OPPersistentObjectEnumerator *enumerator = [GIMessage messageEnumeratorForFulltextIndexerWithLimit:250];
+    NSArray* messages = [GIMessage messagesForFulltextIndexerWithLimit: 250];
     
     //int i = 0;
     
     // Add messages to fulltext index:
-    [GIFulltextIndexCenter addMessagesInBackground:[enumerator allObjects]];
+    [GIFulltextIndexCenter addMessagesInBackground: messages];
 //    [enumerator reset];
 //    [self saveAction:self];
     
@@ -543,14 +543,13 @@
 }
 */
 
-- (IBAction) getNewMailInAllAccounts:(id)sender
+- (IBAction) getNewMailInAllAccounts: (id) sender
 {
-    NSEnumerator *enumerator = [GIAccount allObjectsEnumerator];
-    GIAccount *account;
+    NSEnumerator* enumerator = [[GIAccount allObjects] objectEnumerator];
+    GIAccount* account;
     
-    while (account = [enumerator nextObject])
-    {
-        if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount:account];
+    while (account = [enumerator nextObject]) {
+        if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount: account];
     }
 	
 }

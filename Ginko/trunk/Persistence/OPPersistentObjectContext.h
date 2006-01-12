@@ -107,8 +107,13 @@
 - (void) saveChanges;
 - (void) revertChanges;
 
-- (OPPersistentObjectEnumerator*) objectEnumeratorForClass: (Class) poClass
-													 where: (NSString*) clause;
+//- (NSArray*) objectsForClass: (Class) poClass
+//					   where: (NSString*) clause;
+- (NSArray*) objectsForClass: (Class) poClass
+				 queryFormat: (NSString*) clause, ...;
+
+- (NSArray*) objectsForClass: (Class) poClass
+				 whereFormat: (NSString*) clause, ...;
 
 - (OPFaultingArray*) containerForObject: (id) object
 						relationShipKey: (NSString*) key;
@@ -142,7 +147,7 @@
 
 + (void) printAllRunningEnumerators;
 
-- (void) bind: (id) variable, ...;
+//- (void) bind: (id) variable, ...;
 
 - (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey ofClass: (Class) sortKeyClass;
 

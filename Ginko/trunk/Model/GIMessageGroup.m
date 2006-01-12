@@ -374,27 +374,26 @@ static NSMutableArray* root = nil;
     }
 }
 
-+ (void)enforceIntegrity
++ (void) enforceIntegrity
 /*" Checks if all groups are in the hierarchy and that the hierarchy has no nonexistent groups in it. "*/
 {    
-    NSMutableArray *groupUrlsToCheck = [NSMutableArray array];
-    NSEnumerator *enumerator = [self allObjectsEnumerator];
-	GIMessageGroup *group;
+    NSMutableArray* groupUrlsToCheck = [NSMutableArray array];
+    NSEnumerator* enumerator = [[self allObjects] objectEnumerator];
+	GIMessageGroup* group;
 
     // building array of Object ID URLs:
-    while ((group = [enumerator nextObject])) 
-    {
+    while ((group = [enumerator nextObject])) {
         [groupUrlsToCheck addObject:[group objectURLString]];
     }
     
-    [self checkHierarchy:[self hierarchyRootNode] withGroups:groupUrlsToCheck];
+    [self checkHierarchy:[self hierarchyRootNode] withGroups: groupUrlsToCheck];
     
-    [[self hierarchyRootNode] addObjectsFromArray:groupUrlsToCheck];
+    [[self hierarchyRootNode] addObjectsFromArray: groupUrlsToCheck];
     
     [self saveHierarchy];
 }
 
-+ (NSMutableArray *)hierarchyRootNode
++ (NSMutableArray*) hierarchyRootNode
 /*" Returns the root node of the message group hierarchy. The first entry in every node describes the hierarchy. It is a #{NSDictionary} with keys 'name' for the name of the hierarchy and 'uid' for an unique id of the hierarchy. "*/
 {
     if (! root) 
@@ -424,7 +423,7 @@ static NSMutableArray* root = nil;
         
         [self enforceIntegrity];
 		
-		[[self allObjectsEnumerator] makeObjectsPerformSelector:@selector(retain)]; // Groups are retained to prevent them from being re-fetched every time.
+		[[self allObjects] makeObjectsPerformSelector: @selector(retain)]; // Groups are retained to prevent them from being re-fetched every time.
     }
     
     return root;
@@ -543,7 +542,8 @@ static NSMutableArray* root = nil;
 }
 
 
-- (NSEnumerator*) allMessagesEnumerator
+- (NSArray*) allMessages
+/*" Only returns persistent messages (from the database). "*/
 {
 	OPPersistentObjectEnumerator* result;
 
@@ -551,12 +551,14 @@ static NSMutableArray* root = nil;
 
 #warning needs testing.
 	
-	// todo: Cache enumerator object
-	result = [[[OPPersistentObjectEnumerator alloc] initWithContext: [self context]
-														resultClass: [GIMessage class] 
-														queryString: queryString] autorelease];
+	return [[self context] objectsForClass: [GIMessage class] queryFormat: queryString, self, nil];
 	
-	[result bind: self]; // fill "?" above with own oid;
+	// todo: Cache enumerator object
+	//result = [[[OPPersistentObjectEnumerator alloc] initWithContext: [self context]
+	//													resultClass: [GIMessage class] 
+	//													queryString: queryString] autorelease];
+	
+	//[result bind: self]; // fill "?" above with own oid;
 	
 	return result;
 }

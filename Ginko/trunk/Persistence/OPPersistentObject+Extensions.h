@@ -11,7 +11,7 @@
 
 @interface OPPersistentObject (OPExtensions)
 
-+ (NSEnumerator*) allObjectsEnumerator;
++ (NSArray*) allObjects;
 
 - (BOOL) primitiveBoolForKey: (NSString*) key;
 

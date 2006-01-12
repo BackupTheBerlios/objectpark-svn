@@ -12,9 +12,9 @@
 
 @implementation AccountPrefs
 
-- (NSArray *)accounts
+- (NSArray*) accounts
 {
-    return [[GIAccount allObjectsEnumerator] allObjects];
+    return [GIAccount allObjects];
 }
 
 - (IBAction)removeAccount:(id)sender

@@ -156,6 +156,7 @@
 	
 }
 
+/*
 - (void) testManualFetch
 {	
 	// Insert an object, so we are sure it's there:
@@ -181,6 +182,7 @@
 	NSAssert(newMessage == result, @"Fetch did not return identical object.");
 	
 }
+*/
 
 
 - (void) testDataPersistence
@@ -238,6 +240,7 @@
 	[[context databaseConnection] commitTransaction];
 }
 
+/*
 - (void) testManualFetch2
 {	
 
@@ -251,10 +254,11 @@
 	NSAssert([results count]>0, @"No results for query for messageID containing '2005'.");
 	
 }
+*/
 
 - (void) testGettingAllObjects
 {
-	NSArray* allThreads = [[context objectEnumeratorForClass: [GIMessageGroup class] where: nil] allObjects];
+	NSArray* allThreads = [context objectsForClass: [GIMessageGroup class] whereFormat: nil, nil];
 	
 	NSLog(@"Got %d thread faults.", [allThreads count]);
 	
@@ -338,7 +342,7 @@
 
 - (void) testFaultingArray
 {
-	NSArray* allGroups = [[context objectEnumeratorForClass: [GIMessageGroup class] where: nil] allObjects];
+	NSArray* allGroups = [context objectsForClass: [GIMessageGroup class] whereFormat: nil, nil];
 	OPFaultingArray* testArray = [OPFaultingArray array];
 	
 	[testArray addObject: [allGroups objectAtIndex: 0]];

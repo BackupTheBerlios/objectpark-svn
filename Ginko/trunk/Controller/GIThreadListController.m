@@ -62,13 +62,10 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     if (self = [self init]) {
         
         if (! aGroup) {
-			NSEnumerator* e = [GIMessageGroup allObjectsEnumerator];
-            aGroup = [e nextObject];
-			[(OPPersistentObjectEnumerator*)e reset];
+			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
 		[NSBundle loadNibNamed: @"Group" owner: self]; // sets threadsView
-		
 		[self setGroup: aGroup];
     }
     

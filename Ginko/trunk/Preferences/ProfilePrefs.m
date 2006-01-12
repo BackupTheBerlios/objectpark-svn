@@ -58,7 +58,7 @@
 
 - (NSArray*) accounts
 {
-    return [[GIAccount allObjectsEnumerator] allObjects];
+    return [GIAccount allObjects];
 }
 
 - (IBAction) setSendAccount: (id) sender
