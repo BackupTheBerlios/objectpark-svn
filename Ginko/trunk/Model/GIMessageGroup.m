@@ -564,6 +564,14 @@ static NSMutableArray* root = nil;
 
 - (void) exportAsMboxFile
 {
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    [panel setTitle:[NSString stringWithFormat:@"Exporting messagebox '%@'", [self valueForKey:@"name"]]];
+    [panel setPrompt:@"Export"];
+    [panel setNameFieldLabel:@"Export to:"];
+    
+    if ([panel runModalForDirectory:nil file:[NSString stringWithFormat:@"%@.mbox", [self valueForKey:@"name"]]] == NSFileHandlingPanelCancelButton)
+        return;
+    
     // get name of mbox file by opening a file selector
     NSString *path = [[NSString stringWithFormat:@"~/Desktop/%@.mbox", [self valueForKey:@"name"]] stringByExpandingTildeInPath];
     
@@ -574,9 +582,9 @@ static NSMutableArray* root = nil;
     GIMessage *msg;
     int exportedMessages = 0;
     
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     while (msg = [messages nextObject])
     {
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
 #warning Improve From_ line
         NSString *head = [NSString stringWithFormat:@"From %@\r\n"
@@ -591,14 +599,19 @@ nil, //                                                     [[[NSString alloc] i
         [mbox appendMBoxData:[head dataUsingEncoding:NSISOLatin1StringEncoding]];
         [mbox appendMBoxData:transferData];
         [mbox appendMBoxData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]];
-        exportedMessages++;
-        if (exportedMessages % 100 == 0)
-            NSLog(@"%d messages exported", exportedMessages);
-            
-        [pool release];
         
         [msg refault];
+            
+        if (++exportedMessages % 100 == 0)
+        {
+            NSLog(@"%d messages exported", exportedMessages);
+            
+            [pool release];
+            pool = [[NSAutoreleasePool alloc] init];
+        }
     }
+    
+    [pool release];
     NSLog(@"%d messages exported", exportedMessages);
 }
 
