@@ -731,13 +731,12 @@ nil, //                                                     [[[NSString alloc] i
 
 
 -  (void) fetchThreads: (NSMutableArray**) allThreads
-		trivialThreads: (NSMutableSet**) trivialThreads
 			 newerThan: (NSTimeInterval) sinceRefDate
 		   withSubject: (NSString*) subject
 				author: (NSString*) author
  sortedByDateAscending: (BOOL) ascending
 {    
-    NSLog(@"Entered fetchThreadURIs query");
+    NSLog(@"Entered fetchThreads query");
 	
 	
 	NSMutableArray* clauses = [NSMutableArray arrayWithObject: @"ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS"];
@@ -755,7 +754,7 @@ nil, //                                                     [[[NSString alloc] i
 		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= %f", sinceRefDate]];
 	}
 	
-	NSString* queryString = [NSString stringWithFormat: @"select ZTHREAD.ROWID, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
+	NSString* queryString = [NSString stringWithFormat: @"select ZTHREAD.ROWID from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
 	
 	
 	OPPersistentObjectEnumerator* poe = 
@@ -764,15 +763,8 @@ nil, //                                                     [[[NSString alloc] i
 												  queryString: queryString];
 	
 	GIThread* thread;
-	sqlite3_stmt* statement = [poe statement];
 	while (thread = [poe nextObject]) {
 		[*allThreads addObject: thread];
-		if (trivialThreads) {
-			int messageCount = sqlite3_column_int(statement, 1);
-			if (messageCount<=1) {
-				[*trivialThreads addObject: thread];
-			}
-		}
 	}
 	
 	[poe release];

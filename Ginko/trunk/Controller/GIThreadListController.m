@@ -836,24 +836,21 @@ static BOOL isThreadItem(id item)
 - (IBAction) selectThreadsWithCurrentSubject: (id) sender
 /*" Joins all threads with the subject of the selected thread. "*/
 {
-    NSArray *selectedThreads = [self selectedThreads];
-    if ([selectedThreads count]) 
-    {
-        GIThread *thread = [selectedThreads objectAtIndex:0];
-        NSString *subject = [thread valueForKey:@"subject"];
-        if (subject) 
-        {
+    NSArray* selectedThreads = [self selectedThreads];
+    if ([selectedThreads count]) {
+        GIThread* thread = [selectedThreads objectAtIndex: 0];
+        NSString* subject = [thread valueForKey: @"subject"];
+        if (subject) {
             // query database
-            NSMutableArray *result = [NSMutableArray array];
+            NSMutableArray* result = [NSMutableArray array];
             
-            [[self group] fetchThreads:&result 
-						trivialThreads:NULL 
-							 newerThan:[self nowForThreadFiltering]
-						   withSubject:subject
-								author:nil 
-				 sortedByDateAscending:YES];
+            [[self group] fetchThreads: &result 
+							 newerThan: [self nowForThreadFiltering]
+						   withSubject: subject
+								author: nil 
+				 sortedByDateAscending: YES];
 
-            [threadsView selectItems:result ordered:YES];
+            [threadsView selectItems: result ordered: YES];
         }
     }
 }

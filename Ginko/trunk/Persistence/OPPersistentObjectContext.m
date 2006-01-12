@@ -682,6 +682,11 @@ static NSHashTable* allInstances;
 	return (res==SQLITE_ROW);
 }
 
+- (NSArray*) allObjects
+{
+	return (NSArray*)[self allObjectsSortedByKey: nil ofClass: nil];
+}
+
 - (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey 
 								   ofClass: (Class) sortKeyClass;
 /*" Returns an OPFaultingArray containing all the faults.
