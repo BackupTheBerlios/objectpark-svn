@@ -650,9 +650,10 @@ static BOOL isThreadItem(id item)
 
     nowForThreadFiltering = 0;
     
-    [self setValue: [NSNumber numberWithInt: [[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
+    // boolean value:
+    [self setValue:[NSNumber numberWithInt:[[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
 
-    [self modelChanged: nil];
+    [self modelChanged:nil];
 }
 
 - (NSArray *)hits
@@ -900,7 +901,7 @@ static BOOL isThreadItem(id item)
 
 - (void) updateGroupInfoTextField
 {
-    [groupInfoTextField setStringValue: [NSString stringWithFormat: NSLocalizedString(@"%u threads", "group info text template"), [[self threadsByDate] count]]];
+    [groupInfoTextField setStringValue: [NSString stringWithFormat: NSLocalizedString(@"%u threads", "group info text template"), MIN([self threadLimitCount], [[self threadsByDate] count])]];
 }
 
 - (void) reloadData
@@ -911,7 +912,6 @@ static BOOL isThreadItem(id item)
 	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
 	[threadsView reloadData];
 	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
-
 	
 	//[threadsView setDataSource: nil];
 	//[threadsView setDataSource: self];
@@ -928,7 +928,7 @@ static BOOL isThreadItem(id item)
 
 }
 
-- (void) modelChanged
+- (void)modelChanged
 {
     // Re-query all threads keeping the selection, if possible.
     //NSArray* selectedItems = [threadsView selectedItems];
@@ -936,13 +936,13 @@ static BOOL isThreadItem(id item)
     //[self setThreadCache: nil];
     //[self setNonExpandableItemsCache: nil];
     [self updateGroupInfoTextField];
-    [threadsView deselectAll: nil];
+    [threadsView deselectAll:nil];
 	
 	[self reloadData];
     //[threadsView selectItems: selectedItems ordered: YES];
 }
 
-- (void) modelChanged: (NSNotification*) aNotification
+- (void)modelChanged:(NSNotification *)aNotification
 {
 	[self modelChanged];
 }
@@ -1137,7 +1137,13 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
-static int threadLimitCount = 150;
+- (int)threadLimitCount 
+{
+    BOOL showOnlyRecentThreads = [[self valueForGroupProperty:ShowOnlyRecentThreads] boolValue];
+    
+    if (showOnlyRecentThreads) return 150;
+    else return INT_MAX; 
+}
 
 
 - (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
@@ -1145,7 +1151,7 @@ static int threadLimitCount = 150;
     if (outlineView == threadsView) {
 		// thread list
         if (! item) {
-            return MIN(threadLimitCount, [[self threadsByDate] count]);
+            return MIN([self threadLimitCount], [[self threadsByDate] count]);
         } else  {        
 			// item should be a thread
             return [[item messages] count];
@@ -1171,7 +1177,7 @@ static int threadLimitCount = 150;
     id result = nil;
 	if (! item) {
 		NSArray* threadArray = [self threadsByDate];
-		int arrayIndex = [self threadByDateSortAscending] ? index +([threadArray count]-threadLimitCount): ([threadArray count]-1) - index;
+		int arrayIndex = [self threadByDateSortAscending] ? index +([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count])): ([threadArray count]-1) - index;
 		result = [threadArray objectAtIndex: arrayIndex];
 	} else {            
 		result = [[item messages/*ByTree*/] objectAtIndex: index];

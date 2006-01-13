@@ -77,9 +77,15 @@
 {
 	if (self = [super init]) 
     {
-		//[self insertIntoContext: [OPPersistentObjectContext mainThreadContext]];
 	}
 	return self;
+}
+
+- (void)insertIntoContext:(OPPersistentObjectContext *)aContext
+/*" Setting default value. "*/
+{
+    [super insertIntoContext:aContext];
+    [self setVerifySSLCertificateChain:YES];
 }
 
 - (void)dealloc
@@ -168,16 +174,16 @@
     return tmpValue;
 }
 
-- (void) setIncomingServerName: (NSString *)value 
+- (void)setIncomingServerName:(NSString *)value 
 {
-    [self willChangeValueForKey: @"incomingServerName"];
-    [self setPrimitiveValue:value forKey: @"incomingServerName"];
-    [self didChangeValueForKey: @"incomingServerName"];
+    [self willChangeValueForKey:@"incomingServerName"];
+    [self setPrimitiveValue:value forKey:@"incomingServerName"];
+    [self didChangeValueForKey:@"incomingServerName"];
 }
 
-- (int) incomingServerPort 
+- (int)incomingServerPort 
 {
-    NSNumber* tmpValue;
+    NSNumber *tmpValue;
     
     [self willAccessValueForKey:@"incomingServerPort"];
     tmpValue = [self primitiveValueForKey:@"incomingServerPort"];
@@ -566,13 +572,16 @@
 
 - (void) setOutgoingAuthenticationMethod: (int) value 
 {
-    [self willChangeValueForKey: @"outgoingAuthenticationMethod"];
+    [self willChangeValueForKey:@"outgoingAuthenticationMethod"];
     [self setPrimitiveValue:[NSNumber numberWithInt: value]
-                     forKey: @"outgoingAuthenticationMethod"];
-    [self didChangeValueForKey: @"outgoingAuthenticationMethod"];
+                     forKey:@"outgoingAuthenticationMethod"];
+    [self didChangeValueForKey:@"outgoingAuthenticationMethod"];
 	
-    [self willChangeValueForKey: @"outgoingUsernameNeeded"];
-    [self didChangeValueForKey: @"outgoingUsernameNeeded"];
+    [self willChangeValueForKey:@"outgoingUsernameNeeded"];
+    [self didChangeValueForKey:@"outgoingUsernameNeeded"];
+    
+    [self willChangeValueForKey:@"outgoingUsername"];
+    [self didChangeValueForKey:@"outgoingUsername"];
 }
 
 - (NSString *)outgoingUsername 
@@ -647,15 +656,15 @@
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void) setVerifySSLCertificateChain:(BOOL)value 
+- (void)setVerifySSLCertificateChain:(BOOL)value 
 {
-    [self willChangeValueForKey: @"verifySSLCertificateChain"];
+    [self willChangeValueForKey:@"verifySSLCertificateChain"];
     [self setPrimitiveValue:[NSNumber numberWithBool:value]
-                     forKey: @"verifySSLCertificateChain"];
-    [self didChangeValueForKey: @"verifySSLCertificateChain"];
+                     forKey:@"verifySSLCertificateChain"];
+    [self didChangeValueForKey:@"verifySSLCertificateChain"];
 }
 
-- (BOOL) isPOPAccount
+- (BOOL)isPOPAccount
 {
     int type = [self incomingServerType];
     

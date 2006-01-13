@@ -12,7 +12,7 @@
 
 @implementation AccountPrefs
 
-- (NSArray*) accounts
+- (NSArray *)accounts
 {
     return [GIAccount allObjects];
 }
