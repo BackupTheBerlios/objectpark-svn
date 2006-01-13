@@ -1003,10 +1003,13 @@
 + (void)resetIndex
 /*" Resets the fulltext index. Removes the index from disk and sets all messages to not indexed. "*/
 {
-    NSLog(@"Resetting fulltext index...");
-    [[NSFileManager defaultManager] removeFileAtPath:[self fulltextIndexPath] handler:NULL];
-    [[[OPPersistentObjectContext defaultContext] databaseConnection] performCommand:@"update ZMESSAGE set ZISFULLTEXTINDEXED = 0"];
-    NSLog(@"...reset complete.");
+    @synchronized(self)
+    {
+        NSLog(@"Resetting fulltext index...");
+        [[NSFileManager defaultManager] removeFileAtPath:[self fulltextIndexPath] handler:NULL];
+        [[[OPPersistentObjectContext defaultContext] databaseConnection] performCommand:@"update ZMESSAGE set ZISFULLTEXTINDEXED = 0 WHERE ZISFULLTEXTINDEXED <> 0"];
+        NSLog(@"...reset complete.");
+    }
 }
 
 @end
