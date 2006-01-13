@@ -27,4 +27,6 @@
 + (void)optimize;
 + (void)resetIndex;
 
++ (NSString *)jobName;
+
 @end

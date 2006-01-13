@@ -272,71 +272,6 @@
 	[self saveAction:nil];
 }
 
-- (void)playWithLucene
-{   
-    // Delete existing fulltext index:
-    //[[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
-    
-    // Get messages:
-    
-    NSArray *messages = [GIMessage messagesForFulltextIndexerWithLimit:250];
-    
-    //int i = 0;
-    
-    // Add messages to fulltext index:
-//    [GIFulltextIndexCenter addMessages:messages];
-    [GIFulltextIndexCenter addMessagesInBackground:messages];
-//    [enumerator reset];
-//    [self saveAction:self];
-    
-    // Search in fulltext index:
-    /*
-    NSArray *hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
-    
-    int hitsCount = [hits count];
-    
-    NSLog(@"hits count = %d", hitsCount);
-    
-    for (i = 0; i < hitsCount; i++)
-    {
-        OPObjectPair *hit = [hits objectAtIndex:i];
-        NSString *oid = [hit firstObject];
-        NSNumber *score = [hit secondObject];
-        
-        NSLog(@"hit oid = %@, score = %@", oid, score);
-    }
-    */
-    /*
-    // Remove messages:
-    NSMutableArray *messages = [enumerator allObjects];
-    enumerator = [messages objectEnumerator];
-    NSMutableArray *messageIds = [NSMutableArray array];
-    
-    while (message = [enumerator nextObject])
-    {
-        [messageIds addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
-    }
-    
-    [GIFulltextIndexCenter removeMessagesWithOids:messageIds];
-    
-    // Search in fulltext index:
-    hits = [GIFulltextIndexCenter hitsForQueryString:@"yahoo"];
-    
-    hitsCount = [hits count];
-    
-    NSLog(@"hits count = %d", hitsCount);
-    
-    for (i = 0; i < hitsCount; i++)
-    {
-        OPObjectPair *hit = [hits objectAtIndex:i];
-        NSString *oid = [hit firstObject];
-        NSNumber *score = [hit secondObject];
-        
-        NSLog(@"hit oid = %@, score = %@", oid, score);
-    }
-     */
-}
-
 - (void)awakeFromNib
 {
     [self setDelegate:self];
@@ -344,6 +279,8 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prefpaneDidEndEditing:) name:OPPreferencePaneDidEndEditing object:nil];
 		
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fulltextIndexJobFinished:) name:OPJobDidFinishNotification object:[GIFulltextIndexCenter jobName]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
 
@@ -369,9 +306,7 @@
         // Make sure, we receive NSManagedObjectContextDidSaveNotifications:
     //[[NSNotificationCenter defaultCenter] addObserver: [OPPersistentObjectContext class] selector: @selector(objectsDidChange2:) 
     //                                             name: NSManagedObjectContextDidSaveNotification 
-    //                                           object: nil];  
-    
-    [self playWithLucene];
+    //                                           object: nil];      
 }
 
 /*
@@ -604,51 +539,64 @@
     [self saveAction:self];
 }
 
-- (void) SMTPJobFinished: (NSNotification*) aNotification
+- (void)fulltextIndexJobFinished:(NSNotification *)aNotification
+{
+    if (NSDebugEnabled) NSLog(@"fulltextIndexJobFinished");
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+	[OPJobs removeFinishedJob:jobId]; // clean up
+    [self saveAction:self];
+}
+
+- (void)SMTPJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
     
-    NSNumber* jobId = [[aNotification userInfo] objectForKey: @"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass: [NSNumber class]]);
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
-    NSDictionary* result = [OPJobs resultForJob: jobId];
+    NSDictionary *result = [OPJobs resultForJob:jobId];
 
 	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
-	NSEnumerator* enumerator = [[GIProfile allObjects] objectEnumerator];
-	GIProfile* profile;
-	while (profile = [enumerator nextObject]) {
-		NSEnumerator* messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
-		GIMessage* message;
-		while (message = [messagesToSendEnumerator nextObject]) {
-			if ([message sendStatus] == OPSendStatusSending) {
+	NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
+	GIProfile *profile;
+	while (profile = [enumerator nextObject]) 
+    {
+		NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+		GIMessage *message;
+		while (message = [messagesToSendEnumerator nextObject]) 
+        {
+			if ([message sendStatus] == OPSendStatusSending) 
+            {
 				[message setSendStatus: OPSendStatusQueuedReady];
 			}
 		}            
 	}
 	
-	[OPJobs removeFinishedJob: jobId]; // clean up
+	[OPJobs removeFinishedJob:jobId]; // clean up
 	
 	// Process all messages sent successfully:
 	
-	NSArray* messages = [result objectForKey: @"messages"];
+	NSArray *messages = [result objectForKey:@"messages"];
 	NSAssert(messages != nil, @"result does not contain 'messages'");
 	
-	NSArray* sentMessages = [result objectForKey: @"sentMessages"];
+	NSArray *sentMessages = [result objectForKey:@"sentMessages"];
 	NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 	
 	enumerator = [sentMessages objectEnumerator];
-	GIMessage* message;
+	GIMessage *message;
 	
-	while (message = [enumerator nextObject]) {
-		[message setSendStatus: OPSendStatusNone];
+	while (message = [enumerator nextObject]) 
+    {
+		[message setSendStatus:OPSendStatusNone];
 		// Disconnect message from its dummy thread:
-		[[message valueForKey: @"thread"] removeValue: [GIMessageGroup queuedMessageGroup] forKey: @"groups"];
-		[message setValue: nil forKey: @"thread"];
+		[[message valueForKey:@"thread"] removeValue:[GIMessageGroup queuedMessageGroup] forKey:@"groups"];
+		[message setValue:nil forKey:@"thread"];
 		// Re-Insert message wherever it belongs:
-		[GIMessageBase addMessage: message];
+		[GIMessageBase addMessage:message];
 	}
     
-    [self saveAction: self];
+    [self saveAction:self];
 }
 
 - (void) sendQueuedMessagesWithFlag: (unsigned) flag
@@ -693,6 +641,12 @@
 - (IBAction)resetFulltextIndex:(id)sender
 {
     [GIFulltextIndexCenter resetIndex];
+}
+
+- (IBAction)fulltextIndexSomeMessages:(id)sender
+{
+    NSArray *messages = [GIMessage messagesForFulltextIndexerWithLimit:1000];
+    [GIFulltextIndexCenter addMessagesInBackground:messages];
 }
 
 - (IBAction)showPhraseBrowser:(id)sender

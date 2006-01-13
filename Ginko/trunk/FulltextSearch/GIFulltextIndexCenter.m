@@ -510,6 +510,7 @@
 {
     @synchronized(self)
     {
+        int counter = 1;
         JNIEnv *env = [self jniEnv];
         NSAutoreleasePool *pool = nil;
         if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
@@ -522,7 +523,6 @@
             pool = [[NSAutoreleasePool alloc] init];
             BOOL shouldTerminate = NO;
             id message;
-            int counter = 1;
             while ((message = [messageEnumerator nextObject]) && (!shouldTerminate))
             {
                 if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
@@ -532,7 +532,7 @@
                     jobject doc = [self luceneDocumentFromMessage:message];
                     NSLog(@"indexed document no = %d\n", counter++);
                     [self indexWriter:indexWriter addDocument:doc];
-                    if ((counter % 1000) == 0) 
+                    if (((counter - 1) % 1000) == 0) 
                     {
                         NSLog(@"optimizing index\n");
                         [self indexWriterOptimize:indexWriter];
@@ -559,7 +559,11 @@
         }
         @finally
         {
-            [self indexWriterOptimize:indexWriter];
+            if (((counter - 1) % 1000) != 0) 
+            {
+                NSLog(@"optimizing index\n");
+                [self indexWriterOptimize:indexWriter];
+            }
             [self indexWriterClose:indexWriter];
             [pool release];
             (*env)->PopLocalFrame(env, NULL);
@@ -997,6 +1001,8 @@
     
     [jobArguments setObject:someMessages forKey:@"messagesToIndex"];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadExited:) name:NSThreadWillExitNotification object:nil]; 
+
     [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) arguments:jobArguments synchronizedObject:@"fulltextIndexing"];
 }
 
@@ -1129,9 +1135,7 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
         }        
         
         JNIEnv *env = startupJava(vmLaunchOptions);
-        [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)env] forKey:@"jniEnv"];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadExited:) name:NSThreadWillExitNotification object:nil]; 
+        [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)env] forKey:@"jniEnv"];        
     }
     
     JNIEnv *result = (JNIEnv *)[[[[NSThread currentThread] threadDictionary] objectForKey:@"jniEnv"] unsignedIntValue];
@@ -1160,11 +1164,13 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
 + (void)threadExited:(NSNotification *)aNotification
 {
     NSThread *exitingThread = [aNotification object];
+    NSLog(@"threadExited: %@", exitingThread);
     JNIEnv *env = (JNIEnv *)[[[exitingThread threadDictionary] objectForKey:@"jniEnv"] unsignedIntValue];
     if (env)
     {
         (*theVM)->DetachCurrentThread(theVM);
         [[exitingThread threadDictionary] removeObjectForKey:@"jniEnv"];
+        NSLog(@"Detached JVM from thread %@", exitingThread);
     }
 }
 
