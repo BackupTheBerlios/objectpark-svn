@@ -159,7 +159,7 @@
 
 - (unsigned) messageCount
 {
-    return (unsigned)[[self valueForKey: @"numberOfMessages"] intValue]; 
+    return (unsigned)[[self valueForKey: @"messages"] count]; 
 }
 
 - (BOOL) containsSingleMessage

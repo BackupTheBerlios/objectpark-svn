@@ -1097,13 +1097,18 @@ static BOOL isThreadItem(id item)
     } 
     else 
     {
-        return [self validateSelector:[menuItem action]];
+        return [self validateSelector: [menuItem action]];
     }
 }
 
 @end
 
 @implementation GIThreadListController (OutlineViewDataSource)
+
+- (BOOL) threadByDateSortAscending
+{
+	return YES;
+}
 
 - (void) outlineViewSelectionDidChange: (NSNotification*) notification
 {
@@ -1132,12 +1137,15 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
+static int threadLimitCount = 150;
+
+
 - (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
 {
     if (outlineView == threadsView) {
 		// thread list
         if (! item) {
-            return [[self threadsByDate] count];
+            return MIN(threadLimitCount, [[self threadsByDate] count]);
         } else  {        
 			// item should be a thread
             return [[item messages] count];
@@ -1157,13 +1165,16 @@ static BOOL isThreadItem(id item)
     //return NO;
 }
 
+
 - (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item
 {
     id result = nil;
 	if (! item) {
-		result = [[self threadsByDate] objectAtIndex: index];
+		NSArray* threadArray = [self threadsByDate];
+		int arrayIndex = [self threadByDateSortAscending] ? index +([threadArray count]-threadLimitCount): ([threadArray count]-1) - index;
+		result = [threadArray objectAtIndex: arrayIndex];
 	} else {            
-		result = [[item messages/*byTree*/] objectAtIndex: index];
+		result = [[item messages/*ByTree*/] objectAtIndex: index];
 	}
     [itemRetainer addObject: result];
     return result;
