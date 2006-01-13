@@ -18,11 +18,13 @@
 
 + (NSString *)fulltextIndexPath;
 
++ (void)addMessages:(NSArray *)someMessages;
 + (void)addMessagesInBackground:(NSArray *)someMessages;
 + (void)removeMessagesWithOids:(NSSet *)someOids;
 
 + (NSArray *)hitsForQueryString:(NSString *)aQuery;
 
 + (void)optimize;
++ (void)resetIndex;
 
 @end

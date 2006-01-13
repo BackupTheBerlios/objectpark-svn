@@ -18,23 +18,15 @@
 
 @interface GIFulltextIndexCenter (JVMStuff)
 
-+ (JNIEnv *)getJNIEnvironment;
-+ (void)attachCurrentThread:(JNIEnv *)env;
++ (JNIEnv *)jniEnv;
 
 @end
 
 @implementation GIFulltextIndexCenter
 
-static JNIEnv *env = nil;
-
 + (void)initialize
 {
-    env = [self getJNIEnvironment];
-    /*
-    NSString *lucenePath = [@":" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
-    
-    jvm = [[NSJavaVirtualMachine alloc] initWithClassPath:[[NSJavaVirtualMachine defaultClassPath] stringByAppendingString:lucenePath]];    
-     */
+    [self jniEnv];
 }
 
 + (NSString *)fulltextIndexPath
@@ -51,7 +43,8 @@ static JNIEnv *env = nil;
 + (jclass)documentClass
 {
     jclass documentClass = NULL;
-
+    JNIEnv *env = [self jniEnv];
+    
     if (! documentClass)
     {
         documentClass = (*env)->FindClass(env, "org/apache/lucene/document/Document");
@@ -65,6 +58,7 @@ static JNIEnv *env = nil;
 {
     jobject document = NULL;
     jmethodID cid = NULL;
+    JNIEnv *env = [self jniEnv];
     
     if (! cid)
     {
@@ -88,7 +82,8 @@ static JNIEnv *env = nil;
 + (jclass)fieldClass
 {
     jclass fieldClass = NULL;
-    
+    JNIEnv *env = [self jniEnv];
+
     if (! fieldClass)
     {
         fieldClass = (*env)->FindClass(env, "org/apache/lucene/document/Field");
@@ -101,6 +96,7 @@ static JNIEnv *env = nil;
 + (jclass)dateFieldClass
 {
     jclass dateFieldClass = NULL;
+    JNIEnv *env = [self jniEnv];
     
     if (! dateFieldClass)
     {
@@ -114,6 +110,7 @@ static JNIEnv *env = nil;
 + (void)document:(jobject)aDocument addField:(jobject)aField
 {
     jmethodID mid = NULL;
+    JNIEnv *env = [self jniEnv];
     
     if (! mid)
     {
@@ -126,6 +123,7 @@ static JNIEnv *env = nil;
 + (jstring)document:(jobject)aDocument get:(jstring)aFieldName
 {
     jmethodID mid = NULL;
+    JNIEnv *env = [self jniEnv];
     
     if (! mid)
     {
@@ -141,6 +139,7 @@ static JNIEnv *env = nil;
 + (void)document:(jobject)document addTextFieldWithName:(NSString *)name text:(jstring)textString
 {
     jmethodID mid = NULL;
+    JNIEnv *env = [self jniEnv];
     
     if (! mid)
     {
@@ -168,6 +167,7 @@ static JNIEnv *env = nil;
 
 + (void)document:(jobject)document addKeywordFieldWithName:(NSString *)name text:(jstring)textString
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
     if (! mid)
@@ -193,7 +193,9 @@ static JNIEnv *env = nil;
     [self document:document addField:result];
 }
 
-NSString *stringFromJstring(jstring aJstring) {
++ (NSString *)stringFromJstring:(jstring)aJstring 
+{
+    JNIEnv *env = [self jniEnv];
     const char *str;
     str = (*env)->GetStringUTFChars(env, aJstring, NULL);
     if (str == NULL) {
@@ -208,17 +210,13 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (NSString *)objectToString:(jobject)anObject
 {
-    jmethodID mid = NULL;
+    JNIEnv *env = [self jniEnv];
 
-    if (! mid)
-    {
-        mid = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, anObject), "toString", "()Ljava/lang/String;");
-        NSAssert(mid != NULL, @"toString not found");
-    }
+    jmethodID mid = (*env)->GetMethodID(env, (*env)->GetObjectClass(env, anObject), "toString", "()Ljava/lang/String;");
+    NSAssert(mid != NULL, @"toString not found");
     
     jstring javaResult = (*env)->CallObjectMethod(env, anObject, mid);
-    NSString *result = stringFromJstring(javaResult);
-    //(*env)->DeleteLocalRef(env, javaResult);
+    NSString *result = [self stringFromJstring:javaResult];
     
     return result;
 }
@@ -226,6 +224,7 @@ NSString *stringFromJstring(jstring aJstring) {
 + (jstring)dateFieldTimeToString:(unsigned long long)millis
 {
     jmethodID mid = NULL;
+    JNIEnv *env = [self jniEnv];
     
     if (! mid)
     {
@@ -259,6 +258,7 @@ NSString *stringFromJstring(jstring aJstring) {
 + (jobject)luceneDocumentFromMessage:(GIMessage *)aMessage
 {
     NSParameterAssert(aMessage != nil);
+    JNIEnv *env = [self jniEnv];
     
     jobject document = [self documentNew];
     
@@ -371,6 +371,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jclass)standardAnalyzerClass
 {
+    JNIEnv *env = [self jniEnv];
     jclass analyzerClass = NULL;
     
     if (! analyzerClass)
@@ -384,6 +385,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jobject)standardAnalyzerNew
 {
+    JNIEnv *env = [self jniEnv];
     jobject analyzer = NULL;
     jmethodID cid = NULL;
     
@@ -401,6 +403,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jclass)indexWriterClass
 {
+    JNIEnv *env = [self jniEnv];
     jclass indexWriterClass = NULL;
     
     if (! indexWriterClass)
@@ -415,6 +418,7 @@ NSString *stringFromJstring(jstring aJstring) {
 + (jobject)indexWriter
 /*" Private method. Should only be used inside a synchronized context. "*/
 {
+    JNIEnv *env = [self jniEnv];
     jboolean shouldCreateNewIndex = YES;
         
     if ([[NSFileManager defaultManager] fileExistsAtPath:[self fulltextIndexPath]]) shouldCreateNewIndex = NO;
@@ -457,6 +461,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)indexWriter:(jobject)writer addDocument:(jobject)document
 {    
+    JNIEnv *env = [self jniEnv];
     jclass indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
     NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
     
@@ -477,6 +482,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)indexWriterClose:(jobject)writer
 {
+    JNIEnv *env = [self jniEnv];
     jclass indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
     NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
     
@@ -488,6 +494,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)indexWriterOptimize:(jobject)writer
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
     if (! mid)
@@ -503,27 +510,27 @@ NSString *stringFromJstring(jstring aJstring) {
 {
     @synchronized(self)
     {
+        JNIEnv *env = [self jniEnv];
         NSAutoreleasePool *pool = nil;
         if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
         jobject indexWriter = [self indexWriter];
         NSAssert(indexWriter != NULL, @"IndexWriter could not be created.");
+        NSEnumerator *messageEnumerator = [someMessages objectEnumerator];
         
         @try
         {
             pool = [[NSAutoreleasePool alloc] init];
-            NSEnumerator *messageEnumerator = [someMessages objectEnumerator];
             BOOL shouldTerminate = NO;
             id message;
             int counter = 1;
             while ((message = [messageEnumerator nextObject]) && (!shouldTerminate))
             {
+                if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
+                
                 @try
                 {
-                    if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
-                    
                     jobject doc = [self luceneDocumentFromMessage:message];
-                    //NSLog(@"\nmade document = %@\n", [self objectToString:doc]);
-                    NSLog(@"\nmade document no = %d\n", counter++);
+                    NSLog(@"indexed document no = %d\n", counter++);
                     [self indexWriter:indexWriter addDocument:doc];
                     if ((counter % 1000) == 0) 
                     {
@@ -562,6 +569,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jclass)indexReaderClass
 {
+    JNIEnv *env = [self jniEnv];
     jclass indexReaderClass = NULL;
     
     if (! indexReaderClass)
@@ -575,6 +583,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jobject)indexReaderOpen:(jstring)path
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
     if (! mid)
@@ -591,6 +600,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)indexReaderClose:(jobject)reader
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = (*env)->GetMethodID(env, [self indexReaderClass], "close", "()V");
     NSAssert(mid != NULL, @"close method couldn't be found.");
     
@@ -599,6 +609,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jclass)termClass
 {
+    JNIEnv *env = [self jniEnv];
     jclass termClass = NULL;
     
     if (! termClass)
@@ -612,6 +623,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jint)indexReader:(jobject)reader delete:(jobject)term
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = (*env)->GetMethodID(env, [self indexReaderClass], "delete", "(Lorg/apache/lucene/index/Term;)I");
     NSAssert(mid != NULL, @"delete method couldn't be found.");
     
@@ -631,6 +643,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jobject)termNewWithFieldname:(jstring)fieldName text:(jstring)text
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID cid = NULL;
     
     if (! cid)
@@ -647,6 +660,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)removeMessagesWithOids:(NSSet *)someOids
 {
+    JNIEnv *env = [self jniEnv];
     if ([someOids count])
     {;
         @synchronized(self)
@@ -711,6 +725,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (void)optimize
 {
+    JNIEnv *env = [self jniEnv];
     @synchronized(self)
     {;
         @try
@@ -733,6 +748,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jclass)indexSearcherClass
 {
+    JNIEnv *env = [self jniEnv];
     jclass indexSearcherClass = NULL;
     
     if (! indexSearcherClass)
@@ -746,6 +762,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jobject)indexSearcherNew
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID cid = NULL;
     
     if (! cid)
@@ -765,6 +782,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jobject)indexSearcher:(jobject)searcher search:(jobject)aQuery
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
     if (! mid)
@@ -780,6 +798,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jclass)queryParserClass
 {
+    JNIEnv *env = [self jniEnv];
     jclass queryParserClass = NULL;
     
     if (! queryParserClass)
@@ -793,6 +812,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jobject)queryParserClassParseQueryString:(jstring)aQueryString defaultField:(jstring)defaultFieldName analyzer:(jstring)anAnalyzer
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
     if (! mid)
@@ -822,6 +842,7 @@ NSString *stringFromJstring(jstring aJstring) {
 + (jobject)luceneHitsForQueryString:(NSString *)aQueryString
 /*" Caution: Use only internally in a 'garbage collected' context. "*/
 {
+    JNIEnv *env = [self jniEnv];
     jobject hits = NULL;
     
     jobject indexSearcher = [self indexSearcherNew];
@@ -844,6 +865,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jint)hitsLength:(jobject)hits
 {
+    JNIEnv *env = [self jniEnv];
     if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
     
     jmethodID mid = NULL;
@@ -863,6 +885,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jfloat)hits:(jobject)hits score:(jint)n
 {    
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
     if (! mid)
@@ -878,6 +901,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (jobject)hits:(jobject)hits document:(jint)n
 {
+    JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
     if (! mid)
@@ -893,6 +917,7 @@ NSString *stringFromJstring(jstring aJstring) {
 
 + (NSArray *)hitsForQueryString:(NSString *)aQuery
 {
+    JNIEnv *env = [self jniEnv];
     NSMutableArray *result = nil;
     NSMutableSet *dupeCheck;
     NSMutableSet *dupeOids;
@@ -919,7 +944,7 @@ NSString *stringFromJstring(jstring aJstring) {
         // oid
         jstring fieldName = (*env)->NewStringUTF(env, "id");
         jstring javaOid = [self document:doc get:fieldName];
-        NSString *oidString = stringFromJstring(javaOid);
+        NSString *oidString = [self stringFromJstring:javaOid];
 #warning HACK: Do better with converting to unsigned long long (not correct here)
         NSNumber *oid = [NSNumber numberWithUnsignedLongLong:[oidString longLongValue]];
         
@@ -957,10 +982,7 @@ NSString *stringFromJstring(jstring aJstring) {
 {
     [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
     
-    [[self class] attachCurrentThread:[[self class] getJNIEnvironment]];
     [GIFulltextIndexCenter addMessages:[arguments objectForKey:@"messagesToIndex"]];
-    
-    //jint (JNICALL *DetachCurrentThread)(JavaVM *vm);
 }
 
 + (NSString *)jobName
@@ -978,6 +1000,15 @@ NSString *stringFromJstring(jstring aJstring) {
     [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) arguments:jobArguments synchronizedObject:@"fulltextIndexing"];
 }
 
++ (void)resetIndex
+/*" Resets the fulltext index. Removes the index from disk and sets all messages to not indexed. "*/
+{
+    NSLog(@"Resetting fulltext index...");
+    [[NSFileManager defaultManager] removeFileAtPath:[self fulltextIndexPath] handler:NULL];
+    [[[OPPersistentObjectContext defaultContext] databaseConnection] performCommand:@"update ZMESSAGE set ZISFULLTEXTINDEXED = 0"];
+    NSLog(@"...reset complete.");
+}
+
 @end
 
 #include <sys/stat.h>
@@ -987,7 +1018,7 @@ NSString *stringFromJstring(jstring aJstring) {
 #include "utils.h"
 
 @implementation GIFulltextIndexCenter (JVMStuff)
-static JavaVM *theVM;
+static JavaVM *theVM = NULL;
 
 /*Starts a JVM using the options,classpath,main class, and args stored in a VMLauchOptions structure */ 
 static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {    
@@ -1071,11 +1102,9 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
     return env;
 }
 
-+ (JNIEnv *)getJNIEnvironment
++ (JNIEnv *)jniEnv
 {
-    static JNIEnv *env = NULL;
-    
-    if (! env)
+    if (! theVM)
     {
         /* Allocated the structure that will be used to return the launch options */
         VMLaunchOptions *vmLaunchOptions = malloc(sizeof(VMLaunchOptions));
@@ -1096,23 +1125,44 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
             exit(-1);
         }        
         
-        env = startupJava(vmLaunchOptions);
+        JNIEnv *env = startupJava(vmLaunchOptions);
+        [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)env] forKey:@"jniEnv"];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadExited:) name:NSThreadWillExitNotification object:nil]; 
     }
     
-    return env;
+    JNIEnv *result = (JNIEnv *)[[[[NSThread currentThread] threadDictionary] objectForKey:@"jniEnv"] unsignedIntValue];
+    
+    if (!result)
+    {
+        jint error = (*theVM)->AttachCurrentThread(theVM, (void **)&result, NULL);
+        if (error != 0)
+        {
+            @throw [NSException exceptionWithName:@"JavaVMException" reason:@"Could not attach thread." userInfo:nil];
+        }
+        else
+        {
+            [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)result] forKey:@"jniEnv"];
+            NSLog(@"attached thread %@ to JVM", [NSThread currentThread]); 
+        }
+    }
+    else
+    {
+//        NSLog(@"found jniEnv");
+    }
+    
+    return result;
 }
 
-+ (void)attachCurrentThread:(JNIEnv *)env
++ (void)threadExited:(NSNotification *)aNotification
 {
-    JavaVMAttachArgs vm_attachArgs;
-    
-    vm_attachArgs.version = JNI_VERSION_1_4;
-    vm_attachArgs.name = NULL;
-    vm_attachArgs.group = NULL;
-    
-    jint result = (*theVM)->AttachCurrentThread(theVM, (void **)&env, &vm_attachArgs);
-    
-    NSLog(@"result = %d", result);
+    NSThread *exitingThread = [aNotification object];
+    JNIEnv *env = (JNIEnv *)[[[exitingThread threadDictionary] objectForKey:@"jniEnv"] unsignedIntValue];
+    if (env)
+    {
+        (*theVM)->DetachCurrentThread(theVM);
+        [[exitingThread threadDictionary] removeObjectForKey:@"jniEnv"];
+    }
 }
 
 @end

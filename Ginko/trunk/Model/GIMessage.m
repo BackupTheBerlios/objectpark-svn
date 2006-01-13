@@ -71,11 +71,11 @@
 	@"}";
 }
 
-+ (NSArray*) messagesForFulltextIndexerWithLimit: (unsigned) limit
++ (NSArray *)messagesForFulltextIndexerWithLimit:(unsigned)limit
 {
-    OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
     
-    NSArray* result = [context objectsForClass: self whereFormat: @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    NSArray *result = [context objectsForClass: self whereFormat:@"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
 
     return result;
 }

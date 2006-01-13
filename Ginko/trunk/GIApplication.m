@@ -267,24 +267,25 @@
     return [persistentObjectContext autorelease];
 }
 
-- (void) prefpaneDidEndEditing: (NSNotification*) notification
+- (void)prefpaneDidEndEditing:(NSNotification *)notification
 {
-	[self saveAction: nil];
+	[self saveAction:nil];
 }
 
-- (void) playWithLucene
+- (void)playWithLucene
 {   
     // Delete existing fulltext index:
     //[[NSFileManager defaultManager] removeFileAtPath:[GIFulltextIndexCenter fulltextIndexPath] handler:NULL];
     
     // Get messages:
     
-    NSArray* messages = [GIMessage messagesForFulltextIndexerWithLimit: 250];
+    NSArray *messages = [GIMessage messagesForFulltextIndexerWithLimit:250];
     
     //int i = 0;
     
     // Add messages to fulltext index:
-    [GIFulltextIndexCenter addMessagesInBackground: messages];
+//    [GIFulltextIndexCenter addMessages:messages];
+    [GIFulltextIndexCenter addMessagesInBackground:messages];
 //    [enumerator reset];
 //    [self saveAction:self];
     
@@ -336,7 +337,7 @@
      */
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [self setDelegate:self];
 	    
@@ -357,7 +358,7 @@
     
     //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
     //NSLog(@"last message = %@", aMessage);
-    [OPPersistentObjectContext setDefaultContext: [self initialPersistentObjectContext]];
+    [OPPersistentObjectContext setDefaultContext:[self initialPersistentObjectContext]];
 
     [GIMessageGroup ensureDefaultGroups];
     //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);
@@ -370,9 +371,8 @@
     //                                             name: NSManagedObjectContextDidSaveNotification 
     //                                           object: nil];  
     
-    //[self playWithLucene];
+    [self playWithLucene];
 }
-
 
 /*
 + (void) initialize
@@ -688,6 +688,11 @@
     
     // this action switches automatic activity panel functionality off:
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AutomaticActivityPanelEnabled];
+}
+
+- (IBAction)resetFulltextIndex:(id)sender
+{
+    [GIFulltextIndexCenter resetIndex];
 }
 
 - (IBAction)showPhraseBrowser:(id)sender

@@ -901,7 +901,7 @@ static BOOL isThreadItem(id item)
 
 - (void) updateGroupInfoTextField
 {
-    [groupInfoTextField setStringValue: [NSString stringWithFormat: NSLocalizedString(@"%u threads", "group info text template"), MIN([self threadLimitCount], [[self threadsByDate] count])]];
+    [groupInfoTextField setStringValue: [NSString stringWithFormat: NSLocalizedString(@"%d threads", "group info text template"), MIN([self threadLimitCount], [[self threadsByDate] count])]];
 }
 
 - (void) reloadData
