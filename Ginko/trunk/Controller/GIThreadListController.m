@@ -44,29 +44,29 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @implementation GIThreadListController
 
-
-- (id) init
+- (id)init
 {
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: @"GroupContentChangedNotification" object: self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
 	
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name: OPJobDidFinishNotification object: MboxImportJobName];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
     
     itemRetainer = [[NSMutableSet alloc] init];
     
     return [[super init] retain]; // self retaining!
 }
 
-- (id) initWithGroup: (GIMessageGroup*) aGroup
+- (id)initWithGroup:(GIMessageGroup *)aGroup
 /*" aGroup may be nil, any group will be used then. "*/
 {
-    if (self = [self init]) {
-        
-        if (! aGroup) {
+    if (self = [self init]) 
+    {
+        if (! aGroup) 
+        {
 			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
-		[NSBundle loadNibNamed: @"Group" owner: self]; // sets threadsView
-		[self setGroup: aGroup];
+		[NSBundle loadNibNamed:@"Group" owner:self]; // sets threadsView
+		[self setGroup:aGroup];
     }
     
     return self;
@@ -74,7 +74,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {    
     [threadsView setTarget:self];
     [threadsView setDoubleAction:@selector(openSelection:)];
@@ -92,18 +92,18 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window makeKeyAndOrderFront:self];    
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     NSLog(@"GIThreadListController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [window setDelegate: nil];
+    [window setDelegate:nil];
     
     [self deallocCommentTree];
     [self deallocToolbar];
 
     [displayedMessage release];
     [displayedThread release];
-    [self setGroup: nil];
+    [self setGroup:nil];
     [threadCache release];
     //[nonExpandableItemsCache release];
     [itemRetainer release];
@@ -114,107 +114,108 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 static BOOL isThreadItem(id item)
 {
-    return [item isKindOfClass: [GIThread class]];
+    return [item isKindOfClass:[GIThread class]];
 }
 
-- (id) valueForGroupProperty: (NSString*) prop
+- (id)valueForGroupProperty:(NSString *)prop
 /*" Used for accessing user defaults for current message group. "*/
 {
     NSString *key = [[self group] objectURLString];
-    if (key) {
-        NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-        return [[ud objectForKey:key] objectForKey:prop];
+    if (key) 
+    {
+        return [[[NSUserDefaults standardUserDefaults] objectForKey:key] objectForKey:prop];
     }
     return nil;
 }
 
-- (void) setValue: (id) value forGroupProperty: (NSString*) prop 
+- (void)setValue:(id)value forGroupProperty:(NSString *)prop 
 /*" Used for accessing user defaults for current message group. "*/
 {
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     NSString *key = [[self group] objectURLString];
     
-    NSMutableDictionary* groupProperties = [[ud objectForKey: key] mutableCopy];
+    NSMutableDictionary *groupProperties = [[ud objectForKey:key] mutableCopy];
     if (!groupProperties) groupProperties = [[NSMutableDictionary alloc] init];
     
-    if (value) {
-        [groupProperties setObject: value forKey:prop];
-    } else {
-        [groupProperties removeObjectForKey:prop];
-    }
+    if (value) [groupProperties setObject:value forKey:prop];
+    else [groupProperties removeObjectForKey:prop];
     
-    [ud setObject: groupProperties forKey:key];
+    [ud setObject:groupProperties forKey:key];
     [groupProperties release];
 }
 
-- (void) windowWillClose: (NSNotification*) notification 
+- (void)windowWillClose:(NSNotification *)notification 
 {
     lastTopLeftPoint = NSMakePoint(0.0, 0.0); // reset cascading
-	[self setGroup: nil];
+	[self setGroup:nil];
     [self autorelease]; // balance self-retaining
 }
 
-- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
     NSParameterAssert(isThreadItem(aThread));
     
     int itemRow;
-    BOOL isNewThread = ![aThread isEqual: displayedThread];
+    BOOL isNewThread = ![aThread isEqual:displayedThread];
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
-    [displayedMessage addFlags: OPSeenStatus];
+    [displayedMessage addFlags:OPSeenStatus];
     
-    if (isNewThread) {
+    if (isNewThread) 
+    {
         [displayedThread autorelease];
         displayedThread = [aThread retain];
     }
     
     // make sure that thread is expanded in threads outline view:
-    if (aThread && (![aThread containsSingleMessage])) {
-        [threadsView expandItem: aThread];
+    if (aThread && (![aThread containsSingleMessage])) 
+    {
+        [threadsView expandItem:aThread];
     }
     
     // select responding item in threads view:
     //if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     //{ 
-	itemRow = [[group valueForKey: @"threadsByDate"] indexOfObject: aThread];
-	itemRow = [threadsView rowForItemEqualTo: aThread startingAtRow: itemRow];
+	itemRow = [[group valueForKey:@"threadsByDate"] indexOfObject:aThread];
+	itemRow = [threadsView rowForItemEqualTo:aThread startingAtRow:itemRow];
     //}
     
-    [threadsView selectRow: itemRow byExtendingSelection: NO];
-    [threadsView scrollRowToVisible: itemRow];
+    [threadsView selectRow:itemRow byExtendingSelection:NO];
+    [threadsView scrollRowToVisible:itemRow];
     
     // message display string:
-    NSAttributedString* messageText = nil;
+    NSAttributedString *messageText = nil;
     
     if (showRawSource) {
-        NSData* transferData;
-        NSString* transferString;
-
-        static NSDictionary* fixedFont = nil;
+        NSData *transferData;
+        NSString *transferString;
         
-        if (!fixedFont) {
+        static NSDictionary *fixedFont = nil;
+        
+        if (!fixedFont) 
+        {
             fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
         }
         
         transferData = [displayedMessage transferData];
         
         // joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
-        if (!(transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSUTF8StringEncoding]))
-            transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSISOLatin1StringEncoding];
+        if (!(transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSUTF8StringEncoding]))
+            transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSISOLatin1StringEncoding];
         
-        messageText = [[[NSAttributedString alloc] initWithString: transferString attributes: fixedFont] autorelease]; 
-    } else {
-        messageText = [displayedMessage renderedMessageIncludingAllHeaders: [[NSUserDefaults standardUserDefaults] boolForKey: ShowAllHeaders]];
+        messageText = [[[NSAttributedString alloc] initWithString:transferString attributes:fixedFont] autorelease]; 
+    } 
+    else {
+        messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
     }
     
     if (!messageText) {
-        messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText == nil."];
+        messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
     }
     
-    [[messageTextView textStorage] setAttributedString: messageText];
+    [[messageTextView textStorage] setAttributedString:messageText];
     
     // set the insertion point (cursor)to 0, 0
     [messageTextView setSelectedRange:NSMakeRange(0, 0)];
@@ -222,7 +223,7 @@ static BOOL isThreadItem(id item)
     // make sure that the message's header is displayed:
     [messageTextView scrollRangeToVisible:NSMakeRange(0, 0)];
 
-    [self updateCommentTree: isNewThread];
+    [self updateCommentTree:isNewThread];
     
     //BOOL collapseTree = [commentsMatrix numberOfColumns]<=1;
     // Hide comment tree, if trivial:
@@ -894,17 +895,26 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (void) updateWindowTitle
+- (void)updateWindowTitle
 {
-    [window setTitle: [NSString stringWithFormat: @"%@", [group valueForKey: @"name"]]];
+    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
 }
 
-- (void) updateGroupInfoTextField
+- (int)threadLimitCount 
 {
-    [groupInfoTextField setStringValue: [NSString stringWithFormat: NSLocalizedString(@"%d threads", "group info text template"), MIN([self threadLimitCount], [[self threadsByDate] count])]];
+    BOOL showOnlyRecentThreads = [[self valueForGroupProperty:ShowOnlyRecentThreads] boolValue];
+    
+    if (showOnlyRecentThreads) return 150;
+    else return INT_MAX; 
 }
 
-- (void) reloadData
+- (void)updateGroupInfoTextField
+{
+    int numberOfThreads = MIN([self threadLimitCount], [[self threadsByDate] count]);
+    [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%d threads", "group info text template"), numberOfThreads]];
+}
+
+- (void)reloadData
 {
 	NSLog(@"Reloading outlineview data");
 	// Alternative to 
@@ -947,22 +957,21 @@ static BOOL isThreadItem(id item)
 	[self modelChanged];
 }
 
-- (GIMessageGroup*) group
+- (GIMessageGroup *)group
 {
     return group;
 }
 
-- (void) setGroup: (GIMessageGroup*) aGroup
+- (void)setGroup:(GIMessageGroup *)aGroup
 {
-    if (aGroup != group) {
-        //NSLog(@"Setting group for controller: %@", [aGroup description]);
-        
-		[group removeObserver: self forKeyPath: @"threadsByDate"];
+    if (aGroup != group) 
+    {
+		[group removeObserver:self forKeyPath:@"threadsByDate"];
 		
-		[aGroup addObserver: self 
-				 forKeyPath: @"threadsByDate" 
-					options: NSKeyValueObservingOptionNew 
-					context: NULL];
+		[aGroup addObserver:self 
+				 forKeyPath:@"threadsByDate" 
+					options:NSKeyValueObservingOptionNew 
+					context:NULL];
         
         [group autorelease];
         group = [aGroup retain];
@@ -971,7 +980,7 @@ static BOOL isThreadItem(id item)
 		//[aGroup refault]; // just for testing!!
         //#########
         // thread filter popup:
-        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
+        [threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
@@ -979,23 +988,24 @@ static BOOL isThreadItem(id item)
     }
 }
 
-
 // validation
 
-- (BOOL) isOnlyThreadsSelected
+- (BOOL)isOnlyThreadsSelected
 {
     // true when only threads are selected; false otherwise
     NSIndexSet *selectedIndexes;
     
     selectedIndexes = [threadsView selectedRowIndexes];
-    if ([selectedIndexes count] > 0) {
-		
+    if ([selectedIndexes count] > 0) 
+    {
         int i;
         int lastIndex = [selectedIndexes lastIndex];
         
-        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) {
-            if ([threadsView isRowSelected:i]) {
-                if (!isThreadItem([threadsView itemAtRow: i])) return NO;
+        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) 
+        {
+            if ([threadsView isRowSelected:i]) 
+            {
+                if (!isThreadItem([threadsView itemAtRow:i])) return NO;
             }
         }
         return YES;
@@ -1003,7 +1013,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL) validateSelector: (SEL) aSelector
+- (BOOL)validateSelector:(SEL)aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -1015,20 +1025,30 @@ static BOOL isThreadItem(id item)
 		
         NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
         
-        if ([selectedIndexes count] == 1) {
+        if ([selectedIndexes count] == 1) 
+        {
             id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) {
+            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) 
+            {
                 return YES;
             }
         }
         return NO;
-    } else if (aSelector == @selector(applySortingAndFiltering:)) {
+    } 
+    else if (aSelector == @selector(applySortingAndFiltering:)) 
+    {
         return [self isOnlyThreadsSelected]; 
-	} else if (aSelector == @selector(toggleReadFlag:)) {
+	} 
+    else if (aSelector == @selector(toggleReadFlag:)) 
+    {
         return [[threadsView selectedRowIndexes] count] > 0;
-    } else if (aSelector == @selector(moveSelectionToTrash:)) {
+    } 
+    else if (aSelector == @selector(moveSelectionToTrash:)) 
+    {
         return [[threadsView selectedRowIndexes] count] > 0;
-    } else if (aSelector == @selector(delete:)) {
+    } 
+    else if (aSelector == @selector(delete:)) 
+    {
         return [[threadsView selectedRowIndexes] count] > 0;
     }
     /*
@@ -1136,15 +1156,6 @@ static BOOL isThreadItem(id item)
     
     return YES;
 }
-
-- (int)threadLimitCount 
-{
-    BOOL showOnlyRecentThreads = [[self valueForGroupProperty:ShowOnlyRecentThreads] boolValue];
-    
-    if (showOnlyRecentThreads) return 150;
-    else return INT_MAX; 
-}
-
 
 - (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
 {

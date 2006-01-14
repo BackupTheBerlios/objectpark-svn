@@ -24,11 +24,6 @@
 
 @implementation GIFulltextIndexCenter
 
-+ (void)initialize
-{
-    [self jniEnv];
-}
-
 + (NSString *)fulltextIndexPath
 {
     static NSString *path = nil;

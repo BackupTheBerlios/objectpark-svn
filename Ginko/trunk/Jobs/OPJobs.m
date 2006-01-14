@@ -315,6 +315,53 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     return result;
 }
 
+NSNumber *jobPendingOrRunningForKeyAndObject(NSString *key, id anObject)
+{
+    int i, count;
+    NSNumber *result = nil;
+    
+    [jobsLock lock];
+    
+    count = [pendingJobs count];
+    for (i = count - 1; i >= 0; i--) 
+    {
+        if ([[[pendingJobs objectAtIndex:i] objectForKey:key] isEqualTo:anObject]) 
+        {
+            result = [[pendingJobs objectAtIndex:i] objectForKey:OPJobId];
+            break;
+        }
+    }
+    
+    if (!result) 
+    {
+        count = [runningJobs count];
+        for (i = count - 1; i >= 0; i--) 
+        {
+            if ([[[runningJobs objectAtIndex:i] objectForKey:OPJobName] isEqualTo:anObject]) 
+            {
+                result = [[runningJobs objectAtIndex:i] objectForKey:OPJobId];
+                break;
+            }
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (BOOL)isAnyJobPendingOrRunningWithName:(NSString *)aName
+/*" Returns YES if a job with the given name aName is pending or running. "*/
+{
+    return jobPendingOrRunningForKeyAndObject(OPJobName, aName) != nil;
+}
+
++ (BOOL)isAnyJobPendingOrRunningWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject
+/*" Returns YES if a job with the given synchronized object aSynchronizedObject is pending or running. "*/
+{
+    return jobPendingOrRunningForKeyAndObject(OPJobSynchronizedObject, aSynchronizedObject) != nil;
+}
+
 + (void)noteJobWillStart:(NSNumber *)anJobId
 /*" Performed on main thread to notify of the upcoming start of a job. "*/
 {
