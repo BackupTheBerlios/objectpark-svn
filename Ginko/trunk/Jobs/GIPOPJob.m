@@ -95,21 +95,14 @@
                     fetchCount++;
                     shouldTerminate = [OPJobs shouldTerminate];
                 }
-                                                
-                if (!shouldTerminate)
-                {
-                    // set result:
-                    [OPJobs setResult:[mboxFile path]];
-                    
-                    // cleaning up maildrop:
-                    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
-                    
-                    [pop3session cleanUp];
-                }
-                else
-                {
-                    [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];               
-                }
+                
+                // set result:
+                [OPJobs setResult:[mboxFile path]];
+                
+                // cleaning up maildrop:
+                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+                
+                [pop3session cleanUp];
             }
             @catch (NSException *localException)
             {

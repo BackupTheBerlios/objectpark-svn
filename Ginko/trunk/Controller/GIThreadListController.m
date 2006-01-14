@@ -676,14 +676,39 @@ static BOOL isThreadItem(id item)
     NSString *query = [sender stringValue];
     
     if ([query length])
-    {
-        [tabView selectTabViewItemWithIdentifier:@"searchresult"];
-        
-        [self setHits:[GIFulltextIndexCenter hitsForQueryString:query]];
-        
-        NSLog(@"hits count = %d", [hits count]);
-        
-        [searchHitsTableView reloadData];
+    {;
+        @try
+        {
+            [OPJobs suspendPendingJobs];
+            
+            NSArray *conflictingJobs = [OPJobs runningJobsWithName:[GIFulltextIndexCenter jobName]];
+            if ([conflictingJobs count])
+            {
+                NSEnumerator *enumerator = [conflictingJobs objectEnumerator];
+                NSNumber *jobId;
+                
+                while (jobId = [enumerator nextObject])
+                {
+                    [OPJobs suggestTerminatingJob:jobId];
+                }
+            }
+            
+            [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+            
+            [self setHits:[GIFulltextIndexCenter hitsForQueryString:query]];
+            
+            NSLog(@"hits count = %d", [hits count]);
+            
+            [searchHitsTableView reloadData];
+        }
+        @catch (NSException *localException)
+        {
+            @throw;
+        }
+        @finally
+        {
+            [OPJobs resumePendingJobs];
+        }
     }
     else
     {

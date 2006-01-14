@@ -15,14 +15,33 @@
 #import "OPPersistentObject+Extensions.h"
 #import "OPJobs.h"
 #import <OPDebug/OPLog.h>
+#import "GIUserDefaultsKeys.h"
 
 @interface GIFulltextIndexCenter (JVMStuff)
-
 + (JNIEnv *)jniEnv;
-
 @end
 
 @implementation GIFulltextIndexCenter
+
++ (int)changeCount
+{
+    int result;
+    
+    @synchronized(self)
+    {
+        result = [[NSUserDefaults standardUserDefaults] integerForKey:FulltextIndexChangeCount];
+    }
+    
+    return result;
+}
+
++ (void)addChangeCount:(int)anAmount
+{
+    @synchronized(self)
+    {
+        [[NSUserDefaults standardUserDefaults] setInteger:[self changeCount] + anAmount forKey:FulltextIndexChangeCount];
+    }
+}
 
 + (NSString *)fulltextIndexPath
 {
@@ -527,10 +546,11 @@
                     jobject doc = [self luceneDocumentFromMessage:message];
                     NSLog(@"indexed document no = %d\n", counter++);
                     [self indexWriter:indexWriter addDocument:doc];
-                    if (((counter - 1) % 1000) == 0) 
+                    if (((counter - 1) % 5000) == 0) 
                     {
                         NSLog(@"optimizing index\n");
                         [self indexWriterOptimize:indexWriter];
+                        [self addChangeCount:-5000];
                     }
                     
                     [message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
@@ -554,11 +574,7 @@
         }
         @finally
         {
-            if (((counter - 1) % 1000) != 0) 
-            {
-                NSLog(@"optimizing index\n");
-                [self indexWriterOptimize:indexWriter];
-            }
+            [self addChangeCount:counter];
             [self indexWriterClose:indexWriter];
             [pool release];
             (*env)->PopLocalFrame(env, NULL);
@@ -620,6 +636,26 @@
     return termClass;
 }
 
++ (jint)indexReaderNumDocs:(jobject)reader
+{
+    JNIEnv *env = [self jniEnv];
+    jmethodID mid = (*env)->GetMethodID(env, [self indexReaderClass], "numDocs", "()I");
+    NSAssert(mid != NULL, @"numDocs method couldn't be found.");
+    
+    jint result = 0;
+    result = (*env)->CallIntMethod(env, reader, mid);
+    
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+    return result;
+}
+
 + (jint)indexReader:(jobject)reader delete:(jobject)term
 {
     JNIEnv *env = [self jniEnv];
@@ -657,7 +693,7 @@
     return term;
 }
 
-+ (void)removeMessagesWithOids:(NSSet *)someOids
++ (void)removeMessagesWithOids:(NSArray *)someOids
 {
     JNIEnv *env = [self jniEnv];
     if ([someOids count])
@@ -669,13 +705,15 @@
             jstring javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
             jobject indexReader = [self indexReaderOpen:javaIndexPath];             
             NSAssert(indexReader != NULL, @"Could not create Lucene index reader.");
+            int removedCount = 0;
             
              @try
              {
                  NSEnumerator *enumerator = [someOids objectEnumerator];
                  NSNumber *oidNumber;
+                 BOOL shouldTerminate = NO;
                  
-                 while (oidNumber = [enumerator nextObject])
+                 while ((oidNumber = [enumerator nextObject]) && (!shouldTerminate))
                  {
                      OID oid = [oidNumber unsignedLongLongValue];
                      GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:oid ofClass:[GIMessage class]];
@@ -696,6 +734,7 @@
                          {
                              NSLog(@"Deleted more than one message for a single message id from fulltext index.");
                          }
+                         removedCount += 1;;
                      }
                      @catch (NSException *localException)
                      {
@@ -704,6 +743,7 @@
                      @finally
                      {
                          (*env)->PopLocalFrame(env, NULL);
+                         shouldTerminate = [OPJobs shouldTerminate];
                      }
                  }
              }
@@ -715,10 +755,9 @@
              {
                  [self indexReaderClose:indexReader];
                  (*env)->PopLocalFrame(env, NULL);
+                 [self addChangeCount:removedCount];
              }
         }
-        
-        [self optimize];
     }
 }
 
@@ -733,6 +772,7 @@
             jobject indexWriter = [self indexWriter];
             [self indexWriterOptimize:indexWriter];
             [self indexWriterClose:indexWriter];
+            [self addChangeCount:[self changeCount] * -1];
         }
         @catch (NSException *localException)
         {
@@ -972,16 +1012,31 @@
     (*env)->PopLocalFrame(env, NULL);
     
     // remove dupes:
-    [self removeMessagesWithOids:dupeOids];
+    [self fulltextIndexInBackgroundAdding:nil removing:[dupeOids allObjects]];
     
     return result;
 }
 
 - (void)fulltextIndexMessagesJob:(NSDictionary *)arguments
 {
-    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
-    
-    [GIFulltextIndexCenter addMessages:[arguments objectForKey:@"messagesToIndex"]];
+    if ([arguments count])
+    {
+        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+        
+        // messages to add:
+        NSArray *messagesToAdd = [arguments objectForKey:@"messagesToAdd"];
+        if ([messagesToAdd count]) [GIFulltextIndexCenter addMessages:messagesToAdd];
+        
+        // messages to remove:
+        NSArray *messageOidsToRemove = [arguments objectForKey:@"messageOidsToRemove"];
+        if ([messageOidsToRemove count]) [GIFulltextIndexCenter removeMessagesWithOids:messageOidsToRemove];
+        
+        if (([GIFulltextIndexCenter changeCount] >= 1500) && (![OPJobs shouldTerminate]))
+        {
+            NSLog(@"optimizing index\n");
+            [GIFulltextIndexCenter optimize];
+        }
+    }
 }
 
 + (NSString *)jobName
@@ -989,16 +1044,18 @@
     return @"Fulltext indexing";
 }
 
-+ (void)addMessagesInBackground:(NSArray *)someMessages
++ (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messageOidsToRemove
 /*" Starts a background job for fulltext indexing someMessages. Only one indexing job can be active at one time. "*/
 {
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    [jobArguments setObject:someMessages forKey:@"messagesToIndex"];
+    if ([messagesToAdd count]) [jobArguments setObject:messagesToAdd forKey:@"messagesToAdd"];
+    if ([messageOidsToRemove count]) [jobArguments setObject:messageOidsToRemove forKey:@"messageOidsToRemove"];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadExited:) name:NSThreadWillExitNotification object:nil]; 
-
-    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) arguments:jobArguments synchronizedObject:@"fulltextIndexing"];
+    if ([jobArguments count])
+    {
+        [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) arguments:jobArguments synchronizedObject:@"fulltextIndexing"];
+    }
 }
 
 + (void)resetIndex
@@ -1130,7 +1187,9 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
         }        
         
         JNIEnv *env = startupJava(vmLaunchOptions);
-        [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)env] forKey:@"jniEnv"];        
+        [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)env] forKey:@"jniEnv"];   
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadExited:) name:NSThreadWillExitNotification object:nil]; 
     }
     
     JNIEnv *result = (JNIEnv *)[[[[NSThread currentThread] threadDictionary] objectForKey:@"jniEnv"] unsignedIntValue];

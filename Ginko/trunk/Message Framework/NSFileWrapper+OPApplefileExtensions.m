@@ -534,19 +534,19 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
         return NO;
     
     // take care of resource fork
- 
+    
     // check if resource fork exists
     if (! (resourceForkData = [[self fileAttributes] objectForKey:OPFileResourceForkData]))
         return YES;	// nothing to do
     
     // create resource fork and write resource data in it
     
-if (NSDebugEnabled) NSLog(@"Resource path = %@", path);
+    if (NSDebugEnabled) NSLog(@"Resource path = %@", path);
     
     // create fsRef
     url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)path, kCFURLPOSIXPathStyle, false);
     success = CFURLGetFSRef(url, &fsRef);
-    CFRelease(url);
+//    CFRelease(url);
     if (! success) 
     {
         [NSException raise: NSInvalidArgumentException format: @"Unable to get a FSRef from the path %@.", path];
@@ -564,7 +564,7 @@ if (NSDebugEnabled) NSLog(@"Resource path = %@", path);
     {
         [NSException raise: NSInvalidArgumentException format: @"Unable to create resource fork for file %@ (err = %d).", path, err];
     }
-
+    
     // open resource fork
     err = FSOpenFork(&fsRef, forkName.length, forkName.unicode, fsCurPerm, &refNum);
     if (err != noErr) 
@@ -591,9 +591,9 @@ if (NSDebugEnabled) NSLog(@"Resource path = %@", path);
     {
         FInfo *fndrInfoPtr;
         FSSpec fsSpec;
-
-if (NSDebugEnabled) NSLog(@"Setting FinderInfo.");   
-     
+        
+        if (NSDebugEnabled) NSLog(@"Setting FinderInfo.");   
+        
         // fsRef -> fsSpec
         // http://homepage.mac.com/troy_stephens/software/objects/IconFamily/
         err = FSGetCatalogInfo(&fsRef, kFSCatInfoNone, NULL, NULL, &fsSpec, NULL);
@@ -601,7 +601,7 @@ if (NSDebugEnabled) NSLog(@"Setting FinderInfo.");
         {
             [NSException raise: NSInvalidArgumentException format: @"Unable to get an FSSpec for the file %@ (err = %d).", path, err];
         }
-
+        
         // set Finder info
         fndrInfoPtr = &((ASFinderInfo *)[finderInfo bytes])->ioFlFndrInfo;
         
@@ -611,7 +611,7 @@ if (NSDebugEnabled) NSLog(@"Setting FinderInfo.");
             [NSException raise: NSInvalidArgumentException format: @"Unable to set finder info of file %@ (err = %d).", path, err];
         }
     }
-
+    
     return YES;
 }
 

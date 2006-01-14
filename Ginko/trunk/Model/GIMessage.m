@@ -71,7 +71,7 @@
 	@"}";
 }
 
-+ (NSArray *)messagesForFulltextIndexerWithLimit:(unsigned)limit
++ (NSArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit
 {
     OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
     
@@ -80,6 +80,14 @@
     return result;
 }
 
++ (NSArray *)messagesToRemoveFromFulltextIndexWithLimit:(unsigned)limit
+{
+    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+    
+    NSArray *result = [context objectsForClass: self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    
+    return result;
+}
 
 + (id) messageForMessageId: (NSString*) messageId
 /*" Returns either nil or the message specified by its messageId. "*/

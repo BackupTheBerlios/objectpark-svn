@@ -508,7 +508,7 @@ NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
 }
 
 
-NSString* bytes2Display(unsigned int bytes)
+NSString *bytes2Display(unsigned int bytes)
 {
     NSString *unit, *format;
     double result;
@@ -547,8 +547,8 @@ NSString* bytes2Display(unsigned int bytes)
 }
 
 
-- (void) appendAttachmentWithFileWrapper: (NSFileWrapper*)aFileWrapper 
-                    showInlineIfPossible: (BOOL) shouldShowInline
+- (void)appendAttachmentWithFileWrapper:(NSFileWrapper *)aFileWrapper 
+                   showInlineIfPossible:(BOOL)shouldShowInline
 /*" The file wrapper is materialized in a temp location
     (it is taken care of a possibly existing resource fork). The attachment is then appended to the receiver.
     If shouldShowInline is YES the filewrapper's contents are shown inline if possible
@@ -561,16 +561,17 @@ NSString* bytes2Display(unsigned int bytes)
     OPInternetMessageAttachmentCell *cell = nil;
     
     // write file wrapper's forks to disk
-    do {
+    do 
+    {
         directoryname = [NSString temporaryFilename];
     }
-    while (! [[NSFileManager defaultManager] createDirectoryAtPath:directoryname attributes: nil]);
+    while (! [[NSFileManager defaultManager] createDirectoryAtPath:directoryname attributes:nil]);
     
     path = [directoryname stringByAppendingPathComponent:[aFileWrapper preferredFilename]];
     
-    if (! [aFileWrapper writeForksToFile:path atomically: YES updateFilenames: YES])
+    if (! [aFileWrapper writeForksToFile:path atomically:YES updateFilenames:YES])
     {
-        [NSException raise:NSGenericException format: @"Error writing attachment to temporary directory"];
+        [NSException raise:NSGenericException format:@"Error writing attachment to temporary directory"];
     }
     
     path = [directoryname stringByAppendingPathComponent:[aFileWrapper filename]];
@@ -592,35 +593,35 @@ NSString* bytes2Display(unsigned int bytes)
     //if (! shouldShowInline)
     {
         cell = [[[OPInternetMessageAttachmentCell alloc] initImageCell:[[NSWorkspace sharedWorkspace] iconForFile:path]] autorelease];
-        [cell setAttachment: attachment];
+        [cell setAttachment:attachment];
         
-        if ([aFileWrapper isRegularFile]) {
+        if ([aFileWrapper isRegularFile]) 
+        {
             unsigned int fileSize;
-            NSData* resourceForkData;
+            NSData *resourceForkData;
             
             fileSize = [[aFileWrapper regularFileContents] length];
             
-            if (resourceForkData = [[aFileWrapper fileAttributes] objectForKey: OPFileResourceForkData]) {
+            if (resourceForkData = [[aFileWrapper fileAttributes] objectForKey: OPFileResourceForkData]) 
+            {
                 // add the size of the resource fork also
                 fileSize += [resourceForkData length];
             }
             
-            NSString* infoString = bytes2Display(fileSize);
+            NSString *infoString = bytes2Display(fileSize);
             
-            [cell setInfoString: infoString];
+            [cell setInfoString:infoString];
         } 
-        [cell setTitle: [aFileWrapper filename]];
         
-        [attachment setAttachmentCell: cell];
+        [cell setTitle:[aFileWrapper filename]];
+        
+        [attachment setAttachmentCell:cell];
     }
     
     attchString = [NSAttributedString attributedStringWithAttachment:attachment];
     
     [self appendAttributedString:attchString];
     [self addAttribute:OPAttachmentPathAttribute value:path range:NSMakeRange([self length] - 1, 1)];
-        
-
-
 }
 
 //---------------------------------------------------------------------------------------

@@ -50,6 +50,8 @@ static unsigned maxThreads = 2;
 static unsigned threadCount = 0;
 static unsigned nextJobId = 1;
 
+static BOOL pendingJobsSuspended = NO;
+
 + (void)initialize
 {
     jobsLock = [[NSConditionLock alloc] initWithCondition:OPNoPendingJobs];
@@ -68,6 +70,8 @@ static unsigned nextJobId = 1;
 /*" Returns the next job that is allowed to run. Caution: Run locked only! "*/
 {
     NSMutableDictionary *result = nil;
+    
+    if (pendingJobsSuspended) return nil;
     
     int count = [pendingJobs count];
     if (count)
@@ -315,33 +319,19 @@ id objectForKeyInJobInArray(NSNumber *anJobId, NSArray *anArray, NSString *key)
     return result;
 }
 
-NSNumber *jobPendingOrRunningForKeyAndObject(NSString *key, id anObject)
+NSArray *jobsRunningForKeyAndObject(NSString *key, id anObject)
 {
     int i, count;
-    NSNumber *result = nil;
+    NSMutableArray *result = [NSMutableArray array];
     
     [jobsLock lock];
-    
-    count = [pendingJobs count];
+        
+    count = [runningJobs count];
     for (i = count - 1; i >= 0; i--) 
     {
-        if ([[[pendingJobs objectAtIndex:i] objectForKey:key] isEqualTo:anObject]) 
+        if ([[[runningJobs objectAtIndex:i] objectForKey:OPJobName] isEqualTo:anObject]) 
         {
-            result = [[pendingJobs objectAtIndex:i] objectForKey:OPJobId];
-            break;
-        }
-    }
-    
-    if (!result) 
-    {
-        count = [runningJobs count];
-        for (i = count - 1; i >= 0; i--) 
-        {
-            if ([[[runningJobs objectAtIndex:i] objectForKey:OPJobName] isEqualTo:anObject]) 
-            {
-                result = [[runningJobs objectAtIndex:i] objectForKey:OPJobId];
-                break;
-            }
+            [result addObject:[[runningJobs objectAtIndex:i] objectForKey:OPJobId]];
         }
     }
     
@@ -350,16 +340,16 @@ NSNumber *jobPendingOrRunningForKeyAndObject(NSString *key, id anObject)
     return result;
 }
 
-+ (BOOL)isAnyJobPendingOrRunningWithName:(NSString *)aName
-/*" Returns YES if a job with the given name aName is pending or running. "*/
++ (NSArray *)runningJobsWithName:(NSString *)aName
+/*" Returns running jobs with the given name aName. "*/
 {
-    return jobPendingOrRunningForKeyAndObject(OPJobName, aName) != nil;
+    return jobsRunningForKeyAndObject(OPJobName, aName);
 }
 
-+ (BOOL)isAnyJobPendingOrRunningWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject
-/*" Returns YES if a job with the given synchronized object aSynchronizedObject is pending or running. "*/
++ (NSArray *)runningJobsWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject
+/*" Returns running jobs with the given synchronized object aSynchronizedObject. "*/
 {
-    return jobPendingOrRunningForKeyAndObject(OPJobSynchronizedObject, aSynchronizedObject) != nil;
+    return jobsRunningForKeyAndObject(OPJobSynchronizedObject, aSynchronizedObject);
 }
 
 + (void)noteJobWillStart:(NSNumber *)anJobId
@@ -615,6 +605,26 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
     
     return result;
+}
+
++ (void)suspendPendingJobs
+/*" Suspends all pending jobs. Must be called from the main thread only! "*/
+{
+    [jobsLock lock];
+    
+    pendingJobsSuspended = YES;
+    
+    [jobsLock unlockWithCondition:OPNoPendingJobs];
+}
+
++ (void)resumePendingJobs
+/*" Resumes all pending jobs. Must be called from the main thread only! "*/
+{
+    [jobsLock lock];
+    
+    pendingJobsSuspended = NO;
+    
+    [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
 }
 
 + (void)removeAllFinishedJobs

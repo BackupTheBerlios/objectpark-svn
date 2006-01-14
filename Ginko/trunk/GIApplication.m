@@ -645,8 +645,24 @@
 
 - (IBAction)fulltextIndexSomeMessages:(id)sender
 {
-    NSArray *messages = [GIMessage messagesForFulltextIndexerWithLimit:1000];
-    [GIFulltextIndexCenter addMessagesInBackground:messages];
+    NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
+    NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
+
+    NSMutableArray *messageOidsToRemove = nil;
+    
+    if ([messagesToRemove count])
+    {
+        messageOidsToRemove = [NSMutableArray arrayWithCapacity:[messagesToRemove count]];
+        NSEnumerator *enumerator = [messagesToRemove objectEnumerator];
+        GIMessage *message;
+        
+        while (message = [enumerator nextObject])
+        {
+            [messageOidsToRemove addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
+        }
+    }
+    
+    [GIFulltextIndexCenter fulltextIndexInBackgroundAdding:messagesToAdd removing:messageOidsToRemove];
 }
 
 - (IBAction)showPhraseBrowser:(id)sender

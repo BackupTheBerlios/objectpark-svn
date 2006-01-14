@@ -30,11 +30,13 @@
 + (NSArray *)runningJobs;
 + (BOOL)isJobFinished:(NSNumber *)aJobId;
 + (NSArray *)finishedJobs;
-+ (BOOL)isAnyJobPendingOrRunningWithName:(NSString *)aName;
-+ (BOOL)isAnyJobPendingOrRunningWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject;
++ (NSArray *)runningJobsWithName:(NSString *)aName;
++ (NSArray *)runningJobsWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
-/*" Cancelling pending jobs "*/
+/*" Handling pending jobs "*/
 + (BOOL)cancelPendingJob:(NSNumber *)aJobId;
++ (void)suspendPendingJobs;
++ (void)resumePendingJobs;
 
 /*" Handling finished jobs "*/
 + (BOOL)removeFinishedJob:(NSNumber *)aJobId;
