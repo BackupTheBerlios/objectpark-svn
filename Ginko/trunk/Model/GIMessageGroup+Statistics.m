@@ -8,10 +8,10 @@
 
 #import "GIMessageGroup+Statistics.h"
 
-NSString *GINumberOfUnreadMessages = @"GINumberOfUnreadMessages";
-NSString *GINumberOfUnreadThreads = @"GINumberOfUnreadThreads";
+NSString* GINumberOfUnreadMessages = @"GINumberOfUnreadMessages";
+NSString* GINumberOfUnreadThreads = @"GINumberOfUnreadThreads";
 
-NSString *GIMessageGroupStatisticsDidChangeNotification = @"GIMessageGroupStatisticsDidChangeNotification";
+NSString* GIMessageGroupStatisticsDidChangeNotification = @"GIMessageGroupStatisticsDidChangeNotification";
 
 @implementation GIMessageGroup (Statistics)
 

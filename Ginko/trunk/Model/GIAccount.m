@@ -14,7 +14,7 @@
 
 @implementation GIAccount
 
-+ (NSString *)databaseProperties
++ (NSString* )databaseProperties
 {
 	return 
 	@"{"
@@ -26,7 +26,7 @@
 	@"}";
 }
 
-+ (NSString *)persistentAttributesPlist
++ (NSString* )persistentAttributesPlist
 {
 	return 
 	@"{"
@@ -93,9 +93,9 @@
     [super dealloc];
 }
 
-- (NSString *)name 
+- (NSString* )name 
 {
-    NSString *tmpValue;
+    NSString* tmpValue;
     
     [self willAccessValueForKey:@"name"];
     tmpValue = [self primitiveValueForKey:@"name"];
@@ -104,7 +104,7 @@
     return tmpValue;
 }
 
-- (void)setName:(NSString *)value 
+- (void)setName:(NSString* )value 
 {
     [self willChangeValueForKey:@"name"];
     [self setPrimitiveValue:value forKey:@"name"];
@@ -163,7 +163,7 @@
     }
 }
 
-- (NSString *)incomingServerName 
+- (NSString* )incomingServerName 
 {
     NSString* tmpValue;
     
@@ -174,7 +174,7 @@
     return tmpValue;
 }
 
-- (void)setIncomingServerName:(NSString *)value 
+- (void)setIncomingServerName:(NSString* )value 
 {
     [self willChangeValueForKey:@"incomingServerName"];
     [self setPrimitiveValue:value forKey:@"incomingServerName"];
@@ -223,9 +223,9 @@
     [self didChangeValueForKey:@"incomingAuthenticationMethod"];
 }
 
-- (NSString *)incomingUsername 
+- (NSString* )incomingUsername 
 {
-    NSString *tmpValue;
+    NSString* tmpValue;
     
     [self willAccessValueForKey:@"incomingUsername"];
     tmpValue = [self primitiveValueForKey:@"incomingUsername"];
@@ -234,7 +234,7 @@
     return tmpValue;
 }
 
-- (void) setIncomingUsername: (NSString *)value 
+- (void) setIncomingUsername: (NSString* )value 
 {
     [self willChangeValueForKey: @"incomingUsername"];
     [self setPrimitiveValue:value forKey: @"incomingUsername"];
@@ -258,7 +258,7 @@
     }    
 }
 
-- (NSString *)incomingPasswordItemRef: (SecKeychainItemRef*)itemRef
+- (NSString* )incomingPasswordItemRef: (SecKeychainItemRef*)itemRef
 /*" Accesses keychain to get password. "*/
 {
     NSAssert([self incomingServerName] > 0, @"server name not set");
@@ -302,14 +302,14 @@
     return result;
 }
 
-- (NSString *)incomingPassword
+- (NSString* )incomingPassword
 {
     SecKeychainItemRef itemRef;
     NSString* result = [self incomingPasswordItemRef:&itemRef];
     return result;
 }
 
-- (void) setIncomingPassword:(NSString *)aPassword
+- (void) setIncomingPassword:(NSString* )aPassword
 /*" Uses keychain to store password. "*/
 {
     const char *serverName = [[self incomingServerName] UTF8String];
@@ -363,7 +363,7 @@
     }    
 }
 
-- (NSString *)outgoingPasswordItemRef: (SecKeychainItemRef *)itemRef
+- (NSString* )outgoingPasswordItemRef: (SecKeychainItemRef *)itemRef
     /*" Accesses keychain to get password. "*/
 {
     const char *serverName = [[self outgoingServerName] UTF8String];
@@ -406,14 +406,14 @@
     return result;
 }
 
-- (NSString *)outgoingPassword
+- (NSString* )outgoingPassword
 {
     SecKeychainItemRef itemRef;
     NSString* result = [self outgoingPasswordItemRef:&itemRef];
     return result;
 }
 
-- (void) setOutgoingPassword: (NSString *)aPassword
+- (void) setOutgoingPassword: (NSString* )aPassword
     /*" Uses keychain to store password. "*/
 {
     const char *serverName = [[self outgoingServerName] UTF8String];
@@ -516,7 +516,7 @@
     [self didChangeValueForKey: @"outgoingServerDefaultPort"];	
 }
 
-- (NSString *)outgoingServerName 
+- (NSString* )outgoingServerName 
 {
     NSString*  tmpValue;
     
@@ -527,7 +527,7 @@
     return tmpValue;
 }
 
-- (void) setOutgoingServerName: (NSString *)value 
+- (void) setOutgoingServerName: (NSString* )value 
 {
     [self willChangeValueForKey: @"outgoingServerName"];
     [self setPrimitiveValue:value forKey: @"outgoingServerName"];
@@ -584,7 +584,7 @@
     [self didChangeValueForKey:@"outgoingUsername"];
 }
 
-- (NSString *)outgoingUsername 
+- (NSString* )outgoingUsername 
 {
     NSString* tmpValue;
     
@@ -595,7 +595,7 @@
     return tmpValue;
 }
 
-- (void) setOutgoingUsername: (NSString *)value 
+- (void) setOutgoingUsername: (NSString* )value 
 {
     [self willChangeValueForKey: @"outgoingUsername"];
     [self setPrimitiveValue:value forKey: @"outgoingUsername"];

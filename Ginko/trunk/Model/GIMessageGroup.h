@@ -22,7 +22,7 @@ extern NSString* GIMessageGroupWasAddedNotification;
 
 /*" Dealing with the group hierarchie: "*/
 + (NSMutableArray*) hierarchyRootNode;
-+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex;
++ (GIMessageGroup *)newMessageGroupWithName:(NSString* )aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex;
 + (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
 + (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)aUid;
 + (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly;
@@ -57,7 +57,7 @@ extern NSString* GIMessageGroupWasAddedNotification;
 /*" Persistency handling "*/
 + (void) saveHierarchy;
 
-- (NSEnumerator*) allMessages;
+- (NSArray*) allMessages;
 - (void) exportAsMboxFile;
 
 @end

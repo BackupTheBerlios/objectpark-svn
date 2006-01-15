@@ -78,7 +78,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 /*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
 {
     GIMessageGroup *result = nil;
-    NSString *resultURLString = nil;
+    NSString* resultURLString = nil;
     
     if (!aName) {
         aName = NSLocalizedString(@"New Group", @"Default name for new group");
@@ -210,7 +210,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 {    
     if (!pk)
     { 
-        NSString *URLString = [[[self objectID] URIRepresentation] absoluteString];
+        NSString* URLString = [[[self objectID] URIRepresentation] absoluteString];
         pk = [[[URLString lastPathComponent] substringFromIndex:1] retain];
     }
     
@@ -229,7 +229,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 {
     struct ResultSet* result = (struct ResultSet*)this;
     //NSLog(@"%s", values[0]);
-    static NSString *prefix = nil; if (!prefix) prefix = [G3Thread URIStringPrefix];
+    static NSString* prefix = nil; if (!prefix) prefix = [G3Thread URIStringPrefix];
     
     int threadCount = atoi(values[1]);
     NSString* uri = [prefix stringByAppendingString: [NSString stringWithUTF8String:values[0]]];
@@ -284,7 +284,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
             [clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= %f", sinceRefDate]];
         }
         
-        NSString *queryString = [NSString stringWithFormat: @"select Z_PK, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
+        NSString* queryString = [NSString stringWithFormat: @"select Z_PK, ZNUMBEROFMESSAGES from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
         
         if (errorCode = sqlite3_exec(db, 
                                      [queryString UTF8String], // SQL to be executed 
@@ -398,11 +398,11 @@ static NSMutableArray* root = nil;
 {
     if (! root) 
     {
-        NSString *error;
+        NSString* error;
         NSPropertyListFormat format;
                 
         // Read from application support folder:
-        NSString *plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"GroupHierarchy.plist"];
+        NSString* plistPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"GroupHierarchy.plist"];
         
         NSData *plistData = [NSData dataWithContentsOfFile:plistPath];
         root = [[NSPropertyListSerialization propertyListFromData:plistData
@@ -560,7 +560,7 @@ static NSMutableArray* root = nil;
 	
 	//[result bind: self]; // fill "?" above with own oid;
 	
-	return result;
+	//return result;
 }
 
 
@@ -575,28 +575,29 @@ static NSMutableArray* root = nil;
         return;
     
     // get name of mbox file by opening a file selector
-    NSString *path = [[NSString stringWithFormat:@"~/Desktop/%@.mbox", [self valueForKey:@"name"]] stringByExpandingTildeInPath];
+    NSString* path = [[NSString stringWithFormat:@"~/Desktop/%@.mbox", [self valueForKey:@"name"]] stringByExpandingTildeInPath];
     
     NSLog(@"Exporting to mbox file at %@", path);
     
-    OPMBoxFile *mbox = [OPMBoxFile mboxWithPath:path createIfNotPresent:YES];
-    NSEnumerator *messages = [self allMessagesEnumerator];
-    GIMessage *msg;
+    OPMBoxFile* mbox = [OPMBoxFile mboxWithPath: path createIfNotPresent: YES];
+	NSArray* allMessages = [self allMessages];
+    NSEnumerator* messages = [allMessages objectEnumerator];
+    GIMessage* msg;
     int exportedMessages = 0;
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    while (msg = [messages nextObject])
-    {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	
+    while (msg = [messages nextObject]) {
         
 #warning Improve From_ line
-        NSString *head = [NSString stringWithFormat:@"From %@\r\n"
+        NSString* head = [NSString stringWithFormat:@"From %@\r\n"
                                                     @"X-Ginko-Flags: %@\r\n",
 nil, //                                                     [[[NSString alloc] initWithData:[[[msg senderName] dataUsingEncoding:NSISOLatin1StringEncoding] encodeHeaderQuotedPrintable]
 //                                                               encoding:NSISOLatin1StringEncoding] autorelease],
                                                     [msg flagsString]
                                                     ];
                                                     
-        NSData *transferData = [[msg transferData] fromQuote];
+        NSData* transferData = [[msg transferData] fromQuote];
         
         [mbox appendMBoxData:[head dataUsingEncoding:NSISOLatin1StringEncoding]];
         [mbox appendMBoxData:transferData];
@@ -604,12 +605,10 @@ nil, //                                                     [[[NSString alloc] i
         
         [msg refault];
             
-        if (++exportedMessages % 100 == 0)
-        {
+        if (++exportedMessages % 100 == 0) {
             NSLog(@"%d messages exported", exportedMessages);
             
-            [pool release];
-            pool = [[NSAutoreleasePool alloc] init];
+            [pool release]; pool = [[NSAutoreleasePool alloc] init];
         }
     }
     
@@ -670,7 +669,7 @@ nil, //                                                     [[[NSString alloc] i
 {
     NSParameterAssert(defaultName != nil);
     
-    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
+    NSString* URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
     GIMessageGroup *result = nil;
         
     if (URLString) {
@@ -731,7 +730,7 @@ nil, //                                                     [[[NSString alloc] i
 
 + (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-    NSString *imageName = nil;
+    NSString* imageName = nil;
     
     if (aMessageGroup == [self defaultMessageGroup]) imageName = @"InMailbox";
     else if (aMessageGroup == [self sentMessageGroup]) imageName = @"OutMailbox";

@@ -1561,8 +1561,8 @@ NSDictionary *maxLinesForCalendarName()
     NSMutableArray* result = [NSMutableArray array];
 
     ABSearchElement* searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-    ABSearchElement* searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-    ABSearchElement* searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    //ABSearchElement* searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    //ABSearchElement* searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
     
     NSArray* searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
 

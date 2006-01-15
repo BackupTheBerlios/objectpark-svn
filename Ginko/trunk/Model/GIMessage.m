@@ -226,7 +226,7 @@
 		[result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
 		NSAssert(result != nil, @"Could not create message object");
         
-        NSString *fromHeader = [im fromWithFallback: YES];
+        NSString* fromHeader = [im fromWithFallback: YES];
         
         [result setPrimitiveValue: im forKey: @"internetMessageCache"];
         [result setValue: someTransferData forKey: @"transferData"];

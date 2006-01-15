@@ -92,18 +92,18 @@
 
 - (NSString*) stringValue
 {
-    NSString *format = [[NSUserDefaults standardUserDefaults] stringForKey: @"NSDateFormatString"];
-    return [date descriptionWithCalendarFormat:format];
+    NSString* format = [[NSUserDefaults standardUserDefaults] stringForKey: @"NSDateFormatString"];
+    return [date descriptionWithCalendarFormat: format];
 }
 
 
 - (NSString*) fieldBody {
-    NSCalendarDate	*canonicalDate;
+    NSCalendarDate* canonicalDate;
 
     canonicalDate = [[date copy] autorelease];
-    [canonicalDate setTimeZone:[self _canonicalTimeZone]];
+    [canonicalDate setTimeZone: [self _canonicalTimeZone]];
 
-    return [canonicalDate descriptionWithCalendarFormat:[[self class] dateFormat]];
+    return [canonicalDate descriptionWithCalendarFormat: [[self class] dateFormat]];
 }
 
 
@@ -117,12 +117,10 @@
 - (void) _takeDateFromString: (NSString*) string
 {
     string = [string stringByRemovingSurroundingWhitespace];
-    date = [[NSCalendarDate dateWithMessageTimeSpecification:string] retain];
-    if(date == nil)
-    {
-        date = [[NSCalendarDate dateWithNaturalLanguageString:string] retain];
-        if (date == nil)
-        {
+    date = [[NSCalendarDate dateWithMessageTimeSpecification: string] retain];
+    if(date == nil) {
+        date = [[NSCalendarDate dateWithNaturalLanguageString: string] retain];
+        if (date == nil) {
             NSLog(@"Warning: Invalid date spec; found \"%@\"\n", string);
         }
     }

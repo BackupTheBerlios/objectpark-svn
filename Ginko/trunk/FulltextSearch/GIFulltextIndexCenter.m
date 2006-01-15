@@ -527,7 +527,7 @@
         int counter = 1;
         JNIEnv *env = [self jniEnv];
         NSAutoreleasePool *pool = nil;
-        if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
+        if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Lucene out of memory!"); return;}
         jobject indexWriter = [self indexWriter];
         NSAssert(indexWriter != NULL, @"IndexWriter could not be created.");
         NSEnumerator *messageEnumerator = [someMessages objectEnumerator];
@@ -539,7 +539,7 @@
             id message;
             while ((message = [messageEnumerator nextObject]) && (!shouldTerminate))
             {
-                if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
+                if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;}
                 
                 @try
                 {

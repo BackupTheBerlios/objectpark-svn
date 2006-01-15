@@ -131,14 +131,14 @@
     return [NSSet setWithObjects:[GIMessageGroup defaultMessageGroup], nil];
 }
 
-NSString *MboxImportJobName = @"mbox import";
+NSString* MboxImportJobName = @"mbox import";
 
 - (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
 
     Should run as job (#{see OPJobs})."*/
 {
-    NSString *mboxFilePath = [arguments objectForKey:@"mboxFilename"];
+    NSString* mboxFilePath = [arguments objectForKey:@"mboxFilename"];
     NSParameterAssert(mboxFilePath != nil);
     //NSManagedObjectContext *parentContext = [arguments objectForKey:@"parentContext"];
     //NSParameterAssert(parentContext != nil);
@@ -255,13 +255,13 @@ NSString *MboxImportJobName = @"mbox import";
     }
     
     // move imported mbox to imported boxes:
-    NSString *importedMboxesDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"imported mboxes"];
+    NSString* importedMboxesDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"imported mboxes"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:importedMboxesDirectory])
     {
         NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:importedMboxesDirectory attributes: nil], @"Could not create directory %@", importedMboxesDirectory);
     }
     
-    NSString *destinationPath = [importedMboxesDirectory stringByAppendingPathComponent:[mboxFilePath lastPathComponent]];
+    NSString* destinationPath = [importedMboxesDirectory stringByAppendingPathComponent:[mboxFilePath lastPathComponent]];
     
     // only move if not already there:
     if (![[NSFileManager defaultManager] fileExistsAtPath:destinationPath])

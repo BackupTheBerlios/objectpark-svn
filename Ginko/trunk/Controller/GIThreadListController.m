@@ -30,7 +30,7 @@
 #import "OPPersistence.h"
 #import "OPObjectPair.h"
 
-static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
+static NSString* ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @interface GIThreadListController (CommentsTree)
 
@@ -44,29 +44,27 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @implementation GIThreadListController
 
-- (id)init
+- (id) init
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name:@"GroupContentChangedNotification" object: self];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name:OPJobDidFinishNotification object: MboxImportJobName];
     
     itemRetainer = [[NSMutableSet alloc] init];
     
     return [[super init] retain]; // self retaining!
 }
 
-- (id)initWithGroup:(GIMessageGroup *)aGroup
+- (id) initWithGroup: (GIMessageGroup*) aGroup
 /*" aGroup may be nil, any group will be used then. "*/
 {
-    if (self = [self init]) 
-    {
-        if (! aGroup) 
-        {
+    if (self = [self init]) {
+        if (! aGroup) {
 			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
-		[NSBundle loadNibNamed:@"Group" owner:self]; // sets threadsView
 		[self setGroup:aGroup];
+		[NSBundle loadNibNamed: @"Group" owner: self]; // sets threadsView
     }
     
     return self;
@@ -74,29 +72,31 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {    
     [threadsView setTarget:self];
     [threadsView setDoubleAction:@selector(openSelection:)];
-    [threadsView setHighlightThreads:YES];
-    [threadsView registerForDraggedTypes:[NSArray arrayWithObjects: @"GinkoThreads", nil]];
+    [threadsView setHighlightThreads: YES];
+    [threadsView registerForDraggedTypes: [NSArray arrayWithObjects: @"GinkoThreads", nil]];
     
-    [searchHitsTableView setTarget:self];
-    [searchHitsTableView setDoubleAction:@selector(openSelection:)];
+    [searchHitsTableView setTarget: self];
+    [searchHitsTableView setDoubleAction: @selector(openSelection:)];
 
     [self awakeToolbar];
     [self awakeCommentTree];
 
     lastTopLeftPoint = [window cascadeTopLeftFromPoint: lastTopLeftPoint];
     
-    [window makeKeyAndOrderFront:self];    
+    [window makeKeyAndOrderFront: self];    
+	[self updateWindowTitle];
+
 }
 
 - (void)dealloc
 {
     NSLog(@"GIThreadListController dealloc");
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [window setDelegate:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [window setDelegate: nil];
     
     [self deallocCommentTree];
     [self deallocToolbar];
@@ -982,21 +982,21 @@ static BOOL isThreadItem(id item)
 	[self modelChanged];
 }
 
-- (GIMessageGroup *)group
+- (GIMessageGroup*) group
 {
     return group;
 }
 
-- (void)setGroup:(GIMessageGroup *)aGroup
+- (void) setGroup: (GIMessageGroup*) aGroup
 {
     if (aGroup != group) 
     {
-		[group removeObserver:self forKeyPath:@"threadsByDate"];
+		[group removeObserver: self forKeyPath: @"threadsByDate"];
 		
-		[aGroup addObserver:self 
-				 forKeyPath:@"threadsByDate" 
-					options:NSKeyValueObservingOptionNew 
-					context:NULL];
+		[aGroup addObserver: self 
+				 forKeyPath: @"threadsByDate" 
+					options: NSKeyValueObservingOptionNew 
+					context: NULL];
         
         [group autorelease];
         group = [aGroup retain];
@@ -1005,7 +1005,7 @@ static BOOL isThreadItem(id item)
 		//[aGroup refault]; // just for testing!!
         //#########
         // thread filter popup:
-        [threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
+        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]];
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
@@ -1015,22 +1015,19 @@ static BOOL isThreadItem(id item)
 
 // validation
 
-- (BOOL)isOnlyThreadsSelected
+- (BOOL) isOnlyThreadsSelected
 {
     // true when only threads are selected; false otherwise
-    NSIndexSet *selectedIndexes;
+    NSIndexSet* selectedIndexes;
     
     selectedIndexes = [threadsView selectedRowIndexes];
-    if ([selectedIndexes count] > 0) 
-    {
+    if ([selectedIndexes count] > 0) {
         int i;
         int lastIndex = [selectedIndexes lastIndex];
         
-        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) 
-        {
-            if ([threadsView isRowSelected:i]) 
-            {
-                if (!isThreadItem([threadsView itemAtRow:i])) return NO;
+        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) {
+            if ([threadsView isRowSelected: i]) {
+                if (!isThreadItem([threadsView itemAtRow: i])) return NO;
             }
         }
         return YES;
@@ -1038,7 +1035,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL)validateSelector:(SEL)aSelector
+- (BOOL) validateSelector: (SEL) aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))

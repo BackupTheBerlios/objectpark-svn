@@ -51,8 +51,8 @@ enum LeaveOnServerDuration
 + (int)defaultPortForOutgoingServerType:(int)serverType;
 
 	/*" Accessors "*/
-- (NSString *)name;
-- (void)setName:(NSString *)aString;
+- (NSString* )name;
+- (void)setName:(NSString* )aString;
 
 - (BOOL)isEnabled;
 - (void)setIsEnabled:(BOOL)aBool;
@@ -60,8 +60,8 @@ enum LeaveOnServerDuration
 - (int)incomingServerType;
 - (void)setIncomingServerType:(int)aType;
 
-- (NSString *)incomingServerName;
-- (void)setIncomingServerName:(NSString *)aName;
+- (NSString* )incomingServerName;
+- (void)setIncomingServerName:(NSString* )aName;
 
 - (int)incomingServerPort;
 - (void)setIncomingServerPort:(int)aPort;
@@ -71,11 +71,11 @@ enum LeaveOnServerDuration
 - (int)incomingAuthenticationMethod;
 - (void)setIncomingAuthenticationMethod:(int)aMethod;
 
-- (NSString *)incomingUsername;
-- (void)setIncomingUsername:(NSString *)aName;
+- (NSString* )incomingUsername;
+- (void)setIncomingUsername:(NSString* )aName;
 
-- (NSString *)incomingPassword;
-- (void)setIncomingPassword:(NSString *)aPassword;
+- (NSString* )incomingPassword;
+- (void)setIncomingPassword:(NSString* )aPassword;
 
 - (int)retrieveMessageInterval;
 - (void) setRetrieveMessageInterval:(int)minutes;
@@ -88,8 +88,8 @@ enum LeaveOnServerDuration
 
 - (BOOL)isPOPAccount;
 
-- (NSString *)outgoingServerName;
-- (void)setOutgoingServerName:(NSString *)aName;
+- (NSString* )outgoingServerName;
+- (void)setOutgoingServerName:(NSString* )aName;
 
 - (int)outgoingServerPort;
 - (void)setOutgoingServerPort:(int)aPort;
@@ -99,11 +99,11 @@ enum LeaveOnServerDuration
 - (int)outgoingAuthenticationMethod;
 - (void)setOutgoingAuthenticationMethod:(int)aMethod;
 
-- (NSString *)outgoingUsername;
-- (void)setOutgoingUsername:(NSString *)aName;
+- (NSString* )outgoingUsername;
+- (void)setOutgoingUsername:(NSString* )aName;
 
-- (NSString *)outgoingPassword;
-- (void)setOutgoingPassword:(NSString *)aPassword;
+- (NSString* )outgoingPassword;
+- (void)setOutgoingPassword:(NSString* )aPassword;
 
 - (BOOL)outgoingUsernameNeeded;
 

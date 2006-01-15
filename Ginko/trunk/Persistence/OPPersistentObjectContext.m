@@ -117,8 +117,9 @@ static OPPersistentObjectContext* defaultContext = nil;
 - (void) willChangeObject: (OPPersistentObject*) object
 /*" This method retains object until changes are saved. "*/
 {
-    //[lock lock];
-    [changedObjects addObject: object];  
+	@synchronized(self) {
+		[changedObjects addObject: object];  
+	}
 }
 
 	/*
@@ -152,10 +153,13 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 - (OID) newDatabaseObjectForObject: (OPPersistentObject*) object
 {
-	if (![db transactionInProgress]) [db beginTransaction]; // transaction is committed on -saveChanges
-	OID newOid = [db insertNewRowForClass: [object class]];
-	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
-	[changedObjects addObject: object]; // make sure the values make it into the database
+	OID newOid;
+	@synchronized(self) {
+		if (![db transactionInProgress]) [db beginTransaction]; // transaction is committed on -saveChanges
+		newOid = [db insertNewRowForClass: [object class]];
+		NSAssert1(newOid, @"Unable to insert row for new object %@", object);
+		[changedObjects addObject: object]; // make sure the values make it into the database
+	}
 	return newOid;
 }
 
