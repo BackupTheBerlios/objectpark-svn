@@ -218,7 +218,7 @@
                                            error: &error]) 
     {
         localizedDescription = [error localizedDescription];
-        error = [NSError errorWithDomain: @"Ginko3Domain" 
+        error = [NSError errorWithDomain: @"GinkoDomain" 
                                     code: 0		
                                 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat: @"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
     }
@@ -278,6 +278,8 @@
 	    
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prefpaneDidEndEditing:) name:OPPreferencePaneDidEndEditing object:nil];
 		
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jobFinished:) name:OPJobDidFinishNotification object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fulltextIndexJobFinished:) name:OPJobDidFinishNotification object:[GIFulltextIndexCenter jobName]];
@@ -451,59 +453,104 @@
 		NSString* localizedDescription;
 //        NSLog(@"Commit error: Affected objects = %@\nchanged objects = %@\nDeleted objects = %@", [[exception userInfo] objectForKey:NSAffectedObjectsErrorKey], [[OPPersistentObjectContext threadContext] changedObjects], [[OPPersistentObjectContext threadContext] deletedObjects]);
         localizedDescription = [exception description]; // todo: was: localizedDescription!
-        NSError* error = [NSError errorWithDomain: @"Ginko3Domain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat: @"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
+        NSError* error = [NSError errorWithDomain: @"GinkoDomain" code: 0 userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat: @"Error saving: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
         [self presentError: error];
     }
 }
 
-- (void) applicationWillTerminate: (NSNotification* )notification
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+    NSApplicationTerminateReply result = NSTerminateNow;
+    
+    isTerminating = YES;
+    
+    // check open windows
+    // if an edit window is open with an edited message ask what to do with the open message
+    NSWindow *window;
+    NSArray *windows = [NSApp windows];
+    NSEnumerator *enumerator = [windows objectEnumerator];
+    while (window = [enumerator nextObject])
+    {
+        if ([[window delegate] respondsToSelector:@selector(windowShouldClose:)])
+        {
+            if (! [[window delegate] windowShouldClose:self])
+            {
+                result = NSTerminateLater;
+            }
+        }
+    }
+    
+    [OPJobs suspendPendingJobs];
+    NSArray *runningJobs = [OPJobs runningJobs];
+    
+    if ([runningJobs count])
+    {
+        enumerator = [runningJobs objectEnumerator];
+        NSNumber *jobId;
+        
+        while (jobId = [enumerator nextObject])
+        {
+            [OPJobs suggestTerminatingJob:jobId];
+        }
+        
+        result = NSTerminateLater;
+    }
+    
+    /*
+    MPWDebugLog(@"%@ received an applicationShouldTerminate.", self);
+    [GIApplicationDelegate setIsTerminating:YES];
+    */
+    return result;
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
 {
     [self saveAction:self];
 }
 
-- (IBAction) openSearchWindow: (id) sender
+- (IBAction)getNewMailInAllAccounts:(id)sender
 {
-    if (!searchController) {
-        [NSBundle loadNibNamed: @"Search" owner: self];   
-    }
-    [[searchController window] makeKeyAndOrderFront: self];
-}
-
-/*
-- (void) setSearchController: (GISearchController*) c
-{
-    [c retain];
-    [searchController release];
-    searchController = c;
-}
-*/
-
-- (IBAction) getNewMailInAllAccounts: (id) sender
-{
-    NSEnumerator* enumerator = [[GIAccount allObjects] objectEnumerator];
-    GIAccount* account;
+    NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
+    GIAccount *account;
     
-    while (account = [enumerator nextObject]) {
-        if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount: account];
+    while (account = [enumerator nextObject]) 
+    {
+        if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount:account];
     }
-	
 }
 
-- (void) POPJobFinished: (NSNotification*) aNotification
+- (void)jobFinished:(NSNotification *)aNotification
+{
+    if (isTerminating)
+    {
+        if ([[OPJobs runningJobs] count] == 0)
+        {
+            [self replyToApplicationShouldTerminate:YES];
+        }
+    }
+}
+
+- (void)abortApplicationTerminate
+{
+    isTerminating = NO;
+    [OPJobs resumePendingJobs];
+    [self replyToApplicationShouldTerminate:NO];
+}
+
+- (void)POPJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"POPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
-    NSException *exception = [[aNotification userInfo] objectForKey: @"exception"];
+    NSException *exception = [[aNotification userInfo] objectForKey:@"exception"];
     
     if (exception)
     {
-        NSString* localizedDescription = [[exception userInfo] objectForKey:NSLocalizedDescriptionKey];
+        NSString *localizedDescription = [[exception userInfo] objectForKey:NSLocalizedDescriptionKey];
         
-        NSError *error = [NSError errorWithDomain: @"Ginko3Domain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-            localizedDescription ? localizedDescription : [exception reason], NSLocalizedDescriptionKey, 
+        NSError *error = [NSError errorWithDomain:@"GinkoDomain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:localizedDescription ? localizedDescription : [exception reason], NSLocalizedDescriptionKey, 
             nil]];
         [[NSApplication sharedApplication] presentError:error];
 
@@ -520,18 +567,18 @@
         // import mbox at path mboxPath:
         NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
-        [jobArguments setObject: mboxPath forKey: @"mboxFilename"];
-        [jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+        [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
+        [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
         
-        [OPJobs scheduleJobWithName: MboxImportJobName target: [[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments: jobArguments synchronizedObject: @"mbox import"];
+        [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
     }
 }
 
-- (void) importJobFinished: (NSNotification*) aNotification
+- (void)importJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"importJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
     [OPJobs removeFinishedJob:jobId]; // clean up
@@ -644,7 +691,7 @@
 
 - (IBAction)fulltextIndexSomeMessages:(id)sender
 {
-    NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:10];
+    NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
     NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
 
     NSMutableArray *messageOidsToRemove = nil;

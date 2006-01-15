@@ -17,6 +17,8 @@
 @interface GIApplication : NSApplication 
 {
     IBOutlet GISearchController *searchController;
+
+    BOOL isTerminating;
 }
 
 - (BOOL)isGroupsDrawerMode;
@@ -27,7 +29,6 @@
 - (IBAction)openNewGroupWindow:(id)sender;
 
 - (IBAction)saveAction:(id)sender;
-- (IBAction)openSearchWindow:(id)sender;
 - (IBAction)showActivityPanel:(id)sender;
 - (IBAction)toggleAutomaticActivityPanel:(id)sender;
 
