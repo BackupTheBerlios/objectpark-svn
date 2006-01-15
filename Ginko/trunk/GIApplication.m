@@ -545,7 +545,6 @@
     NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
 	[OPJobs removeFinishedJob:jobId]; // clean up
-    [self saveAction:self];
 }
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
@@ -645,7 +644,7 @@
 
 - (IBAction)fulltextIndexSomeMessages:(id)sender
 {
-    NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
+    NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:10];
     NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
 
     NSMutableArray *messageOidsToRemove = nil;

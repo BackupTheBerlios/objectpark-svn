@@ -1036,6 +1036,8 @@
             NSLog(@"optimizing index\n");
             [GIFulltextIndexCenter optimize];
         }
+        
+        [GIApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
     }
 }
 
@@ -1055,7 +1057,7 @@
     if ([jobArguments count])
     {
         [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) arguments:jobArguments synchronizedObject:@"fulltextIndexing"];
-    }
+    }    
 }
 
 + (void)resetIndex
