@@ -215,15 +215,14 @@ NSString* MboxImportJobName = @"mbox import";
             }
             
 			// Avoid division by zero:
-            if (mboxFileSize > 0) 
-            {
+            if (mboxFileSize > 0) {
                 int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
                 NSDate *now = [[NSDate alloc] init];
                 BOOL timeIsRipe = [now timeIntervalSinceDate:lastProgressSet] > 1.5;
                 
-                if (timeIsRipe || (newPercentComplete > percentComplete)) // report only when percentage changes
-                {
-                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:[mboxFilePath lastPathComponent]]];
+				// Report only when percentage changes:
+                if (timeIsRipe || (newPercentComplete > percentComplete)) {
+                    [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 0 maxValue: mboxFileSize currentValue: [enumerator offsetOfNextObject] description: [mboxFilePath lastPathComponent]]];
                     
                     percentComplete = newPercentComplete;
                     [lastProgressSet release];

@@ -595,28 +595,26 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction)forward:(id)sender
+- (IBAction) forward: (id) sender
 {
-    GIMessage *message = [self selectedMessage];
+    GIMessage* message = [self selectedMessage];
         
-    [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
+    [[[GIMessageEditorController alloc] initForward:message profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction)applySortingAndFiltering:(id)sender
+- (IBAction) applySortingAndFiltering: (id) sender
 /*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
 {
-    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+    NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
     int lastIndex = [selectedIndexes lastIndex];
     int firstIndex = [selectedIndexes firstIndex];
     int i;
 	
-    for (i = firstIndex; i <= lastIndex; i++) 
-    {
-        if ([threadsView isRowSelected:i]) 
-        {
+    for (i = firstIndex; i <= lastIndex; i++) {
+        if ([threadsView isRowSelected: i]) {
             // get one of the selected threads:
-            GIThread *thread = [OPPersistentObjectContext objectWithURLString: [threadsView itemAtRow: i]];
-            NSAssert([thread isKindOfClass:[GIThread class]], @"assuming object is a thread");
+            GIThread *thread = [threadsView itemAtRow: i];
+            NSAssert([thread isKindOfClass: [GIThread class]], @"assuming object is a thread");
             
             // remove selected thread from receiver's group:
             [[self group] removeValue: thread forKey: @"threadsByDate"];
