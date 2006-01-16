@@ -1195,8 +1195,11 @@ static BOOL isThreadItem(id item)
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item
 {
+    //return NO;
 	// Thread items are always expandable!
 	return isThreadItem(item) && [[item messages] count]>1;
+    
+    
 		//NSLog(@"isItemExpandable");
 		//return YES; // [[item messages] count]>1;
 		//return ![[self nonExpandableItems] containsObject: item];
@@ -1362,7 +1365,8 @@ static NSAttributedString* spacer2()
 
 - (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
 {
-    BOOL inSelectionAndAppActive = ([[threadsView selectedItems] containsObject: item] && [NSApp isActive] && [window isMainWindow]);
+    BOOL inSelection = [[threadsView selectedRowIndexes] containsIndex:[threadsView rowForItem:item]];
+    BOOL inSelectionAndAppActive = (inSelection && [NSApp isActive] && [window isMainWindow]);
     
     if (outlineView == threadsView) {
 		// subjects list
