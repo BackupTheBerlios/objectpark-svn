@@ -32,7 +32,7 @@
 
 #import <OPDebug/OPLog.h>
 #import <JavaVM/JavaVM.h>
-#import "GIFullTextIndexCenter.h"
+#import "GIFulltextIndex.h"
 
 @implementation GIApplication
 
@@ -282,7 +282,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fulltextIndexJobFinished:) name:OPJobDidFinishNotification object:[GIFulltextIndexCenter jobName]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fulltextIndexJobFinished:) name:OPJobDidFinishNotification object:[GIFulltextIndex jobName]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
 
@@ -496,10 +496,6 @@
         result = NSTerminateLater;
     }
     
-    /*
-    MPWDebugLog(@"%@ received an applicationShouldTerminate.", self);
-    [GIApplicationDelegate setIsTerminating:YES];
-    */
     return result;
 }
 
@@ -686,7 +682,7 @@
 
 - (IBAction)resetFulltextIndex:(id)sender
 {
-    [GIFulltextIndexCenter resetIndex];
+    [GIFulltextIndex resetIndex];
 }
 
 - (IBAction)fulltextIndexSomeMessages:(id)sender
@@ -708,7 +704,7 @@
         }
     }
     
-    [GIFulltextIndexCenter fulltextIndexInBackgroundAdding:messagesToAdd removing:messageOidsToRemove];
+    [GIFulltextIndex fulltextIndexInBackgroundAdding:messagesToAdd removing:messageOidsToRemove];
 }
 
 - (IBAction)showPhraseBrowser:(id)sender

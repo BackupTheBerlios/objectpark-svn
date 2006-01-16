@@ -1,5 +1,5 @@
 //
-//  GIFulltextIndexCenter.h
+//  GIFulltextIndex.h
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 18.04.05.
@@ -12,7 +12,7 @@
 
 @class GIMessage;
 
-@interface GIFulltextIndexCenter : NSObject 
+@interface GIFulltextIndex : NSObject 
 {
 }
 

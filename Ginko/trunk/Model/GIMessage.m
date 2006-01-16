@@ -19,7 +19,7 @@
 #import "GIApplication.h"
 #import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
-#import "GIFulltextIndexCenter.h"
+#import "GIFulltextIndex.h"
 
 @implementation GIMessage
 
@@ -132,7 +132,7 @@
 - (void) willDelete
 {
 	// remove message from fulltext index
-    //[GIFulltextIndexCenter removeMessagesWithIds: [NSArray arrayWithObject: [self messageId]]];
+    //[GIFulltextIndex removeMessagesWithIds: [NSArray arrayWithObject: [self messageId]]];
 	
 	GIThread* thread = [self valueForKey: @"thread"];
 	if (thread) {
@@ -226,7 +226,7 @@
 		[result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
 		NSAssert(result != nil, @"Could not create message object");
         
-        NSString* fromHeader = [im fromWithFallback: YES];
+        NSString *fromHeader = [im fromWithFallback: YES];
         
         [result setPrimitiveValue: im forKey: @"internetMessageCache"];
         [result setValue: someTransferData forKey: @"transferData"];

@@ -8,7 +8,7 @@
 
 #import "GIFulltextIndexJob.h"
 #import "OPJobs.h"
-#import "GIFulltextIndexCenter.h"
+#import "GIFulltextIndex.h"
 
 @implementation GIFulltextIndexJob
 
@@ -16,7 +16,7 @@
 {
     [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
     
-    [GIFulltextIndexCenter addMessages:messagesToIndexEnumerator];
+    [GIFulltextIndex addMessages:messagesToIndexEnumerator];
 }
 
 - (id)initWithMessages:(OPPersistentObjectEnumerator *)someMessages

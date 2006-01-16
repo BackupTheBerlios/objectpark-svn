@@ -14,7 +14,7 @@
 #import "OPMBoxFile.h"
 #import "OPPersistentObject+Extensions.h"
 #import "GIUserDefaultsKeys.h"
-#import "GIFulltextIndexCenter.h"
+#import "GIFulltextIndex.h"
 #import "NSData+MessageUtils.h"
 #import "OPJobs.h"
 #import "GIMessageFilter.h"
@@ -44,7 +44,7 @@
 		}
 		
 		// add message to index
-		//GIFulltextIndexCenter* indexCenter = [GIFulltextIndexCenter defaultIndexCenter];
+		//GIFulltextIndex* indexCenter = [GIFulltextIndex defaultIndexCenter];
 		//[indexCenter addMessage:message];
 		NSLog(@"adding message... '%@'", [[aMessage internetMessage] subject]);
 	} 	

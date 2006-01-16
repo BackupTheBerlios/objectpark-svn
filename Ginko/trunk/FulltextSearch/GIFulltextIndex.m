@@ -1,12 +1,12 @@
 //
-//  GIFulltextIndexCenter.m
+//  GIFulltextIndex.m
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 18.04.05.
 //  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import "GIFulltextIndexCenter.h"
+#import "GIFulltextIndex.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIApplication.h"
 #import "OPObjectPair.h"
@@ -17,11 +17,11 @@
 #import <OPDebug/OPLog.h>
 #import "GIUserDefaultsKeys.h"
 
-@interface GIFulltextIndexCenter (JVMStuff)
+@interface GIFulltextIndex (JVMStuff)
 + (JNIEnv *)jniEnv;
 @end
 
-@implementation GIFulltextIndexCenter
+@implementation GIFulltextIndex
 
 + (int)changeCount
 {
@@ -415,6 +415,39 @@
     return analyzer;
 }
 
++ (jclass)fsDirectoryClass
+{
+    JNIEnv *env = [self jniEnv];
+    
+    jclass indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/store/FSDirectory");
+    NSAssert(indexWriterClass != NULL, @"org.apache.lucene.store.FSDirectory couldn't be found.");
+    
+    return indexWriterClass;
+}
+
++ (jobject)fsDirectoryGetDirectory:(jstring)path create:(jboolean)create
+{
+    JNIEnv *env = [self jniEnv];
+    jclass fsdirClass = [self fsDirectoryClass];
+    
+    jmethodID mid = (*env)->GetStaticMethodID(env, fsdirClass, "getDirectory", "(Ljava/lang/String;Z)Lorg/apache/lucene/store/FSDirectory;");
+    NSAssert(mid != NULL, @"getDirectory static method couldn't be found.");
+    
+    jobject result = NULL;
+    
+    result = (*env)->CallStaticObjectMethod(env, fsdirClass, mid, path, create);
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+        
+    return result;
+}
+
 + (jclass)indexWriterClass
 {
     JNIEnv *env = [self jniEnv];
@@ -611,6 +644,25 @@
     NSAssert(result != NULL, @"open static method doesn't generate a IndexReader object.");
         
     return result;
+}
+
++ (void)indexReaderUnlock:(jobject)aDirectory
+{
+    JNIEnv *env = [self jniEnv];
+    jclass readerClass = [self indexReaderClass];
+        
+    jmethodID mid = (*env)->GetStaticMethodID(env, readerClass, "unlock", "(Lorg/apache/lucene/store/Directory;)V");
+    NSAssert(mid != NULL, @"unlock static method couldn't be found.");
+    
+    (*env)->CallStaticVoidMethod(env, readerClass, mid, aDirectory);
+    jthrowable exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
 }
 
 + (void)indexReaderClose:(jobject)reader
@@ -967,7 +1019,7 @@
     
     if (hits == NULL) return nil;
     
-    jint i, hitsCount = [GIFulltextIndexCenter hitsLength:hits];
+    jint i, hitsCount = [GIFulltextIndex hitsLength:hits];
     
     result = [NSMutableArray arrayWithCapacity:(int)hitsCount];
     dupeCheck = [NSMutableSet set];
@@ -1025,16 +1077,16 @@
         
         // messages to add:
         NSArray *messagesToAdd = [arguments objectForKey:@"messagesToAdd"];
-        if ([messagesToAdd count]) [GIFulltextIndexCenter addMessages:messagesToAdd];
+        if ([messagesToAdd count]) [GIFulltextIndex addMessages:messagesToAdd];
         
         // messages to remove:
         NSArray *messageOidsToRemove = [arguments objectForKey:@"messageOidsToRemove"];
-        if ([messageOidsToRemove count]) [GIFulltextIndexCenter removeMessagesWithOids:messageOidsToRemove];
+        if ([messageOidsToRemove count]) [GIFulltextIndex removeMessagesWithOids:messageOidsToRemove];
         
-        if (([GIFulltextIndexCenter changeCount] >= 1500) && (![OPJobs shouldTerminate]))
+        if (([GIFulltextIndex changeCount] >= 1500) && (![OPJobs shouldTerminate]))
         {
             NSLog(@"optimizing index\n");
-            [GIFulltextIndexCenter optimize];
+            [GIFulltextIndex optimize];
         }
         
         [GIApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
@@ -1080,7 +1132,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include "utils.h"
 
-@implementation GIFulltextIndexCenter (JVMStuff)
+@implementation GIFulltextIndex (JVMStuff)
 static JavaVM *theVM = NULL;
 
 /*Starts a JVM using the options,classpath,main class, and args stored in a VMLauchOptions structure */ 
@@ -1167,31 +1219,43 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
 
 + (JNIEnv *)jniEnv
 {
-    if (! theVM)
+    @synchronized(self)
     {
-        /* Allocated the structure that will be used to return the launch options */
-        VMLaunchOptions *vmLaunchOptions = malloc(sizeof(VMLaunchOptions));
-        vmLaunchOptions->nOptions = 1;
-        JavaVMOption *option = malloc(vmLaunchOptions->nOptions * sizeof(JavaVMOption));
-        vmLaunchOptions->options = option;
-        option->extraInfo = NULL;
-        
-        NSString *opt = [@"-Djava.class.path=" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
-        
-        NSLog(@"option = %@", opt);
-        
-        CFIndex optionStringSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)opt), kCFStringEncodingUTF8);
-        option->optionString = malloc(optionStringSize+1);
-        /* Now copy the option into the the optionString char* buffer in a UTF8 encoding */
-        if(!CFStringGetCString((CFStringRef)opt, (char *)option->optionString, optionStringSize, kCFStringEncodingUTF8)) {
-            fprintf(stderr, "[JavaAppLauncher Error] Error parsing JVM options.\n");
-            exit(-1);
-        }        
-        
-        JNIEnv *env = startupJava(vmLaunchOptions);
-        [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)env] forKey:@"jniEnv"];   
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadExited:) name:NSThreadWillExitNotification object:nil]; 
+        if (! theVM)
+        {
+            /* Allocated the structure that will be used to return the launch options */
+            VMLaunchOptions *vmLaunchOptions = malloc(sizeof(VMLaunchOptions));
+            vmLaunchOptions->nOptions = 1;
+            JavaVMOption *option = malloc(vmLaunchOptions->nOptions * sizeof(JavaVMOption));
+            vmLaunchOptions->options = option;
+            option->extraInfo = NULL;
+            
+            NSString *opt = [@"-Djava.class.path=" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
+            
+            NSLog(@"option = %@", opt);
+            
+            CFIndex optionStringSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)opt), kCFStringEncodingUTF8);
+            option->optionString = malloc(optionStringSize+1);
+            /* Now copy the option into the the optionString char* buffer in a UTF8 encoding */
+            if(!CFStringGetCString((CFStringRef)opt, (char *)option->optionString, optionStringSize, kCFStringEncodingUTF8)) {
+                fprintf(stderr, "[JavaAppLauncher Error] Error parsing JVM options.\n");
+                exit(-1);
+            }        
+            
+            JNIEnv *env = startupJava(vmLaunchOptions);
+            [[[NSThread currentThread] threadDictionary] setObject:[NSNumber numberWithUnsignedInt:(unsigned int)env] forKey:@"jniEnv"];   
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadExited:) name:NSThreadWillExitNotification object:nil]; 
+            
+            // remove directory lock if present:
+            jstring  javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
+            jobject directory = [self fsDirectoryGetDirectory:javaIndexPath create:JNI_FALSE];
+            if (directory)
+            {
+                // remove lock:
+                [self indexReaderUnlock:directory];
+            }
+        }
     }
     
     JNIEnv *result = (JNIEnv *)[[[[NSThread currentThread] threadDictionary] objectForKey:@"jniEnv"] unsignedIntValue];
@@ -1220,7 +1284,7 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
 + (void)threadExited:(NSNotification *)aNotification
 {
     NSThread *exitingThread = [aNotification object];
-    NSLog(@"threadExited: %@", exitingThread);
+    //NSLog(@"threadExited: %@", exitingThread);
     JNIEnv *env = (JNIEnv *)[[[exitingThread threadDictionary] objectForKey:@"jniEnv"] unsignedIntValue];
     if (env)
     {

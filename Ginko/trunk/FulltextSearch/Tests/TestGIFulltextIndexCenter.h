@@ -1,5 +1,5 @@
 //
-//  TestGIFulltextIndexCenter.h
+//  TestGIFulltextIndex.h
 //  GinkoVoyager
 //
 //  Created by Ulf Licht on 14.05.05.
@@ -9,7 +9,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 
-@interface TestGIFulltextIndexCenter : SenTestCase {
+@interface TestGIFulltextIndex : SenTestCase {
 
 }
 

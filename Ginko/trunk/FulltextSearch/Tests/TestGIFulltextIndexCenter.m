@@ -1,27 +1,27 @@
 //
-//  TestGIFulltextIndexCenter.m
+//  TestGIFulltextIndex.m
 //  GinkoVoyager
 //
 //  Created by Ulf Licht on 14.05.05.
 //  Copyright (c) 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
 //
 
-#import "TestGIFulltextIndexCenter.h"
+#import "TestGIFulltextIndex.h"
 #import "GIMessageBase.h"
 #import "GIMessageGroup.h"
 #import "GIThread.h"
-#import "GIFulltextIndexCenter.h"
+#import "GIFulltextIndex.h"
 #import "GIMessage.h"
 #import "OPPersistentObject+Extensions.h"
 
-@implementation TestGIFulltextIndexCenter
+@implementation TestGIFulltextIndex
 
 GIMessage* tempMessage;
 NSMutableArray* tempMessageArray;
 
 - (void) setUp
 {
-    NSLog(@"-[TestGIFulltextIndexCenter setUp]");
+    NSLog(@"-[TestGIFulltextIndex setUp]");
     int maxTestMessageCount = 100;
     tempMessageArray = [NSMutableArray arrayWithCapacity:maxTestMessageCount];
     [tempMessageArray retain];
@@ -59,7 +59,7 @@ NSMutableArray* tempMessageArray;
 
 - (void) tearDown
 {
-    NSLog(@"-[TestGIFulltextIndexCenter tearDown]");
+    NSLog(@"-[TestGIFulltextIndex tearDown]");
     [tempMessage release];
     [tempMessageArray release];
     [[OPPersistentObjectContext threadContext] revertChanges];
@@ -69,33 +69,33 @@ NSMutableArray* tempMessageArray;
 /*
 - (void) testAddMessage
 {
-    NSLog(@"-[TestGIFulltextIndexCenter testAddOneMessage]");
+    NSLog(@"-[TestGIFulltextIndex testAddOneMessage]");
     //NSLog(@"adding message '%@' with text: %@", [tempMessage messageId], [[tempMessage contentAsAttributedString] string]);
-    STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
+    STAssertTrue([[GIFulltextIndex defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
     STAssertTrue([tempMessage hasFlags:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
     //STAssertTrue([tempIndexCenter flushIndex],@"[tempIndexCenter flushIndex] must return true");
 }
 
 - (void) testAddTwoMessages
 {
-    NSLog(@"-[TestGIFulltextIndexCenter testAddTwoMessages]");
+    NSLog(@"-[TestGIFulltextIndex testAddTwoMessages]");
     //NSLog(@"adding message '%@' with text: %@", [tempMessage messageId], [[tempMessage contentAsAttributedString] string]);
-    STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
+    STAssertTrue([[GIFulltextIndex defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
     STAssertTrue([tempMessage hasFlags:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
     //STAssertTrue([tempIndexCenter flushIndex],@"[tempIndexCenter flushIndex] must return true");
-    STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
+    STAssertTrue([[GIFulltextIndex defaultIndexCenter] addMessage:tempMessage], @"addMessage must return true");
     STAssertTrue([tempMessage hasFlags:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
 }
 */
  
 - (void) testAddManyMessages
 {
-    NSLog(@"-[TestGIFulltextIndexCenter testAddManyMessages]");
+    NSLog(@"-[TestGIFulltextIndex testAddManyMessages]");
     //int i;
     NSEnumerator * messageEnumerator = [tempMessageArray objectEnumerator];
     GIMessage * tempMessageFromArray;
     while ( tempMessageFromArray = [messageEnumerator nextObject] ) {
-//        STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] addMessage:tempMessageFromArray], @"addMessage must return true");
+//        STAssertTrue([[GIFulltextIndex defaultIndexCenter] addMessage:tempMessageFromArray], @"addMessage must return true");
         STAssertTrue([tempMessageFromArray hasFlags:OPFulltextIndexedStatus],@"tempMessage must have status OPFulltextIndexedStatus after adding");
     }
 }
@@ -103,21 +103,21 @@ NSMutableArray* tempMessageArray;
 /*
 - (void) testReindexAllMessages
 {
-    NSLog(@"-[TestGIFulltextIndexCenter reindexAllMessages]");
+    NSLog(@"-[TestGIFulltextIndex reindexAllMessages]");
     STAssertTrue([tempIndexCenter reindexAllMessages],@"[tempIndexCenter reindexAllMessages] must return true");
 }
 */
 
 - (void) testSearch
 {
-    NSLog(@"-[TestGIFulltextIndexCenter testSearch]");
-//    STAssertTrue( 1 <= [[[GIFulltextIndexCenter defaultIndexCenter] hitsForQueryString: @"Ulf Licht"] count], @"search did not result in one hit");
+    NSLog(@"-[TestGIFulltextIndex testSearch]");
+//    STAssertTrue( 1 <= [[[GIFulltextIndex defaultIndexCenter] hitsForQueryString: @"Ulf Licht"] count], @"search did not result in one hit");
 }
 
 - (void) testXRemoveMessage
 {
-    NSLog(@"-[TestGIFulltextIndexCenter testXRemoveMessage]");
-//    STAssertTrue([[GIFulltextIndexCenter defaultIndexCenter] removeMessage:tempMessage],@"removeMessage must return true");
+    NSLog(@"-[TestGIFulltextIndex testXRemoveMessage]");
+//    STAssertTrue([[GIFulltextIndex defaultIndexCenter] removeMessage:tempMessage],@"removeMessage must return true");
     STAssertFalse([tempMessage hasFlags:OPFulltextIndexedStatus],@"tempMessage must not have status OPFulltextIndexedStatus after removing from index");
 }
 

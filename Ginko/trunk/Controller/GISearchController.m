@@ -7,7 +7,7 @@
 //
 
 #import "GISearchController.h"
-#import "GIFulltextIndexCenter.h"
+#import "GIFulltextIndex.h"
 #import "GIApplication.h"
 #import "GIMessage.h"
 
@@ -45,7 +45,7 @@
 {
     NSLog(@"[GIThreadListController search] will search for %@", [sender stringValue]);
     // set searchResults
-    [self setSearchResults:[[GIFulltextIndexCenter defaultIndexCenter] hitsForQueryString:[sender stringValue]]];
+    [self setSearchResults:[[GIFulltextIndex defaultIndexCenter] hitsForQueryString:[sender stringValue]]];
 }
 
 - (int) numberOfRowsInTableView: (NSTableView*) aTableView

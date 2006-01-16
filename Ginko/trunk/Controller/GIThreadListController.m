@@ -21,7 +21,7 @@
 #import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
 #import "OPJobs.h"
-#import "GIFulltextIndexCenter.h"
+#import "GIFulltextIndex.h"
 #import "GIOutlineViewWithKeyboardSupport.h"
 #import "GIMessage.h"
 #import "GIMessageBase.h"
@@ -44,30 +44,37 @@ static NSString* ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @implementation GIThreadListController
 
-- (id) init
+- (id)init
 {
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name:@"GroupContentChangedNotification" object: self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
 	
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(modelChanged:) name:OPJobDidFinishNotification object: MboxImportJobName];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
     
     itemRetainer = [[NSMutableSet alloc] init];
     
     return [[super init] retain]; // self retaining!
 }
 
-- (id) initWithGroup: (GIMessageGroup*) aGroup
+- (id)initWithGroup:(GIMessageGroup *)aGroup
 /*" aGroup may be nil, any group will be used then. "*/
 {
-    if (self = [self init]) {
-        if (! aGroup) {
+    if (self = [self init]) 
+    {
+        if (! aGroup) 
+        {
 			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
 		[self setGroup:aGroup];
-		[NSBundle loadNibNamed: @"Group" owner: self]; // sets threadsView
+		[NSBundle loadNibNamed:@"Group" owner:self]; // sets threadsView
     }
     
     return self;
+}
+
+- (void)updateWindowTitle
+{
+    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
 }
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
@@ -679,7 +686,7 @@ static BOOL isThreadItem(id item)
         {
             [OPJobs suspendPendingJobs];
             
-            NSArray *conflictingJobs = [OPJobs runningJobsWithName:[GIFulltextIndexCenter jobName]];
+            NSArray *conflictingJobs = [OPJobs runningJobsWithName:[GIFulltextIndex jobName]];
             if ([conflictingJobs count])
             {
                 NSEnumerator *enumerator = [conflictingJobs objectEnumerator];
@@ -693,7 +700,7 @@ static BOOL isThreadItem(id item)
             
             [tabView selectTabViewItemWithIdentifier:@"searchresult"];
             
-            [self setHits:[GIFulltextIndexCenter hitsForQueryString:query]];
+            [self setHits:[GIFulltextIndex hitsForQueryString:query]];
             
             NSLog(@"hits count = %d", [hits count]);
             
@@ -916,11 +923,6 @@ static BOOL isThreadItem(id item)
     } else  {
         NSBeep();
     }
-}
-
-- (void)updateWindowTitle
-{
-    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
 }
 
 - (int)threadLimitCount 
