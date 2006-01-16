@@ -212,6 +212,7 @@
 }
 
 - (BOOL) hasUnreadMessages
+/*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    
 	NSEnumerator* enumerator = [[self messages] objectEnumerator];
 	GIMessage* message;

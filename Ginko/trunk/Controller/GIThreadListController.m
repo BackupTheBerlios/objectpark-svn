@@ -158,42 +158,40 @@ static BOOL isThreadItem(id item)
     [self autorelease]; // balance self-retaining
 }
 
-- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
+- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
     NSParameterAssert(isThreadItem(aThread));
     
     int itemRow;
-    BOOL isNewThread = ![aThread isEqual:displayedThread];
+    BOOL isNewThread = ![aThread isEqual: displayedThread];
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
-    [displayedMessage addFlags:OPSeenStatus];
+    [displayedMessage addFlags: OPSeenStatus];
     
-    if (isNewThread) 
-    {
+    if (isNewThread) {
         [displayedThread autorelease];
         displayedThread = [aThread retain];
     }
     
     // make sure that thread is expanded in threads outline view:
-    if (aThread && (![aThread containsSingleMessage])) 
-    {
-        [threadsView expandItem:aThread];
+    if (aThread && (![aThread containsSingleMessage])) {
+        [threadsView expandItem: aThread];
     }
     
     // select responding item in threads view:
     //if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     //{ 
-	itemRow = [[group valueForKey:@"threadsByDate"] indexOfObject:aThread];
-	itemRow = [threadsView rowForItemEqualTo:aThread startingAtRow:itemRow];
+	itemRow = [[group valueForKey: @"threadsByDate"] indexOfObject: aThread]; // estimation!
+	itemRow = [threadsView rowForItemEqualTo: ([aThread containsSingleMessage] ? aThread : aMessage) startingAtRow: itemRow];
     //}
     
-    [threadsView selectRow:itemRow byExtendingSelection:NO];
-    [threadsView scrollRowToVisible:itemRow];
+    [threadsView selectRow: itemRow byExtendingSelection: NO];
+    [threadsView scrollRowToVisible: itemRow];
     
     // message display string:
-    NSAttributedString *messageText = nil;
+    NSAttributedString* messageText = nil;
     
     if (showRawSource) {
         NSData *transferData;
@@ -201,8 +199,7 @@ static BOOL isThreadItem(id item)
         
         static NSDictionary *fixedFont = nil;
         
-        if (!fixedFont) 
-        {
+        if (!fixedFont) {
             fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
         }
         
