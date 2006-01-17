@@ -45,7 +45,7 @@
 
 - (void) willDelete
 {
-	NSLog(@"Will delete Thread!");
+	//NSLog(@"Will delete Thread!");
 	[super willDelete];
 }
 

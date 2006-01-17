@@ -726,6 +726,9 @@
     GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
     OPFaultingArray *threads = [trashgroup valueForKey:@"threadsByDate"];
     GIThread *thread;
+    int counter = 0;
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     while (thread = [threads lastObject]) 
     {
@@ -735,9 +738,19 @@
         {
             [thread delete];
         }
+        
+        counter += 1;
+        
+        if ((counter % 500) == 0)
+        {
+            [self saveAction:self];
+            [pool release];
+            pool = [[NSAutoreleasePool alloc] init];
+        }
     }    
-    
+
     [self saveAction:self];
+    [pool release];
 }
 
 @end

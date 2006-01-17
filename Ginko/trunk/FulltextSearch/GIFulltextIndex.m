@@ -585,11 +585,11 @@
                     [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
 
                     [self indexWriter:indexWriter addDocument:doc];
-                    if ((counter % 5000) == 0) 
+                    if ((counter % 2500) == 0) 
                     {
                         [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
                         [self indexWriterOptimize:indexWriter];
-                        [self addChangeCount:-5000];
+                        [self addChangeCount:-2500];
                     }
                     
                     [message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
