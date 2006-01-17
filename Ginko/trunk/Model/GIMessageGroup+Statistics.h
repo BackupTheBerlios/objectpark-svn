@@ -14,11 +14,11 @@
 - (NSDictionary *)statistics;
 - (void)invalidateStatistics;
 
-- (void)calculateStatisticsAndNotify;
+- (NSNumber *)calculateUnreadMessageCount;
 
 @end
 
-extern NSString* GINumberOfUnreadMessages;
-extern NSString* GINumberOfUnreadThreads;
+extern NSString *GINumberOfUnreadMessages;
+extern NSString *GINumberOfUnreadThreads;
 
-extern NSString* GIMessageGroupStatisticsDidChangeNotification;
+extern NSString *GIMessageGroupStatisticsDidChangeNotification;

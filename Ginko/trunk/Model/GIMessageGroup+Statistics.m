@@ -48,9 +48,17 @@ static NSMutableDictionary *allGroupStats = nil;
     }
 }
 
-- (void)calculateStatisticsAndNotify
+- (NSNumber *)calculateUnreadMessageCount
 {
+    OPSQLiteStatement *statement = [[[OPSQLiteStatement alloc] initWithSQL:[NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:[[OPPersistentObjectContext defaultContext] databaseConnection]] autorelease];
     
+    //NSLog(@"%lu", (unsigned long)[self oid]);
+    
+    [statement execute];
+    
+    NSNumber *unreadMessages = [NSNumber newFromStatement:[statement stmt] index:0];
+    
+    return unreadMessages;
 }
 
 @end

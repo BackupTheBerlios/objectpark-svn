@@ -140,6 +140,7 @@
 		77CDEE8007CBC05300675C49 /* Add.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7807CBC05300675C49 /* Add.tiff */; };
 		77CDEE8107CBC05300675C49 /* Remove_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */; };
 		77CDEE8207CBC05300675C49 /* Remove.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7A07CBC05300675C49 /* Remove.tiff */; };
+		77D23028097CE048002BB88E /* GIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D167D5E09057508000F4F45 /* GIAccount.h */; };
 		77D2A04C0972E50B0044E464 /* DraftsMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04B0972E50B0044E464 /* DraftsMailbox.tiff */; };
 		77D2A04E0972E52A0044E464 /* drag.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04D0972E52A0044E464 /* drag.tiff */; };
 		77D2A0500972E57C0044E464 /* InMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04F0972E57C0044E464 /* InMailbox.tiff */; };
@@ -176,7 +177,6 @@
 		8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D1543D009092C440039DB71 /* OPInternetMessage+GinkoExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */; };
-		8D167D6009057508000F4F45 /* GIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D167D5E09057508000F4F45 /* GIAccount.h */; };
 		8D167D6109057508000F4F45 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D167D5F09057508000F4F45 /* GIAccount.m */; };
 		8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D17B5C70895BBC30057A1C6 /* GIProfile.h */; };
 		8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17B5C80895BBC30057A1C6 /* GIProfile.m */; };
@@ -1498,7 +1498,6 @@
 				8D3EF46308B543C700EC41EC /* OPPersistence.h in Headers */,
 				8D3EF46408B543C900EC41EC /* OPPersistenceConstants.h in Headers */,
 				8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */,
-				8D167D6009057508000F4F45 /* GIAccount.h in Headers */,
 				8D3CDEB7090D7ED3004657A0 /* GIGroupListController.h in Headers */,
 				8D840C02090F8DF50093CFAD /* NSEnumerator+Extensions.h in Headers */,
 				77CD6C14092B2BB500D7E986 /* GIPhraseBrowserController.h in Headers */,
@@ -1511,6 +1510,7 @@
 				77D471E0095BF0E2003CEAEA /* utils.h in Headers */,
 				77608AE30972F4030071A01F /* OPImageAndTextCell.h in Headers */,
 				77DA79A9097B95E900B7A5CC /* GIFulltextIndex.h in Headers */,
+				77D23028097CE048002BB88E /* GIAccount.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

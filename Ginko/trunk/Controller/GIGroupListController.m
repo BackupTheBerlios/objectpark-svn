@@ -24,6 +24,7 @@
 #import "NSString+Extensions.h"
 #import "GIApplication.h"
 #import "OPImageAndTextCell.h"
+#import "GIMessageGroup+Statistics.h"
 
 @implementation GIGroupListController
 
@@ -123,12 +124,16 @@
 	return YES;
 }
 
-- (IBAction) rename: (id) sender
+- (IBAction)rename:(id)sender
 /*" Renames the selected item (folder or group). "*/
 {
     int lastSelectedRow  = [boxesView selectedRow];
     
-    if (lastSelectedRow != -1) [boxesView editColumn: 0 row: lastSelectedRow withEvent: nil select: YES];
+    if (lastSelectedRow != -1) 
+    {
+        int index = [[boxesView tableColumns] indexOfObject:[boxesView tableColumnWithIdentifier:@"info"]];
+        [boxesView editColumn:index row:lastSelectedRow withEvent:nil select:YES];
+    }
 }
 
 - (IBAction) delete: (id) sender
@@ -283,11 +288,11 @@
     {
         if (![item isKindOfClass:[NSMutableArray class]]) 
         {
-            //GIMessageGroup* g = item;
+            GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:item];
             //NSMutableArray *threadURIs = [NSMutableArray array];
             //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
             
-            return @"";
+            return [group calculateUnreadMessageCount];
             /*
              [g fetchThreadURIs:&threadURIs
                  trivialThreads: NULL

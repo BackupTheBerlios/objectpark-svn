@@ -557,7 +557,8 @@
 {
     @synchronized(self)
     {
-        int counter = 1;
+        int counter = 0;
+        int maxCount = [someMessages count];
         JNIEnv *env = [self jniEnv];
         NSAutoreleasePool *pool = nil;
         if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Lucene out of memory!"); return;}
@@ -577,11 +578,16 @@
                 @try
                 {
                     jobject doc = [self luceneDocumentFromMessage:message];
-                    NSLog(@"indexed document no = %d\n", counter++);
+                    counter += 1;
+                    
+                    //NSLog(@"indexed document no = %d\n", counter);
+                    
+                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
+
                     [self indexWriter:indexWriter addDocument:doc];
-                    if (((counter - 1) % 5000) == 0) 
+                    if ((counter % 5000) == 0) 
                     {
-                        NSLog(@"optimizing index\n");
+                        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
                         [self indexWriterOptimize:indexWriter];
                         [self addChangeCount:-5000];
                     }
@@ -748,7 +754,9 @@
 + (void)removeMessagesWithOids:(NSArray *)someOids
 {
     JNIEnv *env = [self jniEnv];
-    if ([someOids count])
+    int maxCount = [someOids count];
+    
+    if (maxCount)
     {;
         @synchronized(self)
         {
@@ -786,7 +794,10 @@
                          {
                              NSLog(@"Deleted more than one message for a single message id from fulltext index.");
                          }
-                         removedCount += 1;;
+                         removedCount += 1;
+                         
+                         [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)1 maxValue:(double)maxCount currentValue:(double)removedCount description:NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
+
                      }
                      @catch (NSException *localException)
                      {
@@ -1083,12 +1094,13 @@
         NSArray *messageOidsToRemove = [arguments objectForKey:@"messageOidsToRemove"];
         if ([messageOidsToRemove count]) [GIFulltextIndex removeMessagesWithOids:messageOidsToRemove];
         
-        if (([GIFulltextIndex changeCount] >= 1500) && (![OPJobs shouldTerminate]))
+        if (([GIFulltextIndex changeCount] >= 2500) && (![OPJobs shouldTerminate]))
         {
-            NSLog(@"optimizing index\n");
+            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
             [GIFulltextIndex optimize];
         }
         
+        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
         [GIApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
     }
 }

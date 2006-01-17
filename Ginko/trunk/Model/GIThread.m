@@ -142,20 +142,20 @@
 }
 
 
-+ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
-//" Overwritten from OPPersistentObject to support fetching the age attribute used for sorting together with the oid on fault creation time. This allows us to update e.g. the threadsByDate relation in GIMessageGroup without re-fetching all threads (which is slow). "/
-{
-	GIThread* result = [super newFromStatement: statement index: index];
-	
-	if (result) {
-		int columnCount = sqlite3_column_count(statement);
-		index++; // forward to next column, i.e. the date
-		if (columnCount>index) {
-			result->age = sqlite3_column_int(statement, index);
-		}
-	}
-	return result;
-}
+//+ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
+////" Overwritten from OPPersistentObject to support fetching the age attribute used for sorting together with the oid on fault creation time. This allows us to update e.g. the threadsByDate relation in GIMessageGroup without re-fetching all threads (which is slow). "/
+//{
+//	GIThread* result = [super newFromStatement: statement index: index];
+//	
+//	if (result) {
+//		int columnCount = sqlite3_column_count(statement);
+//		index++; // forward to next column, i.e. the date
+//		if (columnCount>index) {
+//			result->age = sqlite3_column_int(statement, index);
+//		}
+//	}
+//	return result;
+//}
 
 - (unsigned) messageCount
 {

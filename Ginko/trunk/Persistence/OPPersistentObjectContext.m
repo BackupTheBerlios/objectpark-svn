@@ -181,7 +181,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 		// Put it in the fault cache:
 		//unsigned retainCount = [result retainCount];
 		[faultCache addObject: result]; // cache result
-		if ([faultCache count]>=faultCacheSize) {
+		if ([faultCache count] > faultCacheSize) {
 			[faultCache removeObjectAtIndex: 0]; // release some object
 		}	
 	}

@@ -158,40 +158,42 @@ static BOOL isThreadItem(id item)
     [self autorelease]; // balance self-retaining
 }
 
-- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
     NSParameterAssert(isThreadItem(aThread));
     
     int itemRow;
-    BOOL isNewThread = ![aThread isEqual: displayedThread];
+    BOOL isNewThread = ![aThread isEqual:displayedThread];
     
     [displayedMessage autorelease];
     displayedMessage = [aMessage retain];
-    [displayedMessage addFlags: OPSeenStatus];
+    [displayedMessage addFlags:OPSeenStatus];
     
-    if (isNewThread) {
+    if (isNewThread) 
+    {
         [displayedThread autorelease];
         displayedThread = [aThread retain];
     }
     
     // make sure that thread is expanded in threads outline view:
-    if (aThread && (![aThread containsSingleMessage])) {
-        [threadsView expandItem: aThread];
+    if (aThread && (![aThread containsSingleMessage])) 
+    {
+        [threadsView expandItem:aThread];
     }
     
     // select responding item in threads view:
     //if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     //{ 
-	itemRow = [[group valueForKey: @"threadsByDate"] indexOfObject: aThread]; // estimation!
-	itemRow = [threadsView rowForItemEqualTo: ([aThread containsSingleMessage] ? aThread : aMessage) startingAtRow: itemRow];
+	itemRow = [[group valueForKey:@"threadsByDate"] indexOfObject:aThread]; // estimation!
+	itemRow = [threadsView rowForItemEqualTo:([aThread containsSingleMessage] ? aThread : aMessage) startingAtRow:itemRow];
     //}
     
-    [threadsView selectRow: itemRow byExtendingSelection: NO];
-    [threadsView scrollRowToVisible: itemRow];
+    [threadsView selectRow:itemRow byExtendingSelection:NO];
+    [threadsView scrollRowToVisible:itemRow];
     
     // message display string:
-    NSAttributedString* messageText = nil;
+    NSAttributedString *messageText = nil;
     
     if (showRawSource) {
         NSData *transferData;
@@ -199,7 +201,8 @@ static BOOL isThreadItem(id item)
         
         static NSDictionary *fixedFont = nil;
         
-        if (!fixedFont) {
+        if (!fixedFont) 
+        {
             fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
         }
         
@@ -255,6 +258,8 @@ static BOOL isThreadItem(id item)
         }
         [treeBodySplitter setFirstSubviewSize:newHeight];
     }
+
+    [GIApp saveAction:self];
     //}
     //[commentsMatrix scrollCellToVisibleAtRow: [commentsMatrix selectedRow] column: [commentsMatrix selectedRow]];
 }
@@ -782,27 +787,29 @@ static BOOL isThreadItem(id item)
     return NO;
 }
 
-- (void) toggleFlag: (unsigned int) flag
+- (void)toggleFlag:(unsigned int)flag
 {
-    NSArray* selectedMessages;
-    BOOL set = [self isAnySelectedItemNotHavingMessageflags: flag 
-										allSelectedMessages: &selectedMessages];
-    NSEnumerator* enumerator = [selectedMessages objectEnumerator];
-    GIMessage* message;
+    NSArray *selectedMessages;
+    BOOL set = [self isAnySelectedItemNotHavingMessageflags:flag 
+										allSelectedMessages:&selectedMessages];
+    NSEnumerator *enumerator = [selectedMessages objectEnumerator];
+    GIMessage *message;
     
-    while (message = [enumerator nextObject]) {
-        if (set) [message addFlags: flag];
-        else [message removeFlags: flag];
-		[threadsView reloadItem: message reloadChildren: NO];
+    while (message = [enumerator nextObject]) 
+    {
+        if (set) [message addFlags:flag];
+        else [message removeFlags:flag];
+		[threadsView reloadItem:message reloadChildren:NO];
     }
     
+    [GIApp saveAction:self];
     // not necessary if flag changes would be recognized automatically:
     //[threadsView reloadData];
 }
 
-- (IBAction) toggleReadFlag: (id) sender
+- (IBAction)toggleReadFlag:(id)sender
 {
-    [self toggleFlag: OPSeenStatus];
+    [self toggleFlag:OPSeenStatus];
 }
 
 - (NSArray*) selectedThreads
@@ -1192,7 +1199,8 @@ static BOOL isThreadItem(id item)
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item
 {
-    //return NO;
+	return isThreadItem(item) && (![item isFault]) && [[item messages] count]>1;
+    
 	// Thread items are always expandable!
 	return isThreadItem(item) && [[item messages] count]>1;
     
@@ -1215,7 +1223,10 @@ static BOOL isThreadItem(id item)
 	} else {            
 		result = [[item messages/*ByTree*/] objectAtIndex: index];
 	}
-    [itemRetainer addObject: result];
+//    if (![itemRetainer containsObject: result]) {
+        [itemRetainer addObject: result];
+//        if (item) [threadsView reloadItem: item reloadChildren: YES];
+//    }
     return result;
 }
 

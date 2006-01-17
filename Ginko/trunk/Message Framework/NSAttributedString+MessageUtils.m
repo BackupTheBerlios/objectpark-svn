@@ -692,7 +692,7 @@ NSString *bytes2Display(unsigned int bytes)
             if(schemeRange.length != 0)
             {
                 // if the char before schemeRange is a '<' we need to look for it as the end of the string
-                if ([string characterAtIndex:(schemeRange.location - 1)] == '<')
+                if ((schemeRange.location > 0) && ([string characterAtIndex:(schemeRange.location - 1)] == '<'))
                     urlIsWrappedByBrackets = YES;
                 else
                     urlIsWrappedByBrackets = NO;
