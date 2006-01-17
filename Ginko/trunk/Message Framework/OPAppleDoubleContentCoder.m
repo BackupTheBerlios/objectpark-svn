@@ -654,4 +654,9 @@
     return result;
 }
 
+- (NSString *)string
+{
+    return [[@"\n" stringByAppendingString:filename] stringByAppendingString:@"\n"];
+}
+
 @end

@@ -92,23 +92,20 @@
 //	CONTENT ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-- (NSString*) text
+- (NSString *)text
 {
     return text;
 }
-
 
 - (EDMessagePart *)messagePart
 {
     return [self _encodeTextWithClass:[EDMessagePart class]];
 }
 
-
 - (OPInternetMessage *)message
 {
     return [self _encodeTextWithClass:[OPInternetMessage class]];
 }
-
 
 //---------------------------------------------------------------------------------------
 //	CODING ATTRIBUTES
@@ -242,6 +239,11 @@
     [result urlify];
     
     return [result autorelease];
+}
+
+- (NSString *)string
+{
+    return [self text];
 }
 
 //---------------------------------------------------------------------------------------

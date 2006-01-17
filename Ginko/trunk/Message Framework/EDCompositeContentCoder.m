@@ -29,9 +29,9 @@
 #import "utilities.h"
 
 @interface EDCompositeContentCoder(PrivateAPI)
-- (void) _takeSubpartsFromMultipartContent: (EDMessagePart*) mpart;
-- (void) _takeSubpartsFromMessageContent: (EDMessagePart*) mpart;
-- (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype;
+- (void)_takeSubpartsFromMultipartContent:(EDMessagePart *)mpart;
+- (void)_takeSubpartsFromMessageContent:(EDMessagePart *)mpart;
+- (id)_encodeSubpartsWithClass:(Class)targetClass subtype:(NSString *)subtype;
 @end
 
 
@@ -46,11 +46,11 @@ static short boundaryId = 0;
 //	CAPABILITIES
 //---------------------------------------------------------------------------------------
 
-+ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
++ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
 {
-    if ([[mpart contentType] hasPrefix: @"multipart/"]) return YES;
-    if ([[mpart contentType] isEqualToString: @"message/rfc822"]) return YES;
-    if ([[mpart contentType] isEqualToString: @"message/rfc2822"]) return YES;
+    if ([[mpart contentType] hasPrefix:@"multipart/"]) return YES;
+    if ([[mpart contentType] isEqualToString:@"message/rfc822"]) return YES;
+    if ([[mpart contentType] isEqualToString:@"message/rfc2822"]) return YES;
     return NO;
 }
 
@@ -59,17 +59,23 @@ static short boundaryId = 0;
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id) initWithMessagePart: (EDMessagePart*) mpart
+- (id)initWithMessagePart:(EDMessagePart *)mpart
 {
-    if (self = [self init]) {
-        if ([[mpart contentType] hasPrefix: @"multipart/"]) {
+    if (self = [self init]) 
+    {
+        if ([[mpart contentType] hasPrefix:@"multipart/"]) 
+        {
             [self _takeSubpartsFromMultipartContent:mpart];
-        } else if([[mpart contentType] isEqualToString: @"message/rfc822"] || [[mpart contentType] isEqualToString:@"message/rfc2822"]) {
+        } 
+        else if([[mpart contentType] isEqualToString:@"message/rfc822"] || [[mpart contentType] isEqualToString:@"message/rfc2822"]) 
+        {
             [self _takeSubpartsFromMessageContent:mpart];
-        } else {
+        } 
+        else 
+        {
             // need [self dealloc] here?
             //[NSException raise:NSInvalidArgumentException format: @"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]];
-            NSLog(@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField: @"content-type"]);
+            NSLog(@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]);
             [self dealloc];
             return nil;
         }	
@@ -77,9 +83,10 @@ static short boundaryId = 0;
     return self;
 }
 
-- (id) initWithSubparts: (NSArray*) someParts
+- (id)initWithSubparts:(NSArray *)someParts
 {
-    if (self = [self init]) {
+    if (self = [self init]) 
+    {
         subparts = [someParts retain];
     }
     return self;

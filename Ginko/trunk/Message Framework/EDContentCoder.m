@@ -31,12 +31,12 @@
 //	CAPABILITIES
 //---------------------------------------------------------------------------------------
 
-+ (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
++ (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
 {
     return NO;
 }
 
-+ (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
++ (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange
 {
     return NO;
 }
@@ -45,23 +45,22 @@
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id)initWithMessagePart: (EDMessagePart*) mpart
+- (id)initWithMessagePart:(EDMessagePart *)mpart
 {
     [self methodIsAbstract:_cmd];
     return self;
 }
 
-- (id)initWithAttributedString: (NSAttributedString*) anAttributedString
+- (id)initWithAttributedString:(NSAttributedString *)anAttributedString
 {
     [self methodIsAbstract:_cmd];
     return self;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [super dealloc];
 }
-
 
 //---------------------------------------------------------------------------------------
 //	CODING
@@ -73,15 +72,19 @@
     return nil; // keep compiler happy...
 }
 
-
 - (OPInternetMessage *)message
 {
     [self methodIsAbstract:_cmd];
     return nil; // keep compiler happy...
 }
 
-
 - (NSAttributedString *)attributedString
+{
+    [self methodIsAbstract:_cmd];
+    return nil; // keep compiler happy...
+}
+
+- (NSString *)string
 {
     [self methodIsAbstract:_cmd];
     return nil; // keep compiler happy...

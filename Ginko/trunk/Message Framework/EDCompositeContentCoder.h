@@ -25,14 +25,14 @@
 
 @interface EDCompositeContentCoder : EDContentCoder
 {
-    NSMutableArray* subparts;
+    NSMutableArray *subparts;
 }
 
-- (id) initWithSubparts: (NSArray*) someParts;
-- (NSArray*) subparts;
+- (id)initWithSubparts:(NSArray *)someParts;
+- (NSArray *)subparts;
 
-- (EDMessagePart*) messagePartWithSubtype: (NSString*) subtype;
-- (OPInternetMessage*) messageWithSubtype: (NSString*) subtype;
+- (EDMessagePart *)messagePartWithSubtype:(NSString *)subtype;
+- (OPInternetMessage *)messageWithSubtype:(NSString *)subtype;
 
 @end
 

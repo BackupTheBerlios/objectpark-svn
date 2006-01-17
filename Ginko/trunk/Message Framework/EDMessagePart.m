@@ -31,11 +31,10 @@
 
 @interface EDMessagePart(PrivateAPI)
 + (NSDictionary *)_defaultFallbackHeaders;
-- (NSRange)takeHeadersFromData: (NSData*) data;
-- (void) _takeContentDataFromOriginalTransferData;
-- (void) _forgetOriginalTransferData;
+- (NSRange)takeHeadersFromData:(NSData *)data;
+- (void)_takeContentDataFromOriginalTransferData;
+- (void)_forgetOriginalTransferData;
 @end
-
 
 //---------------------------------------------------------------------------------------
     @implementation EDMessagePart
@@ -45,25 +44,24 @@
 //---------------------------------------------------------------------------------------
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
-- (id)initWithTransferData: (NSData*) data
+- (id)initWithTransferData:(NSData *)data
 {
-    return [self initWithTransferData:data fallbackHeaderFields: nil];
+    return [self initWithTransferData:data fallbackHeaderFields:nil];
 }
 
-
-- (id)initWithTransferData: (NSData*) data fallbackStringEncoding:(NSStringEncoding)encoding
+- (id)initWithTransferData:(NSData *)data fallbackStringEncoding:(NSStringEncoding)encoding
 {
-    NSDictionary	*fields;
-    NSString		*charset, *value;
+    NSDictionary *fields;
+    NSString *charset, *value;
 
     charset = [NSString MIMEEncodingForStringEncoding:encoding];
-    value = [[[[EDEntityFieldCoder alloc] initWithValue: @"text/plain" andParameters: [NSDictionary dictionaryWithObject:charset forKey: @"charset"]] autorelease] fieldBody];
-    fields = [NSDictionary dictionaryWithObject:value forKey: @"content-type"];
+    value = [[[[EDEntityFieldCoder alloc] initWithValue:@"text/plain" andParameters:[NSDictionary dictionaryWithObject:charset forKey:@"charset"]] autorelease] fieldBody];
+    fields = [NSDictionary dictionaryWithObject:value forKey:@"content-type"];
 
     return [self initWithTransferData:data fallbackHeaderFields:fields];
 }
 
-- (id)initWithTransferData: (NSData*) data fallbackHeaderFields:(NSDictionary *)fields
+- (id)initWithTransferData:(NSData *)data fallbackHeaderFields:(NSDictionary *)fields
 /*" Designated Initializer. "*/
 {
     self = [self init];
@@ -72,11 +70,13 @@
     {
         fallbackFields = [[NSMutableDictionary allocWithZone:[self zone]] initWithDictionary:[[self class] _defaultFallbackHeaders]];
         [(NSMutableDictionary *)fallbackFields addEntriesFromDictionary:fields];
-    } else {
+    } 
+    else 
+    {
         fallbackFields = [[[self class] _defaultFallbackHeaders] retain];
     }
     
-    if((data == nil) || ([data length] == 0))
+    if ((data == nil) || ([data length] == 0))
         return self;
     
     bodyRange = [self takeHeadersFromData:data];
@@ -85,9 +85,9 @@
     return self;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
-    bodyRange = NSMakeRange(0,0);   // do not convert transferData...
+    bodyRange = NSMakeRange(0, 0);   // do not convert transferData...
     [fallbackFields release];
     [contentType release];
     [contentTypeParameters release];
@@ -126,7 +126,7 @@
 //	TRANSFER LEVEL ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-- (NSData*) transferData
+- (NSData *)transferData
 {
     NSMutableData	*transferData;
     NSData			*headerData;

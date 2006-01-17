@@ -18,11 +18,8 @@
 */
 
 #import "EDMessagePart+OPExtensions.h"
-//#import "EDMessagePart+OPMboxExtensions.h"
-//#import "EDContentCoder+OPExtensions.h"
 #import "OPContentCoderCenter.h"
 #import "NSString+MessageUtils.h"
-//#import "OPObjectPair.h"
 #import "OPMultimediaContentCoder.h"
 #import "OPApplefileContentCoder.h"
 #import "OPAppleDoubleContentCoder.h"
@@ -41,8 +38,6 @@
 + (NSDictionary *)_defaultFallbackHeaders;
 - (NSData*) takeHeadersFromData: (NSData*) data;
 @end
-
-
 
 /*
 @implementation EDMessagePart (TemporaryBugFix)
@@ -257,17 +252,17 @@
 
 @implementation EDMessagePart (OPExtensions)
 
-
-+ (NSArray*) preferredContentTypes
++ (NSArray *)preferredContentTypes
 /*" Forwards preferredContentTypes to NSApp delegate. Returns a default array of content type strings as default. "*/
 {
     static id defaultTypes = nil;
-    if ([[NSApp delegate] respondsToSelector: @selector(preferredContentTypes)]) 
+    if ([[NSApp delegate] respondsToSelector:@selector(preferredContentTypes)]) 
     {
         return [[NSApp delegate] preferredContentTypes];
     }
     
-    if (!defaultTypes) {
+    if (!defaultTypes) 
+    {
         defaultTypes = [[NSArray alloc] initWithObjects: 
             @"multipart/mixed", 
             @"text/enriched", 
@@ -286,13 +281,13 @@
 
 - (NSAttributedString *)contentAsAttributedString
 {
-    return [self contentAsAttributedStringWithPreferredContentTypes: nil];
+    return [self contentAsAttributedStringWithPreferredContentTypes:nil];
 }
 
-- (NSAttributedString *)contentAsAttributedStringWithPreferredContentTypes:(NSArray*) preferredContentTypes
+- (NSAttributedString *)contentAsAttributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes
 /*" Returns the receivers content as a user presentable attributed string. Returns nil if not decodable. "*/
 {
-    NSAttributedString* content = nil;
+    NSAttributedString *content = nil;
     Class contentCoderClass;
     
     contentCoderClass = [self contentDecoderClass];
@@ -301,52 +296,58 @@
     
     if (contentCoderClass != nil) // found a content coder willing to decode self
     {
-        EDContentCoder* contentCoder = [[contentCoderClass alloc] initWithMessagePart:self];
+        EDContentCoder *contentCoder = [[contentCoderClass alloc] initWithMessagePart:self];
         
-
-        @try {
-
-            if ([contentCoder respondsToSelector:@selector(attributedStringWithPreferredContentTypes:)]) {
+        @try 
+        {
+            if ([contentCoder respondsToSelector:@selector(attributedStringWithPreferredContentTypes:)]) 
+            {
                 content = [(id)contentCoder attributedStringWithPreferredContentTypes:preferredContentTypes];
                 [content retain];
-            } else {
+            } 
+            else 
+            {
                 content = [contentCoder attributedString];
                 [content retain];
             }
-        } @catch (NSException* localException) {
+        } 
+        @catch (NSException *localException) 
+        {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = [[[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."] autorelease];
-        } @finally {
-        }
+        } 
         
 //#warning debug only
 //        [contentCoder autorelease];
         [contentCoder release];
     }
     
-    if (! content) {
-        NSMutableAttributedString* result = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithFormat: @"--- Content of type %@ could not be decoded. Falling back to text/plain: ---\n\n", [self contentType]]];
+    if (! content) 
+    {
+        NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithFormat: @"--- Content of type %@ could not be decoded. Falling back to text/plain: ---\n\n", [self contentType]]];
         // Fake text/plain for the content coder to work:
-        [self setContentType: @"text/plain" withParameters: [NSDictionary dictionary]];
+        [self setContentType:@"text/plain" withParameters:[NSDictionary dictionary]];
 
-        EDContentCoder* contentCoder = [[EDPlainTextContentCoder alloc] initWithMessagePart:self];
+        EDContentCoder *contentCoder = [[EDPlainTextContentCoder alloc] initWithMessagePart:self];
 
-        @try {
-            [result appendAttributedString: [contentCoder attributedString]];
+        @try 
+        {
+            [result appendAttributedString:[contentCoder attributedString]];
             content = result;
-        } @catch (NSException* localException) {
+        } 
+        @catch (NSException *localException) 
+        {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = [[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."];
         }
 
         [contentCoder release];
-        
-
     }
+    
     return [content autorelease];
 }
 
-- (NSString*) contentAsPlainString
+- (NSString *)contentAsPlainString
 /*" Returns the contents as a plain text string. Rich content is described as plain text. Suitable for fulltext indexing of the body content (not including the header texts). "*/
 {
 	// TODO: Improve! This is a very naive implementation
