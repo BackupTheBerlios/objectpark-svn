@@ -11,14 +11,12 @@
 
 @interface GIMessageGroup (Statistics)
 
-- (NSDictionary *)statistics;
 - (void)invalidateStatistics;
-
-- (NSNumber *)calculateUnreadMessageCount;
+- (NSNumber *)unreadMessageCount;
 
 @end
 
 extern NSString *GINumberOfUnreadMessages;
 extern NSString *GINumberOfUnreadThreads;
 
-extern NSString *GIMessageGroupStatisticsDidChangeNotification;
+extern NSString *GIMessageGroupStatisticsDidInvalidateNotification;

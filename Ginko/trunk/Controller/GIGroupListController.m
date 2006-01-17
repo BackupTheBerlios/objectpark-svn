@@ -58,20 +58,21 @@
 - (id) init
 {
     if (self = [super init]) {
-		[[NSNotificationCenter defaultCenter] addObserver: self 
-												 selector: @selector(groupsChanged:) 
-													 name: @"GroupContentChangedNotification" 
-												   object: self];
-		[[NSNotificationCenter defaultCenter] addObserver: self 
-												 selector: @selector(groupsChanged:) 
-													 name: OPJobDidFinishNotification 
-												   object: MboxImportJobName];
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(groupsChanged:) 
+													 name:OPJobDidFinishNotification 
+												   object:MboxImportJobName];
 		
         [NSBundle loadNibNamed: @"Boxes" owner: self];
 		
         [[NSNotificationCenter defaultCenter] addObserver: self 
 												 selector: @selector(groupsChanged:) 
 													 name: GIMessageGroupWasAddedNotification 
+												   object: nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver: self 
+												 selector: @selector(groupsChanged:) 
+													 name: GIMessageGroupStatisticsDidInvalidateNotification 
 												   object: nil];
     }
     
@@ -293,7 +294,7 @@
             //NSMutableArray *threadURIs = [NSMutableArray array];
             //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
             
-            return [group calculateUnreadMessageCount];
+            return [group unreadMessageCount];
             /*
              [g fetchThreadURIs:&threadURIs
                  trivialThreads: NULL

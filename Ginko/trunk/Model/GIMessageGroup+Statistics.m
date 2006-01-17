@@ -8,10 +8,10 @@
 
 #import "GIMessageGroup+Statistics.h"
 
-NSString* GINumberOfUnreadMessages = @"GINumberOfUnreadMessages";
-NSString* GINumberOfUnreadThreads = @"GINumberOfUnreadThreads";
+NSString *GINumberOfUnreadMessages = @"GINumberOfUnreadMessages";
+NSString *GINumberOfUnreadThreads = @"GINumberOfUnreadThreads";
 
-NSString* GIMessageGroupStatisticsDidChangeNotification = @"GIMessageGroupStatisticsDidChangeNotification";
+NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupStatisticsDidInvalidateNotification";
 
 @implementation GIMessageGroup (Statistics)
 
@@ -28,13 +28,39 @@ static NSMutableDictionary *allGroupStats = nil;
     return [NSNumber numberWithUnsignedLongLong:[self oid]];
 }
 
-- (NSDictionary *)statistics
+- (void)observeValueForKeyPath:(NSString *)keyPath 
+                      ofObject:(id)object 
+                        change:(NSDictionary *)change 
+                       context:(void *)context
 {
-    NSDictionary *result = nil;
+    if (object == self) 
+    {
+        if ([keyPath isEqualToString:@"threadsByDate"])
+        {
+            [self invalidateStatistics];
+            [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupStatisticsDidInvalidateNotification object:self];
+        }
+    }
+}
+
+- (NSMutableDictionary *)statistics
+{
+    NSMutableDictionary *result = nil;
     
     @synchronized(allGroupStats)
     {
-        result = [[[[self allGroupStats] objectForKey:[self oidNumber]] copy] autorelease];
+        result = [[self allGroupStats] objectForKey:[self oidNumber]];
+        if (! result)
+        {
+            result = [NSMutableDictionary dictionary];
+            [[self allGroupStats] setObject:result forKey:[self oidNumber]];
+            
+            // add as observer:
+            [self addObserver:self 
+                   forKeyPath:@"threadsByDate" 
+                      options:NSKeyValueObservingOptionNew 
+                      context:NULL];
+        }
     }
     
     return result;
@@ -42,23 +68,38 @@ static NSMutableDictionary *allGroupStats = nil;
 
 - (void)invalidateStatistics
 {
-    @synchronized(allGroupStats)
-    {
-        [[self allGroupStats] removeObjectForKey:[self oidNumber]];
-    }
+    [[self statistics] removeAllObjects];
 }
 
 - (NSNumber *)calculateUnreadMessageCount
 {
-    OPSQLiteStatement *statement = [[[OPSQLiteStatement alloc] initWithSQL:[NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:[[OPPersistentObjectContext defaultContext] databaseConnection]] autorelease];
+    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+    NSNumber *unreadMessages = nil;
     
-    //NSLog(@"%lu", (unsigned long)[self oid]);
-    
-    [statement execute];
-    
-    NSNumber *unreadMessages = [NSNumber newFromStatement:[statement stmt] index:0];
+    @synchronized(context)
+    {
+        OPSQLiteStatement *statement = [[[OPSQLiteStatement alloc] initWithSQL:[NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:[context databaseConnection]] autorelease];
+        
+        //NSLog(@"%lu", (unsigned long)[self oid]);
+        
+        [statement execute];
+        
+        unreadMessages = [NSNumber newFromStatement:[statement stmt] index:0];
+    }
     
     return unreadMessages;
+}
+
+- (NSNumber *)unreadMessageCount
+{
+    NSMutableDictionary *stats = [self statistics];
+    NSNumber *result = [stats objectForKey:GINumberOfUnreadMessages];
+    if (! result) 
+    {
+        result = [self calculateUnreadMessageCount];
+        [stats setObject:result forKey:GINumberOfUnreadMessages];
+    }
+    return result;
 }
 
 @end
