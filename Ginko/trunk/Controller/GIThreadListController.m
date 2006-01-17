@@ -641,7 +641,8 @@ static BOOL isThreadItem(id item)
                 @throw;
             } @finally {
                 if (!threadWasPutIntoAtLeastOneGroup) {
-					[[self group] addValue: thread forKey: @"threadsByDate"];
+					//[[self group] addValue: thread forKey: @"threadsByDate"];
+					[thread addToGroups_Manually: [self group]]; // does dupe-check
 				}
             }
         }

@@ -211,6 +211,18 @@
     return messages;
 }
 
+- (void) addToGroups_Manually: (GIMessageGroup*) newGroup
+/*" "*/
+{
+#warning OPPersistence: implement key-value-coding for relationships 
+	// This may fire the groups relation:
+	if (![[newGroup valueForKey: @"groups"] containsObject: newGroup]) {
+		// Add the thread to the group, if not already present:
+		[self addValue: newGroup forKey: @"groups"];
+	}
+}
+
+
 - (BOOL) hasUnreadMessages
 /*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    

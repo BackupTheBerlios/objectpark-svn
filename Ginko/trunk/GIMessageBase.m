@@ -71,17 +71,17 @@
     }
 }
 
-+ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
++ (void) addMessage: (GIMessage*) aMessage toMessageGroup: (GIMessageGroup*) aGroup suppressThreading: (BOOL) suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-	GIThread *thread = [aMessage assignThreadUseExisting:!suppressThreading];
+	GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
     
 	// Add the thread to the group, if not already present:
-	if (![[aGroup valueForKey:@"threadsByDate"] containsObject:thread]) 
-    {
-		[aGroup addValue:thread forKey:@"threadsByDate"];
-	}
+	//if (![[aGroup valueForKey: @"threadsByDate"] containsObject: thread]) {
+	//	[aGroup addValue:thread forKey: @"threadsByDate"];
+	//}
+	[thread addToGroups_Manually: aGroup];
 }
 
 /*

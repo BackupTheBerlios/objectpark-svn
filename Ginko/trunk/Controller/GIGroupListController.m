@@ -85,7 +85,7 @@
 	if ([selectedItem isKindOfClass: [NSString class]]) {
 		GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedItem];
 		
-		if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) return selectedGroup;
+		if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) return selectedGroup;
 		
 	}
 	return nil;
@@ -141,17 +141,18 @@
 	id item = [[boxesView selectedItems] lastObject];
     if ([item isKindOfClass: [NSArray class]]) {
         if ([item count] == 0) {
-            [GIMessageGroup removeHierarchyNode:item];
+            [GIMessageGroup removeHierarchyNode: item];
             [GIMessageGroup saveHierarchy];
         } else {
             NSBeep();
             NSLog(@"Unable to remove folder containing groups.");
         }
     } else {
-        if ([[item valueForKey: @"threadsByDate"] count] == 0) {
+		GIMessageGroup* selectedGroup = [self group];
+        if ([[selectedGroup valueForKey: @"threadsByDate"] count] == 0) {
             [GIMessageGroup removeHierarchyNode: item];
             // Delete the group object:
-            [item delete];
+            [selectedGroup delete];
             [GIMessageGroup saveHierarchy];
             
         } else {
