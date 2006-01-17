@@ -29,7 +29,7 @@
 
 /*" Returns the contents as a user presentable attributed string "*/
 - (NSAttributedString *)contentAsAttributedString;
-- (NSAttributedString *)contentAsAttributedStringWithPreferredContentTypes:(NSArray*) preferredContentTypes;
+- (id)contentWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 
 /*" Returns the contents as a plain text string (including metadata information). Use this string for fulltext indexing of the body content. "*/
 - (NSString *)contentAsPlainString;

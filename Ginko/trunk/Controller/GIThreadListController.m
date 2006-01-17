@@ -186,7 +186,7 @@ static BOOL isThreadItem(id item)
     //if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
     //{ 
 	itemRow = [[group valueForKey:@"threadsByDate"] indexOfObject:aThread]; // estimation!
-	itemRow = [threadsView rowForItemEqualTo:([aThread containsSingleMessage] ? aThread : aMessage) startingAtRow:itemRow];
+	itemRow = [threadsView rowForItemEqualTo:([aThread containsSingleMessage] ? (id)aThread : (id)aMessage) startingAtRow:itemRow];
     //}
     
     [threadsView selectRow:itemRow byExtendingSelection:NO];

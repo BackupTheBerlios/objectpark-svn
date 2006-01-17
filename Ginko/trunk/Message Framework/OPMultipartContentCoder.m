@@ -38,8 +38,8 @@
 
 @interface OPMultipartContentCoder (PrivateAPI)
 
-- (NSAttributedString *)_attributedStringFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes;
-- (NSAttributedString *)_attributedStringFromMultipartMixedWithPreferredContentTypes:(NSArray*) preferredContentTypes;
+- (id)_contentFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes attributed:(BOOL)shouldBeAttributed;
+- (id)_contentFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 //- (NSAttributedString *)_attributedStringFromMultipartRelatedWithPreferredContentTypes:(NSArray*) preferredContentTypes;
 //- (NSAttributedString *)_attributedStringFromMultipartReportWithPreferredContentTypes:(NSArray*) preferredContentTypes;
 
@@ -70,25 +70,40 @@
 
 - (NSAttributedString *)attributedString
 {
-    return [self attributedStringWithPreferredContentTypes:nil];
+    return [self contentWithPreferredContentTypes:nil attributed:YES];
 }
 
-- (NSAttributedString *)attributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (NSString *)string
+{
+    return [self contentWithPreferredContentTypes:nil attributed:NO];
+}
+
+- (id)contentWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed
 {
     if ([subtype caseInsensitiveCompare:@"alternative"] == NSOrderedSame)
-        return [self _attributedStringFromMultipartAlternativeWithPreferredContentTypes:preferredContentTypes];
+        return [self _contentFromMultipartAlternativeWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
     else if ([subtype caseInsensitiveCompare:@"mixed"] == NSOrderedSame)
-        return [self _attributedStringFromMultipartMixedWithPreferredContentTypes:preferredContentTypes];
+        return [self _contentFromMultipartMixedWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
 /*    else if ([subtype caseInsensitiveCompare:@"related"] == NSOrderedSame)
         return [self _attributedStringFromMultipartRelatedWithPreferredContentTypes:preferredContentTypes];
     else if ([subtype caseInsensitiveCompare:@"report"] == NSOrderedSame)
         return [self _attributedStringFromMultipartReportWithPreferredContentTypes:preferredContentTypes];
 */    
-    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"multipart/%@ not yet decodable. Fallback to multipart/mixed handling\n", subtype]];
     
-    [result appendAttributedString:[self _attributedStringFromMultipartMixedWithPreferredContentTypes:preferredContentTypes]];
-        
-    return [result autorelease];
+    id result = [NSString stringWithFormat:@"multipart/%@ not yet decodable. Fallback to multipart/mixed handling\n", subtype];
+    
+    if (shouldBeAttributed) 
+    {
+        result = [[[NSMutableAttributedString alloc] initWithString:result] autorelease];
+    
+        [result appendAttributedString:[self _contentFromMultipartMixedWithPreferredContentTypes:preferredContentTypes attributed:YES]];
+    }
+    else
+    {
+        result = [result stringByAppendingString:[self _contentFromMultipartMixedWithPreferredContentTypes:preferredContentTypes attributed:NO]];
+    }
+    
+    return result;
 }
 
 @end
@@ -163,24 +178,26 @@
 }
 
 // alternative
-- (NSAttributedString *)_attributedStringFromMultipartAlternativeWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (id)_contentFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes attributed:(BOOL)shouldBeAttributed
 {
     EDMessagePart *preferredSubpart = [self _mostPreferredSubpartWithPreferredContentTypes:preferredContentTypes];
     
     if (preferredSubpart) 
     {
-        return [preferredSubpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
+        return [preferredSubpart contentWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
     } 
     else 
     {
-        return [[[NSAttributedString alloc] initWithString: @"\nmultipart/alternative message part with no decodable alternative.\n"] autorelease];
+        id result = @"\nmultipart/alternative message part with no decodable alternative.\n";
+        if (shouldBeAttributed) result = [[[NSAttributedString alloc] initWithString:result] autorelease];
+        return result;
     }
 }
 
 // mixed
-- (NSAttributedString *)_attributedStringFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (id)_contentFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 {
-    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] init];
+    id result = shouldBeAttributed ? [[[NSMutableAttributedString alloc] init] autorelease] : [NSMutableString string];
     EDMessagePart *subpart;
     NSEnumerator *enumerator = [[self subparts] objectEnumerator];
     
@@ -188,13 +205,13 @@
     {;
         @try 
         {
-            NSAttributedString *subpartContent = [subpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
+            id subpartContent = [subpart contentWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
             if (!subpartContent) 
             {
-                [result appendString: [NSString stringWithFormat: @"\nsubpart decoding error [%@]\n", subpart]];
-                [subpart contentAsAttributedStringWithPreferredContentTypes:preferredContentTypes];
+                [result appendString:[NSString stringWithFormat: @"\nsubpart decoding error [%@]\n", subpart]];
+                //[subpart contentWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
             } 
-            else [result appendAttributedString: subpartContent];
+            else shouldBeAttributed ? [result appendAttributedString:subpartContent] : [result appendString:subpartContent];
         } 
         @catch (NSException *localException) 
         {
@@ -203,7 +220,7 @@
         }
     }
     
-    return [result autorelease];
+    return result;
 }
 
 /*

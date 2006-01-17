@@ -91,7 +91,10 @@ static OPPersistentObjectContext* defaultContext = nil;
 - (void) unregisterObject: (OPPersistentObject*) object
 /*" Called by -[OPPersistentObject dealloc] to make sure we do not keep references to stale objects. "*/
 {
-    NSHashRemove(registeredObjects, object);
+    @synchronized(self)
+    {
+        NSHashRemove(registeredObjects, object);
+    }
 }
 
 - (id) objectRegisteredForOid: (OID) oid ofClass: (Class) poClass

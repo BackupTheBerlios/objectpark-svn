@@ -38,6 +38,7 @@
 
 - (id)initWithAttributedString:(NSAttributedString *)anAttributedString;
 - (NSAttributedString *)attributedString;
+- (NSString *)string;
 
 @end
 

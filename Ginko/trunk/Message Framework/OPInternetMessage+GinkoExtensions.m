@@ -258,34 +258,41 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
 {
     NSMutableAttributedString* bodyContent;
 
-    @try {
-        bodyContent = [[NSMutableAttributedString alloc] initWithAttributedString:[self contentAsAttributedStringWithPreferredContentTypes: [EDMessagePart preferredContentTypes]]];
-    } @catch (NSException* localException) {
+    @try 
+    {
+        bodyContent = [[NSMutableAttributedString alloc] initWithAttributedString:[self contentWithPreferredContentTypes:[EDMessagePart preferredContentTypes] attributed:YES]];
+    } 
+    @catch (NSException *localException) 
+    {
         NSLog(@"warning: [%@]\n", [localException reason]);
-        bodyContent = [[NSMutableAttributedString alloc] initWithString: @"Not decodable.\nFallback to text/plain:\n\n"];
-        [self setContentType: @"text/plain"];
-        [bodyContent appendAttributedString: [self contentAsAttributedString]];
+        bodyContent = [[NSMutableAttributedString alloc] initWithString:@"Not decodable.\nFallback to text/plain:\n\n"];
+        [self setContentType:@"text/plain"];
+        [bodyContent appendAttributedString:[self contentAsAttributedString]];
     }
 
     return [bodyContent autorelease];
 }
 
-- (NSAttributedString*) editableBodyContent
+- (NSAttributedString *)editableBodyContent
 /*"Returns message in a format suitable for editing. That means the quoted lines are wrapped to 72 characters."*/
 {
-    NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
-    NSMutableAttributedString* bodyContent = [self bodyContent];
-    NSArray* partContentStrings = [bodyContent divideContentStringTypedStrings];
-    NSEnumerator* enumerator = [partContentStrings objectEnumerator];
+    NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString *bodyContent = [self bodyContent];
+    NSArray *partContentStrings = [bodyContent divideContentStringTypedStrings];
+    NSEnumerator *enumerator = [partContentStrings objectEnumerator];
 	OPObjectPair *typeAndContent;
 
-    while (typeAndContent = [enumerator nextObject]){
-        if([typeAndContent firstObject] == nil) {   
+    while (typeAndContent = [enumerator nextObject])
+    {
+        if([typeAndContent firstObject] == nil) 
+        {   
 			// text part
             // Ginko currently only supports the creation of text/plain messages 
             // so the following line is OK.
-            [result appendString:[[typeAndContent secondObject] quotedStringWithLineLength: 72 byIncreasingQuoteLevelBy: 0]];
-        } else {
+            [result appendString:[[typeAndContent secondObject] quotedStringWithLineLength:72 byIncreasingQuoteLevelBy:0]];
+        } 
+        else 
+        {
             [result appendAttributedString:[typeAndContent secondObject]];
         }
     }

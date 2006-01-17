@@ -32,6 +32,6 @@
 - (NSString*) subtype;
 
 - (NSAttributedString *)attributedString;
-- (NSAttributedString *)attributedStringWithPreferredContentTypes:(NSArray*) preferredContentTypes;
+- (id)contentWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 
 @end

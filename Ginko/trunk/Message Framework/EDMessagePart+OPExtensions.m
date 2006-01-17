@@ -281,13 +281,13 @@
 
 - (NSAttributedString *)contentAsAttributedString
 {
-    return [self contentAsAttributedStringWithPreferredContentTypes:nil];
+    return [self contentWithPreferredContentTypes:nil attributed:YES];
 }
 
-- (NSAttributedString *)contentAsAttributedStringWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (id)contentWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed
 /*" Returns the receivers content as a user presentable attributed string. Returns nil if not decodable. "*/
 {
-    NSAttributedString *content = nil;
+    id content = nil;
     Class contentCoderClass;
     
     contentCoderClass = [self contentDecoderClass];
@@ -300,21 +300,20 @@
         
         @try 
         {
-            if ([contentCoder respondsToSelector:@selector(attributedStringWithPreferredContentTypes:)]) 
+            if ([contentCoder respondsToSelector:@selector(contentWithPreferredContentTypes:attributed:)]) 
             {
-                content = [(id)contentCoder attributedStringWithPreferredContentTypes:preferredContentTypes];
-                [content retain];
+                content = [(id)contentCoder contentWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
             } 
             else 
             {
-                content = [contentCoder attributedString];
-                [content retain];
+                content = (shouldBeAttributed ? (id)[contentCoder attributedString] : (id)[contentCoder string]);
             }
         } 
         @catch (NSException *localException) 
         {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
-            content = [[[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."] autorelease];
+            content = @"Exception while extracting contents as attributed string.";
+            if (shouldBeAttributed) content = [[[NSAttributedString alloc] initWithString:content] autorelease];
         } 
         
 //#warning debug only
@@ -324,7 +323,10 @@
     
     if (! content) 
     {
-        NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithFormat: @"--- Content of type %@ could not be decoded. Falling back to text/plain: ---\n\n", [self contentType]]];
+        content = [NSString stringWithFormat:@"--- Content of type %@ could not be decoded. Falling back to text/plain: ---\n\n", [self contentType]];
+        
+        if (shouldBeAttributed) content = [[[NSMutableAttributedString alloc] initWithString:content] autorelease];
+        
         // Fake text/plain for the content coder to work:
         [self setContentType:@"text/plain" withParameters:[NSDictionary dictionary]];
 
@@ -332,26 +334,27 @@
 
         @try 
         {
-            [result appendAttributedString:[contentCoder attributedString]];
-            content = result;
+            if (shouldBeAttributed) [content appendAttributedString:[contentCoder attributedString]];
+            else content = [content stringByAppendingString:[contentCoder string]]; 
         } 
         @catch (NSException *localException) 
         {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
-            content = [[NSAttributedString alloc] initWithString: @"Exception while extracting contents as attributed string."];
+            content = @"Exception while extracting contents as attributed string.";
+            
+            if (shouldBeAttributed) content = [[NSAttributedString alloc] initWithString:content];
         }
 
         [contentCoder release];
     }
     
-    return [content autorelease];
+    return content;
 }
 
 - (NSString *)contentAsPlainString
 /*" Returns the contents as a plain text string. Rich content is described as plain text. Suitable for fulltext indexing of the body content (not including the header texts). "*/
 {
-	// TODO: Improve! This is a very naive implementation
-	return [[self contentAsAttributedString] string];
+    return [self contentWithPreferredContentTypes:nil attributed:NO];
 }
 
 @end
