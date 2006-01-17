@@ -68,24 +68,19 @@ static OPPersistentObjectContext* defaultContext = nil;
     }
 }
 
-/*
-- (void) lock
-{
-    [lock lock];
-}
-
-- (void) unlock
-{
-    [lock unlock];
-}
-*/
 
 
+// SearchStruct is a fake object made for searching in the hashtable:
+typedef struct {
+	Class isa;
+	OID oid;
+	NSMutableDictionary* attributes;
+} FakeObject;
 
 - (void) registerObject: (OPPersistentObject*) object
 {
 	NSParameterAssert([object currentOid]>0); // hashing is based on oids here
-    NSHashInsert(registeredObjects, object);
+    NSHashInsertIfAbsent(registeredObjects, object);
 }
 
 - (void) unregisterObject: (OPPersistentObject*) object
@@ -100,12 +95,8 @@ static OPPersistentObjectContext* defaultContext = nil;
 - (id) objectRegisteredForOid: (OID) oid ofClass: (Class) poClass
 /*" Returns a subclass of OPPersistentObject. "*/
 {
-    // SearchStruct is a fake object made for searching in the hashtable:
-    struct {
-        Class isa;
-        OID oid;
-        NSMutableDictionary* attributes;
-    } searchStruct;
+	FakeObject searchStruct;
+	
     searchStruct.isa = poClass;
     searchStruct.oid = oid;
     searchStruct.attributes = nil;
@@ -236,7 +227,12 @@ static OPPersistentObjectContext* defaultContext = nil;
 static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object2)
 {
 	//NSLog(@"Comparing %@ and %@.", object1, object2);
-	return [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
+	// Optimize by removing 2-4 method calls:
+	//return [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
+	const  FakeObject* o1 = object1;
+	const  FakeObject* o2 = object2;
+	
+	return (o1->oid == o2->oid) && (o1->isa == o2->isa);
 }
 
 
@@ -248,7 +244,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 {
 	// Maybe we need a better hash funktion as multiple tables will use the same oids.
 	// Incorporate the class pointer somehow?
-	unsigned result = (unsigned)[(OPPersistentObject*)object currentOid];
+	//unsigned result = (unsigned)[(OPPersistentObject*)object currentOid];
+	unsigned result = (unsigned)(((FakeObject*)object)->oid);
 	return result;
 }
 

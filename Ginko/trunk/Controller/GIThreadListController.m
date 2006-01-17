@@ -621,6 +621,7 @@ static BOOL isThreadItem(id item)
 	
     for (i = firstIndex; i <= lastIndex; i++) {
         if ([threadsView isRowSelected: i]) {
+			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
             // get one of the selected threads:
             GIThread *thread = [threadsView itemAtRow: i];
             NSAssert([thread isKindOfClass: [GIThread class]], @"assuming object is a thread");
@@ -645,6 +646,7 @@ static BOOL isThreadItem(id item)
 					[thread addToGroups_Manually: [self group]]; // does dupe-check
 				}
             }
+			[pool release];
         }
     }
     // commit changes:

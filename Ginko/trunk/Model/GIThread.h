@@ -38,6 +38,8 @@
 - (BOOL) hasUnreadMessages;
 - (BOOL) containsSingleMessage;
 
+- (void) addToGroups_Manually: (GIMessageGroup*) newGroup;
+
 
 - (NSArray*) subthreadWithMessage: (GIMessage*) aMessage;
 
