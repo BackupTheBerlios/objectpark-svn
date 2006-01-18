@@ -110,7 +110,7 @@ static GIActivityPanelController *panel = nil;
 {
 	int rowIndex = [tableView selectedRow];
 
-	[OPJobs shouldTerminateJob: [jobIds objectAtIndex: rowIndex]];
+	[OPJobs suggestTerminatingJob: [jobIds objectAtIndex: rowIndex]];
 	NSLog(@"Should stop thread: %@", [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]]);
 }
 

@@ -699,7 +699,7 @@ static BOOL isThreadItem(id item)
                 
                 while (jobId = [enumerator nextObject])
                 {
-                    [OPJobs shouldTerminateJob:jobId];
+                    [OPJobs suggestTerminatingJob:jobId];
                 }
             }
             

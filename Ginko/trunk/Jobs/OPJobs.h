@@ -49,7 +49,8 @@
 + (id)exceptionForJob:(NSNumber *)anJobId;
 
 /*" Aborting jobs "*/
-+ (BOOL)shouldTerminateJob:(NSNumber *)anJobId;
++ (void)suggestTerminatingJob:(NSNumber *)anJobId;
++ (BOOL)isJobTerminating:(NSNumber *)anJobId;
 
 /*" Accessing job progress info "*/ 
 + (NSDictionary *)progressInfoForJob:(NSNumber *)anJobId;

@@ -494,7 +494,7 @@
         
         while (jobId = [enumerator nextObject])
         {
-            [OPJobs shouldTerminateJob:jobId];
+            [OPJobs suggestTerminatingJob:jobId];
         }
         
         result = NSTerminateLater;
