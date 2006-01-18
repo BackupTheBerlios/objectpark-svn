@@ -49,7 +49,7 @@
 + (id)exceptionForJob:(NSNumber *)anJobId;
 
 /*" Aborting jobs "*/
-+ (BOOL)suggestTerminatingJob:(NSNumber *)anJobId;
++ (BOOL)shouldTerminateJob:(NSNumber *)anJobId;
 
 /*" Accessing job progress info "*/ 
 + (NSDictionary *)progressInfoForJob:(NSNumber *)anJobId;

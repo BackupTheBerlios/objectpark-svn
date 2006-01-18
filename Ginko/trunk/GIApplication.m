@@ -490,7 +490,7 @@
         
         while (jobId = [enumerator nextObject])
         {
-            [OPJobs suggestTerminatingJob:jobId];
+            [OPJobs shouldTerminateJob:jobId];
         }
         
         result = NSTerminateLater;
@@ -730,22 +730,19 @@
     
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    while (thread = [threads lastObject]) 
-    {
+    while (thread = [threads lastObject]) {
         // remove thread from source group:
-        [thread removeValue:trashgroup forKey:@"groups"];
-        if ([[thread valueForKey:@"groups"] count] == 0) 
-        {
+        [thread removeValue: trashgroup forKey: @"groups"];
+        if ([[thread valueForKey: @"groups"] count] == 0) {
             [thread delete];
         }
         
         counter += 1;
         
-        if ((counter % 500) == 0)
-        {
-            [self saveAction:self];
-            [pool release];
-            pool = [[NSAutoreleasePool alloc] init];
+        if ((counter % 500) == 0) {
+			
+            [self saveAction: self];
+            [pool release]; pool = [[NSAutoreleasePool alloc] init];
         }
     }    
 

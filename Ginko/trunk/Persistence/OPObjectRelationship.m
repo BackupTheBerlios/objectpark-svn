@@ -79,6 +79,11 @@
 	[newRelation release];
 }
 
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@, added: %@ removed: %@", [super description], addedRelations, removedRelations];
+}
+
 - (void) removeRelationNamed: (NSString*) relationName 
 						from: (OPPersistentObject*) sourceObject
 						  to: (OPPersistentObject*) targetObject

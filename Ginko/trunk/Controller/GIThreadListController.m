@@ -699,7 +699,7 @@ static BOOL isThreadItem(id item)
                 
                 while (jobId = [enumerator nextObject])
                 {
-                    [OPJobs suggestTerminatingJob:jobId];
+                    [OPJobs shouldTerminateJob:jobId];
                 }
             }
             
@@ -1202,7 +1202,7 @@ static BOOL isThreadItem(id item)
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item
 {
-	return isThreadItem(item) && (![item isFault]) && [[item messages] count]>1;
+	//return isThreadItem(item) && (![item isFault]) && [[item messages] count]>1;
     
 	// Thread items are always expandable!
 	return isThreadItem(item) && [[item messages] count]>1;

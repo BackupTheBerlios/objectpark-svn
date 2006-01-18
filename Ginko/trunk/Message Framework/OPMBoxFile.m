@@ -76,38 +76,35 @@ NSString *OPMBoxException = @"OPMBoxException";
     return [[[self alloc] initWithPath:aPath createIfNotPresent:shouldCreateIfNotPresent] autorelease];
 }
 
-- (id)initWithPath: (NSString*) aPath
+- (id) initWithPath: (NSString*) aPath
 /*" Initialized the instance for use with the mbox file aPath. Standard index providers are used. If no mbox file exists at aPath an exception is raised. "*/
 {
-    return [self initWithPath:aPath createIfNotPresent: NO];
+    return [self initWithPath: aPath createIfNotPresent: NO];
 }
 
-- (id)initWithPath: (NSString*) aPath createIfNotPresent:(BOOL)shouldCreateIfNotPresent 
+- (id) initWithPath: (NSString*) aPath createIfNotPresent: (BOOL) shouldCreateIfNotPresent 
 {
     NSParameterAssert([aPath length]);
     
     if (self = [super init]) {
         NSFileManager* fileManager = [NSFileManager defaultManager];
         
-        if (! [fileManager isReadableFileAtPath:aPath])
-        {
-            if (shouldCreateIfNotPresent)
-            {
-                if (! [fileManager createFileAtPath:aPath contents: nil attributes:nil])
-                {
+        if (! [fileManager isReadableFileAtPath: aPath]) {
+            if (shouldCreateIfNotPresent) {
+                if (! [fileManager createFileAtPath: aPath contents: nil attributes: nil]) {
                     [self release];
                     [NSException raise: OPMBoxException format: @"Cannot create mbox file at path '%@'.", aPath];
                 }
             } else {
                 [self release];
-                [NSException raise:OPMBoxException format: @"No mbox file present at path '%@'.", aPath];
+                [NSException raise: OPMBoxException format: @"No mbox file present at path '%@'.", aPath];
             }
         }
         
         _isReadOnly = ![fileManager isWritableFileAtPath: aPath];
         
         // initialization of ivars
-        [self setPath:aPath];
+        [self setPath: aPath];
     }
     return self;
 }
@@ -228,13 +225,11 @@ NSString *OPMBoxException = @"OPMBoxException";
     }
 }
 
-- (FILE *)mboxFile
+- (FILE*) mboxFile
 /*" Returns the underlying, open unix file. "*/
 {
-    @synchronized(self)
-    {
-        if (! _mboxFile)
-        {
+    @synchronized(self) {
+        if (! _mboxFile) {
             NSAssert(_path != nil, @"_path == nil");
             
             _mboxFile = fopen([[self path] fileSystemRepresentation], "ab+");

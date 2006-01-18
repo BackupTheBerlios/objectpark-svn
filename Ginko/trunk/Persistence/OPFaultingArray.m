@@ -11,6 +11,7 @@
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentObject.h"
 #import <OPDebug/OPLog.h>
+#include <search.h>
 
 @interface OPFaultingArrayEnumerator : NSEnumerator {
 	int eindex;
@@ -281,10 +282,6 @@ static int compare_sort_objects(const void* entry1, const void* entry2)
 	return [obj1 compare: obj2];	
 }
 
-
-
-
-
 - (void) sort 
 {
 	if (needsSorting) {
@@ -304,6 +301,10 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	return [obj1 compare: obj2];	
 }
 
+- (unsigned) indexOfObjectIdenticalTo: (OPPersistentObject*) anObject
+{
+	return [self indexOfObject: anObject];
+}
 
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/
@@ -316,31 +317,46 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	
 	
 	if (sortKey) {
-		id key = [anObject valueForKey: sortKey];
 		
-		char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
-		if (result) {
-			// We found a matching sort-key.		
+		if (NO && [anObject isFault]) {
+			// Firing a fault is probably more expensive than a linear search:
+
+			// Search for oid:
+			size_t elementCount = count; 
+			char* result = lfind(&oid, data, &elementCount, entrySize, compare_oids);
+			if (result) {
+				resultIndex =  (result-data)/entrySize;
+				NSAssert([self oidAtIndex: resultIndex] == oid, @"lfind failed");
+			}
 			
-			resultIndex = (result-data)/entrySize;
+		} else {
+			id key = [anObject valueForKey: sortKey]; // may fire fault! Bad!
 			
-			if (*((OID*)result) == oid) return resultIndex; // found using only bsearch on the keys
-			
-            unsigned searchIndex;
-            
-			// Walk backward until the sortKey no longer matches or oid found: 
-            if (resultIndex) {
-                searchIndex = resultIndex-1;
-                while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
-                    if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-                    searchIndex--;
-                }
-            }
-			// Walk forward until the sortKey no longer matches or oid found: 
-			searchIndex = resultIndex+1;
-			while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
-				if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-				searchIndex++;
+			// Search for sortKey:
+			char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
+			if (result) {
+				// We found a matching sort-key.		
+				
+				resultIndex = (result-data)/entrySize;
+				
+				if (*((OID*)result) == oid) return resultIndex; // found using only bsearch on the keys
+				
+				unsigned searchIndex;
+				
+				// Walk backward until the sortKey no longer matches or oid found: 
+				if (resultIndex) {
+					searchIndex = resultIndex-1;
+					while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
+						if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+						searchIndex--;
+					}
+				}
+				// Walk forward until the sortKey no longer matches or oid found: 
+				searchIndex = resultIndex+1;
+				while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
+					if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+					searchIndex++;
+				}
 			}
 		}
 				

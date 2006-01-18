@@ -133,41 +133,38 @@
 
 NSString* MboxImportJobName = @"mbox import";
 
-- (void)importMessagesFromMboxFileJob:(NSMutableDictionary *)arguments
+- (void) importMessagesFromMboxFileJob: (NSMutableDictionary*) arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
 
     Should run as job (#{see OPJobs})."*/
 {
     NSString* mboxFilePath = [arguments objectForKey:@"mboxFilename"];
     NSParameterAssert(mboxFilePath != nil);
-    //NSManagedObjectContext *parentContext = [arguments objectForKey:@"parentContext"];
-    //NSParameterAssert(parentContext != nil);
     BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
-    NSDate *lastProgressSet = [[NSDate alloc] init];
+    NSDate* lastProgressSet = [[NSDate alloc] init];
     
     // Create mbox file object for enumerating the contained messages:
-    OPMBoxFile *mboxFile = [OPMBoxFile mboxWithPath:mboxFilePath];
+    OPMBoxFile* mboxFile = [OPMBoxFile mboxWithPath: mboxFilePath];
     NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
     unsigned int mboxFileSize = [mboxFile mboxFileSize];
     
     // Get our own context for this job/thread but use the same store coordinator
     // as the main thread because this job/threads works for the main thread.
-    OPPersistentObjectContext *context = [OPPersistentObjectContext threadContext];  
+    OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];  
     
-    NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
-    NSData *mboxData;
+    NSEnumerator* enumerator = [mboxFile messageDataEnumerator];
+    NSData* mboxData;
 
     BOOL messagesWereAdded = NO;
     unsigned mboxDataCount = 0;
     unsigned addedMessageCount = 0;
-    
-//    [[context undoManager] disableUndoRegistration];
-    
-    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:@""]];
-    
-    NSAutoreleasePool *pool = nil;
-    
+        
+    [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 0 
+													 maxValue: mboxFileSize 
+												 currentValue: [enumerator offsetOfNextObject] 
+												  description: @""]];
+    NSAutoreleasePool* pool = nil;
     @try {
         pool = [[NSAutoreleasePool alloc] init];
         
@@ -175,40 +172,33 @@ NSString* MboxImportJobName = @"mbox import";
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
             
-            if (transferData) 
-            {
+            if (transferData) {
                 @try {
-                    NSMutableArray *args = [NSMutableArray arrayWithObject:transferData];
-                    [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject:args waitUntilDone:YES];
+                    NSMutableArray* args = [NSMutableArray arrayWithObject: transferData];
+                    [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
                     
-                    GIMessage *persistentMessage = [args objectAtIndex:1];
+                    GIMessage *persistentMessage = [args objectAtIndex: 1];
                     
                     if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
                     
-                    if (persistentMessage) 
-                    {
+                    if (persistentMessage) {
                         messagesWereAdded = YES;
                         ++addedMessageCount;
                     }
                     
                     [persistentMessage flushInternetMessageCache]; // free some memory
                     
-                    if ((++mboxDataCount % 100) == 0) 
-                    {
-                        if (messagesWereAdded) 
-                        {
+                    if ((++mboxDataCount % 100) == 0) {
+                        if (messagesWereAdded) {
                             OPDebugLog(OPPERSISTENCE, OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
                             
                             [context saveChanges];
                             
                             messagesWereAdded = NO;
                         }
-                        
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
                     }
-					
-                } 
-                @catch (NSException *localException) {
+                } @catch (NSException* localException) {
                     [localException retain]; [localException autorelease]; // Try to avoid zombie exception object
                     [localException raise];
                 }

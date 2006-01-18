@@ -363,10 +363,10 @@
 {
     NSLog(@"Opening database at '%@'.", dbPath);
 	// Comment next three lines to disable statement caching:
-	//updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-	//insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-	//fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
-	//deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
+	deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	
     return SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
 }

@@ -253,11 +253,18 @@
 - (void) removeAllValuesForKey: (NSString*) key 
 /*" Removes all values for key, where key denotes a to-many relationship. "*/
 {
+	NSArray* values = [self valueForKey: key];
+	id relatedObject;
+	while (relatedObject = [values lastObject]) {
+		[self removeValue: relatedObject forKey: key];
+	}
+	/*
 	NSEnumerator* relatedObjectsEnumerator = [[self valueForKey: key] objectEnumerator];
 	id relatedObject;
 	while (relatedObject = [relatedObjectsEnumerator nextObject]) {
 		[self removeValue: relatedObject forKey: key];
 	}
+	 */
 }
 
 - (void) willDelete
@@ -623,14 +630,19 @@
 		// Record relationship change in persistent context:
 		[r removeRelationNamed: key from: self to: value];
 		
-		// Also update inverse relationship (if any):
-		if (inverseKey && [[value attributeValues] objectForKey: inverseKey]) {
-			[value willChangeValueForKey: inverseKey];
-			[value removePrimitiveValue: self forKey: inverseKey];
-			[value didChangeValueForKey: inverseKey];
+		if (inverseKey) {
+			// Also update inverse relationship (if any):
+			[value willChangeToManyRelationshipForKey: inverseKey];
+			if ([[value attributeValues] objectForKey: inverseKey]) {
+				[value removePrimitiveValue: self forKey: inverseKey];
+			}
+			[value didChangeToManyRelationshipForKey: inverseKey];
 		}
 		
-		if ([self isFault]) {
+		if (![attributes objectForKey: key]) {
+			// The relationship has not fired yet:
+			[self willChangeToManyRelationshipForKey: key];
+			[value didChangeToManyRelationshipForKey: inverseKey];
 			return; // we'll pick up the change the next time this fault is fired.
 		}
 		

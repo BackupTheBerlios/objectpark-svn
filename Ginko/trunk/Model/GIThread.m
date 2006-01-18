@@ -87,9 +87,9 @@
 
 
 - (void) mergeMessagesFromThread: (GIThread*) otherThread
-/*" Includes all messages from otherThread. otherThread is being deleted. "*/
+/*" Moves all messages from otherThread into the receiver. otherThread is being deleted. "*/
 {
-    // put all messages from otherThread into self and remove otherThread
+    // Put all messages from otherThread into self and remove otherThread:
     GIMessage* message;
     NSEnumerator* enumerator = [[otherThread messages] objectEnumerator];
     
@@ -216,7 +216,7 @@
 {
 #warning OPPersistence: implement key-value-coding for relationships 
 	// This may fire the groups relation:
-	if (![[newGroup valueForKey: @"groups"] containsObject: newGroup]) {
+	if (![[self valueForKey: @"groups"] containsObject: newGroup]) {
 		// Add the thread to the group, if not already present:
 		[self addValue: newGroup forKey: @"groups"];
 	}

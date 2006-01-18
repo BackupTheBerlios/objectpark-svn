@@ -223,6 +223,7 @@
     [self didChangeValueForKey:@"incomingAuthenticationMethod"];
 }
 
+/*
 - (NSString* )incomingUsername 
 {
     NSString* tmpValue;
@@ -240,6 +241,7 @@
     [self setPrimitiveValue:value forKey: @"incomingUsername"];
     [self didChangeValueForKey: @"incomingUsername"];
 }
+*/
 
 - (SecProtocolType) incomingSecProtocolType
 {
@@ -263,8 +265,8 @@
 {
     NSAssert([self incomingServerName] > 0, @"server name not set");
     const char *serverName = [[self incomingServerName] UTF8String];
-    NSAssert([self incomingUsername] > 0, @"user name not set");
-    const char *accountName = [[self incomingUsername] UTF8String];
+    NSAssert([self valueForKey: @"incomingUsername"] > 0, @"user name not set");
+    const char *accountName = [[self valueForKey: @"incomingUsername"] UTF8String];
     UInt32 passwordLength;
     void *passwordData;
     NSString* result = nil;
@@ -313,7 +315,7 @@
 /*" Uses keychain to store password. "*/
 {
     const char *serverName = [[self incomingServerName] UTF8String];
-    const char *accountName = [[self incomingUsername] UTF8String];
+    const char *accountName = [[self valueForKey: @"incomingUsername"] UTF8String];
     const char *password = [aPassword UTF8String];
     OSStatus err;
     SecKeychainItemRef itemRef = NULL;

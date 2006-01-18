@@ -810,8 +810,8 @@ UIDL. nil otherwise. "*/
             command = @"PASS ********";
         }
         
-        [NSException raise:OPPOP3SessionException
-                    format: @"The command \"%@\" was rejected by the POP3 server: \"%@\"", command, line];
+        [NSException raise: OPPOP3SessionException
+                    format: @"The command \"%@\" was rejected by the POP3 serv$@er: \"%@\"", command, line];
     }
     
     return line;
@@ -851,31 +851,31 @@ UIDL. nil otherwise. "*/
 {
     NSData *transferData = nil;
 
-    if ( (position <= _maildropSize) && (position > 0) )
-    {
-        NS_DURING
-            [self _readOKForCommand:[NSString stringWithFormat: @"RETR %d", position]];
+    if ( (position <= _maildropSize) && (position > 0) ) {
+		
+		NSString* command = [NSString stringWithFormat: @"RETR %d", position];
+        @try {
+            [self _readOKForCommand: command];
             transferData = [_stream availableTextData];
-        NS_HANDLER
-            if (NSDebugEnabled) NSLog(@"POP3 server fails : %@", localException);
-        NS_ENDHANDLER
+        } @catch (NSException* localException) {
+            if (NSDebugEnabled) NSLog(@"Warning: POP3 server fails for command '%@': %@", command, localException);
+		}
     }
     return transferData;
 }
 
-- (NSData*) _headerDataAtPosition:(int)position
+- (NSData*) _headerDataAtPosition: (int) position
 {
-    NSData *headerData = nil;
+    NSData* headerData = nil;
 
-    if ( (position <= _maildropSize) && (position > 0) )
-    {
-        NS_DURING
+    if ( (position <= _maildropSize) && (position > 0) ) {
+        @try {
             [self _readOKForCommand:[NSString stringWithFormat: @"TOP %d 0", position]];
             headerData = [_stream availableTextData];
-        NS_HANDLER
+        } @catch (NSException* localException) {
             if (NSDebugEnabled) NSLog(@"POP3 server does not understand the optional TOP command. Using RETR instead.");
-            headerData = [self _transferDataAtPosition:position];
-        NS_ENDHANDLER
+            headerData = [self _transferDataAtPosition: position];
+        }
     }
     return headerData;
 }

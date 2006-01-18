@@ -162,7 +162,7 @@
     
     sleep(1);
     
-    [OPJobs suggestTerminatingJob:job1];
+    [OPJobs shouldTerminateJob:job1];
     
     while ([OPJobs isJobRunning:job1])
     {

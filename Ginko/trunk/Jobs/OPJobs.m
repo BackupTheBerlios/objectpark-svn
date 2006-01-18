@@ -635,7 +635,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [jobsLock unlockWithCondition:[jobsLock condition]];
 }
 
-+ (BOOL)suggestTerminatingJob:(NSNumber *)anJobId
++ (BOOL)shouldTerminateJob:(NSNumber *)anJobId
 /*" Suggests that a job should terminate. While this does not enforce termination of a job denoted by anJobId, the job can see that termination is requested and can do so. Returns YES if the suggestion could be passed on, NO otherwise. "*/
 {
     BOOL result = NO;
@@ -650,6 +650,9 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
         {
             [jobDescription setObject:[NSNumber numberWithBool:YES] forKey:OPJobShouldTerminate];
             result = YES;
+			
+#warning OPJobs: Set status string here so that terminating status can be reviewed by the user.
+			
             break;
         }
     }

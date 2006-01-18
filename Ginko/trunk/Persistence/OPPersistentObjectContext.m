@@ -228,11 +228,11 @@ static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object
 {
 	//NSLog(@"Comparing %@ and %@.", object1, object2);
 	// Optimize by removing 2-4 method calls:
-	//return [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
-	const  FakeObject* o1 = object1;
-	const  FakeObject* o2 = object2;
+	return [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
+	//const FakeObject* o1 = object1;
+	//const FakeObject* o2 = object2;
 	
-	return (o1->oid == o2->oid) && (o1->isa == o2->isa);
+	//return (o1->oid == o2->oid) && (o1->isa == o2->isa);
 }
 
 
@@ -242,10 +242,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
  * the registeredObjects hashTable.
  */
 {
-	// Maybe we need a better hash funktion as multiple tables will use the same oids.
-	// Incorporate the class pointer somehow?
-	//unsigned result = (unsigned)[(OPPersistentObject*)object currentOid];
-	unsigned result = (unsigned)(((FakeObject*)object)->oid);
+	unsigned result = (unsigned)[(OPPersistentObject*)object currentOid];
+	//unsigned result = (unsigned)(((FakeObject*)object)->oid) ^ (unsigned)(((FakeObject*)object)->isa);
 	return result;
 }
 
@@ -378,7 +376,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		//[db commitTransaction]; [db beginTransaction]; // just for testing
 		
 		if ([changedObjects count]) {
-			OPDebugLog(OPPERSISTENCE, OPINFO, @"Saving %u object(s).", [changedObjects count]);
+			NSLog(/*OPDebugLog(OPPERSISTENCE, OPINFO, */@"Saving %u object(s).", [changedObjects count]);
 			
 			// Process all updated objects and save their changed attribute sets:
 			NSEnumerator* coe = [changedObjects objectEnumerator];

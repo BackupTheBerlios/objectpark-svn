@@ -95,19 +95,28 @@ static GIActivityPanelController *panel = nil;
     return self;
 }
 
-- (NSWindow *)window
+- (NSWindow*) window
 {
     return window;
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
-    [tableView reloadData];   
+    [tableView reloadData];
+	//NSLog(@"ActivityViewer has %d columns.", [tableView numberOfColumns]);
 }
 
-- (void)windowWillClose:(NSNotification *)notification 
+- (IBAction) stopJob: (id) sender
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	int rowIndex = [tableView selectedRow];
+
+	[OPJobs shouldTerminateJob: [jobIds objectAtIndex: rowIndex]];
+	NSLog(@"Should stop thread: %@", [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]]);
+}
+
+- (void) windowWillClose: (NSNotification*) notification 
+{
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void) dealloc
@@ -120,49 +129,31 @@ static GIActivityPanelController *panel = nil;
 
 @implementation GIActivityPanelController (TableViewDataSource)
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (int) numberOfRowsInTableView: (NSTableView*) aTableView
 {
     return [jobIds count];
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id)tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
 {
-    NSDictionary *progressInfo = [OPJobs progressInfoForJob:[jobIds objectAtIndex:rowIndex]];
+    NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
     
-    if (progressInfo)
-    {
-        NSString *identifier = [aTableColumn identifier];
-        
-        if ([identifier isEqualToString:@"progress"])
-        {
-            if ([progressInfo isJobProgressIndeterminate])
-            {
-                return @"Runs";
-            }
-            else
-            {
+    if (progressInfo) {
+        NSString* identifier = [aTableColumn identifier];
+        //NSLog(@"Identifier: %@", identifier);
+        if ([identifier isEqualToString: @"progress"]) {
+            if ([progressInfo isJobProgressIndeterminate]) {
+                return @"Running";
+            } else {
                 double minValue = [progressInfo jobProgressMinValue];
                 double normalizedMax = [progressInfo jobProgressMaxValue] - minValue;
                 double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;
                 double percentComplete = (normalizedCurrentValue / normalizedMax) * (double)100.0;
-                
-                return [NSString stringWithFormat:@"%d %%", (int) floor(percentComplete)];
+				
+                return [NSString stringWithFormat: @"%d %%\n%d/%d", (int) floor(percentComplete), (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
             }
-        }
-        else if ([identifier isEqualToString:@"jobname"])
-        {
-            return [progressInfo jobProgressJobName]; 
-        }
-        else if ([identifier isEqualToString:@"description"])
-        {
-            return [progressInfo jobProgressDescription];
-        }
-        else if ([identifier isEqualToString:@"absolute"])
-        {
-            if (![progressInfo isJobProgressIndeterminate])
-            {
-                return [NSString stringWithFormat:@"%lu/%lu", (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
-            }
+        } else if ([identifier isEqualToString: @"description"]) {
+            return [NSString stringWithFormat: @"%@:\n  %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
         }
     }
     

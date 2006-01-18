@@ -21,4 +21,7 @@
 
 - (NSWindow*) window;
 
+- (IBAction) stopJob: (id) sender;
+
+
 @end
