@@ -58,6 +58,6 @@ extern NSString* GIMessageGroupWasAddedNotification;
 + (void) saveHierarchy;
 
 - (NSArray*) allMessages;
-- (void) exportAsMboxFile;
+- (void) exportAsMboxFileWithPath:(NSString*)path;
 
 @end

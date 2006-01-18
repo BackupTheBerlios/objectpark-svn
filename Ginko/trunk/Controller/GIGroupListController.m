@@ -172,7 +172,17 @@
     NSLog(@"MBox export for group %@ triggered", group);
     
     if (group)
-        [group exportAsMboxFile];
+    {
+        NSSavePanel *panel = [NSSavePanel savePanel];
+        [panel setTitle:[NSString stringWithFormat:@"Exporting messagebox '%@'", [group valueForKey:@"name"]]];
+        [panel setPrompt:@"Export"];
+        [panel setNameFieldLabel:@"Export to:"];
+        
+        if ([panel runModalForDirectory:nil file:[NSString stringWithFormat:@"%@.mbox", [group valueForKey:@"name"]]] == NSFileHandlingPanelCancelButton)
+            return;
+            
+        [OPJobs scheduleJobWithName:@"Mbox export" target:group selector:@selector(exportAsMboxFileWithPath:) arguments:[panel filename] synchronizedObject:nil /*group*/];
+    }
     else
         NSBeep();
 }

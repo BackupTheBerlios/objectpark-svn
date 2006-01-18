@@ -19,6 +19,14 @@
 #import "OPMBoxFile.h"
 #import "GIMessage.h"
 #import "NSData+MessageUtils.h"
+#import "OPJobs.h"
+
+
+#define MESSAGEGROUP     OPL_DOMAIN  @"MessageGroup"
+
+#define EXPORT_FILE      OPL_ASPECT  0x01
+#define EXPORT_PROGRESS  OPL_ASPECT  0x02
+#define EXPORT           OPL_ASPECT  0x03
 
 
 @implementation GIMessageGroup
@@ -545,7 +553,7 @@ static NSMutableArray* root = nil;
 - (NSArray*) allMessages
 /*" Only returns persistent messages (from the database). "*/
 {
-	OPPersistentObjectEnumerator* result;
+// 	OPPersistentObjectEnumerator* result;
 
 	NSString* queryString = @"select ZMESSAGE.ROWID from Z_4THREADS, ZMESSAGE where ZMESSAGE.ZTHREAD = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=?";
 
@@ -564,29 +572,22 @@ static NSMutableArray* root = nil;
 }
 
 
-- (void) exportAsMboxFile
+- (void) exportAsMboxFileWithPath:(NSString*)path
 {
-    NSSavePanel *panel = [NSSavePanel savePanel];
-    [panel setTitle:[NSString stringWithFormat:@"Exporting messagebox '%@'", [self valueForKey:@"name"]]];
-    [panel setPrompt:@"Export"];
-    [panel setNameFieldLabel:@"Export to:"];
-    
-    if ([panel runModalForDirectory:nil file:[NSString stringWithFormat:@"%@.mbox", [self valueForKey:@"name"]]] == NSFileHandlingPanelCancelButton)
-        return;
-    
-    // get name of mbox file by opening a file selector
-    NSString* path = [[NSString stringWithFormat:@"~/Desktop/%@.mbox", [self valueForKey:@"name"]] stringByExpandingTildeInPath];
-    
-    NSLog(@"Exporting to mbox file at %@", path);
+    OPDebugLog(MESSAGEGROUP, EXPORT_FILE, @"Exporting mbox '%@' to file at %@", [self valueForKey:@"name"], path);
     
     OPMBoxFile* mbox = [OPMBoxFile mboxWithPath: path createIfNotPresent: YES];
+    
+    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"determining messages in group '%@'", @"mbox export, determining messages"), [self valueForKey:@"name"]]]];
 	NSArray* allMessages = [self allMessages];
+    unsigned int messagesToExport = [allMessages count];
     NSEnumerator* messages = [allMessages objectEnumerator];
     GIMessage* msg;
     int exportedMessages = 0;
     
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
+    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey:@"name"]]]];
     while (msg = [messages nextObject]) {
         
 #warning Improve From_ line
@@ -606,14 +607,23 @@ nil, //                                                     [[[NSString alloc] i
         [msg refault];
             
         if (++exportedMessages % 100 == 0) {
-            NSLog(@"%d messages exported", exportedMessages);
+            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey:@"name"]]]];
+            OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
             
-            [pool release]; pool = [[NSAutoreleasePool alloc] init];
+            if ([OPJobs shouldTerminate])
+                break;
+                
+            [pool release];
+            pool = [[NSAutoreleasePool alloc] init];
         }
     }
     
     [pool release];
-    NSLog(@"%d messages exported", exportedMessages);
+    
+    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey:@"name"]]]];
+    OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
+    
+//     [OPJobs setResult:@"ready"];
 }
 
 
