@@ -149,7 +149,6 @@
 /*" Returns YES, if the reciever is not a fault afterwards. "*/
 {
     if (attributes==nil) {
-        // implement using the default PersistentObjectContext:
         attributes = [[[self context] persistentValuesForObject: self] retain];
 		if (!attributes && oid==0) {
 			attributes = [[NSMutableDictionary alloc] init]; // should set default values here?

@@ -303,7 +303,12 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 
 - (unsigned) indexOfObjectIdenticalTo: (OPPersistentObject*) anObject
 {
-	return [self indexOfObject: anObject];
+	unsigned result = [self indexOfObject: anObject];
+	if (result != NSNotFound) {
+		if (anObject == [self objectAtIndex: result]) return result;
+		NSLog(@"Warning - indexOfObjectIdenticalTo might have failed?");
+	}
+	return NSNotFound;
 }
 
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
@@ -318,7 +323,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	
 	if (sortKey) {
 		
-		if (NO && [anObject isFault]) {
+		if (YES && [anObject isFault]) {
 			// Firing a fault is probably more expensive than a linear search:
 
 			// Search for oid:
