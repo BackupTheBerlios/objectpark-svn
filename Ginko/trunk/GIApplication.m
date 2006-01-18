@@ -475,7 +475,7 @@
         {
             if (! [[window delegate] windowShouldClose:self])
             {
-                result = NSTerminateLater;
+                return NSTerminateCancel;
             }
         }
     }

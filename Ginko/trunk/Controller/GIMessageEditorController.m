@@ -486,7 +486,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self autorelease]; // balance self-retaining
 }
 
-- (void) dismissalSheetDidEnd: (NSWindow*) sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)dismissalSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 /*" Callback for sheet opened in -windowShouldClose: "*/
 {    
     switch (returnCode)
@@ -496,12 +496,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             // save as draft
             [self checkpointMessageWithStatus:0];
             
+            [window setDocumentEdited:NO];
             [window close];
             
-            if (contextInfo == [NSApp delegate])
-            {
-                [NSApp terminate: self];
-            }
+            if (contextInfo == [NSApp delegate]) [NSApp terminate:self];
             break;
         }
         case NSAlertOtherReturn:
@@ -512,11 +510,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 				[oldMessage setSendStatus: OPSendStatusQueuedReady]; 
 			}
             
+            [window setDocumentEdited:NO];
             [window close];
             
-            if (contextInfo == [NSApp delegate]) {
-                [NSApp terminate: self];
-            }
+            if (contextInfo == [NSApp delegate]) [NSApp terminate:self];
             break;
         }
         default:
@@ -524,33 +521,31 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (BOOL) windowShouldClose: (id) sender
+- (BOOL)windowShouldClose:(id)sender
 {
-    if (! [window isDocumentEdited]) {
-        return YES;
-    }
+    if (! [window isDocumentEdited]) return YES;
     
     // ##WARNING axel->axel: might be a queued message also. Could be only a newer version...
-    NSBeginAlertSheet(NSLocalizedString (@"Save Message as a Draft?", @"edit window close alert sheet"),
-                      NSLocalizedString (@"Save", @"edit window close alert sheet"),
-                      NSLocalizedString (@"Cancel", @"edit window close alert sheet"),
-                      NSLocalizedString (@"Dismiss", @"edit window close alert sheet"),
+    NSBeginAlertSheet(NSLocalizedString(@"Save Message as a Draft?", @"edit window close alert sheet"),
+                      NSLocalizedString(@"Save", @"edit window close alert sheet"),
+                      NSLocalizedString(@"Cancel", @"edit window close alert sheet"),
+                      NSLocalizedString(@"Dismiss", @"edit window close alert sheet"),
                       window,
                       self,
                       @selector(dismissalSheetDidEnd:returnCode:contextInfo:),
                       NULL,
                       sender,
-                      NSLocalizedString (@"Message can be sent later.", @"edit window close alert sheet")
+                      NSLocalizedString(@"Message can be sent later.", @"edit window close alert sheet")
                       );
     return NO;
 }
 
-- (void) textDidChange: (NSNotification*) aNotification
+- (void)textDidChange:(NSNotification *)aNotification
 {
-    [window setDocumentEdited: YES];
+    [window setDocumentEdited:YES];
 }
 
-- (void) controlTextDidChange: (NSNotification*) aNotification
+- (void)controlTextDidChange:(NSNotification *)aNotification
 {
     id sender = [aNotification object];
     

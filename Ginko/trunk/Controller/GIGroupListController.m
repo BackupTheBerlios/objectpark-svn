@@ -132,7 +132,7 @@
     
     if (lastSelectedRow != -1) 
     {
-        int index = [[boxesView tableColumns] indexOfObject:[boxesView tableColumnWithIdentifier:@"info"]];
+        int index = [[boxesView tableColumns] indexOfObject:[boxesView tableColumnWithIdentifier:@"box"]];
         [boxesView editColumn:index row:lastSelectedRow withEvent:nil select:YES];
     }
 }
