@@ -33,22 +33,41 @@
                 addFolder = id; 
                 addMessageGroup = id; 
                 delete = id; 
+                exportGroup = id; 
                 removeFolderMessageGroup = id; 
                 rename = id; 
             }; 
             CLASS = GIGroupListController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                boxesView = NSOutlineView; 
-                progressIndicator = NSProgressIndicator; 
-                window = NSWindow; 
-            }; 
+            OUTLETS = {boxesView = NSOutlineView; window = NSWindow; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
             CLASS = GIOutlineViewWithKeyboardSupport; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSOutlineView; 
+        }, 
+        {
+            ACTIONS = {
+                selectThreadsWithCurrentSubject = id; 
+                showThreads = id; 
+                threadFilterPopUpChanged = id; 
+            }; 
+            CLASS = GIThreadListController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                commentsMatrix = NSMatrix; 
+                groupInfoTextField = NSTextField; 
+                messageTextView = NSTextView; 
+                progressIndicator = NSProgressIndicator; 
+                searchHitsTableView = NSTableView; 
+                tabView = NSTabView; 
+                threadFilterPopUp = NSPopUpButton; 
+                threadsView = GIOutlineViewWithKeyboardSupport; 
+                treeBodySplitter = OPCollapsingSplitView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
         }
     ); 
     IBVersion = 1; 

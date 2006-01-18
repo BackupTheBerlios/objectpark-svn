@@ -676,7 +676,7 @@
     [self sendQueuedMessagesWithFlag: OPSendStatusQueuedReady];
 }
 
-- (IBAction) showActivityPanel: (id) sender
+- (IBAction)showActivityPanel:(id)sender
 {
     [GIActivityPanelController showActivityPanelInteractive:YES];
     

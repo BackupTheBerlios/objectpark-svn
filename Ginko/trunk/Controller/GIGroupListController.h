@@ -12,7 +12,6 @@
 @interface GIGroupListController : NSObject 
 {	
     IBOutlet NSOutlineView *boxesView;
-    IBOutlet NSProgressIndicator *progressIndicator;
     IBOutlet NSWindow *window;
 }
 
