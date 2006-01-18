@@ -1729,15 +1729,17 @@ NSMutableArray* border = nil;
 - (IBAction) navigateUpInMatrix: (id) sender
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently]) {
-        NSArray* comments;
+    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
+    {
+        NSArray *comments;
         int indexOfDisplayedMessage;
         
-        comments = [[[self displayedMessage] reference] commentsInThread: [self displayedThread]];
-        indexOfDisplayedMessage = [comments indexOfObject: [self displayedMessage]];
+        comments = [[[self displayedMessage] reference] commentsInThread:[self displayedThread]];
+        indexOfDisplayedMessage = [comments indexOfObject:[self displayedMessage]];
         
-        if ((indexOfDisplayedMessage - 1)>= 0) {
-            [self setDisplayedMessage: [comments objectAtIndex: indexOfDisplayedMessage - 1] thread: [self displayedThread]];
+        if ((indexOfDisplayedMessage - 1) >= 0) 
+        {
+            [self setDisplayedMessage:[comments objectAtIndex:indexOfDisplayedMessage - 1] thread:[self displayedThread]];
             return;
         }
         NSBeep();
@@ -1747,29 +1749,33 @@ NSMutableArray* border = nil;
 - (IBAction) navigateDownInMatrix: (id) sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently]) {
+    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
+    {
+        NSArray *comments = [[[self displayedMessage] reference] commentsInThread:[self displayedThread]];
+        int indexOfDisplayedMessage = [comments indexOfObject:[self displayedMessage]];
         
-        NSArray* comments = [[[self displayedMessage] reference] commentsInThread: [self displayedThread]];
-        int indexOfDisplayedMessage = [comments indexOfObject: [self displayedMessage]];
-        
-        if ([comments count] > indexOfDisplayedMessage + 1) {
-            [self setDisplayedMessage: [comments objectAtIndex: indexOfDisplayedMessage + 1] thread: [self displayedThread]];
+        if ([comments count] > indexOfDisplayedMessage + 1) 
+        {
+            [self setDisplayedMessage: [comments objectAtIndex:indexOfDisplayedMessage + 1] thread:[self displayedThread]];
             return;
         }
         NSBeep();
     }
 }
 
-- (IBAction)navigateLeftInMatrix: (id) sender
+- (IBAction)navigateLeftInMatrix:(id)sender
 /*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently]) {
+    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
+    {
         GIMessage *newMessage;
         
-        if ((newMessage = [[self displayedMessage] reference])) {
+        if ((newMessage = [[self displayedMessage] reference])) 
+        {
             // check if the current thread has the reference:
-            if ([[[self displayedThread] messages] containsObject:newMessage]) {
-                [self setDisplayedMessage:newMessage thread: [self displayedThread]];
+            if ([[[self displayedThread] messages] containsObject:newMessage]) 
+            {
+                [self setDisplayedMessage:newMessage thread:[self displayedThread]];
                 return;
             }
         }
@@ -1777,15 +1783,16 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction) navigateRightInMatrix: (id) sender
+- (IBAction)navigateRightInMatrix:(id)sender
 /*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently])
+    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
     {
-        NSArray* comments = [[self displayedMessage] commentsInThread: [self displayedThread]];
+        NSArray *comments = [[self displayedMessage] commentsInThread:[self displayedThread]];
         
-        if ([comments count]) {
-            [self setDisplayedMessage: [comments objectAtIndex:0] thread: [self displayedThread]];
+        if ([comments count]) 
+        {
+            [self setDisplayedMessage:[comments objectAtIndex:0] thread:[self displayedThread]];
             return;
         }
         NSBeep();
@@ -1795,7 +1802,7 @@ NSMutableArray* border = nil;
 - (BOOL)matrixIsVisible
 /*" Returns YES if the comments matrix is shown and not collapsed. NO otherwise "*/
 {
-    return ![treeBodySplitter isSubviewCollapsed: [[treeBodySplitter subviews] objectAtIndex:0]];
+    return ![treeBodySplitter isSubviewCollapsed:[[treeBodySplitter subviews] objectAtIndex:0]];
 }
 
 //[commentsMatrix cellAtRow:y column:x]

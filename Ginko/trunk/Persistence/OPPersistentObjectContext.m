@@ -80,7 +80,11 @@ typedef struct {
 - (void) registerObject: (OPPersistentObject*) object
 {
 	NSParameterAssert([object currentOid]>0); // hashing is based on oids here
-    NSHashInsertIfAbsent(registeredObjects, object);
+    
+    @synchronized(self)
+    {
+        NSHashInsertIfAbsent(registeredObjects, object);
+    }
 }
 
 - (void) unregisterObject: (OPPersistentObject*) object
@@ -103,7 +107,13 @@ typedef struct {
 
    //OPPersistentObject* testObject = [[[OPPersistentObject alloc] initWithContext: self oid: oid] autorelease];
     
-    OPPersistentObject* result = NSHashGet(registeredObjects, &searchStruct);
+    OPPersistentObject *result = nil;
+    
+    @synchronized(self)
+    {
+        result = NSHashGet(registeredObjects, &searchStruct);
+    }
+    
     //NSLog(@"Object registered for oid %llu: %@", oid, result);
     return result;
 }
