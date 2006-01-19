@@ -150,7 +150,7 @@ static GIActivityPanelController *panel = nil;
                 double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;
                 double percentComplete = (normalizedCurrentValue / normalizedMax) * (double)100.0;
 				
-                return [NSString stringWithFormat: @"%d %%\n%d/%d", (int) floor(percentComplete), (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
+                return [NSString stringWithFormat: @"%.1f %%\n%d/%d", percentComplete, (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
             }
         } else if ([identifier isEqualToString: @"description"]) {
             return [NSString stringWithFormat: @"%@:\n  %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
