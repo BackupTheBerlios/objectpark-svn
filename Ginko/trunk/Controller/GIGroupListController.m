@@ -181,7 +181,7 @@
         if ([panel runModalForDirectory:nil file:[NSString stringWithFormat:@"%@.mbox", [group valueForKey:@"name"]]] == NSFileHandlingPanelCancelButton)
             return;
             
-        [OPJobs scheduleJobWithName:@"Mbox export" target:group selector:@selector(exportAsMboxFileWithPath:) arguments:[panel filename] synchronizedObject:nil /*group*/];
+        [OPJobs scheduleJobWithName:@"Mbox export" target:group selector:@selector(exportAsMboxFileWithPath:) argument:[panel filename] synchronizedObject:nil /*group*/];
     }
     else
         NSBeep();

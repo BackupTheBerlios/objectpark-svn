@@ -1017,25 +1017,31 @@
     return result;
 }
 
-+ (NSArray *)hitsForQueryString:(NSString *)aQuery
++ (NSArray *)hitsForQueryString:(NSString *)aQuery limit:(int)limit
 {
     JNIEnv *env = [self jniEnv];
     NSMutableArray *result = nil;
     NSMutableSet *dupeCheck;
-    NSMutableSet *dupeOids;
+    NSMutableSet *invalidOids;
     
     if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
     
     jobject hits = [self luceneHitsForQueryString:aQuery];
     
     if (hits == NULL) return nil;
+
+    jstring messageIdFieldName = (*env)->NewStringUTF(env, "id");
+    jstring threadIdFieldName = (*env)->NewStringUTF(env, "thread");
     
-    jint i, hitsCount = [GIFulltextIndex hitsLength:hits];
+    jint i, hitsCount = [self hitsLength:hits];
     
     result = [NSMutableArray arrayWithCapacity:(int)hitsCount];
     dupeCheck = [NSMutableSet set];
-    dupeOids = [NSMutableSet set];
-    for (i = 0; i < hitsCount; i++)
+    invalidOids = [NSMutableSet set];
+    
+    int maxCount = (limit == 0) ? hitsCount : MIN(hitsCount, limit);
+    
+    for (i = 0; i < maxCount; i++)
     {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
@@ -1044,30 +1050,43 @@
         //NSLog(@"hit doc = %@", [self objectToString:doc]);
         
         // oid
-        jstring fieldName = (*env)->NewStringUTF(env, "id");
-        jstring javaOid = [self document:doc get:fieldName];
-        NSString *oidString = [self stringFromJstring:javaOid];
+        jstring javaMessageOid = [self document:doc get:messageIdFieldName];
+        NSString *messageOidString = [self stringFromJstring:javaMessageOid];
 #warning HACK: Do better with converting to unsigned long long (not correct here)
-        NSNumber *oid = [NSNumber numberWithUnsignedLongLong:[oidString longLongValue]];
+        NSNumber *messageOid = [NSNumber numberWithUnsignedLongLong:[messageOidString longLongValue]];
+        GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:[messageOidString longLongValue] ofClass:[GIMessage class]];
         
-        // dupe check:
-        if ([dupeCheck containsObject:oid])
+        jstring javaThreadOid = [self document:doc get:threadIdFieldName];
+        NSString *threadOidString = [self stringFromJstring:javaThreadOid];
+#warning HACK: Do better with converting to unsigned long long (not correct here)
+        //NSNumber *threadOid = [NSNumber numberWithUnsignedLongLong:[threadOidString longLongValue]];
+        GIThread *thread = [[OPPersistentObjectContext threadContext] objectForOid:[threadOidString longLongValue] ofClass:[GIThread class]];
+        
+        if (! thread || ! message)
         {
-            // remove from fulltext index:
-            [dupeOids addObject:oid];
+            [invalidOids addObject:messageOid];
+            if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
         }
         else
         {
-            [dupeCheck addObject:oid];
-            
-            // score
-            jfloat javaScore = [self hits:hits score:i];
-            NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
-            
-            OPObjectPair *hit = [OPObjectPair pairWithObjects:oid :score];
-            [result addObject:hit];
+            // dupe check:
+            if ([dupeCheck containsObject:messageOid])
+            {
+                // remove from fulltext index:
+                [invalidOids addObject:messageOid];
+            }
+            else
+            {
+                [dupeCheck addObject:messageOid];
+                
+                // score
+                jfloat javaScore = [self hits:hits score:i];
+                NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
+                
+                NSArray *hit = [NSArray arrayWithObjects:message, score, thread, nil];
+                [result addObject:hit];
+            }
         }
-
         (*env)->PopLocalFrame(env, NULL);
         [pool release];
     }
@@ -1075,7 +1094,7 @@
     (*env)->PopLocalFrame(env, NULL);
     
     // remove dupes:
-    [self fulltextIndexInBackgroundAdding:nil removing:[dupeOids allObjects]];
+    [self fulltextIndexInBackgroundAdding:nil removing:[invalidOids allObjects]];
     
     return result;
 }
@@ -1120,7 +1139,7 @@
     
     if ([jobArguments count])
     {
-        [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) arguments:jobArguments synchronizedObject:@"fulltextIndexing"];
+        [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
     }    
 }
 

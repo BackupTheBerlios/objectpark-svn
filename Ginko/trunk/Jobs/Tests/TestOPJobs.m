@@ -39,9 +39,9 @@
 
 - (void) testBasics
 {
-    NSNumber *jobId1 = [OPJobs scheduleJobWithName: @"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 1" forKey:@"name"] synchronizedObject: nil];
-    NSNumber *jobId2 = [OPJobs scheduleJobWithName: @"job2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject: nil];
-    NSNumber *jobId3 = [OPJobs scheduleJobWithName: @"job3" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject: nil];
+    NSNumber *jobId1 = [OPJobs scheduleJobWithName: @"job1" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Basic Job 1" forKey:@"name"] synchronizedObject: nil];
+    NSNumber *jobId2 = [OPJobs scheduleJobWithName: @"job2" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject: nil];
+    NSNumber *jobId3 = [OPJobs scheduleJobWithName: @"job3" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject: nil];
     
    // sleep(1);
         
@@ -84,9 +84,9 @@
 
 - (void) testSynchronizing
 {
-    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName: @"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
-    NSNumber *jobKoeln2 = [OPJobs scheduleJobWithName: @"koeln2" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln2" forKey:@"name"] synchronizedObject:@"Koeln"];
-    NSNumber *jobDuisburg = [OPJobs scheduleJobWithName: @"duisburg" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Duisburg" forKey:@"name"] synchronizedObject:@"Duisburg"];
+    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName: @"koeln1" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
+    NSNumber *jobKoeln2 = [OPJobs scheduleJobWithName: @"koeln2" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Job Koeln2" forKey:@"name"] synchronizedObject:@"Koeln"];
+    NSNumber *jobDuisburg = [OPJobs scheduleJobWithName: @"duisburg" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Job Duisburg" forKey:@"name"] synchronizedObject:@"Duisburg"];
     
     sleep(1);
     
@@ -133,7 +133,7 @@
     [OPJobs removeAllFinishedJobs];
     STAssertTrue([[OPJobs finishedJobs] count] == 0, @"at least one finished job in place");
     
-    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName: @"koeln1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
+    NSNumber *jobKoeln1 = [OPJobs scheduleJobWithName: @"koeln1" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
     
     sleep(1);
     
@@ -158,7 +158,7 @@
 
 - (void) testTermination
 {
-    NSNumber *job1 = [OPJobs scheduleJobWithName: @"job1" target:self selector:@selector(jobToTest:) arguments:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject: nil];
+    NSNumber *job1 = [OPJobs scheduleJobWithName: @"job1" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject: nil];
     
     sleep(1);
     

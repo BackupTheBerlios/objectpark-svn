@@ -45,30 +45,29 @@ static NSMutableDictionary *allGroupStats = nil;
 
 - (NSMutableDictionary *)statistics
 {
-    NSMutableDictionary *result = nil;
+    NSMutableDictionary *result = [[NSUserDefaults standardUserDefaults] objectForKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]];
     
-    @synchronized(allGroupStats)
-    {
-        result = [[self allGroupStats] objectForKey:[self oidNumber]];
-        if (! result)
-        {
-            result = [NSMutableDictionary dictionary];
-            [[self allGroupStats] setObject:result forKey:[self oidNumber]];
-            
-            // add as observer:
-            [self addObserver:self 
-                   forKeyPath:@"threadsByDate" 
-                      options:NSKeyValueObservingOptionNew 
-                      context:NULL];
-        }
-    }
+    if (! result) result = [NSMutableDictionary dictionary];
     
+    // add as observer:
+    [self addObserver:self 
+           forKeyPath:@"threadsByDate" 
+              options:NSKeyValueObservingOptionNew 
+              context:NULL];
+        
     return result;
+}
+
+- (void)setStatistics:(NSDictionary *)aDict
+{
+    [[NSUserDefaults standardUserDefaults] setObject:aDict forKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]];
 }
 
 - (void)invalidateStatistics
 {
-    [[self statistics] removeAllObjects];
+    NSMutableDictionary *stats = [self statistics];
+    [stats removeAllObjects];
+    [self setStatistics:stats];
 }
 
 - (NSNumber *)calculateUnreadMessageCount
@@ -98,6 +97,7 @@ static NSMutableDictionary *allGroupStats = nil;
     {
         result = [self calculateUnreadMessageCount];
         [stats setObject:result forKey:GINumberOfUnreadMessages];
+        [self setStatistics:stats];
     }
     return result;
 }

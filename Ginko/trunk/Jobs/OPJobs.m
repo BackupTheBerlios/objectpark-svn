@@ -102,7 +102,7 @@ static BOOL pendingJobsSuspended = NO;
     return result;
 }
 
-+ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject
++ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector argument:(id <NSCopying>)anArgument synchronizedObject:(id <NSCopying>)aSynchronizedObject
 /*" Schedules a job for being executed by a worker thread as soon as a unemployed worker thread is present and the execution of this job isn't mutual excluded by a currently running job. 
 
     aName is an arbitrary name for the job (doesn't need to be unique). This name is used as object when notifications are posted. This way an observer can easily filter by name.
@@ -111,7 +111,7 @@ static BOOL pendingJobsSuspended = NO;
 
     aSelector is the selector to call (the method that performs the job).
 
-    someArguments is an dictionary containing arbitrary arguments that can be used by the job.
+    anArgument is an arbitrary object that can be used by the job.
 
     aSynchronizedObject may be nil but can be used for excluding other jobs with equal synchronized objects for running at the same time. aSelector must denote a method that takes exactly one parameter of the type #{NSMutableDictionary}. The dictionary holds someArguments (see the source code of the corresponding unit tests for an example). 
 
@@ -128,7 +128,7 @@ static BOOL pendingJobsSuspended = NO;
     [jobDescription setObject:aName forKey:OPJobName];
     [jobDescription setObject:aTarget forKey:OPJobTarget];
     [jobDescription setObject:NSStringFromSelector(aSelector) forKey:OPJobSelector];
-    [jobDescription setObject:[[someArguments copy] autorelease] forKey:OPJobArguments];
+    [jobDescription setObject:[[anArgument copy] autorelease] forKey:OPJobArguments];
     
     if (aSynchronizedObject)
     {

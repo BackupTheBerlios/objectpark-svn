@@ -13,7 +13,7 @@
 }
 
 /*" Scheduling new Jobs "*/
-+ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector arguments:(NSDictionary *)someArguments synchronizedObject:(id <NSCopying>)aSynchronizedObject;
++ (NSNumber *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector argument:(id <NSCopying>)anArgument synchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
 /*" Worker Threads "*/
 + (unsigned)maxThreads;

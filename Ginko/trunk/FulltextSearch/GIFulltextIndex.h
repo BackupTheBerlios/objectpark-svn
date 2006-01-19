@@ -22,7 +22,7 @@
 + (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messageOidsToRemove;
 + (void)removeMessagesWithOids:(NSArray *)someOids;
 
-+ (NSArray *)hitsForQueryString:(NSString *)aQuery;
++ (NSArray *)hitsForQueryString:(NSString *)aQuery limit:(int)limit;
 
 + (void)optimize;
 + (void)resetIndex;

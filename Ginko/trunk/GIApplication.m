@@ -428,7 +428,7 @@
 				[jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
                 [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
 				
-                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
+                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
             }
         }
     }    
@@ -570,7 +570,7 @@
         [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
         [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
         
-        [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) arguments:jobArguments synchronizedObject:@"mbox import"];
+        [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
     }
 }
 

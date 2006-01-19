@@ -381,108 +381,139 @@ static BOOL isThreadItem(id item)
 }
 
 - (BOOL)threadsShownCurrently
-    /*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
+/*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
 {
-    return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
+    return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"threads"];
 }
 
 - (BOOL)searchHitsShownCurrently
-    /*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
+/*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
 {
     return (hits != nil);
 }
 
-- (BOOL) openSelection: (id) sender
+- (BOOL)messageShownCurrently
+/*" Returns YES if the tab with the message is currently visible. NO otherwise. "*/
+{
+    return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"];
+}
+
+- (BOOL)openSelection:(id)sender
 {    
-    if ([self threadsShownCurrently])  {
+    if ([self threadsShownCurrently]) 
+    {
         int selectedRow = [threadsView selectedRow];
         
-        if (selectedRow >= 0) {
-            GIMessage* message = nil;
-            GIThread* selectedThread = nil;
-            id item = [threadsView itemAtRow: selectedRow];
+        if (selectedRow >= 0) 
+        {
+            GIMessage *message = nil;
+            GIThread *selectedThread = nil;
+            id item = [threadsView itemAtRow:selectedRow];
             
-            if (!isThreadItem(item)) {
+            if (!isThreadItem(item)) 
+            {
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                selectedThread = [message valueForKey: @"thread"];
-            } else {
+                selectedThread = [message valueForKey:@"thread"];
+            } 
+            else 
+            {
                 selectedThread = item;
                 
-                if ([selectedThread containsSingleMessage]) {
-                    message = [[selectedThread valueForKey: @"messages"] lastObject];
-                } else {
-                    if ([threadsView isItemExpanded: item]) {
-                        [threadsView collapseItem: item];
-                    } else {                        
-                        [threadsView expandItem: item];                    
+                if ([selectedThread containsSingleMessage]) 
+                {
+                    message = [[selectedThread valueForKey:@"messages"] lastObject];
+                } 
+                else 
+                {
+                    if ([threadsView isItemExpanded:item]) 
+                    {
+                        [threadsView collapseItem:item];
+                    } 
+                    else 
+                    {                        
+                        [threadsView expandItem:item];                    
                         // ##TODO:select first "interesting" message of this thread
                         // perhaps the next/first unread message
                         
-                        NSEnumerator* enumerator = [[selectedThread messagesByTree] objectEnumerator];
-						GIMessage* message;
+                        NSEnumerator *enumerator = [[selectedThread messagesByTree] objectEnumerator];
+						GIMessage *message;
 
-                        while (message = [enumerator nextObject]) {
-                            if (! [message hasFlags: OPSeenStatus]) {
-                                [threadsView selectRowIndexes: [NSIndexSet indexSetWithIndex: [threadsView rowForItem:message]] byExtendingSelection: NO];
+                        while (message = [enumerator nextObject]) 
+                        {
+                            if (! [message hasFlags:OPSeenStatus]) 
+                            {
+                                [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:message]] byExtendingSelection:NO];
                                 break;
                             }
                         }
                         
-                        if (! message) {
+                        if (! message) 
+                        {
                             // if no message found select last one:
-                            [threadsView selectRowIndexes: [NSIndexSet indexSetWithIndex: [threadsView rowForItem: [[selectedThread messagesByTree] lastObject]]] byExtendingSelection: NO];   
+                            [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:[[selectedThread messagesByTree] lastObject]]] byExtendingSelection:NO];   
                         }
                         
                         // make selection visible:
-                        [threadsView scrollRowToVisible: [threadsView selectedRow]];
+                        [threadsView scrollRowToVisible:[threadsView selectedRow]];
                     }
                     return YES;
                 }
             }
             
 			unsigned messageSendStatus = [message sendStatus];
-            if (messageSendStatus > OPSendStatusNone) {
-                if (messageSendStatus >= OPSendStatusSending) {
+            if (messageSendStatus > OPSendStatusNone) 
+            {
+                if (messageSendStatus >= OPSendStatusSending) 
+                {
 					NSLog(@"message is in send job"); // replace by alert
                     NSBeep();
-                } else {
+                } 
+                else 
+                {
                     [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
                 }
-            } else {
-                [tabView selectTabViewItemWithIdentifier: @"message"];
+            } 
+            else 
+            {
+                [tabView selectTabViewItemWithIdentifier:@"message"];
                 
-                //[message addFlags: OPSeenStatus];
+                //[message addFlags:OPSeenStatus];
                 
-                [self setDisplayedMessage: message thread: selectedThread];
+                [self setDisplayedMessage:message thread:selectedThread];
                 
-                //if ([self matrixIsVisible]) [window makeFirstResponder: commentsMatrix];
+                //if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
                 //else 
-				[window makeFirstResponder: messageTextView];                    
+				[window makeFirstResponder:messageTextView];                    
             }
         }
 		
-	} else if ([self searchHitsShownCurrently]) {
-		
+	} 
+    else if ([self searchHitsShownCurrently]) 
+    {
         int selectedIndex = [searchHitsTableView selectedRow];
-        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) {
-            OID messageOid = [(NSNumber*) [[hits objectAtIndex: selectedIndex] firstObject] unsignedLongLongValue];
-            
-            GIMessage* message = [[OPPersistentObjectContext threadContext] objectForOid: messageOid ofClass: [GIMessage class]];
-            
+        
+        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) 
+        {
+            GIMessage *message = [[hits objectAtIndex: selectedIndex] objectAtIndex:0];
             
 			unsigned messageSendStatus = [message sendStatus];
-            if (messageSendStatus>OPSendStatusNone) {
-                if (messageSendStatus >= OPSendStatusSending) {
+            if (messageSendStatus > OPSendStatusNone) 
+            {
+                if (messageSendStatus >= OPSendStatusSending) 
+                {
                     NSLog(@"message is in send job");
                     NSBeep();
-                } else {
-                    [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
+                } 
+                else 
+                {
+                    [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
                 }
-            } else {
-				
-                [tabView selectTabViewItemWithIdentifier: @"message"];
+            } 
+            else 
+            {
+                [tabView selectTabViewItemWithIdentifier:@"message"];
                 
                 //[message addFlags: OPSeenStatus];
                 GIThread *thread = [message thread];
@@ -705,7 +736,8 @@ static BOOL isThreadItem(id item)
             
             [tabView selectTabViewItemWithIdentifier:@"searchresult"];
             
-            [self setHits:[GIFulltextIndex hitsForQueryString:query]];
+#warning hard-coded search hit limit of 200
+            [self setHits:[GIFulltextIndex hitsForQueryString:query limit:200]];
             
             NSLog(@"hits count = %d", [hits count]);
             
@@ -1469,9 +1501,8 @@ static NSAttributedString* spacer2()
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-    OPObjectPair *hit = [hits objectAtIndex:rowIndex];
-    OID oid = [(NSNumber *)[hit firstObject] unsignedLongLongValue];
-    GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:oid ofClass:[GIMessage class]];
+    NSArray *hit = [hits objectAtIndex:rowIndex];
+    GIMessage *message = [hit objectAtIndex:0];
     BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
 
     if ([[aTableColumn identifier] isEqualToString:@"date"])
@@ -1487,10 +1518,10 @@ static NSAttributedString* spacer2()
     {
         NSString *from;
         NSAttributedString *aFrom;
-        NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
+        NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
         
         BOOL isRead  = [message hasFlags:OPSeenStatus];
-        NSString *subject = [message valueForKey: @"subject"];
+        NSString *subject = [message valueForKey:@"subject"];
         
         if (!subject) subject = @"";
         
@@ -1501,7 +1532,7 @@ static NSAttributedString* spacer2()
         from = [message senderName];
         from = from ? from : @"- sender missing -";
         
-        from = [NSString stringWithFormat: @" (%@)", from];
+        from = [NSString stringWithFormat:@" (%@)", from];
         
         aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (isAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
         
@@ -1514,7 +1545,7 @@ static NSAttributedString* spacer2()
     }
     else if ([[aTableColumn identifier] isEqualToString:@"relevance"])
     {
-        return [(OPObjectPair *)hit secondObject]; // the score
+        return [hit objectAtIndex:1]; // the score
     }
     
     return @"";
@@ -1726,10 +1757,10 @@ NSMutableArray* border = nil;
 }
 
 // navigation (triggered by menu and keyboard shortcuts)
-- (IBAction) navigateUpInMatrix: (id) sender
+- (IBAction)navigateUpInMatrix:(id)sender
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
+    if ([self messageShownCurrently]) 
     {
         NSArray *comments;
         int indexOfDisplayedMessage;
@@ -1746,10 +1777,10 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction) navigateDownInMatrix: (id) sender
+- (IBAction)navigateDownInMatrix:(id)sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
+    if ([self messageShownCurrently]) 
     {
         NSArray *comments = [[[self displayedMessage] reference] commentsInThread:[self displayedThread]];
         int indexOfDisplayedMessage = [comments indexOfObject:[self displayedMessage]];
@@ -1766,7 +1797,7 @@ NSMutableArray* border = nil;
 - (IBAction)navigateLeftInMatrix:(id)sender
 /*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
+    if ([self messageShownCurrently]) 
     {
         GIMessage *newMessage;
         
@@ -1786,7 +1817,7 @@ NSMutableArray* border = nil;
 - (IBAction)navigateRightInMatrix:(id)sender
 /*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
-    if (![self threadsShownCurrently] && ![self searchHitsShownCurrently]) 
+    if ([self messageShownCurrently]) 
     {
         NSArray *comments = [[self displayedMessage] commentsInThread:[self displayedThread]];
         

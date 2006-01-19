@@ -183,7 +183,7 @@
     
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) arguments:jobArguments synchronizedObject:[anAccount outgoingServerName]];
+    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) argument:jobArguments synchronizedObject:[anAccount outgoingServerName]];
 }
 
 @end
