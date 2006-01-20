@@ -22,6 +22,11 @@
 #import "NSApplication+OPExtensions.h"
 #import <OPDebug/OPLog.h>
 
+#define IMPORT         OPL_DOMAIN  @"Import"
+#define TRANSFERDATA   OPL_ASPECT  0x01
+#define FLAGS          OPL_ASPECT  0x02
+
+
 @implementation GIMessageBase
 
 - (void)addMessage:(GIMessage *)aMessage
@@ -145,7 +150,14 @@ NSString* MboxImportJobName = @"mbox import";
     NSDate* lastProgressSet = [[NSDate alloc] init];
     
     // Create mbox file object for enumerating the contained messages:
-    OPMBoxFile* mboxFile = [OPMBoxFile mboxWithPath: mboxFilePath];
+    OPMBoxFile* mboxFile;
+    @try {
+        mboxFile = [OPMBoxFile mboxWithPath: [mboxFilePath stringByAppendingPathComponent:@"mbox"]];
+    }
+    @catch (NSException* localException) {
+        mboxFile = [OPMBoxFile mboxWithPath: mboxFilePath];
+    }
+    
     NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
     unsigned int mboxFileSize = [mboxFile mboxFileSize];
     
@@ -168,12 +180,29 @@ NSString* MboxImportJobName = @"mbox import";
     @try {
         pool = [[NSAutoreleasePool alloc] init];
         
-        while (mboxData = [enumerator nextObject]) {
+        while ((mboxData = [enumerator nextObject]) && ![OPJobs shouldTerminate]) {
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
             
             if (transferData) {
                 @try {
+                    NSString* flags = nil;
+                    unsigned int length = [transferData length];
+                    const char* bytes = [transferData bytes];
+                    
+                    if (! strncasecmp("X-Ginko-Flags:", bytes, strlen("X-Ginko-Flags:"))) {
+                        const char *pos = bytes;
+                        while ((pos < bytes+length) && (*pos++ != 0x0A))
+                            ;
+                            
+                        flags = [[NSString stringWithCString:bytes+strlen("X-Ginko-Flags:") length:pos - (bytes + strlen("X-Ginko-Flags:") + 2)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                        OPDebugLog(IMPORT, FLAGS, @"Flags: '%@'", flags);
+                        
+                        transferData = [NSData dataWithBytes:pos length:bytes+length-pos];
+                        OPDebugLog(IMPORT, TRANSFERDATA, @"transferData: %@", transferData);
+                    }
+                    
+                    
                     NSMutableArray* args = [NSMutableArray arrayWithObject: transferData];
                     [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
                     
@@ -182,6 +211,8 @@ NSString* MboxImportJobName = @"mbox import";
                     if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
                     
                     if (persistentMessage) {
+                        [persistentMessage addFlagsFromString:flags];
+                        
                         messagesWereAdded = YES;
                         ++addedMessageCount;
                     }
@@ -243,6 +274,9 @@ NSString* MboxImportJobName = @"mbox import";
         [pool release];
     }
     
+    if ([OPJobs shouldTerminate])
+        return;
+        
     // move imported mbox to imported boxes:
     NSString* importedMboxesDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"imported mboxes"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:importedMboxesDirectory])

@@ -416,12 +416,6 @@
             
             while (boxFilename = [enumerator nextObject]) 
             {
-                // Support for 'mbox' bundles - better test for folder!!
-                if ([[boxFilename pathExtension] isEqualToString:@"mbox"]) 
-                {
-                    boxFilename = [boxFilename stringByAppendingPathComponent:@"mbox"];
-                }
-                
                 NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
 				[jobArguments setObject:boxFilename forKey:@"mboxFilename"];
