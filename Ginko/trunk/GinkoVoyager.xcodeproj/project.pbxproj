@@ -206,6 +206,7 @@
 		8D4C5756076E3B6F000F46DA /* GICommentTreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D4C5754076E3B6F000F46DA /* GICommentTreeCell.m */; };
 		8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
 		8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		8D61ED9209812DF100D1999A /* StopSign.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D61ED9109812DF000D1999A /* StopSign.tiff */; };
 		8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */; };
 		8D62DC2208C668BC0059ABB0 /* OPFaultingArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */; };
 		8D666F0207D5247A0076C74D /* GIContentPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D666EFE07D5247A0076C74D /* GIContentPane.h */; };
@@ -642,6 +643,7 @@
 		8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D4C5753076E3B6F000F46DA /* GICommentTreeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GICommentTreeCell.h; sourceTree = "<group>"; };
 		8D4C5754076E3B6F000F46DA /* GICommentTreeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GICommentTreeCell.m; sourceTree = "<group>"; };
+		8D61ED9109812DF000D1999A /* StopSign.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = StopSign.tiff; sourceTree = "<group>"; };
 		8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPFaultingArray.h; sourceTree = "<group>"; };
 		8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPFaultingArray.m; sourceTree = "<group>"; };
 		8D666EF607D523C50076C74D /* ActivePrefPanes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = ActivePrefPanes.plist; sourceTree = "<group>"; };
@@ -1342,6 +1344,7 @@
 		8DD2BEA50773257B00587AAA /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8D61ED9109812DF000D1999A /* StopSign.tiff */,
 				77FF35940972FFA300AFD0DF /* Folder.tiff */,
 				77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */,
 				77D2A04D0972E52A0044E464 /* drag.tiff */,
@@ -1784,6 +1787,7 @@
 				77D2A0580972E71E0044E464 /* JunkMailbox.tiff in Resources */,
 				77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */,
 				77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */,
+				8D61ED9209812DF100D1999A /* StopSign.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
