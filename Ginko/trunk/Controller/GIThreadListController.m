@@ -1042,16 +1042,19 @@ static BOOL isThreadItem(id item)
         [group autorelease];
         group = [aGroup retain];
 		
-		//#########
-		//[aGroup refault]; // just for testing!!
-        //#########
-        // thread filter popup:
-        [threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]];
-        
-        [self updateWindowTitle];
-        [self updateGroupInfoTextField];
-		[self reload];
-		[threadsView scrollRowToVisible: [threadsView numberOfRows]-1];
+		
+		if (group) {
+			//#########
+			//[aGroup refault]; // just for testing!!
+			//#########
+			// thread filter popup:
+			[threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]];
+			
+			[self updateWindowTitle];
+			[self updateGroupInfoTextField];
+			[self reload];
+			[threadsView scrollRowToVisible: [threadsView numberOfRows]-1];
+		}
     }
 }
 

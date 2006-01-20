@@ -223,7 +223,7 @@ NSString* MboxImportJobName = @"mbox import";
                     
                     [persistentMessage flushInternetMessageCache]; // free some memory
                     
-                    if ((++mboxDataCount % 100) == 0) {
+                    if ((++mboxDataCount % 100) == 99) {
                         if (messagesWereAdded) {
                             OPDebugLog(OPPERSISTENCE, OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
                             

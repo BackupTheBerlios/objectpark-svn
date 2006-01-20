@@ -58,23 +58,25 @@ static NSMutableDictionary *allGroupStats = nil;
     [self setStatistics:stats];
 }
 
-- (NSNumber *)calculateUnreadMessageCount
+- (NSNumber*) calculateUnreadMessageCount
 {
-    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-    NSNumber *unreadMessages = nil;
+    OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+    NSNumber* unreadMessageCount = nil;
     
     @synchronized(context)
     {
-        OPSQLiteStatement *statement = [[[OPSQLiteStatement alloc] initWithSQL:[NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:[context databaseConnection]] autorelease];
+        OPSQLiteStatement* statement = [[[OPSQLiteStatement alloc] initWithSQL: [NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection: [context databaseConnection]] autorelease];
         
         //NSLog(@"%lu", (unsigned long)[self oid]);
         
         [statement execute];
         
-        unreadMessages = [NSNumber newFromStatement:[statement stmt] index:0];
+        unreadMessageCount = [NSNumber newFromStatement:[statement stmt] index:0];
+		
+		[statement reset];
     }
     
-    return unreadMessages;
+    return unreadMessageCount;
 }
 
 - (NSNumber *)unreadMessageCount
