@@ -28,32 +28,20 @@ static NSMutableDictionary *allGroupStats = nil;
     return [NSNumber numberWithUnsignedLongLong:[self oid]];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath 
-                      ofObject:(id)object 
-                        change:(NSDictionary *)change 
-                       context:(void *)context
+- (void) didChangeValueForKey: (NSString*) key
 {
-    if (object == self) 
-    {
-        if ([keyPath isEqualToString:@"threadsByDate"])
-        {
-            [self invalidateStatistics];
-            [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupStatisticsDidInvalidateNotification object:self];
-        }
-    }
+	[super didChangeValueForKey: key];
+	if ([key isEqualToString: @"threadsByDate"]) {
+		[self invalidateStatistics];
+		[[NSNotificationCenter defaultCenter] postNotificationName: GIMessageGroupStatisticsDidInvalidateNotification object: self];
+	}
 }
 
 - (NSMutableDictionary *)statistics
 {
-    NSMutableDictionary *result = [[NSUserDefaults standardUserDefaults] objectForKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]];
+    NSMutableDictionary *result = [[[[NSUserDefaults standardUserDefaults] objectForKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]] mutableCopy] autorelease];
     
     if (! result) result = [NSMutableDictionary dictionary];
-    
-    // add as observer:
-    [self addObserver:self 
-           forKeyPath:@"threadsByDate" 
-              options:NSKeyValueObservingOptionNew 
-              context:NULL];
         
     return result;
 }
@@ -63,10 +51,10 @@ static NSMutableDictionary *allGroupStats = nil;
     [[NSUserDefaults standardUserDefaults] setObject:aDict forKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]];
 }
 
-- (void)invalidateStatistics
+- (void) invalidateStatistics
 {
-    NSMutableDictionary *stats = [self statistics];
-    [stats removeAllObjects];
+    NSMutableDictionary* stats = [self statistics];
+    [stats removeAllObjects]; 
     [self setStatistics:stats];
 }
 

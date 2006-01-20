@@ -926,9 +926,11 @@ static BOOL isThreadItem(id item)
 		}
 	}
 	[self reload];
-	
-	[threadsView selectRow: [threadsView rowForItem: targetThread] byExtendingSelection: NO];
-    [threadsView expandItem: targetThread];
+	[threadsView expandItem: targetThread];
+	targetRow = [threadsView rowForItem: targetThread];
+	[threadsView selectRow: targetRow byExtendingSelection: NO];
+	[threadsView scrollRowToVisible: targetRow + [[targetThread valueForKey: @"messages"] count]];
+	[threadsView scrollRowToVisible: targetRow];
     
     [GIApp saveAction: self];
 }

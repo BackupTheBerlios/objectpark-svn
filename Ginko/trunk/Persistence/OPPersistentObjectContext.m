@@ -376,7 +376,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	@synchronized(self) {
 		
 		//[OPPersistentObjectEnumerator printAllRunningEnumerators];
-		NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
+		if ([[OPSQLiteStatement runningStatements] count]) NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
 		
 		//[[OPSQLiteStatement runningStatements] makeObjectsPerformSelector: @selector(reset)];
 		
@@ -386,7 +386,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		//[db commitTransaction]; [db beginTransaction]; // just for testing
 		
 		if ([changedObjects count]) {
-			NSLog(/*OPDebugLog(OPPERSISTENCE, OPINFO, */@"Saving %u object(s).", [changedObjects count]);
+			NSLog(/*OPDebugLog(OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
 			
 			// Process all updated objects and save their changed attribute sets:
 			NSEnumerator* coe = [changedObjects objectEnumerator];
