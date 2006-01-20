@@ -39,7 +39,11 @@
             }; 
             CLASS = GIGroupListController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {boxesView = NSOutlineView; window = NSWindow; }; 
+            OUTLETS = {
+                boxesView = NSOutlineView; 
+                globalProgrssIndicator = NSProgressIndicator; 
+                window = NSWindow; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {

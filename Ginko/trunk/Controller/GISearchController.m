@@ -41,7 +41,7 @@
     [searchResultTableView reloadData];
 }
 
-- (IBAction)search:(id)sender
+- (IBAction)search: (id) sender
 {
     NSLog(@"[GIThreadListController search] will search for %@", [sender stringValue]);
     // set searchResults

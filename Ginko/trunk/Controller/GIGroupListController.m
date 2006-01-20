@@ -69,10 +69,24 @@
 												 selector: @selector(groupsChanged:) 
 													 name: GIMessageGroupStatisticsDidInvalidateNotification 
 												   object: nil];
+		
+		
+		[[NSNotificationCenter defaultCenter] addObserver: self 
+												 selector: @selector(jobStarted:) 
+													 name: OPJobWillStartNotification 
+												   object: nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver: self 
+												 selector: @selector(jobFinished:) 
+													 name: OPJobDidFinishNotification 
+												   object: nil];
+		
     }
     
 	return [self retain]; // self retaining!
 }
+
+
   
 - (GIMessageGroup*) group
 /*" Returns the selected message group if one and only one is selected. nil otherwise. "*/
@@ -87,12 +101,31 @@
 	return nil;
 }
 
-- (void)groupsChanged:(NSNotification *)aNotification
+- (void) groupsChanged: (NSNotification*) aNotification
 {
     [boxesView reloadData];
 }
 
-- (IBAction)showGroupWindow:(id)sender
+- (void) jobStarted: (NSNotification*) aNotification
+{
+	[globalProgrssIndicator startAnimation: self];
+}
+
+- (void) jobFinished: (NSNotification*) aNotification
+{
+	unsigned jobCount = [[OPJobs runningJobs] count];
+	if (jobCount==0) {
+		[globalProgrssIndicator stopAnimation: self];
+	}
+}
+
+- (void) dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[super dealloc];
+}
+
+- (IBAction)showGroupWindow: (id) sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
     GIMessageGroup *selectedGroup = [self group];
@@ -115,23 +148,22 @@
     }
 }
 
-- (IBAction)showGroupInspector:(id)sender
+- (IBAction)showGroupInspector: (id) sender
 {
 	id selectedGroup = [self group];
 	
-	if (selectedGroup) 
-    {
+	if (selectedGroup) {
 		[GIGroupInspectorController groupInspectorForGroup:[[OPPersistentObjectContext defaultContext] objectWithURLString:selectedGroup]];
 	}
 }
 
-- (BOOL)openSelection:(id)sender
+- (BOOL) openSelection: (id) sender
 {    
     [self showGroupWindow:sender];
 	return YES;
 }
 
-- (IBAction)rename:(id)sender
+- (IBAction)rename: (id) sender
 /*" Renames the selected item (folder or group). "*/
 {
     int lastSelectedRow  = [boxesView selectedRow];
@@ -423,7 +455,7 @@
         NSArray* items = [[info draggingPasteboard] propertyListForType:@"GinkoMessageboxes"];
         
         if ([items count] == 1) 
-{
+		{
             if (index != NSOutlineViewDropOnItemIndex) 
             {
 				// accept only when no on item:
@@ -449,8 +481,8 @@
     if (outlineView == boxesView) {
         // ##WARNING works only for single selections. Not for multi selection!
         
-        [pboard declareTypes:[NSArray arrayWithObject:@"GinkoMessageboxes"] owner:self];    
-        [pboard setPropertyList:items forType:@"GinkoMessageboxes"];
+        [pboard declareTypes: [NSArray arrayWithObject: @"GinkoMessageboxes"] owner: self];    
+        [pboard setPropertyList: items forType: @"GinkoMessageboxes"];
     }
     return YES;
 }

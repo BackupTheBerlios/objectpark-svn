@@ -67,13 +67,13 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     return [filter autorelease];
 }
 
-- (IBAction)addFilter:(id)sender
+- (IBAction)addFilter: (id) sender
     /*" Adds a new filter at the end of the list of filters. "*/
 {
     [self _addFilterWithDictionary: nil];
 }
 
-- (IBAction)cloneFilter:(id)sender
+- (IBAction)cloneFilter: (id) sender
 {
     // copy dictionary of selected filter
     GIMessageFilter *filter;
@@ -94,7 +94,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     }
 }
 
-- (IBAction)removeFilter:(id)sender
+- (IBAction)removeFilter: (id) sender
     /*" Removes the selected filter. "*/
 {
     int selectedRow;
@@ -117,7 +117,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     }
 }
 
-- (IBAction)addExpression:(id)sender
+- (IBAction)addExpression: (id) sender
 {
     GIMessageFilter *filter;
     GIMessageFilterExpression *newExpression;
@@ -138,7 +138,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [matchingTableView reloadData];
 }
 
-- (IBAction)removeExpression:(id)sender
+- (IBAction)removeExpression: (id) sender
 {
     NSMutableArray *expressions;
     GIMessageFilter *filter;
@@ -276,12 +276,12 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [self updateDetailView];
 }
 
-- (IBAction)modeChanged:(id)sender
+- (IBAction)modeChanged: (id) sender
 {
     [[self _selectedFilter] setAllExpressionsMustMatch:[[matchingModePopUp selectedItem] tag] ? YES : NO];
 }
 
-- (IBAction)actionsChanged:(id)sender
+- (IBAction)actionsChanged: (id) sender
 {
     // actions
     NSMutableArray *actions;

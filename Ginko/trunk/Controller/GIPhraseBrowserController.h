@@ -26,10 +26,10 @@
 + (void)setTextView:(NSTextView *)aTextView;
 + (void)invalidateTextView:(NSTextView *)aTextView;
 
-- (IBAction)insertPhrase:(id)sender;
-- (IBAction)hotkeySelected:(id)sender;
+- (IBAction)insertPhrase: (id) sender;
+- (IBAction)hotkeySelected: (id) sender;
 
-- (IBAction)addItem:(id)sender;
+- (IBAction)addItem: (id) sender;
 
 - (void)hotkeyPressed:(int)hotkeyNumber;
 

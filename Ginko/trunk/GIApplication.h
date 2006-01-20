@@ -26,11 +26,11 @@
 - (NSString *)databasePath;
 
 /*" Actions "*/
-- (IBAction)openNewGroupWindow:(id)sender;
+- (IBAction)openNewGroupWindow: (id) sender;
 
-- (IBAction)saveAction:(id)sender;
-- (IBAction)showActivityPanel:(id)sender;
-- (IBAction)toggleAutomaticActivityPanel:(id)sender;
+- (IBAction)saveAction: (id) sender;
+- (IBAction)showActivityPanel: (id) sender;
+- (IBAction)toggleAutomaticActivityPanel: (id) sender;
 
 @end
 

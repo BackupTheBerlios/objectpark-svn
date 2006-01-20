@@ -396,7 +396,7 @@ static BOOL isThreadItem(id item)
     return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"];
 }
 
-- (BOOL)openSelection:(id)sender
+- (BOOL)openSelection: (id) sender
 {    
     if ([self threadsShownCurrently]) 
     {
@@ -530,7 +530,7 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
-- (IBAction)closeSelection:(id)sender
+- (IBAction)closeSelection: (id) sender
 {
     if (sender == messageTextView) 
     {
@@ -622,7 +622,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initReplyTo:message all: YES profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction)replyDefault:(id)sender
+- (IBAction)replyDefault: (id) sender
 {
     GIMessage *message = [self selectedMessage];
 
@@ -710,11 +710,9 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction)search:(id)sender
+- (IBAction)search: (id) sender
 {
-    if (!searchField) searchField = sender;
-    
-    NSString *query = [searchField stringValue];
+    NSString *query = [sender stringValue];
     
     if ([query length])
     {;
@@ -736,23 +734,8 @@ static BOOL isThreadItem(id item)
             
             [tabView selectTabViewItemWithIdentifier:@"searchresult"];
             
-#warning hard-coded search hit limit
-#define SEARCHLIMIT 200
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            BOOL limitSearchToGroup = [defaults integerForKey:@"searchRange"] == 1;
-            int defaultFieldTag = [defaults integerForKey:@"defaultSearchField"];
-            
-            NSString *defaultField = @"body";
-            switch (defaultFieldTag)
-            {
-                case 1: defaultField = @"subject"; break;
-                case 2: defaultField = @"author"; break;
-                default: break;
-            }
-            
-            [self setHits:[GIFulltextIndex hitsForQueryString:query defaultField:defaultField group:limitSearchToGroup ? [self group] : nil limit:SEARCHLIMIT]];
-
-            //[self setHits:[GIFulltextIndex hitsForQueryString:query limit:200]];
+#warning hard-coded search hit limit of 200
+            [self setHits:[GIFulltextIndex hitsForQueryString:query limit:200]];
             
             NSLog(@"hits count = %d", [hits count]);
             
@@ -857,7 +840,7 @@ static BOOL isThreadItem(id item)
     //[threadsView reloadData];
 }
 
-- (IBAction)toggleReadFlag:(id)sender
+- (IBAction)toggleReadFlag: (id) sender
 {
     [self toggleFlag:OPSeenStatus];
 }
@@ -1769,7 +1752,7 @@ NSMutableArray* border = nil;
     [commentsMatrix scrollCellToVisibleAtRow: row+1 column: column+1];
 }
 
-- (IBAction)selectTreeCell:(id)sender
+- (IBAction)selectTreeCell: (id) sender
 /*" Displays the corresponding message. "*/
 {
     GIMessage *selectedMessage = [[sender selectedCell] representedObject];
@@ -1780,7 +1763,7 @@ NSMutableArray* border = nil;
 }
 
 // navigation (triggered by menu and keyboard shortcuts)
-- (IBAction)navigateUpInMatrix:(id)sender
+- (IBAction)navigateUpInMatrix: (id) sender
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1800,7 +1783,7 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction)navigateDownInMatrix:(id)sender
+- (IBAction)navigateDownInMatrix: (id) sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1817,7 +1800,7 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction)navigateLeftInMatrix:(id)sender
+- (IBAction)navigateLeftInMatrix: (id) sender
 /*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1837,7 +1820,7 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction)navigateRightInMatrix:(id)sender
+- (IBAction)navigateRightInMatrix: (id) sender
 /*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 

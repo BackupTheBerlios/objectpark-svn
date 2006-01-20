@@ -169,7 +169,9 @@ static GIActivityPanelController *panel = nil;
             }
         } else if ([identifier isEqualToString: @"description"]) {
             return [NSString stringWithFormat: @"%@:\n  %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
-        }
+        } else if ([identifier isEqualToString: @"stopButton"]) {
+			return @"11.1 %";
+		}
     }
     
     return @""; // should not occur

@@ -27,7 +27,7 @@
 
 - (id)initWithParamenters:(NSMutableDictionary *)someParameters;
 
-- (IBAction)OKAction:(id)sender;
-- (IBAction)cancelAction:(id)sender;
+- (IBAction)OKAction: (id) sender;
+- (IBAction)cancelAction: (id) sender;
 
 @end

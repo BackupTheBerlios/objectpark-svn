@@ -352,28 +352,28 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window makeFirstResponder: replyToField];
 }
 
-- (IBAction)replySender:(id)sender
+- (IBAction)replySender: (id) sender
 {
     [self takeValuesFromHeaderFields];
     [self switchToReplyToSender:referencedMessage];
     [self updateHeaders];
 }
 
-- (IBAction)replyAll:(id)sender
+- (IBAction)replyAll: (id) sender
 {
     [self takeValuesFromHeaderFields];
     [self switchToReplyToAll:referencedMessage];
     [self updateHeaders];    
 }
 
-- (IBAction)followup:(id)sender
+- (IBAction)followup: (id) sender
 {
     [self takeValuesFromHeaderFields];
     [self switchToFollowup:referencedMessage];
     [self updateHeaders];    
 }
 
-- (BOOL)tabKeyPressed:(id)sender withmodifierFlags:(NSNumber*) modifierFlags
+- (BOOL)tabKeyPressed: (id) sender withmodifierFlags:(NSNumber*) modifierFlags
 /*" Window delegate method. Handles tabKey. Returns YES, if key was handled, NO otherwise. "*/
 {
     if ([[(NSView *)[window firstResponder] superview] superview] == bottomTextField)
@@ -521,7 +521,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (BOOL)windowShouldClose:(id)sender
+- (BOOL)windowShouldClose: (id) sender
 {
     if (! [window isDocumentEdited]) return YES;
     

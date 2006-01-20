@@ -39,15 +39,15 @@
 }
 
 /*" Interface Builder Actions "*/
-- (IBAction)addFilter:(id)sender;
-- (IBAction)cloneFilter:(id)sender;
-- (IBAction)removeFilter:(id)sender;
+- (IBAction)addFilter: (id) sender;
+- (IBAction)cloneFilter: (id) sender;
+- (IBAction)removeFilter: (id) sender;
 
-- (IBAction)addExpression:(id)sender;
-- (IBAction)removeExpression:(id)sender;
+- (IBAction)addExpression: (id) sender;
+- (IBAction)removeExpression: (id) sender;
 
-- (IBAction)modeChanged:(id)sender;
-- (IBAction)actionsChanged:(id)sender;
+- (IBAction)modeChanged: (id) sender;
+- (IBAction)actionsChanged: (id) sender;
 
 @end
 

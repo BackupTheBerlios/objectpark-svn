@@ -103,7 +103,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     [ts endEditing];
 }
 
-- (void) paste:(id)sender
+- (void) paste: (id) sender
 {
 // ##WARNING This method disables some attributes to be pasted. This has to be configurable at one time in order to allow "styled" texts.
     NSRange pasteRange;
@@ -115,7 +115,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     [self _removeUnsupportedAttributesInRange:pasteRange];
 }
 
-- (void) pasteAsQuotation:(id)sender
+- (void) pasteAsQuotation: (id) sender
 {
     NSAttributedString *quoteContent;
     NSString *quote;
@@ -215,7 +215,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     }
 }
 
-- (void) toggleContinuousSpellChecking:(id)sender
+- (void) toggleContinuousSpellChecking: (id) sender
 /*" Invokes functionality of superclass and sends an OPContinuousSpellCheckingDidToggleNotification notification additionally. "*/
 {
     NSDictionary *userInfo;

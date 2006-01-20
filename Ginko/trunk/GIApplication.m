@@ -60,18 +60,18 @@
     [GIActivityPanelController initialize];
 }
 
-- (IBAction)addressbook:(id)sender
+- (IBAction)addressbook: (id) sender
 /*" Launches the Addressbook application. "*/
 {
     [[NSWorkspace sharedWorkspace] launchApplication: @"Address Book"];
 }
 
-- (IBAction)openNewGroupWindow:(id)sender
+- (IBAction)openNewGroupWindow: (id) sender
 {
     [[[GIThreadListController alloc] initWithGroup: nil] autorelease];
 }
 
-- (IBAction)newMessage:(id)sender
+- (IBAction)newMessage: (id) sender
 {
     // determine message group of frontmost window:
     GIProfile *groupProfile = nil;
@@ -384,7 +384,7 @@
     return someFilePaths;
 }
 
-- (IBAction)importMboxFile:(id)sender
+- (IBAction)importMboxFile: (id) sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
@@ -502,7 +502,7 @@
     [self saveAction:self];
 }
 
-- (IBAction)getNewMailInAllAccounts:(id)sender
+- (IBAction)getNewMailInAllAccounts: (id) sender
 {
     NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
     GIAccount *account;
@@ -670,7 +670,7 @@
     [self sendQueuedMessagesWithFlag: OPSendStatusQueuedReady];
 }
 
-- (IBAction)showActivityPanel:(id)sender
+- (IBAction)showActivityPanel: (id) sender
 {
 	NSWindow* aWindow = [[GIActivityPanelController sharedInstance] window];
 	
@@ -681,12 +681,12 @@
 	}
 }
 
-- (IBAction)resetFulltextIndex:(id)sender
+- (IBAction)resetFulltextIndex: (id) sender
 {
     [GIFulltextIndex resetIndex];
 }
 
-- (IBAction)fulltextIndexSomeMessages:(id)sender
+- (IBAction)fulltextIndexSomeMessages: (id) sender
 {
     NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
     NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
@@ -722,7 +722,7 @@
     [GIActivityPanelController updateData];
 }
 
-- (IBAction)emtpyTrashMailbox:(id)sender
+- (IBAction)emtpyTrashMailbox: (id) sender
 {
     GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
     OPFaultingArray *threads = [trashgroup valueForKey:@"threadsByDate"];

@@ -15,8 +15,8 @@
     IBOutlet NSArrayController *accountsController;
 }
 
-- (IBAction)removeAccount:(id)sender;
-- (IBAction)addAccount:(id)sender;
-- (IBAction)rearrangeObjects:(id)sender;
+- (IBAction)removeAccount: (id) sender;
+- (IBAction)addAccount: (id) sender;
+- (IBAction)rearrangeObjects: (id) sender;
 
 @end
