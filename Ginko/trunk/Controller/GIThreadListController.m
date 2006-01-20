@@ -944,13 +944,11 @@ static BOOL isThreadItem(id item)
         NSString* subject = [thread valueForKey: @"subject"];
         if (subject) {
             // query database
-            NSMutableArray* result = [NSMutableArray array];
-            
-            [[self group] fetchThreads: &result 
-							 newerThan: [self nowForThreadFiltering]
-						   withSubject: subject
-								author: nil 
-				 sortedByDateAscending: YES];
+            NSArray* result;
+			result = [[self group] fetchThreadsNewerThan: 0.0
+											 withSubject: subject
+												  author: nil 
+								   sortedByDateAscending: YES];
 
             [threadsView selectItems: result ordered: YES];
         }

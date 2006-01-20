@@ -682,9 +682,9 @@ static NSHashTable* allInstances;
 		resultClass = poClass;
 		
 		@synchronized(context) {
-			//[context lock];
+
 			sqlite3_prepare([[context databaseConnection] database], [sql UTF8String], -1, &statement, NULL);	
-			//[context unlock];
+
 		}
 		if (!statement) {
 			NSLog(@"Error preparing statement: %@", [[context databaseConnection] lastError]);

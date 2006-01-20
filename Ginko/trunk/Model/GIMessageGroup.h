@@ -44,11 +44,10 @@ extern NSString* GIMessageGroupWasAddedNotification;
 				   fromGroup: (GIMessageGroup*) sourceGroup 
 					 toGroup: (GIMessageGroup*) destinationGroup;
 
--  (void) fetchThreads: (NSMutableArray**) allThreads
-			 newerThan: (NSTimeInterval) sinceRefDate
-		   withSubject: (NSString*) subject
-				author: (NSString*) author
- sortedByDateAscending: (BOOL) ascending;
+-  (NSArray*) fetchThreadsNewerThan: (NSTimeInterval) sinceRefDate
+						withSubject: (NSString*) subject
+							 author: (NSString*) author
+			  sortedByDateAscending: (BOOL) ascending;
 
 /*" Profile handling "*/
 - (GIProfile*) defaultProfile;
