@@ -21,6 +21,12 @@
 #import <Foundation/NSDebug.h>
 #import "GIFulltextIndex.h"
 
+
+#define MESSAGE    OPL_DOMAIN  @"Message"
+#define DUPECHECK  OPL_ASPECT  0x01
+#define FLAGS      OPL_ASPECT  0x02
+
+
 @implementation GIMessage
 
 
@@ -215,7 +221,7 @@
             //[NSApp saveAction: self]; // needed here?
             insertMessage = YES;
         }
-        //if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [im messageId]);        
+        OPDebugLog(MESSAGE, DUPECHECK, @"Dupe for message id %@ detected.", [im messageId]);        
     } else {
         insertMessage = YES;
     }
@@ -404,35 +410,53 @@
 	return result;
 }
 
+
 - (NSString*) flagsString
 	/*" Returns a textual representation of some flags. Used for exporting messages, including their flags. Not all available flags are supported. "*/
 {
-    char result[10]; 
+    char result[sizeof(unsigned)*8+1];  // size of flags vector in bits + 1
     int i = 0;
-    //NSMutableString* result = [[[NSMutableString alloc] initWithCapacity: 6] autorelease];
     unsigned flags = [self flags];
+    
     if (flags & OPInterestingStatus) result[i++] = 'I';
-    if (flags & OPAnsweredStatus) result[i++] = 'A';
-    if (flags & OPJunkMailStatus) result[i++] = 'J';
-    if (flags & OPSeenStatus) result[i++] = 'R';
-    //if (flags & OPDraftStatus) result[i++] = 'D';
+    if (flags & OPAnsweredStatus)    result[i++] = 'A';
+    if (flags & OPJunkMailStatus)    result[i++] = 'J';
+    if (flags & OPSeenStatus)        result[i++] = 'R';
+    //if (flags & OPDraftStatus)       result[i++] = 'D';
+    
     result[i++] = '\0'; // terminate string
+    
     return [NSString stringWithCString: result];
 }
+
 
 - (void) addFlagsFromString: (NSString*) flagsString
 	/*" Not all available flags are supported. "*/
 {
-    char flagcstr[20];
     unsigned flags = 0;
-    [flagsString getCString:flagcstr maxLength:19];
-    if (strchr(flagcstr, 'I')) flags |= OPInterestingStatus;
-    if (strchr(flagcstr, 'A')) flags |= OPAnsweredStatus;
-    if (strchr(flagcstr, 'J')) flags |= OPJunkMailStatus;
-    if (strchr(flagcstr, 'R')) flags |= OPSeenStatus;
-    //if (strchr(flagcstr, 'D')) flags |= OPDraftStatus;
+    
+    int flagsCount = [flagsString length];
+    for (int i = 0; i < flagsCount; i++) {
+        unichar flagChar = [flagsString characterAtIndex:i];
+        
+        switch (flagChar) {
+            case 'I': flags |= OPInterestingStatus;
+                      break;
+            case 'A': flags |= OPAnsweredStatus;
+                      break;
+            case 'J': flags |= OPJunkMailStatus;
+                      break;
+            case 'R': flags |= OPSeenStatus;
+                      break;
+//             case 'D': flags |= OPDraftStatus;
+//                       break;
+            default: OPDebugLog(MESSAGE, FLAGS, @"Unknown flag character in flags string: '%C' (0x%X)", flagChar, flagChar);
+        }
+    }
+    
     [self addFlags:flags];
 }
+
 
 - (BOOL) hasFlags: (unsigned) someFlags
 {
