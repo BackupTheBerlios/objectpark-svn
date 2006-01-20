@@ -201,10 +201,6 @@ typedef struct {
 	//NSParameterAssert([[db name] isEqualToString: [pathComponents objectAtIndex: 2]]);
 	NSString* className = [pathComponents objectAtIndex: 2];
 	Class pClass = NSClassFromString(className);
-	if (!pClass) {
-		// Fallback for transition from CoreData. Can be removed later:
-		pClass = NSClassFromString([@"GI" stringByAppendingString: className]);
-	}
 	NSString* oidString = [pathComponents objectAtIndex: 3];
 
 	OID oid = OPLongLongStringValue(oidString);
@@ -235,14 +231,17 @@ typedef struct {
 }
 
 static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object2)
-{
-	//NSLog(@"Comparing %@ and %@.", object1, object2);
-	// Optimize by removing 2-4 method calls:
-	return [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
+{	
 	//const FakeObject* o1 = object1;
 	//const FakeObject* o2 = object2;
+	BOOL fastResult = (((OPPersistentObject*)object1)->oid == ((OPPersistentObject*)object2)->oid) 
+	&& ([(OPPersistentObject*)object1 class] == [(OPPersistentObject*)object2 class]);
 	
-	//return (o1->oid == o2->oid) && (o1->isa == o2->isa);
+	//NSLog(@"Comparing %@ and %@.", object1, object2);
+	// Optimize by removing 2-4 method calls:
+	//BOOL result = [(OPPersistentObject*)object1 currentOid] == [(OPPersistentObject*)object2 currentOid] && [(OPPersistentObject*)object1 class]==[(OPPersistentObject*)object2 class];
+	//NSCAssert(fastResult == result, @"fastResult oidEqual failed.");
+	return fastResult;
 }
 
 
@@ -252,9 +251,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
  * the registeredObjects hashTable.
  */
 {
-	unsigned result = (unsigned)[(OPPersistentObject*)object currentOid];
-	//unsigned result = (unsigned)(((FakeObject*)object)->oid) ^ (unsigned)(((FakeObject*)object)->isa);
-	return result;
+	//unsigned fastResult = (unsigned)(((FakeObject*)object)->oid) ^ (unsigned)(((FakeObject*)object)->isa);
+	unsigned fastResult = (unsigned)((OPPersistentObject*)object)->oid;
+	//NSAssert(fastResult == result, @"fastResult hashing failed.");
+	return fastResult;
 }
 
 - (void) reset

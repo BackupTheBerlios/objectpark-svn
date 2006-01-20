@@ -244,7 +244,7 @@
 {
 	if (oid != theOid) {
 		NSAssert(oid==0, @"Object ids can be set only once per instance.");
-		oid = theOid;
+		*((OID*)&oid) = theOid;
 		[[self context] registerObject: self];
 	}
 }
@@ -563,6 +563,7 @@
 	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
 	// Todo: For to-many relationships, we do not need to fire a fault in order to update its relationship values!
 
+	if (![[self valueForKey: key] containsObject: value]) {
 	OPClassDescription* cd = [[self class] persistentClassDescription];
 	OPAttributeDescription* ad = [cd attributeWithName: key];
 	OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
@@ -602,7 +603,12 @@
 	
 	[self willChangeValueForKey: key];
 	[self addPrimitiveValue: value forKey: key];
-	[self didChangeToManyRelationshipForKey: key];
+	[self didChangeValueForKey: key];
+	} else {
+		
+		NSLog(@"Warning! Try to add %@ to existing %@-relationship of %@!", value, key, self);
+		
+	}
 }
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key

@@ -16,6 +16,8 @@
     NSArray* jobIds;
 }
 
++ (id) sharedInstance;
+
 + (void) showActivityPanelInteractive: (BOOL) interactive;
 + (void) updateData;
 

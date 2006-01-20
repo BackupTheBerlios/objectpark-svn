@@ -35,6 +35,8 @@
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
 
+	BOOL isAutoReloadEnabled;
+	
     NSMutableSet* itemRetainer;
     
     // -- Toolbar --

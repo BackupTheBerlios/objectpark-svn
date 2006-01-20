@@ -34,24 +34,21 @@
 	[[self class] addMessage:aMessage];
 }
 
-+ (void)addMessage:(GIMessage *)aMessage
++ (void) addMessage: (GIMessage*) aMessage
 {
-	if (aMessage) 
-    {
-		if (![GIMessageFilter filterMessage:aMessage flags:0]) 
-        {
-			[[self class] addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
+	if (aMessage) {
+		if (![GIMessageFilter filterMessage:aMessage flags: 0]) {
+			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
 		}
 		
-		if ([aMessage hasFlags:OPIsFromMeStatus]) 
-        {
-			[[self class] addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
+		if ([aMessage hasFlags: OPIsFromMeStatus]) {
+			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
 		}
 		
 		// add message to index
 		//GIFulltextIndex* indexCenter = [GIFulltextIndex defaultIndexCenter];
 		//[indexCenter addMessage:message];
-		NSLog(@"adding message... '%@'", [[aMessage internetMessage] subject]);
+		//NSLog(@"adding message... '%@'", [[aMessage internetMessage] subject]);
 	} 	
 }
 

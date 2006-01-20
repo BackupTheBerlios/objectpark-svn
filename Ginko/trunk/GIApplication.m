@@ -672,10 +672,13 @@
 
 - (IBAction)showActivityPanel:(id)sender
 {
-    [GIActivityPanelController showActivityPanelInteractive:YES];
-    
-    // this action switches automatic activity panel functionality off:
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:AutomaticActivityPanelEnabled];
+	NSWindow* aWindow = [[GIActivityPanelController sharedInstance] window];
+	
+	if ([aWindow isVisible]) {
+		[aWindow close];
+	} else {
+		[aWindow orderFront: nil];
+	}
 }
 
 - (IBAction)resetFulltextIndex:(id)sender
@@ -705,15 +708,15 @@
     [GIFulltextIndex fulltextIndexInBackgroundAdding:messagesToAdd removing:messageOidsToRemove];
 }
 
-- (IBAction)showPhraseBrowser:(id)sender
+- (IBAction) showPhraseBrowser: (id) sender
 {
-    [GIPhraseBrowserController showPhraseBrowserForTextView:nil];
+    [GIPhraseBrowserController showPhraseBrowserForTextView: nil];
 }
 
-- (IBAction)toggleAutomaticActivityPanel:(id)sender
+- (IBAction) toggleAutomaticActivityPanel: (id) sender
 {
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    [ud setBool:![ud boolForKey:AutomaticActivityPanelEnabled] forKey:AutomaticActivityPanelEnabled];
+    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+    [ud setBool: ![ud boolForKey: AutomaticActivityPanelEnabled] forKey: AutomaticActivityPanelEnabled];
     
     // Hides activity panel if needed:
     [GIActivityPanelController updateData];

@@ -50,7 +50,9 @@
 @class OPClassDescription;
 
 @interface OPPersistentObject : NSObject {
-    OID oid;
+    @public 
+	const OID oid;
+	@protected
     NSMutableDictionary* attributes;
 }
 

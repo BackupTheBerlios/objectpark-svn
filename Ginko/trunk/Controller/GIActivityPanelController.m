@@ -53,16 +53,21 @@ static GIActivityPanelController *panel = nil;
     [self performSelector:@selector(updateData) withObject:nil afterDelay:0.2];
 }
 
++ (id) sharedInstance 
+{
+	if (! panel) {
+        panel = [[self alloc] init];
+    }
+	return panel;
+}
+
 + (void)showActivityPanelInteractive:(BOOL)interactive
     /*" Set the interactive flag to indicate the the panel should be shown as a result of an interactive user request. "*/
 {
-    if (! panel) 
-    {
-        panel = [[self alloc] init];
-    }
-    
-    [[panel window] orderFront:nil];
+    [[[self sharedInstance] window] orderFront:nil];
 }
+
+
 
 + (void)activityStarted:(NSNotification *)aNotification
 {
@@ -103,12 +108,14 @@ static GIActivityPanelController *panel = nil;
 - (void) awakeFromNib
 {
     [tableView reloadData];
+	[window retain]; // goes away otherwise!
 	//NSLog(@"ActivityViewer has %d columns.", [tableView numberOfColumns]);
 }
 
+
 - (IBAction) stopJob: (id) sender
 {
-	int rowIndex = [tableView selectedRow];
+	int rowIndex = [tableView clickedRow];
 
 	[OPJobs suggestTerminatingJob: [jobIds objectAtIndex: rowIndex]];
 	NSLog(@"Should stop thread: %@", [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]]);
@@ -123,6 +130,7 @@ static GIActivityPanelController *panel = nil;
 {
     [jobIds release];
     [super dealloc];
+	if (self==panel) panel = nil;
 }
 
 @end
@@ -133,6 +141,13 @@ static GIActivityPanelController *panel = nil;
 {
     return [jobIds count];
 }
+
+/*
+- (BOOL) tableView: (NSTableView*) tableView shouldSelectRow: (int) row
+{
+	return NO;
+}
+*/
 
 - (id)tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
 {

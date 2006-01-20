@@ -117,6 +117,7 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     [self setProperty:[NSNumber numberWithBool:ascending] forName:@"IsAscending"];
 }
 
+/*
 - (NSArray*) displayThreads
 {
     NSMutableArray *conditions = [NSMutableArray array];
@@ -134,8 +135,7 @@ static NSMutableDictionary *filteredThreadsForGroupID = nil;
     return nil;
     
 }
-    /*
-- (NSArray*) markThreads;
-    */
+*/
+
 
 @end

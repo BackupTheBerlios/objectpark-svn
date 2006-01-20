@@ -329,7 +329,7 @@ static BOOL isThreadItem(id item)
 						 change: (NSDictionary*) change 
 						context: (void*) context
 {
-    if ([object isEqual: [self group]]) {
+    if ([object isEqual: [self group]] && isAutoReloadEnabled) {
         NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
         //NSLog(@"observeValueForKeyPath %@", keyPath);
@@ -686,16 +686,16 @@ static BOOL isThreadItem(id item)
     [threadsView scrollRowToVisible: firstIndex];
 }
 
-- (IBAction)threadFilterPopUpChanged:(id)sender
+- (IBAction) threadFilterPopUpChanged: (id) sender
 {
     if (NSDebugEnabled) NSLog(@"-threadFilterPopUpChanged:");
 
     nowForThreadFiltering = 0;
     
     // boolean value:
-    [self setValue:[NSNumber numberWithInt:[[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
+    [self setValue: [NSNumber numberWithInt: [[threadFilterPopUp selectedItem] tag]] forGroupProperty: ShowOnlyRecentThreads];
 
-    [self modelChanged:nil];
+    [self modelChanged: nil];
 }
 
 - (NSArray *)hits
@@ -870,33 +870,65 @@ static BOOL isThreadItem(id item)
     return result;
 }
 
+- (void) cancelAutoReload
+{
+	isAutoReloadEnabled = NO;
+}
+
+- (void) reload
+{
+	NSLog(@"Reloading outlineview data");
+	// Alternative to 
+	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
+	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
+	[threadsView reloadData];
+	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
+	
+	
+	/*
+	 NSEnumerator* e = [itemRetainer objectEnumerator];
+	 
+	 id item;
+	 while (item=[e nextObject]) {
+		 [threadsView reloadItem: item reloadChildren: YES];
+	 }
+	 [threadsView noteNumberOfRowsChanged];
+	 */
+	isAutoReloadEnabled = YES;
+}
+
+
 - (void) joinThreads
 {
-	NSArray* selectedThread = [self selectedThreads];
-    NSEnumerator* enumerator = [selectedThread objectEnumerator];
-    GIThread* targetThread = [enumerator nextObject];
-	// Find the most recent thread and store it in targetThread. This thread object will survive.
-	GIThread* nextThread;
-	while (nextThread = [enumerator nextObject]) {
-		if ([[nextThread valueForKey: @"date"] compare: [targetThread valueForKey: @"date"]]>0) {
-			targetThread = nextThread; // aThread is nore recent
-		}
-	}
-    [threadsView selectRow: [threadsView rowForItem: targetThread] byExtendingSelection: NO];
-    //[[self nonExpandableItemsCache] removeObject:targetThread]; 
-    [threadsView expandItem: targetThread];
+	unsigned targetRow = [[threadsView selectedRowIndexes] lastIndex];
+	NSArray* selectedThreads = [self selectedThreads];
+    //NSEnumerator* enumerator = [selectedThreads objectEnumerator];
+//    GIThread* targetThread = [enumerator nextObject];
+//	// Find the most recent thread and store it in targetThread. This thread object will survive.
+//	GIThread* nextThread;
+//	while (nextThread = [enumerator nextObject]) {
+//		if ([[nextThread valueForKey: @"date"] compare: [targetThread valueForKey: @"date"]]>0) {
+//			targetThread = nextThread; // aThread is nore recent
+//		}
+//	}
+	GIThread* targetThread = [threadsView itemAtRow: targetRow]; // newest, with current, fixes sort order
 
     NSLog(@"Merging other threads into %@", targetThread);    
-
-    // prevent merge problems:
-    //[[OPPersistentObjectContext threadContext] refreshObject: [self group] mergeChanges: YES];
     
-    enumerator = [selectedThread objectEnumerator];
+	NSEnumerator* enumerator = [selectedThreads objectEnumerator];
+	GIThread* nextThread;
+
+	[self cancelAutoReload];
     while (nextThread = [enumerator nextObject]) {
 		if (nextThread != targetThread) {
+			[threadsView collapseItem: nextThread]; // just to be sure
 			[targetThread mergeMessagesFromThread: nextThread];
 		}
 	}
+	[self reload];
+	
+	[threadsView selectRow: [threadsView rowForItem: targetThread] byExtendingSelection: NO];
+    [threadsView expandItem: targetThread];
     
     [GIApp saveAction: self];
 }
@@ -972,53 +1004,26 @@ static BOOL isThreadItem(id item)
     else return INT_MAX; 
 }
 
-- (void)updateGroupInfoTextField
+- (void) updateGroupInfoTextField
 {
     int numberOfThreads = MIN([self threadLimitCount], [[self threadsByDate] count]);
     [groupInfoTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%d threads", "group info text template"), numberOfThreads]];
 }
 
-- (void)reloadData
+
+
+- (void) modelChanged: (NSNotification*) aNotification
 {
-	NSLog(@"Reloading outlineview data");
-	// Alternative to 
-	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
-	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
+	// Re-query all threads keeping the selection, if possible.
+	//NSArray* selectedItems = [threadsView selectedItems];
+	if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
+	//[self setThreadCache: nil];
+	//[self setNonExpandableItemsCache: nil];
+	[self updateGroupInfoTextField];
+	//[threadsView deselectAll:nil];
+	
 	[threadsView reloadData];
-	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
-	
-	//[threadsView setDataSource: nil];
-	//[threadsView setDataSource: self];
-	
-	/*
-	NSEnumerator* e = [itemRetainer objectEnumerator];
-
-	id item;
-	while (item=[e nextObject]) {
-		[threadsView reloadItem: item reloadChildren: YES];
-	}
-	[threadsView noteNumberOfRowsChanged];
-	 */
-
-}
-
-- (void)modelChanged
-{
-    // Re-query all threads keeping the selection, if possible.
-    //NSArray* selectedItems = [threadsView selectedItems];
-    if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
-    //[self setThreadCache: nil];
-    //[self setNonExpandableItemsCache: nil];
-    [self updateGroupInfoTextField];
-    [threadsView deselectAll:nil];
-	
-	[self reloadData];
-    //[threadsView selectItems: selectedItems ordered: YES];
-}
-
-- (void)modelChanged:(NSNotification *)aNotification
-{
-	[self modelChanged];
+	//[threadsView selectItems: selectedItems ordered: YES];
 }
 
 - (GIMessageGroup*) group
@@ -1028,8 +1033,7 @@ static BOOL isThreadItem(id item)
 
 - (void) setGroup: (GIMessageGroup*) aGroup
 {
-    if (aGroup != group) 
-    {
+    if (aGroup != group) {
 		[group removeObserver: self forKeyPath: @"threadsByDate"];
 		
 		[aGroup addObserver: self 

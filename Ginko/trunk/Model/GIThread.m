@@ -33,7 +33,7 @@
 {
 	return 
 	@"{"
-	@"numberOfMessages = {ColumnName = ZNUMBEROFMESSAGES; AttributeClass = NSNumber;};"
+	//@"numberOfMessages = {ColumnName = ZNUMBEROFMESSAGES; AttributeClass = NSNumber;};"
 	@"subject = {ColumnName = ZSUBJECT; AttributeClass = NSString;};"
 	@"date = {ColumnName = ZDATE; AttributeClass = NSCalendarDate;};"
 	@"groups = {AttributeClass = GIMessageGroup; QueryString =\"select Z_4THREADS.Z_4GROUPS from Z_4THREADS where Z_4THREADS.Z_6THREADS=?\"; ContainerClass=NSMutableArray; JoinTableName=Z_4THREADS; InverseRelationshipKey=threadsByDate; SourceColumnName = Z_6THREADS; TargetColumnName = Z_4GROUPS; };"
@@ -57,6 +57,7 @@
 - (void) didChangeValueForKey: (NSString*) key 
 {
 	[super didChangeValueForKey: key];
+	/*
 	if ([key isEqualToString: @"messages"]) {
 		OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
 		if (messages) {
@@ -65,6 +66,7 @@
 		}
 		[messages makeObjectsPerformSelector: @selector(flushNumberOfReferencesCache)];
 	}
+	 */
 }
 
 /*
@@ -74,8 +76,6 @@
 	[self addValue: group forKey: @"groups"]; 
 	[self didChangeValueForKey: @"groups"];
 }
-
-
 
 - (void) removeFromGroups: (GIMessageGroup*) group
 {
@@ -91,21 +91,13 @@
 {
     // Put all messages from otherThread into self and remove otherThread:
     GIMessage* message;
-    NSEnumerator* enumerator = [[otherThread messages] objectEnumerator];
+    NSArray* messages = [otherThread messages];
     
-    while (message = [enumerator nextObject]) {
+    while (message = [messages lastObject]) {
 		[message referenceFind: YES];
-        [self addValue: message forKey: @"messages"];
+        [message setValue: self forKey: @"thread"];
     }
-    
-    /*
-	// disconnecting another thread from all groups - not necessary! Should be done in - willDelete
-	enumerator = [[otherThread valueForKey: @"groups"] objectEnumerator];
-	GIMessageGroup* group;
-	while (group = [enumerator nextObject]) {
-		[self removeValue: group forKey: @"groups"];
-	}
-	 */
+	NSAssert1([otherThread messageCount] ==  0, @"Thread not empty: %@ - loosing message.", otherThread);
 	
     [otherThread delete];		
 }
@@ -121,22 +113,6 @@
     enumerator = [[self subthreadWithMessage: aMessage] objectEnumerator];
     while (message = [enumerator nextObject]) {
         [newThread addValue: message forKey: @"messages"];
-    }
-	
-    // update numberOfMessages attribute:
-    int newValue = [[self messages] count];
-    [self setValue: [NSNumber numberWithInt:newValue] forKey: @"numberOfMessages"];
-    
-    if (newValue == 0) {
-        // Disconnect self from all groups:
-		/* nullify is now automatic
-        NSEnumerator *enumerator = [[self valueForKey: @"groups"] objectEnumerator];
-        GIMessageGroup *group;
-        while (group = [enumerator nextObject]) {
-            [self removeValue: group forKey: @"groups"];
-        }
-		*/        
-        [self delete];		
     }
     return newThread;
 }
@@ -179,7 +155,7 @@
 }
 
 - (NSArray*) subthreadWithMessage: (GIMessage*) aMessage
-/*" Returns all messages of this thread directly or indirectly referencing aMessage, sorted by tree walk. "*/
+/*" Returns all messages of this thread directly or indirectly referencing aMessage, sorted by tree walk. Does it include aMessage? "*/
 {
     NSMutableArray* result = [NSMutableArray array];
 	[self treeWalkFrom: aMessage addTo: result];
