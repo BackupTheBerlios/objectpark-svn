@@ -16,32 +16,33 @@
 
 @interface GIThreadListController : NSObject 
 {
-    IBOutlet NSWindow* window;
-    IBOutlet GIOutlineViewWithKeyboardSupport* threadsView;
-    IBOutlet NSTabView* tabView;
-    IBOutlet NSTextView* messageTextView;
-    IBOutlet NSMatrix* commentsMatrix;
-    IBOutlet NSTextField* groupInfoTextField;
-    IBOutlet OPCollapsingSplitView* treeBodySplitter;
-    IBOutlet NSPopUpButton* threadFilterPopUp;
-    IBOutlet NSProgressIndicator* progressIndicator;
+    IBOutlet NSWindow *window;
+    IBOutlet GIOutlineViewWithKeyboardSupport *threadsView;
+    IBOutlet NSTabView *tabView;
+    IBOutlet NSTextView *messageTextView;
+    IBOutlet NSMatrix *commentsMatrix;
+    IBOutlet NSTextField *groupInfoTextField;
+    IBOutlet OPCollapsingSplitView *treeBodySplitter;
+    IBOutlet NSPopUpButton *threadFilterPopUp;
+    IBOutlet NSProgressIndicator *progressIndicator;
     IBOutlet NSTableView *searchHitsTableView;
-
-    GIMessageGroup* group;
-    GIThread* displayedThread; // displayed as comment tree
-    GIMessage* displayedMessage; // displayed with body
-    NSMutableArray* threadCache; // contains item uris
-    NSMutableSet* nonExpandableItemsCache; // contains GIThreads
+    IBOutlet NSSearchField *searchField;
+    
+    GIMessageGroup *group;
+    GIThread *displayedThread; // displayed as comment tree
+    GIMessage *displayedMessage; // displayed with body
+    NSMutableArray *threadCache; // contains item uris
+    NSMutableSet *nonExpandableItemsCache; // contains GIThreads
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
 
 	BOOL isAutoReloadEnabled;
 	
-    NSMutableSet* itemRetainer;
+    NSMutableSet *itemRetainer;
     
     // -- Toolbar --
-    NSArray* toolbarItems;
-    NSArray* defaultIdentifiers;
+    NSArray *toolbarItems;
+    NSArray *defaultIdentifiers;
     
     // -- Searching --
     NSArray *hits;
@@ -70,9 +71,10 @@
 - (void) modelChanged: (NSNotification*) aNotification; // remove as soon as possible
 
 /*" Actions "*/
-- (IBAction) showThreads: (id) sender;
-- (IBAction) threadFilterPopUpChanged: (id) sender;
-- (IBAction) selectThreadsWithCurrentSubject: (id) sender;
+- (IBAction)showThreads:(id)sender;
+- (IBAction)threadFilterPopUpChanged:(id)sender;
+- (IBAction)selectThreadsWithCurrentSubject:(id)sender;
+- (IBAction)search:(id)sender;
 
 @end
 

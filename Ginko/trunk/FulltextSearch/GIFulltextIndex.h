@@ -11,6 +11,7 @@
 #include <JavaVM/jni.h>
 
 @class GIMessage;
+@class GIMessageGroup;
 
 @interface GIFulltextIndex : NSObject 
 {
@@ -22,7 +23,7 @@
 + (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messageOidsToRemove;
 + (void)removeMessagesWithOids:(NSArray *)someOids;
 
-+ (NSArray *)hitsForQueryString:(NSString *)aQuery limit:(int)limit;
++ (NSArray *)hitsForQueryString:(NSString *)aQuery defaultField:(NSString *)defaultField group:(GIMessageGroup *)aGroup limit:(int)limit;
 
 + (void)optimize;
 + (void)resetIndex;

@@ -15,20 +15,12 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 
 @implementation GIMessageGroup (Statistics)
 
-static NSMutableDictionary *allGroupStats = nil;
-
-- (NSMutableDictionary *)allGroupStats
-{
-    if (!allGroupStats) allGroupStats = [[NSMutableDictionary alloc] init];
-    return allGroupStats;
-}
-
 - (NSNumber *)oidNumber
 {
     return [NSNumber numberWithUnsignedLongLong:[self oid]];
 }
 
-- (void) didChangeValueForKey: (NSString*) key
+- (void)didChangeValueForKey:(NSString *)key
 {
 	[super didChangeValueForKey: key];
 	if ([key isEqualToString: @"threadsByDate"]) {
@@ -51,7 +43,7 @@ static NSMutableDictionary *allGroupStats = nil;
     [[NSUserDefaults standardUserDefaults] setObject:aDict forKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]];
 }
 
-- (void) invalidateStatistics
+- (void)invalidateStatistics
 {
     NSMutableDictionary* stats = [self statistics];
     [stats removeAllObjects]; 

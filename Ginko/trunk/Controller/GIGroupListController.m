@@ -58,11 +58,6 @@
 - (id) init
 {
     if (self = [super init]) {
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(groupsChanged:) 
-													 name:OPJobDidFinishNotification 
-												   object:MboxImportJobName];
-		
         [NSBundle loadNibNamed: @"Boxes" owner: self];
 		
         [[NSNotificationCenter defaultCenter] addObserver: self 
@@ -92,36 +87,47 @@
 	return nil;
 }
 
-- (IBAction) showGroupWindow: (id) sender
+- (void)groupsChanged:(NSNotification *)aNotification
+{
+    [boxesView reloadData];
+}
+
+- (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-    GIMessageGroup* selectedGroup = [self group];
+    GIMessageGroup *selectedGroup = [self group];
 	
-    if (selectedGroup) {
-        NSWindow* groupWindow = [[GIThreadListController class] windowForGroup: selectedGroup];
+    if (selectedGroup) 
+    {
+        NSWindow *groupWindow = [[GIThreadListController class] windowForGroup:selectedGroup];
         
-        if (groupWindow) {
+        if (groupWindow) 
+        {
             [groupWindow makeKeyAndOrderFront:self];
-        } else {
-            GIThreadListController* newController = [[[GIThreadListController alloc] initWithGroup: selectedGroup] autorelease];
+        } 
+        else 
+        {
+            GIThreadListController *newController = [[[GIThreadListController alloc] initWithGroup:selectedGroup] autorelease];
             groupWindow = [newController window];
         }
-        [[groupWindow delegate] showThreads: sender];
+        
+        [[groupWindow delegate] showThreads:sender];
     }
 }
 
-- (IBAction) showGroupInspector: (id) sender
+- (IBAction)showGroupInspector:(id)sender
 {
 	id selectedGroup = [self group];
 	
-	if (selectedGroup) {
-		[GIGroupInspectorController groupInspectorForGroup: [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedGroup]];
+	if (selectedGroup) 
+    {
+		[GIGroupInspectorController groupInspectorForGroup:[[OPPersistentObjectContext defaultContext] objectWithURLString:selectedGroup]];
 	}
 }
 
-- (BOOL) openSelection: (id) sender
+- (BOOL)openSelection:(id)sender
 {    
-    [self showGroupWindow: sender];
+    [self showGroupWindow:sender];
 	return YES;
 }
 
@@ -242,11 +248,6 @@
 @end
 
 @implementation GIGroupListController (OutlineViewDataSource)
-
-- (void) groupsChanged: (NSNotification*) aNotification
-{
-    [boxesView reloadData];
-}
 
 /*
 - (void) outlineViewSelectionDidChange: (NSNotification*) notification

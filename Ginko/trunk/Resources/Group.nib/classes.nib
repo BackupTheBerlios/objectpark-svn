@@ -70,10 +70,7 @@
         {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             ACTIONS = {
-                addFolder = id; 
-                addMessageGroup = id; 
-                removeFolderMessageGroup = id; 
-                rename = id; 
+                search = id; 
                 selectThreadsWithCurrentSubject = id; 
                 showThreads = id; 
                 threadFilterPopUpChanged = id; 
@@ -81,8 +78,6 @@
             CLASS = GIThreadListController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                boxesDrawer = NSDrawer; 
-                boxesView = NSOutlineView; 
                 commentsMatrix = NSMatrix; 
                 groupInfoTextField = NSTextField; 
                 messageTextView = NSTextView; 

@@ -941,7 +941,7 @@
     return result;
 }
 
-+ (jobject)luceneHitsForQueryString:(NSString *)aQueryString
++ (jobject)luceneHitsForQueryString:(NSString *)aQueryString defaultField:(NSString *)defaultField
 /*" Caution: Use only internally in a 'garbage collected' context. "*/
 {
     JNIEnv *env = [self jniEnv];
@@ -951,7 +951,7 @@
     
     jobject standardAnalyzer = [self standardAnalyzerNew];
     jstring aQueryJavaString = (*env)->NewStringUTF(env, [aQueryString UTF8String]);
-    jstring defaultFieldName = (*env)->NewStringUTF(env, "body");
+    jstring defaultFieldName = (*env)->NewStringUTF(env, [defaultField UTF8String]);
     
     jobject query = [self queryParserClassParseQueryString:aQueryJavaString defaultField:defaultFieldName analyzer:standardAnalyzer];
     
@@ -1017,7 +1017,7 @@
     return result;
 }
 
-+ (NSArray *)hitsForQueryString:(NSString *)aQuery limit:(int)limit
++ (NSArray *)hitsForQueryString:(NSString *)aQuery defaultField:(NSString *)defaultField group:(GIMessageGroup *)aGroup limit:(int)limit;
 {
     JNIEnv *env = [self jniEnv];
     NSMutableArray *result = nil;
@@ -1026,7 +1026,7 @@
     
     if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
     
-    jobject hits = [self luceneHitsForQueryString:aQuery];
+    jobject hits = [self luceneHitsForQueryString:aQuery defaultField:defaultField];
     
     if (hits == NULL) return nil;
 
