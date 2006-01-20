@@ -148,13 +148,20 @@ NSString* MboxImportJobName = @"mbox import";
     
     // Create mbox file object for enumerating the contained messages:
     OPMBoxFile* mboxFile;
-    @try {
-        mboxFile = [OPMBoxFile mboxWithPath: [mboxFilePath stringByAppendingPathComponent:@"mbox"]];
-    }
-    @catch (NSException* localException) {
-        mboxFile = [OPMBoxFile mboxWithPath: mboxFilePath];
-    }
-    
+	BOOL isFolder = NO;
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath: mboxFilePath 
+											 isDirectory: &isFolder]) {
+		if (isFolder) {
+			mboxFilePath = [mboxFilePath stringByAppendingPathComponent: @"mbox"];
+		} 
+		mboxFile = [OPMBoxFile mboxWithPath: mboxFilePath];
+
+	} else {
+		// Error handling here
+	}
+
+	
     NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
     unsigned int mboxFileSize = [mboxFile mboxFileSize];
     

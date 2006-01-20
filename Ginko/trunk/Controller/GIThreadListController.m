@@ -55,26 +55,24 @@ static NSString* ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     return [[super init] retain]; // self retaining!
 }
 
-- (id)initWithGroup:(GIMessageGroup *)aGroup
+- (id) initWithGroup: (GIMessageGroup*) aGroup
 /*" aGroup may be nil, any group will be used then. "*/
 {
-    if (self = [self init]) 
-    {
-        if (! aGroup) 
-        {
+    if (self = [self init]) {
+        if (! aGroup) {
 			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
-		[self setGroup:aGroup];
 		[NSBundle loadNibNamed:@"Group" owner:self]; // sets threadsView
+		[self setGroup:aGroup];
     }
     
     return self;
 }
 
-- (void)updateWindowTitle
+- (void) updateWindowTitle
 {
-    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
+    [window setTitle: [NSString stringWithFormat:@"%@", [group valueForKey: @"name"]]];
 }
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
@@ -881,6 +879,7 @@ static BOOL isThreadItem(id item)
 	// Alternative to 
 	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
 	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
+	isAutoReloadEnabled = YES;
 	[threadsView reloadData];
 	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
 	
@@ -894,7 +893,6 @@ static BOOL isThreadItem(id item)
 	 }
 	 [threadsView noteNumberOfRowsChanged];
 	 */
-	isAutoReloadEnabled = YES;
 }
 
 
@@ -981,7 +979,7 @@ static BOOL isThreadItem(id item)
         NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
         
        // [thread removeFromAllGroups];
-        [[self group] removeValue:thread forKey:@"threadsByDate"];
+        [[self group] removeValue: thread forKey: @"threadsByDate"];
         [GIMessageBase addTrashThread: thread];
         trashedAtLeastOne = YES;
     }
@@ -1022,7 +1020,7 @@ static BOOL isThreadItem(id item)
 	[self updateGroupInfoTextField];
 	//[threadsView deselectAll:nil];
 	
-	[threadsView reloadData];
+	[self reload];
 	//[threadsView selectItems: selectedItems ordered: YES];
 }
 
@@ -1052,7 +1050,8 @@ static BOOL isThreadItem(id item)
         
         [self updateWindowTitle];
         [self updateGroupInfoTextField];
-		[threadsView reloadData];
+		[self reload];
+		[threadsView scrollRowToVisible: [threadsView numberOfRows]-1];
     }
 }
 

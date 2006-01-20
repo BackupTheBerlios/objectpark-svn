@@ -616,7 +616,7 @@
 	@synchronized(self) {
 		OPFaultingArray* container = [self primitiveValueForKey: key];
 		// container may be nil, if the relationship was never fetched. 
-		// This is ok, since addValue:forKey: already updated the relationship object
+		// This is ok, since removeValue:forKey: already updated the relationship object
 		// so we'll pick up any changes later.
 		[container removeObject: value];
 	}
