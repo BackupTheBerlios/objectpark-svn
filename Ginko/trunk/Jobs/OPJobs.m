@@ -128,7 +128,7 @@ static BOOL pendingJobsSuspended = NO;
     [jobDescription setObject:aName forKey:OPJobName];
     [jobDescription setObject:aTarget forKey:OPJobTarget];
     [jobDescription setObject:NSStringFromSelector(aSelector) forKey:OPJobSelector];
-    [jobDescription setObject:[[anArgument copy] autorelease] forKey:OPJobArguments];
+    [jobDescription setObject:[[anArgument copyWithZone:[self zone]] autorelease] forKey:OPJobArguments];
     
     if (aSynchronizedObject)
     {

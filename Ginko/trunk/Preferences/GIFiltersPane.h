@@ -23,8 +23,6 @@
 #import <AppKit/AppKit.h>
 #import <OPPreferences/OPPreferences.h>
 
-@class GIFiltersPaneSheetController;
-
 @interface GIFiltersPane : OPPreferencePane
 {
     IBOutlet NSTableView *filtersTableView;  /*" the table view for filters "*/

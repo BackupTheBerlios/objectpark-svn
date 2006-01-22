@@ -112,6 +112,7 @@
 		77AD5859080C450F00EBE93C /* TestOPMultimediaContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AD5857080C450F00EBE93C /* TestOPMultimediaContentCoder.m */; };
 		77B28DB3082E8A72007FA384 /* OPTableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B28DB1082E8A72007FA384 /* OPTableColumn.h */; };
 		77B28DB4082E8A72007FA384 /* OPTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B28DB2082E8A72007FA384 /* OPTableColumn.m */; };
+		77B8337B0983CD6D00B467C2 /* GIFulltextSearchPane.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77B8337A0983CD6D00B467C2 /* GIFulltextSearchPane.tiff */; };
 		77B8E35A07EEBDE200068222 /* TestEDTextFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DE91A607C6691C008E3C09 /* TestEDTextFieldCoder.h */; };
 		77B8E35B07EEBDE300068222 /* TestEDTextFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DE91A707C6691C008E3C09 /* TestEDTextFieldCoder.m */; };
 		77B8E35C07EEBDE400068222 /* TestNSString+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7779AC9A07C40D1B00F064D3 /* TestNSString+MessageUtils.h */; };
@@ -140,6 +141,12 @@
 		77CDEE8007CBC05300675C49 /* Add.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7807CBC05300675C49 /* Add.tiff */; };
 		77CDEE8107CBC05300675C49 /* Remove_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */; };
 		77CDEE8207CBC05300675C49 /* Remove.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77CDEE7A07CBC05300675C49 /* Remove.tiff */; };
+		77D05F380983C2F80061BC4D /* GIFulltextSearchPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D05F370983C2F80061BC4D /* GIFulltextSearchPane.nib */; };
+		77D05F400983C4BB0061BC4D /* GIFulltextSearchPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D05F3E0983C4BB0061BC4D /* GIFulltextSearchPane.h */; };
+		77D05F410983C4BB0061BC4D /* GIFulltextSearchPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D05F3F0983C4BB0061BC4D /* GIFulltextSearchPane.m */; };
+		77D061690983C86F0061BC4D /* AccountPrefs.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D061680983C86F0061BC4D /* AccountPrefs.tiff */; };
+		77D0616B0983C8F20061BC4D /* ProfilePrefs.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D0616A0983C8F20061BC4D /* ProfilePrefs.tiff */; };
+		77D0616D0983C9F60061BC4D /* GIContentPane.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D0616C0983C9F60061BC4D /* GIContentPane.tiff */; };
 		77D23028097CE048002BB88E /* GIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D167D5E09057508000F4F45 /* GIAccount.h */; };
 		77D2A04C0972E50B0044E464 /* DraftsMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04B0972E50B0044E464 /* DraftsMailbox.tiff */; };
 		77D2A04E0972E52A0044E464 /* drag.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A04D0972E52A0044E464 /* drag.tiff */; };
@@ -567,6 +574,7 @@
 		77B28DB2082E8A72007FA384 /* OPTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPTableColumn.m; sourceTree = "<group>"; };
 		77B71CDE07CB30C9003A3BEF /* TestOPXFolderContentCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPXFolderContentCoder.h; sourceTree = "<group>"; };
 		77B71CDF07CB30C9003A3BEF /* TestOPXFolderContentCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPXFolderContentCoder.m; sourceTree = "<group>"; };
+		77B8337A0983CD6D00B467C2 /* GIFulltextSearchPane.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GIFulltextSearchPane.tiff; sourceTree = "<group>"; };
 		77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GIAddressFormatter.h; sourceTree = "<group>"; };
 		77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GIAddressFormatter.m; sourceTree = "<group>"; };
 		77BA9233076DCCD80082F33F /* ABPerson+Convenience.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "ABPerson+Convenience.h"; sourceTree = "<group>"; };
@@ -588,6 +596,12 @@
 		77CDEE7807CBC05300675C49 /* Add.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Add.tiff; sourceTree = "<group>"; };
 		77CDEE7907CBC05300675C49 /* Remove_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove_Pressed.tiff; sourceTree = "<group>"; };
 		77CDEE7A07CBC05300675C49 /* Remove.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove.tiff; sourceTree = "<group>"; };
+		77D05F370983C2F80061BC4D /* GIFulltextSearchPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIFulltextSearchPane.nib; sourceTree = "<group>"; };
+		77D05F3E0983C4BB0061BC4D /* GIFulltextSearchPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFulltextSearchPane.h; sourceTree = "<group>"; };
+		77D05F3F0983C4BB0061BC4D /* GIFulltextSearchPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFulltextSearchPane.m; sourceTree = "<group>"; };
+		77D061680983C86F0061BC4D /* AccountPrefs.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = AccountPrefs.tiff; sourceTree = "<group>"; };
+		77D0616A0983C8F20061BC4D /* ProfilePrefs.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ProfilePrefs.tiff; sourceTree = "<group>"; };
+		77D0616C0983C9F60061BC4D /* GIContentPane.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GIContentPane.tiff; sourceTree = "<group>"; };
 		77D2A04B0972E50B0044E464 /* DraftsMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = DraftsMailbox.tiff; sourceTree = "<group>"; };
 		77D2A04D0972E52A0044E464 /* drag.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = drag.tiff; sourceTree = "<group>"; };
 		77D2A04F0972E57C0044E464 /* InMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = InMailbox.tiff; sourceTree = "<group>"; };
@@ -1162,16 +1176,23 @@
 				7717AECC07DF30E400B0B0F5 /* AccountPrefs.h */,
 				7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */,
 				8DDD2274080ECA20006C902D /* AccountPrefs.nib */,
+				77D061680983C86F0061BC4D /* AccountPrefs.tiff */,
 				7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */,
 				7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */,
 				7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */,
+				77D0616A0983C8F20061BC4D /* ProfilePrefs.tiff */,
 				8D666EFE07D5247A0076C74D /* GIContentPane.h */,
 				8D666EFF07D5247A0076C74D /* GIContentPane.m */,
 				8D666F0D07D526A80076C74D /* GIContentPane.nib */,
+				77D0616C0983C9F60061BC4D /* GIContentPane.tiff */,
 				8DDD227E080ECA4A006C902D /* GIFiltersPane.h */,
 				8DD6030C080EDD470050E973 /* GIFiltersPane.m */,
 				8DDD2281080ECA57006C902D /* GIFiltersPane.nib */,
 				8DDD227C080ECA3F006C902D /* GIFiltersPane.tiff */,
+				77D05F3E0983C4BB0061BC4D /* GIFulltextSearchPane.h */,
+				77D05F3F0983C4BB0061BC4D /* GIFulltextSearchPane.m */,
+				77D05F370983C2F80061BC4D /* GIFulltextSearchPane.nib */,
+				77B8337A0983CD6D00B467C2 /* GIFulltextSearchPane.tiff */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1514,6 +1535,7 @@
 				77608AE30972F4030071A01F /* OPImageAndTextCell.h in Headers */,
 				77DA79A9097B95E900B7A5CC /* GIFulltextIndex.h in Headers */,
 				77D23028097CE048002BB88E /* GIAccount.h in Headers */,
+				77D05F400983C4BB0061BC4D /* GIFulltextSearchPane.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1788,6 +1810,11 @@
 				77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */,
 				77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */,
 				8D61ED9209812DF100D1999A /* StopSign.tiff in Resources */,
+				77D05F380983C2F80061BC4D /* GIFulltextSearchPane.nib in Resources */,
+				77D061690983C86F0061BC4D /* AccountPrefs.tiff in Resources */,
+				77D0616B0983C8F20061BC4D /* ProfilePrefs.tiff in Resources */,
+				77D0616D0983C9F60061BC4D /* GIContentPane.tiff in Resources */,
+				77B8337B0983CD6D00B467C2 /* GIFulltextSearchPane.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1961,6 +1988,7 @@
 				77D471DF095BF0E2003CEAEA /* utils.c in Sources */,
 				77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */,
 				77DA79AA097B95E900B7A5CC /* GIFulltextIndex.m in Sources */,
+				77D05F410983C4BB0061BC4D /* GIFulltextSearchPane.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
