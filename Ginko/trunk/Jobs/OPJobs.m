@@ -346,6 +346,33 @@ NSArray *jobsRunningForKeyAndObject(NSString *key, id anObject)
     return jobsRunningForKeyAndObject(OPJobName, aName);
 }
 
+NSArray *jobsPendingForKeyAndObject(NSString *key, id anObject)
+{
+    int i, count;
+    NSMutableArray *result = [NSMutableArray array];
+    
+    [jobsLock lock];
+    
+    count = [pendingJobs count];
+    for (i = count - 1; i >= 0; i--) 
+    {
+        if ([[[pendingJobs objectAtIndex:i] objectForKey:OPJobName] isEqualTo:anObject]) 
+        {
+            [result addObject:[[pendingJobs objectAtIndex:i] objectForKey:OPJobId]];
+        }
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (NSArray *)pendingJobsWithName:(NSString *)aName
+/*" Returns pending jobs with the given name aName. "*/
+{
+    return jobsPendingForKeyAndObject(OPJobName, aName);
+}
+
 + (NSArray *)runningJobsWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject
 /*" Returns running jobs with the given synchronized object aSynchronizedObject. "*/
 {

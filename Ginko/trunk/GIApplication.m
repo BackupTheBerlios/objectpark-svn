@@ -60,18 +60,13 @@
     [GIActivityPanelController initialize];
 }
 
-- (IBAction)addressbook: (id) sender
+- (IBAction)addressbook:(id)sender
 /*" Launches the Addressbook application. "*/
 {
-    [[NSWorkspace sharedWorkspace] launchApplication: @"Address Book"];
+    [[NSWorkspace sharedWorkspace] launchApplication:@"Address Book"];
 }
 
-- (IBAction)openNewGroupWindow: (id) sender
-{
-    [[[GIThreadListController alloc] initWithGroup: nil] autorelease];
-}
-
-- (IBAction)newMessage: (id) sender
+- (IBAction)newMessage:(id)sender
 {
     // determine message group of frontmost window:
     GIProfile *groupProfile = nil;
@@ -88,16 +83,10 @@
 
 - (BOOL)validateSelector:(SEL)aSelector
 {
-    if (aSelector == @selector(openNewGroupWindow:)) 
-    {
-        if([self isGroupsDrawerMode]) return YES;
-        else return NO;
-    }
-
     return YES;
 }
 
-+ (NSArray*) preferredContentTypes
++ (NSArray *)preferredContentTypes
 {
     NSArray* types = [[NSUserDefaults standardUserDefaults] objectForKey: ContentTypePreferences];
     return types;
@@ -121,20 +110,6 @@
     NSLog(@"-[GIApplication restoreOpenWindowsFromLastSession] (not yet implemented)");
     // TODO
 }
-
-/*
-- (NSManagedObjectModel*) managedObjectModel
-{	
-	NSMutableSet *allBundles = [[NSMutableSet alloc] init];
-	[allBundles addObject: [NSBundle mainBundle]];
-	[allBundles addObjectsFromArray: [NSBundle allFrameworks]];
-    
-    NSManagedObjectModel* managedObjectModel = [NSManagedObjectModel mergedModelFromBundles: [allBundles allObjects]];
-    [allBundles release];
-    
-    return managedObjectModel;
-}
-*/
 
 - (void) configureDatabaseAtPath: (NSString*) path
 {
@@ -190,56 +165,6 @@
     if (!path) path = [[self applicationSupportPath] stringByAppendingPathComponent: @"MessageBase.sqlite"];
     return path;
 }
-
-/*
-- (OPPersistentObjectContext*) newManagedObjectContext
-// Creates a new context according to the model. The result is not autoreleased! 
-{
-    NSError*  error;
-    NSString* localizedDescription;
-    NSString* dbPath = [self databasePath];
-    
-    BOOL isNewlyCreated = ![[NSFileManager defaultManager] fileExistsAtPath: dbPath]; // used to configure DB using SQL below (todo)
-    
-    
-    //NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-    OPPersistentObjectContext* managedObjectContext = [[OPPersistentObjectContext alloc] init];
-    //[managedObjectContext setPersistentStoreCoordinator: coordinator];
-    //[coordinator release];
-    // Change this path/code to point to your App's data store. 
-    //NSString *applicationSupportDir = [@"~/Library/Application Support/Ginko3" stringByStandardizingPath];
-    //NSFileManager* fileManager = [NSFileManager defaultManager];	
-    
-	
-    if (![coordinator addPersistentStoreWithType: NSSQLiteStoreType // NSXMLStoreType
-                                   configuration: nil
-                                             URL: [NSURL fileURLWithPath: dbPath]
-                                         options: nil
-                                           error: &error]) 
-    {
-        localizedDescription = [error localizedDescription];
-        error = [NSError errorWithDomain: @"GinkoDomain" 
-                                    code: 0		
-                                userInfo: [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat: @"Store Configuration Failure: %@", ((localizedDescription != nil) ? localizedDescription : @"Unknown Error")], NSLocalizedDescriptionKey, nil]];
-    }
-    //NSLog(@"Store: %@", [[coordinator persistentStores] lastObject]);
-    
-    // Create Indexes, etc.
-    if (isNewlyCreated) {
-        [managedObjectContext saveChanges];
-        [self configureDatabaseAtPath: dbPath];
-        [managedObjectContext release];
-        managedObjectContext = [self newManagedObjectContext];
-    }
-	
-    
-    //[managedObjectContext setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
-
-    //[[managedObjectContext undoManager] setLevelsOfUndo:0];
-
-    return managedObjectContext;
-}
-*/
 
 - (OPPersistentObjectContext*) initialPersistentObjectContext
 {
@@ -311,80 +236,45 @@
     //                                           object: nil];      
 }
 
-/*
-+ (void) initialize
+- (NSWindow *)groupsWindow
 {
-    static BOOL initialized = NO;
-    if (!initialized) {
-        [NSManagedObjectContext setMainThreadContext: [self newManagedObjectContext]];
-    }
-}
-*/
-
-- (BOOL) isGroupsDrawerMode
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:GroupsDrawerMode];
-}
-
-- (NSWindow*) standaloneGroupsWindow
-{
-    NSWindow* win;
-    NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
+    NSWindow *win;
+    NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
 	Class glcc = [GIGroupListController class];
 
-    while (win = [enumerator nextObject]) {
-        if ([[win delegate] isKindOfClass: glcc]) {
+    while (win = [enumerator nextObject]) 
+    {
+        if ([[win delegate] isKindOfClass:glcc]) 
+        {
 			return win;
         }
     }
     return nil;
 }
 
-- (BOOL) hasGroupWindow
+- (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
-    NSWindow* win;
-    NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
-	Class gcc = [GIThreadListController class];
-    while (win = [enumerator nextObject]) {
-        if ([[win delegate] isKindOfClass: gcc]) {
-			return YES;
-        }
+    if (![self groupsWindow])
+    {
+        [[[GIGroupListController alloc] init] autorelease]; // opens group list
     }
-    
-    return NO;
 }
 
-- (void) applicationDidBecomeActive: (NSNotification*) aNotification
-{
-	//NSLog(@"Supergroup is %@", [GIMessageGroup superGroup]);
-
-    if ([self isGroupsDrawerMode]) {
-        if (! [self hasGroupWindow]) {
-            [[[GIThreadListController alloc] initWithGroup: nil] autorelease];
-        }
-    } else {
-        if (! [self standaloneGroupsWindow]) {
-            [[[GIGroupListController alloc] init] autorelease]; // also opens group list
-        }
-    }
-//#warning leaking memory as hell:
-  //  [NSAutoreleasePool enableRelease: NO];
-}
-
-- (void) applicationDidFinishLaunching: (NSNotification*) aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 /*" On launch, opens a group window. "*/
 {
-    [self applicationDidBecomeActive: aNotification];
-    [OPJobs setMaxThreads: 4];
+    [self applicationDidBecomeActive:aNotification];
+    [OPJobs setMaxThreads:4];
+    [self startFulltextIndexingJobIfNeeded:self];
 }
 
-- (NSArray*) filePathsSortedByCreationDate: (NSArray*) someFilePaths
+- (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
 {
 #warning implement for better mbox restore
     return someFilePaths;
 }
 
-- (IBAction)importMboxFile: (id) sender
+- (IBAction)importMboxFile:(id)sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
@@ -427,21 +317,6 @@
         }
     }    
 }
-
-/*
-- (NSError*) commitChanges
-{
-    NSError *error = nil;
-    
-    NSLog(@"committing database objects");
-    
-    if (![[OPPersistentObjectContext threadContext] saveChanges]) {
-        return error;
-    } else {
-        return nil;
-    }
-}
-*/
 
 - (IBAction) saveAction: (id) sender
 {
@@ -502,7 +377,7 @@
     [self saveAction:self];
 }
 
-- (IBAction)getNewMailInAllAccounts: (id) sender
+- (IBAction)getNewMailInAllAccounts:(id)sender
 {
     NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
     GIAccount *account;
@@ -580,12 +455,45 @@
     [self saveAction:self];
 }
 
+- (IBAction)startFulltextIndexingJobIfNeeded:(id)sender
+{
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"fulltextSearchDisabled"])
+    {
+        if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
+        {
+            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
+            NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
+            
+            if ([messagesToAdd count] || [messagesToRemove count])
+            {
+                NSMutableArray *messageOidsToRemove = nil;
+                
+                if ([messagesToRemove count])
+                {
+                    messageOidsToRemove = [NSMutableArray arrayWithCapacity:[messagesToRemove count]];
+                    NSEnumerator *enumerator = [messagesToRemove objectEnumerator];
+                    GIMessage *message;
+                    
+                    while (message = [enumerator nextObject])
+                    {
+                        [messageOidsToRemove addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
+                    }
+                }
+                
+                [GIFulltextIndex fulltextIndexInBackgroundAdding:messagesToAdd removing:messageOidsToRemove];
+            }
+        }
+    }
+}
+
 - (void)fulltextIndexJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"fulltextIndexJobFinished");
     NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
 	[OPJobs removeFinishedJob:jobId]; // clean up
+    
+    [self startFulltextIndexingJobIfNeeded:self];
 }
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
@@ -639,90 +547,74 @@
     [self saveAction:self];
 }
 
-- (void) sendQueuedMessagesWithFlag: (unsigned) flag
+- (void)sendQueuedMessagesWithFlag:(unsigned)flag
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Flag is currently ignored. "*/
 {
     // iterate over all profiles:
-    NSEnumerator* enumerator = [[GIProfile allObjects] objectEnumerator];
-    GIProfile* profile;
+    NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
+    GIProfile *profile;
     
-    while (profile = [enumerator nextObject]) {
-        NSEnumerator* messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
-        GIMessage* message;
-        NSMutableArray* messagesQualifyingForSend = [NSMutableArray array];
+    while (profile = [enumerator nextObject]) 
+    {
+        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+        GIMessage *message;
+        NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
             
-        while (message = [messagesToSendEnumerator nextObject]) {
-            if ([message sendStatus] == OPSendStatusQueuedReady) {
-				[message setSendStatus: OPSendStatusSending];
-                [messagesQualifyingForSend addObject: message];
+        while (message = [messagesToSendEnumerator nextObject]) 
+        {
+            if ([message sendStatus] == OPSendStatusQueuedReady) 
+            {
+				[message setSendStatus:OPSendStatusSending];
+                [messagesQualifyingForSend addObject:message];
             }
         }
         
 		// something to send for the account?
-        if ([messagesQualifyingForSend count]) {
-            [GISMTPJob sendMessages: messagesQualifyingForSend viaSMTPAccount: [profile valueForKey: @"sendAccount"]];
+        if ([messagesQualifyingForSend count]) 
+        {
+            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile valueForKey:@"sendAccount"]];
         }
     }
 }
 
-- (IBAction) sendQueuedMessages: (id) sender
+- (IBAction)sendQueuedMessages:(id)sender
 {
-    [self sendQueuedMessagesWithFlag: OPSendStatusQueuedReady];
+    [self sendQueuedMessagesWithFlag:OPSendStatusQueuedReady];
 }
 
-- (IBAction)showActivityPanel: (id) sender
+- (IBAction)showActivityPanel:(id)sender
 {
-	NSWindow* aWindow = [[GIActivityPanelController sharedInstance] window];
+	NSWindow *aWindow = [[GIActivityPanelController sharedInstance] window];
 	
-	if ([aWindow isVisible]) {
-		[aWindow close];
-	} else {
-		[aWindow orderFront: nil];
-	}
+	if ([aWindow isVisible]) [aWindow close];
+	else [aWindow orderFront:nil];
 }
 
-- (IBAction)resetFulltextIndex: (id) sender
+- (IBAction)resetFulltextIndex:(id)sender
 {
     [GIFulltextIndex resetIndex];
 }
 
-- (IBAction)fulltextIndexSomeMessages: (id) sender
+- (IBAction)fulltextIndexSomeMessages:(id)sender
 {
-    NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
-    NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
-
-    NSMutableArray *messageOidsToRemove = nil;
-    
-    if ([messagesToRemove count])
-    {
-        messageOidsToRemove = [NSMutableArray arrayWithCapacity:[messagesToRemove count]];
-        NSEnumerator *enumerator = [messagesToRemove objectEnumerator];
-        GIMessage *message;
-        
-        while (message = [enumerator nextObject])
-        {
-            [messageOidsToRemove addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
-        }
-    }
-    
-    [GIFulltextIndex fulltextIndexInBackgroundAdding:messagesToAdd removing:messageOidsToRemove];
+    [self startFulltextIndexingJobIfNeeded:self];
 }
 
-- (IBAction) showPhraseBrowser: (id) sender
+- (IBAction)showPhraseBrowser:(id)sender
 {
-    [GIPhraseBrowserController showPhraseBrowserForTextView: nil];
+    [GIPhraseBrowserController showPhraseBrowserForTextView:nil];
 }
 
-- (IBAction) toggleAutomaticActivityPanel: (id) sender
+- (IBAction)toggleAutomaticActivityPanel:(id)sender
 {
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    [ud setBool: ![ud boolForKey: AutomaticActivityPanelEnabled] forKey: AutomaticActivityPanelEnabled];
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud setBool:![ud boolForKey: AutomaticActivityPanelEnabled] forKey:AutomaticActivityPanelEnabled];
     
     // Hides activity panel if needed:
     [GIActivityPanelController updateData];
 }
 
-- (IBAction)emtpyTrashMailbox: (id) sender
+- (IBAction)emptyTrashMailbox:(id)sender
 {
     GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
     OPFaultingArray *threads = [trashgroup valueForKey:@"threadsByDate"];
@@ -731,18 +623,17 @@
     
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    while (thread = [threads lastObject]) {
-        // remove thread from source group:
-        [thread removeValue: trashgroup forKey: @"groups"];
-        if ([[thread valueForKey: @"groups"] count] == 0) {
-            [thread delete];
-        }
+    while (thread = [threads lastObject]) // remove thread from source group:
+    {
+        [thread removeValue:trashgroup forKey:@"groups"];
+        
+        if ([[thread valueForKey:@"groups"] count] == 0) [thread delete];
         
         counter += 1;
         
-        if ((counter % 500) == 0) {
-			
-            [self saveAction: self];
+        if ((counter % 500) == 0) 
+        {
+            [self saveAction:self];
             [pool release]; pool = [[NSAutoreleasePool alloc] init];
         }
     }    

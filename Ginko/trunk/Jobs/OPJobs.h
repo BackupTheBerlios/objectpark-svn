@@ -31,6 +31,7 @@
 + (BOOL)isJobFinished:(NSNumber *)aJobId;
 + (NSArray *)finishedJobs;
 + (NSArray *)runningJobsWithName:(NSString *)aName;
++ (NSArray *)pendingJobsWithName:(NSString *)aName;
 + (NSArray *)runningJobsWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject;
 
 /*" Handling pending jobs "*/

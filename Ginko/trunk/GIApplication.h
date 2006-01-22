@@ -21,16 +21,14 @@
     BOOL isTerminating;
 }
 
-- (BOOL)isGroupsDrawerMode;
-- (NSWindow *)standaloneGroupsWindow;
+- (NSWindow *)groupsWindow;
 - (NSString *)databasePath;
 
 /*" Actions "*/
-- (IBAction)openNewGroupWindow: (id) sender;
-
 - (IBAction)saveAction: (id) sender;
 - (IBAction)showActivityPanel: (id) sender;
 - (IBAction)toggleAutomaticActivityPanel: (id) sender;
+- (IBAction)startFulltextIndexingJobIfNeeded:(id)sender;
 
 @end
 
