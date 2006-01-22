@@ -453,6 +453,8 @@
     [OPJobs removeFinishedJob:jobId]; // clean up
     
     [self saveAction:self];
+    
+    [self startFulltextIndexingJobIfNeeded:self];
 }
 
 - (IBAction)startFulltextIndexingJobIfNeeded:(id)sender
