@@ -64,7 +64,6 @@
 /*" Filename extensions for MIME types "*/
 + (NSString*) pathExtensionForContentType: (NSString*) contentType;
 + (NSString*) contentTypeForPathExtension: (NSString*) extension;
-+ (void) addContentTypePathExtensionPair: (OPObjectPair*) tePair;
 
 /*" Determining encoding of XML documents "*/
 + (NSString*) MIMEEncodingOfXMLDocument: (NSData*) xmlData;

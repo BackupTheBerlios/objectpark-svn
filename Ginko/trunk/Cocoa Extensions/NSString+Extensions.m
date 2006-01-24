@@ -27,7 +27,6 @@
 #endif
 #import <Foundation/Foundation.h>
 #import "NSString+Extensions.h"
-#import "OPObjectPair.h"
 
 #ifndef WIN32
 #import <unistd.h>
@@ -451,20 +450,6 @@ static NSMutableDictionary *teTable = nil;
         NSAssert([teTable isKindOfClass:[NSDictionary class]], @"Problem with MIME.plist");
     }
     return teTable;
-}
-
-
-/*" Adds a mapping between a MIME content type/subtype and a file extension to the internal table; the MIME type/subtype being the first object and the file extension the second object in the pair. Note that one MIME type might be represented by several file extensions but a file extension must always map to exactly one MIME type; for example "image/jpeg" maps to "jpg" and "jpeg." A fairly extensive table is available by default. "*/
-
-+ (void) addContentTypePathExtensionPair: (OPObjectPair*) tePair
-{
-    [self _contentTypeExtensionMapping];
-    if([teTable isKindOfClass:[NSMutableDictionary class]] == NO)
-        {
-        [teTable autorelease];
-        teTable = [[NSMutableDictionary alloc] initWithDictionary:teTable];
-        }
-    [teTable setObject: [tePair secondObject] forKey:[tePair firstObject]];
 }
 
 
