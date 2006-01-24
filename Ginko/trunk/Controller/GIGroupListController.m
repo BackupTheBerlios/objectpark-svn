@@ -8,7 +8,6 @@
 
 #import "GIGroupListController.h"
 #import <Foundation/NSDebug.h>
-//#import "NSToolbar+OPExtensions.h"
 #import "GIMessageEditorController.h"
 #import "GIThreadListController.h"
 #import "OPCollapsingSplitView.h"
@@ -57,75 +56,79 @@
 
 - (id) init
 {
-    if (self = [super init]) {
-        [NSBundle loadNibNamed: @"Boxes" owner: self];
+    if (self = [super init]) 
+    {
+        itemRetainer = [[NSMutableSet alloc] init];
+
+        [NSBundle loadNibNamed:@"Boxes" owner:self];
 		
-        [[NSNotificationCenter defaultCenter] addObserver: self 
-												 selector: @selector(groupsChanged:) 
-													 name: GIMessageGroupWasAddedNotification 
-												   object: nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(groupsChanged:) 
+													 name:GIMessageGroupWasAddedNotification 
+												   object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver: self 
-												 selector: @selector(groupsChanged:) 
-													 name: GIMessageGroupStatisticsDidInvalidateNotification 
-												   object: nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(groupsChanged:) 
+													 name:GIMessageGroupStatisticsDidInvalidateNotification 
+												   object:nil];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(jobStarted:) 
+													 name:OPJobWillStartNotification 
+												   object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver: self 
-												 selector: @selector(jobStarted:) 
-													 name: OPJobWillStartNotification 
-												   object: nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver: self 
-												 selector: @selector(jobFinished:) 
-													 name: OPJobDidFinishNotification 
-												   object: nil];
-		
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(jobFinished:) 
+													 name:OPJobDidFinishNotification 
+												   object:nil];
     }
     
 	return [self retain]; // self retaining!
 }
-
-
   
-- (GIMessageGroup*) group
+- (GIMessageGroup *)group
 /*" Returns the selected message group if one and only one is selected. nil otherwise. "*/
 {
-	id selectedItem = [boxesView itemAtRow: [boxesView selectedRow]];
-	if ([selectedItem isKindOfClass: [NSString class]]) {
-		GIMessageGroup* selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: selectedItem];
+	id selectedItem = [boxesView itemAtRow:[boxesView selectedRow]];
+	if ([selectedItem isKindOfClass:[NSString class]]) 
+    {
+		GIMessageGroup *selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:selectedItem];
 		
-		if (selectedGroup && [selectedGroup isKindOfClass: [GIMessageGroup class]]) return selectedGroup;
-		
+		if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) return selectedGroup;
 	}
 	return nil;
 }
 
-- (void) groupsChanged: (NSNotification*) aNotification
+- (void)reloadData
 {
+	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
     [boxesView reloadData];
 }
 
-- (void) jobStarted: (NSNotification*) aNotification
+- (void)groupsChanged:(NSNotification *)aNotification
 {
-	[globalProgrssIndicator startAnimation: self];
+    [self reloadData];
 }
 
-- (void) jobFinished: (NSNotification*) aNotification
+- (void)jobStarted:(NSNotification *)aNotification
+{
+	[globalProgrssIndicator startAnimation:self];
+}
+
+- (void)jobFinished:(NSNotification *)aNotification
 {
 	unsigned jobCount = [[OPJobs runningJobs] count];
-	if (jobCount==0) {
-		[globalProgrssIndicator stopAnimation: self];
-	}
+	if (jobCount == 0) [globalProgrssIndicator stopAnimation:self];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [itemRetainer release];
 	[super dealloc];
 }
 
-- (IBAction)showGroupWindow: (id) sender
+- (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
     GIMessageGroup *selectedGroup = [self group];
@@ -148,7 +151,7 @@
     }
 }
 
-- (IBAction)showGroupInspector: (id) sender
+- (IBAction)showGroupInspector:(id)sender
 {
 	id selectedGroup = [self group];
 	
@@ -157,13 +160,13 @@
 	}
 }
 
-- (BOOL) openSelection: (id) sender
+- (BOOL)openSelection:(id)sender
 {    
     [self showGroupWindow:sender];
 	return YES;
 }
 
-- (IBAction)rename: (id) sender
+- (IBAction)rename:(id)sender
 /*" Renames the selected item (folder or group). "*/
 {
     int lastSelectedRow  = [boxesView selectedRow];
@@ -175,7 +178,7 @@
     }
 }
 
-- (IBAction) delete: (id) sender
+- (IBAction)delete:(id)sender
 {
 	id item = [[boxesView selectedItems] lastObject];
     if ([item isKindOfClass: [NSArray class]]) {
@@ -202,8 +205,7 @@
     } 
 }
 
-
-- (IBAction) exportGroup: (id) sender
+- (IBAction)exportGroup:(id)sender
 {
     GIMessageGroup *group = [self group];
     
@@ -225,20 +227,19 @@
         NSBeep();
 }
 
-
-- (IBAction) addFolder: (id) sender
+- (IBAction)addFolder:(id)sender
 {
     int selectedRow = [boxesView selectedRow];
     [boxesView setAutosaveName: nil];
     [GIMessageGroup addNewHierarchyNodeAfterEntry: [boxesView itemAtRow: selectedRow]];
-    [boxesView reloadData];
+    [self reloadData];
     [boxesView setAutosaveName: @"boxesView"];
     
     [boxesView selectRow: selectedRow + 1 byExtendingSelection: NO];
     [self rename: self];
 }
 
-- (IBAction) addMessageGroup: (id) sender
+- (IBAction)addMessageGroup:(id)sender
 {
     int selectedRow = [boxesView selectedRow];
     id item = [boxesView itemAtRow: selectedRow];
@@ -262,9 +263,9 @@
         }
     }
     
-    GIMessageGroup* newGroup = [GIMessageGroup newMessageGroupWithName: nil atHierarchyNode: node atIndex: index];
+    GIMessageGroup *newGroup = [GIMessageGroup newMessageGroupWithName:nil atHierarchyNode:node atIndex:index];
     
-    [boxesView reloadData];
+    [self reloadData];
     
     [boxesView setAutosaveName: @"boxesView"];
     [boxesView selectRow: [boxesView rowForItem: newGroup] byExtendingSelection: NO];
@@ -272,7 +273,7 @@
 	[GIApp saveAction: nil]; // commit new database entry
 }
 
-- (IBAction) removeFolderMessageGroup: (id) sender
+- (IBAction)removeFolderMessageGroup:(id)sender
 {
     NSLog(@"-removeFolderMessageGroup: needs to be implemented");
 }
@@ -301,7 +302,7 @@
 	else if ([item isKindOfClass:[NSMutableArray class]]) return [item count] - 1;
 
     return 0;
-}
+} 
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
@@ -311,7 +312,9 @@
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
 	if (!item) item = [GIMessageGroup hierarchyRootNode];
-	return [item objectAtIndex:index + 1];
+	id result = [item objectAtIndex:index + 1];
+    [itemRetainer addObject:result];
+    return result;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
@@ -418,7 +421,7 @@
             
             [GIMessageGroup moveEntry:[items lastObject] toHierarchyNode:item atIndex:index testOnly:NO];
             
-            [anOutlineView reloadData];
+            [self reloadData];
 			int row = [anOutlineView rowForItemEqualTo:[items lastObject] startingAtRow:0];
 			[anOutlineView selectRow:row byExtendingSelection:NO];
             

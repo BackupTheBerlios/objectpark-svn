@@ -67,7 +67,7 @@
 }
 */
 
-- (IBAction) restoreDefaultAction: (id) sender {
+- (IBAction)restoreDefaultAction:(id)sender {
 
     id ud = [NSUserDefaults standardUserDefaults];
     
@@ -110,7 +110,7 @@ static NSFont* font()
                                : [NSFont userFontOfSize:-1];    
 }
 
-- (void) changeFont: (id) sender
+- (void) changeFont:(id)sender
 {
     NSFont* newFont = [sender convertFont: font()];
         
@@ -121,14 +121,14 @@ static NSFont* font()
     [self updateFontDescription];
 }
 
-- (IBAction) showFontPanelAction: (id) sender
+- (IBAction)showFontPanelAction:(id)sender
 {
     [[NSFontManager sharedFontManager] setSelectedFont: font() isMultiple: NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:sender];
 }
 
 
-- (IBAction) reloadHeaderData: (id) sender 
+- (IBAction)reloadHeaderData:(id)sender 
 {
     [headersTableView reloadData];
 }

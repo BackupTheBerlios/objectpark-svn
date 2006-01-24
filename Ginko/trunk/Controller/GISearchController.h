@@ -21,7 +21,7 @@
     GIMessage* cachedMessage; // used only in tableViewDataSource
 }
 
-- (IBAction) search: (id) sender;
+- (IBAction)search:(id)sender;
 
 - (NSWindow*) window;
 

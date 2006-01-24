@@ -31,7 +31,7 @@
 }
 
 
-- (IBAction) removeProfile: (id) sender
+- (IBAction)removeProfile:(id)sender
 {	
 	int selectedRow = [profileTableView selectedRow];
 	NSArray* oldList = [self profiles];
@@ -44,7 +44,7 @@
 	[profileTableView selectRow: MIN(selectedRow, [oldList count]-2) byExtendingSelection: NO];
 }
 
-- (IBAction) addProfile: (id) sender
+- (IBAction)addProfile:(id)sender
 {
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	[self willChangeValueForKey: @"profiles"];
@@ -61,7 +61,7 @@
     return [GIAccount allObjects];
 }
 
-- (IBAction) setSendAccount: (id) sender
+- (IBAction)setSendAccount:(id)sender
 {
     GIProfile* selectedProfile = [[profileTableView dataSource] itemAtRow: [profileTableView selectedRow]];
     

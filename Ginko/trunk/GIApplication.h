@@ -25,9 +25,9 @@
 - (NSString *)databasePath;
 
 /*" Actions "*/
-- (IBAction)saveAction: (id) sender;
-- (IBAction)showActivityPanel: (id) sender;
-- (IBAction)toggleAutomaticActivityPanel: (id) sender;
+- (IBAction)saveAction:(id)sender;
+- (IBAction)showActivityPanel:(id)sender;
+- (IBAction)toggleAutomaticActivityPanel:(id)sender;
 - (IBAction)startFulltextIndexingJobIfNeeded:(id)sender;
 
 @end

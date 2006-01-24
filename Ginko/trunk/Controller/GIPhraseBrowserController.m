@@ -94,7 +94,7 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
     return result;
 }
 
-- (IBAction)addItem: (id) sender
+- (IBAction)addItem:(id)sender
 {
     // Note that in Tiger, we cannot use insert: anymore. This is because in Tiger, the default behavior is to run
     // action methods asynchronously, so we cannot rely on insert: to immediately insert the object. This is required,
@@ -108,7 +108,7 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
     [window makeFirstResponder:nameField];
 }
 
-- (IBAction)insertPhrase: (id) sender
+- (IBAction)insertPhrase:(id)sender
 {
     if (textView)
     {
@@ -117,7 +117,7 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
     }
 }
 
-- (IBAction)hotkeySelected: (id) sender
+- (IBAction)hotkeySelected:(id)sender
 {
     [self willChangeValueForKey:@"hotkeys"];
     [self didChangeValueForKey:@"hotkeys"];

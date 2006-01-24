@@ -130,7 +130,7 @@
     [self autorelease]; // balance self-retaining
 }
 
-- (IBAction)OKAction: (id) sender
+- (IBAction)OKAction:(id)sender
 {
     if (NSDebugEnabled) NSLog(@"OKAction");
     
@@ -157,7 +157,7 @@
     [window close];
 }
 
-- (IBAction)cancelAction: (id) sender
+- (IBAction)cancelAction:(id)sender
 {
     if (NSDebugEnabled) NSLog(@"cancelAction");
     

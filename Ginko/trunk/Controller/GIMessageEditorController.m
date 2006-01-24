@@ -279,7 +279,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 
 // actions
-- (IBAction)send: (id) sender
+- (IBAction)send:(id)sender
 {
 	NSString* emailAddress = [[self profile] mailAddress];
 	
@@ -305,7 +305,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window performClose: self];
 }
 
-- (IBAction) queue: (id) sender
+- (IBAction)queue:(id)sender
 {
     if ([[toField stringValue] rangeOfString: [[self profile] mailAddress]].location != NSNotFound)
     {
@@ -328,22 +328,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window close];
 }
 
-- (IBAction) saveMessage: (id) sender
+- (IBAction)saveMessage:(id)sender
 {
     [self checkpointMessageWithStatus: OPSendStatusDraft];
 }
 
-- (IBAction) addCc: (id) sender
+- (IBAction)addCc:(id)sender
 {
     [window makeFirstResponder: [self headerTextFieldWithFieldName: @"Cc"]];
 }
 
-- (IBAction) addBcc: (id) sender
+- (IBAction)addBcc:(id)sender
 {
     [window makeFirstResponder: [self headerTextFieldWithFieldName: @"Bcc"]];
 }
 
-- (IBAction) addReplyTo: (id) sender
+- (IBAction)addReplyTo:(id)sender
 {
     NSTextField *replyToField;
     
@@ -352,28 +352,28 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [window makeFirstResponder: replyToField];
 }
 
-- (IBAction)replySender: (id) sender
+- (IBAction)replySender:(id)sender
 {
     [self takeValuesFromHeaderFields];
     [self switchToReplyToSender:referencedMessage];
     [self updateHeaders];
 }
 
-- (IBAction)replyAll: (id) sender
+- (IBAction)replyAll:(id)sender
 {
     [self takeValuesFromHeaderFields];
     [self switchToReplyToAll:referencedMessage];
     [self updateHeaders];    
 }
 
-- (IBAction)followup: (id) sender
+- (IBAction)followup:(id)sender
 {
     [self takeValuesFromHeaderFields];
     [self switchToFollowup:referencedMessage];
     [self updateHeaders];    
 }
 
-- (BOOL)tabKeyPressed: (id) sender withmodifierFlags:(NSNumber*) modifierFlags
+- (BOOL)tabKeyPressed:(id)sender withmodifierFlags:(NSNumber*) modifierFlags
 /*" Window delegate method. Handles tabKey. Returns YES, if key was handled, NO otherwise. "*/
 {
     if ([[(NSView *)[window firstResponder] superview] superview] == bottomTextField)
@@ -521,7 +521,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (BOOL)windowShouldClose: (id) sender
+- (BOOL)windowShouldClose:(id)sender
 {
     if (! [window isDocumentEdited]) return YES;
     
@@ -1281,7 +1281,7 @@ NSDictionary *maxLinesForCalendarName()
     }
 }
 
-- (IBAction) switchProfile: (id) sender
+- (IBAction)switchProfile:(id)sender
 /*" Triggered by the profile select popup. "*/
 {
     GIProfile* newProfile = [[profileButton selectedItem] representedObject];

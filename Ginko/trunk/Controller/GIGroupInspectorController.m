@@ -67,7 +67,7 @@ static GIGroupInspectorController *sharedInspector = nil;
 {
 }
 
-- (IBAction) switchProfile: (id) sender
+- (IBAction)switchProfile:(id)sender
     /*" Triggered by the profile select popup. "*/
 {
     GIProfile *newProfile;

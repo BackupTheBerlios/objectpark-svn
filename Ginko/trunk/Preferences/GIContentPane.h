@@ -35,9 +35,9 @@
     //@private NSMutableArray* _additionalHeaders;
 }
 
-- (IBAction) restoreDefaultAction: (id) sender;
-  //- (IBAction) reloadHeaderData: (id) sender;
-- (IBAction) showFontPanelAction: (id) sender;
+- (IBAction)restoreDefaultAction:(id)sender;
+  //- (IBAction)reloadHeaderData:(id)sender;
+- (IBAction)showFontPanelAction:(id)sender;
 
 - (NSArray*) allAdditionalHeadersForDisplay;
 - (NSArray*) additionalHeadersForDisplay;

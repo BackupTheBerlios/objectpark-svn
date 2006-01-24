@@ -30,15 +30,15 @@
 #import "OPPersistence.h"
 #import "OPObjectPair.h"
 
-static NSString* ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
+static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @interface GIThreadListController (CommentsTree)
 
-- (void) awakeCommentTree;
-- (void) deallocCommentTree;
-- (IBAction) selectTreeCell: (id) sender;
-- (void) updateCommentTree: (BOOL) rebuildThread;
-- (BOOL) matrixIsVisible;
+- (void)awakeCommentTree;
+- (void)deallocCommentTree;
+- (IBAction)selectTreeCell:(id)sender;
+- (void)updateCommentTree:(BOOL)rebuildThread;
+- (BOOL)matrixIsVisible;
 
 @end
 
@@ -595,7 +595,7 @@ static BOOL isThreadItem(id item)
     return result;
 }
 
-- (IBAction) replySender: (id) sender
+- (IBAction)replySender:(id)sender
 {
     GIMessage* message = [self selectedMessage];
     
@@ -604,7 +604,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initReplyTo:message all:NO profile: [self profileForMessage:message]] autorelease];
 }
 
-- (IBAction) followup: (id) sender
+- (IBAction)followup:(id)sender
 {
     GIMessage *message = [self selectedMessage];
     
@@ -613,7 +613,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initFollowupTo:message profile: [[self group] defaultProfile]] autorelease];
 }
 
-- (IBAction) replyAll: (id) sender
+- (IBAction)replyAll:(id)sender
 {
     GIMessage* message = [self selectedMessage];
     
@@ -633,14 +633,14 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction) forward: (id) sender
+- (IBAction)forward:(id)sender
 {
     GIMessage* message = [self selectedMessage];
         
     [[[GIMessageEditorController alloc] initForward:message profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction) applySortingAndFiltering: (id) sender
+- (IBAction)applySortingAndFiltering:(id)sender
 /*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
 {
     NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
@@ -684,7 +684,7 @@ static BOOL isThreadItem(id item)
     [threadsView scrollRowToVisible: firstIndex];
 }
 
-- (IBAction) threadFilterPopUpChanged: (id) sender
+- (IBAction)threadFilterPopUpChanged:(id)sender
 {
     if (NSDebugEnabled) NSLog(@"-threadFilterPopUpChanged:");
 
@@ -775,12 +775,12 @@ static BOOL isThreadItem(id item)
 }
 
 
-- (IBAction)showThreads: (id) sender
+- (IBAction)showThreads:(id)sender
 {
     [tabView selectFirstTabViewItem: sender];
 }
 
-- (IBAction)showRawSource: (id) sender
+- (IBAction)showRawSource:(id)sender
 {
     showRawSource = !showRawSource;
     
@@ -950,7 +950,7 @@ static BOOL isThreadItem(id item)
     [GIApp saveAction: self];
 }
 
-- (IBAction) selectThreadsWithCurrentSubject: (id) sender
+- (IBAction)selectThreadsWithCurrentSubject:(id)sender
 /*" Joins all threads with the subject of the selected thread. "*/
 {
     NSArray* selectedThreads = [self selectedThreads];
@@ -970,19 +970,19 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction) joinThreads: (id) sender
+- (IBAction)joinThreads:(id)sender
 /*" Joins the selected threads into one. "*/
 {
     [self joinThreads];
 }
 
-- (IBAction) extractThread: (id) sender
+- (IBAction)extractThread:(id)sender
 /*" Creates a new thread for the selected messages. "*/
 {
     NSLog(@"Should extractThread here.");
 }
 
-- (IBAction) moveSelectionToTrash: (id) sender
+- (IBAction)moveSelectionToTrash:(id)sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
     NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];

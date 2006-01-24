@@ -13,7 +13,7 @@
 /*" Informal protocol for ESCListerners "*/
 @protocol ESCListener
 
-- (void) switchKeyPressed: (id) sender;
+- (void) switchKeyPressed:(id)sender;
 
 @end
 
@@ -70,7 +70,7 @@
 }
 
 - (void)sendEvent:(NSEvent *)theEvent
-/*" Intercept the 'switch key' and inform the delegate and don't send the event further along the responder chain if it has a selector -switchKeyPressed: (id) sender. Otherwise the event is send further along the responder chain. "*/ 
+/*" Intercept the 'switch key' and inform the delegate and don't send the event further along the responder chain if it has a selector -switchKeyPressed:(id)sender. Otherwise the event is send further along the responder chain. "*/ 
 {
     BOOL consumed = NO;
     

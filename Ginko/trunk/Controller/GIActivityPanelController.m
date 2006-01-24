@@ -113,7 +113,7 @@ static GIActivityPanelController *panel = nil;
 }
 
 
-- (IBAction) stopJob: (id) sender
+- (IBAction)stopJob:(id)sender
 {
 	int rowIndex = [tableView clickedRow];
 

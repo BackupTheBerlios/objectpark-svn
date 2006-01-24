@@ -8,19 +8,20 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 @interface GIGroupListController : NSObject 
 {	
-    IBOutlet NSOutlineView* boxesView;
-    IBOutlet NSWindow* window;
-	IBOutlet NSProgressIndicator* globalProgrssIndicator;
+    IBOutlet NSOutlineView *boxesView;
+    IBOutlet NSWindow *window;
+	IBOutlet NSProgressIndicator *globalProgrssIndicator;
+    
+    NSMutableSet *itemRetainer;
 }
 
-- (IBAction)addFolder: (id) sender;
-- (IBAction)rename: (id) sender;
-- (IBAction)exportGroup: (id) sender;
-- (IBAction)addMessageGroup: (id) sender;
-- (IBAction)removeFolderMessageGroup: (id) sender;
-- (IBAction)delete: (id) sender;
+- (IBAction)addFolder:(id)sender;
+- (IBAction)rename:(id)sender;
+- (IBAction)exportGroup:(id)sender;
+- (IBAction)addMessageGroup:(id)sender;
+- (IBAction)removeFolderMessageGroup:(id)sender;
+- (IBAction)delete:(id)sender;
 
 @end

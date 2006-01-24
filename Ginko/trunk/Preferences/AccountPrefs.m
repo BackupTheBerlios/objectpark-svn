@@ -17,7 +17,7 @@
     return [GIAccount allObjects];
 }
 
-- (IBAction)removeAccount: (id) sender
+- (IBAction)removeAccount:(id)sender
 {	
 	int selectedRow = [accountTableView selectedRow];
 	NSArray *oldList = [self accounts];
@@ -32,7 +32,7 @@
 	[accountTableView selectRow:MIN(selectedRow, [oldList count] - 2) byExtendingSelection:NO];
 }
 
-- (IBAction)addAccount: (id) sender
+- (IBAction)addAccount:(id)sender
 {
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	[self willChangeValueForKey:@"accounts"];
@@ -43,7 +43,7 @@
 	[accountTableView selectRow:[[self accounts] indexOfObject:newAccount] byExtendingSelection:NO];
 }
 
-- (IBAction)rearrangeObjects: (id) sender;
+- (IBAction)rearrangeObjects:(id)sender;
 /*" This action triggers the refresh of interface elements that change their value according to the actual change. "*/
 {
     [accountsController rearrangeObjects];

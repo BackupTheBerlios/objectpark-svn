@@ -318,7 +318,7 @@
     }    
 }
 
-- (IBAction) saveAction: (id) sender
+- (IBAction)saveAction:(id)sender
 {
 	@try {
 		[[OPPersistentObjectContext threadContext] saveChanges];

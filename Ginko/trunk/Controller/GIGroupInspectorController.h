@@ -19,6 +19,6 @@
 
 + (id)groupInspectorForGroup: (GIMessageGroup*) aGroup;
 
-- (IBAction)switchProfile: (id) sender;
+- (IBAction)switchProfile:(id)sender;
 
 @end
