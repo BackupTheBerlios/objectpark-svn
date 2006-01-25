@@ -10,6 +10,8 @@
 #import "OPJobs.h"
 #import "GIUserDefaultsKeys.h"
 
+NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeedsUpdateNotification";
+
 @implementation GIActivityPanelController
 
 static GIActivityPanelController *panel = nil;
@@ -49,8 +51,14 @@ static GIActivityPanelController *panel = nil;
 
 - (void)dataChanged:(NSNotification *)aNotification
 {
+    NSNotification *updateNotification = [NSNotification notificationWithName:GIActivityPanelNeedsUpdateNotification object:self];
+    
+    [[NSNotificationQueue defaultQueue] enqueueNotification:updateNotification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName forModes:nil];
+    
+    /*
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateData) object:nil];
     [self performSelector:@selector(updateData) withObject:nil afterDelay:0.2];
+     */
 }
 
 + (id) sharedInstance 
@@ -67,8 +75,6 @@ static GIActivityPanelController *panel = nil;
     [[[self sharedInstance] window] orderFront:nil];
 }
 
-
-
 + (void)activityStarted:(NSNotification *)aNotification
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled])
@@ -76,6 +82,8 @@ static GIActivityPanelController *panel = nil;
         [self showActivityPanelInteractive:NO];
         
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        
+        [center addObserver:panel selector:@selector(updateData) name:GIActivityPanelNeedsUpdateNotification object:nil];        
         
         [center addObserver:panel selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
         [center addObserver:panel selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];
@@ -92,6 +100,8 @@ static GIActivityPanelController *panel = nil;
         
         // register for notifications:
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        
+        [center addObserver:self selector:@selector(updateData) name:GIActivityPanelNeedsUpdateNotification object:nil];        
         
         [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
         [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];        

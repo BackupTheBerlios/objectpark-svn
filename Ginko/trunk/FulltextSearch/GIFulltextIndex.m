@@ -1062,14 +1062,7 @@
 #warning HACK: Do better with converting to unsigned long long (not correct here)
         //NSNumber *threadOid = [NSNumber numberWithUnsignedLongLong:[threadOidString longLongValue]];
         GIThread *thread = [[OPPersistentObjectContext threadContext] objectForOid:[threadOidString longLongValue] ofClass:[GIThread class]];
-        
-        BOOL hitIsInRightGroup = YES;
-        
-        if (aGroup)
-        {
-            hitIsInRightGroup = [[thread valueForKey:@"groups"] containsObject:aGroup];
-        }
-        
+                
         if (! [thread resolveFault] || ! [message resolveFault])
         {
             [invalidOids addObject:messageOid];
