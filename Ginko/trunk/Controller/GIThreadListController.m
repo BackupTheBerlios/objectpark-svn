@@ -715,12 +715,11 @@ static BOOL isThreadItem(id item)
             
             [tabView selectTabViewItemWithIdentifier:@"searchresult"];
             
-#warning hard-coded search hit limit
-#define SEARCHLIMIT 200
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             BOOL limitSearchToGroup = [defaults integerForKey:@"searchRange"] == 1;
             int defaultFieldTag = [defaults integerForKey:@"defaultSearchField"];
-            
+            int searchLimit = [defaults integerForKey:SearchHitLimit];
+
             NSString *defaultField = @"body";
             switch (defaultFieldTag)
             {
@@ -729,7 +728,7 @@ static BOOL isThreadItem(id item)
                 default: break;
             }
             
-            [self setHits:[GIFulltextIndex hitsForQueryString:query defaultField:defaultField group:limitSearchToGroup ? [self group] : nil limit:SEARCHLIMIT]];
+            [self setHits:[GIFulltextIndex hitsForQueryString:query defaultField:defaultField group:limitSearchToGroup ? [self group] : nil limit:searchLimit]];
 
             //[self setHits:[GIFulltextIndex hitsForQueryString:query limit:200]];
             
@@ -752,7 +751,6 @@ static BOOL isThreadItem(id item)
         [tabView selectTabViewItemWithIdentifier:@"threads"];
     }
 }
-
 
 - (IBAction)showThreads:(id)sender
 {

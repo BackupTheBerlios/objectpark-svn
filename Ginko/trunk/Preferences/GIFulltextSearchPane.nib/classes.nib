@@ -49,7 +49,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {resetFulltextIndex = id; }; 
+            ACTIONS = {resetFulltextIndex = id; restoreDefaultSearchHitLimit = id; }; 
             CLASS = GIFulltextSearchPane; 
             LANGUAGE = ObjC; 
             SUPERCLASS = OPPreferencePane; 

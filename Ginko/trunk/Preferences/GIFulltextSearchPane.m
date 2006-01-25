@@ -8,12 +8,18 @@
 
 #import "GIFulltextSearchPane.h"
 #import "GIFulltextIndex.h"
+#import "GIUserDefaultsKeys.h"
 
 @implementation GIFulltextSearchPane
 
 - (IBAction)resetFulltextIndex:(id)sender
 {
     [GIFulltextIndex resetIndex];
+}
+
+- (IBAction)restoreDefaultSearchHitLimit:(id)sender
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:DEFAULTSEARCHHITLIMIT forKey:SearchHitLimit];
 }
 
 @end

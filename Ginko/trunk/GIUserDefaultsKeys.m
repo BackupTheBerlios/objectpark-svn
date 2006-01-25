@@ -29,6 +29,8 @@ NSString *FulltextIndexChangeCount = @"FulltextIndexChangeCount";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
+NSString *SearchHitLimit = @"SearchHitLimit";
+
 NSArray* allAdditionalHeadersForDisplay()
 {
     return [NSArray arrayWithObjects:
@@ -82,6 +84,8 @@ void registerDefaultDefaults()
         // setting default sort ordering for phrases list in phrase browser:
         [archiverTransformer reverseTransformedValue:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"phrasename" ascending:YES] autorelease]]], @"phrasesortdescriptors",
     
+        [NSNumber numberWithInt:DEFAULTSEARCHHITLIMIT], SearchHitLimit,
+        
         nil, nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults: appDefaults];

@@ -25,6 +25,9 @@ extern NSString *DisableKeychainForPasswortDefault;
 extern NSString *ImportPanelLastDirectory;
 extern NSString *AutomaticActivityPanelEnabled;
 extern NSString *FulltextIndexChangeCount;
+extern NSString *SearchHitLimit;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();
+
+#define DEFAULTSEARCHHITLIMIT 200

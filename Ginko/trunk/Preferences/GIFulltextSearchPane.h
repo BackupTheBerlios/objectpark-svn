@@ -14,5 +14,6 @@
 }
 
 - (IBAction)resetFulltextIndex:(id)sender;
+- (IBAction)restoreDefaultSearchHitLimit:(id)sender;
 
 @end

@@ -773,7 +773,8 @@
                  NSNumber *oidNumber;
                  BOOL shouldTerminate = NO;
                  
-                 while ((oidNumber = [enumerator nextObject]) && (!shouldTerminate))
+#warning I'm not decided whether deletion of messages from fulltext index should be interruptable...for now it's not!
+                 while ((oidNumber = [enumerator nextObject]) /*&& (!shouldTerminate) */)
                  {
                      OID oid = [oidNumber unsignedLongLongValue];
                      GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:oid ofClass:[GIMessage class]];
@@ -1062,6 +1063,13 @@
         //NSNumber *threadOid = [NSNumber numberWithUnsignedLongLong:[threadOidString longLongValue]];
         GIThread *thread = [[OPPersistentObjectContext threadContext] objectForOid:[threadOidString longLongValue] ofClass:[GIThread class]];
         
+        BOOL hitIsInRightGroup = YES;
+        
+        if (aGroup)
+        {
+            hitIsInRightGroup = [[thread valueForKey:@"groups"] containsObject:aGroup];
+        }
+        
         if (! thread || ! message)
         {
             [invalidOids addObject:messageOid];
@@ -1079,12 +1087,20 @@
             {
                 [dupeCheck addObject:messageOid];
                 
-                // score
-                jfloat javaScore = [self hits:hits score:i];
-                NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
-                
-                NSArray *hit = [NSArray arrayWithObjects:message, score, thread, nil];
-                [result addObject:hit];
+                if (aGroup && (![[thread valueForKey:@"groups"] containsObject:aGroup]))
+                {
+                    // not in right group
+                    if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
+                }
+                else
+                {
+                    // score
+                    jfloat javaScore = [self hits:hits score:i];
+                    NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
+                    
+                    NSArray *hit = [NSArray arrayWithObjects:message, score, thread, nil];
+                    [result addObject:hit];
+                }
             }
         }
         (*env)->PopLocalFrame(env, NULL);
