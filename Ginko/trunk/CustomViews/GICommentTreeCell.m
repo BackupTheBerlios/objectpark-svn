@@ -280,6 +280,7 @@ void ensureIntegrity()
     NSPoint cellEast = NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y + crossingCenterY);
     
     
+    [NSBezierPath setDefaultLineCapStyle:NSButtLineCapStyle];
     [NSBezierPath setDefaultLineWidth:lineWidth];
     
     
@@ -309,6 +310,14 @@ void ensureIntegrity()
     if (connections.east && connections.west) {
         [rootLine moveToPoint:crossingEast];
         [rootLine lineToPoint:crossingWest];
+    }
+    
+    // draw the "broken" reference
+    if (connections.east && !(connections.west || connections.north || connections.south)) {
+        [rootLine moveToPoint:NSMakePoint(cellFrame.origin.x + crossingCenterX + crossingRadius*6/8, cellFrame.origin.y + crossingCenterY)];
+        [rootLine lineToPoint:NSMakePoint(cellFrame.origin.x + crossingCenterX + crossingRadius*4/8, cellFrame.origin.y + crossingCenterY)];
+        [rootLine moveToPoint:NSMakePoint(cellFrame.origin.x + crossingCenterX + crossingRadius*2/8, cellFrame.origin.y + crossingCenterY)];
+        [rootLine lineToPoint:NSMakePoint(cellFrame.origin.x + crossingCenterX + crossingRadius*1/8, cellFrame.origin.y + crossingCenterY)];
     }
     
     // draw the outer "roads"

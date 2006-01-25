@@ -1744,8 +1744,14 @@ NSMutableArray* border = nil;
         GIMessage* rootMessage;
         
         [self initializeBorderToDepth: [displayedThread commentDepth]];
-        while (rootMessage = [me nextObject])
+        while (rootMessage = [me nextObject]) {
             row = [self placeTreeWithRootMessage: rootMessage atOrBelowRow: row inColumn: 0];
+            
+            if ([rootMessage reference]) {
+                // add "broken" reference
+                [[commentsMatrix cellAtRow:row column:0] addConnectionToEast];
+            }
+        }
         
         //[commentsMatrix selectCell: [commentsMatrix cellForRepresentedObject:displayedMessage]];
         [commentsMatrix sizeToFit];
