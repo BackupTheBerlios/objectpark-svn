@@ -13,4 +13,6 @@
 {
 }
 
+- (IBAction)resetFulltextIndex:(id)sender;
+
 @end

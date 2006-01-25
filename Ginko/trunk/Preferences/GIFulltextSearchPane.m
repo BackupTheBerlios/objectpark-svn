@@ -7,8 +7,13 @@
 //
 
 #import "GIFulltextSearchPane.h"
-
+#import "GIFulltextIndex.h"
 
 @implementation GIFulltextSearchPane
+
+- (IBAction)resetFulltextIndex:(id)sender
+{
+    [GIFulltextIndex resetIndex];
+}
 
 @end

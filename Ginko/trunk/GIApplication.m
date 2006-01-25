@@ -592,16 +592,6 @@
 	else [aWindow orderFront:nil];
 }
 
-- (IBAction)resetFulltextIndex:(id)sender
-{
-    [GIFulltextIndex resetIndex];
-}
-
-- (IBAction)fulltextIndexSomeMessages:(id)sender
-{
-    [self startFulltextIndexingJobIfNeeded:self];
-}
-
 - (IBAction)showPhraseBrowser:(id)sender
 {
     [GIPhraseBrowserController showPhraseBrowserForTextView:nil];

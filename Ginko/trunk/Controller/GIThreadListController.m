@@ -55,11 +55,13 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     return [[super init] retain]; // self retaining!
 }
 
-- (id) initWithGroup: (GIMessageGroup*) aGroup
+- (id)initWithGroup:(GIMessageGroup *)aGroup
 /*" aGroup may be nil, any group will be used then. "*/
 {
-    if (self = [self init]) {
-        if (! aGroup) {
+    if (self = [self init]) 
+    {
+        if (! aGroup) 
+        {
 			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
@@ -72,12 +74,12 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 - (void) updateWindowTitle
 {
-    [window setTitle: [NSString stringWithFormat:@"%@", [group valueForKey: @"name"]]];
+    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
 }
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {    
     [threadsView setTarget:self];
     [threadsView setDoubleAction:@selector(openSelection:)];
@@ -94,12 +96,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     [window makeKeyAndOrderFront: self];    
 	[self updateWindowTitle];
-
 }
 
 - (void)dealloc
 {
-    NSLog(@"GIThreadListController dealloc");
+    if (NSDebugEnabled) NSLog(@"GIThreadListController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     [window setDelegate: nil];
     
@@ -109,8 +110,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [displayedMessage release];
     [displayedThread release];
     [self setGroup:nil];
-    [threadCache release];
-    //[nonExpandableItemsCache release];
     [itemRetainer release];
     [hits release];
     
@@ -156,6 +155,25 @@ static BOOL isThreadItem(id item)
     [self autorelease]; // balance self-retaining
 }
 
+- (NSArray *)threadsByDate
+    /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
+{
+	return [group valueForKey:@"threadsByDate"];
+}
+
+- (int)threadLimitCount 
+{
+    BOOL showOnlyRecentThreads = [[self valueForGroupProperty:ShowOnlyRecentThreads] boolValue];
+    
+    if (showOnlyRecentThreads) return 150;
+    else return INT_MAX; 
+}
+
+- (BOOL)threadByDateSortAscending
+{
+	return YES;
+}
+
 - (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
@@ -181,14 +199,31 @@ static BOOL isThreadItem(id item)
     }
     
     // select responding item in threads view:
-    //if ((itemRow = [threadsView rowForItem:aMessage]) < 0)// message could be from single message thread -> message is no item
-    //{ 
-	itemRow = [[group valueForKey:@"threadsByDate"] indexOfObject:aThread]; // estimation!
-	itemRow = [threadsView rowForItemEqualTo:([aThread containsSingleMessage] ? (id)aThread : (id)aMessage) startingAtRow:itemRow];
-    //}
     
-    [threadsView selectRow:itemRow byExtendingSelection:NO];
-    [threadsView scrollRowToVisible:itemRow];
+    NSArray *threadArray = [self threadsByDate];
+    
+	itemRow = [threadArray indexOfObject:aThread]; // estimation!
+    
+    /*
+    if ([self threadByDateSortAscending])
+    {
+        itemRow += ([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count]));
+    }
+    else
+    {
+        itemRow = ([threadArray count]-1) - itemRow;
+    }
+    */
+    
+    if ([self threadLimitCount] != INT_MAX) itemRow = 0;
+    
+	itemRow = [threadsView rowForItemEqualTo:([aThread containsSingleMessage] ? (id)aThread : (id)aMessage) startingAtRow:itemRow];
+    
+    if (itemRow != -1) 
+    {
+        [threadsView selectRow:itemRow byExtendingSelection:NO];
+        [threadsView scrollRowToVisible:itemRow];
+    }
     
     // message display string:
     NSAttributedString *messageText = nil;
@@ -293,35 +328,6 @@ static BOOL isThreadItem(id item)
     return window;
 }
 
-- (NSMutableArray *)threadCache
-/* Returns an array of thread URI strings. */
-{
-    return threadCache;
-}
-
-- (void)setThreadCache:(NSMutableArray *)newCache
-{
-	/*
-    [newCache retain];
-    [threadCache release];
-    threadCache = newCache;
-	 */
-}
-
-- (NSMutableSet *)nonExpandableItemsCache
-{
-    return nonExpandableItemsCache;
-}
-
-- (void)setNonExpandableItemsCache:(NSMutableSet *)newCache
-{
-	/*
-    [newCache retain];
-    [nonExpandableItemsCache release];
-    nonExpandableItemsCache = newCache;
-	 */
-}
-
 - (void) observeValueForKeyPath: (NSString*) keyPath 
 					   ofObject: (id) object 
 						 change: (NSDictionary*) change 
@@ -347,35 +353,6 @@ static BOOL isThreadItem(id item)
         nowForThreadFiltering = [[NSDate date] timeIntervalSinceReferenceDate] - 60 * 60 * 24 * 28;
     }
     return nowForThreadFiltering;
-}
-
-
-- (NSArray*) threadsByDate
-/*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
-{
-	return [group valueForKey:@"threadsByDate"];
-	
-	/*
-    NSMutableArray* result = [self threadCache];
-    
-    if (!result) {
-        [self cacheThreadsAndExpandableItems];
-        result = [self threadCache];
-    }
-    return result;
-	 */
-}
-
-- (NSSet*) nonExpandableItems
-{
-    NSMutableSet *result = [self nonExpandableItemsCache];
-    
-    if (!result) 
-    {
-        //[self cacheThreadsAndExpandableItems];
-        result = [self nonExpandableItemsCache];
-    }
-    return result;
 }
 
 - (BOOL)threadsShownCurrently
@@ -1011,14 +988,6 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (int)threadLimitCount 
-{
-    BOOL showOnlyRecentThreads = [[self valueForGroupProperty:ShowOnlyRecentThreads] boolValue];
-    
-    if (showOnlyRecentThreads) return 150;
-    else return INT_MAX; 
-}
-
 - (void) updateGroupInfoTextField
 {
     int numberOfThreads = MIN([self threadLimitCount], [[self threadsByDate] count]);
@@ -1032,8 +1001,6 @@ static BOOL isThreadItem(id item)
 	// Re-query all threads keeping the selection, if possible.
 	//NSArray* selectedItems = [threadsView selectedItems];
 	if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
-	//[self setThreadCache: nil];
-	//[self setNonExpandableItemsCache: nil];
 	[self updateGroupInfoTextField];
 	//[threadsView deselectAll:nil];
 	
@@ -1046,9 +1013,10 @@ static BOOL isThreadItem(id item)
     return group;
 }
 
-- (void) setGroup: (GIMessageGroup*) aGroup
+- (void)setGroup:(GIMessageGroup *)aGroup
 {
-    if (aGroup != group) {
+    if (aGroup != group) 
+    {
 		[group removeObserver: self forKeyPath: @"threadsByDate"];
 		
 		[aGroup addObserver: self 
@@ -1059,18 +1027,41 @@ static BOOL isThreadItem(id item)
         [group autorelease];
         group = [aGroup retain];
 		
-		
 		if (group) {
-			//#########
-			//[aGroup refault]; // just for testing!!
-			//#########
 			// thread filter popup:
 			[threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]];
 			
 			[self updateWindowTitle];
 			[self updateGroupInfoTextField];
 			[self reload];
-			[threadsView scrollRowToVisible: [threadsView numberOfRows]-1];
+            
+            // select and scroll:
+			[threadsView scrollRowToVisible:[threadsView numberOfRows]-1];
+            
+            OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+            id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
+            
+            if (lastSelectedMessageItem)
+            {
+                // is thread or message
+                GIThread *thread;
+                GIMessage *message;
+                
+                if ([lastSelectedMessageItem isKindOfClass:[GIThread class]])
+                {
+                    thread = lastSelectedMessageItem;
+                    message = [[thread messagesByTree] lastObject];
+                }
+                else
+                {
+                    NSAssert([lastSelectedMessageItem isKindOfClass:[GIMessage class]], @"should be a message object");
+                    
+                    message = lastSelectedMessageItem;
+                    thread = [message thread];
+                }
+                
+                [self setDisplayedMessage:message thread:thread];
+            }
 		}
     }
 }
@@ -1209,20 +1200,16 @@ static BOOL isThreadItem(id item)
 
 @implementation GIThreadListController (OutlineViewDataSource)
 
-- (BOOL) threadByDateSortAscending
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-	return YES;
-}
-
-- (void) outlineViewSelectionDidChange: (NSNotification*) notification
-{
-  if ([notification object] == threadsView) {
-	  
-        id item = [threadsView itemAtRow: [threadsView selectedRow]];
+  if ([notification object] == threadsView) 
+  {	  
+        id item = [threadsView itemAtRow:[threadsView selectedRow]];
         
-        if ([item isKindOfClass: [OPPersistentObject class]]) {
+        if ([item isKindOfClass: [OPPersistentObject class]]) 
+        {
             item = [item objectURLString];
-			[self setValue:item forGroupProperty: @"LastSelectedMessageItem"];
+			[self setValue:item forGroupProperty:@"LastSelectedMessageItem"];
         }
     }
 }
@@ -1241,13 +1228,17 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
-- (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
-    if (outlineView == threadsView) {
+    if (outlineView == threadsView) 
+    {
 		// thread list
-        if (! item) {
+        if (! item) 
+        {
             return MIN([self threadLimitCount], [[self threadsByDate] count]);
-        } else  {        
+        } 
+        else  
+        {        
 			// item should be a thread
             return [[item messages] count];
         }
@@ -1255,7 +1246,7 @@ static BOOL isThreadItem(id item)
     return 0;
 }
 
-- (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
 	//return isThreadItem(item) && (![item isFault]) && [[item messages] count]>1;
     
@@ -1270,38 +1261,25 @@ static BOOL isThreadItem(id item)
     //return NO;
 }
 
-
-- (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     id result = nil;
-	if (! item) {
-		NSArray* threadArray = [self threadsByDate];
+	if (! item) 
+    {
+		NSArray *threadArray = [self threadsByDate];
 		int arrayIndex = [self threadByDateSortAscending] ? index +([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count])): ([threadArray count]-1) - index;
-		result = [threadArray objectAtIndex: arrayIndex];
-	} else {            
-		result = [[item messages/*ByTree*/] objectAtIndex: index];
+		result = [threadArray objectAtIndex:arrayIndex];
+	} 
+    else 
+    {            
+		result = [[item messages/*ByTree*/] objectAtIndex:index];
 	}
-//    if (![itemRetainer containsObject: result]) {
-        [itemRetainer addObject: result];
-//        if (item) [threadsView reloadItem: item reloadChildren: YES];
+//    if (![itemRetainer containsObject:result]) {
+        [itemRetainer addObject:result];
+//        if (item) [threadsView reloadItem:item reloadChildren:YES];
 //    }
     return result;
 }
-
-
-
-- (BOOL) outlineView: (NSOutlineView*) outlineView shouldCollapseItem: (id) item;
-{
-    /* hack obsoleted by itemRetainer workaround :-)
-	if (threadsView == outlineView) {
-        // Retain all messages in thread item:
-		NSLog(@"Should release opened messages.");
-		[[item messages] makeObjectsPerformSelector: @selector(autorelease)]; // could be too early!?
-	}
-     */
-	return YES;
-}
-
 
 // diverse attributes
 NSDictionary* unreadAttributes()
@@ -1427,7 +1405,6 @@ static NSAttributedString* spacer2()
 }
 
 #define MAX_INDENTATION 4
-
 
 - (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
 {

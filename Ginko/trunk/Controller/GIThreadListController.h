@@ -31,8 +31,6 @@
     GIMessageGroup *group;
     GIThread *displayedThread; // displayed as comment tree
     GIMessage *displayedMessage; // displayed with body
-    NSMutableArray *threadCache; // contains item uris
-    NSMutableSet *nonExpandableItemsCache; // contains GIThreads
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
 
