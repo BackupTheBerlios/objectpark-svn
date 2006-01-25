@@ -95,7 +95,7 @@
     
     while (message = [messages lastObject]) {
 		[message referenceFind: YES];
-        [message setValue: self forKey: @"thread"];
+        [message setValue: self forKey: @"thread"]; // removes message from messages
     }
 	NSAssert1([otherThread messageCount] ==  0, @"Thread not empty: %@ - loosing message.", otherThread);
 	

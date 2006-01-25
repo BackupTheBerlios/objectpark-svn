@@ -48,7 +48,7 @@
 
 - (BOOL) isValidMessageID
 { 	
-	return [self hasPrefix: @"<"] && [self hasSuffix:@">"] && ([self rangeOfString:@"@"].length != 0);
+	return [self hasPrefix: @"<"] && [self hasSuffix: @">"] && ([self rangeOfString: @"@"].length != 0);
 }
 
 
@@ -468,7 +468,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
         {
         [buffer appendString:currentLine];
 		// if any of these conditions is met we don't unwrap
-        if(([currentLine isEqualToString: @""]) || ([nextLine isEqualToString:@""]) || ([currentLine length] < 55) || ([forceBreakSet characterIsMember:[nextLine characterAtIndex:0]]))
+        if(([currentLine isEqualToString: @""]) || ([nextLine isEqualToString: @""]) || ([currentLine length] < 55) || ([forceBreakSet characterIsMember:[nextLine characterAtIndex:0]]))
             {
             [buffer appendString:lineBreakSeq];
             }
@@ -2084,7 +2084,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 
 - (NSString*) stringBySpaceStuffing
 {
-    if (([self hasPrefix: @" "]) || ([self hasPrefix:@"From "]))
+    if (([self hasPrefix: @" "]) || ([self hasPrefix: @"From "]))
     {
         return [NSString stringWithFormat: @" %@", self];
     }

@@ -135,7 +135,7 @@
         
         enumerator = [[GIProfile allObjects] objectEnumerator];
         while (profile = [enumerator nextObject]) {
-            if ([[[profile mailAddress] addressFromEMailString] rangeOfString: anAddress options:NSCaseInsensitiveSearch] .location != NSNotFound) {
+            if ([[[profile mailAddress] addressFromEMailString] rangeOfString: anAddress options: NSCaseInsensitiveSearch].location != NSNotFound) {
                 return YES;
             }
         }

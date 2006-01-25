@@ -177,6 +177,8 @@ static BOOL isThreadItem(id item)
 - (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
+	if (!aThread) aThread = [aMessage valueForKey: @"thread"];
+	
     NSParameterAssert(isThreadItem(aThread));
     
     int itemRow;
@@ -252,7 +254,7 @@ static BOOL isThreadItem(id item)
     }
     
     if (!messageText) {
-        messageText = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
+        messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText == nil."];
     }
     
     [[messageTextView textStorage] setAttributedString:messageText];
@@ -358,7 +360,7 @@ static BOOL isThreadItem(id item)
 - (BOOL)threadsShownCurrently
 /*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
 {
-    return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"threads"];
+    return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
 }
 
 - (BOOL)searchHitsShownCurrently
@@ -370,7 +372,7 @@ static BOOL isThreadItem(id item)
 - (BOOL)messageShownCurrently
 /*" Returns YES if the tab with the message is currently visible. NO otherwise. "*/
 {
-    return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"];
+    return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"];
 }
 
 - (BOOL)openSelection:(id)sender
@@ -516,7 +518,7 @@ static BOOL isThreadItem(id item)
     } 
     else 
     {
-        if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"]) 
+        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"]) 
         {
             // from message switch back to threads:
             if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
@@ -1505,7 +1507,7 @@ static NSAttributedString* spacer2()
     GIMessage *message = [hit objectAtIndex:0];
     BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
 
-    if ([[aTableColumn identifier] isEqualToString:@"date"])
+    if ([[aTableColumn identifier] isEqualToString: @"date"])
     {
         BOOL isRead = [message hasFlags:OPSeenStatus];
         NSCalendarDate *date = [message valueForKey:@"date"];
@@ -1514,7 +1516,7 @@ static NSAttributedString* spacer2()
         
         return [[[NSAttributedString alloc] initWithString:dateString attributes:isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
     }
-    else if ([[aTableColumn identifier] isEqualToString:@"subjectauthor"])
+    else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"])
     {
         NSString *from;
         NSAttributedString *aFrom;
@@ -1543,7 +1545,7 @@ static NSAttributedString* spacer2()
         
         return result;
     }
-    else if ([[aTableColumn identifier] isEqualToString:@"relevance"])
+    else if ([[aTableColumn identifier] isEqualToString: @"relevance"])
     {
         return [hit objectAtIndex:1]; // the score
     }

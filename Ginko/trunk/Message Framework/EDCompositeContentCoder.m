@@ -49,8 +49,8 @@ static short boundaryId = 0;
 + (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
 {
     if ([[mpart contentType] hasPrefix:@"multipart/"]) return YES;
-    if ([[mpart contentType] isEqualToString:@"message/rfc822"]) return YES;
-    if ([[mpart contentType] isEqualToString:@"message/rfc2822"]) return YES;
+    if ([[mpart contentType] isEqualToString: @"message/rfc822"]) return YES;
+    if ([[mpart contentType] isEqualToString: @"message/rfc2822"]) return YES;
     return NO;
 }
 
@@ -64,7 +64,7 @@ static short boundaryId = 0;
     if (self = [self init]) {
         if ([[mpart contentType] hasPrefix:@"multipart/"]) {
             [self _takeSubpartsFromMultipartContent:mpart];
-        } else if([[mpart contentType] isEqualToString:@"message/rfc822"] || [[mpart contentType] isEqualToString:@"message/rfc2822"]) {
+        } else if([[mpart contentType] isEqualToString: @"message/rfc822"] || [[mpart contentType] isEqualToString: @"message/rfc2822"]) {
             [self _takeSubpartsFromMessageContent:mpart];
         } else {
             // need [self dealloc] here?
@@ -161,7 +161,7 @@ static short boundaryId = 0;
     while(done == NO)
         {  // p == 0 can occur if part was empty, ie. had no body
         if((p == 0) || (p > pmax - 5 - blen)) // --boundary--\n
-            [NSException raise:EDMessageFormatException format: @"final boundary not found"];
+            [NSException raise: EDMessageFormatException format: @"final boundary not found"];
         if((*p == '-') && (*(p+1) == '-') && (strncmp(p+2, btext, blen) == 0))
             {
             q = p + 2 + blen;

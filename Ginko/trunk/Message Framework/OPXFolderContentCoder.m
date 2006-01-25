@@ -31,7 +31,7 @@
 
 + (BOOL)canDecodeMessagePart:(EDMessagePart *)mpart
 {
-    return [[mpart contentType] isEqualToString:@"multipart/x-folder"];
+    return [[mpart contentType] isEqualToString: @"multipart/x-folder"];
 }
 
 + (BOOL)canEncodeAttributedString:(NSAttributedString *)anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange

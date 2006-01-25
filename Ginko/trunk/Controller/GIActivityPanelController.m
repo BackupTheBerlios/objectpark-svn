@@ -149,13 +149,14 @@ static GIActivityPanelController *panel = nil;
 }
 */
 
-- (id)tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
+- (id) tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
 {
     NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
     
     if (progressInfo) {
         NSString* identifier = [aTableColumn identifier];
         //NSLog(@"Identifier: %@", identifier);
+		/*
         if ([identifier isEqualToString: @"progress"]) {
             if ([progressInfo isJobProgressIndeterminate]) {
                 return @"Running";
@@ -167,14 +168,39 @@ static GIActivityPanelController *panel = nil;
 				
                 return [NSString stringWithFormat: @"%.1f %%\n%d/%d", percentComplete, (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
             }
-        } else if ([identifier isEqualToString: @"description"]) {
+        } else 
+		 */
+		 if ([identifier isEqualToString: @"description"]) {
             return [NSString stringWithFormat: @"%@:\n  %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
-        } else if ([identifier isEqualToString: @"stopButton"]) {
-			return @"11.1 %";
-		}
+        }
     }
     
     return @""; // should not occur
 }
+
+- (void) tableView: (NSTableView*) aTableView willDisplayCell: (id) aCell forTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
+{
+	//NSLog(@"willDisplayCell %@", aCell);
+	NSString* identifier = [aTableColumn identifier];
+
+	if ([identifier isEqualToString: @"stopButton"]) {
+		NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
+		NSString* progressTitle = @"Running";
+		if (![progressInfo isJobProgressIndeterminate]) {
+			double minValue = [progressInfo jobProgressMinValue];
+			double normalizedMax = [progressInfo jobProgressMaxValue] - minValue;
+			double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;
+			double percentComplete = (normalizedCurrentValue / normalizedMax) * (double)100.0;
+			
+			//progressTitle = [NSString stringWithFormat: @"%.1f %%\n%d/%d", percentComplete, 
+			progressTitle = [NSString stringWithFormat: @"%.1f %%", percentComplete]; 
+			//	(unsigned long)[progressInfo jobProgressCurrentValue], 
+			//	(unsigned long)[progressInfo jobProgressMaxValue]];
+		}
+		[aCell setTitle: progressTitle];
+	}
+}
+
+
 
 @end

@@ -112,6 +112,7 @@ typedef struct {
     @synchronized(self)
     {
         result = NSHashGet(registeredObjects, &searchStruct);
+		[[result retain] autorelease];
     }
     
     //NSLog(@"Object registered for oid %llu: %@", oid, result);
@@ -173,23 +174,24 @@ typedef struct {
 	if (!oid) return nil;
 	
 	// First, look up oid in registered objects cache:
-    OPPersistentObject* result = [[self objectRegisteredForOid: oid ofClass: poClass] retain];
+    OPPersistentObject* result = [self objectRegisteredForOid: oid ofClass: poClass];
     if (!result) { 
         // not found - create a fault object:
 		numberOfFaultsCreated++;
-        result = [[poClass alloc] initFaultWithContext: self oid: oid]; // also registers result with self
+        result = [[[poClass alloc] initFaultWithContext: self oid: oid] autorelease]; // also registers result with self
 		//NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
         //NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
     } else {
 		// We already know this object.
 		// Put it in the fault cache:
-		//unsigned retainCount = [result retainCount];
-		[faultCache addObject: result]; // cache result
-		if ([faultCache count] > faultCacheSize) {
-			[faultCache removeObjectAtIndex: 0]; // release some object
-		}	
+		@synchronized (self) {
+			[faultCache addObject: result]; // cache result
+			if ([faultCache count] > faultCacheSize) {
+				[faultCache removeObjectAtIndex: 0]; // release some object
+			}
+		}
 	}
-    return [result autorelease];
+    return result;
 }
 
 - (id) objectWithURLString: (NSString*) urlString
@@ -599,20 +601,27 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (NSArray*) objectsForClass: (Class) poClass
 				 queryFormat: (NSString*) sql, ...
+/*" Pass a query string in the format string. The following parameters replace any occurrences of $1, $2 $3 etc. respectively. "*/
 {
 	NSArray* result;
 	@synchronized(self) {
 		OPPersistentObjectEnumerator* e;
+		char variableValue[5] = "";
+		
 		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
 													  resultClass: poClass
 													  queryString: sql];
+		sqlite3_stmt* statement = [e statement];
 		
 		va_list ap; /* points to each unamed arg in turn */
 		va_start(ap, sql); /* make ap point to 1st unnamed arg */
 		unsigned index = 1; // change that! make it 0 based!
 		id binding;
 		while (binding = va_arg(ap, id)) {
-			[binding bindValueToStatement: [e statement] index: index++];
+			sprintf(variableValue, "$%u", index);
+			unsigned placeholderIndex = sqlite3_bind_parameter_index(statement, variableValue);
+			if (placeholderIndex) [binding bindValueToStatement: statement index: placeholderIndex];
+			index++;
 		}
 		va_end(ap); /* clean up when done */
 		

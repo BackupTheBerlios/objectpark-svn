@@ -573,7 +573,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
         // We replace spaces in the version number to make the version string compliant with RFC2616 and draft-ietf-usefor-article-09.txt (internet draft for news article format)
-        [bundleVersion replaceOccurrencesOfString: @" " withString:@"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
+        [bundleVersion replaceOccurrencesOfString: @" " withString: @"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
         
         versionString = [[NSString alloc] initWithFormat:GINKOVERSION, bundleVersion];
         
@@ -1310,7 +1310,7 @@ NSDictionary *maxLinesForCalendarName()
     
     //NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
 
-    //[[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] removeCharactersInString:@" ."];
+    //[[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] removeCharactersInString: @" ."];
     //NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
 
     //NSLog(@"toField charset = %d", [[toField tokenizingCharacterSet] characterIsMember:' ']);

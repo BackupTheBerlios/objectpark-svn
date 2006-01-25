@@ -85,7 +85,7 @@
 + (BOOL)canDecodeMessagePart: (EDMessagePart*) mpart
 {
     NSString *ct = [[[mpart contentType] componentsSeparatedByString: @"/"] objectAtIndex:0];
-    if ([ct isEqualToString: @"image"] || [ct isEqualToString:@"audio"] || [ct isEqualToString:@"video"] || [ct isEqualToString:@"application"])
+    if ([ct isEqualToString: @"image"] || [ct isEqualToString: @"audio"] || [ct isEqualToString: @"video"] || [ct isEqualToString: @"application"])
         return YES;
     if ([[mpart contentDisposition] caseInsensitiveCompare: @"attachment"] == NSOrderedSame)
         return YES;

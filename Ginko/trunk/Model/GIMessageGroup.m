@@ -760,56 +760,32 @@ nil, //                                                     [[[NSString alloc] i
 			  sortedByDateAscending: (BOOL) ascending
 {    
     NSLog(@"Entered fetchThreads query");
-	
+	NSNumber* sinceDate = [NSNumber numberWithFloat: sinceRefDate];
 	
 	NSMutableArray* clauses = [NSMutableArray arrayWithObject: @"ZTHREAD.Z_PK = Z_4THREADS.Z_6THREADS"];
 	
 	// Find only threads belonging to self:
-	[clauses addObject: [NSString stringWithFormat: @"Z_4THREADS.Z_4GROUPS=?", [self oid]]];
+	[clauses addObject: @"Z_4THREADS.Z_4GROUPS=$1"];
 	
 	if ([subject length]) {
-		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZSUBJECT like '%@'", subject]];
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZSUBJECT like $2", subject]];
 	}
 	if ([author length]) {
-		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZAUTHOR like '%@'", author]];
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZAUTHOR like $3", author]];
 	}
 	if (sinceRefDate>0.0) {
-		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= %f", sinceRefDate]];
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= $4", sinceRefDate]];
 	}
-	
-	
+
 	
 	NSString* queryString = [NSString stringWithFormat: @"select ZTHREAD.ROWID from Z_4THREADS, ZTHREAD where %@ order by ZTHREAD.ZDATE %@;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
 	
 	
 	NSLog(@"Entered fetchThreads query with sql: %@", queryString);
 	
-	/*
-
-	OPPersistentObjectEnumerator* poe = 
-		[[OPPersistentObjectEnumerator alloc] initWithContext: [OPPersistentObjectContext defaultContext]
-												  resultClass: [GIThread class] 
-												  queryString: queryString];
-	 */
-	
 	return [[self context] objectsForClass: [GIThread class]
-							   queryFormat: queryString, self, nil];
+							   queryFormat: queryString, self, subject, author, sinceDate, nil];
 		
-	/*
-							   queryFormat: @"select ZTHREAD.ROWID from Z_4THREADS, ZTHREAD where ? order by ZTHREAD.ZDATE ?;", [clauses componentsJoinedByString: @" and "], ascending ? @"ASC" : @"DESC"];
-	
-	
-	
-	GIThread* thread;
-	while (thread = [poe nextObject]) {
-		[*allThreads addObject: thread];
-	}
-	
-	[poe release];
-	
-	*/
-	
-    //NSLog(@"Exited fetchThreadURIs query. Found %d trivial threads out of %d.", [*trivialThreads count], [*allThreads count]);
 }
 
 @end

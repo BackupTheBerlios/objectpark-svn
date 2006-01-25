@@ -319,7 +319,7 @@
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {    
-    if ([[tableColumn identifier] isEqualToString:@"box"]) 
+    if ([[tableColumn identifier] isEqualToString: @"box"]) 
     {
         if ([item isKindOfClass:[NSMutableArray class]]) 
         {
@@ -332,7 +332,7 @@
         }
     }
     
-    if ([[tableColumn identifier] isEqualToString:@"info"]) 
+    if ([[tableColumn identifier] isEqualToString: @"info"]) 
     {
         if (![item isKindOfClass:[NSMutableArray class]]) 
         {
@@ -389,7 +389,7 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-    if ([[tableColumn identifier] isEqualToString:@"box"])
+    if ([[tableColumn identifier] isEqualToString: @"box"])
     {
         if (![item isKindOfClass:[NSMutableArray class]])
         {

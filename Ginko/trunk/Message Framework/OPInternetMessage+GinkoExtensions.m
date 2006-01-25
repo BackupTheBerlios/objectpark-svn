@@ -69,7 +69,7 @@ unsigned int MessageIdCounter = 0;
         {
             NSArray*components;
 
-            components = [filename componentsSeparatedByString:@"."];
+            components = [filename componentsSeparatedByString: @"."];
             suffix = [components objectAtIndex:[components count]-1];
         }
 
@@ -265,7 +265,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
     @catch (NSException *localException) 
     {
         NSLog(@"warning: [%@]\n", [localException reason]);
-        bodyContent = [[NSMutableAttributedString alloc] initWithString:@"Not decodable.\nFallback to text/plain:\n\n"];
+        bodyContent = [[NSMutableAttributedString alloc] initWithString: @"Not decodable.\nFallback to text/plain:\n\n"];
         [self setContentType:@"text/plain"];
         [bodyContent appendAttributedString:[self contentAsAttributedString]];
     }
@@ -318,7 +318,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
         aDate = [NSCalendarDate date];
     }
 
-    range = [email rangeOfString:@"@"];
+    range = [email rangeOfString: @"@"];
     if (range.location != NSNotFound)
     {
         domain = [email substringWithRange:NSMakeRange(range.location, [email length] - range.location)];
@@ -335,16 +335,16 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
 
     hash = [[stringToHash dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion: YES] md5Base64String];
 
-    while ([hash hasSuffix:@"="])
+    while ([hash hasSuffix: @"="])
     {
         hash = [hash substringToIndex:[hash length] - 1];
     }
     
-    mid = [NSMutableString stringWithString:@"<"];
+    mid = [NSMutableString stringWithString: @"<"];
     [mid appendString:[aDate descriptionWithCalendarFormat:@"%y%m"]];
     [mid appendString:hash];
     [mid appendString:domain];
-    [mid appendString:@">"];
+    [mid appendString: @">"];
 
     [self setBody:mid forHeaderField:@"Message-ID"];
 }
@@ -360,7 +360,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
         
         if (xmailer = [self bodyForHeaderField:@"X-Mailer"]) 
         {
-            if ([xmailer rangeOfString:@"Ginko"].location != NSNotFound) 
+            if ([xmailer rangeOfString: @"Ginko"].location != NSNotFound) 
             {
                 return YES;
             }
@@ -372,7 +372,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
         
         if (useragent = [self bodyForHeaderField:@"User-Agent"]) 
         {
-            if ([useragent rangeOfString:@"Ginko"].location != NSNotFound) 
+            if ([useragent rangeOfString: @"Ginko"].location != NSNotFound) 
             {
                 return YES;
             }
