@@ -1070,7 +1070,7 @@
             hitIsInRightGroup = [[thread valueForKey:@"groups"] containsObject:aGroup];
         }
         
-        if (! thread || ! message)
+        if (! [thread resolveFault] || ! [message resolveFault])
         {
             [invalidOids addObject:messageOid];
             if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
