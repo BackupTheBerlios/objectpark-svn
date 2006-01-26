@@ -146,7 +146,7 @@
 }
 
 - (BOOL) resolveFault
-/*" Returns YES, if the reciever is not a fault afterwards. "*/
+/*" Returns YES, if the reciever is resolved afterwards. "*/
 {
     if (attributes==nil) {
         attributes = [[[self context] persistentValuesForObject: self] retain];
@@ -564,46 +564,46 @@
 	// Todo: For to-many relationships, we do not need to fire a fault in order to update its relationship values!
 
 	if (![[self valueForKey: key] containsObject: value]) {
-	OPClassDescription* cd = [[self class] persistentClassDescription];
-	OPAttributeDescription* ad = [cd attributeWithName: key];
-	OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
-	NSString* inverseKey = [ad inverseRelationshipKey];
-
-	// Check, if it is a many-to-many relation:
-	if (r) {
-		// Record relationship change in persistent context:
-		[r addRelationNamed: key from: self to: value];
-
-		// Also update inverse relationship (if any):
-		if (inverseKey && [[value attributeValues] objectForKey: inverseKey]) {
-			// Firing a relationship would already add value via r. On the other hand - we are now skipping the kvo notifications...bad!
-			[value willChangeValueForKey: inverseKey];
-			[value addPrimitiveValue: self forKey: inverseKey];
-			[value didChangeValueForKey: inverseKey];
-		}
-
-		if ([self isFault]) {
-			return; // we'll pick up the change the next time this fault is fired.
-		}
-
-	} else {
-		if (inverseKey) {
-			// many-to-one relationship
-			id oldIValue = [value valueForKey: inverseKey];
-
-			if (oldIValue)
-				[oldIValue removeValue: value forKey: key]; // remove from inverse inverse relationship (if any). This might fire oldIValue. :-(
-
-			[value willChangeValueForKey: inverseKey];
-			[value setPrimitiveValue: self forKey: inverseKey];
-			[value didChangeValueForKey: inverseKey];
+		OPClassDescription* cd = [[self class] persistentClassDescription];
+		OPAttributeDescription* ad = [cd attributeWithName: key];
+		OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+		NSString* inverseKey = [ad inverseRelationshipKey];
+		
+		// Check, if it is a many-to-many relation:
+		if (r) {
+			// Record relationship change in persistent context:
+			[r addRelationNamed: key from: self to: value];
 			
+			// Also update inverse relationship (if any):
+			if (inverseKey && [[value attributeValues] objectForKey: inverseKey]) {
+				// Firing a relationship would already add value via r. On the other hand - we are now skipping the kvo notifications...bad!
+				[value willChangeValueForKey: inverseKey];
+				[value addPrimitiveValue: self forKey: inverseKey];
+				[value didChangeValueForKey: inverseKey];
+			}
+			
+			if ([self isFault]) {
+				return; // we'll pick up the change the next time this fault is fired.
+			}
+			
+		} else {
+			if (inverseKey) {
+				// many-to-one relationship
+				id oldIValue = [value valueForKey: inverseKey];
+				
+				if (oldIValue)
+					[oldIValue removeValue: value forKey: key]; // remove from inverse inverse relationship (if any). This might fire oldIValue. :-(
+				
+				[value willChangeValueForKey: inverseKey];
+				[value setPrimitiveValue: self forKey: inverseKey];
+				[value didChangeValueForKey: inverseKey];
+				
 		}
 	}
-	
-	[self willChangeValueForKey: key];
-	[self addPrimitiveValue: value forKey: key];
-	[self didChangeValueForKey: key];
+		
+		[self willChangeValueForKey: key];
+		[self addPrimitiveValue: value forKey: key];
+		[self didChangeValueForKey: key];
 	} else {
 		
 		NSLog(@"Warning! Try to add %@ to existing %@-relationship of %@!", value, key, self);

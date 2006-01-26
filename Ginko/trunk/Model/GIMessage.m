@@ -77,20 +77,20 @@
 	@"}";
 }
 
-+ (NSArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit
++ (NSArray*) messagesToAddToFulltextIndexWithLimit: (unsigned) limit
 {
-    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+    OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    NSArray *result = [context objectsForClass: self whereFormat:@"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    NSArray* result = [context objectsForClass: self whereFormat: @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
 
     return result;
 }
 
-+ (NSArray *)messagesToRemoveFromFulltextIndexWithLimit:(unsigned)limit
++ (NSArray*) messagesToRemoveFromFulltextIndexWithLimit: (unsigned) limit
 {
-    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+    OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    NSArray *result = [context objectsForClass: self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    NSArray* result = [context objectsForClass: self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
     
     return result;
 }
@@ -121,7 +121,7 @@
                 {
                     if ([changedObject isKindOfClass:[GIMessage class]])
                     {
-                        if ([[changedObject valueForKey:@"messageId"] isEqualToString:messageId])
+                        if ([[changedObject valueForKey: @"messageId"] isEqualToString:messageId])
                         {
                             result = (GIMessage *)changedObject;
                             break;
@@ -134,6 +134,13 @@
     
 	return result;
 }
+
+- (void) willSave
+{
+	[super willSave];
+	if (![self valueForKey: @"thread"]) NSLog(@"Warning! Will save message without thread!", self);
+}
+
 
 - (void) willDelete
 {
@@ -559,9 +566,9 @@
 - (GIMessage *)reference
 /*" Returns the direct message reference stored. "*/
 {
-    [self willAccessValueForKey:@"reference"];
-    id reference = [self primitiveValueForKey:@"reference"];
-    [self didAccessValueForKey:@"reference"];
+    [self willAccessValueForKey: @"reference"];
+    id reference = [self primitiveValueForKey: @"reference"];
+    [self didAccessValueForKey: @"reference"];
     return reference;
 }
 

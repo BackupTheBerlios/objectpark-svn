@@ -308,9 +308,9 @@
             {
                 NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
-				[jobArguments setObject:boxFilename forKey:@"mboxFilename"];
-				[jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
-                [jobArguments setObject:[NSNumber numberWithBool:YES] forKey:@"copyOnly"];
+				[jobArguments setObject:boxFilename forKey: @"mboxFilename"];
+				[jobArguments setObject:[OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+                [jobArguments setObject:[NSNumber numberWithBool:YES] forKey: @"copyOnly"];
 				
                 [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
             }
@@ -410,10 +410,10 @@
 {
     if (NSDebugEnabled) NSLog(@"POPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
-    NSException *exception = [[aNotification userInfo] objectForKey:@"exception"];
+    NSException *exception = [[aNotification userInfo] objectForKey: @"exception"];
     
     if (exception)
     {
@@ -436,8 +436,8 @@
         // import mbox at path mboxPath:
         NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
-        [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
-        [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey:@"parentContext"];
+        [jobArguments setObject:mboxPath forKey: @"mboxFilename"];
+        [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey: @"parentContext"];
         
         [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
     }
@@ -447,7 +447,7 @@
 {
     if (NSDebugEnabled) NSLog(@"importJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
     [OPJobs removeFinishedJob:jobId]; // clean up
@@ -459,7 +459,7 @@
 
 - (IBAction)startFulltextIndexingJobIfNeeded:(id)sender
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"fulltextSearchDisabled"])
+    if (![[NSUserDefaults standardUserDefaults] boolForKey: @"fulltextSearchDisabled"])
     {
         if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
         {
@@ -491,7 +491,7 @@
 - (void)fulltextIndexJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"fulltextIndexJobFinished");
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
 	[OPJobs removeFinishedJob:jobId]; // clean up
     
@@ -502,7 +502,7 @@
 {
     if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
     NSDictionary *result = [OPJobs resultForJob:jobId];
@@ -512,7 +512,7 @@
 	GIProfile *profile;
 	while (profile = [enumerator nextObject]) 
     {
-		NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+		NSEnumerator *messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
 		GIMessage *message;
 		while (message = [messagesToSendEnumerator nextObject]) 
         {
@@ -527,10 +527,10 @@
 	
 	// Process all messages sent successfully:
 	
-	NSArray *messages = [result objectForKey:@"messages"];
+	NSArray *messages = [result objectForKey: @"messages"];
 	NSAssert(messages != nil, @"result does not contain 'messages'");
 	
-	NSArray *sentMessages = [result objectForKey:@"sentMessages"];
+	NSArray *sentMessages = [result objectForKey: @"sentMessages"];
 	NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 	
 	enumerator = [sentMessages objectEnumerator];
@@ -540,8 +540,8 @@
     {
 		[message setSendStatus:OPSendStatusNone];
 		// Disconnect message from its dummy thread:
-		[[message valueForKey:@"thread"] removeValue:[GIMessageGroup queuedMessageGroup] forKey:@"groups"];
-		[message setValue:nil forKey:@"thread"];
+		[[message valueForKey: @"thread"] removeValue:[GIMessageGroup queuedMessageGroup] forKey: @"groups"];
+		[message setValue:nil forKey: @"thread"];
 		// Re-Insert message wherever it belongs:
 		[GIMessageBase addMessage:message];
 	}
@@ -558,7 +558,7 @@
     
     while (profile = [enumerator nextObject]) 
     {
-        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
+        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
         GIMessage *message;
         NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
             
@@ -574,7 +574,7 @@
 		// something to send for the account?
         if ([messagesQualifyingForSend count]) 
         {
-            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile valueForKey:@"sendAccount"]];
+            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile valueForKey: @"sendAccount"]];
         }
     }
 }
@@ -609,7 +609,7 @@
 - (IBAction)emptyTrashMailbox:(id)sender
 {
     GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
-    OPFaultingArray *threads = [trashgroup valueForKey:@"threadsByDate"];
+    OPFaultingArray *threads = [trashgroup valueForKey: @"threadsByDate"];
     GIThread *thread;
     int counter = 0;
     
@@ -617,9 +617,9 @@
     
     while (thread = [threads lastObject]) // remove thread from source group:
     {
-        [thread removeValue:trashgroup forKey:@"groups"];
+        [thread removeValue:trashgroup forKey: @"groups"];
         
-        if ([[thread valueForKey:@"groups"] count] == 0) [thread delete];
+        if ([[thread valueForKey: @"groups"] count] == 0) [thread delete];
         
         counter += 1;
         

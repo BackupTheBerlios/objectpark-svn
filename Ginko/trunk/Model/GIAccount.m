@@ -97,62 +97,62 @@
 {
     NSString* tmpValue;
     
-    [self willAccessValueForKey:@"name"];
-    tmpValue = [self primitiveValueForKey:@"name"];
-    [self didAccessValueForKey:@"name"];
+    [self willAccessValueForKey: @"name"];
+    tmpValue = [self primitiveValueForKey: @"name"];
+    [self didAccessValueForKey: @"name"];
     
     return tmpValue;
 }
 
 - (void)setName:(NSString* )value 
 {
-    [self willChangeValueForKey:@"name"];
-    [self setPrimitiveValue:value forKey:@"name"];
-    [self didChangeValueForKey:@"name"];
+    [self willChangeValueForKey: @"name"];
+    [self setPrimitiveValue:value forKey: @"name"];
+    [self didChangeValueForKey: @"name"];
 }
 
 - (BOOL)isEnabled 
 {
     NSNumber *tmpValue;
     
-    [self willAccessValueForKey:@"isEnabled"];
-    tmpValue = [self primitiveValueForKey:@"isEnabled"];
-    [self didAccessValueForKey:@"isEnabled"];
+    [self willAccessValueForKey: @"isEnabled"];
+    tmpValue = [self primitiveValueForKey: @"isEnabled"];
+    [self didAccessValueForKey: @"isEnabled"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
 - (void)setIsEnabled:(BOOL)value 
 {
-    [self willChangeValueForKey:@"isEnabled"];
-    [self setPrimitiveValue:[NSNumber numberWithBool:value] forKey:@"isEnabled"];
-    [self didChangeValueForKey:@"isEnabled"];
+    [self willChangeValueForKey: @"isEnabled"];
+    [self setPrimitiveValue:[NSNumber numberWithBool:value] forKey: @"isEnabled"];
+    [self didChangeValueForKey: @"isEnabled"];
 }
 
 - (int) incomingServerType 
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"incomingServerType"];
-    tmpValue = [self primitiveValueForKey:@"incomingServerType"];
-    [self didAccessValueForKey:@"incomingServerType"];
+    [self willAccessValueForKey: @"incomingServerType"];
+    tmpValue = [self primitiveValueForKey: @"incomingServerType"];
+    [self didAccessValueForKey: @"incomingServerType"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
 - (void)setIncomingServerType:(int)value 
 {
-    [self willChangeValueForKey:@"incomingServerType"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"incomingServerType"];
-    [self didChangeValueForKey:@"incomingServerType"];
+    [self willChangeValueForKey: @"incomingServerType"];
+    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey: @"incomingServerType"];
+    [self didChangeValueForKey: @"incomingServerType"];
 
-    [self willChangeValueForKey:@"POPAccount"]; // signalling -isPOPAccount changed
-    [self didChangeValueForKey:@"POPAccount"];	
+    [self willChangeValueForKey: @"POPAccount"]; // signalling -isPOPAccount changed
+    [self didChangeValueForKey: @"POPAccount"];	
 
     // A change of the server type also has effect on the port. The Account is 'touched' to have bindings recognize the change.
     [self setIncomingServerPort:0];
-    [self willChangeValueForKey:@"incomingServerDefaultPort"];
-    [self didChangeValueForKey:@"incomingServerDefaultPort"];
+    [self willChangeValueForKey: @"incomingServerDefaultPort"];
+    [self didChangeValueForKey: @"incomingServerDefaultPort"];
     
     if (![self isPOPAccount])
     {
@@ -167,27 +167,27 @@
 {
     NSString* tmpValue;
     
-    [self willAccessValueForKey:@"incomingServerName"];
-    tmpValue = [self primitiveValueForKey:@"incomingServerName"];
-    [self didAccessValueForKey:@"incomingServerName"];
+    [self willAccessValueForKey: @"incomingServerName"];
+    tmpValue = [self primitiveValueForKey: @"incomingServerName"];
+    [self didAccessValueForKey: @"incomingServerName"];
     
     return tmpValue;
 }
 
 - (void)setIncomingServerName:(NSString* )value 
 {
-    [self willChangeValueForKey:@"incomingServerName"];
-    [self setPrimitiveValue:value forKey:@"incomingServerName"];
-    [self didChangeValueForKey:@"incomingServerName"];
+    [self willChangeValueForKey: @"incomingServerName"];
+    [self setPrimitiveValue:value forKey: @"incomingServerName"];
+    [self didChangeValueForKey: @"incomingServerName"];
 }
 
 - (int)incomingServerPort 
 {
     NSNumber *tmpValue;
     
-    [self willAccessValueForKey:@"incomingServerPort"];
-    tmpValue = [self primitiveValueForKey:@"incomingServerPort"];
-    [self didAccessValueForKey:@"incomingServerPort"];
+    [self willAccessValueForKey: @"incomingServerPort"];
+    tmpValue = [self primitiveValueForKey: @"incomingServerPort"];
+    [self didAccessValueForKey: @"incomingServerPort"];
     
     int result = (tmpValue != nil) ? [tmpValue intValue] : 0;
     return result ? result : [[self class] defaultPortForIncomingServerType:[self incomingServerType]];
@@ -195,9 +195,9 @@
 
 - (void)setIncomingServerPort:(int)value 
 {
-    [self willChangeValueForKey:@"incomingServerPort"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"incomingServerPort"];
-    [self didChangeValueForKey:@"incomingServerPort"];
+    [self willChangeValueForKey: @"incomingServerPort"];
+    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey: @"incomingServerPort"];
+    [self didChangeValueForKey: @"incomingServerPort"];
 }
 
 - (int)incomingServerDefaultPort
@@ -209,18 +209,18 @@
 {
     NSNumber *tmpValue;
     
-    [self willAccessValueForKey:@"incomingAuthenticationMethod"];
-    tmpValue = [self primitiveValueForKey:@"incomingAuthenticationMethod"];
-    [self didAccessValueForKey:@"incomingAuthenticationMethod"];
+    [self willAccessValueForKey: @"incomingAuthenticationMethod"];
+    tmpValue = [self primitiveValueForKey: @"incomingAuthenticationMethod"];
+    [self didAccessValueForKey: @"incomingAuthenticationMethod"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
 - (void)setIncomingAuthenticationMethod:(int)value 
 {
-    [self willChangeValueForKey:@"incomingAuthenticationMethod"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"incomingAuthenticationMethod"];
-    [self didChangeValueForKey:@"incomingAuthenticationMethod"];
+    [self willChangeValueForKey: @"incomingAuthenticationMethod"];
+    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey: @"incomingAuthenticationMethod"];
+    [self didChangeValueForKey: @"incomingAuthenticationMethod"];
 }
 
 /*
@@ -228,9 +228,9 @@
 {
     NSString* tmpValue;
     
-    [self willAccessValueForKey:@"incomingUsername"];
-    tmpValue = [self primitiveValueForKey:@"incomingUsername"];
-    [self didAccessValueForKey:@"incomingUsername"];
+    [self willAccessValueForKey: @"incomingUsername"];
+    tmpValue = [self primitiveValueForKey: @"incomingUsername"];
+    [self didAccessValueForKey: @"incomingUsername"];
     
     return tmpValue;
 }
@@ -461,9 +461,9 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"retrieveMessageInterval"];
-    tmpValue = [self primitiveValueForKey:@"retrieveMessageInterval"];
-    [self didAccessValueForKey:@"retrieveMessageInterval"];
+    [self willAccessValueForKey: @"retrieveMessageInterval"];
+    tmpValue = [self primitiveValueForKey: @"retrieveMessageInterval"];
+    [self didAccessValueForKey: @"retrieveMessageInterval"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
@@ -480,9 +480,9 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"leaveOnServerDuration"];
-    tmpValue = [self primitiveValueForKey:@"leaveOnServerDuration"];
-    [self didAccessValueForKey:@"leaveOnServerDuration"];
+    [self willAccessValueForKey: @"leaveOnServerDuration"];
+    tmpValue = [self primitiveValueForKey: @"leaveOnServerDuration"];
+    [self didAccessValueForKey: @"leaveOnServerDuration"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
@@ -499,9 +499,9 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"outgoingServerType"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerType"];
-    [self didAccessValueForKey:@"outgoingServerType"];
+    [self willAccessValueForKey: @"outgoingServerType"];
+    tmpValue = [self primitiveValueForKey: @"outgoingServerType"];
+    [self didAccessValueForKey: @"outgoingServerType"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
@@ -522,9 +522,9 @@
 {
     NSString*  tmpValue;
     
-    [self willAccessValueForKey:@"outgoingServerName"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerName"];
-    [self didAccessValueForKey:@"outgoingServerName"];
+    [self willAccessValueForKey: @"outgoingServerName"];
+    tmpValue = [self primitiveValueForKey: @"outgoingServerName"];
+    [self didAccessValueForKey: @"outgoingServerName"];
     
     return tmpValue;
 }
@@ -540,9 +540,9 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"outgoingServerPort"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerPort"];
-    [self didAccessValueForKey:@"outgoingServerPort"];
+    [self willAccessValueForKey: @"outgoingServerPort"];
+    tmpValue = [self primitiveValueForKey: @"outgoingServerPort"];
+    [self didAccessValueForKey: @"outgoingServerPort"];
     
     int result = (tmpValue != nil) ? [tmpValue intValue] : 0;
     return result ? result : [[self class] defaultPortForOutgoingServerType:[self outgoingServerType]];
@@ -565,34 +565,34 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"outgoingAuthenticationMethod"];
-    tmpValue = [self primitiveValueForKey:@"outgoingAuthenticationMethod"];
-    [self didAccessValueForKey:@"outgoingAuthenticationMethod"];
+    [self willAccessValueForKey: @"outgoingAuthenticationMethod"];
+    tmpValue = [self primitiveValueForKey: @"outgoingAuthenticationMethod"];
+    [self didAccessValueForKey: @"outgoingAuthenticationMethod"];
     
     return (tmpValue != nil) ? [tmpValue intValue] : 0;
 }
 
 - (void) setOutgoingAuthenticationMethod: (int) value 
 {
-    [self willChangeValueForKey:@"outgoingAuthenticationMethod"];
+    [self willChangeValueForKey: @"outgoingAuthenticationMethod"];
     [self setPrimitiveValue:[NSNumber numberWithInt: value]
-                     forKey:@"outgoingAuthenticationMethod"];
-    [self didChangeValueForKey:@"outgoingAuthenticationMethod"];
+                     forKey: @"outgoingAuthenticationMethod"];
+    [self didChangeValueForKey: @"outgoingAuthenticationMethod"];
 	
-    [self willChangeValueForKey:@"outgoingUsernameNeeded"];
-    [self didChangeValueForKey:@"outgoingUsernameNeeded"];
+    [self willChangeValueForKey: @"outgoingUsernameNeeded"];
+    [self didChangeValueForKey: @"outgoingUsernameNeeded"];
     
-    [self willChangeValueForKey:@"outgoingUsername"];
-    [self didChangeValueForKey:@"outgoingUsername"];
+    [self willChangeValueForKey: @"outgoingUsername"];
+    [self didChangeValueForKey: @"outgoingUsername"];
 }
 
 - (NSString* )outgoingUsername 
 {
     NSString* tmpValue;
     
-    [self willAccessValueForKey:@"outgoingUsername"];
-    tmpValue = [self primitiveValueForKey:@"outgoingUsername"];
-    [self didAccessValueForKey:@"outgoingUsername"];
+    [self willAccessValueForKey: @"outgoingUsername"];
+    tmpValue = [self primitiveValueForKey: @"outgoingUsername"];
+    [self didAccessValueForKey: @"outgoingUsername"];
     
     return tmpValue;
 }
@@ -613,9 +613,9 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"allowExpiredSSLCertificates"];
-    tmpValue = [self primitiveValueForKey:@"allowExpiredSSLCertificates"];
-    [self didAccessValueForKey:@"allowExpiredSSLCertificates"];
+    [self willAccessValueForKey: @"allowExpiredSSLCertificates"];
+    tmpValue = [self primitiveValueForKey: @"allowExpiredSSLCertificates"];
+    [self didAccessValueForKey: @"allowExpiredSSLCertificates"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
@@ -632,9 +632,9 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"allowAnyRootSSLCertificate"];
-    tmpValue = [self primitiveValueForKey:@"allowAnyRootSSLCertificate"];
-    [self didAccessValueForKey:@"allowAnyRootSSLCertificate"];
+    [self willAccessValueForKey: @"allowAnyRootSSLCertificate"];
+    tmpValue = [self primitiveValueForKey: @"allowAnyRootSSLCertificate"];
+    [self didAccessValueForKey: @"allowAnyRootSSLCertificate"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
@@ -651,19 +651,19 @@
 {
     NSNumber* tmpValue;
     
-    [self willAccessValueForKey:@"verifySSLCertificateChain"];
-    tmpValue = [self primitiveValueForKey:@"verifySSLCertificateChain"];
-    [self didAccessValueForKey:@"verifySSLCertificateChain"];
+    [self willAccessValueForKey: @"verifySSLCertificateChain"];
+    tmpValue = [self primitiveValueForKey: @"verifySSLCertificateChain"];
+    [self didAccessValueForKey: @"verifySSLCertificateChain"];
     
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
 - (void)setVerifySSLCertificateChain:(BOOL)value 
 {
-    [self willChangeValueForKey:@"verifySSLCertificateChain"];
+    [self willChangeValueForKey: @"verifySSLCertificateChain"];
     [self setPrimitiveValue:[NSNumber numberWithBool:value]
-                     forKey:@"verifySSLCertificateChain"];
-    [self didChangeValueForKey:@"verifySSLCertificateChain"];
+                     forKey: @"verifySSLCertificateChain"];
+    [self didChangeValueForKey: @"verifySSLCertificateChain"];
 }
 
 - (BOOL)isPOPAccount

@@ -74,7 +74,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 - (void) updateWindowTitle
 {
-    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey:@"name"]]];
+    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey: @"name"]]];
 }
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
@@ -158,7 +158,7 @@ static BOOL isThreadItem(id item)
 - (NSArray *)threadsByDate
     /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-	return [group valueForKey:@"threadsByDate"];
+	return [group valueForKey: @"threadsByDate"];
 }
 
 - (int)threadLimitCount 
@@ -392,7 +392,7 @@ static BOOL isThreadItem(id item)
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                selectedThread = [message valueForKey:@"thread"];
+                selectedThread = [message valueForKey: @"thread"];
             } 
             else 
             {
@@ -400,7 +400,7 @@ static BOOL isThreadItem(id item)
                 
                 if ([selectedThread containsSingleMessage]) 
                 {
-                    message = [[selectedThread valueForKey:@"messages"] lastObject];
+                    message = [[selectedThread valueForKey: @"messages"] lastObject];
                 } 
                 else 
                 {
@@ -619,7 +619,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initForward:message profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction)applySortingAndFiltering:(id)sender
+- (IBAction) applySortingAndFiltering: (id) sender
 /*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
 {
     NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
@@ -631,32 +631,36 @@ static BOOL isThreadItem(id item)
         if ([threadsView isRowSelected: i]) {
 			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
             // get one of the selected threads:
-            GIThread *thread = [threadsView itemAtRow: i];
-            NSAssert([thread isKindOfClass: [GIThread class]], @"assuming object is a thread");
-            
-            // remove selected thread from receiver's group:
-            [[self group] removeValue: thread forKey: @"threadsByDate"];
-            BOOL threadWasPutIntoAtLeastOneGroup = NO;
-            
-            @try {
-                // apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
-                NSEnumerator* enumerator = [[thread messages] objectEnumerator];
-                GIMessage* message;
-                
-                while (message = [enumerator nextObject]) {
-                    threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage: message flags: 0];
-                }
-            } @catch (NSException* localException) {
-                @throw;
-            } @finally {
-                if (!threadWasPutIntoAtLeastOneGroup) {
-					//[[self group] addValue: thread forKey: @"threadsByDate"];
-					[thread addToGroups_Manually: [self group]]; // does dupe-check
+            GIThread* thread = [threadsView itemAtRow: i];
+			
+			// Skip messages - should we apply to message also or to the messages' thread?
+			if (isThreadItem(thread)) {
+				
+				// Remove selected thread from receiver's group:
+				[[self group] removeValue: thread forKey: @"threadsByDate"];
+#warning Dupe problem lies here!
+				BOOL threadWasPutIntoAtLeastOneGroup = NO;
+				
+				@try {
+					// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
+					NSEnumerator* enumerator = [[thread messages] objectEnumerator];
+					GIMessage* message;
+					
+					while (message = [enumerator nextObject]) {
+						threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage: message flags: 0];
+					}
+				} @catch (NSException* localException) {
+					@throw;
+				} @finally {
+					if (!threadWasPutIntoAtLeastOneGroup) {
+						//[[self group] addValue: thread forKey: @"threadsByDate"];
+						[thread addToGroups_Manually: [self group]]; // does dupe-check
+					}
 				}
-            }
-			[pool release];
-        }
-    }
+				[pool release];
+			}
+		}
+	}
     // commit changes:
     [NSApp saveAction: self];
     [threadsView selectRow: firstIndex byExtendingSelection: NO];
@@ -716,8 +720,8 @@ static BOOL isThreadItem(id item)
             [tabView selectTabViewItemWithIdentifier:@"searchresult"];
             
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            BOOL limitSearchToGroup = [defaults integerForKey:@"searchRange"] == 1;
-            int defaultFieldTag = [defaults integerForKey:@"defaultSearchField"];
+            BOOL limitSearchToGroup = [defaults integerForKey: @"searchRange"] == 1;
+            int defaultFieldTag = [defaults integerForKey: @"defaultSearchField"];
             int searchLimit = [defaults integerForKey:SearchHitLimit];
 
             NSString *defaultField = @"body";
@@ -1039,6 +1043,8 @@ static BOOL isThreadItem(id item)
 			[threadsView scrollRowToVisible:[threadsView numberOfRows]-1];
             
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+			
+			@try {
             id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
             
             if (lastSelectedMessageItem)
@@ -1062,6 +1068,9 @@ static BOOL isThreadItem(id item)
                 
                 [self setDisplayedMessage:message thread:thread];
             }
+			} @catch (NSException* localException) {
+				// ignored
+			}
 		}
     }
 }
@@ -1508,7 +1517,7 @@ static NSAttributedString* spacer2()
     if ([[aTableColumn identifier] isEqualToString: @"date"])
     {
         BOOL isRead = [message hasFlags:OPSeenStatus];
-        NSCalendarDate *date = [message valueForKey:@"date"];
+        NSCalendarDate *date = [message valueForKey: @"date"];
                 
         NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
         
@@ -1521,7 +1530,7 @@ static NSAttributedString* spacer2()
         NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
         
         BOOL isRead  = [message hasFlags:OPSeenStatus];
-        NSString *subject = [message valueForKey:@"subject"];
+        NSString *subject = [message valueForKey: @"subject"];
         
         if (!subject) subject = @"";
         

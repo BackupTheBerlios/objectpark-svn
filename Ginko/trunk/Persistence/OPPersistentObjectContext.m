@@ -197,6 +197,8 @@ typedef struct {
 - (id) objectWithURLString: (NSString*) urlString
 /*" Returns (possibly a fault object to) an OPPersistentObject. "*/
 {
+	if (!urlString) return nil;
+	
 	NSArray* pathComponents = [[urlString stringByReplacingPercentEscapesUsingEncoding: NSISOLatin1StringEncoding] pathComponents];
 	NSParameterAssert([pathComponents count]>=4);
 	//NSParameterAssert([[pathComponents objectAtIndex: 0] isEqualToString: @"x-opo"]);
@@ -237,7 +239,7 @@ static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object
 	//const FakeObject* o1 = object1;
 	//const FakeObject* o2 = object2;
 	BOOL fastResult = (((OPPersistentObject*)object1)->oid == ((OPPersistentObject*)object2)->oid) 
-	&& ([(OPPersistentObject*)object1 class] == [(OPPersistentObject*)object2 class]);
+	&& (((NSObject*)object1)->isa == ((NSObject*)object2)->isa || [(id)object1 class] == [(id)object2 class]);
 	
 	//NSLog(@"Comparing %@ and %@.", object1, object2);
 	// Optimize by removing 2-4 method calls:
@@ -413,7 +415,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		[pool release]; pool = [[NSAutoreleasePool alloc] init];
 		
 		//[db commitTransaction]; [db beginTransaction]; // just for testing
-		
+
 		if ([deletedObjects count]) {
 			
 			NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
@@ -436,6 +438,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		NSEnumerator* renum = [relationshipChangesByJoinTable objectEnumerator];
 		OPObjectRelationship* relationshipChanges;
 		while (relationshipChanges = [renum nextObject]) {
+			
+			NSLog(@"Saving relationship changes: %@", relationshipChanges);
 			
 			if ([relationshipChanges changeCount]) {
 				

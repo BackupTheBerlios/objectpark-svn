@@ -214,11 +214,11 @@
     if (group)
     {
         NSSavePanel *panel = [NSSavePanel savePanel];
-        [panel setTitle:[NSString stringWithFormat:@"Exporting messagebox '%@'", [group valueForKey:@"name"]]];
+        [panel setTitle:[NSString stringWithFormat:@"Exporting messagebox '%@'", [group valueForKey: @"name"]]];
         [panel setPrompt:@"Export"];
         [panel setNameFieldLabel:@"Export to:"];
         
-        if ([panel runModalForDirectory:nil file:[NSString stringWithFormat:@"%@.mbox", [group valueForKey:@"name"]]] == NSFileHandlingPanelCancelButton)
+        if ([panel runModalForDirectory:nil file:[NSString stringWithFormat:@"%@.mbox", [group valueForKey: @"name"]]] == NSFileHandlingPanelCancelButton)
             return;
             
         [OPJobs scheduleJobWithName:@"Mbox export" target:group selector:@selector(exportAsMboxFileWithPath:) argument:[panel filename] synchronizedObject:nil /*group*/];
@@ -323,12 +323,12 @@
     {
         if ([item isKindOfClass:[NSMutableArray class]]) 
         {
-            return [[item objectAtIndex:0] valueForKey:@"name"];
+            return [[item objectAtIndex:0] valueForKey: @"name"];
         } 
         else if (item) 
         {
             GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:item];
-            return [group valueForKey:@"name"];
+            return [group valueForKey: @"name"];
         }
     }
     
@@ -359,7 +359,7 @@
 {
     if ([item isKindOfClass:[NSMutableArray class]]) // folder:
     {
-        [[item objectAtIndex:0] setObject:object forKey:@"name"];
+        [[item objectAtIndex:0] setObject:object forKey: @"name"];
         [GIMessageGroup saveHierarchy];
         //[outlineView selectRow: [outlineView rowForItem:item]+1 byExtendingSelection: NO];
         //[[outlineView window] endEditingFor:outlineView];
@@ -367,7 +367,7 @@
     else // message group:
     {
         GIMessageGroup *itemGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:item];
-        [itemGroup setValue:object forKey:@"name"];
+        [itemGroup setValue:object forKey: @"name"];
         [NSApp saveAction:self];
     }
 }
@@ -381,7 +381,7 @@
 {
 	if ([item isKindOfClass:[NSMutableArray class]]) 
     {
-		return [[item objectAtIndex:0] objectForKey:@"uid"];
+		return [[item objectAtIndex:0] objectForKey: @"uid"];
 	}
     
     return nil;

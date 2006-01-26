@@ -161,28 +161,29 @@ static GIActivityPanelController *panel = nil;
 
 - (id) tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
 {
-    NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
-    
-    if (progressInfo) {
-        NSString* identifier = [aTableColumn identifier];
-        //NSLog(@"Identifier: %@", identifier);
-		/*
-        if ([identifier isEqualToString: @"progress"]) {
-            if ([progressInfo isJobProgressIndeterminate]) {
-                return @"Running";
-            } else {
-                double minValue = [progressInfo jobProgressMinValue];
-                double normalizedMax = [progressInfo jobProgressMaxValue] - minValue;
-                double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;
-                double percentComplete = (normalizedCurrentValue / normalizedMax) * (double)100.0;
-				
-                return [NSString stringWithFormat: @"%.1f %%\n%d/%d", percentComplete, (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
-            }
-        } else 
-		 */
-		 if ([identifier isEqualToString: @"description"]) {
-            return [NSString stringWithFormat: @"%@:\n  %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
-        }
+	NSString* identifier = [aTableColumn identifier];
+	//NSLog(@"Identifier: %@", identifier);
+	/*
+	 if ([identifier isEqualToString: @"progress"]) {
+		 if ([progressInfo isJobProgressIndeterminate]) {
+			 return @"Running";
+		 } else {
+			 double minValue = [progressInfo jobProgressMinValue];
+			 double normalizedMax = [progressInfo jobProgressMaxValue] - minValue;
+			 double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;
+			 double percentComplete = (normalizedCurrentValue / normalizedMax) * (double)100.0;
+			 
+			 return [NSString stringWithFormat: @"%.1f %%\n%d/%d", percentComplete, (unsigned long)[progressInfo jobProgressCurrentValue], (unsigned long)[progressInfo jobProgressMaxValue]];
+		 }
+	 } else 
+	 */
+	if ([identifier isEqualToString: @"description"]) {
+		NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
+		
+		if (progressInfo) {
+			return [NSString stringWithFormat: @"%@ - %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
+		}
+        
     }
     
     return @""; // should not occur

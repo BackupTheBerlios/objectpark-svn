@@ -456,23 +456,28 @@ static NSMutableArray* root = nil;
     return result;
 }
 
-+ (void)moveThreadsWithOids:(NSArray *)threadOids 
-				  fromGroup:(GIMessageGroup *)sourceGroup 
-					toGroup:(GIMessageGroup *)destinationGroup
++ (void) moveThreadsWithOids: (NSArray*) threadOids 
+				   fromGroup: (GIMessageGroup*) sourceGroup 
+					 toGroup: (GIMessageGroup*) destinationGroup
 {
-    NSEnumerator *enumerator = [threadOids objectEnumerator];
-    NSNumber *oid;
-    
-    while (oid = [enumerator nextObject]) 
-    {
-        GIThread *thread = [[OPPersistentObjectContext threadContext] objectForOid:[oid unsignedLongLongValue] ofClass:[GIThread class]];
-        
-        // remove thread from source group:
-        [thread removeValue:sourceGroup forKey:@"groups"];
-        
-        // add thread to destination group:
-        [thread addValue:destinationGroup forKey:@"groups"];
-    }
+	if (sourceGroup != destinationGroup) {
+		
+		NSEnumerator *enumerator = [threadOids objectEnumerator];
+		NSNumber *oid;
+		
+		while (oid = [enumerator nextObject]) {
+			GIThread *thread = [[OPPersistentObjectContext threadContext] objectForOid:[oid unsignedLongLongValue] ofClass:[GIThread class]];
+			
+			// remove thread from source group:
+			[thread removeValue:sourceGroup forKey: @"groups"];
+			
+			// add thread to destination group:
+			[thread addValue:destinationGroup forKey: @"groups"];
+			
+		}
+	} else {
+		NSLog(@"Warning: Try to move into same group %@", self);
+	}
 }
 
 + (void) removeHierarchyNode: (id) entry
@@ -574,11 +579,11 @@ static NSMutableArray* root = nil;
 
 - (void) exportAsMboxFileWithPath:(NSString*)path
 {
-    OPDebugLog(MESSAGEGROUP, EXPORT_FILE, @"Exporting mbox '%@' to file at %@", [self valueForKey:@"name"], path);
+    OPDebugLog(MESSAGEGROUP, EXPORT_FILE, @"Exporting mbox '%@' to file at %@", [self valueForKey: @"name"], path);
     
     OPMBoxFile* mbox = [OPMBoxFile mboxWithPath: path createIfNotPresent: YES];
     
-    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"determining messages in group '%@'", @"mbox export, determining messages"), [self valueForKey:@"name"]]]];
+    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"determining messages in group '%@'", @"mbox export, determining messages"), [self valueForKey: @"name"]]]];
 	NSArray* allMessages = [self allMessages];
     unsigned int messagesToExport = [allMessages count];
     NSEnumerator* messages = [allMessages objectEnumerator];
@@ -587,7 +592,7 @@ static NSMutableArray* root = nil;
     
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
-    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey:@"name"]]]];
+    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
     while (msg = [messages nextObject]) {
         
 #warning Improve From_ line
@@ -607,7 +612,7 @@ nil, //                                                     [[[NSString alloc] i
         [msg refault];
             
         if (++exportedMessages % 100 == 0) {
-            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey:@"name"]]]];
+            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
             OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
             
             if ([OPJobs shouldTerminate])
@@ -620,7 +625,7 @@ nil, //                                                     [[[NSString alloc] i
     
     [pool release];
     
-    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey:@"name"]]]];
+    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
     OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
     
 //     [OPJobs setResult:@"ready"];

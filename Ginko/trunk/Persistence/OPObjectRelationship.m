@@ -58,7 +58,7 @@
 
 
 - (NSEnumerator*) addedRelationsEnumerator
-	/*" Enumerates all OPObjectRelation objects in no particular order. "*/
+/*" Enumerates all OPObjectRelation objects in no particular order. "*/
 {
 	return [addedRelations objectEnumerator];
 }
@@ -66,6 +66,7 @@
 - (void) addRelationNamed: (NSString*) relationName 
 					 from: (OPPersistentObject*) sourceObject
 					   to: (OPPersistentObject*) targetObject
+/*" Additions first canel out a previous removal! "*/
 {
 	// Swap 1st, 2nd as needed:
 	if (secondAttribute && [relationName isEqualToString: secondAttribute->name]) {
@@ -74,8 +75,13 @@
 		NSParameterAssert(firstAttribute && [relationName isEqualToString: firstAttribute->name]);
 	}
 	OPObjectPair* newRelation = [[OPObjectPair alloc] initWithObjects: sourceObject : targetObject];
-	[removedRelations removeObject: newRelation];
-	[addedRelations addObject: newRelation];
+	
+	// Additions canel out removals:
+	if ([removedRelations containsObject: newRelation]) {
+		[removedRelations removeObject: newRelation];
+	} else {
+		[addedRelations addObject: newRelation];
+	}
 	[newRelation release];
 }
 
@@ -87,6 +93,7 @@
 - (void) removeRelationNamed: (NSString*) relationName 
 						from: (OPPersistentObject*) sourceObject
 						  to: (OPPersistentObject*) targetObject
+/*" Removals first cancel out existing additions. "*/
 {
 	// Swap 1st, 2nd as needed:
 	if (secondAttribute && [relationName isEqualToString: secondAttribute->name]) {
@@ -95,8 +102,13 @@
 		NSParameterAssert(firstAttribute && [relationName isEqualToString: firstAttribute->name]);
 	}
 	OPObjectPair* removedRelation = [[OPObjectPair alloc] initWithObjects: sourceObject : targetObject]; // Optimize by faking object with stack allocated struct.
-	[removedRelations addObject: removedRelation];
-	[addedRelations removeObject: removedRelation];
+	
+	// Removals cancel out additions!
+	if ([addedRelations containsObject: removedRelation]) {
+		[addedRelations removeObject: removedRelation];
+	} else {
+		[removedRelations addObject: removedRelation];
+	}
 	[removedRelation release];
 }
 

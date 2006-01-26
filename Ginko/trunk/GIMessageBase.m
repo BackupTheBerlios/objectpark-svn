@@ -110,17 +110,17 @@
 
 + (void)addTrashThread:(GIThread *)thread
 {
-    [[GIMessageGroup draftMessageGroup] removeValue:thread forKey:@"threadsByDate"];
-    [[GIMessageGroup queuedMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+    [[GIMessageGroup draftMessageGroup] removeValue:thread forKey: @"threadsByDate"];
+    [[GIMessageGroup queuedMessageGroup] removeValue:thread forKey: @"threadsByDate"];
     
-    [[GIMessageGroup trashMessageGroup] addValue:thread forKey:@"threadsByDate"];
+    [[GIMessageGroup trashMessageGroup] addValue:thread forKey: @"threadsByDate"];
 }
 
 + (void)removeDraftMessage:(GIMessage *)aMessage
 /*" Removes group and message from aMessage's thread. "*/
 {
     GIThread *thread = [aMessage thread];
-    NSAssert(thread != nil, @"draft message without thread");
+    NSAssert(thread != nil, @"draft message without thread: %@");
     
     [thread removeValue:[GIMessageGroup draftMessageGroup] forKey:@"groups"];
     [thread removeValue:aMessage forKey:@"messages"];
