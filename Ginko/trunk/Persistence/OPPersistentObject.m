@@ -625,46 +625,49 @@
 
 - (void) removeValue: (id) value forKey: (NSString*) key
 {
-	OPClassDescription* cd = [[self class] persistentClassDescription];
-	OPAttributeDescription* ad = [cd attributeWithName: key];
-	OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
-	NSString* inverseKey = [ad inverseRelationshipKey];
-
-	// Check, if it is a many-to-many relation:
-	if (r) {
-		// Record relationship change in persistent context:
-		[r removeRelationNamed: key from: self to: value];
+	
+	if ([[self valueForKey: key] containsObject: value]) { // check only necessary for n:m relations?
 		
-		if (inverseKey) {
-			// Also update inverse relationship (if any):
-			[value willChangeToManyRelationshipForKey: inverseKey];
-			if ([[value attributeValues] objectForKey: inverseKey]) {
-				[value removePrimitiveValue: self forKey: inverseKey];
+		OPClassDescription* cd = [[self class] persistentClassDescription];
+		OPAttributeDescription* ad = [cd attributeWithName: key];
+		OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+		NSString* inverseKey = [ad inverseRelationshipKey];
+		
+		// Check, if it is a many-to-many relation:
+		if (r) {
+			// Record relationship change in persistent context:
+			[r removeRelationNamed: key from: self to: value];
+			
+			if (inverseKey) {
+				// Also update inverse relationship (if any):
+				[value willChangeToManyRelationshipForKey: inverseKey];
+				if ([[value attributeValues] objectForKey: inverseKey]) {
+					[value removePrimitiveValue: self forKey: inverseKey];
+				}
+				[value didChangeToManyRelationshipForKey: inverseKey];
 			}
-			[value didChangeToManyRelationshipForKey: inverseKey];
+			
+			if (![attributes objectForKey: key]) {
+				// The relationship has not fired yet:
+				[self willChangeToManyRelationshipForKey: key];
+				[value didChangeToManyRelationshipForKey: inverseKey];
+				return; // we'll pick up the change the next time this fault is fired.
+			}
+			
+		} else {
+			// n:1 relationship
+			if (inverseKey) {
+				// Eager updates are necessary for now:
+				[value willChangeValueForKey: inverseKey];
+				[value setPrimitiveValue: nil forKey: inverseKey];
+				[value didChangeValueForKey: inverseKey];
+			}
 		}
 		
-		if (![attributes objectForKey: key]) {
-			// The relationship has not fired yet:
-			[self willChangeToManyRelationshipForKey: key];
-			[value didChangeToManyRelationshipForKey: inverseKey];
-			return; // we'll pick up the change the next time this fault is fired.
-		}
-		
-	} else {
-		// n:1 relationship
-		if (inverseKey) {
-			// Eager updates are necessary for now:
-			[value willChangeValueForKey: inverseKey];
-			[value setPrimitiveValue: nil forKey: inverseKey];
-			[value didChangeValueForKey: inverseKey];
-		}
+		[self willChangeValueForKey: key];
+		[self removePrimitiveValue: value forKey: key];
+		[self didChangeValueForKey: key];
 	}
-	
-	[self willChangeValueForKey: key];
-	[self removePrimitiveValue: value forKey: key];
-	[self didChangeValueForKey: key];
-	
 }
 
 - (NSArray*) validationErrors

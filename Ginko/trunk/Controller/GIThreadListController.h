@@ -69,10 +69,10 @@
 - (void) modelChanged: (NSNotification*) aNotification; // remove as soon as possible
 
 /*" Actions "*/
-- (IBAction)showThreads:(id)sender;
-- (IBAction)threadFilterPopUpChanged:(id)sender;
-- (IBAction)selectThreadsWithCurrentSubject:(id)sender;
-- (IBAction)search:(id)sender;
+- (IBAction) showThreads: (id) sender;
+- (IBAction) threadFilterPopUpChanged: (id) sender;
+- (IBAction) selectThreadsWithCurrentSubject: (id) sender;
+- (IBAction) search: (id) sender;
 
 @end
 

@@ -36,7 +36,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 - (void)awakeCommentTree;
 - (void)deallocCommentTree;
-- (IBAction)selectTreeCell:(id)sender;
+- (IBAction)selectTreeCell: (id) sender;
 - (void)updateCommentTree:(BOOL)rebuildThread;
 - (BOOL)matrixIsVisible;
 
@@ -375,7 +375,7 @@ static BOOL isThreadItem(id item)
     return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"];
 }
 
-- (BOOL)openSelection:(id)sender
+- (BOOL)openSelection: (id) sender
 {    
     if ([self threadsShownCurrently]) 
     {
@@ -509,7 +509,7 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
-- (IBAction)closeSelection:(id)sender
+- (IBAction)closeSelection: (id) sender
 {
     if (sender == messageTextView) 
     {
@@ -574,7 +574,7 @@ static BOOL isThreadItem(id item)
     return result;
 }
 
-- (IBAction)replySender:(id)sender
+- (IBAction)replySender: (id) sender
 {
     GIMessage* message = [self selectedMessage];
     
@@ -583,7 +583,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initReplyTo:message all:NO profile: [self profileForMessage:message]] autorelease];
 }
 
-- (IBAction)followup:(id)sender
+- (IBAction)followup: (id) sender
 {
     GIMessage *message = [self selectedMessage];
     
@@ -592,7 +592,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initFollowupTo:message profile: [[self group] defaultProfile]] autorelease];
 }
 
-- (IBAction)replyAll:(id)sender
+- (IBAction)replyAll: (id) sender
 {
     GIMessage* message = [self selectedMessage];
     
@@ -601,7 +601,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initReplyTo:message all: YES profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction)replyDefault:(id)sender
+- (IBAction)replyDefault: (id) sender
 {
     GIMessage *message = [self selectedMessage];
 
@@ -612,11 +612,11 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction)forward:(id)sender
+- (IBAction) forward: (id) sender
 {
     GIMessage* message = [self selectedMessage];
         
-    [[[GIMessageEditorController alloc] initForward:message profile: [self profileForMessage: message]] autorelease];
+    [[[GIMessageEditorController alloc] initForward: message profile: [self profileForMessage: message]] autorelease];
 }
 
 - (IBAction) applySortingAndFiltering: (id) sender
@@ -638,7 +638,7 @@ static BOOL isThreadItem(id item)
 				
 				// Remove selected thread from receiver's group:
 				[[self group] removeValue: thread forKey: @"threadsByDate"];
-#warning Dupe problem lies here!
+
 				BOOL threadWasPutIntoAtLeastOneGroup = NO;
 				
 				@try {
@@ -667,7 +667,7 @@ static BOOL isThreadItem(id item)
     [threadsView scrollRowToVisible: firstIndex];
 }
 
-- (IBAction)threadFilterPopUpChanged:(id)sender
+- (IBAction) threadFilterPopUpChanged: (id) sender
 {
     if (NSDebugEnabled) NSLog(@"-threadFilterPopUpChanged:");
 
@@ -679,40 +679,35 @@ static BOOL isThreadItem(id item)
     [self modelChanged: nil];
 }
 
-- (NSArray *)hits
+- (NSArray*) hits
 {
     return hits;
 }
 
-- (void)setHits:(NSArray *)someHits
+- (void) setHits: (NSArray*) someHits
 {
-    if (hits != someHits)
-    {
+    if (hits != someHits) {
         [hits release];
         hits = [someHits retain];
     }
 }
 
-- (IBAction)search:(id)sender
+- (IBAction) search: (id) sender
 {
     if (!searchField) searchField = sender;
     
-    NSString *query = [searchField stringValue];
+    NSString* query = [searchField stringValue];
     
-    if ([query length])
-    {;
-        @try
-        {
+    if ([query length]) {
+        @try {
             [OPJobs suspendPendingJobs];
             
             NSArray *conflictingJobs = [OPJobs runningJobsWithName:[GIFulltextIndex jobName]];
-            if ([conflictingJobs count])
-            {
+            if ([conflictingJobs count]) {
                 NSEnumerator *enumerator = [conflictingJobs objectEnumerator];
                 NSNumber *jobId;
                 
-                while (jobId = [enumerator nextObject])
-                {
+                while (jobId = [enumerator nextObject]) {
                     [OPJobs suggestTerminatingJob:jobId];
                 }
             }
@@ -725,8 +720,7 @@ static BOOL isThreadItem(id item)
             int searchLimit = [defaults integerForKey:SearchHitLimit];
 
             NSString *defaultField = @"body";
-            switch (defaultFieldTag)
-            {
+            switch (defaultFieldTag) {
                 case 1: defaultField = @"subject"; break;
                 case 2: defaultField = @"author"; break;
                 default: break;
@@ -739,29 +733,23 @@ static BOOL isThreadItem(id item)
             NSLog(@"hits count = %d", [hits count]);
             
             [searchHitsTableView reloadData];
-        }
-        @catch (NSException *localException)
-        {
+        } @catch (NSException *localException) {
             @throw;
-        }
-        @finally
-        {
+        } @finally {
             [OPJobs resumePendingJobs];
         }
-    }
-    else
-    {
-        [self setHits:nil];
-        [tabView selectTabViewItemWithIdentifier:@"threads"];
+    } else {
+        [self setHits: nil];
+        [tabView selectTabViewItemWithIdentifier: @"threads"];
     }
 }
 
-- (IBAction)showThreads:(id)sender
+- (IBAction) showThreads: (id) sender
 {
     [tabView selectFirstTabViewItem: sender];
 }
 
-- (IBAction)showRawSource:(id)sender
+- (IBAction) showRawSource: (id) sender
 {
     showRawSource = !showRawSource;
     
@@ -838,7 +826,7 @@ static BOOL isThreadItem(id item)
     //[threadsView reloadData];
 }
 
-- (IBAction)toggleReadFlag:(id)sender
+- (IBAction)toggleReadFlag: (id) sender
 {
     [self toggleFlag:OPSeenStatus];
 }
@@ -931,7 +919,7 @@ static BOOL isThreadItem(id item)
     [GIApp saveAction: self];
 }
 
-- (IBAction)selectThreadsWithCurrentSubject:(id)sender
+- (IBAction)selectThreadsWithCurrentSubject: (id) sender
 /*" Joins all threads with the subject of the selected thread. "*/
 {
     NSArray* selectedThreads = [self selectedThreads];
@@ -951,19 +939,19 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction)joinThreads:(id)sender
+- (IBAction)joinThreads: (id) sender
 /*" Joins the selected threads into one. "*/
 {
     [self joinThreads];
 }
 
-- (IBAction)extractThread:(id)sender
+- (IBAction)extractThread: (id) sender
 /*" Creates a new thread for the selected messages. "*/
 {
     NSLog(@"Should extractThread here.");
 }
 
-- (IBAction)moveSelectionToTrash:(id)sender
+- (IBAction)moveSelectionToTrash: (id) sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
     NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
@@ -1761,7 +1749,7 @@ NSMutableArray* border = nil;
     [commentsMatrix scrollCellToVisibleAtRow: row+1 column: column+1];
 }
 
-- (IBAction)selectTreeCell:(id)sender
+- (IBAction)selectTreeCell: (id) sender
 /*" Displays the corresponding message. "*/
 {
     GIMessage *selectedMessage = [[sender selectedCell] representedObject];
@@ -1772,7 +1760,7 @@ NSMutableArray* border = nil;
 }
 
 // navigation (triggered by menu and keyboard shortcuts)
-- (IBAction)navigateUpInMatrix:(id)sender
+- (IBAction)navigateUpInMatrix: (id) sender
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1792,7 +1780,7 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction)navigateDownInMatrix:(id)sender
+- (IBAction)navigateDownInMatrix: (id) sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1809,7 +1797,7 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction)navigateLeftInMatrix:(id)sender
+- (IBAction)navigateLeftInMatrix: (id) sender
 /*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1829,7 +1817,7 @@ NSMutableArray* border = nil;
     }
 }
 
-- (IBAction)navigateRightInMatrix:(id)sender
+- (IBAction)navigateRightInMatrix: (id) sender
 /*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 

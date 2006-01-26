@@ -439,7 +439,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		OPObjectRelationship* relationshipChanges;
 		while (relationshipChanges = [renum nextObject]) {
 			
-			NSLog(@"Saving relationship changes: %@", relationshipChanges);
+			//NSLog(@"Saving relationship changes: %@", relationshipChanges);
 			
 			if ([relationshipChanges changeCount]) {
 				

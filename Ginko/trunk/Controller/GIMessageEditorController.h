@@ -53,22 +53,22 @@ typedef enum
     NSArray* defaultIdentifiers;
 }
 
-- (id)initWithMessage: (GIMessage*) aMessage;
-- (id)initNewMessageWithProfile: (GIProfile*) aProfile;
-- (id)initReplyTo: (GIMessage*) aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile;
-- (id)initFollowupTo: (GIMessage*) aMessage profile:(GIProfile *)aProfile;
-- (id)initForward: (GIMessage*) aMessage profile:(GIProfile *)aProfile;
+- (id) initWithMessage: (GIMessage*) aMessage;
+- (id) initNewMessageWithProfile: (GIProfile*) aProfile;
+- (id) initReplyTo: (GIMessage*) aMessage all: (BOOL) toAll profile: (GIProfile*) aProfile;
+- (id) initFollowupTo: (GIMessage*) aMessage profile: (GIProfile*) aProfile;
+- (id) initForward: (GIMessage*) aMessage profile: (GIProfile*) aProfile;
 
 - (BOOL)validateSelector:(SEL)aSelector;
 - (GIProfile *)profile;
 
-- (IBAction)addCc:(id)sender;
-- (IBAction)addBcc:(id)sender;
-- (IBAction)addReplyTo:(id)sender;
-- (IBAction)replySender:(id)sender;
-- (IBAction)replyAll:(id)sender;
-- (IBAction)followup:(id)sender;
-- (IBAction)saveMessage:(id)sender;
+- (IBAction) addCc: (id) sender;
+- (IBAction) addBcc: (id) sender;
+- (IBAction) addReplyTo: (id) sender;
+- (IBAction) replySender: (id) sender;
+- (IBAction) replyAll: (id) sender;
+- (IBAction) followup: (id) sender;
+- (IBAction) saveMessage: (id) sender;
 
 @end
 
@@ -78,7 +78,7 @@ typedef enum
 - (void) updateHeaders;
 - (BOOL) hasHeaderTextFieldWithFieldName: (NSString*) aFieldName;
 - (OPSizingTextField*) headerTextFieldWithFieldName: (NSString*) aFieldName;
-- (IBAction)switchProfile:(id)sender;
+- (IBAction) switchProfile: (id) sender;
 - (void) takeValuesFromHeaderFields;
 - (void) validateSelectedProfile;
 

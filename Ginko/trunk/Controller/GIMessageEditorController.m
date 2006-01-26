@@ -180,18 +180,26 @@
     return self;
 }
 
-- (id)initForward: (GIMessage*) aMessage profile:(GIProfile *)aProfile
+- (id) initForward: (GIMessage*) aMessage profile: (GIProfile*) aProfile
 {
     if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         profile = [aProfile retain];
         
-        [self setReplyForwardSubjectFromMessage:aMessage];
-        [self appendForwardContentFromMessage:aMessage];
+        [self setReplyForwardSubjectFromMessage: aMessage];
+		
+		// We are adding a references header even to email forwardings in order to be able to
+		// thread them correctly with the original mail forwarded - regardless of subject:
+		
+		if (![headerFields objectForKey: @"References"]) {
+			[headerFields setObject: [aMessage messageId] forKey: @"References"];
+		}
+		
+        [self appendForwardContentFromMessage: aMessage];
         type = MessageTypeForward;
         shouldAppendSignature = YES;
                 
-        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
+        [NSBundle loadNibNamed: @"MessageEditor" owner: self];
         
         [self updateHeaders];
         [self updateMessageTextView];
@@ -200,7 +208,6 @@
         [window makeFirstResponder: messageTextView];
         [window makeKeyAndOrderFront: self];
     }
-    
     return self;
 }
 
@@ -661,22 +668,20 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void) addReferenceToMessage: (GIMessage*) aMessage
 /*"Adds a "references:" or "In-Reply-To:" header to the message to create."*/
 {
-    if ([aMessage isUsenetMessage]) // Make References: header line
-    {
-        NSMutableString *references;
+    if ([aMessage isUsenetMessage]) {
+		
+        NSMutableString* references = [[[aMessage internetMessage] bodyForHeaderField: @"references"] mutableCopy];
         
-        if (! (references = [[[aMessage internetMessage] bodyForHeaderField: @"references"] mutableCopy]))
-        {
+		// Build References: header line:
+        if (! references) {
             references = [[NSMutableString alloc] init];
         }
         
-        if ([references length] == 0)
-        {
-            NSString *inReplyTo;
+        if ([references length] == 0) {
+            NSString* inReplyTo = [[aMessage internetMessage] bodyForHeaderField: @"In-Reply-To"];
             
-            if (inReplyTo = [[aMessage internetMessage] bodyForHeaderField: @"In-Reply-To"])
-            {
-                [references setString:inReplyTo];
+            if (inReplyTo) {
+                [references setString: inReplyTo];
             }
         }
         
