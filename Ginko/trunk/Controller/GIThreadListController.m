@@ -826,35 +826,40 @@ static BOOL isThreadItem(id item)
     //[threadsView reloadData];
 }
 
-- (IBAction)toggleReadFlag: (id) sender
+- (IBAction)toggleReadFlag:(id)sender
 {
     [self toggleFlag:OPSeenStatus];
 }
 
-- (NSArray*) selectedThreads
+- (IBAction)toggleJunkFlag:(id)sender
+{
+    [self toggleFlag:OPJunkMailStatus];
+}
+
+- (NSArray *)selectedThreads
 /*" Returns a newly created array of threads selected. "*/
 {
-    NSMutableArray* result = [NSMutableArray array];
-    NSIndexSet* set = [threadsView selectedRowIndexes];
+    NSMutableArray *result = [NSMutableArray array];
+    NSIndexSet *set = [threadsView selectedRowIndexes];
 	
-    if ([set count]) {
+    if ([set count]) 
+    {
         int lastIndex = [set lastIndex];
         int i;
-        for (i = [set firstIndex]; i<=lastIndex; i++) {
-            if ([set containsIndex: i]) {
-				// Is it a thread?
-				id item = [threadsView itemAtRow: i];
+        for (i = [set firstIndex]; i<=lastIndex; i++) 
+        {
+            if ([set containsIndex: i]) 
+            { // Is it a thread?
+				id item = [threadsView itemAtRow:i];
 
-                if (isThreadItem(item)) {
-                    [result addObject: item];
-                }
+                if (isThreadItem(item)) [result addObject:item];
             }
         }
     }
     return result;
 }
 
-- (void) cancelAutoReload
+- (void)cancelAutoReload
 {
 	isAutoReloadEnabled = NO;
 }
@@ -1111,7 +1116,7 @@ static BOOL isThreadItem(id item)
     {
         return [self isOnlyThreadsSelected]; 
 	} 
-    else if (aSelector == @selector(toggleReadFlag:)) 
+    else if ((aSelector == @selector(toggleReadFlag:)) || (aSelector == @selector(toggleJunkFlag:))) 
     {
         return [[threadsView selectedRowIndexes] count] > 0;
     } 
