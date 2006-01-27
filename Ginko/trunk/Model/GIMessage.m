@@ -139,7 +139,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) willSave
 {
 	[super willSave];
-	if (![self valueForKey: @"thread"]) NSLog(@"Warning! Will save message without thread!", self);
+	if (![self valueForKey: @"thread"]) NSLog(@"Warning! Will save message without thread: %@", self);
 }
 
 
