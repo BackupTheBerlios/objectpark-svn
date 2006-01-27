@@ -664,6 +664,7 @@
 			}
 		}
 		
+		// Do we need to do this, when self is a fault?		
 		[self willChangeValueForKey: key];
 		[self removePrimitiveValue: value forKey: key];
 		[self didChangeValueForKey: key];

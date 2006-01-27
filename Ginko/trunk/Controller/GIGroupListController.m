@@ -107,55 +107,51 @@
     [boxesView reloadData];
 }
 
-- (void)groupsChanged:(NSNotification *)aNotification
+- (void) groupsChanged: (NSNotification*) aNotification
 {
     [self reloadData];
 }
 
-- (void)groupStatsInvalidated:(NSNotification *)aNotification
+- (void) groupStatsInvalidated: (NSNotification*) aNotification
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(groupsChanged:) object:nil];
-    [self performSelector:@selector(groupsChanged:) withObject:nil afterDelay:(NSTimeInterval)5.0];
+    [NSObject cancelPreviousPerformRequestsWithTarget: self selector: @selector(groupsChanged:) object:nil];
+    [self performSelector: @selector(groupsChanged:) withObject: nil afterDelay: (NSTimeInterval)5.0];
 }
 
-- (void)jobStarted:(NSNotification *)aNotification
+- (void) jobStarted: (NSNotification*) aNotification
 {
-	[globalProgrssIndicator startAnimation:self];
+	[globalProgrssIndicator startAnimation: self];
 }
 
-- (void)jobFinished:(NSNotification *)aNotification
+- (void) jobFinished: (NSNotification*) aNotification
 {
 	unsigned jobCount = [[OPJobs runningJobs] count];
-	if (jobCount == 0) [globalProgrssIndicator stopAnimation:self];
+	if (jobCount == 0) [globalProgrssIndicator stopAnimation: self];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
     [itemRetainer release];
 	[super dealloc];
 }
 
-- (IBAction)showGroupWindow:(id)sender
+- (IBAction) showGroupWindow: (id) sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-    GIMessageGroup *selectedGroup = [self group];
+    GIMessageGroup* selectedGroup = [self group];
 	
-    if (selectedGroup) 
-    {
-        NSWindow *groupWindow = [[GIThreadListController class] windowForGroup:selectedGroup];
+    if (selectedGroup) {
+        NSWindow* groupWindow = [[GIThreadListController class] windowForGroup: selectedGroup];
         
-        if (groupWindow) 
-        {
-            [groupWindow makeKeyAndOrderFront:self];
-        } 
-        else 
-        {
-            GIThreadListController *newController = [[[GIThreadListController alloc] initWithGroup:selectedGroup] autorelease];
+        if (groupWindow) {
+            [groupWindow makeKeyAndOrderFront: self];
+        } else {
+            GIThreadListController *newController = [[[GIThreadListController alloc] initWithGroup: selectedGroup] autorelease];
             groupWindow = [newController window];
         }
         
-        [[groupWindow delegate] showThreads:sender];
+        [[groupWindow delegate] showThreads: sender];
     }
 }
 

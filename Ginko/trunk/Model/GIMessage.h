@@ -90,6 +90,7 @@
 - (BOOL) isDummy;
 
 - (NSString*) senderName;
+- (NSString*) recipientsForDisplay;
 
 - (void) flushInternetMessageCache;
 - (OPInternetMessage*) internetMessage;

@@ -437,6 +437,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return [NSString stringWithCString: result];
 }
 
+- (NSString*) recipientsForDisplay
+{
+	NSString* result = [[self internetMessage] toWithFallback: YES];
+	if ([result rangeOfString: @","].length==0) {
+		result = [result realnameFromEMailStringWithFallback];
+	}
+	
+	return result;
+}
+
 
 - (void) addFlagsFromString: (NSString*) flagsString
 	/*" Not all available flags are supported. "*/

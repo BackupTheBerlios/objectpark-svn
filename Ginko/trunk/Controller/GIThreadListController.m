@@ -1442,21 +1442,23 @@ static NSAttributedString* spacer2()
                     GIMessage* message = [[thread valueForKey: @"messages"] lastObject];
                     
                     if (message) {
-                        BOOL isRead  = [message hasFlags: OPSeenStatus];
+                        BOOL flags  = [message flags];
                         NSString* subject = [message valueForKey: @"subject"];
                         
                         if (!subject) subject = @"";
                         
-                        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: subject attributes: isRead ? (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+                        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: subject attributes: (flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
                         
                         [result appendAttributedString: aSubject];
                         
-                        from = [message senderName];
-                        from = from ? from : @"- sender missing -";
-                        
-                        from = [NSString stringWithFormat: @" (%@)", from];
-                        
-                        aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
+						if ([message hasFlags: OPIsFromMeStatus]) {
+							from = [NSString stringWithFormat: @" (%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
+						} else {
+							from = [message senderName];
+							if (!from) from = @"- sender missing -";
+							from = [NSString stringWithFormat: @" (%@)", from];
+						}                        
+                        aFrom = [[NSAttributedString alloc] initWithString: from attributes: ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
                         
                         [result appendAttributedString: aFrom];
                         
@@ -1501,40 +1503,42 @@ static NSAttributedString* spacer2()
     return [hits count];
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id)tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
 {
-    NSArray *hit = [hits objectAtIndex:rowIndex];
-    GIMessage *message = [hit objectAtIndex:0];
+    NSArray* hit = [hits objectAtIndex:rowIndex];
+    GIMessage* message = [hit objectAtIndex:0];
     BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
 
-    if ([[aTableColumn identifier] isEqualToString: @"date"])
-    {
+    if ([[aTableColumn identifier] isEqualToString: @"date"]) {
         BOOL isRead = [message hasFlags:OPSeenStatus];
         NSCalendarDate *date = [message valueForKey: @"date"];
                 
         NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
         
         return [[[NSAttributedString alloc] initWithString:dateString attributes:isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
-    }
-    else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"])
-    {
-        NSString *from;
-        NSAttributedString *aFrom;
-        NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
+		
+    } else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"]) {
+		
+        NSString* from;
+        NSAttributedString* aFrom;
+        NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
         
-        BOOL isRead  = [message hasFlags:OPSeenStatus];
-        NSString *subject = [message valueForKey: @"subject"];
+        BOOL isRead  = [message hasFlags: OPSeenStatus];
+        NSString* subject = [message valueForKey: @"subject"];
         
         if (!subject) subject = @"";
         
-        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? (isAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? (isAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
         
-        [result appendAttributedString:aSubject];
+        [result appendAttributedString: aSubject];
         
-        from = [message senderName];
-        from = from ? from : @"- sender missing -";
-        
-        from = [NSString stringWithFormat:@" (%@)", from];
+        if ([message hasFlags: OPIsFromMeStatus]) {
+			from = [NSString stringWithFormat: @" (%c %@)", 2782/*Right Arrow*/, [message recipientsForDisplay]];
+		} else {
+			from = [message senderName];
+			if (!from) from = @"- sender missing -";
+			from = [NSString stringWithFormat: @" (%@)", from];
+		}
         
         aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (isAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
         
@@ -1544,10 +1548,8 @@ static NSAttributedString* spacer2()
         [aFrom release];
         
         return result;
-    }
-    else if ([[aTableColumn identifier] isEqualToString: @"relevance"])
-    {
-        return [hit objectAtIndex:1]; // the score
+    } else if ([[aTableColumn identifier] isEqualToString: @"relevance"]) {
+        return [hit objectAtIndex: 1]; // the score
     }
     
     return @"";

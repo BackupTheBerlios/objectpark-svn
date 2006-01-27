@@ -574,10 +574,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (NSString*) versionString
 /*" Returns the version string for use in new messages' headers. "*/
 {
-    static NSString *versionString = nil;
+    static NSString* versionString = nil;
     
-    if (! versionString)
-    {
+    if (! versionString) {
         NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
         // We replace spaces in the version number to make the version string compliant with RFC2616 and draft-ietf-usefor-article-09.txt (internet draft for news article format)
         [bundleVersion replaceOccurrencesOfString: @" " withString: @"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
@@ -860,7 +859,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // If we are replying to our own message, we probably want is to send a message to the recients (to header)
     NSString* preSetTo = [[replyMessage internetMessage] replyToWithFallback: YES];
     
-    if ([replyMessage hasFlags:OPIsFromMeStatus])  {
+    if ([replyMessage hasFlags: OPIsFromMeStatus])  {
         NSString* preSetCc = [[replyMessage internetMessage] ccWithFallback: YES];
         
         if ([preSetCc length]) {
@@ -874,7 +873,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         if ([preSetCc length]) {
             [headerFields setObject: preSetCc forKey: @"Bcc"];
         } else {
-            [headerFields setObject: @"" forKey:@"Bcc"];
+            [headerFields setObject: @"" forKey: @"Bcc"];
         }
         
         preSetTo = [[replyMessage internetMessage] toWithFallback: YES];
@@ -1070,7 +1069,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // status
     if (oldMessage) [message addFlags: [oldMessage flags]];
-    [message addFlags: OPSeenStatus];
+    [message addFlags: OPSeenStatus | OPIsFromMeStatus];
     
     // unmark message as blocked for sending
     [message setSendStatus: sendStatus];
