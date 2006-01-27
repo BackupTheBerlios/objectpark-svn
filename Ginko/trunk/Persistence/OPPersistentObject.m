@@ -622,6 +622,27 @@
 	}
 }
 
+- (id) transientValueForKey: (NSString*) key
+{
+	[self resolveFault];
+	id result = [attributes objectForKey: key];
+	if (NSDebugEnabled) {
+		if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+	}
+	return result;
+}
+
+- (void) setTransientValue: (id) value forKey: (NSString*) key
+/*" Do not set values for persistent keys! "*/
+{
+	if (NSDebugEnabled) {
+		if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+	}
+	// todo: add key-value-observing for transient values.
+	[self resolveFault];
+	[attributes setObject: value forKey: key];
+}
+
 
 - (void) removeValue: (id) value forKey: (NSString*) key
 {

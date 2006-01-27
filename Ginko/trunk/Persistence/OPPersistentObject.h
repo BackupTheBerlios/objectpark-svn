@@ -79,6 +79,9 @@
 - (OID) oid;
 - (NSString*) objectURLString;
 
+- (id) transientValueForKey: (NSString*) key;
+- (void) setTransientValue: (id) value forKey: (NSString*) key;
+
 - (id) primitiveValueForKey: (NSString*) key;
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key;
 - (void) refault;
