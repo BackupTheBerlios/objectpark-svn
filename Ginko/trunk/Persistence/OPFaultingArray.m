@@ -291,6 +291,7 @@ static int compare_sort_objects(const void* entry1, const void* entry2)
 							sortKey ? compare_sort_objects : compare_oids);
 		
 		NSAssert2(err==0, @"Sorting error in %@: %s", self, strerror(err));
+		needsSorting = NO;
 	}
 }
 
@@ -416,6 +417,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	//if (sortKey) NSLog(@"xxx: %@", self);
 	if (!needsSorting && count>1) {
         // No need to set unsorted flag, if we insert in a sorted manner:
+		needsSorting = [self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0; // optimization
 		needsSorting = YES; //[self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0; optimize later
 	}
 }
@@ -437,6 +439,8 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 
 - (id) objectAtIndex: (unsigned) anIndex
 {
+	[self sort];
+	
 	OID oid = *oidPtr(anIndex);
 	// Should we store and retain a context?
 	id result = [[self context] objectForOid: oid ofClass: elementClass];
