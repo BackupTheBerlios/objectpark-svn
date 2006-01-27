@@ -187,12 +187,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) setTransferData: (NSData*) newData
 {
 	GIMessageData* messageData = [self valueForKey: @"messageData"];
-	if (!messageData) {
+	if (messageData) {
+		// Reuse existing GIMessageData object!
+		// Make sure we re-index this message.
+		[self removeFlags: OPFulltextIndexedStatus];
+	} else {
 		messageData = [[[GIMessageData alloc] init] autorelease];
 		[self willChangeValueForKey: @"transferData"];
 		[self setPrimitiveValue: messageData forKey: @"messageData"];
 		[self didChangeValueForKey: @"transferData"];
-	}
+	} 
 	[self setPrimitiveValue: nil forKey: @"internetMessageCache"];
 	// We now have a valid messageData object to upate:
 	[messageData setValue: newData forKey: @"transferData"];	
@@ -224,23 +228,25 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     GIMessage* dupe = [self messageForMessageId: [im messageId]];
     if (dupe) {
         if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
-            //replace old message with new:
-            [dupe delete];
-            //[NSApp saveAction: self]; // needed here?
             insertMessage = YES;
-        }
-        OPDebugLog(MESSAGE, DUPECHECK, @"Dupe for message id %@ detected.", [im messageId]);        
+        } else OPDebugLog(MESSAGE, DUPECHECK, @"Dupe for message id %@ detected.", [im messageId]);        
     } else {
         insertMessage = YES;
     }
     
     if (insertMessage) {
         // Create a new message in the default context:
-        result = [[[GIMessage alloc] init] autorelease];
-		[result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
+		if (dupe) {
+			// Replace transferData of "dupe":
+			result = dupe;
+		} else {
+			result = [[GIMessage alloc] init];
+			[result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
+			[result release];
+		}
 		NSAssert(result != nil, @"Could not create message object");
-        
-        NSString *fromHeader = [im fromWithFallback: YES];
+
+        NSString* fromHeader = [im fromWithFallback: YES];
         
         [result setPrimitiveValue: im forKey: @"internetMessageCache"];
         [result setValue: someTransferData forKey: @"transferData"];
@@ -258,7 +264,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         }
         [result setValue: messageDate forKey: @"date"];
         
-        // Note that this method operates on the encoded header field. It's OK because email
+		// Note that this method operates on the encoded header field. It's OK because email
         // addresses are 7bit only.
         if ([GIProfile isMyEmailAddress: fromHeader]) {
             [result addFlags: OPIsFromMeStatus];

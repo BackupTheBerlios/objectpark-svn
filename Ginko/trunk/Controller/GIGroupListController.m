@@ -56,34 +56,38 @@
 
 - (id) init
 {
-    if (self = [super init]) 
-    {
+    if (self = [super init]) {
+		
+		NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+		
         [GIMessageGroup loadGroupStats];
-
         [NSBundle loadNibNamed:@"Boxes" owner:self];
 		
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(groupsChanged:) 
-													 name:GIMessageGroupWasAddedNotification 
-												   object:nil];
+        [nc addObserver: self 
+			   selector: @selector(groupsChanged:) 
+				   name: GIMessageGroupWasAddedNotification 
+				 object: nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(jobStarted:) 
-													 name:OPJobWillStartNotification 
-												   object:nil];
+		[nc addObserver: self 
+			   selector: @selector(jobStarted:) 
+				   name: OPJobWillStartNotification 
+				 object: nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(jobFinished:) 
-													 name:OPJobDidFinishNotification 
-												   object:nil];
+		[nc addObserver: self 
+			   selector: @selector(jobFinished:) 
+				   name: OPJobDidFinishNotification 
+				 object: nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupStatsInvalidated:) name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
+        [nc addObserver: self 
+			   selector: @selector(groupStatsInvalidated:) 
+				   name: GIMessageGroupStatisticsDidInvalidateNotification 
+				 object: nil];
     }
     
 	return [self retain]; // self retaining!
 }
   
-- (void)windowWillClose:(NSNotification *)notification 
+- (void) windowWillClose: (NSNotification*) notification 
 {
     [self autorelease];
     [GIMessageGroup saveGroupStats];
