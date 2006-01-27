@@ -114,7 +114,7 @@
 
 - (void) groupStatsInvalidated: (NSNotification*) aNotification
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget: self selector: @selector(groupsChanged:) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget: self selector: @selector(groupsChanged:) object: nil];
     [self performSelector: @selector(groupsChanged:) withObject: nil afterDelay: (NSTimeInterval)5.0];
 }
 

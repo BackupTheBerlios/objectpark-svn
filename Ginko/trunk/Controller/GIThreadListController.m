@@ -174,137 +174,128 @@ static BOOL isThreadItem(id item)
 	return YES;
 }
 
-- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
+- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
 	if (!aThread) aThread = [aMessage valueForKey: @"thread"];
 	
-    NSParameterAssert(isThreadItem(aThread));
-    
-    int itemRow;
-    BOOL isNewThread = ![aThread isEqual:displayedThread];
-    
-    [displayedMessage autorelease];
-    displayedMessage = [aMessage retain];
-    [displayedMessage addFlags:OPSeenStatus];
-    
-    if (isNewThread) 
-    {
-        [displayedThread autorelease];
-        displayedThread = [aThread retain];
-    }
-    
-    // make sure that thread is expanded in threads outline view:
-    if (aThread && (![aThread containsSingleMessage])) 
-    {
-        [threadsView expandItem:aThread];
-    }
-    
-    // select responding item in threads view:
-    
-    NSArray *threadArray = [self threadsByDate];
-    
-	itemRow = [threadArray indexOfObject:aThread]; // estimation!
-    
-    /*
-    if ([self threadByDateSortAscending])
-    {
-        itemRow += ([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count]));
-    }
-    else
-    {
-        itemRow = ([threadArray count]-1) - itemRow;
-    }
-    */
-    
-    if ([self threadLimitCount] != INT_MAX) itemRow = 0;
-    
-	itemRow = [threadsView rowForItemEqualTo:([aThread containsSingleMessage] ? (id)aThread : (id)aMessage) startingAtRow:itemRow];
-    
-    if (itemRow != -1) 
-    {
-        [threadsView selectRow:itemRow byExtendingSelection:NO];
-        [threadsView scrollRowToVisible:itemRow];
-    }
-    
-    // message display string:
-    NSAttributedString *messageText = nil;
-    
-    if (showRawSource) {
-        NSData *transferData;
-        NSString *transferString;
-        
-        static NSDictionary *fixedFont = nil;
-        
-        if (!fixedFont) 
-        {
-            fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
-        }
-        
-        transferData = [displayedMessage transferData];
-        
-        // joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
-        if (!(transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSUTF8StringEncoding]))
-            transferString = [NSString stringWithData:[displayedMessage transferData] encoding:NSISOLatin1StringEncoding];
-        
-        messageText = [[[NSAttributedString alloc] initWithString:transferString attributes:fixedFont] autorelease]; 
-    } 
-    else {
-        messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
-    }
-    
-    if (!messageText) {
-        messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText == nil."];
-    }
-    
-    [[messageTextView textStorage] setAttributedString:messageText];
-    
-    // set the insertion point (cursor)to 0, 0
-    [messageTextView setSelectedRange:NSMakeRange(0, 0)];
-    [messageTextView sizeToFit];
-    // make sure that the message's header is displayed:
-    [messageTextView scrollRangeToVisible:NSMakeRange(0, 0)];
-
-    [self updateCommentTree:isNewThread];
-    
-    //BOOL collapseTree = [commentsMatrix numberOfColumns]<=1;
-    // Hide comment tree, if trivial:
-    //[treeBodySplitter setSubview: [[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
-    //if (YES && !collapseTree){
-    if (isNewThread) 
-    {
-        NSScrollView *scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
-        //[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
-        //[treeBodySplitter moveSplitterBy: [commentsMatrix frame].size.height+10-[scrollView frame].size.height];
-        //[scrollView setAutohidesScrollers: YES];
-        BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
-        float newHeight = [commentsMatrix frame].size.height + 3 + (hasHorzontalScroller * [NSScroller scrollerWidth]); // scroller width could be different
-        [scrollView setHasHorizontalScroller:hasHorzontalScroller];
-        if ([commentsMatrix numberOfColumns] <= 1) newHeight = 0;
-        if (newHeight>200.0) 
-        {
-            newHeight = 200.0;
-            [scrollView setHasVerticalScroller:YES];
-            //[scrollView setAutohidesScrollers: YES];
-        } 
-        else 
-        {
-            [scrollView setHasVerticalScroller:NO];
-        }
-        [treeBodySplitter setFirstSubviewSize:newHeight];
-    }
-
-    [GIApp saveAction:self];
-    //}
-    //[commentsMatrix scrollCellToVisibleAtRow: [commentsMatrix selectedRow] column: [commentsMatrix selectedRow]];
+    if (isThreadItem(aThread)) {
+		
+		int itemRow;
+		BOOL isNewThread = ![aThread isEqual:displayedThread];
+		
+		[displayedMessage autorelease];
+		displayedMessage = [aMessage retain];
+		[displayedMessage addFlags: OPSeenStatus];
+		
+		if (isNewThread) {
+			[displayedThread autorelease];
+			displayedThread = [aThread retain];
+		}
+		
+		// make sure that thread is expanded in threads outline view:
+		if (aThread && (![aThread containsSingleMessage])) {
+			[threadsView expandItem:aThread];
+		}
+		
+		// select responding item in threads view:
+		
+		NSArray *threadArray = [self threadsByDate];
+		
+		itemRow = [threadArray indexOfObject:aThread]; // estimation!
+		
+		/*
+		 if ([self threadByDateSortAscending])
+		 {
+			 itemRow += ([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count]));
+		 }
+		 else
+		 {
+			 itemRow = ([threadArray count]-1) - itemRow;
+		 }
+		 */
+		
+		if ([self threadLimitCount] != INT_MAX) itemRow = 0;
+		
+		itemRow = [threadsView rowForItemEqualTo: ([aThread containsSingleMessage] ? (id)aThread : (id)aMessage) startingAtRow: itemRow];
+		
+		if (itemRow != -1) {
+			[threadsView selectRow:itemRow byExtendingSelection:NO];
+			[threadsView scrollRowToVisible:itemRow];
+		}
+		
+		// message display string:
+		NSAttributedString *messageText = nil;
+		
+		if (showRawSource) {
+			NSData* transferData = [displayedMessage transferData];
+			NSString* transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSUTF8StringEncoding];
+			
+			static NSDictionary* fixedFont = nil;
+			
+			if (!fixedFont) {
+				fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys: [NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
+			}
+			
+			// joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
+			if (! transferString) {
+				transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSISOLatin1StringEncoding];
+			}
+			
+			messageText = [[[NSAttributedString alloc] initWithString:transferString attributes: fixedFont] autorelease]; 
+		} else {
+			messageText = [displayedMessage renderedMessageIncludingAllHeaders: [[NSUserDefaults standardUserDefaults] boolForKey: ShowAllHeaders]];
+		}
+		
+		if (!messageText) {
+			messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText == nil."];
+		}
+		
+		[[messageTextView textStorage] setAttributedString: messageText];
+		
+		// set the insertion point (cursor)to 0, 0
+		[messageTextView setSelectedRange: NSMakeRange(0, 0)];
+		[messageTextView sizeToFit];
+		// make sure that the message's header is displayed:
+		[messageTextView scrollRangeToVisible:NSMakeRange(0, 0)];
+		
+		[self updateCommentTree:isNewThread];
+		
+		//BOOL collapseTree = [commentsMatrix numberOfColumns]<=1;
+		// Hide comment tree, if trivial:
+		//[treeBodySplitter setSubview: [[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
+		//if (YES && !collapseTree){
+		if (isNewThread) {
+			NSScrollView *scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
+			//[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
+			//[treeBodySplitter moveSplitterBy: [commentsMatrix frame].size.height+10-[scrollView frame].size.height];
+			//[scrollView setAutohidesScrollers: YES];
+			BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
+			float newHeight = [commentsMatrix frame].size.height + 3 + (hasHorzontalScroller * [NSScroller scrollerWidth]); // scroller width could be different
+			[scrollView setHasHorizontalScroller:hasHorzontalScroller];
+			if ([commentsMatrix numberOfColumns] <= 1) newHeight = 0;
+			if (newHeight>200.0) {
+				newHeight = 200.0;
+				[scrollView setHasVerticalScroller: YES];
+				//[scrollView setAutohidesScrollers: YES];
+			} else {
+				[scrollView setHasVerticalScroller: NO];
+			}
+			[treeBodySplitter setFirstSubviewSize: newHeight];
+		}
+		
+		//[GIApp saveAction:self]; // not neccessary every time...
+		//}
+		//[commentsMatrix scrollCellToVisibleAtRow: [commentsMatrix selectedRow] column: [commentsMatrix selectedRow]];
+	}
 }
 
-- (GIMessage *)displayedMessage
+- (GIMessage*) displayedMessage
 {
     return displayedMessage;
 }
 
-- (GIThread *)displayedThread
+- (GIThread*) displayedThread
 {
     return displayedThread;
 }

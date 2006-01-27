@@ -114,7 +114,7 @@
     
     [subtitleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"for %@ account \"%@\"", @"password panel"), [self serverTypeString], [account name]]];
     
-    [userNameField setStringValue:isIncomingPassword ? [account incomingUsername] : [account outgoingUsername]];
+    [userNameField setStringValue:isIncomingPassword ? [account valueForKey: @"incomingUsername"] : [account outgoingUsername]];
     
     [serverNameField setStringValue:isIncomingPassword ? [account incomingServerName] : [account outgoingServerName]];
     

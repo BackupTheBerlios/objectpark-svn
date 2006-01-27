@@ -237,7 +237,7 @@
 /*" Accesses keychain to get password. "*/
 {
     const char *serverName = [[self incomingServerName] UTF8String];
-    const char *accountName = [[self incomingUsername] UTF8String];
+    const char *accountName = [[account valueForKey: @"incomingUsername"] UTF8String];
     UInt32 passwordLength;
     void *passwordData;
     NSString *result = nil;
@@ -289,23 +289,20 @@
 - (void) setIncomingPassword: (NSString*) aPassword
 /*" Uses keychain to store password. "*/
 {
-    const char *serverName = [[self incomingServerName] UTF8String];
-    const char *accountName = [[self incomingUsername] UTF8String];
-    const char *password = [aPassword UTF8String];
+    const char* serverName = [[self incomingServerName] UTF8String];
+    const char* accountName = [[account valueForKey: @"incomingUsername"] UTF8String];
+    const char* password = [aPassword UTF8String];
     OSStatus err;
     SecKeychainItemRef itemRef = NULL;
     
-    if ([self incomingPasswordItemRef:&itemRef])
-    {        
-        err = SecKeychainItemModifyAttributesAndData(
-                                                     itemRef, // the item reference
+    if ([self incomingPasswordItemRef: &itemRef]) {        
+        err = SecKeychainItemModifyAttributesAndData(itemRef, // the item reference
                                                      NULL, // no change to attributes
                                                      strlen(password),  // length of password
-                                                     password // pointer to password data
-                                                     );
+                                                     password); // pointer to password data
+                                                     
     } else {
-        err = SecKeychainAddInternetPassword (
-                                              NULL, // SecKeychainRef keychain,
+        err = SecKeychainAddInternetPassword (NULL, // SecKeychainRef keychain,
                                               strlen(serverName), // UInt32 serverNameLength,
                                               serverName, //const char *serverName,
                                               0, // UInt32 securityDomainLength,
@@ -319,17 +316,15 @@
                                               kSecAuthenticationTypeDefault, // SecAuthenticationType authenticationType,
                                               strlen(password), // UInt32 passwordLength,
                                               password, // const void *passwordData,
-                                              NULL //SecKeychainItemRef *itemRef
-                                              );
+                                              NULL); //SecKeychainItemRef *itemRef
+                                              
         
     }
-    //if (itemRef) CFRelease(itemRef);
 }
 
-- (SecProtocolType)outgoingSecProtocolType
+- (SecProtocolType) outgoingSecProtocolType
 {
-    switch ([self outgoingServerType])
-    {
+    switch ([self outgoingServerType]) {
         case SMTP:
         case SMTPS:
         case SMTPTLS:

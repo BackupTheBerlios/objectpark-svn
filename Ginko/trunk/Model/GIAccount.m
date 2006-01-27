@@ -223,26 +223,6 @@
     [self didChangeValueForKey: @"incomingAuthenticationMethod"];
 }
 
-/*
-- (NSString* )incomingUsername 
-{
-    NSString* tmpValue;
-    
-    [self willAccessValueForKey: @"incomingUsername"];
-    tmpValue = [self primitiveValueForKey: @"incomingUsername"];
-    [self didAccessValueForKey: @"incomingUsername"];
-    
-    return tmpValue;
-}
-
-- (void) setIncomingUsername: (NSString* )value 
-{
-    [self willChangeValueForKey: @"incomingUsername"];
-    [self setPrimitiveValue:value forKey: @"incomingUsername"];
-    [self didChangeValueForKey: @"incomingUsername"];
-}
-*/
-
 - (SecProtocolType) incomingSecProtocolType
 {
     switch ([self incomingServerType])
@@ -369,7 +349,7 @@
     /*" Accesses keychain to get password. "*/
 {
     const char *serverName = [[self outgoingServerName] UTF8String];
-    const char *accountName = [[self outgoingUsername] UTF8String];
+    const char *accountName = [[self valueForKey: @"outgoingUsername"] UTF8String];
     UInt32 passwordLength;
     void *passwordData;
     NSString* result = nil;
@@ -418,25 +398,20 @@
 - (void) setOutgoingPassword: (NSString* )aPassword
     /*" Uses keychain to store password. "*/
 {
-    const char *serverName = [[self outgoingServerName] UTF8String];
-    const char *accountName = [[self outgoingUsername] UTF8String];
-    const char *password = [aPassword UTF8String];
+    const char* serverName = [[self outgoingServerName] UTF8String];
+    const char* accountName = [[self valueForKey: @"outgoingUsername"] UTF8String];
+    const char* password = [aPassword UTF8String];
     OSStatus err;
     SecKeychainItemRef itemRef = NULL;
     
-    if ([self outgoingPasswordItemRef:&itemRef])
-    {        
-        err = SecKeychainItemModifyAttributesAndData(
-                                                     itemRef, // the item reference
+    if ([self outgoingPasswordItemRef: &itemRef]) {        
+        err = SecKeychainItemModifyAttributesAndData(itemRef, // the item reference
                                                      NULL, // no change to attributes
                                                      strlen(password),  // length of password
-                                                     password // pointer to password data
-                                                     );
-    } 
-    else 
-    {
-        err = SecKeychainAddInternetPassword (
-                                              NULL, // SecKeychainRef keychain,
+                                                     password); // pointer to password data
+                                                     
+    } else {
+        err = SecKeychainAddInternetPassword (NULL, // SecKeychainRef keychain,
                                               strlen(serverName), // UInt32 serverNameLength,
                                               serverName, //const char *serverName,
                                               0, // UInt32 securityDomainLength,
@@ -450,11 +425,8 @@
                                               kSecAuthenticationTypeDefault, // SecAuthenticationType authenticationType,
                                               strlen(password), // UInt32 passwordLength,
                                               password, // const void *passwordData,
-                                              NULL //SecKeychainItemRef *itemRef
-                                              );
-        
-    }
-    //if (itemRef) CFRelease(itemRef);
+                                              NULL ); //SecKeychainItemRef *itemRef
+	}
 }
 
 - (int) retrieveMessageInterval 
@@ -586,6 +558,7 @@
     [self didChangeValueForKey: @"outgoingUsername"];
 }
 
+/*
 - (NSString* )outgoingUsername 
 {
     NSString* tmpValue;
@@ -603,6 +576,7 @@
     [self setPrimitiveValue:value forKey: @"outgoingUsername"];
     [self didChangeValueForKey: @"outgoingUsername"];
 }
+*/
 
 - (BOOL) outgoingUsernameNeeded
 {

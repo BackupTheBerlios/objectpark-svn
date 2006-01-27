@@ -101,8 +101,8 @@ enum LeaveOnServerDuration
 - (int)outgoingAuthenticationMethod;
 - (void)setOutgoingAuthenticationMethod:(int)aMethod;
 
-- (NSString* )outgoingUsername;
-- (void)setOutgoingUsername:(NSString* )aName;
+//- (NSString* )outgoingUsername;
+//- (void)setOutgoingUsername:(NSString* )aName;
 
 - (NSString* )outgoingPassword;
 - (void)setOutgoingPassword:(NSString* )aPassword;
