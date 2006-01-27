@@ -21,6 +21,7 @@
 #import <Foundation/NSDebug.h>
 #import "GIFulltextIndex.h"
 
+NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotification";
 
 #define MESSAGE    OPL_DOMAIN  @"Message"
 #define DUPECHECK  OPL_ASPECT  0x01
@@ -501,6 +502,9 @@
 
 - (void) addFlags: (unsigned) someFlags
 {
+    NSNumber *oldValue = nil;
+    NSNumber *newValue = nil;
+
     @synchronized(self) {
         int flags = [self flags];
 		someFlags = (0xffffffff ^ flags) & someFlags;
@@ -522,8 +526,17 @@
 //            if ((someFlags & OPDraftStatus)) [self setValue: yes forKey: @"isDraft"];
 			
             flagsCache = someFlags | flags;
+            
+            oldValue = [NSNumber numberWithInt:flags];
+            newValue = [NSNumber numberWithInt:flagsCache];
         }
     }
+    
+    // notify if needed (outside the synchronized block to avoid blocking problems)
+    if (newValue) 
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+    }    
 }
 
 /*
@@ -538,8 +551,11 @@
 }
 */
 
-- (void) removeFlags:(unsigned)someFlags
+- (void)removeFlags:(unsigned)someFlags
 {
+    NSNumber *oldValue = nil;
+    NSNumber *newValue = nil;
+    
     @synchronized(self) {
         int flags = [self flags];
         
@@ -559,7 +575,16 @@
             //if (someFlags & OPDraftStatus) [self setValue: nil forKey: @"isDraft"];
             
             flagsCache = (flags & (~someFlags));
+            
+            oldValue = [NSNumber numberWithInt:flags];
+            newValue = [NSNumber numberWithInt:flagsCache];
         }
+    }
+    
+    // notify if needed (outside the synchronized block to avoid blocking problems)
+    if (newValue) 
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
     }
 }
 

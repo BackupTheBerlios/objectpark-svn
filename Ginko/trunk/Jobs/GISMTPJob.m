@@ -49,7 +49,7 @@
                 [stream negotiateEncryption];
             }
                         
-            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream username:[anAccount incomingUsername] andPassword:[anAccount incomingPassword]] autorelease];
+            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream username:[anAccount valueForKey:@"incomingUsername"] andPassword:[anAccount incomingPassword]] autorelease];
             [pop3session openSession]; 
             [pop3session closeSession];
 

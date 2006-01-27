@@ -462,7 +462,7 @@
     if (![[NSUserDefaults standardUserDefaults] boolForKey: @"fulltextSearchDisabled"])
     {
         if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
-        {
+        {            
             NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
             NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
             

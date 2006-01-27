@@ -99,6 +99,8 @@
 
 @end
 
+extern NSString *GIMessageDidChangeFlagsNotification;
+
 @interface GIMessageData : OPPersistentObject {
 }
  

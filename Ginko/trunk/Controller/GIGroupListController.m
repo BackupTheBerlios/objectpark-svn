@@ -81,6 +81,8 @@
 												 selector:@selector(jobFinished:) 
 													 name:OPJobDidFinishNotification 
 												   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupStatsInvalidated:) name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
     }
     
 	return [self retain]; // self retaining!
@@ -108,6 +110,12 @@
 - (void)groupsChanged:(NSNotification *)aNotification
 {
     [self reloadData];
+}
+
+- (void)groupStatsInvalidated:(NSNotification *)aNotification
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(reloadData) object:nil];
+    [self performSelector:@selector(reloadData) withObject:nil afterDelay:5.0];
 }
 
 - (void)jobStarted:(NSNotification *)aNotification
