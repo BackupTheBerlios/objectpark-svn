@@ -109,7 +109,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
     [displayedMessage release];
     [displayedThread release];
-    [self setGroup:nil];
+    [self setGroup: nil];
     [itemRetainer release];
     [hits release];
     
@@ -229,7 +229,7 @@ static BOOL isThreadItem(id item)
 		
 		if (showRawSource) {
 			NSData* transferData = [displayedMessage transferData];
-			NSString* transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSUTF8StringEncoding];
+			NSString* transferString = [NSString stringWithData: transferData encoding: NSUTF8StringEncoding];
 			
 			static NSDictionary* fixedFont = nil;
 			
@@ -239,7 +239,7 @@ static BOOL isThreadItem(id item)
 			
 			// joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
 			if (! transferString) {
-				transferString = [NSString stringWithData: [displayedMessage transferData] encoding: NSISOLatin1StringEncoding];
+				transferString = [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding];
 			}
 			
 			messageText = [[[NSAttributedString alloc] initWithString:transferString attributes: fixedFont] autorelease]; 
@@ -303,10 +303,8 @@ static BOOL isThreadItem(id item)
 + (NSWindow *)windowForGroup:(GIMessageGroup *)aGroup
 /*" Returns the window for the group aGroup. nil if no such window exists. "*/
 {
-    NSWindow *win;
-    NSEnumerator *enumerator;
-    
-    enumerator = [[NSApp windows] objectEnumerator];
+    NSWindow* win;
+    NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
     while (win = [enumerator nextObject]) {
         if ([[win delegate] isKindOfClass:self]) {
             if ([[win delegate] group] == aGroup) return win;
@@ -1575,7 +1573,7 @@ static NSAttributedString* spacer2()
 
 // fill in commentsMatrix
 
-static NSMutableDictionary *commentsCache = nil;
+static NSMutableDictionary* commentsCache = nil;
 
 NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 {

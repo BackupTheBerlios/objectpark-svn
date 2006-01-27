@@ -416,7 +416,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	//if (sortKey) NSLog(@"xxx: %@", self);
 	if (!needsSorting && count>1) {
         // No need to set unsorted flag, if we insert in a sorted manner:
-		needsSorting = [self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0;
+		needsSorting = YES; //[self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0; optimize later
 	}
 }
 

@@ -66,11 +66,12 @@
 												 selector:@selector(groupsChanged:) 
 													 name:GIMessageGroupWasAddedNotification 
 												   object:nil];
-        
+        /*
         [[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(groupsChanged:) 
 													 name:GIMessageGroupStatisticsDidInvalidateNotification 
 												   object:nil];
+		 */
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(jobStarted:) 
