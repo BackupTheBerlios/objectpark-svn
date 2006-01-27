@@ -15,6 +15,8 @@
 
 @interface GIMessageGroup : OPPersistentObject 
 {
+    // transient stats:
+    NSNumber *unreadMessageCount; 
 }
 
 /*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/

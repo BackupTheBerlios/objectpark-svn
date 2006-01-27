@@ -58,7 +58,7 @@
 {
     if (self = [super init]) 
     {
-        itemRetainer = [[NSMutableSet alloc] init];
+        [GIMessageGroup loadGroupStats];
 
         [NSBundle loadNibNamed:@"Boxes" owner:self];
 		
@@ -89,6 +89,12 @@
 	return [self retain]; // self retaining!
 }
   
+- (void)windowWillClose:(NSNotification *)notification 
+{
+    [self autorelease];
+    [GIMessageGroup saveGroupStats];
+}
+
 - (GIMessageGroup *)group
 /*" Returns the selected message group if one and only one is selected. nil otherwise. "*/
 {
@@ -104,7 +110,6 @@
 
 - (void)reloadData
 {
-	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
     [boxesView reloadData];
 }
 
@@ -133,7 +138,6 @@
 - (void) dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
-    [itemRetainer release];
 	[super dealloc];
 }
 
@@ -318,7 +322,6 @@
 {
 	if (!item) item = [GIMessageGroup hierarchyRootNode];
 	id result = [item objectAtIndex:index + 1];
-    [itemRetainer addObject:result];
     return result;
 }
 

@@ -13,8 +13,6 @@
     IBOutlet NSOutlineView *boxesView;
     IBOutlet NSWindow *window;
 	IBOutlet NSProgressIndicator *globalProgrssIndicator;
-    
-    NSMutableSet *itemRetainer;
 }
 
 - (IBAction)addFolder:(id)sender;

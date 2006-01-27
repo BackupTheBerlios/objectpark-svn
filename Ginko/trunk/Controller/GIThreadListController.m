@@ -1079,7 +1079,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL) validateSelector: (SEL) aSelector
+- (BOOL)validateSelector:(SEL)aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))

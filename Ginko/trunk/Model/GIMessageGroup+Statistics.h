@@ -11,6 +11,9 @@
 
 @interface GIMessageGroup (Statistics)
 
++ (void)loadGroupStats;
++ (void)saveGroupStats;
+
 - (void)invalidateStatistics;
 - (NSNumber *)unreadMessageCount;
 

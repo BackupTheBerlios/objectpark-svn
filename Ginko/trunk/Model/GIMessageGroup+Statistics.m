@@ -16,6 +16,58 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 
 @implementation GIMessageGroup (Statistics)
 
+- (void)setUnreadMessageCount:(NSNumber *)aCount
+{
+    [unreadMessageCount autorelease];
+    unreadMessageCount = [aCount retain];
+}
+
++ (void)loadGroupStats
+    /*" Called at initialization time startup "*/
+{
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *groupStats = [ud objectForKey:@"GroupStats"];
+    [ud removeObjectForKey:@"GroupStats"];
+    
+    NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
+    GIMessageGroup *group;
+    
+    while (group = [enumerator nextObject])
+    {
+#warning retains all groups - should be changed SOON to OPPersistence functionality
+        [group retain];
+        NSDictionary *stats = [groupStats objectForKey:[group objectURLString]];
+
+        [group setUnreadMessageCount:[stats objectForKey:GINumberOfUnreadMessages]];
+    }
+}
+
++ (void)saveGroupStats
+/*" Called at the end of the app lifecycle "*/
+{
+    NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
+    GIMessageGroup *group;
+    NSMutableDictionary *groupStats = [NSMutableDictionary dictionary];
+    
+    while (group = [enumerator nextObject])
+    {
+        NSDictionary *dict = [NSMutableDictionary dictionary];
+        NSNumber *unreadCount = [group unreadMessageCount];
+        
+        NSAssert([unreadCount isKindOfClass:[NSNumber class]], @"shit");
+        
+        if (unreadCount) [dict setValue:unreadCount forKey:GINumberOfUnreadMessages];
+        
+        if ([dict count])
+        {
+            [groupStats setObject:dict forKey:[group objectURLString]];
+        }
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:groupStats forKey:@"GroupStats"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 + (void)initialize
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageFlagsDidChange:) name:GIMessageDidChangeFlagsNotification object:nil];
@@ -35,11 +87,6 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
     }
 }
 
-- (NSNumber *)oidNumber
-{
-    return [NSNumber numberWithUnsignedLongLong:[self oid]];
-}
-
 - (void)didChangeValueForKey:(NSString *)key
 {
 	[super didChangeValueForKey: key];
@@ -49,33 +96,17 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 	}
 }
 
-- (NSMutableDictionary *)statistics
-{
-    NSMutableDictionary *result = [[[[NSUserDefaults standardUserDefaults] objectForKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]] mutableCopy] autorelease];
-    
-    if (! result) result = [NSMutableDictionary dictionary];
-        
-    return result;
-}
-
-- (void)setStatistics:(NSDictionary *)aDict
-{
-    [[NSUserDefaults standardUserDefaults] setObject:aDict forKey:[@"GroupStats-" stringByAppendingString:[[self oidNumber] description]]];
-}
-
 - (void)invalidateStatistics
 {
-    NSMutableDictionary *stats = [self statistics];
-    [stats removeAllObjects]; 
-    [self setStatistics:stats];
-    
+    [self setUnreadMessageCount:nil];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupStatisticsDidInvalidateNotification object:self];
 }
 
 - (NSNumber *)calculateUnreadMessageCount
 {
     OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-    NSNumber *unreadMessageCount = nil;
+    NSNumber *result = nil;
     
     @synchronized(context)
     {
@@ -87,25 +118,18 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
         
         [statement execute];
         
-        unreadMessageCount = [NSNumber newFromStatement:[statement stmt] index:0];
+        result = [NSNumber newFromStatement:[statement stmt] index:0];
 		
 		[statement reset];
     }
     
-    return unreadMessageCount;
+    return result;
 }
 
 - (NSNumber *)unreadMessageCount
 {
-    NSMutableDictionary *stats = [self statistics];
-    NSNumber *result = [stats objectForKey:GINumberOfUnreadMessages];
-    if (! result) 
-    {
-        result = [self calculateUnreadMessageCount];
-        [stats setObject:result forKey:GINumberOfUnreadMessages];
-        [self setStatistics:stats];
-    }
-    return result;
+    if (! unreadMessageCount) [self setUnreadMessageCount:[self calculateUnreadMessageCount]];
+    return unreadMessageCount;
 }
 
 @end
