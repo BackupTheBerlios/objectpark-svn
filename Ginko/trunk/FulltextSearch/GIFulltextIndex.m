@@ -150,14 +150,14 @@
     return result;
 }
 
-+ (void)document:(jobject)document addTextFieldWithName:(NSString *)name text:(jstring)textString
++ (void)document:(jobject)document addUnStoredFieldWithName:(NSString *)name text:(jstring)textString
 {
     jmethodID mid = NULL;
     JNIEnv *env = [self jniEnv];
     
     if (! mid)
     {
-        mid = (*env)->GetStaticMethodID(env, [self fieldClass], "Text", "(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/lucene/document/Field;");
+        mid = (*env)->GetStaticMethodID(env, [self fieldClass], "UnStored", "(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/lucene/document/Field;");
         NSAssert(mid != NULL, @"Text static method couldn't be found.");
     }
     
@@ -290,22 +290,7 @@
     NSAssert(oidJavaString != NULL, @"textString not converted.");
 
     [self document:document addKeywordFieldWithName:@"id" text:oidJavaString];
-        
-    // thread-id
-    oidString = [[NSNumber numberWithUnsignedLongLong:[[aMessage thread] oid]] description];
-    oidJavaString = (*env)->NewStringUTF(env, [oidString UTF8String]);
-    exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
-    NSAssert(oidJavaString != NULL, @"textString not converted.");
-    
-    [self document:document addKeywordFieldWithName:@"thread" text:oidJavaString];
-    
+
     // date
     NSCalendarDate *date = [aMessage valueForKey:@"date"];
     double millis = (double)([date timeIntervalSince1970] * 1000.0);
@@ -320,7 +305,7 @@
             (*env)->ExceptionDescribe(env);
             (*env)->ExceptionClear(env);
         }
-        [self document:document addKeywordFieldWithName:@"date" text:dateJavaString];
+        [self document:document addUnStoredFieldWithName:@"date" text:dateJavaString];
     }
     @catch(NSException *localException)
     {
@@ -341,7 +326,7 @@
             (*env)->ExceptionClear(env);
         }
         
-        [self document:document addTextFieldWithName:@"subject" text:subjectJavaString];
+        [self document:document addUnStoredFieldWithName:@"subject" text:subjectJavaString];
     }
     
     // author
@@ -358,7 +343,7 @@
             (*env)->ExceptionClear(env);
         }
         
-        [self document:document addTextFieldWithName:@"author" text:authorJavaString];
+        [self document:document addUnStoredFieldWithName:@"author" text:authorJavaString];
     }
     
     // body
@@ -377,7 +362,7 @@
         }
         
         
-        [self document:document addTextFieldWithName:@"body" text:bodyJavaString];
+        [self document:document addUnStoredFieldWithName:@"body" text:bodyJavaString];
     }    
     
     return document;
@@ -1032,7 +1017,6 @@
     if (hits == NULL) return nil;
 
     jstring messageIdFieldName = (*env)->NewStringUTF(env, "id");
-    jstring threadIdFieldName = (*env)->NewStringUTF(env, "thread");
     
     jint i, hitsCount = [self hitsLength:hits];
     
@@ -1057,11 +1041,7 @@
         NSNumber *messageOid = [NSNumber numberWithUnsignedLongLong:[messageOidString longLongValue]];
         GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:[messageOidString longLongValue] ofClass:[GIMessage class]];
         
-        jstring javaThreadOid = [self document:doc get:threadIdFieldName];
-        NSString *threadOidString = [self stringFromJstring:javaThreadOid];
-#warning HACK: Do better with converting to unsigned long long (not correct here)
-        //NSNumber *threadOid = [NSNumber numberWithUnsignedLongLong:[threadOidString longLongValue]];
-        GIThread *thread = [[OPPersistentObjectContext threadContext] objectForOid:[threadOidString longLongValue] ofClass:[GIThread class]];
+        GIThread *thread = [message thread];
                 
         if (! [thread resolveFault] || ! [message resolveFault])
         {
