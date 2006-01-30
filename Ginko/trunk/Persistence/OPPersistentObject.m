@@ -115,17 +115,15 @@
 {
 	OPPersistentObjectContext* previousContext = [self context];
 	NSParameterAssert(previousContext == context || previousContext == nil);
-
-	[context willChangeObject: self];
+	
 	NSParameterAssert(oid==0);
 	// Create attributes dictionary as necessary
-	@synchronized(self) {
-		if (!attributes) {
-			//NSLog(@"Creating attribute dictionary for object %@", self);
-			attributes = [[NSMutableDictionary alloc] init]; // should we set default values here?
-		}
+	if (!attributes) {
+		//NSLog(@"Creating attribute dictionary for object %@", self);
+		attributes = [[NSMutableDictionary alloc] init]; // should we set default values here?
 	}
-	[context didChangeObject: self];
+	//[context willChangeObject: self];
+	[context insertObject: self];
 }
 
 - (id) initFaultWithContext: (OPPersistentObjectContext*) context 
@@ -241,6 +239,7 @@
 }
 
 - (void) setOid: (OID) theOid
+/*" Registers the receiver with the context, if neccessary. "*/
 {
 	if (oid != theOid) {
 		NSAssert(oid==0, @"Object ids can be set only once per instance.");
@@ -311,7 +310,7 @@
 - (void) willChangeValueForKey: (NSString*) key
 {
     [self willAccessValueForKey: key]; // not necessary for relationships!
-    [[self context] willChangeObject: self];
+    //[[self context] willChangeObject: self];
 	[super willChangeValueForKey: key]; // notify observers
 }
 

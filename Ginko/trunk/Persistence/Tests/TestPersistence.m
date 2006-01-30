@@ -258,7 +258,7 @@
 
 - (void) testGettingAllObjects
 {
-	NSArray* allThreads = [context objectsForClass: [GIMessageGroup class] whereFormat: nil, nil];
+	NSArray* allThreads = [context fetchObjectsOfClass: [GIMessageGroup class] whereFormat: nil, nil];
 	
 	NSLog(@"Got %d thread faults.", [allThreads count]);
 	
@@ -342,7 +342,7 @@
 
 - (void) testFaultingArray
 {
-	NSArray* allGroups = [context objectsForClass: [GIMessageGroup class] whereFormat: nil, nil];
+	NSArray* allGroups = [context fetchObjectsOfClass: [GIMessageGroup class] whereFormat: nil, nil];
 	OPFaultingArray* testArray = [OPFaultingArray array];
 	
 	[testArray addObject: [allGroups objectAtIndex: 0]];

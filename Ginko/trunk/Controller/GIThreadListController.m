@@ -933,21 +933,21 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction)joinThreads: (id) sender
+- (IBAction) joinThreads: (id) sender
 /*" Joins the selected threads into one. "*/
 {
     [self joinThreads];
 }
 
-- (IBAction)extractThread: (id) sender
+- (IBAction) extractThread: (id) sender
 /*" Creates a new thread for the selected messages. "*/
 {
     NSLog(@"Should extractThread here.");
 }
 
-- (IBAction)moveSelectionToTrash: (id) sender
+- (IBAction) moveSelectionToTrash: (id) sender
 {
-    int rowBefore = [[threadsView selectedRowIndexes] firstIndex] - 1;
+    int rowBefore = [[threadsView selectedRowIndexes] firstIndex];
     NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
     GIThread* thread;
     BOOL trashedAtLeastOne = NO;
@@ -965,10 +965,10 @@ static BOOL isThreadItem(id item)
     }
     
     if (trashedAtLeastOne)  {
-        [NSApp saveAction: self];
-        if (rowBefore >= 0)  {
-            [threadsView selectRow: rowBefore byExtendingSelection: NO];
-        }
+		// Select first selected line, if it still exists;
+        rowBefore = MIN([threadsView numberOfRows]-1, rowBefore); 
+		if (rowBefore>=0) [threadsView selectRow: rowBefore byExtendingSelection: NO];
+		[NSApp saveAction: self];
     } else  {
         NSBeep();
     }

@@ -22,7 +22,7 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
     unreadMessageCount = [aCount retain];
 }
 
-+ (void)loadGroupStats
++ (void) loadGroupStats
     /*" Called at initialization time startup "*/
 {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];

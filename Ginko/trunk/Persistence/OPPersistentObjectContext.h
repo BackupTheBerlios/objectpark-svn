@@ -64,17 +64,23 @@
 	/*" Maps join table names to OPObjectReleationship objects, recording the n:m relationship changes for that join table. Used to update fetched n:m relationships. "*/
 	NSMutableDictionary* relationshipChangesByJoinTable;
 	unsigned faultCacheSize;
-	NSMutableArray* faultCache; // array of constant size retaining some often used objects so they do not get instantiated over and over again. 
+	NSMutableArray* faultCache; // array of constant size (ringbuffer) retaining some often used objects so they do not get instantiated over and over again. 
+	NSMutableDictionary* cachedObjectsByClass;
 }
 
-// Methods for internal use:
+// Methods for internal use ONLY:
 
 - (id) objectRegisteredForOid: (OID) oid ofClass: (Class) poClass;
-- (id) objectForOid: (OID) oid ofClass: (Class) poClass;
-- (id) objectWithURLString: (NSString*) urlString;
-
 - (void) registerObject: (OPPersistentObject*) object;
 - (void) unregisterObject: (OPPersistentObject*) object;
+- (void) insertObject: (OPPersistentObject*) object;
+
+		
+// Public Methods:
+
+- (NSArray*) allObjectsOfClass: (Class) poClass;
+
+
 - (NSSet*) changedObjects;
 - (NSSet*) deletedObjects;
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object;
@@ -91,10 +97,10 @@
 + (OPPersistentObjectContext*) defaultContext;
 - (void) reset;
 
-//- (void) lock;
-//- (void) unlock;
+- (id) objectWithURLString: (NSString*) urlString;
+- (id) objectForOid: (OID) oid ofClass: (Class) poClass;
 
-- (void) willChangeObject: (OPPersistentObject*) object;
+//- (void) willChangeObject: (OPPersistentObject*) object;
 - (void) didChangeObject: (OPPersistentObject*) object;
 
 - (void) willRevertObject: (OPPersistentObject*) object;
@@ -107,12 +113,10 @@
 - (void) saveChanges;
 - (void) revertChanges;
 
-//- (NSArray*) objectsForClass: (Class) poClass
-//					   where: (NSString*) clause;
-- (NSArray*) objectsForClass: (Class) poClass
+- (NSArray*) fetchObjectsOfClass: (Class) poClass
 				 queryFormat: (NSString*) clause, ...;
 
-- (NSArray*) objectsForClass: (Class) poClass
+- (NSArray*) fetchObjectsOfClass: (Class) poClass
 				 whereFormat: (NSString*) clause, ...;
 
 - (OPFaultingArray*) containerForObject: (id) object

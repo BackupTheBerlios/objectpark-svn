@@ -82,7 +82,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    NSArray* result = [context objectsForClass: self whereFormat: @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    NSArray* result = [context fetchObjectsOfClass: self whereFormat: @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
 
     return result;
 }
@@ -91,7 +91,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    NSArray* result = [context objectsForClass: self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    NSArray* result = [context fetchObjectsOfClass: self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
     
     return result;
 }
@@ -103,7 +103,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
     if (messageId) {
 		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-		NSArray* objects = [context objectsForClass: self whereFormat: @"ZMESSAGEID=?", messageId, nil];
+		NSArray* objects = [context fetchObjectsOfClass: self whereFormat: @"ZMESSAGEID=?", messageId, nil];
 		
 		//[objectEnum reset]; // optional
 		//[objectEnum bind:messageId, nil]; // only necessary for requests containing question mark placeholders

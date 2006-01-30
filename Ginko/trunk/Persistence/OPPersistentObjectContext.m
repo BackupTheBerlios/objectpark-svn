@@ -81,8 +81,7 @@ typedef struct {
 {
 	NSParameterAssert([object currentOid]>0); // hashing is based on oids here
     
-    @synchronized(self)
-    {
+    @synchronized(self) {
         NSHashInsertIfAbsent(registeredObjects, object);
     }
 }
@@ -90,8 +89,7 @@ typedef struct {
 - (void) unregisterObject: (OPPersistentObject*) object
 /*" Called by -[OPPersistentObject dealloc] to make sure we do not keep references to stale objects. "*/
 {
-    @synchronized(self)
-    {
+    @synchronized(self) {
         NSHashRemove(registeredObjects, object);
     }
 }
@@ -109,8 +107,7 @@ typedef struct {
     
     OPPersistentObject *result = nil;
     
-    @synchronized(self)
-    {
+    @synchronized(self) {
         result = NSHashGet(registeredObjects, &searchStruct);
 		[[result retain] autorelease];
     }
@@ -119,7 +116,7 @@ typedef struct {
     return result;
 }
 
-- (void) willChangeObject: (OPPersistentObject*) object
+- (void) didChangeObject: (OPPersistentObject*) object
 /*" This method retains object until changes are saved. "*/
 {
 	@synchronized(self) {
@@ -140,14 +137,12 @@ typedef struct {
 	[faultFireCountsByKey addObject: key];
 }
 
-- (void) didChangeObject: (OPPersistentObject*) object
-{
-    //[lock unlock];
-}
+//- (void) didChangeObject: (OPPersistentObject*) object
+//{
+//}
 
 - (void) willRevertObject: (OPPersistentObject*) object
 {
-	//[lock lock];
     [changedObjects removeObject: object];  
 }
 
@@ -183,7 +178,7 @@ typedef struct {
         //NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
     } else {
 		// We already know this object.
-		// Put it in the fault cache:
+		// Put it into  the fault cache:
 		@synchronized (self) {
 			[faultCache addObject: result]; // cache result
 			if ([faultCache count] > faultCacheSize) {
@@ -192,6 +187,21 @@ typedef struct {
 		}
 	}
     return result;
+}
+
+- (NSArray*) allObjectsOfClass: (Class) poClass 
+/*" Returns an array of all instances of persistent objects in the receiver. This feature must be enabled in the databaseProperties plist with key 'CacheAllObjects'. Otherwise, this method throws an exception. "*/
+{
+	NSArray* result = [cachedObjectsByClass objectForKey: poClass];
+	if (!result) {
+		NSAssert1([poClass persistentClassDescription]->cachesAllObjects, @"Please set databaseProperty 'CachesAllObjects' for class %@ to keep track of allOBjectsOfClass or call fetchObjects...instead", poClass); 
+		result = [self fetchObjectsOfClass: poClass whereFormat: nil, nil];
+		
+#warning Todo: Add changedObjects to the result!
+		
+		[cachedObjectsByClass setObject: result forKey: poClass];
+	}
+	return result;
 }
 
 - (id) objectWithURLString: (NSString*) urlString
@@ -282,6 +292,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
     [changedObjects release]; changedObjects = [[NSMutableSet alloc] init]; 
     [deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
+    [cachedObjectsByClass release]; cachedObjectsByClass = [[NSMutableDictionary alloc] init];
 	
 	[relationshipChangesByJoinTable release];
 	relationshipChangesByJoinTable = [[NSMutableDictionary alloc] init];
@@ -504,16 +515,24 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" Marks object for deletion on the next -saveChanges call. "*/
 {
 	if ([object currentOid]) {
-		// otherwise it has not been stored persistently, so we do not need to delete it
+		// Otherwise it has not been stored persistently, so we do not need to delete it
 		if (![deletedObjects containsObject: object]) {
 			
 			[deletedObjects addObject: object];
 			[changedObjects removeObject: object]; // make sure, it is not inserted again
 			[object willDelete];
+			[[cachedObjectsByClass objectForKey: [object class]] removeObject: object];
 		}
 	}
 }
 
+- (void) insertObject: (OPPersistentObject*) object
+{
+	// We cannot register object here because it does not yet have an oid.
+	
+	[[cachedObjectsByClass objectForKey: [object class]] addObject: object];
+	[self didChangeObject: object];
+}
 
 
 - (OPFaultingArray*) containerForObject: (id) object
@@ -594,6 +613,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     [faultFireCountsByKey release];
 	[deletedObjects release];
 	[changedObjects release];
+	[cachedObjectsByClass release]; cachedObjectsByClass = nil;
 		
 	[super dealloc];
 }
@@ -603,8 +623,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return [NSString stringWithFormat: @"%@ #faults registered/created: %u/%u, #r'ships fired: %u, #saved: %u, #deleted: %u, \nfireKeys: %@", [super description], NSCountHashTable(registeredObjects), numberOfFaultsCreated, numberOfRelationshipsFired, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
 }
 
-- (NSArray*) objectsForClass: (Class) poClass
-				 queryFormat: (NSString*) sql, ...
+- (NSArray*) fetchObjectsOfClass: (Class) poClass
+					 queryFormat: (NSString*) sql, ...
 /*" Pass a query string in the format string. The following parameters replace any occurrences of $1, $2 $3 etc. respectively. "*/
 {
 	NSArray* result;
@@ -635,8 +655,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return result;
 }
 
-- (NSArray*) objectsForClass: (Class) poClass
-				 whereFormat: (NSString*) clause, ...
+- (NSArray*) fetchObjectsOfClass: (Class) poClass
+					 whereFormat: (NSString*) clause, ...
 	/*" Replaces all the question marks in the whereFormat string with the object 
 	values passed. Valid object classes return YES to +[canPersist]. "*/
 {
@@ -663,7 +683,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 /*
-- (NSArray*) objectsForClass: (Class) poClass
+- (NSArray*) fetchObjectsOfClass: (Class) poClass
 					   where: (NSString*) clause
 {
 	return [[[OPPersistentObjectEnumerator alloc] initWithContext: self 

@@ -49,6 +49,7 @@
 	NSString* columnList; // comma-separated list of column names
 	NSString* tableName; // the name of the database table
 	NSArray* createStatements;
+	BOOL cachesAllObjects;
 }
 
 - (void) checkTableUsingConnection: (OPSQLiteConnection*) connection;

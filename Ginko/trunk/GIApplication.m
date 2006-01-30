@@ -379,11 +379,10 @@
 
 - (IBAction)getNewMailInAllAccounts:(id)sender
 {
-    NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
-    GIAccount *account;
+    NSEnumerator* enumerator = [[GIAccount allObjects] objectEnumerator];
+    GIAccount* account;
     
-    while (account = [enumerator nextObject]) 
-    {
+    while (account = [enumerator nextObject]) {
         if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount:account];
     }
 }

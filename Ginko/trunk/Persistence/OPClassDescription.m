@@ -117,10 +117,12 @@
 		if (createStatements) 
 			NSAssert([createStatements isKindOfClass: [NSArray class]], @"Please supply an array for the 'CreateStatements' key.");
 		
+		cachesAllObjects = [[plist objectForKey: @"CacheAllObjects"] boolValue];
+		NSLog(@"%@: %d", self, cachesAllObjects);
+		
 	}
 	return self;
 }
-
 
 
 - (NSMutableArray*) columnNames

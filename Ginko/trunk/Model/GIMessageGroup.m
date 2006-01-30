@@ -37,6 +37,7 @@
 	return 
 	@"{"
 	@"  TableName = ZMESSAGEGROUP;"
+	@"  CacheAllObjects = 1;"
 	@"  CreateStatements = (\""
 	@"  CREATE TABLE ZMESSAGEGROUP ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZNAME VARCHAR );"
 	@"  \",\""
@@ -564,7 +565,7 @@ static NSMutableArray* root = nil;
 
 #warning needs testing.
 	
-	return [[self context] objectsForClass: [GIMessage class] queryFormat: queryString, self, nil];
+	return [[self context] fetchObjectsOfClass: [GIMessage class] queryFormat: queryString, self, nil];
 	
 	// todo: Cache enumerator object
 	//result = [[[OPPersistentObjectEnumerator alloc] initWithContext: [self context]
@@ -788,7 +789,7 @@ nil, //                                                     [[[NSString alloc] i
 	
 	NSLog(@"Entered fetchThreads query with sql: %@", queryString);
 	
-	return [[self context] objectsForClass: [GIThread class]
+	return [[self context] fetchObjectsOfClass: [GIThread class]
 							   queryFormat: queryString, self, subject, author, sinceDate, nil];
 		
 }
