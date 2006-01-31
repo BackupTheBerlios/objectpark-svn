@@ -609,6 +609,7 @@
 {
     GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
     OPFaultingArray *threads = [trashgroup valueForKey: @"threadsByDate"];
+    NSMutableArray *messageToDeleteOids = [NSMutableArray array];
     GIThread *thread;
     int counter = 0;
     
@@ -616,9 +617,20 @@
     
     while (thread = [threads lastObject]) // remove thread from source group:
     {
-        [thread removeValue:trashgroup forKey: @"groups"];
+        [thread removeValue:trashgroup forKey:@"groups"];
         
-        if ([[thread valueForKey: @"groups"] count] == 0) [thread delete];
+        if ([[thread valueForKey:@"groups"] count] == 0) 
+        {
+            NSEnumerator *enumerator = [[thread messages] objectEnumerator];
+            GIMessage *message;
+            
+            while (message = [enumerator nextObject])
+            {
+                [messageToDeleteOids addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
+            }
+            
+            [thread delete];
+        }
         
         counter += 1;
         
@@ -630,6 +642,12 @@
     }    
 
     [self saveAction:self];
+    
+    if ([messageToDeleteOids count])
+    {
+        [GIFulltextIndex fulltextIndexInBackgroundAdding:nil removing:messageToDeleteOids];
+    }
+    
     [pool release];
 }
 
