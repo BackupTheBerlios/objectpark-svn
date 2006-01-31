@@ -78,13 +78,14 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 
 
 - (NSArray*) references 
-/*" Returns an array of messages in the reply-chain, either taken from the 'In-Reply-To' or 'References' header. "*/
+/*" Returns an array of messages in the reply-chain, either taken from the
+   'References' (prefered) or the 'In-Reply-To' header. "*/
 {
     NSArray*            result = nil;
     EDIdListFieldCoder* coder  = nil;
     NSAutoreleasePool*  pool   = [[NSAutoreleasePool alloc] init];
     
-    NSString* inReplyTo = [self bodyForHeaderField: @"in-reply-to"];
+    NSString* inReplyTo  = [self bodyForHeaderField: @"in-reply-to"];
     NSString* references = [self bodyForHeaderField: @"references"];
     
     if (references) {
@@ -93,15 +94,8 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
         result = [[coder list] retain];
         [coder release];
     }
-	
-    if (inReplyTo) {
-        if (result) {
-            NSArray* oldResult = result;
-            result = [[[NSArray arrayWithObject:inReplyTo] arrayByAddingObjectsFromArray:oldResult] retain];
-            [oldResult release];
-        }
-        else
-            result = [[NSArray arrayWithObject:inReplyTo] retain];
+	else if (inReplyTo) {
+        result = [[NSArray arrayWithObject:inReplyTo] retain];
     }
     
     [pool release];
@@ -109,7 +103,8 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     if([result count] == 0) {
         [result release];
         return nil;
-    } else {
+    }
+    else {
         return [result autorelease];
     }
 }
