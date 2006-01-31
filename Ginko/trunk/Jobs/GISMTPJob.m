@@ -113,12 +113,12 @@
                 
                 while (message = [enumerator nextObject]) 
                 {
-                    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
+                    [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
                     
                     @try 
                     {
-                        [SMTP acceptMessage:[message internetMessage]];
-                        [sentMessages addObject:message];
+                        [SMTP acceptMessage: [message internetMessage]];
+                        [sentMessages addObject: message];
                     } 
                     @catch (NSException *localException) 
                     {
@@ -126,13 +126,9 @@
                     }
                     [pool release]; pool = [[NSAutoreleasePool alloc] init];
                 }
-            } 
-            @catch (NSException *localException) 
-            {
+            } @catch (NSException *localException) {
                 @throw;
-            } 
-            @finally 
-            {
+            } @finally {
                 [pool drain];
                 [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
                 [stream close];

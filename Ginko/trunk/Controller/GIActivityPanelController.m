@@ -197,7 +197,7 @@ static GIActivityPanelController *panel = nil;
 	if ([identifier isEqualToString: @"stopButton"]) {
 		NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
 		NSString* progressTitle = @"Running";
-		if (![progressInfo isJobProgressIndeterminate]) {
+		if (! [progressInfo isJobProgressIndeterminate]) {
 			double minValue = [progressInfo jobProgressMinValue];
 			double normalizedMax = [progressInfo jobProgressMaxValue] - minValue;
 			double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;

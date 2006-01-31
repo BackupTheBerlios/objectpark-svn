@@ -195,11 +195,20 @@ typedef struct {
 	NSArray* result = [cachedObjectsByClass objectForKey: poClass];
 	if (!result) {
 		NSAssert1([poClass persistentClassDescription]->cachesAllObjects, @"Please set databaseProperty 'CachesAllObjects' for class %@ to keep track of allOBjectsOfClass or call fetchObjects...instead", poClass); 
-		result = [self fetchObjectsOfClass: poClass whereFormat: nil, nil];
 		
-#warning Todo: Add changedObjects to the result!
-		
-		[cachedObjectsByClass setObject: result forKey: poClass];
+		@synchronized(self) {
+			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+			result = [self fetchObjectsOfClass: poClass whereFormat: nil, nil];
+			NSEnumerator* coe = [changedObjects objectEnumerator];
+			id object;
+			while ([object = coe nextObject]) {
+				if ([object isKindOfClass: poClass]) {
+					[(id)result addObject: object];
+				}
+			}
+			[cachedObjectsByClass setObject: result forKey: poClass];
+			[pool release];
+		}
 	}
 	return result;
 }

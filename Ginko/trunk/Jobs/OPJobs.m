@@ -195,22 +195,19 @@ static BOOL pendingJobsSuspended = NO;
         [pool release];
         pool = [[NSAutoreleasePool alloc] init];
         
-        [jobsLock lockWhenCondition:OPPendingJobs];
+        [jobsLock lockWhenCondition: OPPendingJobs];
 
         NSMutableDictionary *jobDescription = [self nextPendingJobUnlockingSynchronizedObject:nil];
                         
         // this thread is no longer idle but working:
-        [idleThreads removeObject:[NSThread currentThread]];
-        [activeThreads addObject:[NSThread currentThread]];
+        [idleThreads removeObject: [NSThread currentThread]];
+        [activeThreads addObject: [NSThread currentThread]];
         
         [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
 
-        while (jobDescription)
-        {
+        while (jobDescription) {
             //NSLog(@"Working on job with description: %@", jobDescription);
-            ;
-            @try 
-            {
+			@try {
                 // do job here:
                 NSObject *jobTarget = [jobDescription objectForKey:OPJobTarget];
                 SEL jobSelector = NSSelectorFromString([jobDescription objectForKey:OPJobSelector]);
@@ -220,9 +217,7 @@ static BOOL pendingJobsSuspended = NO;
                 [self performSelectorOnMainThread:@selector(noteJobWillStart:) withObject:[jobDescription objectForKey:OPJobId] waitUntilDone:NO];
                 
                 [jobTarget performSelector:jobSelector withObject:[jobDescription objectForKey:OPJobArguments]];
-            } 
-            @catch (NSException *localException) 
-            {
+            } @catch (NSException *localException) {
                 [localException retain];
 //#warning *** Selector 'isKindOfClass:' sent to dealloced instance 0x5581a80 of class NSException.
                 NSLog(@"Job (%@) caused Exception: %@", jobDescription, localException);
