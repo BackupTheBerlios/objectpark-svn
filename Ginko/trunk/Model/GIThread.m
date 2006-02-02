@@ -232,7 +232,7 @@
 - (void) setDate: (NSDate*) newDate
 {
 	NSDate* oldDate = [self valueForKey: @"date"];
-	if ([oldDate compare: newDate]<0) {
+	if (oldDate == nil || [oldDate compare: newDate]<0) {
 		[self willChangeValueForKey: @"date"];	
 		[self setPrimitiveValue: newDate forKey: @"date"];
 		[self didChangeValueForKey: @"date"];	

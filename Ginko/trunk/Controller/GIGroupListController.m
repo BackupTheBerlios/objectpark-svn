@@ -106,7 +106,7 @@
 	return nil;
 }
 
-- (void)reloadData
+- (void) reloadData
 {
     [boxesView reloadData];
 }
