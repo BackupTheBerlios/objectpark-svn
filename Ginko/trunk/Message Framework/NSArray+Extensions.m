@@ -40,18 +40,26 @@ static NSComparisonResult compareAttributes(id object1, id object2, void *contex
 
 //---------------------------------------------------------------------------------------
 
-/*" If the array contains exactly one object this is returned. Otherwise an #NSInternalInconsistencyException is raised. "*/
+/*" If the array contains exactly one object this is returned.
+    Otherwise an #NSInternalInconsistencyException is raised. "*/
 
 - (id)singleObject
 {
     if([self count] != 1)
-        [NSException raise:NSInternalInconsistencyException format: @"-[%@ %@]: Attempt to retrieve single object from an array that contains %d objects.", NSStringFromClass(isa), NSStringFromSelector(_cmd), [self count]];
+        [NSException raise:NSInternalInconsistencyException format: @"-[%@ %@]: Attempt to retrieve single object from an array that contains %d objects.",
+                                                                    NSStringFromClass(isa), NSStringFromSelector(_cmd), [self count]];
     return [self objectAtIndex:0];
 }
 
 //---------------------------------------------------------------------------------------
 
-/*" Return the object at index 0 or !{nil} if the array is empty. #Note: The method #firstObject is also implemented in the HTML framework which is sometimes loaded in AppKit applications. Unfortunately, its implemenation differs in that it raises an exception if the array is empty. (Don't ask why they did that!) So, you either live with this or call #applyFirstObjectPatch before the HTML framework is loaded. "*/
+/*" Return the object at index 0 or !{nil} if the array is empty.
+    #Note: The method #firstObject is also implemented in the HTML framework
+    which is sometimes loaded in AppKit applications.
+    Unfortunately, its implemenation differs in that it raises an exception if
+    the array is empty. (Don't ask why they did that!)
+    So, you either live with this or call #applyFirstObjectPatch before the HTML
+    framework is loaded. "*/
 
 - (id)firstObject
 {
@@ -91,7 +99,8 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 //---------------------------------------------------------------------------------------
 
-/*" Returns a new array that is a copy of the receiver with the objects arranged in reverse. "*/
+/*" Returns a new array that is a copy of the receiver with the objects arranged
+    in reverse. "*/
 
 - (NSArray*) reversedArray
 {
@@ -99,7 +108,8 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Returns a new array that is a copy of the receiver with the objects rearranged randomly. "*/
+/*" Returns a new array that is a copy of the receiver with the objects 
+    rearranged randomly. "*/
 
 - (NSArray*) shuffledArray
 {
@@ -109,7 +119,8 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Returns a new array that is a copy of the receiver with the objects sorted objects according to their compare: method "*/
+/*" Returns a new array that is a copy of the receiver with the objects sorted
+    objects according to their compare: method "*/
 
 - (NSArray*) sortedArray
 {
@@ -117,7 +128,9 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Returns a new array that is a copy of the receiver with the objects sorted according to the values of their attribute %{attributeName}. These are retrieved using key/value coding. "*/
+/*" Returns a new array that is a copy of the receiver with the objects sorted
+    according to the values of their attribute %{attributeName}.
+    These are retrieved using key/value coding. "*/
 
 - (NSArray*) sortedArrayByComparingAttribute: (NSString*) attributeName
 {
@@ -125,7 +138,10 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" If the receiver contains instances of #NSArray the objects from the embedded array are transferred to the receiver and the embedded array is deleted. This method works recursively which means that embedded arrays are also flattened before their contents are transferred. "*/
+/*" If the receiver contains instances of #NSArray the objects from the embedded
+    array are transferred to the receiver and the embedded array is deleted.
+    This method works recursively which means that embedded arrays are also
+    flattened before their contents are transferred. "*/
 
 - (NSArray*) flattenedArray
 {
@@ -149,7 +165,11 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 //---------------------------------------------------------------------------------------
 
-/*" Uses each object in the receiver as a key and looks up the corresponding value in %mapping. All these values are added in the same order to the array returned. Note that this method raises an Exception if any of the objects in the receiver are not found as a key in %mapping."*/
+/*" Uses each object in the receiver as a key and looks up the corresponding 
+    value in %mapping.
+    All these values are added in the same order to the array returned.
+    Note that this method raises an Exception if any of the objects in the 
+    receiver are not found as a key in %mapping."*/
 
 - (NSArray*) arrayByMappingWithDictionary: (NSDictionary*) mapping
 {
@@ -164,7 +184,8 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Invokes the method described by %selector in each object in the receiver. All returned values are added in the same order to the array returned. "*/
+/*" Invokes the method described by %selector in each object in the receiver.
+    All returned values are added in the same order to the array returned. "*/
 
 - (NSArray*) arrayByMappingWithSelector:(SEL)selector
 {
@@ -179,7 +200,9 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Invokes the method described by %selector in each object in the receiver, passing %object as an argument. All returned values are added in the same order to the array returned. "*/
+/*" Invokes the method described by %selector in each object in the receiver,
+    passing %object as an argument.
+    All returned values are added in the same order to the array returned. "*/
 
 - (NSArray*) arrayByMappingWithSelector:(SEL)selector withObject:(id)object
 {
@@ -196,7 +219,23 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 //---------------------------------------------------------------------------------------
 
-/*" Returns an array containing all objects from the receiver up to (not including) the object at %index. "*/
+/*" Returns an array with all duplicates removed (i.e. uniqued).
+    The order of the entries is preserved. "*/
+
+- (NSArray*) arrayByRemovingDuplicates
+{
+    NSMutableArray* result = [NSMutableArray arrayWithArray:self];
+    
+    [result removeDuplicates];
+    
+    return result;
+}
+
+
+//---------------------------------------------------------------------------------------
+
+/*" Returns an array containing all objects from the receiver up to
+    (not including) the object at %index. "*/
 
 - (NSArray*) subarrayToIndex:(unsigned int)index
 {
@@ -204,13 +243,13 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Returns an array containing all objects from the receiver starting with the object at %index. "*/
+/*" Returns an array containing all objects from the receiver starting with the
+    object at %index. "*/
 
 - (NSArray*) subarrayFromIndex:(unsigned int)index
 {
     return [self subarrayWithRange:NSMakeRange(index, [self count] - index)];
 }
-
 
 //---------------------------------------------------------------------------------------
 
@@ -230,7 +269,8 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 //---------------------------------------------------------------------------------------
 
-/*" Returns the first index at which %otherArray is contained in the receiver; or !{NSNotFound} otherwise. "*/
+/*" Returns the first index at which %otherArray is contained in the receiver;
+    or !{NSNotFound} otherwise. "*/
 
 - (unsigned int)indexOfSubarray:(NSArray*) other
 {
@@ -251,7 +291,9 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 //---------------------------------------------------------------------------------------
 
-/*" Creates and returns an array of NSString objects. These refer to all files of the type specified in %type that can be found in the directory %aPath. "*/
+/*" Creates and returns an array of NSString objects.
+    These refer to all files of the type specified in %type that can be found in
+    the directory %aPath. "*/
 
 + (NSArray*) arrayWithFilesOfType: (NSString*) type inPath: (NSString*) aPath
 {
@@ -267,7 +309,10 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Creates and returns an array of NSString objects. These refer to all files of a type specified in %type that can be found in a directory named %libraryName in any of the standard library locations as returned by #NSSearchPathForDirectoriesInDomains. "*/
+/*" Creates and returns an array of NSString objects.
+    These refer to all files of a type specified in %type that can be found in a
+    directory named %libraryName in any of the standard library locations as 
+    returned by #NSSearchPathForDirectoriesInDomains. "*/
 
 + (NSArray*) arrayWithFilesOfType: (NSString*) type inLibrary: (NSString*) libraryName
 {
@@ -336,6 +381,25 @@ static EDObjcMethodInfo myFirstObjectMethod;
 
 /*" Various common extensions to #NSMutableArray. "*/
 
+/*" Removes duplicate entries from the receiver (.i.e. uniqueing the entries).
+    The order of the entries is preserved. "*/
+
+- (void) removeDuplicates
+{
+    NSMutableSet *seen = [NSMutableSet set];
+    unsigned int i = 0;
+    while (i < [self count]) {
+        id entry = [self objectAtIndex:i];
+        
+        if ([seen containsObject:entry])
+            [self removeObjectAtIndex:i];
+        else {
+            [seen addObject:entry];
+            i++;
+        }
+    }
+}
+
 
 /*" Randomly changes the order of the objects in the receiving array. "*/
 
@@ -366,7 +430,8 @@ static EDObjcMethodInfo myFirstObjectMethod;
 }
 
 
-/*" Sorts objects according to the values of their %{attributeName}. These are retrieved using key/value coding. "*/
+/*" Sorts objects according to the values of their %{attributeName}.
+    These are retrieved using key/value coding. "*/
 
 - (void) sortByComparingAttribute: (NSString*) attributeName
 {

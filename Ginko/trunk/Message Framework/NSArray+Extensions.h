@@ -53,6 +53,8 @@
 
 - (NSArray*) flattenedArray;
 
+- (NSArray*) arrayByRemovingDuplicates;
+
 /*" Mapping the array "*/
 - (NSArray*) arrayByMappingWithDictionary: (NSDictionary*) mapping;
 - (NSArray*) arrayByMappingWithSelector:(SEL)selector; // similar to valueForKey:
@@ -69,6 +71,9 @@
 /*" Various common extensions to #NSMutableArray. "*/
 
 @interface NSMutableArray (OPExtensions)
+
+- (void) removeDuplicates;
+
 /*" Rearranging the array "*/
 - (void) shuffle;
 - (void) sort;
