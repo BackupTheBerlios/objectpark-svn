@@ -52,7 +52,7 @@
     NSString *punycode = /* @"PorqunopuedensimplementehablarenEspaol-fmd56a"; */
     @"heinz-knig-kcb";
     
-    NSLog(@"decoded punycode: %@", [punycode punycodeDecodedString]);
+//     NSLog(@"decoded punycode: %@", [punycode punycodeDecodedString]);
     
     shouldBeEqual(punycode, [[punycode punycodeDecodedString] punycodeEncodedString]);
 }
@@ -61,7 +61,7 @@
 {
     NSString *IDNAEncoded = @"mail.xn--heinz-knig-kcb.de";
     
-    NSLog(@"decoded IDNA: %@", [IDNAEncoded IDNADecodedDomainName]);
+//     NSLog(@"decoded IDNA: %@", [IDNAEncoded IDNADecodedDomainName]);
     
     shouldBeEqual(IDNAEncoded, [[IDNAEncoded IDNADecodedDomainName] IDNAEncodedDomainName]);
 }
