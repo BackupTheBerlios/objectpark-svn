@@ -104,6 +104,17 @@
 */
 
 
+- (void) addMessages:(NSArray*)someMessages
+/*"Adds %someMessages to the receiver."*/
+{
+    NSEnumerator* messagesToAdd = [someMessages reverseObjectEnumerator];
+    GIMessage* message;
+    
+    while (message = [messagesToAdd nextObject])
+        [message setValue:self forKey:@"thread"];
+}
+
+
 - (void) mergeMessagesFromThread: (GIThread*) otherThread
 /*" Moves all messages from otherThread into the receiver. otherThread is being deleted. "*/
 {
@@ -239,7 +250,7 @@
     GIMessage *message;
     while (message = [me nextObject]) {
 		GIMessage* reference = [message reference];
-        if (!reference || ![messages containsObject: [message reference]]) {
+        if (!reference || ![messages containsObject:reference]) {
             [result addObject: message];
         }
     }

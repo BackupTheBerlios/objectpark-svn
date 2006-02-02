@@ -20,6 +20,8 @@
 //+ (id) threadInManagedObjectContext: (OPPersistentObjectContext*) aContext;
 
 - (NSArray*) messages;
+- (void) addMessages:(NSArray*)someMessages;
+
 //- (void) addToMessages: (GIMessage*) message;
 //- (void) removeFromMessages: (GIMessage*) aMessage;
 
