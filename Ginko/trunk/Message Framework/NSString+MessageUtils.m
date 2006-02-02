@@ -143,29 +143,27 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
         NSMutableCharacterSet *workingSet;
         
         workingSet = [[[NSCharacterSet characterSetWithCharactersInString: @"()<>@,;:\\\"[]"] mutableCopy] autorelease];
-    [workingSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-    [workingSet formUnionWithCharacterSet:[NSCharacterSet linebreakCharacterSet]];
-    [workingSet formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
+        [workingSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+        [workingSet formUnionWithCharacterSet:[NSCharacterSet linebreakCharacterSet]];
+        [workingSet formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
 //#ifdef EDMESSAGE_OSXBUILD        
 //#warning ** workaround for broken implementation of -invertedSet in 5G64 
 //        [workingSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithRange:NSMakeRange(128, UINT16_MAX-128)]];
 //#else
-    [workingSet formUnionWithCharacterSet:[[NSCharacterSet standardASCIICharacterSet] invertedSet]];
+        [workingSet formUnionWithCharacterSet:[[NSCharacterSet standardASCIICharacterSet] invertedSet]];
 //#endif        
-    nonAddressChars = [workingSet copy];
-        }
-
-    if((d1Pos = [self rangeOfString: @"<"]).length > 0)
-        {
+        nonAddressChars = [workingSet copy];
+    }
+    
+    if((d1Pos = [self rangeOfString: @"<"]).length > 0) {
         searchRange = NSMakeRange(NSMaxRange(d1Pos), [self length] - NSMaxRange(d1Pos));
         d2Pos = [self rangeOfString: @">" options:0 range:searchRange];
         if(d2Pos.length == 0)
             [NSException raise:NSGenericException format: @"Invalid e-mail address string: \"%@\"", self];
         addrRange = NSMakeRange(NSMaxRange(d1Pos), d2Pos.location - NSMaxRange(d1Pos));
         addr = [[self substringWithRange:addrRange] stringByRemovingSurroundingWhitespace];
-        }
-    else if((atPos = [self rangeOfString: @"@"]).length > 0)
-        {
+    }
+    else if((atPos = [self rangeOfString: @"@"]).length > 0) {
         searchRange = NSMakeRange(0, atPos.location);
         d1Pos = [self rangeOfCharacterFromSet:nonAddressChars options:NSBackwardsSearch range:searchRange];
         if(d1Pos.length == 0)
@@ -176,15 +174,14 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
             d2Pos.location = [self length];
         addrRange = NSMakeRange(NSMaxRange(d1Pos), d2Pos.location - NSMaxRange(d1Pos));
         addr = [self substringWithRange:addrRange];
-        }
-    else
-        {
+    }
+    else {
         d2Pos = [self rangeOfCharacterFromSet:nonAddressChars];
         if(d2Pos.length == 0)
             d2Pos.location = [self length];
         addrRange = NSMakeRange(0, d2Pos.location);
         addr = [self substringWithRange:addrRange];
-        }
+    }
 
     return addr;
 }
