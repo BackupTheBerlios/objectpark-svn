@@ -20,12 +20,18 @@
 #import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
 #import "GIFulltextIndex.h"
+#import "NSArray+Extensions.h"
 
 NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotification";
 
-#define MESSAGE    OPL_DOMAIN  @"Message"
-#define DUPECHECK  OPL_ASPECT  0x01
-#define FLAGS      OPL_ASPECT  0x02
+#define MESSAGE           OPL_DOMAIN  @"Message"
+#define DUPECHECK         OPL_ASPECT  0x01
+#define FLAGS             OPL_ASPECT  0x02
+#define DUMMYCREATION     OPL_ASPECT  0x04
+#define MESSAGEREPLACING  OPL_ASPECT  0x08
+
+#define THREADING  OPL_DOMAIN  @"Threading"
+#define LOOPS      OPL_ASPECT  0x01
 
 
 @implementation GIMessage
@@ -218,68 +224,103 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return cache;
 }
 
+
++ (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate
+{
+    GIMessage* dummy;
+    
+    // if there already is a message with that id we'll use that
+    if (dummy = [self messageForMessageId:aMessageId])
+        return dummy;
+        
+    OPDebugLog(MESSAGE, DUMMYCREATION, @"creating dummy message for message id %@", aMessageId);
+    
+    dummy = [[[GIMessage alloc] init] autorelease];
+    [dummy insertIntoContext: [OPPersistentObjectContext threadContext]]; 
+    NSAssert(dummy != nil, @"Could not create a dummy message object");
+    
+    [dummy setValue:nil forKey:@"transferData"];
+    [dummy setValue: aMessageId forKey: @"messageId"];  
+//     [dummy setValue: @"" forKey: @"subject"];
+//     [dummy setValue: @"" forKey: @"senderName"];
+//     [dummy setValue: aDate forKey: @"date"];
+    
+    // dummy messages should not show up as unread
+    [dummy addFlags:OPSeenStatus];
+    
+    return dummy;
+}
+
+
+- (void) setContentFromInternetMessage:(OPInternetMessage*)im
+{
+    NSString *fromHeader = [im fromWithFallback: YES];
+    
+    if ([self isDummy])
+        [self removeFlags:OPSeenStatus];
+        
+    [self setPrimitiveValue:im forKey:@"internetMessageCache"];
+    [self setValue:[im transferData] forKey:@"transferData"];
+    [self setValue:[im messageId] forKey:@"messageId"];  
+    [self setValue:[im normalizedSubject] forKey:@"subject"];
+    [self setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"senderName"];
+    
+    // sanity check for date header field:
+    NSCalendarDate* messageDate = [im date];
+    if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare:messageDate] != NSOrderedDescending) {
+        // if message's date is a future date
+        // broken message, set current date:
+        messageDate = [NSCalendarDate date];
+        if (NSDebugEnabled)
+            NSLog(@"Found message with future date. Fixing broken date with 'now'.");
+    }
+    [self setValue:messageDate forKey:@"date"];
+    
+    // Note that this method operates on the encoded header field. It's OK because email
+    // addresses are 7bit only.
+    if ([GIProfile isMyEmailAddress:fromHeader]) {
+        [self addFlags:OPIsFromMeStatus];
+    }
+}
+
+
 + (id) messageWithTransferData: (NSData*) someTransferData
-	/*" Returns a new message with the given transfer data someTransferData in the managed object context aContext. If message is a dupe, the message not inserted into the context nil is returned. "*/
+/*" Returns a new message with the given transfer data someTransferData in the 
+    managed object context aContext.
+    If message is a dupe, the message not inserted into the context nil is returned. "*/
 {
     id result = nil;
     OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData: someTransferData];
-    BOOL insertMessage = NO;
     
     GIMessage* dupe = [self messageForMessageId: [im messageId]];
     if (dupe) {
-        if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
-			// Replace my own message but retain the bcc header for later reference:
-			NSString* bcc = [[dupe internetMessage] bccWithFallback: YES];
-			if ([bcc length]) {
-				[im setBody: bcc forHeaderField: @"bcc"];
-				someTransferData = [im transferData];
-			}
-            insertMessage = YES;
-        } else OPDebugLog(MESSAGE, DUPECHECK, @"Dupe for message id %@ detected.", [im messageId]);        
-    } else {
-        insertMessage = YES;
+        if ([dupe isDummy]) {
+            // replace message
+            OPDebugLog(MESSAGE, MESSAGEREPLACING, @"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [im messageId]);
+            [dupe setContentFromInternetMessage:im];
+        }
+        else if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
+            // replace old message with new:
+            OPDebugLog(MESSAGE, MESSAGEREPLACING, @"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [im messageId]);
+            [dupe setContentFromInternetMessage:im];
+        }
+        else
+            OPDebugLog(MESSAGE, DUPECHECK, @"Dupe for message id %@ detected.", [im messageId]);        
     }
-    
-    if (insertMessage) {
+    else {
         // Create a new message in the default context:
-		if (dupe) {
-			// Replace transferData of "dupe":
-			result = dupe;
-		} else {
-			result = [[GIMessage alloc] init];
-			[result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
-			[result release];
-		}
+        result = [[[GIMessage alloc] init] autorelease];
+        [result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
+        
 		NSAssert(result != nil, @"Could not create message object");
-
-        NSString* fromHeader = [im fromWithFallback: YES];
         
-        [result setPrimitiveValue: im forKey: @"internetMessageCache"];
-        [result setValue: someTransferData forKey: @"transferData"];
-        [result setValue: [im messageId] forKey: @"messageId"];  
-        [result setValue: [im normalizedSubject] forKey: @"subject"];
-        [result setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
-        
-        // sanity check for date header field:
-        NSCalendarDate* messageDate = [im date];
-        if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare: messageDate] != NSOrderedDescending) {
-			// if message's date is a future date
-			// broken message, set current date:
-            messageDate = [NSCalendarDate date];
-            if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
-        }
-        [result setValue: messageDate forKey: @"date"];
-        
-		// Note that this method operates on the encoded header field. It's OK because email
-        // addresses are 7bit only.
-        if ([GIProfile isMyEmailAddress: fromHeader]) {
-            [result addFlags: OPIsFromMeStatus];
-        }
+        [result setContentFromInternetMessage:im];
     }
     
     [im release];
     return result;
 }
+
 
 - (BOOL) isUsenetMessage
 	/*" Returns YES, if Ginko thinks (from the message headers) that this message is an Usenet News article (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
@@ -352,10 +393,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[self willAccessValueForKey: @"numberOfReferences"];
     NSNumber* cachedValue = [self primitiveValueForKey: @"numberOfReferences"];
 	[self didAccessValueForKey: @"numberOfReferences"];
-    if (cachedValue) return [cachedValue unsignedIntValue];
-    if (![self reference]) return 0;
+    
+    if (cachedValue)
+        return [cachedValue unsignedIntValue];
+        
+    if (![self reference])
+        return 0;
+        
     cachedValue = [NSNumber numberWithUnsignedInt: [[self reference] numberOfReferences]+1];
     [self setPrimitiveValue: cachedValue forKey: @"numberOfReferences"];
+    
     return [cachedValue unsignedIntValue];
 }
 
@@ -385,7 +432,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 
 - (GIThread*) assignThreadUseExisting: (BOOL) useExisting
-	/*" Returns the one thread the message belongs to. If useExisting is NO, this method creates a new thread in the receiver's context containing just the receiver, otherwise, it uses the message reference to find an existing thread object. "*/
+/*"Returns the one thread the message belongs to.
+   If useExisting is NO, this method creates a new thread in the receiver's
+   context containing just the receiver, otherwise, it uses the message 
+   reference to find an existing thread object."*/
 {
     GIThread* thread = [self thread];
     
@@ -621,22 +671,64 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 - (GIMessage*) referenceFind: (BOOL) find
-/*" Returns the direct message reference stored. If there is none and find is YES, looks up the references header(s) in the internet message object and caches the result (if any). "*/
+/*" Returns the direct message reference stored.
+    If there is none and find is YES, looks up the references header(s) in the
+    internet message object and caches the result (if any). "*/
 {
     GIMessage* result = [self reference];
     
-    if (!result && find) {
-        NSEnumerator* enumerator = [[[self internetMessage] references] reverseObjectEnumerator];
-        NSString* refId;
-        while (refId = [enumerator nextObject])  {
-            if (result = [[self class] messageForMessageId: refId])  {
-                [self setValue: result forKey: @"reference"];
-                return result;
-            }
+    if (result || !find)
+        return result;
+        
+    NSEnumerator* enumerator = [[[[self internetMessage] references] arrayByRemovingDuplicates] reverseObjectEnumerator];
+    GIMessage* referencingMsg = self;
+    GIMessage* referencedMsg;
+    GIThread* thread;
+    
+    NSMutableArray* messages = [NSMutableArray arrayWithObject:self];
+    
+    NSString* refId;
+    while (refId = [enumerator nextObject]) {
+        referencedMsg = [[self class] messageForMessageId:refId];
+        
+        if ([referencingMsg oid] == [referencedMsg oid]) {
+            OPDebugLog(THREADING, LOOPS, @"Loop found for oid %qu, referencing message %@, referenced message %@", [referencingMsg oid], referencingMsg, referencedMsg);
         }
+        
+        if (referencedMsg) {
+            [referencingMsg setValue:referencedMsg forKey: @"reference"];
+            
+            if (![self thread]) {  // needed?
+                thread = [referencedMsg thread];
+                
+                [thread addMessages:messages];
+            }
+            else
+                NSLog(@"OOPS! Creating a reference(s) for a message already in a thread!?!");
+            
+            return [self reference];
+        }
+        
+        // create dummy message
+        referencedMsg = [[self class] dummyMessageWithId:refId andDate:[self valueForKey:@"date"]];
+        
+        [messages addObject:referencedMsg];
+        
+        [referencingMsg setValue:referencedMsg forKey: @"reference"];
+        
+        referencingMsg = referencedMsg;
     }
-    return result;
+    
+    thread = [[[GIThread alloc] init] autorelease];
+    [thread insertIntoContext:[self context]];
+    [thread setValue:[self valueForKey:@"subject"] forKey:@"subject"];
+    [thread setValue:[self valueForKey:@"date"] forKey:@"date"];
+    
+    [thread addMessages:messages];
+    
+    return [self reference];
 }
+
 
 - (BOOL) isListMessage
 	/*" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). Decodes internet message to compute the result - so it may be slow! "*/
