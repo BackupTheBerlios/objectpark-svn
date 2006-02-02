@@ -30,7 +30,7 @@ extern NSString *EDMessageFormatException;
 
 - (BOOL)isEqualToMessage: (OPInternetMessage*) other;
 
-+ (id)messageWithAttributedStringContent: (NSAttributedString*) someContent;
++ (id) messageWithAttributedStringContent: (NSAttributedString*) someContent;
 
 - (void) zapHeaderGremlins;
 - (void) generateMessageIdWithSuffix: (NSString*) aString;

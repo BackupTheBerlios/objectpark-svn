@@ -228,6 +228,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     GIMessage* dupe = [self messageForMessageId: [im messageId]];
     if (dupe) {
         if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
+			// Replace my own message but retain the bcc header for later reference:
+			NSString* bcc = [[dupe internetMessage] bccWithFallback: YES];
+			if ([bcc length]) {
+				[im setBody: bcc forHeaderField: @"bcc"];
+				someTransferData = [im transferData];
+			}
             insertMessage = YES;
         } else OPDebugLog(MESSAGE, DUPECHECK, @"Dupe for message id %@ detected.", [im messageId]);        
     } else {

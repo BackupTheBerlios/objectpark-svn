@@ -47,23 +47,17 @@
 	} 	
 }
 
-- (void)addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
+- (void) addMessageInMainThreadWithTransferData: (NSMutableArray*) parameters
 {
-    @try 
-    {
+    @try {
         GIMessage *message = [GIMessage messageWithTransferData:[parameters objectAtIndex:0]];
-		if (message)
-		{
+		if (message) {
 			[self addMessage:message];
 			[parameters addObject:message]; // out param
 		}
-    } 
-    @catch (NSException *localException) 
-    {
+    } @catch (NSException *localException) {
         NSLog(@"Exception while adding message in main thread: %@", [localException reason]);
-    } 
-    @finally 
-    {
+    } @finally {
         while ([parameters count] < 2) [parameters addObject:[NSNull null]];
     }
 }

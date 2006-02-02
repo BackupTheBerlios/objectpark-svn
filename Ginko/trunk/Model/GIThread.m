@@ -50,9 +50,26 @@
 	[super willDelete];
 }
 
+- (void) calculateDate
+/*" Sets the date attribute according to that of the latest message in the receiver. This method fires all message faults - so be careful."*/
+{
+	NSDate* result = nil;
+	NSEnumerator* oe = [[self valueForKey: @"messages"] objectEnumerator];
+	GIMessage* message;
+	while (message = [oe nextObject]) {
+		NSDate* md = [message valueForKey: @"date"];
+		if ([result compare: md]<=0) {
+			result = md;
+		}
+	}
+	[self setValue: result forKey: @"date"];
+}
+
 - (void) willSave
 {
 	[super willSave];
+	
+	if (![self valueForKey: @"date"]) [self calculateDate]; // fixing only for broken databases - can be removed later.
 }
 
 - (void) didChangeValueForKey: (NSString*) key 
