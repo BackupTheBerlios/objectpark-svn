@@ -33,6 +33,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		301F61260992C3B7001F2072 /* TestNSArray+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 301F61240992C3B7001F2072 /* TestNSArray+Extensions.h */; };
+		301F61270992C3B7001F2072 /* TestNSArray+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 301F61250992C3B7001F2072 /* TestNSArray+Extensions.m */; };
 		30450D81091051910085A02F /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
 		30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5553B093D148F00BCACCB /* OPDebug.framework */; };
 		30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5555D093D1C2500BCACCB /* OPPreferences.framework */; };
@@ -476,6 +478,8 @@
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		301F61240992C3B7001F2072 /* TestNSArray+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSArray+Extensions.h"; sourceTree = "<group>"; };
+		301F61250992C3B7001F2072 /* TestNSArray+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSArray+Extensions.m"; sourceTree = "<group>"; };
 		30450D7C091051910085A02F /* OPDebug.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPDebug.framework; path = ../OPDebug/build/Development/OPDebug.framework; sourceTree = SOURCE_ROOT; };
 		30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "OPL-Configuration.plist"; path = "../OPL-Configuration.plist"; sourceTree = "<group>"; };
 		30D5552D093D148E00BCACCB /* OPDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OPDebug.xcodeproj; path = ../OPDebug/OPDebug.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -953,6 +957,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3017EBA109917089002C5579 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				301F61240992C3B7001F2072 /* TestNSArray+Extensions.h */,
+				301F61250992C3B7001F2072 /* TestNSArray+Extensions.m */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		30D5552E093D148E00BCACCB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1229,6 +1242,7 @@
 		8D901F890779D79A005365EA /* Cocoa Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				3017EBA109917089002C5579 /* Tests */,
 				8D313AE0094E3E39007D668A /* OPObjectPair.h */,
 				8D313AE1094E3E39007D668A /* OPObjectPair.m */,
 				7709374A08574DF200A29008 /* NSHost+GIReachability.h */,
@@ -1536,6 +1550,7 @@
 				77DA79A9097B95E900B7A5CC /* GIFulltextIndex.h in Headers */,
 				77D23028097CE048002BB88E /* GIAccount.h in Headers */,
 				77D05F400983C4BB0061BC4D /* GIFulltextSearchPane.h in Headers */,
+				301F61260992C3B7001F2072 /* TestNSArray+Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1989,6 +2004,7 @@
 				77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */,
 				77DA79AA097B95E900B7A5CC /* GIFulltextIndex.m in Sources */,
 				77D05F410983C4BB0061BC4D /* GIFulltextSearchPane.m in Sources */,
+				301F61270992C3B7001F2072 /* TestNSArray+Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
