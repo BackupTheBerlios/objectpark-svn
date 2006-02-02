@@ -29,20 +29,20 @@
 
 @implementation GIMessageBase
 
-- (void)addMessage:(GIMessage *)aMessage
+- (void) addMessage: (GIMessage*) aMessage
 {
-	[[self class] addMessage:aMessage];
+	[[self class] addMessage: aMessage];
 }
 
 + (void) addMessage: (GIMessage*) aMessage
 {
 	if (aMessage) {
 		if (![GIMessageFilter filterMessage: aMessage flags: 0]) {
-			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+			[self addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
 		}
 		
 		if ([aMessage hasFlags: OPIsFromMeStatus]) {
-			[[self class] addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
+			[self addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
 		}
 	} 	
 }

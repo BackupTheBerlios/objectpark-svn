@@ -312,6 +312,35 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	return NSNotFound;
 }
 
+
+- (unsigned) linearSearchForOid: (OID) oid
+{
+	unsigned resultIndex = NSNotFound;
+	// Search for oid:
+	size_t elementCount = count; 
+	char* result = lfind(&oid, data, &elementCount, entrySize, compare_oids);
+	if (result) {
+		resultIndex =  (result-data)/entrySize;
+		NSAssert([self oidAtIndex: resultIndex] == oid, @"lfind failed");
+	}	
+	return resultIndex;
+}
+
+- (void) updateSortObjectForObject: (id) element 
+{
+	NSParameterAssert(sortKey!=nil);
+	OID oid = [element oid];
+	unsigned objectIndex = [self linearSearchForOid: oid];
+	if (objectIndex == NSNotFound) {
+		NSLog(@"Warning: no sort object to update.");
+		return;
+	}
+	[self removeObjectAtIndex: objectIndex];
+	[self addObject: element];
+}
+
+
+
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/
 {
@@ -326,14 +355,9 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 		
 		if (YES && [anObject isFault]) {
 			// Firing a fault is probably more expensive than a linear search:
+#warning re-enable binary search here
 
-			// Search for oid:
-			size_t elementCount = count; 
-			char* result = lfind(&oid, data, &elementCount, entrySize, compare_oids);
-			if (result) {
-				resultIndex =  (result-data)/entrySize;
-				NSAssert([self oidAtIndex: resultIndex] == oid, @"lfind failed");
-			}
+			resultIndex = [self linearSearchForOid: oid];
 			
 		} else {
 			id key = [anObject valueForKey: sortKey]; // may fire fault! Bad!
@@ -520,6 +544,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	return [OPFaultingArrayEnumerator enumeratorWithArray: self];
 }
 
+/*
 - (void) makeObjectsPerformSelector: (SEL) selector
 {
 	NSEnumerator* e = [self objectEnumerator];
@@ -528,6 +553,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 		[entry performSelector: selector];
 	}
 }
+*/
 
 @end
 

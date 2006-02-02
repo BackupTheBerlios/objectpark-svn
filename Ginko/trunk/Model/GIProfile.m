@@ -55,9 +55,7 @@
 	/*" Returns all profile instances, assuring there is at least one (by creating it). "*/
 {    
     NSArray* result;
-#warning Todo: Cache +[GIProfile allObjects] for better performance of e.g. -isMyEmailAddress!
-    @synchronized(self)
-    {
+    @synchronized(self) {
         result = [super allObjects];
         
         if (![result count]) {

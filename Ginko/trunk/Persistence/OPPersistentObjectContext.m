@@ -199,6 +199,8 @@ typedef struct {
 		@synchronized(self) {
 			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 			result = [self fetchObjectsOfClass: poClass whereFormat: nil, nil];
+			
+			// Add all changed/new objects possibly not yet in the database:
 			NSEnumerator* coe = [changedObjects objectEnumerator];
 			id object;
 			while ([object = coe nextObject]) {

@@ -45,8 +45,9 @@
 - (void) addOid: (OID) oid sortObject: (id) sortObject;
 - (void) addObject: (OPPersistentObject*) anObject;
 //- (void) replaceOidAtIndex: (unsigned) anIndex withOid: (OID) anInt;
+- (void) updateSortObjectForObject: (id) element ;
 
-- (NSEnumerator*) objectEnumerator;
-- (void) makeObjectsPerformSelector: (SEL) selector;
+//- (NSEnumerator*) objectEnumerator;
+//inherited - (void) makeObjectsPerformSelector: (SEL) selector;
 
 @end

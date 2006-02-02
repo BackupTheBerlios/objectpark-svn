@@ -9,6 +9,7 @@
 #import "GIThread.h"
 #import "OPSQLiteConnection.h"
 #import "OPPersistentObjectContext.h"
+#import "NSArray+Extensions.h"
 #import "GIMessage.h"
 
 @implementation GIThread
@@ -228,6 +229,17 @@
     return result;
 }
 
+- (void) setDate: (NSDate*) newDate
+{
+	NSDate* oldDate = [self valueForKey: @"date"];
+	if ([oldDate compare: newDate]<0) {
+		[self willChangeValueForKey: @"date"];	
+		[self setPrimitiveValue: newDate forKey: @"date"];
+		[self didChangeValueForKey: @"date"];	
+		[[self valueForKey: @"groups"] makeObjectsPerformSelector: @selector(dateDidChangeOfThread:) 
+													   withObject: self];
+	}
+}
 
 - (unsigned) commentDepth
 	/*" Returns the the length of the longest comment chain in this thread. "*/

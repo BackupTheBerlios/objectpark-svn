@@ -46,6 +46,11 @@
 - (NSArray*) shuffledArray;
 - (NSArray*) sortedArray;
 - (NSArray*) sortedArrayByComparingAttribute: (NSString*) attributeName;
+
+- (void) makeObjectsPerformSelector: (SEL) aSelector 
+						 withObject: (id) argument1 
+						 withObject: (id) argument2;
+
 - (NSArray*) flattenedArray;
 
 /*" Mapping the array "*/

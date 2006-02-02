@@ -20,6 +20,7 @@
 #import "GIMessage.h"
 #import "NSData+MessageUtils.h"
 #import "OPJobs.h"
+#import "OPFaultingArray.h"
 
 
 #define MESSAGEGROUP     OPL_DOMAIN  @"MessageGroup"
@@ -545,26 +546,14 @@ static NSMutableArray* root = nil;
     return YES;
 }
 
-- (void) willDelete
-{
-	// delete dependent objects
-	[super willDelete];
-}
-
-- (void) willChangeValueForKey: (NSString*) key
-{
-	//NSLog(@"MessageGroup changes value for key %@", key);
-	[super willChangeValueForKey: key];
-}
-
 
 - (NSArray*) allMessages
-/*" Only returns persistent messages (from the database). "*/
+	/*" Only returns persistent messages (from the database). "*/
 {
-// 	OPPersistentObjectEnumerator* result;
-
+	// 	OPPersistentObjectEnumerator* result;
+	
 	NSString* queryString = @"select ZMESSAGE.ROWID from Z_4THREADS, ZMESSAGE where ZMESSAGE.ZTHREAD = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=?";
-
+	
 #warning needs testing.
 	
 	return [[self context] fetchObjectsOfClass: [GIMessage class] queryFormat: queryString, self, nil];
@@ -577,6 +566,27 @@ static NSMutableArray* root = nil;
 	//[result bind: self]; // fill "?" above with own oid;
 	
 	//return result;
+}
+
+- (void) willDelete
+{
+	// delete dependent objects
+	[super willDelete];
+}
+
+/*
+- (void) willChangeValueForKey: (NSString*) key
+{
+	//NSLog(@"MessageGroup changes value for key %@", key);
+	[super willChangeValueForKey: key];
+}
+*/
+
+
+- (void) dateDidChangeOfThread: (GIThread*) thread 
+{
+	OPFaultingArray* threads = [self valueForKey: @"threadsByDate"];
+	[threads updateSortObjectForObject: thread];
 }
 
 

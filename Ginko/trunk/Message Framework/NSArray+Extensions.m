@@ -303,6 +303,27 @@ static EDObjcMethodInfo myFirstObjectMethod;
     return paths;
 }
 
+- (void) makeObjectsPerformSelector: (SEL) aSelector 
+						 withObject: (id) argument1 
+						 withObject: (id) argument2
+{
+#warning Implementation of makeObjectsPerformSelector:withObject:withObject untested.
+	[argument1 retain];
+	[argument2 retain];
+	
+	NSEnumerator* oe = [self objectEnumerator];
+	id element;
+	
+	while (element = [oe nextObject]) {
+		[element performSelector: aSelector 
+					  withObject: argument1 
+					  withObject: argument2];
+	}
+	
+	[argument1 release];
+	[argument2 release];
+}
+
 
 //=======================================================================================
     @end
