@@ -76,7 +76,7 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 + (void)messageFlagsDidChange:(NSNotification *)aNotification
 {
     NSArray *affectedMessageGroups = [[(GIMessage *)[aNotification object] thread] valueForKey:@"groups"];    
-    NSAssert([affectedMessageGroups count] != 0, @"at least one group has to be present");
+    if ([affectedMessageGroups count] == 0) NSLog(@"warning: flags did change for a message without  being in a group.");
     
     NSEnumerator *enumerator = [affectedMessageGroups objectEnumerator];
     GIMessageGroup *group;

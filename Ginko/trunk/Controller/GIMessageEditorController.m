@@ -60,10 +60,11 @@
     return self;
 }
 
-- (id) initWithMessage: (GIMessage*) aMessage
+- (id)initWithMessage:(GIMessage *)aMessage
 /*" For reopening an unsent message. "*/
 {
-    if (self = [self init]) {        
+    if (self = [self init]) 
+    {        
 		// Make sure, aMessage is not send during edit:
         if ([aMessage sendStatus]==OPSendStatusQueuedReady) [aMessage setSendStatus: OPSendStatusQueuedBlocked];
         
@@ -72,20 +73,20 @@
         oldMessage = [aMessage retain];
         referencedMessage = nil;
         
-        [self setHeadersFromMessage: oldMessage];
-        [self appendContentFromMessage: oldMessage];
+        [self setHeadersFromMessage:oldMessage];
+        [self appendContentFromMessage:oldMessage];
         
         shouldAppendSignature = NO;
         
         type = MassageTypeRevisitedMessage;
         
-        [NSBundle loadNibNamed: @"MessageEditor" owner: self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
         
         [self updateHeaders];
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeKeyAndOrderFront: self];
+        [window makeKeyAndOrderFront:self];
     }
     
     return self;
@@ -789,32 +790,38 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (void) setHeadersFromMessage: (GIMessage*) aMessage
+- (void)setHeadersFromMessage:(GIMessage *)aMessage
 {
-    NSEnumerator* enumerator = [[[aMessage internetMessage] headerFields] objectEnumerator];
-	OPObjectPair* header;
+    NSEnumerator *enumerator = [[[aMessage internetMessage] headerFields] objectEnumerator];
+	OPObjectPair *headerField;
 
-    while ((header = [enumerator nextObject])) {
-        [headerFields setObject: [header secondObject] forKey: [header firstObject]];
+    while ((headerField = [enumerator nextObject])) 
+    {
+        EDHeaderFieldCoder *coder = [EDHeaderBearingObject decoderForHeaderField:headerField];        
+        [headerFields setObject:[coder stringValue] forKey:[headerField firstObject]];
     }
+    
+    NSLog(@"headers = %@", headerFields);
 }
 
-- (NSMutableString*) stringByRemovingOwnAddressesFromString: (NSString*) addr
+- (NSMutableString *)stringByRemovingOwnAddressesFromString:(NSString *)addr
 {
-    NSArray* parts = [addr fieldListFromEMailString];
-    NSMutableString* result = [NSMutableString string];
-    NSEnumerator* enumerator;
-    NSString* part;
+    NSArray *parts = [addr fieldListFromEMailString];
+    NSMutableString *result = [NSMutableString string];
+    NSEnumerator *enumerator;
+    NSString *part;
     
     enumerator = [parts objectEnumerator];
     while (part = [enumerator nextObject])
     {
         part = [part stringByRemovingSurroundingWhitespace];
         
-        if ([part length]) {
-            if (! [GIProfile isMyEmailAddress: part]) {
-                if ([result length]) [result appendString: @", "]; // skip first time
-                [result appendString: part];
+        if ([part length]) 
+        {
+            if (! [GIProfile isMyEmailAddress:part]) 
+            {
+                if ([result length]) [result appendString:@", "]; // skip first time
+                [result appendString:part];
             }
         }
     }
