@@ -26,7 +26,9 @@
 
 #define EXPORT_FILE      OPL_ASPECT  0x01
 #define EXPORT_PROGRESS  OPL_ASPECT  0x02
-#define EXPORT           OPL_ASPECT  0x03
+#define EXPORT           OPL_ASPECT  (EXPORT_FILE | EXPORT_PROGRESS)
+#define STANDARDBOXES    OPL_ASPECT  0x04
+#define FINDGROUP        OPL_ASPECT  0x08
 
 
 @implementation GIMessageGroup
@@ -134,7 +136,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
             referencedGroup = [[OPPersistentObjectContext threadContext] objectWithURLString: anUrl];
         }
         @catch (NSException* e) {
-            NSLog(@"Could not find group for URI ''", anUrl);
+            OPDebugLog(MESSAGEGROUP, FINDGROUP, @"Could not find group for URI ''", anUrl);
         }
     }
     
@@ -694,7 +696,8 @@ nil, //                                                     [[[NSString alloc] i
 		if (![result resolveFault]) {
 			result = nil;
 		}
-        if (!result) NSLog(@"Couldn't find standard box '%@'", defaultName);
+        if (!result)
+            OPDebugLog(MESSAGEGROUP, STANDARDBOXES, @"Couldn't find standard box '%@'", defaultName);
     }
     
     if (!result) {

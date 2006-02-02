@@ -36,6 +36,11 @@
 #import "OPSQLiteConnection.h"
 #import "OPPersistentObject.h"
 
+
+#define CLASSDESCRIPTION  OPL_DOMAIN  @"ClassDescription"
+#define CONFIG            OPL_ASPECT  0x01
+
+
 @implementation OPClassDescription
 
 - (void) checkTableUsingConnection: (OPSQLiteConnection*) connection
@@ -118,7 +123,7 @@
 			NSAssert([createStatements isKindOfClass: [NSArray class]], @"Please supply an array for the 'CreateStatements' key.");
 		
 		cachesAllObjects = [[plist objectForKey: @"CacheAllObjects"] boolValue];
-		NSLog(@"%@: %d", self, cachesAllObjects);
+		OPDebugLog(CLASSDESCRIPTION, CONFIG, @"%@: %d", self, cachesAllObjects);
 		
 	}
 	return self;

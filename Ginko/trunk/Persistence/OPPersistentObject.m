@@ -40,6 +40,11 @@
 #import "OPObjectRelationship.h"
 #import "GIThread.h"
 
+
+#define PERSISTENTOBJECT  OPL_DOMAIN  @"PersistentObject"
+#define FAULTS            OPL_ASPECT  0x01
+
+
 @implementation OPPersistentObject
 
 
@@ -150,7 +155,7 @@
         attributes = [[[self context] persistentValuesForObject: self] retain];
 		if (!attributes && oid==0) {
 			attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
-			NSLog(@"Created attribute dictionary for new object %@", self);
+			OPDebugLog(PERSISTENTOBJECT, FAULTS, @"Created attribute dictionary for new object %@", self);
 		}
     }
 	return attributes != nil;
