@@ -73,9 +73,10 @@
 	if (![self valueForKey: @"date"]) [self calculateDate]; // fixing only for broken databases - can be removed later.
 }
 
-- (void) didChangeValueForKey: (NSString*) key 
+- (void)didChangeValueForKey:(NSString *)key 
 {
-	[super didChangeValueForKey: key];
+	[super didChangeValueForKey:key];
+    
 	/*
 	if ([key isEqualToString: @"messages"]) {
 		OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];

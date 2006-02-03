@@ -589,7 +589,6 @@ static NSMutableArray* root = nil;
 	[threads updateSortObjectForObject: thread];
 }
 
-
 - (void) exportAsMboxFileWithPath:(NSString*)path
 {
     OPDebugLog(MESSAGEGROUP, EXPORT_FILE, @"Exporting mbox '%@' to file at %@", [self valueForKey: @"name"], path);

@@ -12,27 +12,9 @@
 #import "GIThread.h"
 #import "GIMessageGroup.h"
 #import "OPFaultingArray.h"
+#import "NSApplication+OPExtensions.h"
 
 @implementation TestPersistence
-
-- (void) setUp
-{
-    context = [OPPersistentObjectContext defaultContext];
-
-    if (![context databaseConnection]) {
-        
-		if (!context) {
-			context = [[[OPPersistentObjectContext alloc] init] autorelease];
-			[context setDatabaseConnectionFromPath: [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Application Support/GinkoVoyager/MessageBase.sqlite"]];
-			[OPPersistentObjectContext setDefaultContext: context];
-		}
-    }
-}
-
-- (void) tearDown
-{
-    [context reset];
-}
 
 - (void) testSimpleFaulting
 {
@@ -342,6 +324,7 @@
 
 - (void) testFaultingArray
 {
+    NSAssert(false == true, @"this test causes an stack overflow");
 	NSArray* allGroups = [context fetchObjectsOfClass: [GIMessageGroup class] whereFormat: nil, nil];
 	OPFaultingArray* testArray = [OPFaultingArray array];
 	

@@ -7,13 +7,11 @@
 //
 
 #import <AppKit/AppKit.h>
-#import "OPPersistentObjectContext.h"
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "TestWithPersistence.h"
 
-
-@interface TestPersistence : SenTestCase {
-    OPPersistentObjectContext* context;
+@interface TestPersistence : TestWithPersistence {
 }
 
 

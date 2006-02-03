@@ -84,10 +84,11 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 
 - (void)didChangeValueForKey:(NSString *)key
 {
-	[super didChangeValueForKey: key];
-	if ([key isEqualToString: @"threadsByDate"]) {
+	[super didChangeValueForKey:key];
+	if ([key isEqualToString:@"threadsByDate"]) 
+    {
 		[self invalidateStatistics];
-		[[NSNotificationCenter defaultCenter] postNotificationName: GIMessageGroupStatisticsDidInvalidateNotification object: self];
+		[[NSNotificationCenter defaultCenter] postNotificationName: GIMessageGroupStatisticsDidInvalidateNotification object:self];
 	}
 }
 

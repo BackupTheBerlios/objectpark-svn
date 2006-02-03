@@ -361,7 +361,7 @@
 
 - (BOOL) open
 {
-    NSLog(@"Opening database at '%@'.", dbPath);
+    OPDebugLog(OPPERSISTENCE, OPINFO, @"Opening database at '%@'.", dbPath);
 	// Comment next three lines to disable statement caching:
 	updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 	insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
@@ -523,6 +523,9 @@
 
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
 {
+    NSParameterAssert(statement != NULL);
+    NSParameterAssert(index >= 0);
+    
 	const char* utf8 = [self UTF8String];
 	int result = sqlite3_bind_text(statement, index, utf8, -1, SQLITE_TRANSIENT); // todo: optimize away copying!
 	NSAssert(result == SQLITE_OK, @"Failed to bind string in statement.");
