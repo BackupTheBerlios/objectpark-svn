@@ -16,6 +16,7 @@
 #import "OPJobs.h"
 #import <OPDebug/OPLog.h>
 #import "GIUserDefaultsKeys.h"
+#import "OPPersistence.h"
 
 @interface GIFulltextIndex (JVMStuff)
 + (JNIEnv *)jniEnv;
@@ -736,75 +737,69 @@
     return term;
 }
 
-+ (void)removeMessagesWithOids:(NSArray *)someOids
++ (void) removeMessages: (OPFaultingArray*) someMessages
+/*" Removes someMessages from the fulltext index. Only uses someMessage's oids as element objects might no longer be valid (e.g. removed). "*/
 {
     JNIEnv *env = [self jniEnv];
-    int maxCount = [someOids count];
+    int maxCount = [someMessages count];
     
-    if (maxCount)
-    {;
-        @synchronized(self)
-        {
+    if (maxCount) {
+        @synchronized(self) {
             if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
             
             jstring javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
-            jobject indexReader = [self indexReaderOpen:javaIndexPath];             
+            jobject indexReader = [self indexReaderOpen: javaIndexPath];             
             NSAssert(indexReader != NULL, @"Could not create Lucene index reader.");
             int removedCount = 0;
             
-             @try
-             {
-                 NSEnumerator *enumerator = [someOids objectEnumerator];
-                 NSNumber *oidNumber;
+             @try {
                  BOOL shouldTerminate = NO;
-                 
+				 GIMessage* message;
 #warning I'm not decided whether deletion of messages from fulltext index should be interruptable...for now it's not!
-                 while ((oidNumber = [enumerator nextObject]) /*&& (!shouldTerminate) */)
-                 {
-                     OID oid = [oidNumber unsignedLongLongValue];
-                     GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:oid ofClass:[GIMessage class]];
-                     
-                     [message setValue:[NSNumber numberWithBool:NO] forKey:@"isFulltextIndexed"];
-                     
-                     @try
-                     {
-                         if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!");}
-
-                         jstring fieldName = (*env)->NewStringUTF(env, "id");
-                         jstring text = (*env)->NewStringUTF(env, [[oidNumber description] UTF8String]);
-
-                         jobject term = [self termNewWithFieldname:fieldName text:text];
-                         
-                         jint count = [self indexReader:indexReader delete:term];
-                         if(count > 1)
-                         {
-                             NSLog(@"Deleted more than one message for a single message id from fulltext index.");
-                         }
-                         removedCount += 1;
-                         
-                         [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)1 maxValue:(double)maxCount currentValue:(double)removedCount description:NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
-
-                     }
-                     @catch (NSException *localException)
-                     {
-                         @throw localException;
-                     }
-                     @finally
-                     {
-                         (*env)->PopLocalFrame(env, NULL);
-                         shouldTerminate = [OPJobs shouldTerminate];
-                     }
-                 }
-             }
-             @catch (NSException *localException)
-             {
+				 while (message = [someMessages lastObject] /*&& (!shouldTerminate) */) {
+					 
+					 OID oid = [message oid];
+					 
+					 //[message setValue: nil forKey: @"isFulltextIndexed"];
+					 char oidString[20] = "";
+					 sprintf(oidString, "%llu", oid);
+					 
+					 @try {
+						 if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"JNI: Out of memory!");}
+						 
+						 jstring fieldName = (*env)->NewStringUTF(env, "id");
+						 jstring text = (*env)->NewStringUTF(env, oidString);
+						 
+						 jobject term = [self termNewWithFieldname:fieldName text:text];
+						 
+						 jint count = [self indexReader: indexReader delete: term];
+						 if(count > 1) {
+							 NSLog(@"Deleted more than one message for a single message id from fulltext index.");
+						 }
+						 removedCount += 1;
+						 
+						 if ([message resolveFault]) {
+							 // The message still exists!
+							 [message setValue: nil forKey: @"isFulltextIndexed"];
+						 }
+						 
+						 [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 1.0 maxValue: (double) maxCount currentValue: (double) removedCount description: NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
+						 
+					 } @catch (NSException* localException) {
+						 @throw localException;
+					 } @finally {
+						 (*env)->PopLocalFrame(env, NULL);
+						 shouldTerminate = [OPJobs shouldTerminate];
+					 }
+					 [someMessages removeLastObject];
+					 
+				 }
+             } @catch (NSException* localException) {
                  @throw localException;
-             }
-             @finally
-             {
-                 [self indexReaderClose:indexReader];
+             } @finally {
+                 [self indexReaderClose: indexReader];
                  (*env)->PopLocalFrame(env, NULL);
-                 [self addChangeCount:removedCount];
+                 [self addChangeCount: removedCount];
              }
         }
     }
@@ -1003,12 +998,13 @@
     return result;
 }
 
-+ (NSArray *)hitsForQueryString:(NSString *)aQuery defaultField:(NSString *)defaultField group:(GIMessageGroup *)aGroup limit:(int)limit;
++ (NSArray*) hitsForQueryString: (NSString*) aQuery 
+				   defaultField: (NSString*) defaultField 
+						  group: (GIMessageGroup*) aGroup 
+						  limit: (int) limit;
 {
-    JNIEnv *env = [self jniEnv];
-    NSMutableArray *result = nil;
-    NSMutableSet *dupeCheck;
-    NSMutableSet *invalidOids;
+    JNIEnv* env = [self jniEnv];
+    NSMutableArray* result = nil;
     
     if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
     
@@ -1021,58 +1017,48 @@
     jint i, hitsCount = [self hitsLength:hits];
     
     result = [NSMutableArray arrayWithCapacity:(int)hitsCount];
-    dupeCheck = [NSMutableSet set];
-    invalidOids = [NSMutableSet set];
+    NSMutableSet* dupeCheck = [NSMutableSet set];
+    OPFaultingArray* invalidMessages = [OPFaultingArray array];
     
     int maxCount = (limit == 0) ? hitsCount : MIN(hitsCount, limit);
     
-    for (i = 0; i < maxCount; i++)
-    {
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    for (i = 0; i < maxCount; i++) {
+        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
         if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
         
         jobject doc = [self hits:hits document:i];
         //NSLog(@"hit doc = %@", [self objectToString:doc]);
         
         // oid
-        jstring javaMessageOid = [self document:doc get:messageIdFieldName];
-        NSString *messageOidString = [self stringFromJstring:javaMessageOid];
+        jstring javaMessageOid = [self document: doc get: messageIdFieldName];
+        NSString* messageOidString = [self stringFromJstring: javaMessageOid];
 #warning HACK: Do better with converting to unsigned long long (not correct here)
-        NSNumber *messageOid = [NSNumber numberWithUnsignedLongLong:[messageOidString longLongValue]];
-        GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:[messageOidString longLongValue] ofClass:[GIMessage class]];
+        NSNumber* messageOid = [NSNumber numberWithUnsignedLongLong: [messageOidString longLongValue]];
+        GIMessage* message = [[OPPersistentObjectContext threadContext] objectForOid: [messageOidString longLongValue] ofClass: [GIMessage class]];
         
-        GIThread *thread = [message thread];
+        GIThread* thread = [message thread];
                 
-        if (! [thread resolveFault] || ! [message resolveFault])
-        {
-            [invalidOids addObject:messageOid];
+        if (! [thread resolveFault] || ! [message resolveFault]) {
+            [invalidMessages addObject: message];
             if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
-        }
-        else
-        {
+        } else {
             // dupe check:
-            if ([dupeCheck containsObject:messageOid])
-            {
+            if ([dupeCheck containsObject: messageOid]) {
                 // remove from fulltext index:
-                [invalidOids addObject:messageOid];
-            }
-            else
-            {
-                [dupeCheck addObject:messageOid];
+                [invalidMessages addObject: message];
+            } else {
+                [dupeCheck addObject: messageOid];
                 
-                if (aGroup && (![[thread valueForKey:@"groups"] containsObject:aGroup]))
-                {
+                if (aGroup && (![[thread valueForKey: @"groups"] containsObject: aGroup])) {
                     // not in right group
                     if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
-                }
-                else
-                {
+                } else {
                     // score
-                    jfloat javaScore = [self hits:hits score:i];
-                    NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
+                    jfloat javaScore = [self hits: hits score: i];
+                    NSNumber* score = [NSNumber numberWithDouble: (double)javaScore];
                     
-                    NSArray *hit = [NSArray arrayWithObjects:message, score, thread, nil];
-                    [result addObject:hit];
+                    NSArray* hit = [NSArray arrayWithObjects: message, score, thread, nil];
+                    [result addObject: hit];
                 }
             }
         }
@@ -1083,56 +1069,54 @@
     (*env)->PopLocalFrame(env, NULL);
     
     // remove dupes:
-    [self fulltextIndexInBackgroundAdding:nil removing:[invalidOids allObjects]];
+    [self fulltextIndexInBackgroundAdding: nil removing: invalidMessages];
     
     return result;
 }
 
-- (void)fulltextIndexMessagesJob:(NSDictionary *)arguments
+- (void) fulltextIndexMessagesJob: (NSDictionary*) arguments
 {
-    if ([arguments count])
-    {
-        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+    if ([arguments count]) {
+        [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
         
         // messages to add:
-        NSArray *messagesToAdd = [arguments objectForKey:@"messagesToAdd"];
-        if ([messagesToAdd count]) [GIFulltextIndex addMessages:messagesToAdd];
+        NSArray* messagesToAdd = [arguments objectForKey: @"messagesToAdd"];
+        if ([messagesToAdd count]) [GIFulltextIndex addMessages: messagesToAdd];
         
         // messages to remove:
-        NSArray *messageOidsToRemove = [arguments objectForKey:@"messageOidsToRemove"];
-        if ([messageOidsToRemove count]) [GIFulltextIndex removeMessagesWithOids:messageOidsToRemove];
+        OPFaultingArray* messagesToRemove = [arguments objectForKey: @"messagesToRemove"];
+        if ([messagesToRemove count]) [GIFulltextIndex removeMessages: messagesToRemove];
         
-        if (([GIFulltextIndex changeCount] >= 5000) && (![OPJobs shouldTerminate]))
-        {
-            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
+        if (([GIFulltextIndex changeCount] >= 5000) && (![OPJobs shouldTerminate])) {
+            [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
             [GIFulltextIndex optimize];
         }
         
-        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
-        [GIApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone:YES];
+        [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+
+		[[OPPersistentObjectContext defaultContext] saveChanges];
     }
 }
 
-+ (NSString *)jobName
++ (NSString*) jobName
 {
     return @"Fulltext indexing";
 }
 
-+ (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messageOidsToRemove
++ (void) fulltextIndexInBackgroundAdding: (NSArray*) messagesToAdd removing: (NSArray*) messagesToRemove
 /*" Starts a background job for fulltext indexing someMessages. Only one indexing job can be active at one time. "*/
 {
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    if ([messagesToAdd count]) [jobArguments setObject:messagesToAdd forKey:@"messagesToAdd"];
-    if ([messageOidsToRemove count]) [jobArguments setObject:messageOidsToRemove forKey:@"messageOidsToRemove"];
+    if ([messagesToAdd count]) [jobArguments setObject: messagesToAdd forKey: @"messagesToAdd"];
+    if ([messagesToRemove count]) [jobArguments setObject: messagesToRemove forKey: @"messagesToRemove"];
     
-    if ([jobArguments count])
-    {
+    if ([jobArguments count]) {
         [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
     }    
 }
 
-+ (void)resetIndex
++ (void) resetIndex
 /*" Resets the fulltext index. Removes the index from disk and sets all messages to not indexed. "*/
 {
     @synchronized(self)

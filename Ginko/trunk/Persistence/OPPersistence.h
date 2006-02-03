@@ -36,5 +36,6 @@
 #import "OPPersistentObjectContext.h";
 #import "OPSQLiteConnection.h"
 #import "OPPersistenceConstants.h"
+#import "OPFaultingArray.h"
 
 #define OPL_MEMORYMANAGEMENT 1

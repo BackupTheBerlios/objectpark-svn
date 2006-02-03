@@ -43,6 +43,7 @@
  * LID and CID can be encoded into an OID and back.
  */
 #define OID unsigned long long 
+#define NILOID 0L
 #define ROWID long long
 
 //#define LID OID

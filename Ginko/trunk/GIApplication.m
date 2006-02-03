@@ -462,39 +462,27 @@
     {
         if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
         {            
-            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
-            NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
+            NSArray* messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit: 1000];
+            NSArray* messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit: 250];
             
-            if ([messagesToAdd count] || [messagesToRemove count])
-            {
-                NSMutableArray *messageOidsToRemove = nil;
-                
-                if ([messagesToRemove count])
-                {
-                    messageOidsToRemove = [NSMutableArray arrayWithCapacity:[messagesToRemove count]];
-                    NSEnumerator *enumerator = [messagesToRemove objectEnumerator];
-                    GIMessage *message;
-                    
-                    while (message = [enumerator nextObject])
-                    {
-                        [messageOidsToRemove addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
-                    }
-                }
-                
-                [GIFulltextIndex fulltextIndexInBackgroundAdding:messagesToAdd removing:messageOidsToRemove];
+            if ([messagesToAdd count] || [messagesToRemove count]) {
+                [GIFulltextIndex fulltextIndexInBackgroundAdding: messagesToAdd removing: messagesToRemove];
             }
         }
     }
 }
 
-- (void)fulltextIndexJobFinished:(NSNotification *)aNotification
+- (void) fulltextIndexJobFinished: (NSNotification*) aNotification
 {
     if (NSDebugEnabled) NSLog(@"fulltextIndexJobFinished");
-    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
-	[OPJobs removeFinishedJob:jobId]; // clean up
+    NSNumber* jobId = [[aNotification userInfo] objectForKey: @"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass: [NSNumber class]]);
+	[OPJobs removeFinishedJob: jobId]; // clean up
     
-    [self startFulltextIndexingJobIfNeeded:self];
+	// Write flag-changes to disk:
+	[[OPPersistentObjectContext defaultContext] saveChanges];
+	
+    [self startFulltextIndexingJobIfNeeded: self];
 }
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
@@ -605,48 +593,34 @@
     [GIActivityPanelController updateData];
 }
 
-- (IBAction)emptyTrashMailbox:(id)sender
+- (IBAction) emptyTrashMailbox: (id) sender
 {
-    GIMessageGroup *trashgroup = [GIMessageGroup trashMessageGroup];
-    OPFaultingArray *threads = [trashgroup valueForKey: @"threadsByDate"];
-    NSMutableArray *messageToDeleteOids = [NSMutableArray array];
-    GIThread *thread;
+    GIMessageGroup* trashgroup = [GIMessageGroup trashMessageGroup];
+    OPFaultingArray* threads = [trashgroup valueForKey: @"threadsByDate"];
+    GIThread* thread;
     int counter = 0;
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     
-    while (thread = [threads lastObject]) // remove thread from source group:
-    {
-        [thread removeValue:trashgroup forKey:@"groups"];
+    while (thread = [threads lastObject]) {
+		 // Remove thread from source group:
+        [thread removeValue: trashgroup forKey: @"groups"];
         
-        if ([[thread valueForKey:@"groups"] count] == 0) 
-        {
-            NSEnumerator *enumerator = [[thread messages] objectEnumerator];
-            GIMessage *message;
-            
-            while (message = [enumerator nextObject])
-            {
-                [messageToDeleteOids addObject:[NSNumber numberWithUnsignedLongLong:[message oid]]];
-            }
-            
+        if ([[thread valueForKey: @"groups"] count] == 0) {
             [thread delete];
         }
         
         counter += 1;
         
-        if ((counter % 500) == 0) 
-        {
-            [self saveAction:self];
+        if ((counter % 100) == 0) {
+            //[self saveAction:self];
             [pool release]; pool = [[NSAutoreleasePool alloc] init];
         }
     }    
 
-    [self saveAction:self];
+    [self saveAction: self];
     
-    if ([messageToDeleteOids count])
-    {
-        [GIFulltextIndex fulltextIndexInBackgroundAdding:nil removing:messageToDeleteOids];
-    }
+	[GIFulltextIndex fulltextIndexInBackgroundAdding: nil removing: [GIMessage deletedMessages]];
     
     [pool release];
 }

@@ -125,11 +125,18 @@
 	return [self initWithCapacity: 10];
 }
 
--(OID) oidAtIndex: (unsigned) index;
+- (OID) oidAtIndex: (unsigned) index;
 {
 	NSParameterAssert(index < count);
 	return *oidPtr(index);
 }
+
+- (OID) lastOid;
+/*" Returns the last OID or NILOID, if the reciever is empty. "*/
+{
+	return count ? *oidPtr(count-1) : NILOID;
+}
+
 
 - (void) _growTo: (unsigned) newCapacity
 {
@@ -200,6 +207,11 @@
 		}
 		[self removeObjectAtIndex: index];
 	}
+}
+
+- (void) removeLastObject
+{
+	if (count) count--;
 }
 
 /*
@@ -447,9 +459,12 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 }
 
 - (void) addObject: (OPPersistentObject*) anObject
+/*" Only objects of the same class can be added for now. "*/
 {
-	if (!elementClass) 
+	if (!elementClass) {
+		NSParameterAssert([anObject isKindOfClass: [OPPersistentObject class]]);
 		elementClass = [anObject class]; // remember the element class
+	}
 	
 	NSParameterAssert([anObject class] == elementClass);
 	

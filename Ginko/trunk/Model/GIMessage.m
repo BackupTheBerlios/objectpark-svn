@@ -97,7 +97,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    NSArray* result = [context fetchObjectsOfClass: self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    NSArray* result = [context fetchObjectsOfClass: self whereFormat: @"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
     
     return result;
 }
@@ -145,15 +145,21 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) willSave
 {
 	[super willSave];
-	if (![self valueForKey: @"thread"]) NSLog(@"Warning! Will save message without thread: %@", self);
+	if (![self valueForKey: @"thread"]) 
+		NSLog(@"Warning! Will save message without thread: %@", self);
+}
+
++ (OPFaultingArray*) deletedMessages
+/*" Returns an array with messages recently deleted from the persistent object context/store. "*/
+{
+	static OPFaultingArray* deletedMessages = nil;
+	if (!deletedMessages) deletedMessages = [[OPFaultingArray alloc] init];
+	return deletedMessages;
 }
 
 
 - (void) willDelete
 {
-	// remove message from fulltext index
-    //[GIFulltextIndex removeMessagesWithIds: [NSArray arrayWithObject: [self messageId]]];
-	
 	GIThread* thread = [self valueForKey: @"thread"];
 	if (thread) {
 		//[self setValue: nil forKey: @"thread"];
@@ -163,6 +169,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		}
 	}
 	[[self valueForKey: @"messageData"] delete];
+	[[[self class] deletedMessages] addObject: self];
 	[super willDelete];
 }
 

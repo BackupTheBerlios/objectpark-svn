@@ -25,24 +25,19 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 + (void) loadGroupStats
     /*" Called at initialization time startup "*/
 {
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *groupStats = [ud objectForKey:@"GroupStats"];
-    [ud removeObjectForKey:@"GroupStats"];
+    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary* groupStats = [ud objectForKey: @"GroupStats"];
+    [ud removeObjectForKey: @"GroupStats"];
     
-    NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
-    GIMessageGroup *group;
-    
-    while (group = [enumerator nextObject])
-    {
-#warning retains all groups - should be changed SOON to OPPersistence functionality
-        [group retain];
-        NSDictionary *stats = [groupStats objectForKey:[group objectURLString]];
-
-        [group setUnreadMessageCount:[stats objectForKey:GINumberOfUnreadMessages]];
+    NSEnumerator* enumerator = [[self allObjects] objectEnumerator];
+    GIMessageGroup* group;
+    while (group = [enumerator nextObject]) {
+        NSDictionary* stats = [groupStats objectForKey: [group objectURLString]];
+        [group setUnreadMessageCount: [stats objectForKey: GINumberOfUnreadMessages]];
     }
 }
 
-+ (void)saveGroupStats
++ (void) saveGroupStats
 /*" Called at the end of the app lifecycle "*/
 {
     NSEnumerator *enumerator = [[self allObjects] objectEnumerator];

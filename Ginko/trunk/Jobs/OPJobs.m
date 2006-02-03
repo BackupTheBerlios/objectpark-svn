@@ -393,8 +393,7 @@ NSArray *jobsPendingForKeyAndObject(NSString *key, id anObject)
     if (result) [userInfo setObject:result forKey:@"result"];
     if (exception) [userInfo setObject:exception forKey:@"exception"];
     [userInfo setObject:anJobId forKey:@"jobId"];
-    
-    
+    	
     [[NSNotificationCenter defaultCenter] postNotificationName: OPJobDidFinishNotification object: jobName userInfo: userInfo];
 }
 

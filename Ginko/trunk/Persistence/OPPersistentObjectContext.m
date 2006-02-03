@@ -349,6 +349,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (NSSet*) deletedObjects
 {
+#warning Make deletedObjects a FaultedArray, so they are not retained.
+
 	return deletedObjects;
 }
 
@@ -526,7 +528,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" Marks object for deletion on the next -saveChanges call. "*/
 {
 	if ([object currentOid]) {
-		// Otherwise it has not been stored persistently, so we do not need to delete it
+		// Object has been stored persistently, so we need to delete it:
 		if (![deletedObjects containsObject: object]) {
 			
 			[deletedObjects addObject: object];

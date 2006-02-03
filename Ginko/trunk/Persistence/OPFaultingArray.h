@@ -33,11 +33,16 @@
 
 
 - (OID) oidAtIndex: (unsigned) index;
+- (OID) lastOid;
+
 - (id) objectAtIndex: (unsigned) anIndex;
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject;
 - (BOOL) containsObject: (OPPersistentObject*) anObject;
+
 - (void) removeObject: (OPPersistentObject*) anObject;
 - (void) removeObjectAtIndex: (unsigned) index;
+- (void) removeLastObject;
+
 - (void) setSortKey: (NSString*) newSortKey;
 - (void) setElementClass: (Class) eClass;
 

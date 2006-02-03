@@ -12,6 +12,7 @@
 @class GIThread;
 @class GIProfile;
 @class OPInternetMessage;
+@class OPFaultingArray;
 
 #define OPSeenStatus 1
 #define OPAnsweredStatus 2
@@ -53,6 +54,8 @@
 + (id) messageWithTransferData: (NSData*) someTransferData;
 + (NSArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit;
 + (NSArray *)messagesToRemoveFromFulltextIndexWithLimit:(unsigned)limit;
+
++ (OPFaultingArray*) deletedMessages;
 
 
 - (NSData*) transferData;

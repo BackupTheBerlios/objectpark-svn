@@ -12,22 +12,23 @@
 
 @class GIMessage;
 @class GIMessageGroup;
+@class OPFaultingArray;
 
 @interface GIFulltextIndex : NSObject 
 {
 }
 
-+ (NSString *)fulltextIndexPath;
++ (NSString*) fulltextIndexPath;
 
-+ (void)addMessages:(NSArray *)someMessages;
-+ (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messageOidsToRemove;
-+ (void)removeMessagesWithOids:(NSArray *)someOids;
++ (void) addMessages: (NSArray*) someMessages;
++ (void) fulltextIndexInBackgroundAdding: (NSArray*) messagesToAdd removing: (NSArray*) messagesToRemove;
++ (void) removeMessages: (OPFaultingArray*) someMessages;
 
-+ (NSArray *)hitsForQueryString:(NSString *)aQuery defaultField:(NSString *)defaultField group:(GIMessageGroup *)aGroup limit:(int)limit;
++ (NSArray*) hitsForQueryString: (NSString*)aQuery defaultField: (NSString*) defaultField group: (GIMessageGroup*) aGroup limit: (int) limit;
 
-+ (void)optimize;
-+ (void)resetIndex;
++ (void) optimize;
++ (void) resetIndex;
 
-+ (NSString *)jobName;
++ (NSString*) jobName;
 
 @end

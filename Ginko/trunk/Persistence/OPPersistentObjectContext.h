@@ -48,9 +48,7 @@
 	@private
     NSHashTable* registeredObjects;
     NSMutableSet* changedObjects;
-    //NSMutableSet* insertedObjects;
     NSMutableSet* deletedObjects;
-    //NSLock* lock; 
     
     OPSQLiteConnection* db;
 	
