@@ -14,6 +14,7 @@
 
 @implementation TestGIMessageGroup
 
+/*
 - (void) testStandardGroups
 {
     GIMessageGroup *group1, *group2;
@@ -34,6 +35,7 @@
     
     //STAssertEqualObjects([tempDefaultGroup name], @"Default Inbox", @"Name of default group is not 'Default Inbox' but '%@'", [tempDefaultGroup name]);
 }
+*/
 
 - (void) testThreadIdsByDate
 {
@@ -41,11 +43,11 @@
         
     NSEnumerator *enumerator = [result objectEnumerator];
     NSString *urlString;
-    OPPersistentObjectContext *context = [OPPersistentObjectContext threadContext];
+    OPPersistentObjectContext *myContext = [OPPersistentObjectContext threadContext];
     
     while (urlString = [enumerator nextObject])
     {
-        STAssertTrue([context objectWithURLString: urlString] != nil, @"Url %@ failed.", urlString);
+        STAssertTrue([myContext objectWithURLString: urlString] != nil, @"Url %@ failed.", urlString);
     }
     
     //NSLog(@"First Thread's name '%@'", [(GIThread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey: @"subject"]);

@@ -7,9 +7,9 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "TestWithPersistence.h"
 
-
-@interface TestGIMessageGroup : SenTestCase 
+@interface TestGIMessageGroup : TestWithPersistence 
 {
 }
 

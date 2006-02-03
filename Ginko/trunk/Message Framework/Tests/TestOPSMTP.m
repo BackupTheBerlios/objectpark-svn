@@ -40,6 +40,7 @@
     return message;
 }
 
+/*
 - (void) testSMTPConnect
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -69,6 +70,7 @@
     [smtpStream close];
     [pool release];
 }
+*/
 
 - (NSString*) usernameForSMTP:(OPSMTP*) aSMTP
 {

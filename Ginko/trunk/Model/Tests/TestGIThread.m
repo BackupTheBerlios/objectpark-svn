@@ -15,11 +15,6 @@
 
 @implementation TestGIThread
 
-- (void) tearDown
-{
-    [[OPPersistentObjectContext threadContext] revertChanges];
-}
-
 - (GIMessage*) makeAMessage
 {
     static int i = 1;
