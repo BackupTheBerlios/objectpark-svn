@@ -24,7 +24,7 @@ If setUp or tearDown are implemented in subclasses super MUST be called.
 		if (!context) {
             NSString *path = @"/tmp/TestBase.sqlite";
 			context = [[[OPPersistentObjectContext alloc] init] autorelease];
-            [[NSFileManager defaultManager] removeFileAtPath:path handler:NULL];
+            //[[NSFileManager defaultManager] removeFileAtPath:path handler:NULL];
             
             [context setDatabaseConnectionFromPath:path];
             [context checkDBSchemaForClasses:@"GIMessage,GIAccount,GIThread,GIMessageGroup,GIProfile,GIMessageData"];

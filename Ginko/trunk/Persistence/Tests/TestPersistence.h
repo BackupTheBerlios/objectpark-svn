@@ -11,7 +11,9 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "TestWithPersistence.h"
 
-@interface TestPersistence : TestWithPersistence {
+@interface TestPersistence : TestWithPersistence 
+{
+    OID messageOid;
 }
 
 

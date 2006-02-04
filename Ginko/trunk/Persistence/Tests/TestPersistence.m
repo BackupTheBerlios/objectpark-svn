@@ -16,30 +16,20 @@
 
 @implementation TestPersistence
 
-- (void) testSimpleFaulting
+- (void)testInsert
 {
-    OID testOid = 2;
-    GIMessage* message = [context objectForOid: testOid ofClass: [GIMessage class]];
-    NSLog(@"Got message fault: %@", message);
-    [message resolveFault];
-    NSLog(@"Got message: %@", message);
-	NSAssert(![message isFault], @"Faulting did not work for oid 2.");
-	[[message valueForKey: @"sendProfile"] resolveFault]; // make sure we do not print a profile fault below
-	NSLog(@"Message has profile: %@", [message valueForKey: @"sendProfile"]);
-}
-
-- (void) testInsert
-{
-    GIMessage* newMessage = [[GIMessage alloc] init];
+    GIMessage *newMessage = [[GIMessage alloc] init];
 	
-	[newMessage setValue: [NSDate date] forKey: @"date"];
-	[newMessage setValue: @"BlaBla" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"senderName"];
-	[newMessage insertIntoContext: context];
-	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Inserted object value not set.");
-
+	[newMessage setValue: [NSDate date] forKey:@"date"];
+	[newMessage setValue:@"BlaBla" forKey:@"subject"];
+	[newMessage setValue:@"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey:@"senderName"];
+	[newMessage insertIntoContext:context];
+	NSAssert([[newMessage valueForKey:@"subject"] isEqualToString:@"BlaBla"], @"Inserted object value not set.");
+    
 	[context saveChanges];
 	
+    messageOid = [newMessage oid];
+
 	NSAssert1([newMessage currentOid], @"No oid was assigned during -saveChanges for %@", newMessage);
 	
 	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Inserted object value not set.");
@@ -47,30 +37,49 @@
 	[newMessage revert];
 	
 	NSAssert([[newMessage valueForKey: @"subject"] isEqualToString: @"BlaBla"], @"Unable to retrieve inserted object value.");
-	
 }
 
-- (void) testOidGeneration
+- (void)testSimpleFaulting
 {
-    GIMessage* newMessage = [[GIMessage alloc] init];
+    [self testInsert];
+    // make sure a new context will be used:
+    context = nil;
+    [self setUp];
+    
+    OID testOid = messageOid;
+    GIMessage *message = [context objectForOid:testOid ofClass:[GIMessage class]];
+    NSAssert(message != nil, @"no fault got");
+    //NSLog(@"Got message fault: %@", message);
+    [message resolveFault];
+    //NSLog(@"Got message: %@", message);
+    
+	NSAssert1(![message isFault], @"Faulting did not work for oid %lu.", testOid);
+    
+    NSAssert([[message valueForKey:@"subject"] isEqualToString:@"BlaBla"], @"wrong subject");
+//	[[message valueForKey:@"sendProfile"] resolveFault]; // make sure we do not print a profile fault below
+//	NSLog(@"Message has profile: %@", [message valueForKey:@"sendProfile"]);
+}
+
+- (void)testOidGeneration
+{
+    GIMessage *newMessage = [[GIMessage alloc] init];
 	
-	[newMessage setValue: @"BlaBla" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey: @"senderName"];
+	[newMessage setValue:@"BlaBla" forKey:@"subject"];
+	[newMessage setValue:@"Ernst Schwallkopf <ernst@schwallkopf.net>" forKey:@"senderName"];
 	
 	// This inserts the object into the database:
 	NSAssert1([newMessage oid], @"No oid was assigned during -saveChanges for %@", newMessage);
 	
-	NSLog(@"New message object created: %@", newMessage);	
-	
+	//NSLog(@"New message object created: %@", newMessage);	
 }
 
 
-- (void) testSimpleDelete
+- (void)testSimpleDelete
 {
-    GIMessage* newMessage = [[GIMessage alloc] init];
+    GIMessage *newMessage = [[GIMessage alloc] init];
 	
-	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"senderName"];
+	[newMessage setValue:@"Re: Re: Schwall" forKey:@"subject"];
+	[newMessage setValue:@"Ernst Schwallinger <ernst@schwallkopf.net>" forKey:@"senderName"];
 	
 	[context saveChanges];
 	
@@ -89,33 +98,33 @@
 	[context saveChanges];
 	[context reset];
 	
-	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
+	newMessage = [context objectForOid:oid ofClass:[GIMessage class]];
 	
 	NSAssert1(![newMessage resolveFault], @"deleted object still accessible from the database: %@", newMessage);
-	
 }
 
-- (void) testDeleteNullify
+- (void)testDeleteNullify
 {
-	
 	// Creation:
-    GIMessage* newMessage = [[GIMessage alloc] init];
-	GIThread* aThread = [context objectForOid: 1 ofClass: [GIThread class]];
+    GIMessage *newMessage = [[[GIMessage alloc] init] autorelease];
+	//GIThread *aThread = [context objectForOid:1 ofClass:[GIThread class]];
+	GIThread *aThread = [[[GIThread alloc] init] autorelease];
 	
-	[newMessage setValue: @"Re: Re: Schwall" forKey: @"subject"];
-	[newMessage setValue: @"Ernst Schwallinger <ernst@schwallkopf.net>" forKey: @"senderName"];
-	[newMessage setValue: aThread forKey: @"thread"];
+	[newMessage setValue:@"Re: Re: Schwall" forKey:@"subject"];
+	[newMessage setValue:@"Ernst Schwallinger <ernst@schwallkopf.net>" forKey:@"senderName"];
+	[newMessage setValue:aThread forKey:@"thread"];
 	
 	[context saveChanges];
 	
-	OID oid = [newMessage oid];
-	
+	OID mOid = [newMessage oid];
+	OID tOid = [aThread oid];
+    
 	[context reset];
 	
 	// Deletion
-	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
-	aThread = [context objectForOid: 1 ofClass: [GIThread class]];
-	unsigned messageCount = [[aThread valueForKey: @"messages"] count];
+	newMessage = [context objectForOid:mOid ofClass:[GIMessage class]];
+	aThread = [context objectForOid:tOid ofClass:[GIThread class]];
+	unsigned messageCount = [[aThread valueForKey:@"messages"] count];
 	
 	NSAssert(newMessage, @"New message not retrievable.");
 	
@@ -125,17 +134,13 @@
 	
 	[context saveChanges];
 	
-	
-
 	NSAssert1([[aThread valueForKey: @"messages"] count] == messageCount-1, @"Relationship 'messages' not nullified: ", [aThread valueForKey: @"messages"]);
-	
 	
 	[context reset];
 	
-	newMessage = [context objectForOid: oid ofClass: [GIMessage class]];
+	newMessage = [context objectForOid:mOid ofClass:[GIMessage class]];
 	
 	NSAssert1(![newMessage resolveFault], @"deleted object still accessible from the database: %@", newMessage);
-	
 }
 
 /*
@@ -167,31 +172,33 @@
 */
 
 
-- (void) testDataPersistence
+- (void)testDataPersistence
 {
 	char bytes[256];
 	int i;
 	for (i=0;i<256;i++) bytes[i] = i % 32;
 	
-	NSData* writeData = [NSData dataWithBytes: bytes length: 255];
+	NSData *writeData = [NSData dataWithBytes:bytes length:255];
 	
-	GIProfile* testProfile = [[[GIProfile alloc] init] autorelease];
-	[testProfile setValue: @"TestProfileName" forKey: @"name"];
-	[testProfile insertIntoContext: context];
-	[testProfile setValue: writeData forKey: @"messageTemplate"];
-	//OID oid = [testProfile oid];
+	GIProfile *testProfile = [[[GIProfile alloc] init] autorelease];
+	[testProfile setValue:@"TestProfileName" forKey:@"name"];
+	[testProfile insertIntoContext:context];
+	[testProfile setValue:writeData forKey:@"messageTemplate"];
+    
 	[context saveChanges];
+    
+	OID oid = [testProfile oid];
 	// testProfile should be released
 	
 	[testProfile revert];
-	//testProfile = [context objectForOid: oid ofClass: [GIProfile class]];
+	testProfile = [context objectForOid:oid ofClass:[GIProfile class]];
 	
-	NSData* readData = [testProfile valueForKey: @"messageTemplate"];
+	NSData *readData = [testProfile valueForKey:@"messageTemplate"];
 	
-	NSAssert([writeData isEqual: readData], @"NSData write-reread failed.");
+	NSAssert2([writeData isEqual:readData], @"NSData write-reread failed. %@ != %@", writeData, readData);
 }
 
-- (void) testAttributedStringPersistence
+- (void)testAttributedStringPersistence
 {	
 	NSAttributedString* writeData = [[[NSAttributedString alloc] initWithString: @"This is an Attributed Test\nString\n."] autorelease];
 	
@@ -238,25 +245,31 @@
 }
 */
 
-- (void) testGettingAllObjects
+- (void)testGettingAllObjects
 {
-	NSArray* allThreads = [context fetchObjectsOfClass: [GIMessageGroup class] whereFormat: nil, nil];
+    [self testInsert];
+    [context saveChanges];
+    
+    context = nil; // get new context
+    [self setUp];
+    
+	NSArray *allMessages = [context fetchObjectsOfClass:[GIMessage class] whereFormat:nil, nil];
 	
-	NSLog(@"Got %d thread faults.", [allThreads count]);
+	//NSLog(@"Got %d thread faults.", [allThreads count]);
 	
-	NSAssert([allThreads count]>0, @"Problem getting allThread faults at once");
+	NSAssert([allMessages count]>0, @"Problem getting allMessages faults at once");
 }
 
-- (void) testGroupsRelationshipRead
+- (void)testGroupsRelationshipRead
 {
-	GIMessage* message = [context objectForOid: 2 ofClass: [GIMessage class]];
-	GIThread* thread = [message valueForKey: @"thread"];
+	GIMessage *message = [context objectForOid: 2 ofClass: [GIMessage class]];
+	GIThread *thread = [message valueForKey:@"thread"];
 	
-	OPFaultingArray* groups = [thread valueForKey: @"groups"];
+	OPFaultingArray *groups = [thread valueForKey: @"groups"];
 	NSLog(@"Thread %@ is contained in %d group(s) (e.g. %@)", thread, [groups count], [[groups lastObject] valueForKey: @"name"]);
 	NSAssert([groups count], @"Thread has no groups!");
 	
-	NSArray* messages = [thread valueForKey: @"messages"];
+	NSArray *messages = [thread valueForKey: @"messages"];
 	
 	NSAssert([messages containsObject: message], @"1:n inverse relationship did not work.");
 	
