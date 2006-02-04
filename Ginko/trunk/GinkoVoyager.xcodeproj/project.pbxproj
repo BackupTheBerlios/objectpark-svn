@@ -47,8 +47,6 @@
 		770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 770878C008B4FCD600FBB196 /* HeaderTemplate.html */; };
 		7709374C08574DF200A29008 /* NSHost+GIReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 7709374A08574DF200A29008 /* NSHost+GIReachability.h */; };
 		7709374D08574DF200A29008 /* NSHost+GIReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7709374B08574DF200A29008 /* NSHost+GIReachability.m */; };
-		77136F3208438E2A002F9298 /* TestGIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 77136F3008438E2A002F9298 /* TestGIThread.h */; };
-		77136F3308438E2A002F9298 /* TestGIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 77136F3108438E2A002F9298 /* TestGIThread.m */; };
 		7717AECA07DF30C700B0B0F5 /* ProfilePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */; };
 		7717AECE07DF30E400B0B0F5 /* AccountPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7717AECC07DF30E400B0B0F5 /* AccountPrefs.h */; };
 		7717AECF07DF30E400B0B0F5 /* AccountPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */; };
@@ -75,14 +73,17 @@
 		77477316080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77477314080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m */; };
 		774791BD085DF0150001560D /* GISMTPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 774791BB085DF0150001560D /* GISMTPJob.h */; };
 		774791BE085DF0150001560D /* GISMTPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 774791BC085DF0150001560D /* GISMTPJob.m */; };
+		774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 776B7DA007C41673009DA8B8 /* SenTestingKit.framework */; };
+		774DD4240994AC0900F0A922 /* TestGIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */; };
+		774DD4250994AC0A00F0A922 /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */; };
+		774DD4260994AC0C00F0A922 /* TestGIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 77136F3008438E2A002F9298 /* TestGIThread.h */; };
+		774DD4270994AC0E00F0A922 /* TestGIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 77136F3108438E2A002F9298 /* TestGIThread.m */; };
 		775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 775025F208489585008DD1CD /* TestNSData+MessageUtils.h */; };
 		775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 775025F308489586008DD1CD /* TestNSData+MessageUtils.m */; };
 		775597BF085506BE00E53108 /* OPPOP3Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 775597BD085506BE00E53108 /* OPPOP3Session.h */; };
 		775597C0085506BE00E53108 /* OPPOP3Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 775597BE085506BE00E53108 /* OPPOP3Session.m */; };
 		7759B41708535F830011B606 /* GIActivityPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7759B41508535F830011B606 /* GIActivityPanelController.h */; };
 		7759B41808535F830011B606 /* GIActivityPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7759B41608535F830011B606 /* GIActivityPanelController.m */; };
-		775A96E30839D5EB008EC276 /* TestGIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */; };
-		775A96E40839D5EB008EC276 /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */; };
 		77608AE30972F4030071A01F /* OPImageAndTextCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 77608AE10972F4030071A01F /* OPImageAndTextCell.h */; };
 		77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77608AE20972F4030071A01F /* OPImageAndTextCell.m */; };
 		77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77738B0B0955B02000BAAB51 /* JavaVM.framework */; };
@@ -121,7 +122,6 @@
 		77B8E35D07EEBDE500068222 /* TestNSString+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7779AC9B07C40D1B00F064D3 /* TestNSString+MessageUtils.m */; };
 		77B8E35E07EEBDE700068222 /* TestOPXFolderContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B71CDE07CB30C9003A3BEF /* TestOPXFolderContentCoder.h */; };
 		77B8E35F07EEBDE800068222 /* TestOPXFolderContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B71CDF07CB30C9003A3BEF /* TestOPXFolderContentCoder.m */; };
-		77B8E36007EEBE1300068222 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 776B7DA007C41673009DA8B8 /* SenTestingKit.framework */; };
 		77BA8F4F076DCC480082F33F /* GIAddressFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */; };
 		77BA8F50076DCC480082F33F /* GIAddressFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */; };
 		77BA9235076DCCD80082F33F /* ABPerson+Convenience.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BA9233076DCCD80082F33F /* ABPerson+Convenience.h */; };
@@ -821,7 +821,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D86D3DF0712FA7C001B6105 /* AddressBook.framework in Frameworks */,
-				77B8E36007EEBE1300068222 /* SenTestingKit.framework in Frameworks */,
 				8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */,
 				8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */,
 				770070E7085B123500AB0064 /* Security.framework in Frameworks */,
@@ -835,6 +834,7 @@
 				30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */,
 				77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */,
 				77D471E4095BF12E003CEAEA /* CoreFoundation.framework in Frameworks */,
+				774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1516,10 +1516,8 @@
 				8DDD227F080ECA4A006C902D /* GIFiltersPane.h in Headers */,
 				8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */,
 				77B28DB3082E8A72007FA384 /* OPTableColumn.h in Headers */,
-				775A96E30839D5EB008EC276 /* TestGIMessageGroup.h in Headers */,
 				77DFA5BF08409DF00068AD15 /* OPJobs.h in Headers */,
 				77DFA5C90840B49C0068AD15 /* TestOPJobs.h in Headers */,
-				77136F3208438E2A002F9298 /* TestGIThread.h in Headers */,
 				775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */,
 				77DF88290849BB6D006CA19D /* NSData+MessageUtils.h in Headers */,
 				772F2941084F82BA004D50E0 /* TestOPMultipartContentCoder.h in Headers */,
@@ -1558,6 +1556,8 @@
 				77D05F400983C4BB0061BC4D /* GIFulltextSearchPane.h in Headers */,
 				301F61260992C3B7001F2072 /* TestNSArray+Extensions.h in Headers */,
 				77D41E410993CF0C00BF2130 /* TestWithPersistence.h in Headers */,
+				774DD4240994AC0900F0A922 /* TestGIMessageGroup.h in Headers */,
+				774DD4260994AC0C00F0A922 /* TestGIThread.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1973,10 +1973,8 @@
 				8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */,
 				8DD6030D080EDD470050E973 /* GIFiltersPane.m in Sources */,
 				77B28DB4082E8A72007FA384 /* OPTableColumn.m in Sources */,
-				775A96E40839D5EB008EC276 /* TestGIMessageGroup.m in Sources */,
 				77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */,
 				77DFA5CA0840B49C0068AD15 /* TestOPJobs.m in Sources */,
-				77136F3308438E2A002F9298 /* TestGIThread.m in Sources */,
 				775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */,
 				77DF882A0849BB6D006CA19D /* NSData+MessageUtils.m in Sources */,
 				772F2942084F82BA004D50E0 /* TestOPMultipartContentCoder.m in Sources */,
@@ -2013,6 +2011,8 @@
 				77D05F410983C4BB0061BC4D /* GIFulltextSearchPane.m in Sources */,
 				301F61270992C3B7001F2072 /* TestNSArray+Extensions.m in Sources */,
 				77D41E420993CF0C00BF2130 /* TestWithPersistence.m in Sources */,
+				774DD4250994AC0A00F0A922 /* TestGIMessageGroup.m in Sources */,
+				774DD4270994AC0E00F0A922 /* TestGIThread.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

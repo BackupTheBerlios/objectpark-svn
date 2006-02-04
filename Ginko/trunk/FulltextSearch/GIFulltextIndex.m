@@ -294,10 +294,11 @@
 
     // date
     NSCalendarDate *date = [aMessage valueForKey:@"date"];
-    double millis = (double)([date timeIntervalSince1970] * 1000.0);
+    NSString *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d"];
+    
     @try
     {
-        jstring dateJavaString = [self dateFieldTimeToString:(unsigned long long)millis];
+        jstring dateJavaString = (*env)->NewStringUTF(env, [dateString UTF8String]);
         jthrowable exc = (*env)->ExceptionOccurred(env);
         if (exc) 
         {
@@ -998,13 +999,10 @@
     return result;
 }
 
-+ (NSArray*) hitsForQueryString: (NSString*) aQuery 
-				   defaultField: (NSString*) defaultField 
-						  group: (GIMessageGroup*) aGroup 
-						  limit: (int) limit;
++ (NSArray *)hitsForQueryString:(NSString *)aQuery defaultField:(NSString *)defaultField group:(GIMessageGroup *)aGroup limit:(int)limit;
 {
-    JNIEnv* env = [self jniEnv];
-    NSMutableArray* result = nil;
+    JNIEnv *env = [self jniEnv];
+    NSMutableArray *result = nil;
     
     if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
     
@@ -1022,43 +1020,52 @@
     
     int maxCount = (limit == 0) ? hitsCount : MIN(hitsCount, limit);
     
-    for (i = 0; i < maxCount; i++) {
-        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    for (i = 0; i < maxCount; i++) 
+    {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Out of memory!"); exit(1);}
         
         jobject doc = [self hits:hits document:i];
         //NSLog(@"hit doc = %@", [self objectToString:doc]);
         
         // oid
-        jstring javaMessageOid = [self document: doc get: messageIdFieldName];
-        NSString* messageOidString = [self stringFromJstring: javaMessageOid];
+        jstring javaMessageOid = [self document:doc get:messageIdFieldName];
+        NSString *messageOidString = [self stringFromJstring:javaMessageOid];
 #warning HACK: Do better with converting to unsigned long long (not correct here)
-        NSNumber* messageOid = [NSNumber numberWithUnsignedLongLong: [messageOidString longLongValue]];
-        GIMessage* message = [[OPPersistentObjectContext threadContext] objectForOid: [messageOidString longLongValue] ofClass: [GIMessage class]];
+        NSNumber *messageOid = [NSNumber numberWithUnsignedLongLong:[messageOidString longLongValue]];
+        GIMessage *message = [[OPPersistentObjectContext threadContext] objectForOid:[messageOidString longLongValue] ofClass:[GIMessage class]];
         
         GIThread* thread = [message thread];
                 
-        if (! [thread resolveFault] || ! [message resolveFault]) {
-            [invalidMessages addObject: message];
+        if (! [thread resolveFault] || ! [message resolveFault]) 
+        {
+            [invalidMessages addObject:message];
             if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
-        } else {
+        } 
+        else 
+        {
             // dupe check:
-            if ([dupeCheck containsObject: messageOid]) {
+            if ([dupeCheck containsObject: messageOid]) 
+            {
                 // remove from fulltext index:
-                [invalidMessages addObject: message];
-            } else {
-                [dupeCheck addObject: messageOid];
+                [invalidMessages addObject:message];
+            } 
+            else 
+            {
+                [dupeCheck addObject:messageOid];
                 
-                if (aGroup && (![[thread valueForKey: @"groups"] containsObject: aGroup])) {
-                    // not in right group
+                if (aGroup && (![[thread valueForKey:@"groups"] containsObject:aGroup])) // not in right group
+                {
                     if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
-                } else {
+                } 
+                else 
+                {
                     // score
-                    jfloat javaScore = [self hits: hits score: i];
-                    NSNumber* score = [NSNumber numberWithDouble: (double)javaScore];
+                    jfloat javaScore = [self hits:hits score:i];
+                    NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
                     
-                    NSArray* hit = [NSArray arrayWithObjects: message, score, thread, nil];
-                    [result addObject: hit];
+                    OPObjectPair *hit = [OPObjectPair pairWithObjects:message :score];
+                    [result addObject:hit];
                 }
             }
         }
@@ -1069,7 +1076,7 @@
     (*env)->PopLocalFrame(env, NULL);
     
     // remove dupes:
-    [self fulltextIndexInBackgroundAdding: nil removing: invalidMessages];
+    [self fulltextIndexInBackgroundAdding:nil removing:invalidMessages];
     
     return result;
 }

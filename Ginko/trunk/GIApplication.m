@@ -375,6 +375,9 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
     [self saveAction:self];
+    
+    // temporary hack:
+    [GIMessage sweepBadMessages];
 }
 
 - (IBAction)getNewMailInAllAccounts:(id)sender
@@ -458,31 +461,32 @@
 
 - (IBAction)startFulltextIndexingJobIfNeeded:(id)sender
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey: @"fulltextSearchDisabled"])
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"fulltextSearchDisabled"])
     {
         if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
         {            
-            NSArray* messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit: 1000];
-            NSArray* messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit: 250];
+            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:200000];
+            NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
             
-            if ([messagesToAdd count] || [messagesToRemove count]) {
-                [GIFulltextIndex fulltextIndexInBackgroundAdding: messagesToAdd removing: messagesToRemove];
+            if ([messagesToAdd count] || [messagesToRemove count]) 
+            {
+                [GIFulltextIndex fulltextIndexInBackgroundAdding:messagesToAdd removing:messagesToRemove];
             }
         }
     }
 }
 
-- (void) fulltextIndexJobFinished: (NSNotification*) aNotification
+- (void) fulltextIndexJobFinished:(NSNotification *)aNotification
 {
     if (NSDebugEnabled) NSLog(@"fulltextIndexJobFinished");
-    NSNumber* jobId = [[aNotification userInfo] objectForKey: @"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass: [NSNumber class]]);
-	[OPJobs removeFinishedJob: jobId]; // clean up
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
+    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+	[OPJobs removeFinishedJob:jobId]; // clean up
     
 	// Write flag-changes to disk:
 	[[OPPersistentObjectContext defaultContext] saveChanges];
 	
-    [self startFulltextIndexingJobIfNeeded: self];
+    [self startFulltextIndexingJobIfNeeded:self];
 }
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
@@ -620,7 +624,7 @@
 
     [self saveAction: self];
     
-	[GIFulltextIndex fulltextIndexInBackgroundAdding: nil removing: [GIMessage deletedMessages]];
+	[GIFulltextIndex fulltextIndexInBackgroundAdding:nil removing:[GIMessage deletedMessages]];
     
     [pool release];
 }

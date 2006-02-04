@@ -36,6 +36,19 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @implementation GIMessage
 
+#warning only temporary workaround
++ (void)sweepBadMessages
+{
+    NSLog(@"temporary hack: sweeping bad messages (messages not belonging to a thread)");
+    
+    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+    
+    @synchronized(context)
+    {
+        [[context databaseConnection] performCommand:@"delete from ZMESSAGE where ZTHREAD isnull;"];
+        [context saveChanges];
+    }
+}
 
 + (NSString*) databaseProperties
 {

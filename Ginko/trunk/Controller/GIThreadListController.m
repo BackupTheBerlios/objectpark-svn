@@ -782,47 +782,57 @@ static BOOL isThreadItem(id item)
     return result;
 }
 
-- (BOOL) isAnySelectedItemNotHavingMessageflags: (unsigned int) flags allSelectedMessages: (NSArray**) allMessages
+- (BOOL)isAnySelectedItemNotHavingMessageflag:(NSString *)attributeName allSelectedMessages:(NSArray **)allMessages
 {
     (*allMessages) = [self allSelectedMessages];
     NSEnumerator *enumerator = [(*allMessages) objectEnumerator];
     GIMessage *message;
     
-    while (message = [enumerator nextObject]) {
-        if (![message hasFlags: flags]) return YES;
+    while (message = [enumerator nextObject]) 
+    {
+        if (![[message valueForKey:attributeName] boolValue]) return YES;
     }
     
     return NO;
 }
 
-- (void)toggleFlag:(unsigned int)flag
+- (void)toggleFlag:(NSString *)attributeName
 {
+    NSParameterAssert(attributeName != nil);
+    
     NSArray *selectedMessages;
-    BOOL set = [self isAnySelectedItemNotHavingMessageflags:flag 
-										allSelectedMessages:&selectedMessages];
+    BOOL set = [self isAnySelectedItemNotHavingMessageflag:attributeName 
+                                       allSelectedMessages:&selectedMessages];
     NSEnumerator *enumerator = [selectedMessages objectEnumerator];
     GIMessage *message;
+    NSNumber *setNumber = [NSNumber numberWithBool:set];
     
     while (message = [enumerator nextObject]) 
     {
+        [message setValue:setNumber forKey:attributeName];
+        /*
         if (set) [message addFlags:flag];
         else [message removeFlags:flag];
 		[threadsView reloadItem:message reloadChildren:NO];
+         */
     }
     
     [GIApp saveAction:self];
+    
+    [[self group] invalidateStatistics];
+    
     // not necessary if flag changes would be recognized automatically:
-    //[threadsView reloadData];
+    [threadsView reloadData];
 }
 
 - (IBAction)toggleReadFlag:(id)sender
 {
-    [self toggleFlag:OPSeenStatus];
+    [self toggleFlag:@"isSeen"];
 }
 
 - (IBAction)toggleJunkFlag:(id)sender
 {
-    [self toggleFlag:OPJunkMailStatus];
+    [self toggleFlag:@"isJunk"];
 }
 
 - (NSArray *)selectedThreads
@@ -1169,7 +1179,7 @@ static BOOL isThreadItem(id item)
         {
             NSArray *selectedMessages;
             
-            if ([self isAnySelectedItemNotHavingMessageflags:OPSeenStatus allSelectedMessages:&selectedMessages]) 
+            if ([self isAnySelectedItemNotHavingMessageflag:@"isSeen" allSelectedMessages:&selectedMessages]) 
             {
                 [menuItem setTitle:NSLocalizedString(@"As Read", @"Menu title for toggling messages to read")];
             } 
@@ -1492,41 +1502,45 @@ static NSAttributedString* spacer2()
     return [hits count];
 }
 
-- (id)tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-    NSArray* hit = [hits objectAtIndex:rowIndex];
-    GIMessage* message = [hit objectAtIndex:0];
+    OPObjectPair *hit = [hits objectAtIndex:rowIndex];
+    GIMessage *message = [hit firstObject];
     BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
 
-    if ([[aTableColumn identifier] isEqualToString: @"date"]) {
+    if ([[aTableColumn identifier] isEqualToString:@"date"]) 
+    {
         BOOL isRead = [message hasFlags:OPSeenStatus];
-        NSCalendarDate *date = [message valueForKey: @"date"];
+        NSCalendarDate *date = [message valueForKey:@"date"];
                 
         NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
         
         return [[[NSAttributedString alloc] initWithString:dateString attributes:isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
-		
-    } else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"]) {
-		
-        NSString* from;
-        NSAttributedString* aFrom;
-        NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
+    } 
+    else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"]) 
+    {
+        NSString *from;
+        NSAttributedString *aFrom;
+        NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
         
-        BOOL isRead  = [message hasFlags: OPSeenStatus];
-        NSString* subject = [message valueForKey: @"subject"];
+        BOOL isRead  = [message hasFlags:OPSeenStatus];
+        NSString *subject = [message valueForKey:@"subject"];
         
         if (!subject) subject = @"";
         
-        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? (isAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? (isAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
         
-        [result appendAttributedString: aSubject];
+        [result appendAttributedString:aSubject];
         
-        if ([message hasFlags: OPIsFromMeStatus]) {
-			from = [NSString stringWithFormat: @" (%c %@)", 2782/*Right Arrow*/, [message recipientsForDisplay]];
-		} else {
+        if ([message hasFlags:OPIsFromMeStatus]) 
+        {
+			from = [NSString stringWithFormat:@" (%c %@)", 2782/*Right Arrow*/, [message recipientsForDisplay]];
+		} 
+        else 
+        {
 			from = [message senderName];
 			if (!from) from = @"- sender missing -";
-			from = [NSString stringWithFormat: @" (%@)", from];
+			from = [NSString stringWithFormat:@" (%@)", from];
 		}
         
         aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (isAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
@@ -1537,8 +1551,10 @@ static NSAttributedString* spacer2()
         [aFrom release];
         
         return result;
-    } else if ([[aTableColumn identifier] isEqualToString: @"relevance"]) {
-        return [hit objectAtIndex: 1]; // the score
+    } 
+    else if ([[aTableColumn identifier] isEqualToString: @"relevance"]) 
+    {
+        return [hit secondObject]; // the score
     }
     
     return @"";
