@@ -1081,49 +1081,52 @@
     return result;
 }
 
-- (void) fulltextIndexMessagesJob: (NSDictionary*) arguments
+- (void)fulltextIndexMessagesJob:(NSDictionary *)arguments
 {
-    if ([arguments count]) {
-        [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+    if ([arguments count]) 
+    {
+        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
         
         // messages to add:
-        NSArray* messagesToAdd = [arguments objectForKey: @"messagesToAdd"];
-        if ([messagesToAdd count]) [GIFulltextIndex addMessages: messagesToAdd];
+        NSArray *messagesToAdd = [arguments objectForKey:@"messagesToAdd"];
+        if ([messagesToAdd count]) [GIFulltextIndex addMessages:messagesToAdd];
         
         // messages to remove:
-        OPFaultingArray* messagesToRemove = [arguments objectForKey: @"messagesToRemove"];
-        if ([messagesToRemove count]) [GIFulltextIndex removeMessages: messagesToRemove];
+        OPFaultingArray *messagesToRemove = [arguments objectForKey:@"messagesToRemove"];
+        if ([messagesToRemove count]) [GIFulltextIndex removeMessages:messagesToRemove];
         
-        if (([GIFulltextIndex changeCount] >= 5000) && (![OPJobs shouldTerminate])) {
-            [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
+        if (([GIFulltextIndex changeCount] >= 5000) && (![OPJobs shouldTerminate])) 
+        {
+            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
             [GIFulltextIndex optimize];
         }
         
-        [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
 
 		[[OPPersistentObjectContext defaultContext] saveChanges];
     }
 }
 
-+ (NSString*) jobName
++ (NSString *)jobName
 {
     return @"Fulltext indexing";
 }
 
-+ (void) fulltextIndexInBackgroundAdding: (NSArray*) messagesToAdd removing: (NSArray*) messagesToRemove
++ (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messagesToRemove
 /*" Starts a background job for fulltext indexing someMessages. Only one indexing job can be active at one time. "*/
 {
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    if ([messagesToAdd count]) [jobArguments setObject: messagesToAdd forKey: @"messagesToAdd"];
-    if ([messagesToRemove count]) [jobArguments setObject: messagesToRemove forKey: @"messagesToRemove"];
+    if ([messagesToAdd count]) [jobArguments setObject: messagesToAdd forKey:@"messagesToAdd"];
+    if ([messagesToRemove count]) [jobArguments setObject: messagesToRemove forKey:@"messagesToRemove"];
     
-    if ([jobArguments count]) {
+    if ([jobArguments count]) 
+    {
         [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
     }    
 }
 
-+ (void) resetIndex
++ (void)resetIndex
 /*" Resets the fulltext index. Removes the index from disk and sets all messages to not indexed. "*/
 {
     @synchronized(self)

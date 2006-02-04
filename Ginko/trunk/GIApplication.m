@@ -465,7 +465,7 @@
     {
         if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
         {            
-            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:200000];
+            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
             NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
             
             if ([messagesToAdd count] || [messagesToRemove count]) 
