@@ -560,37 +560,40 @@
             id message;
             while ((message = [messageEnumerator nextObject]) && (!shouldTerminate))
             {
-                if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;}
-                
-                @try
+                if (![message isDummy])
                 {
-                    jobject doc = [self luceneDocumentFromMessage:message];
-                    counter += 1;
+                    if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;};
                     
-                    //NSLog(@"indexed document no = %d\n", counter);
-                    
-                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
-
-                    [self indexWriter:indexWriter addDocument:doc];
-                    if ((counter % 5000) == 0) 
+                    @try
                     {
-                        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
-                        [self indexWriterOptimize:indexWriter];
-                        [self addChangeCount:-5000];
+                        jobject doc = [self luceneDocumentFromMessage:message];
+                        counter += 1;
+                        
+                        //NSLog(@"indexed document no = %d\n", counter);
+                        
+                        [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
+                        
+                        [self indexWriter:indexWriter addDocument:doc];
+                        if ((counter % 5000) == 0) 
+                        {
+                            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
+                            [self indexWriterOptimize:indexWriter];
+                            [self addChangeCount:-5000];
+                        }
+                        
+                        [message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
                     }
-                    
-                    [message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
-                }
-                @catch (NSException *localException)
-                {
-                    @throw localException;
-                }
-                @finally
-                {
-                    (*env)->PopLocalFrame(env, NULL);
-                    [pool release];
-                    pool = [[NSAutoreleasePool alloc] init];
-                    shouldTerminate = [OPJobs shouldTerminate];
+                    @catch (NSException *localException)
+                    {
+                        @throw localException;
+                    }
+                    @finally
+                    {
+                        (*env)->PopLocalFrame(env, NULL);
+                        [pool release];
+                        pool = [[NSAutoreleasePool alloc] init];
+                        shouldTerminate = [OPJobs shouldTerminate];
+                    }
                 }
             }
         }
@@ -738,70 +741,84 @@
     return term;
 }
 
-+ (void) removeMessages: (OPFaultingArray*) someMessages
++ (void)removeMessages:(OPFaultingArray *)someMessages
 /*" Removes someMessages from the fulltext index. Only uses someMessage's oids as element objects might no longer be valid (e.g. removed). "*/
 {
     JNIEnv *env = [self jniEnv];
     int maxCount = [someMessages count];
     
-    if (maxCount) {
-        @synchronized(self) {
+    if (maxCount) 
+    {;
+        @synchronized(self) 
+        {
             if ((*env)->PushLocalFrame(env, 50) < 0) {NSLog(@"Out of memory!"); exit(1);}
             
             jstring javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
-            jobject indexReader = [self indexReaderOpen: javaIndexPath];             
+            jobject indexReader = [self indexReaderOpen:javaIndexPath];             
             NSAssert(indexReader != NULL, @"Could not create Lucene index reader.");
             int removedCount = 0;
             
-             @try {
-                 BOOL shouldTerminate = NO;
-				 GIMessage* message;
+            @try 
+            {
+                BOOL shouldTerminate = NO;
+                GIMessage *message;
 #warning I'm not decided whether deletion of messages from fulltext index should be interruptable...for now it's not!
-				 while (message = [someMessages lastObject] /*&& (!shouldTerminate) */) {
-					 
-					 OID oid = [message oid];
-					 
-					 //[message setValue: nil forKey: @"isFulltextIndexed"];
-					 char oidString[20] = "";
-					 sprintf(oidString, "%llu", oid);
-					 
-					 @try {
-						 if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"JNI: Out of memory!");}
-						 
-						 jstring fieldName = (*env)->NewStringUTF(env, "id");
-						 jstring text = (*env)->NewStringUTF(env, oidString);
-						 
-						 jobject term = [self termNewWithFieldname:fieldName text:text];
-						 
-						 jint count = [self indexReader: indexReader delete: term];
-						 if(count > 1) {
-							 NSLog(@"Deleted more than one message for a single message id from fulltext index.");
-						 }
-						 removedCount += 1;
-						 
-						 if ([message resolveFault]) {
-							 // The message still exists!
-							 [message setValue: nil forKey: @"isFulltextIndexed"];
-						 }
-						 
-						 [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 1.0 maxValue: (double) maxCount currentValue: (double) removedCount description: NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
-						 
-					 } @catch (NSException* localException) {
-						 @throw localException;
-					 } @finally {
-						 (*env)->PopLocalFrame(env, NULL);
-						 shouldTerminate = [OPJobs shouldTerminate];
-					 }
-					 [someMessages removeLastObject];
-					 
-				 }
-             } @catch (NSException* localException) {
-                 @throw localException;
-             } @finally {
-                 [self indexReaderClose: indexReader];
-                 (*env)->PopLocalFrame(env, NULL);
-                 [self addChangeCount: removedCount];
-             }
+                while (message = [someMessages lastObject] /*&& (!shouldTerminate) */) 
+                {
+                    OID oid = [message oid];
+                    
+                    //[message setValue: nil forKey: @"isFulltextIndexed"];
+                    char oidString[20] = "";
+                    sprintf(oidString, "%llu", oid);
+                    
+                    @try 
+                    {
+                        if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"JNI: Out of memory!");}
+                        
+                        jstring fieldName = (*env)->NewStringUTF(env, "id");
+                        jstring text = (*env)->NewStringUTF(env, oidString);
+                        
+                        jobject term = [self termNewWithFieldname:fieldName text:text];
+                        
+                        jint count = [self indexReader:indexReader delete:term];
+                        
+                        if(count > 1) 
+                        {
+                            NSLog(@"Deleted more than one message for a single message id from fulltext index.");
+                        }
+                        removedCount += 1;
+                        
+                        if ([message resolveFault]) 
+                        {
+                            // The message still exists!
+                            [message setValue:nil forKey:@"isFulltextIndexed"];
+                        }
+                        
+                        [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 1.0 maxValue: (double) maxCount currentValue: (double) removedCount description: NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
+                        
+                    } 
+                    @catch (NSException * localException) 
+                    {
+                        @throw localException;
+                    } 
+                    @finally 
+                    {
+                        (*env)->PopLocalFrame(env, NULL);
+                        shouldTerminate = [OPJobs shouldTerminate];
+                    }
+                    [someMessages removeLastObject];
+                }
+            } 
+            @catch (NSException *localException) 
+            {
+                @throw localException;
+            } 
+            @finally 
+            {
+                [self indexReaderClose:indexReader];
+                (*env)->PopLocalFrame(env, NULL);
+                [self addChangeCount:removedCount];
+            }
         }
     }
 }

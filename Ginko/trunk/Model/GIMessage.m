@@ -101,7 +101,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
     
-    NSArray* result = [context fetchObjectsOfClass: self whereFormat: @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
+    NSArray* result = [context fetchObjectsOfClass: self whereFormat: @"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) and not (ZMESSAGEDATA ISNULL) limit ?", [NSNumber numberWithUnsignedInt: limit], nil];
 
     return result;
 }
