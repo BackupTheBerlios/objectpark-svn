@@ -559,11 +559,14 @@
             BOOL shouldTerminate = NO;
             id message;
 
-            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) {
-				if (![message isDummy]) {
-					if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;}
+            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) 
+            {
+				if (![message isDummy]) 
+                {
+					if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;};
 					
-					@try {
+					@try 
+                    {
 						jobject doc = [self luceneDocumentFromMessage:message];
 						counter += 1;
 						
@@ -572,15 +575,21 @@
 						[OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
 						
 						[self indexWriter:indexWriter addDocument:doc];
-						if ((counter % 5000) == 0) {
+                        
+						if ((counter % 5000) == 0) 
+                        {
 							[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
 							[self indexWriterOptimize:indexWriter];
 							[self addChangeCount:-5000];
 						}
 						
-					} @catch (NSException *localException) {
+					} 
+                    @catch (NSException *localException) 
+                    {
 						@throw localException;
-					} @finally {
+					} 
+                    @finally 
+                    {
 						(*env)->PopLocalFrame(env, NULL);
 						[pool release];
 						pool = [[NSAutoreleasePool alloc] init];
@@ -588,7 +597,6 @@
 					}
 				}
 				[message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
-
 			}
         } @catch (NSException *localException) {
             @throw localException;
