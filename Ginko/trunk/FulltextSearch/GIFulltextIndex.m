@@ -558,7 +558,7 @@
             pool = [[NSAutoreleasePool alloc] init];
             BOOL shouldTerminate = NO;
             id message;
-<<<<<<< .mine
+
             while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) {
 				if (![message isDummy]) {
 					if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;}
@@ -590,53 +590,9 @@
 				[message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
 
 			}
-=======
-            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate))
-            {
-                if (![message isDummy])
-                {
-                    if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;};
-                    
-                    @try
-                    {
-                        jobject doc = [self luceneDocumentFromMessage:message];
-                        counter += 1;
-                        
-                        //NSLog(@"indexed document no = %d\n", counter);
-                        
-                        [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
-                        
-                        [self indexWriter:indexWriter addDocument:doc];
-                        if ((counter % 5000) == 0) 
-                        {
-                            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
-                            [self indexWriterOptimize:indexWriter];
-                            [self addChangeCount:-5000];
-                        }
-                        
-                        [message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
-                    }
-                    @catch (NSException *localException)
-                    {
-                        @throw localException;
-                    }
-                    @finally
-                    {
-                        (*env)->PopLocalFrame(env, NULL);
-                        [pool release];
-                        pool = [[NSAutoreleasePool alloc] init];
-                        shouldTerminate = [OPJobs shouldTerminate];
-                    }
-                }
-            }
->>>>>>> .r517
-        }
-        @catch (NSException *localException)
-        {
+        } @catch (NSException *localException) {
             @throw localException;
-        }
-        @finally
-        {
+        } @finally {
             [self addChangeCount:counter];
             [self indexWriterClose:indexWriter];
             [pool release];
