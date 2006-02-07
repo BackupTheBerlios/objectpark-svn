@@ -87,7 +87,7 @@
                 
                 while ((transferData = [pop3session nextTransferData]) && !shouldTerminate)
                 {
-                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"fetching messages from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, [theAccount incomingServerName]]]];
                     
                     // putting onto disk:
                     [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender: nil]];
