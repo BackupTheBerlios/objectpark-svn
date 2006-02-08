@@ -570,19 +570,20 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		
 		numberOfRelationshipsFired++;
 		
-		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
-													   resultClass: [ad attributeClass] 
-													   queryString: sql];
-		[e bind: object, nil];
-		result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];				
-		[e release];
-		
-		OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
-		if (rchanges) {
-			// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
-			[rchanges updateRelationshipNamed: key from: object values: result];
+		@synchronized(self) {
+			e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
+														  resultClass: [ad attributeClass] 
+														  queryString: sql];
+			[e bind: object, nil];
+			result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];				
+			[e release];
+			
+			OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
+			if (rchanges) {
+				// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
+				[rchanges updateRelationshipNamed: key from: object values: result];
+			}
 		}
-		
 	}
 	return result;
 }

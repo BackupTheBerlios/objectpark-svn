@@ -540,25 +540,22 @@
     [self saveAction:self];
 }
 
-- (void)sendQueuedMessagesWithFlag:(unsigned)flag
+- (void) sendQueuedMessagesWithFlag: (unsigned) flag
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Flag is currently ignored. "*/
 {
     // iterate over all profiles:
-    NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
-    GIProfile *profile;
+    NSEnumerator* enumerator = [[GIProfile allObjects] objectEnumerator];
+    GIProfile* profile;
     
-    while (profile = [enumerator nextObject]) 
-    {
-        NSEnumerator *messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
-        GIMessage *message;
+    while (profile = [enumerator nextObject]) {
+        NSEnumerator* messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
+        GIMessage* message;
         NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
             
-        while (message = [messagesToSendEnumerator nextObject]) 
-        {
-            if ([message sendStatus] == OPSendStatusQueuedReady) 
-            {
-				[message setSendStatus:OPSendStatusSending];
-                [messagesQualifyingForSend addObject:message];
+        while (message = [messagesToSendEnumerator nextObject]) {
+            if ([message sendStatus] == OPSendStatusQueuedReady) {
+				[message setSendStatus: OPSendStatusSending];
+                [messagesQualifyingForSend addObject: message];
             }
         }
         
@@ -570,17 +567,17 @@
     }
 }
 
-- (IBAction)sendQueuedMessages:(id)sender
+- (IBAction)sendQueuedMessages: (id) sender
 {
-    [self sendQueuedMessagesWithFlag:OPSendStatusQueuedReady];
+    [self sendQueuedMessagesWithFlag: OPSendStatusQueuedReady];
 }
 
-- (IBAction)showActivityPanel:(id)sender
+- (IBAction) showActivityPanel: (id) sender
 {
-	NSWindow *aWindow = [[GIActivityPanelController sharedInstance] window];
+	NSWindow* aWindow = [[GIActivityPanelController sharedInstance] window];
 	
 	if ([aWindow isVisible]) [aWindow close];
-	else [aWindow orderFront:nil];
+	else [aWindow orderFront: nil];
 }
 
 - (IBAction)showPhraseBrowser:(id)sender

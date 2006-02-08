@@ -1069,20 +1069,21 @@ static BOOL isThreadItem(id item)
 
 // validation
 
-- (BOOL) isOnlyThreadsSelected
+- (BOOL) multipleThreadsSelected
+/*" Returns YES, if more than one thread is selected in the thread list. "*/
 {
-    // true when only threads are selected; false otherwise
     NSIndexSet* selectedIndexes;
     
     selectedIndexes = [threadsView selectedRowIndexes];
     if ([selectedIndexes count] > 0) {
-        int i;
-        int lastIndex = [selectedIndexes lastIndex];
+		unsigned count = 0;
+        unsigned i;
+        unsigned lastIndex = [selectedIndexes lastIndex];
         
-        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i++) {
-            if ([threadsView isRowSelected: i]) {
-                if (!isThreadItem([threadsView itemAtRow: i])) return NO;
-            }
+        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i = [selectedIndexes indexGreaterThanIndex: i]) {
+			if (isThreadItem([threadsView itemAtRow: i])) {
+				if (++count) >1 return YES;
+			};
         }
         return YES;
     }
