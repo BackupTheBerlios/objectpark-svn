@@ -1082,7 +1082,7 @@ static BOOL isThreadItem(id item)
         
         for (i = [selectedIndexes firstIndex]; i <= lastIndex; i = [selectedIndexes indexGreaterThanIndex: i]) {
 			if (isThreadItem([threadsView itemAtRow: i])) {
-				if (++count) >1 return YES;
+				if (++count >1) return YES;
 			};
         }
         return YES;
@@ -1114,7 +1114,7 @@ static BOOL isThreadItem(id item)
     } 
     else if (aSelector == @selector(applySortingAndFiltering:)) 
     {
-        return [self isOnlyThreadsSelected]; 
+        return [self multipleThreadsSelected]; 
 	} 
     else if ((aSelector == @selector(toggleReadFlag:)) || (aSelector == @selector(toggleJunkFlag:))) 
     {
@@ -1984,7 +1984,7 @@ NSMutableArray* border = nil;
 {
     if (outlineView == threadsView) // threads list
     {
-        if (! [self isOnlyThreadsSelected]) return NO;
+        if (! [self multipleThreadsSelected]) return NO;
         
         [pboard declareTypes:[NSArray arrayWithObject:@"GinkoThreads"] owner:self];
         
