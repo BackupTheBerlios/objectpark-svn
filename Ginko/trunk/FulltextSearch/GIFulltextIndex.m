@@ -542,7 +542,8 @@
 
 + (void)addMessages:(NSArray *)someMessages
 {
-    @synchronized(self) {
+    @synchronized(self) 
+    {
         int counter = 0;
         int maxCount = [someMessages count];
         JNIEnv *env = [self jniEnv];
@@ -552,16 +553,20 @@
         NSAssert(indexWriter != NULL, @"IndexWriter could not be created.");
         NSEnumerator *messageEnumerator = [someMessages objectEnumerator];
         
-        @try {
+        @try 
+        {
             pool = [[NSAutoreleasePool alloc] init];
             BOOL shouldTerminate = NO;
             id message;
 
-            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) {
-				if (![message isDummy]) {
+            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) 
+            {
+				if (![message isDummy]) 
+                {
 					if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;};
 					
-					@try {
+					@try 
+                    {
 						jobject doc = [self luceneDocumentFromMessage:message];
 						counter += 1;
 						
@@ -571,29 +576,39 @@
 						
 						[self indexWriter:indexWriter addDocument:doc];
                         
-						if ((counter % 5000) == 0) {
+						if ((counter % 5000) == 0) 
+                        {
 							[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
 							[self indexWriterOptimize:indexWriter];
 							[self addChangeCount:-5000];
 						}
+                        
 						[message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
-
-					} @catch (NSException *localException) {
+					} 
+                    @catch (NSException *localException) 
+                    {
 						@throw localException;
 					} 
-                    @finally {
+                    @finally 
+                    {
 						(*env)->PopLocalFrame(env, NULL);
 						[pool release];
 						pool = [[NSAutoreleasePool alloc] init];
 						shouldTerminate = [OPJobs shouldTerminate];
 					}
-				} else {
+				} 
+                else 
+                {
 					[message setValue:[NSNumber numberWithBool:YES] forKey:@"isFulltextIndexed"];
 				}
 			}
-        } @catch (NSException *localException) {
+        } 
+        @catch (NSException *localException) 
+        {
             @throw localException;
-        } @finally {
+        } 
+        @finally 
+        {
             [self addChangeCount:counter];
             [self indexWriterClose:indexWriter];
             [pool release];

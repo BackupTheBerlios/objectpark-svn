@@ -372,6 +372,14 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return [self transferData] == nil;
 }
 
+- (void)setIsSeen:(NSNumber *)aBoolean
+{
+    [self willChangeValueForKey:@"isSeen"];
+    [self setPrimitiveValue:aBoolean forKey:@"isSeen"];
+    flagsCache = -1;
+    [self didChangeValueForKey:@"isSeen"];
+}
+
 - (unsigned) flags
 {
     @synchronized(self)
