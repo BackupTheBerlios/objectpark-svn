@@ -49,6 +49,8 @@ typedef enum _OPSMTPState
 - (id)initWithUsername: (NSString*) aUsername password: (NSString*) aPassword stream: (OPStream*) aStream;
 - (id)initWithStream: (OPStream*) aStream andDelegate:(id)anObject;
 
+- (void) quit;
+
 @end
 
 @protocol OPSMTPDelegate
@@ -69,6 +71,7 @@ typedef enum _OPSMTPState
 
 - (BOOL)allowExpiredCertificatesForSMTP: (OPSMTP*) aSMTP;
 /*" Optional. Default is NO. "*/
+
 
 @end
 

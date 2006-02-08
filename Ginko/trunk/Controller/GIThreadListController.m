@@ -1009,10 +1009,9 @@ static BOOL isThreadItem(id item)
     return group;
 }
 
-- (void)setGroup:(GIMessageGroup *)aGroup
+- (void) setGroup: (GIMessageGroup*) aGroup
 {
-    if (aGroup != group) 
-    {
+    if (aGroup != group) {
 		[group removeObserver: self forKeyPath: @"threadsByDate"];
 		
 		[aGroup addObserver: self 
@@ -1037,29 +1036,25 @@ static BOOL isThreadItem(id item)
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 			
 			@try {
-            id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
-            
-            if (lastSelectedMessageItem)
-            {
-                // is thread or message
-                GIThread *thread;
-                GIMessage *message;
-                
-                if ([lastSelectedMessageItem isKindOfClass:[GIThread class]])
-                {
-                    thread = lastSelectedMessageItem;
-                    message = [[thread messagesByTree] lastObject];
-                }
-                else
-                {
-                    NSAssert([lastSelectedMessageItem isKindOfClass:[GIMessage class]], @"should be a message object");
-                    
-                    message = lastSelectedMessageItem;
-                    thread = [message thread];
-                }
-                
-                [self setDisplayedMessage:message thread:thread];
-            }
+				id lastSelectedMessageItem = [context objectWithURLString: [self valueForGroupProperty:@"LastSelectedMessageItem"]];
+				
+				if (lastSelectedMessageItem) {
+					// is thread or message
+					GIThread *thread;
+					GIMessage *message;
+					
+					if ([lastSelectedMessageItem isKindOfClass: [GIThread class]]) {
+						thread = lastSelectedMessageItem;
+						message = [[thread messagesByTree] lastObject];
+					} else {
+						NSAssert([lastSelectedMessageItem isKindOfClass: [GIMessage class]], @"should be a message object");
+						
+						message = lastSelectedMessageItem;
+						thread = [message thread];
+					}
+					
+					[self setDisplayedMessage:message thread:thread];
+				}
 			} @catch (NSException* localException) {
 				// ignored
 			}
@@ -1082,7 +1077,7 @@ static BOOL isThreadItem(id item)
         
         for (i = [selectedIndexes firstIndex]; i <= lastIndex; i = [selectedIndexes indexGreaterThanIndex: i]) {
 			if (isThreadItem([threadsView itemAtRow: i])) {
-				if (++count >1) return YES;
+				if (++count > 1) return YES;
 			};
         }
         return YES;

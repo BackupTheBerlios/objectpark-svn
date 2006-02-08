@@ -82,65 +82,54 @@
         [self authenticateViaPOP:theAccount];
     }
     
-    NSHost *host = [NSHost hostWithName:[theAccount outgoingServerName]];
+    NSHost *host = [NSHost hostWithName: [theAccount outgoingServerName]];
     [host name];
     
-    if ([host isReachableWithNoStringsAttached]) 
-    {
+    if ([host isReachableWithNoStringsAttached]) {
         // connecting to host:
         [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), [theAccount outgoingServerName], [theAccount outgoingServerPort]]]];
         
-        OPStream *stream = [OPStream streamConnectedToHost:host
-                                                      port:[theAccount outgoingServerPort]
-                                               sendTimeout:TIMEOUT
-                                            receiveTimeout:TIMEOUT];
+        OPStream *stream = [OPStream streamConnectedToHost: host
+                                                      port: [theAccount outgoingServerPort]
+                                               sendTimeout: TIMEOUT
+                                            receiveTimeout: TIMEOUT];
         
         NSAssert2(stream != nil, @"could not connect to server %@:%d", [theAccount outgoingServerName], [theAccount outgoingServerPort]);
         
-        @try
-        {
+        @try {
             // logging into POP server:
             [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), [theAccount outgoingServerName]]]];
             
-            OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
-            NSEnumerator *enumerator = [theMessages objectEnumerator];
+            OPSMTP* SMTP = [[[OPSMTP alloc] initWithStream: stream andDelegate: self] autorelease];
+            NSEnumerator* enumerator = [theMessages objectEnumerator];
             
             // sending messages:
-            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            @try 
-            {
+            NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+            @try {
                 GIMessage *message;
                 
-                while (message = [enumerator nextObject]) 
-                {
+                while (message = [enumerator nextObject]) {
                     [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
                     
-                    @try 
-                    {
+                    @try {
                         [SMTP acceptMessage: [message internetMessage]];
                         [sentMessages addObject: message];
-                    } 
-                    @catch (NSException *localException) 
-                    {
-                        NSLog(@"Error sending message %@: %@", [message valueForKey:@"subject"], [localException reason]);
+                    } @catch (NSException* localException) {
+                        NSLog(@"Error sending message %@: %@", [message valueForKey: @"subject"], [localException reason]);
                     }
                     [pool release]; pool = [[NSAutoreleasePool alloc] init];
                 }
-            } @catch (NSException *localException) {
+            } @catch (NSException* localException) {
                 @throw;
             } @finally {
-                [pool drain];
-                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
-                [stream close];
+                [pool release];
+                [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat: NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
+                [SMTP quit];
             }
-        }
-        @catch (NSException *localException) 
-        {
+        } @catch (NSException* localException) {
             @throw;
-        } 
-        @finally 
-        {
-            [OPJobs setResult:[NSDictionary dictionaryWithObjectsAndKeys:
+        } @finally {
+            [OPJobs setResult: [NSDictionary dictionaryWithObjectsAndKeys:
                 sentMessages, @"sentMessages",
                 theMessages, @"messages",
                 nil, nil]];
@@ -148,7 +137,7 @@
     }
 }
 
-- (id)initWithMessages:(NSArray *)someMessages andAccount:(GIAccount *)anAccount
+- (id) initWithMessages:(NSArray*) someMessages andAccount: (GIAccount*) anAccount
 {
     self = [super init];
     
@@ -158,7 +147,7 @@
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [messages release];
     [account release];

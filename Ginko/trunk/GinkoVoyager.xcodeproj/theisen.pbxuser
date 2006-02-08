@@ -25,9 +25,9 @@
 			8D50846508A89496007948E9 /* OPPersistentObjectContext.m:552 */,
 			8DABCA29096B1644008C061C /* OPPersistentObject.m:577 */,
 			8DE962B5089E2AC80053ED6B /* OPSQLiteConnection.m:413 */,
-			8D32AF36096DDA9200B1D2E1 /* GIThreadListController.m:1167 */,
+			8D32AF36096DDA9200B1D2E1 /* GIThreadListController.m:1162 */,
 			8D32B45F0972032400B1D2E1 /* OPPersistentObject.m:594 */,
-			8D32B4C90972103D00B1D2E1 /* GIThreadListController.m:1615 */,
+			8D32B4C90972103D00B1D2E1 /* GIThreadListController.m:1610 */,
 			8D61C5D0097D66DB00D1999A /* OPPersistentObject.m:150 */,
 			8D0D5D37097C1164008D1EF7 /* GIThreadListController.m:187 */,
 			8D3F686D093E30B700BC44D1 /* GIGroupListController.m:196 */,
@@ -38,6 +38,8 @@
 			8DCBDC530992DC3600D6B861 /* GIApplication.m:607 */,
 			8D83A5570975A35D00A0C902 /* GIThread.m:243 */,
 			8DCBE21B0993BF3900D6B861 /* GIApplication.m:485 */,
+			8DCBE8ED099A5BA400D6B861 /* OPSMTP.m:205 */,
+			8DCBE94B099A640500D6B861 /* OPSMTP.m:387 */,
 		);
 		breakpointsGroup = 8D9E54AA0864469900AE9683 /* XCBreakpointsBucket */;
 		codeSenseManager = 8D9E89FF06AC42610055F87C /* Code sense */;
@@ -2285,6 +2287,97 @@
 			8DCBE8230999FD7B00D6B861 /* PBXTextBookmark */ = 8DCBE8230999FD7B00D6B861 /* PBXTextBookmark */;
 			8DCBE8240999FD7B00D6B861 /* PBXTextBookmark */ = 8DCBE8240999FD7B00D6B861 /* PBXTextBookmark */;
 			8DCBE8250999FD8C00D6B861 /* PBXTextBookmark */ = 8DCBE8250999FD8C00D6B861 /* PBXTextBookmark */;
+			8DCBE826099A004400D6B861 /* PBXTextBookmark */ = 8DCBE826099A004400D6B861 /* PBXTextBookmark */;
+			8DCBE827099A004E00D6B861 /* PBXTextBookmark */ = 8DCBE827099A004E00D6B861 /* PBXTextBookmark */;
+			8DCBE828099A004E00D6B861 /* PBXTextBookmark */ = 8DCBE828099A004E00D6B861 /* PBXTextBookmark */;
+			8DCBE8CF099A574500D6B861 /* PBXTextBookmark */ = 8DCBE8CF099A574500D6B861 /* PBXTextBookmark */;
+			8DCBE8D0099A574500D6B861 /* PBXTextBookmark */ = 8DCBE8D0099A574500D6B861 /* PBXTextBookmark */;
+			8DCBE8D1099A574500D6B861 /* PBXTextBookmark */ = 8DCBE8D1099A574500D6B861 /* PBXTextBookmark */;
+			8DCBE8D3099A574500D6B861 /* PBXTextBookmark */ = 8DCBE8D3099A574500D6B861 /* PBXTextBookmark */;
+			8DCBE8D4099A574500D6B861 /* PBXTextBookmark */ = 8DCBE8D4099A574500D6B861 /* PBXTextBookmark */;
+			8DCBE8D6099A574500D6B861 /* PBXTextBookmark */ = 8DCBE8D6099A574500D6B861 /* PBXTextBookmark */;
+			8DCBE8D7099A574500D6B861 /* PBXTextBookmark */ = 8DCBE8D7099A574500D6B861 /* PBXTextBookmark */;
+			8DCBE8E2099A594F00D6B861 /* PBXTextBookmark */ = 8DCBE8E2099A594F00D6B861 /* PBXTextBookmark */;
+			8DCBE8E3099A594F00D6B861 /* PBXTextBookmark */ = 8DCBE8E3099A594F00D6B861 /* PBXTextBookmark */;
+			8DCBE8E4099A594F00D6B861 /* PBXTextBookmark */ = 8DCBE8E4099A594F00D6B861 /* PBXTextBookmark */;
+			8DCBE8E5099A594F00D6B861 /* PBXTextBookmark */ = 8DCBE8E5099A594F00D6B861 /* PBXTextBookmark */;
+			8DCBE8E6099A597200D6B861 /* PBXTextBookmark */ = 8DCBE8E6099A597200D6B861 /* PBXTextBookmark */;
+			8DCBE8E7099A597200D6B861 /* PBXTextBookmark */ = 8DCBE8E7099A597200D6B861 /* PBXTextBookmark */;
+			8DCBE8EF099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8EF099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F0099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F0099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F1099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F1099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F2099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F2099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F3099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F3099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F4099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F4099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F5099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F5099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F6099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F6099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8F8099A5C3700D6B861 /* PBXTextBookmark */ = 8DCBE8F8099A5C3700D6B861 /* PBXTextBookmark */;
+			8DCBE8FA099A5C4400D6B861 /* PBXTextBookmark */ = 8DCBE8FA099A5C4400D6B861 /* PBXTextBookmark */;
+			8DCBE8FB099A5C4400D6B861 /* PBXTextBookmark */ = 8DCBE8FB099A5C4400D6B861 /* PBXTextBookmark */;
+			8DCBE8FC099A5C5D00D6B861 /* PBXTextBookmark */ = 8DCBE8FC099A5C5D00D6B861 /* PBXTextBookmark */;
+			8DCBE8FD099A5C5D00D6B861 /* PBXTextBookmark */ = 8DCBE8FD099A5C5D00D6B861 /* PBXTextBookmark */;
+			8DCBE8FE099A5DC000D6B861 /* PBXTextBookmark */ = 8DCBE8FE099A5DC000D6B861 /* PBXTextBookmark */;
+			8DCBE8FF099A5DC000D6B861 /* PBXTextBookmark */ = 8DCBE8FF099A5DC000D6B861 /* PBXTextBookmark */;
+			8DCBE900099A5DC000D6B861 /* PBXTextBookmark */ = 8DCBE900099A5DC000D6B861 /* PBXTextBookmark */;
+			8DCBE901099A5DC000D6B861 /* PBXTextBookmark */ = 8DCBE901099A5DC000D6B861 /* PBXTextBookmark */;
+			8DCBE902099A5DC000D6B861 /* PBXTextBookmark */ = 8DCBE902099A5DC000D6B861 /* PBXTextBookmark */;
+			8DCBE903099A5E2600D6B861 /* PBXTextBookmark */ = 8DCBE903099A5E2600D6B861 /* PBXTextBookmark */;
+			8DCBE904099A5E2600D6B861 /* PBXTextBookmark */ = 8DCBE904099A5E2600D6B861 /* PBXTextBookmark */;
+			8DCBE905099A5E2600D6B861 /* PBXTextBookmark */ = 8DCBE905099A5E2600D6B861 /* PBXTextBookmark */;
+			8DCBE906099A5E2600D6B861 /* PBXBookmark */ = 8DCBE906099A5E2600D6B861 /* PBXBookmark */;
+			8DCBE907099A5E2600D6B861 /* PBXTextBookmark */ = 8DCBE907099A5E2600D6B861 /* PBXTextBookmark */;
+			8DCBE908099A5E2600D6B861 /* PBXTextBookmark */ = 8DCBE908099A5E2600D6B861 /* PBXTextBookmark */;
+			8DCBE909099A5E2600D6B861 /* PBXTextBookmark */ = 8DCBE909099A5E2600D6B861 /* PBXTextBookmark */;
+			8DCBE90D099A5E6E00D6B861 /* PBXTextBookmark */ = 8DCBE90D099A5E6E00D6B861 /* PBXTextBookmark */;
+			8DCBE90E099A5E6E00D6B861 /* PBXTextBookmark */ = 8DCBE90E099A5E6E00D6B861 /* PBXTextBookmark */;
+			8DCBE911099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE911099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE912099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE912099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE913099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE913099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE914099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE914099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE916099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE916099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE918099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE918099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE919099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE919099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE91A099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE91A099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE91C099A5ED500D6B861 /* PBXTextBookmark */ = 8DCBE91C099A5ED500D6B861 /* PBXTextBookmark */;
+			8DCBE91E099A5EE300D6B861 /* PBXTextBookmark */ = 8DCBE91E099A5EE300D6B861 /* PBXTextBookmark */;
+			8DCBE91F099A5F0200D6B861 /* PBXTextBookmark */ = 8DCBE91F099A5F0200D6B861 /* PBXTextBookmark */;
+			8DCBE920099A5F0200D6B861 /* PBXTextBookmark */ = 8DCBE920099A5F0200D6B861 /* PBXTextBookmark */;
+			8DCBE926099A61ED00D6B861 /* PBXTextBookmark */ = 8DCBE926099A61ED00D6B861 /* PBXTextBookmark */;
+			8DCBE927099A61ED00D6B861 /* PBXTextBookmark */ = 8DCBE927099A61ED00D6B861 /* PBXTextBookmark */;
+			8DCBE928099A61ED00D6B861 /* PBXTextBookmark */ = 8DCBE928099A61ED00D6B861 /* PBXTextBookmark */;
+			8DCBE929099A61ED00D6B861 /* PBXTextBookmark */ = 8DCBE929099A61ED00D6B861 /* PBXTextBookmark */;
+			8DCBE92A099A61ED00D6B861 /* PBXTextBookmark */ = 8DCBE92A099A61ED00D6B861 /* PBXTextBookmark */;
+			8DCBE92B099A61ED00D6B861 /* PBXTextBookmark */ = 8DCBE92B099A61ED00D6B861 /* PBXTextBookmark */;
+			8DCBE92C099A61ED00D6B861 /* PBXTextBookmark */ = 8DCBE92C099A61ED00D6B861 /* PBXTextBookmark */;
+			8DCBE92E099A620F00D6B861 /* PBXTextBookmark */ = 8DCBE92E099A620F00D6B861 /* PBXTextBookmark */;
+			8DCBE92F099A620F00D6B861 /* PBXTextBookmark */ = 8DCBE92F099A620F00D6B861 /* PBXTextBookmark */;
+			8DCBE930099A620F00D6B861 /* PBXTextBookmark */ = 8DCBE930099A620F00D6B861 /* PBXTextBookmark */;
+			8DCBE931099A620F00D6B861 /* PBXTextBookmark */ = 8DCBE931099A620F00D6B861 /* PBXTextBookmark */;
+			8DCBE932099A620F00D6B861 /* PBXTextBookmark */ = 8DCBE932099A620F00D6B861 /* PBXTextBookmark */;
+			8DCBE933099A620F00D6B861 /* PBXTextBookmark */ = 8DCBE933099A620F00D6B861 /* PBXTextBookmark */;
+			8DCBE935099A621500D6B861 /* PBXTextBookmark */ = 8DCBE935099A621500D6B861 /* PBXTextBookmark */;
+			8DCBE936099A622200D6B861 /* PBXTextBookmark */ = 8DCBE936099A622200D6B861 /* PBXTextBookmark */;
+			8DCBE938099A624900D6B861 /* PBXTextBookmark */ = 8DCBE938099A624900D6B861 /* PBXTextBookmark */;
+			8DCBE939099A624900D6B861 /* PBXTextBookmark */ = 8DCBE939099A624900D6B861 /* PBXTextBookmark */;
+			8DCBE93A099A624900D6B861 /* PBXTextBookmark */ = 8DCBE93A099A624900D6B861 /* PBXTextBookmark */;
+			8DCBE93B099A624E00D6B861 /* PBXTextBookmark */ = 8DCBE93B099A624E00D6B861 /* PBXTextBookmark */;
+			8DCBE93C099A624E00D6B861 /* PBXTextBookmark */ = 8DCBE93C099A624E00D6B861 /* PBXTextBookmark */;
+			8DCBE93E099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE93E099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE93F099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE93F099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE940099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE940099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE941099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE941099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE942099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE942099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE943099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE943099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE944099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE944099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE945099A636C00D6B861 /* PBXTextBookmark */ = 8DCBE945099A636C00D6B861 /* PBXTextBookmark */;
+			8DCBE946099A637700D6B861 /* PBXTextBookmark */ = 8DCBE946099A637700D6B861 /* PBXTextBookmark */;
+			8DCBE947099A637700D6B861 /* PBXTextBookmark */ = 8DCBE947099A637700D6B861 /* PBXTextBookmark */;
+			8DCBE948099A639500D6B861 /* PBXTextBookmark */ = 8DCBE948099A639500D6B861 /* PBXTextBookmark */;
+			8DCBE949099A639600D6B861 /* PBXTextBookmark */ = 8DCBE949099A639600D6B861 /* PBXTextBookmark */;
+			8DCBE94C099A641D00D6B861 /* PBXTextBookmark */ = 8DCBE94C099A641D00D6B861 /* PBXTextBookmark */;
+			8DCBE94D099A641D00D6B861 /* PBXTextBookmark */ = 8DCBE94D099A641D00D6B861 /* PBXTextBookmark */;
+			8DCBE951099A64EA00D6B861 /* PBXTextBookmark */ = 8DCBE951099A64EA00D6B861 /* PBXTextBookmark */;
+			8DCBE952099A64EA00D6B861 /* PBXTextBookmark */ = 8DCBE952099A64EA00D6B861 /* PBXTextBookmark */;
 			8DCC252F0925EBAF002F1792 = 8DCC252F0925EBAF002F1792 /* PBXTextBookmark */;
 			8DCC25300925EBAF002F1792 = 8DCC25300925EBAF002F1792 /* PBXTextBookmark */;
 			8DCC25320925EBAF002F1792 = 8DCC25320925EBAF002F1792 /* PBXTextBookmark */;
@@ -2391,16 +2484,16 @@
 	};
 	77253D6107ECB83E00375AFC /* OPSMTP.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {629, 1092}}";
-			sepNavSelRange = "{1163, 35}";
-			sepNavVisRect = "{{0, 174}, {629, 310}}";
+			sepNavIntBoundsRect = "{{0, 0}, {953, 1106}}";
+			sepNavSelRange = "{2020, 0}";
+			sepNavVisRect = "{{0, 580}, {953, 283}}";
 		};
 	};
 	77253D6207ECB83E00375AFC /* OPSMTP.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {948, 9044}}";
-			sepNavSelRange = "{10678, 0}";
-			sepNavVisRect = "{{0, 3528}, {948, 350}}";
+			sepNavIntBoundsRect = "{{0, 0}, {953, 9030}}";
+			sepNavSelRange = "{10567, 0}";
+			sepNavVisRect = "{{0, 3478}, {953, 283}}";
 		};
 	};
 	772D9524094435EA00456485 /* GIMessageGroup+Statistics.m */ = {
@@ -2448,9 +2541,9 @@
 	};
 	774791BC085DF0150001560D /* GISMTPJob.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {945, 3472}}";
-			sepNavSelRange = "{5033, 0}";
-			sepNavVisRect = "{{0, 1618}, {945, 250}}";
+			sepNavIntBoundsRect = "{{0, 0}, {953, 3262}}";
+			sepNavSelRange = "{6121, 0}";
+			sepNavVisRect = "{{0, 882}, {953, 283}}";
 		};
 	};
 	774A05B40859DAFD00AF321C /* Tasks.txt */ = {
@@ -2725,9 +2818,9 @@
 	};
 	77DA79A8097B95E900B7A5CC /* GIFulltextIndex.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {651, 19712}}";
-			sepNavSelRange = "{17100, 0}";
-			sepNavVisRect = "{{0, 7552}, {651, 389}}";
+			sepNavIntBoundsRect = "{{0, 0}, {953, 18732}}";
+			sepNavSelRange = "{30322, 87}";
+			sepNavVisRect = "{{0, 12908}, {953, 283}}";
 		};
 	};
 	77DE91A607C6691C008E3C09 /* TestEDTextFieldCoder.h */ = {
@@ -2760,9 +2853,9 @@
 	};
 	77DFA5BE08409DF00068AD15 /* OPJobs.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {948, 12334}}";
-			sepNavSelRange = "{9939, 0}";
-			sepNavVisRect = "{{0, 3430}, {948, 350}}";
+			sepNavIntBoundsRect = "{{0, 0}, {953, 7518}}";
+			sepNavSelRange = "{8374, 0}";
+			sepNavVisRect = "{{0, 3016}, {953, 283}}";
 		};
 	};
 	77DFA5C80840B49C0068AD15 /* TestOPJobs.m */ = {
@@ -3171,7 +3264,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1529";
 		rLen = 0;
-		rLoc = 50123;
+		rLoc = 49849;
 		rType = 0;
 		vrLen = 959;
 		vrLoc = 6559;
@@ -3231,7 +3324,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1529";
 		rLen = 0;
-		rLoc = 50123;
+		rLoc = 49849;
 		rType = 0;
 		vrLen = 959;
 		vrLoc = 6559;
@@ -3621,7 +3714,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1820";
 		rLen = 0;
-		rLoc = 60665;
+		rLoc = 60391;
 		rType = 0;
 		vrLen = 1460;
 		vrLoc = 20369;
@@ -3666,7 +3759,7 @@
 		functionName = "-setDisplayedMessage:thread:";
 		hitCount = 1;
 		lineNumber = 187;
-		modificationTime = 161063938.176122;
+		modificationTime = 161112957.258756;
 		state = 2;
 	};
 	8D0D5D3B097C1169008D1EF7 /* PBXTextBookmark */ = {
@@ -3782,7 +3875,7 @@
 		functionName = "-insertNewRowForClass:";
 		hitCount = 1;
 		lineNumber = 313;
-		modificationTime = 161063938.174368;
+		modificationTime = 161112957.257088;
 		state = 2;
 	};
 	8D2142B5084FB994004C44B9 /* -[_NSZombie respondsToSelector:] */ = {
@@ -3792,7 +3885,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 1;
-		modificationTime = 160993826.867427;
+		modificationTime = 161112957.343404;
 		state = 1;
 		symbolName = "-[_NSZombie respondsToSelector:]";
 	};
@@ -4281,9 +4374,9 @@
 	};
 	8D31443E09562178007D668A /* GIThreadListController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {687, 30786}}";
-			sepNavSelRange = "{34022, 23}";
-			sepNavVisRect = "{{0, 15333}, {687, 302}}";
+			sepNavIntBoundsRect = "{{0, 0}, {651, 30940}}";
+			sepNavSelRange = "{34274, 0}";
+			sepNavVisRect = "{{0, 15395}, {651, 389}}";
 			sepNavWindowFrame = "{{45, 163}, {789, 578}}";
 		};
 	};
@@ -4472,7 +4565,7 @@
 			sepNavVisRect = "{{0, 666}, {687, 302}}";
 		};
 	};
-	8D32AF36096DDA9200B1D2E1 /* GIThreadListController.m:1167 */ = {
+	8D32AF36096DDA9200B1D2E1 /* GIThreadListController.m:1162 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -4481,8 +4574,8 @@
 		fileReference = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		functionName = "-outlineView:child:ofItem:";
 		hitCount = 1;
-		lineNumber = 1167;
-		modificationTime = 161063938.175394;
+		lineNumber = 1162;
+		modificationTime = 161112957.258124;
 		state = 2;
 	};
 	8D32AF41096DDD2E00B1D2E1 /* PBXTextBookmark */ = {
@@ -4680,7 +4773,7 @@
 		functionName = "-addValue:forKey:";
 		hitCount = 1;
 		lineNumber = 594;
-		modificationTime = 161063938.175627;
+		modificationTime = 161112957.258336;
 		state = 2;
 	};
 	8D32B4AB09720F4000B1D2E1 /* PBXTextBookmark */ = {
@@ -4717,7 +4810,7 @@
 		path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSRange.h;
 		sourceTree = "<absolute>";
 	};
-	8D32B4C90972103D00B1D2E1 /* GIThreadListController.m:1615 */ = {
+	8D32B4C90972103D00B1D2E1 /* GIThreadListController.m:1610 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -4726,16 +4819,16 @@
 		fileReference = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		functionName = "-updateCommentTree:";
 		hitCount = 1;
-		lineNumber = 1615;
-		modificationTime = 161063938.175754;
+		lineNumber = 1610;
+		modificationTime = 161112957.258435;
 		state = 2;
 	};
 	8D32B5820973ED1000B1D2E1 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "sesame = [[[NSString stringWithFormat:@\"\\0%@\\0%@\", aUsername, aPassword] dataUsingEncoding:NSUTF8StringEncoding] encodeBase64];";
-		rLen = 132;
-		rLoc = 20812;
+		rLen = 134;
+		rLoc = 20851;
 		rType = 0;
 		vrLen = 777;
 		vrLoc = 20534;
@@ -4838,7 +4931,7 @@
 		functionName = "-delete:";
 		hitCount = 1;
 		lineNumber = 196;
-		modificationTime = 161063938.176424;
+		modificationTime = 161112957.272718;
 		state = 1;
 	};
 	8D3F68BA093E3C0E00BC44D1 /* PBXDocBookmark */ = {
@@ -5268,7 +5361,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 123";
 		rLen = 0;
-		rLoc = 5342;
+		rLoc = 5243;
 		rType = 0;
 		vrLen = 1200;
 		vrLoc = 4321;
@@ -5403,7 +5496,7 @@
 		functionName = "-validateMailAddress:error:";
 		hitCount = 1;
 		lineNumber = 82;
-		modificationTime = 161063938.17451;
+		modificationTime = 161112957.257218;
 		state = 1;
 	};
 	8D3FA59D09329E06001B2DE3 /* OPSQLiteConnection.m:298 */ = {
@@ -5416,7 +5509,7 @@
 		functionName = "-updateRowOfClass:rowId:values:";
 		hitCount = 1;
 		lineNumber = 298;
-		modificationTime = 161063938.174016;
+		modificationTime = 161112957.256385;
 		state = 2;
 	};
 	8D3FB5850933EA51001B2DE3 /* PBXTextBookmark */ = {
@@ -5602,7 +5695,7 @@
 		functionName = "-testManualUpdateQuery";
 		hitCount = 1;
 		lineNumber = 237;
-		modificationTime = 161063938.173517;
+		modificationTime = 161112957.256258;
 		state = 1;
 	};
 	8D3FB5DA0933F94B001B2DE3 /* PBXTextBookmark */ = {
@@ -5679,7 +5772,7 @@
 		functionName = "-testToManyRelationship";
 		hitCount = 1;
 		lineNumber = 279;
-		modificationTime = 161063938.173296;
+		modificationTime = 161112957.256082;
 		state = 1;
 	};
 	8D50846508A89496007948E9 /* OPPersistentObjectContext.m:552 */ = {
@@ -5692,7 +5785,7 @@
 		functionName = "-containerForObject:relationShipKey:";
 		hitCount = 1;
 		lineNumber = 552;
-		modificationTime = 161063938.174813;
+		modificationTime = 161112957.257638;
 		state = 2;
 	};
 	8D61C465097D044400D1999A /* PBXTextBookmark */ = {
@@ -5765,7 +5858,7 @@
 		functionName = "-resolveFault";
 		hitCount = 1;
 		lineNumber = 150;
-		modificationTime = 161063938.175857;
+		modificationTime = 161112957.258514;
 		state = 2;
 	};
 	8D61C641097D874300D1999A /* PBXTextBookmark */ = {
@@ -5930,7 +6023,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: removeAllFinishedJobs";
 		rLen = 0;
-		rLoc = 20340;
+		rLoc = 20298;
 		rType = 0;
 		vrLen = 922;
 		vrLoc = 20055;
@@ -5940,7 +6033,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 656";
 		rLen = 0;
-		rLoc = 21134;
+		rLoc = 21092;
 		rType = 0;
 		vrLen = 869;
 		vrLoc = 20696;
@@ -6503,7 +6596,7 @@
 		functionName = "-restoreDefaultAction:";
 		hitCount = 1;
 		lineNumber = 72;
-		modificationTime = 161063938.172086;
+		modificationTime = 161112957.255478;
 		state = 1;
 	};
 	8D6E6A1007DA853900428E45 /* Localizable.strings */ = {
@@ -6614,7 +6707,7 @@
 		functionName = "-rootMessages";
 		hitCount = 1;
 		lineNumber = 243;
-		modificationTime = 161063938.177678;
+		modificationTime = 161112957.274555;
 		state = 2;
 	};
 	8D83A7630975ADFA00A0C902 /* PBXTextBookmark */ = {
@@ -6892,7 +6985,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 727";
 		rLen = 0;
-		rLoc = 23297;
+		rLoc = 23255;
 		rType = 0;
 		vrLen = 880;
 		vrLoc = 22884;
@@ -7727,7 +7820,7 @@
 		isa = PBXTextBookmark;
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		rLen = 0;
-		rLoc = 1522;
+		rLoc = 1517;
 		rType = 1;
 	};
 	8D95DA84098A83C8003F8BED /* PBXTextBookmark */ = {
@@ -7795,7 +7888,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1522";
 		rLen = 0;
-		rLoc = 50439;
+		rLoc = 50165;
 		rType = 0;
 		vrLen = 758;
 		vrLoc = 49926;
@@ -7805,7 +7898,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1522";
 		rLen = 0;
-		rLoc = 50439;
+		rLoc = 50165;
 		rType = 0;
 		vrLen = 1158;
 		vrLoc = 49764;
@@ -7822,7 +7915,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1522";
 		rLen = 0;
-		rLoc = 50439;
+		rLoc = 50165;
 		rType = 0;
 		vrLen = 1158;
 		vrLoc = 49764;
@@ -7979,7 +8072,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1522";
 		rLen = 0;
-		rLoc = 50439;
+		rLoc = 50165;
 		rType = 0;
 		vrLen = 758;
 		vrLoc = 49926;
@@ -8330,7 +8423,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1430";
 		rLen = 0;
-		rLoc = 45611;
+		rLoc = 45337;
 		rType = 0;
 		vrLen = 916;
 		vrLoc = 45221;
@@ -8397,7 +8490,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1430";
 		rLen = 0;
-		rLoc = 45611;
+		rLoc = 45337;
 		rType = 0;
 		vrLen = 916;
 		vrLoc = 45221;
@@ -8417,7 +8510,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1430";
 		rLen = 0;
-		rLoc = 45611;
+		rLoc = 45337;
 		rType = 0;
 		vrLen = 916;
 		vrLoc = 45221;
@@ -8437,7 +8530,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1430";
 		rLen = 0;
-		rLoc = 45611;
+		rLoc = 45337;
 		rType = 0;
 		vrLen = 916;
 		vrLoc = 45221;
@@ -9957,7 +10050,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 131";
 		rLen = 0;
-		rLoc = 5610;
+		rLoc = 5512;
 		rType = 0;
 		vrLen = 940;
 		vrLoc = 5035;
@@ -9967,7 +10060,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 390";
 		rLen = 0;
-		rLoc = 15066;
+		rLoc = 14821;
 		rType = 0;
 		vrLen = 335;
 		vrLoc = 14821;
@@ -9976,7 +10069,7 @@
 		isa = PBXTextBookmark;
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		rLen = 0;
-		rLoc = 197;
+		rLoc = 196;
 		rType = 1;
 	};
 	8D95DC3B098ED399003F8BED /* PBXTextBookmark */ = {
@@ -10004,7 +10097,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 388";
 		rLen = 0;
-		rLoc = 15002;
+		rLoc = 14756;
 		rType = 0;
 		vrLen = 371;
 		vrLoc = 16189;
@@ -10014,7 +10107,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 120";
 		rLen = 0;
-		rLoc = 5035;
+		rLoc = 4978;
 		rType = 0;
 		vrLen = 925;
 		vrLoc = 4596;
@@ -10024,7 +10117,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 388";
 		rLen = 0;
-		rLoc = 15002;
+		rLoc = 14756;
 		rType = 0;
 		vrLen = 335;
 		vrLoc = 14821;
@@ -10034,7 +10127,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 388";
 		rLen = 0;
-		rLoc = 15002;
+		rLoc = 14756;
 		rType = 0;
 		vrLen = 335;
 		vrLoc = 14821;
@@ -10044,7 +10137,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 388";
 		rLen = 0;
-		rLoc = 15002;
+		rLoc = 14756;
 		rType = 0;
 		vrLen = 335;
 		vrLoc = 14821;
@@ -10054,7 +10147,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 120";
 		rLen = 0;
-		rLoc = 5035;
+		rLoc = 4978;
 		rType = 0;
 		vrLen = 925;
 		vrLoc = 4596;
@@ -10064,7 +10157,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 120";
 		rLen = 0;
-		rLoc = 5035;
+		rLoc = 4978;
 		rType = 0;
 		vrLen = 925;
 		vrLoc = 4596;
@@ -10074,7 +10167,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 233";
 		rLen = 0;
-		rLoc = 8944;
+		rLoc = 8931;
 		rType = 0;
 		vrLen = 901;
 		vrLoc = 8543;
@@ -10084,7 +10177,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 120";
 		rLen = 0;
-		rLoc = 5035;
+		rLoc = 4978;
 		rType = 0;
 		vrLen = 712;
 		vrLoc = 2514;
@@ -10094,7 +10187,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 120";
 		rLen = 0;
-		rLoc = 5035;
+		rLoc = 4978;
 		rType = 0;
 		vrLen = 925;
 		vrLoc = 4596;
@@ -10104,7 +10197,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "GISMTPJob.m: 131";
 		rLen = 0;
-		rLoc = 5610;
+		rLoc = 5512;
 		rType = 0;
 		vrLen = 940;
 		vrLoc = 5035;
@@ -10114,7 +10207,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 390";
 		rLen = 0;
-		rLoc = 15066;
+		rLoc = 14821;
 		rType = 0;
 		vrLen = 335;
 		vrLoc = 14821;
@@ -10249,7 +10342,7 @@
 		functionName = "-allObjectsOfClass:";
 		hitCount = 1;
 		lineNumber = 208;
-		modificationTime = 161063938.176702;
+		modificationTime = 161112966.012205;
 		state = 0;
 	};
 	8D95DC65098F57D3003F8BED /* PBXTextBookmark */ = {
@@ -10338,13 +10431,13 @@
 			8DABCA29096B1644008C061C /* OPPersistentObject.m:577 */,
 			8DABCBA6096BC1E9008C061C /* OPPersistentObjectContext.m:235 */,
 			8DABCBB0096BC56B008C061C /* OPSQLiteConnection.m:756 */,
-			8D32AF36096DDA9200B1D2E1 /* GIThreadListController.m:1167 */,
+			8D32AF36096DDA9200B1D2E1 /* GIThreadListController.m:1162 */,
 			8D32B45F0972032400B1D2E1 /* OPPersistentObject.m:594 */,
-			8D32B4C90972103D00B1D2E1 /* GIThreadListController.m:1615 */,
+			8D32B4C90972103D00B1D2E1 /* GIThreadListController.m:1610 */,
 			8D83A5570975A35D00A0C902 /* GIThread.m:243 */,
 			8D0D5D37097C1164008D1EF7 /* GIThreadListController.m:187 */,
 			8D61C5D0097D66DB00D1999A /* OPPersistentObject.m:150 */,
-			8DAA50570989A99500758504 /* GIThreadListController.m:1523 */,
+			8DAA50570989A99500758504 /* GIThreadListController.m:1518 */,
 			8D95DC5F098F5771003F8BED /* OPPersistentObjectContext.m:208 */,
 			8DCBDA0B0992053300D6B861 /* GIMessageGroup.m:588 */,
 			8DCBDA3B099208AB00D6B861 /* OPFaultingArray.m:347 */,
@@ -10679,7 +10772,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1533";
 		rLen = 0;
-		rLoc = 50799;
+		rLoc = 50525;
 		rType = 0;
 		vrLen = 951;
 		vrLoc = 50161;
@@ -10739,7 +10832,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1540";
 		rLen = 0;
-		rLoc = 51085;
+		rLoc = 50811;
 		rType = 0;
 		vrLen = 686;
 		vrLoc = 50686;
@@ -10759,7 +10852,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1540";
 		rLen = 0;
-		rLoc = 51085;
+		rLoc = 50811;
 		rType = 0;
 		vrLen = 686;
 		vrLoc = 50686;
@@ -10779,7 +10872,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1540";
 		rLen = 0;
-		rLoc = 51085;
+		rLoc = 50811;
 		rType = 0;
 		vrLen = 839;
 		vrLoc = 50540;
@@ -10789,7 +10882,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1528";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 746;
 		vrLoc = 50431;
@@ -10806,7 +10899,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1528";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 746;
 		vrLoc = 50431;
@@ -10826,7 +10919,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1540";
 		rLen = 0;
-		rLoc = 51085;
+		rLoc = 50811;
 		rType = 0;
 		vrLen = 840;
 		vrLoc = 50540;
@@ -10846,7 +10939,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1540";
 		rLen = 0;
-		rLoc = 51085;
+		rLoc = 50811;
 		rType = 0;
 		vrLen = 686;
 		vrLoc = 50687;
@@ -10901,7 +10994,7 @@
 		vrLen = 688;
 		vrLoc = 3684;
 	};
-	8DAA50570989A99500758504 /* GIThreadListController.m:1523 */ = {
+	8DAA50570989A99500758504 /* GIThreadListController.m:1518 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -10910,7 +11003,7 @@
 		fileReference = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		functionName = "-tableView:objectValueForTableColumn:row:";
 		hitCount = 1;
-		lineNumber = 1523;
+		lineNumber = 1518;
 		modificationTime = 160952779.364694;
 		state = 1;
 	};
@@ -10919,7 +11012,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1540";
 		rLen = 0;
-		rLoc = 51085;
+		rLoc = 50811;
 		rType = 0;
 		vrLen = 686;
 		vrLoc = 50688;
@@ -10979,7 +11072,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1545";
 		rLen = 0;
-		rLoc = 51254;
+		rLoc = 50980;
 		rType = 0;
 		vrLen = 1071;
 		vrLoc = 50279;
@@ -10989,7 +11082,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1545";
 		rLen = 0;
-		rLoc = 51254;
+		rLoc = 50980;
 		rType = 0;
 		vrLen = 1071;
 		vrLoc = 50279;
@@ -11019,7 +11112,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1545";
 		rLen = 0;
-		rLoc = 51254;
+		rLoc = 50980;
 		rType = 0;
 		vrLen = 1071;
 		vrLoc = 50279;
@@ -11049,7 +11142,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1540";
 		rLen = 0;
-		rLoc = 51085;
+		rLoc = 50811;
 		rType = 0;
 		vrLen = 686;
 		vrLoc = 50688;
@@ -11216,7 +11309,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1528";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 707;
 		vrLoc = 50472;
@@ -11256,7 +11349,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1528";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 707;
 		vrLoc = 50472;
@@ -11276,7 +11369,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1528";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 932;
 		vrLoc = 50279;
@@ -11286,7 +11379,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1528";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 932;
 		vrLoc = 50279;
@@ -11296,7 +11389,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1528";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 986;
 		vrLoc = 50095;
@@ -11316,7 +11409,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1456";
 		rLen = 0;
-		rLoc = 46776;
+		rLoc = 46502;
 		rType = 0;
 		vrLen = 1062;
 		vrLoc = 46729;
@@ -11336,7 +11429,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1456";
 		rLen = 0;
-		rLoc = 46776;
+		rLoc = 46502;
 		rType = 0;
 		vrLen = 1302;
 		vrLoc = 46573;
@@ -11346,7 +11439,7 @@
 		comments = "error: 'isRead' undeclared (first use in this function)";
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		rLen = 1;
-		rLoc = 1436;
+		rLoc = 1431;
 		rType = 1;
 	};
 	8DAA50960989AEC900758504 /* PBXTextBookmark */ = {
@@ -11354,7 +11447,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1452;
 		vrLoc = 45656;
@@ -11364,7 +11457,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1530";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 917;
 		vrLoc = 50078;
@@ -11374,7 +11467,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1452;
 		vrLoc = 45656;
@@ -11399,7 +11492,7 @@
 		isa = PBXTextBookmark;
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		rLen = 0;
-		rLoc = 1443;
+		rLoc = 1438;
 		rType = 1;
 	};
 	8DAA50A10989AF3800758504 /* PBXTextBookmark */ = {
@@ -11407,7 +11500,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 46051;
@@ -11433,7 +11526,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1450";
 		rLen = 0;
-		rLoc = 46485;
+		rLoc = 46211;
 		rType = 0;
 		vrLen = 1150;
 		vrLoc = 46130;
@@ -11443,7 +11536,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1453;
 		vrLoc = 45961;
@@ -11453,7 +11546,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1530";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 917;
 		vrLoc = 50085;
@@ -11463,7 +11556,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1459;
 		vrLoc = 45656;
@@ -11473,7 +11566,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1530";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 917;
 		vrLoc = 50087;
@@ -11483,7 +11576,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1461;
 		vrLoc = 45656;
@@ -11493,7 +11586,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1530";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 917;
 		vrLoc = 50087;
@@ -11503,7 +11596,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1461;
 		vrLoc = 45656;
@@ -11513,7 +11606,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1530";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 917;
 		vrLoc = 50087;
@@ -11523,7 +11616,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1461;
 		vrLoc = 45656;
@@ -11533,7 +11626,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1530";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 917;
 		vrLoc = 50087;
@@ -11543,7 +11636,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1445";
 		rLen = 0;
-		rLoc = 46133;
+		rLoc = 45859;
 		rType = 0;
 		vrLen = 1461;
 		vrLoc = 45656;
@@ -11553,7 +11646,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1450";
 		rLen = 0;
-		rLoc = 46460;
+		rLoc = 46186;
 		rType = 0;
 		vrLen = 1153;
 		vrLoc = 46130;
@@ -11563,7 +11656,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1530";
 		rLen = 0;
-		rLoc = 50481;
+		rLoc = 50207;
 		rType = 0;
 		vrLen = 917;
 		vrLoc = 50087;
@@ -11573,7 +11666,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1450";
 		rLen = 0;
-		rLoc = 46460;
+		rLoc = 46186;
 		rType = 0;
 		vrLen = 1455;
 		vrLoc = 45961;
@@ -11583,7 +11676,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 2110";
 		rLen = 0;
-		rLoc = 70189;
+		rLoc = 69915;
 		rType = 0;
 		vrLen = 1053;
 		vrLoc = 49915;
@@ -11653,7 +11746,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 2110";
 		rLen = 0;
-		rLoc = 70189;
+		rLoc = 69915;
 		rType = 0;
 		vrLen = 1042;
 		vrLoc = 49915;
@@ -12422,7 +12515,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "return [account valueForKey: @\"outgoingUsername\"];";
 		rLen = 59;
-		rLoc = 7494;
+		rLoc = 7367;
 		rType = 0;
 		vrLen = 1074;
 		vrLoc = 6554;
@@ -12470,7 +12563,7 @@
 		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
 		name = "return [account valueForKey: @\"outgoingUsername\"];";
 		rLen = 59;
-		rLoc = 7494;
+		rLoc = 7367;
 		rType = 0;
 		vrLen = 1074;
 		vrLoc = 6554;
@@ -12830,7 +12923,7 @@
 		functionName = "-addValue:forKey:";
 		hitCount = 1;
 		lineNumber = 577;
-		modificationTime = 161063938.174968;
+		modificationTime = 161112957.257768;
 		state = 2;
 	};
 	8DABCB70096B4882008C061C /* PBXTextBookmark */ = {
@@ -13091,7 +13184,7 @@
 		functionName = "";
 		hitCount = 1;
 		lineNumber = 644;
-		modificationTime = 161063938.176867;
+		modificationTime = 161112966.138194;
 		state = 0;
 	};
 	8DBBAB4C08B36498002566B9 /* OPSQLiteConnection.m:121 */ = {
@@ -13104,7 +13197,7 @@
 		functionName = "-statementForClass:forId:relationship:";
 		hitCount = 1;
 		lineNumber = 121;
-		modificationTime = 161063938.173173;
+		modificationTime = 161112965.366796;
 		state = 0;
 	};
 	8DC771F806B1097500053CB7 /* -[NSException raise] */ = {
@@ -13113,8 +13206,8 @@
 		);
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
-		hitCount = 26;
-		modificationTime = 161085574.745013;
+		hitCount = 1;
+		modificationTime = 161112957.342713;
 		state = 1;
 		symbolName = "-[NSException raise]";
 	};
@@ -13209,7 +13302,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 134";
 		rLen = 0;
-		rLoc = 4785;
+		rLoc = 4788;
 		rType = 0;
 		vrLen = 1151;
 		vrLoc = 4293;
@@ -13301,6 +13394,18 @@
 		rType = 0;
 		vrLen = 647;
 		vrLoc = 3022;
+	};
+	8DCB8956065A43DD0012ED8D /* OPSSLSocket.m */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.objc;
+		path = OPSSLSocket.m;
+		sourceTree = "<group>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {588, 10695}}";
+			sepNavSelRange = "{19132, 0}";
+			sepNavVisRect = "{{0, 7748}, {588, 418}}";
+		};
 	};
 	8DCBD6100990B01600D6B861 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -13959,7 +14064,7 @@
 		functionName = "-dateDidChangeOfThread:";
 		hitCount = 1;
 		lineNumber = 588;
-		modificationTime = 161063938.176983;
+		modificationTime = 161112957.273877;
 		state = 2;
 	};
 	8DCBDA0C0992053600D6B861 /* PBXTextBookmark */ = {
@@ -14292,7 +14397,7 @@
 		functionName = "-updateSortObjectForObject:";
 		hitCount = 1;
 		lineNumber = 347;
-		modificationTime = 161063938.177177;
+		modificationTime = 161112966.292314;
 		state = 0;
 	};
 	8DCBDA3C099208FC00D6B861 /* PBXTextBookmark */ = {
@@ -14647,7 +14752,7 @@
 		isa = PBXTextBookmark;
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		rLen = 0;
-		rLoc = 1522;
+		rLoc = 1517;
 		rType = 1;
 	};
 	8DCBDB41099267C500D6B861 /* PBXTextBookmark */ = {
@@ -14665,7 +14770,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1518";
 		rLen = 0;
-		rLoc = 50227;
+		rLoc = 49953;
 		rType = 0;
 		vrLen = 758;
 		vrLoc = 50006;
@@ -14685,7 +14790,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1518";
 		rLen = 0;
-		rLoc = 50227;
+		rLoc = 49953;
 		rType = 0;
 		vrLen = 1158;
 		vrLoc = 49844;
@@ -14705,7 +14810,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1518";
 		rLen = 0;
-		rLoc = 50227;
+		rLoc = 49953;
 		rType = 0;
 		vrLen = 907;
 		vrLoc = 49844;
@@ -14775,7 +14880,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1518";
 		rLen = 0;
-		rLoc = 50227;
+		rLoc = 49953;
 		rType = 0;
 		vrLen = 907;
 		vrLoc = 49844;
@@ -14835,7 +14940,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1518";
 		rLen = 0;
-		rLoc = 50227;
+		rLoc = 49953;
 		rType = 0;
 		vrLen = 1282;
 		vrLoc = 49469;
@@ -14855,7 +14960,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1518";
 		rLen = 0;
-		rLoc = 50227;
+		rLoc = 49953;
 		rType = 0;
 		vrLen = 1282;
 		vrLoc = 49469;
@@ -14915,7 +15020,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1518";
 		rLen = 0;
-		rLoc = 50227;
+		rLoc = 49953;
 		rType = 0;
 		vrLen = 856;
 		vrLoc = 49764;
@@ -16443,7 +16548,7 @@
 		functionName = "-emptyTrashMailbox:";
 		hitCount = 1;
 		lineNumber = 607;
-		modificationTime = 161063938.177436;
+		modificationTime = 161112957.274303;
 		state = 1;
 	};
 	8DCBDC580992DD6500D6B861 /* GIMessage.m:157 */ = {
@@ -16741,7 +16846,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "";
 		rLen = 1;
-		rLoc = 20809;
+		rLoc = 20767;
 		rType = 0;
 		vrLen = 505;
 		vrLoc = 20552;
@@ -16818,7 +16923,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "";
 		rLen = 1;
-		rLoc = 20809;
+		rLoc = 20767;
 		rType = 0;
 		vrLen = 505;
 		vrLoc = 20552;
@@ -17295,7 +17400,7 @@
 		functionName = "-fulltextIndexJobFinished:";
 		hitCount = 1;
 		lineNumber = 485;
-		modificationTime = 161063938.178415;
+		modificationTime = 161112957.274663;
 		state = 2;
 	};
 	8DCBE21C0993BF3B00D6B861 /* PBXTextBookmark */ = {
@@ -17313,7 +17418,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 398";
 		rLen = 0;
-		rLoc = 14168;
+		rLoc = 14126;
 		rType = 0;
 		vrLen = 860;
 		vrLoc = 13652;
@@ -17333,7 +17438,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 398";
 		rLen = 0;
-		rLoc = 14168;
+		rLoc = 14126;
 		rType = 0;
 		vrLen = 860;
 		vrLoc = 13652;
@@ -17373,7 +17478,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 396";
 		rLen = 0;
-		rLoc = 14167;
+		rLoc = 14125;
 		rType = 0;
 		vrLen = 1080;
 		vrLoc = 13606;
@@ -17393,7 +17498,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 396";
 		rLen = 0;
-		rLoc = 14167;
+		rLoc = 14125;
 		rType = 0;
 		vrLen = 1080;
 		vrLoc = 13606;
@@ -17463,7 +17568,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 397";
 		rLen = 0;
-		rLoc = 14169;
+		rLoc = 14127;
 		rType = 0;
 		vrLen = 892;
 		vrLoc = 13725;
@@ -17675,7 +17780,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 250";
 		rLen = 0;
-		rLoc = 9939;
+		rLoc = 9897;
 		rType = 0;
 		vrLen = 814;
 		vrLoc = 9377;
@@ -17685,7 +17790,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 264";
 		rLen = 0;
-		rLoc = 10678;
+		rLoc = 10571;
 		rType = 0;
 		vrLen = 541;
 		vrLoc = 10435;
@@ -17725,7 +17830,7 @@
 		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
 		name = "OPJobs.m: 250";
 		rLen = 0;
-		rLoc = 9939;
+		rLoc = 9897;
 		rType = 0;
 		vrLen = 814;
 		vrLoc = 9377;
@@ -17735,7 +17840,7 @@
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: 264";
 		rLen = 0;
-		rLoc = 10678;
+		rLoc = 10571;
 		rType = 0;
 		vrLen = 541;
 		vrLoc = 10435;
@@ -18016,6 +18121,12 @@
 		rType = 0;
 		vrLen = 1154;
 		vrLoc = 17740;
+	};
+	8DCBE4970997525300D6B861 /* OPStream.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		path = OPStream.h;
+		sourceTree = "<group>";
 	};
 	8DCBE4C30997529200D6B861 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -18481,8 +18592,8 @@
 		isa = PBXTextBookmark;
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: initWithUsername:password:stream:";
-		rLen = 97;
-		rLoc = 10628;
+		rLen = 23;
+		rLoc = 10548;
 		rType = 0;
 		vrLen = 464;
 		vrLoc = 10509;
@@ -18512,7 +18623,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1524";
 		rLen = 0;
-		rLoc = 50253;
+		rLoc = 49979;
 		rType = 0;
 		vrLen = 1111;
 		vrLoc = 49579;
@@ -18579,8 +18690,8 @@
 		isa = PBXTextBookmark;
 		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
 		name = "OPSMTP.m: initWithUsername:password:stream:";
-		rLen = 97;
-		rLoc = 10628;
+		rLen = 23;
+		rLoc = 10548;
 		rType = 0;
 		vrLen = 464;
 		vrLoc = 10509;
@@ -18610,7 +18721,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1524";
 		rLen = 0;
-		rLoc = 50253;
+		rLoc = 49979;
 		rType = 0;
 		vrLen = 1111;
 		vrLoc = 49579;
@@ -18896,6 +19007,7 @@
 	};
 	8DCBE6C10998D5C800D6B861 /* asm mach_msg_trap  0x9000b200 */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = file;
 		path = "asm mach_msg_trap  0x9000b200";
 		sourceTree = "<group>";
 	};
@@ -19092,6 +19204,7 @@
 	};
 	8DCBE7E50999EE5800D6B861 /* asm semaphore_signal_trap  0x9002b960 */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = file;
 		path = "asm semaphore_signal_trap  0x9002b960";
 		sourceTree = "<group>";
 	};
@@ -19390,7 +19503,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = NSIndexSet;
 		rLen = 10;
-		rLoc = 34129;
+		rLoc = 33854;
 		rType = 0;
 		vrLen = 707;
 		vrLoc = 33989;
@@ -19433,7 +19546,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1081";
 		rLen = 0;
-		rLoc = 34316;
+		rLoc = 34041;
 		rType = 0;
 		vrLen = 657;
 		vrLoc = 33998;
@@ -19466,7 +19579,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1085";
 		rLen = 0;
-		rLoc = 34562;
+		rLoc = 34288;
 		rType = 0;
 		vrLen = 630;
 		vrLoc = 33998;
@@ -19476,7 +19589,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1085";
 		rLen = 0;
-		rLoc = 34562;
+		rLoc = 34288;
 		rType = 0;
 		vrLen = 648;
 		vrLoc = 34125;
@@ -19486,7 +19599,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = NSIndexSet;
 		rLen = 10;
-		rLoc = 34129;
+		rLoc = 33854;
 		rType = 0;
 		vrLen = 682;
 		vrLoc = 33989;
@@ -19496,7 +19609,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1085";
 		rLen = 0;
-		rLoc = 34562;
+		rLoc = 34288;
 		rType = 0;
 		vrLen = 648;
 		vrLoc = 34125;
@@ -19506,7 +19619,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = NSIndexSet;
 		rLen = 10;
-		rLoc = 34129;
+		rLoc = 33854;
 		rType = 0;
 		vrLen = 682;
 		vrLoc = 33989;
@@ -19516,7 +19629,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1085";
 		rLen = 0;
-		rLoc = 34562;
+		rLoc = 34288;
 		rType = 0;
 		vrLen = 630;
 		vrLoc = 33998;
@@ -19549,7 +19662,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1085";
 		rLen = 0;
-		rLoc = 34562;
+		rLoc = 34288;
 		rType = 0;
 		vrLen = 630;
 		vrLoc = 33998;
@@ -19584,7 +19697,7 @@
 		comments = "warning: 'GIThreadListController' may not respond to '-isOnlyThreadsSelected'";
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		rLen = 1;
-		rLoc = 1116;
+		rLoc = 1111;
 		rType = 1;
 	};
 	8DCBE8210999FD3300D6B861 /* PBXTextBookmark */ = {
@@ -19592,7 +19705,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = isOnlyThreadsSelected;
 		rLen = 23;
-		rLoc = 35477;
+		rLoc = 35203;
 		rType = 0;
 		vrLen = 954;
 		vrLoc = 34990;
@@ -19602,7 +19715,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = multipleThreadsSelected;
 		rLen = 23;
-		rLoc = 34022;
+		rLoc = 33747;
 		rType = 0;
 		vrLen = 571;
 		vrLoc = 33907;
@@ -19612,7 +19725,7 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = "GIThreadListController.m: 1987";
 		rLen = 0;
-		rLoc = 66111;
+		rLoc = 65837;
 		rType = 0;
 		vrLen = 949;
 		vrLoc = 34990;
@@ -19622,10 +19735,995 @@
 		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
 		name = multipleThreadsSelected;
 		rLen = 23;
-		rLoc = 34022;
+		rLoc = 33747;
 		rType = 0;
 		vrLen = 571;
 		vrLoc = 33907;
+	};
+	8DCBE826099A004400D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 763;
+		vrLoc = 33806;
+	};
+	8DCBE827099A004E00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 571;
+		vrLoc = 33907;
+	};
+	8DCBE828099A004E00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 757;
+		vrLoc = 33806;
+	};
+	8DCBE8CF099A574500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = "GIThreadListController.m: 1071";
+		rLen = 0;
+		rLoc = 33737;
+		rType = 0;
+		vrLen = 479;
+		vrLoc = 33806;
+	};
+	8DCBE8D0099A574500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77DA79A8097B95E900B7A5CC /* GIFulltextIndex.m */;
+		name = "NSAssert(result != NULL, @\"parse static method doesn't generate a Query object.\");";
+		rLen = 87;
+		rLoc = 30322;
+		rType = 0;
+		vrLen = 637;
+		vrLoc = 30038;
+	};
+	8DCBE8D1099A574500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8D2099A574500D6B861 /* asm -[NSException raise]  0x92901508 */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 132;
+		vrLoc = 0;
+	};
+	8DCBE8D2099A574500D6B861 /* asm -[NSException raise]  0x92901508 */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = file;
+		path = "asm -[NSException raise]  0x92901508";
+		sourceTree = "<group>";
+	};
+	8DCBE8D3099A574500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = "GIThreadListController.m: 1071";
+		rLen = 0;
+		rLoc = 33737;
+		rType = 0;
+		vrLen = 479;
+		vrLoc = 33806;
+	};
+	8DCBE8D4099A574500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8D5099A574500D6B861 /* asm -[NSException raise]  0x92901508 */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 132;
+		vrLoc = 0;
+	};
+	8DCBE8D5099A574500D6B861 /* asm -[NSException raise]  0x92901508 */ = {
+		isa = PBXFileReference;
+		path = "asm -[NSException raise]  0x92901508";
+		sourceTree = "<group>";
+	};
+	8DCBE8D6099A574500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77DA79A8097B95E900B7A5CC /* GIFulltextIndex.m */;
+		name = "NSAssert(result != NULL, @\"parse static method doesn't generate a Query object.\");";
+		rLen = 87;
+		rLoc = 30322;
+		rType = 0;
+		vrLen = 637;
+		vrLoc = 30038;
+	};
+	8DCBE8D7099A574500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8D8099A574500D6B861 /* asm -[NSException raise]  0x92901508 */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 132;
+		vrLoc = 0;
+	};
+	8DCBE8D8099A574500D6B861 /* asm -[NSException raise]  0x92901508 */ = {
+		isa = PBXFileReference;
+		path = "asm -[NSException raise]  0x92901508";
+		sourceTree = "<group>";
+	};
+	8DCBE8E2099A594F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = "GIThreadListController.m: 1080";
+		rLen = 0;
+		rLoc = 34274;
+		rType = 0;
+		vrLen = 687;
+		vrLoc = 33710;
+	};
+	8DCBE8E3099A594F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: parse error before 'setObject'";
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		rLen = 1;
+		rLoc = 212;
+		rType = 1;
+	};
+	8DCBE8E4099A594F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = "GIThreadListController.m: 1080";
+		rLen = 0;
+		rLoc = 34274;
+		rType = 0;
+		vrLen = 687;
+		vrLoc = 33710;
+	};
+	8DCBE8E5099A594F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 1142;
+		vrLoc = 8841;
+	};
+	8DCBE8E6099A597200D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE8E7099A597200D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 1020;
+		vrLoc = 9138;
+	};
+	8DCBE8ED099A5BA400D6B861 /* OPSMTP.m:205 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		functionName = "-_connect";
+		hitCount = 1;
+		lineNumber = 205;
+		modificationTime = 161112957.275002;
+		state = 1;
+	};
+	8DCBE8EF099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
+		name = "OPJobs.m: 238";
+		rLen = 0;
+		rLoc = 9583;
+		rType = 0;
+		vrLen = 999;
+		vrLoc = 8983;
+	};
+	8DCBE8F0099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 122";
+		rLen = 0;
+		rLoc = 5110;
+		rType = 0;
+		vrLen = 999;
+		vrLoc = 4564;
+	};
+	8DCBE8F1099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = Stream;
+		rLen = 6;
+		rLoc = 1184;
+		rType = 0;
+		vrLen = 651;
+		vrLoc = 681;
+	};
+	8DCBE8F2099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 107";
+		rLen = 5005;
+		rLoc = 3669;
+		rType = 0;
+		vrLen = 564;
+		vrLoc = 2546;
+	};
+	8DCBE8F3099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCB8956065A43DD0012ED8D /* OPSSLSocket.m */;
+		rLen = 0;
+		rLoc = 329;
+		rType = 1;
+	};
+	8DCBE8F4099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
+		name = "OPJobs.m: 238";
+		rLen = 0;
+		rLoc = 9583;
+		rType = 0;
+		vrLen = 999;
+		vrLoc = 8983;
+	};
+	8DCBE8F5099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 107";
+		rLen = 5005;
+		rLoc = 3669;
+		rType = 0;
+		vrLen = 564;
+		vrLoc = 2546;
+	};
+	8DCBE8F6099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8F7099A5C3700D6B861 /* OPSSLSocket.m */;
+		name = "(null): 330";
+		rLen = 0;
+		rLoc = 13020;
+		rType = 0;
+		vrLen = 822;
+		vrLoc = 12762;
+	};
+	8DCBE8F7099A5C3700D6B861 /* OPSSLSocket.m */ = {
+		isa = PBXFileReference;
+		name = OPSSLSocket.m;
+		path = /Users/theisen/Projects/Work/OPNetwork/OPSSLSocket.m;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {651, 10192}}";
+			sepNavSelRange = "{13020, 0}";
+			sepNavVisRect = "{{0, 4615}, {651, 389}}";
+		};
+	};
+	8DCBE8F8099A5C3700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8F9099A5C3700D6B861 /* OPSSLSocket.m */;
+		name = "(null): 330";
+		rLen = 0;
+		rLoc = 13020;
+		rType = 0;
+		vrLen = 822;
+		vrLoc = 12762;
+	};
+	8DCBE8F9099A5C3700D6B861 /* OPSSLSocket.m */ = {
+		isa = PBXFileReference;
+		name = OPSSLSocket.m;
+		path = /Users/theisen/Projects/Work/OPNetwork/OPSSLSocket.m;
+		sourceTree = "<absolute>";
+	};
+	8DCBE8FA099A5C4400D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 1020;
+		vrLoc = 9144;
+	};
+	8DCBE8FB099A5C4400D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8F7099A5C3700D6B861 /* OPSSLSocket.m */;
+		name = "OPSSLSocket.m: 330";
+		rLen = 0;
+		rLoc = 13020;
+		rType = 0;
+		vrLen = 927;
+		vrLoc = 12708;
+	};
+	8DCBE8FC099A5C5D00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE8FD099A5C5D00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8F7099A5C3700D6B861 /* OPSSLSocket.m */;
+		name = "OPSSLSocket.m: 330";
+		rLen = 0;
+		rLoc = 13020;
+		rType = 0;
+		vrLen = 933;
+		vrLoc = 12702;
+	};
+	8DCBE8FE099A5DC000D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8F7099A5C3700D6B861 /* OPSSLSocket.m */;
+		name = "OPSSLSocket.m: 330";
+		rLen = 0;
+		rLoc = 13020;
+		rType = 0;
+		vrLen = 822;
+		vrLoc = 12762;
+	};
+	8DCBE8FF099A5DC000D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 544";
+		rLen = 0;
+		rLoc = 18814;
+		rType = 0;
+		vrLen = 612;
+		vrLoc = 1117;
+	};
+	8DCBE900099A5DC000D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8F7099A5C3700D6B861 /* OPSSLSocket.m */;
+		name = "OPSSLSocket.m: 330";
+		rLen = 0;
+		rLoc = 13020;
+		rType = 0;
+		vrLen = 822;
+		vrLoc = 12762;
+	};
+	8DCBE901099A5DC000D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 544";
+		rLen = 0;
+		rLoc = 18814;
+		rType = 0;
+		vrLen = 612;
+		vrLoc = 1117;
+	};
+	8DCBE902099A5DC000D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = Stream;
+		rLen = 6;
+		rLoc = 1184;
+		rType = 0;
+		vrLen = 562;
+		vrLoc = 1199;
+	};
+	8DCBE903099A5E2600D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE8F7099A5C3700D6B861 /* OPSSLSocket.m */;
+		name = "OPSSLSocket.m: 330";
+		rLen = 0;
+		rLoc = 13020;
+		rType = 0;
+		vrLen = 933;
+		vrLoc = 12702;
+	};
+	8DCBE904099A5E2600D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = Stream;
+		rLen = 6;
+		rLoc = 1184;
+		rType = 0;
+		vrLen = 795;
+		vrLoc = 1133;
+	};
+	8DCBE905099A5E2600D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 930;
+		vrLoc = 9234;
+	};
+	8DCBE906099A5E2600D6B861 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 8DCBE4970997525300D6B861 /* OPStream.h */;
+	};
+	8DCBE907099A5E2600D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = Stream;
+		rLen = 6;
+		rLoc = 1184;
+		rType = 0;
+		vrLen = 795;
+		vrLoc = 1133;
+	};
+	8DCBE908099A5E2600D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 930;
+		vrLoc = 9234;
+	};
+	8DCBE909099A5E2600D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1113;
+		vrLoc = 607;
+	};
+	8DCBE90A099A5E2600D6B861 /* OPStream.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = OPStream.h;
+		path = /Users/theisen/Projects/Work/OPNetwork/build/Development/OPNetwork.framework/Headers/OPStream.h;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {651, 1386}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 28}, {651, 389}}";
+		};
+	};
+	8DCBE90D099A5E6E00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE90E099A5E6E00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "OPStream.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1113;
+		vrLoc = 607;
+	};
+	8DCBE911099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = Stream;
+		rLen = 6;
+		rLoc = 1184;
+		rType = 0;
+		vrLen = 562;
+		vrLoc = 1199;
+	};
+	8DCBE912099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "OPStream.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 815;
+		vrLoc = 607;
+	};
+	8DCBE913099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 544";
+		rLen = 0;
+		rLoc = 18814;
+		rType = 0;
+		vrLen = 640;
+		vrLoc = 18819;
+	};
+	8DCBE914099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE915099A5ED500D6B861 /* asm -[NSException raise]  0x92901508 */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 132;
+		vrLoc = 0;
+	};
+	8DCBE915099A5ED500D6B861 /* asm -[NSException raise]  0x92901508 */ = {
+		isa = PBXFileReference;
+		path = "asm -[NSException raise]  0x92901508";
+		sourceTree = "<group>";
+	};
+	8DCBE916099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE917099A5ED500D6B861 /* asm objc_msgSend_rtp  0xfffeff00 */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	8DCBE917099A5ED500D6B861 /* asm objc_msgSend_rtp  0xfffeff00 */ = {
+		isa = PBXFileReference;
+		path = "asm objc_msgSend_rtp  0xfffeff00";
+		sourceTree = "<group>";
+	};
+	8DCBE918099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "OPStream.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 815;
+		vrLoc = 607;
+	};
+	8DCBE919099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 544";
+		rLen = 0;
+		rLoc = 18814;
+		rType = 0;
+		vrLen = 640;
+		vrLoc = 18819;
+	};
+	8DCBE91A099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE91B099A5ED500D6B861 /* asm -[NSException raise]  0x92901508 */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 132;
+		vrLoc = 0;
+	};
+	8DCBE91B099A5ED500D6B861 /* asm -[NSException raise]  0x92901508 */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = file;
+		path = "asm -[NSException raise]  0x92901508";
+		sourceTree = "<group>";
+	};
+	8DCBE91C099A5ED500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE91D099A5ED500D6B861 /* asm objc_msgSend_rtp  0xfffeff00 */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 818;
+		vrLoc = 0;
+	};
+	8DCBE91D099A5ED500D6B861 /* asm objc_msgSend_rtp  0xfffeff00 */ = {
+		isa = PBXFileReference;
+		path = "asm objc_msgSend_rtp  0xfffeff00";
+		sourceTree = "<group>";
+	};
+	8DCBE91E099A5EE300D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "OPStream.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1301;
+		vrLoc = 121;
+	};
+	8DCBE91F099A5F0200D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE920099A5F0200D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "OPStream.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1300;
+		vrLoc = 121;
+	};
+	8DCBE926099A61ED00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
+		name = "OPJobs.m: 218";
+		rLen = 0;
+		rLoc = 8374;
+		rType = 0;
+		vrLen = 1289;
+		vrLoc = 7765;
+	};
+	8DCBE927099A61ED00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "OPStream.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1149;
+		vrLoc = 121;
+	};
+	8DCBE928099A61ED00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 128";
+		rLen = 0;
+		rLoc = 5809;
+		rType = 0;
+		vrLen = 1099;
+		vrLoc = 4978;
+	};
+	8DCBE929099A61ED00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "- (void) quit";
+		rLen = 13;
+		rLoc = 14824;
+		rType = 0;
+		vrLen = 339;
+		vrLoc = 14863;
+	};
+	8DCBE92A099A61ED00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 128";
+		rLen = 0;
+		rLoc = 5809;
+		rType = 0;
+		vrLen = 1099;
+		vrLoc = 4978;
+	};
+	8DCBE92B099A61ED00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "- (void) quit";
+		rLen = 13;
+		rLoc = 14824;
+		rType = 0;
+		vrLen = 339;
+		vrLoc = 14863;
+	};
+	8DCBE92C099A61ED00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: 73";
+		rLen = 0;
+		rLoc = 2673;
+		rType = 0;
+		vrLen = 641;
+		vrLoc = 2038;
+	};
+	8DCBE92E099A620F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE92F099A620F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8DCBE90A099A5E2600D6B861 /* OPStream.h */;
+		name = "OPStream.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1300;
+		vrLoc = 121;
+	};
+	8DCBE930099A620F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "[SMTP quit];";
+		rLen = 29;
+		rLoc = 5780;
+		rType = 0;
+		vrLen = 1122;
+		vrLoc = 5110;
+	};
+	8DCBE931099A620F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: 73";
+		rLen = 0;
+		rLoc = 2673;
+		rType = 0;
+		vrLen = 748;
+		vrLoc = 2005;
+	};
+	8DCBE932099A620F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "[SMTP quit];";
+		rLen = 29;
+		rLoc = 5780;
+		rType = 0;
+		vrLen = 1122;
+		vrLoc = 5110;
+	};
+	8DCBE933099A620F00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: 52";
+		rLen = 0;
+		rLoc = 2020;
+		rType = 0;
+		vrLen = 802;
+		vrLoc = 1300;
+	};
+	8DCBE935099A621500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: 52";
+		rLen = 0;
+		rLoc = 2020;
+		rType = 0;
+		vrLen = 802;
+		vrLoc = 1300;
+	};
+	8DCBE936099A622200D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: 52";
+		rLen = 0;
+		rLoc = 2020;
+		rType = 0;
+		vrLen = 706;
+		vrLoc = 1396;
+	};
+	8DCBE938099A624900D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: 52";
+		rLen = 0;
+		rLoc = 2020;
+		rType = 0;
+		vrLen = 906;
+		vrLoc = 1332;
+	};
+	8DCBE939099A624900D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: 52";
+		rLen = 0;
+		rLoc = 2020;
+		rType = 0;
+		vrLen = 906;
+		vrLoc = 1332;
+	};
+	8DCBE93A099A624900D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 930;
+		vrLoc = 9234;
+	};
+	8DCBE93B099A624E00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE93C099A624E00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 1020;
+		vrLoc = 9144;
+	};
+	8DCBE93E099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */;
+		name = "OPSMTP.h: quit";
+		rLen = 0;
+		rLoc = 2020;
+		rType = 0;
+		vrLen = 696;
+		vrLoc = 1590;
+	};
+	8DCBE93F099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 389";
+		rLen = 0;
+		rLoc = 15065;
+		rType = 0;
+		vrLen = 447;
+		vrLoc = 14683;
+	};
+	8DCBE940099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
+		name = "OPJobs.m: 218";
+		rLen = 0;
+		rLoc = 8374;
+		rType = 0;
+		vrLen = 1289;
+		vrLoc = 7765;
+	};
+	8DCBE941099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		rLen = 0;
+		rLoc = 137;
+		rType = 1;
+	};
+	8DCBE942099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 127";
+		rLen = 0;
+		rLoc = 5780;
+		rType = 0;
+		vrLen = 950;
+		vrLoc = 5171;
+	};
+	8DCBE943099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 389";
+		rLen = 0;
+		rLoc = 15065;
+		rType = 0;
+		vrLen = 447;
+		vrLoc = 14683;
+	};
+	8DCBE944099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */;
+		name = "OPJobs.m: 218";
+		rLen = 0;
+		rLoc = 8374;
+		rType = 0;
+		vrLen = 1289;
+		vrLoc = 7765;
+	};
+	8DCBE945099A636C00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 138";
+		rLen = 0;
+		rLoc = 6121;
+		rType = 0;
+		vrLen = 753;
+		vrLoc = 2316;
+	};
+	8DCBE946099A637700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		name = "OPSMTP.m: 224";
+		rLen = 0;
+		rLoc = 9830;
+		rType = 0;
+		vrLen = 1020;
+		vrLoc = 9144;
+	};
+	8DCBE947099A637700D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 138";
+		rLen = 0;
+		rLoc = 6121;
+		rType = 0;
+		vrLen = 910;
+		vrLoc = 2245;
+	};
+	8DCBE948099A639500D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE949099A639600D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 138";
+		rLen = 0;
+		rLoc = 6121;
+		rType = 0;
+		vrLen = 910;
+		vrLoc = 2245;
+	};
+	8DCBE94B099A640500D6B861 /* OPSMTP.m:387 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		continueAfterActions = 0;
+		delayBeforeContinue = 0;
+		fileReference = 77253D6207ECB83E00375AFC /* OPSMTP.m */;
+		functionName = "-quit";
+		hitCount = 2;
+		lineNumber = 387;
+		modificationTime = 161113269.678386;
+		state = 0;
+	};
+	8DCBE94C099A641D00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE94D099A641D00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 138";
+		rLen = 0;
+		rLoc = 6121;
+		rType = 0;
+		vrLen = 910;
+		vrLoc = 2245;
+	};
+	8DCBE951099A64EA00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D31443E09562178007D668A /* GIThreadListController.m */;
+		name = multipleThreadsSelected;
+		rLen = 23;
+		rLoc = 33747;
+		rType = 0;
+		vrLen = 591;
+		vrLoc = 33714;
+	};
+	8DCBE952099A64EA00D6B861 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 774791BC085DF0150001560D /* GISMTPJob.m */;
+		name = "GISMTPJob.m: 138";
+		rLen = 0;
+		rLoc = 6121;
+		rType = 0;
+		vrLen = 910;
+		vrLoc = 2245;
 	};
 	8DCC251C092577B1002F1792 /* NSCursor.h */ = {
 		isa = PBXFileReference;
@@ -19893,7 +20991,7 @@
 		functionName = "-setSubview:isCollapsed:";
 		hitCount = 1;
 		lineNumber = 39;
-		modificationTime = 161063938.174242;
+		modificationTime = 161112957.256945;
 		state = 1;
 	};
 	8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {
@@ -20001,9 +21099,9 @@
 		delayBeforeContinue = 0;
 		fileReference = 8DCE36070891918900F705EF /* OPSQLiteConnection.m */;
 		functionName = "-raiseSQLiteError";
-		hitCount = 2;
+		hitCount = 1;
 		lineNumber = 51;
-		modificationTime = 161082827.177725;
+		modificationTime = 161112965.277169;
 		state = 0;
 	};
 	8DE962B5089E2AC80053ED6B /* OPSQLiteConnection.m:413 */ = {
@@ -20016,7 +21114,7 @@
 		functionName = "-performCommand:";
 		hitCount = 1;
 		lineNumber = 413;
-		modificationTime = 161063938.175148;
+		modificationTime = 161112965.760389;
 		state = 0;
 	};
 	8DE9646E089F9F1F0053ED6B /* GIThread.h */ = {
@@ -20104,7 +21202,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 1;
-		modificationTime = 160993836.04664;
+		modificationTime = 161112966.859996;
 		state = 0;
 		symbolName = "_NSZombie methodSignatureForSelector]";
 	};
@@ -20115,7 +21213,7 @@
 		continueAfterActions = 0;
 		delayBeforeContinue = 0;
 		hitCount = 1;
-		modificationTime = 160993836.306433;
+		modificationTime = 161112967.067877;
 		state = 0;
 		symbolName = "NSZombie forward::";
 	};

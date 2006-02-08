@@ -190,8 +190,7 @@ static BOOL pendingJobsSuspended = NO;
     
     [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
     
-    for(;;)
-    {
+    while (YES) {
         [pool release];
         pool = [[NSAutoreleasePool alloc] init];
         
@@ -223,9 +222,7 @@ static BOOL pendingJobsSuspended = NO;
                 NSLog(@"Job (%@) caused Exception: %@", jobDescription, localException);
                 [jobDescription setObject: localException forKey:OPJobUnhandledException];
                 [localException autorelease];
-            } 
-            @finally 
-            {
+            }  @finally {
                 [jobsLock lock];
                 
                 [jobDescription removeObjectForKey:OPJobWorkerThread];
@@ -238,8 +235,7 @@ static BOOL pendingJobsSuspended = NO;
                 // try to get next job:
                 jobDescription = [self nextPendingJobUnlockingSynchronizedObject:[jobDescription objectForKey:OPJobSynchronizedObject]];
                 
-                if (!jobDescription) 
-                {
+                if (!jobDescription) {
                     [activeThreads removeObject:[NSThread currentThread]];
                     [idleThreads addObject:[NSThread currentThread]];
                 }
