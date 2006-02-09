@@ -529,10 +529,13 @@
 	
 	while (message = [enumerator nextObject]) 
     {
+        // remove account info:
+        [message setValue:nil forKey:@"sendProfile"];
+        // remove sent status:
 		[message setSendStatus:OPSendStatusNone];
 		// Disconnect message from its dummy thread:
-		[[message valueForKey: @"thread"] removeValue:[GIMessageGroup queuedMessageGroup] forKey: @"groups"];
-		[message setValue:nil forKey: @"thread"];
+		[[message valueForKey: @"thread"] removeValue:[GIMessageGroup queuedMessageGroup] forKey:@"groups"];
+		[message setValue:nil forKey:@"thread"];
 		// Re-Insert message wherever it belongs:
 		[GIMessageBase addMessage:message];
 	}

@@ -29,6 +29,7 @@
 #import "GIMessageFilter.h"
 #import "OPPersistence.h"
 #import "OPObjectPair.h"
+#import "GIMessageGroup+Statistics.h"
 
 static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
@@ -174,66 +175,78 @@ static BOOL isThreadItem(id item)
 	return YES;
 }
 
-- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
+- (void)showMessageInThreadList:(GIMessage *)aMessage
+{
+    GIThread *thread = [aMessage valueForKey:@"thread"];
+    int itemRow;
+            
+    // make sure that thread is expanded in threads outline view:
+    if (thread && (![thread containsSingleMessage])) 
+    {
+        [threadsView expandItem:thread];
+    }
+    
+    // select responding item in threads view:
+    
+    NSArray *threadArray = [self threadsByDate];
+    
+    itemRow = [threadArray indexOfObject:thread]; // estimation!
+    
+    /*
+     if ([self threadByDateSortAscending])
+     {
+         itemRow += ([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count]));
+     }
+     else
+     {
+         itemRow = ([threadArray count]-1) - itemRow;
+     }
+     */
+    
+    if ([self threadLimitCount] != INT_MAX) itemRow = 0;
+    
+    itemRow = [threadsView rowForItemEqualTo:([thread containsSingleMessage] ? (id)thread : (id)aMessage) startingAtRow:itemRow];
+    
+    if (itemRow != -1) 
+    {
+        [threadsView selectRow:itemRow byExtendingSelection:NO];
+        [threadsView scrollRowToVisible:itemRow];
+    }
+}
+
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
-	if (!aThread) aThread = [aMessage valueForKey: @"thread"];
+	if (!aThread) aThread = [aMessage valueForKey:@"thread"];
 	
-    if (isThreadItem(aThread)) {
-		
-		int itemRow;
+    if (isThreadItem(aThread)) 
+    {
 		BOOL isNewThread = ![aThread isEqual:displayedThread];
 		
 		[displayedMessage autorelease];
 		displayedMessage = [aMessage retain];
-		[displayedMessage addFlags: OPSeenStatus];
+		[displayedMessage addFlags:OPSeenStatus];
 		
-		if (isNewThread) {
+		if (isNewThread) 
+        {
 			[displayedThread autorelease];
 			displayedThread = [aThread retain];
 		}
 		
-		// make sure that thread is expanded in threads outline view:
-		if (aThread && (![aThread containsSingleMessage])) {
-			[threadsView expandItem:aThread];
-		}
-		
-		// select responding item in threads view:
-		
-		NSArray *threadArray = [self threadsByDate];
-		
-		itemRow = [threadArray indexOfObject:aThread]; // estimation!
-		
-		/*
-		 if ([self threadByDateSortAscending])
-		 {
-			 itemRow += ([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count]));
-		 }
-		 else
-		 {
-			 itemRow = ([threadArray count]-1) - itemRow;
-		 }
-		 */
-		
-		if ([self threadLimitCount] != INT_MAX) itemRow = 0;
-		
-		itemRow = [threadsView rowForItemEqualTo: ([aThread containsSingleMessage] ? (id)aThread : (id)aMessage) startingAtRow: itemRow];
-		
-		if (itemRow != -1) {
-			[threadsView selectRow:itemRow byExtendingSelection:NO];
-			[threadsView scrollRowToVisible:itemRow];
-		}
-		
+		[self showMessageInThreadList:aMessage];
+        
 		// message display string:
 		NSAttributedString *messageText = nil;
 		
-		if (showRawSource) {
+		if (showRawSource) 
+        {
 			NSData* transferData = [displayedMessage transferData];
 			NSString* transferString = [NSString stringWithData: transferData encoding: NSUTF8StringEncoding];
 			
 			static NSDictionary* fixedFont = nil;
 			
-			if (!fixedFont) {
+			if (!fixedFont) 
+            {
 				fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys: [NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
 			}
 			
@@ -1022,7 +1035,8 @@ static BOOL isThreadItem(id item)
         [group autorelease];
         group = [aGroup retain];
 		
-		if (group) {
+		if (group) 
+        {
 			// thread filter popup:
 			[threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]];
 			
@@ -1035,6 +1049,35 @@ static BOOL isThreadItem(id item)
             
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 			
+<<<<<<< .mine
+			@try 
+            {
+                id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
+                
+                if (lastSelectedMessageItem)
+                {
+                    // is thread or message
+                    GIThread *thread;
+                    GIMessage *message;
+                    
+                    if ([lastSelectedMessageItem isKindOfClass:[GIThread class]])
+                    {
+                        thread = lastSelectedMessageItem;
+                        message = [[thread messagesByTree] lastObject];
+                    }
+                    else
+                    {
+                        NSAssert([lastSelectedMessageItem isKindOfClass:[GIMessage class]], @"should be a message object");
+                        
+                        message = lastSelectedMessageItem;
+                        thread = [message thread];
+                    }
+                    [self showMessageInThreadList:message];
+                }
+			} 
+            @catch (NSException *localException) 
+            {
+=======
 			@try {
 				id lastSelectedMessageItem = [context objectWithURLString: [self valueForGroupProperty:@"LastSelectedMessageItem"]];
 				
@@ -1056,6 +1099,7 @@ static BOOL isThreadItem(id item)
 					[self setDisplayedMessage:message thread:thread];
 				}
 			} @catch (NSException* localException) {
+>>>>>>> .r527
 				// ignored
 			}
 		}
