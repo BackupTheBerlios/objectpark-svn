@@ -659,8 +659,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     NSEnumerator *enumerator = [runningJobs objectEnumerator];
     NSMutableDictionary *jobDescription;
     
-    while (jobDescription = [enumerator nextObject])
-    {
+    while (jobDescription = [enumerator nextObject]) {
         if ([[jobDescription objectForKey:OPJobId] isEqualToNumber:anJobId])
         {
             [jobDescription setObject:[NSNumber numberWithBool:YES] forKey:OPJobShouldTerminate];			

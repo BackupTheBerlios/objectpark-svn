@@ -16,34 +16,34 @@
 
 @interface GIThreadListController : NSObject 
 {
-    IBOutlet NSWindow *window;
+    IBOutlet NSWindow* window;
     IBOutlet GIOutlineViewWithKeyboardSupport *threadsView;
-    IBOutlet NSTabView *tabView;
-    IBOutlet NSTextView *messageTextView;
-    IBOutlet NSMatrix *commentsMatrix;
-    IBOutlet NSTextField *groupInfoTextField;
-    IBOutlet OPCollapsingSplitView *treeBodySplitter;
-    IBOutlet NSPopUpButton *threadFilterPopUp;
-    IBOutlet NSProgressIndicator *progressIndicator;
-    IBOutlet NSTableView *searchHitsTableView;
-    IBOutlet NSSearchField *searchField;
+    IBOutlet NSTabView* tabView;
+    IBOutlet NSTextView* messageTextView;
+    IBOutlet NSMatrix* commentsMatrix;
+    IBOutlet NSTextField* groupInfoTextField;
+    IBOutlet OPCollapsingSplitView* treeBodySplitter;
+    IBOutlet NSPopUpButton* threadFilterPopUp;
+    IBOutlet NSProgressIndicator* progressIndicator;
+    IBOutlet NSTableView* searchHitsTableView;
+    IBOutlet NSSearchField* searchField;
     
-    GIMessageGroup *group;
-    GIThread *displayedThread; // displayed as comment tree
-    GIMessage *displayedMessage; // displayed with body
+    GIMessageGroup* group;
+    GIThread* displayedThread; // displayed as comment tree
+    GIMessage* displayedMessage; // displayed with body
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
 
 	BOOL isAutoReloadEnabled;
 	
-    NSMutableSet *itemRetainer;
+    NSMutableSet* itemRetainer;
     
     // -- Toolbar --
-    NSArray *toolbarItems;
-    NSArray *defaultIdentifiers;
+    NSArray* toolbarItems;
+    NSArray* defaultIdentifiers;
     
     // -- Searching --
-    NSArray *hits;
+    NSArray* hits;
 }
 
 - (id) initWithGroup: (GIMessageGroup*) aGroup;

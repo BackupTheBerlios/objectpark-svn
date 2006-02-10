@@ -8,8 +8,10 @@
 
 #import "GIPasswordController.h"
 #import <Foundation/NSDebug.h>
-#import "G3Account.h"
 #import "GIUserDefaultsKeys.h"
+#import "GIApplication.h"
+#import "GIAccount.h"
+
 
 @implementation GIPasswordController
 
@@ -37,12 +39,10 @@
 
 - (NSString*) serverTypeString
 {
-    NSString *serverType = @"UNKNOWN";
+    NSString* serverType = @"UNKNOWN";
     
-    if (isIncomingPassword)
-    {
-        switch([account incomingServerType])
-        {
+    if (isIncomingPassword) {
+        switch([account incomingServerType]) {
             case POP3:
                 serverType = @"POP3";
                 break;
@@ -58,11 +58,10 @@
             default:
                 break;
         }
-    }
-    else // outgoing password
-    {
-        switch([account incomingServerType])
-        {
+    } else {
+		// outgoing password
+
+        switch([account incomingServerType]) {
             case SMTP:
                 serverType = @"SMTP";
                 break;
@@ -76,7 +75,6 @@
                 break;
         }
     }
-    
     return serverType;
 }
 
@@ -132,8 +130,8 @@
     if (NSDebugEnabled) NSLog(@"OKAction");
     
     @synchronized(result) {
-        [result setObject: [passwordField stringValue] forKey:@"password"];
-        [result setObject: [NSNumber numberWithBool: YES] forKey:@"finished"];
+        [result setObject: [passwordField stringValue] forKey: @"password"];
+        [result setObject: yesNumber forKey: @"finished"];
     }
     
     if ([storeInKeychainCheckbox state] == NSOnState) {
@@ -155,7 +153,7 @@
     if (NSDebugEnabled) NSLog(@"cancelAction");
     
     @synchronized(result) {
-        [result setObject: [NSNumber numberWithBool: YES] forKey:@"finished"];
+        [result setObject: yesNumber forKey: @"finished"];
     }
     
     [window close];

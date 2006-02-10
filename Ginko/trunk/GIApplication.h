@@ -14,6 +14,8 @@
 
 #define GIApp ((GIApplication *)NSApp)
 
+extern NSNumber* yesNumber;
+
 @interface GIApplication : NSApplication 
 {
     IBOutlet GISearchController *searchController;

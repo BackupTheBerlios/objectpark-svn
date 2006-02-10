@@ -123,10 +123,10 @@
     return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
 }
 
-- (void)setIsEnabled:(BOOL)value 
+- (void) setIsEnabled: (BOOL) value 
 {
     [self willChangeValueForKey: @"isEnabled"];
-    [self setPrimitiveValue:[NSNumber numberWithBool:value] forKey: @"isEnabled"];
+    [self setPrimitiveBool: value forKey: @"isEnabled"];
     [self didChangeValueForKey: @"isEnabled"];
 }
 
@@ -598,8 +598,8 @@
 - (void) setAllowExpiredSSLCertificates: (BOOL) value 
 {
     [self willChangeValueForKey: @"allowExpiredSSLCertificates"];
-    [self setPrimitiveValue:[NSNumber numberWithBool: value]
-                     forKey: @"allowExpiredSSLCertificates"];
+    [self setPrimitiveBool: value
+					forKey: @"allowExpiredSSLCertificates"];
     [self didChangeValueForKey: @"allowExpiredSSLCertificates"];
 }
 
@@ -617,8 +617,8 @@
 - (void) setAllowAnyRootSSLCertificate:(BOOL)value 
 {
     [self willChangeValueForKey: @"allowAnyRootSSLCertificate"];
-    [self setPrimitiveValue:[NSNumber numberWithBool:value]
-                     forKey: @"allowAnyRootSSLCertificate"];
+    [self setPrimitiveBool: value
+					forKey: @"allowAnyRootSSLCertificate"];
     [self didChangeValueForKey: @"allowAnyRootSSLCertificate"];
 }
 
@@ -636,8 +636,8 @@
 - (void)setVerifySSLCertificateChain:(BOOL)value 
 {
     [self willChangeValueForKey: @"verifySSLCertificateChain"];
-    [self setPrimitiveValue:[NSNumber numberWithBool:value]
-                     forKey: @"verifySSLCertificateChain"];
+    [self setPrimitiveBool: value
+					forKey: @"verifySSLCertificateChain"];
     [self didChangeValueForKey: @"verifySSLCertificateChain"];
 }
 

@@ -8,6 +8,7 @@
 
 #import "OPPersistentObject+Extensions.h"
 #import "OPPersistentObjectContext.h"
+#import "GIApplication.h"
 
 @implementation OPPersistentObject (OPExtensions)
 
@@ -31,6 +32,11 @@ static volatile NSThread* mainThread = nil;
 {
 	BOOL result = [[self primitiveValueForKey: key] boolValue];
 	return result;
+}
+
+- (void) setPrimitiveBool: (BOOL) yesno forKey: (NSString*) key 
+{
+	[self setValue: yesno ? yesNumber : nil forKey: @"key"];
 }
 
 @end

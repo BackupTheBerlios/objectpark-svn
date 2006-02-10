@@ -61,7 +61,7 @@
         if (![result count]) {
             GIProfile* profile = [[[self alloc] init] autorelease];
             [profile setValue: @"Dummy Profile" forKey: @"name"];
-            [profile setValue: [NSNumber numberWithBool: NO] forKey: @"enabled"];
+            [profile setValue: nil forKey: @"enabled"];
             [profile setValue: @"dummy@replace.this" forKey: @"mailAddress"];
 			[profile insertIntoContext: [OPPersistentObjectContext defaultContext]]; // make persistent.
 			

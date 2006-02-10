@@ -372,18 +372,19 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return [self transferData] == nil;
 }
 
-- (void)setIsSeen:(NSNumber *)aBoolean
+/*
+- (void) setIsSeen:(NSNumber *)aBoolean
 {
-    [self willChangeValueForKey:@"isSeen"];
-    [self setPrimitiveValue:aBoolean forKey:@"isSeen"];
+    [self willChangeValueForKey: @"isSeen"];
+    [self setPrimitiveBool: aBoolean forKey: @"isSeen"];
     flagsCache = -1;
-    [self didChangeValueForKey:@"isSeen"];
+    [self didChangeValueForKey: @"isSeen"];
 }
+*/
 
 - (unsigned) flags
 {
-    @synchronized(self)
-    {
+    @synchronized(self) {
         if (flagsCache < 0) {
             flagsCache = 0;
             
@@ -603,40 +604,39 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (void) addFlags: (unsigned) someFlags
 {
-    NSNumber *oldValue = nil;
-    NSNumber *newValue = nil;
+    NSNumber* oldValue = nil;
+    NSNumber* newValue = nil;
 
     @synchronized(self) {
         int flags = [self flags];
 		someFlags = (0xffffffff ^ flags) & someFlags;
         if (someFlags) {
+			// Some flags actually changed!
+
             // flags to set:
-            NSNumber* yes = [NSNumber numberWithBool: YES];
 //#warning isInSendJob not in DB schema ignored.
             //if ((someFlags & OPInSendJobStatus)) [self setValue: yes forKey: @"isInSendJob"]; // not in DB schema!?
 //            if ((someFlags & OPQueuedStatus)) [self setValue: yes forKey: @"isQueued"];
-            if ((someFlags & OPInterestingStatus)) [self setValue: yes forKey: @"isInteresting"];
-            if ((someFlags & OPSeenStatus)) [self setValue: yes forKey: @"isSeen"];
-            if ((someFlags & OPJunkMailStatus)) [self setValue: yes forKey: @"isJunk"];
+            if ((someFlags & OPInterestingStatus)) [self setValue: yesNumber forKey: @"isInteresting"];
+            if ((someFlags & OPSeenStatus)) [self setValue: yesNumber forKey: @"isSeen"];
+            if ((someFlags & OPJunkMailStatus)) [self setValue: yesNumber forKey: @"isJunk"];
 //#warning isSendingBlocked not in DB schema ignored.
             //if ((someFlags & OPSendingBlockedStatus)) [self setValue: yes forKey: @"isSendingBlocked"];
-            if ((someFlags & OPFlaggedStatus)) [self setValue: yes forKey: @"isFlagged"];
-            if ((someFlags & OPIsFromMeStatus)) [self setValue: yes forKey: @"isFromMe"];
-            if ((someFlags & OPFulltextIndexedStatus)) [self setValue: yes forKey: @"isFulltextIndexed"];
-            if ((someFlags & OPAnsweredStatus)) [self setValue: yes forKey: @"isAnswered"];
+            if ((someFlags & OPFlaggedStatus)) [self setValue: yesNumber forKey: @"isFlagged"];
+            if ((someFlags & OPIsFromMeStatus)) [self setValue: yesNumber forKey: @"isFromMe"];
+            if ((someFlags & OPFulltextIndexedStatus)) [self setValue: yesNumber forKey: @"isFulltextIndexed"];
+            if ((someFlags & OPAnsweredStatus)) [self setValue: yesNumber forKey: @"isAnswered"];
 //            if ((someFlags & OPDraftStatus)) [self setValue: yes forKey: @"isDraft"];
 			
             flagsCache = someFlags | flags;
-            
-            oldValue = [NSNumber numberWithInt:flags];
-            newValue = [NSNumber numberWithInt:flagsCache];
+			oldValue = [NSNumber numberWithInt: flags];
+			newValue = [NSNumber numberWithInt: flagsCache];
         }
     }
     
     // notify if needed (outside the synchronized block to avoid blocking problems)
-    if (newValue) 
-    {
-        [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+    if (newValue) {
+        [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageDidChangeFlagsNotification object: self userInfo: [NSDictionary dictionaryWithObjectsAndKeys: oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
     }    
 }
 
@@ -683,8 +683,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     }
     
     // notify if needed (outside the synchronized block to avoid blocking problems)
-    if (newValue) 
-    {
+    if (newValue) {
         [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
     }
 }

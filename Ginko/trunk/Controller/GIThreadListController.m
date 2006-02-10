@@ -214,39 +214,40 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
+- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
-	if (!aThread) aThread = [aMessage valueForKey:@"thread"];
+	if (!aThread) aThread = [aMessage valueForKey: @"thread"];
 	
-    if (isThreadItem(aThread)) 
-    {
-		BOOL isNewThread = ![aThread isEqual:displayedThread];
+    if (isThreadItem(aThread)) {
+		BOOL isNewThread = ![aThread isEqual: displayedThread];
 		
 		[displayedMessage autorelease];
 		displayedMessage = [aMessage retain];
-		[displayedMessage addFlags:OPSeenStatus];
+		[displayedMessage addFlags: OPSeenStatus];
 		
-		if (isNewThread) 
-        {
+		if (isNewThread) {
+			[displayedThread removeObserver: self forKeyPath: @"messages"];
 			[displayedThread autorelease];
 			displayedThread = [aThread retain];
+			[displayedThread addObserver: self 
+							  forKeyPath: @"messages" 
+								 options: NSKeyValueObservingOptionNew 
+								 context: NULL];		
 		}
 		
-		[self showMessageInThreadList:aMessage];
+		[self showMessageInThreadList: aMessage];
         
 		// message display string:
-		NSAttributedString *messageText = nil;
+		NSAttributedString* messageText = nil;
 		
-		if (showRawSource) 
-        {
+		if (showRawSource) {
 			NSData* transferData = [displayedMessage transferData];
 			NSString* transferString = [NSString stringWithData: transferData encoding: NSUTF8StringEncoding];
 			
 			static NSDictionary* fixedFont = nil;
 			
-			if (!fixedFont) 
-            {
+			if (!fixedFont) {
 				fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys: [NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
 			}
 			
@@ -270,16 +271,16 @@ static BOOL isThreadItem(id item)
 		[messageTextView setSelectedRange: NSMakeRange(0, 0)];
 		[messageTextView sizeToFit];
 		// make sure that the message's header is displayed:
-		[messageTextView scrollRangeToVisible:NSMakeRange(0, 0)];
+		[messageTextView scrollRangeToVisible: NSMakeRange(0, 0)];
 		
-		[self updateCommentTree:isNewThread];
+		[self updateCommentTree: isNewThread];
 		
 		//BOOL collapseTree = [commentsMatrix numberOfColumns]<=1;
 		// Hide comment tree, if trivial:
 		//[treeBodySplitter setSubview: [[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
 		//if (YES && !collapseTree){
 		if (isNewThread) {
-			NSScrollView *scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
+			NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex: 0];
 			//[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
 			//[treeBodySplitter moveSplitterBy: [commentsMatrix frame].size.height+10-[scrollView frame].size.height];
 			//[scrollView setAutohidesScrollers: YES];
@@ -337,7 +338,11 @@ static BOOL isThreadItem(id item)
 						 change: (NSDictionary*) change 
 						context: (void*) context
 {
-    if ([object isEqual: [self group]] && isAutoReloadEnabled) {
+	if (object == displayedThread) {
+		if ([keyPath isEqualToString: @"messages"]) {
+			[self updateCommentTree: YES];
+		}
+	} else if ([object isEqual: [self group]] && isAutoReloadEnabled) {
         NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
         //NSLog(@"observeValueForKeyPath %@", keyPath);
@@ -1035,8 +1040,7 @@ static BOOL isThreadItem(id item)
         [group autorelease];
         group = [aGroup retain];
 		
-		if (group) 
-        {
+		if (group) {
 			// thread filter popup:
 			[threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]];
 			
@@ -1048,8 +1052,9 @@ static BOOL isThreadItem(id item)
 			[threadsView scrollRowToVisible:[threadsView numberOfRows]-1];
             
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-			
-<<<<<<< .mine
+	
+			/*
+//////// .mine
 			@try 
             {
                 id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
@@ -1077,7 +1082,7 @@ static BOOL isThreadItem(id item)
 			} 
             @catch (NSException *localException) 
             {
-=======
+*/
 			@try {
 				id lastSelectedMessageItem = [context objectWithURLString: [self valueForGroupProperty:@"LastSelectedMessageItem"]];
 				
@@ -1099,7 +1104,7 @@ static BOOL isThreadItem(id item)
 					[self setDisplayedMessage:message thread:thread];
 				}
 			} @catch (NSException* localException) {
->>>>>>> .r527
+//////// .r527
 				// ignored
 			}
 		}
@@ -1129,7 +1134,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL)validateSelector:(SEL)aSelector
+- (BOOL) validateSelector: (SEL) aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -1801,7 +1806,7 @@ NSMutableArray* border = nil;
     [commentsMatrix scrollCellToVisibleAtRow: row+1 column: column+1];
 }
 
-- (IBAction)selectTreeCell: (id) sender
+- (IBAction) selectTreeCell: (id) sender
 /*" Displays the corresponding message. "*/
 {
     GIMessage *selectedMessage = [[sender selectedCell] representedObject];

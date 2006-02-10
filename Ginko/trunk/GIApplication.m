@@ -36,6 +36,9 @@
 
 @implementation GIApplication
 
+NSNumber* yesNumber = nil;
+
+
 + (void)load
     {
     static BOOL didLoad = NO;
@@ -43,6 +46,8 @@
     if (didLoad == YES)
         return;
         
+	yesNumber = [NSNumber numberWithBool: YES];
+	
     didLoad = YES;
     
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -304,13 +309,12 @@
             NSEnumerator *enumerator = [filesToOpen objectEnumerator];
             NSString *boxFilename;
             
-            while (boxFilename = [enumerator nextObject]) 
-            {
+            while (boxFilename = [enumerator nextObject]) {
                 NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
-				[jobArguments setObject:boxFilename forKey: @"mboxFilename"];
-				[jobArguments setObject:[OPPersistentObjectContext threadContext] forKey: @"parentContext"];
-                [jobArguments setObject:[NSNumber numberWithBool:YES] forKey: @"copyOnly"];
+				[jobArguments setObject: boxFilename forKey: @"mboxFilename"];
+				[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+                [jobArguments setObject: yesNumber forKey: @"copyOnly"];
 				
                 [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
             }

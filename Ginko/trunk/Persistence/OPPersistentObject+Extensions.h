@@ -14,6 +14,8 @@
 + (NSArray*) allObjects;
 
 - (BOOL) primitiveBoolForKey: (NSString*) key;
+- (void) setPrimitiveBool: (BOOL) yesno forKey: (NSString*) key;
+
 
 @end
 
