@@ -1052,9 +1052,6 @@ static BOOL isThreadItem(id item)
 			[threadsView scrollRowToVisible:[threadsView numberOfRows]-1];
             
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-	
-			/*
-//////// .mine
 			@try 
             {
                 id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
@@ -1082,29 +1079,6 @@ static BOOL isThreadItem(id item)
 			} 
             @catch (NSException *localException) 
             {
-*/
-			@try {
-				id lastSelectedMessageItem = [context objectWithURLString: [self valueForGroupProperty:@"LastSelectedMessageItem"]];
-				
-				if (lastSelectedMessageItem) {
-					// is thread or message
-					GIThread *thread;
-					GIMessage *message;
-					
-					if ([lastSelectedMessageItem isKindOfClass: [GIThread class]]) {
-						thread = lastSelectedMessageItem;
-						message = [[thread messagesByTree] lastObject];
-					} else {
-						NSAssert([lastSelectedMessageItem isKindOfClass: [GIMessage class]], @"should be a message object");
-						
-						message = lastSelectedMessageItem;
-						thread = [message thread];
-					}
-					
-					[self setDisplayedMessage:message thread:thread];
-				}
-			} @catch (NSException* localException) {
-//////// .r527
 				// ignored
 			}
 		}
