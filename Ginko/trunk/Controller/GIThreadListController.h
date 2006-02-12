@@ -37,6 +37,8 @@
 	BOOL isAutoReloadEnabled;
 	
     NSMutableSet* itemRetainer;
+	
+	//NSMutableSet* observedThreads;
     
     // -- Toolbar --
     NSArray* toolbarItems;

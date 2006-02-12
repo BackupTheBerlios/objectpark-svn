@@ -42,10 +42,6 @@
 
 - (void) addToGroups_Manually: (GIMessageGroup*) newGroup;
 
-
-- (NSArray*) subthreadWithMessage: (GIMessage*) aMessage;
-
-- (GIThread*) splitWithMessage: (GIMessage*) aMessage;
 - (void) mergeMessagesFromThread: (GIThread*) anotherThread;
 
 

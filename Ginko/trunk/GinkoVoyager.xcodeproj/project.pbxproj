@@ -315,6 +315,7 @@
 		8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */; };
 		8DC773C506B27FCB00053CB7 /* OPSizingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */; };
 		8DC773C606B27FCB00053CB7 /* OPSizingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */; };
+		8DC8047E099C99F700CF4660 /* libsqlite3.dylib in Copy dylibs */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.dylib */; };
 		8DCA9ABE08015F7600EEA49F /* SQLConfig.sqlstatements in Resources */ = {isa = PBXBuildFile; fileRef = 8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */; };
 		8DCE35F90891905600F705EF /* OPPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35F80891905600F705EF /* OPPersistence.h */; };
 		8DCE35FC0891905A00F705EF /* OPPersistentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E80891900B00F705EF /* OPPersistentObject.h */; };
@@ -328,8 +329,8 @@
 		8DCE38FE08940F4000F705EF /* TestPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE38FC08940F4000F705EF /* TestPersistence.m */; };
 		8DCE39030894116500F705EF /* GIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E60891900B00F705EF /* GIMessage.h */; };
 		8DCE39040894116700F705EF /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E70891900B00F705EF /* GIMessage.m */; };
-		8DCE392B089423E000F705EF /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.0.dylib */; };
-		8DCE392C089423E000F705EF /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.0.dylib */; };
+		8DCE392B089423E000F705EF /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.dylib */; };
+		8DCE392C089423E000F705EF /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.dylib */; };
 		8DD2BF430775A1BA00587AAA /* GIMessage+Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */; };
 		8DD2BF440775A1BA00587AAA /* GIMessage+Rendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */; };
 		8DD602F1080ED9300050E973 /* GIFiltersPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8DDD2281080ECA57006C902D /* GIFiltersPane.nib */; };
@@ -474,6 +475,20 @@
 			remoteInfo = OPNetwork;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DC8047B099C99E300CF4660 /* Copy dylibs */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8DC8047E099C99F700CF4660 /* libsqlite3.dylib in Copy dylibs */,
+			);
+			name = "Copy dylibs";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -784,7 +799,7 @@
 		8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistenceConstants.h; sourceTree = "<group>"; };
 		8DCE38FB08940F4000F705EF /* TestPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestPersistence.h; sourceTree = "<group>"; };
 		8DCE38FC08940F4000F705EF /* TestPersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestPersistence.m; sourceTree = "<group>"; };
-		8DCE392A089423E000F705EF /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = /usr/lib/libsqlite3.0.dylib; sourceTree = "<absolute>"; };
+		8DCE392A089423E000F705EF /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Resources/libsqlite3.dylib; sourceTree = "<group>"; };
 		8DD2BF410775A1BA00587AAA /* GIMessage+Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GIMessage+Rendering.h"; sourceTree = "<group>"; };
 		8DD2BF420775A1BA00587AAA /* GIMessage+Rendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GIMessage+Rendering.m"; sourceTree = "<group>"; };
 		8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFiltersPane.m; sourceTree = "<group>"; };
@@ -827,7 +842,7 @@
 				7700727B085B129600AB0064 /* SystemConfiguration.framework in Frameworks */,
 				8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */,
 				8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */,
-				8DCE392B089423E000F705EF /* libsqlite3.0.dylib in Frameworks */,
+				8DCE392B089423E000F705EF /* libsqlite3.dylib in Frameworks */,
 				30450D81091051910085A02F /* OPDebug.framework in Frameworks */,
 				77D33406092BB03E00F2BFAB /* libsqlite3.dylib in Frameworks */,
 				30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */,
@@ -842,7 +857,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DCE392C089423E000F705EF /* libsqlite3.0.dylib in Frameworks */,
+				8DCE392C089423E000F705EF /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -874,7 +889,7 @@
 			children = (
 				77D471E3095BF12E003CEAEA /* CoreFoundation.framework */,
 				77738B0B0955B02000BAAB51 /* JavaVM.framework */,
-				8DCE392A089423E000F705EF /* libsqlite3.0.dylib */,
+				8DCE392A089423E000F705EF /* libsqlite3.dylib */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				7700727A085B129600AB0064 /* SystemConfiguration.framework */,
@@ -1590,6 +1605,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				303DCD6A0943C3A100D8BCBE /* Copy Frameworks */,
+				8DC8047B099C99E300CF4660 /* Copy dylibs */,
 			);
 			buildRules = (
 			);

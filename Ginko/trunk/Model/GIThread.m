@@ -134,19 +134,6 @@
 }
 
 
-- (GIThread*) splitWithMessage: (GIMessage*) aMessage
-	/*" Splits the receiver into two threads. Returns a thread containing aMessage and comments and removes these messages from the receiver. "*/
-{
-    GIThread* newThread = [[[[self class] alloc] init] autorelease];
-    NSEnumerator* enumerator;
-    GIMessage* message;
-    
-    enumerator = [[self subthreadWithMessage: aMessage] objectEnumerator];
-    while (message = [enumerator nextObject]) {
-        [newThread addValue: message forKey: @"messages"];
-    }
-    return newThread;
-}
 
 
 //+ (id) newFromStatement: (sqlite3_stmt*) statement index: (int) index
@@ -174,6 +161,7 @@
 	return [self messageCount] <= 1;
 }
 
+/*
 - (void) treeWalkFrom: (GIMessage*) localRoot addTo: (NSMutableArray*) result
 {
     [result addObject: localRoot];
@@ -185,28 +173,43 @@
     }
 }
 
+
 - (NSArray*) subthreadWithMessage: (GIMessage*) aMessage
-/*" Returns all messages of this thread directly or indirectly referencing aMessage, sorted by tree walk. Does it include aMessage? "*/
+
 {
     NSMutableArray* result = [NSMutableArray array];
 	[self treeWalkFrom: aMessage addTo: result];
     return result;
 }
+*/
 
 
 - (NSArray*) messagesByTree
 	/* Returns an array containing the result of a depth first search over all tree roots. */
 {
     NSArray* allMessages = [self messages];
+	NSMutableArray* result = [NSMutableArray arrayWithCapacity: [allMessages count]];
+
+	[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: result];
+	
+	/*
     NSMutableArray* result = [NSMutableArray arrayWithCapacity: [allMessages count]];
     NSEnumerator* me = [allMessages objectEnumerator];
     GIMessage* message;
     while (message = [me nextObject]) {
-        if (![message reference]) {
+		GIMessage* reference = [message reference];
+        if (!reference || ![allMessages containsObject: reference]) {
             // Found a root message. Walk the tree and collect all nodes:
             [self treeWalkFrom: message addTo: result];
         }
     }
+
+	if ([allMessages count]!=[result count]) {
+		NSMutableArray* missing = [[allMessages mutableCopy] autorelease];
+		[missing removeObjectsInArray: result];
+		NSLog(@"Bug: messagesByTree doesn't work: only %u of %u total in %@ missing %@", [result count], [allMessages count], self, missing);
+	}
+	 	 */
     return result;
 }
 
@@ -252,7 +255,7 @@
     GIMessage *message;
     while (message = [me nextObject]) {
 		GIMessage* reference = [message reference];
-        if (!reference || ![messages containsObject:reference]) {
+        if (!reference || ![messages containsObject: reference]) {
             [result addObject: message];
         }
     }

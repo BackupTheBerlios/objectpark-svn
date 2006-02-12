@@ -372,15 +372,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return [self transferData] == nil;
 }
 
-/*
-- (void) setIsSeen:(NSNumber *)aBoolean
+
+- (void) setIsSeen: (NSNumber*) aBoolean
 {
     [self willChangeValueForKey: @"isSeen"];
-    [self setPrimitiveBool: aBoolean forKey: @"isSeen"];
-    flagsCache = -1;
+    [self setPrimitiveValue: aBoolean forKey: @"isSeen"];
+    flagsCache = [aBoolean boolValue] ? (flagsCache | OPSeenStatus) : -1;
     [self didChangeValueForKey: @"isSeen"];
 }
-*/
+
 
 - (unsigned) flags
 {
@@ -768,6 +768,19 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
             || ([m bodyForHeaderField: @"X-List-Post"] != nil));
 }
 
+
+- (void) addOrderedSubthreadToArray: (NSMutableArray*) result
+/*" Adds the receiver and all messages of this thread directly or indirectly referencing the receiver, sorted by tree. "*/
+{
+    [result addObject: self];
+    NSArray* comments = [self commentsInThread: [self thread]];
+    int i;
+    int commentCount = [comments count];
+    for (i=0; i<commentCount; i++) {
+        [[comments objectAtIndex: i] addOrderedSubthreadToArray: result];
+    }
+} 
+
 @end
 
 @implementation GIMessageData
@@ -794,5 +807,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	@"transferData = {ColumnName = ZTRANSFERDATA; AttributeClass = NSData;};"
 	@"}";
 }
+
+
 
 @end

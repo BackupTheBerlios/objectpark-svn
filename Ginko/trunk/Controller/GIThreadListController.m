@@ -17,6 +17,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIApplication.h"
 #import "NSArray+Extensions.h"
+#import "NSEnumerator+Extensions.h"
 #import "GIGroupInspectorController.h"
 #import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
@@ -52,6 +53,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
     
     itemRetainer = [[NSMutableSet alloc] init];
+    //observedThreads = [[NSMutableSet alloc] init];
     
     return [[super init] retain]; // self retaining!
 }
@@ -80,13 +82,14 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {    
-    [threadsView setTarget:self];
-    [threadsView setDoubleAction:@selector(openSelection:)];
+    [threadsView setTarget: self];
+    [threadsView setDoubleAction: @selector(openSelection:)];
     [threadsView setHighlightThreads: YES];
     [threadsView registerForDraggedTypes: [NSArray arrayWithObjects: @"GinkoThreads", nil]];
-    
+    ///[threadsView setIndentationPerLevel: 1.0];
+	
     [searchHitsTableView setTarget: self];
     [searchHitsTableView setDoubleAction: @selector(openSelection:)];
 
@@ -99,7 +102,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	[self updateWindowTitle];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     if (NSDebugEnabled) NSLog(@"GIThreadListController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -109,7 +112,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self deallocToolbar];
 
     [displayedMessage release];
+	
+	[displayedThread removeObserver: self forKeyPath: @"messages"];
     [displayedThread release];
+	
+	//[[observedThreads objectEnumerator] makeObjectsPerformSelector: @selector(removeObserver:forKeyPath:)
+    //														withObject: self
+	//													withObject: @"messages"];
+	//[observedThreads release];
+	
     [self setGroup: nil];
     [itemRetainer release];
     [hits release];
@@ -175,14 +186,13 @@ static BOOL isThreadItem(id item)
 	return YES;
 }
 
-- (void)showMessageInThreadList:(GIMessage *)aMessage
+- (void) showMessageInThreadList: (GIMessage*) aMessage
 {
-    GIThread *thread = [aMessage valueForKey:@"thread"];
+    GIThread* thread = [aMessage valueForKey: @"thread"];
     int itemRow;
             
     // make sure that thread is expanded in threads outline view:
-    if (thread && (![thread containsSingleMessage])) 
-    {
+    if (thread && (![thread containsSingleMessage]))  {
         [threadsView expandItem:thread];
     }
     
@@ -207,8 +217,7 @@ static BOOL isThreadItem(id item)
     
     itemRow = [threadsView rowForItemEqualTo:([thread containsSingleMessage] ? (id)thread : (id)aMessage) startingAtRow:itemRow];
     
-    if (itemRow != -1) 
-    {
+    if (itemRow != -1) {
         [threadsView selectRow:itemRow byExtendingSelection:NO];
         [threadsView scrollRowToVisible:itemRow];
     }
@@ -279,24 +288,7 @@ static BOOL isThreadItem(id item)
 		// Hide comment tree, if trivial:
 		//[treeBodySplitter setSubview: [[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
 		//if (YES && !collapseTree){
-		if (isNewThread) {
-			NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex: 0];
-			//[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
-			//[treeBodySplitter moveSplitterBy: [commentsMatrix frame].size.height+10-[scrollView frame].size.height];
-			//[scrollView setAutohidesScrollers: YES];
-			BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
-			float newHeight = [commentsMatrix frame].size.height + 3 + (hasHorzontalScroller * [NSScroller scrollerWidth]); // scroller width could be different
-			[scrollView setHasHorizontalScroller:hasHorzontalScroller];
-			if ([commentsMatrix numberOfColumns] <= 1) newHeight = 0;
-			if (newHeight>200.0) {
-				newHeight = 200.0;
-				[scrollView setHasVerticalScroller: YES];
-				//[scrollView setAutohidesScrollers: YES];
-			} else {
-				[scrollView setHasVerticalScroller: NO];
-			}
-			[treeBodySplitter setFirstSubviewSize: newHeight];
-		}
+
 		
 		//[GIApp saveAction:self]; // not neccessary every time...
 		//}
@@ -328,7 +320,7 @@ static BOOL isThreadItem(id item)
     return nil;
 }
 
-- (NSWindow *)window 
+- (NSWindow*) window 
 {
     return window;
 }
@@ -338,10 +330,13 @@ static BOOL isThreadItem(id item)
 						 change: (NSDictionary*) change 
 						context: (void*) context
 {
-	if (object == displayedThread) {
-		if ([keyPath isEqualToString: @"messages"]) {
+	if ([keyPath isEqualToString: @"messages"]) {
+		
+		if (object == displayedThread) {
 			[self updateCommentTree: YES];
 		}
+		[threadsView reloadItem: object reloadChildren: YES];
+		
 	} else if ([object isEqual: [self group]] && isAutoReloadEnabled) {
         NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
@@ -970,7 +965,25 @@ static BOOL isThreadItem(id item)
 - (IBAction) extractThread: (id) sender
 /*" Creates a new thread for the selected messages. "*/
 {
-    NSLog(@"Should extractThread here.");
+	NSArray* items = [threadsView selectedItems];
+	if ([items count]) {
+		NSEnumerator* soe = [items objectEnumerator];
+		NSMutableArray* newThreadMessages = [NSMutableArray arrayWithCapacity: [items count]+2];
+		
+		id item;
+		while (item = [soe nextObject]) {
+			if (!isThreadItem(item)) {
+				[item addOrderedSubthreadToArray: newThreadMessages];
+			} // ignore selected threads
+		}
+		if ([newThreadMessages count]) {
+			GIThread* newThread = [[[[GIThread class] alloc] init] autorelease];
+			[newThread insertIntoContext: [(GIMessage*)[newThreadMessages lastObject] context]];
+			[newThread addMessages: newThreadMessages];
+			//[group addValue: newThread forKey: @"messagesByDate"];
+			[newThread addToGroups_Manually: group];
+		}
+	}
 }
 
 - (IBAction) moveSelectionToTrash: (id) sender
@@ -1048,37 +1061,30 @@ static BOOL isThreadItem(id item)
 			[self updateGroupInfoTextField];
 			[self reload];
             
-            // select and scroll:
-			[threadsView scrollRowToVisible:[threadsView numberOfRows]-1];
+            // Select and scroll:
+			[threadsView scrollRowToVisible: [threadsView numberOfRows]-1];
             
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-			@try 
-            {
+			@try {
                 id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
                 
-                if (lastSelectedMessageItem)
-                {
+                if (lastSelectedMessageItem) {
                     // is thread or message
-                    GIThread *thread;
-                    GIMessage *message;
+                    GIThread* thread;
+                    GIMessage* message;
                     
-                    if ([lastSelectedMessageItem isKindOfClass:[GIThread class]])
-                    {
+                    if (isThreadItem(lastSelectedMessageItem)) {
                         thread = lastSelectedMessageItem;
                         message = [[thread messagesByTree] lastObject];
-                    }
-                    else
-                    {
-                        NSAssert([lastSelectedMessageItem isKindOfClass:[GIMessage class]], @"should be a message object");
+                    } else {
+                        NSAssert([lastSelectedMessageItem isKindOfClass: [GIMessage class]], @"should be a message object");
                         
                         message = lastSelectedMessageItem;
                         thread = [message thread];
                     }
-                    [self showMessageInThreadList:message];
+                    [self showMessageInThreadList: message];
                 }
-			} 
-            @catch (NSException *localException) 
-            {
+			} @catch (NSException* localException) {
 				// ignored
 			}
 		}
@@ -1226,8 +1232,7 @@ static BOOL isThreadItem(id item)
   {	  
         id item = [threadsView itemAtRow:[threadsView selectedRow]];
         
-        if ([item isKindOfClass: [OPPersistentObject class]]) 
-        {
+        if ([item isKindOfClass: [OPPersistentObject class]]) {
             item = [item objectURLString];
 			[self setValue:item forGroupProperty:@"LastSelectedMessageItem"];
         }
@@ -1237,28 +1242,22 @@ static BOOL isThreadItem(id item)
 - (BOOL) outlineView: (NSOutlineView*) outlineView shouldExpandItem: (id) item
 /*" Remembers last expanded thread for opening the next time. "*/
 {
-    /* hack obsoleted by workaround with itemRetainer
-    if (outlineView == threadsView) {
-        [tabView selectFirstTabViewItem: self];
-		// Retain all messages in thread item:
-		[[item messages] makeObjectsPerformSelector: @selector(retain)];
-    }
-     */
-    
+	//[observedThreads addObject: item];
+	//[item addObserver: self 
+	//	   forKeyPath: @"messages" 
+	//		  options: NSKeyValueObservingOptionNew 
+	//		  context: NULL];    
+	
     return YES;
 }
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
 {
-    if (outlineView == threadsView) 
-    {
+    if (outlineView == threadsView) {
 		// thread list
-        if (! item) 
-        {
+        if (! item) {
             return MIN([self threadLimitCount], [[self threadsByDate] count]);
-        } 
-        else  
-        {        
+        } else {        
 			// item should be a thread
             return [[item messages] count];
         }
@@ -1268,36 +1267,21 @@ static BOOL isThreadItem(id item)
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-	//return isThreadItem(item) && (![item isFault]) && [[item messages] count]>1;
-    
-	// Thread items are always expandable!
 	return isThreadItem(item) && [[item messages] count]>1;
-    
-    
-		//NSLog(@"isItemExpandable");
-		//return YES; // [[item messages] count]>1;
-		//return ![[self nonExpandableItems] containsObject: item];
-	//}
-    //return NO;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item
 {
     id result = nil;
-	if (! item) 
-    {
-		NSArray *threadArray = [self threadsByDate];
+	if (! item) {
+		NSArray* threadArray = [self threadsByDate];
 		int arrayIndex = [self threadByDateSortAscending] ? index +([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count])): ([threadArray count]-1) - index;
-		result = [threadArray objectAtIndex:arrayIndex];
-	} 
-    else 
-    {            
-		result = [[item messages/*ByTree*/] objectAtIndex:index];
+		result = [threadArray objectAtIndex: arrayIndex];
+	} else {            
+		result = [[item messages/*ByTree*/] objectAtIndex: index];
+		[item messagesByTree];
 	}
-//    if (![itemRetainer containsObject:result]) {
-        [itemRetainer addObject:result];
-//        if (item) [threadsView reloadItem:item reloadChildren:YES];
-//    }
+	[itemRetainer addObject:result];
     return result;
 }
 
@@ -1489,7 +1473,11 @@ static NSAttributedString* spacer2()
                 }
             } else {
 				// a message, not a thread
-                NSString* from;
+                NSString* from = [item senderName];
+                if (!from) {
+					from = @"- sender missing -";
+				}
+				
                 unsigned indentation = [(GIMessage*) item numberOfReferences];
                 
                 [result appendAttributedString: spacer()];
@@ -1500,10 +1488,7 @@ static NSAttributedString* spacer2()
                 
                 [result appendAttributedString: (indentation > MAX_INDENTATION)? spacer2() : spacer()];
                 
-                from = [item senderName];
-                from = from ? from : @"- sender missing -";
-                
-                [result appendAttributedString: [[NSAttributedString alloc] initWithString: from attributes: [(GIMessage *)item hasFlags: OPSeenStatus] ? (inSelectionAndAppActive ? selectedReadFromAttributes():readFromAttributes()):(inSelectionAndAppActive ? selectedUnreadFromAttributes():unreadFromAttributes())]];
+                [result appendAttributedString: [[NSAttributedString alloc] initWithString: from attributes: [(GIMessage *)item hasFlags: OPSeenStatus] ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())]];
             }
             
             return result;
@@ -1778,6 +1763,25 @@ NSMutableArray* border = nil;
     [commentsMatrix getRow: &row column: &column ofCell: cell];
     [commentsMatrix scrollCellToVisibleAtRow: MAX(row-1, 0)column: MAX(column-1,0)];
     [commentsMatrix scrollCellToVisibleAtRow: row+1 column: column+1];
+	
+	// Update tree splitter view:
+	if (rebuildThread) {
+		NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex: 0];
+		//[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
+		//[treeBodySplitter moveSplitterBy: [commentsMatrix frame].size.height+10-[scrollView frame].size.height];
+		//[scrollView setAutohidesScrollers: YES];
+		BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
+		float newHeight = [commentsMatrix frame].size.height + 3 + (hasHorzontalScroller * [NSScroller scrollerWidth]); // scroller width could be different
+		[scrollView setHasHorizontalScroller: hasHorzontalScroller];
+		if ([commentsMatrix numberOfColumns] <= 1) newHeight = 0;
+		if (newHeight>200.0) {
+			newHeight = 200.0;
+			[scrollView setHasVerticalScroller: YES];
+		} else {
+			[scrollView setHasVerticalScroller: NO];
+		}
+		[treeBodySplitter setFirstSubviewSize: newHeight];
+	}
 }
 
 - (IBAction) selectTreeCell: (id) sender

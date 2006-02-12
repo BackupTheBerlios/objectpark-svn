@@ -29,5 +29,18 @@
 	}
 }
 
+- (void) makeObjectsPerformSelector: (SEL) selector withObject: (id) object1 withObject: (id) object2
+	/*" Performs the given selector on all remaining objects with the given parameter object. Afterward that, -nextObject returns nil. "*/
+{
+	[object1 retain];
+	[object2 retain];
+	id element;
+	while (element = [self nextObject]) {
+		[element performSelector: selector withObject: object1 withObject: object2];
+	}
+	[object1 release];
+	[object2 release];
+}
+
 
 @end

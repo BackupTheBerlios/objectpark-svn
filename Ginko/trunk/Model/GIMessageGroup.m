@@ -582,6 +582,22 @@ static NSMutableArray* root = nil;
 }
 */
 
+/*
+- (BOOL) contentDidChange 
+{
+	return contentDidChangeFlag;
+}
+
+- (void) noteContentDidChange
+{
+	contentDidChangeFlag = YES;
+}
+
+- (void) resetContentDidChange
+{
+	contentDidChangeFlag = NO;
+}
+*/
 
 - (void) dateDidChangeOfThread: (GIThread*) thread 
 {
@@ -733,7 +749,7 @@ nil, //                                                     [[[NSString alloc] i
 
 + (GIMessageGroup *)sentMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:SentMessageGroupURLString defaultName:NSLocalizedString(@"Sent Messages", @"default group name for outgoing messages")];
+    return [self standardMessageGroupWithUserDefaultsKey:SentMessageGroupURLString defaultName:NSLocalizedString(@"My Threads", @"default group name for outgoing messages")];
 }
 
 + (GIMessageGroup *)draftMessageGroup
@@ -748,7 +764,7 @@ nil, //                                                     [[[NSString alloc] i
 
 + (GIMessageGroup *)spamMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:SpamMessageGroupURLString defaultName:NSLocalizedString(@"Spam Messages", @"default group name for spam")];
+    return [self standardMessageGroupWithUserDefaultsKey:SpamMessageGroupURLString defaultName:NSLocalizedString(@"Spam", @"default group name for spam")];
 }
 
 + (GIMessageGroup *)trashMessageGroup

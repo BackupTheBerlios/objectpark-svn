@@ -97,13 +97,15 @@
 
 - (void) flushInternetMessageCache;
 - (OPInternetMessage*) internetMessage;
+- (void) addOrderedSubthreadToArray: (NSMutableArray*) result;
+
 
 //- (void) setSendJobStatus;
 //- (void) resetSendJobStatus;
 
 @end
 
-extern NSString *GIMessageDidChangeFlagsNotification;
+extern NSString* GIMessageDidChangeFlagsNotification;
 
 @interface GIMessageData : OPPersistentObject {
 }

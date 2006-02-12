@@ -13,5 +13,6 @@
 
 - (void) makeObjectsPerformSelector: (SEL) selector;
 - (void) makeObjectsPerformSelector: (SEL) selector withObject: (id) object;
+- (void) makeObjectsPerformSelector: (SEL) selector withObject: (id) object1 withObject: (id) object2;
 
 @end

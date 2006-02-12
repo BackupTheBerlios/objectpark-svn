@@ -295,20 +295,21 @@
     if ([set count]) {
         int lastIndex = [set lastIndex];
         int i;
-        for (i=[set firstIndex]; i<=lastIndex; i++) {
-            if ([set containsIndex: i]) {
-                if ([self levelForRow: i]==0) {
+        for (i=[set firstIndex]; i<=lastIndex; i = [set indexGreaterThanIndex: i]) {
+            //if ([set containsIndex: i]) {
+                //if ([self levelForRow: i]==0) {
                     id item = [self itemAtRow: i];
-                    if (item) [result addObject: item];
-                }
-            }
+                    if (item) 
+						[result addObject: item];
+                //}
+            //}
         }
     }
     return result;
 }
 
 - (void) selectItems: (NSArray*) items ordered: (BOOL) ordered
-/*" Extends the selection by the rows for the items passed. If ordered==YES, We assume uriStrings are ordered the same way the items are, improving performance. "*/
+/*" Extends the selection by the rows for the items passed. If ordered==YES, We assume array items are ordered the same way the view items are, improving performance. "*/
 {
     NSEnumerator* e = [items objectEnumerator];
     NSString* item;
