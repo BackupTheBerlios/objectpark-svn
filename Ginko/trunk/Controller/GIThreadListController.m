@@ -1117,28 +1117,30 @@ static BOOL isThreadItem(id item)
 
 // validation
 
-- (BOOL) multipleThreadsSelected
+- (BOOL)multipleThreadsSelected
 /*" Returns YES, if more than one thread is selected in the thread list. "*/
 {
-    NSIndexSet* selectedIndexes;
+    NSIndexSet *selectedIndexes;
     
     selectedIndexes = [threadsView selectedRowIndexes];
-    if ([selectedIndexes count] > 0) {
+    if ([selectedIndexes count] > 0) 
+    {
 		unsigned count = 0;
         unsigned i;
         unsigned lastIndex = [selectedIndexes lastIndex];
         
-        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i = [selectedIndexes indexGreaterThanIndex: i]) {
-			if (isThreadItem([threadsView itemAtRow: i])) {
+        for (i = [selectedIndexes firstIndex]; i <= lastIndex; i = [selectedIndexes indexGreaterThanIndex:i]) {
+			if (isThreadItem([threadsView itemAtRow: i])) 
+            {
 				if (++count > 1) return YES;
-			};
+			}
         }
         return YES;
     }
     return NO;        
 }
 
-- (BOOL) validateSelector: (SEL) aSelector
+- (BOOL)validateSelector:(SEL)aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -1146,8 +1148,8 @@ static BOOL isThreadItem(id item)
          || (aSelector == @selector(forward:))
          || (aSelector == @selector(followup:))
          //|| (aSelector == @selector(showTransferData:))
-         ) {
-		
+         ) 
+    {
         NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
         
         if ([selectedIndexes count] == 1) 

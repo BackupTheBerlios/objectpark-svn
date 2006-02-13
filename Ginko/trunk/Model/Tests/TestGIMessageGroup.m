@@ -37,7 +37,7 @@
 }
 */
 
-- (void) testThreadIdsByDate
+- (void)testThreadIdsByDate
 {
     NSMutableArray *result = [NSMutableArray array];
         
@@ -51,6 +51,28 @@
     }
     
     //NSLog(@"First Thread's name '%@'", [(GIThread *)[[NSManagedObjectContext threadContext] objectWithURI:[NSURL URLWithString:[result objectAtIndex:4]]] valueForKey: @"subject"]);
+}
+
+- (void)testGroupRemove
+{
+    GIMessageGroup *group = [[GIMessageGroup alloc] init];
+    OID groupOID = [group oid];
+    [context saveChanges];
+    
+    group = [context objectForOid:groupOID ofClass:[GIMessageGroup class]];
+    STAssertTrue(group != nil, @"group not persistent");
+    
+    [group delete];
+    [context saveChanges];
+
+    group = [context objectForOid:groupOID ofClass:[GIMessageGroup class]];
+    STAssertTrue(group == nil, @"group still persistent with old context");
+    
+    context = nil;
+    [self setUp];
+    
+    group = [context objectForOid:groupOID ofClass:[GIMessageGroup class]];
+    STAssertTrue(group == nil, @"group still persistent with new context");
 }
 
 @end

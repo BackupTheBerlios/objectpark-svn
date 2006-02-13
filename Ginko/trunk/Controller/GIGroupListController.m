@@ -185,6 +185,7 @@
     }
 }
 
+#warning deletion of groups makes the app crash
 - (IBAction)delete:(id)sender
 {
 	id item = [[boxesView selectedItems] lastObject];
@@ -195,21 +196,26 @@
         } else {
             NSBeep();
             NSLog(@"Unable to remove folder containing groups.");
+            return;
         }
     } else {
 		GIMessageGroup* selectedGroup = [self group];
         if ([[selectedGroup valueForKey: @"threadsByDate"] count] == 0) {
             [GIMessageGroup removeHierarchyNode: item];
+            [GIMessageGroup saveHierarchy];
+
             // Delete the group object:
             [selectedGroup delete];
-            [GIMessageGroup saveHierarchy];
             
         } else {
             NSBeep();
             NSLog(@"Unable to remove group containing threads.");
+            return;
         }
-		[GIMessageGroup removeHierarchyNode: item];
+		//[GIMessageGroup removeHierarchyNode: item];
     } 
+    
+    [boxesView reloadData];
 }
 
 - (IBAction)exportGroup:(id)sender

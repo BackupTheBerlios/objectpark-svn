@@ -478,7 +478,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 			// Set the thread's subject to be the first message's subject:
             [thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
         } else {
-             NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
+             OPDebugLog(MESSAGE, OPINFO, @"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
         }
 		[thread setValue: [self valueForKey: @"date"] forKey: @"date"];
 
