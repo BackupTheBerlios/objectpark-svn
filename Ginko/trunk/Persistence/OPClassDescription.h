@@ -80,10 +80,15 @@
 	NSString* inverseRelationshipKey; 
 	NSString* sourceColumnName;
 	NSString* targetColumnName;
+	SEL valueAdder;
+	SEL valueRemover;
 }
 
 
-- (id) initWithName: (NSString*) aName properties: (NSDictionary*) dict;
+- (id) initWithParentClass: (Class) pclass 
+					  name: (NSString*) aName 
+				properties: (NSDictionary*) dict;
+
 - (NSString*) name;
 - (NSString*) queryString;
 - (Class) attributeClass;

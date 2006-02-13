@@ -98,9 +98,14 @@
 		NSMutableDictionary* dict = [NSMutableDictionary dictionary];
 		NSString* key;
 		while (key = [keyEnumerator nextObject]) {
-			OPAttributeDescription* ad = [[[OPAttributeDescription alloc] initWithName: key properties: [plist objectForKey: key]] autorelease];
+			OPAttributeDescription* ad;
+			ad = [[OPAttributeDescription alloc] initWithParentClass: poClass 
+																name: key 
+														  properties: [plist objectForKey: key]];
+			
 			[([ad isToManyRelationship] ? relations : attrs) addObject: ad];
 			[dict setObject: ad forKey: key];
+			[ad release];
 		}
 		//NSLog(@"Found relations in %@: %@", poClass, relations);
 		//NSLog(@"Found attributes in %@: %@", poClass, attrs);
@@ -182,7 +187,9 @@
 @implementation OPAttributeDescription
 
 
-- (id) initWithName: (NSString*) aName properties: (NSDictionary*) dict
+- (id) initWithParentClass: (Class) poClass 
+					  name: (NSString*) aName 
+				properties: (NSDictionary*) dict
 {
 	NSParameterAssert(aName);
 	if (self = [super init]) {
@@ -204,6 +211,31 @@
 		
 		NSParameterAssert([theClass canPersist]);
 		
+		if ([name isEqualToString: @"messages"]) {
+			NSLog(@"messages relation found");
+		}
+		
+		if ([self isToManyRelationship]) {
+			// See, if we have custom methods to add and remove values:
+			
+			// Build an search for remover selector:
+			char addselstr[200] = "addTo";
+			[name getCString: addselstr+5 maxLength: 190];
+			addselstr[5] = toupper(addselstr[5]);
+			strcat(addselstr, ":");
+			SEL addsel = NSSelectorFromString([NSString stringWithCString: addselstr]);
+			if ([poClass instancesRespondToSelector: addsel]) 
+				valueAdder = addsel;
+			
+			// Build an search for remover selector:
+			char remselstr[200] = "removeFrom";
+			[name getCString: remselstr+10 maxLength: 190];
+			remselstr[10] = toupper(remselstr[10]);
+			strcat(remselstr, ":");
+			SEL remsel = NSSelectorFromString([NSString stringWithCString: remselstr]);
+			if ([poClass instancesRespondToSelector: remsel]) 
+				valueRemover = remsel;
+		}
 	}
 	
 	return self;
@@ -264,6 +296,16 @@
 - (NSString*) targetColumnName
 {
 	return targetColumnName;
+}
+
+- (SEL) valueAdder
+{
+	return valueAdder;
+}
+
+- (SEL) valueRemover
+{
+	return valueRemover;
 }
 
 - (OPAttributeDescription*) inverseRelationshipAttribute

@@ -243,6 +243,11 @@
     return messages;
 }
 
+- (void) addToMessages: (GIMessage*) aMessage 
+{
+	NSAssert(NO, @"Should not yet be called.");
+}
+
 - (void) addToGroups_Manually: (GIMessageGroup*) newGroup
 /*" "*/
 {
@@ -312,7 +317,7 @@
 /*"Returns the thread a message is in.
    If the message is not yet in a thread it creates a new one and inserts the
    message into it."*/
-+ (GIThread*) threadForMessage:(GIMessage*)aMessage
++ (GIThread*) threadForMessage: (GIMessage*) aMessage
 {
     GIThread* thread = [aMessage thread];
     
@@ -320,11 +325,11 @@
         return thread;
         
     thread = [[[self alloc] init] autorelease];
-    [thread insertIntoContext:[aMessage context]];
-    [thread setValue:[aMessage valueForKey:@"subject"] forKey:@"subject"];
-    [thread setValue:[aMessage valueForKey:@"date"] forKey:@"date"];
+    [thread insertIntoContext: [aMessage context]];
+    [thread setValue: [aMessage valueForKey:@"subject"] forKey: @"subject"];
+    [thread setValue: [aMessage valueForKey:@"date"] forKey: @"date"];
     
-    [thread addMessage:aMessage];
+    [thread addMessage: aMessage];
     
     OPDebugLog(THREADING, CREATION, @"Created thread %@ for message %@ (%qu)", [aMessage messageId], [aMessage oid]);
     
