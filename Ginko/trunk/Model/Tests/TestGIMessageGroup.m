@@ -66,13 +66,13 @@
     [context saveChanges];
 
     group = [context objectForOid:groupOID ofClass:[GIMessageGroup class]];
-    STAssertTrue(group == nil, @"group still persistent with old context");
+    STAssertFalse([group resolveFault], @"group still persistent with old context");
     
     context = nil;
     [self setUp];
     
     group = [context objectForOid:groupOID ofClass:[GIMessageGroup class]];
-    STAssertTrue(group == nil, @"group still persistent with new context");
+    STAssertFalse([group resolveFault], @"group still persistent with new context");
 }
 
 @end
