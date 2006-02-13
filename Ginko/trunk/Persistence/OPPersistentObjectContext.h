@@ -94,6 +94,7 @@
 // Methods for use by the appication developer:
 + (OPPersistentObjectContext*) defaultContext;
 - (void) reset;
+- (void) close;
 
 - (id) objectWithURLString: (NSString*) urlString;
 - (id) objectForOid: (OID) oid ofClass: (Class) poClass;

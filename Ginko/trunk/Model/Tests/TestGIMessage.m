@@ -41,7 +41,7 @@
     STAssertNotNil(message, @"Creating message failed");
     
     GIMessage* ref = [message referenceFind:NO];
-    STAssertNil(ref, @"Reference returned although finding was disallowed");
+    NSAssert(ref == nil, @"Reference returned although finding was disallowed");
 }
 
 
@@ -51,9 +51,9 @@
     STAssertNotNil(message, @"Creating message failed");
     
     GIMessage* ref = [message referenceFind:NO];
-    STAssertNil(ref, @"Reference returned although finding was not allowed and there is none");
+    NSAssert(ref == nil, @"Reference returned although finding was not allowed and there is none");
     ref = [message referenceFind:YES];
-    STAssertNil(ref, @"Reference returned although there is none");
+    NSAssert(ref == nil, @"Reference returned although there is none");
 }
 
 

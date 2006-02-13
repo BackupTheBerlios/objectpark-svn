@@ -962,6 +962,7 @@ static BOOL isThreadItem(id item)
     [self joinThreads];
 }
 
+
 - (IBAction) extractThread: (id) sender
 /*" Creates a new thread for the selected messages. "*/
 {
@@ -969,19 +970,24 @@ static BOOL isThreadItem(id item)
 	if ([items count]) {
 		NSEnumerator* soe = [items objectEnumerator];
 		NSMutableArray* newThreadMessages = [NSMutableArray arrayWithCapacity: [items count]+2];
+		NSMutableSet* affectedThreads = [NSMutableSet set];
 		
 		id item;
 		while (item = [soe nextObject]) {
 			if (!isThreadItem(item)) {
 				[item addOrderedSubthreadToArray: newThreadMessages];
+				[affectedThreads addObject: [item thread]];
 			} // ignore selected threads
 		}
 		if ([newThreadMessages count]) {
+			
 			GIThread* newThread = [[[[GIThread class] alloc] init] autorelease];
 			[newThread insertIntoContext: [(GIMessage*)[newThreadMessages lastObject] context]];
 			[newThread addMessages: newThreadMessages];
 			//[group addValue: newThread forKey: @"messagesByDate"];
 			[newThread addToGroups_Manually: group];
+			
+			[affectedThreads makeObjectsPerformSelector: @selector(calculateDate)];
 		}
 	}
 }
@@ -989,20 +995,38 @@ static BOOL isThreadItem(id item)
 - (IBAction) moveSelectionToTrash: (id) sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex];
-    NSEnumerator* enumerator = [[self selectedThreads] objectEnumerator];
-    GIThread* thread;
+    NSEnumerator* enumerator = [[threadsView selectedItems] objectEnumerator];
+    id item;
     BOOL trashedAtLeastOne = NO;
+	NSMutableDictionary* oldNewThreadDictionary = nil;
+	GIMessageGroup* trash = [GIMessageGroup trashMessageGroup];
     
 	// Make sure, update notifications do not try to re-select threads that no longer exist:
 	[threadsView deselectAll: nil]; 
     
-    while (thread = [enumerator nextObject]) {
-        NSAssert([thread isKindOfClass: [GIThread class]], @"got non-thread object");
-        
-       // [thread removeFromAllGroups];
-        [[self group] removeValue: thread forKey: @"threadsByDate"];
-        [GIMessageBase addTrashThread: thread];
-        trashedAtLeastOne = YES;
+    while (item = [enumerator nextObject]) {
+		
+		if (isThreadItem(item)) {
+			// We have to trash a thread:
+			[GIMessageBase addTrashThread: item];
+			[[self group] removeValue: item forKey: @"threadsByDate"];
+			trashedAtLeastOne = YES;	
+		} else {
+			// We have to trash a message:
+			if (![[[item thread] valueForKey: @"groups"] containsObject: trash]) {
+				if (!oldNewThreadDictionary) oldNewThreadDictionary = [NSMutableDictionary dictionary];
+				GIThread* newThread = [oldNewThreadDictionary objectForKey: [item thread]];
+				if (!newThread) {
+					// Create new thread for all messages from the same thread:
+					GIThread* newThread = [[[[GIThread class] alloc] init] autorelease];
+					[newThread insertIntoContext: [(GIMessage*)item context]];
+					[oldNewThreadDictionary setObject: newThread forKey: [item thread]];
+					[GIMessageBase addTrashThread: newThread];
+				}
+				[newThread addValue: item forKey: @"messages"];
+
+			} // Othwise we trash the whole thread anyway.
+		}
     }
     
     if (trashedAtLeastOne)  {

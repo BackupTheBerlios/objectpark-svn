@@ -312,7 +312,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	[db close];
 	[db open];
-	
 }
 
 - (id) init 
@@ -620,9 +619,21 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	}
 }
 
+- (void) close
+/*" No persistent objects or the receiver can be used after calling this method. "*/
+{
+	if (db) {
+		[self reset]; [db close]; 
+		[db release]; db = nil;
+		if (self == [OPPersistentObjectContext defaultContext]) {
+			[OPPersistentObjectContext setDefaultContext: nil];
+		}
+	}
+}
+
 - (void) dealloc
 {
-    [self reset];
+    [self close]; // check if already closed?
 
     [faultFireCountsByKey release];
 	[deletedObjects release];

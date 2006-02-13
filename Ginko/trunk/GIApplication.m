@@ -376,12 +376,22 @@ NSNumber* yesNumber = nil;
     return result;
 }
 
-- (void)applicationWillTerminate:(NSNotification *)notification
+- (void) applicationWillTerminate: (NSNotification*) notification
 {
-    [self saveAction:self];
-    
+	[[self windows] makeObjectsPerformSelector: @selector(performClose:) withObject: self];
+	
+    [self saveAction: self];
+	
     // temporary hack:
     [GIMessage sweepBadMessages];
+	
+	[[OPPersistentObjectContext defaultContext] close];
+}
+
+- (void) stop: (id) sender
+{
+	[[OPPersistentObjectContext defaultContext] close];
+	[super stop: sender];
 }
 
 - (IBAction)getNewMailInAllAccounts:(id)sender

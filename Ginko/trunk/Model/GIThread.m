@@ -81,10 +81,12 @@
 	if (![self valueForKey: @"date"]) [self calculateDate]; // fixing only for broken databases - can be removed later.
 }
 
-- (void)didChangeValueForKey:(NSString *)key 
+- (void) didChangeValueForKey: (NSString*) key 
 {
-	[super didChangeValueForKey:key];
-    
+	[attributes removeObjectForKey: @"messagesByTreeCache"];
+
+	[super didChangeValueForKey: key];
+	
 	/*
 	if ([key isEqualToString: @"messages"]) {
 		OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
@@ -202,10 +204,15 @@
 - (NSArray*) messagesByTree
 	/* Returns an array containing the result of a depth first search over all tree roots. */
 {
-    NSArray* allMessages = [self messages];
-	NSMutableArray* result = [NSMutableArray arrayWithCapacity: [allMessages count]];
-
-	[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: result];
+	NSMutableArray* result = [attributes objectForKey: @"messagesByTreeCache"];
+	if (!result) {
+		NSArray* allMessages = [self messages];
+		result = [[NSMutableArray alloc] initWithCapacity: [allMessages count]];
+		
+		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: result];
+		[attributes setObject: result forKey: @"messagesByTreeCache"];
+		[result release];
+	}	
 	
 	/*
     NSMutableArray* result = [NSMutableArray arrayWithCapacity: [allMessages count]];

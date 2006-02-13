@@ -46,6 +46,7 @@
 
 #pragma mark Tests
 
+/* tested api no longer exists
 - (void) testSplit
 {
     GIThread* threadA = [[[GIThread alloc] init] autorelease];
@@ -66,6 +67,7 @@
     STAssertTrue([[threadA messages] count] == 1, @"not %d", [[threadA messages] count]);
     STAssertTrue([[threadB messages] count] == 2, @"not %d", [[threadB messages] count]);
 }
+*/
 
 
 - (void) testMerge
@@ -140,7 +142,7 @@
     GIMessage* message = [self makeMessageWithId:@"<1>" andReferences:nil];
     STAssertNotNil(message, @"Creating message without references failed");
     
-    STAssertNil([message thread], @"Test message erroneously has a thread!");
+    NSAssert([message thread] == nil, @"Test message erroneously has a thread!");
     
     
     GIThread *thread = [GIThread threadForMessage:message];
@@ -198,7 +200,7 @@
     STAssertEqualObjects(msgRef, dummyMsg2, @"Reference of test message is wrong (should be %@", dummyMsg2);
     GIMessage* dummy2Ref = [dummyMsg2 reference];
     STAssertEqualObjects(dummy2Ref, dummyMsg1, @"Reference of test message is wrong (should be %@", dummyMsg1);
-    STAssertNil([dummyMsg1 reference], @"Root message has a reference!");
+    NSAssert([dummyMsg1 reference] == nil, @"Root message has a reference!");
 }
 
 
@@ -210,7 +212,7 @@
     GIThread* thread = [GIThread threadForMessage:root];
     STAssertNotNil(thread, @"Root message has no thread");
     STAssertEquals([[thread messages] count], (unsigned)1, @"The thread of the root message contains more than 1 message");
-    STAssertNil([root reference], @"The root message has a reference to a non existing message");
+    NSAssert([root reference] == nil, @"The root message has a reference to a non existing message");
     
     GIMessage* message = [self makeMessageWithId:@"<2>" andReferences:@"<1>"];
     STAssertNotNil(message, @"Creating test message failed");
@@ -226,7 +228,7 @@
     STAssertTrue([messages containsObject:root], @"Root message is not in the thread");
     STAssertTrue([messages containsObject:message], @"Message is not in the thread");
     STAssertEqualObjects([message reference], root, @"The message has no reference to the root message");
-    STAssertNil([root reference], @"The root message has a reference!");
+    NSAssert([root reference] == nil, @"The root message has a reference!");
 }
 
 
