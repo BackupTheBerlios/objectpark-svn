@@ -11,6 +11,14 @@
 #import "OPPersistentObjectContext.h"
 #import "NSArray+Extensions.h"
 #import "GIMessage.h"
+#import "OPInternetMessage.h"
+
+
+#define THREADING   OPL_DOMAIN  @"Threading"
+#define CREATION    OPL_ASPECT  0x01
+#define REFERENCES  OPL_ASPECT  0x02
+#define MERGING     OPL_ASPECT  0x04
+
 
 @implementation GIThread
 
@@ -105,6 +113,11 @@
 }
 */
 
+- (void) addMessage:(GIMessage*)aMessage
+{
+    [aMessage setValue:self forKey:@"thread"];
+}
+
 
 - (void) addMessages:(NSArray*)someMessages
 /*"Adds %someMessages to the receiver."*/
@@ -113,7 +126,7 @@
     GIMessage* message;
     
     while (message = [messagesToAdd nextObject])
-        [message setValue:self forKey:@"thread"];
+        [self addMessage:message];
 }
 
 
@@ -123,6 +136,8 @@
     // Put all messages from otherThread into self and remove otherThread:
     GIMessage* message;
     NSArray* messages = [otherThread messages];
+    
+    OPDebugLog(THREADING, MERGING, @"Mergeing messages %@ into thread %@ with messages %@", messages, self, [self messages]);
     
     while (message = [messages lastObject]) {
 		[message referenceFind: YES];
@@ -285,5 +300,79 @@
     }
     return result + 1;
 }
+
+
+/*"Returns the thread a message is in.
+   If the message is not yet in a thread it creates a new one and inserts the
+   message into it."*/
++ (GIThread*) threadForMessage:(GIMessage*)aMessage
+{
+    GIThread* thread = [aMessage thread];
+    
+    if (thread)
+        return thread;
+        
+    thread = [[[self alloc] init] autorelease];
+    [thread insertIntoContext:[aMessage context]];
+    [thread setValue:[aMessage valueForKey:@"subject"] forKey:@"subject"];
+    [thread setValue:[aMessage valueForKey:@"date"] forKey:@"date"];
+    
+    [thread addMessage:aMessage];
+    
+    OPDebugLog(THREADING, CREATION, @"Created thread %@ for message %@ (%qu)", [aMessage messageId], [aMessage oid]);
+    
+    return thread;
+}
+
+
+/*"Adds aMessage to the thread it belongs to.
+   I.e. a chain of messages is created from the references that starts with the
+   nearest non existing ancestor of aMessage and ends with aMessage.
+   So all of the messages in the chain with the exception of the last one (which
+   is aMessage) are dummy messages.
+   If the direct ancestor of aMessage does exist (i.e. is a non dummy message)
+   the chain will consist of only a single message: aMessage.
+   If the direct ancestor of the first message in the chain exists the chain is
+   connected to that message and the chain is added to its thread.
+   If it does not exist that chain is added to a newly created thread."*/
++ (void) addMessageToAppropriateThread:(GIMessage*)message
+{
+    NSMutableArray* references = [NSMutableArray arrayWithArray:[[message internetMessage] references]];
+    [references removeObject:[message messageId]];  // no self referencing allowed
+    [references removeDuplicates];
+    
+    GIThread* thread = [self threadForMessage:message];
+    
+    NSEnumerator* enumerator = [references reverseObjectEnumerator];
+    GIMessage* referencingMsg = message;
+    GIMessage* referencedMsg;
+    
+    NSString* refId;
+    while (refId = [enumerator nextObject]) {
+        referencedMsg = [[message class] messageForMessageId:refId];
+        
+        if (referencedMsg) {
+            OPDebugLog(THREADING, REFERENCES, @"%@ (%qu) -> %@ (%qu)", [referencingMsg messageId], [referencingMsg oid], [referencedMsg messageId], [referencedMsg oid]);
+            [referencingMsg setValue:referencedMsg forKey: @"reference"];
+            
+            [[referencedMsg thread] mergeMessagesFromThread:thread];
+            
+            return;
+        }
+        
+        // create dummy message
+        referencedMsg = [GIMessage dummyMessageWithId:refId andDate:[message valueForKey:@"date"]];
+        [thread addMessage:referencedMsg];
+        
+        OPDebugLog(THREADING, REFERENCES, @"%@ (%qu) -> %@ (%qu)", [referencingMsg messageId], [referencingMsg oid], [referencedMsg messageId], [referencedMsg oid]);
+        [referencingMsg setValue:referencedMsg forKey: @"reference"];
+        
+        referencingMsg = referencedMsg;
+    }
+}
+
+
+
+
 
 @end

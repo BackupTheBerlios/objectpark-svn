@@ -17,9 +17,13 @@
 	//int age; // since reference date (should be 1970)
 }
 
++ (GIThread*) threadForMessage:(GIMessage*)aMessage;
++ (void) addMessageToAppropriateThread:(GIMessage*)message;
+
 //+ (id) threadInManagedObjectContext: (OPPersistentObjectContext*) aContext;
 
 - (NSArray*) messages;
+- (void) addMessage:(GIMessage*)aMessage;
 - (void) addMessages:(NSArray*)someMessages;
 
 //- (void) addToMessages: (GIMessage*) message;

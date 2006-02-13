@@ -55,6 +55,8 @@
 + (NSArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit;
 + (NSArray *)messagesToRemoveFromFulltextIndexWithLimit:(unsigned)limit;
 
++ (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
+
 + (OPFaultingArray*) deletedMessages;
 
 

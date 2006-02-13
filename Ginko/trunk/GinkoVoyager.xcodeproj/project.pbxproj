@@ -36,8 +36,14 @@
 		301F61260992C3B7001F2072 /* TestNSArray+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 301F61240992C3B7001F2072 /* TestNSArray+Extensions.h */; };
 		301F61270992C3B7001F2072 /* TestNSArray+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 301F61250992C3B7001F2072 /* TestNSArray+Extensions.m */; };
 		30450D81091051910085A02F /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
+		3083577209A015DE003D1D86 /* TestPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE38FC08940F4000F705EF /* TestPersistence.m */; };
+		3083577309A015E0003D1D86 /* TestPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE38FB08940F4000F705EF /* TestPersistence.h */; };
+		3083577809A01639003D1D86 /* TestOPJobs.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DFA5C70840B49C0068AD15 /* TestOPJobs.h */; };
+		3083577A09A0163A003D1D86 /* TestOPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5C80840B49C0068AD15 /* TestOPJobs.m */; };
 		30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5553B093D148F00BCACCB /* OPDebug.framework */; };
 		30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5555D093D1C2500BCACCB /* OPPreferences.framework */; };
+		30F74C7609994E120026B4A8 /* TestGIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 30F74C7409994E120026B4A8 /* TestGIMessage.h */; };
+		30F74C7709994E120026B4A8 /* TestGIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 30F74C7509994E120026B4A8 /* TestGIMessage.m */; };
 		77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77006FF2085A08D400AB0064 /* GIPasswordController.h */; };
 		77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77006FF3085A08D400AB0064 /* GIPasswordController.m */; };
 		770070E7085B123500AB0064 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 770070E6085B123500AB0064 /* Security.framework */; };
@@ -174,8 +180,6 @@
 		77DF882A0849BB6D006CA19D /* NSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DF88280849BB6D006CA19D /* NSData+MessageUtils.m */; };
 		77DFA5BF08409DF00068AD15 /* OPJobs.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DFA5BD08409DF00068AD15 /* OPJobs.h */; };
 		77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */; };
-		77DFA5C90840B49C0068AD15 /* TestOPJobs.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DFA5C70840B49C0068AD15 /* TestOPJobs.h */; };
-		77DFA5CA0840B49C0068AD15 /* TestOPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5C80840B49C0068AD15 /* TestOPJobs.m */; };
 		77E5401D0785839D00265DBB /* GIApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9E8A8306AC44080055F87C /* GIApplication.h */; };
 		77E541AF0785AB9D00265DBB /* Boxes.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77E541AE0785AB9D00265DBB /* Boxes.nib */; };
 		77EF03D207DC4AF9007CD721 /* GroupInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */; };
@@ -325,8 +329,6 @@
 		8DCE36080891918900F705EF /* OPSQLiteConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE36060891918900F705EF /* OPSQLiteConnection.h */; };
 		8DCE36090891918900F705EF /* OPSQLiteConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE36070891918900F705EF /* OPSQLiteConnection.m */; };
 		8DCE363E0891C71500F705EF /* OPPersistenceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE363D0891C71500F705EF /* OPPersistenceConstants.h */; };
-		8DCE38FD08940F4000F705EF /* TestPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE38FB08940F4000F705EF /* TestPersistence.h */; };
-		8DCE38FE08940F4000F705EF /* TestPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE38FC08940F4000F705EF /* TestPersistence.m */; };
 		8DCE39030894116500F705EF /* GIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E60891900B00F705EF /* GIMessage.h */; };
 		8DCE39040894116700F705EF /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E70891900B00F705EF /* GIMessage.m */; };
 		8DCE392B089423E000F705EF /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCE392A089423E000F705EF /* libsqlite3.dylib */; };
@@ -502,6 +504,8 @@
 		30D5552D093D148E00BCACCB /* OPDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OPDebug.xcodeproj; path = ../OPDebug/OPDebug.xcodeproj; sourceTree = SOURCE_ROOT; };
 		30D55555093D1C2500BCACCB /* OPPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OPPreferences.xcodeproj; path = ../OPPreferences/OPPreferences.xcodeproj; sourceTree = SOURCE_ROOT; };
 		30D555A8093D3D6700BCACCB /* OPNetwork.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OPNetwork.xcodeproj; path = ../OPNetwork/OPNetwork.xcodeproj; sourceTree = SOURCE_ROOT; };
+		30F74C7409994E120026B4A8 /* TestGIMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIMessage.h; sourceTree = "<group>"; };
+		30F74C7509994E120026B4A8 /* TestGIMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessage.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GinkoVoyager_Prefix.pch; sourceTree = "<group>"; };
 		6131DCD4083A85D10056FF9D /* TestGIFulltextIndexCenter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TestGIFulltextIndexCenter.h; sourceTree = "<group>"; };
 		6131DCD5083A85D10056FF9D /* TestGIFulltextIndexCenter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TestGIFulltextIndexCenter.m; sourceTree = "<group>"; };
@@ -1200,6 +1204,8 @@
 				775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */,
 				77136F3008438E2A002F9298 /* TestGIThread.h */,
 				77136F3108438E2A002F9298 /* TestGIThread.m */,
+				30F74C7409994E120026B4A8 /* TestGIMessage.h */,
+				30F74C7509994E120026B4A8 /* TestGIMessage.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1532,7 +1538,6 @@
 				8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */,
 				77B28DB3082E8A72007FA384 /* OPTableColumn.h in Headers */,
 				77DFA5BF08409DF00068AD15 /* OPJobs.h in Headers */,
-				77DFA5C90840B49C0068AD15 /* TestOPJobs.h in Headers */,
 				775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */,
 				77DF88290849BB6D006CA19D /* NSData+MessageUtils.h in Headers */,
 				772F2941084F82BA004D50E0 /* TestOPMultipartContentCoder.h in Headers */,
@@ -1542,7 +1547,6 @@
 				77049FE80858570800253732 /* GIPOPJob.h in Headers */,
 				77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */,
 				774791BD085DF0150001560D /* GISMTPJob.h in Headers */,
-				8DCE38FD08940F4000F705EF /* TestPersistence.h in Headers */,
 				8DCE39030894116500F705EF /* GIMessage.h in Headers */,
 				8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */,
 				8DE96470089F9F1F0053ED6B /* GIThread.h in Headers */,
@@ -1573,6 +1577,9 @@
 				77D41E410993CF0C00BF2130 /* TestWithPersistence.h in Headers */,
 				774DD4240994AC0900F0A922 /* TestGIMessageGroup.h in Headers */,
 				774DD4260994AC0C00F0A922 /* TestGIThread.h in Headers */,
+				30F74C7609994E120026B4A8 /* TestGIMessage.h in Headers */,
+				3083577309A015E0003D1D86 /* TestPersistence.h in Headers */,
+				3083577809A01639003D1D86 /* TestOPJobs.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1990,7 +1997,6 @@
 				8DD6030D080EDD470050E973 /* GIFiltersPane.m in Sources */,
 				77B28DB4082E8A72007FA384 /* OPTableColumn.m in Sources */,
 				77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */,
-				77DFA5CA0840B49C0068AD15 /* TestOPJobs.m in Sources */,
 				775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */,
 				77DF882A0849BB6D006CA19D /* NSData+MessageUtils.m in Sources */,
 				772F2942084F82BA004D50E0 /* TestOPMultipartContentCoder.m in Sources */,
@@ -2000,7 +2006,6 @@
 				77049FE90858570800253732 /* GIPOPJob.m in Sources */,
 				77006FF5085A08D400AB0064 /* GIPasswordController.m in Sources */,
 				774791BE085DF0150001560D /* GISMTPJob.m in Sources */,
-				8DCE38FE08940F4000F705EF /* TestPersistence.m in Sources */,
 				8DCE39040894116700F705EF /* GIMessage.m in Sources */,
 				8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */,
 				8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */,
@@ -2029,6 +2034,9 @@
 				77D41E420993CF0C00BF2130 /* TestWithPersistence.m in Sources */,
 				774DD4250994AC0A00F0A922 /* TestGIMessageGroup.m in Sources */,
 				774DD4270994AC0E00F0A922 /* TestGIThread.m in Sources */,
+				30F74C7709994E120026B4A8 /* TestGIMessage.m in Sources */,
+				3083577209A015DE003D1D86 /* TestPersistence.m in Sources */,
+				3083577A09A0163A003D1D86 /* TestOPJobs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

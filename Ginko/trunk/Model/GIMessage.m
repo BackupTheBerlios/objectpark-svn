@@ -30,8 +30,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 #define DUMMYCREATION     OPL_ASPECT  0x04
 #define MESSAGEREPLACING  OPL_ASPECT  0x08
 
-#define THREADING  OPL_DOMAIN  @"Threading"
-#define LOOPS      OPL_ASPECT  0x01
 
 
 @implementation GIMessage
@@ -318,6 +316,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
             // replace message
             OPDebugLog(MESSAGE, MESSAGEREPLACING, @"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [im messageId]);
             [dupe setContentFromInternetMessage:im];
+            [dupe referenceFind:YES];
         }
         else if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
             // replace old message with new:
@@ -700,63 +699,22 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (GIMessage*) referenceFind: (BOOL) find
 /*" Returns the direct message reference stored.
     If there is none and find is YES, looks up the references header(s) in the
-    internet message object and caches the result (if any). "*/
+    internet message object and caches the result (if any).
+    
+    #ATTENTION: This method will generate dummy messages and add them to the 
+    thread if required and %find is YES! "*/
 {
     GIMessage* result = [self reference];
     
     if (result || !find)
         return result;
         
-    NSEnumerator* enumerator = [[[[self internetMessage] references] arrayByRemovingDuplicates] reverseObjectEnumerator];
-    GIMessage* referencingMsg = self;
-    GIMessage* referencedMsg;
-    GIThread* thread;
-    
-    NSMutableArray* messages = [NSMutableArray arrayWithObject:self];
-    
-    NSString* refId;
-    while (refId = [enumerator nextObject]) {
-        referencedMsg = [[self class] messageForMessageId:refId];
-        
-        if ([referencingMsg oid] == [referencedMsg oid]) {
-            OPDebugLog(THREADING, LOOPS, @"Loop found for oid %qu, referencing message %@, referenced message %@", [referencingMsg oid], referencingMsg, referencedMsg);
-        }
-        
-        if (referencedMsg) {
-            [referencingMsg setValue:referencedMsg forKey: @"reference"];
-            
-            if (![self thread]) {  // needed?
-                thread = [referencedMsg thread];
-                
-                [thread addMessages:messages];
-            }
-            else
-                NSLog(@"OOPS! Creating a reference(s) for a message already in a thread!?!");
-            
-            return [self reference];
-        }
-        
-        // create dummy message
-        referencedMsg = [[self class] dummyMessageWithId:refId andDate:[self valueForKey:@"date"]];
-        
-        [messages addObject:referencedMsg];
-        
-        [referencingMsg setValue:referencedMsg forKey: @"reference"];
-        
-        referencingMsg = referencedMsg;
-    }
-    
-    thread = [[[GIThread alloc] init] autorelease];
-    [thread insertIntoContext:[self context]];
-    [thread setValue:[self valueForKey:@"subject"] forKey:@"subject"];
-    [thread setValue:[self valueForKey:@"date"] forKey:@"date"];
-    
-    [thread addMessages:messages];
+    [GIThread addMessageToAppropriateThread:self];
     
     return [self reference];
 }
-
-
+        
+        
 - (BOOL) isListMessage
 	/*" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). Decodes internet message to compute the result - so it may be slow! "*/
 {
