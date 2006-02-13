@@ -979,14 +979,17 @@ static BOOL isThreadItem(id item)
 				[affectedThreads addObject: [item thread]];
 			} // ignore selected threads
 		}
-		if ([newThreadMessages count]) {
-			
-			GIThread* newThread = [[[[GIThread class] alloc] init] autorelease];
-			[newThread insertIntoContext: [(GIMessage*)[newThreadMessages lastObject] context]];
+		
+		GIMessage* anyThreadMessage = [newThreadMessages lastObject];
+		
+		if (anyThreadMessage) {
+			[anyThreadMessage setValue: nil forKey: @"thread"];
+			GIThread* newThread = [GIThread threadForMessage: anyThreadMessage];
+			//[newThread insertIntoContext: [(GIMessage*)[newThreadMessages lastObject] context]];
 			[newThread addMessages: newThreadMessages];
 			//[group addValue: newThread forKey: @"messagesByDate"];
 			[newThread addToGroups_Manually: group];
-			
+			[newThread calculateDate];
 			[affectedThreads makeObjectsPerformSelector: @selector(calculateDate)];
 		}
 	}

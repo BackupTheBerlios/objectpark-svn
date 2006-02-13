@@ -22,6 +22,7 @@
 
 //+ (id) threadInManagedObjectContext: (OPPersistentObjectContext*) aContext;
 
+- (void) calculateDate;
 - (NSArray*) messages;
 - (void) addMessage:(GIMessage*)aMessage;
 - (void) addMessages:(NSArray*)someMessages;
