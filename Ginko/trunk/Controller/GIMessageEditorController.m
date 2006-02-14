@@ -92,9 +92,10 @@
     return self;
 }
 
-- (id) initNewMessageWithProfile: (GIProfile*) aProfile
+- (id)initNewMessageWithProfile:(GIProfile *)aProfile
 {
-    if (self = [self init]) {
+    if (self = [self init]) 
+    {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -104,21 +105,22 @@
                 
         type = MessageTypeNewMessage;
         
-        [NSBundle loadNibNamed: @"MessageEditor" owner: self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
         
         [self updateHeaders];
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeKeyAndOrderFront: self];
+        [window makeKeyAndOrderFront:self];
     }
     
     return self;
 }
 
-- (id)initReplyTo: (GIMessage*) aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
+- (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
 {
-    if (self = [self init]) {
+    if (self = [self init]) 
+    {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -130,10 +132,13 @@
 
         shouldAppendSignature = YES;
         
-        if (toAll) {
+        if (toAll) 
+        {
             [self switchToReplyToAll:aMessage];
             type = MessageTypeReplyToAll;
-        } else {
+        } 
+        else 
+        {
             [self switchToReplyToSender:aMessage];
             type = MessageTypeReplyToSender;
         }
@@ -754,39 +759,42 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (void) appendContentFromMessage: (GIMessage*) aMessage
+- (void)appendContentFromMessage:(GIMessage *)aMessage
 {
-    [content appendAttributedString: [[aMessage internetMessage] editableBodyContent]];
+    [content appendAttributedString:[[aMessage internetMessage] editableBodyContent]];
 }
 
-- (void) setReplySubjectFromMessage: (GIMessage*) aMessage
+- (void)setReplySubjectFromMessage:(GIMessage *)aMessage
 {
     NSString *replySubject;
     OPInternetMessage *internetMessage = [aMessage internetMessage];
     
-    @try {
+    @try 
+    {
         replySubject = [internetMessage replySubject];
-		
-    } @catch (NSException* localException) {
-		
+    } 
+    @catch (NSException *localException) 
+    {
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
-        replySubject = [internetMessage bodyForHeaderField: @"Subject"];
+        replySubject = [internetMessage bodyForHeaderField:@"Subject"];
     }
     
-    [headerFields setObject: replySubject ? replySubject : @"Re: " forKey: @"Subject"];	
+    [headerFields setObject:replySubject ? replySubject : @"Re: " forKey:@"Subject"];	
 }
 
-- (void) setReplyForwardSubjectFromMessage: (GIMessage*) aMessage
+- (void)setReplyForwardSubjectFromMessage:(GIMessage *)aMessage
 {
-    OPInternetMessage* internetMessage = [aMessage internetMessage];
+    OPInternetMessage *internetMessage = [aMessage internetMessage];
     
-    @try {
-        [headerFields setObject: [internetMessage forwardSubject] forKey: @"Subject"];
+    @try 
+    {
+        [headerFields setObject:[internetMessage forwardSubject] forKey:@"Subject"];
 		
-    } @catch (NSException* localException) {
-		
+    } 
+    @catch (NSException *localException) 
+    {
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
-        [headerFields setObject: [@"FWD: " stringByAppendingString: [internetMessage bodyForHeaderField: @"Subject"]] forKey: @"Subject"];
+        [headerFields setObject:[@"FWD: " stringByAppendingString:[internetMessage bodyForHeaderField:@"Subject"]] forKey:@"Subject"];
     }
 }
 

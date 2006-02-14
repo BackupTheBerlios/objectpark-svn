@@ -30,6 +30,7 @@ NSString *FulltextIndexChangeCount = @"FulltextIndexChangeCount";
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
 NSString *SearchHitLimit = @"SearchHitLimit";
+NSString *JunkReplySubjectPrefixes = @"JunkReplySubjectPrefixes";
 
 NSArray* allAdditionalHeadersForDisplay()
 {
@@ -71,6 +72,8 @@ void registerDefaultDefaults()
             @"Reply-To",
             @"Date",
             nil], HeadersShown,
+        
+        [NSArray arrayWithObjects:@"Antw: ", nil], JunkReplySubjectPrefixes,
         
         [NSArray array], AdditionalHeadersShown,
                

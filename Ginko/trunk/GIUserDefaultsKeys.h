@@ -26,6 +26,7 @@ extern NSString *ImportPanelLastDirectory;
 extern NSString *AutomaticActivityPanelEnabled;
 extern NSString *FulltextIndexChangeCount;
 extern NSString *SearchHitLimit;
+extern NSString *JunkReplySubjectPrefixes;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

@@ -32,6 +32,7 @@
 #import "OPObjectPair.h"
 #import "OPContentCoderCenter.h"
 #import "NSData+OPMD5.h"
+#import "GIUserDefaultsKeys.h"
 
 NSString *EDMessageTypeException = @"EDMessageTypeException";
 NSString *EDMessageFormatException = @"EDMessageFormatException";
@@ -174,6 +175,20 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
             subj = [self bodyForHeaderField: @"subject"];
 	NS_ENDHANDLER
         
+    NSArray *junkPrefixes = [[NSUserDefaults standardUserDefaults] objectForKey:JunkReplySubjectPrefixes];
+    
+    NSEnumerator *enumerator = [junkPrefixes objectEnumerator];
+    NSString *junkPrefix;
+    
+    while (([subj length] > 0) && (junkPrefix = [enumerator nextObject]) != nil)
+    {
+        if ([subj hasPrefix:junkPrefix])
+        {
+            subj = [[subj substringFromIndex:[junkPrefix length]] stringByRemovingSurroundingWhitespace];
+            enumerator = [junkPrefixes objectEnumerator]; // start from beginning
+        }
+    }
+    
 	return [[[subj stringByRemovingSurroundingWhitespace] stringByNormalizingWhitespaces] sharedInstance];
 }
 

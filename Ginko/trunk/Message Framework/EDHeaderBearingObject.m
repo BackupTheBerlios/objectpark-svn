@@ -225,31 +225,32 @@
 //	ACCESSORS FOR ATTRIBUTES DERIVED FROM HEADER FIELDS
 //---------------------------------------------------------------------------------------
 
-- (NSString*) originalSubject
+- (NSString *)originalSubject
 {
     if(originalSubject == nil)
         originalSubject = [[[self subject] stringByRemovingReplyPrefix] retain];
     return originalSubject;
 }
 
-
-- (NSString*) replySubject
+- (NSString *)replySubject
 {
     // I do not want to see this localized!
-    if([[self subject] isEqualToString:[self originalSubject]])
+//    if([[self subject] isEqualToString:[self originalSubject]])
+    if (![[self subject] hasPrefix:@"Re: "])
+    {
         return [@"Re: " stringByAppendingString:[self subject]];
+    }
+    
     return [self subject];
 }
 
-
-- (NSString*) forwardSubject
+- (NSString *)forwardSubject
 {
     // Maybe we should localize this.
     return [[@"[FWD: " stringByAppendingString:[self subject]] stringByAppendingString: @"]"];
 }
 
-
-- (NSString*) author
+- (NSString *)author
 {
     NSString *fBody;
 
