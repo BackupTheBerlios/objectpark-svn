@@ -189,6 +189,8 @@
 		77F3181E077B327A0097096B /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F3181C077B327A0097096B /* GITextView.m */; };
 		77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */; };
 		77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF35940972FFA300AFD0DF /* Folder.tiff */; };
+		8D0EC28209A22577004563D4 /* NSString+Similarities.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0EC28009A22577004563D4 /* NSString+Similarities.h */; };
+		8D0EC28309A22577004563D4 /* NSString+Similarities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0EC28109A22577004563D4 /* NSString+Similarities.m */; };
 		8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D1543D009092C440039DB71 /* OPInternetMessage+GinkoExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */; };
@@ -664,6 +666,8 @@
 		77F3181C077B327A0097096B /* GITextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GITextView.m; sourceTree = "<group>"; };
 		77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OtherMailbox.tiff; sourceTree = "<group>"; };
 		77FF35940972FFA300AFD0DF /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
+		8D0EC28009A22577004563D4 /* NSString+Similarities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Similarities.h"; sourceTree = "<group>"; };
+		8D0EC28109A22577004563D4 /* NSString+Similarities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Similarities.m"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* GinkoAlpha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GinkoAlpha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D167D5E09057508000F4F45 /* GIAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccount.h; sourceTree = "<group>"; };
@@ -1300,6 +1304,8 @@
 				8D9029A3077A52D7005365EA /* utilities.h */,
 				8D840C00090F8DF50093CFAD /* NSEnumerator+Extensions.h */,
 				8D840C01090F8DF50093CFAD /* NSEnumerator+Extensions.m */,
+				8D0EC28009A22577004563D4 /* NSString+Similarities.h */,
+				8D0EC28109A22577004563D4 /* NSString+Similarities.m */,
 			);
 			path = "Cocoa Extensions";
 			sourceTree = "<group>";
@@ -1580,6 +1586,7 @@
 				30F74C7609994E120026B4A8 /* TestGIMessage.h in Headers */,
 				3083577309A015E0003D1D86 /* TestPersistence.h in Headers */,
 				3083577809A01639003D1D86 /* TestOPJobs.h in Headers */,
+				8D0EC28209A22577004563D4 /* NSString+Similarities.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2037,6 +2044,7 @@
 				30F74C7709994E120026B4A8 /* TestGIMessage.m in Sources */,
 				3083577209A015DE003D1D86 /* TestPersistence.m in Sources */,
 				3083577A09A0163A003D1D86 /* TestOPJobs.m in Sources */,
+				8D0EC28309A22577004563D4 /* NSString+Similarities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
