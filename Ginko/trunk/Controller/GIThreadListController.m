@@ -1727,16 +1727,20 @@ NSMutableArray* border = nil;
     [cell setHasConnectionToDummyMessage: [[message reference] isDummy]];
     
     [commentsMatrix setToolTip: [message valueForKey: @"senderName"] forCell:cell];
-        
-    // for testing we are coloring the messages of David Stes and John C. Randolph
-    NSString* senderName = [message senderName];
-    if (senderName) {
-        NSRange range = [senderName rangeOfString: @"David Stes"];
-        if (range.location != NSNotFound)
-            [cell setColorIndex:1];  // red
-        range = [senderName rangeOfString: @"John C. Randolph"];
-        if (range.location != NSNotFound)
-            [cell setColorIndex:4];  // green
+    
+    if ([message flags] & OPIsFromMeStatus)
+        [cell setColorIndex:5];  // blue
+    else {
+        // for testing we are coloring the messages of David Stes and John C. Randolph
+        NSString* senderName = [message senderName];
+        if (senderName) {
+            NSRange range = [senderName rangeOfString: @"David Stes"];
+            if (range.location != NSNotFound)
+                [cell setColorIndex:1];  // red
+            range = [senderName rangeOfString: @"John C. Randolph"];
+            if (range.location != NSNotFound)
+                [cell setColorIndex:4];  // green
+        }
     }
     
     return row;
