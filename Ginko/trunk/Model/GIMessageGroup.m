@@ -611,15 +611,13 @@ static NSMutableArray* root = nil;
 	
     [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue:0 maxValue: messagesToExport currentValue: exportedMessages description: [NSString stringWithFormat: NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
     while (msg = [messages nextObject]) {
-        
-#warning Improve From_ line
-        NSString* head;
-		head = [NSString stringWithFormat: @"From %@\r\nX-Ginko-Flags: %@\r\n",
-			nil, [msg flagsString]];
-		
         NSData* transferData = [[msg transferData] fromQuote];
-        
 		if (transferData) {
+			NSString* head;
+			head = [NSString stringWithFormat: @"From %@\r\nX-Ginko-Flags: %@\r\n",
+				nil, [msg flagsString]];
+#warning Improve From_ line
+			
 			[mbox appendMBoxData: [head dataUsingEncoding: NSISOLatin1StringEncoding]];
 			[mbox appendMBoxData: transferData];
 			[mbox appendMBoxData: [@"\r\n" dataUsingEncoding: NSASCIIStringEncoding]];
