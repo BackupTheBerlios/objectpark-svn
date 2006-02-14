@@ -377,45 +377,35 @@ static BOOL isThreadItem(id item)
     return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"];
 }
 
-- (BOOL)openSelection: (id) sender
+- (BOOL) openSelection: (id) sender
 {    
-    if ([self threadsShownCurrently]) 
-    {
+    if ([self threadsShownCurrently]) {
         int selectedRow = [threadsView selectedRow];
         
-        if (selectedRow >= 0) 
-        {
-            GIMessage *message = nil;
-            GIThread *selectedThread = nil;
-            id item = [threadsView itemAtRow:selectedRow];
+        if (selectedRow >= 0) {
+            GIMessage* message = nil;
+            GIThread* selectedThread = nil;
+            id item = [threadsView itemAtRow: selectedRow];
             
-            if (!isThreadItem(item)) 
-            {
+            if (!isThreadItem(item)) {
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
                 selectedThread = [message valueForKey: @"thread"];
-            } 
-            else 
-            {
+            } else {
                 selectedThread = item;
                 
-                if ([selectedThread containsSingleMessage]) 
-                {
+                if ([selectedThread containsSingleMessage]) {
                     message = [[selectedThread valueForKey: @"messages"] lastObject];
-                } 
-                else 
-                {
-                    if ([threadsView isItemExpanded:item]) 
-                    {
-                        [threadsView collapseItem:item];
-                    } 
-                    else 
-                    {                        
-                        [threadsView expandItem:item];                    
+                } else {
+                    if ([threadsView isItemExpanded: item]) {
+                        [threadsView collapseItem: item];
+                    } else {                        
+                        [threadsView expandItem: item];                    
                         // ##TODO:select first "interesting" message of this thread
                         // perhaps the next/first unread message
                         
+						/* Do this on hitting "space" only:
                         NSEnumerator *enumerator = [[selectedThread messagesByTree] objectEnumerator];
 						GIMessage *message;
 
@@ -436,62 +426,48 @@ static BOOL isThreadItem(id item)
                         
                         // make selection visible:
                         [threadsView scrollRowToVisible:[threadsView selectedRow]];
+						*/
                     }
                     return YES;
                 }
             }
             
 			unsigned messageSendStatus = [message sendStatus];
-            if (messageSendStatus > OPSendStatusNone) 
-            {
-                if (messageSendStatus >= OPSendStatusSending) 
-                {
+            if (messageSendStatus > OPSendStatusNone) {
+                if (messageSendStatus >= OPSendStatusSending) {
 					NSLog(@"message is in send job"); // replace by alert
                     NSBeep();
-                } 
-                else 
-                {
+                } else {
                     [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
                 }
-            } 
-            else 
-            {
-                [tabView selectTabViewItemWithIdentifier:@"message"];
+            } else {
+                [tabView selectTabViewItemWithIdentifier: @"message"];
                 
                 //[message addFlags:OPSeenStatus];
                 
-                [self setDisplayedMessage:message thread:selectedThread];
+                [self setDisplayedMessage: message thread: selectedThread];
                 
                 //if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
                 //else 
-				[window makeFirstResponder:messageTextView];                    
+				[window makeFirstResponder: messageTextView];                    
             }
         }
 		
-	} 
-    else if ([self searchHitsShownCurrently]) 
-    {
+	} else if ([self searchHitsShownCurrently]) {
         int selectedIndex = [searchHitsTableView selectedRow];
         
-        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) 
-        {
+        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) {
             GIMessage *message = [[hits objectAtIndex: selectedIndex] objectAtIndex:0];
             
 			unsigned messageSendStatus = [message sendStatus];
-            if (messageSendStatus > OPSendStatusNone) 
-            {
-                if (messageSendStatus >= OPSendStatusSending) 
-                {
+            if (messageSendStatus > OPSendStatusNone) {
+                if (messageSendStatus >= OPSendStatusSending) {
                     NSLog(@"message is in send job");
                     NSBeep();
-                } 
-                else 
-                {
+                } else {
                     [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
                 }
-            } 
-            else 
-            {
+            } else {
                 [tabView selectTabViewItemWithIdentifier:@"message"];
                 
                 //[message addFlags: OPSeenStatus];
@@ -502,35 +478,28 @@ static BOOL isThreadItem(id item)
                 else [window makeFirstResponder:messageTextView];                    
             }       
         }
-    }
-    else // message shown
-    {
+    } else {
+		// message shown
         if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
         else [window makeFirstResponder:commentsMatrix];
     }
     return YES;
 }
 
-- (IBAction)closeSelection: (id) sender
+- (IBAction) closeSelection: (id) sender
 {
-    if (sender == messageTextView) 
-    {
-        if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
-        else [tabView selectTabViewItemWithIdentifier:@"threads"];
-    } 
-    else 
-    {
-        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"]) 
-        {
+    if (sender == messageTextView) {
+        if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier: @"searchresult"];
+        else [tabView selectTabViewItemWithIdentifier: @"threads"];
+    } else {
+        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"]) {
             // from message switch back to threads:
-            if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
-            else [tabView selectTabViewItemWithIdentifier:@"threads"];
-        } 
-        else 
-        {
+            if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier: @"searchresult"];
+            else [tabView selectTabViewItemWithIdentifier: @"threads"];
+        } else {
             // from threads switch back to the groups window:
-            [[GIApp groupsWindow] makeKeyAndOrderFront:sender];
-            [window performClose:self];
+            [[GIApp groupsWindow] makeKeyAndOrderFront: sender];
+            [window performClose: self];
         }
     }
 }
@@ -1270,13 +1239,7 @@ static BOOL isThreadItem(id item)
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView shouldExpandItem: (id) item
 /*" Remembers last expanded thread for opening the next time. "*/
-{
-	//[observedThreads addObject: item];
-	//[item addObserver: self 
-	//	   forKeyPath: @"messages" 
-	//		  options: NSKeyValueObservingOptionNew 
-	//		  context: NULL];    
-	
+{	
     return YES;
 }
 
@@ -2109,7 +2072,7 @@ NSMutableArray* border = nil;
     
     if (NSDebugEnabled) NSLog(@"double click on attachment with name %@", filename);
     
-    [[NSWorkspace sharedWorkspace] openFile:filename];
+    [[NSWorkspace sharedWorkspace] openFile: filename];
 }
 
 - (void) textView: (NSTextView*) view draggedCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)rect event:(NSEvent *)event atIndex:(unsigned)charIndex
