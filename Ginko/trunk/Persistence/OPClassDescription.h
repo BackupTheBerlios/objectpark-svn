@@ -98,6 +98,9 @@
 - (NSString*) sourceColumnName;
 - (NSString*) targetColumnName;
 
+- (SEL) valueAdder;
+- (SEL) valueRemover;
+
 - (NSString*) inverseRelationshipKey;
 - (OPAttributeDescription*) inverseRelationshipAttribute;
 

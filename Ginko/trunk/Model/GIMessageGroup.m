@@ -552,20 +552,11 @@ static NSMutableArray* root = nil;
 {
 	// 	OPPersistentObjectEnumerator* result;
 	
-	NSString* queryString = @"select ZMESSAGE.ROWID from Z_4THREADS, ZMESSAGE where ZMESSAGE.ZTHREAD = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=?";
+	NSString* queryString = @"select ZMESSAGE.ROWID from Z_4THREADS, ZMESSAGE where ZMESSAGE.ZTHREAD = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=$1";
 	
 #warning needs testing.
 	
 	return [[self context] fetchObjectsOfClass: [GIMessage class] queryFormat: queryString, self, nil];
-	
-	// todo: Cache enumerator object
-	//result = [[[OPPersistentObjectEnumerator alloc] initWithContext: [self context]
-	//													resultClass: [GIMessage class] 
-	//													queryString: queryString] autorelease];
-	
-	//[result bind: self]; // fill "?" above with own oid;
-	
-	//return result;
 }
 
 - (void) willDelete
