@@ -585,7 +585,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	id result = [self primitiveValueForKey: @"sendStatus"];
 	[self didAccessValueForKey: @"sendStatus"];	
 	unsigned intResult = [result intValue];
-	NSLog(@"SendStatus of %@ is %u", self, result);
+	//NSLog(@"SendStatus of %@ is %u", self, result);
 	NSAssert2(intResult<=OPSendStatusSending, @"Illegal send status of %@: %@ detected.", self, result);
 	NSAssert(intResult==0 || [self valueForKey: @"sendProfile"] !=nil, @"No profile set, but send status");
 	return intResult;
@@ -597,7 +597,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[self willChangeValueForKey: @"sendStatus"];
 	[self setPrimitiveValue: newStatus == 0 ? nil : [NSNumber numberWithInt: newStatus] forKey: @"sendStatus"];
 	[self didChangeValueForKey: @"sendStatus"];
-	NSLog(@"SendStatus of %@ changed to %u", self, newStatus);
+	//NSLog(@"SendStatus of %@ changed to %u", self, newStatus);
 }
 
 

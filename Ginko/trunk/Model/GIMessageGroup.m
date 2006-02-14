@@ -553,9 +553,7 @@ static NSMutableArray* root = nil;
 	// 	OPPersistentObjectEnumerator* result;
 	
 	NSString* queryString = @"select ZMESSAGE.ROWID from Z_4THREADS, ZMESSAGE where ZMESSAGE.ZTHREAD = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=$1";
-	
-#warning needs testing.
-	
+		
 	return [[self context] fetchObjectsOfClass: [GIMessage class] queryFormat: queryString, self, nil];
 }
 
@@ -611,35 +609,33 @@ static NSMutableArray* root = nil;
     
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	
-    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
+    [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue:0 maxValue: messagesToExport currentValue: exportedMessages description: [NSString stringWithFormat: NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
     while (msg = [messages nextObject]) {
         
 #warning Improve From_ line
-        NSString* head = [NSString stringWithFormat:@"From %@\r\n"
-                                                    @"X-Ginko-Flags: %@\r\n",
-nil, //                                                     [[[NSString alloc] initWithData:[[[msg senderName] dataUsingEncoding:NSISOLatin1StringEncoding] encodeHeaderQuotedPrintable]
-//                                                               encoding:NSISOLatin1StringEncoding] autorelease],
-                                                    [msg flagsString]
-                                                    ];
-                                                    
+        NSString* head;
+		head = [NSString stringWithFormat: @"From %@\r\nX-Ginko-Flags: %@\r\n",
+			nil, [msg flagsString]];
+		
         NSData* transferData = [[msg transferData] fromQuote];
         
-        [mbox appendMBoxData:[head dataUsingEncoding:NSISOLatin1StringEncoding]];
-        [mbox appendMBoxData:transferData];
-        [mbox appendMBoxData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]];
-        
-        [msg refault];
-            
-        if (++exportedMessages % 100 == 0) {
-            [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
-            OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
-            
-            if ([OPJobs shouldTerminate])
-                break;
-                
-            [pool release];
-            pool = [[NSAutoreleasePool alloc] init];
-        }
+		if (transferData) {
+			[mbox appendMBoxData: [head dataUsingEncoding: NSISOLatin1StringEncoding]];
+			[mbox appendMBoxData: transferData];
+			[mbox appendMBoxData: [@"\r\n" dataUsingEncoding: NSASCIIStringEncoding]];
+			
+			[msg refault];
+			
+			if (++exportedMessages % 100 == 0) {
+				[OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue: exportedMessages description: [NSString stringWithFormat: NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
+				OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
+				
+				if ([OPJobs shouldTerminate])
+					break;
+				
+				[pool release]; pool = [[NSAutoreleasePool alloc] init];
+			}
+		}
     }
     
     [pool release];
@@ -647,7 +643,7 @@ nil, //                                                     [[[NSString alloc] i
     [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
     OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
     
-//     [OPJobs setResult:@"ready"];
+	// [OPJobs setResult:@"ready"];
 }
 
 
