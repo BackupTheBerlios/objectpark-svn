@@ -365,13 +365,13 @@ static BOOL isThreadItem(id item)
     return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
 }
 
-- (BOOL)searchHitsShownCurrently
+- (BOOL) searchHitsShownCurrently
 /*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
 {
     return (hits != nil);
 }
 
-- (BOOL)messageShownCurrently
+- (BOOL) messageShownCurrently
 /*" Returns YES if the tab with the message is currently visible. NO otherwise. "*/
 {
     return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"];
@@ -1112,7 +1112,39 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (BOOL)validateSelector:(SEL)aSelector
+- (IBAction) showNextMessage: (id) sender 
+{
+	if ([self threadsShownCurrently]) {
+		// Thread list is showing	
+		NSLog(@"Should show next message!");
+		NSBeep();
+	} else if ([self messageShownCurrently]) {
+		// Message view is showing
+		NSArray* messages = [displayedThread messagesByTree];
+		GIMessage* messageFound = nil;
+
+		if ([messages count]>1) {
+			unsigned displayedMessageIndex = [messages indexOfObject: displayedMessage];
+			unsigned index = displayedMessageIndex;
+			// Find the next unread message in current thread:
+			while (displayedMessageIndex != (index = (index + 1) % [messages count])) {
+				GIMessage* message = [messages objectAtIndex: index];
+				if (!([message flags] & OPSeenStatus)) {
+					messageFound = message;
+					break;
+				}
+			}
+		}
+		if (messageFound) {
+			[self setDisplayedMessage: messageFound thread: displayedThread];
+		} else {
+			NSLog(@"Should show next thread !");
+			NSBeep();
+		}
+	}
+}
+
+- (BOOL) validateSelector: (SEL) aSelector
 {
     if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
@@ -1120,34 +1152,23 @@ static BOOL isThreadItem(id item)
          || (aSelector == @selector(forward:))
          || (aSelector == @selector(followup:))
          //|| (aSelector == @selector(showTransferData:))
-         ) 
-    {
+         ) {
         NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
         
-        if ([selectedIndexes count] == 1) 
-        {
-            id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) 
-            {
+        if ([selectedIndexes count] == 1) {
+            id item = [threadsView itemAtRow: [selectedIndexes firstIndex]];
+            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) {
                 return YES;
             }
         }
         return NO;
-    } 
-    else if (aSelector == @selector(applySortingAndFiltering:)) 
-    {
+    } else if (aSelector == @selector(applySortingAndFiltering:)) {
         return [self multipleThreadsSelected]; 
-	} 
-    else if ((aSelector == @selector(toggleReadFlag:)) || (aSelector == @selector(toggleJunkFlag:))) 
-    {
+	} else if ((aSelector == @selector(toggleReadFlag:)) || (aSelector == @selector(toggleJunkFlag:))) {
         return [[threadsView selectedRowIndexes] count] > 0;
-    } 
-    else if (aSelector == @selector(moveSelectionToTrash:)) 
-    {
+    } else if (aSelector == @selector(moveSelectionToTrash:)) {
         return [[threadsView selectedRowIndexes] count] > 0;
-    } 
-    else if (aSelector == @selector(delete:)) 
-    {
+    } else if (aSelector == @selector(delete:)) {
         return [[threadsView selectedRowIndexes] count] > 0;
     }
     /*
@@ -2097,7 +2118,7 @@ NSMutableArray* border = nil;
     [view dragFile:filename fromRect:rect slideBack: YES event:event];
 }
 
-- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)flag
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL) flag
 {
     return NSDragOperationCopy;
 }

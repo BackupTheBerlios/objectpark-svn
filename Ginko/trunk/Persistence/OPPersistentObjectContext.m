@@ -233,7 +233,7 @@ typedef struct {
 		// Fallback for transition from CoreData. Can be removed later:
 		oid = OPLongLongStringValue([oidString substringFromIndex: 1]);
 	}
-	return [self objectForOid:  oid ofClass: pClass];
+	return [self objectForOid: oid ofClass: pClass];
 }
 
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object
@@ -307,7 +307,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	[relationshipChangesByJoinTable release];
 	relationshipChangesByJoinTable = [[NSMutableDictionary alloc] init];
-	faultCacheSize = 50;
+	faultCacheSize = 100;
 	[faultCache release]; faultCache = [[NSMutableArray alloc] initWithCapacity: faultCacheSize+1];
 	
 	[db close];

@@ -274,15 +274,13 @@ NSString *OPMBoxException = @"OPMBoxException";
 
 - (void) appendMBoxData: (NSData*) mboxData
 {
-    @synchronized(self)
-    {
-        FILE *file = [self mboxFile];
+    @synchronized(self) {
+        FILE* file = [self mboxFile];
         
         NSAssert(mboxData, @"Error: Objects not in place.");
         
-        if (fwrite([mboxData bytes], 1, [mboxData length], file) < [mboxData length])
-        {
-            [NSException raise:NSObjectInaccessibleException format: @"Exception raised in -appendMBoxData: ! Could not write message to mbox file."];
+        if (fwrite([mboxData bytes], 1, [mboxData length], file) < [mboxData length]) {
+            [NSException raise: NSObjectInaccessibleException format: @"Exception raised in -appendMBoxData: ! Could not write message to mbox file."];
         }
         
         fflush(file);
