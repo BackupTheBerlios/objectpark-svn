@@ -85,16 +85,16 @@
                     //    [self sendActionSelector: @selector(tabKeyPressed:withmodifierFlags:)];
                     //    break;
                 case ESCKEY:
-                case BACKSPACEKEY: {
-                    if (([theEvent modifierFlags] & NSCommandKeyMask) == 0) {
-						
-                        if ((![[self firstResponder] isKindOfClass: [NSTextView class]])
-                            || [[self firstResponder] isKindOfClass: [GITextView class]]) {
-                            [self sendActionSelector:@selector(closeSelection:)];
-                            return;
-                        }
-                    }
-                }
+				case BACKSPACEKEY: {
+						if (([theEvent modifierFlags] & NSCommandKeyMask) == 0) {
+							
+							if ((![[self firstResponder] isKindOfClass: [NSTextView class]])
+								|| [[self firstResponder] isKindOfClass: [GITextView class]]) {
+								[self sendActionSelector:@selector(closeSelection:)];
+								return;
+							}
+						}
+					}
                     break;
                 case 2: // d
                 case KEYPAD6KEY:
@@ -123,6 +123,17 @@
 				case SPACEKEY:
                     [self delegateAction: @selector(showNextMessage:)];
 					consumed = YES;
+					//sleep(1);
+
+					
+					theEvent = [NSApp nextEventMatchingMask: NSKeyUpMask
+												  untilDate: [NSDate dateWithTimeIntervalSinceNow: 2.0]
+													 inMode: NSEventTrackingRunLoopMode
+													dequeue: YES];
+					 
+					[NSApp discardEventsMatchingMask: NSAnyEventMask beforeEvent: theEvent];
+
+					
                     break;
 					
                 default:

@@ -44,6 +44,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @end
 
+
 @implementation GIThreadListController
 
 - (id)init
@@ -167,21 +168,23 @@ static BOOL isThreadItem(id item)
     [self autorelease]; // balance self-retaining
 }
 
-- (NSArray *)threadsByDate
+- (NSArray*) threadsByDate
     /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
 	return [group valueForKey: @"threadsByDate"];
 }
 
-- (int)threadLimitCount 
+- (int) threadLimitCount 
 {
-    BOOL showOnlyRecentThreads = [[self valueForGroupProperty:ShowOnlyRecentThreads] boolValue];
-    
-    if (showOnlyRecentThreads) return 150;
-    else return INT_MAX; 
+	if (!recentThreadsCache) {
+		
+		BOOL showOnlyRecentThreads = [[self valueForGroupProperty: ShowOnlyRecentThreads] boolValue];	
+		recentThreadsCache = showOnlyRecentThreads ? recentThreadsCache = 150 : INT_MAX;
+	}
+	return recentThreadsCache;
 }
 
-- (BOOL)threadByDateSortAscending
+- (BOOL) threadByDateSortAscending
 {
 	return YES;
 }
@@ -2152,3 +2155,13 @@ NSMutableArray* border = nil;
 }
 
 @end
+
+@implementation GIThreadListController (WindowDelegate)
+
+- (void) windowDidBecomeKey: (NSNotification*) aNotification
+{
+	recentThreadsCache = NSNotFound; // clear cache
+}
+
+@end
+

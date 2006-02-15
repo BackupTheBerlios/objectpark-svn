@@ -34,6 +34,8 @@
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
 
+	unsigned recentThreadsCache;
+	
 	BOOL isAutoReloadEnabled;
 	
     NSMutableSet* itemRetainer;

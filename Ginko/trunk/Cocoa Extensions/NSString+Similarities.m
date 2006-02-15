@@ -6,6 +6,8 @@
 //  Improved by Dirk Theisen on 14.02.06.
 //  Copyright 2006 by the authors. All rights reserved.
 //
+// See <http://www.merriampark.com/ldobjc.htm>
+// See <http://www.dcs.shef.ac.uk/~sam/stringmetrics.html#Levenshtein>
 
 #import "NSString+Similarities.h"
 
