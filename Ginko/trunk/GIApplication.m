@@ -424,7 +424,7 @@ NSNumber* yesNumber = nil;
 
 - (void)POPJobFinished:(NSNotification *)aNotification
 {
-    if (NSDebugEnabled) NSLog(@"POPJobFinished");
+    OPDebugLog(OPJOBS, OPINFO, @"POPJobFinished");
     
     NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
@@ -461,7 +461,7 @@ NSNumber* yesNumber = nil;
 
 - (void)importJobFinished:(NSNotification *)aNotification
 {
-    if (NSDebugEnabled) NSLog(@"importJobFinished");
+    OPDebugLog(OPJOBS, OPINFO, @"importJobFinished");
     
     NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
@@ -492,7 +492,7 @@ NSNumber* yesNumber = nil;
 
 - (void) fulltextIndexJobFinished:(NSNotification *)aNotification
 {
-    if (NSDebugEnabled) NSLog(@"fulltextIndexJobFinished");
+    OPDebugLog(OPJOBS, OPINFO, @"fulltextIndexJobFinished");
     NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
 	[OPJobs removeFinishedJob:jobId]; // clean up
@@ -505,7 +505,7 @@ NSNumber* yesNumber = nil;
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
 {
-    if (NSDebugEnabled) NSLog(@"SMTPJobFinished");
+    OPDebugLog(OPJOBS, OPINFO, @"SMTPJobFinished");
     
     NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);

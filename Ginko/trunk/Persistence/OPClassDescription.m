@@ -211,10 +211,12 @@
 		
 		NSParameterAssert([theClass canPersist]);
 		
+        /*
 		if ([name isEqualToString: @"messages"]) {
 			NSLog(@"messages relation found");
 		}
-		
+		*/
+        
 		if ([self isToManyRelationship]) {
 			// See, if we have custom methods to add and remove values:
 			

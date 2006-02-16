@@ -8,6 +8,8 @@
 
 #import <AppKit/AppKit.h>
 
+#define OPJOBS OPL_DOMAIN @"OPJOBS"
+
 @interface OPJobs : NSObject 
 {
 }
