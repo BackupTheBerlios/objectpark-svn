@@ -116,6 +116,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	
 	[displayedThread removeObserver: self forKeyPath: @"messages"];
     [displayedThread release];
+    [border release];
 	
 	//[[observedThreads objectEnumerator] makeObjectsPerformSelector: @selector(removeObserver:forKeyPath:)
     //														withObject: self
@@ -1625,7 +1626,6 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     return result;
 }
 
-NSMutableArray* border = nil;
 
 - (void) initializeBorderToDepth: (int) aDepth
 {
@@ -1637,12 +1637,18 @@ NSMutableArray* border = nil;
         [border addObject: [NSNumber numberWithInt: -1]];
 }
 
-- (int) placeTreeWithRootMessage: (GIMessage*) message atOrBelowRow: (int) row inColumn: (int) column
+
+/*"Configures the cell for %message in the tree view.
+   The cell's position is in the specified column but it's row is the row of the
+   first child of the message.
+   If there is no child the cell is in row %row.
+   The return value is the row the message was placed in."*/
+- (int) placeTreeWithRootMessage:(GIMessage*)message atOrBelowRow:(int)row inColumn:(int)column
 {
     GICommentTreeCell* cell;
     
-    if (row <= [[border objectAtIndex: column] intValue])
-        row = [[border objectAtIndex: column] intValue] + 1;
+    if (row <= [[border objectAtIndex:column] intValue])
+        row = [[border objectAtIndex:column] intValue] + 1;
         
     NSArray* comments = commentsForMessage(message, displayedThread);
     int commentCount = [comments count];
@@ -1650,54 +1656,54 @@ NSMutableArray* border = nil;
     NSEnumerator* children = [comments objectEnumerator];
     GIMessage* child;
     
+    // place the children first
     if (child = [children nextObject]) {
         int nextColumn = column + 1;
         int newRow;
         
-        row = newRow = [self placeTreeWithRootMessage: child atOrBelowRow: row inColumn: nextColumn];
+        row = newRow = [self placeTreeWithRootMessage:child atOrBelowRow:row inColumn:nextColumn];
         
-        cell = [commentsMatrix cellAtRow: newRow column: nextColumn];
-        [cell addConnectionToEast];
-        [cell addConnectionToWest];
+        // first child
+        cell = [commentsMatrix cellAtRow:newRow column:nextColumn];
+        [cell addConnectionToEast];  // to child itself (me)
+        [cell addConnectionToWest];  // to parent
         
+        // other children
         while (child = [children nextObject]) {
             int i;
             int startRow = newRow;
-            BOOL messageHasDummyParent = [[message reference] isDummy];
             
-            newRow = [self placeTreeWithRootMessage: child atOrBelowRow: newRow + 1 inColumn: nextColumn];
+            newRow = [self placeTreeWithRootMessage:child atOrBelowRow:newRow + 1 inColumn:nextColumn];
             
-            [[commentsMatrix cellAtRow: startRow column: nextColumn] addConnectionToSouth];
+            [[commentsMatrix cellAtRow:startRow column:nextColumn] addConnectionToSouth];
             
             for (i = startRow+1; i < newRow; i++)
             {
-                cell = [commentsMatrix cellAtRow: i column: nextColumn];
+                cell = [commentsMatrix cellAtRow:i column:nextColumn];
                 [cell addConnectionToNorth];
                 [cell addConnectionToSouth];
-                [cell setHasConnectionToDummyMessage: messageHasDummyParent];
             }
             
-            cell = [commentsMatrix cellAtRow: newRow column: nextColumn];
+            cell = [commentsMatrix cellAtRow:newRow column:nextColumn];
             [cell addConnectionToNorth];
             [cell addConnectionToEast];
-            [cell setHasConnectionToDummyMessage: messageHasDummyParent];
         }
     }
     
     // update the border
-    [border replaceObjectAtIndex: column withObject: [NSNumber numberWithInt: row]];
+    [border replaceObjectAtIndex:column withObject:[NSNumber numberWithInt:row]];
     
     
     while (row >= [commentsMatrix numberOfRows])
         [commentsMatrix addRow];
-    
-    cell = [commentsMatrix cellAtRow: row column: column];
-    
-    
-    
-    NSArray* siblings = [[message reference] commentsInThread: [self displayedThread]];
-    int indexOfMessage = [siblings indexOfObject: message];
         
+    // get the cell for the message second
+    cell = [commentsMatrix cellAtRow:row column:column];
+    
+    NSArray* siblings = [[message reference] commentsInThread:[self displayedThread]];
+    int indexOfMessage = [siblings indexOfObject:message];
+    
+    // set cell's navigation info
     if (commentCount > 0)
         [cell addNavigationToEast];
     if ([message numberOfReferences] > 0)
@@ -1708,23 +1714,24 @@ NSMutableArray* border = nil;
         [cell addNavigationToSouth];
 
     // set cell's message attributes
-    [cell setRepresentedObject: message];
-    [cell setSeen: [message hasFlags: OPSeenStatus]];
-    [cell setIsDummyMessage: [message isDummy]];
-    [cell setHasConnectionToDummyMessage: [[message reference] isDummy]];
+    [cell setRepresentedObject:message];
+    [cell setSeen:[message hasFlags:OPSeenStatus]];
+    [cell setIsDummyMessage:[message isDummy]];
+    [cell setHasConnectionToDummyMessage:[[message reference] isDummy]];
     
-    [commentsMatrix setToolTip: [message valueForKey: @"senderName"] forCell:cell];
+    [commentsMatrix setToolTip:[message valueForKey:@"senderName"] forCell:cell];
     
+    // set color
     if ([message flags] & OPIsFromMeStatus)
         [cell setColorIndex:5];  // blue
     else {
         // for testing we are coloring the messages of David Stes and John C. Randolph
         NSString* senderName = [message senderName];
         if (senderName) {
-            NSRange range = [senderName rangeOfString: @"David Stes"];
+            NSRange range = [senderName rangeOfString:@"David Stes"];
             if (range.location != NSNotFound)
                 [cell setColorIndex:1];  // red
-            range = [senderName rangeOfString: @"John C. Randolph"];
+            range = [senderName rangeOfString:@"John C. Randolph"];
             if (range.location != NSNotFound)
                 [cell setColorIndex:4];  // green
         }

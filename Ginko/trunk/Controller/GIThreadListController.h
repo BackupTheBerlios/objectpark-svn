@@ -31,6 +31,8 @@
     GIMessageGroup* group;
     GIThread* displayedThread; // displayed as comment tree
     GIMessage* displayedMessage; // displayed with body
+    NSMutableArray* border; // helper for comment tree creation
+    
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
 
