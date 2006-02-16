@@ -42,7 +42,7 @@
 #define OPXERROR  OPL_ASPECT  0x80000000
 
 
-/*"This is the function (macro) used for logging.
+/*"This is the function (macro) used for debug logging.
    Domain and aspect describe the exact aspect that the log message format
    belongs to.
    The log message will only be output if !{NSDebugEnabled} is set and the
@@ -60,11 +60,18 @@
                                                         OPLog *sharedInstance = [OPLog sharedInstance];                                                   \
                                                         if ([sharedInstance aspectsForDomain:domain] & aspects)                                           \
                                                             [sharedInstance log:[NSString stringWithFormat:[@"%@ (%s): " stringByAppendingString:format], \
-                                                                                              domain, #aspects, ##__VA_ARGS__]];                          \
+                                                                                                           domain, #aspects, ##__VA_ARGS__]];             \
                                                         }                                                                                                 \
                                                     }
 
-
+/*"The unconditional log function (macro).
+   Unconditional means that it always logs the message, independent of the setting
+   of the !{NSDebugEnabled} variable and independent of domain and aspect settings.
+   
+   This function is equivalent to !{NSLog()} and should be used instead of it."*/
+#define OPLog(format, ...)    [[OPLog sharedInstance] log:[NSString stringWithFormat:format, ##__VA_ARGS__]]
+                              
+                              
 @interface OPLog : NSObject
     {
     NSMutableDictionary* settings;  /*"is the dictionary holding the current settings of aspects for the domains"*/

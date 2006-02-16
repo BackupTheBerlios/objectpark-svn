@@ -91,4 +91,34 @@
     }
     
     
+- (void) testOPLog
+    {
+    NSDebugEnabled = 0;
+        
+    NSString *message = @"Yes, this should be printed!";
+    
+    OPLog(message);
+    
+    STAssertNotNil([[OPLogMock sharedInstance] loggedMessage],
+                   @"A message should have been logged but wasn't.");
+    STAssertEqualObjects([[OPLogMock sharedInstance] loggedMessage],
+                         message,
+                         @"A wrong message has been logged");
+    }
+    
+    
+- (void) testOPLogWithAdditionalArg
+    {
+    NSDebugEnabled = 0;
+        
+    OPLog(@"Here we have an %@", @"argument");
+    
+    STAssertNotNil([[OPLogMock sharedInstance] loggedMessage],
+                   @"A message should have been logged but wasn't.");
+    STAssertEqualObjects([[OPLogMock sharedInstance] loggedMessage],
+                         @"Here we have an argument",
+                         @"A wrong message has been logged");
+    }
+    
+    
 @end
