@@ -1071,7 +1071,7 @@
                     jfloat javaScore = [self hits:hits score:i];
                     NSNumber *score = [NSNumber numberWithDouble:(double)javaScore];
                     
-                    OPObjectPair *hit = [OPObjectPair pairWithObjects:message :score];
+                    NSDictionary *hit = [NSDictionary dictionaryWithObjectsAndKeys:message, @"message", score, @"score", nil, nil];
                     [result addObject:hit];
                 }
             }

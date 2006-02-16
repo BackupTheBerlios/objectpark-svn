@@ -83,47 +83,52 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {    
-    [threadsView setTarget: self];
-    [threadsView setDoubleAction: @selector(openSelection:)];
-    [threadsView setHighlightThreads: YES];
-    [threadsView registerForDraggedTypes: [NSArray arrayWithObjects: @"GinkoThreads", nil]];
-    ///[threadsView setIndentationPerLevel: 1.0];
+    [threadsView setTarget:self];
+    [threadsView setDoubleAction:@selector(openSelection:)];
+    [threadsView setHighlightThreads:YES];
+    [threadsView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinkoThreads", nil]];
+    ///[threadsView setIndentationPerLevel:1.0];
 	
-    [searchHitsTableView setTarget: self];
-    [searchHitsTableView setDoubleAction: @selector(openSelection:)];
+    [searchHitsTableView setTarget:self];
+    [searchHitsTableView setDoubleAction:@selector(openSelection:)];
 
+    // configure search hit date formatter:
+    [searchHitDateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [searchHitDateFormatter setDateStyle:NSDateFormatterShortStyle];
+    [searchHitDateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    
     [self awakeToolbar];
     [self awakeCommentTree];
 
-    lastTopLeftPoint = [window cascadeTopLeftFromPoint: lastTopLeftPoint];
+    lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
     
-    [window makeKeyAndOrderFront: self];    
+    [window makeKeyAndOrderFront:self];    
 	[self updateWindowTitle];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     if (NSDebugEnabled) NSLog(@"GIThreadListController dealloc");
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
-    [window setDelegate: nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [window setDelegate:nil];
     
     [self deallocCommentTree];
     [self deallocToolbar];
 
     [displayedMessage release];
 	
-	[displayedThread removeObserver: self forKeyPath: @"messages"];
+	[displayedThread removeObserver:self forKeyPath:@"messages"];
     [displayedThread release];
     [border release];
 	
-	//[[observedThreads objectEnumerator] makeObjectsPerformSelector: @selector(removeObserver:forKeyPath:)
-    //														withObject: self
-	//													withObject: @"messages"];
+	//[[observedThreads objectEnumerator] makeObjectsPerformSelector:@selector(removeObserver:forKeyPath:)
+    //														withObject:self
+	//													withObject:@"messages"];
 	//[observedThreads release];
 	
-    [self setGroup: nil];
+    [self setGroup:nil];
     [itemRetainer release];
     [hits release];
     
@@ -460,18 +465,25 @@ static BOOL isThreadItem(id item)
 	} else if ([self searchHitsShownCurrently]) {
         int selectedIndex = [searchHitsTableView selectedRow];
         
-        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) {
-            GIMessage *message = [[hits objectAtIndex: selectedIndex] objectAtIndex:0];
+        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) 
+        {
+            GIMessage *message = [[hits objectAtIndex: selectedIndex] objectForKey:@"message"];
             
 			unsigned messageSendStatus = [message sendStatus];
-            if (messageSendStatus > OPSendStatusNone) {
-                if (messageSendStatus >= OPSendStatusSending) {
+            if (messageSendStatus > OPSendStatusNone) 
+            {
+                if (messageSendStatus >= OPSendStatusSending) 
+                {
                     NSLog(@"message is in send job");
                     NSBeep();
-                } else {
+                } 
+                else 
+                {
                     [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
                 }
-            } else {
+            } 
+            else 
+            {
                 [tabView selectTabViewItemWithIdentifier:@"message"];
                 
                 //[message addFlags: OPSeenStatus];
@@ -482,7 +494,9 @@ static BOOL isThreadItem(id item)
                 else [window makeFirstResponder:messageTextView];                    
             }       
         }
-    } else {
+    } 
+    else 
+    {
 		// message shown
         if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
         else [window makeFirstResponder:commentsMatrix];
@@ -654,35 +668,40 @@ static BOOL isThreadItem(id item)
     [self modelChanged: nil];
 }
 
-- (NSArray*) hits
+- (NSArray *)hits
 {
     return hits;
 }
 
-- (void) setHits: (NSArray*) someHits
+- (void)setHits:(NSArray *)someHits
 {
-    if (hits != someHits) {
+    if (hits != someHits) 
+    {
         [hits release];
         hits = [someHits retain];
     }
 }
 
-- (IBAction) search: (id) sender
+- (IBAction)search:(id)sender
 {
     if (!searchField) searchField = sender;
     
-    NSString* query = [searchField stringValue];
+    NSString *query = [searchField stringValue];
     
-    if ([query length]) {
-        @try {
+    if ([query length]) 
+    {;
+        @try 
+        {
             [OPJobs suspendPendingJobs];
             
             NSArray *conflictingJobs = [OPJobs runningJobsWithName:[GIFulltextIndex jobName]];
-            if ([conflictingJobs count]) {
+            if ([conflictingJobs count]) 
+            {
                 NSEnumerator *enumerator = [conflictingJobs objectEnumerator];
                 NSNumber *jobId;
                 
-                while (jobId = [enumerator nextObject]) {
+                while (jobId = [enumerator nextObject]) 
+                {
                     [OPJobs suggestTerminatingJob:jobId];
                 }
             }
@@ -693,50 +712,56 @@ static BOOL isThreadItem(id item)
             BOOL limitSearchToGroup = [defaults integerForKey: @"searchRange"] == 1;
             int defaultFieldTag = [defaults integerForKey: @"defaultSearchField"];
             int searchLimit = [defaults integerForKey:SearchHitLimit];
-
+            
             NSString *defaultField = @"body";
-            switch (defaultFieldTag) {
+            switch (defaultFieldTag) 
+            {
                 case 1: defaultField = @"subject"; break;
                 case 2: defaultField = @"author"; break;
                 default: break;
             }
             
             [self setHits:[GIFulltextIndex hitsForQueryString:query defaultField:defaultField group:limitSearchToGroup ? [self group] : nil limit:searchLimit]];
-
-            //[self setHits:[GIFulltextIndex hitsForQueryString:query limit:200]];
             
             NSLog(@"hits count = %d", [hits count]);
             
             [searchHitsTableView reloadData];
-        } @catch (NSException *localException) {
+        } 
+        @catch (NSException *localException) 
+        {
             @throw;
-        } @finally {
+        } 
+        @finally 
+        {
             [OPJobs resumePendingJobs];
         }
-    } else {
-        [self setHits: nil];
-        [tabView selectTabViewItemWithIdentifier: @"threads"];
+    } 
+    else 
+    {
+        [self setHits:nil];
+        [tabView selectTabViewItemWithIdentifier:@"threads"];
     }
 }
 
-- (IBAction) showThreads: (id) sender
+- (IBAction)showThreads:(id)sender
 {
-    [tabView selectFirstTabViewItem: sender];
+    [tabView selectFirstTabViewItem:sender];
 }
 
-- (IBAction) showRawSource: (id) sender
+- (IBAction)showRawSource:(id)sender
 {
     showRawSource = !showRawSource;
     
-	if (displayedMessage && displayedThread) {
-        [self setDisplayedMessage: displayedMessage thread: displayedThread];
+	if (displayedMessage && displayedThread) 
+    {
+        [self setDisplayedMessage:displayedMessage thread:displayedThread];
     }
 }
 
-- (NSArray*) allSelectedMessages
+- (NSArray *)allSelectedMessages
 {
-    NSMutableArray* result = [NSMutableArray array];
-    NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
+    NSMutableArray *result = [NSMutableArray array];
+    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
     
     if (! [selectedIndexes count]) return [NSArray array];
     
@@ -1525,8 +1550,8 @@ static NSAttributedString* spacer2()
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-    OPObjectPair *hit = [hits objectAtIndex:rowIndex];
-    GIMessage *message = [hit firstObject];
+    NSDictionary *hit = [hits objectAtIndex:rowIndex];
+    GIMessage *message = [hit objectForKey:@"message"];
     BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
 
     if ([[aTableColumn identifier] isEqualToString:@"date"]) 
@@ -1575,7 +1600,7 @@ static NSAttributedString* spacer2()
     } 
     else if ([[aTableColumn identifier] isEqualToString: @"relevance"]) 
     {
-        return [hit secondObject]; // the score
+        return [hit objectForKey:@"score"]; // the score
     }
     
     return @"";

@@ -16,21 +16,22 @@
 
 @interface GIThreadListController : NSObject 
 {
-    IBOutlet NSWindow* window;
+    IBOutlet NSWindow *window;
     IBOutlet GIOutlineViewWithKeyboardSupport *threadsView;
-    IBOutlet NSTabView* tabView;
-    IBOutlet NSTextView* messageTextView;
-    IBOutlet NSMatrix* commentsMatrix;
-    IBOutlet NSTextField* groupInfoTextField;
-    IBOutlet OPCollapsingSplitView* treeBodySplitter;
-    IBOutlet NSPopUpButton* threadFilterPopUp;
-    IBOutlet NSProgressIndicator* progressIndicator;
-    IBOutlet NSTableView* searchHitsTableView;
-    IBOutlet NSSearchField* searchField;
+    IBOutlet NSTabView *tabView;
+    IBOutlet NSTextView *messageTextView;
+    IBOutlet NSMatrix *commentsMatrix;
+    IBOutlet NSTextField *groupInfoTextField;
+    IBOutlet OPCollapsingSplitView *treeBodySplitter;
+    IBOutlet NSPopUpButton *threadFilterPopUp;
+    IBOutlet NSProgressIndicator *progressIndicator;
+    IBOutlet NSTableView *searchHitsTableView;
+    IBOutlet NSSearchField *searchField;
+    IBOutlet NSDateFormatter *searchHitDateFormatter;
     
-    GIMessageGroup* group;
-    GIThread* displayedThread; // displayed as comment tree
-    GIMessage* displayedMessage; // displayed with body
+    GIMessageGroup *group;
+    GIThread *displayedThread; // displayed as comment tree
+    GIMessage *displayedMessage; // displayed with body
     NSMutableArray* border; // helper for comment tree creation
     
     BOOL showRawSource;
@@ -40,51 +41,51 @@
 	
 	BOOL isAutoReloadEnabled;
 	
-    NSMutableSet* itemRetainer;
+    NSMutableSet *itemRetainer;
 	
 	//NSMutableSet* observedThreads;
     
     // -- Toolbar --
-    NSArray* toolbarItems;
-    NSArray* defaultIdentifiers;
+    NSArray *toolbarItems;
+    NSArray *defaultIdentifiers;
     
     // -- Searching --
-    NSArray* hits;
+    NSArray *hits;
 }
 
-- (id) initWithGroup: (GIMessageGroup*) aGroup;
+- (id)initWithGroup:(GIMessageGroup *)aGroup;
 
-+ (NSWindow*) windowForGroup: (GIMessageGroup*) aGroup;
++ (NSWindow *)windowForGroup:(GIMessageGroup *)aGroup;
 
-- (NSWindow*) window;
-- (GIMessageGroup*) group;
-- (void) setGroup: (GIMessageGroup*) aGroup;
+- (NSWindow *)window;
+- (GIMessageGroup *)group;
+- (void)setGroup:(GIMessageGroup *)aGroup;
 
 
-- (id)valueForGroupProperty: (NSString*) prop;
-- (void) setValue:(id)value forGroupProperty: (NSString*) prop;
+- (id)valueForGroupProperty:(NSString *)prop;
+- (void)setValue:(id)value forGroupProperty:(NSString *)prop;
 
-- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread;
-- (GIMessage*) displayedMessage;
-- (GIThread*) displayedThread;
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread;
+- (GIMessage *)displayedMessage;
+- (GIThread *)displayedThread;
 
-- (BOOL) threadsShownCurrently;
+- (BOOL)threadsShownCurrently;
 
-- (BOOL) validateSelector: (SEL) aSelector; // necessary?
+- (BOOL)validateSelector:(SEL)aSelector; // necessary?
 
-- (void) modelChanged: (NSNotification*) aNotification; // remove as soon as possible
+- (void)modelChanged:(NSNotification *)aNotification; // remove as soon as possible
 
 /*" Actions "*/
-- (IBAction) showThreads: (id) sender;
-- (IBAction) threadFilterPopUpChanged: (id) sender;
-- (IBAction) selectThreadsWithCurrentSubject: (id) sender;
-- (IBAction) search: (id) sender;
+- (IBAction)showThreads:(id)sender;
+- (IBAction)threadFilterPopUpChanged:(id)sender;
+- (IBAction)selectThreadsWithCurrentSubject:(id)sender;
+- (IBAction)search:(id)sender;
 
 @end
 
 @interface GIThreadListController (ToolbarDelegate)
 
-- (void) awakeToolbar;
-- (void) deallocToolbar;
+- (void)awakeToolbar;
+- (void)deallocToolbar;
 
 @end
