@@ -1668,7 +1668,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
    first child of the message.
    If there is no child the cell is in row %row.
    The return value is the row the message was placed in."*/
-- (int) placeTreeWithRootMessage:(GIMessage*)message atOrBelowRow:(int)row inColumn:(int)column
+- (int) placeTreeWithRootMessage:(GIMessage*)message andSiblings:(NSArray*)siblings atOrBelowRow:(int)row inColumn:(int)column
 {
     GICommentTreeCell* cell;
     
@@ -1686,7 +1686,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
         int nextColumn = column + 1;
         int newRow;
         
-        row = newRow = [self placeTreeWithRootMessage:child atOrBelowRow:row inColumn:nextColumn];
+        row = newRow = [self placeTreeWithRootMessage:child andSiblings:comments atOrBelowRow:row inColumn:nextColumn];
         
         // first child
         cell = [commentsMatrix cellAtRow:newRow column:nextColumn];
@@ -1698,7 +1698,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
             int i;
             int startRow = newRow;
             
-            newRow = [self placeTreeWithRootMessage:child atOrBelowRow:newRow + 1 inColumn:nextColumn];
+            newRow = [self placeTreeWithRootMessage:child andSiblings:comments atOrBelowRow:newRow + 1 inColumn:nextColumn];
             
             [[commentsMatrix cellAtRow:startRow column:nextColumn] addConnectionToSouth];
             
@@ -1725,7 +1725,6 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     // get the cell for the message second
     cell = [commentsMatrix cellAtRow:row column:column];
     
-    NSArray* siblings = [[message reference] commentsInThread:[self displayedThread]];
     int indexOfMessage = [siblings indexOfObject:message];
     
     // set cell's navigation info
@@ -1765,11 +1764,11 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     return row;
 }
 
-- (void) updateCommentTree: (BOOL) rebuildThread
+- (void) updateCommentTree:(BOOL) rebuildThread
 {
     if (rebuildThread) {
         [commentsMatrix deselectAllCells];
-        [commentsMatrix renewRows: 1 columns: [displayedThread commentDepth]];
+        [commentsMatrix renewRows:1 columns:[displayedThread commentDepth]];
         
         commentsCache = [[NSMutableDictionary alloc] init];
         
@@ -1778,16 +1777,17 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
         
         //NSLog(@"Cells %@", [commentsMatrix cells]);
         
-        [[commentsMatrix cells] makeObjectsPerformSelector: @selector(reset)withObject: nil];
+        [[commentsMatrix cells] makeObjectsPerformSelector:@selector(reset) withObject:nil];
         
         // Usually this calls placeMessage:singleRootMessage row:0
-        NSEnumerator* me = [[displayedThread rootMessages] objectEnumerator];
+        NSArray* rootMessages = [displayedThread rootMessages];
+        NSEnumerator* me = [rootMessages objectEnumerator];
         unsigned row = 0;
         GIMessage* rootMessage;
         
-        [self initializeBorderToDepth: [displayedThread commentDepth]];
+        [self initializeBorderToDepth:[displayedThread commentDepth]];
         while (rootMessage = [me nextObject]) {
-            row = [self placeTreeWithRootMessage: rootMessage atOrBelowRow: row inColumn: 0];
+            row = [self placeTreeWithRootMessage:rootMessage andSiblings:rootMessages atOrBelowRow:row inColumn:0];
             
             if ([rootMessage reference]) {
                 // add "broken" reference
@@ -1795,9 +1795,9 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
             }
         }
         
-        //[commentsMatrix selectCell: [commentsMatrix cellForRepresentedObject:displayedMessage]];
+        //[commentsMatrix selectCell:[commentsMatrix cellForRepresentedObject:displayedMessage]];
         [commentsMatrix sizeToFit];
-        [commentsMatrix setNeedsDisplay: YES];
+        [commentsMatrix setNeedsDisplay:YES];
         //[commentsMatrix scrollCellToVisibleAtRow:<#(int)row#> column:<#(int)col#>]];
         
         [commentsCache release];
@@ -1807,32 +1807,32 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     int row, column;
     GICommentTreeCell* cell;
     
-    cell = (GICommentTreeCell*) [commentsMatrix cellForRepresentedObject: displayedMessage];
-    [cell setSeen: YES];
+    cell = (GICommentTreeCell*) [commentsMatrix cellForRepresentedObject:displayedMessage];
+    [cell setSeen:YES];
     
-    [commentsMatrix selectCell: cell];
+    [commentsMatrix selectCell:cell];
     
-    [commentsMatrix getRow: &row column: &column ofCell: cell];
-    [commentsMatrix scrollCellToVisibleAtRow: MAX(row-1, 0)column: MAX(column-1,0)];
-    [commentsMatrix scrollCellToVisibleAtRow: row+1 column: column+1];
+    [commentsMatrix getRow:&row column:&column ofCell:cell];
+    [commentsMatrix scrollCellToVisibleAtRow:MAX(row-1, 0) column:MAX(column-1,0)];
+    [commentsMatrix scrollCellToVisibleAtRow:row+1 column:column+1];
 	
 	// Update tree splitter view:
 	if (rebuildThread) {
-		NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex: 0];
+		NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
 		//[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
-		//[treeBodySplitter moveSplitterBy: [commentsMatrix frame].size.height+10-[scrollView frame].size.height];
-		//[scrollView setAutohidesScrollers: YES];
+		//[treeBodySplitter moveSplitterBy:[commentsMatrix frame].size.height+10-[scrollView frame].size.height];
+		//[scrollView setAutohidesScrollers:YES];
 		BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
 		float newHeight = [commentsMatrix frame].size.height + 3 + (hasHorzontalScroller * [NSScroller scrollerWidth]); // scroller width could be different
-		[scrollView setHasHorizontalScroller: hasHorzontalScroller];
+		[scrollView setHasHorizontalScroller:hasHorzontalScroller];
 		if ([commentsMatrix numberOfColumns] <= 1) newHeight = 0;
 		if (newHeight>200.0) {
 			newHeight = 200.0;
-			[scrollView setHasVerticalScroller: YES];
+			[scrollView setHasVerticalScroller:YES];
 		} else {
-			[scrollView setHasVerticalScroller: NO];
+			[scrollView setHasVerticalScroller:NO];
 		}
-		[treeBodySplitter setFirstSubviewSize: newHeight];
+		[treeBodySplitter setFirstSubviewSize:newHeight];
 	}
 }
 
