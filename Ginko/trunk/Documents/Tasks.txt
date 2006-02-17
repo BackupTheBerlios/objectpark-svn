@@ -2,19 +2,15 @@ Ginko Voyager's tasks
 
 Tasks:
 High priority:
-- (=> Dirk) UI for splitting message threads
-- Prevent merge errors on save
-- export database to big mbox, preserving flags?
-- (=> Dirk) build better performing backend based on SQLite and the existing data model 
+
 Medium priority:
-- bayesian spam filter
 - use new TextAttachmentCell during Message composition
-- configurable debug logging (better than if (NSDebugEnbled) NSLog() granularity)
+
 Low priority:
 - external filter action and UI
-- completion of real names
 - using token fields for header field input
 - better networking classes
+- bayesian spam filter
 
 
 (DONE Dirk)- dot quoting support in streams
@@ -24,3 +20,7 @@ Low priority:
 (DONE Axel)- attachment d & d into Finder etc.
 (DONE Axel)- change message dates that are in the future to 'now'
 (DONE Axel)- show row message function
+(DONE Dirk)- UI for splitting message threads
+(DONE Jšrg)- export database to mbox, preserving flags
+(DONE Axel)- completion of real names
+(DONE Jšrg)- configurable debug logging (better than if (NSDebugEnbled) NSLog() granularity)
