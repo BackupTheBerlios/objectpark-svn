@@ -453,6 +453,24 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return result;
 }
 
+- (NSArray*) comments
+/*" Returns the comments in the receiver's thread. "*/
+{
+	NSArray* result = [attributes objectForKey: @"comments"];
+	if (!result) {
+		result = [self commentsInThread: [self thread]]; // fires fault
+		[attributes setObject: result forKey: @"comments"];
+	}
+	return result;
+}
+
+- (void) flushCommentsCache
+/*" Needs to be called whenever any other message changes its reference to the receiver (additions or removals). Preferable in -setPrimitiviveReference:. "*/
+{
+	[attributes removeObjectForKey: @"comments"];
+}
+
+
 - (NSAttributedString*) contentAsAttributedString
 {
     return [[self internetMessage] bodyContent];

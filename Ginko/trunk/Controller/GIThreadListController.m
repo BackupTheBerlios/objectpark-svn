@@ -680,7 +680,9 @@ static BOOL isThreadItem(id item)
     if (NSDebugEnabled) NSLog(@"-threadFilterPopUpChanged:");
 
     nowForThreadFiltering = 0;
-    
+	
+	recentThreadsCache = 0; // clear cache
+	
     // boolean value:
     [self setValue: [NSNumber numberWithInt: [[threadFilterPopUp selectedItem] tag]] forGroupProperty: ShowOnlyRecentThreads];
 
@@ -1339,7 +1341,7 @@ static BOOL isThreadItem(id item)
 		int arrayIndex = [self threadByDateSortAscending] ? index +([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count])): ([threadArray count]-1) - index;
 		result = [threadArray objectAtIndex: arrayIndex];
 	} else {            
-		result = [[item messages/*ByTree*/] objectAtIndex: index];
+		result = [[item messagesByTree] objectAtIndex: index];
 		[item messagesByTree];
 	}
 	[itemRetainer addObject:result];
@@ -2227,7 +2229,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 
 - (void) windowDidBecomeKey: (NSNotification*) aNotification
 {
-	recentThreadsCache = NSNotFound; // clear cache
+	recentThreadsCache = 0; // clear cache
 }
 
 @end
