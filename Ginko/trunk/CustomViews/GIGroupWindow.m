@@ -37,45 +37,50 @@
 #define BACKSPACEKEY 0x33
 #define ESCKEY 0x35
 
-- (void) dealloc
+- (void)dealloc
 {
     if (NSDebugEnabled) NSLog(@"GIGroupWindow dealloc");
     [super dealloc];
 }
 
-- (BOOL)makeFirstResponder: (NSResponder*) aResponder
+- (BOOL)makeFirstResponder:(NSResponder *)aResponder
 {
     BOOL result = [super makeFirstResponder:aResponder];
 //    NSLog(@"New first responder of %@ is %@ (success: %d)", self, [self firstResponder], result);
     return result;
 }
 
-- (void) sendActionSelector: (SEL) selector
+- (void)sendActionSelector:(SEL)selector
 {
     id delegate = [self delegate];
-    if ([delegate respondsToSelector: selector]) {
+    if ([delegate respondsToSelector:selector]) 
+    {
         //if ([delegate validateKeyboardSelector: selector]) {
-        [delegate performSelector: selector withObject: self];
+        [delegate performSelector: selector withObject:self];
         //}
     } 
 }
 
-- (void) delegateAction: (SEL) selector
+- (void)delegateAction:(SEL)selector
 {
     id delegate = [self delegate];
-    if ([delegate respondsToSelector:selector]) {
-        [delegate performSelector: selector withObject: self];
+    if ([delegate respondsToSelector:selector]) 
+    {
+        [delegate performSelector:selector withObject:self];
     }
 }
 
-- (void) sendEvent: (NSEvent*) theEvent
+- (void)sendEvent:(NSEvent *)theEvent
 /*" Intercept the 'switch key' and inform the delegate and don't send the event further along the responder chain if it has a selector -switchKeyPressed:(id)sender. Otherwise the event is send further along the responder chain. "*/ 
 {
     BOOL consumed = NO;
     
-    if (![[self firstResponder] isKindOfClass: [NSSearchField class]]) {
-        if ([theEvent type] == NSKeyDown) {
-            switch ([theEvent keyCode]) {
+    if (![[self firstResponder] isKindOfClass: [NSSearchField class]]) 
+    {
+        if ([theEvent type] == NSKeyDown) 
+        {
+            switch ([theEvent keyCode]) 
+            {
                 case SWITCHKEY:
                 case ALTSWITCHKEY:
                     [self sendActionSelector: @selector(openSelection:)];
@@ -86,10 +91,11 @@
                     //    break;
                 case ESCKEY:
 				case BACKSPACEKEY: {
-						if (([theEvent modifierFlags] & NSCommandKeyMask) == 0) {
-							
-							if ((![[self firstResponder] isKindOfClass: [NSTextView class]])
-								|| [[self firstResponder] isKindOfClass: [GITextView class]]) {
+						if (([theEvent modifierFlags] & NSCommandKeyMask) == 0) 
+                        {
+							if ((![[self firstResponder] isKindOfClass:[NSTextView class]])
+								|| [[self firstResponder] isKindOfClass:[GITextView class]]) 
+                            {
 								[self sendActionSelector:@selector(closeSelection:)];
 								return;
 							}
@@ -99,7 +105,7 @@
                 case 2: // d
                 case KEYPAD6KEY:
                 case 42: // #
-                    [self delegateAction: @selector(navigateRightInMatrix:)];
+                    [self delegateAction:@selector(navigateRightInMatrix:)];
                     break;
                     
                 case 0: // a
@@ -117,6 +123,7 @@
                 case 1: // s
                 case 39: // Ä
                 case KEYPAD2KEY:
+                case KEYPAD5KEY:
                     [self delegateAction: @selector(navigateDownInMatrix:)];
                     break;
                     
@@ -142,7 +149,7 @@
             }        
         }
     }
-    if (!consumed) [super sendEvent: theEvent];
+    if (!consumed) [super sendEvent:theEvent];
 }
 
 @end

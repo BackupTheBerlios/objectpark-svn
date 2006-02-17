@@ -14,12 +14,15 @@
 
 #define TABKEY 0x30
 
-- (void) sendEvent: (NSEvent*) theEvent
+- (void)sendEvent:(NSEvent *)theEvent
 {
-    if ([theEvent type] == NSKeyDown) {
-        switch ([theEvent keyCode]) {
+    if ([theEvent type] == NSKeyDown) 
+    {
+        switch ([theEvent keyCode]) 
+        {
             case TABKEY:
-                if ([[self delegate] respondsToSelector:@selector(tabKeyPressed:withmodifierFlags:)]) {
+                if ([[self delegate] respondsToSelector:@selector(tabKeyPressed:withmodifierFlags:)]) 
+                {
                     if ([[self delegate] performSelector:@selector(tabKeyPressed:withmodifierFlags:)
                                               withObject:self withObject:[NSNumber numberWithUnsignedInt:[theEvent modifierFlags]]]) {
                         return; // consume event

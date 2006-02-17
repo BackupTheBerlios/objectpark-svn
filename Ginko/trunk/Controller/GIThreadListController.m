@@ -38,7 +38,7 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 - (void)awakeCommentTree;
 - (void)deallocCommentTree;
-- (IBAction)selectTreeCell: (id) sender;
+- (IBAction)selectTreeCell:(id)sender;
 - (void)updateCommentTree:(BOOL)rebuildThread;
 - (BOOL)matrixIsVisible;
 
@@ -386,31 +386,42 @@ static BOOL isThreadItem(id item)
     return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"];
 }
 
-- (BOOL) openSelection: (id) sender
+- (BOOL)openSelection:(id)sender
 {    
-    if ([self threadsShownCurrently]) {
+    if ([self threadsShownCurrently]) 
+    {
         int selectedRow = [threadsView selectedRow];
         
-        if (selectedRow >= 0) {
-            GIMessage* message = nil;
-            GIThread* selectedThread = nil;
-            id item = [threadsView itemAtRow: selectedRow];
+        if (selectedRow >= 0) 
+        {
+            GIMessage *message = nil;
+            GIThread *selectedThread = nil;
+            id item = [threadsView itemAtRow:selectedRow];
             
-            if (!isThreadItem(item)) {
+            if (!isThreadItem(item)) 
+            {
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                selectedThread = [message valueForKey: @"thread"];
-            } else {
+                selectedThread = [message valueForKey:@"thread"];
+            } 
+            else 
+            {
                 selectedThread = item;
                 
-                if ([selectedThread containsSingleMessage]) {
-                    message = [[selectedThread valueForKey: @"messages"] lastObject];
-                } else {
-                    if ([threadsView isItemExpanded: item]) {
-                        [threadsView collapseItem: item];
-                    } else {                        
-                        [threadsView expandItem: item];                    
+                if ([selectedThread containsSingleMessage]) 
+                {
+                    message = [[selectedThread valueForKey:@"messages"] lastObject];
+                } 
+                else 
+                {
+                    if ([threadsView isItemExpanded:item]) 
+                    {
+                        [threadsView collapseItem:item];
+                    } 
+                    else 
+                    {                        
+                        [threadsView expandItem:item];                    
                         // ##TODO:select first "interesting" message of this thread
                         // perhaps the next/first unread message
                         
@@ -442,27 +453,35 @@ static BOOL isThreadItem(id item)
             }
             
 			unsigned messageSendStatus = [message sendStatus];
-            if (messageSendStatus > OPSendStatusNone) {
-                if (messageSendStatus >= OPSendStatusSending) {
+            if (messageSendStatus > OPSendStatusNone) 
+            {
+                if (messageSendStatus >= OPSendStatusSending) 
+                {
 					NSLog(@"message is in send job"); // replace by alert
                     NSBeep();
-                } else {
-                    [[[GIMessageEditorController alloc] initWithMessage: message] autorelease];
+                } 
+                else 
+                {
+                    [[[GIMessageEditorController alloc] initWithMessage:message] autorelease];
                 }
-            } else {
-                [tabView selectTabViewItemWithIdentifier: @"message"];
+            } 
+            else 
+            {
+                [tabView selectTabViewItemWithIdentifier:@"message"];
                 
                 //[message addFlags:OPSeenStatus];
                 
-                [self setDisplayedMessage: message thread: selectedThread];
+                [self setDisplayedMessage:message thread:selectedThread];
                 
                 //if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
                 //else 
-				[window makeFirstResponder: messageTextView];                    
+				[window makeFirstResponder:messageTextView];                    
             }
         }
 		
-	} else if ([self searchHitsShownCurrently]) {
+	} 
+    else if ([self searchHitsShownCurrently]) 
+    {
         int selectedIndex = [searchHitsTableView selectedRow];
         
         if ((selectedIndex >= 0) && (selectedIndex < [hits count])) 
@@ -495,7 +514,7 @@ static BOOL isThreadItem(id item)
             }       
         }
     } 
-    else 
+    else if ([self messageShownCurrently])
     {
 		// message shown
         if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
@@ -504,7 +523,7 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
-- (IBAction) closeSelection: (id) sender
+- (IBAction) closeSelection:(id)sender
 {
     if (sender == messageTextView) {
         if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier: @"searchresult"];
@@ -563,7 +582,7 @@ static BOOL isThreadItem(id item)
     return result;
 }
 
-- (IBAction)replySender: (id) sender
+- (IBAction)replySender:(id)sender
 {
     GIMessage* message = [self selectedMessage];
     
@@ -572,7 +591,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initReplyTo:message all:NO profile: [self profileForMessage:message]] autorelease];
 }
 
-- (IBAction)followup: (id) sender
+- (IBAction)followup:(id)sender
 {
     GIMessage *message = [self selectedMessage];
     
@@ -581,7 +600,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initFollowupTo:message profile: [[self group] defaultProfile]] autorelease];
 }
 
-- (IBAction)replyAll: (id) sender
+- (IBAction)replyAll:(id)sender
 {
     GIMessage* message = [self selectedMessage];
     
@@ -590,7 +609,7 @@ static BOOL isThreadItem(id item)
     [[[GIMessageEditorController alloc] initReplyTo:message all: YES profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction)replyDefault: (id) sender
+- (IBAction)replyDefault:(id)sender
 {
     GIMessage *message = [self selectedMessage];
 
@@ -601,14 +620,14 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction) forward: (id) sender
+- (IBAction) forward:(id)sender
 {
     GIMessage* message = [self selectedMessage];
         
     [[[GIMessageEditorController alloc] initForward: message profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction) applySortingAndFiltering: (id) sender
+- (IBAction) applySortingAndFiltering:(id)sender
 /*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
 {
     NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
@@ -656,7 +675,7 @@ static BOOL isThreadItem(id item)
     [threadsView scrollRowToVisible: firstIndex];
 }
 
-- (IBAction) threadFilterPopUpChanged: (id) sender
+- (IBAction) threadFilterPopUpChanged:(id)sender
 {
     if (NSDebugEnabled) NSLog(@"-threadFilterPopUpChanged:");
 
@@ -934,7 +953,7 @@ static BOOL isThreadItem(id item)
     [GIApp saveAction: self];
 }
 
-- (IBAction)selectThreadsWithCurrentSubject: (id) sender
+- (IBAction)selectThreadsWithCurrentSubject:(id)sender
 /*" Joins all threads with the subject of the selected thread. "*/
 {
     NSArray* selectedThreads = [self selectedThreads];
@@ -954,14 +973,14 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction) joinThreads: (id) sender
+- (IBAction) joinThreads:(id)sender
 /*" Joins the selected threads into one. "*/
 {
     [self joinThreads];
 }
 
 
-- (IBAction) extractThread: (id) sender
+- (IBAction) extractThread:(id)sender
 /*" Creates a new thread for the selected messages. "*/
 {
 	NSArray* items = [threadsView selectedItems];
@@ -993,7 +1012,7 @@ static BOOL isThreadItem(id item)
 	}
 }
 
-- (IBAction) moveSelectionToTrash: (id) sender
+- (IBAction) moveSelectionToTrash:(id)sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex];
     NSEnumerator* enumerator = [[threadsView selectedItems] objectEnumerator];
@@ -1141,7 +1160,7 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (IBAction) showNextMessage: (id) sender 
+- (IBAction) showNextMessage:(id)sender 
 {
 	if ([self threadsShownCurrently]) {
 		// Thread list is showing	
@@ -1836,7 +1855,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 	}
 }
 
-- (IBAction) selectTreeCell: (id) sender
+- (IBAction) selectTreeCell:(id)sender
 /*" Displays the corresponding message. "*/
 {
     GIMessage *selectedMessage = [[sender selectedCell] representedObject];
@@ -1846,8 +1865,23 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     }
 }
 
+- (BOOL)matrixIsVisible
+    /*" Returns YES if the comments matrix is shown and not collapsed. NO otherwise "*/
+{
+    return ![treeBodySplitter isSubviewCollapsed:[[treeBodySplitter subviews] objectAtIndex:0]];
+}
+
+- (BOOL)leftMostMessageIsSelected
+{
+    int row, col;
+    
+    [commentsMatrix getRow:&row column:&col ofCell:[commentsMatrix selectedCell]];
+    
+    return col == 0;
+}
+
 // navigation (triggered by menu and keyboard shortcuts)
-- (IBAction)navigateUpInMatrix: (id) sender
+- (IBAction)navigateUpInMatrix:(id)sender
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1867,7 +1901,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     }
 }
 
-- (IBAction)navigateDownInMatrix: (id) sender
+- (IBAction)navigateDownInMatrix:(id)sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1884,27 +1918,34 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     }
 }
 
-- (IBAction)navigateLeftInMatrix: (id) sender
+- (IBAction)navigateLeftInMatrix:(id)sender
 /*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
     {
-        GIMessage *newMessage;
-        
-        if ((newMessage = [[self displayedMessage] reference])) 
+        if ([self leftMostMessageIsSelected] || ![self matrixIsVisible])
         {
-            // check if the current thread has the reference:
-            if ([[[self displayedThread] messages] containsObject:newMessage]) 
-            {
-                [self setDisplayedMessage:newMessage thread:[self displayedThread]];
-                return;
-            }
+            [self closeSelection:self];
         }
-        NSBeep();
+        else
+        {
+            GIMessage *newMessage;
+            
+            if ((newMessage = [[self displayedMessage] reference])) 
+            {
+                // check if the current thread has the reference:
+                if ([[[self displayedThread] messages] containsObject:newMessage]) 
+                {
+                    [self setDisplayedMessage:newMessage thread:[self displayedThread]];
+                    return;
+                }
+            }
+            NSBeep();
+        }
     }
 }
 
-- (IBAction)navigateRightInMatrix: (id) sender
+- (IBAction)navigateRightInMatrix:(id)sender
 /*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
     if ([self messageShownCurrently]) 
@@ -1918,12 +1959,6 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
         }
         NSBeep();
     }
-}
-
-- (BOOL)matrixIsVisible
-/*" Returns YES if the comments matrix is shown and not collapsed. NO otherwise "*/
-{
-    return ![treeBodySplitter isSubviewCollapsed:[[treeBodySplitter subviews] objectAtIndex:0]];
 }
 
 //[commentsMatrix cellAtRow:y column:x]

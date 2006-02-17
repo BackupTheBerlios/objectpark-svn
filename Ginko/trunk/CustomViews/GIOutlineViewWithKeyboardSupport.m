@@ -24,42 +24,19 @@
 #import <Foundation/NSDebug.h>
 #import <Foundation/Foundation.h>
 
-#define TAB ((char)'\x09')
-#define SPACE ((char)'\x20')
+#define TAB 0x30
+#define SPACEKEY 0x31
 #define BACKSPACE 127
-#define RETURN 13
-#define ENTER 0x0003
-
+#define RETURN 0x24
+#define ENTER 0x4c
+#define KEYPAD0KEY  0x52
+#define KEYPAD2KEY  0x54
+#define KEYPAD4KEY  0x56
+#define KEYPAD5KEY  0x57
+#define KEYPAD6KEY  0x58
+#define KEYPAD8KEY  0x5B
 
 @implementation GIOutlineViewWithKeyboardSupport
-
-/* <hacks> */
-
-
-/*
-- (int) numberOfRows
-{
-	//NSLog(@"Instance variable _numberOfRows: %d", (FakeOutlineView*)self->_numberOfRows);
-	return [super numberOfRows];	
-}
-*/
-
-- (void) reloadData 
-{
-	[super reloadData];
-}
-
-/*
- - (void)_verifySelectionIsOK
- {
-	 if ([[self selectedRowIndexes] count]) {
-		 [(FakeOutlineView*)super _verifySelectionIsOK];
-	 }
- }
- */
- 
-
-/* </hacks> */
 
 - (id)previousExpandedItem
 {
@@ -73,11 +50,9 @@
 
     if (level)
     {
-        while (
-               ([self levelForItem:item] > level)
-               || (! [self isItemExpanded:item]) 
-               && (selectedRow > 0)
-               )
+        while (([self levelForItem:item] > level)
+                || (! [self isItemExpanded:item]) 
+                && (selectedRow > 0))
         {
             selectedRow -= 1;
             item = [self itemAtRow:selectedRow];
@@ -86,7 +61,7 @@
     return item;
 }
 
-- (void) keyDown: (NSEvent*) theEvent 
+- (void)keyDown:(NSEvent *)theEvent 
 {
     NSString *characters;
     unichar firstChar;
@@ -100,64 +75,77 @@
     item = [self itemAtRow:selectedRow];
     characters = [theEvent characters];
     firstChar = [characters characterAtIndex:0];
-
-    switch (firstChar) {
+    
+    switch ([theEvent keyCode]) 
+    {
         case RETURN:
-            if ([[self delegate] respondsToSelector:@selector(openSelection:)]) {
+        case 42: // #
+        case 2: // d
+        case KEYPAD6KEY:
+        case 0x7c: // RightArrowFunctionKey
+            if ([[self delegate] respondsToSelector:@selector(openSelection:)]) 
+            {
                 [[self delegate] performSelector:@selector(openSelection:) withObject:self];
-            } else {
+            } 
+            else 
+            {
                 [self expandItem:item];
             }
             break;
             
-        case NSLeftArrowFunctionKey:
+        case 0x7b: //LeftArrowFunctionKey:
+        case 0: // a
+        case 41: // …
+        case KEYPAD4KEY:
         {
             id myItem;
             int row;
             
             myItem = [self previousExpandedItem];
-            row = [self rowForItem: myItem];
-            
-            [self collapseItem: myItem];
-            [self selectRow: row byExtendingSelection: NO];
-            [self scrollRowToVisible: row];
-            break;
-        }
-        case SPACE:
-            if ([[self delegate] respondsToSelector: @selector(spacebarHitInOutlineView:)]) {
-                [[self delegate] performSelector: @selector(spacebarHitInOutlineView:)
-                                      withObject: self];
-            }
-            break;
-/*            if([self isExpandable:item])
+            if ([self isItemExpanded:myItem])
             {
-                if([self isItemExpanded:item])
-                {
-                    [self collapseItem:item];
-                }
-                else
-                {
-                    [self expandItem:item];
-                }
+                row = [self rowForItem:myItem];
+                
+                [self collapseItem:myItem];
+                [self selectRow:row byExtendingSelection:NO];
+                [self scrollRowToVisible:row];
             }
             else
             {
-                id myItem;
-
-                myItem = [self previousExpandedItem];
-                [self collapseItem:myItem];
-                [self selectRow:[self rowForItem:myItem] byExtendingSelection: NO];
+                if ([[self delegate] respondsToSelector:@selector(closeSelection:)]) 
+                {
+                    [[self delegate] performSelector:@selector(closeSelection:) withObject:self];
+                } 
             }
-            break; */
-/*        case RETURN:
-        case ENTER:
-        { 
-            SEL doubleAction = [self doubleAction];
-            id delegate = [self delegate];
-            [delegate performSelector:doubleAction withObject:self];
         }
             break;
-*/        case TAB:
+        case 13: // w
+        case 33: // †
+        case KEYPAD8KEY:
+            if (selectedRow > 0) 
+            {
+                [self selectRow:selectedRow - 1 byExtendingSelection:NO];
+                [self scrollRowToVisible:selectedRow - 1];
+            }
+            break;            
+        case 1: // s
+        case 39: // €
+        case KEYPAD2KEY:
+        case KEYPAD5KEY:
+            if (selectedRow < ([self numberOfRows] - 1))
+            {
+                [self selectRow:selectedRow + 1 byExtendingSelection:NO];
+                [self scrollRowToVisible:selectedRow + 1];
+            }
+            break;
+        case 0x31: // SPACE
+            if ([[self delegate] respondsToSelector:@selector(spacebarHitInOutlineView:)]) 
+            {
+                [[self delegate] performSelector:@selector(spacebarHitInOutlineView:)
+                                      withObject:self];
+            }
+            break;
+        case TAB:
             if(theModifierFlags & NSAlternateKeyMask)
             {
                 if ([delegate respondsToSelector:@selector(selectPreviousKeyView:)])

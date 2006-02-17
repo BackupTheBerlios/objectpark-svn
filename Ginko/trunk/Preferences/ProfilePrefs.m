@@ -11,61 +11,58 @@
 #import "GIAccount.h"
 #import "OPPersistentObject+Extensions.h"
 
-
 @implementation ProfilePrefs
 
-- (void) didSelect 
+- (void)didSelect 
 {    
-    [self willChangeValueForKey: @"accounts"];
-    [self didChangeValueForKey: @"accounts"];
+    [self willChangeValueForKey:@"accounts"];
+    [self didChangeValueForKey:@"accounts"];
 }
 
-- (NSArray*) profiles
+- (NSArray *)profiles
 {
     return [GIProfile allObjects];
 }
 
-- (void) setProfiles: (id) accounts
+- (void)setProfiles:(id)accounts
 {
 	// NOP, only to keep controller happy
 }
 
-
 - (IBAction)removeProfile:(id)sender
 {	
 	int selectedRow = [profileTableView selectedRow];
-	NSArray* oldList = [self profiles];
-	GIProfile* selectedProfile = [oldList objectAtIndex: [profileTableView selectedRow]];
-	OPPersistentObjectContext* context = [selectedProfile context];
+	NSArray *oldList = [self profiles];
+	GIProfile *selectedProfile = [oldList objectAtIndex:[profileTableView selectedRow]];
+	OPPersistentObjectContext *context = [selectedProfile context];
 	[self willChangeValueForKey: @"profiles"];
 	[selectedProfile delete];
 	[context saveChanges];
-	[self didChangeValueForKey: @"profiles"];
-	[profileTableView selectRow: MIN(selectedRow, [oldList count]-2) byExtendingSelection: NO];
+	[self didChangeValueForKey:@"profiles"];
+	[profileTableView selectRow:MIN(selectedRow, [oldList count]-2) byExtendingSelection:NO];
 }
 
 - (IBAction)addProfile:(id)sender
 {
-	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-	[self willChangeValueForKey: @"profiles"];
-	GIProfile* newProfile = [[[GIProfile alloc] init] autorelease];
-	[newProfile insertIntoContext: context];
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+	[self willChangeValueForKey:@"profiles"];
+	GIProfile *newProfile = [[[GIProfile alloc] init] autorelease];
+	[newProfile insertIntoContext:context];
 	[context saveChanges];
-	[self didChangeValueForKey: @"profiles"];
-	[profileTableView selectRow: [[self profiles] indexOfObject: newProfile] byExtendingSelection: NO];
+	[self didChangeValueForKey:@"profiles"];
+	[profileTableView selectRow:[[self profiles] indexOfObject:newProfile] byExtendingSelection:NO];
 }
 
-
-- (NSArray*) accounts
+- (NSArray *)accounts
 {
     return [GIAccount allObjects];
 }
 
 - (IBAction)setSendAccount:(id)sender
 {
-    GIProfile* selectedProfile = [[profileTableView dataSource] itemAtRow: [profileTableView selectedRow]];
+    GIProfile *selectedProfile = [[profileTableView dataSource] itemAtRow:[profileTableView selectedRow]];
     
-    [selectedProfile setValue: [sender objectValue] forKey: @"sendAccount"];
+    [selectedProfile setValue:[sender objectValue] forKey:@"sendAccount"];
 }
 
 @end
