@@ -371,19 +371,19 @@ static BOOL isThreadItem(id item)
 - (BOOL)threadsShownCurrently
 /*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
 {
-    return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"threads"];
+    return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"threads"];
 }
 
-- (BOOL) searchHitsShownCurrently
+- (BOOL)searchHitsShownCurrently
 /*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
 {
     return (hits != nil);
 }
 
-- (BOOL) messageShownCurrently
+- (BOOL)messageShownCurrently
 /*" Returns YES if the tab with the message is currently visible. NO otherwise. "*/
 {
-    return [[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"];
+    return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"];
 }
 
 - (BOOL)openSelection:(id)sender
@@ -523,20 +523,20 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
-- (IBAction) closeSelection:(id)sender
+- (IBAction)closeSelection:(id)sender
 {
     if (sender == messageTextView) {
-        if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier: @"searchresult"];
-        else [tabView selectTabViewItemWithIdentifier: @"threads"];
+        if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+        else [tabView selectTabViewItemWithIdentifier:@"threads"];
     } else {
-        if ([[[tabView selectedTabViewItem] identifier] isEqualToString: @"message"]) {
+        if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"]) {
             // from message switch back to threads:
-            if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier: @"searchresult"];
-            else [tabView selectTabViewItemWithIdentifier: @"threads"];
+            if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+            else [tabView selectTabViewItemWithIdentifier:@"threads"];
         } else {
             // from threads switch back to the groups window:
-            [[GIApp groupsWindow] makeKeyAndOrderFront: sender];
-            [window performClose: self];
+            [[GIApp groupsWindow] makeKeyAndOrderFront:sender];
+            [window performClose:self];
         }
     }
 }
@@ -1927,7 +1927,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     {
         if ([self leftMostMessageIsSelected] || ![self matrixIsVisible])
         {
-            [self closeSelection:self];
+            [tabView selectTabViewItemWithIdentifier:@"threads"];
         }
         else
         {

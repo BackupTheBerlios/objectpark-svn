@@ -105,30 +105,34 @@
                 case 2: // d
                 case KEYPAD6KEY:
                 case 42: // #
+                    consumed = [[self delegate] messageShownCurrently];
                     [self delegateAction:@selector(navigateRightInMatrix:)];
                     break;
                     
                 case 0: // a
                 case 41: // Ö
                 case KEYPAD4KEY:
-                    [self delegateAction: @selector(navigateLeftInMatrix:)];
+                    consumed = [[self delegate] messageShownCurrently];
+                    [self delegateAction:@selector(navigateLeftInMatrix:)];
                     break;
                     
                 case 13: // w
                 case 33: // Ü
                 case KEYPAD8KEY:
-                    [self delegateAction: @selector(navigateUpInMatrix:)];
+                    consumed = [[self delegate] messageShownCurrently];
+                    [self delegateAction:@selector(navigateUpInMatrix:)];
                     break;
                     
                 case 1: // s
                 case 39: // Ä
                 case KEYPAD2KEY:
                 case KEYPAD5KEY:
-                    [self delegateAction: @selector(navigateDownInMatrix:)];
+                    consumed = [[self delegate] messageShownCurrently];
+                    [self delegateAction:@selector(navigateDownInMatrix:)];
                     break;
                     
 				case SPACEKEY:
-                    [self delegateAction: @selector(showNextMessage:)];
+                    [self delegateAction:@selector(showNextMessage:)];
 					consumed = YES;
 					//sleep(1);
 
