@@ -97,6 +97,8 @@ typedef struct {
 - (id) objectRegisteredForOid: (OID) oid ofClass: (Class) poClass
 /*" Returns a subclass of OPPersistentObject. "*/
 {
+    NSParameterAssert(poClass != NULL);
+    
 	FakeObject searchStruct;
 	
     searchStruct.isa = poClass;
@@ -228,6 +230,8 @@ typedef struct {
 	Class pClass = NSClassFromString(className);
 	NSString* oidString = [pathComponents objectAtIndex: 3];
 
+    if (pClass == NULL) return nil;
+    
 	OID oid = OPLongLongStringValue(oidString);
 	if (oid==0LL && [oidString hasPrefix: @"p"]) {
 		// Fallback for transition from CoreData. Can be removed later:

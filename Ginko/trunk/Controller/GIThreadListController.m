@@ -486,7 +486,7 @@ static BOOL isThreadItem(id item)
         
         if ((selectedIndex >= 0) && (selectedIndex < [hits count])) 
         {
-            GIMessage *message = [[hits objectAtIndex: selectedIndex] objectForKey:@"message"];
+            GIMessage *message = [[[hits sortedArrayUsingDescriptors:[searchHitsTableView sortDescriptors]] objectAtIndex:selectedIndex] objectForKey:@"message"];
             
 			unsigned messageSendStatus = [message sendStatus];
             if (messageSendStatus > OPSendStatusNone) 
