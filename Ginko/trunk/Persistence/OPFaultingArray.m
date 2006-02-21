@@ -478,6 +478,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 
 - (id) objectAtIndex: (unsigned) anIndex
 {
+	NSParameterAssert(anIndex<count);
 	[self sort];
 	
 	OID oid = *oidPtr(anIndex);
