@@ -197,39 +197,41 @@ static BOOL isThreadItem(id item)
 
 - (void) showMessageInThreadList: (GIMessage*) aMessage
 {
-    GIThread* thread = [aMessage valueForKey: @"thread"];
-    int itemRow;
-            
-    // make sure that thread is expanded in threads outline view:
-    if (thread && (![thread containsSingleMessage]))  {
-        [threadsView expandItem:thread];
-    }
-    
-    // select responding item in threads view:
-    
-    NSArray *threadArray = [self threadsByDate];
-    
-    itemRow = [threadArray indexOfObject:thread]; // estimation!
-    
-    /*
-     if ([self threadByDateSortAscending])
-     {
-         itemRow += ([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count]));
-     }
-     else
-     {
-         itemRow = ([threadArray count]-1) - itemRow;
-     }
-     */
-    
-    if ([self threadLimitCount] != INT_MAX) itemRow = 0;
-    
-    itemRow = [threadsView rowForItemEqualTo:([thread containsSingleMessage] ? (id)thread : (id)aMessage) startingAtRow:itemRow];
-    
-    if (itemRow != -1) {
-        [threadsView selectRow:itemRow byExtendingSelection:NO];
-        [threadsView scrollRowToVisible:itemRow];
-    }
+	if (aMessage) {
+		GIThread* thread = [aMessage valueForKey: @"thread"];
+		int itemRow;
+		
+		// make sure that thread is expanded in threads outline view:
+		if (thread && (![thread containsSingleMessage]))  {
+			[threadsView expandItem:thread];
+		}
+		
+		// select responding item in threads view:
+		
+		NSArray *threadArray = [self threadsByDate];
+		
+		itemRow = [threadArray indexOfObject:thread]; // estimation!
+		
+		/*
+		 if ([self threadByDateSortAscending])
+		 {
+			 itemRow += ([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count]));
+		 }
+		 else
+		 {
+			 itemRow = ([threadArray count]-1) - itemRow;
+		 }
+		 */
+		
+		if ([self threadLimitCount] != INT_MAX) itemRow = 0;
+		
+		itemRow = [threadsView rowForItemEqualTo:([thread containsSingleMessage] ? (id)thread : (id)aMessage) startingAtRow:itemRow];
+		
+		if (itemRow != -1) {
+			[threadsView selectRow:itemRow byExtendingSelection:NO];
+			[threadsView scrollRowToVisible:itemRow];
+		}
+	}
 }
 
 - (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
@@ -237,25 +239,27 @@ static BOOL isThreadItem(id item)
 {
 	if (!aThread) aThread = [aMessage valueForKey: @"thread"];
 	
-    if (isThreadItem(aThread)) {
-		BOOL isNewThread = ![aThread isEqual: displayedThread];
-		
-		[displayedMessage autorelease];
-		displayedMessage = [aMessage retain];
-		[displayedMessage addFlags: OPSeenStatus];
-		
-		if (isNewThread) {
-			[displayedThread removeObserver: self forKeyPath: @"messages"];
-			[displayedThread autorelease];
-			displayedThread = [aThread retain];
-			[displayedThread addObserver: self 
-							  forKeyPath: @"messages" 
-								 options: NSKeyValueObservingOptionNew 
-								 context: NULL];		
-		}
-		
+	NSParameterAssert(aThread==nil || isThreadItem(aThread));
+	
+	BOOL isNewThread = ![aThread isEqual: displayedThread];
+	
+	[displayedMessage autorelease];
+	displayedMessage = [aMessage retain];
+	[displayedMessage addFlags: OPSeenStatus];
+	
+	if (isNewThread) {
+		[displayedThread removeObserver: self forKeyPath: @"messages"];
+		[displayedThread autorelease];
+		displayedThread = [aThread retain];
+		[displayedThread addObserver: self 
+						  forKeyPath: @"messages" 
+							 options: NSKeyValueObservingOptionNew 
+							 context: NULL];		
+	}
+	
+	if (aMessage) {
 		[self showMessageInThreadList: aMessage];
-        
+		
 		// message display string:
 		NSAttributedString* messageText = nil;
 		
@@ -292,16 +296,6 @@ static BOOL isThreadItem(id item)
 		[messageTextView scrollRangeToVisible: NSMakeRange(0, 0)];
 		
 		[self updateCommentTree: isNewThread];
-		
-		//BOOL collapseTree = [commentsMatrix numberOfColumns]<=1;
-		// Hide comment tree, if trivial:
-		//[treeBodySplitter setSubview: [[treeBodySplitter subviews] objectAtIndex:0] isCollapsed:collapseTree];
-		//if (YES && !collapseTree){
-
-		
-		//[GIApp saveAction:self]; // not neccessary every time...
-		//}
-		//[commentsMatrix scrollCellToVisibleAtRow: [commentsMatrix selectedRow] column: [commentsMatrix selectedRow]];
 	}
 }
 
@@ -1014,7 +1008,7 @@ static BOOL isThreadItem(id item)
 	}
 }
 
-- (IBAction) moveSelectionToTrash:(id)sender
+- (IBAction) moveSelectionToTrash: (id) sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex];
     NSEnumerator* enumerator = [[threadsView selectedItems] objectEnumerator];
@@ -1040,7 +1034,7 @@ static BOOL isThreadItem(id item)
 				GIThread* newThread = [oldNewThreadDictionary objectForKey: [item thread]];
 				if (!newThread) {
 					// Create new thread for all messages from the same thread:
-					GIThread* newThread = [[[[GIThread class] alloc] init] autorelease];
+					newThread = [[[[GIThread class] alloc] init] autorelease];
 					[newThread insertIntoContext: [(GIMessage*)item context]];
 					[oldNewThreadDictionary setObject: newThread forKey: [item thread]];
 					[GIMessageBase addTrashThread: newThread];
@@ -1055,6 +1049,8 @@ static BOOL isThreadItem(id item)
 		// Select first selected line, if it still exists;
         rowBefore = MIN([threadsView numberOfRows]-1, rowBefore); 
 		if (rowBefore>=0) [threadsView selectRow: rowBefore byExtendingSelection: NO];
+		
+		[tabView selectTabViewItemWithIdentifier: @"threads"];
 		[NSApp saveAction: self];
     } else  {
         NSBeep();
@@ -1089,6 +1085,8 @@ static BOOL isThreadItem(id item)
 - (void) setGroup: (GIMessageGroup*) aGroup
 {
     if (aGroup != group) {
+		[self setDisplayedMessage: nil thread: nil];
+		
 		[group removeObserver: self forKeyPath: @"threadsByDate"];
 		
 		[aGroup addObserver: self 
