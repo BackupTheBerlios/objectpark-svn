@@ -148,7 +148,7 @@
                     break;
 					
                 default:
-					NSLog(@"Key pressed. Code: %X", [theEvent keyCode]);
+					//NSLog(@"Key pressed. Code: %X", [theEvent keyCode]);
                     break;
             }        
         }

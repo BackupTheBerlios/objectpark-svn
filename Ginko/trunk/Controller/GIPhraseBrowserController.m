@@ -22,6 +22,13 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 + (void)showPhraseBrowserForTextView:(NSTextView *)aTextView
 {
     GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
+	
+	// The following if does not yet quite work for phrase browsers with a textview set:
+	if ([controller->window isVisible] && controller->textView == aTextView) {
+		[controller->window close];
+		[self setTextView: nil];
+		return;
+	}
     [controller->window makeFirstResponder:controller->phraseTableView];
     [self setTextView:aTextView];
     [controller->window makeKeyAndOrderFront:self];
@@ -29,8 +36,7 @@ static GIPhraseBrowserController *sharedPhraseBrowserController = nil;
 
 + (void)setTextView:(NSTextView *)aTextView
 {
-    if (aTextView)
-    {
+    if (aTextView) {
         GIPhraseBrowserController *controller = [self sharedPhraseBrowserController];
         
         [controller willChangeValueForKey:@"textView"];

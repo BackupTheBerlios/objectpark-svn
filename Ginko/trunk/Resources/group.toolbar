@@ -1,5 +1,5 @@
 {
-    toolbarDefaultItems = (new, replyDefault, NSToolbarSeparatorItem, replySender, replyAll, followup, NSToolbarSeparatorItem, forward, NSToolbarFlexibleSpaceItem, delete, search);
+    toolbarDefaultItems = (back, new, replyDefault, NSToolbarSeparatorItem, replySender, replyAll, followup, NSToolbarSeparatorItem, forward, NSToolbarFlexibleSpaceItem, delete, search);
     replyDefault = {
         label = "Reply";
         paletteLabel = "Reply";
@@ -70,6 +70,13 @@
         action = "removeReadThreads:";
         imageName = "MailIcon_less";
     };
+    back = {
+        label = "Back";
+        paletteLabel = "Back";
+        toolTip = "Goes back to the previous view.";
+        action = "closeSelection:";
+        imageName = "BackToolbarImage";
+    };	
     search = {
         label = "Search";
         paletteLabel = "Search";
