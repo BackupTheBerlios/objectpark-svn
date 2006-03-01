@@ -126,22 +126,23 @@
 
 + (BOOL) isMyEmailAddress: (NSString*) anAddress
 {
-    NSEnumerator *enumerator;
-    GIProfile *profile;
-    
-    @try {
-        anAddress = [anAddress addressFromEMailString]; // to be sure to have only the address part
-        
-        enumerator = [[GIProfile allObjects] objectEnumerator];
-        while (profile = [enumerator nextObject]) {
-            if ([[[profile mailAddress] addressFromEMailString] rangeOfString: anAddress options: NSCaseInsensitiveSearch].location != NSNotFound) {
-                return YES;
-            }
-        }
-    } @catch (NSException* localException) {
-        return NO; // Expect our users to have correct email addresses.
+	if (anAddress) {
+		NSEnumerator *enumerator;
+		GIProfile *profile;
+		
+		@try {
+			anAddress = [anAddress addressFromEMailString]; // to be sure to have only the address part
+			
+			enumerator = [[GIProfile allObjects] objectEnumerator];
+			while (profile = [enumerator nextObject]) {
+				if ([[[profile mailAddress] addressFromEMailString] rangeOfString: anAddress options: NSCaseInsensitiveSearch].location != NSNotFound) {
+					return YES;
+				}
+			}
+		} @catch (NSException* localException) {
+			return NO; // Expect our users to have correct email addresses.
+		}
     }
-    
     return NO;
 }
 
