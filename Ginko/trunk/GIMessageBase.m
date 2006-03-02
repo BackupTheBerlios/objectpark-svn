@@ -197,14 +197,19 @@ NSString* MboxImportJobName = @"mbox import";
                     
                     
                     NSMutableArray* args = [NSMutableArray arrayWithObject: transferData];
-                    [self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
-                    
-                    GIMessage *persistentMessage = [args objectAtIndex: 1];
-                    
-                    if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
+					
+                    //[self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
+                    // Moved addition to background thread:
+					GIMessage *persistentMessage = [GIMessage messageWithTransferData: transferData];
+	
+					                    
+                    //if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
                     
                     if (persistentMessage) {
-                        [persistentMessage addFlagsFromString:flags];
+						
+						[self addMessage:persistentMessage];
+
+                        if (flags) [persistentMessage addFlagsFromString:flags];
                         
                         messagesWereAdded = YES;
                         ++addedMessageCount;

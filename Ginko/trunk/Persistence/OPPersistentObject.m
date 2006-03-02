@@ -363,7 +363,7 @@
 }
 
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key
-/*" Passing a nil value is allowed. "*/
+/*" Passing a nil value is allowed and removes the respective value. "*/
 {	
 	@synchronized(self) {
 		if (object) {
@@ -552,13 +552,13 @@
 
 - (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 {
-	@synchronized(self) {
-		OPFaultingArray* container = [self primitiveValueForKey: key];	
-		// container may be nil, if the relationship was never fetched. 
-		// This is ok, since addValue:forKey: already updated the relationship object
-		// so we'll pick up any changes later.
-		[container addObject: value];	
-	}
+	//@synchronized(self) { not needed. causes deadlock.
+	OPFaultingArray* container = [self primitiveValueForKey: key];	
+	// container may be nil, if the relationship was never fetched. 
+	// This is ok, since addValue:forKey: already updated the relationship object
+	// so we'll pick up any changes later.
+	[container addObject: value];	
+	//}
 }
 
 
@@ -617,13 +617,13 @@
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key
 {
-	@synchronized(self) {
-		OPFaultingArray* container = [self primitiveValueForKey: key];
-		// container may be nil, if the relationship was never fetched. 
-		// This is ok, since removeValue:forKey: already updated the relationship object
-		// so we'll pick up any changes later.
-		[container removeObject: value];
-	}
+	//@synchronized(self) { // not needed. Can cause deadlock
+	OPFaultingArray* container = [self primitiveValueForKey: key];
+	// container may be nil, if the relationship was never fetched. 
+	// This is ok, since removeValue:forKey: already updated the relationship object
+	// so we'll pick up any changes later.
+	[container removeObject: value];
+	//}
 }
 
 - (id) transientValueForKey: (NSString*) key
