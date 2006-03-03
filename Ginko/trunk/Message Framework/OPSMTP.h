@@ -2,7 +2,7 @@
      OPSMTP.h created by axel on Sat 02-Jun-2001
      $Id: OPSMTP.h,v 1.1 2005/03/19 19:48:09 mikesch Exp $
 
-     Copyright (c) 2001 by Axel Katerbau. All rights reserved.
+     Copyright (c) 2001, 2006 by Axel Katerbau. All rights reserved.
 
      Permission to use, copy, modify and distribute this software and its documentation
      is hereby granted, provided that both the copyright notice and this permission
@@ -19,12 +19,11 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "OPInternetMessage.h"
-#import "OPMessageConsumer.h"
 #import <OPNetwork/OPStream+SSL.h>
 
-typedef enum _OPSMTPState
-{
+#define GISMTP OPL_DOMAIN @"GISMTP"
+
+typedef enum _OPSMTPState {
     Disconnected,
     Connected,
     NonAuthenticated,
@@ -32,8 +31,7 @@ typedef enum _OPSMTPState
 } OPSMTPState;
 
 // RFC 821 SMTP
-@interface OPSMTP : NSObject <OPMessageConsumer>
-{
+@interface OPSMTP : NSObject {
     @private
     OPStream *stream;
     NSMutableDictionary *capabilities;
@@ -43,35 +41,41 @@ typedef enum _OPSMTPState
     int state;
 }
 
-+ (id)SMTPWithUsername: (NSString*) aUsername password: (NSString*) aPassword stream: (OPStream*) aStream;
-+ (id)SMTPWithStream: (OPStream*) aStream andDelegate:(id)anObject;
++ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream;
++ (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject;
 
-- (id)initWithUsername: (NSString*) aUsername password: (NSString*) aPassword stream: (OPStream*) aStream;
-- (id)initWithStream: (OPStream*) aStream andDelegate:(id)anObject;
+- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream;
+- (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject;
 
-- (void) quit;
+- (BOOL)willAcceptMessage;
+- (BOOL)handles8BitBodies;
+
+- (void)sendTransferData:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients;
+
+//- (void)sendMailWithHeaders:(NSDictionary *)userHeaders andBody:(NSString *)body;
+
+- (void)quit;
 
 @end
 
 @protocol OPSMTPDelegate
 
-- (NSString*) usernameForSMTP: (OPSMTP*) aSMTP;
+- (NSString *)usernameForSMTP:(OPSMTP *)aSMTP;
 /*" Required. Returns the username for use with the given SMTP aSMTP.
     SMTP sends this method paired with %{-passwordForSMTP:}. "*/
 
-- (NSString*) passwordForSMTP: (OPSMTP*) aSMTP;
+- (NSString *)passwordForSMTP:(OPSMTP *)aSMTP;
 /*" Required. Returns the password for use with the given SMTP aSMTP.
     SMTP sends this method paired with %{-usernameForSMTP:}."*/
 
-- (BOOL)useSMTPS: (OPSMTP*) aSMTP;
+- (BOOL)useSMTPS:(OPSMTP *)aSMTP;
 /*" Optional. Default is NO. "*/
 
-- (BOOL)allowAnyRootCertificateForSMTP: (OPSMTP*) aSMTP;
+- (BOOL)allowAnyRootCertificateForSMTP:(OPSMTP *)aSMTP;
 /*" Optional. Default is NO. "*/
 
-- (BOOL)allowExpiredCertificatesForSMTP: (OPSMTP*) aSMTP;
+- (BOOL)allowExpiredCertificatesForSMTP:(OPSMTP *)aSMTP;
 /*" Optional. Default is NO. "*/
-
 
 @end
 

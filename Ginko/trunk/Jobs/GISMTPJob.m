@@ -13,7 +13,7 @@
 #import <OPNetwork/OPNetwork.h>
 #import "NSHost+GIReachability.h"
 #import "OPPOP3Session.h"
-#import "OPSMTP.h"
+#import "OPSMTP+InternetMessage.h"
 #import "GIMessage.h"
 
 @implementation GISMTPJob
@@ -104,29 +104,29 @@
             NSEnumerator* enumerator = [theMessages objectEnumerator];
             
             // sending messages:
-            NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
             @try {
                 GIMessage *message;
                 
                 while (message = [enumerator nextObject]) {
-                    [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
+                    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
                     
                     @try {
-                        [SMTP acceptMessage: [message internetMessage]];
-                        [sentMessages addObject: message];
-                    } @catch (NSException* localException) {
+                        [SMTP sendMessage:[message internetMessage]];
+                        [sentMessages addObject:message];
+                    } @catch (NSException *localException) {
                         NSLog(@"Error sending message %@: %@", [message valueForKey: @"subject"], [localException reason]);
                     }
                     [pool release]; pool = [[NSAutoreleasePool alloc] init];
                 }
-            } @catch (NSException* localException) {
+            } @catch (NSException *localException) {
                 @throw;
             } @finally {
                 [pool release];
-                [OPJobs setProgressInfo: [OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat: NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
+                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat:NSLocalizedString(@"loggin off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
                 [SMTP quit];
             }
-        } @catch (NSException* localException) {
+        } @catch (NSException *localException) {
             @throw;
         } @finally {
             [OPJobs setResult: [NSDictionary dictionaryWithObjectsAndKeys:

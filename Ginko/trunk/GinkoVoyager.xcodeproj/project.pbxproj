@@ -110,6 +110,8 @@
 		7786DC5107DE2F7200C5F9F7 /* ProfilePrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */; };
 		77A84B970771D32700112B7D /* GIMessageEditorWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 77A84B950771D32700112B7D /* GIMessageEditorWindow.h */; };
 		77A84B980771D32700112B7D /* GIMessageEditorWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A84B960771D32700112B7D /* GIMessageEditorWindow.m */; };
+		77AA32BE09B8896900D90C6A /* OPSMTP+InternetMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 77AA32BC09B8896900D90C6A /* OPSMTP+InternetMessage.h */; };
+		77AA32BF09B8896900D90C6A /* OPSMTP+InternetMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AA32BD09B8896900D90C6A /* OPSMTP+InternetMessage.m */; };
 		77AD0FA1076EECB400D1DD65 /* MailIcon_addresses.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AD0F99076EECB300D1DD65 /* MailIcon_addresses.tiff */; };
 		77AD0FA2076EECB400D1DD65 /* MailIcon_addbcc.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AD0F9A076EECB400D1DD65 /* MailIcon_addbcc.tiff */; };
 		77AD0FA3076EECB400D1DD65 /* MailIcon_addcc.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AD0F9B076EECB400D1DD65 /* MailIcon_addcc.tiff */; };
@@ -587,6 +589,8 @@
 		7790BB9D0962F7F900988B3C /* GIFulltextIndexJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFulltextIndexJob.m; sourceTree = "<group>"; };
 		77A84B950771D32700112B7D /* GIMessageEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorWindow.h; sourceTree = "<group>"; };
 		77A84B960771D32700112B7D /* GIMessageEditorWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorWindow.m; sourceTree = "<group>"; };
+		77AA32BC09B8896900D90C6A /* OPSMTP+InternetMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPSMTP+InternetMessage.h"; sourceTree = "<group>"; };
+		77AA32BD09B8896900D90C6A /* OPSMTP+InternetMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPSMTP+InternetMessage.m"; sourceTree = "<group>"; };
 		77AD0F99076EECB300D1DD65 /* MailIcon_addresses.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_addresses.tiff; sourceTree = "<group>"; };
 		77AD0F9A076EECB400D1DD65 /* MailIcon_addbcc.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_addbcc.tiff; sourceTree = "<group>"; };
 		77AD0F9B076EECB400D1DD65 /* MailIcon_addcc.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_addcc.tiff; sourceTree = "<group>"; };
@@ -1376,6 +1380,8 @@
 				775597BE085506BE00E53108 /* OPPOP3Session.m */,
 				77253D6107ECB83E00375AFC /* OPSMTP.h */,
 				77253D6207ECB83E00375AFC /* OPSMTP.m */,
+				77AA32BC09B8896900D90C6A /* OPSMTP+InternetMessage.h */,
+				77AA32BD09B8896900D90C6A /* OPSMTP+InternetMessage.m */,
 				772DB3D7077DB231001665AB /* OPURLFieldCoder.h */,
 				772DB3D8077DB231001665AB /* OPURLFieldCoder.m */,
 				8D9021AB077A0589005365EA /* OPXFolderContentCoder.h */,
@@ -1590,6 +1596,7 @@
 				3083577309A015E0003D1D86 /* TestPersistence.h in Headers */,
 				3083577809A01639003D1D86 /* TestOPJobs.h in Headers */,
 				8D0EC28209A22577004563D4 /* NSString+Similarities.h in Headers */,
+				77AA32BE09B8896900D90C6A /* OPSMTP+InternetMessage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2049,6 +2056,7 @@
 				3083577209A015DE003D1D86 /* TestPersistence.m in Sources */,
 				3083577A09A0163A003D1D86 /* TestOPJobs.m in Sources */,
 				8D0EC28309A22577004563D4 /* NSString+Similarities.m in Sources */,
+				77AA32BF09B8896900D90C6A /* OPSMTP+InternetMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

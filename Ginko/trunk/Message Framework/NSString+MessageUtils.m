@@ -24,8 +24,6 @@
 #import "NSString+MessageUtils.h"
 #import "NSAttributedString+MessageUtils.h"
 #import "NSAttributedString+Extensions.h"
-//#import "NSArray+Extensions.h"
-#import "OPObjectPair.h"
 #import "NSScanner+Extensions.h"
 #import "utilities.h"
 
@@ -727,7 +725,7 @@ static BOOL _fileExists(NSString *filePath)
     NSArray* lines;
     NSMutableArray *ranges;
     NSEnumerator *enumerator;
-    OPObjectPair *rangeObject;
+    NSArray *rangeObject;
     
     result = [[[NSMutableAttributedString alloc] init] autorelease];
     pool = [[NSAutoreleasePool alloc] init];
@@ -781,7 +779,7 @@ static BOOL _fileExists(NSString *filePath)
             if (excerptDepth)
             {
                 //[ranges addObject:[OPObjectPair pairWithObjects:[EDRange rangeWithRangeValue:range] :excerptDepth]];
-                [ranges addObject:[OPObjectPair pairWithObjects:NSStringFromRange(range) :excerptDepth]];
+                [ranges addObject:[NSArray arrayWithObjects:NSStringFromRange(range), excerptDepth, nil]];
             }
         }
         else
@@ -798,13 +796,13 @@ static BOOL _fileExists(NSString *filePath)
         NSRange range;
         NSNumber *excerptDepth;
         
-        range = NSRangeFromString([rangeObject firstObject]);
+        range = NSRangeFromString([rangeObject objectAtIndex:0]);
         
         while (NSMaxRange(range) >= [result length])
         {
             range.length--;
         }
-        excerptDepth = [rangeObject secondObject];
+        excerptDepth = [rangeObject objectAtIndex:1];
     
         [result addAttribute:OPQuotationAttributeName value:excerptDepth range:range];
     }
