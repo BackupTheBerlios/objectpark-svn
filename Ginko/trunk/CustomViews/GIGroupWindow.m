@@ -132,19 +132,17 @@
                     break;
                     
 				case SPACEKEY:
-                    [self delegateAction:@selector(showNextMessage:)];
-					consumed = YES;
-					//sleep(1);
+                    if (! [[self delegate] searchHitsShownCurrently]) {
+                        [self delegateAction:@selector(showNextMessage:)];
+                        consumed = YES;
 
-					
-					theEvent = [NSApp nextEventMatchingMask: NSKeyUpMask
-												  untilDate: [NSDate dateWithTimeIntervalSinceNow: 2.0]
-													 inMode: NSEventTrackingRunLoopMode
-													dequeue: YES];
-					 
-					[NSApp discardEventsMatchingMask: NSAnyEventMask beforeEvent: theEvent];
-
-					
+                        theEvent = [NSApp nextEventMatchingMask:NSKeyUpMask
+                                                      untilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]
+                                                         inMode:NSEventTrackingRunLoopMode
+                                                        dequeue:YES];
+                        
+                        [NSApp discardEventsMatchingMask:NSAnyEventMask beforeEvent:theEvent];
+					}
                     break;
 					
                 default:
