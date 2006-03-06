@@ -21,6 +21,9 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
 #import <OPNetwork/OPSSLSocket.h>
 #import <OPNetwork/NSHost+Extensions.h>
 #import "NSData+Extensions.h"
+#import "NSData+MessageUtils.h"
+#import "NSString+MessageUtils.h"
+
 #import <OPDebug/OPLog.h>
 
 NSString *OPSMTPException = @"OPSMTPException";
@@ -241,6 +244,62 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     }
     return self;
 }
+
+
+- (void) sendPlainText: (NSString*) body withHeaders: (NSDictionary*) userHeaders 
+{
+	NSMutableData* transferData = [NSMutableData data];
+	NSEnumerator* headerEnumerator = [userHeaders objectEnumerator];
+	NSString* headerName;
+	
+	NSParameterAssert([[userHeaders objectForKey: @"From"] length]);
+	NSParameterAssert([[userHeaders objectForKey: @"To"] length]);
+	NSParameterAssert([[userHeaders objectForKey: @"Subject"] length]);
+	
+	// Set mime version and content-type here!
+	
+	// Make header data 7-bit clean:
+	while (headerName = [headerEnumerator nextObject]) {
+		NSString* headerValue = [userHeaders objectForKey: headerName];
+		
+		if ([headerValue isKindOfClass: [NSCalendarDate class]]) {
+			[(NSCalendarDate*)headerValue setTimeZone: [NSTimeZone timeZoneWithName: @"GMT"]];
+			headerValue = [(NSCalendarDate*)headerValue descriptionWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"]; 
+		}
+		
+		if (![headerValue canBeConvertedToEncoding: NSASCIIStringEncoding]) {
+			// Do header encoding here
+			if ([headerValue canBeConvertedToEncoding: NSISOLatin1StringEncoding]) {
+				// Example:
+				// Subject: =?iso-8859-1?Q?Steuererkl=E4rung_am_Macintosh_und_PC_leicht_gemacht!?=
+				NSData* data = [[headerValue dataUsingEncoding: NSISOLatin1StringEncoding]  encodeHeaderQuotedPrintable];
+				headerValue = [NSString stringWithFormat: @"=?iso-8859-1?Q?%@?=", [NSString stringWithData: data encoding: NSASCIIStringEncoding]];
+			} else {
+				// Raise Exception
+			}
+		}
+		NSString* headerLine = [NSString stringWithFormat: @"%@: %@\r\n", headerName, headerValue];
+
+		[transferData appendData: [headerLine dataUsingEncoding: NSASCIIStringEncoding]];
+	}
+	
+	[transferData appendData: [@"\r\n" dataUsingEncoding: NSASCIIStringEncoding]]; // could be more efficient
+	
+	body = [body stringWithCanonicalLinebreaks];
+	body = [body stringByEncodingFlowedFormat];
+	
+	[transferData appendData: [body dataUsingEncoding: NSISOLatin1StringEncoding]];
+	
+	NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding]);
+	
+	NSString* fromHeader = [userHeaders objectForKey: @"From"];
+	NSArray* toArray = [[userHeaders objectForKey: @"To"] componentsSeparatedByString: @","];
+	
+	[self sendTransferData: transferData from: fromHeader to: toArray];
+	
+}
+ 
+
 
 - (void)dealloc
 {

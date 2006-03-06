@@ -27,6 +27,9 @@
 
 /*" Various common extensions to #NSString. "*/
 
+#define LF ((char)'\x0A')
+#define CR ((char)'\x0D')
+
 @interface NSString (OPExtensions)
 
 /*" Convenience factory methods "*/
@@ -37,6 +40,13 @@
 - (BOOL)isWhitespace;
 - (NSString*) stringByRemovingWhitespace;
 - (NSString*) stringByRemovingCharactersFromSet: (NSCharacterSet*) set;
+
+
+/*" Line Breaks "*/
+
+- (NSString*) stringWithCanonicalLinebreaks;
+- (NSString*) stringWithUnixLinebreaks;
+
 
 /*" Comparisons "*/
 - (BOOL) hasPrefixCaseInsensitive: (NSString*) string;

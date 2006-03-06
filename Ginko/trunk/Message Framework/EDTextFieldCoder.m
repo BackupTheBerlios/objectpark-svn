@@ -19,7 +19,7 @@
 //---------------------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "NSString+MessageUtils.h"
+#import "NSString+Extensions.h"
 #import "NSData+MessageUtils.h"
 #import "NSData+Extensions.h"
 #import "EDTextFieldCoder.h"
@@ -196,47 +196,46 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 
 + (NSString*) stringByEncodingString: (NSString*) string
 {
-    NSCharacterSet	*spaceCharacterSet;
+    static NSCharacterSet	*spaceCharacterSet = nil;
     NSScanner		*scanner;
     NSMutableString	*buffer, *chunk;
     NSString		*currentEncoding, *nextEncoding, *word, *spaces;
-
-    spaceCharacterSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
+	
+    if (!spaceCharacterSet) spaceCharacterSet = [[NSCharacterSet characterSetWithCharactersInString: @" "] retain];
     buffer = [[[NSMutableString allocWithZone:[(NSObject *)self zone]] init] autorelease];
     scanner = [NSScanner scannerWithString:string];
     [scanner setCharactersToBeSkipped: nil];
-
+	
     chunk = [NSMutableString string];
     currentEncoding = nil;
-    do
-        {
+    do {
         if([scanner scanCharactersFromSet:spaceCharacterSet intoString:&spaces] == NO)
             spaces = @"";
         if([scanner scanUpToCharactersFromSet:spaceCharacterSet intoString:&word] == NO)
             word = nil;
-
+		
         nextEncoding = [word recommendedMIMEEncoding];
         if((nextEncoding != currentEncoding) || ([chunk length] + [word length] + 7 + [currentEncoding length] > 75) || (word == nil))
-            {
+		{
             if([chunk length] > 0)
-                {
+			{
                 if([currentEncoding caseInsensitiveCompare:MIMEAsciiStringEncoding] != NSOrderedSame)
                     [buffer appendString:[self _wrappedWord:chunk encoding:currentEncoding]];
                 else
                     [buffer appendString:chunk];
-                }
+			}
             [buffer appendString:spaces];
             currentEncoding = nextEncoding;
             chunk = [[word mutableCopy] autorelease];
-            }
+		}
         else
-            {
+		{
             [chunk appendString:spaces];
             [chunk appendString:word];
-            }
-        }
+		}
+	}
     while([chunk length] > 0);
-
+	
     return buffer;
 }
 

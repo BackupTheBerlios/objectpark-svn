@@ -166,6 +166,69 @@ static NSCharacterSet *iwsSet = nil;
 }
 
 
+- (NSString*) stringWithCanonicalLinebreaks
+	/*" Returns an autoreleased copy of the receiver with single LF chars replaced by CRLF. "*/
+{
+    unsigned length = [self length];
+    NSMutableString* result = nil;
+    unichar lastChr = 0;
+    unichar chr;
+    int i;
+    
+    for (i = 0; i<length;i++) {
+        chr = [self characterAtIndex: i];
+        if (chr == LF && lastChr!=CR) {
+            if (!result) {
+                result = [[self mutableCopy] autorelease];
+                [result deleteCharactersInRange: NSMakeRange(i, length-i)];
+            }
+            [result appendString: @"\r\n"];
+        } else {
+            [result appendFormat: @"%C", chr];
+        }
+        lastChr = chr;
+    }
+    return result ? result : self;
+}
+
+- (NSString*) stringWithUnixLinebreaks
+	/*" Returns an autoreleased copy of the receiver with CRLF chars replaced by single LF. "*/
+{
+    unsigned length = [self length];
+    NSMutableString *result = nil;
+    unichar lastChr = 0;
+    unichar chr;
+    int i;
+    
+    for (i = 0; i < length; i++) 
+    {
+        chr = [self characterAtIndex:i];
+        
+        if (chr == LF && lastChr == CR) 
+        {
+            if (!result) 
+            {
+                result = [[self mutableCopy] autorelease];
+                [result deleteCharactersInRange:NSMakeRange(i - 1, length -(i - 1))];
+            }
+            else
+            {
+                [result deleteCharactersInRange:NSMakeRange([result length] - 1, 1)];
+            }
+            [result appendString: @"\n"];
+        } 
+        else 
+        {
+            [result appendFormat: @"%C",chr];
+        }
+        lastChr = chr;
+    }
+    return result ? result : self;
+}
+
+
+
+
 /*" Returns a copy of the receiver with all characters from %set removed. "*/
 
 - (NSString*) stringByRemovingCharactersFromSet: (NSCharacterSet*) set

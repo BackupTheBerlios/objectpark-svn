@@ -82,11 +82,11 @@
     if (!fallback)
         return [[self decoderWithFieldBody: body] stringValue];
     // else fall back to the body:
-    NS_DURING
-	result = [[self decoderWithFieldBody: body] stringValue];
-    NS_HANDLER
+    @try {
+		result = [[self decoderWithFieldBody: body] stringValue];
+    } @catch(NSException* localException) {
         result = body;
-    NS_ENDHANDLER
+	}
     return result;
 }
 

@@ -35,8 +35,6 @@
 - (NSString*) stringByRemovingReplyPrefix;
 
 - (NSString*) stringByApplyingROT13;
-- (NSString*) stringWithCanonicalLinebreaks;
-- (NSString*) stringWithUnixLinebreaks;
 
 - (NSString*) stringByUnwrappingParagraphs;
 - (NSString*) stringByWrappingToLineLength:(unsigned int)length;
