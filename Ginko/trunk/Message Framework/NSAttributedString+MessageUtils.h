@@ -62,10 +62,6 @@
 
 @end
 
-// key for object of class NSNumber (interpreted as int) -> quotation level
-extern NSString *OPQuotationAttributeName;
-extern NSString *OPQuotationPrefixAttributeName;
 
-extern NSString *OPAttachmentPathAttribute;
 
 

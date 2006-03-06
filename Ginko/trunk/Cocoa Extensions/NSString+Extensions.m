@@ -226,7 +226,15 @@ static NSCharacterSet *iwsSet = nil;
     return result ? result : self;
 }
 
-
+- (NSString*) stringByRemovingLinebreaks
+/*" Warning: Simplistic implementation - slow. "*/
+{
+    NSString* lineBreakSeq = @"\r\n";
+    if([self rangeOfString:lineBreakSeq].length == 0)
+        lineBreakSeq = @"\n";
+    
+    return [[self componentsSeparatedByString:lineBreakSeq] componentsJoinedByString: @""];
+}
 
 
 /*" Returns a copy of the receiver with all characters from %set removed. "*/

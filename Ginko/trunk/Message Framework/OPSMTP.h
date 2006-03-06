@@ -52,7 +52,11 @@ typedef enum _OPSMTPState {
 
 - (void)sendTransferData:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients;
 
-//- (void)sendMailWithHeaders:(NSDictionary *)userHeaders andBody:(NSString *)body;
+- (void) sendPlainText: (NSString*) body 
+				  from: (NSString*) from 
+					to: (NSArray*) recipients
+			   subject: (NSString*) subject
+		   moreHeaders: (NSDictionary*) userHeaders;
 
 - (void)quit;
 

@@ -21,6 +21,12 @@
 
 #import "NSString+Extensions.h"
 
+// key for object of class NSNumber (interpreted as int) -> quotation level
+extern NSString *OPQuotationAttributeName;
+extern NSString *OPQuotationPrefixAttributeName;
+
+extern NSString *OPAttachmentPathAttribute;
+
 @interface NSString (OPMessageUtilities) 
 
 - (BOOL)isValidMessageID;
@@ -72,7 +78,6 @@
 + (NSString*) temporaryFilenameWithExtension: (NSString*) ext;
 - (NSString*) stringByStrippingTrailingWhitespacesAndNewlines;
 - (long)longValue;
-- (NSString*) stringByRemovingLinebreaks;
 - (NSString*) stringByRemovingAttachmentChars;
 
 @end

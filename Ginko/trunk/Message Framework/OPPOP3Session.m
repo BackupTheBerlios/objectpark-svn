@@ -822,14 +822,14 @@ UIDL. nil otherwise. "*/
     Returns the server's greeting. After leaving this method the session is in
     AUTHORIZATION state. Throws an %{OPPOP3SessionException} otherwise. "*/
 {
-    NSString *response = nil;
+    NSString* response = nil;
     // Read greeting with optional timestamp:
-    NS_DURING
+    @try {
         response = [self _readOKForCommand: nil];
-    NS_HANDLER
-        [NSException raise:OPPOP3SessionException
+    } @catch (NSException* localException) {
+        [NSException raise: OPPOP3SessionException
                     format: @"The POP3 server does not respond (with a 'server greeting')."];
-    NS_ENDHANDLER
+    }
         
     // Go in AUTHORIZATION state:
     _state = AUTHORIZATION;

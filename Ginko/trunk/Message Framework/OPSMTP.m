@@ -246,21 +246,34 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 }
 
 
-- (void) sendPlainText: (NSString*) body withHeaders: (NSDictionary*) userHeaders 
+- (void) sendPlainText: (NSString*) body 
+				  from: (NSString*) from 
+					to: (NSArray*) recipients
+			   subject: (NSString*) subject
+		   moreHeaders: (NSDictionary*) userHeaders 
+/*" Takes a message body string, an array of email address-strings. "*/
 {
-	NSMutableData* transferData = [NSMutableData data];
-	NSEnumerator* headerEnumerator = [userHeaders objectEnumerator];
-	NSString* headerName;
+	NSParameterAssert([from length]);
+	NSParameterAssert([[recipients lastObject] length]);
+	NSParameterAssert([subject length]);
+	NSParameterAssert([body length]);
 	
-	NSParameterAssert([[userHeaders objectForKey: @"From"] length]);
-	NSParameterAssert([[userHeaders objectForKey: @"To"] length]);
-	NSParameterAssert([[userHeaders objectForKey: @"Subject"] length]);
+	NSMutableData* transferData = [NSMutableData data];
+	NSMutableDictionary* headers = userHeaders ? [userHeaders mutableCopy] : [NSMutableDictionary dictionary];
 	
 	// Set mime version and content-type here!
+	[headers setValue: subject forKey: @"Subject"];
+	[headers setValue: from forKey: @"From"];
+	[headers setValue: [NSCalendarDate date] forKey: @"Date"];
+	[headers setValue: [recipients componentsJoinedByString: @","] forKey: @"To"];
+	
+	
+	NSEnumerator* headerEnumerator = [headers keyEnumerator];
+	NSString* headerName;
 	
 	// Make header data 7-bit clean:
 	while (headerName = [headerEnumerator nextObject]) {
-		NSString* headerValue = [userHeaders objectForKey: headerName];
+		NSString* headerValue = [headers objectForKey: headerName];
 		
 		if ([headerValue isKindOfClass: [NSCalendarDate class]]) {
 			[(NSCalendarDate*)headerValue setTimeZone: [NSTimeZone timeZoneWithName: @"GMT"]];
@@ -278,7 +291,10 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 				// Raise Exception
 			}
 		}
+				
 		NSString* headerLine = [NSString stringWithFormat: @"%@: %@\r\n", headerName, headerValue];
+		
+		NSAssert2([headerLine length]<950, @"Encoded Header '%@' too long: %u characters.", headerName, [headerLine length]);
 
 		[transferData appendData: [headerLine dataUsingEncoding: NSASCIIStringEncoding]];
 	}
@@ -291,11 +307,8 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[transferData appendData: [body dataUsingEncoding: NSISOLatin1StringEncoding]];
 	
 	NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding]);
-	
-	NSString* fromHeader = [userHeaders objectForKey: @"From"];
-	NSArray* toArray = [[userHeaders objectForKey: @"To"] componentsSeparatedByString: @","];
-	
-	[self sendTransferData: transferData from: fromHeader to: toArray];
+		
+	[self sendTransferData: transferData from: from to: recipients];
 	
 }
  

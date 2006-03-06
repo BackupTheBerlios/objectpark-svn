@@ -402,10 +402,6 @@
 
 @end
 
-NSString* OPQuotationAttributeName       = @"OPQuotationAttributeName";
-NSString* OPQuotationPrefixAttributeName = @"OPQuotationPrefixAttributeName";
-NSString* OPAttachmentPathAttribute      = @"OPAttachmentPathAttribute";
-
 @implementation NSMutableAttributedString (MessageAdditions)
 
 /*" Appends the string %aURL as a clickable, underlined URL in the default link color. "*/

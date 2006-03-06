@@ -26,7 +26,7 @@
 #import "GIOutlineViewWithKeyboardSupport.h"
 #import "GIMessage.h"
 #import "GIMessageBase.h"
-#import "NSString+Extensions.h"
+#import "NSString+MessageUtils.h"
 #import "GIMessageFilter.h"
 #import "OPPersistence.h"
 #import "OPObjectPair.h"

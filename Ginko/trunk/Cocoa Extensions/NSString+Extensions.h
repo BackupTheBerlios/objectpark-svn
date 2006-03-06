@@ -46,6 +46,8 @@
 
 - (NSString*) stringWithCanonicalLinebreaks;
 - (NSString*) stringWithUnixLinebreaks;
+- (NSString*) stringByRemovingLinebreaks;
+
 
 
 /*" Comparisons "*/
