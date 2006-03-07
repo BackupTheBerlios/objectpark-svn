@@ -368,9 +368,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (BOOL) isDummy
 {
-    return [self transferData] == nil;
+    return [self valueForKey:@"messageData"] == nil;
 }
-
 
 - (void) setIsSeen: (NSNumber*) aBoolean
 {
