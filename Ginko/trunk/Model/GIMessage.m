@@ -210,13 +210,13 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (void) setTransferData: (NSData*) newData
 {
-	GIMessageData* messageData = [self valueForKey: @"messageData"];
+	GIMessageData* messageData = newData ? [self valueForKey: @"messageData"] : nil;
 	if (messageData) {
 		// Reuse existing GIMessageData object!
 		// Make sure we re-index this message.
 		[self removeFlags: OPFulltextIndexedStatus];
 	} else {
-		messageData = [[[GIMessageData alloc] init] autorelease];
+		if (newData) messageData = [[[GIMessageData alloc] init] autorelease];
 		[self willChangeValueForKey: @"transferData"];
 		[self setPrimitiveValue: messageData forKey: @"messageData"];
 		[self didChangeValueForKey: @"transferData"];
@@ -248,6 +248,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     GIMessage* dummy;
     
     // if there already is a message with that id we'll use that
+	// This may not be dummy! So what happens then?
     if (dummy = [self messageForMessageId:aMessageId])
         return dummy;
         
@@ -257,15 +258,14 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     [dummy insertIntoContext: [OPPersistentObjectContext threadContext]]; 
     NSAssert(dummy != nil, @"Could not create a dummy message object");
     
-    [dummy setValue:nil forKey:@"transferData"];
+    [dummy setTransferData: nil];
     [dummy setValue: aMessageId forKey: @"messageId"];  
-//     [dummy setValue: @"" forKey: @"subject"];
-//     [dummy setValue: @"" forKey: @"senderName"];
-//     [dummy setValue: aDate forKey: @"date"];
-    
+
     // dummy messages should not show up as unread
     [dummy addFlags:OPSeenStatus];
     
+	NSAssert([dummy isDummy], @"Dummy message not marked as such");
+	
     return dummy;
 }
 

@@ -36,7 +36,8 @@
 + (NSString*) stringWithData: (NSData*) data encoding:(NSStringEncoding)encoding;
 
 /*" Handling whitespace "*/
-- (NSString*) stringByRemovingSurroundingWhitespace;
+#define stringByRemovingSurroundingWhitespace stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]
+//- (NSString*) stringByRemovingSurroundingWhitespace;
 - (BOOL)isWhitespace;
 - (NSString*) stringByRemovingWhitespace;
 - (NSString*) stringByRemovingCharactersFromSet: (NSCharacterSet*) set;

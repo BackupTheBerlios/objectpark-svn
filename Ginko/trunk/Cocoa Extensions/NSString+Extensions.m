@@ -119,14 +119,19 @@ static NSCharacterSet *iwsSet = nil;
 }
 
 
+
+
 //---------------------------------------------------------------------------------------
 //	VARIOUS EXTENSIONS
 //---------------------------------------------------------------------------------------
 
 /*" Returns a copy of the receiver with all whitespace left of the first non-whitespace character and right of the last whitespace character removed. "*/
 
-- (NSString*) stringByRemovingSurroundingWhitespace
-{
+//- (NSString*) stringByRemovingSurroundingWhitespace
+//{
+//	return [self stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+
+	/*
     NSRange		start, end, result;
 
     if(iwsSet == nil)
@@ -143,7 +148,8 @@ static NSCharacterSet *iwsSet = nil;
     result = NSMakeRange(start.location, end.location + end.length - start.location);
 
     return [self substringWithRange:result];	
-}
+	 */
+//}
 
 
 /*" Returns YES if the receiver consists of whitespace only. "*/
