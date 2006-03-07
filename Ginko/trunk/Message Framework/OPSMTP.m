@@ -266,7 +266,12 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[headers setValue: from forKey: @"From"];
 	[headers setValue: [NSCalendarDate date] forKey: @"Date"];
 	[headers setValue: [recipients componentsJoinedByString: @","] forKey: @"To"];
+	[headers setValue: @"text/plain; format=\"flowed\"" forKey: @"Content-Type"];
 	
+	if (![body canBeConvertedToEncoding: NSASCIIStringEncoding]) {
+		[headers setValue: @"8bit" forKey: @"Content-Transfer-Encoding"];
+		[headers setValue: @"text/plain; charset=\"iso-8859-1\"; format=\"flowed\"" forKey: @"Content-Type"];
+	}
 	
 	NSEnumerator* headerEnumerator = [headers keyEnumerator];
 	NSString* headerName;
