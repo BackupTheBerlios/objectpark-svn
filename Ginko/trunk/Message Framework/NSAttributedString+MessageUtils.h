@@ -22,6 +22,9 @@
 
 #import <AppKit/AppKit.h>
 
+extern NSString* OPStringFromColor(NSColor* color);
+extern NSColor* OPColorFromString(NSString* string);
+
 @interface NSAttributedString (QuotationExtensions)
 
 + (NSColor*) defaultLinkColor;

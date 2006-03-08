@@ -18,7 +18,6 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
-#import <Foundation/Foundation.h>
 #import "NSCharacterSet+MIME.h"
 
 

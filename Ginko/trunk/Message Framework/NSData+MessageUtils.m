@@ -19,7 +19,6 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
-#import <Foundation/Foundation.h>
 #import "NSData+Extensions.h"
 #import "utilities.h"
 #import "NSCharacterSet+MIME.h"

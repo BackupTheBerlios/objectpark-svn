@@ -18,7 +18,7 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
-
+#import <Foundation/Foundation.h>
 /*" Various common extensions to #NSData. "*/
 
 @interface NSData(EDExtensions)

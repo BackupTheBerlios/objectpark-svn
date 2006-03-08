@@ -19,6 +19,7 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
+#import <Foundation/Foundation.h>
 #import "NSString+Extensions.h"
 
 // key for object of class NSNumber (interpreted as int) -> quotation level

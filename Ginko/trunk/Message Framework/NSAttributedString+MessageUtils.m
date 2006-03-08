@@ -39,6 +39,39 @@
 #define QuotationLevel4Color      @"QuotationLevel4Color"
 #define QuotationColorCyclicFlag  @"QuotationColorCyclicFlag"
 
+
+// Functions for converting between NSString and NSColor.
+// The intended purpose of this category is storing and retrieving NSColor objects from the defaults.
+
+NSString* OPStringFromColor(NSColor* color)
+/*"Returns a string with the %{color}'s RGB and alpha values encoded."*/
+{
+    float red, green, blue, alpha;
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];    
+    return [NSString stringWithFormat: @"%f %f %f %f", red, green, blue, alpha];
+}
+
+
+NSColor* OPColorFromString(NSString* string)
+/*" Returns a NSColor object with the RGB and alpha values encoded in the string (in the same format as created by #{+stringWithColor}). "*/
+{
+    NSArray* rgba = [string componentsSeparatedByString: @" "];
+    
+    if ([rgba count] != 4) {
+        NSLog(@"[NSString colorWithString]: Illegal number of components in string for NSColor (%@)", string);
+        return nil;
+    }
+    
+    NSColor *color = [NSColor colorWithCalibratedRed:[[rgba objectAtIndex:0] floatValue]
+                                               green:[[rgba objectAtIndex:1] floatValue]
+                                                blue:[[rgba objectAtIndex:2] floatValue]
+                                               alpha:[[rgba objectAtIndex:3] floatValue]];
+    
+    return color;
+}
+
+
+
 @implementation NSAttributedString (QuotationExtensions)
 
 /*" Returns a dark blue, 0.1 0.1 0.5 (calibrated). "*/
@@ -222,15 +255,15 @@
         
     switch (quotationLevel)
     {
-        case 1:  color = [[userDefaults objectForKey:QuotationLevel1Color] colorValue];
+        case 1:  color = OPColorFromString([userDefaults objectForKey:QuotationLevel1Color]);
                  break;
-        case 2:  color = [[userDefaults objectForKey:QuotationLevel2Color] colorValue];
+        case 2:  color = OPColorFromString([userDefaults objectForKey:QuotationLevel2Color]);
                  break;
-        case 3:  color = [[userDefaults objectForKey:QuotationLevel3Color] colorValue];
+        case 3:  color = OPColorFromString([userDefaults objectForKey:QuotationLevel3Color]);
                  break;
-        case 4:  color = [[userDefaults objectForKey:QuotationLevel4Color] colorValue];
+        case 4:  color = OPColorFromString([userDefaults objectForKey:QuotationLevel4Color]);
                  break;
-        default: color = [[userDefaults objectForKey:QuotationLevel0Color] colorValue];
+        default: color = OPColorFromString([userDefaults objectForKey:QuotationLevel0Color]);
     }
     
     if (color == nil)

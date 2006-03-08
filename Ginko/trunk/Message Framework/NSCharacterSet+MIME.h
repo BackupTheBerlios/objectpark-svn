@@ -18,6 +18,7 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
+#import <Foundation/Foundation.h>
 
 @interface NSCharacterSet(EDMessageExtensions)
 

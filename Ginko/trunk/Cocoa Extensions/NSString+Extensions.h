@@ -89,11 +89,6 @@
 - (BOOL)isValidEncryptionOfString: (NSString*) aString;
 #endif
 
-#ifndef EDCOMMON_WOBUILD
-/*" Abbreviating paths "*/
-- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forFont: (NSFont*) font;
-- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forAttributes: (NSDictionary*) attributes;
-#endif
 
 /*" Sharing instances "*/
 - (NSString*) sharedInstance;
@@ -142,11 +137,5 @@ extern NSString *MIMEAttachmentContentDisposition;
 
 @end
 
-@interface NSString (OPColorConverting) 
-
-+ (NSString*) stringFromColor: (NSColor*) color;
-- (NSColor*)  colorValue;
-
-@end
 
 extern inline NSString *makeStringIfNil(NSString *str);

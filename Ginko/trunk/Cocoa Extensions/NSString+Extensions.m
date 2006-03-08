@@ -19,12 +19,12 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
-#ifndef EDCOMMON_WOBUILD
-#import <AppKit/AppKit.h>
-#endif
-#ifdef EDCOMMON_OSXBUILD
-#import <CoreFoundation/CoreFoundation.h>
-#endif
+//#ifndef EDCOMMON_WOBUILD
+//#import <AppKit/AppKit.h>
+//#endif
+//#ifdef EDCOMMON_OSXBUILD
+//#import <CoreFoundation/CoreFoundation.h>
+//#endif
 #import <Foundation/Foundation.h>
 #import "NSString+Extensions.h"
 
@@ -38,39 +38,6 @@
 + (NSDictionary *)_contentTypeExtensionMapping;
 @end
 
-@implementation NSString (OPColorConverting)
-/*"A category for converting between NSString and NSColor.
-The intended purpose of this category is storing and retrieving NSColor objects from the defaults."*/
-
-
-/*"Returns a string with the %{color}'s RGB and alpha values encoded."*/
-+ (NSString*) stringFromColor: (NSColor*) color
-{
-    float red, green, blue, alpha;
-    [color getRed:&red green:&green blue:&blue alpha:&alpha];    
-    return [NSString stringWithFormat: @"%f %f %f %f", red, green, blue, alpha];
-}
-
-
-/*"Returns a NSColor object with the RGB and alpha values encoded in the string (in the same format as created by #{+stringWithColor})."*/
-- (NSColor*) colorValue
-{
-    NSArray* rgba = [self componentsSeparatedByString: @" "];
-    
-    if ([rgba count] != 4) {
-        NSLog(@"[NSString colorWithString]: Illegal number of components in string for NSColor (%@)", self);
-        return nil;
-    }
-    
-    NSColor *color = [NSColor colorWithCalibratedRed:[[rgba objectAtIndex:0] floatValue]
-                                               green:[[rgba objectAtIndex:1] floatValue]
-                                                blue:[[rgba objectAtIndex:2] floatValue]
-                                               alpha:[[rgba objectAtIndex:3] floatValue]];
-    
-    return color;
-}
-
-@end
 
 //=======================================================================================
     @implementation NSString(EDExtensions)
@@ -256,51 +223,6 @@ static NSCharacterSet *iwsSet = nil;
 
     return temp;
 }
-
-
-#ifndef EDCOMMON_WOBUILD
-
-/*" Returns a string that is not wider than %maxWidths pixels. "*/
-
-- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forFont: (NSFont*) font
-{
-    return [self stringByAbbreviatingPathToWidth:maxWidth forAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]];
-}
-
-/*" Returns a string that is not wider than %maxWidths pixels. "*/
-
-- (NSString*) stringByAbbreviatingPathToWidth:(float)maxWidth forAttributes: (NSDictionary*) attributes
-{
-    NSString		*result;
-    NSMutableArray	*components;
-    int 			i;
-
-    if([self sizeWithAttributes:attributes].width <= maxWidth)
-        return self;
-
-    result = [self stringByAbbreviatingWithTildeInPath];
-    if([result sizeWithAttributes:attributes].width <= maxWidth)
-        return result;
-
-    components = [[[result pathComponents] mutableCopy] autorelease];
-    if([[components objectAtIndex:0] isEqualToString: @"/"])
-        [components removeObjectAtIndex:0];
-    if([components count] < 2)
-        return nil;
-    [components replaceObjectAtIndex:0 withObject: @"..."];
-
-    for(i = 1; i < [components count] - 1; i++)
-        {
-        [components removeObjectAtIndex:i];
-        result = [NSString pathWithComponents:components];
-        if([result sizeWithAttributes:attributes].width <= maxWidth)
-            return result;
-        }
-
-    return nil;
-}
-
-#endif
 
 
 /*" Returns YES if the receiver's prefix is equal to %string, comparing case insensitive. "*/

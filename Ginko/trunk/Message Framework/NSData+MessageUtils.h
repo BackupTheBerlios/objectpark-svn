@@ -18,7 +18,7 @@
 //  OR OF ANY DERIVATIVE WORK.
 //---------------------------------------------------------------------------------------
 
-#import "OPInternetMessage.h"
+#import <Foundation/Foundation.h>
 
 
 @interface NSData (MessageUtils)

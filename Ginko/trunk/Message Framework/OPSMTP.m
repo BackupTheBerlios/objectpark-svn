@@ -23,7 +23,6 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
 #import "NSData+Extensions.h"
 #import "NSData+MessageUtils.h"
 #import "NSString+MessageUtils.h"
-
 #import <OPDebug/OPLog.h>
 
 NSString *OPSMTPException = @"OPSMTPException";
@@ -261,20 +260,22 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	NSMutableData* transferData = [NSMutableData data];
 	NSMutableDictionary* headers = userHeaders ? [userHeaders mutableCopy] : [NSMutableDictionary dictionary];
 	NSCalendarDate* date = [NSCalendarDate date];
-	// Set mime version and content-type here!
+	NSString* bundleName = [[[[NSBundle bundleForClass: [self class]] bundlePath] lastPathComponent] stringByDeletingPathExtension];
+	if (!bundleName) bundleName = @"OPMessage";
+	
+	// Set necessary headers:
 	[headers setValue: subject forKey: @"Subject"];
 	[headers setValue: from forKey: @"From"];
 	[headers setValue: date forKey: @"Date"];
 	[headers setValue: [recipients componentsJoinedByString: @","] forKey: @"To"];
-	[headers setValue: @"text/plain; format=\"flowed\"" forKey: @"Content-Type"];
+	[headers setValue: @"text/plain; charset=\"iso-8859-1\"; format=\"flowed\"" forKey: @"Content-Type"];
 	[headers setValue: @"1.0" forKey: @"MIME-Version"];
-	NSString* bundleName = [[[[NSBundle bundleForClass: [self class]] bundlePath] lastPathComponent] stringByDeletingPathExtension];
-	if (!bundleName) bundleName = "OPMessage";
+
 	[headers setValue: [NSString stringWithFormat: @"<%@%u>", bundleName, ABS([date timeIntervalSince1970]+[body hash])] forKey: @"Message-ID"];
 
 	if (![body canBeConvertedToEncoding: NSASCIIStringEncoding]) {
+		// Signal that we are using the 8th bit:
 		[headers setValue: @"8bit" forKey: @"Content-Transfer-Encoding"];
-		[headers setValue: @"text/plain; charset=\"iso-8859-1\"; format=\"flowed\"" forKey: @"Content-Type"];
 	}
 	
 	NSEnumerator* headerEnumerator = [headers keyEnumerator];
