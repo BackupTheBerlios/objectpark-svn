@@ -6,7 +6,7 @@
 //  Copyright 2005 Objectpark.org. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 #import "OPLog.h"
 
