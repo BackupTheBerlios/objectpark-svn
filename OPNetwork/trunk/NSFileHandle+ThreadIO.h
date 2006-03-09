@@ -6,7 +6,7 @@
 //  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 #define	NSFileHandleThreadIOMaxBufferSize 4096
 
@@ -26,3 +26,13 @@
 
 
 @end
+
+#if MAC_OS_X_VERSION_10_3 <= MAC_OS_X_VERSION_MAX_ALLOWED
+
+@interface NSStream (OPExtensions)
+
+- (CFSocketNativeHandle) nativeSocketHandle;
+
+@end
+
+#endif

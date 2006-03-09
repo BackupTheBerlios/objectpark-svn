@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D44120A0727C46300063044 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D4412090727C46300063044 /* libresolv.dylib */; };
-		8D795029071E9EFC00002E0F /* OPSerialPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D795025071E9EFC00002E0F /* OPSerialPort.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D79502A071E9EFC00002E0F /* OPSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D795026071E9EFC00002E0F /* OPSerialPort.m */; };
-		8D79502B071E9EFC00002E0F /* OPSerialPort+Discovery.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D795027071E9EFC00002E0F /* OPSerialPort+Discovery.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D79502C071E9EFC00002E0F /* OPSerialPort+Discovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D795028071E9EFC00002E0F /* OPSerialPort+Discovery.m */; };
 		8D79503B071EA1E600002E0F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D79503A071EA1E600002E0F /* IOKit.framework */; };
 		8DA9E86E07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DA9E86C07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8DA9E86F07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA9E86D07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m */; };
@@ -43,6 +38,7 @@
 		8DCB8CF9065A493B0012ED8D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		8DCB8D16065A49C10012ED8D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCB8D15065A49C10012ED8D /* Security.framework */; };
 		8DCB8F40065A4C780012ED8D /* NSFileHandle+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCB894B065A43DD0012ED8D /* NSFileHandle+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8DEFDB8609C07FD200F6FB25 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEFDB8509C07FD200F6FB25 /* libresolv.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -76,7 +72,6 @@
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		08FB77B4FE84181DC02AAC07 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* OPNetwork_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPNetwork_Prefix.pch; sourceTree = "<group>"; };
-		8D4412090727C46300063044 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = /usr/lib/libresolv.dylib; sourceTree = "<absolute>"; };
 		8D795025071E9EFC00002E0F /* OPSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSerialPort.h; sourceTree = "<group>"; };
 		8D795026071E9EFC00002E0F /* OPSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSerialPort.m; sourceTree = "<group>"; };
 		8D795027071E9EFC00002E0F /* OPSerialPort+Discovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPSerialPort+Discovery.h"; sourceTree = "<group>"; };
@@ -110,6 +105,7 @@
 		8DCB895E065A43DD0012ED8D /* OPTCPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPTCPSocket.m; sourceTree = "<group>"; };
 		8DCB895F065A43DD0012ED8D /* osdep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osdep.h; sourceTree = "<group>"; };
 		8DCB8D15065A49C10012ED8D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		8DEFDB8509C07FD200F6FB25 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = /usr/lib/libresolv.dylib; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +116,7 @@
 				8DCB8CF9065A493B0012ED8D /* Foundation.framework in Frameworks */,
 				8DCB8D16065A49C10012ED8D /* Security.framework in Frameworks */,
 				8D79503B071EA1E600002E0F /* IOKit.framework in Frameworks */,
-				8D44120A0727C46300063044 /* libresolv.dylib in Frameworks */,
+				8DEFDB8609C07FD200F6FB25 /* libresolv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,7 +146,7 @@
 		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				8D4412090727C46300063044 /* libresolv.dylib */,
+				8DEFDB8509C07FD200F6FB25 /* libresolv.dylib */,
 				8D79503A071EA1E600002E0F /* IOKit.framework */,
 				8DCB8D15065A49C10012ED8D /* Security.framework */,
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
@@ -233,8 +229,6 @@
 				8DCB8976065A43DE0012ED8D /* osdep.h in Headers */,
 				8DCB8F40065A4C780012ED8D /* NSFileHandle+Extensions.h in Headers */,
 				8DAEB9A606620423000668A3 /* NSHost+Extensions.h in Headers */,
-				8D795029071E9EFC00002E0F /* OPSerialPort.h in Headers */,
-				8D79502B071E9EFC00002E0F /* OPSerialPort+Discovery.h in Headers */,
 				8DA9E86E07201AD9003BFAE4 /* NSFileHandle+ThreadIO.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,8 +333,6 @@
 				8DCB8973065A43DE0012ED8D /* OPStream+TimeoutExtensions.m in Sources */,
 				8DCB8975065A43DE0012ED8D /* OPTCPSocket.m in Sources */,
 				8DAEB9A506620422000668A3 /* NSHost+Extensions.m in Sources */,
-				8D79502A071E9EFC00002E0F /* OPSerialPort.m in Sources */,
-				8D79502C071E9EFC00002E0F /* OPSerialPort+Discovery.m in Sources */,
 				8DA9E86F07201AD9003BFAE4 /* NSFileHandle+ThreadIO.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -384,6 +376,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Dynamic;
+				MACH_O_TYPE = mh_dylib;
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
 				OTHER_LDFLAGS = "";
@@ -421,6 +414,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Dynamic;
+				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = OPNetwork;
@@ -455,6 +449,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Dynamic;
+				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = OPNetwork;
@@ -471,20 +466,74 @@
 		770937230857490E00A29008 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Development;
 		};
 		770937240857490E00A29008 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Deployment;
 		};
 		770937250857490E00A29008 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Default;
+		};
+		8DEFDA6B09C0767F00F6FB25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPNetwork_Prefix.pch;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Dynamic;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = OPNetwork;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		8DEFDA6C09C0767F00F6FB25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				PREBINDING = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.3.9.sdk;
+			};
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -494,6 +543,7 @@
 			buildConfigurations = (
 				7709371F0857490E00A29008 /* Development */,
 				770937200857490E00A29008 /* Deployment */,
+				8DEFDA6B09C0767F00F6FB25 /* Release */,
 				770937210857490E00A29008 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -504,6 +554,7 @@
 			buildConfigurations = (
 				770937230857490E00A29008 /* Development */,
 				770937240857490E00A29008 /* Deployment */,
+				8DEFDA6C09C0767F00F6FB25 /* Release */,
 				770937250857490E00A29008 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;

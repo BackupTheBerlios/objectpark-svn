@@ -55,7 +55,7 @@
 #include <sysexits.h>
 #include <sys/param.h>
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 #define	AMSerialOptionServiceName @"AMSerialOptionServiceName"
 #define	AMSerialOptionSpeed @"AMSerialOptionSpeed"

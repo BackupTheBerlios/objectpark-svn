@@ -3,7 +3,7 @@
 
 
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import "OPSerialPort.h"
 
 @interface OPSerialPort (Discovery)

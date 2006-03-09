@@ -108,8 +108,22 @@ NSMutableDictionary* readThreads()
            readData: (const char*) bytes 
              length: (unsigned) byteCount
 {
-    NSLog(@"%@ received %u bytes of data.", handle, byteCount);
+    NSLog(@"%@ received %u bytes of data. Discarding...", handle, byteCount);
 }
 
 
 @end
+
+
+#if MAC_OS_X_VERSION_10_3 <= MAC_OS_X_VERSION_MAX_ALLOWED
+
+@implementation NSStream (OPExtensions)
+
+- (CFSocketNativeHandle) nativeSocketHandle
+{
+	return [self propertyForKey: kCFStreamPropertySocketNativeHandle];
+}
+
+@end
+
+#endif

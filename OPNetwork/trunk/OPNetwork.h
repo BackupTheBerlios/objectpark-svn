@@ -14,7 +14,7 @@
 #import "OPIPSocket.h"
 #import "NSFileHandle+Extensions.h"
 #import "NSHost+Extensions.h"
-#import "OPSerialPort.h"
-#import "OPSerialPort+Discovery.h"
+//#import "OPSerialPort.h"
+//#import "OPSerialPort+Discovery.h"
 #import "NSFileHandle+ThreadIO.h"
 
