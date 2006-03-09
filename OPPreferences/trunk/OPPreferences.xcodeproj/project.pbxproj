@@ -320,7 +320,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.2.8.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Development;
 		};
@@ -328,7 +328,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.2.8.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Deployment;
 		};
@@ -336,7 +336,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.2.8.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Default;
 		};
@@ -437,6 +437,56 @@
 			};
 			name = Default;
 		};
+		8DEFDB9809C081A700F6FB25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 2;
+				DYLIB_CURRENT_VERSION = 2;
+				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_VERSION = A;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_CPU = "";
+				GCC_MODEL_TUNING = G4;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_UNROLL_LOOPS = YES;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = "";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0xb0150000,
+				);
+				PREBINDING = YES;
+				PRODUCT_NAME = OPPreferences;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		8DEFDB9909C081A700F6FB25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "";
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.3.9.sdk;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -445,6 +495,7 @@
 			buildConfigurations = (
 				30C0C2E1085B4A6300133D2E /* Development */,
 				30C0C2E2085B4A6300133D2E /* Deployment */,
+				8DEFDB9909C081A700F6FB25 /* Release */,
 				30C0C2E3085B4A6300133D2E /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -455,6 +506,7 @@
 			buildConfigurations = (
 				8D3FB5710933E8CA001B2DE3 /* Development */,
 				8D3FB5720933E8CA001B2DE3 /* Deployment */,
+				8DEFDB9809C081A700F6FB25 /* Release */,
 				8D3FB5730933E8CA001B2DE3 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
