@@ -110,10 +110,35 @@ NSNumber* yesNumber = nil;
     else return [self validateSelector:[menuItem action]];
 }
 
+- (void) saveOpenWindowsFromThisSession
+{
+	NSMutableArray* groupNames = [NSMutableArray array];
+	NSWindow* win;
+    NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
+    while (win = [enumerator nextObject]) {
+		GIThreadListController* controller = [win delegate];
+        if ([controller isKindOfClass: [GIThreadListController class]]) {
+			NSString* groupURL = [[controller group] objectURLString];
+			if (groupURL) [groupNames addObject: groupURL];
+        }
+    }
+	[[NSUserDefaults standardUserDefaults] setObject: groupNames forKey: OpenMessageGroups];
+}
+
 - (void) restoreOpenWindowsFromLastSession
 {
-    NSLog(@"-[GIApplication restoreOpenWindowsFromLastSession] (not yet implemented)");
-    // TODO
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];	
+	NSArray* groupsToOpen = [[NSUserDefaults standardUserDefaults] objectForKey: OpenMessageGroups];
+	
+	NSEnumerator* groupEnumerator = [groupsToOpen objectEnumerator];
+	NSString* groupURL;
+	while (groupURL = [groupEnumerator nextObject]) {
+		@try {
+			GIMessageGroup* group = [context objectWithURLString: groupURL];
+			[GIGroupListController showGroup: group];
+		} @catch(NSException* e) {
+		}
+	}
 }
 
 - (void) configureDatabaseAtPath: (NSString*) path
@@ -378,6 +403,8 @@ NSNumber* yesNumber = nil;
 
 - (void) applicationWillTerminate: (NSNotification*) notification
 {
+	[self saveOpenWindowsFromThisSession];
+	
 	[[self windows] makeObjectsPerformSelector: @selector(performClose:) withObject: self];
 	
     [self saveAction: self];

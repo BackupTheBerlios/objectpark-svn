@@ -196,7 +196,7 @@ NSString* MboxImportJobName = @"mbox import";
                     }
                     
                     
-                    NSMutableArray* args = [NSMutableArray arrayWithObject: transferData];
+                    //NSMutableArray* args = [NSMutableArray arrayWithObject: transferData];
 					
                     //[self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
                     // Moved addition to background thread:

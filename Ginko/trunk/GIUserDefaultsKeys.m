@@ -9,6 +9,7 @@
 
 #import "GIUserDefaultsKeys.h"
 
+NSString* OpenMessageGroups = @"OpenMessageGroups";
 NSString *MessageRendererFontName = @"MessageRendererFontName";
 NSString *MessageRendererFontSize = @"MessageRendererFontSize";
 NSString *MessageRendererShouldRenderAttachmentsInlineIfPossible = @"MessageRendererShouldRenderAttachmentsInlineIfPossible";

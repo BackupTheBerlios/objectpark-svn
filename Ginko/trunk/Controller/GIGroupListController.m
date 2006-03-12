@@ -139,27 +139,26 @@
 	[super dealloc];
 }
 
-- (IBAction)showGroupWindow:(id)sender
-/*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
-{
-    GIMessageGroup *selectedGroup = [self group];
-	
-    if (selectedGroup) 
-    {
-        NSWindow *groupWindow = [[GIThreadListController class] windowForGroup:selectedGroup];
++ (void) showGroup: (GIMessageGroup*) group
+{	
+    if (group) {
+        NSWindow* groupWindow = [[GIThreadListController class] windowForGroup: group];
         
-        if (groupWindow) 
-        {
-            [groupWindow makeKeyAndOrderFront:self];
-        } 
-        else 
-        {
-            GIThreadListController *newController = [[[GIThreadListController alloc] initWithGroup:selectedGroup] autorelease];
+        if (groupWindow) {
+            [groupWindow makeKeyAndOrderFront: self];
+        } else {
+            GIThreadListController* newController = [[[GIThreadListController alloc] initWithGroup: group] autorelease];
             groupWindow = [newController window];
         }
         
-        [[groupWindow delegate] showThreads:sender];
-    }
+        [[groupWindow delegate] showThreads: self];
+    }	
+}
+
+- (IBAction) showGroupWindow: (id) sender
+/*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
+{
+	[[self class] showGroup: [self group]];
 }
 
 - (IBAction)showGroupInspector:(id)sender

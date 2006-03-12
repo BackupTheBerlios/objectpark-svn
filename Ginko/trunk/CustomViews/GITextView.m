@@ -238,33 +238,32 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
 {
     if (! [self isEditable])
     {
-        NSString *characters;
-        unichar firstChar;
-        int modifierFlags;
-        id delegate = [self delegate];
-        
-        modifierFlags = [theEvent modifierFlags];
-        characters = [theEvent characters];
-        firstChar = [characters characterAtIndex:0];
-
-        switch (firstChar)
-        {
-            case SPACE:
-                if ([delegate respondsToSelector:@selector(textView:spaceKeyPressedWithModifierFlags:)])
-                {
-                    [delegate textView:self spaceKeyPressedWithModifierFlags:modifierFlags];
-                }
-                break;
-            case TAB:
-                if ([self nextKeyView]) {
-                    BOOL result = [[self window] makeFirstResponder: [self nextKeyView]];
-                    NSLog(@"swwitched first responder to %@: %d", [self nextKeyView], result);            
-                }
-                return;
-                break;
-            default:
-                break;
-        }
+        NSString* characters = [theEvent characters];
+		
+		if ([characters length]) {
+			unichar firstChar = [characters characterAtIndex: 0];
+			id delegate = [self delegate];
+			int modifierFlags = [theEvent modifierFlags];
+			
+			switch (firstChar)
+			{
+				case SPACE:
+					if ([delegate respondsToSelector:@selector(textView:spaceKeyPressedWithModifierFlags:)])
+					{
+						[delegate textView:self spaceKeyPressedWithModifierFlags:modifierFlags];
+					}
+					break;
+				case TAB:
+					if ([self nextKeyView]) {
+						BOOL result = [[self window] makeFirstResponder: [self nextKeyView]];
+						NSLog(@"swwitched first responder to %@: %d", [self nextKeyView], result);            
+					}
+					return;
+					break;
+				default:
+					break;
+			}
+		}
     }
 
     [super keyDown:theEvent];

@@ -7,6 +7,7 @@
  *
  */
 
+extern NSString* OpenMessageGroups;
 extern NSString *MessageRendererFontName;
 extern NSString *MessageRendererFontSize;
 extern NSString *MessageRendererShouldRenderAttachmentsInlineIfPossible;

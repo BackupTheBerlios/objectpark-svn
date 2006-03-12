@@ -61,8 +61,5 @@ extern NSString* GIMessageGroupWasAddedNotification;
 - (NSArray*) allMessages;
 - (void) exportAsMboxFileWithPath: (NSString*) path;
 
-//- (BOOL) contentDidChange;
-//- (void) noteContentDidChange;
-//- (void) resetContentDidChange;
 
 @end

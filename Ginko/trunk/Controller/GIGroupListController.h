@@ -6,7 +6,8 @@
 //  Copyright 2005 Objectpark Group. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Cocoa/Cocoa.h> 
+@class GIMessageGroup;
 
 @interface GIGroupListController : NSObject 
 {	
@@ -14,6 +15,8 @@
     IBOutlet NSWindow *window;
 	IBOutlet NSProgressIndicator *globalProgrssIndicator;
 }
+
++ (void) showGroup: (GIMessageGroup*) group;
 
 - (IBAction)addFolder:(id)sender;
 - (IBAction)rename:(id)sender;

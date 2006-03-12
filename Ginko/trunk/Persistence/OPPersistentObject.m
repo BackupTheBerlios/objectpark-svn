@@ -240,7 +240,7 @@
 
 - (NSString*) objectURLString
 {
-	return OPURLStringFromOidAndClass([self oid], isa, [[[self context] databaseConnection] name]);
+	return OPURLStringFromOidAndClass([self oid], [self class], [[[self context] databaseConnection] name]);
 }
 
 - (void) setOid: (OID) theOid
