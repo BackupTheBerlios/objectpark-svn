@@ -119,9 +119,9 @@ NSMutableDictionary* readThreads()
 
 @implementation NSStream (OPExtensions)
 
-- (CFSocketNativeHandle) nativeSocketHandle
+- (CFSocketNativeHandle)nativeSocketHandle
 {
-	return [self propertyForKey: kCFStreamPropertySocketNativeHandle];
+	return (CFSocketNativeHandle)[self propertyForKey:(NSString *)kCFStreamPropertySocketNativeHandle];
 }
 
 @end

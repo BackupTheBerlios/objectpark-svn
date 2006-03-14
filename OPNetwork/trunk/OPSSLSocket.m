@@ -463,7 +463,7 @@ The TCP connection on the socket has to be established before calling this metho
 /*"This method inquires if any root certificate is allowed."*/
 - (BOOL) allowsAnyRootCertificate
 {
-    BOOL allowed;
+    Boolean allowed;
     OSStatus err = SSLGetAllowsAnyRoot(_context, &allowed);
     if (err)
     {
@@ -476,7 +476,7 @@ The TCP connection on the socket has to be established before calling this metho
             raise];
     }
     
-    return allowed;
+    return allowed != NO;
 }
 
 
@@ -504,7 +504,7 @@ certificates that are not signed by the root CAs supported by the system
 /*"This method inquires if expired certificates are allowed."*/
 - (BOOL) allowsExpiredCertificates
 {
-    BOOL allowed;
+    Boolean allowed;
     OSStatus err = SSLGetAllowsExpiredCerts(_context, &allowed);
     if (err)
     {
@@ -517,7 +517,7 @@ certificates that are not signed by the root CAs supported by the system
             raise];
     }
     
-    return allowed;
+    return allowed != NO;
 }
 
 

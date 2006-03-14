@@ -44,7 +44,7 @@
 
 - (unsigned short)localPort
 {
-    int 			sockaddrLength;
+    socklen_t 		   sockaddrLength;
     struct sockaddr_in sockaddr;
     
     sockaddrLength = sizeof(struct sockaddr_in);
@@ -58,7 +58,7 @@
 
 - (NSString *)localAddress
 {
-    int 			sockaddrLength;
+    socklen_t 		   sockaddrLength;
     struct sockaddr_in sockaddr;
     
     sockaddrLength = sizeof(struct sockaddr_in);
@@ -72,7 +72,7 @@
 
 - (unsigned short)remotePort
 {
-    int 			sockaddrLength;
+    socklen_t 		   sockaddrLength;
     struct sockaddr_in sockaddr;
 
     sockaddrLength = sizeof(struct sockaddr_in);
@@ -86,7 +86,7 @@
 
 - (NSString *)remoteAddress
 {
-    int 			sockaddrLength;
+    socklen_t 		   sockaddrLength;
     struct sockaddr_in sockaddr;
 
     sockaddrLength = sizeof(struct sockaddr_in);
