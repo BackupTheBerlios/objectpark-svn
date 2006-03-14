@@ -22,8 +22,8 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
     unreadMessageCount = [aCount retain];
 }
 
-+ (void) loadGroupStats
-    /*" Called at initialization time startup "*/
++ (void)loadGroupStats
+/*" Called at initialization time startup "*/
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSDictionary* groupStats = [ud objectForKey: @"GroupStats"];
@@ -37,7 +37,7 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
     }
 }
 
-+ (void) saveGroupStats
++ (void)saveGroupStats
 /*" Called at the end of the app lifecycle "*/
 {
     NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
@@ -85,7 +85,7 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 - (void)didChangeValueForKey:(NSString *)key
 {
 	[super didChangeValueForKey:key];
-	if ([key isEqualToString:@"threadsByDate"]) 
+//	if ([key isEqualToString:@"threadsByDate"]) 
     {
 		[self invalidateStatistics];
 		[[NSNotificationCenter defaultCenter] postNotificationName: GIMessageGroupStatisticsDidInvalidateNotification object:self];

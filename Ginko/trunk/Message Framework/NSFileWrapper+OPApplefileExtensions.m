@@ -387,10 +387,9 @@ NSString *OPFinderInfo = @"OPFinderInfo";
         Boolean success;
         OSErr err;
         FSRef fsRef;
-        FSSpec fsSpec;
+        //FSSpec fsSpec;
         HFSUniStr255 forkName;
         SInt16 refNum;
-        FInfo fndrInfo;
         NSData *resourceForkData = nil, *finderInfo = nil;
         
         // create fsRef
@@ -455,7 +454,19 @@ NSString *OPFinderInfo = @"OPFinderInfo";
         }
 
         // add Finder info
+        FSCatalogInfo catalogInfo;
         
+        err = FSGetCatalogInfo(&fsRef, kFSCatInfoFinderInfo, &catalogInfo, NULL, NULL, NULL);
+        if (err != noErr)
+        {
+            NSLog(@"Unable to get an FSSpec for the file %@ (err = %d).", path, err);
+        }
+        else
+        {
+            finderInfo = [NSData dataWithBytes:catalogInfo.finderInfo length:sizeof(FInfo)];
+        }
+        
+        /*  deprecated stuff
         // fsRef -> fsSpec
         // http://homepage.mac.com/troy_stephens/software/objects/IconFamily/
         err = FSGetCatalogInfo(&fsRef, kFSCatInfoNone, NULL, NULL, &fsSpec, NULL);
@@ -465,6 +476,9 @@ NSString *OPFinderInfo = @"OPFinderInfo";
         }
         else
         {
+            // get Finder info if given:
+            
+            
             err = FSpGetFInfo(&fsSpec, &fndrInfo);
             if (err != noErr)
             {
@@ -475,6 +489,7 @@ NSString *OPFinderInfo = @"OPFinderInfo";
                 finderInfo = [NSData dataWithBytes:&fndrInfo length:sizeof(FInfo)];
             }
         }
+        */
         
         // add resource fork to attributes
         {
@@ -546,7 +561,8 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
     // create fsRef
     url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)path, kCFURLPOSIXPathStyle, false);
     success = CFURLGetFSRef(url, &fsRef);
-//    CFRelease(url);
+    CFRelease(url);
+    
     if (! success) 
     {
         [NSException raise: NSInvalidArgumentException format: @"Unable to get a FSRef from the path %@.", path];
@@ -589,11 +605,23 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
     // take care of Finder info
     if (finderInfo = [[self fileAttributes] objectForKey:OPFinderInfo])
     {
-        FInfo *fndrInfoPtr;
-        FSSpec fsSpec;
-        
         if (NSDebugEnabled) NSLog(@"Setting FinderInfo.");   
         
+        FSCatalogInfo catalogInfo;
+        FInfo fndrInfo;
+                        
+        [finderInfo getBytes:&fndrInfo length:sizeof(FInfo)];
+            
+#warning help needed here! probably not correct!
+        *(catalogInfo.finderInfo) = (UInt8 *)&fndrInfo;
+        
+        OSErr err = FSSetCatalogInfo(&fsRef, kFSCatInfoFinderInfo, &catalogInfo);
+        if (err != noErr)
+        {
+            [NSException raise:NSInvalidArgumentException format:@"Unable to set finder info of file %@ (err = %d).", path, err];
+        }
+        
+        /* old and deprecated stuff
         // fsRef -> fsSpec
         // http://homepage.mac.com/troy_stephens/software/objects/IconFamily/
         err = FSGetCatalogInfo(&fsRef, kFSCatInfoNone, NULL, NULL, &fsSpec, NULL);
@@ -610,6 +638,8 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
         {
             [NSException raise: NSInvalidArgumentException format: @"Unable to set finder info of file %@ (err = %d).", path, err];
         }
+        
+        */
     }
     
     return YES;
