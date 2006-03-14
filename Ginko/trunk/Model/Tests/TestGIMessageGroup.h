@@ -11,6 +11,7 @@
 
 @interface TestGIMessageGroup : TestWithPersistence 
 {
+    unsigned int invalidationCount;
 }
 
 @end

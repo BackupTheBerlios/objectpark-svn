@@ -120,7 +120,6 @@
     [aMessage setValue:self forKey:@"thread"];
 }
 
-
 - (void) addMessages:(NSArray*)someMessages
 /*"Adds %someMessages to the receiver."*/
 {

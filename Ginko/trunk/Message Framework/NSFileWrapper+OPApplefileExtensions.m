@@ -599,7 +599,7 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
     err = FSCloseFork(refNum);
     if (err != noErr)
     {
-        [NSException raise: NSInvalidArgumentException format: @"Unable to close resource fork of file %@ (err = %d).", path, err];
+        [NSException raise: NSInvalidArgumentException format:@"Unable to close resource fork of file %@ (err = %d).", path, err];
     }
     
     // take care of Finder info

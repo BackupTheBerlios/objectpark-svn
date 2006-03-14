@@ -7,7 +7,7 @@
 //
 
 #import "TestGIMessageGroup.h"
-#import "GIMessageGroup.h"
+#import "GIMessageGroup+Statistics.h"
 #import "GIThread.h"
 #import "OPPersistentObject+Extensions.h"
 #import "OPPersistentObjectContext.h"
@@ -73,6 +73,31 @@
     
     group = [context objectForOid:groupOID ofClass:[GIMessageGroup class]];
     STAssertFalse([group resolveFault], @"group still persistent with new context");
+}
+
+- (void)statisticsInvalidated:(NSNotification *)aNotification
+{
+    NSLog(@"statisticsInvalidated:");
+    invalidationCount += 1;
+}
+
+- (void)testStatistics
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statisticsInvalidated:) name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
+    
+    GIMessageGroup *group = [[[GIMessageGroup alloc] init] autorelease];
+    
+    GIThread *thread = [[[GIThread alloc] init] autorelease];
+
+    /*
+    [group addValue:thread forKey:@"threadsByDate"];
+    STAssertTrue(invalidationCount != 0, @"should be invalidated");
+    */
+     
+    [thread addValue:group forKey:@"groups"];
+    STAssertTrue(invalidationCount != 0, @"should be invalidated");
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
 }
 
 @end
