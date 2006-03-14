@@ -612,8 +612,8 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
                         
         [finderInfo getBytes:&fndrInfo length:sizeof(FInfo)];
             
-#warning help needed here! probably not correct!
-        *(catalogInfo.finderInfo) = (UInt8 *)&fndrInfo;
+        // inspired by MoreFilesX.c <http://www.ncbi.nlm.nih.gov/IEB/ToolBox/C_DOC/source/corelib/morefile/MoreFilesX.c>
+        BlockMoveData(&fndrInfo, catalogInfo.finderInfo, sizeof(FInfo));
         
         OSErr err = FSSetCatalogInfo(&fsRef, kFSCatInfoFinderInfo, &catalogInfo);
         if (err != noErr)
