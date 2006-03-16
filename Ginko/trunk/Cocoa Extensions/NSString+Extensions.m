@@ -28,6 +28,9 @@
 #import <Foundation/Foundation.h>
 #import "NSString+Extensions.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #ifndef WIN32
 #import <unistd.h>
 #else
@@ -570,6 +573,41 @@ Note: This method is not available on Windows NT platforms. "*/
 
     return [self encryptedStringWithSalt:salt];
 }
+
+static BOOL _fileExists(NSString *filePath) 
+{
+    struct stat stats;
+    int result;
+    
+    if (! filePath) {
+        return NO;
+    }
+    
+    result = stat([filePath cString], &stats);
+    if ( (result != 0) && (errno == ENOENT) ) {
+        return NO; // file does not exist.
+    }
+    
+    NSCAssert1(result == 0, @"Error while getting file size (stat): %s", strerror(errno));
+    return YES;
+}
+
+
++ (NSString*) temporaryFilenameWithPrefix: (NSString*) prefix 
+								extension: (NSString*) ext 
+{
+    NSString* result = nil;
+	if (!ext) ext = @"";
+    do {
+        // ##WARNING dirk->all Use a privacy-safe path like /tmp/Ginko/Users for temp files.
+        char *name = tmpnam(NULL);
+        result = [NSString stringWithFormat: @"%@%s.%@", prefix, name, ext];
+        //free(name); only needed for tempnam
+    } while (_fileExists(result));
+    
+    return result;
+}
+
 
 
 /*" Returns an encrypted version of the receiver using %salt as randomizer. %Salt must be a C String containing excatly two characters.

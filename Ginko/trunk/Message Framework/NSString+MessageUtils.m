@@ -619,35 +619,9 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 }
 */
 
-static BOOL _fileExists(NSString *filePath) 
++ (NSString*) temporaryFilename
 {
-    struct stat stats;
-    int result;
-    
-    if (! filePath) {
-        return NO;
-    }
-    
-    result = stat([filePath cString], &stats);
-    if ( (result != 0) && (errno == ENOENT) ) {
-        return NO; // file does not exist.
-    }
-    
-    NSCAssert1(result == 0, @"Error while getting file size (stat): %s", strerror(errno));
-    return YES;
-}
-
-+ (NSString *)temporaryFilename
-{
-    NSString *result = nil;
-    
-    do 
-    {
-        result = [NSString stringWithCString:tempnam([NSTemporaryDirectory() cString], "OPMS")];
-    } 
-    while (_fileExists(result));
-    
-    return result;
+	return [self temporaryFilenameWithPrefix: @"OPMessage" extension: nil];
 }
 
 - (NSString *)realnameFromEMailStringWithFallback 
@@ -2027,19 +2001,6 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     }
     
     return self;
-}
-
-+ (NSString *)temporaryFilenameWithExtension: (NSString*) ext 
-{
-    NSString* result = nil;
-    do {
-        // ##WARNING dirk->all Use a privacy-safe path like /tmp/Ginko/Users for temp files.
-        char *name = tmpnam(NULL);
-        result = [NSString stringWithFormat: @"%s.%@", name, ext];
-        //free(name); only needed for tempnam
-    } while (_fileExists(result));
-    
-    return result;
 }
 
 

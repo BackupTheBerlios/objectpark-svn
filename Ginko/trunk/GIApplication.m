@@ -119,7 +119,7 @@ NSNumber* yesNumber = nil;
 		GIThreadListController* controller = [win delegate];
         if ([controller isKindOfClass: [GIThreadListController class]]) {
 			NSString* groupURL = [[controller group] objectURLString];
-			if (groupURL) [groupNames addObject: groupURL];
+			if ([groupURL length]) [groupNames addObject: groupURL];
         }
     }
 	[[NSUserDefaults standardUserDefaults] setObject: groupNames forKey: OpenMessageGroups];

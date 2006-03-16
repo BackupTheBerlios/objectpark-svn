@@ -76,7 +76,6 @@ extern NSString *OPAttachmentPathAttribute;
 - (NSString*) stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp;
 - (NSString*) stringByEncodingFlowedFormat;
 
-+ (NSString*) temporaryFilenameWithExtension: (NSString*) ext;
 - (NSString*) stringByStrippingTrailingWhitespacesAndNewlines;
 - (long)longValue;
 - (NSString*) stringByRemovingAttachmentChars;
