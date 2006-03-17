@@ -1,7 +1,8 @@
 Bugs:
 
+- KVO notifications don't work with inverse many-to-many relationships (see test TestGIMessageGroup/testStatistics)
 
 Regressions:
 
-- "empty trash" no longer works
-- "space" in searches no longer work (-> maybe related to "go to next message" functionality)
+- "empty trash" no longer works (infinite loop)
+- "space" in searches no longer works (-> maybe related to "go to next message" functionality)

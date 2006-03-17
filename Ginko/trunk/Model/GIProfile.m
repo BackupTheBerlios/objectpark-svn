@@ -52,18 +52,18 @@
 	@"}";
 }
 
-+ (NSArray*) allObjects
-	/*" Returns all profile instances, assuring there is at least one (by creating it). "*/
++ (NSArray *)allObjects
+/*" Returns all profile instances, assuring there is at least one (by creating it). "*/
 {    
-    NSArray* result;
+    NSArray *result;
     @synchronized(self) {
         result = [super allObjects];
         
         if (![result count]) {
-            GIProfile* profile = [[[self alloc] init] autorelease];
-            [profile setValue: @"Dummy Profile" forKey: @"name"];
-            [profile setValue: nil forKey: @"enabled"];
-            [profile setValue: @"dummy@replace.this" forKey: @"mailAddress"];
+            GIProfile *profile = [[[self alloc] init] autorelease];
+            [profile setValue:@"Dummy Profile" forKey:@"name"];
+            [profile setValue:nil forKey:@"enabled"];
+            [profile setValue:@"dummy@replace.this" forKey:@"mailAddress"];
 			[profile insertIntoContext: [OPPersistentObjectContext defaultContext]]; // make persistent.
 			
 			[[OPPersistentObjectContext defaultContext] saveChanges];
@@ -76,43 +76,51 @@
     return result;
 }
 
-- (BOOL) validateMailAddress: (NSString**) address error: (NSError**) outError
+- (BOOL)validateMailAddress:(NSString **)address error:(NSError **)outError
 {
-	if ([*address length]<3) {
+	if ([*address length] < 3) {
 		// illegal email address
-		*outError = [NSError errorWithDomain: @"GIProfile" description: @"No valid email address has been set in the  selected profile."];
+		*outError = [NSError errorWithDomain:@"GIProfile" description:@"No valid email address has been set in the  selected profile."];
 	}
-	return  *outError == nil;
+	return *outError == nil;
 }
 
-+ (GIProfile*) defaultProfile
-	/*" Returns the default Profile. "*/
-{
-    return [[self allObjects] firstObject]; // dth: why should this work?
+/*" Returns all additional email addresses which are related of the receiver. "*/
+- (NSArray *)allAdditionalEmailAddresses {
+    return [[self valueForKey:@"additionalAddresses"] addressListFromEMailString];
 }
 
-+ (GIProfile*) guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage
-	/*" Tries to find a profile that matches the one meant by aMessage. Return nil if no profile could be guessed. "*/ 
++ (GIProfile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage
+/*" Tries to find a profile that matches the one meant by aMessage. Return nil if no profile could be guessed. "*/ 
 {    
     // All addressees:
-    NSArray* toList = [[aMessage bodyForHeaderField: @"To"] addressListFromEMailString];
-    NSArray* ccList = [[aMessage bodyForHeaderField: @"Cc"] addressListFromEMailString];
-    NSArray* addressList = ([ccList count] ? [toList arrayByAddingObjectsFromArray:ccList] : toList);
+    NSArray *toList = [[aMessage bodyForHeaderField:@"To"] addressListFromEMailString];
+    NSArray *ccList = [[aMessage bodyForHeaderField:@"Cc"] addressListFromEMailString];
+    NSArray *addressList = ([ccList count] ? [toList arrayByAddingObjectsFromArray:ccList] : toList);
 
-    NSEnumerator* enumerator = [[self allObjects] objectEnumerator];
-	GIProfile* profile;
-    GIProfile* replyToCandidate = nil;
+    NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
+	GIProfile *profile;
+    GIProfile *replyToCandidate = nil;
     while ((profile = [enumerator nextObject])) {
-		
-        if ([[profile valueForKey: @"enabled"] boolValue]) {
-            NSString* email = [profile mailAddress];
-            NSString* replyTo = [profile valueForKey: @"defaultReplyTo"];
-            NSEnumerator* addressEnumerator = [addressList objectEnumerator];
-            NSString* address;
+        if ([[profile valueForKey:@"enabled"] boolValue]) {
+            NSString *email = [profile valueForKey:@"mailAddress"];
+            NSString *replyTo = [profile valueForKey:@"defaultReplyTo"];
+            NSEnumerator *addressEnumerator = [addressList objectEnumerator];
+            NSString *address;
             
             while ((address = [addressEnumerator nextObject])) {
                 if (email && [email caseInsensitiveCompare:address] == NSOrderedSame) {
                     return profile;
+                }
+                
+                // try to match additional addresses:
+                NSEnumerator *additionalEnumerator = [[profile allAdditionalEmailAddresses] objectEnumerator];
+                NSString *additionalAddress;
+                
+                while (additionalAddress = [additionalEnumerator nextObject]) {
+                    if ([additionalAddress caseInsensitiveCompare:address] == NSOrderedSame) {
+                        return profile;
+                    }
                 }
                 
                 if (!replyToCandidate && replyTo && [replyTo caseInsensitiveCompare:address] == NSOrderedSame) {
@@ -125,8 +133,8 @@
     return replyToCandidate;
 }
 
-+ (BOOL) isMyEmailAddress: (NSString*) anAddress
-{
+/*" Returns true if the given address is one of the known (present in any profile) user's addresses. "*/
++ (BOOL)isMyEmailAddress:(NSString *)anAddress {
 	if (anAddress) {
 		NSEnumerator *enumerator;
 		GIProfile *profile;
@@ -136,24 +144,15 @@
 			
 			enumerator = [[GIProfile allObjects] objectEnumerator];
 			while (profile = [enumerator nextObject]) {
-				if ([[[profile mailAddress] addressFromEMailString] rangeOfString: anAddress options: NSCaseInsensitiveSearch].location != NSNotFound) {
+				if ([[[profile valueForKey:@"mailAddress"] addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch].location != NSNotFound) {
 					return YES;
 				}
 			}
-		} @catch (NSException* localException) {
+		} @catch (NSException *localException) {
 			return NO; // Expect our users to have correct email addresses.
 		}
     }
     return NO;
-}
-
-
-- (NSString*) mailAddress
-{
-    [self willAccessValueForKey: @"mailAddress"];
-    id result = [self primitiveValueForKey: @"mailAddress"];
-    [self didAccessValueForKey: @"mailAddress"];
-    return result;
 }
 
 @end

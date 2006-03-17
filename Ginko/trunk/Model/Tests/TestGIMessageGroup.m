@@ -89,11 +89,12 @@
     
     GIThread *thread = [[[GIThread alloc] init] autorelease];
 
-    /*
+    /* this works...
     [group addValue:thread forKey:@"threadsByDate"];
     STAssertTrue(invalidationCount != 0, @"should be invalidated");
     */
      
+    // ...but this doesn't!
     [thread addValue:group forKey:@"groups"];
     STAssertTrue(invalidationCount != 0, @"should be invalidated");
     

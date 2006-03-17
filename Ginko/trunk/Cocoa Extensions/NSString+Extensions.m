@@ -23,7 +23,7 @@
 //#import <AppKit/AppKit.h>
 //#endif
 //#ifdef EDCOMMON_OSXBUILD
-//#import <CoreFoundation/CoreFoundation.h>
+#import <CoreFoundation/CoreFoundation.h>
 //#endif
 #import <Foundation/Foundation.h>
 #import "NSString+Extensions.h"
@@ -324,7 +324,7 @@ static NSCharacterSet *iwsSet = nil;
 //	NSStringEncoding vs. MIME Encoding
 //---------------------------------------------------------------------------------------
 
-#ifdef EDCOMMON_OSXBUILD
+#ifdef __COREFOUNDATION__
 
 + (NSStringEncoding)stringEncodingForMIMEEncoding: (NSString*) charsetName
 {

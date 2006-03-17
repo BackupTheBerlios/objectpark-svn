@@ -9,25 +9,18 @@
 #import <AppKit/AppKit.h>
 #import "OPPersistentObject.h"
 
-
-
 @class OPInternetMessage;
 @class GIAccount;
 @class GIMessage;
 
 @interface GIProfile : OPPersistentObject {
-	
 }
 
-+ (NSArray*) allObjects;
-+ (GIProfile*) defaultProfile;
+/*" Accessing profiles "*/
++ (NSArray *)allObjects;
++ (GIProfile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage;
 
-+ (GIProfile*) guessedProfileForReplyingToMessage: (OPInternetMessage*) aMessage;
-
-+ (BOOL) isMyEmailAddress: (NSString*) aString;
-
-
-- (NSString*) mailAddress;
-
+/*" Utility methods "*/
++ (BOOL)isMyEmailAddress:(NSString *)aString;
 
 @end

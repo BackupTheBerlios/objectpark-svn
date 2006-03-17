@@ -96,7 +96,7 @@
 {
     if (self = [self init]) 
     {
-        if (! aProfile) aProfile = [GIProfile defaultProfile];
+        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
         
         profile = [aProfile retain];
         referencedMessage = nil;
@@ -121,7 +121,7 @@
 {
     if (self = [self init]) 
     {
-        if (! aProfile) aProfile = [GIProfile defaultProfile];
+        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
         
         profile = [aProfile retain];
         referencedMessage = [aMessage retain];
@@ -159,7 +159,7 @@
 - (id)initFollowupTo: (GIMessage*) aMessage profile:(GIProfile *)aProfile
 {
     if (self = [self init]) {
-        if (! aProfile) aProfile = [GIProfile defaultProfile];
+        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
         
         profile = [aProfile retain];
         referencedMessage = [aMessage retain];
@@ -189,7 +189,7 @@
 - (id) initForward: (GIMessage*) aMessage profile: (GIProfile*) aProfile
 {
     if (self = [self init]) {
-        if (! aProfile) aProfile = [GIProfile defaultProfile];
+        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
         profile = [aProfile retain];
         
         [self setReplyForwardSubjectFromMessage: aMessage];
@@ -294,7 +294,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 // actions
 - (IBAction)send:(id)sender
 {
-	NSString* emailAddress = [[self profile] mailAddress];
+	NSString* emailAddress = [[self profile] valueForKey:@"mailAddress"];
 	
     if (emailAddress && ([[toField stringValue] rangeOfString:emailAddress].location != NSNotFound)) {
         NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
@@ -320,7 +320,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)queue:(id)sender
 {
-    if ([[toField stringValue] rangeOfString: [[self profile] mailAddress]].location != NSNotFound)
+    if ([[toField stringValue] rangeOfString:[[self profile] valueForKey:@"mailAddress"]].location != NSNotFound)
     {
         NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
                           NSLocalizedString(@"Send", @"sendSoliloquySheet"),
@@ -608,9 +608,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // create from header:
 	if ([[theProfile valueForKey: @"realname"] length]) {
-		from = [NSString stringWithFormat: @"%@ <%@>", [theProfile valueForKey: @"realname"], [theProfile mailAddress]];
+		from = [NSString stringWithFormat: @"%@ <%@>", [theProfile valueForKey:@"realname"], [theProfile valueForKey:@"mailAddress"]];
 	} else {
-		from = [theProfile mailAddress];
+		from = [theProfile valueForKey:@"mailAddress"];
 	}
 	[headerFields setObject: from forKey: @"From"];
     
