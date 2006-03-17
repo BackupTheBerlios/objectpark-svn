@@ -621,7 +621,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
 
 + (NSString*) temporaryFilename
 {
-	return [self temporaryFilenameWithPrefix: @"OPMessage" extension: nil];
+	return [self temporaryFilenameWithPrefix: @"OPMessage"];
 }
 
 - (NSString *)realnameFromEMailStringWithFallback 

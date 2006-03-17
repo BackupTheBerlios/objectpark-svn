@@ -574,7 +574,8 @@ Note: This method is not available on Windows NT platforms. "*/
     return [self encryptedStringWithSalt:salt];
 }
 
-static BOOL _fileExists(NSString *filePath) 
+/*
+static BOOL _fileExists(char* filePath) 
 {
     struct stat stats;
     int result;
@@ -583,7 +584,7 @@ static BOOL _fileExists(NSString *filePath)
         return NO;
     }
     
-    result = stat([filePath cString], &stats);
+    result = stat(filePath, &stats);
     if ( (result != 0) && (errno == ENOENT) ) {
         return NO; // file does not exist.
     }
@@ -591,32 +592,27 @@ static BOOL _fileExists(NSString *filePath)
     NSCAssert1(result == 0, @"Error while getting file size (stat): %s", strerror(errno));
     return YES;
 }
+*/
 
 
 + (NSString*) temporaryFilenameWithPrefix: (NSString*) prefix 
-								extension: (NSString*) ext 
+/*" Only 7 bit strings are allowed for prefix and ext parameters. "*/
 {
-    NSString* result = nil;
-	if (!ext) ext = @"";
-    do {
-        // ##WARNING dirk->all Use a privacy-safe path like /tmp/Ginko/Users for temp files.
-        char *name = tmpnam(NULL);
-        result = [NSString stringWithFormat: @"%@%s.%@", prefix, name, ext];
-        //free(name); only needed for tempnam
-    } while (_fileExists(result));
+	if (!prefix) prefix = @"";
+	char* result = (char*)[[NSString stringWithFormat: @"%@/%@-XXXXXXX", NSTemporaryDirectory(), prefix] cString];
+
+	result = mktemp(result);
     
-    return result;
+	return [NSString stringWithCString: result];
 }
 
 
 
-/*" Returns an encrypted version of the receiver using %salt as randomizer. %Salt must be a C String containing excatly two characters.
 
-This method is thread-safe.
-
-Note: This method is not available on Windows NT platforms. "*/
 
 - (NSString*) encryptedStringWithSalt:(const char *)salt
+/*" Returns an encrypted version of the receiver using %salt as randomizer. %Salt must be a C String containing excatly two characters.
+	This method is thread-safe. Note: This method is not available on Windows NT platforms. "*/
 {
     static NSLock	*encryptLock = nil;
     NSMutableData 	*sdata;

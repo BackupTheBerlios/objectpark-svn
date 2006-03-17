@@ -82,8 +82,7 @@
 + (NSString*) MIMEEncodingOfXMLDocument: (NSData*) xmlData;
 + (NSStringEncoding) encodingOfXMLDocument: (NSData*) xmlData;
 
-+ (NSString*) temporaryFilenameWithPrefix: (NSString*) prefix 
-								extension: (NSString*) ext;
++ (NSString*) temporaryFilenameWithPrefix: (NSString*) prefix;
 
 #ifndef WIN32
 /*" Encryptions "*/
