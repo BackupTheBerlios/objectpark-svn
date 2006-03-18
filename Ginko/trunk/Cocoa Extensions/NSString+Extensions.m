@@ -596,7 +596,7 @@ static BOOL _fileExists(char* filePath)
 
 
 + (NSString*) temporaryFilenameWithPrefix: (NSString*) prefix 
-/*" Only 7 bit strings are allowed for prefix and ext parameters. "*/
+/*" Only 7 bit strings are allowed for prefix and ext parameters. The file does not yes exist. "*/
 {
 	if (!prefix) prefix = @"";
 	char* result = (char*)[[NSString stringWithFormat: @"%@/%@-XXXXXXX", NSTemporaryDirectory(), prefix] cString];
@@ -605,8 +605,6 @@ static BOOL _fileExists(char* filePath)
     
 	return [NSString stringWithCString: result];
 }
-
-
 
 
 

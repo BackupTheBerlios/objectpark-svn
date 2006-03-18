@@ -579,10 +579,12 @@
 			[r addRelationNamed: key from: self to: value];
 			
 			// Also update inverse relationship (if any):
-			if (inverseKey && [[value attributeValues] objectForKey: inverseKey]) {
-				// Firing a relationship would already add value via r. On the other hand - we are now skipping the kvo notifications...bad!
+			if (inverseKey) {
 				[value willChangeValueForKey: inverseKey];
-				[value addPrimitiveValue: self forKey: inverseKey];
+				if ([[value attributeValues] objectForKey: inverseKey]) {
+					// Firing the relationship will add self via r later otherwise.
+					[value addPrimitiveValue: self forKey: inverseKey];
+				}
 				[value didChangeValueForKey: inverseKey];
 			}
 			
@@ -595,16 +597,15 @@
 				// many-to-one relationship
 				id oldIValue = [value valueForKey: inverseKey];
 				
-				if (oldIValue)
-					[oldIValue removeValue: value forKey: key]; // remove from inverse inverse relationship (if any). This might fire oldIValue. :-(
+				if (oldIValue) {
+					[oldIValue removeValue: value forKey: key]; // remove from inverse inverse relationship (if any). This might fire oldIValue. gmpf
+				}
 				
 				[value willChangeValueForKey: inverseKey];
 				[value setPrimitiveValue: self forKey: inverseKey];
 				[value didChangeValueForKey: inverseKey];
-				
+			}
 		}
-	}
-		
 		[self willChangeValueForKey: key];
 		[self addPrimitiveValue: value forKey: key];
 		[self didChangeValueForKey: key];
