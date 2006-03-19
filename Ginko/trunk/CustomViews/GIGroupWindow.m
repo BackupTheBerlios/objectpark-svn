@@ -7,6 +7,7 @@
 //
 
 #import "GIGroupWindow.h"
+#import "GIThreadListController.h"
 #import <Foundation/NSDebug.h>
 #import "GITextView.h"
 
@@ -105,21 +106,21 @@
                 case 2: // d
                 case KEYPAD6KEY:
                 case 42: // #
-                    consumed = [[self delegate] messageShownCurrently];
+                    consumed = [[self delegate] isMessageShownCurrently];
                     [self delegateAction:@selector(navigateRightInMatrix:)];
                     break;
                     
                 case 0: // a
                 case 41: // Ö
                 case KEYPAD4KEY:
-                    consumed = [[self delegate] messageShownCurrently];
+                    consumed = [[self delegate] isMessageShownCurrently];
                     [self delegateAction:@selector(navigateLeftInMatrix:)];
                     break;
                     
                 case 13: // w
                 case 33: // Ü
                 case KEYPAD8KEY:
-                    consumed = [[self delegate] messageShownCurrently];
+                    consumed = [[self delegate] isMessageShownCurrently];
                     [self delegateAction:@selector(navigateUpInMatrix:)];
                     break;
                     
@@ -127,12 +128,12 @@
                 case 39: // Ä
                 case KEYPAD2KEY:
                 case KEYPAD5KEY:
-                    consumed = [[self delegate] messageShownCurrently];
+                    consumed = [[self delegate] isMessageShownCurrently];
                     [self delegateAction:@selector(navigateDownInMatrix:)];
                     break;
                     
 				case SPACEKEY:
-                    if (! [[self delegate] searchHitsShownCurrently]) {
+                    if (! [[self delegate] isSearchShownCurrently]) {
                         [self delegateAction:@selector(showNextMessage:)];
                         consumed = YES;
 
