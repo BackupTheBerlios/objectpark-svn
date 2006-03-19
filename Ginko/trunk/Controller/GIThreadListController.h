@@ -69,7 +69,9 @@
 - (GIMessage *)displayedMessage;
 - (GIThread *)displayedThread;
 
-- (BOOL)threadsShownCurrently;
+- (BOOL) isThreadlistShownCurrently;
+- (BOOL) isSearchShownCurrently;
+- (BOOL) isMessageShownCurrently;
 
 - (BOOL)validateSelector:(SEL)aSelector; // necessary?
 

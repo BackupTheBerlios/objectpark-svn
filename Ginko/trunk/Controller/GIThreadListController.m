@@ -362,19 +362,19 @@ static BOOL isThreadItem(id item)
     return nowForThreadFiltering;
 }
 
-- (BOOL)threadsShownCurrently
+- (BOOL) isThreadlistShownCurrently
 /*" Returns YES if the tab with the threads outline view is currently visible. NO otherwise. "*/
 {
     return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"threads"];
 }
 
-- (BOOL)searchHitsShownCurrently
+- (BOOL) isSearchShownCurrently
 /*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
 {
     return (hits != nil);
 }
 
-- (BOOL)messageShownCurrently
+- (BOOL) isMessageShownCurrently
 /*" Returns YES if the tab with the message is currently visible. NO otherwise. "*/
 {
     return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"];
@@ -382,7 +382,7 @@ static BOOL isThreadItem(id item)
 
 - (BOOL)openSelection:(id)sender
 {    
-    if ([self threadsShownCurrently]) 
+    if ([self isThreadlistShownCurrently]) 
     {
         int selectedRow = [threadsView selectedRow];
         
@@ -474,7 +474,7 @@ static BOOL isThreadItem(id item)
         }
 		
 	} 
-    else if ([self searchHitsShownCurrently]) 
+    else if ([self isSearchShownCurrently]) 
     {
         int selectedIndex = [searchHitsTableView selectedRow];
         
@@ -508,7 +508,7 @@ static BOOL isThreadItem(id item)
             }       
         }
     } 
-    else if ([self messageShownCurrently])
+    else if ([self isMessageShownCurrently])
     {
 		// message shown
         if ([window firstResponder] == commentsMatrix) [window makeFirstResponder:messageTextView];
@@ -520,12 +520,12 @@ static BOOL isThreadItem(id item)
 - (IBAction)closeSelection:(id)sender
 {
     if (sender == messageTextView) {
-        if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+        if ([self isSearchShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
         else [tabView selectTabViewItemWithIdentifier:@"threads"];
     } else {
         if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"]) {
             // from message switch back to threads:
-            if ([self searchHitsShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
+            if ([self isSearchShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
             else [tabView selectTabViewItemWithIdentifier:@"threads"];
         } else {
             // from threads switch back to the groups window:
@@ -1162,11 +1162,11 @@ static BOOL isThreadItem(id item)
 
 - (IBAction) showNextMessage:(id)sender 
 {
-	if ([self threadsShownCurrently]) {
+	if ([self isThreadlistShownCurrently]) {
 		// Thread list is showing	
 		NSLog(@"Should show next message!");
 		NSBeep();
-	} else if ([self messageShownCurrently]) {
+	} else if ([self isMessageShownCurrently]) {
 		// Message view is showing
 		NSArray* messages = [displayedThread messagesByTree];
 		GIMessage* messageFound = nil;
@@ -1201,14 +1201,16 @@ static BOOL isThreadItem(id item)
          || (aSelector == @selector(followup:))
          //|| (aSelector == @selector(showTransferData:))
          ) {
-        NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
-        
-        if ([selectedIndexes count] == 1) {
-            id item = [threadsView itemAtRow: [selectedIndexes firstIndex]];
-            if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) {
-                return YES;
-            }
-        }
+		if ([self isThreadlistShownCurrently] || [self isMessageShownCurrently]) {
+			NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
+			
+			if ([selectedIndexes count] == 1) {
+				id item = [threadsView itemAtRow: [selectedIndexes firstIndex]];
+				if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) {
+					return YES;
+				}
+			}
+		}
         return NO;
     } else if (aSelector == @selector(applySortingAndFiltering:)) {
         return [self multipleThreadsSelected]; 
@@ -1263,7 +1265,7 @@ static BOOL isThreadItem(id item)
     if ([menuItem action] == @selector(showRawSource:)) 
     {
         [menuItem setState:showRawSource ? NSOnState : NSOffState];
-        return ![self threadsShownCurrently];
+        return ![self isThreadlistShownCurrently];
     } 
     else if ([menuItem action] == @selector(toggleReadFlag:)) 
     {
@@ -1884,7 +1886,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 - (IBAction)navigateUpInMatrix:(id)sender
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if ([self messageShownCurrently]) 
+    if ([self isMessageShownCurrently]) 
     {
         NSArray *comments;
         int indexOfDisplayedMessage;
@@ -1904,7 +1906,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 - (IBAction)navigateDownInMatrix:(id)sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
 {
-    if ([self messageShownCurrently]) 
+    if ([self isMessageShownCurrently]) 
     {
         NSArray *comments = [[[self displayedMessage] reference] commentsInThread:[self displayedThread]];
         int indexOfDisplayedMessage = [comments indexOfObject:[self displayedMessage]];
@@ -1921,7 +1923,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 - (IBAction)navigateLeftInMatrix:(id)sender
 /*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
-    if ([self messageShownCurrently]) 
+    if ([self isMessageShownCurrently]) 
     {
         if ([self leftMostMessageIsSelected] || ![self matrixIsVisible])
         {
@@ -1948,7 +1950,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 - (IBAction)navigateRightInMatrix:(id)sender
 /*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
-    if ([self messageShownCurrently]) 
+    if ([self isMessageShownCurrently]) 
     {
         NSArray *comments = [[self displayedMessage] commentsInThread:[self displayedThread]];
         
