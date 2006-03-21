@@ -50,6 +50,37 @@
 - (NSData *)readDataToEndOfFileNonBlocking;
 - (NSData *)readDataOfMaxLengthNonBlocking:(unsigned int)length;
 
+/**
+ * Call -writeInBackgroundAndNotify:forModes: with nil modes.
+ */
+- (void) writeInBackgroundAndNotify: (NSData*)item;
+
+/**
+ * Write the specified data asynchronously, and notify on completion.
+ */
+- (void) writeInBackgroundAndNotify: (NSData*) item forModes: (NSArray*) modes;
+
 @end
+
+// GNUstep Notification names.
+
+/**
+* Notification posted when an asynchronous [NSFileHandle] connection
+ * attempt (to an FTP, HTTP, or other internet server) has succeeded.
+ */
+extern NSString * const GSFileHandleConnectCompletionNotification;
+
+/**
+* Notification posted when an asynchronous [NSFileHandle] write
+ * operation (to an FTP, HTTP, or other internet server) has succeeded.
+ */
+extern NSString * const GSFileHandleWriteCompletionNotification;
+
+/**
+* Message describing error in asynchronous [NSFileHandle] accept,read,write
+ * operation.
+ */
+extern NSString * const GSFileHandleNotificationError;
+
 
 #endif	/* __NSFileHandle_NetExt_h_INCLUDE */

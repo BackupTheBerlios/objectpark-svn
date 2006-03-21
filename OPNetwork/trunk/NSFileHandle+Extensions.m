@@ -33,6 +33,26 @@
 #define OPSOCKETHANDLE [self fileDescriptor]
 #endif
 
+/**
+ * Notification posted when an asynchronous [NSFileHandle] connection
+ * attempt (to an FTP, HTTP, or other internet server) has succeeded.
+ */
+NSString* const GSFileHandleConnectCompletionNotification = @"GSFileHandleConnectCompletionNotification";
+
+/**
+ * Notification posted when an asynchronous [NSFileHandle] write
+ * operation (to an FTP, HTTP, or other internet server) has succeeded.
+ */
+ NSString* const GSFileHandleWriteCompletionNotification = @"GSFileHandleWriteCompletionNotification";
+
+/**
+* Message describing error in asynchronous [NSFileHandle] accept,read,write
+ * operation.
+ */
+ NSString* const GSFileHandleNotificationError = @"GSFileHandleNotificationError";
+
+
+
 //---------------------------------------------------------------------------------------
     @implementation NSFileHandle(EDExtensions)
 //---------------------------------------------------------------------------------------
@@ -188,6 +208,68 @@
     return [self readDataOfLength:((available < length) ? available : length)];
 }
 
+/**
+* Call -writeInBackgroundAndNotify:forModes: with nil modes.
+ */
+- (void) writeInBackgroundAndNotify: (NSData*)item
+{
+	[self writeInBackgroundAndNotify: item forModes: nil];
+}
+
+
+- (void) _noteWriteDidFinishWithUserInfo: (NSDictionary*) userInfo
+{
+	// Called in main thread
+	[[NSNotificationCenter defaultCenter] postNotificationName: GSFileHandleWriteCompletionNotification object: self userInfo: [userInfo autorelease]];
+}
+
+- (void) _noteWriteErrorWithUserInfo: (NSDictionary*) userInfo
+{
+	// Called in main thread
+	[[NSNotificationCenter defaultCenter] postNotificationName: GSFileHandleNotificationError object: self userInfo: [userInfo autorelease]];
+}
+
+- (void) _writeInBackgroundAndNotify: (NSMutableDictionary*) userInfo
+{
+	// called in background thread, so we do not block. Do we need to add a timeout using select()?
+	@try {
+		[self writeData: [userInfo objectForKey: @"Data"]];
+	} @catch (NSException* e) {
+		[userInfo setObject:  e forKey: @"Exception"];
+		NSLog(@"Exception occured during background send: %@", e);
+		[[NSThread currentThread] performSelectorOnMainThread: @selector(_noteWriteErrorWithUserInfo:)
+												   withObject: userInfo
+												waitUntilDone: NO];
+		return;
+	}
+	
+	NSArray* modes = [userInfo objectForKey: @"Modes"];
+	if (modes) {
+		[self performSelectorOnMainThread: @selector(_noteWriteDidFinishWithUserInfo:)
+							   withObject: userInfo
+							waitUntilDone: NO
+									modes: modes];
+	} else {
+		[self performSelectorOnMainThread: @selector(_noteWriteDidFinishWithUserInfo:)
+							   withObject: userInfo
+							waitUntilDone: NO];
+	}
+}
+
+/**
+* Write the specified data asynchronously, and notify on completion.
+ */
+- (void) writeInBackgroundAndNotify: (NSData*)item forModes: (NSArray*)modes
+{
+	NSMutableDictionary* userInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+		item, @"Data",
+		modes, @"Modes",
+		nil, nil]; // released after writing in _noteWriteDidfinish
+	
+	[NSThread detachNewThreadSelector: @selector(_writeInBackgroundAndNotify:) 
+							 toTarget: self 
+						   withObject: userInfo];
+}
 
 //---------------------------------------------------------------------------------------
     @end
