@@ -729,16 +729,35 @@ static BOOL isThreadItem(id item)
             int searchLimit = [defaults integerForKey:SearchHitLimit];
             
             NSString *defaultField = @"body";
-            switch (defaultFieldTag) 
-            {
-                case 1: defaultField = @"subject"; break;
-                case 2: defaultField = @"author"; break;
+            switch (defaultFieldTag) {
+                case 0: {
+                    static NSArray *allFields = nil;
+                    if (!allFields) {
+                        allFields = [[NSArray alloc] initWithObjects:@"body", @"subject", @"author", @"recipients", nil];
+                    }
+                    
+                    NSEnumerator *enumerator = [allFields objectEnumerator];
+                    NSString *fieldName;
+                    NSString *allQuery = @"";
+                    while (fieldName = [enumerator nextObject]) {
+                        allQuery = [allQuery stringByAppendingFormat:@"%@:(%@) ", fieldName, query];
+                    }
+                    query = allQuery;
+                    
+                    break;
+                }
+                case 1: defaultField = @"body"; break;
+                case 2: defaultField = @"subject"; break;
+                case 3: defaultField = @"author"; break;
+                case 4: defaultField = @"recipients"; break;
                 default: break;
             }
             
+            NSLog(@"query = %@", query);
+            
             [self setHits:[GIFulltextIndex hitsForQueryString:query defaultField:defaultField group:limitSearchToGroup ? [self group] : nil limit:searchLimit]];
             
-            NSLog(@"hits count = %d", [hits count]);
+            if (NSDebugEnabled) NSLog(@"hits count = %d", [hits count]);
             
             [searchHitsTableView reloadData];
         } 

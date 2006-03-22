@@ -17,6 +17,7 @@
 #import <OPDebug/OPLog.h>
 #import "GIUserDefaultsKeys.h"
 #import "OPPersistence.h"
+#import "OPInternetMessage.h"
 
 @interface GIFulltextIndex (JVMStuff)
 + (JNIEnv *)jniEnv;
@@ -348,6 +349,28 @@
         [self document:document addUnStoredFieldWithName:@"author" text:authorJavaString];
     }
     
+    // recipients
+    OPInternetMessage *internetMessage = [aMessage internetMessage];
+    NSString *to = [internetMessage toWithFallback:YES];
+    NSString *cc = [internetMessage ccWithFallback:YES];
+    NSString *bcc = [internetMessage bccWithFallback:YES];
+    
+    NSString *recipients = [to length] ? to : @"";
+    recipients = [cc length] ? [recipients stringByAppendingFormat:@", %@", cc] : recipients;
+    recipients = [bcc length] ? [recipients stringByAppendingFormat:@", %@", bcc] : recipients;
+    
+    jstring recipientsJavaString = (*env)->NewStringUTF(env, [recipients UTF8String]);
+    exc = (*env)->ExceptionOccurred(env);
+    if (exc) 
+    {
+        /* We don't do much with the exception, except that
+        we print a debug message for it, clear it. */
+        (*env)->ExceptionDescribe(env);
+        (*env)->ExceptionClear(env);
+    }
+    
+    [self document:document addUnStoredFieldWithName:@"recipients" text:recipientsJavaString];    
+    
     // body
     NSString *body = [aMessage valueForKey:@"messageBodyAsPlainString"];
     [aMessage flushInternetMessageCache]; // get rid of the message's data
@@ -540,7 +563,7 @@
     (*env)->CallVoidMethod(env, writer, mid);
 }
 
-+ (void)addMessages: (NSArray*) someMessages
++ (void)addMessages:(NSArray *)someMessages
 {
     @synchronized(self) {
         int counter = 0;
@@ -555,10 +578,12 @@
         @try {
             pool = [[NSAutoreleasePool alloc] init];
             BOOL shouldTerminate = NO;
-            id message;
+            GIMessage *message;
 
             while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) {
-				if (![message isDummy]) {
+                GIThread *thread = [message thread];
+                
+				if (![message isDummy] && [thread resolveFault]) {
 					if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;};
 					
 					@try {
@@ -590,7 +615,7 @@
 					[message setValue: yesNumber forKey: @"isFulltextIndexed"];
 				}
 			}
-        } @catch (NSException* localException) {
+        } @catch (NSException *localException) {
             @throw localException;
         } @finally {
             [self addChangeCount:counter];
@@ -1048,17 +1073,9 @@
         {
             [invalidMessages addObject:message];
             if (limit != 0) maxCount = MIN(hitsCount, maxCount + 1);
-        } 
-        else 
-        {
+        } else {
             // dupe check:
-            if ([dupeCheck containsObject: messageOid]) 
-            {
-                // remove from fulltext index:
-                [invalidMessages addObject:message];
-            } 
-            else 
-            {
+            if (![dupeCheck containsObject:messageOid]) {
                 [dupeCheck addObject:messageOid];
                 
                 if (aGroup && (![[thread valueForKey:@"groups"] containsObject:aGroup])) // not in right group

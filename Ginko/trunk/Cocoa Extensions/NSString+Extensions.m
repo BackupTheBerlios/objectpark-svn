@@ -237,7 +237,6 @@ static NSCharacterSet *iwsSet = nil;
 
 
 /*" Returns YES if the receiver is equal to string "yes", comparing case insensitive. "*/
-
 - (BOOL) boolValue
 {
     if([self intValue] > 0)
@@ -253,22 +252,19 @@ static NSCharacterSet *iwsSet = nil;
 }
 
 /*" Assumes the string contains an integer written in hexadecimal notation and returns its value. Uses #scanHexInt in #NSScanner. "*/
-
-- (unsigned int) intValueForHex
-{
-    unsigned int	value;
+- (unsigned int)intValueForHex {
+    unsigned int value;
 
     if([[NSScanner scannerWithString:self] scanHexInt:&value] == NO)
         return 0;
+    
     return value;
 }
 
 
 /*" Returns yes if the string contains no text characters. Note that its length can still be non-zero. "*/
-
-- (BOOL)isEmpty
-{
-  return [self isEqualToString: @""];
+- (BOOL)isEmpty {
+    return [self isEqualToString: @""];
 }
 
 
