@@ -1268,9 +1268,9 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
             vmLaunchOptions->options = option;
             option->extraInfo = NULL;
             
-            NSString *opt = [@"-Djava.class.path=" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-1.4.3" ofType:@"jar"]];
+            NSString *opt = [@"-Djava.class.path=" stringByAppendingString:[[NSBundle mainBundle] pathForResource:@"lucene-core-1.9.1" ofType:@"jar"]];
             
-            NSLog(@"option = %@", opt);
+            if (NSDebugEnabled) NSLog(@"option = %@", opt);
             
             CFIndex optionStringSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)opt), kCFStringEncodingUTF8);
             option->optionString = malloc(optionStringSize+1);

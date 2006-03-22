@@ -135,7 +135,6 @@
 		77BA8F50076DCC480082F33F /* GIAddressFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */; };
 		77BA9235076DCCD80082F33F /* ABPerson+Convenience.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BA9233076DCCD80082F33F /* ABPerson+Convenience.h */; };
 		77BA9236076DCCD80082F33F /* ABPerson+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BA9234076DCCD80082F33F /* ABPerson+Convenience.m */; };
-		77BBA52C095587D6005C4915 /* lucene-1.4.3.jar in Resources */ = {isa = PBXBuildFile; fileRef = 770E4D74095583BC007F1158 /* lucene-1.4.3.jar */; };
 		77BC56C707F1D338009EF11D /* boxes.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 77BC56C607F1D338009EF11D /* boxes.toolbar */; };
 		77BC581C07610AB700B70D8F /* GIGroupWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BC581A07610AB700B70D8F /* GIGroupWindow.h */; };
 		77BC581D07610AB700B70D8F /* GIGroupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC581B07610AB700B70D8F /* GIGroupWindow.m */; };
@@ -186,6 +185,7 @@
 		77EF040407DC4DEF007CD721 /* GIGroupInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */; };
 		77F3181D077B327A0097096B /* GITextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 77F3181B077B327A0097096B /* GITextView.h */; };
 		77F3181E077B327A0097096B /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F3181C077B327A0097096B /* GITextView.m */; };
+		77F917E509D156B40069C455 /* lucene-core-1.9.1.jar in Resources */ = {isa = PBXBuildFile; fileRef = 77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */; };
 		77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */; };
 		77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF35940972FFA300AFD0DF /* Folder.tiff */; };
 		8D0EC28209A22577004563D4 /* NSString+Similarities.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0EC28009A22577004563D4 /* NSString+Similarities.h */; };
@@ -519,7 +519,6 @@
 		770878C008B4FCD600FBB196 /* HeaderTemplate.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = HeaderTemplate.html; sourceTree = "<group>"; };
 		7709374A08574DF200A29008 /* NSHost+GIReachability.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSHost+GIReachability.h"; sourceTree = "<group>"; };
 		7709374B08574DF200A29008 /* NSHost+GIReachability.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSHost+GIReachability.m"; sourceTree = "<group>"; };
-		770E4D74095583BC007F1158 /* lucene-1.4.3.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "lucene-1.4.3.jar"; path = "Resources/lucene-1.4.3.jar"; sourceTree = "<group>"; };
 		77136F3008438E2A002F9298 /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
 		77136F3108438E2A002F9298 /* TestGIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIThread.m; sourceTree = "<group>"; };
 		7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ProfilePrefs.nib; sourceTree = "<group>"; };
@@ -663,6 +662,7 @@
 		77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupInspectorController.m; sourceTree = "<group>"; };
 		77F3181B077B327A0097096B /* GITextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GITextView.h; sourceTree = "<group>"; };
 		77F3181C077B327A0097096B /* GITextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GITextView.m; sourceTree = "<group>"; };
+		77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "lucene-core-1.9.1.jar"; path = "Resources/lucene-core-1.9.1.jar"; sourceTree = "<group>"; };
 		77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OtherMailbox.tiff; sourceTree = "<group>"; };
 		77FF35940972FFA300AFD0DF /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
 		8D0EC28009A22577004563D4 /* NSString+Similarities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Similarities.h"; sourceTree = "<group>"; };
@@ -973,8 +973,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */,
 				8DEFDBC909C08CFD00F6FB25 /* libsqlite3.a */,
-				770E4D74095583BC007F1158 /* lucene-1.4.3.jar */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 			);
 			name = Frameworks;
@@ -1807,7 +1807,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77BBA52C095587D6005C4915 /* lucene-1.4.3.jar in Resources */,
+				77F917E509D156B40069C455 /* lucene-core-1.9.1.jar in Resources */,
 				77CC67F109333E9C00E0F213 /* OPL-Configuration.plist in Resources */,
 				7776BBAA07D0773E00822246 /* MainMenu.nib in Resources */,
 				8D9E9DC906AE215D0055F87C /* OPBanner.jpg in Resources */,
