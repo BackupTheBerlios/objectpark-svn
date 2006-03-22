@@ -244,13 +244,12 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     return self;
 }
 
-
+/*" Sends message with given parameters. Raises an exception if the message could not be sent. "*/
 - (void) sendPlainText: (NSString*) body 
 				  from: (NSString*) from 
 					to: (NSArray*) recipients
 			   subject: (NSString*) subject
 		   moreHeaders: (NSDictionary*) userHeaders 
-/*" Takes a message body string, an array of email address-strings. "*/
 {
 	NSParameterAssert([from length]);
 	NSParameterAssert([[recipients lastObject] length]);
@@ -321,8 +320,6 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[self sendTransferData: transferData from: from to: recipients];
 	
 }
- 
-
 
 - (void)dealloc
 {
@@ -347,6 +344,8 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     return [capabilities objectForKey:@"8BITMIME"] != nil;
 }
 
+/*" Sends message transfer data from sender to recipients. 
+Raises an exception if the message could not be sent. "*/
 - (void)sendTransferData:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients {
     NSEnumerator *enumerator;
     NSString *recipient;

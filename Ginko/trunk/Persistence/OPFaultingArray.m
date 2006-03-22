@@ -467,7 +467,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 		elementClass = [anObject class]; // remember the element class
 	}
 	
-	if ([self containsObject: anObject]) {
+	if (NSDebugEnabled && [self containsObject: anObject]) {
 		NSLog(@"Warning: producing double entry '%@' in faulting array '%@'", anObject, self);
 		NSBeep();
 	}
