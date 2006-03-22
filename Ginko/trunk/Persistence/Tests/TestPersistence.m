@@ -171,7 +171,8 @@
 }
 */
 
-
+/*
+// Test ist outdated - GIProfile no longer stores NSDatas, but NSAttributedStrings
 - (void)testDataPersistence
 {
 	char bytes[256];
@@ -197,8 +198,10 @@
 	
 	NSAssert2([writeData isEqual:readData], @"NSData write-reread failed. %@ != %@", writeData, readData);
 }
+*/
 
 - (void)testAttributedStringPersistence
+// Also tests Data persistence
 {	
 	NSAttributedString* writeData = [[[NSAttributedString alloc] initWithString: @"This is an Attributed Test\nString\n."] autorelease];
 	
@@ -335,9 +338,10 @@
 
 }
 
-- (void) testFaultingArray
+- (void) notestFaultingArray
+// this test relies in a database with existing groups.
 {
-    NSAssert(false == true, @"this test causes an stack overflow");
+    //NSAssert(false == true, @"this test causes a stack overflow");
 	NSArray* allGroups = [context fetchObjectsOfClass: [GIMessageGroup class] whereFormat: nil, nil];
 	OPFaultingArray* testArray = [OPFaultingArray array];
 	

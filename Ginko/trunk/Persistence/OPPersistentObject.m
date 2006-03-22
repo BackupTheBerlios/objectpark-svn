@@ -295,40 +295,11 @@
 }
 
 
-- (void) willAccessValueForKey: (NSString*) key
-{
-	if (!attributes) [[self context] willFireFault: self forKey: key]; // statistics - not elegant	
-    [self resolveFault];
-		
-	if (key && ![attributes objectForKey: key]) {
-		// Try to fetch and cache a relationship:
-		id result = [[self context] containerForObject: self
-									   relationShipKey: key];
-		if (result) {
-			// Cache result container in attributes dictionary:
-			[attributes setObject: result forKey: key]; 
-		}
-	}
-}
-
-
 - (void) willChangeValueForKey: (NSString*) key
 {
-    [self willAccessValueForKey: key]; // not necessary for relationships!
+    //[self willAccessValueForKey: key]; // not necessary for relationships!
     //[[self context] willChangeObject: self];
 	[super willChangeValueForKey: key]; // notify observers
-}
-
-- (void) willChangeToManyRelationshipForKey: (NSString*) key 
-{
-	// We do not need to fire a fault - changes are recorded in the OPObjectRelationship object
-	[super willChangeValueForKey: key]; // notify observers
-}
-
-- (void) didChangeToManyRelationshipForKey: (NSString*) key 
-{
-	// We do not need to fire a fault - changes are recorded in the OPObjectRelationship object
-	[super didChangeValueForKey: key]; // notify observers
 }
 
 - (void) didAccessValueForKey: (NSString*) key
@@ -352,10 +323,29 @@
 	[self refault]; // free attribute resources
 }
 
+- (void) willAccessValueForKey: (NSString*) key
+{
+	if (!attributes) [[self context] willFireFault: self forKey: key]; // statistics - not elegant	
+    [self resolveFault];
+	
+	if (key && ![attributes objectForKey: key]) {
+		// Try to fetch and cache a relationship:
+		id result = [[self context] containerForObject: self
+									   relationShipKey: key];
+		if (result) {
+			// Cache result container in attributes dictionary:
+			[attributes setObject: result forKey: key]; 
+		}
+	}
+}
+
 - (id) primitiveValueForKey: (NSString*) key
-/*" Returns nil, if the receiver is a fault. Call -willAccessValueForKey prior to this method to make sure, the object attributes are in place."*/
+/*" Fills the attributes dictionary, if necessary, i.e. fires the fault."*/
 {
 	id result;
+	
+	[self willAccessValueForKey: key]; // fire fault, make sure the attribute values exist.
+	
 	@synchronized(self) {
 		result = [attributes objectForKey: key];
 	}	
@@ -365,6 +355,8 @@
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key
 /*" Passing a nil value is allowed and removes the respective value. "*/
 {	
+	[self willAccessValueForKey: key];
+	
 	@synchronized(self) {
 		if (object) {
 			[attributes setObject: object forKey: key];
@@ -419,7 +411,7 @@
 
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
-	[self willAccessValueForKey: key];
+	// no loner necessary! [self willAccessValueForKey: key];
 	id oldValue = [self primitiveValueForKey: key];
 	[self didAccessValueForKey: key];
 	
@@ -552,13 +544,8 @@
 
 - (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 {
-	//@synchronized(self) { not needed. causes deadlock.
 	OPFaultingArray* container = [self primitiveValueForKey: key];	
-	// container may be nil, if the relationship was never fetched. 
-	// This is ok, since addValue:forKey: already updated the relationship object
-	// so we'll pick up any changes later.
-	[container addObject: value];	
-	//}
+	[container addObject: value]; // OPFaultingArray should be thread-safe
 }
 
 
@@ -588,10 +575,13 @@
 				[value didChangeValueForKey: inverseKey];
 			}
 			
-			if ([self isFault]) {
+			if (![attributes objectForKey: key]) {
+				// The relationship has not fired yet:
+				[self willChangeValueForKey: key];
+				[self didChangeValueForKey: key];
 				return; // we'll pick up the change the next time this fault is fired.
 			}
-			
+
 		} else {
 			if (inverseKey) {
 				// many-to-one relationship
@@ -618,13 +608,8 @@
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key
 {
-	//@synchronized(self) { // not needed. Can cause deadlock
-	OPFaultingArray* container = [self primitiveValueForKey: key];
-	// container may be nil, if the relationship was never fetched. 
-	// This is ok, since removeValue:forKey: already updated the relationship object
-	// so we'll pick up any changes later.
-	[container removeObject: value];
-	//}
+	OPFaultingArray* container = [self primitiveValueForKey: key]; // Fires Fault
+	[container removeObject: value]; // should be thread-safe
 }
 
 - (id) transientValueForKey: (NSString*) key
@@ -666,17 +651,17 @@
 			
 			if (inverseKey) {
 				// Also update inverse relationship (if any):
-				[value willChangeToManyRelationshipForKey: inverseKey];
+				[value willChangeValueForKey: inverseKey];
 				if ([[value attributeValues] objectForKey: inverseKey]) {
 					[value removePrimitiveValue: self forKey: inverseKey];
 				}
-				[value didChangeToManyRelationshipForKey: inverseKey];
+				[value didChangeValueForKey: inverseKey];
 			}
 			
 			if (![attributes objectForKey: key]) {
 				// The relationship has not fired yet:
-				[self willChangeToManyRelationshipForKey: key];
-				[value didChangeToManyRelationshipForKey: inverseKey];
+				[self willChangeValueForKey: key];
+				[value didChangeValueForKey: inverseKey];
 				return; // we'll pick up the change the next time this fault is fired.
 			}
 			

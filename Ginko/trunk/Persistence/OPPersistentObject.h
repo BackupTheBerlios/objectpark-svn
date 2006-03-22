@@ -97,8 +97,8 @@
 - (void) didChangeValueForKey: (NSString*) key;
 - (void) didAccessValueForKey: (NSString*) key;
 
-- (void) willChangeToManyRelationshipForKey: (NSString*) key;
-- (void) didChangeToManyRelationshipForKey: (NSString*) key;
+//- (void) willChangeToManyRelationshipForKey: (NSString*) key;
+//- (void) didChangeToManyRelationshipForKey: (NSString*) key;
 
 - (NSString*) descriptionIncludingAttributes: (BOOL) printAttributes;
 

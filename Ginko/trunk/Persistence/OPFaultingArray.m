@@ -462,8 +462,14 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 /*" Only objects of the same class can be added for now. "*/
 {
 	if (!elementClass) {
+		// Remember the element class - objects have to be uniform for now
 		NSParameterAssert([anObject isKindOfClass: [OPPersistentObject class]]);
 		elementClass = [anObject class]; // remember the element class
+	}
+	
+	if ([self containsObject: anObject]) {
+		NSLog(@"Warning: producing double entry '%@' in faulting array '%@'", anObject, self);
+		NSBeep();
 	}
 	
 	NSParameterAssert([anObject class] == elementClass);
