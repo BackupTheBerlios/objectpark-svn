@@ -183,6 +183,10 @@
 		77EF03D207DC4AF9007CD721 /* GroupInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */; };
 		77EF040307DC4DEF007CD721 /* GIGroupInspectorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77EF040107DC4DEF007CD721 /* GIGroupInspectorController.h */; };
 		77EF040407DC4DEF007CD721 /* GIGroupInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */; };
+		77F01CF309D299E2007C4CA5 /* GIHeaderFieldEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 77F01CF109D299E2007C4CA5 /* GIHeaderFieldEditor.h */; };
+		77F01CF409D299E2007C4CA5 /* GIHeaderFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F01CF209D299E2007C4CA5 /* GIHeaderFieldEditor.m */; };
+		77F01D0109D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h in Headers */ = {isa = PBXBuildFile; fileRef = 77F01CFF09D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h */; };
+		77F01D0209D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F01D0009D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m */; };
 		77F3181D077B327A0097096B /* GITextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 77F3181B077B327A0097096B /* GITextView.h */; };
 		77F3181E077B327A0097096B /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F3181C077B327A0097096B /* GITextView.m */; };
 		77F917E509D156B40069C455 /* lucene-core-1.9.1.jar in Resources */ = {isa = PBXBuildFile; fileRef = 77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */; };
@@ -660,6 +664,10 @@
 		77E541AE0785AB9D00265DBB /* Boxes.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Boxes.nib; sourceTree = "<group>"; };
 		77EF040107DC4DEF007CD721 /* GIGroupInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGroupInspectorController.h; sourceTree = "<group>"; };
 		77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupInspectorController.m; sourceTree = "<group>"; };
+		77F01CF109D299E2007C4CA5 /* GIHeaderFieldEditor.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GIHeaderFieldEditor.h; sourceTree = "<group>"; };
+		77F01CF209D299E2007C4CA5 /* GIHeaderFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GIHeaderFieldEditor.m; sourceTree = "<group>"; };
+		77F01CFF09D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSPasteboard+OPExtendedFileTypeMatching.h"; sourceTree = "<group>"; };
+		77F01D0009D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSPasteboard+OPExtendedFileTypeMatching.m"; sourceTree = "<group>"; };
 		77F3181B077B327A0097096B /* GITextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GITextView.h; sourceTree = "<group>"; };
 		77F3181C077B327A0097096B /* GITextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GITextView.m; sourceTree = "<group>"; };
 		77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "lucene-core-1.9.1.jar"; path = "Resources/lucene-core-1.9.1.jar"; sourceTree = "<group>"; };
@@ -1240,6 +1248,8 @@
 		8D857FEB0785CF2D00B0D669 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				77F01CF109D299E2007C4CA5 /* GIHeaderFieldEditor.h */,
+				77F01CF209D299E2007C4CA5 /* GIHeaderFieldEditor.m */,
 				8D4C5753076E3B6F000F46DA /* GICommentTreeCell.h */,
 				8D4C5754076E3B6F000F46DA /* GICommentTreeCell.m */,
 				77BC581A07610AB700B70D8F /* GIGroupWindow.h */,
@@ -1270,6 +1280,8 @@
 			isa = PBXGroup;
 			children = (
 				3017EBA109917089002C5579 /* Tests */,
+				77F01CFF09D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h */,
+				77F01D0009D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m */,
 				8D313AE0094E3E39007D668A /* OPObjectPair.h */,
 				8D313AE1094E3E39007D668A /* OPObjectPair.m */,
 				7709374A08574DF200A29008 /* NSHost+GIReachability.h */,
@@ -1586,6 +1598,8 @@
 				3083577809A01639003D1D86 /* TestOPJobs.h in Headers */,
 				8D0EC28209A22577004563D4 /* NSString+Similarities.h in Headers */,
 				77AA32BE09B8896900D90C6A /* OPSMTP+InternetMessage.h in Headers */,
+				77F01CF309D299E2007C4CA5 /* GIHeaderFieldEditor.h in Headers */,
+				77F01D0109D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2045,6 +2059,8 @@
 				8D0EC28309A22577004563D4 /* NSString+Similarities.m in Sources */,
 				77AA32BF09B8896900D90C6A /* OPSMTP+InternetMessage.m in Sources */,
 				7729F54E09C6ED9E002491A6 /* utils.m in Sources */,
+				77F01CF409D299E2007C4CA5 /* GIHeaderFieldEditor.m in Sources */,
+				77F01D0209D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

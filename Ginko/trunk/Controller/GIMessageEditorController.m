@@ -27,23 +27,24 @@
 #import <Foundation/NSDebug.h>
 #import "GIAddressFormatter.h"
 #import "GIPhraseBrowserController.h"
+#import "GIHeaderFieldEditor.h"
 
 @interface GIMessageEditorController (PrivateAPI)
-- (OPInternetMessage*) message;
-- (GIMessage*) checkpointMessageWithStatus: (unsigned int) aType;
-- (void) addReferenceToMessage: (GIMessage*) aMessage;
-- (void) setHeadersFromMessage: (GIMessage*) aMessage;
-- (void) appendContentFromMessage: (GIMessage*) aMessage;
-- (void) appendForwardContentFromMessage: (GIMessage*) aMessage;
-- (void) switchToReplyToAll: (GIMessage*) replyMessage;
-- (void) switchToReplyToSender: (GIMessage*) replyMessage;
-- (void) switchToFollowup: (GIMessage*) replyMessage;
-- (void) appendQuotePasteboardContents;
-- (void) setReplySubjectFromMessage: (GIMessage*) aMessage;
-- (void) setReplyForwardSubjectFromMessage: (GIMessage*) aMessage;
-- (void) updateMessageTextView;
-- (void) updateWindowTitle;
-- (BOOL) messageIsSendable;
+- (OPInternetMessage *)message;
+- (GIMessage *)checkpointMessageWithStatus:(unsigned int)aType;
+- (void)addReferenceToMessage:(GIMessage *)aMessage;
+- (void)setHeadersFromMessage:(GIMessage *)aMessage;
+- (void)appendContentFromMessage:(GIMessage *)aMessage;
+- (void)appendForwardContentFromMessage:(GIMessage *)aMessage;
+- (void)switchToReplyToAll:(GIMessage *)replyMessage;
+- (void)switchToReplyToSender:(GIMessage *)replyMessage;
+- (void)switchToFollowup:(GIMessage *)replyMessage;
+- (void)appendQuotePasteboardContents;
+- (void)setReplySubjectFromMessage:(GIMessage *)aMessage;
+- (void)setReplyForwardSubjectFromMessage:(GIMessage *)aMessage;
+- (void)updateMessageTextView;
+- (void)updateWindowTitle;
+- (BOOL)messageIsSendable;
 @end
 
 @implementation GIMessageEditorController
@@ -551,6 +552,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                       NSLocalizedString(@"Message can be sent later.", @"edit window close alert sheet")
                       );
     return NO;
+}
+
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject
+{
+    static NSTextView *headerFieldEditor = nil;
+    
+    if (! headerFieldEditor)
+    {
+        headerFieldEditor = [[GIHeaderFieldEditor alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
+    }
+    
+    if ([anObject isKindOfClass:[OPSizingTextField class]])
+    {
+        return headerFieldEditor;
+    }
+    return nil;
 }
 
 - (void)textDidChange:(NSNotification *)aNotification

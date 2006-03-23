@@ -1,13 +1,13 @@
 /*
- $Id: ABPerson+Convenience.h,v 1.1 2004/12/13 13:20:41 mikesch Exp $
+$Id: GIHeaderFieldEditor.h,v 1.1 2002/12/27 16:31:33 mikesch Exp $
 
- Copyright (c) 2002 by Dirk Theisen and Axel Katerbau. All rights reserved.
+ Copyright (c) 2002 by Axel Katerbau. All rights reserved.
 
  Permission to use, copy, modify and distribute this software and its documentation
  is hereby granted, provided that both the copyright notice and this permission
  notice appear in all copies of the software, derivative works or modified versions,
  and any portions thereof, and that both notices appear in supporting documentation,
- and that credit is given to Dirk Theisen and Axel Katerbau in all documents and publicity
+ and that credit is given to Axel Katerbau in all documents and publicity
  pertaining to direct or indirect use of this code or its derivatives.
 
  THIS IS EXPERIMENTAL SOFTWARE AND IT IS KNOWN TO HAVE BUGS, SOME OF WHICH MAY HAVE
@@ -20,20 +20,11 @@
  at http://www.objectpark.org/Ginko.html
  */
 
-#import <Foundation/Foundation.h>
-#import <AddressBook/AddressBook.h>
+#import <AppKit/AppKit.h>
 
-@interface ABPerson (Convenience)
+@interface GIHeaderFieldEditor : NSTextView
+{
 
-/*" vcf File support "*/
-+ (NSArray *)personsWithContentsFromVCardFile:(NSString *)filename;
-
-/*" convenience accessors "*/
-- (NSString *)firstname;
-- (NSString *)lastname;
-- (NSString *)fullname;
-- (NSString *)honorprefix;
-- (NSString *)honorpostfix;
-- (NSString *)email;
+}
 
 @end
