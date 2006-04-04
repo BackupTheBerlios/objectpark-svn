@@ -13,6 +13,7 @@
 #import <OPDebug/OPLog.h>
 #include <search.h>
 
+
 @interface OPFaultingArrayEnumerator : NSEnumerator {
 	int eindex;
 	OPFaultingArray* hostArray;
@@ -21,9 +22,9 @@
 + (id) enumeratorWithArray: (OPFaultingArray*) array;
 @end
 
-@implementation OPFaultingArray
+/*" OPFaultingArray is considered thread-safe!. "*/
 
-/*" Warning: This class is not thread-save! "*/
+@implementation OPFaultingArray
 
 /* Macros for accessing the two fields in the array entries */
 
@@ -105,19 +106,24 @@
 /*" When calling this method, the receiver may not contain any elements. "*/
 {
 	if (newSortKey != sortKey) {
-		NSAssert(count==0, @"You can only set a sort key for an empty array (for now).");
-		[sortKey autorelease];
-		sortKey   = [newSortKey retain];
-		entrySize = sizeof(OID) + (sortKey ? sizeof(void*) : 0);
-		data      = realloc(data, (capacity+3) * entrySize );
-		//memset(data, 0, (capacity+3) * entrySize); // nullify memory.
+		@synchronized(self) {
+			NSAssert(count==0, @"You can only set a sort key for an empty array (for now).");
+			[sortKey autorelease];
+			sortKey   = [newSortKey retain];
+			entrySize = sizeof(OID) + (sortKey ? sizeof(void*) : 0);
+			data      = realloc(data, (capacity+3) * entrySize );
+		}
 	}
 }
 
 
 - (id) lastObject
 {
-	return count ? [self objectAtIndex: count-1] : nil;
+	id result;
+	@synchronized(self) {
+		result = count ? [self objectAtIndex: count-1] : nil;
+	}
+	return result;
 }
 
 - (id) init
@@ -127,14 +133,22 @@
 
 - (OID) oidAtIndex: (unsigned) index;
 {
-	NSParameterAssert(index < count);
-	return *oidPtr(index);
+	OID result;
+	@synchronized(self) {
+		NSParameterAssert(index < count);
+		result = *oidPtr(index);
+	}
+	return result;
 }
 
 - (OID) lastOid;
 /*" Returns the last OID or NILOID, if the reciever is empty. "*/
 {
-	return count ? *oidPtr(count-1) : NILOID;
+	OID result;
+	@synchronized(self) {
+		result = count ? *oidPtr(count-1) : NILOID;
+	}
+	return result;
 }
 
 
@@ -149,29 +163,18 @@
     }
 }
 
-/*
-- (void) insertOid: (OID) anOid atIndex: (unsigned) index
-{
-	// needs testing!
-	NSParameterAssert(index<=count);
-	count++;
-	if ( count >= capacity ) {
-		[self _growTo: count];
-	}	
-	if ((count-index)-1>0) { 
-		// Move up elements, freeing element at index:
-		memccpy(&(data[index+1]), &(data[index]),(count-index)-1, entrySize);
-	}
-	data[index] = anOid;
-}
-*/
-
-
-
 
 - (BOOL) containsObject: (OPPersistentObject*) anObject
 {
-	return [self indexOfObject: anObject] != NSNotFound;
+	unsigned resultIndex = [self indexOfObject: anObject];
+	if (NSDebugEnabled) {
+		unsigned lresultIndex = [self linearSearchForOid: [anObject oid]];
+		if (lresultIndex != resultIndex) {
+			[self isReallySorted];
+			resultIndex = lresultIndex;
+		}
+	}
+	return resultIndex != NSNotFound;
 }
 
 
@@ -181,18 +184,20 @@
 		NSParameterAssert(index<count);
 		//NSLog(@"Removing element %#u of %@", index, self);
 		
-		if (sortKey) [*sortObjectPtr(index) release];
-		// Test, if we need to move elements:
-		if (index<count-1) {
-			OID movedoid = *oidPtr(index+1); 
-			
-			memmove(oidPtr(index), oidPtr(index+1), ((count-index)-1) * entrySize);
-			// Will there be an entry left?
-			if (count>2) {
-				NSAssert2(movedoid == *oidPtr(index), @"move did not work for index %d in %@", index, self);
+		@synchronized(self) {
+			if (sortKey) [*sortObjectPtr(index) release];
+			// Test, if we need to move elements:
+			if (index<count-1) {
+				OID movedoid = *oidPtr(index+1); 
+				
+				memmove(oidPtr(index), oidPtr(index+1), ((count-index)-1) * entrySize);
+				// Will there be an entry left?
+				if (count>2) {
+					NSAssert2(movedoid == *oidPtr(index), @"move did not work for index %d in %@", index, self);
+				}
 			}
+			count--;
 		}
-		count--;
 		//NSLog(@"Removed element. Now %@.", self);
 	}
 #warning Implement array shrinking!
@@ -201,17 +206,20 @@
 - (void) removeObject: (OPPersistentObject*) anObject
 {
 	if (anObject) {
+		
 		unsigned index = [self indexOfObject: anObject];
-		if (index==NSNotFound) {
+		//if (index==NSNotFound) {
 			//NSLog(@"Warning: Try to remove a nonexisting object %@.", anObject);
-		}
+		//}
 		[self removeObjectAtIndex: index];
 	}
 }
 
 - (void) removeLastObject
 {
-	if (count) count--;
+	@synchronized(self) {
+		if (count) count--;
+	}
 }
 
 /*
@@ -244,6 +252,10 @@
  
  */
 
+- (OPPersistentObjectContext*) context
+{
+	return [OPPersistentObjectContext defaultContext];
+}
 
 - (id) sortObjectAtIndex: (unsigned) index
 /*" Returns the attribute used for sorting for the object at the index given. Raises, if "*/
@@ -273,8 +285,6 @@
 	
 	return result;
 }
-
-
 
 
 static int compare_oids(const void* entry1, const void* entry2)
@@ -342,74 +352,92 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 {
 	NSParameterAssert(sortKey!=nil);
 	OID oid = [element oid];
-	unsigned objectIndex = [self linearSearchForOid: oid];
-	if (objectIndex == NSNotFound) {
-		NSLog(@"Warning: no sort object to update.");
-		return;
+	@synchronized(self) {
+		unsigned objectIndex = [self linearSearchForOid: oid];
+		if (objectIndex == NSNotFound) {
+			NSLog(@"Warning: no sort object to update.");
+			return;
+		}
+		[self removeObjectAtIndex: objectIndex];
+		[self addObject: element];
 	}
-	[self removeObjectAtIndex: objectIndex];
-	[self addObject: element];
 }
 
-
+- (BOOL) isReallySorted
+{
+	if (sortKey) {
+		int i;
+		
+		for (i=0;i<count-1;i++) {
+			NSAssert([[self sortObjectAtIndex: i] compare: [self sortObjectAtIndex: i+1]]<=0, @"faulted array not sorted!");
+		}
+	}
+	return YES;
+}
 
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/
 {
 	unsigned resultIndex = NSNotFound;
 	OID oid = [anObject oid]; // should be efficient
-
-	// Make sure, we are sorted:
-	if (needsSorting) [self sort]; 
 	
-	
-	if (sortKey) {
+	@synchronized(self) {
+		// Make sure, we are sorted:
+		if (needsSorting) [self sort]; 
 		
-		if (YES && [anObject isFault]) {
-			// Firing a fault is probably more expensive than a linear search:
+		if (sortKey) {
+			
+			if ([anObject isFault]) {
+				// Firing a fault is probably more expensive than a linear search:
 #warning re-enable binary search here
+				
+				resultIndex = [self linearSearchForOid: oid];
+				
+			} else {
+				id key = [anObject valueForKey: sortKey]; // may fire fault! Bad!
+				
+				// Search for sortKey:
+				char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
+				if (result) {
+					// We found a matching sort-key.		
+					
+					resultIndex = (result-data)/entrySize;
+					
+					if (*((OID*)result) == oid) return resultIndex; // found using only bsearch on the keys
+					
+					unsigned searchIndex;
+					
+					// Walk backward until the sortKey no longer matches or oid found: 
+					if (resultIndex) {
+						searchIndex = resultIndex-1;
+						while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
+							if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+							searchIndex--;
+						}
+					}
+					// Walk forward until the sortKey no longer matches or oid found: 
+					searchIndex = resultIndex+1;
+					while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
+						if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+						searchIndex++;
+					}
+					
+					resultIndex = NSNotFound;
+				}
 
-			resultIndex = [self linearSearchForOid: oid];
+			}
 			
 		} else {
-			id key = [anObject valueForKey: sortKey]; // may fire fault! Bad!
 			
-			// Search for sortKey:
-			char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
+			// Search for oid:
+			char* result = bsearch(&oid, data, count, entrySize, compare_oids);
 			if (result) {
-				// We found a matching sort-key.		
-				
-				resultIndex = (result-data)/entrySize;
-				
-				if (*((OID*)result) == oid) return resultIndex; // found using only bsearch on the keys
-				
-				unsigned searchIndex;
-				
-				// Walk backward until the sortKey no longer matches or oid found: 
-				if (resultIndex) {
-					searchIndex = resultIndex-1;
-					while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
-						if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-						searchIndex--;
-					}
-				}
-				// Walk forward until the sortKey no longer matches or oid found: 
-				searchIndex = resultIndex+1;
-				while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
-					if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-					searchIndex++;
-				}
+				resultIndex =  (result-data)/entrySize;
 			}
 		}
-				
-	} else {
 		
-		// Search for oid:
-		char* result = bsearch(&oid, data, count, entrySize, compare_oids);
-		if (result) {
-			resultIndex =  (result-data)/entrySize;
-		}
 	}
+	
 	return resultIndex;
 }
 
@@ -461,36 +489,39 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 - (void) addObject: (OPPersistentObject*) anObject
 /*" Only objects of the same class can be added for now. "*/
 {
-	if (!elementClass) {
-		// Remember the element class - objects have to be uniform for now
-		NSParameterAssert([anObject isKindOfClass: [OPPersistentObject class]]);
-		elementClass = [anObject class]; // remember the element class
+	@synchronized(self) {
+		if (!elementClass) {
+			// Remember the element class - objects have to be uniform for now
+			NSParameterAssert([anObject isKindOfClass: [OPPersistentObject class]]);
+			elementClass = [anObject class]; // remember the element class
+		}
+		
+		if (NSDebugEnabled && [self containsObject: anObject]) {
+			NSLog(@"Warning: producing double entry '%@' in faulting array '%@'", anObject, self);
+			NSBeep();
+			[self containsObject: anObject];
+		}
+		
+		NSParameterAssert([anObject class] == elementClass);
+		
+		[self addOid: [anObject oid] sortObject: sortKey ? [anObject valueForKey: sortKey] : nil];
 	}
-	
-	if (NSDebugEnabled && [self containsObject: anObject]) {
-		NSLog(@"Warning: producing double entry '%@' in faulting array '%@'", anObject, self);
-		NSBeep();
-	}
-	
-	NSParameterAssert([anObject class] == elementClass);
-	
-	[self addOid: [anObject oid] sortObject: sortKey ? [anObject valueForKey: sortKey] : nil];
 }
 
-- (OPPersistentObjectContext*) context
-{
-	return [OPPersistentObjectContext defaultContext];
-}
+
 
 - (id) objectAtIndex: (unsigned) anIndex
 {
-	NSParameterAssert(anIndex<count);
-	[self sort];
-	
-	OID oid = *oidPtr(anIndex);
-	// Should we store and retain a context?
-	id result = [[self context] objectForOid: oid ofClass: elementClass];
-	NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
+	id result;
+	@synchronized(self) {
+		NSParameterAssert(anIndex<count);
+		[self sort];
+		
+		OID oid = *oidPtr(anIndex);
+		// Should we store and retain a context?
+		result = [[self context] objectForOid: oid ofClass: elementClass];
+		NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
+	}
 	return result;
 }
 

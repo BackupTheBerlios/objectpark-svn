@@ -53,12 +53,15 @@ NSString* OPStringFromColor(NSColor* color)
 
 
 NSColor* OPColorFromString(NSString* string)
-/*" Returns a NSColor object with the RGB and alpha values encoded in the string (in the same format as created by #{+stringWithColor}). "*/
+/*" Returns a NSColor object with the RGB and alpha values encoded in the string (in the same format as created by #{OPStringFromColor()}). "*/
 {
+	if (![string length]) 
+		return nil;
+	
     NSArray* rgba = [string componentsSeparatedByString: @" "];
     
     if ([rgba count] != 4) {
-        NSLog(@"[NSString colorWithString]: Illegal number of components in string for NSColor (%@)", string);
+        NSLog(@"OPColorFromString(): Illegal number of components in string for NSColor (%@)", string);
         return nil;
     }
     
@@ -269,6 +272,7 @@ NSColor* OPColorFromString(NSString* string)
     if (color == nil)
         switch (quotationLevel)
         {
+			// todo: remove the following code and replace it with registered user default values!
             case 1:  color = [NSColor colorWithCalibratedRed:0.40 green:0.40 blue:0.40 alpha:1.0];
                      break;
             case 2:  color = [NSColor colorWithCalibratedRed:0.55 green:0.55 blue:0.55 alpha:1.0];

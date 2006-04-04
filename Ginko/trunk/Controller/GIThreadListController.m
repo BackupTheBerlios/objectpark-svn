@@ -183,7 +183,6 @@ static BOOL isThreadItem(id item)
 - (int) threadLimitCount 
 {
 	if (!recentThreadsCache) {
-		
 		BOOL showOnlyRecentThreads = [[self valueForGroupProperty: ShowOnlyRecentThreads] boolValue];	
 		recentThreadsCache = showOnlyRecentThreads ? recentThreadsCache = 150 : INT_MAX;
 	}
@@ -341,6 +340,9 @@ static BOOL isThreadItem(id item)
 		[threadsView reloadItem: object reloadChildren: YES];
 		
 	} else if ([object isEqual: [self group]] && isAutoReloadEnabled) {
+		
+		[threadsView noteNumberOfRowsChanged]; // make sure, we are not called back with illegal indexes
+		
         NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
         //NSLog(@"observeValueForKeyPath %@", keyPath);
@@ -1337,8 +1339,14 @@ static BOOL isThreadItem(id item)
 {
     if (outlineView == threadsView) {
 		// thread list
-        if (! item) {
-            return MIN([self threadLimitCount], [[self threadsByDate] count]);
+        if (item == nil) {
+			int result = [self threadLimitCount];
+			int threadCount = [[self threadsByDate] count];
+			if (threadCount < result) {
+				result = threadCount;
+			}
+			return result;
+            //return MIN([self threadLimitCount], [[self threadsByDate] count]);
         } else {        
 			// item should be a thread
             return [[item messages] count];
@@ -1357,7 +1365,13 @@ static BOOL isThreadItem(id item)
     id result = nil;
 	if (! item) {
 		NSArray* threadArray = [self threadsByDate];
-		int arrayIndex = [self threadByDateSortAscending] ? index +([threadArray count]-MIN([self threadLimitCount], [[self threadsByDate] count])): ([threadArray count]-1) - index;
+		int arrayIndex = index;
+		int threadLimit = [self threadLimitCount];
+	
+		if ([threadArray count]>threadLimit)  {
+			//[threadArray count]-MIN(threadLimit, [threadArray count]);
+			arrayIndex += [threadArray count]-threadLimit;
+		}
 		result = [threadArray objectAtIndex: arrayIndex];
 	} else {            
 		result = [[item messagesByTree] objectAtIndex: index];

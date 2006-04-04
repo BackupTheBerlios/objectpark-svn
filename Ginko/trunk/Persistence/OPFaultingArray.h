@@ -14,6 +14,8 @@
 @class OPPersistentObjectContext;
 
 @interface OPFaultingArray : NSArray {
+	
+	@private
 	char* data;
 	unsigned count; // number of objects contained
 	unsigned capacity; // max number of objects without reallocing
@@ -28,15 +30,13 @@
 - (id) initWithCapacity: (unsigned) newCapacity;
 
 - (unsigned) count;
-- (OPPersistentObjectContext*) context;
-- (id) lastObject;
-
 
 - (OID) oidAtIndex: (unsigned) index;
 - (OID) lastOid;
 
 - (id) objectAtIndex: (unsigned) anIndex;
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject;
+- (id) lastObject;
 - (BOOL) containsObject: (OPPersistentObject*) anObject;
 
 - (void) removeObject: (OPPersistentObject*) anObject;

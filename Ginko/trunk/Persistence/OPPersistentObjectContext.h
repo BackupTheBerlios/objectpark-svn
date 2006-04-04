@@ -46,6 +46,7 @@
 @interface OPPersistentObjectContext : NSObject {
     
 	@private
+	
     NSHashTable* registeredObjects;
     NSMutableSet* changedObjects;
     NSMutableSet* deletedObjects;

@@ -81,7 +81,7 @@ typedef struct {
 {
 	NSParameterAssert([object currentOid]>0); // hashing is based on oids here
     
-    @synchronized(self) {
+    @synchronized(registeredObjects) {
         NSHashInsertIfAbsent(registeredObjects, object);
     }
 }
@@ -89,7 +89,7 @@ typedef struct {
 - (void) unregisterObject: (OPPersistentObject*) object
 /*" Called by -[OPPersistentObject dealloc] to make sure we do not keep references to stale objects. "*/
 {
-    @synchronized(self) {
+    @synchronized(registeredObjects) {
         NSHashRemove(registeredObjects, object);
     }
 }
@@ -109,7 +109,7 @@ typedef struct {
     
     OPPersistentObject *result = nil;
     
-    @synchronized(self) {
+    @synchronized(registeredObjects) {
         result = NSHashGet(registeredObjects, &searchStruct);
 		[[result retain] autorelease];
     }
@@ -294,9 +294,11 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	NSHashTableCallBacks htCallBacks = NSNonRetainedObjectHashCallBacks;
 	htCallBacks.hash = &oidHash;
 	htCallBacks.isEqual = &oidEqual;
-    if (registeredObjects) NSFreeHashTable(registeredObjects);
-    registeredObjects = NSCreateHashTable(htCallBacks, 1000);
-    
+	
+	@synchronized(registeredObjects) {
+		if (registeredObjects) NSFreeHashTable(registeredObjects);
+		registeredObjects = NSCreateHashTable(htCallBacks, 1000);
+	}
 	// Reset statistics:
 	 numberOfFaultsFired = 0; 
 	 numberOfRelationshipsFired = 0;
@@ -476,6 +478,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 												firstColumnName: [relationshipChanges firstColumnName] 
 											   secondColumnName: [relationshipChanges secondColumnName]];
 				
+				// prevent this relationship from changing:
+				//@synchronized(relationshipChanges) {
 				NSEnumerator* pairEnum = [relationshipChanges addedRelationsEnumerator];
 				OPObjectPair* pair;
 				
@@ -512,6 +516,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 					
 					[removeStatement execute];
 				}		
+				//}
+				
 				[removeStatement reset];
 				
 				[relationshipChanges reset]; // delete all changes as they are now recorded in the database

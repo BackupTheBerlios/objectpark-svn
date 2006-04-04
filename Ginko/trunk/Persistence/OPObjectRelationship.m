@@ -58,7 +58,7 @@
 
 
 - (NSEnumerator*) addedRelationsEnumerator
-/*" Enumerates all OPObjectRelation objects in no particular order. "*/
+/*" Enumerates all OPObjectRelation objects in no particular order. Synchronize on the receiver during enumeration in multithreaded applications. "*/
 {
 	return [addedRelations objectEnumerator];
 }
@@ -76,12 +76,14 @@
 	}
 	OPObjectPair* newRelation = [[OPObjectPair alloc] initWithObjects: sourceObject : targetObject];
 	
-	// Additions canel out removals:
-	if ([removedRelations containsObject: newRelation]) {
-		[removedRelations removeObject: newRelation];
-	} else {
-		[addedRelations addObject: newRelation];
-	}
+	//@synchronized(self) {
+		// Additions cancel out removals:
+		if ([removedRelations containsObject: newRelation]) {
+			[removedRelations removeObject: newRelation];
+		} else {
+			[addedRelations addObject: newRelation];
+		}
+	//}
 	[newRelation release];
 }
 
@@ -103,12 +105,14 @@
 	}
 	OPObjectPair* removedRelation = [[OPObjectPair alloc] initWithObjects: sourceObject : targetObject]; // Optimize by faking object with stack allocated struct.
 	
-	// Removals cancel out additions!
-	if ([addedRelations containsObject: removedRelation]) {
-		[addedRelations removeObject: removedRelation];
-	} else {
-		[removedRelations addObject: removedRelation];
-	}
+	//@synchronized(self) {
+		// Removals cancel out additions!
+		if ([addedRelations containsObject: removedRelation]) {
+			[addedRelations removeObject: removedRelation];
+		} else {
+			[removedRelations addObject: removedRelation];
+		}
+	//}
 	[removedRelation release];
 }
 
@@ -133,24 +137,38 @@
 	NSAssert1(objectColumn>=0, @"Unable to determine source column for object %@.", anObject);
 	NSEnumerator* e;
 	OPObjectPair* relation;
+	
+	// Make sure the relationship does not change during enumeration:
+	//@synchronized(self) {
 	e = [addedRelations objectEnumerator];
 	while (relation = [e nextObject]) {
 		if ([relation objectAtIndex: objectColumn] == anObject) {
 			// Add related object to array:
-			[array addObject: [relation objectAtIndex: 1-objectColumn]];
+			id target = [relation objectAtIndex: 1-objectColumn];
+			if (![array containsObject: target]) {
+				[array addObject: target];
+			} else {
+				NSLog(@"Warning: Relationship addition '%@'='%@' already present. ", relationName, target);
+			}
 		}
 	}
 	e = [removedRelations objectEnumerator];
 	while (relation = [e nextObject]) {
 		if ([relation objectAtIndex: objectColumn] == anObject) {
 			// Remove related object from array:
-			[array removeObject: [relation objectAtIndex: 1-objectColumn]];
+			id target = [relation objectAtIndex: 1-objectColumn];
+			if ([array containsObject: target]) {
+				[array removeObject: target];
+			} else {
+				NSLog(@"Warning: Relationship addition '%@'='%@' already present. ", relationName, target);
+			}
 		}
 	}
+	//}
 }
 
 - (NSEnumerator*) removedRelationsEnumerator
-	/*" Enumerates all OPObjectPair objects in no particular order. "*/
+	/*" Enumerates all OPObjectPair objects in no particular order. Synchronize on the receiver during enumeration in multithreaded applications. "*/
 {
 	return [removedRelations objectEnumerator];
 }

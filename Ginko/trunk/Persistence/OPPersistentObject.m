@@ -29,7 +29,7 @@
 //  Dirk Theisen <d.theisen@objectpark.org> for a reasonable fee.
 //
 //  DEFINITION Commercial use
-//  This library is used commercially whenever the library or derivative work
+//  This library is used commercially whenever the library or work depending on this library
 //  is charged for more than the price for shipping and handling.
 //
 
@@ -44,6 +44,8 @@
 #define PERSISTENTOBJECT  OPL_DOMAIN  @"PersistentObject"
 #define FAULTS            OPL_ASPECT  0x01
 
+/*" This class should be thread-safe. It should synchronize(self) all accesses to the attributes dictionary.
+In addition to that, it should synchronize([self context]) all write-accesses to the attributes dictionary. "*/
 
 @implementation OPPersistentObject
 
@@ -151,14 +153,18 @@
 - (BOOL) resolveFault
 /*" Returns YES, if the reciever is resolved afterwards. "*/
 {
-    if (attributes==nil) {
-        attributes = [[[self context] persistentValuesForObject: self] retain];
-		if (!attributes && oid==0) {
-			attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
-			OPDebugLog(PERSISTENTOBJECT, FAULTS, @"Created attribute dictionary for new object %@", self);
+	BOOL result;
+	@synchronized(self) {
+		if (attributes==nil) {
+			attributes = [[[self context] persistentValuesForObject: self] retain];
+			if (!attributes && oid==0) {
+				attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
+				OPDebugLog(PERSISTENTOBJECT, FAULTS, @"Created attribute dictionary for new object %@", self);
+			}
 		}
-    }
-	return attributes != nil;
+		result = attributes != nil;
+	}
+	return result;
 }
 
 - (void) revert
@@ -206,7 +212,6 @@
 
 - (id) valueForUndefinedKey: (NSString*) key
 {
-	[self willAccessValueForKey: key];
 	id result = [self primitiveValueForKey: key];
 	[self didAccessValueForKey: key];
 	if (NSDebugEnabled && !result) {
@@ -261,13 +266,6 @@
 	while (relatedObject = [values lastObject]) {
 		[self removeValue: relatedObject forKey: key];
 	}
-	/*
-	NSEnumerator* relatedObjectsEnumerator = [[self valueForKey: key] objectEnumerator];
-	id relatedObject;
-	while (relatedObject = [relatedObjectsEnumerator nextObject]) {
-		[self removeValue: relatedObject forKey: key];
-	}
-	 */
 }
 
 - (void) willDelete
@@ -297,15 +295,17 @@
 
 - (void) willChangeValueForKey: (NSString*) key
 {
-    //[self willAccessValueForKey: key]; // not necessary for relationships!
     //[[self context] willChangeObject: self];
 	[super willChangeValueForKey: key]; // notify observers
 }
 
 - (void) didAccessValueForKey: (NSString*) key
 {
-    //[[self context] unlock];
 } 
+
+- (void) willAccessValueForKey: (NSString*) key
+{
+}
 
 - (void) didChangeValueForKey: (NSString*) key
 {
@@ -323,7 +323,7 @@
 	[self refault]; // free attribute resources
 }
 
-- (void) willAccessValueForKey: (NSString*) key
+- (void) xwillAccessValueForKey: (NSString*) key
 {
 	if (!attributes) [[self context] willFireFault: self forKey: key]; // statistics - not elegant	
     [self resolveFault];
@@ -344,7 +344,7 @@
 {
 	id result;
 	
-	[self willAccessValueForKey: key]; // fire fault, make sure the attribute values exist.
+	[self xwillAccessValueForKey: key]; // fire fault, make sure the attribute values exist.
 	
 	@synchronized(self) {
 		result = [attributes objectForKey: key];
@@ -355,13 +355,15 @@
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key
 /*" Passing a nil value is allowed and removes the respective value. "*/
 {	
-	[self willAccessValueForKey: key];
+	[self xwillAccessValueForKey: key];
 	
-	@synchronized(self) {
-		if (object) {
-			[attributes setObject: object forKey: key];
-		} else {
-			[attributes removeObjectForKey: key];
+	@synchronized([self context]) {
+		@synchronized(self) {
+			if (object) {
+				[attributes setObject: object forKey: key];
+			} else {
+				[attributes removeObjectForKey: key];
+			}
 		}
 	}
 }
@@ -411,11 +413,9 @@
 
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
-	// no loner necessary! [self willAccessValueForKey: key];
 	id oldValue = [self primitiveValueForKey: key];
-	[self didAccessValueForKey: key];
 	
-	if (oldValue != value) {	
+	if (![oldValue isEqual: value]) {	
 		[self willChangeValueForKey: key];
 		
 		// This is a to-one relationship, because to-many relationships use the add/removeValue methods.
@@ -455,6 +455,7 @@
 }
 
 - (NSDictionary*) attributeValues
+/*" For internal use only! @synchronize the receiver while accessing values of the dictionary returned. "*/
 {
 	return attributes;
 }
@@ -545,7 +546,7 @@
 - (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 {
 	OPFaultingArray* container = [self primitiveValueForKey: key];	
-	[container addObject: value]; // OPFaultingArray should be thread-safe
+	[container addObject: value]; // thread-safe
 }
 
 
@@ -553,71 +554,80 @@
 {
 	// Do we need to check, if value is already contained in array? Could be a performance-Problem?
 	// Todo: For to-many relationships, we do not need to fire a fault in order to update its relationship values!
-
-	if (![[self valueForKey: key] containsObject: value]) {
-		OPClassDescription* cd = [[self class] persistentClassDescription];
-		OPAttributeDescription* ad = [cd attributeWithName: key];
-		OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
-		NSString* inverseKey = [ad inverseRelationshipKey];
-		
-		// Check, if it is a many-to-many relation:
-		if (r) {
-			// Record relationship change in persistent context:
-			[r addRelationNamed: key from: self to: value];
-			
-			// Also update inverse relationship (if any):
-			if (inverseKey) {
-				[value willChangeValueForKey: inverseKey];
-				if ([[value attributeValues] objectForKey: inverseKey]) {
-					// Firing the relationship will add self via r later otherwise.
-					[value addPrimitiveValue: self forKey: inverseKey];
+	
+	@synchronized([self context]) {
+		@synchronized(self) {
+			@synchronized(value) {
+				if (![[self valueForKey: key] containsObject: value]) {
+					OPClassDescription* cd = [[self class] persistentClassDescription];
+					OPAttributeDescription* ad = [cd attributeWithName: key];
+					OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+					NSString* inverseKey = [ad inverseRelationshipKey];
+					
+					// Check, if it is a many-to-many relation:
+					if (r) {
+						// Record relationship change in persistent context:
+						[r addRelationNamed: key from: self to: value];
+						
+						// Also update inverse relationship (if any):
+						if (inverseKey) {
+							[value willChangeValueForKey: inverseKey];
+							if ([[value attributeValues] objectForKey: inverseKey]) {
+								// Firing the relationship will add self via r later otherwise.
+								[value addPrimitiveValue: self forKey: inverseKey];
+							}
+							[value didChangeValueForKey: inverseKey];
+						}
+						
+						if (![attributes objectForKey: key]) {
+							// The relationship has not fired yet:
+							[self willChangeValueForKey: key];
+							[self didChangeValueForKey: key];
+							return; // we'll pick up the change the next time this fault is fired.
+						}
+						
+					} else {
+						if (inverseKey) {
+							// many-to-one relationship
+							id oldIValue = [value valueForKey: inverseKey];
+							
+							if (oldIValue) {
+								[oldIValue removeValue: value forKey: key]; // remove from inverse inverse relationship (if any). This might fire oldIValue. gr2mpf
+							}
+							
+							[value willChangeValueForKey: inverseKey];
+							[value setPrimitiveValue: self forKey: inverseKey];
+							[value didChangeValueForKey: inverseKey];
+						}
+					}
+					[self willChangeValueForKey: key];
+					[self addPrimitiveValue: value forKey: key];
+					[self didChangeValueForKey: key];
+				} else {
+					
+					NSLog(@"Warning! Try to add %@ to existing %@-relationship of %@!", value, key, self);
 				}
-				[value didChangeValueForKey: inverseKey];
-			}
-			
-			if (![attributes objectForKey: key]) {
-				// The relationship has not fired yet:
-				[self willChangeValueForKey: key];
-				[self didChangeValueForKey: key];
-				return; // we'll pick up the change the next time this fault is fired.
-			}
-
-		} else {
-			if (inverseKey) {
-				// many-to-one relationship
-				id oldIValue = [value valueForKey: inverseKey];
-				
-				if (oldIValue) {
-					[oldIValue removeValue: value forKey: key]; // remove from inverse inverse relationship (if any). This might fire oldIValue. gmpf
-				}
-				
-				[value willChangeValueForKey: inverseKey];
-				[value setPrimitiveValue: self forKey: inverseKey];
-				[value didChangeValueForKey: inverseKey];
 			}
 		}
-		[self willChangeValueForKey: key];
-		[self addPrimitiveValue: value forKey: key];
-		[self didChangeValueForKey: key];
-	} else {
-		
-		NSLog(@"Warning! Try to add %@ to existing %@-relationship of %@!", value, key, self);
-		
 	}
 }
 
 - (void) removePrimitiveValue: (id) value forKey: (NSString*) key
 {
-	OPFaultingArray* container = [self primitiveValueForKey: key]; // Fires Fault
-	[container removeObject: value]; // should be thread-safe
+	OPFaultingArray* container = [self primitiveValueForKey: key]; // fires fault
+	[container removeObject: value]; // thread-safe
 }
 
 - (id) transientValueForKey: (NSString*) key
 {
 	[self resolveFault];
-	id result = [attributes objectForKey: key];
-	if (NSDebugEnabled) {
-		if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+	id result;
+	
+	@synchronized(self) {
+		result = [attributes objectForKey: key];
+		if (NSDebugEnabled) {
+			if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+		}
 	}
 	return result;
 }
@@ -625,60 +635,67 @@
 - (void) setTransientValue: (id) value forKey: (NSString*) key
 /*" Do not set values for persistent keys! "*/
 {
-	if (NSDebugEnabled) {
-		if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+	@synchronized([self context]) {
+		@synchronized(self) {
+			if (NSDebugEnabled) {
+				if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+			}
+			// todo: add key-value-observing for transient values.
+			[self resolveFault];
+			[attributes setObject: value forKey: key];
+		}
 	}
-	// todo: add key-value-observing for transient values.
-	[self resolveFault];
-	[attributes setObject: value forKey: key];
 }
 
 
 - (void) removeValue: (id) value forKey: (NSString*) key
 {
-	
-	if ([[self valueForKey: key] containsObject: value]) { // check only necessary for n:m relations?
-		
-		OPClassDescription* cd = [[self class] persistentClassDescription];
-		OPAttributeDescription* ad = [cd attributeWithName: key];
-		OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
-		NSString* inverseKey = [ad inverseRelationshipKey];
-		
-		// Check, if it is a many-to-many relation:
-		if (r) {
-			// Record relationship change in persistent context:
-			[r removeRelationNamed: key from: self to: value];
-			
-			if (inverseKey) {
-				// Also update inverse relationship (if any):
-				[value willChangeValueForKey: inverseKey];
-				if ([[value attributeValues] objectForKey: inverseKey]) {
-					[value removePrimitiveValue: self forKey: inverseKey];
+	@synchronized([self context]) {
+		@synchronized(self) {
+			if ([[self valueForKey: key] containsObject: value]) { // check only necessary for n:m relations?
+				
+				OPClassDescription* cd = [[self class] persistentClassDescription];
+				OPAttributeDescription* ad = [cd attributeWithName: key];
+				OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+				NSString* inverseKey = [ad inverseRelationshipKey];
+				
+				// Check, if it is a many-to-many relation:
+				if (r) {
+					// Record relationship change in persistent context:
+					[r removeRelationNamed: key from: self to: value];
+					
+					if (inverseKey) {
+						// Also update inverse relationship (if any):
+						[value willChangeValueForKey: inverseKey];
+						if ([[value attributeValues] objectForKey: inverseKey]) {
+							[value removePrimitiveValue: self forKey: inverseKey];
+						}
+						[value didChangeValueForKey: inverseKey];
+					}
+					
+					if (![attributes objectForKey: key]) {
+						// The relationship has not fired yet:
+						[self willChangeValueForKey: key];
+						[value didChangeValueForKey: inverseKey];
+						return; // we'll pick up the change the next time this fault is fired.
+					}
+					
+				} else {
+					// n:1 relationship
+					if (inverseKey) {
+						// Eager updates are necessary for now:
+						[value willChangeValueForKey: inverseKey];
+						[value setPrimitiveValue: nil forKey: inverseKey];
+						[value didChangeValueForKey: inverseKey];
+					}
 				}
-				[value didChangeValueForKey: inverseKey];
-			}
-			
-			if (![attributes objectForKey: key]) {
-				// The relationship has not fired yet:
+				
+				// Do we need to do this, when self is a fault?		
 				[self willChangeValueForKey: key];
-				[value didChangeValueForKey: inverseKey];
-				return; // we'll pick up the change the next time this fault is fired.
-			}
-			
-		} else {
-			// n:1 relationship
-			if (inverseKey) {
-				// Eager updates are necessary for now:
-				[value willChangeValueForKey: inverseKey];
-				[value setPrimitiveValue: nil forKey: inverseKey];
-				[value didChangeValueForKey: inverseKey];
+				[self removePrimitiveValue: value forKey: key];
+				[self didChangeValueForKey: key];
 			}
 		}
-		
-		// Do we need to do this, when self is a fault?		
-		[self willChangeValueForKey: key];
-		[self removePrimitiveValue: value forKey: key];
-		[self didChangeValueForKey: key];
 	}
 }
 
@@ -688,19 +705,21 @@
 	NSMutableArray* validationErrors = nil;
 	OPClassDescription* cd = [isa persistentClassDescription];
 	int i = cd->simpleAttributeCount;
-	while (--i) {
-		OPAttributeDescription* ad = [cd->attributeDescriptions objectAtIndex: i];
-		NSError* error = nil;
-		NSString* key = ad->name;
-		id value = [self valueForKey: key];
-		[self validateValue: &value forKey: key error: &error];
-		if (error) {
-			//id value = [self valueForKey: key];
-			if (!validationErrors) validationErrors = [NSMutableArray array];
-			[validationErrors addObject: error];
+	
+	@synchronized(self) {
+		while (--i) {
+			OPAttributeDescription* ad = [cd->attributeDescriptions objectAtIndex: i];
+			NSError* error = nil;
+			NSString* key = ad->name;
+			id value = [self valueForKey: key];
+			[self validateValue: &value forKey: key error: &error];
+			if (error) {
+				//id value = [self valueForKey: key];
+				if (!validationErrors) validationErrors = [NSMutableArray array];
+				[validationErrors addObject: error];
+			}
 		}
 	}
-	
 	return validationErrors;
 }
 

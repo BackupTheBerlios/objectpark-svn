@@ -9,7 +9,6 @@
 #import "GIMessageBase.h"
 #import "GIMessage.h"
 #import "GIThread.h"
-#import "G3Account.h"
 #import "GIMessageGroup.h"
 #import "OPMBoxFile.h"
 #import "OPPersistentObject+Extensions.h"
