@@ -164,18 +164,6 @@
 }
 
 
-- (BOOL) containsObject: (OPPersistentObject*) anObject
-{
-	unsigned resultIndex = [self indexOfObject: anObject];
-	if (NSDebugEnabled) {
-		unsigned lresultIndex = [self linearSearchForOid: [anObject oid]];
-		if (lresultIndex != resultIndex) {
-			[self isReallySorted];
-			resultIndex = lresultIndex;
-		}
-	}
-	return resultIndex != NSNotFound;
-}
 
 
 - (void) removeObjectAtIndex: (unsigned) index
@@ -348,6 +336,33 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	return resultIndex;
 }
 
+- (BOOL) isReallySorted
+// For debugging only!
+{
+	if (sortKey) {
+		int i;
+		
+		for (i=0;i<count-1;i++) {
+			NSAssert([[self sortObjectAtIndex: i] compare: [self sortObjectAtIndex: i+1]]<=0, @"faulted array not sorted!");
+		}
+	}
+	return YES;
+}
+
+- (BOOL) containsObject: (OPPersistentObject*) anObject
+{
+	unsigned resultIndex = [self indexOfObject: anObject];
+	if (NSDebugEnabled) {
+		unsigned lresultIndex = [self linearSearchForOid: [anObject oid]];
+		if (lresultIndex != resultIndex) {
+			[self isReallySorted];
+			resultIndex = lresultIndex;
+		}
+	}
+	return resultIndex != NSNotFound;
+}
+
+
 - (void) updateSortObjectForObject: (id) element 
 {
 	NSParameterAssert(sortKey!=nil);
@@ -363,17 +378,6 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	}
 }
 
-- (BOOL) isReallySorted
-{
-	if (sortKey) {
-		int i;
-		
-		for (i=0;i<count-1;i++) {
-			NSAssert([[self sortObjectAtIndex: i] compare: [self sortObjectAtIndex: i+1]]<=0, @"faulted array not sorted!");
-		}
-	}
-	return YES;
-}
 
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/
@@ -388,9 +392,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 		if (sortKey) {
 			
 			if ([anObject isFault]) {
-				// Firing a fault is probably more expensive than a linear search:
-#warning re-enable binary search here
-				
+				// Firing a fault is probably more expensive than a linear search:				
 				resultIndex = [self linearSearchForOid: oid];
 				
 			} else {
