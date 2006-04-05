@@ -193,13 +193,15 @@
 
 - (void) removeObject: (OPPersistentObject*) anObject
 {
-	if (anObject) {
-		
-		unsigned index = [self indexOfObject: anObject];
-		//if (index==NSNotFound) {
+	@synchronized(self) {
+		if (anObject) {
+			
+			unsigned index = [self indexOfObject: anObject];
+			//if (index==NSNotFound) {
 			//NSLog(@"Warning: Try to remove a nonexisting object %@.", anObject);
-		//}
-		[self removeObjectAtIndex: index];
+			//}
+			[self removeObjectAtIndex: index];
+		}
 	}
 }
 
@@ -351,12 +353,15 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 
 - (BOOL) containsObject: (OPPersistentObject*) anObject
 {
-	unsigned resultIndex = [self indexOfObject: anObject];
-	if (NSDebugEnabled) {
-		unsigned lresultIndex = [self linearSearchForOid: [anObject oid]];
-		if (lresultIndex != resultIndex) {
-			[self isReallySorted];
-			resultIndex = lresultIndex;
+	unsigned resultIndex;
+	@synchronized(self) {
+		resultIndex = [self indexOfObject: anObject];
+		if (NSDebugEnabled) {
+			unsigned lresultIndex = [self linearSearchForOid: [anObject oid]];
+			if (lresultIndex != resultIndex) {
+				[self isReallySorted];
+				resultIndex = lresultIndex;
+			}
 		}
 	}
 	return resultIndex != NSNotFound;
