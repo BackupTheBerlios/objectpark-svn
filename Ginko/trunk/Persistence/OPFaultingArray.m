@@ -354,7 +354,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 - (BOOL) containsObject: (OPPersistentObject*) anObject
 {
 	unsigned resultIndex;
-	@synchronized(self) {
+	@synchronized(self) { // only needed because of debugging code
 		resultIndex = [self indexOfObject: anObject];
 		if (NSDebugEnabled) {
 			unsigned lresultIndex = [self linearSearchForOid: [anObject oid]];
