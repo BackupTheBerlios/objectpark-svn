@@ -133,8 +133,6 @@
     return [super readSelectionFromPasteboard:pboard type:type];
 }
 
-#ifdef _0
-
 #define TAB ((char)'\x09')
 
 - (void)keyDown:(NSEvent *)theEvent
@@ -191,7 +189,5 @@
     return [super draggingEntered: sender];
 }
 */
-
-#endif
 
 @end

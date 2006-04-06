@@ -312,8 +312,9 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	
 	body = [body stringWithCanonicalLinebreaks];
 	body = [body stringByEncodingFlowedFormat];
-	
-	[transferData appendData: [body dataUsingEncoding: NSISOLatin1StringEncoding]];
+	body = [body stringWithCanonicalLinebreaks];
+
+	[transferData appendData:[body dataUsingEncoding: NSISOLatin1StringEncoding]];
 	
 	NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding]);
 		

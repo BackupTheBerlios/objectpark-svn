@@ -45,9 +45,9 @@
 
 /*" Line Breaks "*/
 
-- (NSString*) stringWithCanonicalLinebreaks;
-- (NSString*) stringWithUnixLinebreaks;
-- (NSString*) stringByRemovingLinebreaks;
+- (NSString *)stringWithCanonicalLinebreaks;
+- (NSString *)stringWithUnixLinebreaks;
+- (NSString *)stringByRemovingLinebreaks;
 
 
 

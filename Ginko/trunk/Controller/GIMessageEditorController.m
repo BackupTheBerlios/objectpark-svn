@@ -387,9 +387,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self updateHeaders];    
 }
 
-- (BOOL)tabKeyPressed:(id)sender withmodifierFlags:(NSNumber*) modifierFlags
+- (BOOL)tabKeyPressed:(id)sender withmodifierFlags:(NSNumber *)modifierFlags
 /*" Window delegate method. Handles tabKey. Returns YES, if key was handled, NO otherwise. "*/
-{
+{	
     if ([[(NSView *)[window firstResponder] superview] superview] == bottomTextField)
     {
         if (! ([modifierFlags unsignedIntValue] & NSShiftKeyMask))
@@ -400,6 +400,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             }
             return YES;
         }
+		else [[(GIHeaderFieldEditor *)[window firstResponder] delegate] selectPreviousKeyView:self];
+    }
+    else if ([[(NSView *)[window firstResponder] superview] superview] == toField)
+    {
+        if ([modifierFlags unsignedIntValue] & NSShiftKeyMask)
+        {
+			[window makeFirstResponder:messageTextView];
+            return YES;
+        }
+		//else [[(GIHeaderFieldEditor *)[window firstResponder] delegate] selectNextKeyView:self];
     }
     else if ([window firstResponder] == messageTextView)
     {
@@ -417,6 +427,23 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         
         return YES;
     }
+	else if ([[window firstResponder] isKindOfClass:[GIHeaderFieldEditor class]]) 
+	{
+		OPSizingTextField *field = [(GIHeaderFieldEditor *)[window firstResponder] delegate];
+		NSAssert([field isKindOfClass:[OPSizingTextField class]], @"should be OPSizingTextField");
+		
+		if ([modifierFlags unsignedIntValue] & NSShiftKeyMask)
+		{
+			[field selectPreviousKeyView:self];
+		}
+		else
+		{
+			[field selectNextKeyView:self];
+		}
+		
+		return YES;
+	}
+	
     return NO;
 }
 
@@ -1239,39 +1266,41 @@ NSDictionary *maxLinesForCalendarName()
 	if (validationErrors) [profileValidationButton setToolTip: [[validationErrors arrayByMappingWithSelector: @selector(localizedDescription)] componentsJoinedByString: @"\n"]];	
 }
 
-- (void) selectProfile: (GIProfile*) aProfile
+- (void)selectProfile:(GIProfile *)aProfile
 {
-    NSString* text;
-	NSString* oldText;
-    NSTextField* field;
+    NSString *text;
+	NSString *oldText;
+    NSTextField *field;
     
-    GIProfile* oldProfile = profile;
+    GIProfile *oldProfile = profile;
     [profile autorelease];
     profile = [aProfile retain];
     
 	
-    if (profile) {
-        // select active profile:
-        [profileButton selectItemAtIndex: [profileButton indexOfItemWithRepresentedObject:profile]];
+    if (profile) // select active profile:
+	{
+        [profileButton selectItemAtIndex:[profileButton indexOfItemWithRepresentedObject:profile]];
     }
 	
 	[self validateSelectedProfile];
     
     // Cc:
-    if ([self hasHeaderTextFieldWithFieldName: @"Cc"]) {
-        field = [self headerTextFieldWithFieldName: @"Cc"];
+    if ([self hasHeaderTextFieldWithFieldName:@"Cc"]) 
+	{
+        field = [self headerTextFieldWithFieldName:@"Cc"];
         
-        oldText = [oldProfile valueForKey: @"defaultCc"];
+        oldText = [oldProfile valueForKey:@"defaultCc"];
         oldText = oldText ? oldText : @"";
         
-        if ([[field stringValue] isEqualToString:oldText]) {
-            [field setStringValue: @""];
+        if ([[field stringValue] isEqualToString:oldText]) 
+		{
+            [field setStringValue:@""];
         }
     }
         
-    if ((text = [profile valueForKey: @"defaultCc"]))
+    if ((text = [profile valueForKey:@"defaultCc"]))
     {
-        field = [self headerTextFieldWithFieldName: @"Cc"];
+        field = [self headerTextFieldWithFieldName:@"Cc"];
         if (! [[field stringValue] length])
         {
             [field setStringValue:text];
@@ -1279,39 +1308,46 @@ NSDictionary *maxLinesForCalendarName()
     }
     
     // Bcc:
-    if ([self hasHeaderTextFieldWithFieldName: @"Bcc"]) {
-        field = [self headerTextFieldWithFieldName: @"Bcc"];
+    if ([self hasHeaderTextFieldWithFieldName:@"Bcc"]) 
+	{
+        field = [self headerTextFieldWithFieldName:@"Bcc"];
         
-        oldText = [oldProfile valueForKey: @"defaultBcc"];
+        oldText = [oldProfile valueForKey:@"defaultBcc"];
         oldText = oldText ? oldText : @"";
         
-        if ([[field stringValue] isEqualToString:oldText]) {
-            [field setStringValue: @""];
+        if ([[field stringValue] isEqualToString:oldText]) 
+		{
+            [field setStringValue:@""];
         }
     }
 
-    if ((text = [profile valueForKey: @"defaultBcc"])) {
-        NSTextField *field = [self headerTextFieldWithFieldName: @"Bcc"];
+    if ((text = [profile valueForKey:@"defaultBcc"])) 
+	{
+        NSTextField *field = [self headerTextFieldWithFieldName:@"Bcc"];
         if (! [[field stringValue] length]) {
             [field setStringValue:text];
         }
     }
     
     // Reply-To:
-    if ([self hasHeaderTextFieldWithFieldName: @"Reply-To"]) {
-        field = [self headerTextFieldWithFieldName: @"Reply-To"];
+    if ([self hasHeaderTextFieldWithFieldName:@"Reply-To"]) 
+	{
+        field = [self headerTextFieldWithFieldName:@"Reply-To"];
         
-        oldText = [oldProfile valueForKey: @"defaultReplyTo"];
+        oldText = [oldProfile valueForKey:@"defaultReplyTo"];
         oldText = oldText ? oldText : @"";
         
-        if ([[field stringValue] isEqualToString: oldText]) {
-            [field setStringValue: @""];
+        if ([[field stringValue] isEqualToString:oldText]) 
+		{
+            [field setStringValue:@""];
         }
     }
     
-    if ((text = [profile valueForKey: @"defaultReplyTo"])) {
-        NSTextField *field = [self headerTextFieldWithFieldName: @"Reply-To"];
-        if (! [[field stringValue] length]) {
+    if ((text = [profile valueForKey:@"defaultReplyTo"])) 
+	{
+        NSTextField *field = [self headerTextFieldWithFieldName:@"Reply-To"];
+        if (! [[field stringValue] length]) 
+		{
             [field setStringValue:text];
         }
     }
@@ -1320,27 +1356,28 @@ NSDictionary *maxLinesForCalendarName()
 - (IBAction)switchProfile:(id)sender
 /*" Triggered by the profile select popup. "*/
 {
-    GIProfile* newProfile = [[profileButton selectedItem] representedObject];
+    GIProfile *newProfile = [[profileButton selectedItem] representedObject];
 	// Check if something to do:
-    if ([self profile] != newProfile)  {
-        [self selectProfile: newProfile];
+    if ([self profile] != newProfile) 
+	{
+        [self selectProfile:newProfile];
         [self updateSignature];
-        [window setDocumentEdited: YES];
+        [window setDocumentEdited:YES];
     }
 }
 
-- (void) awakeHeaders
+- (void)awakeHeaders
 /*" The awakeFromNib part of the Headers category. "*/
 {
     unsigned maxLines;
     
     // prepare dictionary for looking up header fields:
     headerTextFieldsForName = [[NSMutableDictionary alloc] init];
-    [headerTextFieldsForName setObject: toField forKey: @"To"];
-    [headerTextFieldsForName setObject: subjectField forKey: @"Subject"];
+    [headerTextFieldsForName setObject: toField forKey:@"To"];
+    [headerTextFieldsForName setObject: subjectField forKey:@"Subject"];
     bottomTextField = subjectField;
     
-    maxLines = [[maxLinesForCalendarName() objectForKey: @"To"] unsignedIntValue];
+    maxLines = [[maxLinesForCalendarName() objectForKey:@"To"] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [toField setMaxLines:maxLines];
     
@@ -1364,10 +1401,10 @@ NSDictionary *maxLinesForCalendarName()
     [profileButton setAction:@selector(switchProfile:)];
     
     [self setupProfilePopUpButton];
-    [self selectProfile: [self profile]];
+    [self selectProfile:[self profile]];
 }
 
-- (void) updateHeaders
+- (void)updateHeaders
 /*" Updates headers so that they are set to the values in headerFields. "*/
 {
     NSEnumerator *enumerator;
@@ -1390,7 +1427,7 @@ NSDictionary *maxLinesForCalendarName()
             {
                 if ([self hasHeaderTextFieldWithFieldName:fieldName])
                 {
-                    [[self headerTextFieldWithFieldName:fieldName] setStringValue: @""];
+                    [[self headerTextFieldWithFieldName:fieldName] setStringValue:@""];
                 }
             }
         }
@@ -1430,7 +1467,7 @@ NSDictionary *maxLinesForCalendarName()
      */
 }
 
-- (void) takeValuesFromHeaderFields
+- (void)takeValuesFromHeaderFields
 /*" Takes values from ui header fields into the header fields dictionary. "*/
 {
     NSEnumerator *enumerator;
@@ -1443,7 +1480,7 @@ NSDictionary *maxLinesForCalendarName()
         
         if ([fieldContent length])
         {
-            [headerFields setObject: fieldContent forKey:headerName];
+            [headerFields setObject:fieldContent forKey:headerName];
         }
         else
         {
@@ -1452,19 +1489,19 @@ NSDictionary *maxLinesForCalendarName()
     }
 }
 
-- (BOOL) isAddressListField: (NSString*) fieldName
+- (BOOL)isAddressListField:(NSString *)fieldName
 /*" Returns YES if the given field (non-localized!) is an address field. NO otherwise. "*/
 {
     // Idea: do it via the tag instead?
-    return ( ([fieldName caseInsensitiveCompare: @"to"])
-        || ([fieldName caseInsensitiveCompare: @"from"])
-        || ([fieldName caseInsensitiveCompare: @"reply-to"])
-        || ([fieldName caseInsensitiveCompare: @"cc"])
-        || ([fieldName caseInsensitiveCompare: @"bcc"]) )
+    return ( ([fieldName caseInsensitiveCompare:@"to"])
+        || ([fieldName caseInsensitiveCompare:@"from"])
+        || ([fieldName caseInsensitiveCompare:@"reply-to"])
+        || ([fieldName caseInsensitiveCompare:@"cc"])
+        || ([fieldName caseInsensitiveCompare:@"bcc"]) )
     ? YES : NO;
 }
 
-- (OPSizingTextField *)createTextFieldWithFieldName: (NSString*) aFieldName
+- (OPSizingTextField *)createTextFieldWithFieldName:(NSString *)aFieldName
 /*" Creates a new OPSizingTextField for the given field name aFieldName. It is inserted in the window by respecting the header ordering (as defined by -headerOrder). "*/
 {
     OPSizingTextField *result;
@@ -1480,7 +1517,7 @@ NSDictionary *maxLinesForCalendarName()
     // search for predecessor (the new entry should be placed behind a predecessor):
     for (i = [headerOrder() indexOfObject:aFieldName] - 1; i >= 0; i--)
     {
-        if ((predecessor = [headerTextFieldsForName objectForKey: [headerOrder() objectAtIndex:i]])) break;
+        if ((predecessor = [headerTextFieldsForName objectForKey:[headerOrder() objectAtIndex:i]])) break;
     }
     
     if (! predecessor) predecessor = bottomTextField;
@@ -1494,12 +1531,12 @@ NSDictionary *maxLinesForCalendarName()
     topY = predecessorFrame.origin.y - 8; // gap
 
     // configuring text field:
-    result = [[[OPSizingTextField alloc] initWithFrame: [hiddenTextFieldPrototype frame]] autorelease];
+    result = [[[OPSizingTextField alloc] initWithFrame:[hiddenTextFieldPrototype frame]] autorelease];
     frame = [result frame];
     frame.origin.y = topY - frame.size.height;
     [result setFrame:frame];
-    [result setNextKeyView: [predecessor nextKeyView]];
-    [result setAutoresizingMask: [hiddenTextFieldPrototype autoresizingMask]];  
+    [result setNextKeyView:[predecessor nextKeyView]];
+    [result setAutoresizingMask:[hiddenTextFieldPrototype autoresizingMask]];  
     maxLines = [[maxLinesForCalendarName() objectForKey:aFieldName] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [result setMaxLines:maxLines];
@@ -1507,16 +1544,16 @@ NSDictionary *maxLinesForCalendarName()
     [predecessor setNextKeyView:result];
 
     // configuring the caption:
-    caption = [[[NSTextField alloc] initWithFrame: [hiddenCaptionPrototype frame]] autorelease];
+    caption = [[[NSTextField alloc] initWithFrame:[hiddenCaptionPrototype frame]] autorelease];
     frame = [caption frame];
     frame.origin.y = topY - frame.size.height - 3; // center positionsa
     [caption setFrame:frame];
-    [caption setStringValue: [displayNameForHeaderField stringByAppendingString: @":"]];
+    [caption setStringValue:[displayNameForHeaderField stringByAppendingString:@":"]];
     [caption setAlignment:NSRightTextAlignment];
-    [caption setEditable: NO];
-    [caption setBezeled: NO];
-    [caption setBackgroundColor: [NSColor windowBackgroundColor]];
-    [caption setAutoresizingMask: [hiddenCaptionPrototype autoresizingMask]];
+    [caption setEditable:NO];
+    [caption setBezeled:NO];
+    [caption setBackgroundColor:[NSColor windowBackgroundColor]];
+    [caption setAutoresizingMask:[hiddenCaptionPrototype autoresizingMask]];
     
     // moving other views down:
     [[predecessor superview] moveSubviewsWithinHeight:topY verticallyBy:-1 * ([result frame].size.height + 8)];
@@ -1538,12 +1575,12 @@ NSDictionary *maxLinesForCalendarName()
     return result;
 }
 
-- (BOOL)hasHeaderTextFieldWithFieldName: (NSString*) aFieldName
+- (BOOL)hasHeaderTextFieldWithFieldName:(NSString *)aFieldName
 {
     return [headerTextFieldsForName objectForKey:aFieldName] != nil;
 }
 
-- (OPSizingTextField *)headerTextFieldWithFieldName: (NSString*) aFieldName
+- (OPSizingTextField *)headerTextFieldWithFieldName:(NSString *)aFieldName
 /*" Returns a OPSizingTextField for the given field name. The form order is respected. "*/
 {
     OPSizingTextField *result;

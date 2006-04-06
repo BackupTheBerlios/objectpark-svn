@@ -215,7 +215,7 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     }
 }
 
-- (void) toggleContinuousSpellChecking:(id)sender
+- (void)toggleContinuousSpellChecking:(id)sender
 /*" Invokes functionality of superclass and sends an OPContinuousSpellCheckingDidToggleNotification notification additionally. "*/
 {
     NSDictionary *userInfo;
@@ -233,15 +233,16 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
                     userInfo:userInfo];
 }
 
-- (void) keyDown: (NSEvent*) theEvent
+- (void)keyDown:(NSEvent *)theEvent
 /*" Enables in the case of a non editable text view the use of the spacebar. "*/
 {
     if (! [self isEditable])
     {
-        NSString* characters = [theEvent characters];
+        NSString *characters = [theEvent characters];
 		
-		if ([characters length]) {
-			unichar firstChar = [characters characterAtIndex: 0];
+		if ([characters length]) 
+		{
+			unichar firstChar = [characters characterAtIndex:0];
 			id delegate = [self delegate];
 			int modifierFlags = [theEvent modifierFlags];
 			
@@ -254,9 +255,10 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
 					}
 					break;
 				case TAB:
-					if ([self nextKeyView]) {
-						BOOL result = [[self window] makeFirstResponder: [self nextKeyView]];
-						NSLog(@"swwitched first responder to %@: %d", [self nextKeyView], result);            
+					if ([self nextKeyView]) 
+					{
+						[[self window] makeFirstResponder:[self nextKeyView]];
+						//NSLog(@"switched first responder to %@: %d", [self nextKeyView], result);            
 					}
 					return;
 					break;

@@ -215,5 +215,14 @@
 }
 */
 
+- (void)selectNextKeyView:(id)sender
+{
+	[[self window] selectKeyViewFollowingView:self];
+}
+
+- (void)selectPreviousKeyView:(id)sender
+{
+	[[self window] selectKeyViewPrecedingView:self];
+}
 
 @end

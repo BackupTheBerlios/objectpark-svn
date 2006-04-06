@@ -18,4 +18,7 @@
 - (void) setMaxLines: (unsigned) maximum;
 - (unsigned) maxLines;
 
+- (void)selectNextKeyView:(id)sender;
+- (void)selectPreviousKeyView:(id)sender;
+
 @end
