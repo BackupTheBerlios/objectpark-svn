@@ -3,6 +3,7 @@ Bugs:
 - updates to the list of messages (fetching messages) do not result in thread-list reloads
 - sometimes statistics display is not updated.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
+- window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
 
 Regressions:
 

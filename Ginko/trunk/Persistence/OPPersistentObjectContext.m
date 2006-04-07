@@ -180,7 +180,7 @@ typedef struct {
 {
 	OID newOid;
 	@synchronized(db) {
-		if (![db transactionInProgress]) [db beginTransaction]; // transaction is committed on -saveChanges
+		[db beginTransaction]; // transaction is committed on -saveChanges
 		newOid = [db insertNewRowForClass: [object class]];
 	}
 	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
@@ -342,7 +342,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	faultCacheSize = 100;
 	[faultCache release]; faultCache = [[NSMutableArray alloc] initWithCapacity: faultCacheSize+1];
 	
-	@synchronized(registeredObjects) {
+	@synchronized(db) {
 		[db close];
 		[db open];
 	}
@@ -442,7 +442,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
 		
-		if (![db transactionInProgress]) [db beginTransaction];
+		@synchronized(db) {
+			[db beginTransaction];
+		}
 		
 		if ([changedObjects count]) {
 			NSLog(/*OPDebugLog(OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
@@ -687,10 +689,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" No persistent objects or the receiver can be used after calling this method. "*/
 {
 	if (db) {
-		[self reset]; [db close]; 
-		[db release]; db = nil;
-		if (self == [OPPersistentObjectContext defaultContext]) {
-			[OPPersistentObjectContext setDefaultContext: nil];
+		@synchronized(db) {
+			[self reset]; [db close]; 
+			[db release]; db = nil;
+			if (self == [OPPersistentObjectContext defaultContext]) {
+				[OPPersistentObjectContext setDefaultContext: nil];
+			}
 		}
 	}
 }

@@ -419,15 +419,19 @@
 	return transactionInProgress;
 }
 
-- (void) beginTransaction
+- (BOOL) beginTransaction
+/*" Does nothing, if a transaction is already in progress and returns NO. Returns YES, if a transaction was started. "*/
 {
-	NSAssert(transactionInProgress==NO, @"Transaction already in progress.");
+	if (!transactionInProgress) {
+	//NSAssert(transactionInProgress==NO, @"Transaction already in progress.");
 	//if (!transactionInProgress) {
 	//OPDebugLog(OPPERSISTENCE, OPINFO, @"Beginning db transaction for %@", self);
 	// Simplistic implementation. Should use a statement class/object and cache that:
-	[self performCommand: @"BEGIN TRANSACTION"];   
-	transactionInProgress = YES;
-	//}
+		[self performCommand: @"BEGIN TRANSACTION"];   
+		transactionInProgress = YES;
+		return YES;
+	}
+	return NO;
 }
 
 - (void) commitTransaction
