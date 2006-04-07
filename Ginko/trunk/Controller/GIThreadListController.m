@@ -1340,13 +1340,16 @@ static BOOL isThreadItem(id item)
     if (outlineView == threadsView) {
 		// thread list
         if (item == nil) {
+			
+			return MIN([self threadLimitCount], [[self threadsByDate] count]);
+/*
 			int result = [self threadLimitCount];
 			int threadCount = [[self threadsByDate] count];
 			if (threadCount < result) {
 				result = threadCount;
 			}
 			return result;
-            //return MIN([self threadLimitCount], [[self threadsByDate] count]);
+ */
         } else {        
 			// item should be a thread
             return [[item messages] count];
@@ -1370,7 +1373,7 @@ static BOOL isThreadItem(id item)
 	
 		if ([threadArray count]>threadLimit)  {
 			//[threadArray count]-MIN(threadLimit, [threadArray count]);
-			arrayIndex += [threadArray count]-threadLimit;
+			arrayIndex += ([threadArray count]-threadLimit);
 		}
 		result = [threadArray objectAtIndex: arrayIndex];
 	} else {            
@@ -2214,13 +2217,16 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     
     if (NSDebugEnabled) NSLog(@"draggedCell %@", filename);
     
-    NSPoint mouseLocation = [event locationInWindow];
-    mouseLocation.x -= 16; // file icons are guaranteed to have 32 by 32 pixels (Mac OS 10.4 NSWorkspace docs)
-    mouseLocation.y -= 16;
-    mouseLocation = [view convertPoint:mouseLocation toView: nil];
-     
-    rect = NSMakeRect(mouseLocation.x, mouseLocation.y, 1, 1);
-    [view dragFile:filename fromRect:rect slideBack: YES event:event];
+	// HTML may not contain attachment files, how do we handle D&D?
+	if (filename) {
+		NSPoint mouseLocation = [event locationInWindow];
+		mouseLocation.x -= 16; // file icons are guaranteed to have 32 by 32 pixels (Mac OS 10.4 NSWorkspace docs)
+		mouseLocation.y -= 16;
+		mouseLocation = [view convertPoint:mouseLocation toView: nil];
+		
+		rect = NSMakeRect(mouseLocation.x, mouseLocation.y, 1, 1);
+		[view dragFile:filename fromRect:rect slideBack: YES event:event];
+	}
 }
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL) flag

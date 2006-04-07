@@ -48,7 +48,7 @@
 	@"signature = {ColumnName = ZSIGNATURE; AttributeClass = NSAttributedString;};"
 	@"messageTemplate = {ColumnName = ZMESSAGETEMPLATE; AttributeClass = NSAttributedString;};"
 	@"sendAccount = {ColumnName = ZSENDACCOUNT; AttributeClass = GIAccount;};"
-	@"messagesToSend = {InverseRelationshipKey = sendProfile; AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZPROFILE=?\";};"
+	@"messagesToSend = {InverseRelationshipKey = sendProfile; AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZPROFILE=$1\";};"
 	@"}";
 }
 

@@ -24,6 +24,8 @@
 	NSString* sortKey; // The key to sort the array. May be null.
 	//int (*compare)(id, id, OPFaultingArray*);
 	BOOL needsSorting;
+	
+	unsigned lastIndexFound; // todo: optimization: use this as a cache for indexOfObject. Try the cache first. This way, the sequence (containsObject: removeObject: becomes faster)!
 }
 
 + (id) array;

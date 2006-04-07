@@ -361,6 +361,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 			if (lresultIndex != resultIndex) {
 				[self isReallySorted];
 				resultIndex = lresultIndex;
+				unsigned resultIndex2 = [self indexOfObject: anObject]; // step into this!
 			}
 		}
 	}
@@ -410,26 +411,27 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 					
 					resultIndex = (result-data)/entrySize;
 					
-					if (*((OID*)result) == oid) return resultIndex; // found using only bsearch on the keys
-					
-					unsigned searchIndex;
-					
-					// Walk backward until the sortKey no longer matches or oid found: 
-					if (resultIndex) {
-						searchIndex = resultIndex-1;
-						while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
-							if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-							searchIndex--;
+					if (*((OID*)result) != oid) { // found using only bsearch on the keys
+						
+						unsigned searchIndex;
+						
+						// Walk backward until the sortKey no longer matches or oid found: 
+						if (resultIndex) {
+							searchIndex = resultIndex-1;
+							while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
+								if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+								searchIndex--;
+							}
 						}
+						// Walk forward until the sortKey no longer matches or oid found: 
+						searchIndex = resultIndex+1;
+						while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
+							if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+							searchIndex++;
+						}
+						
+						resultIndex = NSNotFound;
 					}
-					// Walk forward until the sortKey no longer matches or oid found: 
-					searchIndex = resultIndex+1;
-					while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
-						if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-						searchIndex++;
-					}
-					
-					resultIndex = NSNotFound;
 				}
 
 			}

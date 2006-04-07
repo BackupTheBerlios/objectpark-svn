@@ -61,23 +61,14 @@
     return item;
 }
 
-- (void)keyDown:(NSEvent *)theEvent 
+- (void) keyDown:(NSEvent *)theEvent 
 {
-    NSString *characters;
-    unichar firstChar;
-    int selectedRow;
-    id item;
-    int theModifierFlags;
     id delegate = [self delegate];
-
-    theModifierFlags = [theEvent modifierFlags];    
-    selectedRow = [self selectedRow];
-    item = [self itemAtRow:selectedRow];
-    characters = [theEvent characters];
-    firstChar = [characters characterAtIndex:0];
+    int theModifierFlags = [theEvent modifierFlags];    
+    int selectedRow = [self selectedRow];
+    id item = [self itemAtRow: selectedRow];
     
-    switch ([theEvent keyCode]) 
-    {
+    switch ([theEvent keyCode]) {
         case RETURN:
         case 42: // #
         case 2: // d

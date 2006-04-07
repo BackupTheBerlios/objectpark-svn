@@ -249,6 +249,7 @@
 }
 
 - (NSString*) queryString
+/*" Usually, querystrings are only set on to-many-relationships. They contain an SQL statement string "*/
 {
 	return queryString;
 }

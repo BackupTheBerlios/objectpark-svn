@@ -114,10 +114,12 @@
 - (void) revertChanges;
 
 - (NSArray*) fetchObjectsOfClass: (Class) poClass
-				 queryFormat: (NSString*) clause, ...;
+					 sortedByKey: (NSString*) sortKey
+						keyClass: (Class) sortKeyClass
+					 queryFormat: (NSString*) clause, ...;
 
 - (NSArray*) fetchObjectsOfClass: (Class) poClass
-				 whereFormat: (NSString*) clause, ...;
+					 whereFormat: (NSString*) clause, ...;
 
 - (OPFaultingArray*) containerForObject: (id) object
 						relationShipKey: (NSString*) key;
@@ -129,33 +131,5 @@
 
 @end
 
-@class OPFaultingArray;
-
-@interface OPPersistentObjectEnumerator : NSEnumerator {
-	sqlite3_stmt* statement;
-	Class resultClass;
-	OPPersistentObjectContext* context;
-}
-
-- (id) initWithContext: (OPPersistentObjectContext*) aContext
-		   resultClass: (Class) poClass 
-		   queryString: (NSString*) sql;
-
-- (id) initWithContext: (OPPersistentObjectContext*) aContext
-		   resultClass: (Class) poClass 
-		   whereClause: (NSString*) clause;
-
-- (void) reset;
-- (BOOL) skipObject;
-- (sqlite3_stmt*) statement;
-
-+ (void) printAllRunningEnumerators;
-
-//- (void) bind: (id) variable, ...;
-
-- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey ofClass: (Class) sortKeyClass;
-
-
-@end
 
 extern NSString* OPURLStringFromOidAndClass(OID oid, Class poClass, NSString* databaseName);

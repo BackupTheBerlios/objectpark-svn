@@ -820,12 +820,15 @@ static NSHashTable* allInstances;
 - (int) execute
 /*" Raises exception on error. "*/
 {
-	OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing %@", self);
-	int result = sqlite3_step(statement);
+	int result;
+	@synchronized(connection) {
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing %@", self);
+		result = sqlite3_step(statement);
 		
-	if (result != SQLITE_DONE && result != SQLITE_ROW) {
-		[connection raiseSQLiteError];
-	}	
+		if (result != SQLITE_DONE && result != SQLITE_ROW) {
+			[connection raiseSQLiteError];
+		}	
+	}
 	return result;
 }
 

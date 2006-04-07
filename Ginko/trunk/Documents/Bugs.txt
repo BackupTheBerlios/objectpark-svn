@@ -1,5 +1,8 @@
 Bugs:
 
+- updates to the list of messages (fetching messages) do not result in thread-list reloads
+- sometimes statistics display is not updated.
+- while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
 
 Regressions:
 
@@ -13,5 +16,3 @@ Done:
 - (Dirk) KVO notifications don't work with inverse many-to-many relationships (see test TestGIMessageGroup/testStatistics)
 - (Axel) keyboard navigation in message tree no longer works
 - (Axel) "space" in searches no longer works (-> maybe related to "go to next message" functionality)
-- updates to the list of messages (fetching messages) do not result in thread-list reloads
-- sometimes statistics display is not updated.

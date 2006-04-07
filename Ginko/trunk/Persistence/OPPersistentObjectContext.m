@@ -41,6 +41,29 @@
 #import <OPObjectPair.h>
 #import "OPObjectRelationship.h"
 
+@interface OPPersistentObjectEnumerator : NSEnumerator {
+	sqlite3_stmt* statement;
+	Class resultClass;
+	OPPersistentObjectContext* context;
+}
+
+- (id) initWithContext: (OPPersistentObjectContext*) aContext
+		   resultClass: (Class) poClass 
+		   queryString: (NSString*) sql;
+
+- (id) initWithContext: (OPPersistentObjectContext*) aContext
+		   resultClass: (Class) poClass 
+		   whereClause: (NSString*) clause;
+
+- (void) reset;
+- (BOOL) skipObject;
+- (sqlite3_stmt*) statement;
++ (void) printAllRunningEnumerators;
+- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey ofClass: (Class) sortKeyClass;
+
+@end
+
+
 @implementation OPPersistentObjectContext
 
 static long long OPLongLongStringValue(NSString* self)
@@ -156,10 +179,12 @@ typedef struct {
 - (OID) newDatabaseObjectForObject: (OPPersistentObject*) object
 {
 	OID newOid;
-	@synchronized(self) {
+	@synchronized(db) {
 		if (![db transactionInProgress]) [db beginTransaction]; // transaction is committed on -saveChanges
 		newOid = [db insertNewRowForClass: [object class]];
-		NSAssert1(newOid, @"Unable to insert row for new object %@", object);
+	}
+	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
+	@synchronized(self) {
 		[changedObjects addObject: object]; // make sure the values make it into the database
 	}
 	return newOid;
@@ -181,12 +206,12 @@ typedef struct {
     } else {
 		// We already know this object.
 		// Put it into  the fault cache:
-		@synchronized (self) {
+		//@synchronized (self) {
 			[faultCache addObject: result]; // cache result
 			if ([faultCache count] > faultCacheSize) {
 				[faultCache removeObjectAtIndex: 0]; // release some object
 			}
-		}
+		//}
 	}
     return result;
 }
@@ -245,9 +270,11 @@ typedef struct {
 	NSParameterAssert(object!=nil);
 	OID oid = [object currentOid];
 	id result = nil;
-	@synchronized(self) {
 		if (oid) {
-			result = [db attributesForRowId: oid ofClass: [object class]];
+			@synchronized(db) {
+				result = [db attributesForRowId: oid ofClass: [object class]];
+			}
+
 			if (!result) {
 				NSLog(@"Faulting problem: %@ with oid %llu not in the database!?", [object class], oid);
 			}
@@ -255,7 +282,6 @@ typedef struct {
 			result = [NSMutableDictionary dictionary];
 		}
 		numberOfFaultsFired++;
-	}
 	return result;
 }
 
@@ -316,8 +342,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	faultCacheSize = 100;
 	[faultCache release]; faultCache = [[NSMutableArray alloc] initWithCapacity: faultCacheSize+1];
 	
-	[db close];
-	[db open];
+	@synchronized(registeredObjects) {
+		[db close];
+		[db open];
+	}
 }
 
 - (id) init 
@@ -336,6 +364,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
  
 - (OPSQLiteConnection*) databaseConnection
+/*" You need to lock the connection returned prior to using it! "*/
 {
     return db;   
 }
@@ -370,7 +399,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		if (pClass) {
 			[classesChecked addObject: pClass];
 			OPClassDescription* cd = [pClass persistentClassDescription];
-			[cd checkTableUsingConnection: db];
+			@synchronized(db) {
+				[cd checkTableUsingConnection: db];
+			}
 		}
 	}
 }
@@ -405,18 +436,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (void) saveChanges
 /*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
 {
-	//[lock lock];
 	@synchronized(self) {
 		
-		//[OPPersistentObjectEnumerator printAllRunningEnumerators];
 		if ([[OPSQLiteStatement runningStatements] count]) NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
-		
-		//[[OPSQLiteStatement runningStatements] makeObjectsPerformSelector: @selector(reset)];
 		
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
 		
 		if (![db transactionInProgress]) [db beginTransaction];
-		//[db commitTransaction]; [db beginTransaction]; // just for testing
 		
 		if ([changedObjects count]) {
 			NSLog(/*OPDebugLog(OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
@@ -427,10 +453,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			while (changedObject = [coe nextObject]) {
 				
 				[changedObject willSave];
-				
-				OID newOid = [db updateRowOfClass: [changedObject class] 
+				OID newOid;
+				@synchronized(db) {
+					newOid = [db updateRowOfClass: [changedObject class] 
 											rowId: [changedObject currentOid] 
 										   values: [changedObject attributeValues]];
+				}
 				
 				[changedObject setOid: newOid]; // also registers object
 				
@@ -453,8 +481,11 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			while (deletedObject = [coe nextObject]) {
 				
 				//NSLog(@"Will honk %@", deletedObject);
-				[db deleteRowOfClass: [deletedObject class] 
-							   rowId: [deletedObject currentOid]];
+				@synchronized(db) {
+					
+					[db deleteRowOfClass: [deletedObject class] 
+								   rowId: [deletedObject currentOid]];
+				}
 				
 				[changedObjects removeObject: deletedObject];
 			}
@@ -472,65 +503,78 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			
 			if ([relationshipChanges changeCount]) {
 				
+				
 				// Add a row in the join table for each relation added:
 				OPSQLiteStatement* addStatement;
-				addStatement = [db addStatementForJoinTableName: [relationshipChanges joinTableName] 
-												firstColumnName: [relationshipChanges firstColumnName] 
-											   secondColumnName: [relationshipChanges secondColumnName]];
+				@synchronized(db) {
+					addStatement = [db addStatementForJoinTableName: [relationshipChanges joinTableName] 
+													firstColumnName: [relationshipChanges firstColumnName] 
+												   secondColumnName: [relationshipChanges secondColumnName]];
+				}
 				
 				// prevent this relationship from changing:
-				//@synchronized(relationshipChanges) {
-				NSEnumerator* pairEnum = [relationshipChanges addedRelationsEnumerator];
-				OPObjectPair* pair;
-				
-				while (pair = [pairEnum nextObject]) {
+				@synchronized(relationshipChanges) {
+					NSEnumerator* pairEnum = [relationshipChanges addedRelationsEnumerator];
+					OPObjectPair* pair;
 					
-					OPPersistentObject* firstObject  = [pair firstObject];
-					OPPersistentObject* secondObject = [pair secondObject];
-					
+					while (pair = [pairEnum nextObject]) {
+						
+						OPPersistentObject* firstObject  = [pair firstObject];
+						OPPersistentObject* secondObject = [pair secondObject];
+						
+						@synchronized(db) {
+							[addStatement reset];
+							[addStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
+							[addStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
+							
+							[addStatement execute];
+						}
+					}
 					[addStatement reset];
-					[addStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
-					[addStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
 					
-					[addStatement execute];
-				}
-				[addStatement reset];
-				
-				// Remove a row in the join table to each relation removed:
-				
-				OPSQLiteStatement* removeStatement;
-				removeStatement = [db removeStatementForJoinTableName: [relationshipChanges joinTableName] 
-													  firstColumnName: [relationshipChanges firstColumnName] 
-													 secondColumnName: [relationshipChanges secondColumnName]];
-				
-				pairEnum = [relationshipChanges removedRelationsEnumerator];
-				
-				while (pair = [pairEnum nextObject]) {
+					// Remove a row in the join table to each relation removed:
 					
-					OPPersistentObject* firstObject  = [pair firstObject];
-					OPPersistentObject* secondObject = [pair secondObject];
+					OPSQLiteStatement* removeStatement;
+					
+					@synchronized(db) {
+						removeStatement = [db removeStatementForJoinTableName: [relationshipChanges joinTableName] 
+															  firstColumnName: [relationshipChanges firstColumnName] 
+															 secondColumnName: [relationshipChanges secondColumnName]];
+					}
+					
+					pairEnum = [relationshipChanges removedRelationsEnumerator];
+					
+					while (pair = [pairEnum nextObject]) {
+						
+						OPPersistentObject* firstObject  = [pair firstObject];
+						OPPersistentObject* secondObject = [pair secondObject];
+						
+						@synchronized(db) {
+							[removeStatement reset];
+							[removeStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
+							[removeStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
+							
+							[removeStatement execute];
+						}
+					}		
+					
 					
 					[removeStatement reset];
-					[removeStatement bindPlaceholderAtIndex: 0 toRowId: [firstObject oid]];
-					[removeStatement bindPlaceholderAtIndex: 1 toRowId: [secondObject oid]];
 					
-					[removeStatement execute];
-				}		
-				//}
-				
-				[removeStatement reset];
-				
-				[relationshipChanges reset]; // delete all changes as they are now recorded in the database
+					[relationshipChanges reset]; // delete all changes as they are now recorded in the database
+				}
 			}
 		}
 		
 		[pool release]; pool = [[NSAutoreleasePool alloc] init];
-		
-		[db commitTransaction];
+
+		@synchronized(db) {
+			[db commitTransaction];
+		}
 		
 		[pool release];
 		
-	}
+		}
 }
 
 - (void) shouldDeleteObject: (OPPersistentObject*) object
@@ -540,10 +584,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		// Object has been stored persistently, so we need to delete it:
 		if (![deletedObjects containsObject: object]) {
 			
-			[deletedObjects addObject: object];
-			[changedObjects removeObject: object]; // make sure, it is not inserted again
-			[object willDelete];
-			[[cachedObjectsByClass objectForKey: [object class]] removeObject: object];
+			@synchronized(self) {
+				[deletedObjects addObject: object];
+				[changedObjects removeObject: object]; // make sure, it is not inserted again
+				[object willDelete];
+				[[cachedObjectsByClass objectForKey: [object class]] removeObject: object];
+			}
 		}
 	}
 }
@@ -567,9 +613,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	NSString* sql                   = [ad queryString];
 	NSString* sortKey               = nil; 
 	Class     sortKeyClass          = nil;
-	id        result                = nil;
+	OPFaultingArray* result         = nil;
 	
-	OPPersistentObjectEnumerator* e = nil;
+	//OPPersistentObjectEnumerator* e = nil;
 	
 	if ([ad isToManyRelationship] && sql != nil) {
 		// We might want to cache these:
@@ -580,18 +626,24 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		numberOfRelationshipsFired++;
 		
 		@synchronized(self) {
+			/* replace with fetch!
 			e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
 														  resultClass: [ad attributeClass] 
 														  queryString: sql];
 			[e bind: object, nil];
 			result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];				
 			[e release];
+			*/
+			result = [self fetchObjectsOfClass: [ad attributeClass] 
+								   sortedByKey: sortKey
+									  keyClass: sortKeyClass
+								   queryFormat: sql, object, nil];
+			
 			
 			OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
-			if (rchanges) {
-				// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
-				[rchanges updateRelationshipNamed: key from: object values: result];
-			}
+			// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
+			[rchanges updateRelationshipNamed: key from: object values: result];
+			
 		}
 	}
 	return result;
@@ -623,7 +675,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			[changedObject revert]; // removes itself from changedObjects
 		}
 		
-		[db rollBackTransaction]; // in case one is in progress
+		@synchronized(db) {
+			[db rollBackTransaction]; // in case one is in progress
+		}
 		
 		//[lock unlock];
 	}
@@ -659,11 +713,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 - (NSArray*) fetchObjectsOfClass: (Class) poClass
+					 sortedByKey: (NSString*) sortKey
+						keyClass: (Class) sortKeyClass
 					 queryFormat: (NSString*) sql, ...
-/*" Pass a query string in the format string. The following parameters replace any occurrences of $1, $2 $3 etc. respectively. "*/
+/*" Pass a query string in the format string. The following parameters replace any occurrences of $1, $2 $3 etc. respectively. key and keyClass can be nil, if sorting is not required. "*/
 {
 	NSArray* result;
-	@synchronized(self) {
+	@synchronized(db) {
 		OPPersistentObjectEnumerator* e;
 		char variableValue[5] = "";
 		
@@ -684,7 +740,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		}
 		va_end(ap); /* clean up when done */
 		
-		result = [e allObjects];
+		result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];
 		[e release];
 	}
 	return result;
@@ -693,10 +749,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (NSArray*) fetchObjectsOfClass: (Class) poClass
 					 whereFormat: (NSString*) clause, ...
 	/*" Replaces all the question marks in the whereFormat string with the object 
-	values passed. Valid object classes return YES to +[canPersist]. "*/
+	values passed. Valid object classes return YES to +[canPersist]. key and keyClass can be nil, if sorting is not required. "*/
 {
 	NSArray* result;
-	@synchronized(self) {
+	@synchronized(db) {
 		OPPersistentObjectEnumerator* e;
 		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
 													  resultClass: poClass
@@ -749,9 +805,11 @@ static NSHashTable* allInstances;
 		context     = [aContext retain];
 		resultClass = poClass;
 		
-		@synchronized(context) {
+		id connection = [context databaseConnection];
+		
+		@synchronized(connection) {
 
-			sqlite3_prepare([[context databaseConnection] database], [sql UTF8String], -1, &statement, NULL);	
+			sqlite3_prepare([connection database], [sql UTF8String], -1, &statement, NULL);	
 
 		}
 		if (!statement) {
@@ -792,25 +850,18 @@ static NSHashTable* allInstances;
 
 - (void) reset
 {
-	@synchronized(context) {
-		//[context lock];
-		sqlite3_reset(statement);
-		NSHashRemove(allInstances, self);
-		//[context unlock];
-	}
+	sqlite3_reset(statement);
+	NSHashRemove(allInstances, self);
 }
 
 - (BOOL) skipObject
 	/*" Returns YES, if an object was skipped, NO otherwise (nothing to enumerate). Similar to nextObject, but does not create the result object (if any). "*/
 {
 	int res;
-	//[context lock];
-	@synchronized(context) {
-		res = sqlite3_step(statement);
-		
-		if (res!=SQLITE_ROW) {
-			[self reset]; // finished
-		}
+	res = sqlite3_step(statement);
+	
+	if (res!=SQLITE_ROW) {
+		[self reset]; // finished
 	}
 	return (res==SQLITE_ROW);
 }
@@ -823,7 +874,7 @@ static NSHashTable* allInstances;
 - (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey 
 								   ofClass: (Class) sortKeyClass;
 /*" Returns an OPFaultingArray containing all the faults.
-	If sortKey is a key-value-complient key for the resultClass, the result is sorted by the key givenand the second result column is expected to contain the sort objects in ascending order while the first column must always contain ROWIDs. "*/
+	If sortKey is a key-value-complient key for the resultClass, the result is sorted by the key given and the second result column is expected to contain the sort objects in ascending order while the first column must always contain ROWIDs. "*/
 {
 	OPFaultingArray* result = [OPFaultingArray array];
 	[result setSortKey: sortKey];
@@ -846,15 +897,13 @@ static NSHashTable* allInstances;
 {
 	id result = nil;
 	
-	@synchronized(context) {
-		if (sqlite3_step(statement)==SQLITE_ROW) {
-			result = [resultClass newFromStatement: statement index: 0];
-			//[context unlock];
-		} else {
-			//NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
-			//[context unlock];
-			[self reset]; // finished
-		}
+	if (sqlite3_step(statement)==SQLITE_ROW) {
+		result = [resultClass newFromStatement: statement index: 0];
+		//[context unlock];
+	} else {
+		//NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
+		//[context unlock];
+		[self reset]; // finished
 	}
 	//NSLog(@"%@: Enumerated object %@", self, result);
 	return result;

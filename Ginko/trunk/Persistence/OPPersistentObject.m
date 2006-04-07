@@ -153,17 +153,20 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 - (BOOL) resolveFault
 /*" Returns YES, if the reciever is resolved afterwards. "*/
 {
-	BOOL result;
+	BOOL result = YES;
 	@synchronized(self) {
 		if (attributes==nil) {
-			attributes = [[[self context] persistentValuesForObject: self] retain];
+			NSDictionary* attributesDict = [[[self context] persistentValuesForObject: self] retain];
+			attributes = attributesDict;
+			
 			if (!attributes && oid==0) {
 				attributes = [[NSMutableDictionary alloc] init]; // should set default values here?
 				OPDebugLog(PERSISTENTOBJECT, FAULTS, @"Created attribute dictionary for new object %@", self);
 			}
+			result = attributes != nil;
 		}
-		result = attributes != nil;
 	}
+	
 	return result;
 }
 
@@ -172,25 +175,24 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	Changes done since the last -saveChanges are lost. "*/
 {
 	id context = [self context];
+	
+	[context willRevertObject: self];
 	@synchronized(self) {
-		
-		[context willRevertObject: self];
-		
 		[attributes release]; attributes = nil;
-		
-		[context didRevertObject: self];
 	}
+	
+	[context didRevertObject: self];
 }
 
 - (void) refault
 /*" Turns the receiver in to a fault, releasing attribute values. 
 	If the reveiver -hasChanged, this method does nothing. "*/
 {
-	@synchronized(self) {
-		if (![self hasChanged]) {
+	if (![self hasChanged]) {
+		@synchronized(self) {
 			[attributes release]; attributes = nil; // better call -revert?
-//#warning todo: remove all cached many-to-many relationships on re-fault
 		}
+		#warning todo: remove all cached many-to-many relationships on re-fault
 	}
 }
 
@@ -324,6 +326,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 }
 
 - (void) xwillAccessValueForKey: (NSString*) key
+
 {
 	if (!attributes) [[self context] willFireFault: self forKey: key]; // statistics - not elegant	
     [self resolveFault];
@@ -334,7 +337,9 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 									   relationShipKey: key];
 		if (result) {
 			// Cache result container in attributes dictionary:
-			[attributes setObject: result forKey: key]; 
+			@synchronized(self) {
+				[attributes setObject: result forKey: key]; 
+			}
 		}
 	}
 }
@@ -344,9 +349,9 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 {
 	id result;
 	
-	[self xwillAccessValueForKey: key]; // fire fault, make sure the attribute values exist.
-	
 	@synchronized(self) {
+
+		[self xwillAccessValueForKey: key]; // fire fault, make sure the attribute values exist.
 		result = [attributes objectForKey: key];
 	}	
 	return result;
@@ -355,10 +360,10 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key
 /*" Passing a nil value is allowed and removes the respective value. "*/
 {	
-	[self xwillAccessValueForKey: key];
-	
 	@synchronized([self context]) {
 		@synchronized(self) {
+			[self xwillAccessValueForKey: key];
+
 			if (object) {
 				[attributes setObject: object forKey: key];
 			} else {
@@ -635,15 +640,13 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 - (void) setTransientValue: (id) value forKey: (NSString*) key
 /*" Do not set values for persistent keys! "*/
 {
-	@synchronized([self context]) {
-		@synchronized(self) {
-			if (NSDebugEnabled) {
-				if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
-			}
-			// todo: add key-value-observing for transient values.
-			[self resolveFault];
-			[attributes setObject: value forKey: key];
+	@synchronized(self) {
+		if (NSDebugEnabled) {
+			if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
 		}
+		// todo: add key-value-observing for transient values.
+		[self resolveFault];
+		[attributes setObject: value forKey: key];
 	}
 }
 
@@ -692,7 +695,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 				
 				// Do we need to do this, when self is a fault?		
 				[self willChangeValueForKey: key];
-				[self removePrimitiveValue: value forKey: key];
+				[self removePrimitiveValue: value forKey: key]; // index already calculated above - optimize?
 				[self didChangeValueForKey: key];
 			}
 		}

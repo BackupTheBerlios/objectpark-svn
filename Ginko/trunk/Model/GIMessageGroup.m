@@ -59,7 +59,7 @@
 	return 
 	@"{"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
-    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=? order by ZTHREAD.ZDATE;\"; SortAttribute = date; JoinTableName = Z_4THREADS; SourceColumnName = Z_4GROUPS; TargetColumnName = Z_6THREADS; InverseRelationshipKey=groups;};"
+    @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=$1 order by ZTHREAD.ZDATE;\"; SortAttribute = date; JoinTableName = Z_4THREADS; SourceColumnName = Z_4GROUPS; TargetColumnName = Z_6THREADS; InverseRelationshipKey=groups;};"
     //@"defaultProfile = {AttributeClass = GIProfile; ColumnName = ZDEFAULTPROFILE; }
 	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; SortAttributeName = date};"
 	@"}";
@@ -548,13 +548,14 @@ static NSMutableArray* root = nil;
 
 
 - (NSArray*) allMessages
-	/*" Only returns persistent messages (from the database). "*/
-{
-	// 	OPPersistentObjectEnumerator* result;
-	
+	/*" Only returns persistent messages (from the database), so do a -saveChanges first. "*/
+{	
 	NSString* queryString = @"select ZMESSAGE.ROWID from Z_4THREADS, ZMESSAGE where ZMESSAGE.ZTHREAD = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=$1";
 		
-	return [[self context] fetchObjectsOfClass: [GIMessage class] queryFormat: queryString, self, nil];
+	return [[self context] fetchObjectsOfClass: [GIMessage class] 
+								   sortedByKey: nil
+									  keyClass: nil
+								   queryFormat: queryString, self, nil];
 }
 
 - (void) willDelete
@@ -803,7 +804,9 @@ static NSMutableArray* root = nil;
 	NSLog(@"Entered fetchThreads query with sql: %@", queryString);
 	
 	return [[self context] fetchObjectsOfClass: [GIThread class]
-							   queryFormat: queryString, self, subject, author, sinceDate, nil];
+								   sortedByKey: nil
+									  keyClass: nil
+								   queryFormat: queryString, self, subject, author, sinceDate, nil];
 		
 }
 

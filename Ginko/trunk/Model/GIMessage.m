@@ -122,17 +122,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 		NSArray* objects = [context fetchObjectsOfClass: self whereFormat: @"ZMESSAGEID=?", messageId, nil];
 		
-		//[objectEnum reset]; // optional
-		//[objectEnum bind:messageId, nil]; // only necessary for requests containing question mark placeholders
-		
 		result = [objects lastObject];
 		//[objectEnum reset]; // might free some memory.
         
-        if (! result)
-        {;
-            @synchronized(context)
-            {
-                // look in changed objects
+        if (! result) {
+            @synchronized(context) {
+                // Look in changed objects sequentially:
                 NSEnumerator *enumerator = [[context changedObjects] objectEnumerator];
                 OPPersistentObject *changedObject;
                 while (changedObject = [enumerator nextObject]) 
