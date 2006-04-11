@@ -52,28 +52,25 @@
 	@"}";
 }
 
-+ (NSArray *)allObjects
-/*" Returns all profile instances, assuring there is at least one (by creating it). "*/
++ (NSArray*) allObjects
+/*" Returns all profile instances, assuring there is at least one (by creating it). The array returned is sorted by name. "*/
 {    
-    NSArray *result;
+    OPFaultingArray* result;
     @synchronized(self) {
-        result = [super allObjects];
-        
-        if (![result count]) {
-            GIProfile *profile = [[[self alloc] init] autorelease];
+		
+		while (![(result = (OPFaultingArray*)[super allObjects]) count]) {
+            GIProfile* profile = [[[self alloc] init] autorelease];
             [profile setValue:@"Dummy Profile" forKey:@"name"];
             [profile setValue:nil forKey:@"enabled"];
-            [profile setValue:@"dummy@replace.this" forKey:@"mailAddress"];
+            [profile setValue:@"somename@domain.org" forKey:@"mailAddress"];
 			[profile insertIntoContext: [OPPersistentObjectContext defaultContext]]; // make persistent.
 			
 			[[OPPersistentObjectContext defaultContext] saveChanges];
-			
-			result = [super allObjects];
-        }
+        } 
+		//[result sortByComparingAttribute: @"name"];
         
-        result = result;
-    }
-    return result;
+	}
+    return [result sortedArrayByComparingAttribute: @"name"]; // improve by making result sorted!
 }
 
 - (BOOL)validateMailAddress:(NSString **)address error:(NSError **)outError
