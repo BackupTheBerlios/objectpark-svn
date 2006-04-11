@@ -27,6 +27,7 @@ NSString *TrashMessageGroupURLString = @"TrashMessageGroupURLString";
 NSString *ImportPanelLastDirectory = @"ImportPanelLastDirectory";
 NSString *AutomaticActivityPanelEnabled = @"AutomaticActivityPanelEnabled";
 NSString *FulltextIndexChangeCount = @"FulltextIndexChangeCount";
+NSString *EarliestSendTimes = @"EarliestSendTimes";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 

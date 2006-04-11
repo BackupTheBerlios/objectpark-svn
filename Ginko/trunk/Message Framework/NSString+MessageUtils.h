@@ -62,7 +62,7 @@ extern NSString *OPAttachmentPathAttribute;
 - (long)octalValue;
 
 - (NSCalendarDate *)dateFromRFC2822String;
-- (NSCalendarDate *)slowDateFromRFC2822String;
+//- (NSCalendarDate *)slowDateFromRFC2822String;
 
 - (NSString*) stringByNormalizingWhitespaces;
 

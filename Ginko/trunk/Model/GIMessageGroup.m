@@ -810,4 +810,13 @@ static NSMutableArray* root = nil;
 		
 }
 
+- (void)willSave
+{
+	[super willSave];
+	if ([[self valueForKey:@"name"] length] == 0)
+	{
+		NSLog(@"don't do that");
+	}
+}
+
 @end

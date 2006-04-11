@@ -401,13 +401,15 @@ NSNumber* yesNumber = nil;
     return result;
 }
 
-- (void) applicationWillTerminate: (NSNotification*) notification
+- (void)applicationWillTerminate:(NSNotification *)notification
 {
 	[self saveOpenWindowsFromThisSession];
 	
-	[[self windows] makeObjectsPerformSelector: @selector(performClose:) withObject: self];
+	[[self windows] makeObjectsPerformSelector:@selector(performClose:) withObject:self];
 	
-    [self saveAction: self];
+    [self saveAction:self];
+	
+	[GIMessage repairEarliestSendTimes];
 	
     // temporary hack:
     [GIMessage sweepBadMessages];
@@ -415,10 +417,10 @@ NSNumber* yesNumber = nil;
 	[[OPPersistentObjectContext defaultContext] close];
 }
 
-- (void) stop: (id) sender
+- (void)stop:(id)sender
 {
 	[[OPPersistentObjectContext defaultContext] close];
-	[super stop: sender];
+	[super stop:sender];
 }
 
 - (IBAction)getNewMailInAllAccounts:(id)sender

@@ -21,6 +21,7 @@
 #import <Foundation/NSDebug.h>
 #import "GIFulltextIndex.h"
 #import "NSArray+Extensions.h"
+#import "GIUserDefaultsKeys.h"
 
 NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotification";
 
@@ -591,11 +592,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[[[OPPersistentObjectContext defaultContext] databaseConnection] performCommand: command];
 }
 
-- (unsigned) sendStatus
+- (unsigned)sendStatus
 {
-	[self willAccessValueForKey: @"sendStatus"];
-	id result = [self primitiveValueForKey: @"sendStatus"];
-	[self didAccessValueForKey: @"sendStatus"];	
+	[self willAccessValueForKey:@"sendStatus"];
+	id result = [self primitiveValueForKey:@"sendStatus"];
+	[self didAccessValueForKey:@"sendStatus"];	
 	unsigned intResult = [result intValue];
 	//NSLog(@"SendStatus of %@ is %u", self, result);
 	NSAssert2(intResult<=OPSendStatusSending, @"Illegal send status of %@: %@ detected.", self, result);
@@ -603,15 +604,68 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return intResult;
 }
 
-- (void) setSendStatus: (unsigned) newStatus
+- (void)setSendStatus:(unsigned)newStatus
 {
 	NSParameterAssert(newStatus<=OPSendStatusSending);
-	[self willChangeValueForKey: @"sendStatus"];
+	[self willChangeValueForKey:@"sendStatus"];
 	[self setPrimitiveValue: newStatus == 0 ? nil : [NSNumber numberWithInt: newStatus] forKey: @"sendStatus"];
-	[self didChangeValueForKey: @"sendStatus"];
+	[self didChangeValueForKey:@"sendStatus"];
 	//NSLog(@"SendStatus of %@ changed to %u", self, newStatus);
 }
 
++ (NSMutableDictionary *)earliestSendTimes
+{
+	static NSMutableDictionary *earliestSendTimes = nil;
+	
+	if (!earliestSendTimes)
+	{
+		earliestSendTimes = [[[NSUserDefaults standardUserDefaults] objectForKey:EarliestSendTimes] mutableCopy];
+		if (!earliestSendTimes) earliestSendTimes = [[NSMutableDictionary alloc] init];
+	}
+	
+	return earliestSendTimes;
+}
+
++ (void)repairEarliestSendTimes
+{
+	NSMutableDictionary *earliestSendTimes = [self earliestSendTimes];
+	NSEnumerator *enumerator = [earliestSendTimes keyEnumerator];
+	NSString *objectURL;
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+	NSMutableArray *badKeys = [NSMutableArray array];
+	
+	while (objectURL = [enumerator nextObject])
+	{
+		if (![[context objectWithURLString:objectURL] resolveFault])
+		{
+			[badKeys addObject:objectURL];
+		}
+	}
+	
+	[earliestSendTimes removeObjectsForKeys:badKeys];
+	[[NSUserDefaults standardUserDefaults] setObject:earliestSendTimes forKey:EarliestSendTimes];
+}
+
+- (NSDate *)earliestSendTime
+{
+	return [[[self class] earliestSendTimes] objectForKey:[self objectURLString]];
+}
+
+- (void)setEarliestSendTime:(NSDate *)aDate
+{
+	NSMutableDictionary *earliestSendTimes = [[self class] earliestSendTimes];
+	
+	if (aDate)
+	{
+		[earliestSendTimes setObject:aDate forKey:[self objectURLString]];
+	}
+	else
+	{
+		[earliestSendTimes removeObjectForKey:[self objectURLString]];
+	}
+	
+	[[NSUserDefaults standardUserDefaults] setObject:earliestSendTimes forKey:EarliestSendTimes];
+}
 
 - (void) addFlags: (unsigned) someFlags
 {

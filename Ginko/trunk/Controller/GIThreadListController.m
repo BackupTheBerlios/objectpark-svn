@@ -1181,32 +1181,42 @@ static BOOL isThreadItem(id item)
     return NO;        
 }
 
-- (IBAction) showNextMessage:(id)sender 
+- (IBAction)showNextMessage:(id)sender 
 {
-	if ([self isThreadlistShownCurrently]) {
+	if ([self isThreadlistShownCurrently]) 
+	{
 		// Thread list is showing	
 		NSLog(@"Should show next message!");
 		NSBeep();
-	} else if ([self isMessageShownCurrently]) {
+	} 
+	else if ([self isMessageShownCurrently]) 
+	{
 		// Message view is showing
-		NSArray* messages = [displayedThread messagesByTree];
-		GIMessage* messageFound = nil;
+		NSArray *messages = [displayedThread messagesByTree];
+		GIMessage *messageFound = nil;
 
-		if ([messages count]>1) {
+		if ([messages count] > 1) 
+		{
 			unsigned displayedMessageIndex = [messages indexOfObject: displayedMessage];
 			unsigned index = displayedMessageIndex;
 			// Find the next unread message in current thread:
-			while (displayedMessageIndex != (index = (index + 1) % [messages count])) {
-				GIMessage* message = [messages objectAtIndex: index];
-				if (!([message flags] & OPSeenStatus)) {
+			while (displayedMessageIndex != (index = (index + 1) % [messages count])) 
+			{
+				GIMessage *message = [messages objectAtIndex:index];
+				if (!([message flags] & OPSeenStatus)) 
+				{
 					messageFound = message;
 					break;
 				}
 			}
 		}
-		if (messageFound) {
+		
+		if (messageFound) 
+		{
 			[self setDisplayedMessage: messageFound thread: displayedThread];
-		} else {
+		} 
+		else 
+		{
 			NSLog(@"Should show next thread !");
 			NSBeep();
 		}
@@ -2239,14 +2249,12 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     return YES;
 }
 
-- (void) textView: (NSTextView*) textView spaceKeyPressedWithModifierFlags: (int) modifierFlags
+- (void)textView:(NSTextView *)textView spaceKeyPressedWithModifierFlags:(int)modifierFlags
 {
-    if (NSDebugEnabled) NSLog(@"spaceKeyPressedWithModifierFlags");
-
-    GIMessage* result = nil;
-    GIMessage* candidate;
+    GIMessage *result = nil;
+    GIMessage *candidate;
     
-    NSArray* orderedMessages = [[self displayedThread] messagesByTree];
+    NSArray *orderedMessages = [[self displayedThread] messagesByTree];
     int orderedMessageCount = [orderedMessages count];
     int iStart = [orderedMessages indexOfObject: [self displayedMessage]];
     int i = (iStart+1) % orderedMessageCount;

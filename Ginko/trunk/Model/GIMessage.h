@@ -69,14 +69,16 @@
 - (unsigned) numberOfReferences;
 - (void) flushNumberOfReferencesCache;
 
-
 - (unsigned) flags;
 - (BOOL) hasFlags: (unsigned) someFlags;
 - (void) addFlags: (unsigned) someFlags;
 - (void) removeFlags: (unsigned) someFlags;
 
-- (unsigned) sendStatus;
-- (void) setSendStatus: (unsigned) newStatus;
+- (unsigned)sendStatus;
+- (void)setSendStatus:(unsigned)newStatus;
+- (NSDate *)earliestSendTime;
+- (void)setEarliestSendTime:(NSDate *)aDate;
++ (void)repairEarliestSendTimes;
 
 - (NSString*) flagsString; // use only for export
 - (void) addFlagsFromString: (NSString*) flagsString; // use only for import

@@ -1096,6 +1096,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return [NSCalendarDate dateWithYear:year month:month day:day hour:thh minute:tmm second:tss timeZone:timezone];
 }
 
+#ifdef _0
 - (NSCalendarDate*) slowDateFromRFC2822String
 /*"
 Attempts to parse a date according to the rules in RFC 2822. However, some mailers don't follow that format as specified, so dateFromRFC2822String tries to guess correctly in such cases. Date is a string containing an RFC 2822 date, such as 'Mon, 20 Nov 1995 19:12:08 -0500'. If it succeeds in parsing the date, dateFromRFC2822String returns a NSDate. nil otherwise.
@@ -1361,6 +1362,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     // calculate date
     return [NSCalendarDate dateWithYear:year month:month day:day hour:thh minute:tmm second:tss timeZone:timezone];
 }
+#endif
 
 - (NSString*) stringByNormalizingWhitespaces
 {

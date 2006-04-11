@@ -28,6 +28,7 @@ extern NSString *AutomaticActivityPanelEnabled;
 extern NSString *FulltextIndexChangeCount;
 extern NSString *SearchHitLimit;
 extern NSString *JunkReplySubjectPrefixes;
+extern NSString *EarliestSendTimes;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();
