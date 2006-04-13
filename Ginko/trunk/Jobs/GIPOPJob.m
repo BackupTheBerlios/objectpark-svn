@@ -26,8 +26,8 @@
 {
     int days = [account leaveOnServerDuration];
 	
-    if (days == 0) return [NSDate distantPast];
-    if (days == -1) return [NSDate distantFuture];
+    if (days == -1) return [NSDate distantPast];
+    if (days == 0) return [NSDate distantFuture];
     
     return [NSDate dateWithTimeIntervalSinceNow:days * -86400]; // 86400 = seconds per day
 }
