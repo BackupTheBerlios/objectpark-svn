@@ -21,6 +21,17 @@
 // Socket timeout (60 secs)
 #define TIMEOUT 60
 
+- (NSDate *)deletionDate
+/*" Calculates the date for mail deletion. Mails older than this date wil be deleted. "*/
+{
+    int days = [account leaveOnServerDuration];
+	
+    if (days == 0) return [NSDate distantPast];
+    if (days == -1) return [NSDate distantFuture];
+    
+    return [NSDate dateWithTimeIntervalSinceNow:days * -86400]; // 86400 = seconds per day
+}
+
 - (void)retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
 /*" Retrieves using delegate for providing password. "*/
 {
@@ -100,9 +111,12 @@
                 [OPJobs setResult:[mboxFile path]];
                 
                 // cleaning up maildrop:
-                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
-                
-                [pop3session cleanUp];
+				if (![[self deletionDate] isEqualTo:[NSDate distantFuture]])
+				{
+					[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+					
+					[pop3session cleanUp];
+				}
             }
             @catch (NSException *localException)
             {
@@ -170,29 +184,32 @@
 /*" Starts a background job for retrieving messages from the given POP account anAccount. One account can only be 'popped' by at most one pop job at a time. "*/
 {
     NSParameterAssert([anAccount isPOPAccount]);
-    
-    NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
-    
-    [jobArguments setObject:anAccount forKey:@"account"];
-    
-    [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) argument:jobArguments synchronizedObject:[anAccount incomingServerName]];
+ 
+	if ([[OPJobs runningJobsWithSynchronizedObject:[anAccount incomingServerName]] count] == 0)
+	{
+		NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+		
+		[jobArguments setObject:anAccount forKey:@"account"];
+		
+		[OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) argument:jobArguments synchronizedObject:[anAccount incomingServerName]];
+	}
 }
 
 /******** POP3 delegate methods **********/
 
 /*" required "*/
-- (NSString*) usernameForPOP3Session: (OPPOP3Session*) aSession
+- (NSString *)usernameForPOP3Session:(OPPOP3Session *)aSession
 {
-    return [account valueForKey: @"incomingUsername"];
+    return [account valueForKey:@"incomingUsername"];
 }
 
-- (NSString*) passwordForPOP3Session: (OPPOP3Session*) aSession
+- (NSString *)passwordForPOP3Session:(OPPOP3Session *)aSession
 {
-    NSString* password = [account incomingPassword];
+    NSString *password = [account incomingPassword];
     
-    if (![password length]) {
-        password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount: account
-																forIncomingPassword: YES];
+    if (![password length]) 
+	{
+        password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:YES];
     }
     return password;
 }
@@ -228,19 +245,9 @@
     return YES;
 }
 
-- (NSDate *)deletionDate
-/*" Calculates the date for mail deletion. Mails older than this date wil be deleted. "*/
-{
-    int days = [account retrieveMessageInterval];
-        
-    if (days == 0) return [NSDate distantPast];
-    if (days == -1) return [NSDate distantFuture];
-    
-    return [NSDate dateWithTimeIntervalSinceNow:days * -86400]; // 86400 = seconds per day
-}
-
 - (BOOL)shouldDeleteMessageWithMessageId:(NSString *)messageId date:(NSDate *)messageDate size:(long)size inPOP3Session:(OPPOP3Session *)aSession
 {
+	NSLog(@"cleanup: %@", messageId);
     return [messageDate compare:[self deletionDate]] != NSOrderedDescending; /* date <= tooOldDate */
 }
 

@@ -296,6 +296,7 @@ NSNumber* yesNumber = nil;
     [self applicationDidBecomeActive:aNotification];
     [OPJobs setMaxThreads:4];
     [self startFulltextIndexingJobIfNeeded:self];
+	[GIAccount resetAccountRetrieveAndSendTimers];
 }
 
 - (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
@@ -425,11 +426,14 @@ NSNumber* yesNumber = nil;
 
 - (IBAction)getNewMailInAllAccounts:(id)sender
 {
-    NSEnumerator* enumerator = [[GIAccount allObjects] objectEnumerator];
-    GIAccount* account;
+    NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
+    GIAccount *account;
     
-    while (account = [enumerator nextObject]) {
-        if ([account isEnabled]) [GIPOPJob retrieveMessagesFromPOPAccount:account];
+	[GIAccount resetAccountRetrieveAndSendTimers];
+	
+    while (account = [enumerator nextObject]) 
+	{
+		[account receive];
     }
 }
 

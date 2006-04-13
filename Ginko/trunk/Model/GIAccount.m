@@ -11,6 +11,7 @@
 #import <Security/Security.h>
 #import <Foundation/NSDebug.h>
 #import "NSString+Extensions.h"
+#import "GIPOPJob.h"
 
 @implementation GIAccount
 
@@ -648,5 +649,53 @@
     return (type == POP3) || (type == POP3S);
 }
 
+
+@end
+
+@implementation GIAccount (SendingAndReceiving)
+
++ (void)resetAccountRetrieveAndSendTimers
+{
+	static NSMutableArray *timers = nil;
+	
+	if (!timers)
+	{
+		timers = [[NSMutableArray alloc] init];
+	}
+	else
+	{
+		[timers makeObjectsPerformSelector:@selector(invalidate)];
+		[timers removeAllObjects];
+	}
+	
+	NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
+	GIAccount *account;
+	
+	while (account = [enumerator nextObject])
+	{
+		NSTimeInterval interval = [[account valueForKey:@"retrieveMessageInterval"] floatValue] * 60.0;
+		
+		if (interval > 0.1)
+		{
+			NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:interval target:account selector:@selector(sendAndReceiveTimerFired:) userInfo:nil repeats:YES];
+			[timers addObject:timer];
+		}
+	}
+}
+
+- (void)send
+/*" Starts an asynchronous send job for the receiver. "*/
+{
+}
+
+- (void)receive
+{
+	if ([self isEnabled] && [self isPOPAccount]) [GIPOPJob retrieveMessagesFromPOPAccount:self];
+}
+
+- (void)sendAndReceiveTimerFired:(NSTimer *)aTimer
+{
+	[self receive];
+}
 
 @end

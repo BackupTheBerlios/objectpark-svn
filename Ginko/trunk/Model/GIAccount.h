@@ -45,14 +45,13 @@ enum LeaveOnServerDuration
 /*" Designated initializer "*/
 - (id)init;
 
-	/*" Class methods "*/
-
+/*" Class methods "*/
 + (int)defaultPortForIncomingServerType:(int)serverType;
 + (int)defaultPortForOutgoingServerType:(int)serverType;
 
-	/*" Accessors "*/
-- (NSString* )name;
-- (void)setName:(NSString* )aString;
+/*" Accessors "*/
+- (NSString *)name;
+- (void)setName:(NSString *)aString;
 
 - (BOOL)isEnabled;
 - (void)setIsEnabled:(BOOL)aBool;
@@ -60,8 +59,8 @@ enum LeaveOnServerDuration
 - (int)incomingServerType;
 - (void)setIncomingServerType:(int)aType;
 
-- (NSString* )incomingServerName;
-- (void)setIncomingServerName:(NSString* )aName;
+- (NSString *)incomingServerName;
+- (void)setIncomingServerName:(NSString *)aName;
 
 - (int)incomingServerPort;
 - (void)setIncomingServerPort:(int)aPort;
@@ -72,12 +71,12 @@ enum LeaveOnServerDuration
 - (void)setIncomingAuthenticationMethod:(int)aMethod;
 
 /*
-- (NSString* )incomingUsername;
-- (void)setIncomingUsername:(NSString* )aName;
+- (NSString *)incomingUsername;
+- (void)setIncomingUsername:(NSString *)aName;
 */
 
-- (NSString* )incomingPassword;
-- (void)setIncomingPassword:(NSString* )aPassword;
+- (NSString *)incomingPassword;
+- (void)setIncomingPassword:(NSString *)aPassword;
 
 - (int)retrieveMessageInterval;
 - (void) setRetrieveMessageInterval:(int)minutes;
@@ -90,8 +89,8 @@ enum LeaveOnServerDuration
 
 - (BOOL)isPOPAccount;
 
-- (NSString* )outgoingServerName;
-- (void)setOutgoingServerName:(NSString* )aName;
+- (NSString *)outgoingServerName;
+- (void)setOutgoingServerName:(NSString *)aName;
 
 - (int)outgoingServerPort;
 - (void)setOutgoingServerPort:(int)aPort;
@@ -104,8 +103,8 @@ enum LeaveOnServerDuration
 //- (NSString* )outgoingUsername;
 //- (void)setOutgoingUsername:(NSString* )aName;
 
-- (NSString* )outgoingPassword;
-- (void)setOutgoingPassword:(NSString* )aPassword;
+- (NSString *)outgoingPassword;
+- (void)setOutgoingPassword:(NSString *)aPassword;
 
 - (BOOL)outgoingUsernameNeeded;
 
@@ -113,5 +112,14 @@ enum LeaveOnServerDuration
 - (BOOL)allowAnyRootSSLCertificate;
 - (BOOL)verifySSLCertificateChain;
 - (void)setVerifySSLCertificateChain:(BOOL)value;
+
+@end
+
+/*" Sending and Retrieving "*/
+@interface GIAccount (SendingAndReceiving)
+
++ (void)resetAccountRetrieveAndSendTimers;
+- (void)send;
+- (void)receive;
 
 @end
