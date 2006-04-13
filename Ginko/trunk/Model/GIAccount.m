@@ -698,4 +698,12 @@
 	[self receive];
 }
 
+- (void)didChangeValueForKey:(NSString *)key
+{
+	if ([key isEqualToString:@"retrieveMessageInterval"])
+	{
+		[[self class] resetAccountRetrieveAndSendTimers];
+	}
+}
+
 @end
