@@ -700,6 +700,8 @@
 
 - (void)didChangeValueForKey:(NSString *)key
 {
+	[super didChangeValueForKey:key];
+	
 	if ([key isEqualToString:@"retrieveMessageInterval"])
 	{
 		[[self class] resetAccountRetrieveAndSendTimers];
