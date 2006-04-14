@@ -137,7 +137,7 @@
     }
 }
 
-- (id) initWithMessages:(NSArray*) someMessages andAccount: (GIAccount*) anAccount
+- (id)initWithMessages:(NSArray *)someMessages andAccount:(GIAccount *)anAccount
 {
     self = [super init];
     
@@ -147,7 +147,7 @@
     return self;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [messages release];
     [account release];
@@ -160,15 +160,18 @@
     return @"SMTP send";
 }
 
-+ (void) sendMessages: (NSArray*) someMessages viaSMTPAccount: (GIAccount*) anAccount
++ (void)sendMessages:(NSArray *)someMessages viaSMTPAccount:(GIAccount *)anAccount
 /*" Starts a background job for sending messages someMessages via the given SMTP account anAccount. One account can only be 'smtp'ed by at most one smtp job at a time. "*/
 {
     NSParameterAssert([someMessages count]);
     NSParameterAssert(anAccount != nil);
     
-    NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
-    
-    [OPJobs scheduleJobWithName:[self jobName] target: [[[self alloc] initWithMessages: someMessages andAccount: anAccount] autorelease] selector: @selector(sendMessagesViaSMTPAccountJob:) argument: jobArguments synchronizedObject: [anAccount outgoingServerName]];
+	if ([[OPJobs runningJobsWithSynchronizedObject:[anAccount outgoingServerName]] count] == 0)
+	{
+		NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+		
+		[OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) argument:jobArguments synchronizedObject:[anAccount outgoingServerName]];
+	}
 }
 
 @end
@@ -176,20 +179,23 @@
 @implementation GISMTPJob (SMTPDelegate)
 
 /*" required "*/
-- (NSString*) usernameForSMTP: (OPSMTP*) aSMTP
+- (NSString *)usernameForSMTP:(OPSMTP *)aSMTP
 {
-    if ([account outgoingAuthenticationMethod] == SMTPAuthentication) {
-        return [account valueForKey: @"outgoingUsername"];
+    if ([account outgoingAuthenticationMethod] == SMTPAuthentication) 
+	{
+        return [account valueForKey:@"outgoingUsername"];
     }
     else return nil;
 }
 
-- (NSString*) passwordForSMTP:(OPSMTP *)aSMTP
+- (NSString *)passwordForSMTP:(OPSMTP *)aSMTP
 {
-    if ([account outgoingAuthenticationMethod] == SMTPAuthentication) {
-        NSString* password = [account outgoingPassword];
-		if (![password length]) {
-			password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount: account forIncomingPassword: NO];
+    if ([account outgoingAuthenticationMethod] == SMTPAuthentication) 
+	{
+        NSString *password = [account outgoingPassword];
+		if (![password length]) 
+		{
+			password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:NO];
 		}
 		return password;
     }
@@ -197,14 +203,14 @@
 }
 
 /*" optional "*/
-- (BOOL) useSMTPS: (OPSMTP*) aSMTP
+- (BOOL)useSMTPS:(OPSMTP *)aSMTP
 /*"OPTIONAL.
     Determines if SMTPS should be used instead of SMTP. Default is NO."*/
 {
     return [account outgoingServerType] == SMTPS;
 }
 
-- (BOOL) allowAnyRootCertificateForSMTP: (OPSMTP*) aSMTP
+- (BOOL)allowAnyRootCertificateForSMTP:(OPSMTP *)aSMTP
 /*"OPTIONAL.
     Determines if the root certificate should not be verified (YES) or not (NO).
     If the server uses a self signed certificate and you didn't install the corresponding root certificate
@@ -213,7 +219,7 @@
     return [account allowAnyRootSSLCertificate];
 }
 
-- (BOOL) allowExpiredCertificatesForSMTP: (OPSMTP*) aSMTP
+- (BOOL)allowExpiredCertificatesForSMTP:(OPSMTP *)aSMTP
 /*"OPTIONAL.
     Determines if the SSL handshake should succeed (YES) if the server's certificate has expired, or not (NO).
     Default is NO."*/

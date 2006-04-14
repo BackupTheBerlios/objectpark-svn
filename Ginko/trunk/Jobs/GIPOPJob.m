@@ -101,14 +101,21 @@
                     [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, [theAccount incomingServerName]]]];
                     
                     // putting onto disk:
-                    [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender: nil]];
+                    [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender:nil]];
                     
                     fetchCount++;
                     shouldTerminate = [OPJobs shouldTerminate];
                 }
                 
                 // set result:
-                [OPJobs setResult:[mboxFile path]];
+				if (fetchCount > 0)
+				{
+					[OPJobs setResult:[mboxFile path]];
+				}
+				else
+				{
+					[mboxFile remove];
+				}
                 
                 // cleaning up maildrop:
 				if (![[self deletionDate] isEqualTo:[NSDate distantFuture]])

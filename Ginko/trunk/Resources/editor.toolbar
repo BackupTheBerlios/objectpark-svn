@@ -1,5 +1,5 @@
 {
-    toolbarDefaultItems = (send, queue, NSToolbarSeparatorItem, addressbook, cc, bcc, replyto, );
+    toolbarDefaultItems = (send, queue, NSToolbarSeparatorItem, addressbook, cc, bcc, replyto);
     send = {
         label = "Send Now";
         paletteLabel = "Send Now";
@@ -8,8 +8,8 @@
         imageName = "MailIcon_send";
     };
     queue = {
-        label = "Queue";
-        paletteLabel = "Queue";
+        label = "Send Delayed";
+        paletteLabel = "Send Delayed";
         toolTip = "Queue message for sending later.";
 	action = "queue:";
         imageName = "MailIcon_queue";

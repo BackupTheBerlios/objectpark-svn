@@ -424,19 +424,6 @@ NSNumber* yesNumber = nil;
 	[super stop:sender];
 }
 
-- (IBAction)getNewMailInAllAccounts:(id)sender
-{
-    NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
-    GIAccount *account;
-    
-	[GIAccount resetAccountRetrieveAndSendTimers];
-	
-    while (account = [enumerator nextObject]) 
-	{
-		[account receive];
-    }
-}
-
 - (void)jobFinished:(NSNotification *)aNotification
 {
     if (isTerminating)
@@ -459,10 +446,10 @@ NSNumber* yesNumber = nil;
 {
     OPDebugLog(OPJOBS, OPINFO, @"POPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
+    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
     
-    NSException *exception = [[aNotification userInfo] objectForKey: @"exception"];
+    NSException *exception = [[aNotification userInfo] objectForKey:@"exception"];
     
     if (exception)
     {
@@ -590,44 +577,21 @@ NSNumber* yesNumber = nil;
     [self saveAction:self];
 }
 
-- (void) sendQueuedMessagesWithFlag: (unsigned) flag
-/*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Flag is currently ignored. "*/
+- (IBAction)sendAndReceiveInAllAccounts:(id)sender
+/*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Creates receive jobs for all accounts."*/
 {
-    // iterate over all profiles:
-    NSEnumerator* enumerator = [[GIProfile allObjects] objectEnumerator];
-    GIProfile* profile;
-    
-    while (profile = [enumerator nextObject]) {
-        NSEnumerator* messagesToSendEnumerator = [[profile valueForKey: @"messagesToSend"] objectEnumerator];
-        GIMessage* message;
-        NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
-            
-        while (message = [messagesToSendEnumerator nextObject]) {
-            if ([message sendStatus] == OPSendStatusQueuedReady) {
-				[message setSendStatus: OPSendStatusSending];
-                [messagesQualifyingForSend addObject: message];
-            }
-        }
-        
-		// something to send for the account?
-        if ([messagesQualifyingForSend count]) 
-        {
-            [GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:[profile valueForKey: @"sendAccount"]];
-        }
-    }
+	[GIAccount resetAccountRetrieveAndSendTimers];
+	[[GIAccount allObjects] makeObjectsPerformSelector:@selector(send)];
+	[GIAccount resetAccountRetrieveAndSendTimers];
+	[[GIAccount allObjects] makeObjectsPerformSelector:@selector(receive)];
 }
 
-- (IBAction)sendQueuedMessages: (id) sender
+- (IBAction)showActivityPanel:(id)sender
 {
-    [self sendQueuedMessagesWithFlag: OPSendStatusQueuedReady];
-}
-
-- (IBAction) showActivityPanel: (id) sender
-{
-	NSWindow* aWindow = [[GIActivityPanelController sharedInstance] window];
+	NSWindow *aWindow = [[GIActivityPanelController sharedInstance] window];
 	
 	if ([aWindow isVisible]) [aWindow close];
-	else [aWindow orderFront: nil];
+	else [aWindow orderFront:nil];
 }
 
 - (IBAction)showPhraseBrowser:(id)sender

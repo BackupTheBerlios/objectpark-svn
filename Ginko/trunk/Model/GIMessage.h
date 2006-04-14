@@ -80,10 +80,10 @@
 - (void)setEarliestSendTime:(NSDate *)aDate;
 + (void)repairEarliestSendTimes;
 
-- (NSString*) flagsString; // use only for export
-- (void) addFlagsFromString: (NSString*) flagsString; // use only for import
+- (NSString *)flagsString; // use only for export
+- (void)addFlagsFromString:(NSString *)flagsString; // use only for import
 
-- (NSAttributedString*) contentAsAttributedString;
+- (NSAttributedString *)contentAsAttributedString;
 
 - (GIThread*) thread;
 - (GIThread*) assignThreadUseExisting: (BOOL) useExisting;

@@ -25,69 +25,68 @@ typedef enum
 
 @interface GIMessageEditorController : NSObject 
 {
-    IBOutlet NSWindow* window;
-    IBOutlet OPSizingTextField* toField;
-    IBOutlet OPSizingTextField* subjectField;
-    IBOutlet OPSizingTextField* hiddenTextFieldPrototype; /*" prototype for dynamic text fields "*/
-    IBOutlet NSTextField* hiddenCaptionPrototype;
-    IBOutlet NSPopUpButton* profileButton;
-    IBOutlet GITextView* messageTextView;
-    IBOutlet NSPopUpButton* toFieldOptionsButton;
-    IBOutlet NSButton* profileValidationButton;
+    IBOutlet NSWindow *window;
+    IBOutlet OPSizingTextField *toField;
+    IBOutlet OPSizingTextField *subjectField;
+    IBOutlet OPSizingTextField *hiddenTextFieldPrototype; /*" prototype for dynamic text fields "*/
+    IBOutlet NSTextField *hiddenCaptionPrototype;
+    IBOutlet NSPopUpButton *profileButton;
+    IBOutlet GITextView *messageTextView;
+    IBOutlet NSPopUpButton *toFieldOptionsButton;
+    IBOutlet NSButton *profileValidationButton;
     
-    NSWindowController* windowController;
-    GIProfile* profile;
-    GIMessage* referencedMessage;
-	GIMessage* oldMessage;
-    NSMutableDictionary* headerFields;	/*" Maps header names to header field content values "*/
-    NSMutableAttributedString* content;
+    NSWindowController *windowController;
+    GIProfile *profile;
+    GIMessage *referencedMessage;
+	GIMessage *oldMessage;
+    NSMutableDictionary *headerFields;	/*" Maps header names to header field content values "*/
+    NSMutableAttributedString *content;
     BOOL shouldAppendSignature;
     int type;
     
     // -- Headers --
-    NSMutableDictionary* headerTextFieldsForName;
-    OPSizingTextField* bottomTextField;
+    NSMutableDictionary *headerTextFieldsForName;
+    OPSizingTextField *bottomTextField;
     
     // -- Toolbar --
-    NSArray* toolbarItems;
-    NSArray* defaultIdentifiers;
+    NSArray *toolbarItems;
+    NSArray *defaultIdentifiers;
 }
 
-- (id) initWithMessage: (GIMessage*) aMessage;
-- (id) initNewMessageWithProfile: (GIProfile*) aProfile;
-- (id) initReplyTo: (GIMessage*) aMessage all: (BOOL) toAll profile: (GIProfile*) aProfile;
-- (id) initFollowupTo: (GIMessage*) aMessage profile: (GIProfile*) aProfile;
-- (id) initForward: (GIMessage*) aMessage profile: (GIProfile*) aProfile;
+- (id)initWithMessage:(GIMessage *)aMessage;
+- (id)initNewMessageWithProfile:(GIProfile *)aProfile;
+- (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile;
+- (id)initFollowupTo:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
+- (id)initForward:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
 
 - (BOOL)validateSelector:(SEL)aSelector;
 - (GIProfile *)profile;
 
-- (IBAction) addCc: (id) sender;
-- (IBAction) addBcc: (id) sender;
-- (IBAction) addReplyTo: (id) sender;
-- (IBAction) replySender: (id) sender;
-- (IBAction) replyAll: (id) sender;
-- (IBAction) followup: (id) sender;
-- (IBAction) saveMessage: (id) sender;
+- (IBAction)addCc:(id)sender;
+- (IBAction)addBcc:(id)sender;
+- (IBAction)addReplyTo:(id)sender;
+- (IBAction)replySender:(id)sender;
+- (IBAction)replyAll:(id)sender;
+- (IBAction)followup:(id)sender;
+- (IBAction)saveMessage:(id)sender;
 
 @end
 
 @interface GIMessageEditorController (Headers)
 
-- (void) awakeHeaders;
-- (void) updateHeaders;
-- (BOOL) hasHeaderTextFieldWithFieldName: (NSString*) aFieldName;
-- (OPSizingTextField*) headerTextFieldWithFieldName: (NSString*) aFieldName;
-- (IBAction) switchProfile: (id) sender;
-- (void) takeValuesFromHeaderFields;
-- (void) validateSelectedProfile;
-
+- (void)awakeHeaders;
+- (void)updateHeaders;
+- (BOOL)hasHeaderTextFieldWithFieldName:(NSString *)aFieldName;
+- (OPSizingTextField *)headerTextFieldWithFieldName:(NSString *)aFieldName;
+- (IBAction)switchProfile:(id)sender;
+- (void)takeValuesFromHeaderFields;
+- (void)validateSelectedProfile;
 
 @end
 
 @interface GIMessageEditorController (ToolbarDelegate)
 
-- (void) awakeToolbar;
-- (void) deallocToolbar;
+- (void)awakeToolbar;
+- (void)deallocToolbar;
 
 @end

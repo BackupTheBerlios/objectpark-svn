@@ -272,7 +272,7 @@ NSString *OPMBoxException = @"OPMBoxException";
     return result;
 }
 
-- (void) appendMBoxData: (NSData*) mboxData
+- (void)appendMBoxData:(NSData *)mboxData
 {
     @synchronized(self) {
         FILE* file = [self mboxFile];
@@ -285,6 +285,17 @@ NSString *OPMBoxException = @"OPMBoxException";
         
         fflush(file);
     }
+}
+
+- (void)remove
+{
+    if (_mboxFile) 
+	{ 
+		fclose(_mboxFile);    
+		_mboxFile = NULL;
+	}
+	
+	[[NSFileManager defaultManager] removeFileAtPath:_path handler:NULL];
 }
 
 - (void) dealloc

@@ -295,7 +295,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 // actions
 - (IBAction)send:(id)sender
 {
-	NSString* emailAddress = [[self profile] valueForKey:@"mailAddress"];
+	NSString *emailAddress = [[self profile] valueForKey:@"mailAddress"];
 	
     if (emailAddress && ([[toField stringValue] rangeOfString:emailAddress].location != NSNotFound)) {
         NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
@@ -312,11 +312,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         return;
     }
     
-    //GIMessage *message = 
-    [self checkpointMessageWithStatus: OPSendStatusQueuedReady];
-#warning start message send job here
-
-    [window performClose: self];
+    [self checkpointMessageWithStatus:OPSendStatusQueuedReady];
+	[[profile valueForKey:@"sendAccount"] send];
+	
+    [window performClose:self];
+    [window close];
 }
 
 - (IBAction)queue:(id)sender
@@ -331,39 +331,47 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                           self,   // delegate
                           @selector(sendSheetDidEnd:returnCode:contextInfo:),
                           NULL,   // didDismissSelector,
-                          [[NSNumber alloc] initWithBool: NO],   // contextinfo
+                          [[NSNumber alloc] initWithBool:NO],   // contextinfo
                           NSLocalizedString(@"The To: field contains one of your own email addresses. You can now send the message or edit it and remove the address.", @"sendSoliloquySheet")
                           );
         return;
     }
     
-    [self checkpointMessageWithStatus: OPSendStatusQueuedReady];
-    [window performClose: self];
+    GIMessage *message = [self checkpointMessageWithStatus:OPSendStatusQueuedReady];
+	
+	// Send delay:
+	NSNumber *sendDelay = [profile valueForKey:@"sendDelay"];
+	if (sendDelay && ([sendDelay floatValue] > 0.1))
+	{
+		[message setEarliestSendTime:[NSDate dateWithTimeIntervalSinceNow:[sendDelay floatValue] * 60.0]];
+	}
+	
+    [window performClose:self];
     [window close];
 }
 
 - (IBAction)saveMessage:(id)sender
 {
-    [self checkpointMessageWithStatus: OPSendStatusDraft];
+    [self checkpointMessageWithStatus:OPSendStatusDraft];
 }
 
 - (IBAction)addCc:(id)sender
 {
-    [window makeFirstResponder: [self headerTextFieldWithFieldName: @"Cc"]];
+    [window makeFirstResponder:[self headerTextFieldWithFieldName:@"Cc"]];
 }
 
 - (IBAction)addBcc:(id)sender
 {
-    [window makeFirstResponder: [self headerTextFieldWithFieldName: @"Bcc"]];
+    [window makeFirstResponder:[self headerTextFieldWithFieldName:@"Bcc"]];
 }
 
 - (IBAction)addReplyTo:(id)sender
 {
     NSTextField *replyToField;
     
-    replyToField = [self headerTextFieldWithFieldName: @"Reply-To"];
+    replyToField = [self headerTextFieldWithFieldName:@"Reply-To"];
 
-    [window makeFirstResponder: replyToField];
+    [window makeFirstResponder:replyToField];
 }
 
 - (IBAction)replySender:(id)sender
@@ -477,17 +485,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if (aSelector == @selector(addCc:)) 
     {
-        return ![self hasHeaderTextFieldWithFieldName: @"Cc"];
+        return ![self hasHeaderTextFieldWithFieldName:@"Cc"];
     }
     
     if (aSelector == @selector(addBcc:)) 
     {
-        return ![self hasHeaderTextFieldWithFieldName: @"Bcc"];
+        return ![self hasHeaderTextFieldWithFieldName:@"Bcc"];
     }
     
     if (aSelector == @selector(addReplyTo:)) 
     {
-        return ![self hasHeaderTextFieldWithFieldName: @"Reply-To"];
+        return ![self hasHeaderTextFieldWithFieldName:@"Reply-To"];
     }
     
     if (aSelector == @selector(replySender:)) 
@@ -508,7 +516,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     /*
     if (aSelector == @selector(pasteAsQuotation:)) {
-        return [[[NSPasteboard generalPasteboard] availableTypeFromArray: [NSArray arrayWithObjects:NSRTFDPboardType, NSRTFPboardType, NSStringPboardType, nil]] length] != 0;
+        return [[[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSRTFDPboardType, NSRTFPboardType, NSStringPboardType, nil]] length] != 0;
     }
     */
     return YES;
@@ -516,7 +524,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    return [self validateSelector: [menuItem action]];
+    return [self validateSelector:[menuItem action]];
 }
 
 - (void)windowWillClose:(NSNotification *)notification 
@@ -548,7 +556,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             // dismiss
 			// unmark message as blocked for sending
 			if ([oldMessage sendStatus] == OPSendStatusQueuedBlocked) {
-				[oldMessage setSendStatus: OPSendStatusQueuedReady]; 
+				[oldMessage setSendStatus:OPSendStatusQueuedReady]; 
 			}
             
             [window setDocumentEdited:NO];
@@ -606,7 +614,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     id sender = [aNotification object];
     
-    [window setDocumentEdited: YES];
+    [window setDocumentEdited:YES];
     if ((sender == toField) || (sender == subjectField))
     {
         [self updateWindowTitle];
@@ -627,9 +635,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     static NSString* versionString = nil;
     
     if (! versionString) {
-        NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
+        NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
         // We replace spaces in the version number to make the version string compliant with RFC2616 and draft-ietf-usefor-article-09.txt (internet draft for news article format)
-        [bundleVersion replaceOccurrencesOfString: @" " withString: @"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
+        [bundleVersion replaceOccurrencesOfString:@" " withString:@"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
         
         versionString = [[NSString alloc] initWithFormat:GINKOVERSION, bundleVersion];
         
@@ -651,20 +659,24 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self takeValuesFromHeaderFields];
     
     // create from header:
-	if ([[theProfile valueForKey: @"realname"] length]) {
-		from = [NSString stringWithFormat: @"%@ <%@>", [theProfile valueForKey:@"realname"], [theProfile valueForKey:@"mailAddress"]];
-	} else {
+	if ([[theProfile valueForKey:@"realname"] length]) 
+	{
+		from = [NSString stringWithFormat:@"%@ <%@>", [theProfile valueForKey:@"realname"], [theProfile valueForKey:@"mailAddress"]];
+	} 
+	else 
+	{
 		from = [theProfile valueForKey:@"mailAddress"];
 	}
-	[headerFields setObject: from forKey: @"From"];
+	[headerFields setObject:from forKey:@"From"];
     
     // organization:
-	NSString* orga = [theProfile valueForKey: @"organization"];
-    if ((! [result bodyForHeaderField: @"Organization"]) && ([orga length])) {
-        [headerFields setObject: orga forKey: @"Organization"];
+	NSString *orga = [theProfile valueForKey:@"organization"];
+    if ((! [result bodyForHeaderField:@"Organization"]) && ([orga length])) 
+	{
+        [headerFields setObject:orga forKey:@"Organization"];
     }
     
-    result = [OPInternetMessage messageWithAttributedStringContent: [messageTextView textStorage]];
+    result = [OPInternetMessage messageWithAttributedStringContent:[messageTextView textStorage]];
     
     enumerator = [headerFields keyEnumerator];
     while(headerField = [enumerator nextObject])
@@ -676,15 +688,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         // by messageWithAttributedStringContent:)
         if (! [result bodyForHeaderField:headerField])
         {
-            fieldCoder = [[EDTextFieldCoder allocWithZone: [self zone]] initWithText: [[headerFields objectForKey:headerField] stringByRemovingLinebreaks]];
+            fieldCoder = [[EDTextFieldCoder allocWithZone:[self zone]] initWithText:[[headerFields objectForKey:headerField] stringByRemovingLinebreaks]];
             
             fieldBody = [fieldCoder fieldBody];
             
             [fieldCoder release];
             
             // sanity check
-            if ( ([headerField caseInsensitiveCompare: @"Cc"] == NSOrderedSame)
-                 || ([headerField caseInsensitiveCompare: @"Bcc"] == NSOrderedSame) )
+            if ( ([headerField caseInsensitiveCompare:@"Cc"] == NSOrderedSame)
+                 || ([headerField caseInsensitiveCompare:@"Bcc"] == NSOrderedSame) )
             {
                 if (! [[fieldBody stringByRemovingSurroundingWhitespace] length])
                     continue;
@@ -695,42 +707,45 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
     
     // date
-    //    [message setBody: [[NSCalendarDate calendarDate] descriptionWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z (%Z)"] forHeaderField:@"Date"];
-    [result setDate: [NSCalendarDate calendarDate]];
+    //    [message setBody:[[NSCalendarDate calendarDate] descriptionWithCalendarFormat:@"%a, %d %b %Y %H:%M:%S %z (%Z)"] forHeaderField:@"Date"];
+    [result setDate:[NSCalendarDate calendarDate]];
     
     // message id
-    [result generateMessageIdWithSuffix: [NSString stringWithFormat: @"@%@", [[theProfile valueForKey: @"sendAccount"] outgoingServerName]]];
+    [result generateMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", [[theProfile valueForKey:@"sendAccount"] outgoingServerName]]];
     
     // mailer info
 /*     if([result isUsenetMessage])
      {
-         [result setBody: [self versionString] forHeaderField: @"User-Agent"];
+         [result setBody:[self versionString] forHeaderField:@"User-Agent"];
      }
      else
      {*/
-	[result setBody: [self versionString] forHeaderField: @"X-Mailer"];
+	[result setBody:[self versionString] forHeaderField:@"X-Mailer"];
 /*     }*/
     
     return result;
 }
 
-- (void) addReferenceToMessage: (GIMessage*) aMessage
+- (void)addReferenceToMessage:(GIMessage *)aMessage
 /*"Adds a "references:" or "In-Reply-To:" header to the message to create."*/
 {
-    if ([aMessage isUsenetMessage]) {
-		
-        NSMutableString* references = [[[aMessage internetMessage] bodyForHeaderField: @"references"] mutableCopy];
+    if ([aMessage isUsenetMessage]) 
+	{
+        NSMutableString *references = [[[aMessage internetMessage] bodyForHeaderField:@"references"] mutableCopy];
         
 		// Build References: header line:
-        if (! references) {
+        if (! references) 
+		{
             references = [[NSMutableString alloc] init];
         }
         
-        if ([references length] == 0) {
-            NSString* inReplyTo = [[aMessage internetMessage] bodyForHeaderField: @"In-Reply-To"];
+        if ([references length] == 0) 
+		{
+            NSString *inReplyTo = [[aMessage internetMessage] bodyForHeaderField:@"In-Reply-To"];
             
-            if (inReplyTo) {
-                [references setString: inReplyTo];
+            if (inReplyTo) 
+			{
+                [references setString:inReplyTo];
             }
         }
         
@@ -742,38 +757,39 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
             // draft which allows CFWS insteac of a space between the mids
             int skipped = 0;
             int charactersToRemove = [references length] + [[[aMessage internetMessage] messageId] length] + 13 - 998;
-            NSString* referenceToSkip;
-			NSString* reference;
-            NSArray* referencesArray = [references componentsSeparatedByString: @" "];
+            NSString *referenceToSkip;
+			NSString *reference;
+            NSArray *referencesArray = [references componentsSeparatedByString:@" "];
             
-            if ([referencesArray count]) {
+            if ([referencesArray count]) 
+			{
                 NSEnumerator *referencesList = [referencesArray objectEnumerator];
                 
-                [references setString: [referencesList nextObject]];
+                [references setString:[referencesList nextObject]];
                 
                 while ((skipped < charactersToRemove) && (referenceToSkip = [referencesList nextObject])) {
                     skipped += [referenceToSkip length] + 1;
                 }
                 while (reference = [referencesList nextObject]) {
-                    [references appendString: @" "];
-                    [references appendString: reference];
+                    [references appendString:@" "];
+                    [references appendString:reference];
                 }
             }
         }
         
         if ([references length])
         {
-            [references appendString: @" "];
+            [references appendString:@" "];
         }
         
         if ([[[aMessage internetMessage] messageId] length])
         {
-            [references appendString: [[aMessage internetMessage] messageId]];
+            [references appendString:[[aMessage internetMessage] messageId]];
         }
         
         if ([references length])
         {
-            [headerFields setObject: references forKey: @"References"];
+            [headerFields setObject:references forKey:@"References"];
         }
         
         [references release];
@@ -781,16 +797,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if ([aMessage isEMailMessage])  // Make In-Reply-To: header line
     {
-        [headerFields setObject: [[aMessage internetMessage] messageId] forKey: @"In-Reply-To"];
+        [headerFields setObject:[[aMessage internetMessage] messageId] forKey:@"In-Reply-To"];
     }
 }
 
-- (void) appendQuotePasteboardContents
+- (void)appendQuotePasteboardContents
 /*"Appends the content of the QuotePasteboard to the message text."*/
 {
     NSPasteboard *quotePasteboard;
     
-    quotePasteboard = [NSPasteboard pasteboardWithName: @"QuotePasteboard"];
+    quotePasteboard = [NSPasteboard pasteboardWithName:@"QuotePasteboard"];
     
     if (quotePasteboard)
     {
@@ -882,95 +898,111 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return result;
 }
 
-- (void) switchToReplyToAll: (GIMessage*) replyMessage
+- (void)switchToReplyToAll:(GIMessage *)replyMessage
 {
     // Build the new to: header line. This includes the original to: content
     // sans myself plus the sender's ReplyTo:
     NSString *oldTo;
     NSMutableString* toAllButMe;
     
-    oldTo = [NSString stringWithFormat: @"%@, %@", [[replyMessage internetMessage] replyToWithFallback: YES], makeStringIfNil([[replyMessage internetMessage] toWithFallback: YES])];
+    oldTo = [NSString stringWithFormat:@"%@, %@", [[replyMessage internetMessage] replyToWithFallback:YES], makeStringIfNil([[replyMessage internetMessage] toWithFallback:YES])];
     
     // Try to remove myself from list (if included):
     toAllButMe = [self stringByRemovingOwnAddressesFromString:oldTo];
     
     // Write the new to: header:
-    [headerFields setObject: toAllButMe forKey: @"To"];
+    [headerFields setObject:toAllButMe forKey:@"To"];
     
     // Build the new cc: header line. This includes the original cc: content
     // sans myself:
-    NSString *oldCC = [[replyMessage internetMessage] ccWithFallback: YES];
+    NSString *oldCC = [[replyMessage internetMessage] ccWithFallback:YES];
     
     // Try to remove myself from list (if included):
-    NSMutableString* ccAllButMe = [self stringByRemovingOwnAddressesFromString: oldCC];
+    NSMutableString *ccAllButMe = [self stringByRemovingOwnAddressesFromString:oldCC];
     
-    if ([ccAllButMe length]) {
-        [headerFields setObject: ccAllButMe forKey: @"Cc"];
-    } else {
-        [headerFields setObject: @"" forKey:@"Cc"];
+    if ([ccAllButMe length]) 
+	{
+        [headerFields setObject:ccAllButMe forKey:@"Cc"];
+    } 
+	else 
+	{
+        [headerFields setObject:@"" forKey:@"Cc"];
     }
     
     type = MessageTypeReplyToAll;
 }
 
-- (void) switchToReplyToSender: (GIMessage*) replyMessage
+- (void)switchToReplyToSender:(GIMessage *)replyMessage
 {
-    // If we are replying to our own message, we probably want is to send a message to the recients (to header)
-    NSString* preSetTo = [[replyMessage internetMessage] replyToWithFallback: YES];
+    // If trying to reply to own message, probably want is to send a message to the recients (to header)
+    NSString *preSetTo = [[replyMessage internetMessage] replyToWithFallback:YES];
     
-    if ([replyMessage hasFlags: OPIsFromMeStatus])  {
-        NSString* preSetCc = [[replyMessage internetMessage] ccWithFallback: YES];
+    if ([replyMessage hasFlags:OPIsFromMeStatus])  
+	{
+        NSString *preSetCc = [[replyMessage internetMessage] ccWithFallback:YES];
         
-        if ([preSetCc length]) {
-            [headerFields setObject: preSetCc forKey: @"Cc"];
-        } else {
-            [headerFields setObject: @"" forKey: @"Cc"];
+        if ([preSetCc length]) 
+		{
+            [headerFields setObject:preSetCc forKey:@"Cc"];
+        } 
+		else 
+		{
+            [headerFields setObject:@"" forKey:@"Cc"];
         }
         
-        preSetCc = [[replyMessage internetMessage] bccWithFallback: YES];
+        preSetCc = [[replyMessage internetMessage] bccWithFallback:YES];
         
-        if ([preSetCc length]) {
-            [headerFields setObject: preSetCc forKey: @"Bcc"];
-        } else {
-            [headerFields setObject: @"" forKey: @"Bcc"];
+        if ([preSetCc length]) 
+		{
+            [headerFields setObject:preSetCc forKey:@"Bcc"];
+        } 
+		else 
+		{
+            [headerFields setObject:@"" forKey:@"Bcc"];
         }
         
-        preSetTo = [[replyMessage internetMessage] toWithFallback: YES];
-    } else {
-        NSString* Cc = [[self profile] valueForKey: @"defaultCc"];
+        preSetTo = [[replyMessage internetMessage] toWithFallback:YES];
+    } 
+	else 
+	{
+        NSString *Cc = [[self profile] valueForKey:@"defaultCc"];
         if (![Cc length]) Cc = @"";
-        NSString* Bcc = [[self profile] valueForKey: @"defaultBcc"];
+        NSString *Bcc = [[self profile] valueForKey:@"defaultBcc"];
         if (![Bcc length]) Bcc = @"";
         
-        [headerFields setObject: Cc forKey: @"Cc"];
-        [headerFields setObject: Bcc forKey: @"Bcc"];
+        [headerFields setObject:Cc forKey:@"Cc"];
+        [headerFields setObject:Bcc forKey:@"Bcc"];
     }
     
-    [headerFields setObject: makeStringIfNil(preSetTo) forKey: @"To"];
+    [headerFields setObject:makeStringIfNil(preSetTo) forKey:@"To"];
     
     type = MessageTypeReplyToSender;
 }
 
-- (void) switchToFollowup: (GIMessage*) replyMessage
+- (void)switchToFollowup:(GIMessage *)replyMessage
 {
     type = MessageTypeFollowup;
 
     // Make usenet replies take precedence to list replies:
-    if ([replyMessage isUsenetMessage]) {
+    if ([replyMessage isUsenetMessage]) 
+	{
         // Set the Newsgroups: header to To. Primitive!! More checks needed!
-        [headerFields setObject: [[replyMessage internetMessage] bodyForHeaderField: @"Newsgroups"] forKey: @"To"];
+        [headerFields setObject:[[replyMessage internetMessage] bodyForHeaderField:@"Newsgroups"] forKey:@"To"];
         return;
     }
     
-    if ([replyMessage isEMailMessage]) {
+    if ([replyMessage isEMailMessage]) 
+	{
         // try to identify a mailing list:
-        NSString* rawPostString = [[replyMessage internetMessage] bodyForHeaderField: @"List-Post"];
+        NSString *rawPostString = [[replyMessage internetMessage] bodyForHeaderField:@"List-Post"];
         
-        if ([rawPostString length]) {
-            NSString *postURLString = [OPURLFieldCoder stringFromFieldBody:rawPostString withFallback: YES];
+        if ([rawPostString length]) 
+		{
+            NSString *postURLString = [OPURLFieldCoder stringFromFieldBody:rawPostString withFallback:YES];
             
-            if (postURLString) {
-                [headerFields setObject: postURLString forKey: @"To"];
+            if (postURLString) 
+			{
+                [headerFields setObject:postURLString forKey:@"To"];
                 return;
             }
         }
@@ -982,63 +1014,69 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return;
 }
 
-- (void) appendForwardContentFromMessage: (GIMessage*) aMessage
+- (void)appendForwardContentFromMessage:(GIMessage *)aMessage
 {
-    OPInternetMessage*internetMessage = [aMessage internetMessage];
+    OPInternetMessage *internetMessage = [aMessage internetMessage];
     
-    NSAttributedString* forwardPrefix = [[[NSAttributedString allocWithZone: [self zone]] initWithString: @"\n\n==== BEGIN FORWARDED MESSAGE ====\n"] autorelease];
+    NSAttributedString *forwardPrefix = [[[NSAttributedString allocWithZone:[self zone]] initWithString:@"\n\n==== BEGIN FORWARDED MESSAGE ====\n"] autorelease];
     
-    NSAttributedString* forwardSuffix = [[[NSAttributedString allocWithZone: [self zone]] initWithString: @"\n==== END FORWARDED MESSAGE ====\n\n"] autorelease];
+    NSAttributedString *forwardSuffix = [[[NSAttributedString allocWithZone:[self zone]] initWithString:@"\n==== END FORWARDED MESSAGE ====\n\n"] autorelease];
     
-    NSAttributedString* forwardHeaders = [GIMessage renderedHeaders: [NSArray arrayWithObjects: @"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage: internetMessage showOthers: NO];
+    NSAttributedString *forwardHeaders = [GIMessage renderedHeaders:[NSArray arrayWithObjects:@"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage:internetMessage showOthers:NO];
     
-    NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
     
-    [result appendAttributedString: forwardPrefix];
-    [result appendAttributedString: forwardSuffix];
-    [result insertAttributedString: [internetMessage editableBodyContent] atIndex: [forwardPrefix length]];
-    [result insertAttributedString: forwardHeaders atIndex: [forwardPrefix length]];
+    [result appendAttributedString:forwardPrefix];
+    [result appendAttributedString:forwardSuffix];
+    [result insertAttributedString:[internetMessage editableBodyContent] atIndex:[forwardPrefix length]];
+    [result insertAttributedString:forwardHeaders atIndex:[forwardPrefix length]];
     
-    [content appendAttributedString: result];
+    [content appendAttributedString:result];
 }
 
-- (NSAttributedString*) signature 
+- (NSAttributedString *)signature 
 /*"Returns the signature of the current profile."*/
-{	
-	@try {
-		NSAttributedString* signature = [[self profile] valueForKey: @"signature"];
+{;	
+	@try 
+	{
+		NSAttributedString *signature = [[self profile] valueForKey:@"signature"];
 		
-		if ([signature length]) {
-			NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] initWithString: @"\n-- \n"] autorelease];
-			[result appendAttributedString: signature];
+		if ([signature length]) 
+		{
+			NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] initWithString:@"\n-- \n"] autorelease];
+			[result appendAttributedString:signature];
 			
 			return result;
 		}
-	} @catch (NSException* exception) {
-		NSLog(@"Warning: Unable to append signature: %@", exception);
+	} 
+	@catch (NSException *localException) 
+	{
+		NSLog(@"Warning: Unable to append signature: %@", localException);
 	}
     
     return nil;
 }
 
-- (void) updateSignature
+- (void)updateSignature
 {
-    NSMutableAttributedString* messageText = [messageTextView textStorage];
-    NSRange signatureRange = [[messageText string] rangeOfString: @"\n-- \n" options:NSBackwardsSearch | NSLiteralSearch];
+    NSMutableAttributedString *messageText = [messageTextView textStorage];
+    NSRange signatureRange = [[messageText string] rangeOfString:@"\n-- \n" options:NSBackwardsSearch | NSLiteralSearch];
     
-    if (signatureRange.location != NSNotFound) {
+    if (signatureRange.location != NSNotFound) 
+	{
         signatureRange.length = [messageText length] - signatureRange.location;
-        [messageText deleteCharactersInRange: signatureRange];
+        [messageText deleteCharactersInRange:signatureRange];
     }
     
-    NSAttributedString* signature = [self signature];
+    NSAttributedString *signature = [self signature];
     
-    if ([signature length]) {
+    if ([signature length]) 
+	{
         NSRange selectedRange = [messageTextView selectedRange];
         [messageText appendAttributedString:signature];
         
         if ((selectedRange.location + selectedRange.length) < [messageText length]) {
-            [messageTextView setSelectedRange: selectedRange];
+            [messageTextView setSelectedRange:selectedRange];
         }
     }    
 }
@@ -1071,16 +1109,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [messageTextView setSelectedRange:selectedRange];
     
     // override font of the whole body text
-    [[messageTextView textStorage] addAttribute:NSFontAttributeName value: [GIMessage font] range:NSMakeRange(0, [[messageTextView textStorage] length])];
+    [[messageTextView textStorage] addAttribute:NSFontAttributeName value:[GIMessage font] range:NSMakeRange(0, [[messageTextView textStorage] length])];
     
     // set typing font
-    [messageTextView setTypingAttributes: [NSDictionary dictionaryWithObject: [GIMessage font] forKey:NSFontAttributeName]];    
+    [messageTextView setTypingAttributes:[NSDictionary dictionaryWithObject:[GIMessage font] forKey:NSFontAttributeName]];    
 }
 
-- (void) updateWindowTitle
+- (void)updateWindowTitle
 {
-    NSString *subject = [[self headerTextFieldWithFieldName: @"Subject"] stringValue];
-    NSString *to = [[self headerTextFieldWithFieldName: @"To"] stringValue];
+    NSString *subject = [[self headerTextFieldWithFieldName:@"Subject"] stringValue];
+    NSString *to = [[self headerTextFieldWithFieldName:@"To"] stringValue];
     NSString *typeString = nil;
     
     switch (type)
@@ -1111,7 +1149,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         NSLocalizedString(@"%@ to %@ regarding '%@'", @"Message Window Title when subject is present") :
         NSLocalizedString(@"%@ to %@", @"Message Window Title when subject is not present");
         
-        [window setTitle: [NSString stringWithFormat:format, typeString, [to realnameFromEMailStringWithFallback], [subject stringByRemovingReplyPrefix]]];
+        [window setTitle:[NSString stringWithFormat:format, typeString, [to realnameFromEMailStringWithFallback], [subject stringByRemovingReplyPrefix]]];
     } 
     else 
     {
@@ -1119,42 +1157,45 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }
 }
 
-- (GIMessage*) checkpointMessageWithStatus: (unsigned) sendStatus
+- (GIMessage *)checkpointMessageWithStatus:(unsigned)sendStatus
 {
-    GIMessage* message = nil;
+    GIMessage *message = nil;
     
-    message = [GIMessage messageWithTransferData: [[self message] transferData]];
+    message = [GIMessage messageWithTransferData:[[self message] transferData]];
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [[self message] transferData]);
     
     // status
-    if (oldMessage) [message addFlags: [oldMessage flags]];
-    [message addFlags: OPSeenStatus | OPIsFromMeStatus];
+    if (oldMessage) [message addFlags:[oldMessage flags]];
+    [message addFlags:OPSeenStatus | OPIsFromMeStatus];
     
     // unmark message as blocked for sending
-    [message setSendStatus: sendStatus];
+    [message setSendStatus:sendStatus];
 	
     // Remove old message from database if present:
 	[oldMessage delete];
     
-    if (sendStatus == OPSendStatusDraft) {
+    if (sendStatus == OPSendStatusDraft) 
+	{
         //add new message to database
-        [GIMessageBase addDraftMessage: message];
-    } else {
-        [GIMessageBase addQueuedMessage: message];
+        [GIMessageBase addDraftMessage:message];
+    } 
+	else 
+	{
+        [GIMessageBase addQueuedMessage:message];
     }
     
     [oldMessage autorelease];
     oldMessage = [message retain];
     
     // Set answered status if reply:
-    [referencedMessage addFlags: OPAnsweredStatus]; // dth: shouldn't we do that on send?
+    [referencedMessage addFlags:OPAnsweredStatus];
     
     // Set message in profile's messagesToSend:
-    [profile addValue: message forKey: @"messagesToSend"];
+    [profile addValue:message forKey:@"messagesToSend"];
+		
+    [window setDocumentEdited:NO];
     
-    [window setDocumentEdited: NO];
-    
-    [NSApp saveAction: self];
+    [NSApp saveAction:self];
 
     //if (NSDebugEnabled) NSLog(@"checkpointed message");
     
