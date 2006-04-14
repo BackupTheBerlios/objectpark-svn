@@ -756,7 +756,7 @@
     return term;
 }
 
-+ (void)removeMessages:(OPFaultingArray *)someMessages
++ (void)removeMessages:(NSArray *)someMessages
 /*" Removes someMessages from the fulltext index. Only uses someMessage's oids as element objects might no longer be valid (e.g. removed). "*/
 {
     JNIEnv *env = [self jniEnv];
@@ -1107,28 +1107,45 @@
 
 - (void)fulltextIndexMessagesJob:(NSDictionary *)arguments
 {
-    if ([arguments count]) 
-    {
-        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
-        
-        // messages to add:
-        NSArray *messagesToAdd = [arguments objectForKey:@"messagesToAdd"];
-        if ([messagesToAdd count]) [GIFulltextIndex addMessages:messagesToAdd];
-        
-        // messages to remove:
-        OPFaultingArray *messagesToRemove = [arguments objectForKey:@"messagesToRemove"];
-        if ([messagesToRemove count]) [GIFulltextIndex removeMessages:messagesToRemove];
-        
-        if (([GIFulltextIndex changeCount] >= 5000) && (![OPJobs shouldTerminate])) 
-        {
-            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
-            [GIFulltextIndex optimize];
-        }
-        
-        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+	NSArray *messagesToAdd = nil;
+	NSArray *messagesToRemove = nil;
+	
+    if (![arguments count]) 
+	{
+		// no messages supplied, try to find some:
+		[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"searching for messages needing fulltext indexing", @"progress description in fulltext index job")]];
+		messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
+		messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
+	}
+	else
+	{
+		messagesToAdd = [arguments objectForKey:@"messagesToAdd"];
+		messagesToRemove = [arguments objectForKey:@"messagesToRemove"];
+	}
 
+	if ([messagesToAdd count] || [messagesToRemove count])
+	{
+		[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+		
+		// messages to add:
+		if ([messagesToAdd count]) [GIFulltextIndex addMessages:messagesToAdd];
+		
+		// messages to remove:
+		if ([messagesToRemove count]) [GIFulltextIndex removeMessages:messagesToRemove];
+		
+		if (([GIFulltextIndex changeCount] >= 5000) && (![OPJobs shouldTerminate])) 
+		{
+			[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
+			[GIFulltextIndex optimize];
+		}
+		
+		[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+		
 		[[OPPersistentObjectContext defaultContext] saveChanges];
-    }
+		
+		// note that some messages were indexed:
+		[OPJobs setResult:[NSNumber numberWithBool:YES]];
+	}
 }
 
 + (NSString *)jobName
@@ -1144,10 +1161,7 @@
     if ([messagesToAdd count]) [jobArguments setObject: messagesToAdd forKey:@"messagesToAdd"];
     if ([messagesToRemove count]) [jobArguments setObject: messagesToRemove forKey:@"messagesToRemove"];
     
-    if ([jobArguments count]) 
-    {
-        [OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
-    }    
+	[OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
 }
 
 + (void)resetIndex

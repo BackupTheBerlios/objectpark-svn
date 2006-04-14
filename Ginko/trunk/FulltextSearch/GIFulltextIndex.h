@@ -18,17 +18,17 @@
 {
 }
 
-+ (NSString*) fulltextIndexPath;
++ (NSString *)fulltextIndexPath;
 
-+ (void) addMessages: (NSArray*) someMessages;
-+ (void) fulltextIndexInBackgroundAdding: (NSArray*) messagesToAdd removing: (NSArray*) messagesToRemove;
-+ (void) removeMessages: (OPFaultingArray*) someMessages;
++ (void)addMessages:(NSArray *)someMessages;
++ (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messagesToRemove;
++ (void)removeMessages:(NSArray *)someMessages;
 
-+ (NSArray*) hitsForQueryString: (NSString*)aQuery defaultField: (NSString*) defaultField group: (GIMessageGroup*) aGroup limit: (int) limit;
++ (NSArray *)hitsForQueryString:(NSString *)aQuery defaultField:(NSString *)defaultField group:(GIMessageGroup *)aGroup limit:(int)limit;
 
-+ (void) optimize;
-+ (void) resetIndex;
++ (void)optimize;
++ (void)resetIndex;
 
-+ (NSString*) jobName;
++ (NSString *)jobName;
 
 @end

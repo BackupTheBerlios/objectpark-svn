@@ -472,7 +472,7 @@ NSNumber* yesNumber = nil;
         // import mbox at path mboxPath:
         NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
                 
-        [jobArguments setObject:mboxPath forKey: @"mboxFilename"];
+        [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
         [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey: @"parentContext"];
         
         [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
@@ -499,13 +499,13 @@ NSNumber* yesNumber = nil;
     {
         if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
         {            
-            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
-            NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
+//            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
+//            NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
             
-            if ([messagesToAdd count] || [messagesToRemove count]) 
-            {
-                [GIFulltextIndex fulltextIndexInBackgroundAdding:messagesToAdd removing:messagesToRemove];
-            }
+//            if ([messagesToAdd count] || [messagesToRemove count]) 
+//            {
+                [GIFulltextIndex fulltextIndexInBackgroundAdding:nil removing:nil];
+//            }
         }
     }
 }
@@ -515,12 +515,14 @@ NSNumber* yesNumber = nil;
     OPDebugLog(OPJOBS, OPINFO, @"fulltextIndexJobFinished");
     NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
     NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+	BOOL didIndexSomeMessages = [[OPJobs resultForJob:jobId] boolValue];
+
 	[OPJobs removeFinishedJob:jobId]; // clean up
     
 	// Write flag-changes to disk:
 	[[OPPersistentObjectContext defaultContext] saveChanges];
 	
-    [self startFulltextIndexingJobIfNeeded:self];
+	if (didIndexSomeMessages) [self startFulltextIndexingJobIfNeeded:self];
 }
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
