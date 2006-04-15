@@ -2,10 +2,14 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {switchProfile = id; }; 
-            CLASS = G3GroupInspectorController; 
+            ACTIONS = {switchProfile = id; switchType = id; }; 
+            CLASS = GIGroupInspectorController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {profileButton = NSPopUpButton; window = NSWindow; }; 
+            OUTLETS = {
+                profileButton = NSPopUpButton; 
+                typeRadioButtons = NSMatrix; 
+                window = NSWindow; 
+            }; 
             SUPERCLASS = NSObject; 
         }
     ); 

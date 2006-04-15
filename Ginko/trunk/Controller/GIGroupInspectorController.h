@@ -13,12 +13,13 @@
 {
     IBOutlet NSWindow *window;
     IBOutlet NSPopUpButton *profileButton;
-
+	IBOutlet NSMatrix *typeRadioButtons;
     GIMessageGroup *group;
 }
 
 + (id)groupInspectorForGroup: (GIMessageGroup*) aGroup;
 
 - (IBAction)switchProfile:(id)sender;
+- (IBAction)switchType:(id)sender;
 
 @end

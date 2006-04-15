@@ -20,10 +20,11 @@
 }
 
 /*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/
-extern NSString* GIMessageGroupWasAddedNotification;
+extern NSString *GIMessageGroupWasAddedNotification;
+extern NSString *GIMessageGroupsChangedNotification;
 
 /*" Dealing with the group hierarchie: "*/
-+ (NSMutableArray*) hierarchyRootNode;
++ (NSMutableArray *)hierarchyRootNode;
 + (GIMessageGroup *)newMessageGroupWithName:(NSString* )aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex;
 + (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
 + (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)aUid;
@@ -32,14 +33,20 @@ extern NSString* GIMessageGroupWasAddedNotification;
 + (void) removeHierarchyNode: (id) entry;
 
 /*" Standard message groups "*/
-+ (GIMessageGroup*) defaultMessageGroup;
-+ (GIMessageGroup*) sentMessageGroup;
-+ (GIMessageGroup*) queuedMessageGroup;
-+ (GIMessageGroup*) draftMessageGroup;
-+ (GIMessageGroup*) spamMessageGroup;
-+ (GIMessageGroup*) trashMessageGroup;
-+ (NSImage*) imageForMessageGroup: (GIMessageGroup*) aMessageGroup;
-+ (void) ensureDefaultGroups;
++ (GIMessageGroup *)defaultMessageGroup;
++ (void)setDefaultMessageGroup:(GIMessageGroup *)aMessageGroup;
++ (GIMessageGroup *)sentMessageGroup;
++ (void)setSentMessageGroup:(GIMessageGroup *)aMessageGroup;
++ (GIMessageGroup *)queuedMessageGroup;
++ (void)setQueuedMessageGroup:(GIMessageGroup *)aMessageGroup;
++ (GIMessageGroup *)draftMessageGroup;
++ (void)setDraftMessageGroup:(GIMessageGroup *)aMessageGroup;
++ (GIMessageGroup *)spamMessageGroup;
++ (void)setSpamMessageGroup:(GIMessageGroup *)aMessageGroup;
++ (GIMessageGroup *)trashMessageGroup;
++ (void)setTrashMessageGroup:(GIMessageGroup *)aMessageGroup;
++ (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup;
++ (void)ensureDefaultGroups;
 
 /*" Thread handling "*/
 + (void) moveThreadsWithOids: (NSArray*) threadOids 
@@ -58,8 +65,8 @@ extern NSString* GIMessageGroupWasAddedNotification;
 /*" Persistency handling "*/
 + (void) saveHierarchy;
 
-- (NSArray*) allMessages;
-- (void) exportAsMboxFileWithPath: (NSString*) path;
+- (NSArray *)allMessages;
+- (void)exportAsMboxFileWithPath:(NSString *)path;
 
 
 @end

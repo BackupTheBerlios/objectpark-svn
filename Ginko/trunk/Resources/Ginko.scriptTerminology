@@ -1,0 +1,29 @@
+{
+    Classes = {
+        GIApplication = {
+            Attributes = {
+                userEmail = {Description = "The users email address"; Name = "user email"; }; 
+            }; 
+            Description = "Mail's top level scripting object."; 
+            Name = application; 
+            PluralName = applications; 
+        };
+    }; 
+    
+    Commands = {
+        "GetURL" = {
+            "Name" = "GetURL";
+            "Description" = "Opens a mailto URL";
+        };
+        "MailTo" = {
+            "Name" = "mailto";
+            "Description" = "Opens a mailto URL";
+        };
+        "GURL" = {
+            "Name" = "GURL";
+            "Description" = "Opens a mailto URL";
+        };
+    };
+    Description = "Ginko specific classes."; 
+    Name = "Ginko Mail suite"; 
+}

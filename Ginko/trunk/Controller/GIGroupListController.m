@@ -68,6 +68,11 @@
 				   name: GIMessageGroupWasAddedNotification 
 				 object: nil];
 		
+        [nc addObserver: self 
+			   selector: @selector(groupsChanged:) 
+				   name: GIMessageGroupsChangedNotification 
+				 object: nil];
+		
 		[nc addObserver: self 
 			   selector: @selector(jobStarted:) 
 				   name: OPJobWillStartNotification 
@@ -87,7 +92,7 @@
 	return [self retain]; // self retaining!
 }
   
-- (void) windowWillClose: (NSNotification*) notification 
+- (void)windowWillClose:(NSNotification *)notification 
 {
     [self autorelease];
     [GIMessageGroup saveGroupStats];
@@ -106,12 +111,12 @@
 	return nil;
 }
 
-- (void) reloadData
+- (void)reloadData
 {
     [boxesView reloadData];
 }
 
-- (void) groupsChanged: (NSNotification*) aNotification
+- (void)groupsChanged:(NSNotification *)aNotification
 {
     [self reloadData];
 }
@@ -166,7 +171,7 @@
 	id selectedGroup = [self group];
 	
 	if (selectedGroup) {
-		[GIGroupInspectorController groupInspectorForGroup:[[OPPersistentObjectContext defaultContext] objectWithURLString:selectedGroup]];
+		[GIGroupInspectorController groupInspectorForGroup:selectedGroup];
 	}
 }
 

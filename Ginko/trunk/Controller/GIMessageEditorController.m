@@ -51,9 +51,10 @@
 
 - (id) init
 {
-    if (self = [super init]) {
+    if (self = [super init]) 
+	{
         // eager, isn't it?
-        NSLog(@"GIMessageEditorController init");
+        if (NSDebugEnabled) NSLog(@"GIMessageEditorController init");
         headerFields = [[NSMutableDictionary alloc] init];
         content = [[NSMutableAttributedString alloc] init];
         [self retain];
@@ -67,7 +68,7 @@
     if (self = [self init]) 
     {        
 		// Make sure, aMessage is not send during edit:
-        if ([aMessage sendStatus]==OPSendStatusQueuedReady) [aMessage setSendStatus: OPSendStatusQueuedBlocked];
+        if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus: OPSendStatusQueuedBlocked];
         
         profile = [[aMessage valueForKey: @"sendProfile"] retain];
         
@@ -118,6 +119,55 @@
     return self;
 }
 
+- (id)initNewMessageWithMailToDictionary:(NSDictionary *)aMailToDict
+{
+    if(self = [self init])
+    {
+        profile = [[[GIProfile allObjects] firstObject] retain]; // can a better profile be guessed?
+        referencedMessage = nil;
+		
+        shouldAppendSignature = YES;
+		
+        type = MessageTypeNewMessage;
+        
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
+		
+		NSString *component;
+		
+		if (component = [aMailToDict objectForKey:@"to"])
+		{
+			[headerFields setObject:component forKey:@"To"];
+		}
+		
+		if (component = [aMailToDict objectForKey:@"subject"])
+		{
+			[headerFields setObject:component forKey:@"Subject"];
+		}
+		
+		if (component = [aMailToDict objectForKey:@"cc"])
+		{
+			[headerFields setObject:component forKey:@"Cc"];
+		}
+		
+		if (component = [aMailToDict objectForKey:@"bcc"])
+		{
+			[headerFields setObject:component forKey:@"Bcc"];
+		}
+		
+		if (component = [aMailToDict objectForKey:@"body"])
+		{
+			[content appendString:component];
+		}
+		
+		[self updateHeaders];
+        [self updateMessageTextView];
+        [self updateWindowTitle];
+        
+        [window makeKeyAndOrderFront:self];		
+    }
+    return self;
+}
+
 - (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
 {
     if (self = [self init]) 
@@ -157,9 +207,10 @@
     return self;
 }
 
-- (id)initFollowupTo: (GIMessage*) aMessage profile:(GIProfile *)aProfile
+- (id)initFollowupTo:(GIMessage *)aMessage profile:(GIProfile *)aProfile
 {
-    if (self = [self init]) {
+    if (self = [self init]) 
+	{
         if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
         
         profile = [aProfile retain];
@@ -180,47 +231,50 @@
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeFirstResponder: messageTextView];
-        [window makeKeyAndOrderFront: self];
+        [window makeFirstResponder:messageTextView];
+        [window makeKeyAndOrderFront:self];
     }
         
     return self;
 }
 
-- (id) initForward: (GIMessage*) aMessage profile: (GIProfile*) aProfile
+- (id)initForward:(GIMessage *)aMessage profile:(GIProfile *)aProfile
 {
-    if (self = [self init]) {
+    if (self = [self init]) 
+	{
         if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
         profile = [aProfile retain];
         
-        [self setReplyForwardSubjectFromMessage: aMessage];
+        [self setReplyForwardSubjectFromMessage:aMessage];
 		
 		// We are adding a references header even to email forwardings in order to be able to
 		// thread them correctly with the original mail forwarded - regardless of subject:
 		
-		if (![headerFields objectForKey: @"References"]) {
-			[headerFields setObject: [aMessage messageId] forKey: @"References"];
+		if (![headerFields objectForKey:@"References"]) 
+		{
+			[headerFields setObject:[aMessage messageId] forKey:@"References"];
 		}
 		
-        [self appendForwardContentFromMessage: aMessage];
+        [self appendForwardContentFromMessage:aMessage];
         type = MessageTypeForward;
         shouldAppendSignature = YES;
                 
-        [NSBundle loadNibNamed: @"MessageEditor" owner: self];
+        [NSBundle loadNibNamed:@"MessageEditor" owner:self];
         
         [self updateHeaders];
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeFirstResponder: messageTextView];
-        [window makeKeyAndOrderFront: self];
+        [window makeFirstResponder:messageTextView];
+        [window makeKeyAndOrderFront:self];
     }
+	
     return self;
 }
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [self awakeHeaders];
     [self awakeToolbar];
@@ -228,21 +282,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [[messageTextView layoutManager] setDefaultAttachmentScaling:NSScaleProportionally];
     
     // set up most recently used continuous spell check status:
-    [messageTextView setContinuousSpellCheckingEnabled: [[NSUserDefaults standardUserDefaults] boolForKey:@"ContinuousSpellCheckingEnabled"]];
+    [messageTextView setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"ContinuousSpellCheckingEnabled"]];
     
-    lastTopLeftPoint = [window cascadeTopLeftFromPoint: lastTopLeftPoint];
+    lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
     
-    [GIPhraseBrowserController setTextView: messageTextView];
+    [GIPhraseBrowserController setTextView:messageTextView];
 }
 
-- (void)windowDidMove: (NSNotification*) aNotification
+- (void)windowDidMove:(NSNotification *)aNotification
 {
 //    lastTopLeftPoint = NSMakePoint(0.0, 0.0);
 }
 
-- (void) windowDidBecomeKey: (NSNotification*) aNotification
+- (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
-    [GIPhraseBrowserController setTextView: messageTextView];
+    [GIPhraseBrowserController setTextView:messageTextView];
 	[self validateSelectedProfile];
 }
 
@@ -254,7 +308,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 */
 
-- (void) dealloc
+- (void)dealloc
 {
     NSLog(@"GIMessageEditorController dealloc");
     
@@ -273,17 +327,19 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 }
 
 // accessors
-- (GIProfile*) profile
+- (GIProfile *)profile
 {
     return profile;
 }
 
-- (void) sendSheetDidEnd: (NSWindow*)sheet returnCode: (int) returnCode contextInfo: (void*) contextInfo
+- (void)sendSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    if (returnCode == NSAlertDefaultReturn) {
+    if (returnCode == NSAlertDefaultReturn) 
+	{
         //GIMessage *message = [self checkpointMessageWithStatus:OPQueuedStatus];
         BOOL sendNow = [(NSNumber *)contextInfo boolValue];
-        if (sendNow) {
+        if (sendNow) 
+		{
 #warning start message send job here
         }
         [window performClose:self];
@@ -1081,7 +1137,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     }    
 }
 
-- (void) updateMessageTextView
+- (void)updateMessageTextView
 /*" Sets the message text view contents to content plus X. ;-) "*/
 {
     NSRange selectedRange;

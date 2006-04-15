@@ -17,10 +17,9 @@
 
     if (! path) 
     {
-        NSString *processName;
-        
-        processName = [[NSProcessInfo processInfo] processName];
-        path = [[[[NSHomeDirectory() stringByAppendingPathComponent: @"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:processName] retain];
+        NSString *identifier = [[[NSBundle mainBundle] bundleIdentifier] pathExtension];
+        //processName = [[NSProcessInfo processInfo] processName];
+        path = [[[[NSHomeDirectory() stringByAppendingPathComponent: @"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:identifier] retain];
 
         if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) 
         {

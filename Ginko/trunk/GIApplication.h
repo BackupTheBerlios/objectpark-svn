@@ -34,3 +34,20 @@ extern NSNumber* yesNumber;
 
 @end
 
+@interface GIApplication (ScriptingSupport)
+
+//- accounts;
+//- valueInAccountsWithName:;
+- (NSString *)userEmail;
+	//- messageEditors;
+	//- (void)insertInMessageEditors:fp12 atIndex:(unsigned int)fp16;
+	//- (void)removeFromMessageEditors:fp12;
+	//- composeMessages;
+	//- (void)insertInComposeMessages:fp12 atIndex:(unsigned int)fp16;
+	//- (void)removeFromComposeMessages:fp12;
+	//- objectSpecifierForComposeMessage:fp12;
+
+	//- (void)handleOpenAppleEvent:;
+
+@end
+

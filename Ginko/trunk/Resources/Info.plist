@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>GinkoAlpha</string>
+	<string>Ginko</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Ginko version 0.5.0, Copyright 2000-2006 by Objectpark Group &lt;http://www.objectpark.org/&gt;</string>
 	<key>CFBundleIconFile</key>
@@ -15,13 +15,24 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>GinkoAlpha</string>
+	<string>Ginko</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>0.5.0</string>
 	<key>CFBundleSignature</key>
 	<string>GNKO</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Email Address URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>mailto</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>0.5.0</string>
 	<key>Java</key>
@@ -29,6 +40,8 @@
 		<key>JVMVersion</key>
 		<string>1.4*</string>
 	</dict>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright 2000-2006 Objectpark Group.</string>
 	<key>NSMainNibFile</key>

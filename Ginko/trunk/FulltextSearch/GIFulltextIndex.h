@@ -20,9 +20,9 @@
 
 + (NSString *)fulltextIndexPath;
 
-+ (void)addMessages:(NSArray *)someMessages;
-+ (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messagesToRemove;
-+ (void)removeMessages:(NSArray *)someMessages;
++ (void)addMessages:(OPFaultingArray *)someMessages;
++ (void)fulltextIndexInBackgroundAdding:(OPFaultingArray *)messagesToAdd removing:(OPFaultingArray *)messagesToRemove;
++ (void)removeMessages:(OPFaultingArray *)someMessages;
 
 + (NSArray *)hitsForQueryString:(NSString *)aQuery defaultField:(NSString *)defaultField group:(GIMessageGroup *)aGroup limit:(int)limit;
 

@@ -29,6 +29,7 @@
 #import "GIPhraseBrowserController.h"
 #import <OPPreferences/OPPreferences.h>
 #import "OPObjectPair.h"
+#import "NSArray+Extensions.h"
 
 #import <OPDebug/OPLog.h>
 #import <JavaVM/JavaVM.h>
@@ -644,4 +645,13 @@ NSNumber* yesNumber = nil;
 
 @end
 
+@implementation GIApplication (ScriptingSupport)
 
+// Scripting Support
+
+- (NSString *)userEmail
+{
+    return [(GIProfile *)[[GIProfile allObjects] firstObject] valueForKey:@"mailAddress"];
+}
+
+@end

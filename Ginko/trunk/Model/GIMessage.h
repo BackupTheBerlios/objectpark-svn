@@ -52,8 +52,8 @@
 + (void) resetSendStatus;
 + (id) messageForMessageId: (NSString*) messageId;
 + (id) messageWithTransferData: (NSData*) someTransferData;
-+ (NSArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit;
-+ (NSArray *)messagesToRemoveFromFulltextIndexWithLimit:(unsigned)limit;
++ (OPFaultingArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit;
++ (OPFaultingArray *)messagesToRemoveFromFulltextIndexWithLimit:(unsigned)limit;
 
 + (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
 

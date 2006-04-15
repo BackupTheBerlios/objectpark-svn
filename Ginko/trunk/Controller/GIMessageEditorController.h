@@ -58,6 +58,7 @@ typedef enum
 - (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile;
 - (id)initFollowupTo:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
 - (id)initForward:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
+- (id)initNewMessageWithMailToDictionary:(NSDictionary *)aMailToDict;
 
 - (BOOL)validateSelector:(SEL)aSelector;
 - (GIProfile *)profile;

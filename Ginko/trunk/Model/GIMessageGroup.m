@@ -68,13 +68,14 @@
 
 
 
-NSString* GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
+NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
+NSString *GIMessageGroupsChangedNotification = @"GIMessageGroupsChangedNotification";
 
 /*" GIMessageGroup is a collection of G3Thread objects (which in turn are a collection of GIMessage objects). GIMessageGroup is an entity in the datamodel (see %{Ginko3_DataModel.xcdatamodel} file).
 
 GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSMutableArrays (e.g. #{+rootHierarchyNode} returns the NSMutableArray that is the root node). The first entry in such a hierarchy node is information of the node itself (it is a NSMutableDictionary whose keys are described lateron). All other entries are either NSStrings with URLs that reference GIMessageGroup objects (see #{-[NSManagedObject objectID]}) or other hierarchy nodes (NSMutableArrays). "*/
 
-+ (void) ensureDefaultGroups
++ (void)ensureDefaultGroups
 /*" Makes sure that all default groups are in place. "*/
 {
     [self defaultMessageGroup];
@@ -85,42 +86,46 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     [self trashMessageGroup];
 }
 
-
-+ (GIMessageGroup *)newMessageGroupWithName: (NSString*) aName atHierarchyNode: (NSMutableArray*) aNode atIndex:(int)anIndex
++ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex
 /*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
 {
     GIMessageGroup *result = nil;
     NSString* resultURLString = nil;
     
-    if (!aName) {
+    if (!aName) 
+	{
         aName = NSLocalizedString(@"New Group", @"Default name for new group");
     }
     
-    if (!aNode) {
+    if (!aNode) 
+	{
         aNode = [self hierarchyRootNode];
         anIndex = [aNode count];
     }
     
     // creating new group and setting name:
     result = [[[self alloc] init] autorelease];
-	[result insertIntoContext: [OPPersistentObjectContext threadContext]];
-    [result setValue: aName forKey: @"name"];
+	[result insertIntoContext:[OPPersistentObjectContext threadContext]];
+    [result setValue:aName forKey:@"name"];
 
     // placing new group in hierarchy:
     NSParameterAssert((anIndex >= 0) && (anIndex <= [aNode count]));
     anIndex += 1; // first position is node info
     resultURLString = [result objectURLString];
     
-    if (anIndex = [aNode count]) {
-        [aNode addObject: resultURLString];
-    } else {
-        [aNode insertObject: resultURLString atIndex: anIndex];
+    if (anIndex = [aNode count]) 
+	{
+        [aNode addObject:resultURLString];
+    } 
+	else 
+	{
+        [aNode insertObject:resultURLString atIndex:anIndex];
     }
     
     [self saveHierarchy];
-	[GIApp saveAction: nil]; // hack
+	[GIApp saveAction:nil]; // hack
     
-    [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageGroupWasAddedNotification object:result];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupWasAddedNotification object:result];
     
     return result;
 }
@@ -693,34 +698,36 @@ static NSMutableArray* root = nil;
     return [self hierarchyNodeForUid:anUid startHierarchyNode: [self hierarchyRootNode]];
 }
 
-+ (GIMessageGroup*) standardMessageGroupWithUserDefaultsKey: (NSString* )defaultsKey defaultName: (NSString*) defaultName
++ (GIMessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
 /*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
 {
     NSParameterAssert(defaultName != nil);
     
-    NSString* URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
+    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
     GIMessageGroup *result = nil;
         
-    if (URLString) {
+    if (URLString) 
+	{
         result = [GIMessageGroup messageGroupWithURIReferenceString: URLString];
 		// Test, if the URL is still valid:
-		if (![result resolveFault]) {
+		if (![result resolveFault]) 
+		{
 			result = nil;
 		}
-        if (!result)
-            OPDebugLog(MESSAGEGROUP, STANDARDBOXES, @"Couldn't find standard box '%@'", defaultName);
+        if (!result) OPDebugLog(MESSAGEGROUP, STANDARDBOXES, @"Couldn't find standard box '%@'", defaultName);
     }
     
-    if (!result) {
+    if (!result) 
+	{
         // not found creating new:
-        result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode: nil atIndex:0];
+        result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:0];
                 
-        NSAssert1([result valueForKey: @"name"] != nil, @"group should have a name: %@", defaultName);
+        NSAssert1([result valueForKey:@"name"] != nil, @"group should have a name: %@", defaultName);
         
-        [[NSUserDefaults standardUserDefaults] setObject: [result objectURLString] forKey: defaultsKey];
+        [[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey: defaultsKey] isEqualToString: [result objectURLString]], @"Fatal error. User defaults are wrong.");
+        NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
     }
     
     NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);
@@ -733,9 +740,19 @@ static NSMutableArray* root = nil;
     return [self standardMessageGroupWithUserDefaultsKey:DefaultMessageGroupURLString defaultName:NSLocalizedString(@"Default Inbox", @"default group name for default inbox")];
 }
 
++ (void)setDefaultMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:DefaultMessageGroupURLString];
+}
+
 + (GIMessageGroup *)sentMessageGroup
 {
     return [self standardMessageGroupWithUserDefaultsKey:SentMessageGroupURLString defaultName:NSLocalizedString(@"My Threads", @"default group name for outgoing messages")];
+}
+
++ (void)setSentMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:SentMessageGroupURLString];
 }
 
 + (GIMessageGroup *)draftMessageGroup
@@ -743,9 +760,19 @@ static NSMutableArray* root = nil;
     return [self standardMessageGroupWithUserDefaultsKey:DraftsMessageGroupURLString defaultName:NSLocalizedString(@"Draft Messages", @"default group name for drafts")];
 }
 
++ (void)setDraftMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:DraftsMessageGroupURLString];
+}
+
 + (GIMessageGroup *)queuedMessageGroup
 {
     return [self standardMessageGroupWithUserDefaultsKey:QueuedMessageGroupURLString defaultName:NSLocalizedString(@"Queued Messages", @"default group name for queued")];
+}
+
++ (void)setQueuedMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:QueuedMessageGroupURLString];
 }
 
 + (GIMessageGroup *)spamMessageGroup
@@ -753,9 +780,19 @@ static NSMutableArray* root = nil;
     return [self standardMessageGroupWithUserDefaultsKey:SpamMessageGroupURLString defaultName:NSLocalizedString(@"Spam", @"default group name for spam")];
 }
 
++ (void)setSpamMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:SpamMessageGroupURLString];
+}
+
 + (GIMessageGroup *)trashMessageGroup
 {
     return [self standardMessageGroupWithUserDefaultsKey:TrashMessageGroupURLString defaultName:NSLocalizedString(@"Trash", @"default group name for trash")];
+}
+
++ (void)setTrashMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:TrashMessageGroupURLString];
 }
 
 + (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup

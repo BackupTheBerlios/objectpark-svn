@@ -141,6 +141,10 @@
 		77BC58C80761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BC58C60761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h */; };
 		77BC58C90761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC58C70761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m */; };
 		77C386E907AE9F1F00420AE9 /* MIME.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77C386E807AE9F1F00420AE9 /* MIME.plist */; };
+		77CA730F09F1272C00749461 /* MailToCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CA730D09F1272C00749461 /* MailToCommand.h */; };
+		77CA731009F1272C00749461 /* MailToCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA730E09F1272C00749461 /* MailToCommand.m */; };
+		77CA735409F12BD000749461 /* Ginko.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 77CA735309F12BD000749461 /* Ginko.scriptSuite */; };
+		77CA735709F12C7800749461 /* Ginko.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 77CA735609F12C7800749461 /* Ginko.scriptTerminology */; };
 		77CC67F109333E9C00E0F213 /* OPL-Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */; };
 		77CD551007699AD1003354A0 /* MessageEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77CD550F07699AD1003354A0 /* MessageEditor.nib */; };
 		77CD551307699B4B003354A0 /* GIMessageEditorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CD551107699B4B003354A0 /* GIMessageEditorController.h */; };
@@ -613,6 +617,10 @@
 		77BC58C60761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GIOutlineViewWithKeyboardSupport.h; sourceTree = "<group>"; };
 		77BC58C70761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GIOutlineViewWithKeyboardSupport.m; sourceTree = "<group>"; };
 		77C386E807AE9F1F00420AE9 /* MIME.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; path = MIME.plist; sourceTree = "<group>"; };
+		77CA730D09F1272C00749461 /* MailToCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MailToCommand.h; sourceTree = "<group>"; };
+		77CA730E09F1272C00749461 /* MailToCommand.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MailToCommand.m; sourceTree = "<group>"; };
+		77CA735309F12BD000749461 /* Ginko.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.scriptSuite; path = Ginko.scriptSuite; sourceTree = "<group>"; };
+		77CA735609F12C7800749461 /* Ginko.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.scriptTerminology; path = Ginko.scriptTerminology; sourceTree = "<group>"; };
 		77CD550F07699AD1003354A0 /* MessageEditor.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MessageEditor.nib; sourceTree = "<group>"; };
 		77CD551107699B4B003354A0 /* GIMessageEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorController.h; sourceTree = "<group>"; };
 		77CD551207699B4B003354A0 /* GIMessageEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorController.m; sourceTree = "<group>"; };
@@ -672,7 +680,7 @@
 		8D0EC28009A22577004563D4 /* NSString+Similarities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Similarities.h"; sourceTree = "<group>"; };
 		8D0EC28109A22577004563D4 /* NSString+Similarities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Similarities.m"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* GinkoAlpha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GinkoAlpha.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* Ginko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ginko.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D167D5E09057508000F4F45 /* GIAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccount.h; sourceTree = "<group>"; };
 		8D167D5F09057508000F4F45 /* GIAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIAccount.m; sourceTree = "<group>"; };
 		8D17B5C70895BBC30057A1C6 /* GIProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIProfile.h; sourceTree = "<group>"; };
@@ -881,6 +889,8 @@
 				77CD8B64093698E500C9030B /* Obsolete */,
 				8DCE35E508918FC200F705EF /* Persistence */,
 				8D666F0407D524E20076C74D /* Preferences */,
+				77CA730D09F1272C00749461 /* MailToCommand.h */,
+				77CA730E09F1272C00749461 /* MailToCommand.m */,
 				8D901F4F0778EC97005365EA /* GIUserDefaultsKeys.h */,
 				8D901F500778EC97005365EA /* GIUserDefaultsKeys.m */,
 			);
@@ -908,7 +918,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* GinkoAlpha.app */,
+				8D1107320486CEB800E47090 /* Ginko.app */,
 				8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */,
 			);
 			name = Products;
@@ -941,6 +951,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				77CA735609F12C7800749461 /* Ginko.scriptTerminology */,
+				77CA735309F12BD000749461 /* Ginko.scriptSuite */,
 				30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */,
 				770878C008B4FCD600FBB196 /* HeaderTemplate.html */,
 				772F293C084F8249004D50E0 /* Test Resources */,
@@ -1580,6 +1592,7 @@
 				77AA32BE09B8896900D90C6A /* OPSMTP+InternetMessage.h in Headers */,
 				77F01CF309D299E2007C4CA5 /* GIHeaderFieldEditor.h in Headers */,
 				77F01D0109D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h in Headers */,
+				77CA730F09F1272C00749461 /* MailToCommand.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1657,7 +1670,7 @@
 			name = GinkoVoyager;
 			productInstallPath = "$(HOME)/Applications";
 			productName = GinkoVoyager;
-			productReference = 8D1107320486CEB800E47090 /* GinkoAlpha.app */;
+			productReference = 8D1107320486CEB800E47090 /* Ginko.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8DCE35F00891902600F705EF /* OPPersistence */ = {
@@ -1861,6 +1874,8 @@
 				77D0616D0983C9F60061BC4D /* GIContentPane.tiff in Resources */,
 				77B8337B0983CD6D00B467C2 /* GIFulltextSearchPane.tiff in Resources */,
 				8D34C67E09B4A31100615833 /* BackToolbarImage.tiff in Resources */,
+				77CA735409F12BD000749461 /* Ginko.scriptSuite in Resources */,
+				77CA735709F12C7800749461 /* Ginko.scriptTerminology in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2041,6 +2056,7 @@
 				7729F54E09C6ED9E002491A6 /* utils.m in Sources */,
 				77F01CF409D299E2007C4CA5 /* GIHeaderFieldEditor.m in Sources */,
 				77F01D0209D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */,
+				77CA731009F1272C00749461 /* MailToCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2126,7 +2142,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = GinkoAlpha;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -2174,7 +2190,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = GinkoAlpha;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -2232,7 +2248,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = GinkoAlpha;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = NO;
@@ -2279,7 +2295,7 @@
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				PRODUCT_NAME = GinkoAlpha;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -2653,7 +2669,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = GinkoAlpha;
+				PRODUCT_NAME = Ginko;
 				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = NO;

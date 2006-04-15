@@ -563,7 +563,7 @@
     (*env)->CallVoidMethod(env, writer, mid);
 }
 
-+ (void)addMessages:(NSArray *)someMessages
++ (void)addMessages:(OPFaultingArray *)someMessages
 {
     @synchronized(self) {
         int counter = 0;
@@ -756,7 +756,7 @@
     return term;
 }
 
-+ (void)removeMessages:(NSArray *)someMessages
++ (void)removeMessages:(OPFaultingArray *)someMessages
 /*" Removes someMessages from the fulltext index. Only uses someMessage's oids as element objects might no longer be valid (e.g. removed). "*/
 {
     JNIEnv *env = [self jniEnv];
@@ -1107,8 +1107,8 @@
 
 - (void)fulltextIndexMessagesJob:(NSDictionary *)arguments
 {
-	NSArray *messagesToAdd = nil;
-	NSArray *messagesToRemove = nil;
+	OPFaultingArray *messagesToAdd = nil;
+	OPFaultingArray *messagesToRemove = nil;
 	
     if (![arguments count]) 
 	{
@@ -1153,7 +1153,7 @@
     return @"Fulltext indexing";
 }
 
-+ (void)fulltextIndexInBackgroundAdding:(NSArray *)messagesToAdd removing:(NSArray *)messagesToRemove
++ (void)fulltextIndexInBackgroundAdding:(OPFaultingArray *)messagesToAdd removing:(OPFaultingArray *)messagesToRemove
 /*" Starts a background job for fulltext indexing someMessages. Only one indexing job can be active at one time. "*/
 {
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];

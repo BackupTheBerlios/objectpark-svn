@@ -1,0 +1,36 @@
+{
+    Name = Ginko; 
+    AppleEventCode = GNKO; 
+/*    Classes = {
+        GIApplication = {
+            AppleEventCode = capp; 
+            Attributes = {
+                userEmail = {AppleEventCode = ueml; ReadOnly = YES; Type = NSString; }; 
+            }; 
+            Superclass = NSCoreSuite.NSApplication; 
+            "SupportedCommands" = {
+                "NSCoreSuite.Open" = "handleOpenAppleEvent:";
+            };
+        }; 
+    }; */
+    "Commands" = {
+        "GetURL" = {
+            "CommandClass" = "MailToCommand";
+            "Type" = "";
+            "AppleEventClassCode" = "GNKO";
+            "AppleEventCode" = "emtg";
+        };
+        "MailTo" = {
+            "CommandClass" = "MailToCommand";
+            "Type" = "";
+            "AppleEventClassCode" = "GNKO";
+            "AppleEventCode" = "emto";
+        };
+        "GURL" = {
+            "CommandClass" = "MailToCommand";
+            "Type" = "";
+            "AppleEventClassCode" = "GURL";
+            "AppleEventCode" = "GURL";
+        };
+    };
+}
