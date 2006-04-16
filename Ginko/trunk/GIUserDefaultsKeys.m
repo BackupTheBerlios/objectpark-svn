@@ -28,6 +28,7 @@ NSString *ImportPanelLastDirectory = @"ImportPanelLastDirectory";
 NSString *AutomaticActivityPanelEnabled = @"AutomaticActivityPanelEnabled";
 NSString *FulltextIndexChangeCount = @"FulltextIndexChangeCount";
 NSString *EarliestSendTimes = @"EarliestSendTimes";
+NSString *AskAgainToBecomeDefaultMailApplication = @"AskAgainToBecomeDefaultMailApplication";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
@@ -91,6 +92,8 @@ void registerDefaultDefaults()
     
         [NSNumber numberWithInt:DEFAULTSEARCHHITLIMIT], SearchHitLimit,
         
+		[NSNumber numberWithBool:YES], AskAgainToBecomeDefaultMailApplication, 
+		
         nil, nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults: appDefaults];

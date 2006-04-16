@@ -693,45 +693,56 @@ static NSMutableArray* root = nil;
     return result;
 }
 
-+ (NSMutableArray*) hierarchyNodeForUid: (NSNumber*) anUid
++ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)anUid
 {
-    return [self hierarchyNodeForUid:anUid startHierarchyNode: [self hierarchyRootNode]];
+    return [self hierarchyNodeForUid:anUid startHierarchyNode:[self hierarchyRootNode]];
+}
+
++ (void)setStandardMessageGroup:(GIMessageGroup *)aGroup forDefaultsKey:(NSString *)aKey
+{
+	@synchronized(self)
+	{
+		[[NSUserDefaults standardUserDefaults] setObject:[aGroup objectURLString] forKey:aKey];
+	}
 }
 
 + (GIMessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
 /*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
 {
     NSParameterAssert(defaultName != nil);
+	GIMessageGroup *result = nil;
     
-    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
-    GIMessageGroup *result = nil;
-        
-    if (URLString) 
+	@synchronized(self)
 	{
-        result = [GIMessageGroup messageGroupWithURIReferenceString: URLString];
-		// Test, if the URL is still valid:
-		if (![result resolveFault]) 
+		NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
+        
+		if (URLString) 
 		{
-			result = nil;
+			result = [GIMessageGroup messageGroupWithURIReferenceString: URLString];
+			// Test, if the URL is still valid:
+			if (![result resolveFault]) 
+			{
+				result = nil;
+			}
+			if (!result) OPDebugLog(MESSAGEGROUP, STANDARDBOXES, @"Couldn't find standard box '%@'", defaultName);
 		}
-        if (!result) OPDebugLog(MESSAGEGROUP, STANDARDBOXES, @"Couldn't find standard box '%@'", defaultName);
+		
+		if (!result) 
+		{
+			// not found creating new:
+			result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:0];
+			
+			NSAssert1([result valueForKey:@"name"] != nil, @"group should have a name: %@", defaultName);
+			
+			[[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+			
+			NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
+		}
+		
+		NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);
     }
-    
-    if (!result) 
-	{
-        // not found creating new:
-        result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:0];
-                
-        NSAssert1([result valueForKey:@"name"] != nil, @"group should have a name: %@", defaultName);
-        
-        [[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
-    }
-    
-    NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);
-    
+	
     return result;
 }
 
@@ -742,7 +753,7 @@ static NSMutableArray* root = nil;
 
 + (void)setDefaultMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:DefaultMessageGroupURLString];
+	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:DefaultMessageGroupURLString];
 }
 
 + (GIMessageGroup *)sentMessageGroup
@@ -752,7 +763,7 @@ static NSMutableArray* root = nil;
 
 + (void)setSentMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:SentMessageGroupURLString];
+	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:SentMessageGroupURLString];
 }
 
 + (GIMessageGroup *)draftMessageGroup
@@ -762,7 +773,7 @@ static NSMutableArray* root = nil;
 
 + (void)setDraftMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:DraftsMessageGroupURLString];
+	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:DraftsMessageGroupURLString];
 }
 
 + (GIMessageGroup *)queuedMessageGroup
@@ -772,7 +783,7 @@ static NSMutableArray* root = nil;
 
 + (void)setQueuedMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:QueuedMessageGroupURLString];
+	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:QueuedMessageGroupURLString];
 }
 
 + (GIMessageGroup *)spamMessageGroup
@@ -782,7 +793,7 @@ static NSMutableArray* root = nil;
 
 + (void)setSpamMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:SpamMessageGroupURLString];
+	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:SpamMessageGroupURLString];
 }
 
 + (GIMessageGroup *)trashMessageGroup
@@ -792,12 +803,12 @@ static NSMutableArray* root = nil;
 
 + (void)setTrashMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[aMessageGroup objectURLString] forKey:TrashMessageGroupURLString];
+	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:TrashMessageGroupURLString];
 }
 
 + (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup
 {
-    NSString* imageName = nil;
+    NSString *imageName = nil;
     
     if (aMessageGroup == [self defaultMessageGroup]) imageName = @"InMailbox";
     else if (aMessageGroup == [self sentMessageGroup]) imageName = @"OutMailbox";

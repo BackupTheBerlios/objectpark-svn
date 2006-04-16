@@ -3,12 +3,13 @@
 //  Ginko
 //
 //  Created by Axel Katerbau on Sat Jul 27 2002.
-//  Copyright (c) 2002 Objectpark Group. All rights reserved.
+//  Copyright (c) 2002, 2006 Objectpark Group. All rights reserved.
 //
 
 #import "MailToCommand.h"
 #include <CoreFoundation/CFURL.h>
 #import "GIMessageEditorController.h"
+#import "GIUserDefaultsKeys.h"
 
 @implementation MailToCommand
 /*" Script Command for handling "mailto:" URLs.

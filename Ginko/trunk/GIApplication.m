@@ -30,6 +30,8 @@
 #import <OPPreferences/OPPreferences.h>
 #import "OPObjectPair.h"
 #import "NSArray+Extensions.h"
+#import "MailToCommand.h"
+#import <ApplicationServices/ApplicationServices.h>
 
 #import <OPDebug/OPLog.h>
 #import <JavaVM/JavaVM.h>
@@ -59,7 +61,7 @@ NSNumber* yesNumber = nil;
     }
 
 
-+ (void) initialize
++ (void)initialize
 {
     registerDefaultDefaults();
     NSAssert([[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences], @"Failed to register default Preferences.");
@@ -259,12 +261,14 @@ NSNumber* yesNumber = nil;
     //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);
     [GIMessage resetSendStatus];
 	
+	[[[GIGroupListController alloc] init] autorelease]; // opens group list
     [self restoreOpenWindowsFromLastSession];
 
         // Make sure, we receive NSManagedObjectContextDidSaveNotifications:
     //[[NSNotificationCenter defaultCenter] addObserver: [OPPersistentObjectContext class] selector: @selector(objectsDidChange2:) 
     //                                             name: NSManagedObjectContextDidSaveNotification 
-    //                                           object: nil];      
+    //                                           object: nil];  
+	[self askForBecomingDefaultMailApplication];
 }
 
 - (NSWindow *)groupsWindow
@@ -641,6 +645,36 @@ NSNumber* yesNumber = nil;
 	[GIFulltextIndex fulltextIndexInBackgroundAdding:nil removing:[GIMessage deletedMessages]];
     
     [pool release];
+}
+
+- (void)askForBecomingDefaultMailApplication
+{
+	BOOL shouldAsk = [[NSUserDefaults standardUserDefaults] boolForKey:AskAgainToBecomeDefaultMailApplication];
+	
+	if (shouldAsk)
+	{
+		NSString *defaultMailAppBundleIdentifier = (NSString *)LSCopyDefaultHandlerForURLScheme((CFStringRef)@"mailto");
+		NSString *bundleIdentifier = [[[NSBundle mainBundle] bundleIdentifier] lowercaseString];
+		
+		if (![bundleIdentifier isEqualToString:defaultMailAppBundleIdentifier])
+		{
+			[standardAppWindow center];
+			[standardAppWindow makeKeyAndOrderFront:self];
+		}
+		
+		[defaultMailAppBundleIdentifier release];
+	}
+}
+
+- (IBAction)makeGinkoStandardApp:(id)sender
+{
+	LSSetDefaultHandlerForURLScheme((CFStringRef)@"mailto", (CFStringRef)[[[NSBundle mainBundle] bundleIdentifier] lowercaseString]);
+	[standardAppWindow close];
+}
+
+- (IBAction)dontChangeStandardApp:(id)sender
+{
+	[standardAppWindow close];
 }
 
 @end

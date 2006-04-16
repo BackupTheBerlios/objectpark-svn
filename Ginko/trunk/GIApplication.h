@@ -18,10 +18,12 @@ extern NSNumber* yesNumber;
 
 @interface GIApplication : NSApplication 
 {
-    IBOutlet GISearchController *searchController;
+	IBOutlet NSWindow *standardAppWindow;
 
     BOOL isTerminating;
 }
+
+- (void)askForBecomingDefaultMailApplication;
 
 - (NSWindow *)groupsWindow;
 - (NSString *)databasePath;
@@ -31,6 +33,9 @@ extern NSNumber* yesNumber;
 - (IBAction)showActivityPanel:(id)sender;
 - (IBAction)toggleAutomaticActivityPanel:(id)sender;
 - (IBAction)startFulltextIndexingJobIfNeeded:(id)sender;
+
+- (IBAction)makeGinkoStandardApp:(id)sender;
+- (IBAction)dontChangeStandardApp:(id)sender;
 
 @end
 

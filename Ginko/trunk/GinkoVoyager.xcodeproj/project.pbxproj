@@ -56,6 +56,7 @@
 		7717AECA07DF30C700B0B0F5 /* ProfilePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */; };
 		7717AECE07DF30E400B0B0F5 /* AccountPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7717AECC07DF30E400B0B0F5 /* AccountPrefs.h */; };
 		7717AECF07DF30E400B0B0F5 /* AccountPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */; };
+		7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7718C87F09F1762A00D517CB /* ApplicationServices.framework */; };
 		77253D6307ECB83E00375AFC /* OPMessageConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */; };
 		77253D6407ECB83E00375AFC /* OPMessageConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77253D6007ECB83E00375AFC /* OPMessageConsumer.m */; };
 		77253D6507ECB83E00375AFC /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */; };
@@ -532,6 +533,7 @@
 		7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ProfilePrefs.nib; sourceTree = "<group>"; };
 		7717AECC07DF30E400B0B0F5 /* AccountPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountPrefs.h; sourceTree = "<group>"; };
 		7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountPrefs.m; sourceTree = "<group>"; };
+		7718C87F09F1762A00D517CB /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
 		77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPMessageConsumer.h; sourceTree = "<group>"; };
 		77253D6007ECB83E00375AFC /* OPMessageConsumer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPMessageConsumer.m; sourceTree = "<group>"; };
 		77253D6107ECB83E00375AFC /* OPSMTP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPSMTP.h; sourceTree = "<group>"; };
@@ -862,6 +864,7 @@
 				77D471E4095BF12E003CEAEA /* CoreFoundation.framework in Frameworks */,
 				774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */,
 				8DEFDBCA09C08CFD00F6FB25 /* libsqlite3.a in Frameworks */,
+				7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -900,6 +903,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7718C87F09F1762A00D517CB /* ApplicationServices.framework */,
 				77D471E3095BF12E003CEAEA /* CoreFoundation.framework */,
 				77738B0B0955B02000BAAB51 /* JavaVM.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
