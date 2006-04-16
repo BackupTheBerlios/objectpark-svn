@@ -113,13 +113,13 @@
 - (void) saveChanges;
 - (void) revertChanges;
 
-- (NSArray*) fetchObjectsOfClass: (Class) poClass
-					 sortedByKey: (NSString*) sortKey
-						keyClass: (Class) sortKeyClass
-					 queryFormat: (NSString*) clause, ...;
+- (OPFaultingArray*) fetchObjectsOfClass: (Class) poClass
+							 sortedByKey: (NSString*) sortKey
+								keyClass: (Class) sortKeyClass
+							 queryFormat: (NSString*) clause, ...;
 
-- (NSArray*) fetchObjectsOfClass: (Class) poClass
-					 whereFormat: (NSString*) clause, ...;
+- (OPFaultingArray*) fetchObjectsOfClass: (Class) poClass
+							 whereFormat: (NSString*) clause, ...;
 
 - (OPFaultingArray*) containerForObject: (id) object
 						relationShipKey: (NSString*) key;

@@ -654,6 +654,7 @@
 			sqlite3_bind_double(statement, index, [self doubleValue]);
         } else {
 			sqlite3_bind_int64(statement, index, [self longLongValue]);
+			//sqlite3_bind_null(<#sqlite3_stmt * #>,<#int #>)
 		} 
 		/*else {
 			NSLog(@"Warning! column type not handeled for save!");	
@@ -676,7 +677,7 @@
     int type = sqlite3_column_type(statement, index);
     //SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, SQLITE_NULL
     if (type!=SQLITE_NULL) {
-        long long value = sqlite3_column_int64(statement, index);
+        double value = sqlite3_column_double(statement, index);
 		
         result = [self dateWithTimeIntervalSinceReferenceDate: value];
     }
@@ -685,7 +686,7 @@
 
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
 {
-	sqlite3_bind_int64(statement, index, (long long)[self timeIntervalSinceReferenceDate]);
+	sqlite3_bind_double(statement, index, [self timeIntervalSinceReferenceDate]);
 }
 
 @end 

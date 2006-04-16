@@ -153,6 +153,7 @@
 
 
 - (void) _growTo: (unsigned) newCapacity
+// caller must syncronize!
 {
 	capacity=MAX( capacity*2+2, newCapacity );
     if ( data ) {
@@ -162,8 +163,6 @@
 		//memset(data, 0, (capacity+3) * entrySize); // nullify memory.
     }
 }
-
-
 
 
 - (void) removeObjectAtIndex: (unsigned) index
@@ -253,16 +252,24 @@
 	NSParameterAssert(index < count);
 	NSAssert(sortKey!=nil, @"Only allowed, with sortKey set.");
 	id result = nil;
+	OID oid;
+	id* storedSortObjectPtr;
+	@synchronized(self) {
+		oid = *oidPtr(index);
+		storedSortObjectPtr = sortObjectPtr(index);
+	} // rest only works on local data
+
 	// See, if there is an object registered with the context:
-	OPPersistentObject* object = [[self context] objectRegisteredForOid: *oidPtr(index) ofClass: elementClass];
+	OPPersistentObject* object = [[self context] objectRegisteredForOid: oid ofClass: elementClass];
 	// Avoid firing a fault to access the sort attribute:
 	if (object && ![object isFault]) {
 		result = [object valueForKey: sortKey]; // what happens, if it returns nil?
-		id* storedSortObjectPtr = sortObjectPtr(index);
+
 		if (result != *storedSortObjectPtr) {
 			// Update stored sortObject:
 			
-			if (![*storedSortObjectPtr isEqual: result]) needsSorting = YES;
+			if (![*storedSortObjectPtr isEqual: result]) 
+				needsSorting = YES; // error?
 			
 			// Free the stored object if favor of the object's attribute:
 			[*storedSortObjectPtr release];
@@ -270,7 +277,7 @@
 		}
 	} else {
 		// Fall back to cached sortObject:
-		result = *sortObjectPtr(index);
+		result = *storedSortObjectPtr;
 	}
 	
 	return result;
@@ -328,13 +335,15 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 - (unsigned) linearSearchForOid: (OID) oid
 {
 	unsigned resultIndex = NSNotFound;
-	// Search for oid:
-	size_t elementCount = count; 
-	char* result = lfind(&oid, data, &elementCount, entrySize, compare_oids);
-	if (result) {
-		resultIndex =  (result-data)/entrySize;
-		NSAssert([self oidAtIndex: resultIndex] == oid, @"lfind failed");
-	}	
+	if (oid) {
+		// Search for oid:
+		size_t elementCount = count; 
+		char* result = lfind(&oid, data, &elementCount, entrySize, compare_oids);
+		if (result) {
+			resultIndex =  (result-data)/entrySize;
+			NSAssert([self oidAtIndex: resultIndex] == oid, @"lfind failed");
+		}	
+	}
 	return resultIndex;
 }
 
@@ -357,7 +366,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	@synchronized(self) { // only needed because of debugging code
 		resultIndex = [self indexOfObject: anObject];
 		if (NSDebugEnabled) {
-			unsigned lresultIndex = [self linearSearchForOid: [anObject oid]];
+			unsigned lresultIndex = [self linearSearchForOid: [anObject currentOid]];
 			if (lresultIndex != resultIndex) {
 				[self isReallySorted];
 				resultIndex = lresultIndex;
@@ -389,64 +398,68 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/
 {
 	unsigned resultIndex = NSNotFound;
-	OID oid = [anObject oid]; // should be efficient
+	OID oid = [anObject currentOid]; // should be efficient
 	
-	@synchronized(self) {
-		// Make sure, we are sorted:
-		if (needsSorting) [self sort]; 
-		
-		if (sortKey) {
+	// Without oid, the object cannot be in this array!
+	if (oid) {
+		@synchronized(self) {
+			// Make sure, we are sorted:
+			[self sort]; 
 			
-			if ([anObject isFault]) {
-				// Firing a fault is probably more expensive than a linear search:				
-				resultIndex = [self linearSearchForOid: oid];
+			if (sortKey) {
 				
-			} else {
-				id key = [anObject valueForKey: sortKey]; // may fire fault! Bad!
-				
-				// Search for sortKey:
-				char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
-				if (result) {
-					// We found a matching sort-key.		
+				if ([anObject isFault]) {
+					// Firing a fault is probably more expensive than a linear search:				
+					resultIndex = [self linearSearchForOid: oid];
 					
-					resultIndex = (result-data)/entrySize;
+				} else {
+					id key = [anObject valueForKey: sortKey]; // may fire fault! avoid that!
 					
-					if (*((OID*)result) != oid) { // found using only bsearch on the keys
+					// Make sure, we are sorted:
+					[self sort]; 
+					// Search for sortKey:
+					char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
+					if (result) {
+						// We found a matching sort-key.		
 						
-						unsigned searchIndex;
+						resultIndex = (result-data)/entrySize;
 						
-						// Walk backward until the sortKey no longer matches or oid found: 
-						if (resultIndex) {
-							searchIndex = resultIndex-1;
-							while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
-								if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-								searchIndex--;
+						if (*((OID*)result) != oid) { // found using only bsearch on the keys
+							
+							unsigned searchIndex;
+							
+							// Walk backward until the sortKey no longer matches or oid found: 
+							if (resultIndex) {
+								searchIndex = resultIndex-1;
+								while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
+									if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+									searchIndex--;
+								}
 							}
+							// Walk forward until the sortKey no longer matches or oid found: 
+							searchIndex = resultIndex+1;
+							while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
+								if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+								searchIndex++;
+							}
+							
+							resultIndex = NSNotFound;
 						}
-						// Walk forward until the sortKey no longer matches or oid found: 
-						searchIndex = resultIndex+1;
-						while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
-							if (oid == *oidPtr(searchIndex)) return searchIndex; // found
-							searchIndex++;
-						}
-						
-						resultIndex = NSNotFound;
 					}
+					
 				}
-
-			}
-			
-		} else {
-			
-			// Search for oid:
-			char* result = bsearch(&oid, data, count, entrySize, compare_oids);
-			if (result) {
-				resultIndex =  (result-data)/entrySize;
+			} else {
+				
+				// Make sure, we are sorted:
+				[self sort]; 
+				// Search for oid:
+				char* result = bsearch(&oid, data, count, entrySize, compare_oids);
+				if (result) {
+					resultIndex =  (result-data)/entrySize;
+				}
 			}
 		}
-		
 	}
-	
 	return resultIndex;
 }
 
@@ -472,26 +485,28 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 /*" The sortObject may be nil, if sortKey is nil. "*/
 {	
 	NSParameterAssert(!sortObject || sortKey);
-	if (count+1 >= capacity) {
-		[self _growTo: count+1];
-	}
-	
-	*oidPtr(count) = oid;
-	
-	if (sortKey) {
-		// Cache the sortObject:
-		//NSLog(@"Adding sortObject: %@", sortObject);
-		[sortObject retain];
-		//NSLog(@"Adding Sortkey %@ at index: %d", sortObject, count);
-		*sortObjectPtr(count) = sortObject;
-	}
-	count+=1;
-	
-	//if (sortKey) NSLog(@"xxx: %@", self);
-	if (!needsSorting && count>1) {
-        // No need to set unsorted flag, if we insert in a sorted manner:
-		needsSorting = [self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0; // optimization
-		needsSorting = YES; //[self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0; optimize later
+	@synchronized(self) {
+		if (count+1 >= capacity) {
+			[self _growTo: count+1];
+		}
+		
+		*oidPtr(count) = oid;
+		
+		if (sortKey) {
+			// Cache the sortObject:
+			//NSLog(@"Adding sortObject: %@", sortObject);
+			[sortObject retain];
+			//NSLog(@"Adding Sortkey %@ at index: %d", sortObject, count);
+			*sortObjectPtr(count) = sortObject;
+		}
+		count+=1;
+		
+		//if (sortKey) NSLog(@"xxx: %@", self);
+		if (!needsSorting && count>1) {
+			// No need to set unsorted flag, if we insert in a sorted manner:
+			//needsSorting = [self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0; // optimization - be careful accessing other sort objects - they might not be upto-date
+			needsSorting = YES; //[self compareObjectAtIndex: count-2 withObjectAtIndex: count-1] > 0; optimize later
+		}
 	}
 }
 
@@ -521,16 +536,16 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 
 - (id) objectAtIndex: (unsigned) anIndex
 {
-	id result;
+	OID oid;
 	@synchronized(self) {
 		NSParameterAssert(anIndex<count);
 		[self sort];
-		
-		OID oid = *oidPtr(anIndex);
-		// Should we store and retain a context?
-		result = [[self context] objectForOid: oid ofClass: elementClass];
-		NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
+		oid = *oidPtr(anIndex);
 	}
+
+	// Should we store and retain a context?
+	id result = [[self context] objectForOid: oid ofClass: elementClass];
+	NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
 	return result;
 }
 

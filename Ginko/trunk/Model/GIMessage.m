@@ -99,7 +99,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 + (OPFaultingArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit
 {
     OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-    
+	#warning (Indexing) Queries with 'or' sometimes prevent indexes from being used. Check with sqlite doku and rewrite.
     OPFaultingArray *result = (OPFaultingArray *)[context fetchObjectsOfClass: self whereFormat:@"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) and not (ZMESSAGEDATA ISNULL) limit ?", [NSNumber numberWithUnsignedInt:limit], nil];
 
     return result;

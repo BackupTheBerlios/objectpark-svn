@@ -74,12 +74,14 @@
 	[self setValue: result forKey: @"date"];
 }
 
+/*
 - (void) willSave
 {
 	[super willSave];
 	
-	if (![self valueForKey: @"date"]) [self calculateDate]; // fixing only for broken databases - can be removed later.
+	//if (![self valueForKey: @"date"]) [self calculateDate]; // fixing only for broken databases - can be removed later.
 }
+*/
 
 - (void) didChangeValueForKey: (NSString*) key 
 {

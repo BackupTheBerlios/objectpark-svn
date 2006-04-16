@@ -1057,12 +1057,13 @@ static BOOL isThreadItem(id item)
 					// Create new thread for all messages from the same thread:
 					newThread = [[[[GIThread class] alloc] init] autorelease];
 					[newThread insertIntoContext: [(GIMessage*)item context]];
-					[oldNewThreadDictionary setObject: newThread forKey: [item thread]];
+					// xxx
+					[oldNewThreadDictionary setObject: newThread forKey: [item thread]]; // *** -[GIThread copyWithZone:]: selector not recognized 
 					[GIMessageBase addTrashThread: newThread];
 				}
 				[newThread addValue: item forKey: @"messages"];
 
-			} // Othwise we trash the whole thread anyway.
+			} // Otherwise we trash the whole thread anyway.
 		}
     }
     

@@ -514,8 +514,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 												   secondColumnName: [relationshipChanges secondColumnName]];
 				}
 				
-				// prevent this relationship from changing:
-				@synchronized(relationshipChanges) {
+				// Prevent this relationship from being read:
+				@synchronized(relationshipChanges) { 
 					NSEnumerator* pairEnum = [relationshipChanges addedRelationsEnumerator];
 					OPObjectPair* pair;
 					
@@ -559,7 +559,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 							[removeStatement execute];
 						}
 					}		
-					
 					
 					[removeStatement reset];
 					
@@ -627,25 +626,20 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		
 		numberOfRelationshipsFired++;
 		
-		@synchronized(self) {
-			/* replace with fetch!
-			e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
-														  resultClass: [ad attributeClass] 
-														  queryString: sql];
-			[e bind: object, nil];
-			result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];				
-			[e release];
-			*/
-			result = [self fetchObjectsOfClass: [ad attributeClass] 
-								   sortedByKey: sortKey
-									  keyClass: sortKeyClass
-								   queryFormat: sql, object, nil];
-			
-			
-			OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
-			// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
-			[rchanges updateRelationshipNamed: key from: object values: result];
-			
+		
+		result = [self fetchObjectsOfClass: [ad attributeClass] 
+							   sortedByKey: sortKey
+								  keyClass: sortKeyClass
+							   queryFormat: sql, object, nil];
+		
+		
+		OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
+		if (rchanges) {
+			@synchronized(rchanges) { // do not lock the context here? Deadlock!
+				
+				// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
+				[rchanges updateRelationshipNamed: key from: object values: result];
+			}
 		}
 	}
 	return result;
@@ -716,13 +710,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return [NSString stringWithFormat: @"%@ #faults registered/created: %u/%u, #r'ships fired: %u, #saved: %u, #deleted: %u, \nfireKeys: %@", [super description], NSCountHashTable(registeredObjects), numberOfFaultsCreated, numberOfRelationshipsFired, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
 }
 
-- (NSArray*) fetchObjectsOfClass: (Class) poClass
+- (OPFaultingArray*) fetchObjectsOfClass: (Class) poClass
 					 sortedByKey: (NSString*) sortKey
 						keyClass: (Class) sortKeyClass
 					 queryFormat: (NSString*) sql, ...
 /*" Pass a query string in the format string. The following parameters replace any occurrences of $1, $2 $3 etc. respectively. key and keyClass can be nil, if sorting is not required. "*/
 {
-	NSArray* result;
+	OPFaultingArray* result;
 	@synchronized(db) {
 		OPPersistentObjectEnumerator* e;
 		char variableValue[5] = "";
@@ -750,12 +744,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return result;
 }
 
-- (NSArray*) fetchObjectsOfClass: (Class) poClass
+- (OPFaultingArray*) fetchObjectsOfClass: (Class) poClass
 					 whereFormat: (NSString*) clause, ...
 	/*" Replaces all the question marks in the whereFormat string with the object 
 	values passed. Valid object classes return YES to +[canPersist]. key and keyClass can be nil, if sorting is not required. "*/
 {
-	NSArray* result;
+	OPFaultingArray* result;
 	@synchronized(db) {
 		OPPersistentObjectEnumerator* e;
 		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
@@ -771,7 +765,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		}
 		va_end(ap); /* clean up when done */
 		
-		result = [e allObjects];
+		result = (OPFaultingArray*)[e allObjects];
 		[e release];
 	}
 	return result;

@@ -235,14 +235,16 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	Currently, the defaultContext is always used. "*/
 {
 	if (!oid) {
-		// Create database row and oid:
-		OPPersistentObjectContext* context = [self context];
-		if (context) {
-			OID newOid = [context newDatabaseObjectForObject: self];
-			[self setOid: newOid];
+		@synchronized(self) {
+			// Create database row and oid:
+			OPPersistentObjectContext* context = [self context];
+			if (context) {
+				OID newOid = [context newDatabaseObjectForObject: self];
+				[self setOid: newOid];
+			}
 		}
 	}
-    return oid;
+	return oid;
 }
 
 - (NSString*) objectURLString
@@ -253,10 +255,12 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 - (void) setOid: (OID) theOid
 /*" Registers the receiver with the context, if neccessary. "*/
 {
-	if (oid != theOid) {
-		NSAssert(oid==0, @"Object ids can be set only once per instance.");
-		*((OID*)&oid) = theOid;
-		[[self context] registerObject: self];
+	@synchronized(self) {
+		if (oid != theOid) {
+			NSAssert(oid==0, @"Object ids can be set only once per instance.");
+			*((OID*)&oid) = theOid;
+			[[self context] registerObject: self];
+		}
 	}
 }
 

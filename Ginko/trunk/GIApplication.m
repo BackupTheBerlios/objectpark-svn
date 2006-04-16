@@ -500,13 +500,13 @@ NSNumber* yesNumber = nil;
     {
         if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
         {            
-//            NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
-//            NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
+            //NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000]; // perform this expensive operation in background thread!!
+            //NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250]; // perform this expensive operation in background thread!
             
-//            if ([messagesToAdd count] || [messagesToRemove count]) 
-//            {
-                [GIFulltextIndex fulltextIndexInBackgroundAdding:nil removing:nil];
-//            }
+			//            if ([messagesToAdd count] || [messagesToRemove count]) 
+			//            {
+			[GIFulltextIndex fulltextIndexInBackgroundAdding:nil removing:nil];
+			//            }
         }
     }
 }

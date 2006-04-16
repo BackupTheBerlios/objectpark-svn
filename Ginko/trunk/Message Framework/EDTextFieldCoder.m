@@ -165,7 +165,7 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
                ([scanner scanUpToString: @"?=" intoString:&chunk] == NO) ||
                ([scanner scanString: @"?=" intoString: NULL] == NO))
             {
-                [NSException raise:EDMessageFormatException format:EDLS_MALFORMED_MIME_HEADER_WORD, fieldBody];
+                [NSException raise: EDMessageFormatException format:EDLS_MALFORMED_MIME_HEADER_WORD, fieldBody];
                 if([previousChunk isWhitespace])
                     [result appendString:previousChunk];
                 hasSeenEncodedWord = NO;
@@ -278,11 +278,11 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
     
     if (!fallback)
         return [self stringByDecodingMIMEWordsInString: body]; // throws
-    NS_DURING
+    @try {
         result = [self stringByDecodingMIMEWordsInString: body];
-    NS_HANDLER
+	} @catch (NSException* localException) {
         result = body;
-    NS_ENDHANDLER
+	}
     return result;    
 }
 

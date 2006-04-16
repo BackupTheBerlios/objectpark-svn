@@ -596,7 +596,7 @@ static NSMutableArray* root = nil;
 
 - (void) dateDidChangeOfThread: (GIThread*) thread 
 {
-	OPFaultingArray* threads = [self valueForKey: @"threadsByDate"];
+	OPFaultingArray* threads = [self valueForKey: @"threadsByDate"]; // changed thread date causes problem here!
 	[threads updateSortObjectForObject: thread];
 }
 

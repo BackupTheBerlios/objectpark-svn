@@ -69,7 +69,7 @@
 - (NSString*) path;
 - (NSString*) name; 
 
-- (void) beginTransaction;
+- (BOOL) beginTransaction;
 - (void) commitTransaction;
 - (void) rollBackTransaction;
 - (BOOL) transactionInProgress;

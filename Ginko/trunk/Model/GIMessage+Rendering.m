@@ -183,6 +183,7 @@ static NSString *templatePostfix = nil;
             }
         }
         
+#warning Exception occurs when [fieldNames count] delivers 0!
         NSMutableAttributedString *fieldTable = [self fieldTableWithRowCount:[fieldNames count]];
         int i, count = [fieldNames count];
         int startPosition = 0;

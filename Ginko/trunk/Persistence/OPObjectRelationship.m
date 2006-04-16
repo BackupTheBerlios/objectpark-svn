@@ -139,32 +139,33 @@
 	OPObjectPair* relation;
 	
 	// Make sure the relationship does not change during enumeration:
-	//@synchronized(self) {
 	e = [addedRelations objectEnumerator];
-	while (relation = [e nextObject]) {
-		if ([relation objectAtIndex: objectColumn] == anObject) {
-			// Add related object to array:
-			id target = [relation objectAtIndex: 1-objectColumn];
-			if (![array containsObject: target]) {
-				[array addObject: target];
-			} else {
-				NSLog(@"Warning: Relationship addition '%@'='%@' already present. ", relationName, target);
+	
+	@synchronized(array) {
+		while (relation = [e nextObject]) {
+			if ([relation objectAtIndex: objectColumn] == anObject) {
+				// Add related object to array:
+				id target = [relation objectAtIndex: 1-objectColumn];
+				if (![array containsObject: target]) {
+					[array addObject: target];
+				} else {
+					NSLog(@"Warning: Relationship addition '%@'='%@' already present. ", relationName, target);
+				}
+			}
+		}
+		e = [removedRelations objectEnumerator];
+		while (relation = [e nextObject]) {
+			if ([relation objectAtIndex: objectColumn] == anObject) {
+				// Remove related object from array:
+				id target = [relation objectAtIndex: 1-objectColumn];
+				if ([array containsObject: target]) {
+					[array removeObject: target];
+				} else {
+					NSLog(@"Warning: Relationship addition '%@'='%@' already present. ", relationName, target);
+				}
 			}
 		}
 	}
-	e = [removedRelations objectEnumerator];
-	while (relation = [e nextObject]) {
-		if ([relation objectAtIndex: objectColumn] == anObject) {
-			// Remove related object from array:
-			id target = [relation objectAtIndex: 1-objectColumn];
-			if ([array containsObject: target]) {
-				[array removeObject: target];
-			} else {
-				NSLog(@"Warning: Relationship addition '%@'='%@' already present. ", relationName, target);
-			}
-		}
-	}
-	//}
 }
 
 - (NSEnumerator*) removedRelationsEnumerator
