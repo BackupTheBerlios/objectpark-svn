@@ -57,6 +57,9 @@
 		7717AECE07DF30E400B0B0F5 /* AccountPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7717AECC07DF30E400B0B0F5 /* AccountPrefs.h */; };
 		7717AECF07DF30E400B0B0F5 /* AccountPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */; };
 		7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7718C87F09F1762A00D517CB /* ApplicationServices.framework */; };
+		7718CA8809F2CDEA00D517CB /* GIGeneralPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7718CA8609F2CDEA00D517CB /* GIGeneralPrefs.h */; };
+		7718CA8909F2CDEA00D517CB /* GIGeneralPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7718CA8709F2CDEA00D517CB /* GIGeneralPrefs.m */; };
+		7718CA8E09F2CE5100D517CB /* GIGeneralPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7718CA8D09F2CE5100D517CB /* GIGeneralPrefs.nib */; };
 		77253D6307ECB83E00375AFC /* OPMessageConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */; };
 		77253D6407ECB83E00375AFC /* OPMessageConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77253D6007ECB83E00375AFC /* OPMessageConsumer.m */; };
 		77253D6507ECB83E00375AFC /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */; };
@@ -534,6 +537,9 @@
 		7717AECC07DF30E400B0B0F5 /* AccountPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountPrefs.h; sourceTree = "<group>"; };
 		7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountPrefs.m; sourceTree = "<group>"; };
 		7718C87F09F1762A00D517CB /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
+		7718CA8609F2CDEA00D517CB /* GIGeneralPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGeneralPrefs.h; sourceTree = "<group>"; };
+		7718CA8709F2CDEA00D517CB /* GIGeneralPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGeneralPrefs.m; sourceTree = "<group>"; };
+		7718CA8D09F2CE5100D517CB /* GIGeneralPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIGeneralPrefs.nib; sourceTree = "<group>"; };
 		77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPMessageConsumer.h; sourceTree = "<group>"; };
 		77253D6007ECB83E00375AFC /* OPMessageConsumer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPMessageConsumer.m; sourceTree = "<group>"; };
 		77253D6107ECB83E00375AFC /* OPSMTP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPSMTP.h; sourceTree = "<group>"; };
@@ -1221,10 +1227,6 @@
 				7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */,
 				8DDD2274080ECA20006C902D /* AccountPrefs.nib */,
 				77D061680983C86F0061BC4D /* AccountPrefs.tiff */,
-				7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */,
-				7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */,
-				7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */,
-				77D0616A0983C8F20061BC4D /* ProfilePrefs.tiff */,
 				8D666EFE07D5247A0076C74D /* GIContentPane.h */,
 				8D666EFF07D5247A0076C74D /* GIContentPane.m */,
 				8D666F0D07D526A80076C74D /* GIContentPane.nib */,
@@ -1237,6 +1239,13 @@
 				77D05F3F0983C4BB0061BC4D /* GIFulltextSearchPane.m */,
 				77D05F370983C2F80061BC4D /* GIFulltextSearchPane.nib */,
 				77B8337A0983CD6D00B467C2 /* GIFulltextSearchPane.tiff */,
+				7718CA8609F2CDEA00D517CB /* GIGeneralPrefs.h */,
+				7718CA8709F2CDEA00D517CB /* GIGeneralPrefs.m */,
+				7718CA8D09F2CE5100D517CB /* GIGeneralPrefs.nib */,
+				7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */,
+				7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */,
+				7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */,
+				77D0616A0983C8F20061BC4D /* ProfilePrefs.tiff */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1597,6 +1606,7 @@
 				77F01CF309D299E2007C4CA5 /* GIHeaderFieldEditor.h in Headers */,
 				77F01D0109D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h in Headers */,
 				77CA730F09F1272C00749461 /* MailToCommand.h in Headers */,
+				7718CA8809F2CDEA00D517CB /* GIGeneralPrefs.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1880,6 +1890,7 @@
 				8D34C67E09B4A31100615833 /* BackToolbarImage.tiff in Resources */,
 				77CA735409F12BD000749461 /* Ginko.scriptSuite in Resources */,
 				77CA735709F12C7800749461 /* Ginko.scriptTerminology in Resources */,
+				7718CA8E09F2CE5100D517CB /* GIGeneralPrefs.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2061,6 +2072,7 @@
 				77F01CF409D299E2007C4CA5 /* GIHeaderFieldEditor.m in Sources */,
 				77F01D0209D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */,
 				77CA731009F1272C00749461 /* MailToCommand.m in Sources */,
+				7718CA8909F2CDEA00D517CB /* GIGeneralPrefs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

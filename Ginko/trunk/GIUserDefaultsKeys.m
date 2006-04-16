@@ -29,6 +29,8 @@ NSString *AutomaticActivityPanelEnabled = @"AutomaticActivityPanelEnabled";
 NSString *FulltextIndexChangeCount = @"FulltextIndexChangeCount";
 NSString *EarliestSendTimes = @"EarliestSendTimes";
 NSString *AskAgainToBecomeDefaultMailApplication = @"AskAgainToBecomeDefaultMailApplication";
+NSString *SoonRipeMessagesShouldBeSent = @"SoonRipeMessagesShouldBeSent";
+NSString *SoonRipeMessageMinutes = @"SoonRipeMessageMinutes";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
@@ -93,6 +95,10 @@ void registerDefaultDefaults()
         [NSNumber numberWithInt:DEFAULTSEARCHHITLIMIT], SearchHitLimit,
         
 		[NSNumber numberWithBool:YES], AskAgainToBecomeDefaultMailApplication, 
+				
+		[NSNumber numberWithBool:YES], SoonRipeMessagesShouldBeSent,
+		
+		[NSNumber numberWithInt:30], SoonRipeMessageMinutes,
 		
         nil, nil];
     

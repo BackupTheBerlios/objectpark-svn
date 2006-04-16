@@ -23,6 +23,7 @@ extern NSNumber* yesNumber;
     BOOL isTerminating;
 }
 
+- (BOOL)isGinkoStandardMailApplication;
 - (void)askForBecomingDefaultMailApplication;
 
 - (NSWindow *)groupsWindow;

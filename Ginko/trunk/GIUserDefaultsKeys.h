@@ -30,6 +30,8 @@ extern NSString *SearchHitLimit;
 extern NSString *JunkReplySubjectPrefixes;
 extern NSString *EarliestSendTimes;
 extern NSString *AskAgainToBecomeDefaultMailApplication;
+extern NSString *SoonRipeMessagesShouldBeSent;
+extern NSString *SoonRipeMessageMinutes;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

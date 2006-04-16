@@ -119,6 +119,8 @@ enum LeaveOnServerDuration
 @interface GIAccount (SendingAndReceiving)
 
 + (void)resetAccountRetrieveAndSendTimers;
++ (BOOL)anyMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval;
+- (void)sendMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval;
 - (void)send;
 - (void)receive;
 

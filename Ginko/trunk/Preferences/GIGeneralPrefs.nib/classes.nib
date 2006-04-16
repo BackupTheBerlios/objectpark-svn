@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {addAccount = id; rearrangeObjects = id; removeAccount = id; }; 
+            CLASS = AccountPrefs; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {accountTableView = NSTableView; accountsController = NSArrayController; }; 
+            SUPERCLASS = OPPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = G3Account; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {askForBecomingDefaultMailApplication = id; }; 
+            CLASS = GIGeneralPrefs; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = OPPreferencePane; 
+        }, 
+        {
+            CLASS = NSPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "_firstKeyView" = NSView; 
+                "_initialKeyView" = NSView; 
+                "_lastKeyView" = NSView; 
+                "_window" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = OPPreferencePane; LANGUAGE = ObjC; SUPERCLASS = NSPreferencePane; }
+    ); 
+    IBVersion = 1; 
+}

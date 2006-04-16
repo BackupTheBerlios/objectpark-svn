@@ -647,22 +647,26 @@ NSNumber* yesNumber = nil;
     [pool release];
 }
 
+- (BOOL)isGinkoStandardMailApplication
+{
+	NSString *defaultMailAppBundleIdentifier = (NSString *)LSCopyDefaultHandlerForURLScheme((CFStringRef)@"mailto");
+	NSString *bundleIdentifier = [[[NSBundle mainBundle] bundleIdentifier] lowercaseString];
+	[defaultMailAppBundleIdentifier autorelease];
+	
+	return [bundleIdentifier isEqualToString:defaultMailAppBundleIdentifier];
+}
+
 - (void)askForBecomingDefaultMailApplication
 {
 	BOOL shouldAsk = [[NSUserDefaults standardUserDefaults] boolForKey:AskAgainToBecomeDefaultMailApplication];
 	
 	if (shouldAsk)
-	{
-		NSString *defaultMailAppBundleIdentifier = (NSString *)LSCopyDefaultHandlerForURLScheme((CFStringRef)@"mailto");
-		NSString *bundleIdentifier = [[[NSBundle mainBundle] bundleIdentifier] lowercaseString];
-		
-		if (![bundleIdentifier isEqualToString:defaultMailAppBundleIdentifier])
+	{		
+		if (![self isGinkoStandardMailApplication])
 		{
 			[standardAppWindow center];
 			[standardAppWindow makeKeyAndOrderFront:self];
-		}
-		
-		[defaultMailAppBundleIdentifier release];
+		}		
 	}
 }
 

@@ -672,7 +672,7 @@
 	}
 }
 
-- (void)send
+- (NSArray *)messagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval
 {
     // iterate over all profiles:
 	NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
@@ -685,6 +685,7 @@
 		{
 			NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
 			GIMessage *message;
+			NSDate *ripeDate = [NSDate dateWithTimeIntervalSinceNow:interval];
 			
 			while (message = [messagesToSendEnumerator nextObject]) 
 			{
@@ -693,7 +694,7 @@
 				
 				if (earliestSendTime)
 				{
-					if ([earliestSendTime laterDate:[NSDate date]] == earliestSendTime)
+					if ([earliestSendTime laterDate:ripeDate] == earliestSendTime)
 					{
 						timeIsRipe = NO;
 					}
@@ -708,11 +709,39 @@
 		}
     }
 	
+	return messagesQualifyingForSend;
+}
+
++ (BOOL)anyMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval
+{
+	NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
+	GIAccount *account;
+	
+	while (account = [enumerator nextObject])
+	{
+		if ([[account messagesRipeForSendingAtTimeIntervalSinceNow:interval] count])
+		{
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+- (void)sendMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval
+{
+	NSArray *messagesQualifyingForSend = [self messagesRipeForSendingAtTimeIntervalSinceNow:interval];
+	
 	// something to send for the account?
 	if ([messagesQualifyingForSend count]) 
 	{
 		[GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:self];
 	}
+}
+
+- (void)send
+{
+	[self sendMessagesRipeForSendingAtTimeIntervalSinceNow:0.0];
 }
 
 - (void)receive
