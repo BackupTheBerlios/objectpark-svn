@@ -388,8 +388,24 @@ NSNumber* yesNumber = nil;
 {
     NSApplicationTerminateReply result = NSTerminateNow;
     
-    isTerminating = YES;
-    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SoonRipeMessagesShouldBeSent])
+	{
+		NSTimeInterval dueInterval = (NSTimeInterval)[[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes] * 60.0;
+		
+		if ([GIAccount anyMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval])
+		{
+			[self sendMessagesDueInNearFuture:self];
+			
+			NSAlert *alert = [[NSAlert alloc] init];
+			//[alert setTitle:NSLocalizedString(@"Unsent 'due soon' Messages", @"quit dialog due soon messages")];
+			[alert setMessageText:NSLocalizedString(@"There are messages that are due for sending soon which will be send now. Quit canceled.", @"quit dialog due soon messages")];
+			[alert addButtonWithTitle:NSLocalizedString(@"Close", @"quit dialog due soon messages")];
+			[alert runModal];
+			[alert release];
+			return NSTerminateCancel;
+		}
+	}
+	
     // check open windows
     // if an edit window is open with an edited message ask what to do with the open message
     NSWindow *window;
@@ -405,7 +421,9 @@ NSNumber* yesNumber = nil;
             }
         }
     }
-    
+
+	isTerminating = YES;
+
     [OPJobs suspendPendingJobs];
     NSArray *runningJobs = [OPJobs runningJobs];
     
