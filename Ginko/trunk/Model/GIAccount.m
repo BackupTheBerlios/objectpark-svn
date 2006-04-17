@@ -702,7 +702,6 @@
 				
 				if (([message sendStatus] == OPSendStatusQueuedReady) && (timeIsRipe)) 
 				{
-					[message setSendStatus:OPSendStatusSending];
 					[messagesQualifyingForSend addObject:message];
 				}
 			}
@@ -735,6 +734,13 @@
 	// something to send for the account?
 	if ([messagesQualifyingForSend count]) 
 	{
+		NSEnumerator *enumerator = [messagesQualifyingForSend objectEnumerator];
+		GIMessage *message;
+		while (message = [enumerator nextObject])
+		{
+			[message setSendStatus:OPSendStatusSending];
+		}
+
 		[GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:self];
 	}
 }

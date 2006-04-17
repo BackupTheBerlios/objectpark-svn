@@ -317,7 +317,7 @@ NSNumber* yesNumber = nil;
 /*" On launch, opens a group window. "*/
 {
     [self applicationDidBecomeActive:aNotification];
-    [OPJobs setMaxThreads:4];
+    [OPJobs setMaxThreads:16];
     [self startFulltextIndexingJobIfNeeded:self];
 	[GIAccount resetAccountRetrieveAndSendTimers];
 }
@@ -395,7 +395,8 @@ NSNumber* yesNumber = nil;
 		if ([GIAccount anyMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval])
 		{
 			[self sendMessagesDueInNearFuture:self];
-			
+			sleep(1); // let the jobs begin
+			/*
 			NSAlert *alert = [[NSAlert alloc] init];
 			//[alert setTitle:NSLocalizedString(@"Unsent 'due soon' Messages", @"quit dialog due soon messages")];
 			[alert setMessageText:NSLocalizedString(@"There are messages that are due for sending soon which will be send now. Quit canceled.", @"quit dialog due soon messages")];
@@ -403,6 +404,7 @@ NSNumber* yesNumber = nil;
 			[alert runModal];
 			[alert release];
 			return NSTerminateCancel;
+			 */
 		}
 	}
 	
@@ -471,7 +473,8 @@ NSNumber* yesNumber = nil;
     {
         if ([[OPJobs runningJobs] count] == 0)
         {
-            [self replyToApplicationShouldTerminate:YES];
+			// let other notification listeners clean up properly...hence the little delay:
+			[self replyToApplicationShouldTerminate:YES];
         }
     }
 }
