@@ -38,6 +38,8 @@ extern NSNumber* yesNumber;
 - (IBAction)makeGinkoStandardApp:(id)sender;
 - (IBAction)dontChangeStandardApp:(id)sender;
 
+- (IBAction)sendMessagesDueInNearFuture:(id)sender;
+
 @end
 
 @interface GIApplication (ScriptingSupport)

@@ -96,21 +96,39 @@ NSNumber* yesNumber = nil;
 
 + (NSArray *)preferredContentTypes
 {
-    NSArray* types = [[NSUserDefaults standardUserDefaults] objectForKey: ContentTypePreferences];
+    NSArray *types = [[NSUserDefaults standardUserDefaults] objectForKey:ContentTypePreferences];
     return types;
 }
 
-- (BOOL) validateMenuItem: (id <NSMenuItem>) menuItem
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    if ([menuItem action] == @selector(toggleAutomaticActivityPanel:)) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled]) {
+    if ([menuItem action] == @selector(toggleAutomaticActivityPanel:)) 
+	{
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled]) 
+		{
             [menuItem setState:NSOnState];
-        } else {
+        } 
+		else 
+		{
             [menuItem setState:NSOffState];
         }
         return YES;
     }
-    else return [self validateSelector:[menuItem action]];
+	else if ([menuItem action] == @selector(sendMessagesDueInNearFuture:)) 
+	{
+		int soonRipeMinutes = [[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes];
+		if ([GIAccount anyMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)soonRipeMinutes * 60.0])
+		{
+			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString(@"Send Messages Due in %d Minutes", @"Menu item"), soonRipeMinutes]];
+			return YES;
+		}
+		else
+		{
+			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString(@"No Messages Due in %d Minutes", @"Menu item"), soonRipeMinutes]];
+			return NO;
+		}
+	}
+    return [self validateSelector:[menuItem action]];
 }
 
 - (void) saveOpenWindowsFromThisSession
@@ -591,6 +609,17 @@ NSNumber* yesNumber = nil;
 	[[GIAccount allObjects] makeObjectsPerformSelector:@selector(send)];
 	[GIAccount resetAccountRetrieveAndSendTimers];
 	[[GIAccount allObjects] makeObjectsPerformSelector:@selector(receive)];
+}
+
+- (IBAction)sendMessagesDueInNearFuture:(id)sender
+{
+	NSEnumerator *enumerator = [[GIAccount allObjects] objectEnumerator];
+	GIAccount *account;
+	NSTimeInterval dueInterval = [[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes] * 60.0;
+	while (account = [enumerator nextObject]) 
+	{
+		[account sendMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval];
+	}
 }
 
 - (IBAction)showActivityPanel:(id)sender
