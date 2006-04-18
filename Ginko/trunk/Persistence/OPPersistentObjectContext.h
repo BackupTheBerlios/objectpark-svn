@@ -48,7 +48,7 @@
 	@private
 	
     NSHashTable* registeredObjects;
-    NSMutableSet* changedObjects;
+    NSMutableSet* changedObjects; // this object is used to lock both changedObjects and deletedObjects
     NSMutableSet* deletedObjects;
     
     OPSQLiteConnection* db;

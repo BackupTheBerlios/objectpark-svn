@@ -349,16 +349,15 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 }
 
 - (id) primitiveValueForKey: (NSString*) key
-/*" Fills the attributes dictionary, if necessary, i.e. fires the fault."*/
+/*" Fills the attributes dictionary, if necessary, i.e. fires the fault. The result is autoreleased in the calling thread. "*/
 {
 	id result;
 	
 	@synchronized(self) {
-
 		[self xwillAccessValueForKey: key]; // fire fault, make sure the attribute values exist.
-		result = [attributes objectForKey: key];
+		result = [[attributes objectForKey: key] retain];
 	}	
-	return result;
+	return [result autorelease]; // needed to be thread-safe?
 }
 
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key

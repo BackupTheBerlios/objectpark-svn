@@ -535,6 +535,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 
 
 - (id) objectAtIndex: (unsigned) anIndex
+/*" The result is autoreleased in the caller's thread. "*/
 {
 	OID oid;
 	@synchronized(self) {
@@ -543,10 +544,9 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 		oid = *oidPtr(anIndex);
 	}
 
-	// Should we store and retain a context?
 	id result = [[self context] objectForOid: oid ofClass: elementClass];
 	NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
-	return result;
+	return [[result retain] autorelease];
 }
 
 /*

@@ -144,7 +144,7 @@ typedef struct {
 - (void) didChangeObject: (OPPersistentObject*) object
 /*" This method retains object until changes are saved. "*/
 {
-	@synchronized(self) {
+	@synchronized(changedObjects) {
 		[changedObjects addObject: object];  
 	}
 }
@@ -168,12 +168,13 @@ typedef struct {
 
 - (void) willRevertObject: (OPPersistentObject*) object
 {
-    [changedObjects removeObject: object];  
+	@synchronized(changedObjects) {
+		[changedObjects removeObject: object]; 
+	}
 }
 
 - (void) didRevertObject: (OPPersistentObject*) object
 {
-	//[lock unlock];
 }
 
 - (OID) newDatabaseObjectForObject: (OPPersistentObject*) object
@@ -184,7 +185,7 @@ typedef struct {
 		newOid = [db insertNewRowForClass: [object class]];
 	}
 	NSAssert1(newOid, @"Unable to insert row for new object %@", object);
-	@synchronized(self) {
+	@synchronized(changedObjects) {
 		[changedObjects addObject: object]; // make sure the values make it into the database
 	}
 	return newOid;
@@ -206,14 +207,14 @@ typedef struct {
     } else {
 		// We already know this object.
 		// Put it into  the fault cache:
-		//@synchronized (self) {
+		@synchronized (faultCache) {
 			[faultCache addObject: result]; // cache result
 			if ([faultCache count] > faultCacheSize) {
 				[faultCache removeObjectAtIndex: 0]; // release some object
 			}
-		//}
+		}
 	}
-    return result;
+    return result; // needed?
 }
 
 - (NSArray*) allObjectsOfClass: (Class) poClass 
@@ -227,15 +228,17 @@ typedef struct {
 			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 			result = [self fetchObjectsOfClass: poClass whereFormat: nil, nil];
 			
-			// Add all changed/new objects possibly not yet in the database:
-			NSEnumerator* coe = [changedObjects objectEnumerator];
-			id object;
-			while ([object = coe nextObject]) {
-				if ([object isKindOfClass: poClass]) {
-					[(id)result addObject: object];
+			@synchronized(changedObjects) {
+				// Add all changed/new objects possibly not yet in the database:
+				NSEnumerator* coe = [changedObjects objectEnumerator];
+				id object;
+				while ([object = coe nextObject]) {
+					if ([object isKindOfClass: poClass]) {
+						[(id)result addObject: object];
+					}
 				}
+				[cachedObjectsByClass setObject: result forKey: poClass];
 			}
-			[cachedObjectsByClass setObject: result forKey: poClass];
 			[pool release];
 		}
 	}
@@ -333,9 +336,11 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	 numberOfObjectsDeleted = 0;
 	 [faultFireCountsByKey release]; faultFireCountsByKey = [[NSCountedSet alloc] init];
 	
-    [changedObjects release]; changedObjects = [[NSMutableSet alloc] init]; 
-    [deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
-    [cachedObjectsByClass release]; cachedObjectsByClass = [[NSMutableDictionary alloc] init];
+	 @synchronized(changedObjects) {
+		 [changedObjects release]; changedObjects = [[NSMutableSet alloc] init]; 
+		 [deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
+		 [cachedObjectsByClass release]; cachedObjectsByClass = [[NSMutableDictionary alloc] init];
+	 }
 	
 	[relationshipChangesByJoinTable release];
 	relationshipChangesByJoinTable = [[NSMutableDictionary alloc] init];
@@ -351,7 +356,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (id) init 
 {
     if (self = [super init]) {
-        [self reset];       
+        [self reset];      
 		//lock = [[NSLock alloc] init];
     }
     return self;
@@ -446,55 +451,55 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			[db beginTransaction];
 		}
 		
-		if ([changedObjects count]) {
-			NSLog(/*OPDebugLog(OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
-			
-			// Process all updated objects and save their changed attribute sets:
-			NSEnumerator* coe = [changedObjects objectEnumerator];
-			OPPersistentObject* changedObject;
-			while (changedObject = [coe nextObject]) {
+		@synchronized(changedObjects) {
+			if ([changedObjects count]) {
+				NSLog(/*OPDebugLog OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
 				
-				[changedObject willSave];
-				OID newOid;
-				@synchronized(db) {
-					newOid = [db updateRowOfClass: [changedObject class] 
-											rowId: [changedObject currentOid] 
-										   values: [changedObject attributeValues]];
-				}
-				
-				[changedObject setOid: newOid]; // also registers object
-				
-			}
-			
-			numberOfObjectsSaved += [changedObjects count];
-			// Release all changed objects:
-			[changedObjects release]; changedObjects = [[NSMutableSet alloc] init];
-		}	
-		
-		[pool release]; pool = [[NSAutoreleasePool alloc] init];
-		
-		//[db commitTransaction]; [db beginTransaction]; // just for testing
-
-		if ([deletedObjects count]) {
-			
-			NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
-			NSEnumerator* coe = [deletedObjects objectEnumerator];
-			OPPersistentObject* deletedObject;
-			while (deletedObject = [coe nextObject]) {
-				
-				//NSLog(@"Will honk %@", deletedObject);
-				@synchronized(db) {
+			    // Process all updated objects and save their changed attribute sets:
+				NSEnumerator* coe = [changedObjects objectEnumerator];
+				OPPersistentObject* changedObject;
+				while (changedObject = [coe nextObject]) {
 					
-					[db deleteRowOfClass: [deletedObject class] 
-								   rowId: [deletedObject currentOid]];
+					[changedObject willSave];
+					OID newOid;
+					@synchronized(db) {
+						newOid = [db updateRowOfClass: [changedObject class] 
+												rowId: [changedObject currentOid] 
+											   values: [changedObject attributeValues]];
+						//NSLog(@"Saving object: %@", changedObject);
+					}
+					
+					[changedObject setOid: newOid]; // also registers object
+					
 				}
 				
-				[changedObjects removeObject: deletedObject];
-			}
+				numberOfObjectsSaved += [changedObjects count];
+				// Release all changed objects:
+				[changedObjects removeAllObjects];
+			}	
 			
-			numberOfObjectsDeleted += [deletedObjects count];
-			// Release all changed objects:
-			[deletedObjects release]; deletedObjects = [[NSMutableSet alloc] init];
+			[pool release]; pool = [[NSAutoreleasePool alloc] init];
+			
+			
+			if ([deletedObjects count]) {
+				
+				NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
+				NSEnumerator* coe = [deletedObjects objectEnumerator];
+				OPPersistentObject* deletedObject;
+				while (deletedObject = [coe nextObject]) {
+					
+					//NSLog(@"Will honk %@", deletedObject);
+					@synchronized(db) {
+						
+						[db deleteRowOfClass: [deletedObject class] 
+									   rowId: [deletedObject currentOid]];
+					}
+				}
+				
+				numberOfObjectsDeleted += [deletedObjects count];
+				// Release all changed objects:
+				[deletedObjects removeAllObjects];
+			}
 		}
 		
 		NSEnumerator* renum = [relationshipChangesByJoinTable objectEnumerator];
@@ -583,9 +588,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 {
 	if ([object currentOid]) {
 		// Object has been stored persistently, so we need to delete it:
-		if (![deletedObjects containsObject: object]) {
-			
-			@synchronized(self) {
+		@synchronized(changedObjects) { // changedObjects also locks deletedObjects
+			if (![deletedObjects containsObject: object]) {
 				[deletedObjects addObject: object];
 				[changedObjects removeObject: object]; // make sure, it is not inserted again
 				[object willDelete];
@@ -666,9 +670,11 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	//[lock lock];
 	@synchronized(self) {
 		
-		OPPersistentObject* changedObject;
-		while (changedObject = [changedObjects anyObject]) {
-			[changedObject revert]; // removes itself from changedObjects
+		@synchronized(changedObjects) {
+			OPPersistentObject* changedObject;
+			while (changedObject = [changedObjects anyObject]) {
+				[changedObject revert]; // removes itself from changedObjects
+			}
 		}
 		
 		@synchronized(db) {
