@@ -42,7 +42,7 @@
 	@"  TableName = ZMESSAGEGROUP;"
 	@"  CacheAllObjects = 1;"
 	@"  CreateStatements = (\""
-	@"  CREATE TABLE ZMESSAGEGROUP ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZNAME VARCHAR );"
+	@"  CREATE TABLE ZMESSAGEGROUP ( Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZNAME VARCHAR, ZDEFAULTPROFILE INTEGER );"
 	@"  \",\""
 	@"  CREATE TABLE Z_4THREADS ( Z_4GROUPS, Z_6THREADS )"
 	@"  \",\""
@@ -54,13 +54,13 @@
 	@"}";
 }
 
-+ (NSString*) persistentAttributesPlist
++ (NSString *)persistentAttributesPlist
 {
 	return 
 	@"{"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
     @"threadsByDate = {AttributeClass = GIThread; QueryString = \"select ZTHREAD.ROWID, ZTHREAD.ZDATE from Z_4THREADS, ZTHREAD where ZTHREAD.ROWID = Z_4THREADS.Z_6THREADS and Z_4THREADS.Z_4GROUPS=$1 order by ZTHREAD.ZDATE;\"; SortAttribute = date; JoinTableName = Z_4THREADS; SourceColumnName = Z_4GROUPS; TargetColumnName = Z_6THREADS; InverseRelationshipKey=groups;};"
-    //@"defaultProfile = {AttributeClass = GIProfile; ColumnName = ZDEFAULTPROFILE; }
+    @"defaultProfile = {AttributeClass = GIProfile; ColumnName = ZDEFAULTPROFILE;};"
 	// @"threadsByDate = {AttributeClass = GIThread; JoinTableName = Z_4THREADS; SourceKeyColumnName = Z_4GROUPS targetKeyColumnName = Z_6THREADS; SortAttributeName = date};"
 	@"}";
 }
@@ -330,22 +330,22 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     [super dealloc];
 }
 
-- (GIProfile*) defaultProfile
+- (GIProfile *)defaultProfile
 /*" Returns the default profile to use for replies on messages on this group. 
     Returns nil, if no default profile was specified. "*/
 {	
-	[self willAccessValueForKey: @"defaultProfile"];
-	id profile = [self primitiveValueForKey: @"defaultProfile"];
-	[self didAccessValueForKey: @"defaultProfile"];
+	[self willAccessValueForKey:@"defaultProfile"];
+	id profile = [self primitiveValueForKey:@"defaultProfile"];
+	[self didAccessValueForKey:@"defaultProfile"];
 	return profile;
 }
 
-- (void) setDefaultProfile: (GIProfile*) aProfile
+- (void)setDefaultProfile:(GIProfile *)aProfile
 /*" Sets the default profile for the receiver. The default profile is used for replies on messages in this group. May set to nil. Then a more global default will be used. "*/
 {
-	[self willChangeValueForKey: @"defaultProfile"];
-    [self setPrimitiveValue: aProfile forKey: @"defaultProfile"];
-	[self willChangeValueForKey: @"defaultProfile"];
+	[self willChangeValueForKey:@"defaultProfile"];
+    [self setPrimitiveValue:aProfile forKey:@"defaultProfile"];
+	[self willChangeValueForKey:@"defaultProfile"];
 }
 
 static NSMutableArray* root = nil;

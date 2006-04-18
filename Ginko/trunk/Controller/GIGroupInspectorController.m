@@ -33,6 +33,12 @@ static GIGroupInspectorController *sharedInspector = nil;
 	return STANDARDGROUP;
 }
 
+- (NSArray *)profiles
+{
+	return [GIProfile allObjects];
+}
+
+/*
 - (void)setupProfilePopUpButton
 {
     NSEnumerator *enumerator;
@@ -47,14 +53,20 @@ static GIGroupInspectorController *sharedInspector = nil;
         [[profileButton lastItem] setRepresentedObject: aProfile];
     }
 }
+*/
+
+- (GIMessageGroup *)group
+{
+	return group;
+}
 
 - (void)setGroup:(GIMessageGroup *)aGroup
 {
     [group autorelease];
     group = [aGroup retain];
     
-    [self setupProfilePopUpButton];
-    [profileButton selectItemAtIndex:[profileButton indexOfItemWithRepresentedObject:[aGroup defaultProfile]]];
+//    [self setupProfilePopUpButton];
+//    [profileButton selectItemAtIndex:[profileButton indexOfItemWithRepresentedObject:[aGroup defaultProfile]]];
     
 	// setup Type:
 	[typeRadioButtons selectCellWithTag:[self groupTypeTagForGroup:aGroup]];
