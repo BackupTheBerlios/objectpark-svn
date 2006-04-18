@@ -347,11 +347,13 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 /*" Sends message transfer data from sender to recipients. 
 Raises an exception if the message could not be sent. "*/
-- (void)sendTransferData:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients {
+- (void)sendTransferData:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients 
+{
     NSEnumerator *enumerator;
     NSString *recipient;
     
-    if ([self _allowsPipelining]) {
+    if ([self _allowsPipelining]) 
+	{
         [self _writeSender:sender];
         
         enumerator = [recipients objectEnumerator];
@@ -363,7 +365,9 @@ Raises an exception if the message could not be sent. "*/
         // check if all in order
         while ([self _hasPendingResponses])
             [self _assertServerAcceptedCommand];
-    } else {
+    } 
+	else 
+	{
 		// No pipelining:
         
         [self _writeSender:sender];

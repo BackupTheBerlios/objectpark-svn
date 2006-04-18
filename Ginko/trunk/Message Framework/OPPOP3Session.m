@@ -34,17 +34,17 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 #define UIDLsDir @"Infos for UIDLs"
 
 @interface OPPOP3Session (Authentication)
-- (void) _authenticationWithServerGreeting: (NSString*) serverGreeting;
-- (void) _userPassAuthentication;
-- (void) _APOPAuthenticationWithServerGreeting: (NSString*) serverGreeting;
-- (NSString*) _digestForServerTimestamp: (NSString*) serverTimestamp andSecret: (NSString*) secret;
+- (void)_authenticationWithServerGreeting:(NSString *)serverGreeting;
+- (void)_userPassAuthentication;
+- (void)_APOPAuthenticationWithServerGreeting:(NSString *)serverGreeting;
+- (NSString *)_digestForServerTimestamp:(NSString *)serverTimestamp andSecret:(NSString *)secret;
 @end
 
 @interface OPPOP3Session (UIDL)
-- (void) _takeInfoFromTransferData: (NSData*) transferData forPosition:(int)position;
-- (void) _addMessageSizesToMessageInfo;
+- (void)_takeInfoFromTransferData:(NSData *)transferData forPosition:(int)position;
+- (void)_addMessageSizesToMessageInfo;
 - (int)_synchronizeUIDLs;
-- (void) _autosaveUIDLs;
+- (void)_autosaveUIDLs;
 @end
 
 @interface OPPOP3Session (ServerResponseAndSimpleCommands)
@@ -368,6 +368,8 @@ UIDL. nil otherwise. "*/
 
     triedMethods = [NSMutableArray array];
     
+	NSDate *dateBefore = [NSDate date];
+
     // get username and password
     if (! _username)
     {
@@ -392,12 +394,25 @@ UIDL. nil otherwise. "*/
             [NSException raise:OPPOP3SessionException format:@"Delegate either not set or does not implement the required OPPOP3SessionDelegate method -passwordForPOP3Session: (POP3Session: %@).", self];
         }
     }
-    
+    	
     if ((! _username) || (! _password))
     {
         [NSException raise:OPPOP3SessionException format:@"username and/or password is/are nil in POP3Session %@.", self];
     }
 
+	if ([dateBefore timeIntervalSinceNow] < (NSTimeInterval)-1.0)
+	{;
+		// as gathering username and password may have taken a long time, test if server is still listening:
+		@try
+		{
+			[self keepAlive];
+		}
+		@catch (NSException *localException)
+		{
+			[NSException raise:OPPOP3SessionException format:@"Timeout in POP3Session %@.", self];	
+		}
+	}
+	
     // APOP
     NS_DURING
     {
@@ -461,7 +476,7 @@ UIDL. nil otherwise. "*/
         {
             if (NSDebugEnabled) NSLog(@"USER/PASS failed for POP3Session %@.", self);
             
-            [triedMethods addObject:[NSString stringWithFormat: @"Plain failed (%@)", [localException reason]]];
+            [triedMethods addObject:[NSString stringWithFormat:@"Plain failed (%@)", [localException reason]]];
             
             if ([_delegate respondsToSelector:@selector(shouldContinueWithOtherAuthenticationMethodAfterFailedAuthentication:inPOP3Session:)])
             {
@@ -518,14 +533,13 @@ UIDL. nil otherwise. "*/
 
         digest = [self _digestForServerTimestamp:serverTimestamp andSecret:_password];
         // respond to challenge
-        [self _readOKForCommand:
-            [[[@"APOP " stringByAppendingString:_username]
-                     stringByAppendingString: @" "] stringByAppendingString:digest]];
+        [self _readOKForCommand:[[[@"APOP " stringByAppendingString:_username]
+                     stringByAppendingString:@" "] stringByAppendingString:digest]];
         _state = TRANSACTION;
     }
 }
 
-- (NSString*) _digestForServerTimestamp: (NSString*) serverTimestamp andSecret: (NSString*) secret
+- (NSString *)_digestForServerTimestamp:(NSString *)serverTimestamp andSecret:(NSString *)secret
 /*" Returns the client response for the server challenge serverTimestamp and the secret. "*/
 {
     NSMutableString *result;
@@ -534,8 +548,8 @@ UIDL. nil otherwise. "*/
     md5_state_t state;
     md5_byte_t digest[16];
 
-    serverTimestamp = [[@"<" stringByAppendingString:serverTimestamp] stringByAppendingString: @">"];
-    md5Input = [[serverTimestamp stringByAppendingString:secret] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion: YES];
+    serverTimestamp = [[@"<" stringByAppendingString:serverTimestamp] stringByAppendingString:@">"];
+    md5Input = [[serverTimestamp stringByAppendingString:secret] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
 
     md5_init(&state);
     md5_append(&state, (const md5_byte_t *)[md5Input bytes], [md5Input length]);
@@ -553,14 +567,14 @@ UIDL. nil otherwise. "*/
 
 @implementation OPPOP3Session (UIDL)
 
-- (void) _setMessageInfo: (NSMutableArray*) anArray
+- (void)_setMessageInfo:(NSMutableArray *)anArray
 {
     [anArray retain];
     [_messageInfo release];
     _messageInfo = anArray;
 }
 
-- (void) _takeInfoFromTransferData: (NSData*) transferData forPosition:(int)position
+- (void)_takeInfoFromTransferData:(NSData *)transferData forPosition:(int)position
 {
     OPInternetMessage *message = nil;
     
@@ -584,19 +598,19 @@ UIDL. nil otherwise. "*/
     }
 }
 
-- (void) _addMessageSizesToMessageInfo
+- (void)_addMessageSizesToMessageInfo
 /*" Issues the LIST command and collects the size info in the message info dicts. "*/
 {
     NSString *response;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NS_DURING
-        [self _readOKForCommand: @"LIST"]; 	// try to use LIST command
+        [self _readOKForCommand:@"LIST"]; 	// try to use LIST command
 
         response = [_stream availableLine];
         while (response)
         {
-            NSArray* components = [response componentsSeparatedByString: @" "];
+            NSArray *components = [response componentsSeparatedByString: @" "];
             NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
             NSDecimalNumber *sizeNumber = [[NSDecimalNumber alloc] initWithString:
                 [components objectAtIndex:1]];
@@ -810,7 +824,7 @@ UIDL. nil otherwise. "*/
         }
         
         [NSException raise:OPPOP3SessionException
-                    format:@"The command \"%@\" was rejected by the POP3 serv$@er: \"%@\"", command, line];
+                    format:@"The command \"%@\" was rejected by the POP3 server: \"%@\"", command, line];
     }
     
     return line;
