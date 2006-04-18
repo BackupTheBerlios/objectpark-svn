@@ -254,7 +254,7 @@
 
 - (BOOL)shouldDeleteMessageWithMessageId:(NSString *)messageId date:(NSDate *)messageDate size:(long)size inPOP3Session:(OPPOP3Session *)aSession
 {
-	NSLog(@"cleanup: %@", messageId);
+	//NSLog(@"cleanup: %@", messageId);
     return [messageDate compare:[self deletionDate]] != NSOrderedDescending; /* date <= tooOldDate */
 }
 
