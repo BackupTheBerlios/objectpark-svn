@@ -49,7 +49,7 @@
 
 @implementation GIMessageEditorController
 
-- (id) init
+- (id)init
 {
     if (self = [super init]) 
 	{
@@ -68,7 +68,7 @@
     if (self = [self init]) 
     {        
 		// Make sure, aMessage is not send during edit:
-        if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus: OPSendStatusQueuedBlocked];
+        if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus:OPSendStatusQueuedBlocked];
         
         profile = [[aMessage valueForKey: @"sendProfile"] retain];
         
@@ -98,7 +98,7 @@
 {
     if (self = [self init]) 
     {
-        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
+        if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
         referencedMessage = nil;
@@ -123,7 +123,7 @@
 {
     if(self = [self init])
     {
-        profile = [[[GIProfile allObjects] firstObject] retain]; // can a better profile be guessed?
+        profile = [[GIProfile defaultProfile] retain]; // can a better profile be guessed?
         referencedMessage = nil;
 		
         shouldAppendSignature = YES;
@@ -172,7 +172,7 @@
 {
     if (self = [self init]) 
     {
-        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
+        if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
         referencedMessage = [aMessage retain];
@@ -211,7 +211,7 @@
 {
     if (self = [self init]) 
 	{
-        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
+        if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
         referencedMessage = [aMessage retain];
@@ -242,7 +242,7 @@
 {
     if (self = [self init]) 
 	{
-        if (! aProfile) aProfile = [[GIProfile allObjects] firstObject];
+        if (! aProfile) aProfile = [GIProfile defaultProfile];
         profile = [aProfile retain];
         
         [self setReplyForwardSubjectFromMessage:aMessage];

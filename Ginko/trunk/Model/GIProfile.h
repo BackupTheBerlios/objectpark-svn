@@ -23,4 +23,10 @@
 /*" Utility methods "*/
 + (BOOL)isMyEmailAddress:(NSString *)aString;
 
+/*" Default Profile "*/
++ (GIProfile *)defaultProfile;
++ (void)setDefaultProfile:(GIProfile *)aProfile;
+- (BOOL)isDefaultProfile;
+- (void)makeDefaultProfile;
+
 @end

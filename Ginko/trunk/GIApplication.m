@@ -739,7 +739,7 @@ NSNumber* yesNumber = nil;
 
 - (NSString *)userEmail
 {
-    return [(GIProfile *)[[GIProfile allObjects] firstObject] valueForKey:@"mailAddress"];
+    return [[GIProfile defaultProfile] valueForKey:@"mailAddress"];
 }
 
 @end

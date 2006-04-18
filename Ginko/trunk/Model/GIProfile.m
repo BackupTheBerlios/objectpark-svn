@@ -15,6 +15,7 @@
 #import "NSArray+Extensions.h"
 #import "OPInternetMessage.h"
 #import "OPPersistentObject+Extensions.h"
+#import "GIUserDefaultsKeys.h"
 
 @implementation GIProfile
 
@@ -151,6 +152,34 @@
 		}
     }
     return NO;
+}
+
+// Default Profile stuff:
+
++ (GIProfile *)defaultProfile
+{
+	NSString *URLString = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultProfileURLString];
+	
+	GIProfile *result = [[OPPersistentObjectContext defaultContext] objectWithURLString:URLString];
+	
+	if (! result) result = [[GIProfile allObjects] firstObject];
+	
+	return result;
+}
+
++ (void)setDefaultProfile:(GIProfile *)aProfile
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[aProfile objectURLString] forKey:DefaultProfileURLString];
+}
+
+- (BOOL)isDefaultProfile
+{
+	return self == [[self class] defaultProfile];
+}
+
+- (void)makeDefaultProfile
+{
+	[[self class] setDefaultProfile:self];
 }
 
 @end

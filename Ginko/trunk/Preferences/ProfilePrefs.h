@@ -17,5 +17,6 @@
 - (IBAction)setSendAccount:(id)sender;
 - (IBAction)removeProfile:(id)sender;
 - (IBAction)addProfile:(id)sender;
+- (IBAction)makeDefaultProfile:(id)sender;
 
 @end

@@ -32,6 +32,7 @@ extern NSString *EarliestSendTimes;
 extern NSString *AskAgainToBecomeDefaultMailApplication;
 extern NSString *SoonRipeMessagesShouldBeSent;
 extern NSString *SoonRipeMessageMinutes;
+extern NSString *DefaultProfileURLString;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

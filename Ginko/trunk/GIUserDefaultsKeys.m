@@ -31,6 +31,7 @@ NSString *EarliestSendTimes = @"EarliestSendTimes";
 NSString *AskAgainToBecomeDefaultMailApplication = @"AskAgainToBecomeDefaultMailApplication";
 NSString *SoonRipeMessagesShouldBeSent = @"SoonRipeMessagesShouldBeSent";
 NSString *SoonRipeMessageMinutes = @"SoonRipeMessageMinutes";
+NSString *DefaultProfileURLString = @"DefaultProfileURLString";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 
