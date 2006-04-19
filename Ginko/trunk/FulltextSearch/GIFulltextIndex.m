@@ -1158,8 +1158,8 @@
 {
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
     
-    if ([messagesToAdd count]) [jobArguments setObject: messagesToAdd forKey:@"messagesToAdd"];
-    if ([messagesToRemove count]) [jobArguments setObject: messagesToRemove forKey:@"messagesToRemove"];
+    if ([messagesToAdd count]) [jobArguments setObject:messagesToAdd forKey:@"messagesToAdd"];
+    if ([messagesToRemove count]) [jobArguments setObject:messagesToRemove forKey:@"messagesToRemove"];
     
 	[OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
 }

@@ -201,7 +201,6 @@ NSString* MboxImportJobName = @"mbox import";
                     
                     //NSMutableArray* args = [NSMutableArray arrayWithObject: transferData];
 					
-                    //[self performSelectorOnMainThread:@selector(addMessageInMainThreadWithTransferData:) withObject: args waitUntilDone: YES];
                     // Moved addition to background thread:
 					GIMessage *persistentMessage = [GIMessage messageWithTransferData: transferData];
 	
@@ -258,7 +257,6 @@ NSString* MboxImportJobName = @"mbox import";
         
         if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
         
-        //[NSApp performSelectorOnMainThread:@selector(saveAction:) withObject:self waitUntilDone: YES];
         [context saveChanges];
         //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
 		

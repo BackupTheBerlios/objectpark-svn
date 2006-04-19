@@ -829,7 +829,7 @@ BOOL removeJobFromArray(NSNumber *anJobId, NSMutableArray *anArray)
     [parameterDict setObject:result forKey:@"result"];
     
     // open panel in main thread
-    [self performSelectorOnMainThread:@selector(openPasswordPanel:) withObject:parameterDict waitUntilDone: YES];
+    [self performSelectorOnMainThread:@selector(openPasswordPanel:) withObject:parameterDict waitUntilDone:YES];
     
     NSString *password = nil;
     
