@@ -336,13 +336,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (returnCode == NSAlertDefaultReturn) 
 	{
+		[self checkpointMessageWithStatus:OPSendStatusQueuedReady];
+		
         //GIMessage *message = [self checkpointMessageWithStatus:OPQueuedStatus];
         BOOL sendNow = [(NSNumber *)contextInfo boolValue];
         if (sendNow) 
 		{
-#warning start message send job here
+			[[profile valueForKey:@"sendAccount"] send];
         }
         [window performClose:self];
+		[window close];
     }
     
     [(NSNumber *)contextInfo release];

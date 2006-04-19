@@ -22,22 +22,17 @@
 
 #import <AppKit/AppKit.h>
 
-
 @interface GITextView : NSTextView 
 {
-    
 }
 
-    // This should go somewhere (into the model!):
-+ (NSString*) plainTextQuoteFromPasteboard: (NSPasteboard*) quotePasteboard;
-
+// This should go somewhere (into the model!):
++ (NSString *)plainTextQuoteFromPasteboard:(NSPasteboard *)quotePasteboard;
 
 @end
 
 @protocol GITextViewDelegate
-- (void) textView: (NSTextView*) textView spaceKeyPressedWithModifierFlags:(int)modifierFlags;
+- (void)textView:(NSTextView *)textView spaceKeyPressedWithModifierFlags:(int)modifierFlags;
 @end
 
 extern NSString *OPAttributedStringPboardType;
-extern NSString *OPContinuousSpellCheckingDidToggleNotification;
-/*" user info has @"enabled" or @"disabled" for key @"status" "*/

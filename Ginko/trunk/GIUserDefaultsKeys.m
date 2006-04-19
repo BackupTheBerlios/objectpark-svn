@@ -32,6 +32,7 @@ NSString *AskAgainToBecomeDefaultMailApplication = @"AskAgainToBecomeDefaultMail
 NSString *SoonRipeMessagesShouldBeSent = @"SoonRipeMessagesShouldBeSent";
 NSString *SoonRipeMessageMinutes = @"SoonRipeMessageMinutes";
 NSString *DefaultProfileURLString = @"DefaultProfileURLString";
+NSString *ContinuousSpellCheckingEnabled = @"ContinuousSpellCheckingEnabled";
 
 NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefault";
 

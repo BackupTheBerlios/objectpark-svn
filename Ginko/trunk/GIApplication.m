@@ -32,6 +32,7 @@
 #import "NSArray+Extensions.h"
 #import "MailToCommand.h"
 #import <ApplicationServices/ApplicationServices.h>
+#include <unistd.h>
 
 #import <OPDebug/OPLog.h>
 #import <JavaVM/JavaVM.h>
