@@ -562,10 +562,7 @@ NSNumber* yesNumber = nil;
 	BOOL didIndexSomeMessages = [[OPJobs resultForJob:jobId] boolValue];
 
 	[OPJobs removeFinishedJob:jobId]; // clean up
-    
-	// Write flag-changes to disk:
-	[[OPPersistentObjectContext defaultContext] saveChanges];
-	
+    	
 	if (didIndexSomeMessages) [self startFulltextIndexingJobIfNeeded:self];
 }
 
