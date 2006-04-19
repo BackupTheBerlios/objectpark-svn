@@ -8,12 +8,12 @@ Bugs:
 Regressions:
 
 - "empty trash" no longer works (infinite loop)
-- TAB key in To:-Field inserts a TAB char
 - serching for messages, then selecting a hit, then hitting the "Back" icon closes the window. It should switch back to the thread list.
 - Replying sometime replies to the wrong message.
 
 Done:
 
+- (Axel) - TAB key in To:-Field inserts a TAB char
 - (Dirk) KVO notifications don't work with inverse many-to-many relationships (see test TestGIMessageGroup/testStatistics)
 - (Axel) keyboard navigation in message tree no longer works
 - (Axel) "space" in searches no longer works (-> maybe related to "go to next message" functionality)

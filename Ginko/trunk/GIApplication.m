@@ -229,17 +229,6 @@ NSNumber* yesNumber = nil;
     OPPersistentObjectContext* persistentObjectContext = [[OPPersistentObjectContext alloc] init];
 	[persistentObjectContext setDatabaseConnectionFromPath: path];
 	[persistentObjectContext checkDBSchemaForClasses: @"GIMessage,GIAccount,GIThread,GIMessageGroup,GIProfile,GIMessageData"];
-	
-	/*
-    if (isNewlyCreated) {
-        error = nil;
-        [managedObjectContext saveChanges];
-        [managedObjectContext release]; // get rid of it
-        NSLog(@"Commit errors: %@", error);
-        [self configureDatabaseAtPath: path];
-        managedObjectContext = [self newManagedObjectContext];
-    }
-	 */
     
     return [persistentObjectContext autorelease];
 }

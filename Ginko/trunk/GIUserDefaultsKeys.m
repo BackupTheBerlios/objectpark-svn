@@ -102,6 +102,8 @@ void registerDefaultDefaults()
 		
 		[NSNumber numberWithInt:30], SoonRipeMessageMinutes,
 		
+		[NSNumber numberWithBool:YES], NSPrintHeaderAndFooter,
+		
         nil, nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults: appDefaults];

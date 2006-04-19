@@ -54,6 +54,15 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 	printJobTitle = [newTitle retain];
 }
 
+/*
+//- (NSAttributedString *)pageHeader;
+- (NSAttributedString*) pageFooter
+{
+	NSString* footer = @"- 1 -";
+	return [[[NSAttributedString alloc] initWithString: footer] autorelease];
+}
+*/
+
 - (void) dealloc
 {
 	[printJobTitle release];
@@ -130,10 +139,10 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 
 	NSRect bounds;
 	bounds.size = [printInfo paperSize];
+	// We scale the textview by the factor (pagewidth/hor.margins), if we do not substract the margins because we fit horizontally to the page .
 	bounds.origin.x = 0.0; //[printInfo leftMargin];
 	bounds.origin.y = 0.0; //[printInfo topMargin];
 	//bounds.size.width -= bounds.origin.x+[printInfo rightMargin];
-	//bounds.size.height -= bounds.origin.y+[printInfo bottomMargin];
 	
 	GIPrintingTextView* printView = [[[GIPrintingTextView alloc] initWithFrame: bounds] autorelease];
 	
