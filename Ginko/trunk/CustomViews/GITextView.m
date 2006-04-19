@@ -33,6 +33,36 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
 #define TAB ((char)'\x09')
 #define SPACE ((char)'\x20')
 
+@interface GIPrintingTextView : NSTextView {
+	NSString* printJobTitle;
+}
+
+- (void) setPrintJobTitle: (NSString*) newTitle;
+
+@end
+
+@implementation GIPrintingTextView
+
+- (NSString*) printJobTitle
+{
+	return printJobTitle? printJobTitle : [super printJobTitle];
+}
+
+- (void) setPrintJobTitle: (NSString*) newTitle
+{
+	[printJobTitle autorelease];
+	printJobTitle = [newTitle retain];
+}
+
+- (void) dealloc
+{
+	[printJobTitle release];
+	[super dealloc];
+}
+
+@end
+
+
 @implementation GITextView
 /*"Support for a new pasteboard type OPAttributedStringPboardType. It uses NSCoding for transmitting so it is not crossplatform."*/
 
@@ -86,6 +116,33 @@ NSString *OPContinuousSpellCheckingDidToggleNotification = @"OPContinuousSpellCh
     quoteContent = [[self _attributedStringFromPasteboard:quotePasteboard] attributedStringByRemovingSourroundingWhitespacesAndNewLines];
     
     return [[quoteContent quotedStringWithLineLength:72 byIncreasingQuoteLevelBy:1] stringByRemovingAttachmentChars];
+}
+
+
+
+
+- (void) print: (id) sender
+{
+	NSPrintInfo* printInfo = [NSPrintInfo sharedPrintInfo];
+	[printInfo setHorizontalPagination: NSFitPagination];
+    [printInfo setVerticallyCentered: NO];
+	[printInfo setTopMargin: 60.0]; // 72 should be one inch
+
+	NSRect bounds;
+	bounds.size = [printInfo paperSize];
+	bounds.origin.x = 0.0; //[printInfo leftMargin];
+	bounds.origin.y = 0.0; //[printInfo topMargin];
+	//bounds.size.width -= bounds.origin.x+[printInfo rightMargin];
+	//bounds.size.height -= bounds.origin.y+[printInfo bottomMargin];
+	
+	GIPrintingTextView* printView = [[[GIPrintingTextView alloc] initWithFrame: bounds] autorelease];
+	
+	[[printView textStorage] beginEditing];
+	[[printView textStorage] appendAttributedString: [self textStorage]];
+	[[printView textStorage] endEditing];
+	[printView setPrintJobTitle: [[self window] title]];
+	
+	[printView print: sender];
 }
 
 - (void) _removeUnsupportedAttributesInRange:(NSRange)range

@@ -36,12 +36,16 @@
 + (void) addMessage: (GIMessage*) aMessage
 {
 	if (aMessage) {
-		if (![GIMessageFilter filterMessage: aMessage flags: 0]) {
-			[self addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
-		}
 		
-		if ([aMessage hasFlags: OPIsFromMeStatus]) {
-			[self addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
+		// Adding a message should be an atomic operation:
+		@synchronized([aMessage context]) {
+			if (![GIMessageFilter filterMessage: aMessage flags: 0]) {
+				[self addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+			}
+			
+			if ([aMessage hasFlags: OPIsFromMeStatus]) {
+				[self addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
+			}
 		}
 	} 	
 }

@@ -421,44 +421,46 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
-	id oldValue = [self primitiveValueForKey: key];
-	
-	if (![oldValue isEqual: value]) {	
-		[self willChangeValueForKey: key];
+	@synchronized([self context]) {
+		id oldValue = [self primitiveValueForKey: key];
 		
-		// This is a to-one relationship, because to-many relationships use the add/removeValue methods.
-		
-		// The inverse relationship might be a to-many relationship. Examine that:	
-		OPAttributeDescription* ad = [[[self class] persistentClassDescription] attributeWithName: key];
-		if (!ad) [super setValue: value forUndefinedKey: key]; // throws exception, unknown attribute
-		
-		NSString* inverseKey = [ad inverseRelationshipKey];
-		if (inverseKey) {
-			// We need to update an inverse relationship:
+		if (![oldValue isEqual: value]) {	
+			[self willChangeValueForKey: key];
 			
-			// Find out what kind of relationship:
-			OPAttributeDescription* iad = [[[ad attributeClass] persistentClassDescription] attributeWithName: inverseKey];
+			// This is a to-one relationship, because to-many relationships use the add/removeValue methods.
 			
-			if ([iad isToManyRelationship]) {
-				// inverse is a to-many relationship, so this is a many-to-one relationship
-				[oldValue willChangeValueForKey: inverseKey];
-				[oldValue removePrimitiveValue: self forKey: inverseKey]; // oldValue may be nil
-				[oldValue didChangeValueForKey: inverseKey];
-				[value willChangeValueForKey: inverseKey];
-				[value addPrimitiveValue: self forKey: inverseKey]; // value may be nil
-				[value didChangeValueForKey: inverseKey];
-			} else {
-				// inverse is a to-one relationship, so this is a one-to-one relationship
+			// The inverse relationship might be a to-many relationship. Examine that:	
+			OPAttributeDescription* ad = [[[self class] persistentClassDescription] attributeWithName: key];
+			if (!ad) [super setValue: value forUndefinedKey: key]; // throws exception, unknown attribute
+			
+			NSString* inverseKey = [ad inverseRelationshipKey];
+			if (inverseKey) {
+				// We need to update an inverse relationship:
+				
+				// Find out what kind of relationship:
+				OPAttributeDescription* iad = [[[ad attributeClass] persistentClassDescription] attributeWithName: inverseKey];
+				
+				if ([iad isToManyRelationship]) {
+					// inverse is a to-many relationship, so this is a many-to-one relationship
+					[oldValue willChangeValueForKey: inverseKey];
+					[oldValue removePrimitiveValue: self forKey: inverseKey]; // oldValue may be nil
+					[oldValue didChangeValueForKey: inverseKey];
+					[value willChangeValueForKey: inverseKey];
+					[value addPrimitiveValue: self forKey: inverseKey]; // value may be nil
+					[value didChangeValueForKey: inverseKey];
+				} else {
+					// inverse is a to-one relationship, so this is a one-to-one relationship
 #warning one-to-one (inverse) relationships will create a retain cycle.
-				[oldValue setValue: nil forKey: inverseKey];
-				id oldSelf = [value objectForKey: inverseKey]; 
-				[oldSelf setValue: nil forKey: key];
-			}			
+					[oldValue setValue: nil forKey: inverseKey];
+					id oldSelf = [value objectForKey: inverseKey]; 
+					[oldSelf setValue: nil forKey: key];
+				}			
+			}
+			
+			[self setPrimitiveValue: value forKey: key]; 
+			
+			[self didChangeValueForKey: key];
 		}
-		
-		[self setPrimitiveValue: value forKey: key]; 
-		
-		[self didChangeValueForKey: key];
 	}
 }
 
@@ -553,8 +555,10 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 {
-	OPFaultingArray* container = [self primitiveValueForKey: key];	
-	[container addObject: value]; // thread-safe
+	@synchronized([self context]) {
+		OPFaultingArray* container = [self primitiveValueForKey: key];	
+		[container addObject: value]; // thread-safe
+	}
 }
 
 
