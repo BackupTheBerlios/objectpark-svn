@@ -1207,7 +1207,7 @@ static JNIEnv *startupJava(VMLaunchOptions *launchOptions) {
      If the environment variable JAVA_JVM_VERSION is not set, and JNI_VERSION_1_4 is passed into JNI_CreateJavaVM as the vm_args.version, JNI_CreateJavaVM will return the current preferred JDK. Java 1.4.2 is the preferred JDK as of the release of this sample and the release of Mac OS X 10.4.
      */
 	{
-		CFStringRef targetJVM = CFSTR("1.4");
+		CFStringRef targetJVM = CFSTR("1.5");
 		CFBundleRef JavaVMBundle;
 		CFURLRef    JavaVMBundleURL;
 		CFURLRef    JavaVMBundlerVersionsDirURL;

@@ -539,36 +539,55 @@ static BOOL isThreadItem(id item)
 
 // actions
 
-- (void) placeSelectedTextOnQuotePasteboard
+- (void)placeSelectedTextOnQuotePasteboard
 {
-    NSArray* types = [messageTextView writablePasteboardTypes];
-    NSPasteboard *quotePasteboard = [NSPasteboard pasteboardWithName: @"QuotePasteboard"];
+    NSArray *types = [messageTextView writablePasteboardTypes];
+    NSPasteboard *quotePasteboard = [NSPasteboard pasteboardWithName:@"QuotePasteboard"];
     
-    [quotePasteboard declareTypes:types owner: nil];
+    [quotePasteboard declareTypes:types owner:nil];
     [messageTextView writeSelectionToPasteboard:quotePasteboard types:types];
 }
 
-- (GIMessage*) selectedMessage
+- (GIMessage *)selectedMessage
 /*" Returns selected message, iff one message is selected. nil otherwise. "*/
 {
-    GIMessage* result = nil;
-    id item = [threadsView itemAtRow: [threadsView selectedRow]];
-	
-    if ([item isKindOfClass: [GIMessage class]]) {
-        result = item;
-    } else {
-        result = [[item messagesByTree] lastObject];
-    }    
-    
-    return result;
+	if ([self isSearchShownCurrently]) 
+    {
+        int selectedIndex = [searchHitsTableView selectedRow];
+        
+        if ((selectedIndex >= 0) && (selectedIndex < [hits count])) 
+        {
+            GIMessage *message = [[[hits sortedArrayUsingDescriptors:[searchHitsTableView sortDescriptors]] objectAtIndex:selectedIndex] objectForKey:@"message"];
+			
+			return message;
+		}
+		
+		return nil;
+	}
+	else
+	{
+		GIMessage *result = nil;
+		id item = [threadsView itemAtRow:[threadsView selectedRow]];
+		
+		if ([item isKindOfClass:[GIMessage class]]) 
+		{
+			result = item;
+		} 
+		else
+		{
+			result = [[item messagesByTree] lastObject];
+		}    
+		
+		return result;
+	}
 }
 
-- (GIProfile*) profileForMessage: (GIMessage*) aMessage
+- (GIProfile *)profileForMessage:(GIMessage *)aMessage
 /*" Return the profile to use for email replies. Tries first to guess a profile based on the replied email. If no matching profile can be found, the group default profile is chosen. May return nil in case of no group default and no match present. "*/
 {
     GIProfile *result;
     
-    result = [GIProfile guessedProfileForReplyingToMessage: [aMessage internetMessage]];
+    result = [GIProfile guessedProfileForReplyingToMessage:[aMessage internetMessage]];
     
     if (!result)
     {
@@ -616,49 +635,58 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction) forward:(id)sender
+- (IBAction)forward:(id)sender
 {
-    GIMessage* message = [self selectedMessage];
+    GIMessage *message = [self selectedMessage];
         
     [[[GIMessageEditorController alloc] initForward: message profile: [self profileForMessage: message]] autorelease];
 }
 
-- (IBAction) applySortingAndFiltering:(id)sender
+- (IBAction)applySortingAndFiltering:(id)sender
 /*" Applies sorting and filtering to the selected threads. The selected threads are removed from the receivers group and only added again if they fit in no group defined by sorting and filtering. "*/
 {
-    NSIndexSet* selectedIndexes = [threadsView selectedRowIndexes];
+    NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
     int lastIndex = [selectedIndexes lastIndex];
     int firstIndex = [selectedIndexes firstIndex];
     int i;
 	
-    for (i = firstIndex; i <= lastIndex; i++) {
-        if ([threadsView isRowSelected: i]) {
-			NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    for (i = firstIndex; i <= lastIndex; i++) 
+	{
+        if ([threadsView isRowSelected: i]) 
+		{
+			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
             // get one of the selected threads:
-            GIThread* thread = [threadsView itemAtRow: i];
+            GIThread *thread = [threadsView itemAtRow: i];
 			
 			// Skip messages - should we apply to message also or to the messages' thread?
-			if (isThreadItem(thread)) {
-				
+			if (isThreadItem(thread)) 
+			{
 				// Remove selected thread from receiver's group:
-				[[self group] removeValue: thread forKey: @"threadsByDate"];
+				[[self group] removeValue:thread forKey:@"threadsByDate"];
 
 				BOOL threadWasPutIntoAtLeastOneGroup = NO;
 				
-				@try {
+				@try 
+				{
 					// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
-					NSEnumerator* enumerator = [[thread messages] objectEnumerator];
-					GIMessage* message;
+					NSEnumerator *enumerator = [[thread messages] objectEnumerator];
+					GIMessage *message;
 					
-					while (message = [enumerator nextObject]) {
+					while (message = [enumerator nextObject])
+					{
 						threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage: message flags: 0];
 					}
-				} @catch (NSException* localException) {
+				} 
+				@catch (NSException *localException) 
+				{
 					@throw;
-				} @finally {
-					if (!threadWasPutIntoAtLeastOneGroup) {
+				} 
+				@finally 
+				{
+					if (!threadWasPutIntoAtLeastOneGroup) 
+					{
 						//[[self group] addValue: thread forKey: @"threadsByDate"];
-						[thread addToGroups_Manually: [self group]]; // does dupe-check
+						[thread addToGroups_Manually:[self group]]; // does dupe-check
 					}
 				}
 				[pool release];
@@ -666,12 +694,12 @@ static BOOL isThreadItem(id item)
 		}
 	}
     // commit changes:
-    [NSApp saveAction: self];
-    [threadsView selectRow: firstIndex byExtendingSelection: NO];
-    [threadsView scrollRowToVisible: firstIndex];
+    [NSApp saveAction:self];
+    [threadsView selectRow:firstIndex byExtendingSelection:NO];
+    [threadsView scrollRowToVisible:firstIndex];
 }
 
-- (IBAction) threadFilterPopUpChanged:(id)sender
+- (IBAction)threadFilterPopUpChanged:(id)sender
 {
     if (NSDebugEnabled) NSLog(@"-threadFilterPopUpChanged:");
 
@@ -680,9 +708,9 @@ static BOOL isThreadItem(id item)
 	recentThreadsCache = 0; // clear cache
 	
     // boolean value:
-    [self setValue: [NSNumber numberWithInt: [[threadFilterPopUp selectedItem] tag]] forGroupProperty: ShowOnlyRecentThreads];
+    [self setValue: [NSNumber numberWithInt:[[threadFilterPopUp selectedItem] tag]] forGroupProperty:ShowOnlyRecentThreads];
 
-    [self modelChanged: nil];
+    [self modelChanged:nil];
 }
 
 - (NSArray *)hits
@@ -1224,33 +1252,51 @@ static BOOL isThreadItem(id item)
 	}
 }
 
-- (BOOL) validateSelector: (SEL) aSelector
+- (BOOL)validateSelector:(SEL)aSelector
 {
-    if ( (aSelector == @selector(replyDefault:))
+	if ([self isSearchShownCurrently]) 
+	{
+		int selectedIndex = [searchHitsTableView selectedRow];
+		
+		if (selectedIndex >= 0) return YES;
+		else return NO;
+	}
+    else if ( (aSelector == @selector(replyDefault:))
          || (aSelector == @selector(replySender:))
          || (aSelector == @selector(replyAll:))
          || (aSelector == @selector(forward:))
          || (aSelector == @selector(followup:))
          //|| (aSelector == @selector(showTransferData:))
-         ) {
-		if ([self isThreadlistShownCurrently] || [self isMessageShownCurrently]) {
+         ) 
+	{
+		if ([self isThreadlistShownCurrently] || [self isMessageShownCurrently]) 
+		{
 			NSIndexSet *selectedIndexes = [threadsView selectedRowIndexes];
 			
 			if ([selectedIndexes count] == 1) {
-				id item = [threadsView itemAtRow: [selectedIndexes firstIndex]];
-				if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) {
+				id item = [threadsView itemAtRow:[selectedIndexes firstIndex]];
+				if (([item isKindOfClass:[GIMessage class]]) || ([item containsSingleMessage])) 
+				{
 					return YES;
 				}
 			}
 		}
-        return NO;
-    } else if (aSelector == @selector(applySortingAndFiltering:)) {
+		return NO;
+    } 
+	else if (aSelector == @selector(applySortingAndFiltering:)) 
+	{
         return [self multipleThreadsSelected]; 
-	} else if ((aSelector == @selector(toggleReadFlag:)) || (aSelector == @selector(toggleJunkFlag:))) {
+	} 
+	else if ((aSelector == @selector(toggleReadFlag:)) || (aSelector == @selector(toggleJunkFlag:))) 
+	{
         return [[threadsView selectedRowIndexes] count] > 0;
-    } else if (aSelector == @selector(moveSelectionToTrash:)) {
+    } 
+	else if (aSelector == @selector(moveSelectionToTrash:)) 
+	{
         return [[threadsView selectedRowIndexes] count] > 0;
-    } else if (aSelector == @selector(delete:)) {
+    } 
+	else if (aSelector == @selector(delete:)) 
+	{
         return [[threadsView selectedRowIndexes] count] > 0;
     }
     /*
