@@ -11,6 +11,7 @@ extern NSString* OpenMessageGroups;
 extern NSString *MessageRendererFontName;
 extern NSString *MessageRendererFontSize;
 extern NSString *MessageRendererShouldRenderAttachmentsInlineIfPossible;
+extern NSString *UseAlternateDateDisplayInMessageLists;
 extern NSString *ShowAllHeaders;
 extern NSString *ContentTypePreferences;
 extern NSString *GroupsDrawerMode;

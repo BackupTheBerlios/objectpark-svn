@@ -44,7 +44,7 @@
             // starting SSL if needed:
             if ([anAccount incomingServerType] == POP3S) 
             {
-                [(OPSSLSocket *)[stream fileHandle] setAllowsAnyRootCertificate:[anAccount allowAnyRootSSLCertificate]];
+                [(OPSSLSocket *)[stream fileHandle] setAllowsAnyRootCertificate:[[anAccount valueForKey:@"allowAnyRootSSLCertificate"] boolValue]];
                 
                 [stream negotiateEncryption];
             }
@@ -216,7 +216,7 @@
     If the server uses a self signed certificate and you didn't install the corresponding root certificate
     you need to return YES to have the SSL handshake succeed. Default is NO."*/
 {
-    return [account allowAnyRootSSLCertificate];
+    return [[account valueForKey:@"allowAnyRootSSLCertificate"] boolValue];
 }
 
 - (BOOL)allowExpiredCertificatesForSMTP:(OPSMTP *)aSMTP
@@ -224,7 +224,7 @@
     Determines if the SSL handshake should succeed (YES) if the server's certificate has expired, or not (NO).
     Default is NO."*/
 {
-    return [account allowExpiredSSLCertificates];
+    return [[account valueForKey:@"allowExpiredSSLCertificates"] boolValue];
 }
 
 @end

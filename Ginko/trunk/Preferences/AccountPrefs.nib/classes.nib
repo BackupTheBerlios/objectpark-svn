@@ -8,7 +8,7 @@
             SUPERCLASS = OPPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = G3Account; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = GIAccount; LANGUAGE = ObjC; SUPERCLASS = OPPersistentObject; }, 
         {
             CLASS = NSPreferencePane; 
             LANGUAGE = ObjC; 
@@ -20,6 +20,7 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = OPPersistentObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = OPPreferencePane; LANGUAGE = ObjC; SUPERCLASS = NSPreferencePane; }
     ); 
     IBVersion = 1; 

@@ -400,7 +400,7 @@ UIDL. nil otherwise. "*/
         [NSException raise:OPPOP3SessionException format:@"username and/or password is/are nil in POP3Session %@.", self];
     }
 
-	if ([dateBefore timeIntervalSinceNow] < (NSTimeInterval)-1.0)
+	if ([dateBefore timeIntervalSinceNow] < (NSTimeInterval)-15.0)
 	{;
 		// as gathering username and password may have taken a long time, test if server is still listening:
 		@try

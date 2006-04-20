@@ -53,9 +53,10 @@ enum LeaveOnServerDuration
 - (NSString *)name;
 - (void)setName:(NSString *)aString;
 
+/*
 - (BOOL)isEnabled;
 - (void)setIsEnabled:(BOOL)aBool;
-
+*/
 - (int)incomingServerType;
 - (void)setIncomingServerType:(int)aType;
 
@@ -108,11 +109,12 @@ enum LeaveOnServerDuration
 
 - (BOOL)outgoingUsernameNeeded;
 
+/*
 - (BOOL)allowExpiredSSLCertificates;
 - (BOOL)allowAnyRootSSLCertificate;
 - (BOOL)verifySSLCertificateChain;
 - (void)setVerifySSLCertificateChain:(BOOL)value;
-
+*/
 @end
 
 /*" Sending and Retrieving "*/

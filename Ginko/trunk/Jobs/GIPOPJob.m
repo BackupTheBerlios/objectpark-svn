@@ -63,7 +63,7 @@
             {
                 [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"opening secure connection to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
                 
-                [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:[theAccount allowAnyRootSSLCertificate]];
+                [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:[[theAccount valueForKey:@"allowAnyRootSSLCertificate"] boolValue]];
                 
                 [stream negotiateEncryption];
             }

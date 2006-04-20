@@ -39,7 +39,7 @@
 	@"incomingUsername = {ColumnName = ZINCOMINGUSERNAME; AttributeClass = NSString;};"
 	@"outgoingUsername = {ColumnName = ZOUTGOINGUSERNAME; AttributeClass = NSString;};"
 	@"retrieveMessageInterval = {ColumnName = ZRETRIEVEMESSAGEINTERVAL; AttributeClass = NSNumber;};"
-	@"allowExpiredCertificates = {ColumnName = ZALLOWEXPIREDSSLCERTIFICATES; AttributeClass = NSNumber;};"
+	@"allowExpiredSSLCertificates = {ColumnName = ZALLOWEXPIREDSSLCERTIFICATES; AttributeClass = NSNumber;};"
 	@"leaveOnServerDuration = {ColumnName = ZLEAVEONSERVERDURATION; AttributeClass = NSNumber;};"
 	@"outgoingAuthenticationMethod = {ColumnName = ZOUTGOINGAUTHENTICATIONMETHOD; AttributeClass = NSNumber;};"
 	@"incomingServerPort = {ColumnName = ZINCOMINGSERVERPORT; AttributeClass = NSNumber;};"
@@ -47,7 +47,7 @@
 	@"outgoingServerName = {ColumnName = ZOUTGOINGSERVERNAME; AttributeClass = NSString;};"
 	@"incomingServerName = {ColumnName = ZINCOMINGSERVERNAME; AttributeClass = NSString;};"
 	@"incomingServerType = {ColumnName = ZINCOMINGSERVERTYPE; AttributeClass = NSNumber;};"
-	@"allowAnyRootCertificate = {ColumnName = ZALLOWANYROOTSSLCERTIFICATE; AttributeClass = NSNumber;};"
+	@"allowAnyRootSSLCertificate = {ColumnName = ZALLOWANYROOTSSLCERTIFICATE; AttributeClass = NSNumber;};"
 	@"outgoingServerType = {ColumnName = ZOUTGOINGSERVERTYPE; AttributeClass = NSNumber;};"
 	@"isEnabled = {ColumnName = ZISENABLED; AttributeClass = NSNumber;};"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
@@ -91,7 +91,7 @@
 /*" Setting default value. "*/
 {
     [super insertIntoContext:aContext];
-    [self setVerifySSLCertificateChain:YES];
+	[self setValue:[NSNumber numberWithBool:YES] forKey:@"verifySSLCertificateChain"];
 }
 
 - (void)dealloc
@@ -117,6 +117,7 @@
     [self didChangeValueForKey:@"name"];
 }
 
+/*
 - (BOOL)isEnabled 
 {
     NSNumber *tmpValue;
@@ -134,7 +135,7 @@
     [self setPrimitiveBool:value forKey:@"isEnabled"];
     [self didChangeValueForKey:@"isEnabled"];
 }
-
+*/
 - (int)incomingServerType 
 {
     NSNumber *tmpValue;
@@ -577,6 +578,7 @@
     return [self outgoingAuthenticationMethod] == SMTPAuthentication;
 }
 
+/*
 - (BOOL)allowExpiredSSLCertificates 
 {
     NSNumber *tmpValue;
@@ -630,7 +632,7 @@
     [self setPrimitiveBool:value forKey:@"verifySSLCertificateChain"];
     [self didChangeValueForKey:@"verifySSLCertificateChain"];
 }
-
+*/
 - (BOOL)isPOPAccount
 {
     int type = [self incomingServerType];
@@ -753,7 +755,7 @@
 - (void)receive
 /*" Starts an asynchronous receive job for the receiver. "*/
 {
-	if ([self isEnabled] && [self isPOPAccount]) [GIPOPJob retrieveMessagesFromPOPAccount:self];
+	if ([[self valueForKey:@"isEnabled"] boolValue] && [self isPOPAccount]) [GIPOPJob retrieveMessagesFromPOPAccount:self];
 }
 
 - (void)sendAndReceiveTimerFired:(NSTimer *)aTimer
