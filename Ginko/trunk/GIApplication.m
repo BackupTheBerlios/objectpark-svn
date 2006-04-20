@@ -7,6 +7,7 @@
 //
 
 #import "GIApplication.h"
+#import "NSApplication+OPSleepNotifications.h"
 #import "GIThreadListController.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIThreadListController.h"
@@ -238,9 +239,9 @@ NSNumber* yesNumber = nil;
 	[self saveAction:nil];
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
-    [self setDelegate:self];
+    [self setDelegate: self];
 	    
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prefpaneDidEndEditing:) name:OPPreferencePaneDidEndEditing object:nil];
 		
@@ -457,16 +458,16 @@ NSNumber* yesNumber = nil;
 	[super stop:sender];
 }
 
-- (void)jobFinished:(NSNotification *)aNotification
+- (void) jobFinished: (NSNotification*) aNotification
 {
-    if (isTerminating)
-    {
-        if ([[OPJobs runningJobs] count] == 0)
-        {
-			// let other notification listeners clean up properly...hence the little delay:
-			[self replyToApplicationShouldTerminate:YES];
-        }
-    }
+	if ([[OPJobs runningJobs] count] == 0) {
+		if (isTerminating) {
+			[self replyToApplicationShouldTerminate: YES];
+		}
+		NSLog(@"[self allowSleep: YES]");
+
+		[self allowSleep: YES]; // does nothing, if not about to sleep
+	}
 }
 
 - (void)abortApplicationTerminate
@@ -555,6 +556,20 @@ NSNumber* yesNumber = nil;
     	
 	if (didIndexSomeMessages) [self startFulltextIndexingJobIfNeeded:self];
 }
+
+- (void) applicationShouldSleep
+{
+	NSTimeInterval dueInterval = (NSTimeInterval)[[NSUserDefaults standardUserDefaults] integerForKey: SoonRipeMessageMinutes] * 60.0;
+	
+	if ([GIAccount anyMessagesRipeForSendingAtTimeIntervalSinceNow: dueInterval]) {
+		[self allowSleep: NO];
+		NSLog(@"[self allowSleep: NO]");
+		[self sendMessagesDueInNearFuture: self]; // we will allow sleep after last job finished
+	} else {
+		[self allowSleep: YES];
+	}
+}
+
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
 {

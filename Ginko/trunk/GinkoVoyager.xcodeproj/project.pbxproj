@@ -361,6 +361,9 @@
 		8DDD227F080ECA4A006C902D /* GIFiltersPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD227E080ECA4A006C902D /* GIFiltersPane.h */; };
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
+		8DDFB43F09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */; };
+		8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */; };
+		8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDFB45209F82C07000F73E2 /* IOKit.framework */; };
 		8DE96470089F9F1F0053ED6B /* GIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE9646E089F9F1F0053ED6B /* GIThread.h */; };
 		8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE9646F089F9F1F0053ED6B /* GIThread.m */; };
 		8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */; };
@@ -839,6 +842,9 @@
 		8DDD2281080ECA57006C902D /* GIFiltersPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIFiltersPane.nib; sourceTree = "<group>"; };
 		8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPExtensions.h"; sourceTree = "<group>"; };
 		8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPExtensions.m"; sourceTree = "<group>"; };
+		8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPSleepNotifications.h"; sourceTree = "<group>"; };
+		8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPSleepNotifications.m"; sourceTree = "<group>"; };
+		8DDFB45209F82C07000F73E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		8DE9646E089F9F1F0053ED6B /* GIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThread.h; sourceTree = "<group>"; };
 		8DE9646F089F9F1F0053ED6B /* GIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThread.m; sourceTree = "<group>"; };
 		8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPPersistentObject+Extensions.h"; sourceTree = "<group>"; };
@@ -871,6 +877,7 @@
 				774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */,
 				8DEFDBCA09C08CFD00F6FB25 /* libsqlite3.a in Frameworks */,
 				7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */,
+				8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -993,6 +1000,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8DDFB45209F82C07000F73E2 /* IOKit.framework */,
 				77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */,
 				8DEFDBC909C08CFD00F6FB25 /* libsqlite3.a */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -1284,6 +1292,8 @@
 		8D901F890779D79A005365EA /* Cocoa Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */,
+				8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */,
 				3017EBA109917089002C5579 /* Tests */,
 				77F01CFF09D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h */,
 				77F01D0009D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m */,
@@ -1607,6 +1617,7 @@
 				77F01D0109D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h in Headers */,
 				77CA730F09F1272C00749461 /* MailToCommand.h in Headers */,
 				7718CA8809F2CDEA00D517CB /* GIGeneralPrefs.h in Headers */,
+				8DDFB43F09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2073,6 +2084,7 @@
 				77F01D0209D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */,
 				77CA731009F1272C00749461 /* MailToCommand.m in Sources */,
 				7718CA8909F2CDEA00D517CB /* GIGeneralPrefs.m in Sources */,
+				8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
