@@ -278,7 +278,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. Default implementation nullifies all object relations. "*/
 {
 	OPClassDescription* cd = [[self class] persistentClassDescription];
-	
+		
 	NSArray* ads = cd->attributeDescriptions;
 	int adIndex;
 	for (adIndex = [ads count]-1; adIndex>=0; adIndex--) {

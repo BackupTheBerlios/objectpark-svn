@@ -4,16 +4,17 @@ Bugs:
 - sometimes statistics display is not updated.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
 - window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
+- while retrieving messages, sometimes only one account is used at first - the other accounts follow after the first has finished
 
 Regressions:
 
-- primitiveBoolValue no longer works (claims that the key is not valid)
 - "empty trash" no longer works (infinite loop)
 - serching for messages, then selecting a hit, then hitting the "Back" icon closes the window. It should switch back to the thread list.
 - Replying sometime replies to the wrong message.
 
 Done:
 
+- (Dirk) - primitiveBoolValue no longer works (claims that the key is not valid)
 - (Axel) - TAB key in To:-Field inserts a TAB char
 - (Dirk) KVO notifications don't work with inverse many-to-many relationships (see test TestGIMessageGroup/testStatistics)
 - (Axel) keyboard navigation in message tree no longer works
