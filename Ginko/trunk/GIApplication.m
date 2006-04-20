@@ -586,7 +586,7 @@ NSNumber* yesNumber = nil;
 	// Process all messages sent successfully:
 	
 	NSArray *messages = [result objectForKey: @"messages"];
-	NSAssert(messages != nil, @"result does not contain 'messages'");
+	NSAssert(messages != nil, @"result does not contain 'messages'"); // RAISES!
 	
 	NSArray *sentMessages = [result objectForKey: @"sentMessages"];
 	NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");

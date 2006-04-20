@@ -36,7 +36,7 @@ static volatile NSThread* mainThread = nil;
 
 - (void) setPrimitiveBool: (BOOL) yesno forKey: (NSString*) key 
 {
-	[self setValue: yesno ? yesNumber : nil forKey: @"key"];
+	[self setValue: yesno ? yesNumber : nil forKey: key];
 }
 
 @end
