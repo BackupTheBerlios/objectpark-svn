@@ -30,3 +30,5 @@
 - (void)makeDefaultProfile;
 
 @end
+
+extern NSString *GIProfileDidChangNotification;

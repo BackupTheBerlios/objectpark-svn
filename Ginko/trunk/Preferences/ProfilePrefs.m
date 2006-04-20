@@ -17,6 +17,7 @@
 {    
     [self willChangeValueForKey:@"accounts"];
     [self didChangeValueForKey:@"accounts"];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(profileDidChange:) name:GIProfileDidChangNotification object:nil];
 }
 
 - (NSArray *)profiles
@@ -39,6 +40,7 @@
 	[selectedProfile delete];
 	[context saveChanges];
 	[self didChangeValueForKey:@"profiles"];
+	[profileTableView reloadData];
 	[profileTableView selectRow:MIN(selectedRow, [oldList count]-2) byExtendingSelection:NO];
 }
 
@@ -50,6 +52,7 @@
 	[newProfile insertIntoContext:context];
 	[context saveChanges];
 	[self didChangeValueForKey:@"profiles"];
+	[profileTableView reloadData];
 	[profileTableView selectRow:[[self profiles] indexOfObject:newProfile] byExtendingSelection:NO];
 }
 
@@ -71,6 +74,15 @@
     GIProfile *selectedProfile = [[GIProfile allObjects] objectAtIndex:[profileTableView selectedRow]];
 	[selectedProfile makeDefaultProfile];
 	[profileTableView reloadData];
+}
+
+- (void)profileDidChange:(NSNotification *)aNotification
+{
+	if ([[[aNotification userInfo] objectForKey:@"key"] isEqualToString:@"name"])
+	{
+		[self willChangeValueForKey:@"accounts"];
+		[self didChangeValueForKey:@"accounts"];
+	}
 }
 
 @end

@@ -17,8 +17,9 @@
 #import "OPPersistentObject+Extensions.h"
 #import "GIUserDefaultsKeys.h"
 
-@implementation GIProfile
+NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 
+@implementation GIProfile
 
 + (NSString*) databaseProperties
 {
@@ -180,6 +181,13 @@
 - (void)makeDefaultProfile
 {
 	[[self class] setDefaultProfile:self];
+}
+
+- (void)didChangeValueForKey:(NSString *)key
+{
+	[super didChangeValueForKey:key];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GIProfileDidChangNotification object:self userInfo:[NSDictionary dictionaryWithObject:key forKey:@"key"]];
 }
 
 @end
