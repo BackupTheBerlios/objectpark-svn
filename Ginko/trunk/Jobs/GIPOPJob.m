@@ -32,6 +32,21 @@
     return [NSDate dateWithTimeIntervalSinceNow:days * -86400]; // 86400 = seconds per day
 }
 
+- (void)runAuthenticationErrorDialog:(NSString *)errorMessage
+{
+	NSAlert *alert = [[NSAlert alloc] init];
+	
+	[alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Authentication error with server '%@'.\nTry with new password next time?", @"AuthenticationErrorDialog"), [account incomingServerName]]];
+	[alert setInformativeText:errorMessage];
+	
+	[alert addButtonWithTitle:NSLocalizedString(@"Keep Password", @"AuthenticationErrorDialog")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Try with new Password next Time", @"AuthenticationErrorDialog")];
+	
+	authenticationErrorDialogResult = [alert runModal];
+	
+	[alert release];
+}
+
 - (void)retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
 /*" Retrieves using delegate for providing password. "*/
 {
@@ -151,10 +166,16 @@
         {
             if ([[localException name] isEqualToString:OPPOP3AuthenticationFailedException])
             {
-                // Authentication failed (assuming that the password was wrong) -> clearing password
-                [theAccount setIncomingPassword:@""];
+				[self performSelectorOnMainThread:@selector(runAuthenticationErrorDialog:) withObject:[localException reason] waitUntilDone:YES];
+				
+				if (authenticationErrorDialogResult != NSAlertFirstButtonReturn)
+				{
+					if (NSDebugEnabled) NSLog(@"Authentication failed (assuming that the password was wrong) -> clearing password");
+					// Authentication failed (assuming that the password was wrong) -> clearing password
+					[theAccount setIncomingPassword:@""];
+				}
             }
-            @throw;
+			else @throw;
         }
         @finally
         {

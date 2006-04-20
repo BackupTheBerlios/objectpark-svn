@@ -13,6 +13,7 @@
 @interface GIPOPJob : NSObject 
 {
     GIAccount *account;
+	int authenticationErrorDialogResult;
 }
 
 + (void)retrieveMessagesFromPOPAccount:(GIAccount *)anAccount;
