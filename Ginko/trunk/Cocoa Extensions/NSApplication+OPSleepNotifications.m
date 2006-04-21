@@ -39,7 +39,7 @@ static long notificationID = 0;
 
 void sleepCallback(void * x,io_service_t y,natural_t messageType,void * messageArgument)
 {
-    printf("Got messageType %08lx, arg %08lx\n",(long unsigned int)messageType, (long unsigned int)messageArgument);
+    // printf("Got messageType %08lx, arg %08lx\n",(long unsigned int)messageType, (long unsigned int)messageArgument);
 
     notificationID = (long)messageArgument;
 
@@ -122,7 +122,7 @@ static io_object_t powernotifier;
 				IOCancelPowerChange(root_port, notificationID); // calling this with willSleep==YES, sleeps immediately! :-O
 			}
         }
-        NSLog(@"- allowSleep: %d executed.", allow);
+        //NSLog(@"- allowSleep: %d executed.", allow);
     }
 }
 
@@ -142,8 +142,7 @@ static io_object_t powernotifier;
     SEL delegateMethod = @selector(applicationDidWakeUp:);
     if ([[self delegate] respondsToSelector: delegateMethod])
         [[self delegate] performSelector: delegateMethod withObject: self];
-	NSLog(@"- applicationDidWakeUp executed.");
-
+	//NSLog(@"- applicationDidWakeUp executed.");
 }
 
 @end

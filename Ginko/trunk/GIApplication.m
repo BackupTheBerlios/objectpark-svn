@@ -464,7 +464,7 @@ NSNumber* yesNumber = nil;
 		if (isTerminating) {
 			[self replyToApplicationShouldTerminate: YES];
 		}
-		NSLog(@"[self allowSleep: YES]");
+		//NSLog(@"[self allowSleep: YES]");
 
 		[self allowSleep: YES]; // does nothing, if not about to sleep
 	}
@@ -563,7 +563,7 @@ NSNumber* yesNumber = nil;
 	
 	if ([GIAccount anyMessagesRipeForSendingAtTimeIntervalSinceNow: dueInterval]) {
 		[self allowSleep: NO];
-		NSLog(@"[self allowSleep: NO]");
+		//NSLog(@"[self allowSleep: NO]");
 		[self sendMessagesDueInNearFuture: self]; // we will allow sleep after last job finished
 	} else {
 		[self allowSleep: YES];
