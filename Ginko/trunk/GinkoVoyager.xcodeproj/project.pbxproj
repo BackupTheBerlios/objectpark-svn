@@ -60,6 +60,12 @@
 		7718CA8809F2CDEA00D517CB /* GIGeneralPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7718CA8609F2CDEA00D517CB /* GIGeneralPrefs.h */; };
 		7718CA8909F2CDEA00D517CB /* GIGeneralPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7718CA8709F2CDEA00D517CB /* GIGeneralPrefs.m */; };
 		7718CA8E09F2CE5100D517CB /* GIGeneralPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7718CA8D09F2CE5100D517CB /* GIGeneralPrefs.nib */; };
+		771CD38609F800170062BEED /* libsasl2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 771CD38509F800170062BEED /* libsasl2.dylib */; };
+		771CD4B709F8C77C0062BEED /* OPSASL.h in Headers */ = {isa = PBXBuildFile; fileRef = 771CD4B509F8C77C0062BEED /* OPSASL.h */; };
+		771CD4B809F8C77C0062BEED /* OPSASL.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CD4B609F8C77C0062BEED /* OPSASL.m */; };
+		771CD4BC09F8C7B20062BEED /* prop.h in Headers */ = {isa = PBXBuildFile; fileRef = 771CD4BA09F8C7B20062BEED /* prop.h */; };
+		771CD4BD09F8C7B20062BEED /* sasl.h in Headers */ = {isa = PBXBuildFile; fileRef = 771CD4BB09F8C7B20062BEED /* sasl.h */; };
+		771CD5EE09F90D020062BEED /* saslutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 771CD5ED09F90D020062BEED /* saslutil.h */; };
 		77253D6307ECB83E00375AFC /* OPMessageConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */; };
 		77253D6407ECB83E00375AFC /* OPMessageConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77253D6007ECB83E00375AFC /* OPMessageConsumer.m */; };
 		77253D6507ECB83E00375AFC /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */; };
@@ -543,6 +549,12 @@
 		7718CA8609F2CDEA00D517CB /* GIGeneralPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGeneralPrefs.h; sourceTree = "<group>"; };
 		7718CA8709F2CDEA00D517CB /* GIGeneralPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGeneralPrefs.m; sourceTree = "<group>"; };
 		7718CA8D09F2CE5100D517CB /* GIGeneralPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIGeneralPrefs.nib; sourceTree = "<group>"; };
+		771CD38509F800170062BEED /* libsasl2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsasl2.dylib; path = /usr/lib/libsasl2.dylib; sourceTree = "<absolute>"; };
+		771CD4B509F8C77C0062BEED /* OPSASL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSASL.h; sourceTree = "<group>"; };
+		771CD4B609F8C77C0062BEED /* OPSASL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSASL.m; sourceTree = "<group>"; };
+		771CD4BA09F8C7B20062BEED /* prop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = prop.h; sourceTree = "<group>"; };
+		771CD4BB09F8C7B20062BEED /* sasl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sasl.h; sourceTree = "<group>"; };
+		771CD5ED09F90D020062BEED /* saslutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = saslutil.h; sourceTree = "<group>"; };
 		77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPMessageConsumer.h; sourceTree = "<group>"; };
 		77253D6007ECB83E00375AFC /* OPMessageConsumer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPMessageConsumer.m; sourceTree = "<group>"; };
 		77253D6107ECB83E00375AFC /* OPSMTP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPSMTP.h; sourceTree = "<group>"; };
@@ -877,6 +889,7 @@
 				774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */,
 				8DEFDBCA09C08CFD00F6FB25 /* libsqlite3.a in Frameworks */,
 				7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */,
+				771CD38609F800170062BEED /* libsasl2.dylib in Frameworks */,
 				8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1000,6 +1013,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				771CD38509F800170062BEED /* libsasl2.dylib */,
 				8DDFB45209F82C07000F73E2 /* IOKit.framework */,
 				77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */,
 				8DEFDBC909C08CFD00F6FB25 /* libsqlite3.a */,
@@ -1336,6 +1350,9 @@
 		8D9020B50779D943005365EA /* Message Framework */ = {
 			isa = PBXGroup;
 			children = (
+				771CD5ED09F90D020062BEED /* saslutil.h */,
+				771CD4BA09F8C7B20062BEED /* prop.h */,
+				771CD4BB09F8C7B20062BEED /* sasl.h */,
 				7779AC9907C40CC300F064D3 /* Tests */,
 				8D90220D077A0EF3005365EA /* EDCompositeContentCoder.h */,
 				8D90220C077A0EF3005365EA /* EDCompositeContentCoder.m */,
@@ -1405,6 +1422,8 @@
 				8D9021A8077A0589005365EA /* OPXFolderContentCoder.m */,
 				77D79BD507F31BDB00C521CE /* punycode.h */,
 				77D79BD607F31BDB00C521CE /* punycode.m */,
+				771CD4B509F8C77C0062BEED /* OPSASL.h */,
+				771CD4B609F8C77C0062BEED /* OPSASL.m */,
 			);
 			path = "Message Framework";
 			sourceTree = "<group>";
@@ -1618,6 +1637,10 @@
 				77CA730F09F1272C00749461 /* MailToCommand.h in Headers */,
 				7718CA8809F2CDEA00D517CB /* GIGeneralPrefs.h in Headers */,
 				8DDFB43F09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h in Headers */,
+				771CD4B709F8C77C0062BEED /* OPSASL.h in Headers */,
+				771CD4BC09F8C7B20062BEED /* prop.h in Headers */,
+				771CD4BD09F8C7B20062BEED /* sasl.h in Headers */,
+				771CD5EE09F90D020062BEED /* saslutil.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2085,6 +2108,7 @@
 				77CA731009F1272C00749461 /* MailToCommand.m in Sources */,
 				7718CA8909F2CDEA00D517CB /* GIGeneralPrefs.m in Sources */,
 				8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */,
+				771CD4B809F8C77C0062BEED /* OPSASL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

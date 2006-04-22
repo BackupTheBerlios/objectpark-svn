@@ -202,6 +202,11 @@
     else return nil;
 }
 
+- (NSString *)serverHostnameForSMTP:(OPSMTP *)aSMTP
+{
+	return [account outgoingServerName];
+}
+
 /*" optional "*/
 - (BOOL)useSMTPS:(OPSMTP *)aSMTP
 /*"OPTIONAL.

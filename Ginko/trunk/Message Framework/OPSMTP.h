@@ -20,6 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import <OPNetwork/OPStream+SSL.h>
+#include <sasl.h>
 
 #define GISMTP OPL_DOMAIN @"GISMTP"
 
@@ -35,16 +36,24 @@ typedef enum _OPSMTPState {
     @private
     OPStream *stream;
     NSMutableDictionary *capabilities;
-    NSString *username, *password;
+    NSString *username, *password, *hostname;
     NSMutableArray *pendingResponses; // inspired by EDInternet's EDSMTPStream by Erik Dšrnenburg
     @private id _delegate;			/*" Delegate "*/
     int state;
+	
+	// SASL stuff
+	sasl_conn_t *conn;
+	const char *getauthname_func_result;
+	unsigned *getauthname_func_len;
+	const char *getuser_func_result;
+	unsigned *getuser_func_len;
+	sasl_secret_t *getsecret_func_psecret;
 }
 
-+ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream;
++ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname;
 + (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject;
 
-- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream;
+- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname;
 - (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject;
 
 - (BOOL)willAcceptMessage;
@@ -71,6 +80,9 @@ typedef enum _OPSMTPState {
 - (NSString *)passwordForSMTP:(OPSMTP *)aSMTP;
 /*" Required. Returns the password for use with the given SMTP aSMTP.
     SMTP sends this method paired with %{-usernameForSMTP:}."*/
+
+- (NSString *)serverHostnameForSMTP:(OPSMTP *)aSMTP;
+/*" Required. Returns the fully qualified hostname of the SMTP server to use. "*/
 
 - (BOOL)useSMTPS:(OPSMTP *)aSMTP;
 /*" Optional. Default is NO. "*/

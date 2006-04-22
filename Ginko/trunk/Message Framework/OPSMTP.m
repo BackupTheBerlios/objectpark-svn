@@ -24,6 +24,9 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
 #import "NSData+MessageUtils.h"
 #import "NSString+MessageUtils.h"
 #import <OPDebug/OPLog.h>
+#include <sasl.h>
+#include <saslutil.h>
+#import "OPSASL.h"
 
 NSString *OPSMTPException = @"OPSMTPException";
 NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
@@ -44,16 +47,17 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 - (void)_beginBody;
 - (void)_finishBody;
 - (BOOL)_hasPendingResponses;
-- (BOOL)_SASLAuthentication:(NSArray*) methods;
-- (BOOL)__authPlainWithUsername: (NSString*) aUsername andPassword:(NSString*) aPassword;
+- (BOOL)_SASLAuthentication:(NSArray *)methods;
+//- (BOOL)__authPlainWithUsername:(NSString *)aUsername andPassword:(NSString *)aPassword;
+- (void)_freeSASLResources;
 @end
 
 @implementation OPSMTP
 
 //Factory Methods
 
-+ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream {
-    return [[[OPSMTP alloc] initWithUsername:aUsername password:aPassword stream:aStream] autorelease];
++ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname{
+    return [[[OPSMTP alloc] initWithUsername:aUsername password:aPassword stream:aStream hostname:aHostname] autorelease];
 }
 
 + (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject {
@@ -229,7 +233,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     return self;  
 }
 
-- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream
+- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname
 {
     NSParameterAssert(aStream);
     
@@ -238,6 +242,8 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
         stream = [aStream retain];
         username = [aUsername retain];
         password = [aPassword retain];
+		hostname = [aHostname retain];
+		
         [self _commonInits];
         [self _connect];
     }
@@ -274,28 +280,32 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 	if (![body canBeConvertedToEncoding: NSASCIIStringEncoding]) {
 		// Signal that we are using the 8th bit:
-		[headers setValue: @"8bit" forKey: @"Content-Transfer-Encoding"];
+		[headers setValue:@"8bit" forKey:@"Content-Transfer-Encoding"];
 	}
 	
-	NSEnumerator* headerEnumerator = [headers keyEnumerator];
-	NSString* headerName;
+	NSEnumerator *headerEnumerator = [headers keyEnumerator];
+	NSString *headerName;
 	
 	// Make header data 7-bit clean:
-	while (headerName = [headerEnumerator nextObject]) {
-		NSString* headerValue = [headers objectForKey: headerName];
+	while (headerName = [headerEnumerator nextObject]) 
+	{
+		NSString *headerValue = [headers objectForKey:headerName];
 		
-		if ([headerValue isKindOfClass: [NSCalendarDate class]]) {
-			[(NSCalendarDate*)headerValue setTimeZone: [NSTimeZone timeZoneWithName: @"GMT"]];
-			headerValue = [(NSCalendarDate*)headerValue descriptionWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"]; 
+		if ([headerValue isKindOfClass: [NSCalendarDate class]]) 
+		{
+			[(NSCalendarDate *)headerValue setTimeZone: [NSTimeZone timeZoneWithName:@"GMT"]];
+			headerValue = [(NSCalendarDate*)headerValue descriptionWithCalendarFormat:@"%a, %d %b %Y %H:%M:%S %z"]; 
 		}
 		
-		if (![headerValue canBeConvertedToEncoding: NSASCIIStringEncoding]) {
+		if (![headerValue canBeConvertedToEncoding:NSASCIIStringEncoding]) 
+		{
 			// Do header encoding here
-			if ([headerValue canBeConvertedToEncoding: NSISOLatin1StringEncoding]) {
+			if ([headerValue canBeConvertedToEncoding:NSISOLatin1StringEncoding]) 
+			{
 				// Example:
 				// Subject: =?iso-8859-1?Q?Steuererkl=E4rung_am_Macintosh_und_PC_leicht_gemacht!?=
-				NSData* data = [[headerValue dataUsingEncoding: NSISOLatin1StringEncoding]  encodeHeaderQuotedPrintable];
-				headerValue = [NSString stringWithFormat: @"=?iso-8859-1?Q?%@?=", [NSString stringWithData: data encoding: NSASCIIStringEncoding]];
+				NSData *data = [[headerValue dataUsingEncoding: NSISOLatin1StringEncoding] encodeHeaderQuotedPrintable];
+				headerValue = [NSString stringWithFormat:@"=?iso-8859-1?Q?%@?=", [NSString stringWithData:data encoding:NSASCIIStringEncoding]];
 			} else {
 				// Raise Exception
 			}
@@ -326,8 +336,12 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 {
     [self quit];
     
+	[self _freeSASLResources];
+	
     [username release];
     [password release];
+	[hostname release];
+	
     [stream release];
     [capabilities release];
     
@@ -472,7 +486,7 @@ Raises an exception if the message could not be sent. "*/
 - (void)_assertServerAcceptedCommand
 {    
     if (! [pendingResponses count])
-        [NSException raise: NSInternalInconsistencyException format:@"-[%@ %@]: No pending responses.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
+        [NSException raise:NSInternalInconsistencyException format:@"-[%@ %@]: No pending responses.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
     NSString *expectedCode = [[[pendingResponses objectAtIndex:0] retain] autorelease];
     [pendingResponses removeObjectAtIndex:0];
@@ -543,6 +557,19 @@ Raises an exception if the message could not be sent. "*/
     return nil;
 }
 
+- (NSString *)_hostname
+{
+    if (hostname) {
+        return hostname;
+    }
+    
+    if ([_delegate respondsToSelector:@selector(serverHostnameForSMTP:)]) {
+        return [_delegate serverHostnameForSMTP:self];
+    }
+    
+    return nil;
+}
+
 - (BOOL)_useSMTPS
 {
     if ([_delegate respondsToSelector:@selector(useSMTPS:)]) {
@@ -603,9 +630,282 @@ Raises an exception if the message could not be sent. "*/
     return [pendingResponses count] > 0;
 }
 
+// Callback functions for SASL library
+
+static int getsecret_func(sasl_conn_t *conn,
+						  void *context,
+						  int id,
+						  sasl_secret_t **psecret)
+{
+	if (id!=SASL_CB_PASS) return SASL_FAIL; // paranoia
+	
+	OPSMTP *smtp = (OPSMTP *)context;
+	if (![smtp isKindOfClass:[OPSMTP class]])
+	{
+		[NSException raise:NSGenericException format:@"Expected a OPSTMP object but got a %@ object", NSStringFromClass([smtp class])];
+	}
+	
+	const char *UTF8Password = [[smtp _password] UTF8String];
+	unsigned long passwordLength = strlen(UTF8Password);
+	(*psecret) = malloc(sizeof(sasl_secret_t) + passwordLength + 2);
+	smtp->getsecret_func_psecret = (*psecret);
+	
+	(*psecret)->len = passwordLength;
+	
+	memcpy((*psecret)->data, UTF8Password, passwordLength + 1);
+	(*psecret)->data[passwordLength] = 0;
+	
+	return SASL_OK;
+}
+
+static int getauthname_func(void *context,
+							int id,
+							const char **result,
+							unsigned *len)
+{
+	if (id!=SASL_CB_AUTHNAME) return SASL_FAIL; // paranoia
+	
+	OPSMTP *smtp = (OPSMTP *)context;
+	if (![smtp isKindOfClass:[OPSMTP class]])
+	{
+		[NSException raise:NSGenericException format:@"Expected a OPSTMP object but got a %@ object", NSStringFromClass([smtp class])];
+	}
+	
+	const char *UTF8Username = [[smtp _username] UTF8String];
+	unsigned long usernameLength = strlen(UTF8Username);
+		
+	(*result) = malloc(usernameLength + 2);
+	smtp->getauthname_func_result = (*result);
+	
+	memcpy((void *)*result, UTF8Username, usernameLength + 1);
+	result[usernameLength] = 0;
+	
+	len = malloc(sizeof(unsigned));
+	smtp->getauthname_func_len = len;
+	
+	(*len) = usernameLength;
+	
+	return SASL_OK;
+}
+
+- (void)_freeSASLResources
+{
+	if (conn) sasl_dispose(&conn);
+
+	if (getauthname_func_result) free((void *)getauthname_func_result);
+	if (getauthname_func_len) free(getauthname_func_len);
+	
+	if (getuser_func_result) free((void *)getuser_func_result);
+	if (getuser_func_len) free(getuser_func_len);
+
+	if (getsecret_func_psecret) free(getsecret_func_psecret);
+}
+
+- (void)interaction:(int)iid :(const char *)prompt :(char **)tresult :(unsigned int *)tlen
+{
+    char result[1024];
+	
+    if (iid == SASL_CB_PASS) 
+	{
+		*tresult = (char *)[[self _password] UTF8String];
+		*tlen = strlen(*tresult);
+		return;
+    } 
+	else if (iid == SASL_CB_USER) 
+	{
+		*tresult = (char *)[[self _username] UTF8String];
+		*tlen = strlen(*tresult);
+		return;
+    } 
+	else if (iid == SASL_CB_AUTHNAME) 
+	{
+		*tresult = (char *)[[self _username] UTF8String];
+		*tlen = strlen(*tresult);
+		return;
+    } 
+	else if ((iid == SASL_CB_GETREALM) /* && (realm != NULL) */) 
+	{
+		[NSException raise:OPSMTPException format:@"Not supported SASL intercation SASL_CB_GETREALM."];
+		//strcpy(result, realm);
+    } 
+	else 
+	{
+		[NSException raise:OPSMTPException format:@"Not supported SASL intercation."];
+    }
+
+	// never used
+	/*
+	*tlen = strlen(result);
+	*tresult = (char *) malloc(*tlen+1); // leak!
+	memset(*tresult, 0, *tlen+1);
+	memcpy((char *) *tresult, result, *tlen);
+	 */
+}
+
+- (void)fillin_interactions:(sasl_interact_t *)tlist
+{
+    while (tlist->id != SASL_CB_LIST_END)
+    {
+		[self interaction:tlist->id :tlist->prompt :(void *)&(tlist->result) :&(tlist->len)];
+		tlist++;
+    }
+}
+
 - (BOOL)_SASLAuthentication:(NSArray *)authMethods
 {
-    NSString *method;
+	[OPSASL initialize]; // be sure to have the SASL lib initialized
+	
+	/* The SASL context kept for the life of the connection */
+	int result;
+	
+	sasl_callback_t myCallbacks[] = 
+	{
+	{
+		SASL_CB_GETREALM, NULL, NULL  /* we'll just use an interaction if this comes up */
+	}, 
+	{
+		SASL_CB_USER, NULL, NULL      /* we'll just use an interaction if this comes up */
+	}, 
+	{
+		SASL_CB_AUTHNAME, &getauthname_func, self /* A mechanism should call getauthname_func if it needs the authentication name */
+	}, 
+	{ 
+		SASL_CB_PASS, &getsecret_func, self      /* Call getsecret_func if need secret */
+	}, 
+	{
+		SASL_CB_LIST_END, NULL, NULL
+	}
+	};
+	
+	// client new connection
+	result = sasl_client_new("smtp",     // The service we are using
+							 [[self _hostname] UTF8String], // The fully qualified domain name of the server we're connecting to
+							 NULL, NULL, // Local and remote IP address strings
+							 myCallbacks,       // connection-specific callbacks
+							 0,          // security flags
+							 &conn);     // allocated on success
+							 
+	// check to see if that worked */
+	if (result != SASL_OK) 
+	{
+		NSLog(@"sasl_client_new failed");
+		return NO;
+	}
+						   
+	sasl_interact_t *client_interact=NULL;
+	const char *out, *mechusing;
+	unsigned outlen;
+	
+	const char *mechlist = [[authMethods componentsJoinedByString:@" "] UTF8String];
+	
+	char out64[4096];
+	
+	do {
+		
+		result = sasl_client_start(conn,      /* the same context from
+		above */ 
+								 mechlist,  /* the list of mechanisms
+								 from the server */
+								 &client_interact, /* filled in if an
+								 interaction is needed */
+								 &out,      /* filled in on success */
+								 &outlen,   /* filled in on success */
+								 &mechusing);
+		
+		if (result == SASL_INTERACT)
+		{
+			[self fillin_interactions:client_interact];
+		}
+		
+	} while (result == SASL_INTERACT); /* the mechanism may ask us to fill
+                                               in things many times. result is 
+                                               SASL_CONTINUE on success */
+	if (result != SASL_CONTINUE && result != SASL_OK) 
+	{
+		NSLog(@"sasl_client_start failed (result = %d)", result);
+		return NO;
+	}
+	
+	if (outlen > 0) 
+	{
+		result = sasl_encode64(out, outlen, out64, sizeof out64, NULL);
+		if (!result) 
+		{
+		    if (NSDebugEnabled) NSLog(@"AUTH %s %s\r\n", mechusing, out64);
+			[stream writeFormat:@"AUTH %s %s\r\n", mechusing, out64];
+		}
+	} 
+	else 
+	{
+		if (NSDebugEnabled) NSLog(@"AUTH %s\r\n", mechusing);
+		[stream writeFormat:@"AUTH %s\r\n", mechusing];
+	}
+	
+	while (result == SASL_OK || result == SASL_CONTINUE) 
+	{
+		NSString *response = [[self _readResponse] objectAtIndex:0];
+		
+		NSLog(@"response = '%@'", response);
+		
+		if ([response hasPrefix:@"5"]) 
+		{
+			NSLog(@"Authentication failure");
+			return NO;
+		}
+		
+		if ([response hasPrefix:@"235"]) 
+		{
+			return YES;
+		}
+		NSAssert([response hasPrefix:@"3"], @"should have 3 as prefix");
+		if (NSDebugEnabled) NSLog(@"Another step in the authentication process is necessary.");
+		
+		char in[4096];
+		unsigned int inlen;
+		const char *buf = [[response substringFromIndex:4] UTF8String];
+		
+		char newbuf[1024];
+		
+		strcpy(newbuf, buf);
+				
+		result = sasl_decode64(newbuf, strlen(newbuf), in, 4096, &inlen);
+		if (result != SASL_OK) break;
+
+		do 
+		{
+			result = sasl_client_step(conn,  /* our context */
+			in,    /* the data from the server */
+			inlen, /* it's length */
+			&client_interact,  /* this should be
+			unallocated and NULL */
+			&out,     /* filled in on success */
+			&outlen); /* filled in on success */
+			
+			if (result == SASL_INTERACT)
+			{
+				[self fillin_interactions:client_interact];
+			}
+			
+		} 
+		while (result==SASL_INTERACT);
+		
+		if (result == SASL_OK || result == SASL_CONTINUE) 
+		{
+			result = sasl_encode64(out, outlen, out64, sizeof out64, NULL);
+		}
+		
+		if (result == SASL_OK) 
+		{
+			if (NSDebugEnabled) NSLog(@"%s\r\n", out64);
+			[stream writeFormat:@"%s\r\n", out64];
+		}
+	}
+	
+	// failed:
+	return NO;
+	
+	/* old version without cyrus SASL lib only supporting PLAIN
+	NSString *method;
     NSString *aUsername, *aPassword;
     NSEnumerator *methods = [authMethods reverseObjectEnumerator];
     
@@ -626,9 +926,10 @@ Raises an exception if the message could not be sent. "*/
     
     //OPDebugLog(SMTPDEBUG, OPWARNING, @"OOPS! We have a problem. No known AUTH method is supported!");
     return NO;
+	 */
 }
 
-
+/*
 // PLAIN authentication only
 - (BOOL)__authPlainWithUsername:(NSString *)aUsername andPassword:(NSString *)aPassword
 {        
@@ -638,18 +939,18 @@ Raises an exception if the message could not be sent. "*/
     NSParameterAssert(aUsername && aPassword);
     
     // initiate auth        
-    sesame = [[[NSString stringWithFormat: @"\0%@\0%@", aUsername, aPassword] dataUsingEncoding: NSUTF8StringEncoding] encodeBase64];
+    sesame = [[[NSString stringWithFormat:@"\0%@\0%@", aUsername, aPassword] dataUsingEncoding: NSUTF8StringEncoding] encodeBase64];
     
-    authString = [NSString stringWithFormat: @"AUTH PLAIN %@", [NSString stringWithCString: [sesame bytes] length: [sesame length]]];
+    authString = [NSString stringWithFormat:@"AUTH PLAIN %@", [NSString stringWithCString: [sesame bytes] length: [sesame length]]];
     
     //OPDebugLog1(SMTPDEBUG, OPALL, @"auth string = (%@)", authString);
     [stream writeString: authString];
     
-    [pendingResponses addObject: @"235"];
+    [pendingResponses addObject:@"235"];
     
     [self _assertServerAcceptedCommand];
     
     return YES;
 }
-
+*/
 @end
