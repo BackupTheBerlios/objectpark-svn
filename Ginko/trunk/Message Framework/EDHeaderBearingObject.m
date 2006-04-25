@@ -210,7 +210,7 @@
     canonicalName = [fieldName lowercaseString];
     if([headerDictionary objectForKey:canonicalName] != nil)
     {
-        if (NSDebugEnabled) NSLog(@"will remove header field %@", fieldName);
+        //if (NSDebugEnabled) NSLog(@"will remove header field %@", fieldName);
         for(i = 0, n = [headerFields count]; i < n; i++)
             if([[[headerFields objectAtIndex:i] firstObject] caseInsensitiveCompare:fieldName] == NSOrderedSame)
                 break;

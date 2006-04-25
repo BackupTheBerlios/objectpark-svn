@@ -164,7 +164,6 @@
     }
 }
 
-
 - (void) removeObjectAtIndex: (unsigned) index
 {
 	if (index!=NSNotFound && count>0) {
@@ -365,6 +364,8 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	unsigned resultIndex;
 	@synchronized(self) { // only needed because of debugging code
 		resultIndex = [self indexOfObject: anObject];
+		
+		/*
 		if (NSDebugEnabled) {
 			unsigned lresultIndex = [self linearSearchForOid: [anObject currentOid]];
 			if (lresultIndex != resultIndex) {
@@ -373,6 +374,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 				unsigned resultIndex2 = [self indexOfObject: anObject]; // step into this!
 			}
 		}
+		 */
 	}
 	return resultIndex != NSNotFound;
 }
@@ -520,11 +522,13 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 			elementClass = [anObject class]; // remember the element class
 		}
 		
+		/*
 		if (NSDebugEnabled && [self containsObject: anObject]) {
 			NSLog(@"Warning: producing double entry '%@' in faulting array '%@'", anObject, self);
 			NSBeep();
 			[self containsObject: anObject];
 		}
+		 */
 		
 		NSParameterAssert([anObject class] == elementClass);
 		

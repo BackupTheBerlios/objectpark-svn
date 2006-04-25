@@ -519,18 +519,21 @@ static BOOL isThreadItem(id item)
     return YES;
 }
 
-- (IBAction)closeSelection:(id)sender
+- (IBAction) closeSelection: (id) sender
 {
     if (sender == messageTextView) {
         if ([self isSearchShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
         else [tabView selectTabViewItemWithIdentifier:@"threads"];
     } else {
         if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"message"]) {
-            // from message switch back to threads:
+            // From message switch back to threads:
             if ([self isSearchShownCurrently]) [tabView selectTabViewItemWithIdentifier:@"searchresult"];
             else [tabView selectTabViewItemWithIdentifier:@"threads"];
-        } else {
-            // from threads switch back to the groups window:
+        } else if ([[[tabView selectedTabViewItem] identifier] isEqualToString:@"searchresult"]) {
+			// From search hits, remove search term and switch back to thread list:
+			[searchField setStringValue: @""]; [self search: nil];
+		} else {
+            // From threads switch back to the groups window:
             [[GIApp groupsWindow] makeKeyAndOrderFront:sender];
             [window performClose:self];
         }
@@ -727,26 +730,22 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction)search:(id)sender
+- (IBAction) search: (id) sender
 {
     if (!searchField) searchField = sender;
     
-    NSString *query = [searchField stringValue];
+    NSString* query = [searchField stringValue];
     
-    if ([query length]) 
-    {;
-        @try 
-        {
+    if ([query length]) {
+        @try {
             [OPJobs suspendPendingJobs];
             
             NSArray *conflictingJobs = [OPJobs runningJobsWithName:[GIFulltextIndex jobName]];
-            if ([conflictingJobs count]) 
-            {
+            if ([conflictingJobs count]) {
                 NSEnumerator *enumerator = [conflictingJobs objectEnumerator];
                 NSNumber *jobId;
                 
-                while (jobId = [enumerator nextObject]) 
-                {
+                while (jobId = [enumerator nextObject]) {
                     [OPJobs suggestTerminatingJob:jobId];
                 }
             }
@@ -790,20 +789,16 @@ static BOOL isThreadItem(id item)
             if (NSDebugEnabled) NSLog(@"hits count = %d", [hits count]);
             
             [searchHitsTableView reloadData];
-        } 
-        @catch (NSException *localException) 
-        {
+        } @catch (NSException *localException) {
             @throw;
-        } 
-        @finally 
-        {
+        } @finally {
             [OPJobs resumePendingJobs];
         }
-    } 
-    else 
-    {
-        [self setHits:nil];
-        [tabView selectTabViewItemWithIdentifier:@"threads"];
+    } else {
+        [self setHits: nil];
+        [tabView selectTabViewItemWithIdentifier: @"threads"];
+		//NSView* view = [[tabView selectedTabViewItem] view];
+		[window makeFirstResponder: threadsView];
     }
 }
 
