@@ -703,7 +703,7 @@ static int getauthname_func(void *context,
 
 - (void)interaction:(int)iid :(const char *)prompt :(char **)tresult :(unsigned int *)tlen
 {
-    char result[1024];
+//    char result[1024];
 	
     if (iid == SASL_CB_PASS) 
 	{
@@ -753,6 +753,30 @@ static int getauthname_func(void *context,
 
 - (BOOL)_SASLAuthentication:(NSArray *)authMethods
 {
+	static NSArray *supportedMethods = nil;
+	
+	if (!supportedMethods)
+	{
+		supportedMethods = [[NSArray alloc] initWithObjects:@"CRAM-MD5", @"LOGIN", @"PLAIN", @"ANONYMOUS", nil];
+	}
+	
+	NSMutableArray *qualifyingMethods = [NSMutableArray array];
+	NSEnumerator *enumerator = [supportedMethods objectEnumerator];
+	NSString *method;
+	
+	while (method = [enumerator nextObject])
+	{
+		if ([authMethods containsObject:method])
+		{
+			[qualifyingMethods addObject:method];
+		}
+	}
+	
+	if ([qualifyingMethods count] == 0)
+	{
+		[NSException raise:OPSMTPException format:@"No supported SASL authentication method. Server supports: %@", authMethods];
+	}
+	
 	[OPSASL initialize]; // be sure to have the SASL lib initialized
 	
 	/* The SASL context kept for the life of the connection */
@@ -796,7 +820,7 @@ static int getauthname_func(void *context,
 	const char *out, *mechusing;
 	unsigned outlen;
 	
-	const char *mechlist = [[authMethods componentsJoinedByString:@" "] UTF8String];
+	const char *mechlist = [[qualifyingMethods componentsJoinedByString:@" "] UTF8String];
 	
 	char out64[4096];
 	

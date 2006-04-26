@@ -234,13 +234,17 @@ UIDL. nil otherwise. "*/
 }
 
 - (void)keepAlive
-/*"Sends some command to the server to prevent the connection from timing out."*/
+/*" Sends a command to the server to prevent the connection from timing out. "*/
 {
     if (NSDebugEnabled) NSLog(@"sending 'keep alive' for %@", [self description]);
-    
-    // send some command that does not alter any state and produces little traffic
-    int size = [self _maildropSize];
-    if (NSDebugEnabled) NSLog(@"-keepAlive on %@ returned %d", [self description], size);
+	
+	[_stream writeLine:@"CAPA"];
+	NSString *line;
+	do
+	{
+		line = [_stream availableLine];
+	}
+	while (line);
 }
 
 - (void)setAutosaveName:(NSString *)aName
@@ -400,7 +404,7 @@ UIDL. nil otherwise. "*/
         [NSException raise:OPPOP3SessionException format:@"username and/or password is/are nil in POP3Session %@.", self];
     }
 
-	if ([dateBefore timeIntervalSinceNow] < (NSTimeInterval)-15.0)
+	if ([dateBefore timeIntervalSinceNow] < (NSTimeInterval)-5.0)
 	{;
 		// as gathering username and password may have taken a long time, test if server is still listening:
 		@try
@@ -657,7 +661,7 @@ UIDL. nil otherwise. "*/
         [_messageInfo addObject:[NSMutableDictionary dictionaryWithCapacity:4]];
     
     NS_DURING
-        [self _readOKForCommand: @"UIDL"]; 	// try to use UIDL command
+        [self _readOKForCommand:@"UIDL"]; 	// try to use UIDL command
     NS_HANDLER
         if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.");
         while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
@@ -669,11 +673,11 @@ UIDL. nil otherwise. "*/
         while (response = [_stream availableLine])
         {
             NSMutableDictionary *infoDict;
-            NSArray* components;
-            NSString* UIDL;
+            NSArray *components;
+            NSString *UIDL;
             int messageNumber;
 
-            components = [response componentsSeparatedByString: @" "];
+            components = [response componentsSeparatedByString:@" "];
             NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
             messageNumber = [[components objectAtIndex:0] intValue];
             UIDL = [components objectAtIndex:1];
@@ -717,7 +721,7 @@ UIDL. nil otherwise. "*/
     return result;
 }
 
-- (void) _autosaveUIDLs
+- (void)_autosaveUIDLs
 {
     if (([_autosaveName length]) && (_maildropSize != -1))
     {
@@ -859,7 +863,7 @@ UIDL. nil otherwise. "*/
     NSAssert(_state == TRANSACTION, @"POP3 session is not in TRANSACTION state");
 
     response = [self _readOKForCommand:@"STAT"];
-    return [[NSDecimalNumber decimalNumberWithString:[[response componentsSeparatedByString: @" "] objectAtIndex:1]] intValue];
+    return [[NSDecimalNumber decimalNumberWithString:[[response componentsSeparatedByString:@" "] objectAtIndex:1]] intValue];
 }
 
 - (NSData *)_transferDataAtPosition:(int)position
@@ -873,7 +877,8 @@ UIDL. nil otherwise. "*/
 		{
             [self _readOKForCommand:command];
             transferData = [_stream availableTextData];
-        } @catch (NSException* localException) {
+        } @catch (NSException *localException) 
+		{
             if (NSDebugEnabled) NSLog(@"Warning: POP3 server fails for command '%@': %@", command, localException);
 		}
     }
