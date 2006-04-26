@@ -182,10 +182,11 @@ static BOOL isThreadItem(id item)
 
 - (int) threadLimitCount 
 {
-	if (!recentThreadsCache) {
+#warning optimization in -threadLimitCount removed.
+	//if (!recentThreadsCache) {
 		BOOL showOnlyRecentThreads = [[self valueForGroupProperty: ShowOnlyRecentThreads] boolValue];	
 		recentThreadsCache = showOnlyRecentThreads ? recentThreadsCache = 150 : INT_MAX;
-	}
+	//}
 	return recentThreadsCache;
 }
 
@@ -295,6 +296,9 @@ static BOOL isThreadItem(id item)
 		[messageTextView scrollRangeToVisible: NSMakeRange(0, 0)];
 		
 		[self updateCommentTree: isNewThread];
+	} else {
+		// Clear the content:
+		[[messageTextView textStorage] replaceCharactersInRange: NSMakeRange(0, [[messageTextView textStorage] length]) withString: @""];
 	}
 }
 
@@ -463,6 +467,9 @@ static BOOL isThreadItem(id item)
             } 
             else 
             {
+				
+				[self setDisplayedMessage:message thread:selectedThread];
+
                 [tabView selectTabViewItemWithIdentifier:@"message"];
                 
                 //[message addFlags:OPSeenStatus];
@@ -1393,7 +1400,9 @@ static BOOL isThreadItem(id item)
 		// thread list
         if (item == nil) {
 			
-			return MIN([self threadLimitCount], [[self threadsByDate] count]);
+			int result = MIN([self threadLimitCount], [[self threadsByDate] count]);
+			NSLog(@"ThreadList %@ shows %d threads.", self, result);
+			return result;
 /*
 			int result = [self threadLimitCount];
 			int threadCount = [[self threadsByDate] count];
