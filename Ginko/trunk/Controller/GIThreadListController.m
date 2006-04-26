@@ -245,7 +245,6 @@ static BOOL isThreadItem(id item)
 	
 	[displayedMessage autorelease];
 	displayedMessage = [aMessage retain];
-	[displayedMessage addFlags: OPSeenStatus];
 	
 	if (isNewThread) {
 		[displayedThread removeObserver: self forKeyPath: @"messages"];
@@ -300,6 +299,8 @@ static BOOL isThreadItem(id item)
 		// Clear the content:
 		[[messageTextView textStorage] replaceCharactersInRange: NSMakeRange(0, [[messageTextView textStorage] length]) withString: @""];
 	}
+	
+	[displayedMessage addFlags: OPSeenStatus];
 }
 
 - (GIMessage*) displayedMessage
@@ -468,7 +469,7 @@ static BOOL isThreadItem(id item)
             else 
             {
 				
-				[self setDisplayedMessage:message thread:selectedThread];
+				[self setDisplayedMessage: nil thread: nil];
 
                 [tabView selectTabViewItemWithIdentifier:@"message"];
                 
