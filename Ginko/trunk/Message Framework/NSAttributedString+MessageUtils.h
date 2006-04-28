@@ -22,49 +22,43 @@
 
 #import <AppKit/AppKit.h>
 
-extern NSString* OPStringFromColor(NSColor* color);
-extern NSColor* OPColorFromString(NSString* string);
+extern NSString *OPStringFromColor(NSColor *color);
+extern NSColor *OPColorFromString(NSString *string);
 
 @interface NSAttributedString (QuotationExtensions)
 
-+ (NSColor*) defaultLinkColor;
++ (NSColor *)defaultLinkColor;
 
-- (NSString*) quotedStringWithLineLength: (int) lineLength 
-               byIncreasingQuoteLevelBy: (int) levelDelta;
+- (NSString *)quotedStringWithLineLength:(int)lineLength byIncreasingQuoteLevelBy:(int)levelDelta;
+- (NSString *)firstLevelMicrosoftTOFUQuote;
 
 @end
 
 
 @interface NSMutableAttributedString (QuotationExtensions)
 
-- (void) prepareQuotationsForDisplay;
+- (void)prepareQuotationsForDisplay;
 
 @end
 
 @interface NSMutableAttributedString (MessageAdditions)
 
 /*" Appending "special" objects "*/
+- (void)appendAttachmentWithFileWrapper:(NSFileWrapper *)aFileWrapper showInlineIfPossible:(BOOL)shouldShowInline;
+- (void)appendAttachmentWithFileWrapper:(NSFileWrapper *)aFileWrapper;
 
-
-//- (void) appendAttachment: (NSData*) data name: (NSString*) name description: (NSString*) description;
-- (void) appendAttachmentWithFileWrapper: (NSFileWrapper*) aFileWrapper showInlineIfPossible:(BOOL)shouldShowInline;
-- (void) appendAttachmentWithFileWrapper: (NSFileWrapper*) aFileWrapper;
-
-
-- (void) appendURL: (NSString*) aURL;
-- (void) appendURL: (NSString*) aURL linkColor: (NSColor*) linkColor;
-- (void) appendImage: (NSData*) data name: (NSString*) name;
-//- (void) appendAttachment: (NSData*) data name: (NSString*) name;
+- (void)appendURL:(NSString *)aURL;
+- (void)appendURL:(NSString *)aURL linkColor:(NSColor *)linkColor;
+- (void)appendImage:(NSData *)data name:(NSString *)name;
 
 - (NSMutableAttributedString *)urlify;
-- (NSMutableAttributedString *)urlifyWithLinkColor: (NSColor*) linkColor;
-- (NSMutableAttributedString *)urlifyWithLinkColor: (NSColor*) linkColor range:(NSRange)range;
+- (NSMutableAttributedString *)urlifyWithLinkColor:(NSColor *)linkColor;
+- (NSMutableAttributedString *)urlifyWithLinkColor:(NSColor *)linkColor range:(NSRange)range;
 
-- (NSArray*) divideContentStringTypedStrings;
+- (NSArray *)divideContentStringTypedStrings;
 - (BOOL)hasRichAttributes;
 
 @end
-
 
 
 

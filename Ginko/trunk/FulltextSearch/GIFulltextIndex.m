@@ -1100,7 +1100,10 @@
     (*env)->PopLocalFrame(env, NULL);
     
     // remove dupes:
-    [self fulltextIndexInBackgroundAdding:nil removing:invalidMessages];
+	if ([invalidMessages count])
+	{
+		[self fulltextIndexInBackgroundAdding:nil removing:invalidMessages];
+	}
     
     return result;
 }

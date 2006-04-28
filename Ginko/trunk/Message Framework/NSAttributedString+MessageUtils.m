@@ -206,9 +206,70 @@ NSColor* OPColorFromString(NSString* string)
     return result;
 }
 
+- (NSString *)firstLevelMicrosoftTOFUQuote
+{
+	NSString *result = nil;
+	NSString *plainText = [self string];
+	
+	NSRange range = [plainText rangeOfString:@"-----"];
+	
+	if (range.location != NSNotFound
+		&& ![self attribute:OPQuotationAttributeName 
+				   atIndex:range.location 
+			effectiveRange:NULL]) // found TOFU
+	{
+		range = [plainText lineRangeForRange:range];
+		unsigned int quoteStart = range.location + range.length;
+		NSRange stopRange;
+		
+		if (quoteStart < [plainText length]) // still in bounds?
+		{
+			// test, if a stopper is present:
+			unsigned int stopPosition = NSNotFound;
+			unsigned int searchPosition = quoteStart;
+			do
+			{
+				stopRange = [plainText rangeOfString:@"--" options:0 range:NSMakeRange(searchPosition, [plainText length] - searchPosition)];
+				
+				if (stopRange.location != NSNotFound)
+				{
+					range = [plainText lineRangeForRange:stopRange];
+					if (range.location == stopRange.location)
+					{
+						stopPosition = range.location;
+					}
+				}
+			}
+			while (stopRange.location != NSNotFound && stopPosition == NSNotFound);
+			
+			if (stopPosition == NSNotFound)
+			{
+				result = [plainText substringFromIndex:quoteStart];
+			}
+			else
+			{
+				result = [plainText substringWithRange:NSMakeRange(quoteStart, stopPosition - quoteStart)];
+			}
+			
+			range = [result paragraphRangeForRange:NSMakeRange(0, 0)];
+			
+			while (range.location != NSNotFound && range.length > 6)
+			{
+				range = [result paragraphRangeForRange:NSMakeRange(range.location + range.length, 0)];
+			}
+			
+			if (range.location != NSNotFound)
+			{
+				result = [result substringFromIndex:range.location + range.length];
+			}
+
+		}
+	}
+	
+	return result;
+}
+
 @end
-
-
 
 @implementation NSMutableAttributedString (QuotationExtensions)
 
@@ -287,7 +348,7 @@ NSColor* OPColorFromString(NSString* string)
     return color;
 }
 
-- (void) prepareQuotationsForDisplay
+- (void)prepareQuotationsForDisplay
 /*"Adds paragraph style attributes to quoted ranges."*/
 {
     NSRange limitRange;

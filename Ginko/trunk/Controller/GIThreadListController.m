@@ -31,6 +31,7 @@
 #import "OPPersistence.h"
 #import "OPObjectPair.h"
 #import "GIMessageGroup+Statistics.h"
+#import "NSAttributedString+MessageUtils.h"
 
 static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
@@ -234,17 +235,21 @@ static BOOL isThreadItem(id item)
 	}
 }
 
-- (void) setDisplayedMessage: (GIMessage*) aMessage thread: (GIThread*) aThread
+- (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread
 /*" Central method for detail viewing of a message aMessage in a thread aThread. "*/
 {
-	if (!aThread) aThread = [aMessage valueForKey: @"thread"];
+	if (!aThread) aThread = [aMessage valueForKey:@"thread"];
 	
 	NSParameterAssert(aThread==nil || isThreadItem(aThread));
 	
-	BOOL isNewThread = ![aThread isEqual: displayedThread];
+	BOOL isNewThread = ![aThread isEqual:displayedThread];
 	
 	[displayedMessage autorelease];
 	displayedMessage = [aMessage retain];
+<<<<<<< .mine
+	[displayedMessage addFlags:OPSeenStatus];
+=======
+>>>>>>> .r648
 	
 	if (isNewThread) {
 		[displayedThread removeObserver: self forKeyPath: @"messages"];
@@ -279,7 +284,7 @@ static BOOL isThreadItem(id item)
 			
 			messageText = [[[NSAttributedString alloc] initWithString:transferString attributes: fixedFont] autorelease]; 
 		} else {
-			messageText = [displayedMessage renderedMessageIncludingAllHeaders: [[NSUserDefaults standardUserDefaults] boolForKey: ShowAllHeaders]];
+			messageText = [displayedMessage renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
 		}
 		
 		if (!messageText) {
@@ -1060,31 +1065,45 @@ static BOOL isThreadItem(id item)
 	}
 }
 
-- (IBAction) moveSelectionToTrash: (id) sender
+- (IBAction)repairInReplyTo:(id)sender
+{
+	NSLog(@"Trying repair...");
+	NSAttributedString *content = [[self displayedMessage] renderedMessageIncludingAllHeaders:NO];
+	
+	NSString *TOFUQuote = [content firstLevelMicrosoftTOFUQuote];
+	
+	NSLog(@"TOFU Quote = '%@'", TOFUQuote);
+}
+
+- (IBAction)moveSelectionToTrash:(id)sender
 {
     int rowBefore = [[threadsView selectedRowIndexes] firstIndex];
-    NSEnumerator* enumerator = [[threadsView selectedItems] objectEnumerator];
+    NSEnumerator *enumerator = [[threadsView selectedItems] objectEnumerator];
     id item;
     BOOL trashedAtLeastOne = NO;
-	NSMutableDictionary* oldNewThreadDictionary = nil;
-	GIMessageGroup* trash = [GIMessageGroup trashMessageGroup];
+	NSMutableDictionary *oldNewThreadDictionary = nil;
+	GIMessageGroup *trash = [GIMessageGroup trashMessageGroup];
     
 	// Make sure, update notifications do not try to re-select threads that no longer exist:
-	[threadsView deselectAll: nil]; 
+	[threadsView deselectAll:nil]; 
     
-    while (item = [enumerator nextObject]) {
-		
-		if (isThreadItem(item)) {
-			// We have to trash a thread:
-			[GIMessageBase addTrashThread: item];
-			[[self group] removeValue: item forKey: @"threadsByDate"];
+    while (item = [enumerator nextObject]) 
+	{
+		if (isThreadItem(item)) // trashing a thread:
+		{
+			[GIMessageBase addTrashThread:item];
+			[[self group] removeValue:item forKey:@"threadsByDate"];
 			trashedAtLeastOne = YES;	
-		} else {
-			// We have to trash a message:
-			if (![[[item thread] valueForKey: @"groups"] containsObject: trash]) {
+		} 
+		else // trashing a message
+		{
+			
+			if (![[[item thread] valueForKey:@"groups"] containsObject:trash]) 
+			{
 				if (!oldNewThreadDictionary) oldNewThreadDictionary = [NSMutableDictionary dictionary];
-				GIThread* newThread = [oldNewThreadDictionary objectForKey: [item thread]];
-				if (!newThread) {
+				GIThread *newThread = [oldNewThreadDictionary objectForKey:[item thread]];
+				if (!newThread) 
+				{
 					// Create new thread for all messages from the same thread:
 					newThread = [[[[GIThread class] alloc] init] autorelease];
 					[newThread insertIntoContext: [(GIMessage*)item context]];
@@ -1257,7 +1276,13 @@ static BOOL isThreadItem(id item)
 
 - (BOOL)validateSelector:(SEL)aSelector
 {
-	if ([self isSearchShownCurrently]) 
+	if ([self isSearchShownCurrently]
+		&&
+		(aSelector == @selector(replyDefault:))
+		|| (aSelector == @selector(replySender:))
+		|| (aSelector == @selector(replyAll:))
+		|| (aSelector == @selector(forward:))
+		|| (aSelector == @selector(followup:))		) 
 	{
 		int selectedIndex = [searchHitsTableView selectedRow];
 		
