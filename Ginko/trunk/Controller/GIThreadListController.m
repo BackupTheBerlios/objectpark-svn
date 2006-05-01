@@ -246,10 +246,8 @@ static BOOL isThreadItem(id item)
 	
 	[displayedMessage autorelease];
 	displayedMessage = [aMessage retain];
-<<<<<<< .mine
-	[displayedMessage addFlags:OPSeenStatus];
-=======
->>>>>>> .r648
+
+	[displayedMessage addFlags: OPSeenStatus];
 	
 	if (isNewThread) {
 		[displayedThread removeObserver: self forKeyPath: @"messages"];
