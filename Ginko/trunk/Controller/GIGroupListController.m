@@ -368,7 +368,10 @@
             //NSMutableArray *threadURIs = [NSMutableArray array];
             //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
             
-            return [group unreadMessageCount];
+            id result = [group unreadMessageCount];
+			if (![result intValue]) result = @"";
+			return result;
+			
             /*
              [g fetchThreadURIs:&threadURIs
                  trivialThreads: NULL
