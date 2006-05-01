@@ -452,7 +452,7 @@ UIDL. nil otherwise. "*/
     // USER/PASS
     if (shouldContinue && _state != TRANSACTION)
     {
-        NS_DURING
+        @try
             // use plain vanilla username & password authentication
         {
             if ([_delegate respondsToSelector:@selector(shouldTryAuthenticationMethod:inPOP3Session:)])
@@ -476,7 +476,7 @@ UIDL. nil otherwise. "*/
                 [_delegate authenticationMethod:OPPOP3USERPASSAuthenticationMethod succeededInPOP3Session:self];
             }
         }
-        NS_HANDLER
+        @catch (NSException* localException) 
         {
             if (NSDebugEnabled) NSLog(@"USER/PASS failed for POP3Session %@.", self);
             
@@ -487,7 +487,6 @@ UIDL. nil otherwise. "*/
                 shouldContinue = [_delegate shouldContinueWithOtherAuthenticationMethodAfterFailedAuthentication:OPPOP3USERPASSAuthenticationMethod inPOP3Session:self];
             }
         }
-        NS_ENDHANDLER        
     }
     
     // clear username and password

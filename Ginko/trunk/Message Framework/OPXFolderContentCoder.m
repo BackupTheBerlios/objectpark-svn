@@ -117,7 +117,7 @@
 {    
     if ([[messagePart contentDisposition] caseInsensitiveCompare: MIMEAttachmentContentDisposition] != NSOrderedSame)
     {
-        if (NSDebugEnabled) NSLog(@"set to attachment");
+        //if (NSDebugEnabled) NSLog(@"set to attachment");
         
         if ([[messagePart contentDispositionParameters] count] > 0)
         {

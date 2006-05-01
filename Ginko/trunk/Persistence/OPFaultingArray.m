@@ -297,6 +297,13 @@ static int compare_sort_objects(const void* entry1, const void* entry2)
 	// Compare sort objects (pointers located behind the OIDs):
 	id obj1 = *((id*)(entry1+sizeof(OID)));
 	id obj2 = *((id*)(entry2+sizeof(OID)));
+	
+	if (obj1==obj2) return 0;
+
+	//NSCAssert(obj1!=nil && obj2!=nil, @"nil sort keys");
+	if (obj1==nil) return -1;
+	if (obj2==nil) return 1;
+	
 	return [obj1 compare: obj2];	
 }
 
@@ -317,6 +324,12 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 {
 	id obj1 = *((id*)sortObject);
 	id obj2 = *((id*)(entry+sizeof(OID)));
+	
+	if (obj1==obj2) return 0;
+	//NSCAssert(obj1!=nil && obj2!=nil, @"nil sort keys");
+
+	if (obj1==nil) return -1;
+	if (obj2==nil) return 1;
 	return [obj1 compare: obj2];	
 }
 
@@ -418,7 +431,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 					id key = [anObject valueForKey: sortKey]; // may fire fault! avoid that!
 					
 					// Make sure, we are sorted:
-					[self sort]; 
+					[self sort]; // already done above?
 					// Search for sortKey:
 					char* result = bsearch(&key, data, count, entrySize, compare_sort_object_with_entry);
 					if (result) {
@@ -434,13 +447,19 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 							if (resultIndex) {
 								searchIndex = resultIndex-1;
 								while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
-									if (oid == *oidPtr(searchIndex)) return searchIndex; // found
+									if (oid == *oidPtr(searchIndex)) {
+										return searchIndex; // found
+									}
 									searchIndex--;
 								}
 							}
 							// Walk forward until the sortKey no longer matches or oid found: 
 							searchIndex = resultIndex+1;
-							while (searchIndex<count && [key compare: *sortObjectPtr(searchIndex)]==0) {
+							while (searchIndex<count) {
+								id searchIndexKey = *sortObjectPtr(searchIndex);
+								if ([key compare: searchIndexKey] != 0) 
+									break;
+								
 								if (oid == *oidPtr(searchIndex)) return searchIndex; // found
 								searchIndex++;
 							}

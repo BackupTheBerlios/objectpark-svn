@@ -452,6 +452,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		}
 		
 		@synchronized(changedObjects) {
+			
+			[changedObjects minusSet: deletedObjects];
+			
 			if ([changedObjects count]) {
 				NSLog(/*OPDebugLog OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
 				
@@ -573,14 +576,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		}
 		
 		[pool release]; pool = [[NSAutoreleasePool alloc] init];
-
+		
 		@synchronized(db) {
 			[db commitTransaction];
 		}
 		
 		[pool release];
-		
-		}
+	}
 }
 
 - (void) shouldDeleteObject: (OPPersistentObject*) object

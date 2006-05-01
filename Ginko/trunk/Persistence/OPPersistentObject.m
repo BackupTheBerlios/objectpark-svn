@@ -275,7 +275,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 }
 
 - (void) willDelete
-	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. Call refault here to immidiately free up attributes. Otherwise they are freed on - saveChanges. Default implementation nullifies all object relations. "*/
+	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. After this calll, -refault will free all attribute values. Default implementation nullifies all object relations. "*/
 {
 	OPClassDescription* cd = [[self class] persistentClassDescription];
 		
@@ -321,7 +321,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 }
 
 - (void) delete
-/*" Deletes the receiver from the persistent store associated with it's context. Does nothing, if the reciever does have no context or has never been stored persistently. "*/
+/*" Deletes the receiver from the persistent store associated with it's context. Does nothing, if the reciever does not have a context or has never been stored persistently. "*/
 {
 	if (oid) {
 		[[self context] shouldDeleteObject: self];

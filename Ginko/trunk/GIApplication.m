@@ -670,7 +670,7 @@ NSNumber* yesNumber = nil;
 - (IBAction) emptyTrashMailbox: (id) sender
 {
     GIMessageGroup* trashgroup = [GIMessageGroup trashMessageGroup];
-    OPFaultingArray* threads = [trashgroup valueForKey: @"threadsByDate"];
+    NSArray* threads = [trashgroup valueForKey: @"threadsByDate"];
     GIThread* thread;
     int counter = 0;
     
@@ -678,7 +678,7 @@ NSNumber* yesNumber = nil;
     
     while (thread = [threads lastObject]) {
 		 // Remove thread from source group:
-        [thread removeValue: trashgroup forKey: @"groups"];
+        [trashgroup removeValue: thread forKey: @"threadsByDate"];
         
         if ([[thread valueForKey: @"groups"] count] == 0) {
             [thread delete];

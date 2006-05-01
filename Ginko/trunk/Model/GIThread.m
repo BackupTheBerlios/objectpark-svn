@@ -55,7 +55,7 @@
 - (void) willDelete
 {
 	//NSLog(@"Will delete Thread!");
-	//[[self valueForKey: @"messages"] makeObjectsPerformSelector: @selector(delete)];
+	[[self valueForKey: @"messages"] makeObjectsPerformSelector: @selector(delete)];
 	[super willDelete];
 }
 

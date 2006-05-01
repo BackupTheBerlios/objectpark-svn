@@ -1,5 +1,7 @@
 Bugs:
 
+- deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
+
 - updates to the list of messages (fetching messages) do not result in thread-list reloads
 - sometimes statistics display is not updated.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
@@ -9,12 +11,13 @@ Bugs:
 
 Regressions:
 
-- "empty trash" no longer works (infinite loop)
-- serching for messages, then selecting a hit, then hitting the "Back" icon closes the window. It should switch back to the thread list.
+
 - Replying sometime replies to the wrong message.
 
 Done:
 
+- (Dirk) - "empty trash" no longer works (infinite loop)
+- (Dirk) - serching for messages, then selecting a hit, then hitting the "Back" icon closes the window. It should switch back to the thread list.
 - (Dirk) - primitiveBoolValue no longer works (claims that the key is not valid)
 - (Axel) - TAB key in To:-Field inserts a TAB char
 - (Dirk) KVO notifications don't work with inverse many-to-many relationships (see test TestGIMessageGroup/testStatistics)

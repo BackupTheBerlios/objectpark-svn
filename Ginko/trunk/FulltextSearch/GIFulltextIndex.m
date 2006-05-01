@@ -805,6 +805,7 @@
                         
                         if ([message resolveFault]) 
                         {
+#warning Dirk: Do we need to fulltext-flag messages to be deleted? It would be more efficient to not -resolveFault.
                             // The message still exists!
                             [message setValue:nil forKey:@"isFulltextIndexed"];
                         }
