@@ -333,8 +333,12 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 {
 	if (!attributes) [[self context] willFireFault: self forKey: key]; // statistics - not elegant	
-    [self resolveFault];
 	
+    BOOL resolved = [self resolveFault];
+	if (!resolved) {
+		NSLog(@"Faulting problem: %@ with oid %llu not in the database!?", [self class], oid);
+	}
+				
 	if (key && ![attributes objectForKey: key]) {
 		// Try to fetch and cache a relationship:
 		id result = [[self context] containerForObject: self

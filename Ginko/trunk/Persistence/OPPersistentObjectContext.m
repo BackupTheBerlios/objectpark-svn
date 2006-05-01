@@ -278,9 +278,9 @@ typedef struct {
 				result = [db attributesForRowId: oid ofClass: [object class]];
 			}
 
-			if (!result) {
-				NSLog(@"Faulting problem: %@ with oid %llu not in the database!?", [object class], oid);
-			}
+			//if (!result) {
+			//	NSLog(@"Faulting problem: %@ with oid %llu not in the database!?", [object class], oid);
+			//}
 		} else {
 			result = [NSMutableDictionary dictionary];
 		}
