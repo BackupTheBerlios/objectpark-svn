@@ -313,10 +313,27 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 {
 }
 
-- (void) didChangeValueForKey: (NSString*) key
+- (void) didRemoveValueForKey: (NSString*) key
+/*" Same as didChangeValueForKey: but for to-many removals. Does not mark the the object itself as dirty. "*/
+{
+	// currently the same as didAddValueForKey:
+	[self didAddValueForKey: key]; 
+}
+
+- (void) didAddValueForKey: (NSString*) key
+/*" Same as didChangeValueForKey: but for to-many additions. Does not mark the the object itself as dirty. "*/
 {
 	[self didAccessValueForKey: key];
-    [[self context] didChangeObject: self];
+	// All To-Many redlationship changes are recorded elsewhere
+	// if (NSDebugEnabled) NSLog(@"Skipped dirty-setting for add/remove-%@.", key);
+	[super didChangeValueForKey: key];
+}
+
+- (void) didChangeValueForKey: (NSString*) key
+/*" Call respaective didAdd/Remove methods for to-many relationships fror efficiency. "*/
+{
+	[self didAccessValueForKey: key];
+	[[self context] didChangeObject: self];
 	[super didChangeValueForKey: key];
 }
 
@@ -448,10 +465,10 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 					// inverse is a to-many relationship, so this is a many-to-one relationship
 					[oldValue willChangeValueForKey: inverseKey];
 					[oldValue removePrimitiveValue: self forKey: inverseKey]; // oldValue may be nil
-					[oldValue didChangeValueForKey: inverseKey];
+					[oldValue didRemoveValueForKey: inverseKey];
 					[value willChangeValueForKey: inverseKey];
 					[value addPrimitiveValue: self forKey: inverseKey]; // value may be nil
-					[value didChangeValueForKey: inverseKey];
+					[value didAddValueForKey: inverseKey];
 				} else {
 					// inverse is a to-one relationship, so this is a one-to-one relationship
 #warning one-to-one (inverse) relationships will create a retain cycle.
@@ -592,13 +609,13 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 								// Firing the relationship will add self via r later otherwise.
 								[value addPrimitiveValue: self forKey: inverseKey];
 							}
-							[value didChangeValueForKey: inverseKey];
+							[value didAddValueForKey: inverseKey];
 						}
 						
 						if (![attributes objectForKey: key]) {
 							// The relationship has not fired yet:
 							[self willChangeValueForKey: key];
-							[self didChangeValueForKey: key];
+							[self didAddValueForKey: key];
 							return; // we'll pick up the change the next time this fault is fired.
 						}
 						
@@ -618,7 +635,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 					}
 					[self willChangeValueForKey: key];
 					[self addPrimitiveValue: value forKey: key];
-					[self didChangeValueForKey: key];
+					[self didAddValueForKey: key];
 				} else {
 					
 					NSLog(@"Warning! Try to add %@ to existing %@-relationship of %@!", value, key, self);
@@ -684,13 +701,14 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 						if ([[value attributeValues] objectForKey: inverseKey]) {
 							[value removePrimitiveValue: self forKey: inverseKey];
 						}
-						[value didChangeValueForKey: inverseKey];
+						[value didRemoveValueForKey: inverseKey];
 					}
 					
+					// If we did not yet fire the relationship, skip removing the primitive value:
 					if (![attributes objectForKey: key]) {
 						// The relationship has not fired yet:
 						[self willChangeValueForKey: key];
-						[value didChangeValueForKey: inverseKey];
+						[self didRemoveValueForKey: key];
 						return; // we'll pick up the change the next time this fault is fired.
 					}
 					
@@ -707,7 +725,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 				// Do we need to do this, when self is a fault?		
 				[self willChangeValueForKey: key];
 				[self removePrimitiveValue: value forKey: key]; // index already calculated above - optimize?
-				[self didChangeValueForKey: key];
+				[self didRemoveValueForKey: key];
 			}
 		}
 	}

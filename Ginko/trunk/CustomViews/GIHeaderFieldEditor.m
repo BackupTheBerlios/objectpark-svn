@@ -139,47 +139,51 @@
 /*" Enables the use of the tab key for moving to next/previous key view. "*/
 {
     NSString *characters;
-    unichar firstChar;
     int modifierFlags;
     id delegate = [self delegate];
 
     modifierFlags = [theEvent modifierFlags];
     characters = [theEvent characters];
-    firstChar = [characters characterAtIndex:0];
-
-    switch (firstChar)
-    {
-        case TAB:
-            if(modifierFlags & NSShiftKeyMask)
-            {
-                if ([delegate respondsToSelector:@selector(selectPreviousKeyView:)])
-                {
-                    [delegate selectPreviousKeyView:self];
-                    return;
-                }
-                else
-                {
-                    [[self window] selectPreviousKeyView:self];
-                    return;
-                }
-            }
-            else
-            {
-                if ([delegate respondsToSelector:@selector(selectNextKeyView:)])
-                {
-                    [delegate selectNextKeyView:self];
-                    return;
-                }
-                else
-                {
-                    [[self window] selectNextKeyView:self];
-                    break;
-                }
-            }
-        default:
-            [super keyDown:theEvent];
-            break;
-    }
+	
+	
+	if ([characters length]) {
+        unichar firstChar = [characters characterAtIndex:0];
+		
+		switch (firstChar) {
+			case TAB:
+				if(modifierFlags & NSShiftKeyMask)
+				{
+					if ([delegate respondsToSelector:@selector(selectPreviousKeyView:)])
+					{
+						[delegate selectPreviousKeyView:self];
+						return;
+					}
+					else
+					{
+						[[self window] selectPreviousKeyView:self];
+						return;
+					}
+				}
+				else
+				{
+					if ([delegate respondsToSelector:@selector(selectNextKeyView:)])
+					{
+						[delegate selectNextKeyView:self];
+						return;
+					}
+					else
+					{
+						[[self window] selectNextKeyView:self];
+						break;
+					}
+				}
+			default:
+				[super keyDown:theEvent];
+				break;
+		} 
+	} else {
+		[super keyDown:theEvent];
+	}
 }
 
 /*

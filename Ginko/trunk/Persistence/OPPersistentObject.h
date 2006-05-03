@@ -96,6 +96,8 @@
 - (void) willAccessValueForKey: (NSString*) key;
 - (void) didChangeValueForKey: (NSString*) key;
 - (void) didAccessValueForKey: (NSString*) key;
+- (void) didRemoveValueForKey: (NSString*) key;
+- (void) didAddValueForKey: (NSString*) key;
 
 //- (void) willChangeToManyRelationshipForKey: (NSString*) key;
 //- (void) didChangeToManyRelationshipForKey: (NSString*) key;

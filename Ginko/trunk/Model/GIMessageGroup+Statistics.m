@@ -73,16 +73,19 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
     NSArray *affectedMessageGroups = [[(GIMessage *)[aNotification object] thread] valueForKey:@"groups"];    
     if ([affectedMessageGroups count] == 0) NSLog(@"warning: flags did change for a message without  being in a group.");
     
-    NSEnumerator *enumerator = [affectedMessageGroups objectEnumerator];
-    GIMessageGroup *group;
-    
-    while (group = [enumerator nextObject])
-    {
-        [group invalidateStatistics];
-    }
+	[affectedMessageGroups makeObjectsPerformSelector: @selector(invalidateStatistics)];
 }
 
-- (void)didChangeValueForKey:(NSString *)key
+- (void) didAddValueForKey:(NSString *)key
+{
+	[super didChangeValueForKey:key];
+	if ([key isEqualToString:@"threadsByDate"]) 
+    {
+		[self invalidateStatistics];
+	}
+}
+
+- (void) didRemoveValueForKey:(NSString *)key
 {
 	[super didChangeValueForKey:key];
 	if ([key isEqualToString:@"threadsByDate"]) 

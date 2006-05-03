@@ -456,7 +456,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			[changedObjects minusSet: deletedObjects];
 			
 			if ([changedObjects count]) {
-				NSLog(/*OPDebugLog OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
+				if (NSDebugEnabled) NSLog(/*OPDebugLog OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
 				
 			    // Process all updated objects and save their changed attribute sets:
 				NSEnumerator* coe = [changedObjects objectEnumerator];
@@ -486,7 +486,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			
 			if ([deletedObjects count]) {
 				
-				NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
+				if (NSDebugEnabled) NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
 				NSEnumerator* coe = [deletedObjects objectEnumerator];
 				OPPersistentObject* deletedObject;
 				while (deletedObject = [coe nextObject]) {
@@ -509,11 +509,11 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		OPObjectRelationship* relationshipChanges;
 		while (relationshipChanges = [renum nextObject]) {
 			
-			//NSLog(@"Saving relationship changes: %@", relationshipChanges);
 			
 			if ([relationshipChanges changeCount]) {
 				
-				
+				if (NSDebugEnabled) NSLog(@"Saving %u changes to relationship %@", [relationshipChanges changeCount], relationshipChanges);
+
 				// Add a row in the join table for each relation added:
 				OPSQLiteStatement* addStatement;
 				@synchronized(db) {
