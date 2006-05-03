@@ -332,8 +332,12 @@
         [self document:document addUnStoredFieldWithName:@"subject" text:subjectJavaString];
     }
     
+    OPInternetMessage *internetMessage = [aMessage internetMessage];
+	
     // author
-    NSString *author = [aMessage valueForKey:@"senderName"];
+    //NSString *author = [aMessage valueForKey:@"senderName"];
+    NSString *author = [internetMessage fromWithFallback:YES];
+	
     if (author)
     {
         jstring authorJavaString = (*env)->NewStringUTF(env, [author UTF8String]);
@@ -350,7 +354,6 @@
     }
     
     // recipients
-    OPInternetMessage *internetMessage = [aMessage internetMessage];
     NSString *to = [internetMessage toWithFallback:YES];
     NSString *cc = [internetMessage ccWithFallback:YES];
     NSString *bcc = [internetMessage bccWithFallback:YES];

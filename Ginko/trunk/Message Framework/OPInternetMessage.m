@@ -129,24 +129,28 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
                                      withFallback:YES] sharedInstance];
 }
 
-- (NSString*) toWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"to"]
-                                     withFallback: YES] sharedInstance];
+- (NSString *)toWithFallback:(BOOL)fallback 
+{
+    return [[EDTextFieldCoder stringFromFieldBody:[self bodyForHeaderField:@"to"]
+                                     withFallback:YES] sharedInstance];
 }
 
-- (NSString*) fromWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"from"]
-                                     withFallback: YES] sharedInstance];
+- (NSString *)fromWithFallback:(BOOL)fallback 
+{
+    return [[EDTextFieldCoder stringFromFieldBody:[self bodyForHeaderField:@"from"]
+                                     withFallback:YES] sharedInstance];
 }
 
-- (NSString*) ccWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"cc"]
-                                     withFallback: YES] sharedInstance];
+- (NSString *)ccWithFallback:(BOOL)fallback 
+{
+    return [[EDTextFieldCoder stringFromFieldBody:[self bodyForHeaderField:@"cc"]
+                                     withFallback:YES] sharedInstance];
 }
 
-- (NSString*) bccWithFallback: (BOOL) fallback {
-    return [[EDTextFieldCoder stringFromFieldBody: [self bodyForHeaderField: @"bcc"]
-                                     withFallback: YES] sharedInstance];
+- (NSString *)bccWithFallback:(BOOL)fallback 
+{
+    return [[EDTextFieldCoder stringFromFieldBody:[self bodyForHeaderField:@"bcc"]
+                                     withFallback:YES] sharedInstance];
 }
 
 
