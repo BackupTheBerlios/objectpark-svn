@@ -171,6 +171,8 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                         if ([self _SASLAuthentication:methods]) {
                             state = Authenticated;
                         } else {
+							[NSException raise:OPSMTPException format:@"SMTP Authentication failed. Please check login and password."];
+							
                             //OPDebugLog(SMTPDEBUG, OPWARNING, @"AUTHentication failed!");
                         }
                     } else {
