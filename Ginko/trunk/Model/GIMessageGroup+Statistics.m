@@ -94,10 +94,14 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 	}
 }
 
-- (void)invalidateStatistics
+- (void) invalidateStatistics
 {
-    [self setUnreadMessageCount:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupStatisticsDidInvalidateNotification object:self];
+    [self setUnreadMessageCount: nil];
+	NSNotification* n = [NSNotification notificationWithName: GIMessageGroupStatisticsDidInvalidateNotification 
+													  object: self];
+	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread: @selector(postNotification:) 
+														   withObject: n 
+														waitUntilDone: NO];
 }
 
 - (NSNumber *)calculateUnreadMessageCount
