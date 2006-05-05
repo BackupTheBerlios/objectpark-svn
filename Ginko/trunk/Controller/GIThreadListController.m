@@ -565,6 +565,8 @@ static BOOL isThreadItem(id item)
 - (GIMessage *)selectedMessage
 /*" Returns selected message, iff one message is selected. nil otherwise. "*/
 {
+	if ([self isMessageShownCurrently]) return [self displayedMessage];
+		
 	if ([self isSearchShownCurrently]) 
     {
         int selectedIndex = [searchHitsTableView selectedRow];
