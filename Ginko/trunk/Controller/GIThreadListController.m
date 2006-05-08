@@ -32,6 +32,8 @@
 #import "OPObjectPair.h"
 #import "GIMessageGroup+Statistics.h"
 #import "NSAttributedString+MessageUtils.h"
+#import "NSWindow+RecentPositions.h"
+
 
 static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
@@ -103,7 +105,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self awakeToolbar];
     [self awakeCommentTree];
 
-    lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
+    //lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
+	[window autoPositionWithKind: @"ThreadListWindow"];
     
     [window makeKeyAndOrderFront:self];    
 	[self updateWindowTitle];
@@ -317,7 +320,7 @@ static BOOL isThreadItem(id item)
 }
 
 + (NSWindow *)windowForGroup:(GIMessageGroup *)aGroup
-/*" Returns the window for the group aGroup. nil if no such window exists. "*/
+/*" Returns the window for the group aGroup or nil, if no such window exists. "*/
 {
     NSWindow* win;
     NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
@@ -1692,59 +1695,52 @@ static NSAttributedString* spacer2()
     return [hits count];
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id) tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
 {
-    NSDictionary *hit = [hits objectAtIndex:rowIndex];
-    GIMessage *message = [hit objectForKey:@"message"];
-    BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
+    NSDictionary* hit = [hits objectAtIndex: rowIndex];
+    GIMessage* message = [hit objectForKey: @"message"];
+    //BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
 
-    if ([[aTableColumn identifier] isEqualToString:@"date"]) 
-    {
-        BOOL isRead = [message hasFlags:OPSeenStatus];
-        NSCalendarDate *date = [message valueForKey:@"date"];
+    if ([[aTableColumn identifier] isEqualToString: @"date"]) {
+        BOOL isRead = [message hasFlags: OPSeenStatus];
+        NSCalendarDate* date = [message valueForKey: @"date"];
                 
-        NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+#warning Use NSCalendar here!
+        NSString* dateString = [date descriptionWithCalendarFormat: [[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone: [NSTimeZone localTimeZone] locale: [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
         
-        return [[[NSAttributedString alloc] initWithString:dateString attributes:isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
-    } 
-    else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"]) 
-    {
-        NSString *from;
+        return [[[NSAttributedString alloc] initWithString:dateString attributes: isRead ?  selectedReadFromAttributes() : unreadAttributes()] autorelease];
+    } else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"]) {
+        NSString* from;
         NSAttributedString *aFrom;
-        NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
+        NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
         
         BOOL isRead  = [message hasFlags:OPSeenStatus];
-        NSString *subject = [message valueForKey:@"subject"];
+        NSString* subject = [message valueForKey: @"subject"];
         
         if (!subject) subject = @"";
         
-        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? (isAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: subject attributes: isRead ? selectedReadAttributes() : unreadAttributes()];
         
-        [result appendAttributedString:aSubject];
+        [result appendAttributedString: aSubject];
         
-        if ([message hasFlags:OPIsFromMeStatus]) 
-        {
+        if ([message hasFlags: OPIsFromMeStatus]) {
 			from = [NSString stringWithFormat:@" (%c %@)", 2782/*Right Arrow*/, [message recipientsForDisplay]];
-		} 
-        else 
-        {
+		} else {
 			from = [message senderName];
 			if (!from) from = @"- sender missing -";
 			from = [NSString stringWithFormat:@" (%@)", from];
 		}
         
-        aFrom = [[NSAttributedString alloc] initWithString:from attributes: isRead ? (isAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (isAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
+        aFrom = [[NSAttributedString alloc] initWithString: from attributes: isRead ? selectedReadFromAttributes()  :  selectedUnreadFromAttributes()];
         
-        [result appendAttributedString:aFrom];
+        [result appendAttributedString: aFrom];
         
         [aSubject release];
         [aFrom release];
         
         return result;
-    } 
-    else if ([[aTableColumn identifier] isEqualToString: @"relevance"]) 
-    {
-        return [hit objectForKey:@"score"]; // the score
+    } else if ([[aTableColumn identifier] isEqualToString: @"relevance"]) {
+        return [hit objectForKey: @"score"]; // the score
     }
     
     return @"";

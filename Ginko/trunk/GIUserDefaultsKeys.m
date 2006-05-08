@@ -39,6 +39,7 @@ NSString *DisableKeychainForPasswortDefault = @"DisableKeychainForPasswortDefaul
 
 NSString *SearchHitLimit = @"SearchHitLimit";
 NSString *JunkReplySubjectPrefixes = @"JunkReplySubjectPrefixes";
+NSString* RecentThreadListWindowPositions = @"RecentThreadListWindowPositions";
 
 NSArray* allAdditionalHeadersForDisplay()
 {

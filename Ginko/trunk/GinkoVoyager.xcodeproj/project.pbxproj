@@ -241,6 +241,8 @@
 		8D4C5756076E3B6F000F46DA /* GICommentTreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D4C5754076E3B6F000F46DA /* GICommentTreeCell.m */; };
 		8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
 		8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		8D61A4050A0F6E1300AB7C35 /* NSWindow+RecentPositions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D61A4030A0F6E1300AB7C35 /* NSWindow+RecentPositions.h */; };
+		8D61A4060A0F6E1300AB7C35 /* NSWindow+RecentPositions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D61A4040A0F6E1300AB7C35 /* NSWindow+RecentPositions.m */; };
 		8D61ED9209812DF100D1999A /* StopSign.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D61ED9109812DF000D1999A /* StopSign.tiff */; };
 		8D62DC2108C668BC0059ABB0 /* OPFaultingArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */; };
 		8D62DC2208C668BC0059ABB0 /* OPFaultingArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */; };
@@ -723,6 +725,8 @@
 		8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D4C5753076E3B6F000F46DA /* GICommentTreeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GICommentTreeCell.h; sourceTree = "<group>"; };
 		8D4C5754076E3B6F000F46DA /* GICommentTreeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GICommentTreeCell.m; sourceTree = "<group>"; };
+		8D61A4030A0F6E1300AB7C35 /* NSWindow+RecentPositions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+RecentPositions.h"; sourceTree = "<group>"; };
+		8D61A4040A0F6E1300AB7C35 /* NSWindow+RecentPositions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+RecentPositions.m"; sourceTree = "<group>"; };
 		8D61ED9109812DF000D1999A /* StopSign.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = StopSign.tiff; sourceTree = "<group>"; };
 		8D62DC1F08C668BC0059ABB0 /* OPFaultingArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPFaultingArray.h; sourceTree = "<group>"; };
 		8D62DC2008C668BC0059ABB0 /* OPFaultingArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPFaultingArray.m; sourceTree = "<group>"; };
@@ -1343,6 +1347,8 @@
 				8D840C01090F8DF50093CFAD /* NSEnumerator+Extensions.m */,
 				8D0EC28009A22577004563D4 /* NSString+Similarities.h */,
 				8D0EC28109A22577004563D4 /* NSString+Similarities.m */,
+				8D61A4030A0F6E1300AB7C35 /* NSWindow+RecentPositions.h */,
+				8D61A4040A0F6E1300AB7C35 /* NSWindow+RecentPositions.m */,
 			);
 			path = "Cocoa Extensions";
 			sourceTree = "<group>";
@@ -1641,6 +1647,7 @@
 				771CD4BC09F8C7B20062BEED /* prop.h in Headers */,
 				771CD4BD09F8C7B20062BEED /* sasl.h in Headers */,
 				771CD5EE09F90D020062BEED /* saslutil.h in Headers */,
+				8D61A4050A0F6E1300AB7C35 /* NSWindow+RecentPositions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2109,6 +2116,7 @@
 				7718CA8909F2CDEA00D517CB /* GIGeneralPrefs.m in Sources */,
 				8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */,
 				771CD4B809F8C77C0062BEED /* OPSASL.m in Sources */,
+				8D61A4060A0F6E1300AB7C35 /* NSWindow+RecentPositions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
