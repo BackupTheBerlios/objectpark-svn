@@ -19,6 +19,15 @@
     NSNumber *unreadMessageCount; 
 }
 
+/*" MessageGroup types "*/
+#define GIRegularMessageGroup 1
+#define GIDefaultMessageGroup 2
+#define GIQueuedMessageGroup 3
+#define GIDraftMessageGroup 4
+#define GISentMessageGroup 5
+#define GISpamMessageGroup 6
+#define GITrashMessageGroup 7
+
 /*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/
 extern NSString *GIMessageGroupWasAddedNotification;
 extern NSString *GIMessageGroupsChangedNotification;
@@ -45,7 +54,11 @@ extern NSString *GIMessageGroupsChangedNotification;
 + (void)setSpamMessageGroup:(GIMessageGroup *)aMessageGroup;
 + (GIMessageGroup *)trashMessageGroup;
 + (void)setTrashMessageGroup:(GIMessageGroup *)aMessageGroup;
-+ (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup;
+
+- (NSString*) imageName;
+- (int) type;
+
+
 + (void)ensureDefaultGroups;
 
 /*" Thread handling "*/

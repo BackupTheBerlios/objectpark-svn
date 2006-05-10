@@ -66,12 +66,10 @@
 }
 
 
-
-
 NSString *GIMessageGroupWasAddedNotification = @"GIMessageGroupWasAddedNotification";
 NSString *GIMessageGroupsChangedNotification = @"GIMessageGroupsChangedNotification";
 
-/*" GIMessageGroup is a collection of G3Thread objects (which in turn are a collection of GIMessage objects). GIMessageGroup is an entity in the datamodel (see %{Ginko3_DataModel.xcdatamodel} file).
+/*" GIMessageGroup is a collection of GIThread objects (which in turn are a collection of GIMessage objects). GIMessageGroup is an entity in the datamodel (see %{Ginko3_DataModel.xcdatamodel} file).
 
 GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSMutableArrays (e.g. #{+rootHierarchyNode} returns the NSMutableArray that is the root node). The first entry in such a hierarchy node is information of the node itself (it is a NSMutableDictionary whose keys are described lateron). All other entries are either NSStrings with URLs that reference GIMessageGroup objects (see #{-[NSManagedObject objectID]}) or other hierarchy nodes (NSMutableArrays). "*/
 
@@ -806,18 +804,34 @@ static NSMutableArray* root = nil;
 	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:TrashMessageGroupURLString];
 }
 
-+ (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup
+
+- (int) type
+/*" Returns the special type of messageGroup (e.g. GIQueuedMessageGroup) or 0 for a regular messageGroup. "*/
 {
-    NSString *imageName = nil;
-    
-    if (aMessageGroup == [self defaultMessageGroup]) imageName = @"InMailbox";
-    else if (aMessageGroup == [self sentMessageGroup]) imageName = @"OutMailbox";
-    else if (aMessageGroup == [self queuedMessageGroup]) imageName = @"ToBeDeliveredMailbox";
-    else if (aMessageGroup == [self draftMessageGroup]) imageName = @"DraftsMailbox";
-    else if (aMessageGroup == [self spamMessageGroup]) imageName = @"JunkMailbox";
-    else if (aMessageGroup == [self trashMessageGroup]) imageName = @"TrashMailbox";
-    else imageName = @"OtherMailbox";
-    
+	int type = [[self transientValueForKey: @"type"] intValue];
+	if (!type) {
+		type = GIRegularMessageGroup;
+		Class c = [self class];
+		if (self == [c defaultMessageGroup]) type = GIDefaultMessageGroup;
+		else if (self == [c sentMessageGroup]) type = GISentMessageGroup;
+		else if (self == [c queuedMessageGroup]) type = GIQueuedMessageGroup;
+		else if (self == [c draftMessageGroup]) type = GIDraftMessageGroup;
+		else if (self == [c spamMessageGroup]) type = GISpamMessageGroup;
+		else if (self == [c trashMessageGroup]) type = GITrashMessageGroup;
+		[self setTransientValue: [NSNumber numberWithInt: type] forKey: @"type"];
+	}
+	return type;
+}
+
+- (NSString*) imageName
+{
+	static NSString* imageNames[6] = {@"OtherMailbox", @"InMailbox", @"ToBeDeliveredMailbox", @"DraftsMailbox", @"OutMailbox", @"JunkMailbox", @"TrashMailbox"};
+	return imageNames[MAX(0, [self type]-1)];
+}
+ 
++ (NSImage*) imageForMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+    NSString *imageName = [aMessageGroup imageName];    
     return [NSImage imageNamed:imageName];
 }
 

@@ -653,14 +653,16 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (id) transientValueForKey: (NSString*) key
 {
-	[self resolveFault];
+	//[self resolveFault];
 	id result;
 	
 	@synchronized(self) {
-		result = [attributes objectForKey: key];
+		//result = [attributes objectForKey: key];
 		if (NSDebugEnabled) {
-			if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+			if ([[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) 
+				[super valueForUndefinedKey: key]; // raises exception, not a transient value
 		}
+		result = [self primitiveValueForKey: key];
 	}
 	return result;
 }
@@ -670,11 +672,11 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 {
 	@synchronized(self) {
 		if (NSDebugEnabled) {
-			if (![[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) [super valueForUndefinedKey: key]; // raises exception
+			if ([[[self class] persistentClassDescription]->attributeDescriptionsByName objectForKey: key]) 
+				[super valueForUndefinedKey: key]; // raises exception
 		}
-		// todo: add key-value-observing for transient values.
-		[self resolveFault];
-		[attributes setObject: value forKey: key];
+#warning todo: add key-value-observing for transient values.
+		[self setPrimitiveValue: value forKey: key];
 	}
 }
 

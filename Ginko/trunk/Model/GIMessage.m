@@ -196,7 +196,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) flushInternetMessageCache
 	/*" Flushes the cache for the internetMessageCache transient attribute. Used for optimized memory usage. "*/
 {
-    [attributes removeObjectForKey: @"internetMessageCache"];
+    [attributes removeObjectForKey: @"internetMessageCache"]; // efficient, but too low-level
 }
 
 - (NSData*) transferData
@@ -217,20 +217,20 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		[self setPrimitiveValue: messageData forKey: @"messageData"];
 		[self didChangeValueForKey: @"transferData"];
 	} 
-	[self setPrimitiveValue: nil forKey: @"internetMessageCache"];
+	[self flushInternetMessageCache];
 	// We now have a valid messageData object to upate:
 	[messageData setValue: newData forKey: @"transferData"];	
 }
 
 - (OPInternetMessage*) internetMessage
 {
-    OPInternetMessage* cache = [self primitiveValueForKey: @"internetMessageCache"];
+    OPInternetMessage* cache = [self transientValueForKey: @"internetMessageCache"];
     if (!cache) {
         NSData* transferData = [self valueForKey: @"transferData"];
         
         if (transferData) {
             cache = [[OPInternetMessage alloc] initWithTransferData: transferData];
-            [self setPrimitiveValue: cache forKey: @"internetMessageCache"];
+            [self setTransientValue: cache forKey: @"internetMessageCache"];
             [cache release];
         }
     } 
@@ -266,34 +266,34 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-- (void) setContentFromInternetMessage:(OPInternetMessage*)im
+- (void) setContentFromInternetMessage: (OPInternetMessage*) im
 {
-    NSString *fromHeader = [im fromWithFallback: YES];
+    NSString* fromHeader = [im fromWithFallback: YES];
     
     if ([self isDummy])
-        [self removeFlags:OPSeenStatus];
+        [self removeFlags: OPSeenStatus];
         
-    [self setPrimitiveValue:im forKey:@"internetMessageCache"];
-    [self setValue:[im transferData] forKey:@"transferData"];
-    [self setValue:[im messageId] forKey:@"messageId"];  
-    [self setValue:[im normalizedSubject] forKey:@"subject"];
-    [self setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"senderName"];
+    [self setTransientValue: im forKey: @"internetMessageCache"];
+    [self setValue: [im transferData] forKey: @"transferData"];
+    [self setValue: [im messageId] forKey: @"messageId"];  
+    [self setValue: [im normalizedSubject] forKey: @"subject"];
+    [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
     
     // sanity check for date header field:
     NSCalendarDate* messageDate = [im date];
-    if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare:messageDate] != NSOrderedDescending) {
+    if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare: messageDate] != NSOrderedDescending) {
         // if message's date is a future date
         // broken message, set current date:
         messageDate = [NSCalendarDate date];
         if (NSDebugEnabled)
             NSLog(@"Found message with future date. Fixing broken date with 'now'.");
     }
-    [self setValue:messageDate forKey:@"date"];
+    [self setValue: messageDate forKey: @"date"];
     
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
-    if ([GIProfile isMyEmailAddress:fromHeader]) {
-        [self addFlags:OPIsFromMeStatus];
+    if ([GIProfile isMyEmailAddress: fromHeader]) {
+        [self addFlags: OPIsFromMeStatus];
     }
 }
 

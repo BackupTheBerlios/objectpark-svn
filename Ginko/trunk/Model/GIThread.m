@@ -142,7 +142,7 @@
     
     OPDebugLog(THREADING, MERGING, @"Mergeing messages %@ into thread %@ with messages %@", messages, self, [self messages]);
     
-    while (message = [messages lastObject]) {
+    while (message = [[otherThread messages] lastObject]) {
 		[message referenceFind: YES];
         [message setValue: self forKey: @"thread"]; // removes message from messages
     }

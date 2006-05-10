@@ -418,17 +418,18 @@
     return nil;
 }
 
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+- (void) outlineView: (NSOutlineView*) outlineView 
+	 willDisplayCell: (id) cell 
+	  forTableColumn: (NSTableColumn*) tableColumn 
+				item: (id) item
 {
-    if ([[tableColumn identifier] isEqualToString: @"box"])
-    {
-        if (![item isKindOfClass:[NSMutableArray class]])
-        {
-            NSImage *image = [GIMessageGroup imageForMessageGroup:[OPPersistentObjectContext objectWithURLString:item]];
+    if ([[tableColumn identifier] isEqualToString: @"box"]) {
+        if (![item isKindOfClass: [NSMutableArray class]]) {
+            NSImage* image = [NSImage imageNamed: [[OPPersistentObjectContext objectWithURLString: item] imageName]];
             
-            [cell setImage:image];
+            [cell setImage: image];
         }
-        else [cell setImage:[NSImage imageNamed:@"Folder"]];
+        else [cell setImage: [NSImage imageNamed: @"Folder"]];
     }
 }
 

@@ -73,7 +73,16 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
         }
 		
 		[NSBundle loadNibNamed:@"Group" owner:self]; // sets threadsView
-		[self setGroup:aGroup];
+		
+		//lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
+		if ([aGroup type] != GIRegularMessageGroup) {
+			[window setFrameAutosaveName: [@"ThreadListWindow" stringByAppendingString: [aGroup imageName]]];
+		} else {
+			[window autoPositionWithKind: @"ThreadListWindow"];
+		}
+		
+		[self setGroup: aGroup];
+		[window makeKeyAndOrderFront: self];  
     }
     
     return self;
@@ -86,12 +95,13 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {    
     [threadsView setTarget:self];
     [threadsView setDoubleAction:@selector(openSelection:)];
     [threadsView setHighlightThreads:YES];
     [threadsView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinkoThreads", nil]];
+	[threadsView setIndentationMarkerFollowsCell: NO];
     ///[threadsView setIndentationPerLevel:1.0];
 	
     [searchHitsTableView setTarget:self];
@@ -103,13 +113,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [searchHitDateFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     [self awakeToolbar];
-    [self awakeCommentTree];
-
-    //lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
-	[window autoPositionWithKind: @"ThreadListWindow"];
-    
-    [window makeKeyAndOrderFront:self];    
-	[self updateWindowTitle];
+    [self awakeCommentTree];  
 }
 
 - (void)dealloc

@@ -204,7 +204,7 @@
 
 @interface GIOutlineViewWithKeyboardSupport (Stripes)
 
-- (BOOL)highlightThreads;
+- (BOOL) highlightThreads;
 - (void) setHighlightThreads:(BOOL)aBool;
 
 @end
