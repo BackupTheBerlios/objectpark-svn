@@ -823,10 +823,10 @@ static NSMutableArray* root = nil;
 	return type;
 }
 
-- (NSString*) imageName
+- (NSString *)imageName
 {
-	static NSString* imageNames[6] = {@"OtherMailbox", @"InMailbox", @"ToBeDeliveredMailbox", @"DraftsMailbox", @"OutMailbox", @"JunkMailbox", @"TrashMailbox"};
-	return imageNames[MAX(0, [self type]-1)];
+	static NSString *imageNames[] = {@"OtherMailbox", @"InMailbox", @"ToBeDeliveredMailbox", @"DraftsMailbox", @"OutMailbox", @"JunkMailbox", @"TrashMailbox"};
+	return imageNames[MAX(0, [self type] - 1)];
 }
  
 + (NSImage*) imageForMessageGroup:(GIMessageGroup *)aMessageGroup
