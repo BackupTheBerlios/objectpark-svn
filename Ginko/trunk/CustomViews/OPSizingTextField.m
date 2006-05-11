@@ -19,23 +19,28 @@
     return [super init];
 }
 
+- (void) awake 
+/*" common initializer, since -init is not called. "*/
+{
+	maxlines    = 5;
+    _lineHeight = 17;	
+}
+
+
+
 
 - (id) initWithFrame: (NSRect) frame
 {
     if (self = [super initWithFrame: frame]) {
-        //[self setDelegate: self];
+		[self awake];
     }
-    maxlines = 5;
-    _lineHeight = 17;
+
     return self;
 }
 
 - (void) awakeFromNib
 {
-    maxlines = 5;
-    _lineHeight = 17;
-    //[self setDelegate: self];
-    //heightDiff = [self size].height - [self container]
+	[self awake];
 }
 
 
@@ -69,27 +74,6 @@
 - (void) moveSisterViewsBy:(float)diff
 {
     [[self superview] moveSubviewsWithinHeight:([self frame].origin.y - 1) verticallyBy:diff];
-
-    /*
-    BOOL didMove = NO;
-    NSRect myFrame = [self frame];
-    NSEnumerator* e = [[[self superview] subviews] objectEnumerator];
-    NSView* subview;
-    while (subview = [e nextObject]) {
-        NSRect frame = [subview frame];
-        if (frame.origin.y<myFrame.origin.y) {
-            if ([subview autoresizingMask] & NSViewHeightSizable) {
-                // size height
-                frame.size.height+=diff;
-            } else {
-                frame.origin.y+=diff;
-            }
-            [subview setFrame: frame];
-            didMove = YES;
-        }
-    }   
-    if (didMove) [[self superview] setNeedsDisplay: YES];
-     */
 }
 
 - (NSTextContainer*) textContainer
@@ -117,6 +101,27 @@
     [self setFrame: frame];
 }
 */
+
+//- (void) setStringValue:(id) value 
+//{
+//	[super setStringValue: value];	
+//}
+//
+//- (void) setAttributedStringValue: (id) value;
+//{
+//	[super setAttributedStringValue: value];	
+//}
+//
+//- (void)selectText: (id) text
+//{
+//	[super selectText: text];
+//}
+//
+//- (BOOL) textView: (id) tv shouldChangeTextInRange: (NSRange) range replacementString: (id) newString;
+//{
+//	return [super textView: tv shouldChangeTextInRange: range replacementString: newString];
+//}
+
 
 
 - (void) sizeToFit
@@ -156,9 +161,18 @@
     return maxlines;
 }
 
-/*
-- (BOOL) textShouldBeginEditing: (NSText*) fieldEditor
-{
+
+//- (BOOL) textShouldBeginEditing: (NSText*) fieldEditor
+//{
+//	BOOL result = [super textShouldBeginEditing: fieldEditor];
+//	if (result) {
+////		[[NSNotificationCenter defaultCenter] addObserver: self 
+////												 selector: @selector(tvsDidChange:) 
+////													 name: NSTextViewDidChangeSelectionNotification
+////												   object: fieldEditor];
+//	}
+//	return result;
+//}
 
     
     // Set Text Container to 1 line height
@@ -168,11 +182,17 @@
     //NSRect bounds = [self bounds];
     // Make sure we get called on textcontainer overflow:
     //[lm setDelegate: self];
-    return [super textShouldBeginEditing: fieldEditor];
-}
-*/
+   // return [super textShouldBeginEditing: fieldEditor];
+//}
+//
 
-//- (BOOL)textShouldEndEditing: (NSText*) textObject;
+//- (BOOL) textShouldEndEditing: (NSText*) textObject
+//{
+//	NSLog(@"textShouldEndEditing: %@", textObject);
+//	return [super textShouldEndEditing: textObject];
+//}
+
+
 - (void) textDidBeginEditing: (NSNotification*) notification
 {
     NSTextContainer* tc = [self textContainer];
@@ -181,14 +201,17 @@
     NSFont* typingFont = [[[tc textView] typingAttributes] objectForKey: NSFontAttributeName];
     _lineHeight = [lm defaultLineHeightForFont: typingFont];
     
-    //[self sizeToFit];
     [super textDidBeginEditing: notification];
 }
 //- (void) textDidEndEditing: (NSNotification*) notification;
 
 - (void) textDidChange: (NSNotification*) notification
 {
-    [self sizeToFit]; 
+	// Instead of calling -sizeToFit directly, we call it delayed, to take any changes in the selection, (e.g. introduces by the formatter) into account.
+	[self performSelectorOnMainThread: @selector(sizeToFit) withObject: nil waitUntilDone: NO];
+    //[self sizeToFit]; 
+	
+	//NSLog(@"textDidChange: %@", [self stringValue]);
     [super textDidChange: notification];
 }
 
@@ -202,7 +225,12 @@
 }
 
 
-
+//- (void) tvsDidChange: (NSNotification*) n
+//{
+//	NSLog(@"selection did change: %@", n);
+//	[self sizeToFit]; 
+//}
+	
 /*
 - (void) layoutManager: (NSLayoutManager*) lm
     didCompleteLayoutForTextContainer: (NSTextContainer*) textContainer
