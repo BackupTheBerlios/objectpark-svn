@@ -38,18 +38,19 @@
 #define BACKSPACEKEY 0x33
 #define ESCKEY 0x35
 
-- (void)dealloc
-{
-    if (NSDebugEnabled) NSLog(@"GIGroupWindow dealloc");
-    [super dealloc];
-}
 
-- (BOOL)makeFirstResponder:(NSResponder *)aResponder
-{
-    BOOL result = [super makeFirstResponder:aResponder];
-//    NSLog(@"New first responder of %@ is %@ (success: %d)", self, [self firstResponder], result);
-    return result;
-}
+//- (void) dealloc
+//{
+//    //if (NSDebugEnabled) NSLog(@"GIGroupWindow dealloc");
+//    [super dealloc];
+//}
+//
+//- (BOOL) makeFirstResponder: (NSResponder*) aResponder
+//{
+//    BOOL result = [super makeFirstResponder:aResponder];
+////    NSLog(@"New first responder of %@ is %@ (success: %d)", self, [self firstResponder], result);
+//    return result;
+//}
 
 - (void)sendActionSelector:(SEL)selector
 {

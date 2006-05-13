@@ -1962,21 +1962,20 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 	
 	// Update tree splitter view:
 	if (rebuildThread) {
-		NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex:0];
-		//[scrollView setFrameSize:NSMakeSize([scrollView frame].size.width, [commentsMatrix frame].size.height+15.0)];
-		//[treeBodySplitter moveSplitterBy:[commentsMatrix frame].size.height+10-[scrollView frame].size.height];
-		//[scrollView setAutohidesScrollers:YES];
+		NSScrollView* scrollView = [[treeBodySplitter subviews] objectAtIndex: 0];
+
 		BOOL hasHorzontalScroller = [commentsMatrix frame].size.width>[scrollView frame].size.width;
 		float newHeight = [commentsMatrix frame].size.height + 3 + (hasHorzontalScroller * [NSScroller scrollerWidth]); // scroller width could be different
-		[scrollView setHasHorizontalScroller:hasHorzontalScroller];
-		if ([commentsMatrix numberOfColumns] <= 1) newHeight = 0;
+		[scrollView setHasHorizontalScroller: hasHorzontalScroller];
+		if ([[displayedThread valueForKey: @"messages"] count] <= 1) 
+			newHeight = 0;
 		if (newHeight>200.0) {
 			newHeight = 200.0;
-			[scrollView setHasVerticalScroller:YES];
+			[scrollView setHasVerticalScroller: YES];
 		} else {
-			[scrollView setHasVerticalScroller:NO];
+			[scrollView setHasVerticalScroller: NO];
 		}
-		[treeBodySplitter setFirstSubviewSize:newHeight];
+		[treeBodySplitter setFirstSubviewSize: newHeight];
 	}
 }
 

@@ -94,6 +94,13 @@
     }
 }
 
+
+- (void) awakeFromNib
+{
+    [self adjustSubviews];
+}
+
+
 - (void) setFirstSubviewSize: (float) firstSize
 {
     NSSize totalSize = [self frame].size;
@@ -106,8 +113,30 @@
         firstViewSize.height = firstSize;
     }
     [firstView setFrameSize: firstViewSize];
+	//NSRect oldSecondRect = [lastView frame];
     [lastView setFrameSize: NSMakeSize(totalSize.width, totalSize.height-[self dividerThickness]-firstViewSize.height)]; 
-    [self adjustSubviews];
+	NSRect newSecondRect = [lastView frame];
+
+	[lastView setFrameSize: newSecondRect.size];
+	
+	//[lastView setNeedsDisplay: YES];
+	[self adjustSubviews];
+	
+	/* does nothing
+	if ([lastView isKindOfClass: [NSScrollView class]]) {
+		[lastView setAutohidesScrollers: NO];
+		[lastView setAutohidesScrollers: YES];
+	}
+	 */
+	
+	// Force resize - otherwise, scrollviews do not update their scollbar lengths.
+	NSRect selfFrame = [self frame];
+	selfFrame.size.height -= 1;
+	[self setFrameSize: selfFrame.size];
+	selfFrame.size.height += 1;
+	[self setFrameSize: selfFrame.size];
+	
+	//[self resizeSubviewsWithOldSize: selfFrame.size]; // doesn't work
 }
 
 

@@ -26,6 +26,6 @@
 @interface NSObject (Extensions)
 
 /*" Developer notes "*/
-- (volatile void)methodIsAbstract:(SEL)selector;
+- (volatile void) methodIsAbstract: (SEL) selector;
 
 @end
