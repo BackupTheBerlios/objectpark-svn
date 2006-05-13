@@ -89,7 +89,7 @@ void ensureIntegrity()
 - (id) init
 {
     if (self = [super init]) {
-        representedObject = nil;
+        //representedObject = nil;
         [self setBordered: NO];
         
         [self reset];
@@ -359,7 +359,7 @@ void ensureIntegrity()
     }
     
     
-    if (representedObject) {
+    if ([self representedObject]) {
         NSRect circleRect;
         NSBezierPath *circle;
         
@@ -410,25 +410,26 @@ void ensureIntegrity()
 }
 
 
-- (id) representedObject
-{
-    return representedObject;
-}
+//- (id) representedObject
+//{
+//    return representedObject;
+//}
 
 
 - (void) setRepresentedObject: (id) newObj
 {
-    [representedObject autorelease];
-    representedObject = [newObj retain];
-    [self setEnabled:representedObject != nil];
+    //[representedObject autorelease];
+    //representedObject = [newObj retain];
+	[super setRepresentedObject: newObj];
+    [self setEnabled: newObj != nil];
 }
 
 
-- (void) dealloc
-{
-    [representedObject release];
-    [super dealloc];
-}
+//- (void) dealloc
+//{
+    //[representedObject release];
+//    [super dealloc];
+//}
 
 
 @end

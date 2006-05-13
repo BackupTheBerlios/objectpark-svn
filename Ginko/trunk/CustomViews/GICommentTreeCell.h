@@ -28,7 +28,7 @@
         int east:1;
         int west:1;
     } navigation;
-    id representedObject;
+    //id representedObject;
 }
 
 - (void) setIsDummyMessage:(BOOL) aBool;

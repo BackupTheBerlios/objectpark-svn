@@ -194,8 +194,6 @@
 		77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */; };
 		77E5401D0785839D00265DBB /* GIApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9E8A8306AC44080055F87C /* GIApplication.h */; };
 		77E541AF0785AB9D00265DBB /* Boxes.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77E541AE0785AB9D00265DBB /* Boxes.nib */; };
-		77E809C60A0BB08100A48916 /* OPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 77E809C40A0BB08100A48916 /* OPJob.h */; };
-		77E809C70A0BB08100A48916 /* OPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E809C50A0BB08100A48916 /* OPJob.m */; };
 		77EF03D207DC4AF9007CD721 /* GroupInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */; };
 		77EF040307DC4DEF007CD721 /* GIGroupInspectorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77EF040107DC4DEF007CD721 /* GIGroupInspectorController.h */; };
 		77EF040407DC4DEF007CD721 /* GIGroupInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */; };
@@ -693,8 +691,6 @@
 		77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFilteredThreads.h; sourceTree = "<group>"; };
 		77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFilteredThreads.m; sourceTree = "<group>"; };
 		77E541AE0785AB9D00265DBB /* Boxes.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Boxes.nib; sourceTree = "<group>"; };
-		77E809C40A0BB08100A48916 /* OPJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPJob.h; sourceTree = "<group>"; };
-		77E809C50A0BB08100A48916 /* OPJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPJob.m; sourceTree = "<group>"; };
 		77EF040107DC4DEF007CD721 /* GIGroupInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGroupInspectorController.h; sourceTree = "<group>"; };
 		77EF040207DC4DEF007CD721 /* GIGroupInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupInspectorController.m; sourceTree = "<group>"; };
 		77F01CF109D299E2007C4CA5 /* GIHeaderFieldEditor.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GIHeaderFieldEditor.h; sourceTree = "<group>"; };
@@ -1201,8 +1197,6 @@
 				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
 				7790BB9C0962F7F900988B3C /* GIFulltextIndexJob.h */,
 				7790BB9D0962F7F900988B3C /* GIFulltextIndexJob.m */,
-				77E809C40A0BB08100A48916 /* OPJob.h */,
-				77E809C50A0BB08100A48916 /* OPJob.m */,
 			);
 			path = Jobs;
 			sourceTree = "<group>";
@@ -1653,7 +1647,6 @@
 				771CD4BC09F8C7B20062BEED /* prop.h in Headers */,
 				771CD4BD09F8C7B20062BEED /* sasl.h in Headers */,
 				771CD5EE09F90D020062BEED /* saslutil.h in Headers */,
-				77E809C60A0BB08100A48916 /* OPJob.h in Headers */,
 				8D61A4050A0F6E1300AB7C35 /* NSWindow+RecentPositions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2123,7 +2116,6 @@
 				7718CA8909F2CDEA00D517CB /* GIGeneralPrefs.m in Sources */,
 				8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */,
 				771CD4B809F8C77C0062BEED /* OPSASL.m in Sources */,
-				77E809C70A0BB08100A48916 /* OPJob.m in Sources */,
 				8D61A4060A0F6E1300AB7C35 /* NSWindow+RecentPositions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
