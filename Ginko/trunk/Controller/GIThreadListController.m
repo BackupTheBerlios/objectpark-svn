@@ -50,31 +50,31 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @implementation GIThreadListController
 
-- (id)init
+- (id) init
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"GroupContentChangedNotification" object:self];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:OPJobDidFinishNotification object:MboxImportJobName];
-    
-    itemRetainer = [[NSMutableSet alloc] init];
-    //observedThreads = [[NSMutableSet alloc] init];
-    
-    return [[super init] retain]; // self retaining!
+	if (self = [super init]) {
+
+		
+		itemRetainer = [[NSMutableSet alloc] init];
+		
+#warning ThreadListController is normally self retaining - disabled because some binding controller retains us. uh?
+
+		//[self retain]; // self retaining! disabled because some binding controller retains us. uh?
+
+	}
+    return self;
 }
 
-- (id)initWithGroup:(GIMessageGroup *)aGroup
+- (id) initWithGroup: (GIMessageGroup*) aGroup
 /*" aGroup may be nil, any group will be used then. "*/
 {
-    if (self = [self init]) 
-    {
-        if (! aGroup) 
-        {
+    if (self = [self init])  {
+        if (! aGroup) {
 			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
-		[NSBundle loadNibNamed:@"Group" owner:self]; // sets threadsView
+		[NSBundle loadNibNamed: @"Group" owner: self]; // sets threadsView
 		
-		//lastTopLeftPoint = [window cascadeTopLeftFromPoint:lastTopLeftPoint];
 		if ([aGroup type] != GIRegularMessageGroup) {
 			[window setFrameAutosaveName: [@"ThreadListWindow" stringByAppendingString: [aGroup imageName]]];
 		} else {
@@ -90,10 +90,10 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 - (void) updateWindowTitle
 {
-    [window setTitle:[NSString stringWithFormat:@"%@", [group valueForKey: @"name"]]];
+    [window setTitle: [NSString stringWithFormat:@"%@", [group valueForKey: @"name"]]];
 }
 
-static NSPoint lastTopLeftPoint = {0.0, 0.0};
+//static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void) awakeFromNib
 {    
@@ -116,30 +116,22 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self awakeCommentTree];  
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     if (NSDebugEnabled) NSLog(@"GIThreadListController dealloc");
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [window setDelegate:nil];
+
+    [window setDelegate: nil];
     
     [self deallocCommentTree];
     [self deallocToolbar];
-
-    [displayedMessage release];
-	
-	[displayedThread removeObserver:self forKeyPath:@"messages"];
-    [displayedThread release];
+	[self setDisplayedMessage: nil thread: nil];
     [border release];
-	
-	//[[observedThreads objectEnumerator] makeObjectsPerformSelector:@selector(removeObserver:forKeyPath:)
-    //														withObject:self
-	//													withObject:@"messages"];
-	//[observedThreads release];
-	
-    [self setGroup:nil];
+    [self setGroup: nil];
     [itemRetainer release];
     [hits release];
-    
+	
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	
     [super dealloc];
 }
 
@@ -175,11 +167,17 @@ static BOOL isThreadItem(id item)
     [groupProperties release];
 }
 
+- (void) retain
+{
+	[super retain];	
+}
+
 - (void)windowWillClose:(NSNotification *)notification 
 {
-    lastTopLeftPoint = NSMakePoint(0.0, 0.0); // reset cascading
-	[self setGroup:nil];
-    [self autorelease]; // balance self-retaining
+	[self setGroup: nil];
+	NSLog(@"ThreadListController retainCount after window close (and self release): %d", [self retainCount]-1);
+    [self release]; // balance self-retaining
+	// Do nothing after this point!
 }
 
 - (NSArray*) threadsByDate
@@ -258,6 +256,7 @@ static BOOL isThreadItem(id item)
 	
 	if (isNewThread) {
 		[displayedThread removeObserver: self forKeyPath: @"messages"];
+
 		[displayedThread autorelease];
 		displayedThread = [aThread retain];
 		[displayedThread addObserver: self 
@@ -329,7 +328,7 @@ static BOOL isThreadItem(id item)
     NSWindow* win;
     NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
     while (win = [enumerator nextObject]) {
-        if ([[win delegate] isKindOfClass:self]) {
+        if ([[win delegate] isKindOfClass: self]) {
             if ([[win delegate] group] == aGroup) return win;
         }
     }
@@ -552,8 +551,8 @@ static BOOL isThreadItem(id item)
 			[searchField setStringValue: @""]; [self search: nil];
 		} else {
             // From threads switch back to the groups window:
-            [[GIApp groupsWindow] makeKeyAndOrderFront:sender];
-            [window performClose:self];
+            [[GIApp groupsWindow] makeKeyAndOrderFront: sender];
+            [window performClose: self]; // deallocs self
         }
     }
 }
@@ -1166,14 +1165,32 @@ static BOOL isThreadItem(id item)
     if (aGroup != group) {
 		[self setDisplayedMessage: nil thread: nil];
 		
-		[group removeObserver: self forKeyPath: @"threadsByDate"];
 		
-		[aGroup addObserver: self 
-				 forKeyPath: @"threadsByDate" 
-					options: NSKeyValueObservingOptionNew 
-					context: NULL];
-        
-        [group autorelease];
+		// Do not use old group any longer (if any):
+		if (group) {
+			[group removeObserver: self forKeyPath: @"threadsByDate"];
+			[[NSNotificationCenter defaultCenter] removeObserver: self name: @"GroupContentChangedNotification" object: self];
+			[[NSNotificationCenter defaultCenter] removeObserver: self name: OPJobDidFinishNotification object: nil];
+			[group autorelease];
+		}
+		
+
+		// Observe the new group (if any):
+		if (aGroup) {
+			[[NSNotificationCenter defaultCenter] addObserver: self 
+													 selector: @selector(modelChanged:) 
+														 name: @"GroupContentChangedNotification" 
+													   object: self];
+			[[NSNotificationCenter defaultCenter] addObserver: self 
+													 selector: @selector(modelChanged:) 
+														 name: OPJobDidFinishNotification 
+													   object: MboxImportJobName];
+			[aGroup addObserver: self 
+					 forKeyPath: @"threadsByDate" 
+						options: NSKeyValueObservingOptionNew 
+						context: NULL];
+		}
+		
         group = [aGroup retain];
 		
 		if (group) {
