@@ -50,39 +50,40 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 @implementation GIThreadListController
 
-- (id) init
+- (id)init
 {
-	if (self = [super init]) {
-
-		
+	if (self = [super init]) 
+	{
 		itemRetainer = [[NSMutableSet alloc] init];
-		
-#warning ThreadListController is normally self retaining - disabled because some binding controller retains us. uh?
 
-		//[self retain]; // self retaining! disabled because some binding controller retains us. uh?
-
+		[self retain]; // self retaining!
 	}
     return self;
 }
 
-- (id) initWithGroup: (GIMessageGroup*) aGroup
+- (id)initWithGroup:(GIMessageGroup *)aGroup
 /*" aGroup may be nil, any group will be used then. "*/
 {
-    if (self = [self init])  {
-        if (! aGroup) {
+    if (self = [self init])  
+	{
+        if (! aGroup) 
+		{
 			aGroup = [[GIMessageGroup allObjects] lastObject];
         }
 		
-		[NSBundle loadNibNamed: @"Group" owner: self]; // sets threadsView
+		[NSBundle loadNibNamed:@"Group" owner:self]; // sets threadsView
 		
-		if ([aGroup type] != GIRegularMessageGroup) {
-			[window setFrameAutosaveName: [@"ThreadListWindow" stringByAppendingString: [aGroup imageName]]];
-		} else {
-			[window autoPositionWithKind: @"ThreadListWindow"];
+		if ([aGroup type] != GIRegularMessageGroup) 
+		{
+			[window setFrameAutosaveName:[@"ThreadListWindow" stringByAppendingString:[aGroup imageName]]];
+		} 
+		else 
+		{
+			[window autoPositionWithKind:@"ThreadListWindow"];
 		}
 		
-		[self setGroup: aGroup];
-		[window makeKeyAndOrderFront: self];  
+		[self setGroup:aGroup];
+		[window makeKeyAndOrderFront:self];  
     }
     
     return self;
@@ -112,26 +113,27 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     [searchHitDateFormatter setDateStyle:NSDateFormatterShortStyle];
     [searchHitDateFormatter setTimeStyle:NSDateFormatterShortStyle];
     
-    [self awakeToolbar];
+	[self awakeToolbar];
     [self awakeCommentTree];  
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     if (NSDebugEnabled) NSLog(@"GIThreadListController dealloc");
 
-    [window setDelegate: nil];
-    
     [self deallocCommentTree];
     [self deallocToolbar];
-	[self setDisplayedMessage: nil thread: nil];
+	[self setDisplayedMessage:nil thread:nil];
     [border release];
-    [self setGroup: nil];
+    [self setGroup:nil];
     [itemRetainer release];
     [hits release];
 	
-	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
+	[window setDelegate:nil];
+    [window release];
+		
     [super dealloc];
 }
 
@@ -174,16 +176,18 @@ static BOOL isThreadItem(id item)
 
 - (void)windowWillClose:(NSNotification *)notification 
 {
-	[self setGroup: nil];
+	[self setGroup:nil];
+	
 	NSLog(@"ThreadListController retainCount after window close (and self release): %d", [self retainCount]-1);
-    [self release]; // balance self-retaining
+
+	[self release]; // balance self-retaining
 	// Do nothing after this point!
 }
 
-- (NSArray*) threadsByDate
+- (NSArray *)threadsByDate
     /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-	return [group valueForKey: @"threadsByDate"];
+	return [group valueForKey:@"threadsByDate"];
 }
 
 - (int) threadLimitCount 
@@ -312,12 +316,12 @@ static BOOL isThreadItem(id item)
 	[displayedMessage addFlags: OPSeenStatus];
 }
 
-- (GIMessage*) displayedMessage
+- (GIMessage *)displayedMessage
 {
     return displayedMessage;
 }
 
-- (GIThread*) displayedThread
+- (GIThread *)displayedThread
 {
     return displayedThread;
 }
@@ -325,10 +329,12 @@ static BOOL isThreadItem(id item)
 + (NSWindow *)windowForGroup:(GIMessageGroup *)aGroup
 /*" Returns the window for the group aGroup or nil, if no such window exists. "*/
 {
-    NSWindow* win;
-    NSEnumerator* enumerator = [[NSApp windows] objectEnumerator];
-    while (win = [enumerator nextObject]) {
-        if ([[win delegate] isKindOfClass: self]) {
+    NSWindow *win;
+    NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
+    while (win = [enumerator nextObject]) 
+	{
+        if ([[win delegate] isKindOfClass:self]) 
+		{
             if ([[win delegate] group] == aGroup) return win;
         }
     }
@@ -336,7 +342,7 @@ static BOOL isThreadItem(id item)
     return nil;
 }
 
-- (NSWindow*) window 
+- (NSWindow *)window 
 {
     return window;
 }
@@ -747,6 +753,8 @@ static BOOL isThreadItem(id item)
         [hits release];
         hits = [someHits retain];
     }
+	
+	[hitsController setContent:someHits];
 }
 
 - (IBAction) search: (id) sender

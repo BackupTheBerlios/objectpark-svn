@@ -28,7 +28,8 @@
     IBOutlet NSTableView *searchHitsTableView;
     IBOutlet NSSearchField *searchField;
     IBOutlet NSDateFormatter *searchHitDateFormatter;
-    
+    IBOutlet NSArrayController *hitsController;
+	
     GIMessageGroup *group;
     GIThread *displayedThread; // displayed as comment tree
     GIMessage *displayedMessage; // displayed with body
