@@ -384,6 +384,8 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 - (void) setPrimitiveValue: (id) object forKey: (NSString*) key
 /*" Passing a nil value is allowed and removes the respective value. "*/
 {	
+	
+#warning Stop resolving faults for deleted objects!
 	@synchronized([self context]) {
 		@synchronized(self) {
 			[self xwillAccessValueForKey: key];
@@ -676,7 +678,13 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 				[super valueForUndefinedKey: key]; // raises exception
 		}
 #warning todo: add key-value-observing for transient values.
-		[self setPrimitiveValue: value forKey: key];
+		[self xwillAccessValueForKey: key];
+		
+		if (value) {
+			[attributes setObject: value forKey: key];
+		} else {
+			[attributes removeObjectForKey: key];
+		}
 	}
 }
 

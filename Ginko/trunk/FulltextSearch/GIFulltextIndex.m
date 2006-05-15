@@ -167,7 +167,7 @@
     NSAssert(nameString != NULL, @"nameString not converted.");
     
     jobject result = (*env)->CallStaticObjectMethod(env, [self fieldClass], mid, nameString, textString);
-    NSAssert(result != NULL, @"Text static method doesn't generate a Field object.");
+    NSAssert1(result != NULL, @"Text static method doesn't generate a Field object '%@'.", name);
     
     jthrowable exc = (*env)->ExceptionOccurred(env);
     if (exc) 
@@ -297,24 +297,23 @@
     NSCalendarDate *date = [aMessage valueForKey:@"date"];
     NSString *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d"];
     
-    @try
-    {
-        jstring dateJavaString = (*env)->NewStringUTF(env, [dateString UTF8String]);
-        jthrowable exc = (*env)->ExceptionOccurred(env);
-        if (exc) 
-        {
-            /* We don't do much with the exception, except that
-            we print a debug message for it, clear it. */
-            (*env)->ExceptionDescribe(env);
-            (*env)->ExceptionClear(env);
-        }
-        [self document:document addUnStoredFieldWithName:@"date" text:dateJavaString];
+	if (dateString) {
+		@try {
+			jstring dateJavaString = (*env)->NewStringUTF(env, [dateString UTF8String]);
+			jthrowable exc = (*env)->ExceptionOccurred(env);
+			if (exc) 
+			{
+				/* We don't do much with the exception, except that
+				we print a debug message for it, clear it. */
+				(*env)->ExceptionDescribe(env);
+				(*env)->ExceptionClear(env);
+			}
+			[self document:document addUnStoredFieldWithName:@"date" text:dateJavaString];
+		}
+		@catch(NSException *localException) {
+			NSLog(@"Date %@ could not be fulltext indexed", date);
+		}
     }
-    @catch(NSException *localException)
-    {
-        NSLog(@"Date %@ could not be fulltext indexed", date);
-    }
-    
     // subject
     NSString *subject = [aMessage valueForKey:@"subject"];
     if (subject) 
