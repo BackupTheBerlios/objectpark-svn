@@ -114,6 +114,10 @@
                     @try {
                         [SMTP sendMessage:[message internetMessage]];
                         [sentMessages addObject:message];
+						
+						// Make woosh-sound for each message sent:
+						[[NSSound soundNamed: @"Mail Sent"] play];
+						
                     } @catch (NSException *localException) {
                         NSLog(@"Error sending message %@: %@", [message valueForKey: @"subject"], [localException reason]);
                     }

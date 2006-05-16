@@ -183,7 +183,6 @@ static GIActivityPanelController *panel = nil;
 		if (progressInfo) {
 			return [NSString stringWithFormat: @"%@ - %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
 		}
-        
     }
     
     return @""; // should not occur

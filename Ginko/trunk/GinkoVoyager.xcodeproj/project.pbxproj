@@ -214,6 +214,7 @@
 		8D167D6109057508000F4F45 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D167D5F09057508000F4F45 /* GIAccount.m */; };
 		8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D17B5C70895BBC30057A1C6 /* GIProfile.h */; };
 		8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17B5C80895BBC30057A1C6 /* GIProfile.m */; };
+		8D218B500A19490600BD1DE8 /* Mail Sent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */; };
 		8D313AE2094E3E39007D668A /* OPObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D313AE0094E3E39007D668A /* OPObjectPair.h */; };
 		8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D313AE1094E3E39007D668A /* OPObjectPair.m */; };
 		8D313AE4094E3E39007D668A /* OPObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D313AE0094E3E39007D668A /* OPObjectPair.h */; };
@@ -713,6 +714,7 @@
 		8D2147AD085114B2004C44B9 /* GISearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISearchController.h; sourceTree = "<group>"; };
 		8D2147AE085114B3004C44B9 /* GISearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISearchController.m; sourceTree = "<group>"; };
 		8D2147CE0851182E004C44B9 /* Search.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Search.nib; sourceTree = "<group>"; };
+		8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = "Mail Sent.aiff"; path = "Resources/Mail Sent.aiff"; sourceTree = SOURCE_ROOT; };
 		8D313AE0094E3E39007D668A /* OPObjectPair.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = OPObjectPair.h; sourceTree = "<group>"; };
 		8D313AE1094E3E39007D668A /* OPObjectPair.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = OPObjectPair.m; sourceTree = "<group>"; };
 		8D31443D09562178007D668A /* GIThreadListController.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = GIThreadListController.h; sourceTree = "<group>"; };
@@ -985,6 +987,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */,
 				77CA735609F12C7800749461 /* Ginko.scriptTerminology */,
 				77CA735309F12BD000749461 /* Ginko.scriptSuite */,
 				30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */,
@@ -1932,6 +1935,7 @@
 				77CA735409F12BD000749461 /* Ginko.scriptSuite in Resources */,
 				77CA735709F12C7800749461 /* Ginko.scriptTerminology in Resources */,
 				7718CA8E09F2CE5100D517CB /* GIGeneralPrefs.nib in Resources */,
+				8D218B500A19490600BD1DE8 /* Mail Sent.aiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
