@@ -390,9 +390,9 @@ static BOOL isThreadItem(id item)
     return [[[tabView selectedTabViewItem] identifier] isEqualToString:@"threads"];
 }
 
-- (BOOL) isSearchShownCurrently
+- (BOOL)isSearchShownCurrently
 /*" Returns YES if the tab with the search results is currently visible. NO otherwise. "*/
-{
+{	
     return (hits != nil);
 }
 
@@ -1310,12 +1310,14 @@ static BOOL isThreadItem(id item)
 {
 	if ([self isSearchShownCurrently]
 		&&
+		(
 		(aSelector == @selector(replyDefault:))
 		|| (aSelector == @selector(replySender:))
 		|| (aSelector == @selector(replyAll:))
 		|| (aSelector == @selector(forward:))
-		|| (aSelector == @selector(followup:))		) 
+		|| (aSelector == @selector(followup:)))	) 
 	{
+		NSLog(@"search shown currently");
 		int selectedIndex = [searchHitsTableView selectedRow];
 		
 		if (selectedIndex >= 0) return YES;
@@ -1425,7 +1427,7 @@ static BOOL isThreadItem(id item)
     } 
     else 
     {
-        return [self validateSelector: [menuItem action]];
+        return [self validateSelector:[menuItem action]];
     }
 }
 

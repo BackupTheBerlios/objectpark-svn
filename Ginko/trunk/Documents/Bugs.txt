@@ -12,8 +12,6 @@ Bugs:
 Regressions:
 
 
-- Replying sometime replies to the wrong message.
-
 Done:
 
 - (Dirk) - OPSizingTextField did does not resize when a new selection is added by the formatter
@@ -24,3 +22,5 @@ Done:
 - (Dirk) KVO notifications don't work with inverse many-to-many relationships (see test TestGIMessageGroup/testStatistics)
 - (Axel) keyboard navigation in message tree no longer works
 - (Axel) "space" in searches no longer works (-> maybe related to "go to next message" functionality)
+- (Axel) Replying sometime replies to the wrong message.
+- (Axel) Validation of toolbar items in ThreadListController regression
