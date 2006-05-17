@@ -2,7 +2,7 @@
 //  $Id: OPSSLSocket.m,v 1.2 2005/03/25 22:39:05 theisen Exp $
 //
 //  Created by joerg on Mon Sep 17 2001.
-//  Copyright (c) 2001 Jšrg Westheide. All rights reserved.
+//  Copyright (c) 2001 JÃ¶rg Westheide. All rights reserved.
 //
 
 //#import "MPWDebug.h"
@@ -241,8 +241,7 @@ OSStatus ssl_write(SSLConnectionRef connection, const void *rawdata, size_t *raw
         return [super availableData];
     
     err = SSLGetBufferedReadSize(_context, &bufSize);
-    if (err)
-    {
+    if (err) {
         OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetBufferedReadSize(): %s", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"SSLGetBufferedReadSize(): %s", OPStringForErrorCode(err)]
                                      errorCode: err
@@ -276,14 +275,12 @@ This call is blocking so it returns less than %length bytes only if an error occ
     
     data = [NSMutableData dataWithCapacity:length];
     
-    do
-    {
+    do {
         bytesReadThisTime = 0;
         err = SSLRead(_context, &rawData+bytesRead, /*length-bytesRead > 16384 ? 16384 :*/ length-bytesRead, &bytesReadThisTime);
         [data appendBytes:&rawData length:bytesReadThisTime];
         bytesRead += bytesReadThisTime;
-        if (err)
-        {
+        if (err) {
             OPDebugLog1(SSLDEBUG, OPERROR, @"SSLRead(): %s", OPStringForErrorCode(err));
             
             if (err == errSSLWouldBlock)
@@ -304,7 +301,7 @@ This call is blocking so it returns less than %length bytes only if an error occ
 
 
 /*"This methods writes %data to the socket."*/
-- (void)writeData:(NSData*)data
+- (void) writeData: (NSData*) data
 {
     OSStatus err;
     size_t bytesWritten = 0;
@@ -312,22 +309,21 @@ This call is blocking so it returns less than %length bytes only if an error occ
     size_t length = [data length];
     const void *rawData;
     
-    if (!_encrypted)
-    {
+    if (!_encrypted) {
         [super writeData:data];
         return;
     }
     
     rawData = [data bytes];
     
-    do
-    {
+    do {
         bytesWrittenThisTime = 0;
         err = SSLWrite(_context, rawData+bytesWritten, length-bytesWritten, &bytesWrittenThisTime);
         bytesWritten += bytesWrittenThisTime;
         if (err)
         {
-            OPDebugLog1(SSLDEBUG, OPERROR, @"SSLWrite(): %@", OPStringForErrorCode(err));
+			// The following Log output cashes, Joerg!
+            // OPDebugLog1(SSLDEBUG, OPERROR, @"SSLWrite(): %@", OPStringForErrorCode(err));
             
             if (err == errSSLWouldBlock)
                 continue;
@@ -390,7 +386,7 @@ The TCP connection on the socket has to be established before calling this metho
     err = SSLHandshake(_context);
     if (err < 0)
     {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLHandshake(): %@", OPStringForErrorCode(err));
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLHandshake(): %@", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLHandshake(): %@", OPStringForErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLHandshake()"
@@ -402,10 +398,11 @@ The TCP connection on the socket has to be established before calling this metho
     _encrypted = YES;
     
     OPDebugLog(SSLDEBUG, OPINFO, @"negotiating encryption successful");
-    NS_DURING
-        OPDebugLog2(SSLDEBUG, OPINFO, @"negotiated protocol %@ with cipher: %@", [OPSSLSocket protocolToString:[self negotiatedProtocol]], [OPSSLSocket cipherToString:[self negotiatedCipher]]);
-    NS_HANDLER
-        NS_ENDHANDLER
+    @try {
+        //OPDebugLog2(SSLDEBUG, OPINFO, @"negotiated protocol %@ with cipher: %@", [OPSSLSocket protocolToString:[self negotiatedProtocol]], [OPSSLSocket cipherToString:[self negotiatedCipher]]);
+    } @catch (NSException* e) {
+		// Do nothing?
+	}
 }
 
 
@@ -417,15 +414,13 @@ The TCP connection on the socket has to be established before calling this metho
     OPDebugLog(SSLDEBUG, OPALL, @"shutting down encryption");
     
     err = SSLClose(_context);
-    if (err)
-    {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLClose(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLClose(): %@", OPStringForErrorCode(err)]
-                                     errorCode:err
-                                    failedCall:@"SSLClose()"
-                                 callingMethod:_cmd
-                                 callingObject:self]
-            raise];
+    if (err) {
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLClose(): %@", OPStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLClose(): %@", OPStringForErrorCode(err)]
+                                     errorCode: err
+                                    failedCall: @"SSLClose()"
+                                 callingMethod: _cmd
+                                 callingObject: self] raise];
     }
     
     _encrypted = NO;
@@ -441,8 +436,7 @@ The TCP connection on the socket has to be established before calling this metho
     OPDebugLog(SSLDEBUG, OPALL, @"inquireing encryption state");
     
     err = SSLGetSessionState(_context, &state);
-    if (err)
-    {
+    if (err) {
         OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetSessionState(): %@", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetSessionState(): %@", OPStringForErrorCode(err)]
                                      errorCode:err
@@ -465,9 +459,8 @@ The TCP connection on the socket has to be established before calling this metho
 {
     Boolean allowed;
     OSStatus err = SSLGetAllowsAnyRoot(_context, &allowed);
-    if (err)
-    {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsAnyRoot(): %@", OPStringForErrorCode(err));
+    if (err) {
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsAnyRoot(): %@", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetAllowsAnyRoot(): %@", OPStringForErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLGetAllowsAnyRoot()"
@@ -488,9 +481,8 @@ certificates that are not signed by the root CAs supported by the system
 - (void) setAllowsAnyRootCertificate:(BOOL)allowed
 {
     OSStatus err = SSLSetAllowsAnyRoot(_context, allowed);
-    if (err)
-    {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsAnyRoot(): %@", OPStringForErrorCode(err));
+    if (err) {
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsAnyRoot(): %@", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLSetAllowsAnyRoot(): %@", OPStringForErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLSetAllowsAnyRoot()"
@@ -506,9 +498,8 @@ certificates that are not signed by the root CAs supported by the system
 {
     Boolean allowed;
     OSStatus err = SSLGetAllowsExpiredCerts(_context, &allowed);
-    if (err)
-    {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsExpiredCerts(): %@", OPStringForErrorCode(err));
+    if (err) {
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsExpiredCerts(): %@", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetAllowsExpiredCerts(): %@", OPStringForErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLGetAllowsExpiredCerts()"
@@ -526,9 +517,8 @@ Setting YES means that a part of the certificate verification is not done."*/
 - (void) setAllowsExpiredCertificates:(BOOL)allowed
 {
     OSStatus err = SSLSetAllowsExpiredCerts(_context, allowed);
-    if (err)
-    {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsExpiredCerts(): %@", OPStringForErrorCode(err));
+    if (err) {
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsExpiredCerts(): %@", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLSetAllowsExpiredCerts(): %@", OPStringForErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLSetAllowsExpiredCerts()"
@@ -548,9 +538,8 @@ Setting YES means that a part of the certificate verification is not done."*/
 {
     SSLProtocol protocol;
     OSStatus err = SSLGetNegotiatedProtocolVersion(_context, &protocol);
-    if (err)
-    {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedProtocolVersion(): %@", OPStringForErrorCode(err));
+    if (err) {
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedProtocolVersion(): %@", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetNegotiatedProtocolVersion(): %@", OPStringForErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLGetNegotiatedProtocolVersion()"
@@ -568,9 +557,8 @@ Setting YES means that a part of the certificate verification is not done."*/
 {
     SSLCipherSuite cipher;
     OSStatus err = SSLGetNegotiatedCipher(_context, &cipher);
-    if (err)
-    {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedCipher(): %s", OPStringForErrorCode(err));
+    if (err) {
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedCipher(): %s", OPStringForErrorCode(err));
         [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLGetNegotiatedCipher(): %@", OPStringForErrorCode(err)]
                                      errorCode: err
                                     failedCall: @"SSLGetNegotiatedCipher()"
@@ -600,13 +588,11 @@ OSStatus ssl_read(SSLConnectionRef connection, void *rawdata, size_t *rawdatalen
     
     *rawdatalength = 0;
     
-    while (1)
-    {
+    while (1) {
         bytesRead = 0;
         rrtn = read(sock, currData, bytesToGo);
         
-        if (rrtn <= 0)
-        {
+        if (rrtn <= 0) {
             /* this is guesswork... */
             int theErr = errno;
             
@@ -667,19 +653,15 @@ OSStatus ssl_write(SSLConnectionRef connection, const void *rawdata, size_t *raw
     
     *rawdatalength = 0;
     
-    do
-    {
+    do {
         length = write(sock, (char*)dataPtr + bytesSent, dataLen - bytesSent);
-    }
-    while ((length > 0) && ((bytesSent += length) < dataLen));
+    } while ((length > 0) && ((bytesSent += length) < dataLen));
     
-    if (length <= 0)
-        if (errno == EAGAIN)
-            ortn = errSSLWouldBlock;
-        else
-            ortn = ioErr;  // -36
-    else
+    if (length <= 0) {
+		ortn = (errno == EAGAIN) ? errSSLWouldBlock : ioErr;// -36
+	} else {
         ortn = noErr;
+	}
     
     *rawdatalength = bytesSent;
     return ortn;
@@ -690,7 +672,7 @@ OSStatus ssl_write(SSLConnectionRef connection, const void *rawdata, size_t *raw
 @implementation NSFileHandle (OPSSLSocket)
 
 - (BOOL) isEncrypted
-/* Superclass implementation returns NO by default. */
+	/* Superclass implementation returns NO by default. */
 {
     return NO;
 }
