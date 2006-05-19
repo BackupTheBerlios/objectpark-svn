@@ -23,6 +23,9 @@
     SSLContextRef _context;           /*""*/
     }
 
+/*" Getting an (english) error description for ssl error codes. "*/
+NSString* OPStringForSecErrorCode(OSStatus status);
+
 /*"Protcol and cipher names"*/
 + (NSString*) cipherToString:(SSLCipherSuite)cipher;
 + (NSString*) protocolToString:(SSLProtocol)protocol;

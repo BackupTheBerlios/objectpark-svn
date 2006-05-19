@@ -2,7 +2,7 @@
 //  $Id: OPSSLSocket.m,v 1.2 2005/03/25 22:39:05 theisen Exp $
 //
 //  Created by joerg on Mon Sep 17 2001.
-//  Copyright (c) 2001 Jörg Westheide. All rights reserved.
+//  Copyright (c) 2001 Jˆrg Westheide. All rights reserved.
 //
 
 //#import "MPWDebug.h"
@@ -10,14 +10,18 @@
 #import "OPSSLSocket.h"
 #include <sys/socket.h>
 #include <openssl/rand.h>
+#import <Security/SecBase.h>
 //#import "OPDebug.h"
 
 #define OPDebugLog(a,b,format) NSLog(format)
 #define OPDebugLog1(a,b,format,param) NSLog(format, param)
-#define OPDebugLog2(a,b,format,param1,param2) NSLog(format, param1,param2)
+#define OPDebugLog2(a,b,format,param1,param2) NSLog(format, param1, param2)
+#define OPDebugLog3(a,b,format,param1,param2, param3) NSLog(format, param1, param2, pararm3)
+//#define OPDebugLog4(a,b,format,param1,param2, param3) NSLog(format, param1, param2, pararm3)
+#define OPDebugLog5(a,b,format, param1, param2, param3, param4, param5) NSLog(format, param1, param2, param3, param4, param5)
 
-#define OPStringForErrorCode(code) (strerror(code))
-
+#define OPCStringForErrorCode(code) (strerror(code))
+//#define OPStringForSecErrorCode(code) ([OPSecErrorMessageFromBundle((code), NULL) autorelease])
 
 //#import "NSString+OPOSErrors.h"
 
@@ -26,6 +30,20 @@
 
 
 #define OPSSLException  @"SSLException"
+
+
+NSString* OPStringForSecErrorCode(OSStatus status)
+/*" Returns the error string from the SecErrorMessages.strings file found in the Security.framework bundle for the error (status) code given. "*/
+{	
+	NSBundle* secBundle   = [NSBundle bundleWithIdentifier: @"com.apple.security"];
+    // Convert status to Int32 string representation, e.g. "-25924":
+    NSString* keyString   = [NSString stringWithFormat: @"%d", status]; 	
+	NSString* errorString = [secBundle localizedStringForKey: keyString
+													   value: keyString 
+													   table: @"SecErrorMessages"];
+    return errorString;
+}
+
 
 @interface OPSSLSocket(PrivateAPI)
 - (OPSSLSocket*)_initAsServer:(BOOL)asServer;
@@ -125,9 +143,14 @@ The reason contains a short description while the userinfo dictionary contains t
 
 
 /*"private method which creates an OPSSLException."*/
-- (NSException*) _createOPSSLExceptionWithReason:(NSString*)reason errorCode:(OSStatus)errorCode failedCall:(NSString*)failedCall callingMethod:(SEL)callingMethod callingObject:(id)callingObject
+- (NSException*) _createOPSSLExceptionWithReason: (NSString*) reason 
+									   errorCode: (OSStatus) errorCode 
+									  failedCall: (NSString*) failedCall 
+								   callingMethod: (SEL) callingMethod 
+								   callingObject: (id) callingObject
 {
-    //OPDebugLog5(SSLDEBUG, OPINFO, @"creating SSL exception with reason %@, error code %d from call %@ in method %@ called for object %@", reason, errorCode, failedCall, NSStringFromSelector(callingMethod), callingObject);
+	//OPDebugLog4(SSLDEBUG, OPERROR, @"SSL Error in %@: %@ failed: %@ (%d)", NSStringFromSelector(callingMethod), failedCall, OPStringForSecErrorCode(errorCode), errorCode);
+    OPDebugLog5(SSLDEBUG, OPINFO, @"creating SSL exception with reason %@, error code %d from call %@ in method %@ called for object %@", reason, errorCode, failedCall, NSStringFromSelector(callingMethod), callingObject);
     return [NSException exceptionWithName:OPSSLException
                                    reason:reason
                                  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithLong:errorCode], OPEErrorCode,                                                                                     failedCall, OPEFailedCall,
@@ -242,8 +265,8 @@ OSStatus ssl_write(SSLConnectionRef connection, const void *rawdata, size_t *raw
     
     err = SSLGetBufferedReadSize(_context, &bufSize);
     if (err) {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetBufferedReadSize(): %s", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"SSLGetBufferedReadSize(): %s", OPStringForErrorCode(err)]
+        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetBufferedReadSize(): %@", OPStringForSecErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"SSLGetBufferedReadSize(): %@", OPStringForSecErrorCode(err)]
                                      errorCode: err
                                     failedCall: @"SSLGetBufferedReadSize()"
                                  callingMethod: _cmd
@@ -281,16 +304,16 @@ This call is blocking so it returns less than %length bytes only if an error occ
         [data appendBytes:&rawData length:bytesReadThisTime];
         bytesRead += bytesReadThisTime;
         if (err) {
-            OPDebugLog1(SSLDEBUG, OPERROR, @"SSLRead(): %s", OPStringForErrorCode(err));
+            OPDebugLog1(SSLDEBUG, OPERROR, @"SSLRead(): %@", OPStringForSecErrorCode(err));
             
             if (err == errSSLWouldBlock)
                 continue;
             
-            [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLRead(): %s", OPStringForErrorCode(err)]
-                                         errorCode:err
-                                        failedCall:@"SSLRead()"
-                                     callingMethod:_cmd
-                                     callingObject:self]
+            [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLRead(): %@", OPStringForSecErrorCode(err)]
+                                         errorCode: err
+                                        failedCall: @"SSLRead()"
+                                     callingMethod: _cmd
+                                     callingObject: self]
                 raise];
         }
     }
@@ -323,16 +346,16 @@ This call is blocking so it returns less than %length bytes only if an error occ
         if (err)
         {
 			// The following Log output cashes, Joerg!
-            // OPDebugLog1(SSLDEBUG, OPERROR, @"SSLWrite(): %@", OPStringForErrorCode(err));
+			//OPDebugLog1(SSLDEBUG, OPERROR, @"SSLWrite(): %@", OPStringForSecErrorCode(err));
             
             if (err == errSSLWouldBlock)
                 continue;
             
-            [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLWrite(): %@", OPStringForErrorCode(err)]
-                                         errorCode:err
-                                        failedCall:@"SSLWrite()"
-                                     callingMethod:_cmd
-                                     callingObject:self]
+            [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLWrite(): %@", OPStringForSecErrorCode(err)]
+                                         errorCode: err
+                                        failedCall: @"SSLWrite()"
+                                     callingMethod: _cmd
+                                     callingObject: self]
                 raise];
         }
     }
@@ -362,8 +385,8 @@ This call is blocking so it returns less than %length bytes only if an error occ
     err = SSLDisposeContext(_context);
     if (err)
     {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLDisposeContext(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLDisposeContext(): %@", OPStringForErrorCode(err)]
+        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLDisposeContext(): %s", OPStringForSecErrorCode(err));
+        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLDisposeContext(): %s", OPStringForSecErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLDisposeContext()"
                                  callingMethod:_cmd
@@ -386,12 +409,12 @@ The TCP connection on the socket has to be established before calling this metho
     err = SSLHandshake(_context);
     if (err < 0)
     {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLHandshake(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLHandshake(): %@", OPStringForErrorCode(err)]
-                                     errorCode:err
-                                    failedCall:@"SSLHandshake()"
-                                 callingMethod:_cmd
-                                 callingObject:self]
+        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLHandshake(): %@", OPStringForSecErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"Error occured during SSL Handshake: %@", OPStringForSecErrorCode(err)]
+                                     errorCode: err
+                                    failedCall: @"SSLHandshake()"
+                                 callingMethod: _cmd
+                                 callingObject: self]
             raise];
     }
     
@@ -415,8 +438,8 @@ The TCP connection on the socket has to be established before calling this metho
     
     err = SSLClose(_context);
     if (err) {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLClose(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLClose(): %@", OPStringForErrorCode(err)]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLClose(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"SSLClose(): %@", OPStringForSecErrorCode(err)]
                                      errorCode: err
                                     failedCall: @"SSLClose()"
                                  callingMethod: _cmd
@@ -437,12 +460,12 @@ The TCP connection on the socket has to be established before calling this metho
     
     err = SSLGetSessionState(_context, &state);
     if (err) {
-        OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetSessionState(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetSessionState(): %@", OPStringForErrorCode(err)]
-                                     errorCode:err
-                                    failedCall:@"SSLGetSessionState()"
-                                 callingMethod:_cmd
-                                 callingObject:self]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetSessionState(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLGetSessionState(): %@", OPStringForSecErrorCode(err)]
+                                     errorCode: err
+                                    failedCall: @"SSLGetSessionState()"
+                                 callingMethod: _cmd
+                                 callingObject: self]
             raise];
     }
     
@@ -460,12 +483,12 @@ The TCP connection on the socket has to be established before calling this metho
     Boolean allowed;
     OSStatus err = SSLGetAllowsAnyRoot(_context, &allowed);
     if (err) {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsAnyRoot(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetAllowsAnyRoot(): %@", OPStringForErrorCode(err)]
-                                     errorCode:err
-                                    failedCall:@"SSLGetAllowsAnyRoot()"
-                                 callingMethod:_cmd
-                                 callingObject:self]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsAnyRoot(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"SSLGetAllowsAnyRoot(): %@", OPStringForSecErrorCode(err)]
+                                     errorCode: err
+                                    failedCall: @"SSLGetAllowsAnyRoot()"
+                                 callingMethod: _cmd
+                                 callingObject: self]
             raise];
     }
     
@@ -482,12 +505,12 @@ certificates that are not signed by the root CAs supported by the system
 {
     OSStatus err = SSLSetAllowsAnyRoot(_context, allowed);
     if (err) {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsAnyRoot(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLSetAllowsAnyRoot(): %@", OPStringForErrorCode(err)]
-                                     errorCode:err
-                                    failedCall:@"SSLSetAllowsAnyRoot()"
-                                 callingMethod:_cmd
-                                 callingObject:self]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsAnyRoot(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"SSLSetAllowsAnyRoot(): %@", OPStringForSecErrorCode(err)]
+                                     errorCode: err
+                                    failedCall: @"SSLSetAllowsAnyRoot()"
+                                 callingMethod: _cmd
+                                 callingObject: self]
             raise];
     }
 }
@@ -499,12 +522,12 @@ certificates that are not signed by the root CAs supported by the system
     Boolean allowed;
     OSStatus err = SSLGetAllowsExpiredCerts(_context, &allowed);
     if (err) {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsExpiredCerts(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetAllowsExpiredCerts(): %@", OPStringForErrorCode(err)]
-                                     errorCode:err
-                                    failedCall:@"SSLGetAllowsExpiredCerts()"
-                                 callingMethod:_cmd
-                                 callingObject:self]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetAllowsExpiredCerts(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat: @"SSLGetAllowsExpiredCerts(): %@", OPStringForSecErrorCode(err)]
+                                     errorCode: err
+                                    failedCall: @"SSLGetAllowsExpiredCerts()"
+                                 callingMethod: _cmd
+                                 callingObject: self]
             raise];
     }
     
@@ -518,8 +541,8 @@ Setting YES means that a part of the certificate verification is not done."*/
 {
     OSStatus err = SSLSetAllowsExpiredCerts(_context, allowed);
     if (err) {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsExpiredCerts(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLSetAllowsExpiredCerts(): %@", OPStringForErrorCode(err)]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLSetAllowsExpiredCerts(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLSetAllowsExpiredCerts(): %@", OPStringForSecErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLSetAllowsExpiredCerts()"
                                  callingMethod:_cmd
@@ -539,8 +562,8 @@ Setting YES means that a part of the certificate verification is not done."*/
     SSLProtocol protocol;
     OSStatus err = SSLGetNegotiatedProtocolVersion(_context, &protocol);
     if (err) {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedProtocolVersion(): %@", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetNegotiatedProtocolVersion(): %@", OPStringForErrorCode(err)]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedProtocolVersion(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason:[NSString stringWithFormat:@"SSLGetNegotiatedProtocolVersion(): %@", OPStringForSecErrorCode(err)]
                                      errorCode:err
                                     failedCall:@"SSLGetNegotiatedProtocolVersion()"
                                  callingMethod:_cmd
@@ -558,8 +581,8 @@ Setting YES means that a part of the certificate verification is not done."*/
     SSLCipherSuite cipher;
     OSStatus err = SSLGetNegotiatedCipher(_context, &cipher);
     if (err) {
-        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedCipher(): %s", OPStringForErrorCode(err));
-        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLGetNegotiatedCipher(): %@", OPStringForErrorCode(err)]
+        //OPDebugLog1(SSLDEBUG, OPERROR, @"SSLGetNegotiatedCipher(): %s", OPCStringForErrorCode(err));
+        [[self _createOPSSLExceptionWithReason: [NSString stringWithFormat:@"SSLGetNegotiatedCipher(): %@", OPStringForSecErrorCode(err)]
                                      errorCode: err
                                     failedCall: @"SSLGetNegotiatedCipher()"
                                  callingMethod: _cmd
