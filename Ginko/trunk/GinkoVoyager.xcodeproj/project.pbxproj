@@ -132,6 +132,8 @@
 		77AD0FA8076EECB400D1DD65 /* MailIcon_send.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AD0FA0076EECB400D1DD65 /* MailIcon_send.tiff */; };
 		77AD5858080C450F00EBE93C /* TestOPMultimediaContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77AD5856080C450F00EBE93C /* TestOPMultimediaContentCoder.h */; };
 		77AD5859080C450F00EBE93C /* TestOPMultimediaContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AD5857080C450F00EBE93C /* TestOPMultimediaContentCoder.m */; };
+		77B07A3F0A22F9CA009773FB /* OPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B07A3D0A22F9C9009773FB /* OPJob.h */; };
+		77B07A400A22F9CA009773FB /* OPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B07A3E0A22F9CA009773FB /* OPJob.m */; };
 		77B28DB3082E8A72007FA384 /* OPTableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B28DB1082E8A72007FA384 /* OPTableColumn.h */; };
 		77B28DB4082E8A72007FA384 /* OPTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B28DB2082E8A72007FA384 /* OPTableColumn.m */; };
 		77B8337B0983CD6D00B467C2 /* GIFulltextSearchPane.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77B8337A0983CD6D00B467C2 /* GIFulltextSearchPane.tiff */; };
@@ -628,6 +630,8 @@
 		77AD0FA0076EECB400D1DD65 /* MailIcon_send.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_send.tiff; sourceTree = "<group>"; };
 		77AD5856080C450F00EBE93C /* TestOPMultimediaContentCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPMultimediaContentCoder.h; sourceTree = "<group>"; };
 		77AD5857080C450F00EBE93C /* TestOPMultimediaContentCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPMultimediaContentCoder.m; sourceTree = "<group>"; };
+		77B07A3D0A22F9C9009773FB /* OPJob.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPJob.h; sourceTree = "<group>"; };
+		77B07A3E0A22F9CA009773FB /* OPJob.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPJob.m; sourceTree = "<group>"; };
 		77B28DB1082E8A72007FA384 /* OPTableColumn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPTableColumn.h; sourceTree = "<group>"; };
 		77B28DB2082E8A72007FA384 /* OPTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPTableColumn.m; sourceTree = "<group>"; };
 		77B71CDE07CB30C9003A3BEF /* TestOPXFolderContentCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPXFolderContentCoder.h; sourceTree = "<group>"; };
@@ -1191,6 +1195,8 @@
 		77CD8B650936992D00C9030B /* Jobs */ = {
 			isa = PBXGroup;
 			children = (
+				77B07A3D0A22F9C9009773FB /* OPJob.h */,
+				77B07A3E0A22F9CA009773FB /* OPJob.m */,
 				775A96DE0839D5C2008EC276 /* Tests */,
 				77049FE60858570800253732 /* GIPOPJob.h */,
 				77049FE70858570800253732 /* GIPOPJob.m */,
@@ -1651,6 +1657,7 @@
 				771CD4BD09F8C7B20062BEED /* sasl.h in Headers */,
 				771CD5EE09F90D020062BEED /* saslutil.h in Headers */,
 				8D61A4050A0F6E1300AB7C35 /* NSWindow+RecentPositions.h in Headers */,
+				77B07A3F0A22F9CA009773FB /* OPJob.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2121,6 +2128,7 @@
 				8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */,
 				771CD4B809F8C77C0062BEED /* OPSASL.m in Sources */,
 				8D61A4060A0F6E1300AB7C35 /* NSWindow+RecentPositions.m in Sources */,
+				77B07A400A22F9CA009773FB /* OPJob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

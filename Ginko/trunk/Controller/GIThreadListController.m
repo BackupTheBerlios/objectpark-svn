@@ -1317,7 +1317,6 @@ static BOOL isThreadItem(id item)
 		|| (aSelector == @selector(forward:))
 		|| (aSelector == @selector(followup:)))	) 
 	{
-		NSLog(@"search shown currently");
 		int selectedIndex = [searchHitsTableView selectedRow];
 		
 		if (selectedIndex >= 0) return YES;
