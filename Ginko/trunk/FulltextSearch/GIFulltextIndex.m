@@ -316,12 +316,10 @@
     }
     // subject
     NSString *subject = [aMessage valueForKey:@"subject"];
-    if (subject) 
-    {
+    if (subject) {
         jstring subjectJavaString = (*env)->NewStringUTF(env, [subject UTF8String]);
         exc = (*env)->ExceptionOccurred(env);
-        if (exc) 
-        {
+        if (exc) {
             /* We don't do much with the exception, except that
             we print a debug message for it, clear it. */
             (*env)->ExceptionDescribe(env);
@@ -333,16 +331,12 @@
     
     OPInternetMessage *internetMessage = [aMessage internetMessage];
 	
-    // author
-    //NSString *author = [aMessage valueForKey:@"senderName"];
     NSString *author = [internetMessage fromWithFallback:YES];
 	
-    if (author)
-    {
+    if (author) {
         jstring authorJavaString = (*env)->NewStringUTF(env, [author UTF8String]);
         exc = (*env)->ExceptionOccurred(env);
-        if (exc) 
-        {
+        if (exc) {
             /* We don't do much with the exception, except that
             we print a debug message for it, clear it. */
             (*env)->ExceptionDescribe(env);
