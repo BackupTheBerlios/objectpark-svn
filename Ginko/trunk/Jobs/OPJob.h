@@ -47,7 +47,7 @@
 + (void)resumePendingJobs;
 
 /*" Handling finished jobs "*/
-+ (BOOL)removeFinishedJob:(NSNumber *)aJobId;
++ (BOOL)removeFinishedJob:(OPJob *)aJob;
 + (void)removeAllFinishedJobs;
 
 /*" Job state accessors "*/

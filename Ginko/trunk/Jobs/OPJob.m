@@ -195,7 +195,7 @@ static NSString *OPJobKey = @"OPJob";
         [NSThread detachNewThreadSelector:@selector(workerThread:) toTarget:self withObject:nil];
         threadCount++;
     }
-    
+	
     [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
     
     return job;
@@ -280,6 +280,122 @@ static NSString *OPJobKey = @"OPJob";
 	return [[[NSThread currentThread] threadDictionary] objectForKey:OPJobKey];
 }
 
+// Handling finished jobs
+
++ (BOOL)removeFinishedJob:(OPJob *)aJob
+/*" Removes aJob from the list of finished jobs. Returns YES if the job was 
+	finished and could be removed. NO otherwise. "*/
+{
+    BOOL result;
+    
+    [jobsLock lock];
+    
+	result = [finishedJobs containsObject:aJob];
+    [finishedJobs removeObject:aJob];
+		
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (void)removeAllFinishedJobs
+/*" Empties the list of finished jobs. "*/
+{
+    [jobsLock lock];
+    [finishedJobs removeAllObjects];
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+}
+
+// Handling pending jobs
+
++ (void)suspendPendingJobs
+/*" Suspends all pending jobs. Must be called from the main thread only! "*/
+{
+    [jobsLock lock];
+    
+    pendingJobsSuspended = YES;
+    
+    [jobsLock unlockWithCondition:OPNoPendingJobs];
+}
+
++ (void)resumePendingJobs
+/*" Resumes all pending jobs. Must be called from the main thread only! "*/
+{
+    [jobsLock lock];
+    
+    pendingJobsSuspended = NO;
+    
+    [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
+}
+
+// Statistics
+
++ (int)idleThreadCount
+/*" Returns the number of threads in idle state. "*/
+{
+    int result;
+    
+    [jobsLock lock];
+    result = [idleThreads count];    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (int)activeThreadCount
+/*" Returns the number of threads in active/running state. "*/
+{
+    int result;
+    
+    [jobsLock lock];
+    result = [activeThreads count];    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (NSArray *)pendingJobs
+/*" Returns the job ids of all pending jobs. "*/
+{
+	NSArray *result;
+	
+	[jobsLock lock];
+    result = [[pendingJobs copy] autorelease];    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+	
+	return result;
+}
+
++ (NSArray *)runningJobs
+/*" Returns the job ids of all running jobs. "*/
+{
+	NSArray *result;
+	
+	[jobsLock lock];
+    result = [[runningJobs copy] autorelease];    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+	
+	return result;
+}
+
++ (NSArray *)finishedJobs
+/*" Returns the job ids of all finished jobs. "*/
+{
+	NSArray *result;
+	
+	[jobsLock lock];
+    result = [[finishedJobs copy] autorelease];    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+	
+	return result;
+}
+
+/*
++ (NSArray *)runningJobsWithName:(NSString *)aName;
++ (NSArray *)pendingJobsWithName:(NSString *)aName;
++ (NSArray *)runningJobsWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject;
+*/
+
 - (NSObject *)result
 {
 	NSObject *rslt;
@@ -291,6 +407,7 @@ static NSString *OPJobKey = @"OPJob";
 	
 	return rslt;
 }
+
 
 - (void)setResult:(NSObject *)aResult
 {

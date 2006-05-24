@@ -54,7 +54,7 @@
     
 //     NSLog(@"decoded punycode: %@", [punycode punycodeDecodedString]);
     
-    shouldBeEqual(punycode, [[punycode punycodeDecodedString] punycodeEncodedString]);
+    NSAssert([punycode isEqual:[[punycode punycodeDecodedString] punycodeEncodedString]], @"not equal");
 }
 
 - (void) testIDNAEncoding
@@ -63,7 +63,7 @@
     
 //     NSLog(@"decoded IDNA: %@", [IDNAEncoded IDNADecodedDomainName]);
     
-    shouldBeEqual(IDNAEncoded, [[IDNAEncoded IDNADecodedDomainName] IDNAEncodedDomainName]);
+    NSAssert([IDNAEncoded isEqual:[[IDNAEncoded IDNADecodedDomainName] IDNAEncodedDomainName]], @"not equal");
 }
 
 /*

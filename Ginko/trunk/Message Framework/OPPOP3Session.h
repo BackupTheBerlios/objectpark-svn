@@ -42,6 +42,7 @@ typedef enum _OPPOP3State {
     @private NSString *_autosaveName;        /*" Name used for autosaving UIDLs "*/
     @private NSString *_username;            /*" The username for authentication "*/
     @private NSString *_password;            /*" The password for authentication "*/
+	@private NSDictionary *_capabilities;    /*" The capabilities for the session "*/
 }
 
 /*" Initialization "*/

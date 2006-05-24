@@ -114,7 +114,8 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     [_autosaveName release];
     [_username release];
     [_password release];
-    
+    [_capabilities release];
+	
     [super dealloc];
 }
 
@@ -147,12 +148,14 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
         [self _readOKForCommand:@"RSET"];
         [self _readOKForCommand:@"QUIT"];
         _state = UPDATE;
-    } else {
+    } 
+	else 
+	{
         _state = DIRTY_ABORTED;
     }
 }
 
-- (void) setShouldStop
+- (void)setShouldStop
 /*"Makes the currently running command abort gracefully (currently only used to abort the cleanup)."*/
 {
     _shouldStop = YES;
@@ -171,7 +174,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     _currentPosition = aPosition;
 }
 
-- (void) resetCurrentPosition
+- (void)resetCurrentPosition
 /*" Resets the current position to the first message in the mail drop. "*/
 {
     _currentPosition = 1;
@@ -183,6 +186,13 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     [self _gatherStatsIfNeeded];
     
     return _maildropSize;
+}
+
+- (NSDictionary *)capabilities
+{
+    [self _gatherStatsIfNeeded];
+	
+	return _capabilities;
 }
 
 - (NSString *)UIDLForPosition:(int)aPosition
@@ -865,6 +875,54 @@ UIDL. nil otherwise. "*/
     return [[NSDecimalNumber decimalNumberWithString:[[response componentsSeparatedByString:@" "] objectAtIndex:1]] intValue];
 }
 
+- (void)_getCapabilities
+{
+	if (! _capabilities)
+	{;
+		@try
+		{
+			[self _readOKForCommand:@"CAPA"];
+			
+			NSMutableDictionary *capabilities = [NSMutableDictionary dictionary];
+			
+			NSString *line;
+			do
+			{
+				line = [_stream availableLine];
+								
+				NSArray *components = [line componentsSeparatedByString:@" "];
+				
+				if ([components count]) 
+				{
+					if (NSDebugEnabled) NSLog(@"POP3 Capability: %@", line);
+					
+					NSString *key = [components objectAtIndex:0];
+					NSString *value = @"";
+					
+					if ([components count] > 1) 
+					{
+						int i;
+						
+						for (i = 1; i < [components count]; i++)
+						{
+							value = [value stringByAppendingFormat:@" %@", [components objectAtIndex:i]];
+						}
+					}
+					
+					[capabilities setObject:value forKey:key];
+				}
+			}
+			while (line);
+			
+			_capabilities = [capabilities copy];
+		}
+		@catch (NSException *localException)
+		{
+			NSLog(@"CAPA failed.");
+		}		
+	}
+}
+
 - (NSData *)_transferDataAtPosition:(int)position
 {
     NSData *transferData = nil;
@@ -915,6 +973,7 @@ UIDL. nil otherwise. "*/
         
         _maildropSize = [self _maildropSize];
         _currentPosition = [self _synchronizeUIDLs] + 1;
+		[self _getCapabilities];
         [self _addMessageSizesToMessageInfo];
     }
 }

@@ -31,7 +31,7 @@
 	
 	wrapper1 = [coder fileWrapper];
 	
-    shouldBeEqual([wrapper regularFileContents], [wrapper1 regularFileContents]);
+    NSAssert([[wrapper regularFileContents] isEqual:[wrapper1 regularFileContents]], @"not equal");
 	
 	attString = [coder attributedString];
 	
@@ -39,7 +39,7 @@
 	
 	attString1 = [coder attributedString];
 	
-	shouldBeEqual([attString string], [attString1 string]);
+	NSAssert([[attString string] isEqual:[attString1 string]], @"not equal");
 }
 
 @end
