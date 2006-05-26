@@ -30,6 +30,16 @@ static BOOL pendingJobsSuspended = NO;
 
 static NSString *OPJobKey = @"OPJob";
 
+NSString *JobProgressMinValue = @"OPJobProgressMinValue";
+NSString *JobProgressMaxValue = @"OPJobProgressMaxValue";
+NSString *JobProgressCurrentValue = @"OPJobProgressCurrentValue";
+NSString *JobProgressDescription = @"OPJobProgressDescription";
+NSString *JobProgressJob = @"OPJobProgressJob";
+
+NSString *JobWillStartNotification = @"OPJobWillStartNotification";
+NSString *JobDidFinishNotification = @"OPJobDidFinishNotification";
+NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotification";
+
 + (void)initialize
 {
     jobsLock = [[NSConditionLock alloc] initWithCondition:OPNoPendingJobs];
@@ -42,6 +52,39 @@ static NSString *OPJobKey = @"OPJob";
     activeThreads = [[NSMutableArray alloc] init];
     
     synchronizedObjects = [[NSMutableSet alloc] init];
+}
+
+// Worker Threads
++ (BOOL)setMaxThreads:(unsigned)newMax
+/*" Sets a new maximum number of worker threads. Lower bound is the current count of created worker threads. Returns YES if the maximum could be set. NO otherwise. "*/
+{
+    BOOL result = NO;
+    
+    [jobsLock lock];
+	
+    if (newMax >= [activeThreads count])
+    {
+        result = YES;
+        maxThreads = newMax;
+    }
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
+}
+
++ (unsigned)maxThreads
+/*" Returns the maximum number of worker threads that may be used. "*/
+{
+    unsigned result;
+    
+    [jobsLock lock];
+    
+    result = maxThreads;
+    
+    [jobsLock unlockWithCondition:[jobsLock condition]];
+    
+    return result;
 }
 
 - (id)initWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector argument:(NSObject <NSCopying> *)anArgument synchronizedObject:(NSObject <NSCopying> *)aSynchronizedObject
@@ -67,6 +110,7 @@ static NSString *OPJobKey = @"OPJob";
 	[target release];
 	[argument release];
 	[synchronizedObject release];
+	[progressInfo release];
 	
 	[super dealloc];
 }
@@ -74,6 +118,11 @@ static NSString *OPJobKey = @"OPJob";
 - (NSObject <NSCopying> *)synchronizedObject
 {
 	return synchronizedObject;
+}
+
+- (NSString *)name
+{
+	return [[name copy] autorelease]; 
 }
 
 - (NSObject <NSCopying> *)argument
@@ -99,6 +148,32 @@ static NSString *OPJobKey = @"OPJob";
 		[exception release];
 		exception = anException;
 	}
+}
+
+- (id)exception
+/*" Returns the exception for the receiver. nil, if no exception was set. "*/
+{
+	NSException *rslt;
+	
+	@synchronized(self) 
+	{
+		rslt = [[exception copy] autorelease];
+	}
+	
+	return rslt;
+}
+
+- (NSDictionary *)progressInfo
+/*" Returns the progress info dictionary for the job denoted by anJobId. nil, if no progress info was set. See #{NSDictinary (OPJobsExtensions)} for easy job progress info access. "*/
+{
+	NSDictionary *rslt;
+	
+	@synchronized(self)
+	{
+		rslt = [[progressInfo copy] autorelease];
+	}
+	
+	return rslt;
 }
 
 + (OPJob *)nextEligibleJob
@@ -235,8 +310,10 @@ static NSString *OPJobKey = @"OPJob";
 			{
                 // do job here:
 				[[[NSThread currentThread] threadDictionary] setObject:job forKey:OPJobKey];
-				                				
-                [self performSelectorOnMainThread:@selector(noteJobWillStart:) withObject:job waitUntilDone:NO];
+				                			
+				NSNotification *jobWillStartNotification = [NSNotification notificationWithName:JobWillStartNotification object:job];
+				
+                [self postNotificationInMainThread:jobWillStartNotification];
                 
                 [[job target] performSelector:[job selector] withObject:[job argument]];
             } 
@@ -255,8 +332,10 @@ static NSString *OPJobKey = @"OPJob";
                 [finishedJobs addObject:job];
                 [runningJobs removeObject:job];
 				
-                [self performSelectorOnMainThread:@selector(noteJobDidFinish:) withObject:job waitUntilDone:NO];
-                
+				NSNotification *jobDidFinishNotification = [NSNotification notificationWithName:JobDidFinishNotification object:job];
+				
+                [self postNotificationInMainThread:jobDidFinishNotification];
+				                
                 // try to get next job:
                 job = [self nextPendingJobUnlockingSynchronizedObject:[job synchronizedObject]];
                 
@@ -328,6 +407,22 @@ static NSString *OPJobKey = @"OPJob";
     [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
 }
 
++ (BOOL)cancelPendingJob:(OPJob *)aJob
+/*" Cancels the pending job aJob. Returns YES if job could be cancelled, NO otherwise. "*/
+{
+    BOOL result;
+    
+    [jobsLock lock];
+    
+	result = [pendingJobs containsObject:aJob];
+    [pendingJobs removeObject:aJob];
+    
+    [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
+    
+    return result;
+}
+
+
 // Statistics
 
 + (int)idleThreadCount
@@ -390,11 +485,94 @@ static NSString *OPJobKey = @"OPJob";
 	return result;
 }
 
-/*
-+ (NSArray *)runningJobsWithName:(NSString *)aName;
-+ (NSArray *)pendingJobsWithName:(NSString *)aName;
-+ (NSArray *)runningJobsWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject;
-*/
++ (NSArray *)jobsWithValue:(NSObject *)aValue forKey:(NSString *)aKey inArray:(NSArray *)anArray
+{
+	NSMutableArray *result = [NSMutableArray array];
+	
+	[jobsLock lock];
+	NSEnumerator *enumerator = [anArray objectEnumerator];
+	OPJob *job;
+	
+	while (job = [enumerator nextObject])
+	{
+		if ([[job valueForKey:aKey] isEqual:aValue])
+		{
+			[result addObject:job];
+		}
+	}
+	
+	[jobsLock unlockWithCondition:[jobsLock condition]];
+	
+	return result;
+}
+
++ (NSArray *)runningJobsWithName:(NSString *)aName
+/*" Returns running jobs with the given name aName. "*/
+{
+	return [self jobsWithValue:aName forKey:@"name" inArray:runningJobs];
+}
+
++ (NSArray *)pendingJobsWithName:(NSString *)aName
+/*" Returns pending jobs with the given name aName. "*/
+{
+	return [self jobsWithValue:aName forKey:@"name" inArray:pendingJobs];
+}
+
++ (NSArray *)runningJobsWithSynchronizedObject:(NSObject <NSCopying> *)aSynchronizedObject
+/*" Returns running jobs with the given synchronized object aSynchronizedObject. "*/
+{
+	return [self jobsWithValue:aSynchronizedObject forKey:@"synchronizedObject" inArray:runningJobs];
+}
+
+// Job state accessors
+- (BOOL)isPending
+/*" Returns YES if the job denoted by anJobId is currently pending. NO otherwise. "*/
+{
+	BOOL rslt;
+	
+	[jobsLock lock];
+	rslt = [pendingJobs containsObject:self];
+	[jobsLock unlockWithCondition:[jobsLock condition]];
+	
+	return rslt;
+}
+
+- (BOOL)isRunning
+/*" Returns YES if the job denoted by anJobId is currently running. NO otherwise. "*/
+{
+	BOOL rslt;
+	
+	[jobsLock lock];
+	rslt = [runningJobs containsObject:self];
+	[jobsLock unlockWithCondition:[jobsLock condition]];
+	
+	return rslt;
+}
+
+- (BOOL)isFinished
+/*" Returns YES if the job denoted by anJobId is in the list of finished jobs. NO otherwise. "*/
+{
+	BOOL rslt;
+	
+	[jobsLock lock];
+	rslt = [finishedJobs containsObject:self];
+	[jobsLock unlockWithCondition:[jobsLock condition]];
+	
+	return rslt;
+}
+
+- (BOOL)isTerminating
+/*" Returns YES if the running job with the id anJobId has been suggested to terminate. "*/
+{
+	BOOL rslt;
+	
+	@synchronized(self)
+	{
+		rslt = shouldTerminate;
+	}
+	
+	return rslt;
+}
 
 - (NSObject *)result
 {
@@ -439,6 +617,54 @@ static NSString *OPJobKey = @"OPJob";
 	{
 		shouldTerminate = YES;
 	}
+}
+
++ (void)postNotificationInMainThread:(NSNotification *)aNotification
+/*" Helper for jobs. Posts a notification in main thread. "*/
+{
+    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:aNotification waitUntilDone:NO];
+}
+
+- (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription
+{
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSNumber numberWithDouble:aMinValue], JobProgressMinValue,
+        [NSNumber numberWithDouble:aMaxValue], JobProgressMaxValue,
+        [NSNumber numberWithDouble:currentValue], JobProgressCurrentValue,
+        aDescription, JobProgressDescription,
+        self, JobProgressJob,
+        nil, nil];
+}
+
+- (NSDictionary *)indeterminateProgressInfoWithDescription:(NSString *)aDescription
+{
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+        aDescription, JobProgressDescription,
+        self, JobProgressJob,
+        nil, nil];
+}
+
+- (void)setProgressInfo:(NSDictionary *)aProgressInfo
+/*" Sets the progress info for the calling job. "*/
+{
+	BOOL wasSet = NO;
+	
+	@synchronized(self)
+	{
+		if (! [progressInfo isEqual:aProgressInfo])
+		{
+			[progressInfo release];
+			progressInfo = [progressInfo copy];
+			wasSet = YES;
+		}
+	}
+    
+    if (wasSet) 
+    {
+		NSNotification *notification = [NSNotification notificationWithName:JobDidSetProgressInfoNotification object:self userInfo:[NSDictionary dictionaryWithObject:progressInfo forKey:@"progressInfo"]];
+		
+		[[self class] postNotificationInMainThread:notification];
+    }
 }
 
 @end

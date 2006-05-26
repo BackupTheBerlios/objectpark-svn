@@ -54,6 +54,8 @@
 		771CD4BC09F8C7B20062BEED /* prop.h in Headers */ = {isa = PBXBuildFile; fileRef = 771CD4BA09F8C7B20062BEED /* prop.h */; };
 		771CD4BD09F8C7B20062BEED /* sasl.h in Headers */ = {isa = PBXBuildFile; fileRef = 771CD4BB09F8C7B20062BEED /* sasl.h */; };
 		771CD5EE09F90D020062BEED /* saslutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 771CD5ED09F90D020062BEED /* saslutil.h */; };
+		771F9F5A0A27393A00937F89 /* TestOPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 771F9F580A27393A00937F89 /* TestOPJob.h */; };
+		771F9F5B0A27393A00937F89 /* TestOPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 771F9F590A27393A00937F89 /* TestOPJob.m */; };
 		77253D6307ECB83E00375AFC /* OPMessageConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */; };
 		77253D6407ECB83E00375AFC /* OPMessageConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77253D6007ECB83E00375AFC /* OPMessageConsumer.m */; };
 		77253D6507ECB83E00375AFC /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */; };
@@ -480,6 +482,8 @@
 		771CD4BA09F8C7B20062BEED /* prop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = prop.h; sourceTree = "<group>"; };
 		771CD4BB09F8C7B20062BEED /* sasl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sasl.h; sourceTree = "<group>"; };
 		771CD5ED09F90D020062BEED /* saslutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = saslutil.h; sourceTree = "<group>"; };
+		771F9F580A27393A00937F89 /* TestOPJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPJob.h; sourceTree = "<group>"; };
+		771F9F590A27393A00937F89 /* TestOPJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPJob.m; sourceTree = "<group>"; };
 		77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPMessageConsumer.h; sourceTree = "<group>"; };
 		77253D6007ECB83E00375AFC /* OPMessageConsumer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPMessageConsumer.m; sourceTree = "<group>"; };
 		77253D6107ECB83E00375AFC /* OPSMTP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPSMTP.h; sourceTree = "<group>"; };
@@ -1046,6 +1050,8 @@
 			children = (
 				77DFA5C70840B49C0068AD15 /* TestOPJobs.h */,
 				77DFA5C80840B49C0068AD15 /* TestOPJobs.m */,
+				771F9F580A27393A00937F89 /* TestOPJob.h */,
+				771F9F590A27393A00937F89 /* TestOPJob.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1578,6 +1584,7 @@
 				771CD5EE09F90D020062BEED /* saslutil.h in Headers */,
 				8D61A4050A0F6E1300AB7C35 /* NSWindow+RecentPositions.h in Headers */,
 				77B07A3F0A22F9CA009773FB /* OPJob.h in Headers */,
+				771F9F5A0A27393A00937F89 /* TestOPJob.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1960,6 +1967,7 @@
 				771CD4B809F8C77C0062BEED /* OPSASL.m in Sources */,
 				8D61A4060A0F6E1300AB7C35 /* NSWindow+RecentPositions.m in Sources */,
 				77B07A400A22F9CA009773FB /* OPJob.m in Sources */,
+				771F9F5B0A27393A00937F89 /* TestOPJob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,6 +20,7 @@
 	NSObject <NSCopying> *synchronizedObject;
 	NSException *exception;
 	NSObject *result;
+	NSDictionary *progressInfo;
 	BOOL shouldTerminate;
 }
 
@@ -40,11 +41,14 @@
 
 + (NSArray *)runningJobsWithName:(NSString *)aName;
 + (NSArray *)pendingJobsWithName:(NSString *)aName;
-+ (NSArray *)runningJobsWithSynchronizedObject:(id <NSCopying>)aSynchronizedObject;
++ (NSArray *)runningJobsWithSynchronizedObject:(NSObject <NSCopying> *)aSynchronizedObject;
+
+- (NSString *)name;
 
 /*" Handling pending jobs "*/
 + (void)suspendPendingJobs;
 + (void)resumePendingJobs;
++ (BOOL)cancelPendingJob:(OPJob *)aJob;
 
 /*" Handling finished jobs "*/
 + (BOOL)removeFinishedJob:(OPJob *)aJob;
@@ -57,7 +61,6 @@
 - (BOOL)isTerminating;
 
 /*" Job operations "*/
-- (BOOL)cancel;
 - (NSObject *)result;
 - (id)exception;
 - (void)suggestTerminating;
@@ -65,12 +68,12 @@
 
 /*" Methods for use within jobs "*/
 + (OPJob *)job;
+- (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription;
+- (NSDictionary *)indeterminateProgressInfoWithDescription:(NSString *)aDescription;
 - (void)setResult:(NSObject *)aResult;
 - (BOOL)shouldTerminate;
 - (NSString *)name;
-- (void)postNotificationInMainThreadWithName:(NSString *)aNotificationName andUserInfo:(NSMutableDictionary *)userInfo;
-- (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription;
-- (NSDictionary *)indeterminateProgressInfoWithDescription:(NSString *)aDescription;
++ (void)postNotificationInMainThread:(NSNotification *)aNotification;
 - (void)setProgressInfo:(NSDictionary *)progressInfo;
 
 @end
