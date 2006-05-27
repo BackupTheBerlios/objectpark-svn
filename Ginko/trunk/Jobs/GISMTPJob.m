@@ -7,7 +7,7 @@
 //
 
 #import "GISMTPJob.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "GIAccount.h"
 #import <OPDebug/OPLog.h>
 #import <OPNetwork/OPNetwork.h>
@@ -23,7 +23,8 @@
 
 - (void)authenticateViaPOP:(GIAccount *)anAccount
 {
-    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat:NSLocalizedString(@"authorization 'SMTP after POP' with %@", @"progress description in SMTP job"), [anAccount incomingServerName]]]];
+	OPJob *job = [OPJob job];
+    [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"authorization 'SMTP after POP' with %@", @"progress description in SMTP job"), [anAccount incomingServerName]]]];
 
     NSHost *host = [NSHost hostWithName:[anAccount incomingServerName]];
     [host name]; // I remember that was important, but I can't remember why
@@ -74,7 +75,7 @@
     GIAccount *theAccount = [[account retain] autorelease];
     NSArray *theMessages = [[messages retain] autorelease];
     NSMutableArray *sentMessages = [NSMutableArray array];
-    
+    OPJob *job = [OPJob job];
     // is theAccount an SMTP after POP account?
     if ([theAccount outgoingAuthenticationMethod] == SMTPAfterPOP) 
     {
@@ -87,7 +88,7 @@
     
     if ([host isReachableWithNoStringsAttached]) {
         // connecting to host:
-        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), [theAccount outgoingServerName], [theAccount outgoingServerPort]]]];
+        [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), [theAccount outgoingServerName], [theAccount outgoingServerPort]]]];
         
         OPStream *stream = [OPStream streamConnectedToHost: host
                                                       port: [theAccount outgoingServerPort]
@@ -98,10 +99,10 @@
         
         @try {
             // logging into POP server:
-            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), [theAccount outgoingServerName]]]];
+            [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), [theAccount outgoingServerName]]]];
             
-            OPSMTP* SMTP = [[[OPSMTP alloc] initWithStream: stream andDelegate: self] autorelease];
-            NSEnumerator* enumerator = [theMessages objectEnumerator];
+            OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
+            NSEnumerator *enumerator = [theMessages objectEnumerator];
             
             // sending messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -109,7 +110,7 @@
                 GIMessage *message;
                 
                 while (message = [enumerator nextObject]) {
-                    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
+                    [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
                     
                     @try {
                         [SMTP sendMessage:[message internetMessage]];
@@ -127,13 +128,13 @@
                 @throw;
             } @finally {
                 [pool release];
-                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: [NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
+                [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
                 [SMTP quit];
             }
         } @catch (NSException *localException) {
             @throw;
         } @finally {
-            [OPJobs setResult: [NSDictionary dictionaryWithObjectsAndKeys:
+            [job setResult:[NSDictionary dictionaryWithObjectsAndKeys:
                 sentMessages, @"sentMessages",
                 theMessages, @"messages",
                 nil, nil]];
@@ -169,12 +170,12 @@
 {
     NSParameterAssert([someMessages count]);
     NSParameterAssert(anAccount != nil);
-    
-	if ([[OPJobs runningJobsWithSynchronizedObject:[anAccount outgoingServerName]] count] == 0)
+	
+	if ([[OPJob runningJobsWithSynchronizedObject:[anAccount outgoingServerName]] count] == 0)
 	{
 		NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
 		
-		[OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) argument:jobArguments synchronizedObject:[anAccount outgoingServerName]];
+		[OPJob scheduleJobWithName:[self jobName] target:[[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease] selector:@selector(sendMessagesViaSMTPAccountJob:) argument:jobArguments synchronizedObject:[anAccount outgoingServerName]];
 	}
 }
 
@@ -199,7 +200,7 @@
         NSString *password = [account outgoingPassword];
 		if (![password length]) 
 		{
-			password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:NO];
+			password = [[[[OPJob alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:NO];
 		}
 		return password;
     }

@@ -19,7 +19,7 @@
 #import "OPMBoxFile.h"
 #import "GIMessage.h"
 #import "NSData+MessageUtils.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "OPFaultingArray.h"
 
 
@@ -598,24 +598,25 @@ static NSMutableArray* root = nil;
 	[threads updateSortObjectForObject: thread];
 }
 
-- (void) exportAsMboxFileWithPath:(NSString*)path
+- (void)exportAsMboxFileWithPath:(NSString *)path
 {
     OPDebugLog(MESSAGEGROUP, EXPORT_FILE, @"Exporting mbox '%@' to file at %@", [self valueForKey: @"name"], path);
+    OPJob *job = [OPJob job];
+    OPMBoxFile *mbox = [OPMBoxFile mboxWithPath: path createIfNotPresent: YES];
     
-    OPMBoxFile* mbox = [OPMBoxFile mboxWithPath: path createIfNotPresent: YES];
-    
-    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"determining messages in group '%@'", @"mbox export, determining messages"), [self valueForKey: @"name"]]]];
-	NSArray* allMessages = [self allMessages];
+    [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"determining messages in group '%@'", @"mbox export, determining messages"), [self valueForKey: @"name"]]]];
+	NSArray *allMessages = [self allMessages];
     unsigned int messagesToExport = [allMessages count];
-    NSEnumerator* messages = [allMessages objectEnumerator];
-    GIMessage* msg;
+    NSEnumerator *messages = [allMessages objectEnumerator];
+    GIMessage *msg;
     int exportedMessages = 0;
     
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-    [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue:0 maxValue: messagesToExport currentValue: exportedMessages description: [NSString stringWithFormat: NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
-    while (msg = [messages nextObject]) {
-        NSData* transferData = [[msg transferData] fromQuote];
+    [job setProgressInfo:[job progressInfoWithMinValue:0 maxValue: messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey:@"name"]]]];
+    while (msg = [messages nextObject]) 
+	{
+        NSData *transferData = [[msg transferData] fromQuote];
 		if (transferData) {
 			NSString* head;
 			head = [NSString stringWithFormat: @"From %@\r\nX-Ginko-Flags: %@\r\n",
@@ -629,10 +630,10 @@ static NSMutableArray* root = nil;
 			[msg refault];
 			
 			if (++exportedMessages % 100 == 0) {
-				[OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue: exportedMessages description: [NSString stringWithFormat: NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
+				[job setProgressInfo: [job progressInfoWithMinValue:0 maxValue:messagesToExport currentValue: exportedMessages description: [NSString stringWithFormat: NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
 				OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
 				
-				if ([OPJobs shouldTerminate])
+				if ([job shouldTerminate])
 					break;
 				
 				[pool release]; pool = [[NSAutoreleasePool alloc] init];
@@ -642,7 +643,7 @@ static NSMutableArray* root = nil;
     
     [pool release];
     
-    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
+    [job setProgressInfo:[job progressInfoWithMinValue:0 maxValue:messagesToExport currentValue:exportedMessages description:[NSString stringWithFormat:NSLocalizedString(@"exporting '%@'", @"mbox export, exporting"), [self valueForKey: @"name"]]]];
     OPDebugLog(MESSAGEGROUP, EXPORT_PROGRESS, @"%d messages exported", exportedMessages);
     
 	// [OPJobs setResult:@"ready"];

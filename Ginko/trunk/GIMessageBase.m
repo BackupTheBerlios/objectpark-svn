@@ -15,7 +15,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIFulltextIndex.h"
 #import "NSData+MessageUtils.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "GIMessageFilter.h"
 #import "OPPOP3Session.h"
 #import "NSApplication+OPExtensions.h"
@@ -168,15 +168,18 @@ NSString* MboxImportJobName = @"mbox import";
     unsigned mboxDataCount = 0;
     unsigned addedMessageCount = 0;
         
-    [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 0 
-													 maxValue: mboxFileSize 
-												 currentValue: [enumerator offsetOfNextObject] 
-												  description: @""]];
-    NSAutoreleasePool* pool = nil;
-    @try {
+	OPJob *job = [OPJob job];
+	
+    [job setProgressInfo:[job progressInfoWithMinValue:0 
+											  maxValue:mboxFileSize 
+										  currentValue:[enumerator offsetOfNextObject] 
+										   description:@""]];
+    NSAutoreleasePool *pool = nil;
+    @try 
+	{
         pool = [[NSAutoreleasePool alloc] init];
         
-        while ((mboxData = [enumerator nextObject]) && ![OPJobs shouldTerminate]) {
+        while ((mboxData = [enumerator nextObject]) && ![job shouldTerminate]) {
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
             
@@ -243,7 +246,7 @@ NSString* MboxImportJobName = @"mbox import";
                 
 				// Report only when percentage changes:
                 if (timeIsRipe || (newPercentComplete > percentComplete)) {
-                    [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 0 maxValue: mboxFileSize currentValue: [enumerator offsetOfNextObject] description: [mboxFilePath lastPathComponent]]];
+                    [job setProgressInfo:[job progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:[mboxFilePath lastPathComponent]]];
                     
                     percentComplete = newPercentComplete;
                     [lastProgressSet release];
@@ -273,7 +276,7 @@ NSString* MboxImportJobName = @"mbox import";
         [pool release];
     }
     
-    if ([OPJobs shouldTerminate])
+    if ([job shouldTerminate])
         return;
         
     // move imported mbox to imported boxes:

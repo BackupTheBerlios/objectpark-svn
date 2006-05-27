@@ -26,8 +26,6 @@
 		30450D81091051910085A02F /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
 		3083577209A015DE003D1D86 /* TestPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE38FC08940F4000F705EF /* TestPersistence.m */; };
 		3083577309A015E0003D1D86 /* TestPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE38FB08940F4000F705EF /* TestPersistence.h */; };
-		3083577809A01639003D1D86 /* TestOPJobs.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DFA5C70840B49C0068AD15 /* TestOPJobs.h */; };
-		3083577A09A0163A003D1D86 /* TestOPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5C80840B49C0068AD15 /* TestOPJobs.m */; };
 		30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5553B093D148F00BCACCB /* OPDebug.framework */; };
 		30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5555D093D1C2500BCACCB /* OPPreferences.framework */; };
 		30F74C7609994E120026B4A8 /* TestGIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 30F74C7409994E120026B4A8 /* TestGIMessage.h */; };
@@ -182,8 +180,6 @@
 		77DA79AA097B95E900B7A5CC /* GIFulltextIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DA79A8097B95E900B7A5CC /* GIFulltextIndex.m */; };
 		77DF88290849BB6D006CA19D /* NSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DF88270849BB6D006CA19D /* NSData+MessageUtils.h */; };
 		77DF882A0849BB6D006CA19D /* NSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DF88280849BB6D006CA19D /* NSData+MessageUtils.m */; };
-		77DFA5BF08409DF00068AD15 /* OPJobs.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DFA5BD08409DF00068AD15 /* OPJobs.h */; };
-		77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DFA5BE08409DF00068AD15 /* OPJobs.m */; };
 		77E5401D0785839D00265DBB /* GIApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D9E8A8306AC44080055F87C /* GIApplication.h */; };
 		77E541AF0785AB9D00265DBB /* Boxes.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77E541AE0785AB9D00265DBB /* Boxes.nib */; };
 		77EF03D207DC4AF9007CD721 /* GroupInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */; };
@@ -613,10 +609,6 @@
 		77DE91A707C6691C008E3C09 /* TestEDTextFieldCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestEDTextFieldCoder.m; sourceTree = "<group>"; };
 		77DF88270849BB6D006CA19D /* NSData+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSData+MessageUtils.h"; sourceTree = "<group>"; };
 		77DF88280849BB6D006CA19D /* NSData+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSData+MessageUtils.m"; sourceTree = "<group>"; };
-		77DFA5BD08409DF00068AD15 /* OPJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPJobs.h; sourceTree = "<group>"; };
-		77DFA5BE08409DF00068AD15 /* OPJobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPJobs.m; sourceTree = "<group>"; };
-		77DFA5C70840B49C0068AD15 /* TestOPJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPJobs.h; sourceTree = "<group>"; };
-		77DFA5C80840B49C0068AD15 /* TestOPJobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPJobs.m; sourceTree = "<group>"; };
 		77E05AA2088D64FB0008FC96 /* GIFilteredThreads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFilteredThreads.h; sourceTree = "<group>"; };
 		77E05AA3088D64FB0008FC96 /* GIFilteredThreads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFilteredThreads.m; sourceTree = "<group>"; };
 		77E541AE0785AB9D00265DBB /* Boxes.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Boxes.nib; sourceTree = "<group>"; };
@@ -1048,8 +1040,6 @@
 		775A96DE0839D5C2008EC276 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				77DFA5C70840B49C0068AD15 /* TestOPJobs.h */,
-				77DFA5C80840B49C0068AD15 /* TestOPJobs.m */,
 				771F9F580A27393A00937F89 /* TestOPJob.h */,
 				771F9F590A27393A00937F89 /* TestOPJob.m */,
 			);
@@ -1128,8 +1118,6 @@
 				77049FE70858570800253732 /* GIPOPJob.m */,
 				774791BB085DF0150001560D /* GISMTPJob.h */,
 				774791BC085DF0150001560D /* GISMTPJob.m */,
-				77DFA5BD08409DF00068AD15 /* OPJobs.h */,
-				77DFA5BE08409DF00068AD15 /* OPJobs.m */,
 				7790BB9C0962F7F900988B3C /* GIFulltextIndexJob.h */,
 				7790BB9D0962F7F900988B3C /* GIFulltextIndexJob.m */,
 			);
@@ -1528,7 +1516,6 @@
 				8DDD227F080ECA4A006C902D /* GIFiltersPane.h in Headers */,
 				8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */,
 				77B28DB3082E8A72007FA384 /* OPTableColumn.h in Headers */,
-				77DFA5BF08409DF00068AD15 /* OPJobs.h in Headers */,
 				775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */,
 				77DF88290849BB6D006CA19D /* NSData+MessageUtils.h in Headers */,
 				772F2941084F82BA004D50E0 /* TestOPMultipartContentCoder.h in Headers */,
@@ -1570,7 +1557,6 @@
 				774DD4260994AC0C00F0A922 /* TestGIThread.h in Headers */,
 				30F74C7609994E120026B4A8 /* TestGIMessage.h in Headers */,
 				3083577309A015E0003D1D86 /* TestPersistence.h in Headers */,
-				3083577809A01639003D1D86 /* TestOPJobs.h in Headers */,
 				8D0EC28209A22577004563D4 /* NSString+Similarities.h in Headers */,
 				77AA32BE09B8896900D90C6A /* OPSMTP+InternetMessage.h in Headers */,
 				77F01CF309D299E2007C4CA5 /* GIHeaderFieldEditor.h in Headers */,
@@ -1916,7 +1902,6 @@
 				8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */,
 				8DD6030D080EDD470050E973 /* GIFiltersPane.m in Sources */,
 				77B28DB4082E8A72007FA384 /* OPTableColumn.m in Sources */,
-				77DFA5C008409DF00068AD15 /* OPJobs.m in Sources */,
 				775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */,
 				77DF882A0849BB6D006CA19D /* NSData+MessageUtils.m in Sources */,
 				772F2942084F82BA004D50E0 /* TestOPMultipartContentCoder.m in Sources */,
@@ -1955,7 +1940,6 @@
 				774DD4270994AC0E00F0A922 /* TestGIThread.m in Sources */,
 				30F74C7709994E120026B4A8 /* TestGIMessage.m in Sources */,
 				3083577209A015DE003D1D86 /* TestPersistence.m in Sources */,
-				3083577A09A0163A003D1D86 /* TestOPJobs.m in Sources */,
 				8D0EC28309A22577004563D4 /* NSString+Similarities.m in Sources */,
 				77AA32BF09B8896900D90C6A /* OPSMTP+InternetMessage.m in Sources */,
 				7729F54E09C6ED9E002491A6 /* utils.m in Sources */,

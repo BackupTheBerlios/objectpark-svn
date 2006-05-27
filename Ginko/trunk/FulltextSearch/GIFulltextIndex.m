@@ -13,7 +13,7 @@
 #import "NSString+Extensions.h"
 #import "GIMessage.h"
 #import "OPPersistentObject+Extensions.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import <OPDebug/OPLog.h>
 #import "GIUserDefaultsKeys.h"
 #import "OPPersistence.h"
@@ -561,7 +561,8 @@
 
 + (void)addMessages:(OPFaultingArray *)someMessages
 {
-    @synchronized(self) {
+    @synchronized(self) 
+	{
         int counter = 0;
         int maxCount = [someMessages count];
         JNIEnv *env = [self jniEnv];
@@ -571,49 +572,63 @@
         NSAssert(indexWriter != NULL, @"IndexWriter could not be created.");
         NSEnumerator *messageEnumerator = [someMessages objectEnumerator];
         
-        @try {
+        @try 
+		{
             pool = [[NSAutoreleasePool alloc] init];
             BOOL shouldTerminate = NO;
             GIMessage *message;
 
-            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) {
+            while ((message = [messageEnumerator nextObject]) && (!shouldTerminate)) 
+			{
                 GIThread *thread = [message thread];
                 
-				if (![message isDummy] && [thread resolveFault]) {
+				if (![message isDummy] && [thread resolveFault]) 
+				{
 					if ((*env)->PushLocalFrame(env, 250) < 0) {NSLog(@"Lucene out of memory!"); return;};
+					OPJob *job = [OPJob job];
 					
-					@try {
+					@try 
+					{
 						jobject doc = [self luceneDocumentFromMessage:message];
 						counter += 1;
 						
 						//NSLog(@"indexed document no = %d\n", counter);
-						
-						[OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
+						[job setProgressInfo:[job progressInfoWithMinValue:(double)0 maxValue:(double)maxCount currentValue:(double)counter description:NSLocalizedString(@"adding to fulltext index", @"progress description in fulltext index job")]];
 						
 						[self indexWriter:indexWriter addDocument:doc];
                         
-						if ((counter % 5000) == 0) {
-							[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
+						if ((counter % 5000) == 0) 
+						{
+							[job setProgressInfo:[job indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
 							[self indexWriterOptimize:indexWriter];
 							[self addChangeCount:-5000];
 						}
                         
-						[message setValue: yesNumber forKey: @"isFulltextIndexed"];
-					} @catch (NSException* localException) {
+						[message setValue:yesNumber forKey:@"isFulltextIndexed"];
+					} @catch (NSException *localException) 
+					{
 						@throw localException;
-					} @finally {
+					} 
+					@finally 
+					{
 						(*env)->PopLocalFrame(env, NULL);
 						[pool release];
 						pool = [[NSAutoreleasePool alloc] init];
-						shouldTerminate = [OPJobs shouldTerminate];
+						shouldTerminate = [job shouldTerminate];
 					}
-				} else {
-					[message setValue: yesNumber forKey: @"isFulltextIndexed"];
+				} 
+				else 
+				{
+					[message setValue:yesNumber forKey:@"isFulltextIndexed"];
 				}
 			}
-        } @catch (NSException *localException) {
+        } 
+		@catch (NSException *localException) 
+		{
             @throw localException;
-        } @finally {
+        } 
+		@finally 
+		{
             [self addChangeCount:counter];
             [self indexWriterClose:indexWriter];
             [pool release];
@@ -768,7 +783,8 @@
             jobject indexReader = [self indexReaderOpen:javaIndexPath];             
             NSAssert(indexReader != NULL, @"Could not create Lucene index reader.");
             int removedCount = 0;
-            
+			OPJob *job = [OPJob job];
+
             @try 
             {
                 BOOL shouldTerminate = NO;
@@ -806,8 +822,7 @@
                             [message setValue:nil forKey:@"isFulltextIndexed"];
                         }
                         
-                        [OPJobs setProgressInfo: [OPJobs progressInfoWithMinValue: 1.0 maxValue: (double) maxCount currentValue: (double) removedCount description: NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
-                        
+                        [job setProgressInfo:[job progressInfoWithMinValue:1.0 maxValue:(double)maxCount currentValue:(double)removedCount description:NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
                     } 
                     @catch (NSException * localException) 
                     {
@@ -816,7 +831,7 @@
                     @finally 
                     {
                         (*env)->PopLocalFrame(env, NULL);
-                        shouldTerminate = [OPJobs shouldTerminate];
+                        shouldTerminate = [job shouldTerminate];
                     }
                     [someMessages removeLastObject];
                 }
@@ -1109,11 +1124,12 @@
 {
 	OPFaultingArray *messagesToAdd = nil;
 	OPFaultingArray *messagesToRemove = nil;
+	OPJob *job = [OPJob job];
 	
     if (![arguments count]) 
 	{
 		// no messages supplied, try to find some:
-		[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"searching for messages needing fulltext indexing", @"progress description in fulltext index job")]];
+		[job setProgressInfo:[job indeterminateProgressInfoWithDescription:NSLocalizedString(@"searching for messages needing fulltext indexing", @"progress description in fulltext index job")]];
 		messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000];
 		messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250];
 	}
@@ -1125,7 +1141,7 @@
 
 	if ([messagesToAdd count] || [messagesToRemove count])
 	{
-		[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+		[job setProgressInfo:[job indeterminateProgressInfoWithDescription: NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
 		
 		// messages to add:
 		if ([messagesToAdd count]) [GIFulltextIndex addMessages:messagesToAdd];
@@ -1133,18 +1149,18 @@
 		// messages to remove:
 		if ([messagesToRemove count]) [GIFulltextIndex removeMessages:messagesToRemove];
 		
-		if (([GIFulltextIndex changeCount] >= 5000) && (![OPJobs shouldTerminate])) 
+		if (([GIFulltextIndex changeCount] >= 5000) && (![job shouldTerminate])) 
 		{
-			[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
+			[job setProgressInfo:[job indeterminateProgressInfoWithDescription:NSLocalizedString(@"optimizing fulltext index", @"progress description in fulltext index job")]];
 			[GIFulltextIndex optimize];
 		}
 		
-		[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
+		[job setProgressInfo:[job indeterminateProgressInfoWithDescription:NSLocalizedString(@"fulltext indexing", @"progress description in fulltext index job")]];
 		
 		[[OPPersistentObjectContext defaultContext] saveChanges];
 		
 		// note that some messages were indexed:
-		[OPJobs setResult:[NSNumber numberWithBool:YES]];
+		[job setResult:[NSNumber numberWithBool:YES]];
 	}
 }
 
@@ -1161,7 +1177,7 @@
     if ([messagesToAdd count]) [jobArguments setObject:messagesToAdd forKey:@"messagesToAdd"];
     if ([messagesToRemove count]) [jobArguments setObject:messagesToRemove forKey:@"messagesToRemove"];
     
-	[OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
+	[OPJob scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
 }
 
 + (void)resetIndex

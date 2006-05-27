@@ -17,7 +17,7 @@
 #import "GIGroupInspectorController.h"
 #import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "GIOutlineViewWithKeyboardSupport.h"
 #import "GIMessageBase.h"
 #import "NSString+Extensions.h"
@@ -75,12 +75,12 @@
 		
 		[nc addObserver: self 
 			   selector: @selector(jobStarted:) 
-				   name: OPJobWillStartNotification 
+				   name: JobWillStartNotification 
 				 object: nil];
 		
 		[nc addObserver: self 
 			   selector: @selector(jobFinished:) 
-				   name: OPJobDidFinishNotification 
+				   name: JobDidFinishNotification 
 				 object: nil];
         
         [nc addObserver: self 
@@ -134,7 +134,7 @@
 
 - (void)jobFinished:(NSNotification *)aNotification
 {
-	unsigned jobCount = [[OPJobs runningJobs] count];
+	unsigned jobCount = [[OPJob runningJobs] count];
 	if (jobCount == 0) [globalProgrssIndicator stopAnimation:self];
 }
 
@@ -250,7 +250,7 @@
         if ([panel runModalForDirectory:nil file:[NSString stringWithFormat:@"%@.mbox", [group valueForKey: @"name"]]] == NSFileHandlingPanelCancelButton)
             return;
             
-        [OPJobs scheduleJobWithName:@"Mbox export" target:group selector:@selector(exportAsMboxFileWithPath:) argument:[panel filename] synchronizedObject:nil /*group*/];
+        [OPJob scheduleJobWithName:@"Mbox export" target:group selector:@selector(exportAsMboxFileWithPath:) argument:[panel filename] synchronizedObject:nil /*group*/];
     }
     else
         NSBeep();

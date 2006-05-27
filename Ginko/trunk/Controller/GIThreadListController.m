@@ -21,7 +21,7 @@
 #import "GIGroupInspectorController.h"
 #import "OPPersistentObject+Extensions.h"
 #import "GIMessageGroup.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "GIFulltextIndex.h"
 #import "GIOutlineViewWithKeyboardSupport.h"
 #import "GIMessage.h"
@@ -757,24 +757,22 @@ static BOOL isThreadItem(id item)
 	[hitsController setContent:someHits];
 }
 
-- (IBAction) search: (id) sender
+- (IBAction)search:(id)sender
 {
     if (!searchField) searchField = sender;
     
-    NSString* query = [searchField stringValue];
+    NSString *query = [searchField stringValue];
     
-    if ([query length]) {
-        @try {
-            [OPJobs suspendPendingJobs];
+    if ([query length]) 
+	{;
+        @try 
+		{
+            [OPJob suspendPendingJobs];
             
-            NSArray *conflictingJobs = [OPJobs runningJobsWithName:[GIFulltextIndex jobName]];
-            if ([conflictingJobs count]) {
-                NSEnumerator *enumerator = [conflictingJobs objectEnumerator];
-                NSNumber *jobId;
-                
-                while (jobId = [enumerator nextObject]) {
-                    [OPJobs suggestTerminatingJob:jobId];
-                }
+            NSArray *conflictingJobs = [OPJob runningJobsWithName:[GIFulltextIndex jobName]];
+            if ([conflictingJobs count]) 
+			{
+				[conflictingJobs makeObjectsPerformSelector:@selector(suggestTerminating)];
             }
             
             [tabView selectTabViewItemWithIdentifier:@"searchresult"];
@@ -785,17 +783,21 @@ static BOOL isThreadItem(id item)
             int searchLimit = [defaults integerForKey:SearchHitLimit];
             
             NSString *defaultField = @"body";
-            switch (defaultFieldTag) {
-                case 0: {
+            switch (defaultFieldTag) 
+			{
+                case 0: 
+				{
                     static NSArray *allFields = nil;
-                    if (!allFields) {
+                    if (!allFields) 
+					{
                         allFields = [[NSArray alloc] initWithObjects:@"body", @"subject", @"author", @"recipients", nil];
                     }
                     
                     NSEnumerator *enumerator = [allFields objectEnumerator];
                     NSString *fieldName;
                     NSString *allQuery = @"";
-                    while (fieldName = [enumerator nextObject]) {
+                    while (fieldName = [enumerator nextObject]) 
+					{
                         allQuery = [allQuery stringByAppendingFormat:@"%@:(%@) ", fieldName, query];
                     }
                     query = allQuery;
@@ -816,16 +818,22 @@ static BOOL isThreadItem(id item)
             if (NSDebugEnabled) NSLog(@"hits count = %d", [hits count]);
             
             [searchHitsTableView reloadData];
-        } @catch (NSException *localException) {
+        } 
+		@catch (NSException *localException) 
+		{
             @throw;
-        } @finally {
-            [OPJobs resumePendingJobs];
+        } 
+		@finally 
+		{
+            [OPJob resumePendingJobs];
         }
-    } else {
-        [self setHits: nil];
-        [tabView selectTabViewItemWithIdentifier: @"threads"];
+    } 
+	else 
+	{
+        [self setHits:nil];
+        [tabView selectTabViewItemWithIdentifier:@"threads"];
 		//NSView* view = [[tabView selectedTabViewItem] view];
-		[window makeFirstResponder: threadsView];
+		[window makeFirstResponder:threadsView];
     }
 }
 
@@ -1163,76 +1171,84 @@ static BOOL isThreadItem(id item)
 	//[threadsView selectItems: selectedItems ordered: YES];
 }
 
-- (GIMessageGroup*) group
+- (GIMessageGroup *)group
 {
     return group;
 }
 
-- (void) setGroup: (GIMessageGroup*) aGroup
+- (void)setGroup:(GIMessageGroup *)aGroup
 {
-    if (aGroup != group) {
-		[self setDisplayedMessage: nil thread: nil];
+    if (aGroup != group) 
+	{
+		[self setDisplayedMessage:nil thread:nil];
 		
 		
 		// Do not use old group any longer (if any):
-		if (group) {
-			[group removeObserver: self forKeyPath: @"threadsByDate"];
-			[[NSNotificationCenter defaultCenter] removeObserver: self name: @"GroupContentChangedNotification" object: self];
-			[[NSNotificationCenter defaultCenter] removeObserver: self name: OPJobDidFinishNotification object: nil];
+		if (group) 
+		{
+			[group removeObserver:self forKeyPath:@"threadsByDate"];
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"GroupContentChangedNotification" object:self];
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:JobDidFinishNotification object:nil];
 			[group autorelease];
 		}
 		
 
 		// Observe the new group (if any):
-		if (aGroup) {
-			[[NSNotificationCenter defaultCenter] addObserver: self 
-													 selector: @selector(modelChanged:) 
-														 name: @"GroupContentChangedNotification" 
-													   object: self];
-			[[NSNotificationCenter defaultCenter] addObserver: self 
-													 selector: @selector(modelChanged:) 
-														 name: OPJobDidFinishNotification 
-													   object: MboxImportJobName];
-			[aGroup addObserver: self 
-					 forKeyPath: @"threadsByDate" 
-						options: NSKeyValueObservingOptionNew 
-						context: NULL];
+		if (aGroup) 
+		{
+			[[NSNotificationCenter defaultCenter] addObserver:self 
+													 selector:@selector(modelChanged:) 
+														 name:@"GroupContentChangedNotification" 
+													   object:self];
+			[[NSNotificationCenter defaultCenter] addObserver:self 
+													 selector:@selector(modelChanged:) 
+														 name:JobDidFinishNotification 
+													   object:nil];
+			[aGroup addObserver:self 
+					 forKeyPath:@"threadsByDate" 
+						options:NSKeyValueObservingOptionNew 
+						context:NULL];
 		}
 		
         group = [aGroup retain];
 		
-		if (group) {
+		if (group) 
+		{
 			// thread filter popup:
-			[threadFilterPopUp selectItemWithTag: [[self valueForGroupProperty: ShowOnlyRecentThreads] intValue]];
+			[threadFilterPopUp selectItemWithTag:[[self valueForGroupProperty:ShowOnlyRecentThreads] intValue]];
 			
 			[self updateWindowTitle];
 			[self updateGroupInfoTextField];
 			[self reload];
             
             // Select and scroll:
-			[threadsView scrollRowToVisible: [threadsView numberOfRows]-1];
+			[threadsView scrollRowToVisible:[threadsView numberOfRows]-1];
             
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 			@try {
                 id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
                 
-                if (lastSelectedMessageItem) {
+                if (lastSelectedMessageItem) 
+				{
                     // is thread or message
-                    GIThread* thread;
-                    GIMessage* message;
+                    GIThread *thread;
+                    GIMessage *message;
                     
-                    if (isThreadItem(lastSelectedMessageItem)) {
+                    if (isThreadItem(lastSelectedMessageItem)) 
+					{
                         thread = lastSelectedMessageItem;
                         message = [[thread messagesByTree] lastObject];
-                    } else {
-                        NSAssert([lastSelectedMessageItem isKindOfClass: [GIMessage class]], @"should be a message object");
+                    } 
+					else 
+					{
+                        NSAssert([lastSelectedMessageItem isKindOfClass:[GIMessage class]], @"should be a message object");
                         
                         message = lastSelectedMessageItem;
                         thread = [message thread];
                     }
-                    [self showMessageInThreadList: message];
+                    [self showMessageInThreadList:message];
                 }
-			} @catch (NSException* localException) {
+			} @catch (NSException *localException) {
 				// ignored
 			}
 		}

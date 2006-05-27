@@ -19,7 +19,7 @@
 	NSObject <NSCopying> *argument;
 	NSObject <NSCopying> *synchronizedObject;
 	NSException *exception;
-	NSObject *result;
+	id result;
 	NSDictionary *progressInfo;
 	BOOL shouldTerminate;
 }
@@ -61,7 +61,7 @@
 - (BOOL)isTerminating;
 
 /*" Job operations "*/
-- (NSObject *)result;
+- (id)result;
 - (id)exception;
 - (void)suggestTerminating;
 - (NSDictionary *)progressInfo;
@@ -77,3 +77,32 @@
 - (void)setProgressInfo:(NSDictionary *)progressInfo;
 
 @end
+
+@class GIAccount;
+
+@interface OPJob (GinkoExtensions)
+
+- (NSString *)runPasswordPanelWithAccount:(GIAccount *)anAccount forIncomingPassword:(BOOL)isIncoming;
+
+@end
+
+@interface NSDictionary (OPJobExtensions)
+
+- (double)jobProgressMinValue;
+- (double)jobProgressMaxValue;
+- (double)jobProgressCurrentValue;
+- (NSString *)jobProgressDescription;
+- (OPJob *)jobProgressJob;
+- (BOOL)isJobProgressIndeterminate;
+
+@end
+
+extern NSString *JobProgressMinValue;
+extern NSString *JobProgressMaxValue;
+extern NSString *JobProgressCurrentValue;
+extern NSString *JobProgressDescription;
+extern NSString *JobProgressJob;
+
+extern NSString *JobWillStartNotification;
+extern NSString *JobDidFinishNotification;
+extern NSString *JobDidSetProgressInfoNotification;

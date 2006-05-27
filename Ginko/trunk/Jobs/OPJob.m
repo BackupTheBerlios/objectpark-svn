@@ -574,9 +574,9 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
 	return rslt;
 }
 
-- (NSObject *)result
+- (id)result
 {
-	NSObject *rslt;
+	id rslt;
 	
 	@synchronized(self)
 	{
@@ -654,17 +654,108 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
 		if (! [progressInfo isEqual:aProgressInfo])
 		{
 			[progressInfo release];
-			progressInfo = [progressInfo copy];
+			progressInfo = [aProgressInfo copy];
 			wasSet = YES;
 		}
 	}
     
-    if (wasSet) 
+    if (wasSet && progressInfo) 
     {
 		NSNotification *notification = [NSNotification notificationWithName:JobDidSetProgressInfoNotification object:self userInfo:[NSDictionary dictionaryWithObject:progressInfo forKey:@"progressInfo"]];
 		
 		[[self class] postNotificationInMainThread:notification];
     }
+}
+
+@end
+
+#import "GIAccount.h"
+#import "GIPasswordController.h"
+
+@implementation OPJob (GinkoExtensions)
+
+- (void)openPasswordPanel:(NSMutableDictionary *)someParameters
+	/*" Called in main thread to open the panel. "*/
+{
+    [[[GIPasswordController alloc] initWithParamenters:someParameters] autorelease];
+}
+
+- (NSString *)runPasswordPanelWithAccount:(GIAccount *)anAccount forIncomingPassword:(BOOL)isIncoming
+{
+    NSParameterAssert(anAccount != nil);
+	
+    NSMutableDictionary *rslt = [NSMutableDictionary dictionary];
+    // prepare parameter dictionary for cross thread method call
+    NSMutableDictionary *parameterDict = [NSMutableDictionary dictionary];
+    [parameterDict setObject:[NSNumber numberWithBool:isIncoming] forKey:@"isIncoming"];
+    [parameterDict setObject:anAccount forKey:@"account"];
+    [parameterDict setObject:rslt forKey:@"result"];
+    
+    // open panel in main thread
+    [self performSelectorOnMainThread:@selector(openPasswordPanel:) withObject:parameterDict waitUntilDone:YES];
+    
+    NSString *password = nil;
+    
+    // wait for the panel controller to set an object for key @"finished".
+    do
+    {
+        id finished;
+        
+        @synchronized(rslt) 
+        {
+            finished = [rslt objectForKey:@"finished"];
+            password = [rslt objectForKey:@"password"];
+        }
+		
+        if (finished) break;
+        
+        else
+        {
+            // sleep for 1 second
+            //[[NSRunLoop currentRunLoop] run];
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+        }
+    }
+    while (YES);
+    
+    return password;
+}
+
+@end
+
+@implementation NSDictionary (OPJobExtensions)
+
+- (double)jobProgressMinValue
+{
+    NSNumber *rslt = [self objectForKey:JobProgressMinValue];
+    return rslt ? [rslt doubleValue] : 0.0;
+}
+
+- (double)jobProgressMaxValue
+{
+    NSNumber *rslt = [self objectForKey:JobProgressMaxValue];
+    return rslt ? [rslt doubleValue] : 0.0;
+}
+
+- (double)jobProgressCurrentValue
+{
+    NSNumber *rslt = [self objectForKey:JobProgressCurrentValue];
+    return rslt ? [rslt doubleValue] : 0.0;
+}
+
+- (NSString *)jobProgressDescription
+{
+    return [self objectForKey:JobProgressDescription];
+}
+
+- (BOOL)isJobProgressIndeterminate
+{
+    return [self objectForKey:JobProgressCurrentValue] == nil;
+}
+
+- (OPJob *)jobProgressJob
+{
+    return [self objectForKey:JobProgressJob];    
 }
 
 @end

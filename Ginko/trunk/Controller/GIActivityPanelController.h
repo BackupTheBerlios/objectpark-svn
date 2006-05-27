@@ -13,13 +13,13 @@
     IBOutlet NSWindow *window;
     IBOutlet NSTableView *tableView;
     
-    NSArray *jobIds;
+    NSArray *jobs;
 }
 
 + (id)sharedInstance;
 + (void)updateData;
 
-+ (void)showActivityPanelInteractive: (BOOL) interactive;
++ (void)showActivityPanelInteractive:(BOOL)interactive;
 
 - (NSWindow *)window;
 

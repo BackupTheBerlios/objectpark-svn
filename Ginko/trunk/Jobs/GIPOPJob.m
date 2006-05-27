@@ -8,7 +8,7 @@
 
 #import "GIPOPJob.h"
 #import "OPPOP3Session.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "GIAccount.h"
 #import "NSHost+GIReachability.h"
 #import <OPNetwork/OPNetwork.h>
@@ -54,7 +54,8 @@
     NSParameterAssert([theAccount isPOPAccount]);
     
     // finding host:
-    [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"finding %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+	OPJob *job = [OPJob job];
+    [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"finding %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
     
     NSHost *host = [NSHost hostWithName:[theAccount incomingServerName]];
     [host name]; // I remember that was important, but I can't remember why
@@ -62,7 +63,7 @@
     if ([host isReachableWithNoStringsAttached])
     {
         // connecting to host:
-        [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in POP job"), [theAccount incomingServerName], [theAccount incomingServerPort]]]];
+        [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in POP job"), [theAccount incomingServerName], [theAccount incomingServerPort]]]];
         
         OPStream *stream = [OPStream streamConnectedToHost:host
                                                       port:[theAccount incomingServerPort]
@@ -76,7 +77,7 @@
             // starting SSL if needed:
             if ([theAccount incomingServerType] == POP3S)
             {
-                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"opening secure connection to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+                [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"opening secure connection to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
                 
                 [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:[[theAccount valueForKey:@"allowAnyRootSSLCertificate"] boolValue]];
                 
@@ -84,7 +85,7 @@
             }
             
             // logging into POP server:
-            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+            [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
             
             OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream andDelegate:self] autorelease];
             [pop3session setAutosaveName:[theAccount incomingServerName]];
@@ -113,19 +114,19 @@
                 
                 while ((transferData = [pop3session nextTransferData]) && !shouldTerminate)
                 {
-                    [OPJobs setProgressInfo:[OPJobs progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, [theAccount incomingServerName]]]];
+                    [job setProgressInfo:[job progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, [theAccount incomingServerName]]]];
                     
                     // putting onto disk:
                     [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender:nil]];
                     
                     fetchCount++;
-                    shouldTerminate = [OPJobs shouldTerminate];
+                    shouldTerminate = [job shouldTerminate];
                 }
                 
                 // set result:
 				if (fetchCount > 0)
 				{
-					[OPJobs setResult:[mboxFile path]];
+					[job setResult:[mboxFile path]];
 				}
 				else
 				{
@@ -135,7 +136,7 @@
                 // cleaning up maildrop:
 				if (![[self deletionDate] isEqualTo:[NSDate distantFuture]])
 				{
-					[OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+					[job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
 					
 					[pop3session cleanUp];
 				}
@@ -151,13 +152,13 @@
                 [pool release];
             }
             
-            [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+            [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
             
             [pop3session closeSession];
             
             if ([theAccount incomingServerType] == POP3S)
             {
-                [OPJobs setProgressInfo:[OPJobs indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"closing secure connection to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+                [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"closing secure connection to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
                 
                 [stream shutdownEncryption];
             }
@@ -213,13 +214,13 @@
 {
     NSParameterAssert([anAccount isPOPAccount]);
  
-	if ([[OPJobs runningJobsWithSynchronizedObject:[anAccount incomingServerName]] count] == 0)
+	if ([[OPJob runningJobsWithSynchronizedObject:[anAccount incomingServerName]] count] == 0)
 	{
 		NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
 		
 		[jobArguments setObject:anAccount forKey:@"account"];
 		
-		[OPJobs scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) argument:jobArguments synchronizedObject:[anAccount incomingServerName]];
+		[OPJob scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) argument:jobArguments synchronizedObject:[anAccount incomingServerName]];
 	}
 }
 
@@ -237,7 +238,7 @@
     
     if (![password length]) 
 	{
-        password = [[[[OPJobs alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:YES];
+        password = [[[[OPJob alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:YES];
     }
     return password;
 }

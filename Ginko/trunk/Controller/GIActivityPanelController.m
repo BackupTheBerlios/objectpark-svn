@@ -7,7 +7,7 @@
 //
 
 #import "GIActivityPanelController.h"
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "GIUserDefaultsKeys.h"
 
 NSString *GIActivityPanelNeedsUpdateNotification = @"GIActivityPanelNeedsUpdateNotification";
@@ -22,19 +22,19 @@ static GIActivityPanelController *panel = nil;
     
     if (! initialized)
     {
-        [[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector(activityStarted:) name:OPJobWillStartNotification object:nil]; 
+        [[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector(activityStarted:) name:JobWillStartNotification object:nil]; 
         initialized = YES;
     }
 }
 
 - (void)updateData
 {
-    [jobIds autorelease];
-    jobIds = [[OPJobs runningJobs] retain];
+    [jobs autorelease];
+    jobs = [[OPJob runningJobs] retain];
     
     [tableView reloadData];
     
-    if ([jobIds count] == 0) // no jobs to show 
+    if ([jobs count] == 0) // no jobs to show 
     {
         // close if automatic panel is active:
         if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled])
@@ -61,9 +61,10 @@ static GIActivityPanelController *panel = nil;
      */
 }
 
-+ (id) sharedInstance 
++ (id)sharedInstance 
 {
-	if (! panel) {
+	if (! panel) 
+	{
         panel = [[self alloc] init];
     }
 	return panel;
@@ -85,8 +86,8 @@ static GIActivityPanelController *panel = nil;
         
         [center addObserver:panel selector:@selector(updateData) name:GIActivityPanelNeedsUpdateNotification object:nil];        
         
-        [center addObserver:panel selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
-        [center addObserver:panel selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];
+        [center addObserver:panel selector:@selector(dataChanged:) name:JobDidFinishNotification object:nil];
+        [center addObserver:panel selector:@selector(dataChanged:) name:JobDidSetProgressInfoNotification object:nil];
     }
 }
 
@@ -94,7 +95,7 @@ static GIActivityPanelController *panel = nil;
 {
     if (self = [super init]) 
     {
-        [NSBundle loadNibNamed: @"Activity" owner:self];
+        [NSBundle loadNibNamed:@"Activity" owner:self];
         
         //[self retain]; // balanced in -windowWillClose:
         
@@ -103,19 +104,19 @@ static GIActivityPanelController *panel = nil;
         
         [center addObserver:self selector:@selector(updateData) name:GIActivityPanelNeedsUpdateNotification object:nil];        
         
-        [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidFinishNotification object:nil];
-        [center addObserver:self selector:@selector(dataChanged:) name:OPJobDidSetProgressInfoNotification object:nil];        
+        [center addObserver:self selector:@selector(dataChanged:) name:JobDidFinishNotification object:nil];
+        [center addObserver:self selector:@selector(dataChanged:) name:JobDidSetProgressInfoNotification object:nil];        
     }
     
     return self;
 }
 
-- (NSWindow*) window
+- (NSWindow *)window
 {
     return window;
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [tableView reloadData];
 	[window retain]; // goes away otherwise!
@@ -127,18 +128,18 @@ static GIActivityPanelController *panel = nil;
 {
 	int rowIndex = [tableView clickedRow];
 
-	[OPJobs suggestTerminatingJob: [jobIds objectAtIndex: rowIndex]];
-	NSLog(@"Should stop thread: %@", [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]]);
+	[[jobs objectAtIndex:rowIndex] suggestTerminating];
+	NSLog(@"Should stop thread: %@", [[jobs objectAtIndex:rowIndex] progressInfo]);
 }
 
-- (void) windowWillClose: (NSNotification*) notification 
+- (void)windowWillClose:(NSNotification *)notification 
 {
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
-    [jobIds release];
+    [jobs release];
     [super dealloc];
 	if (self==panel) panel = nil;
 }
@@ -147,9 +148,9 @@ static GIActivityPanelController *panel = nil;
 
 @implementation GIActivityPanelController (TableViewDataSource)
 
-- (int) numberOfRowsInTableView: (NSTableView*) aTableView
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-    return [jobIds count];
+    return [jobs count];
 }
 
 /*
@@ -159,9 +160,9 @@ static GIActivityPanelController *panel = nil;
 }
 */
 
-- (id) tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-	NSString* identifier = [aTableColumn identifier];
+	NSString *identifier = [aTableColumn identifier];
 	//NSLog(@"Identifier: %@", identifier);
 	/*
 	 if ([identifier isEqualToString: @"progress"]) {
@@ -177,40 +178,42 @@ static GIActivityPanelController *panel = nil;
 		 }
 	 } else 
 	 */
-	if ([identifier isEqualToString: @"description"]) {
-		NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
+	if ([identifier isEqualToString:@"description"]) 
+	{
+		NSDictionary *progressInfo = [[jobs objectAtIndex:rowIndex] progressInfo];
 		
-		if (progressInfo) {
-			return [NSString stringWithFormat: @"%@ - %@", [progressInfo jobProgressJobName], [progressInfo jobProgressDescription]];
+		if (progressInfo) 
+		{
+			return [NSString stringWithFormat:@"%@ - %@", [[progressInfo jobProgressJob] name], [progressInfo jobProgressDescription]];
 		}
     }
     
     return @""; // should not occur
 }
 
-- (void) tableView: (NSTableView*) aTableView willDisplayCell: (id) aCell forTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
 	//NSLog(@"willDisplayCell %@", aCell);
-	NSString* identifier = [aTableColumn identifier];
+	NSString *identifier = [aTableColumn identifier];
 
-	if ([identifier isEqualToString: @"stopButton"]) {
-		NSDictionary* progressInfo = [OPJobs progressInfoForJob: [jobIds objectAtIndex: rowIndex]];
-		NSString* progressTitle = @"Running";
-		if (! [progressInfo isJobProgressIndeterminate]) {
+	if ([identifier isEqualToString:@"stopButton"]) 
+	{
+		NSDictionary *progressInfo = [[jobs objectAtIndex:rowIndex] progressInfo];
+		NSString *progressTitle = @"Running";
+		if (! [progressInfo isJobProgressIndeterminate]) 
+		{
 			double minValue = [progressInfo jobProgressMinValue];
 			double normalizedMax = [progressInfo jobProgressMaxValue] - minValue;
 			double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;
 			double percentComplete = (normalizedCurrentValue / normalizedMax) * (double)100.0;
 			
 			//progressTitle = [NSString stringWithFormat: @"%.1f %%\n%d/%d", percentComplete, 
-			progressTitle = [NSString stringWithFormat: @"%.1f %%", percentComplete]; 
+			progressTitle = [NSString stringWithFormat:@"%.1f %%", percentComplete]; 
 			//	(unsigned long)[progressInfo jobProgressCurrentValue], 
 			//	(unsigned long)[progressInfo jobProgressMaxValue]];
 		}
-		[aCell setTitle: progressTitle];
+		[aCell setTitle:progressTitle];
 	}
 }
-
-
 
 @end

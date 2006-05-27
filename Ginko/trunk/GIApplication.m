@@ -19,7 +19,7 @@
 #import "GIMessageGroup.h"
 #import "GISearchController.h"
 #import <sqlite3.h>
-#import "OPJobs.h"
+#import "OPJob.h"
 #import "GIActivityPanelController.h"
 #import "GIPOPJob.h"
 #import "GISMTPJob.h"
@@ -245,16 +245,8 @@ NSNumber* yesNumber = nil;
 	    
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prefpaneDidEndEditing:) name:OPPreferencePaneDidEndEditing object:nil];
 		
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jobFinished:) name:OPJobDidFinishNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jobFinished:) name:JobDidFinishNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(SMTPJobFinished:) name:OPJobDidFinishNotification object:[GISMTPJob jobName]];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fulltextIndexJobFinished:) name:OPJobDidFinishNotification object:[GIFulltextIndex jobName]];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(POPJobFinished:) name:OPJobDidFinishNotification object:[GIPOPJob jobName]];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(importJobFinished:) name:OPJobDidFinishNotification object:MboxImportJobName];
-
     // Some statistical messsages:
     //OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	
     //NSArray*allMessages = [GIMessage allObjects];
@@ -308,7 +300,7 @@ NSNumber* yesNumber = nil;
 /*" On launch, opens a group window. "*/
 {
     [self applicationDidBecomeActive:aNotification];
-    [OPJobs setMaxThreads:16];
+    [OPJob setMaxThreads:16];
     [self startFulltextIndexingJobIfNeeded:self];
 	[GIAccount resetAccountRetrieveAndSendTimers];
 }
@@ -356,7 +348,7 @@ NSNumber* yesNumber = nil;
 				[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
                 [jobArguments setObject: yesNumber forKey: @"copyOnly"];
 				
-                [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
+                [OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
             }
         }
     }    
@@ -417,19 +409,11 @@ NSNumber* yesNumber = nil;
 
 	isTerminating = YES;
 
-    [OPJobs suspendPendingJobs];
-    NSArray *runningJobs = [OPJobs runningJobs];
-    
+    [OPJob suspendPendingJobs];
+    NSArray *runningJobs = [OPJob runningJobs];
     if ([runningJobs count])
     {
-        enumerator = [runningJobs objectEnumerator];
-        NSNumber *jobId;
-        
-        while (jobId = [enumerator nextObject])
-        {
-            [OPJobs suggestTerminatingJob:jobId];
-        }
-        
+		[runningJobs makeObjectsPerformSelector:@selector(suggestTerminating)];
         result = NSTerminateLater;
     }
     
@@ -458,33 +442,21 @@ NSNumber* yesNumber = nil;
 	[super stop:sender];
 }
 
-- (void) jobFinished: (NSNotification*) aNotification
-{
-	if ([[OPJobs runningJobs] count] == 0) {
-		if (isTerminating) {
-			[self replyToApplicationShouldTerminate: YES];
-		}
-		//NSLog(@"[self allowSleep: YES]");
-
-		[self allowSleep: YES]; // does nothing, if not about to sleep
-	}
-}
-
 - (void)abortApplicationTerminate
 {
     isTerminating = NO;
-    [OPJobs resumePendingJobs];
+    [OPJob resumePendingJobs];
     [self replyToApplicationShouldTerminate:NO];
 }
 
 - (void)POPJobFinished:(NSNotification *)aNotification
 {
-    OPDebugLog(OPJOBS, OPINFO, @"POPJobFinished");
+    OPDebugLog(OPJOB, OPINFO, @"POPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    OPJob *job = [aNotification object];
+    NSParameterAssert(job != nil && [job isKindOfClass:[OPJob class]]);
     
-    NSException *exception = [[aNotification userInfo] objectForKey:@"exception"];
+    NSException *exception = [job exception];
     
     if (exception)
     {
@@ -497,8 +469,8 @@ NSNumber* yesNumber = nil;
         return;
     }
     
-    NSString *mboxPath = [OPJobs resultForJob:jobId];
-    [OPJobs removeFinishedJob:jobId]; // clean up
+    NSString *mboxPath = (NSString *)[job result];
+    [OPJob removeFinishedJob:job]; // clean up
     
     if (mboxPath)
     {
@@ -510,18 +482,18 @@ NSNumber* yesNumber = nil;
         [jobArguments setObject:mboxPath forKey:@"mboxFilename"];
         [jobArguments setObject:[OPPersistentObjectContext threadContext] forKey: @"parentContext"];
         
-        [OPJobs scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
+        [OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
     }
 }
 
 - (void)importJobFinished:(NSNotification *)aNotification
 {
-    OPDebugLog(OPJOBS, OPINFO, @"importJobFinished");
+    OPDebugLog(OPJOB, OPINFO, @"importJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    OPJob *job = [aNotification object];
+    NSParameterAssert(job != nil && [job isKindOfClass:[OPJob class]]);
     
-    [OPJobs removeFinishedJob:jobId]; // clean up
+    [OPJob removeFinishedJob:job]; // clean up
     
     [self saveAction:self];
     
@@ -532,7 +504,7 @@ NSNumber* yesNumber = nil;
 {
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"fulltextSearchDisabled"])
     {
-        if (![[OPJobs pendingJobsWithName:[GIFulltextIndex jobName]] count])
+        if (![[OPJob pendingJobsWithName:[GIFulltextIndex jobName]] count])
         {            
             //NSArray *messagesToAdd = [GIMessage messagesToAddToFulltextIndexWithLimit:1000]; // perform this expensive operation in background thread!!
             //NSArray *messagesToRemove = [GIMessage messagesToRemoveFromFulltextIndexWithLimit:250]; // perform this expensive operation in background thread!
@@ -545,14 +517,14 @@ NSNumber* yesNumber = nil;
     }
 }
 
-- (void) fulltextIndexJobFinished:(NSNotification *)aNotification
+- (void)fulltextIndexJobFinished:(NSNotification *)aNotification
 {
-    OPDebugLog(OPJOBS, OPINFO, @"fulltextIndexJobFinished");
-    NSNumber *jobId = [[aNotification userInfo] objectForKey:@"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
-	BOOL didIndexSomeMessages = [[OPJobs resultForJob:jobId] boolValue];
+    OPDebugLog(OPJOB, OPINFO, @"fulltextIndexJobFinished");
+    OPJob *job = [aNotification object];
+    NSParameterAssert(job != nil && [job isKindOfClass:[OPJob class]]);
+	BOOL didIndexSomeMessages = [(NSNumber *)[job result] boolValue];
 
-	[OPJobs removeFinishedJob:jobId]; // clean up
+	[OPJob removeFinishedJob:job]; // clean up
     	
 	if (didIndexSomeMessages) [self startFulltextIndexingJobIfNeeded:self];
 }
@@ -573,12 +545,12 @@ NSNumber* yesNumber = nil;
 
 - (void)SMTPJobFinished:(NSNotification *)aNotification
 {
-    OPDebugLog(OPJOBS, OPINFO, @"SMTPJobFinished");
+    OPDebugLog(OPJOB, OPINFO, @"SMTPJobFinished");
     
-    NSNumber *jobId = [[aNotification userInfo] objectForKey: @"jobId"];
-    NSParameterAssert(jobId != nil && [jobId isKindOfClass:[NSNumber class]]);
+    OPJob *job = [aNotification object];
+    NSParameterAssert(job != nil && [job isKindOfClass:[OPJob class]]);
     
-    NSDictionary *result = [OPJobs resultForJob:jobId];
+    NSDictionary *result = (NSDictionary *)[job result];
 
 	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
 	NSEnumerator *enumerator = [[GIProfile allObjects] objectEnumerator];
@@ -596,7 +568,7 @@ NSNumber* yesNumber = nil;
 		}            
 	}
 	
-	[OPJobs removeFinishedJob:jobId]; // clean up
+	[OPJob removeFinishedJob:job]; // clean up
 	
 	// Process all messages sent successfully:
 	
@@ -623,6 +595,39 @@ NSNumber* yesNumber = nil;
 	}
     
     [self saveAction:self];
+}
+
+- (void)jobFinished:(NSNotification *)aNotification
+{
+	NSString *jobName = [[aNotification object] name];
+	
+	if ([jobName isEqualToString:[GISMTPJob jobName]])
+	{
+		[self SMTPJobFinished:aNotification];
+	}
+	else if ([jobName isEqualToString:[GIFulltextIndex jobName]])
+	{
+		[self fulltextIndexJobFinished:aNotification];
+	}
+	else if ([jobName isEqualToString:[GIPOPJob jobName]])
+	{
+		[self POPJobFinished:aNotification];
+	}
+	else if ([jobName isEqualToString:MboxImportJobName])
+	{
+		[self importJobFinished:aNotification];
+	}
+	
+	if ([[OPJob runningJobs] count] == 0) 
+	{
+		if (isTerminating) 
+		{
+			[self replyToApplicationShouldTerminate:YES];
+		}
+		//NSLog(@"[self allowSleep: YES]");
+		
+		[self allowSleep:YES]; // does nothing, if not about to sleep
+	}
 }
 
 - (IBAction)sendAndReceiveInAllAccounts:(id)sender
