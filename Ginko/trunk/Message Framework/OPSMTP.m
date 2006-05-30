@@ -648,13 +648,19 @@ static int getsecret_func(sasl_conn_t *conn,
 	}
 	
 	const char *UTF8Password = [[smtp _password] UTF8String];
-	unsigned long passwordLength = strlen(UTF8Password);
-	(*psecret) = malloc(sizeof(sasl_secret_t) + passwordLength + 2);
+	unsigned long passwordLength = 0;
+		
+	if (UTF8Password)
+	{
+		passwordLength = strlen(UTF8Password);
+	}
+	
+	(*psecret) = malloc(sizeof(sasl_secret_t) + passwordLength + 1);
 	smtp->getsecret_func_psecret = (*psecret);
 	
 	(*psecret)->len = passwordLength;
 	
-	memcpy((*psecret)->data, UTF8Password, passwordLength + 1);
+	memcpy((*psecret)->data, UTF8Password, passwordLength);
 	(*psecret)->data[passwordLength] = 0;
 	
 	return SASL_OK;
@@ -674,13 +680,20 @@ static int getauthname_func(void *context,
 	}
 	
 	const char *UTF8Username = [[smtp _username] UTF8String];
-	unsigned long usernameLength = strlen(UTF8Username);
-		
-	(*result) = malloc(usernameLength + 2);
-	smtp->getauthname_func_result = (*result);
+	unsigned long usernameLength = 0;
+	if (UTF8Username) 
+	{
+		*result = strdup(UTF8Username);
+		usernameLength = strlen(*result);
+		smtp->getauthname_func_result = (*result);
+	}
+	else
+	{
+		(*result) = "";
+	}
 	
-	memcpy((void *)*result, UTF8Username, usernameLength + 1);
-	result[usernameLength] = 0;
+	//memcpy((void *)*result, UTF8Username, usernameLength);
+	//(*result)[usernameLength] = 0;
 	
 	len = malloc(sizeof(unsigned));
 	smtp->getauthname_func_len = len;
@@ -715,6 +728,7 @@ static int getauthname_func(void *context,
     } 
 	else if (iid == SASL_CB_USER) 
 	{
+		puts("USER");
 		*tresult = (char *)[[self _username] UTF8String];
 		*tlen = strlen(*tresult);
 		return;
@@ -818,7 +832,7 @@ static int getauthname_func(void *context,
 		return NO;
 	}
 						   
-	sasl_interact_t *client_interact=NULL;
+	sasl_interact_t *client_interact = NULL;
 	const char *out, *mechusing;
 	unsigned outlen;
 	
@@ -897,8 +911,14 @@ static int getauthname_func(void *context,
 		result = sasl_decode64(newbuf, strlen(newbuf), in, 4096, &inlen);
 		if (result != SASL_OK) break;
 
+		puts(in);
+		
 		do 
 		{
+			client_interact = NULL;
+			out = NULL;
+			outlen = 0;
+			
 			result = sasl_client_step(conn,  /* our context */
 			in,    /* the data from the server */
 			inlen, /* it's length */
@@ -911,8 +931,8 @@ static int getauthname_func(void *context,
 			{
 				[self fillin_interactions:client_interact];
 			}
-			
 		} 
+		
 		while (result==SASL_INTERACT);
 		
 		if (result == SASL_OK || result == SASL_CONTINUE) 
