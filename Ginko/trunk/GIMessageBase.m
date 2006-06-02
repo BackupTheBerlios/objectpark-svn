@@ -21,61 +21,72 @@
 #import "NSApplication+OPExtensions.h"
 #import <OPDebug/OPLog.h>
 
-#define IMPORT         OPL_DOMAIN  @"Import"
-#define TRANSFERDATA   OPL_ASPECT  0x01
-#define FLAGS          OPL_ASPECT  0x02
+#define IMPORT OPL_DOMAIN @"Import"
+#define TRANSFERDATA OPL_ASPECT 0x01
+#define FLAGS OPL_ASPECT 0x02
 
 
 @implementation GIMessageBase
 
-- (void) addMessage: (GIMessage*) aMessage
+- (void)addMessage:(GIMessage *)aMessage
 {
-	[[self class] addMessage: aMessage];
+	[[self class] addMessage:aMessage];
 }
 
-+ (void) addMessage: (GIMessage*) aMessage
++ (void)addMessage:(GIMessage *)aMessage
 {
-	if (aMessage) {
-		
+	if (aMessage) 
+	{;
 		// Adding a message should be an atomic operation:
-		@synchronized([aMessage context]) {
-			if (![GIMessageFilter filterMessage: aMessage flags: 0]) {
-				[self addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+		@synchronized([aMessage context]) 
+		{
+			if (![GIMessageFilter filterMessage:aMessage flags:0]) 
+			{
+				[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
 			}
 			
-			if ([aMessage hasFlags: OPIsFromMeStatus]) {
-				[self addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
+			if ([aMessage hasFlags:OPIsFromMeStatus]) 
+			{
+				[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
 			}
+			
+			NSAssert([[[aMessage valueForKey:@"thread"] valueForKey:@"groups"] count] > 0, @"message without group found");
 		}
 	} 	
 }
 
-- (void) addMessageInMainThreadWithTransferData: (NSMutableArray*) parameters
+- (void)addMessageInMainThreadWithTransferData:(NSMutableArray *)parameters
 {
-    @try {
+    @try 
+	{
         GIMessage *message = [GIMessage messageWithTransferData:[parameters objectAtIndex:0]];
-		if (message) {
+		if (message) 
+		{
 			[self addMessage:message];
 			[parameters addObject:message]; // out param
 		}
-    } @catch (NSException *localException) {
+    } 
+	@catch (NSException *localException) 
+	{
         NSLog(@"Exception while adding message in main thread: %@", [localException reason]);
-    } @finally {
+    } 
+	@finally 
+	{
         while ([parameters count] < 2) [parameters addObject:[NSNull null]];
     }
 }
 
-+ (void) addMessage: (GIMessage*) aMessage toMessageGroup: (GIMessageGroup*) aGroup suppressThreading: (BOOL) suppressThreading
++ (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup suppressThreading:(BOOL)suppressThreading
 {
     NSParameterAssert(aMessage != nil);
     
-	GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
+	GIThread *thread = [aMessage assignThreadUseExisting:!suppressThreading];
     
 	// Add the thread to the group, if not already present:
 	//if (![[aGroup valueForKey: @"threadsByDate"] containsObject: thread]) {
 	//	[aGroup addValue:thread forKey: @"threadsByDate"];
 	//}
-	[thread addToGroups_Manually: aGroup];
+	[thread addToGroups_Manually:aGroup];
 }
 
 /*

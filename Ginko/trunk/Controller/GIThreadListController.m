@@ -975,6 +975,7 @@ static BOOL isThreadItem(id item)
 	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
 	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
 	isAutoReloadEnabled = YES;
+	[threadsView noteNumberOfRowsChanged];
 	[threadsView reloadData];
 	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
 	

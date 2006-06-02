@@ -23,3 +23,4 @@ extern NSString *GINumberOfUnreadMessages;
 extern NSString *GINumberOfUnreadThreads;
 
 extern NSString *GIMessageGroupStatisticsDidInvalidateNotification;
+extern NSString *GIMessageGroupStatisticsDidUpdateNotification;

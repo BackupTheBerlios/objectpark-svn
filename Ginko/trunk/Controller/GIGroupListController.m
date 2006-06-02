@@ -87,6 +87,8 @@
 			   selector: @selector(groupStatsInvalidated:) 
 				   name: GIMessageGroupStatisticsDidInvalidateNotification 
 				 object: nil];
+		
+		[nc addObserver:self selector:@selector(groupStatsDidUpdate:) name:GIMessageGroupStatisticsDidUpdateNotification object:nil];
     }
     
 	return [self retain]; // self retaining!
@@ -125,6 +127,16 @@
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(groupsChanged:) object:nil];
     [self performSelector:@selector(groupsChanged:) withObject:nil afterDelay:(NSTimeInterval)5.0];
+}
+
+- (void)groupStatsDidUpdate:(NSNotification *)aNotification
+{
+	[self reloadData];
+	/*
+	GIMessageGroup *group = [aNotification object];
+	NSAssert([group isKindOfClass:[GIMessageGroup class]], @"wrong class");
+	[boxesView reloadItem:[group objectURLString]];
+	 */
 }
 
 - (void)jobStarted:(NSNotification *)aNotification
@@ -192,7 +204,7 @@
 - (IBAction)rename:(id)sender
 /*" Renames the selected item (folder or group). "*/
 {
-    int lastSelectedRow  = [boxesView selectedRow];
+    int lastSelectedRow = [boxesView selectedRow];
     
     if (lastSelectedRow != -1) 
     {
@@ -259,13 +271,13 @@
 - (IBAction)addFolder:(id)sender
 {
     int selectedRow = [boxesView selectedRow];
-    [boxesView setAutosaveName: nil];
-    [GIMessageGroup addNewHierarchyNodeAfterEntry: [boxesView itemAtRow: selectedRow]];
+    [boxesView setAutosaveName:nil];
+    [GIMessageGroup addNewHierarchyNodeAfterEntry:[boxesView itemAtRow: selectedRow]];
     [self reloadData];
-    [boxesView setAutosaveName: @"boxesView"];
+    [boxesView setAutosaveName:@"boxesView"];
     
-    [boxesView selectRow: selectedRow + 1 byExtendingSelection: NO];
-    [self rename: self];
+    [boxesView selectRow:selectedRow + 1 byExtendingSelection:NO];
+    [self rename:self];
 }
 
 - (IBAction)addMessageGroup:(id)sender

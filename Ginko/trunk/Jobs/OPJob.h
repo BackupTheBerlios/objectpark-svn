@@ -24,8 +24,14 @@
 	BOOL shouldTerminate;
 }
 
-/*" Scheduling new Jobs "*/
+/*" Initialization "*/
+- (id)initWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector argument:(NSObject <NSCopying> *)anArgument synchronizedObject:(NSObject <NSCopying> *)aSynchronizedObject;
+
+/*" Scheduling new Jobs (Deprecated) "*/
 + (OPJob *)scheduleJobWithName:(NSString *)aName target:(NSObject *)aTarget selector:(SEL)aSelector argument:(NSObject <NSCopying> *)anArgument synchronizedObject:(NSObject <NSCopying> *)aSynchronizedObject;
+
+/*" Scheduling new Jobs "*/
++ (void)scheduleJob:(OPJob *)job;
 
 /*" Worker Threads "*/
 + (unsigned)maxThreads;
@@ -41,6 +47,7 @@
 
 + (NSArray *)runningJobsWithName:(NSString *)aName;
 + (NSArray *)pendingJobsWithName:(NSString *)aName;
++ (NSArray *)pendingJobsWithTarget:(NSObject *)aTarget;
 + (NSArray *)runningJobsWithSynchronizedObject:(NSObject <NSCopying> *)aSynchronizedObject;
 
 - (NSString *)name;

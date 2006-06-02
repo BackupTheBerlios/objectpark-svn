@@ -214,13 +214,18 @@
 {
     NSParameterAssert([anAccount isPOPAccount]);
  
-	if ([[OPJob runningJobsWithSynchronizedObject:[anAccount incomingServerName]] count] == 0)
+	NSArray *conflictingJobs = [OPJob runningJobsWithSynchronizedObject:[anAccount incomingServerName]];
+	if ([conflictingJobs count] == 0)
 	{
 		NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
 		
 		[jobArguments setObject:anAccount forKey:@"account"];
 		
 		[OPJob scheduleJobWithName:[self jobName] target:[[[self alloc] initWithAccount:anAccount] autorelease] selector:@selector(retrieveMessagesFromPOPAccountJob:) argument:jobArguments synchronizedObject:[anAccount incomingServerName]];
+	}
+	else
+	{
+		NSLog(@"POPJob: conflicting jobs %@", conflictingJobs);
 	}
 }
 

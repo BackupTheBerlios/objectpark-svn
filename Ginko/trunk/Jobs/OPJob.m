@@ -257,10 +257,18 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
 
     Returns the job or nil if not successful. "*/
 {
-    [jobsLock lock];
 	
 	OPJob *job = [[[OPJob alloc] initWithName:aName target:aTarget selector:aSelector argument:anArgument synchronizedObject:aSynchronizedObject] autorelease];
         
+    [self scheduleJob:job];
+	
+    return job;
+}
+
++ (void)scheduleJob:(OPJob *)job
+{
+    [jobsLock lock];
+	
     [pendingJobs addObject:job];
     
     // start new worker thread if no threads are idle and 
@@ -272,8 +280,6 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
     }
 	
     [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
-    
-    return job;
 }
 
 + (void)workerThread:(id)args
@@ -518,6 +524,12 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
 	return [self jobsWithValue:aName forKey:@"name" inArray:pendingJobs];
 }
 
++ (NSArray *)pendingJobsWithTarget:(NSObject *)aTarget
+/*" Returns pending jobs with the given target aTarget. "*/
+{
+	return [self jobsWithValue:aTarget forKey:@"target" inArray:pendingJobs];
+}
+									
 + (NSArray *)runningJobsWithSynchronizedObject:(NSObject <NSCopying> *)aSynchronizedObject
 /*" Returns running jobs with the given synchronized object aSynchronizedObject. "*/
 {
@@ -622,7 +634,7 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
 + (void)postNotificationInMainThread:(NSNotification *)aNotification
 /*" Helper for jobs. Posts a notification in main thread. "*/
 {
-    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:aNotification waitUntilDone:NO];
+    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:[[aNotification copy] autorelease] waitUntilDone:NO];
 }
 
 - (NSDictionary *)progressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription

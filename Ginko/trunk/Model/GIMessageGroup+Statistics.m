@@ -8,32 +8,43 @@
 
 #import "GIMessageGroup+Statistics.h"
 #import "GIMessage.h"
+#import "OPJob.h"
 
 NSString *GINumberOfUnreadMessages = @"GINumberOfUnreadMessages";
 NSString *GINumberOfUnreadThreads = @"GINumberOfUnreadThreads";
 
 NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupStatisticsDidInvalidateNotification";
+NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatisticsDidUpdateNotification";
 
 @implementation GIMessageGroup (Statistics)
 
 - (void)setUnreadMessageCount:(NSNumber *)aCount
 {
-    [unreadMessageCount autorelease];
-    unreadMessageCount = [aCount retain];
+	@synchronized(self)
+	{
+		[unreadMessageCount autorelease];
+		unreadMessageCount = [aCount retain];
+	}
 }
 
 + (void)loadGroupStats
 /*" Called at initialization time startup "*/
 {
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* groupStats = [ud objectForKey: @"GroupStats"];
-    [ud removeObjectForKey: @"GroupStats"];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *groupStats = [userDefaults objectForKey:@"GroupStats"];
+    [userDefaults removeObjectForKey:@"GroupStats"];
     
-    NSEnumerator* enumerator = [[self allObjects] objectEnumerator];
-    GIMessageGroup* group;
-    while (group = [enumerator nextObject]) {
-        NSDictionary* stats = [groupStats objectForKey: [group objectURLString]];
-        [group setUnreadMessageCount: [stats objectForKey: GINumberOfUnreadMessages]];
+    NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
+    GIMessageGroup *group;
+    while (group = [enumerator nextObject]) 
+	{;
+		@synchronized(group)
+		{
+			NSDictionary *stats = [groupStats objectForKey:[group objectURLString]];
+			[group setUnreadMessageCount:[stats objectForKey:GINumberOfUnreadMessages]];
+#warning what's going wrong here?
+			//group->isStatisticsValid = YES;
+		}
     }
 }
 
@@ -73,10 +84,10 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
     NSArray *affectedMessageGroups = [[(GIMessage *)[aNotification object] thread] valueForKey:@"groups"];    
     if ([affectedMessageGroups count] == 0) NSLog(@"warning: flags did change for a message without group.");
     
-	[affectedMessageGroups makeObjectsPerformSelector: @selector(invalidateStatistics)];
+	[affectedMessageGroups makeObjectsPerformSelector:@selector(invalidateStatistics)];
 }
 
-- (void) didAddValueForKey:(NSString *)key
+- (void)didAddValueForKey:(NSString *)key
 {
 	[super didChangeValueForKey:key];
 	if ([key isEqualToString:@"threadsByDate"]) 
@@ -94,44 +105,83 @@ NSString *GIMessageGroupStatisticsDidInvalidateNotification = @"GIMessageGroupSt
 	}
 }
 
-- (void) invalidateStatistics
+- (void)invalidateStatistics
 {
-    [self setUnreadMessageCount: nil];
-	NSNotification* n = [NSNotification notificationWithName: GIMessageGroupStatisticsDidInvalidateNotification 
-													  object: self];
-	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread: @selector(postNotification:) 
-														   withObject: n 
-														waitUntilDone: NO];
+	@synchronized(self)
+	{
+		isStatisticsValid = NO;
+	}
+	
+	NSNotification *notification = [NSNotification notificationWithName:GIMessageGroupStatisticsDidInvalidateNotification object:self];
+	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
 }
 
-- (NSNumber *)calculateUnreadMessageCount
+- (NSString *)jobName
+{
+	return @"Group Statistics Update";
+}
+
+- (void)calculateUnreadMessageCount
+{
+	NSLog(@"Starting statistics job for group %@", self);
+	
+	OPJob *job = [[[OPJob alloc] initWithName:[self jobName] target:self selector:@selector(calculateUnreadMessageCountJob:) argument:[NSDictionary dictionaryWithObject:self forKey:@"group"] synchronizedObject:[NSNumber numberWithUnsignedLongLong:[self oid]]] autorelease];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statisticsJobDidEnd:) name:JobDidFinishNotification object:job];
+	
+	[OPJob scheduleJob:job];
+}
+
+- (NSNumber *)unreadMessageCount
+{
+	@synchronized(self)
+	{
+		if (!isStatisticsValid)
+		{
+			if (![[OPJob pendingJobsWithTarget:self] count])
+			{
+				[self calculateUnreadMessageCount];
+			}
+			isStatisticsValid = YES;
+		}
+	}
+    return unreadMessageCount;
+}
+
+- (void)statisticsJobDidEnd:(NSNotification *)aNotification
+{		
+	OPJob *job = [aNotification object];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:JobDidFinishNotification object:job];
+	
+	NSNumber *result = [job result];
+	
+	NSLog(@"Finished statistics Job for group %@ with result %@.", self, result);
+
+	[self setUnreadMessageCount:result];
+	
+	NSNotification *notification = [NSNotification notificationWithName:GIMessageGroupStatisticsDidUpdateNotification object:self];
+	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
+}
+
+- (void)calculateUnreadMessageCountJob:(NSDictionary *)arguments
 {
     OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-    NSNumber *result = nil;
-    
 	
 	[context saveChanges];
-
-    @synchronized([context databaseConnection]) {
-        
-        OPSQLiteStatement *statement = [[[OPSQLiteStatement alloc] initWithSQL: [NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection: [context databaseConnection]] autorelease];
+	
+    @synchronized([context databaseConnection]) 
+	{
+        OPSQLiteStatement *statement = [[[OPSQLiteStatement alloc] initWithSQL:[NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:[context databaseConnection]] autorelease];
         
         //NSLog(@"%lu", (unsigned long)[self oid]);
         
         [statement execute];
         
-        result = [NSNumber newFromStatement:[statement stmt] index:0];
+		[[OPJob job] setResult:[NSNumber newFromStatement:[statement stmt] index:0]];
 		
 		[statement reset];
     }
-    
-    return result;
-}
-
-- (NSNumber *)unreadMessageCount
-{
-    if (! unreadMessageCount) [self setUnreadMessageCount:[self calculateUnreadMessageCount]];
-    return unreadMessageCount;
 }
 
 @end

@@ -2051,54 +2051,6 @@
 			};
 			name = Development;
 		};
-		7749E6C90855CB04009EF4F3 /* Development (linked) */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build/Development,
-					../OPNetwork/build/Development,
-					../OPDebug/build/Development,
-					$USER_LIBRARY_DIR/Frameworks/,
-				);
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GinkoVoyager_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = TIGER;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				GENERATE_PKGINFO_FILE = NO;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = Resources/Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/../../..",
-					"$(SRCROOT)",
-				);
-				OTHER_CFLAGS = "-fobjc-exceptions";
-				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = Ginko;
-				SECTORDER_FLAGS = "";
-				SEPARATE_STRIP = YES;
-				UNSTRIPPED_PRODUCT = YES;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = app;
-				ZERO_LINK = NO;
-			};
-			name = "Development (linked)";
-		};
 		7749E6CB0855CB04009EF4F3 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2178,38 +2130,6 @@
 			};
 			name = Development;
 		};
-		7749E6CE0855CB04009EF4F3 /* Development (linked) */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build/XCBuildConfiguration/linkedDevelopment_2,
-					../OPNetwork/build,
-					$USER_LIBRARY_DIR/Frameworks/,
-				);
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				HEADER_SEARCH_PATHS = $USER_LIBRARY_DIR/Frameworks/SenTestingKit.framework/Headers/;
-				OTHER_CFLAGS = "-fobjc-exceptions";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = "Run HeaderDoc";
-				SECTORDER_FLAGS = "";
-				UNSTRIPPED_PRODUCT = YES;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				ZERO_LINK = NO;
-			};
-			name = "Development (linked)";
-		};
 		7749E6D00855CB04009EF4F3 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2244,24 +2164,6 @@
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
 			};
 			name = Development;
-		};
-		7749E6D30855CB04009EF4F3 /* Development (linked) */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build/$BUILD_STYLE/,
-					../OPDebug/build/$BUILD_STYLE/,
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				UNSTRIPPED_PRODUCT = YES;
-				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences";
-			};
-			name = "Development (linked)";
 		};
 		7749E6D50855CB04009EF4F3 /* Default */ = {
 			isa = XCBuildConfiguration;
@@ -2312,42 +2214,6 @@
 				);
 			};
 			name = Development;
-		};
-		8DCE35F50891902800F705EF /* Development (linked) */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = "Resources/OPPersistence-Info.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)\"";
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = OPPersistence;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = "Development (linked)";
 		};
 		8DCE35F70891902800F705EF /* Default */ = {
 			isa = XCBuildConfiguration;
@@ -2531,7 +2397,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7749E6C80855CB04009EF4F3 /* Development */,
-				7749E6C90855CB04009EF4F3 /* Development (linked) */,
 				8DEFDC0C09C0962D00F6FB25 /* Release */,
 				7749E6CB0855CB04009EF4F3 /* Default */,
 			);
@@ -2542,7 +2407,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7749E6CD0855CB04009EF4F3 /* Development */,
-				7749E6CE0855CB04009EF4F3 /* Development (linked) */,
 				8DEFDC0D09C0962D00F6FB25 /* Release */,
 				7749E6D00855CB04009EF4F3 /* Default */,
 			);
@@ -2553,7 +2417,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7749E6D20855CB04009EF4F3 /* Development */,
-				7749E6D30855CB04009EF4F3 /* Development (linked) */,
 				8DEFDC0F09C0962D00F6FB25 /* Release */,
 				7749E6D50855CB04009EF4F3 /* Default */,
 			);
@@ -2564,7 +2427,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DCE35F40891902800F705EF /* Development */,
-				8DCE35F50891902800F705EF /* Development (linked) */,
 				8DEFDC0E09C0962D00F6FB25 /* Release */,
 				8DCE35F70891902800F705EF /* Default */,
 			);
