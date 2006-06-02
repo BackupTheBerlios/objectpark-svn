@@ -1219,14 +1219,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (GIMessage *)checkpointMessageWithStatus:(unsigned)sendStatus
 {
     GIMessage *message = nil;
-    
-    message = [GIMessage messageWithTransferData:[[self message] transferData]];
-    NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [[self message] transferData]);
+    OPInternetMessage *internetMessage = [self message];
+    message = [GIMessage messageWithTransferData:[internetMessage transferData]];
+    NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [internetMessage transferData]);
     
     // status
     if (oldMessage) [message addFlags:[oldMessage flags]];
     [message addFlags:OPSeenStatus | OPIsFromMeStatus];
-    
+    [message setValue:[internetMessage toWithFallback:YES] forKey:@"to"];
+	
     // unmark message as blocked for sending
     [message setSendStatus:sendStatus];
 	

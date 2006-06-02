@@ -55,7 +55,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	@"{"
 	@"  TableName = ZMESSAGE;"
 	@"  CreateStatements = (\""
-	@"  CREATE TABLE ZMESSAGE (Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZISANSWERED INTEGER, ZISFLAGGED INTEGER, ZMESSAGEID VARCHAR, ZISFULLTEXTINDEXED INTEGER, ZISSEEN INTEGER, ZISINTERESTING INTEGER, ZAUTHOR VARCHAR, ZISFROMME INTEGER, ZISDRAFT INTEGER, ZISQUEUED INTEGER, ZSUBJECT VARCHAR, ZDATE TIMESTAMP, ZISJUNK INTEGER, ZTHREAD INTEGER, ZPROFILE INTEGER, ZREFERENCE INTEGER, ZMESSAGEDATA INTEGER)"
+	@"  CREATE TABLE ZMESSAGE (Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZISANSWERED INTEGER, ZISFLAGGED INTEGER, ZMESSAGEID VARCHAR, ZISFULLTEXTINDEXED INTEGER, ZISSEEN INTEGER, ZISINTERESTING INTEGER, ZAUTHOR VARCHAR, ZISFROMME INTEGER, ZISDRAFT INTEGER, ZISQUEUED INTEGER, ZSUBJECT VARCHAR, ZDATE TIMESTAMP, ZISJUNK INTEGER, ZTHREAD INTEGER, ZPROFILE INTEGER, ZREFERENCE INTEGER, ZMESSAGEDATA INTEGER, ZTO VARCHAR)"
 	@"  \",\""
 	@"  CREATE INDEX ZMESSAGE_ZREFERENCE_INDEX ON ZMESSAGE (ZREFERENCE)"
 	@"  \",\""
@@ -74,6 +74,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	@"messageId = {ColumnName = ZMESSAGEID; AttributeClass = NSString;};"
 	@"messageData = {ColumnName = ZMESSAGEDATA; AttributeClass = GIMessageData;};"
 	@"subject = {ColumnName = ZSUBJECT; AttributeClass = NSString;};"
+	@"to = {ColumnName = ZTO; AttributeClass = NSString;};"
 	@"date = {ColumnName = ZDATE; AttributeClass = NSCalendarDate;};"
 	@"senderName = {ColumnName = ZAUTHOR; AttributeClass = NSString;};"
 	@"sendProfile = {ColumnName = ZPROFILE; AttributeClass = GIProfile; InverseRelationshipKey = messagesToSend;};"
@@ -114,7 +115,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return result;
 }
 
-+ (id) messageForMessageId: (NSString*) messageId
++ (id)messageForMessageId:(NSString *)messageId
 /*" Returns either nil or the message specified by its messageId. "*/
 {
 	GIMessage* result = nil;
@@ -523,10 +524,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-- (NSString*) flagsString
+- (NSString *)flagsString
 	/*" Returns a textual representation of some flags. Used for exporting messages, including their flags. Not all available flags are supported. "*/
 {
-    char result[sizeof(unsigned)*8+1];  // size of flags vector in bits + 1
+    char result[sizeof(unsigned) * 8 + 1];  // size of flags vector in bits + 1
     int i = 0;
     unsigned flags = [self flags];
     
@@ -538,13 +539,27 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     result[i++] = '\0'; // terminate string
     
-    return [NSString stringWithCString: result];
+    return [NSString stringWithCString:result];
 }
 
-- (NSString*) recipientsForDisplay
+- (NSString *)recipientsForDisplay
 {
-	NSString* result = [[self internetMessage] toWithFallback: YES];
-	if ([result rangeOfString: @","].length==0) {
+	NSString *result = [self valueForKey:@"to"];
+	if ([result length] == 0)
+	{
+		OPInternetMessage *internetMessage = [self internetMessage];
+		result = [internetMessage toWithFallback:YES];
+		
+		// self repairing:
+		if ([self hasFlags:OPIsFromMeStatus])
+		{
+			NSLog(@"repairing to field");
+			[self setValue:result forKey:@"to"];
+		}
+	}
+	
+	if ([result rangeOfString:@","].length == 0) 
+	{
 		result = [result realnameFromEMailStringWithFallback];
 	}
 	

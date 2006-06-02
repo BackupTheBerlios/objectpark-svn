@@ -96,13 +96,13 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 //static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {    
     [threadsView setTarget:self];
     [threadsView setDoubleAction:@selector(openSelection:)];
     [threadsView setHighlightThreads:YES];
     [threadsView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinkoThreads", nil]];
-	[threadsView setIndentationMarkerFollowsCell: NO];
+	[threadsView setIndentationMarkerFollowsCell:NO];
     ///[threadsView setIndentationPerLevel:1.0];
 	
     [searchHitsTableView setTarget:self];
@@ -1674,24 +1674,29 @@ static NSAttributedString* spacer2()
 	        	// it's a thread:		
                 GIThread* thread = item;
                 
-                if ([thread containsSingleMessage]) {
-                    NSString* from;
-                    NSAttributedString* aFrom;
-                    GIMessage* message = [[thread valueForKey: @"messages"] lastObject];
+                if ([thread containsSingleMessage]) 
+				{
+                    NSString *from;
+                    NSAttributedString *aFrom;
+                    GIMessage *message = [[thread valueForKey:@"messages"] lastObject];
                     
-                    if (message) {
+                    if (message) 
+					{
                         BOOL flags  = [message flags];
-                        NSString* subject = [message valueForKey: @"subject"];
+                        NSString *subject = [message valueForKey:@"subject"];
                         
                         if (!subject) subject = @"";
                         
-                        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: subject attributes: (flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+                        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:(flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
                         
-                        [result appendAttributedString: aSubject];
+                        [result appendAttributedString:aSubject];
                         
-						if ([message hasFlags: OPIsFromMeStatus]) {
-							from = [NSString stringWithFormat: @" (%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
-						} else {
+						if ([message hasFlags:OPIsFromMeStatus]) 
+						{
+							from = [NSString stringWithFormat: @"(%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
+						} 
+						else 
+						{
 							from = [message senderName];
 							if (!from) from = @"- sender missing -";
 							from = [NSString stringWithFormat: @" (%@)", from];
