@@ -112,8 +112,7 @@
                 BOOL shouldTerminate = NO;
                 NSData *transferData = nil;
                 
-                while ((transferData = [pop3session nextTransferData]) && !shouldTerminate)
-                {
+                while ((transferData = [pop3session nextTransferData]) && !shouldTerminate) {
                     [job setProgressInfo:[job progressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, [theAccount incomingServerName]]]];
                     
                     // putting onto disk:
@@ -124,41 +123,36 @@
                 }
                 
                 // set result:
-				if (fetchCount > 0)
-				{
+				if (fetchCount > 0) {
 					[job setResult:[mboxFile path]];
-				}
-				else
-				{
+				} else {
 					[mboxFile remove];
 				}
                 
                 // cleaning up maildrop:
-				if (![[self deletionDate] isEqualTo:[NSDate distantFuture]])
-				{
+				if (![[self deletionDate] isEqualTo:[NSDate distantFuture]]) {
 					[job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
 					
 					[pop3session cleanUp];
 				}
-            }
-            @catch (NSException *localException)
-            {
+            } @catch (NSException* localException) {
                 [pop3session abortSession];
-                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];               
+                [[NSFileManager defaultManager] removeFileAtPath: [mboxFile path] handler: NULL];     
+				[localException retain];
+				[pool release]; pool = nil;
+				[localException autorelease];
                 @throw;
-            }
-            @finally
-            {
-                [pool release];
-            }
+            } 
+			[pool release]; pool = nil;
+
             
-            [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+            [job setProgressInfo: [job indeterminateProgressInfoWithDescription: [NSString stringWithFormat: NSLocalizedString(@"logging off from %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
             
             [pop3session closeSession];
             
             if ([theAccount incomingServerType] == POP3S)
             {
-                [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"closing secure connection to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
+                [job setProgressInfo:[job indeterminateProgressInfoWithDescription: [NSString stringWithFormat: NSLocalizedString(@"closing secure connection to %@", @"progress description in POP job"), [theAccount incomingServerName]]]];
                 
                 [stream shutdownEncryption];
             }

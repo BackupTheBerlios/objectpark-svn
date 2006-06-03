@@ -48,7 +48,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 @end
 
 @interface OPPOP3Session (ServerResponseAndSimpleCommands)
-- (BOOL)_isOKResponse:(NSString *)aResponse;
+
 - (NSString *)_readOKForCommand:(NSString *)command;
 - (NSString *)_serverGreeting;
 - (int)_maildropSize;
@@ -139,18 +139,20 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     }
 }
 
-- (void)abortSession
+- (void) abortSession
 /*" Aborts the session with rollback of DELEs. "*/
 {
-    if (_state == TRANSACTION)
-    {
+    if (_state == TRANSACTION) {
         // stream needs closing
-        [self _readOKForCommand:@"RSET"];
-        [self _readOKForCommand:@"QUIT"];
+		@try {
+			[self _readOKForCommand: @"RSET"];
+			[self _readOKForCommand: @"QUIT"];
+		} @catch (NSException* localException) {
+			// Ignore Exceptions during abort.
+			_state = DIRTY_ABORTED; // Is this the right thing to do?
+		}
         _state = UPDATE;
-    } 
-	else 
-	{
+    } else {
         _state = DIRTY_ABORTED;
     }
 }
@@ -423,7 +425,7 @@ UIDL. nil otherwise. "*/
 		}
 		@catch (NSException *localException)
 		{
-			[NSException raise:OPPOP3SessionException format:@"Timeout in POP3Session %@.", self];	
+			[NSException raise:OPPOP3SessionException format: @"Timeout in POP3Session %@: ", self, localException];	
 		}
 	}
 	
@@ -669,58 +671,52 @@ UIDL. nil otherwise. "*/
     for (i = 0; i < _maildropSize; i++)
         [_messageInfo addObject:[NSMutableDictionary dictionaryWithCapacity:4]];
     
-    NS_DURING
+    @try {
         [self _readOKForCommand:@"UIDL"]; 	// try to use UIDL command
-    NS_HANDLER
-        if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.");
-        while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
-        [pool release];
+    } @catch (NSException* localException) {
+		if ([localException isKindOfClass: [OPPOP3SessionException class]]) {
+		if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.");
+		while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
+		[pool release];
         return 0;				// UIDL command not understood.
-    NS_ENDHANDLER
+		} else {
+			@throw localException;
+		}
+	}
 
-    NS_DURING
-        while (response = [_stream availableLine])
-        {
-            NSMutableDictionary *infoDict;
-            NSArray *components;
-            NSString *UIDL;
-            int messageNumber;
-
-            components = [response componentsSeparatedByString:@" "];
+    @try {
+        while (response = [_stream availableLine]) {
+			
+            NSArray* components = [response componentsSeparatedByString: @" "];
             NSAssert([components count] > 1, @"components not right -> bug in OPNetwork because dotted line prob");
-            messageNumber = [[components objectAtIndex:0] intValue];
-            UIDL = [components objectAtIndex:1];
-
-            infoDict = [_messageInfo objectAtIndex:messageNumber - 1];
-
-            if ([UIDL length])
-            {
+            int messageNumber = [[components objectAtIndex: 0] intValue];
+            NSString* UIDL = [components objectAtIndex: 1];
+            NSMutableDictionary* infoDict = [_messageInfo objectAtIndex:messageNumber - 1];
+			
+            if ([UIDL length]) {
                 NSDictionary *contentFromInfoForUIDL;
-
+				
                 // add info from infoForUIDL if present
-                [infoDict setObject:UIDL forKey:@"UIDL"];
-                if (contentFromInfoForUIDL = [infoForUIDL objectForKey:UIDL])
-                    [infoDict addEntriesFromDictionary:contentFromInfoForUIDL];
+                [infoDict setObject: UIDL forKey:@"UIDL"];
+                if (contentFromInfoForUIDL = [infoForUIDL objectForKey: UIDL])
+                    [infoDict addEntriesFromDictionary: contentFromInfoForUIDL];
             }
             
-            if ([UIDLFromLastPosition isEqualToString:UIDL])
-            {
-                if (result == 0)
-                {
+            if ([UIDLFromLastPosition isEqualToString: UIDL]) {
+                if (result == 0) {
                     result = messageNumber;
                     if (NSDebugEnabled) NSLog(@"%@: Position %d for last UIDL found.", self, messageNumber);
-                }
-                else
-                {
+                } else {
                     if (NSDebugEnabled) NSLog(@"%@: CAUTION! An additional position %d for last UIDL found.", self, messageNumber);
                 }
             }
         };
-    NS_HANDLER
+    } @catch(NSException* localException) {
         if (NSDebugEnabled) NSLog(@"%@: Error while retrieving UIDLs from POP3 server.", self);
-    NS_ENDHANDLER
+    } @finally {
+		[pool release];
+	}
 
-    [pool release];
 
     if (result == 0)
     {
@@ -813,51 +809,68 @@ UIDL. nil otherwise. "*/
 
 @implementation OPPOP3Session (ServerResponseAndSimpleCommands)
 
+/*
 - (BOOL)_isOKResponse:(NSString *)aResponse
 {
     return [aResponse hasPrefix:@"+OK"];
 }
+*/
+
+static BOOL isOK(NSString* response) 
+/*" Returns YES, if the response string given begins with '+OK'. NO otherwise. "*/
+{
+	return [response hasPrefix:@"+OK"];
+}
+
+- (NSString*) responseForCommand: (NSString*) command
+{	
+    if (command) {
+        [_stream writeLine: command];
+		
+		// prevent printing of password
+        //if ([command hasPrefix:@"PASS "]) {
+        //    command = @"PASS ********";
+        //}
+    }	
+	NSString* line = [_stream availableLine];
+
+	return line;
+}
 
 - (NSString *)_readOKForCommand:(NSString *)command
+/*" Deprecated. Use isOK(response = [self responseForCommand: command]) instead. "*/
 {
     NSString *line = nil;
 
-    if (command)
-    {
+    if (command) {
         [_stream writeLine:command];
     }
     
     line = [_stream availableLine];
-    if (! [self _isOKResponse:line])
-    {
+    if (! isOK(line)) {
         // prevent printing of password
-        if ([command hasPrefix:@"PASS "])
-        {
+        if ([command hasPrefix:@"PASS "]) {
             command = @"PASS ********";
         }
         
-        [NSException raise:OPPOP3SessionException
-                    format:@"The command \"%@\" was rejected by the POP3 server: \"%@\"", command, line];
+        [NSException raise: OPPOP3SessionException
+                    format: @"The command \"%@\" was rejected by the POP3 server: \"%@\"", command, line];
     }
     
     return line;
 }
 
-- (NSString *)_serverGreeting
+- (NSString*) _serverGreeting
 /*" Reads the initial greeting with the optional timestamp for APOP.
     Returns the server's greeting. After leaving this method the session is in
     AUTHORIZATION state. Throws an %{OPPOP3SessionException} otherwise. "*/
 {
-    NSString *response = nil;
+    NSString* response = nil;
     // Read greeting with optional timestamp:
-    @try 
-	{
-        response = [self _readOKForCommand:nil];
-    } 
-	@catch (NSException *localException) 
-	{
-        [NSException raise:OPPOP3SessionException
-                    format:@"The POP3 server does not respond (with a 'server greeting')."];
+	if (! isOK(response = [self responseForCommand: nil])) {
+		
+        [NSException raise: OPPOP3SessionException
+                    format: @"The POP3 server does not respond (with a 'server greeting')."];
     }
         
     // Go in AUTHORIZATION state:
@@ -865,61 +878,54 @@ UIDL. nil otherwise. "*/
     return response;
 }
 
-- (int)_maildropSize
-/*" Returns the number of messages in the POP3 maildrop (server). Requires TRANSACTION state. "*/
+- (int) _maildropSize
+/*" Returns the number of messages in the POP3 maildrop (server) or -1, if unknown. Requires TRANSACTION state. "*/
 {
-    NSString *response;
+    NSString* response;
     NSAssert(_state == TRANSACTION, @"POP3 session is not in TRANSACTION state");
 
-    response = [self _readOKForCommand:@"STAT"];
-    return [[NSDecimalNumber decimalNumberWithString:[[response componentsSeparatedByString:@" "] objectAtIndex:1]] intValue];
+    if (isOK(response = [self responseForCommand: @"STAT"])) {
+		return [[NSDecimalNumber decimalNumberWithString: [[response componentsSeparatedByString: @" "] objectAtIndex: 1]] intValue];
+	} 
+	
+	return -1;
 }
 
 - (void)_getCapabilities
 {
-	if (! _capabilities)
-	{;
-		@try
-		{
-			[self _readOKForCommand:@"CAPA"];
+	if (! _capabilities) {
+		
+		if (isOK([self responseForCommand: @"CAPA"])) {
 			
-			NSMutableDictionary *capabilities = [NSMutableDictionary dictionary];
+			NSMutableDictionary* capabilities = [NSMutableDictionary dictionary];
 			
-			NSString *line;
-			do
-			{
+			NSString* line;
+			do {
 				line = [_stream availableLine];
-								
-				NSArray *components = [line componentsSeparatedByString:@" "];
 				
-				if ([components count]) 
-				{
-					if (NSDebugEnabled) NSLog(@"POP3 Capability: %@", line);
+				NSArray* components = [line componentsSeparatedByString: @" "];
+				
+				if ([components count]) {
 					
-					NSString *key = [components objectAtIndex:0];
-					NSString *value = @"";
+					NSString* key = [components objectAtIndex: 0];
+					NSString* value = @"";
 					
-					if ([components count] > 1) 
-					{
+					if ([components count] > 1) {
 						int i;
 						
-						for (i = 1; i < [components count]; i++)
-						{
-							value = [value stringByAppendingFormat:@" %@", [components objectAtIndex:i]];
+						for (i = 1; i < [components count]; i++) {
+							value = [value stringByAppendingFormat: @" %@", [components objectAtIndex:i]];
 						}
 					}
 					
 					[capabilities setObject:value forKey:key];
 				}
-			}
-			while (line);
+			} while (line);
+			
+			if (NSDebugEnabled) NSLog(@"POP3 Capabilities: %@", capabilities);
 			
 			_capabilities = [capabilities copy];
 		}
-		@catch (NSException *localException)
-		{
-			NSLog(@"CAPA failed.");
-		}		
 	}
 }
 
