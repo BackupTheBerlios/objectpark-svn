@@ -117,7 +117,10 @@
                         [sentMessages addObject:message];
 						
 						// Make woosh-sound for each message sent:
-						[[NSSound soundNamed: @"Mail Sent"] play];
+						NSSound* woosh = [NSSound soundNamed: @"Mail Sent"];
+						//while ([woosh isPlaying]) [NSThread sleepUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.5]]; // Make sure we hear one woosh per mail
+						[woosh stop];
+						[woosh play];
 						
                     } @catch (NSException *localException) {
                         NSLog(@"Error sending message %@: %@", [message valueForKey: @"subject"], [localException reason]);
