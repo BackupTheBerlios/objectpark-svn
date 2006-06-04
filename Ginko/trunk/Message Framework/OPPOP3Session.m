@@ -930,19 +930,17 @@ static BOOL isOK(NSString* response)
 }
 
 - (NSData *)_transferDataAtPosition:(int)position
+/*" Returns nil, if no data could be obtained from the server. "*/
 {
-    NSData *transferData = nil;
+    NSData* transferData = nil;
 
-    if ( (position <= _maildropSize) && (position > 0) ) 
-	{
-		NSString *command = [NSString stringWithFormat:@"RETR %d", position];
-        @try 
-		{
-            [self _readOKForCommand:command];
+    if ( (position <= _maildropSize) && (position > 0) ) {
+		NSString* command = [NSString stringWithFormat:@"RETR %d", position];
+		NSString* response;
+			if (isOK(response = [self responseForCommand: command])) {
             transferData = [_stream availableTextData];
-        } @catch (NSException *localException) 
-		{
-            if (NSDebugEnabled) NSLog(@"Warning: POP3 server fails for command '%@': %@", command, localException);
+		} else {
+            if (NSDebugEnabled) NSLog(@"Warning: POP3 server fails for command '%@': %@", command, response);
 		}
     }
     return transferData;
