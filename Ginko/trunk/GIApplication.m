@@ -422,6 +422,8 @@ NSNumber* yesNumber = nil;
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	[GIMessageGroup saveGroupStats];
+
 	[self saveOpenWindowsFromThisSession];
 	
 	[[self windows] makeObjectsPerformSelector:@selector(performClose:) withObject:self];

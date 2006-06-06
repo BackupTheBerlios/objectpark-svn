@@ -56,6 +56,11 @@
 
 - (id) init
 {
+	NSArray *allGroups = [GIMessageGroup allObjects];
+#warning Hack to keep them in resolved memory. Dirk, is this as it should be? If so, please remove the warning. ;-)
+	[allGroups retain]; // hack to keep them in memory!
+	[allGroups makeObjectsPerformSelector:@selector(resolveFault)];
+	
     if (self = [super init]) {
 		
 		NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -97,7 +102,6 @@
 - (void)windowWillClose:(NSNotification *)notification 
 {
     [self autorelease];
-    [GIMessageGroup saveGroupStats];
 }
 
 - (GIMessageGroup *)group

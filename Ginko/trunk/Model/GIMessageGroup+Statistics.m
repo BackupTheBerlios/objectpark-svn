@@ -41,9 +41,13 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 		@synchronized(group)
 		{
 			NSDictionary *stats = [groupStats objectForKey:[group objectURLString]];
-			[group setUnreadMessageCount:[stats objectForKey:GINumberOfUnreadMessages]];
-#warning what's going wrong here?
-			//group->isStatisticsValid = YES;
+			NSNumber *numberOfUnreadMessages = [stats objectForKey:GINumberOfUnreadMessages];
+			if (numberOfUnreadMessages)
+			{
+				//NSLog(@"set number of unread messages");
+				[group setUnreadMessageCount:numberOfUnreadMessages];
+				group->isStatisticsValid = YES;
+			}
 		}
     }
 }
@@ -58,11 +62,11 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
     while (group = [enumerator nextObject])
     {
         NSDictionary *dict = [NSMutableDictionary dictionary];
-        NSNumber *unreadCount = [group unreadMessageCount];
+        NSNumber *unreadCount = group->unreadMessageCount;
         
-        NSAssert([unreadCount isKindOfClass:[NSNumber class]], @"shit");
+        NSAssert(!unreadCount || [unreadCount isKindOfClass:[NSNumber class]], @"shit");
         
-        if (unreadCount) [dict setValue:unreadCount forKey:GINumberOfUnreadMessages];
+        if (unreadCount && group->isStatisticsValid) [dict setValue:unreadCount forKey:GINumberOfUnreadMessages];
         
         if ([dict count])
         {
@@ -123,7 +127,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 
 - (void)calculateUnreadMessageCount
 {
-	NSLog(@"Starting statistics job for group %@", self);
+	//NSLog(@"Starting statistics job for group %@", self);
 	
 	OPJob *job = [[[OPJob alloc] initWithName:[self jobName] target:self selector:@selector(calculateUnreadMessageCountJob:) argument:[NSDictionary dictionaryWithObject:self forKey:@"group"] synchronizedObject:[NSNumber numberWithUnsignedLongLong:[self oid]]] autorelease];
 
@@ -156,7 +160,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	
 	NSNumber *result = [job result];
 	
-	NSLog(@"Finished statistics Job for group %@ with result %@.", self, result);
+	//NSLog(@"Finished statistics Job for group %@ with result %@.", self, result);
 
 	[self setUnreadMessageCount:result];
 	
