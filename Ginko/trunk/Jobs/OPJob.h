@@ -22,6 +22,7 @@
 	id result;
 	NSDictionary *progressInfo;
 	BOOL shouldTerminate;
+	BOOL isHidden;
 }
 
 /*" Initialization "*/
@@ -72,6 +73,10 @@
 - (id)exception;
 - (void)suggestTerminating;
 - (NSDictionary *)progressInfo;
+
+/*" Miscellaneous "*/
+- (BOOL)isHidden;
+- (void)setHidden:(BOOL)shouldBeHidden;
 
 /*" Methods for use within jobs "*/
 + (OPJob *)job;

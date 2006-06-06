@@ -131,6 +131,8 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	
 	OPJob *job = [[[OPJob alloc] initWithName:[self jobName] target:self selector:@selector(calculateUnreadMessageCountJob:) argument:[NSDictionary dictionaryWithObject:self forKey:@"group"] synchronizedObject:[NSNumber numberWithUnsignedLongLong:[self oid]]] autorelease];
 
+	[job setHidden:YES];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statisticsJobDidEnd:) name:JobDidFinishNotification object:job];
 	
 	[OPJob scheduleJob:job];

@@ -13,7 +13,7 @@
     IBOutlet NSWindow *window;
     IBOutlet NSTableView *tableView;
     
-    NSArray *jobs;
+    NSMutableArray *jobs;
 }
 
 + (id)sharedInstance;

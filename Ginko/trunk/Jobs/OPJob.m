@@ -679,6 +679,27 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
     }
 }
 
+// Miscellaneous
+- (BOOL)isHidden
+{
+	BOOL rslt;
+	
+	@synchronized(self)
+	{
+		rslt = isHidden;
+	}
+	
+	return rslt;
+}
+
+- (void)setHidden:(BOOL)shouldBeHidden
+{
+	@synchronized(self)
+	{
+		isHidden = shouldBeHidden;
+	}
+}
+
 @end
 
 #import "GIAccount.h"

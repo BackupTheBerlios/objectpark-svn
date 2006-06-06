@@ -27,11 +27,28 @@ static GIActivityPanelController *panel = nil;
     }
 }
 
++ (void)showActivityPanelInteractive:(BOOL)interactive
+	/*" Set the interactive flag to indicate the the panel should be shown as a result of an interactive user request. "*/
+{
+    [[[self sharedInstance] window] orderFront:nil];
+}
+
 - (void)updateData
 {
     [jobs autorelease];
-    jobs = [[OPJob runningJobs] retain];
+    jobs = [[OPJob runningJobs] mutableCopy];
     
+	// throw out hidden jobs:
+	NSMutableArray *hiddenJobs = [NSMutableArray array];
+	NSEnumerator *enumerator = [jobs objectEnumerator];
+	OPJob *job;
+	while (job = [enumerator nextObject])
+	{
+		if ([job isHidden]) [hiddenJobs addObject:job];
+	}
+	
+	[jobs removeObjectsInArray:hiddenJobs];
+	
     [tableView reloadData];
     
     if ([jobs count] == 0) // no jobs to show 
@@ -42,6 +59,13 @@ static GIActivityPanelController *panel = nil;
             [window close];
         }
     }
+	else
+	{
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled])
+		{
+			[[self class] showActivityPanelInteractive:NO];
+		}
+	}
 }
 
 + (void)updateData
@@ -67,21 +91,16 @@ static GIActivityPanelController *panel = nil;
 	{
         panel = [[self alloc] init];
     }
+	
 	return panel;
-}
-
-+ (void)showActivityPanelInteractive:(BOOL)interactive
-    /*" Set the interactive flag to indicate the the panel should be shown as a result of an interactive user request. "*/
-{
-    [[[self sharedInstance] window] orderFront:nil];
 }
 
 + (void)activityStarted:(NSNotification *)aNotification
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:AutomaticActivityPanelEnabled])
-    {
-        [self showActivityPanelInteractive:NO];
-        
+    {        
+		[[self sharedInstance] updateData];
+				
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         
         [center addObserver:panel selector:@selector(updateData) name:GIActivityPanelNeedsUpdateNotification object:nil];        
