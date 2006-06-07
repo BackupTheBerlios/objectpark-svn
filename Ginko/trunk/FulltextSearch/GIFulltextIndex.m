@@ -1177,7 +1177,11 @@
     if ([messagesToAdd count]) [jobArguments setObject:messagesToAdd forKey:@"messagesToAdd"];
     if ([messagesToRemove count]) [jobArguments setObject:messagesToRemove forKey:@"messagesToRemove"];
     
-	[OPJob scheduleJobWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"];
+	OPJob *job = [[[OPJob alloc] initWithName:[self jobName] target:[[[self alloc] init] autorelease] selector:@selector(fulltextIndexMessagesJob:) argument:jobArguments synchronizedObject:@"fulltextIndexing"] autorelease];
+		
+	[job setHidden:YES];
+	
+	[OPJob scheduleJob:job];
 }
 
 + (void)resetIndex

@@ -1,14 +1,11 @@
 Bugs:
 
-- "move to trash" verhindert nicht das Senden einer Mail
+- "move to trash" does not prevent sending
 - deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
-
 - updates to the list of messages (fetching messages) do not result in thread-list reloads
-- sometimes statistics display is not updated.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
 - window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
 - while retrieving messages, sometimes only one account is used at first - the other accounts follow after the first has finished
-- Editor's vertical scroll bar is too short (until window is resized)
 
 Regressions:
 
@@ -25,3 +22,5 @@ Done:
 - (Axel) "space" in searches no longer works (-> maybe related to "go to next message" functionality)
 - (Axel) Replying sometime replies to the wrong message.
 - (Axel) Validation of toolbar items in ThreadListController regression
+- (Axel) sometimes statistics display is not updated.
+- (Dirk) Editor's vertical scroll bar is too short (until window is resized)
