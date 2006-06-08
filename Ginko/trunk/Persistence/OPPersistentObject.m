@@ -326,7 +326,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	[self didAccessValueForKey: key];
 	// All To-Many redlationship changes are recorded elsewhere
 	// if (NSDebugEnabled) NSLog(@"Skipped dirty-setting for add/remove-%@.", key);
-	[super didChangeValueForKey: key];
+	[self didChangeValueForKey: key];
 }
 
 - (void) didChangeValueForKey: (NSString*) key

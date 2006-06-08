@@ -133,7 +133,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
     if ((_state != UPDATE) && (_state != DISCONNECTED))
     {
         // stream needs closing
-        [self _readOKForCommand:@"QUIT"];
+        [self responseForCommand: @"QUIT"];
         [self _autosaveUIDLs];
         _state = UPDATE;
     }
@@ -935,9 +935,9 @@ static BOOL isOK(NSString* response)
     NSData* transferData = nil;
 
     if ( (position <= _maildropSize) && (position > 0) ) {
-		NSString* command = [NSString stringWithFormat:@"RETR %d", position];
+		NSString* command = [NSString stringWithFormat: @"RETR %d", position];
 		NSString* response;
-			if (isOK(response = [self responseForCommand: command])) {
+		if (isOK(response = [self responseForCommand: command])) {
             transferData = [_stream availableTextData];
 		} else {
             if (NSDebugEnabled) NSLog(@"Warning: POP3 server fails for command '%@': %@", command, response);
