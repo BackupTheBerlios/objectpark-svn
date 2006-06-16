@@ -70,6 +70,25 @@ NSNumber* yesNumber = nil;
     [GIActivityPanelController initialize];
 }
 
+static NSThread *mainThread = nil;
+
++ (void)acquireMainThread
+{
+	mainThread = [[NSThread currentThread] retain];
+}
+
++ (NSThread *)mainThread
+{
+	@synchronized(self) {
+		if (!mainThread)
+		{
+			[self performSelectorOnMainThread:@selector(acquireMainThread) withObject:nil waitUntilDone:YES];
+		}
+	}
+	
+	return mainThread;
+}
+
 - (IBAction)addressbook:(id)sender
 /*" Launches the Addressbook application. "*/
 {

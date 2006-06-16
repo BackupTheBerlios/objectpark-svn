@@ -982,27 +982,17 @@ static BOOL isThreadItem(id item)
 	isAutoReloadEnabled = NO;
 }
 
-- (void) reload
+- (void)reload
 {
+	NSAssert1([NSThread currentThread] == [GIApplication mainThread], @"called from wrong thread %@", [NSThread currentThread]);
+	
 	NSLog(@"Reloading outlineview data");
-	// Alternative to 
 	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
 	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
 	isAutoReloadEnabled = YES;
 	[threadsView noteNumberOfRowsChanged];
 	[threadsView reloadData];
 	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
-	
-	
-	/*
-	 NSEnumerator* e = [itemRetainer objectEnumerator];
-	 
-	 id item;
-	 while (item=[e nextObject]) {
-		 [threadsView reloadItem: item reloadChildren: YES];
-	 }
-	 [threadsView noteNumberOfRowsChanged];
-	 */
 }
 
 
