@@ -56,17 +56,20 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 //Factory Methods
 
-+ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname{
-    return [[[OPSMTP alloc] initWithUsername:aUsername password:aPassword stream:aStream hostname:aHostname] autorelease];
++ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates
+{
+    return [[[OPSMTP alloc] initWithUsername:aUsername password:aPassword stream:aStream hostname:aHostname useSMTPS:shouldUseSMTPS allowAnyRootCertificate:shouldAllowAnyRootCertificate allowExpiredCertificates:shouldAllowExpiredCertificates] autorelease];
 }
 
-+ (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject {
++ (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject 
+{
     return [[[OPSMTP alloc] initWithStream:aStream andDelegate:anObject] autorelease];
 }
 
 // Initialization and Deallocation Methods
 
-- (void)_connect {
+- (void)_connect 
+{
     NSHost *localhost;
     NSString *name;
 	NSString *domain;
@@ -81,7 +84,6 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
         
         [stream negotiateEncryption];
     }
-    
     
     // read initial greeting
     [pendingResponses addObject:@"220"];
@@ -235,7 +237,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     return self;  
 }
 
-- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname
+- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates
 {
     NSParameterAssert(aStream);
     
@@ -245,6 +247,9 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
         username = [aUsername retain];
         password = [aPassword retain];
 		hostname = [aHostname retain];
+		useSMTPS = shouldUseSMTPS;
+		allowAnyRootCertificate = shouldAllowAnyRootCertificate;
+		allowExpiredCertificates = shouldAllowExpiredCertificates;
 		
         [self _commonInits];
         [self _connect];
@@ -331,7 +336,6 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding]);
 		
 	[self sendTransferData: transferData from: from to: recipients];
-	
 }
 
 - (void)dealloc
@@ -578,7 +582,7 @@ Raises an exception if the message could not be sent. "*/
         return [_delegate useSMTPS:self];
     }
     
-    return NO;
+    return useSMTPS;
 }
 
 - (BOOL)_allowAnyRootCertificate
@@ -587,7 +591,7 @@ Raises an exception if the message could not be sent. "*/
         return [_delegate allowAnyRootCertificateForSMTP:self];
     }
     
-    return NO;
+    return allowAnyRootCertificate;
 }
 
 - (BOOL)_allowExpiredCertificates
@@ -596,7 +600,7 @@ Raises an exception if the message could not be sent. "*/
         return [_delegate allowExpiredCertificatesForSMTP:self];
     }
     
-    return NO;
+    return allowExpiredCertificates;
 }
 
 - (void)_writeSender:(NSString *)sender

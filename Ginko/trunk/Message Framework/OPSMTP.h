@@ -37,6 +37,9 @@ typedef enum _OPSMTPState {
     OPStream *stream;
     NSMutableDictionary *capabilities;
     NSString *username, *password, *hostname;
+	BOOL useSMTPS;
+	BOOL allowAnyRootCertificate;
+	BOOL allowExpiredCertificates;
     NSMutableArray *pendingResponses; // inspired by EDInternet's EDSMTPStream by Erik Dšrnenburg
     @private id _delegate;			/*" Delegate "*/
     int state;
@@ -50,10 +53,10 @@ typedef enum _OPSMTPState {
 	sasl_secret_t *getsecret_func_psecret;
 }
 
-+ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname;
++ (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates;
 + (id)SMTPWithStream:(OPStream *)aStream andDelegate:(id)anObject;
 
-- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname;
+- (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates;
 - (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject;
 
 - (BOOL)willAcceptMessage;

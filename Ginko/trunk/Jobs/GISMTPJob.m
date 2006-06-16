@@ -76,6 +76,7 @@
     NSArray *theMessages = [[messages retain] autorelease];
     NSMutableArray *sentMessages = [NSMutableArray array];
     OPJob *job = [OPJob job];
+	
     // is theAccount an SMTP after POP account?
     if ([theAccount outgoingAuthenticationMethod] == SMTPAfterPOP) 
     {
@@ -83,22 +84,23 @@
         [self authenticateViaPOP:theAccount];
     }
     
-    NSHost *host = [NSHost hostWithName: [theAccount outgoingServerName]];
+    NSHost *host = [NSHost hostWithName:[theAccount outgoingServerName]];
     [host name];
     
-    if ([host isReachableWithNoStringsAttached]) {
+    if ([host isReachableWithNoStringsAttached]) 
+	{
         // connecting to host:
         [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), [theAccount outgoingServerName], [theAccount outgoingServerPort]]]];
         
-        OPStream *stream = [OPStream streamConnectedToHost: host
-                                                      port: [theAccount outgoingServerPort]
-                                               sendTimeout: TIMEOUT
-                                            receiveTimeout: TIMEOUT];
+        OPStream *stream = [OPStream streamConnectedToHost:host
+                                                      port:[theAccount outgoingServerPort]
+                                               sendTimeout:TIMEOUT
+                                            receiveTimeout:TIMEOUT];
         
         NSAssert2(stream != nil, @"could not connect to server %@:%d", [theAccount outgoingServerName], [theAccount outgoingServerPort]);
         
         @try {
-            // logging into POP server:
+            // logging into SMTP server:
             [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), [theAccount outgoingServerName]]]];
             
             OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
@@ -106,37 +108,49 @@
             
             // sending messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            @try {
+            @try 
+			{
                 GIMessage *message;
                 
-                while (message = [enumerator nextObject]) {
+                while (message = [enumerator nextObject]) 
+				{
                     [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), [message valueForKey:@"subject"]]]];
                     
-                    @try {
+                    @try 
+					{
                         [SMTP sendMessage:[message internetMessage]];
                         [sentMessages addObject:message];
 						
 						// Make woosh-sound for each message sent:
-						NSSound* woosh = [NSSound soundNamed: @"Mail Sent"];
+						NSSound *woosh = [NSSound soundNamed:@"Mail Sent"];
 						//while ([woosh isPlaying]) [NSThread sleepUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.5]]; // Make sure we hear one woosh per mail
 						[woosh stop];
 						[woosh play];
-						
-                    } @catch (NSException *localException) {
+                    } 
+					@catch (NSException *localException) 
+					{
                         NSLog(@"Error sending message %@: %@", [message valueForKey: @"subject"], [localException reason]);
                     }
                     [pool release]; pool = [[NSAutoreleasePool alloc] init];
                 }
-            } @catch (NSException *localException) {
+            } 
+			@catch (NSException *localException) 
+			{
                 @throw;
-            } @finally {
+            } 
+			@finally 
+			{
                 [pool release];
                 [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
                 [SMTP quit];
             }
-        } @catch (NSException *localException) {
+        } 
+		@catch (NSException *localException) 
+		{
             @throw;
-        } @finally {
+        } 
+		@finally 
+		{
             [job setResult:[NSDictionary dictionaryWithObjectsAndKeys:
                 sentMessages, @"sentMessages",
                 theMessages, @"messages",
