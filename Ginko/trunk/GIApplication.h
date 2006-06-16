@@ -59,3 +59,8 @@ extern NSNumber* yesNumber;
 
 @end
 
+@interface GIApplication (NonModalErrorPresenting)
+
+- (BOOL)nonModalPresentError:(NSError *)error withTimeout:(NSTimeInterval)timeout;
+
+@end

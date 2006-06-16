@@ -49,5 +49,6 @@
 
 - (void) mergeMessagesFromThread: (GIThread*) anotherThread;
 
-
 @end
+
+extern NSString *GIThreadDidChangeNotification;

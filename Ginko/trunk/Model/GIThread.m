@@ -19,6 +19,7 @@
 #define REFERENCES  OPL_ASPECT  0x02
 #define MERGING     OPL_ASPECT  0x04
 
+NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 @implementation GIThread
 
@@ -59,19 +60,23 @@
 	[super willDelete];
 }
 
-- (void) calculateDate
+- (void)calculateDate
 /*" Sets the date attribute according to that of the latest message in the receiver. This method fires all message faults - so be careful."*/
 {
-	NSDate* result = nil;
-	NSEnumerator* oe = [[self valueForKey: @"messages"] objectEnumerator];
-	GIMessage* message;
-	while (message = [oe nextObject]) {
-		NSDate* md = [message valueForKey: @"date"];
-		if ([result compare: md]<=0) {
-			result = md;
+	NSDate *result = nil;
+	NSEnumerator *enumerator = [[self valueForKey:@"messages"] objectEnumerator];
+	GIMessage *message;
+	
+	while (message = [enumerator nextObject]) 
+	{
+		NSDate *date = [message valueForKey:@"date"];
+		if ([result compare:date] == NSOrderedDescending) 
+		{
+			result = date;
 		}
 	}
-	[self setValue: result forKey: @"date"];
+	
+	[self setValue:result forKey:@"date"];
 }
 
 /*
@@ -83,11 +88,24 @@
 }
 */
 
-- (void) didChangeValueForKey: (NSString*) key 
+- (void)noteChange
 {
-	[attributes removeObjectForKey: @"messagesByTreeCache"];
+	NSNotification *notification = [NSNotification notificationWithName:GIThreadDidChangeNotification object:self];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+}
 
-	[super didChangeValueForKey: key];
+- (void)didChangeValueForKey:(NSString *)key 
+{
+	// invalidating cache:
+	[attributes removeObjectForKey:@"messagesByTreeCache"];
+
+	// notifying main thread about message relation changes:
+	if ([key isEqualToString:@"messages"])
+	{
+		[self performSelectorOnMainThread:@selector(noteChange) withObject:nil waitUntilDone:NO];
+	}
+	
+	[super didChangeValueForKey:key];
 	
 	/*
 	if ([key isEqualToString: @"messages"]) {
@@ -117,21 +135,22 @@
 }
 */
 
-- (void) addMessage:(GIMessage*)aMessage
+- (void)addMessage:(GIMessage *)aMessage
 {
     [aMessage setValue:self forKey:@"thread"];
 }
 
-- (void) addMessages:(NSArray*)someMessages
+- (void)addMessages:(NSArray *)someMessages
 /*"Adds %someMessages to the receiver."*/
 {
-    NSEnumerator* messagesToAdd = [someMessages reverseObjectEnumerator];
-    GIMessage* message;
+    NSEnumerator *messagesToAdd = [someMessages reverseObjectEnumerator];
+    GIMessage *message;
     
     while (message = [messagesToAdd nextObject])
-        [self addMessage:message];
+	{
+        [message setValue:self forKey:@"thread"];
+	}
 }
-
 
 - (void) mergeMessagesFromThread: (GIThread*) otherThread
 /*" Moves all messages from otherThread into the receiver. otherThread is being deleted. "*/
@@ -318,19 +337,18 @@
 /*"Returns the thread a message is in.
    If the message is not yet in a thread it creates a new one and inserts the
    message into it."*/
-+ (GIThread*) threadForMessage: (GIMessage*) aMessage
++ (GIThread *)threadForMessage:(GIMessage *)aMessage
 {
-    GIThread* thread = [aMessage thread];
+    GIThread *thread = [aMessage thread];
     
-    if (thread)
-        return thread;
+    if (thread) return thread;
         
     thread = [[[self alloc] init] autorelease];
-    [thread insertIntoContext: [aMessage context]];
-    [thread setValue: [aMessage valueForKey:@"subject"] forKey: @"subject"];
-    [thread setValue: [aMessage valueForKey:@"date"] forKey: @"date"];
+    [thread insertIntoContext:[aMessage context]];
+    [thread setValue:[aMessage valueForKey:@"subject"] forKey:@"subject"];
+    [thread setValue:[aMessage valueForKey:@"date"] forKey:@"date"];
     
-    [thread addMessage: aMessage];
+    [thread addMessage:aMessage];
     
     OPDebugLog(THREADING, CREATION, @"Created thread %@ for message %@ (%qu)", [aMessage messageId], [aMessage oid]);
     
@@ -348,25 +366,27 @@
    If the direct ancestor of the first message in the chain exists the chain is
    connected to that message and the chain is added to its thread.
    If it does not exist that chain is added to a newly created thread."*/
-+ (void) addMessageToAppropriateThread:(GIMessage*)message
++ (void)addMessageToAppropriateThread:(GIMessage *)message
 {
-    NSMutableArray* references = [NSMutableArray arrayWithArray:[[message internetMessage] references]];
+    NSMutableArray *references = [NSMutableArray arrayWithArray:[[message internetMessage] references]];
     [references removeObject:[message messageId]];  // no self referencing allowed
     [references removeDuplicates];
     
-    GIThread* thread = [self threadForMessage:message];
+    GIThread *thread = [self threadForMessage:message];
     
-    NSEnumerator* enumerator = [references reverseObjectEnumerator];
-    GIMessage* referencingMsg = message;
-    GIMessage* referencedMsg;
+    NSEnumerator *enumerator = [references reverseObjectEnumerator];
+    GIMessage *referencingMsg = message;
+    GIMessage *referencedMsg;
     
-    NSString* refId;
-    while (refId = [enumerator nextObject]) {
+    NSString *refId;
+    while (refId = [enumerator nextObject]) 
+	{
         referencedMsg = [[message class] messageForMessageId:refId];
         
-        if (referencedMsg) {
+        if (referencedMsg) 
+		{
             OPDebugLog(THREADING, REFERENCES, @"%@ (%qu) -> %@ (%qu)", [referencingMsg messageId], [referencingMsg oid], [referencedMsg messageId], [referencedMsg oid]);
-            [referencingMsg setValue:referencedMsg forKey: @"reference"];
+            [referencingMsg setValue:referencedMsg forKey:@"reference"];
             
             [[referencedMsg thread] mergeMessagesFromThread:thread];
             
@@ -378,7 +398,7 @@
         [thread addMessage:referencedMsg];
         
         OPDebugLog(THREADING, REFERENCES, @"%@ (%qu) -> %@ (%qu)", [referencingMsg messageId], [referencingMsg oid], [referencedMsg messageId], [referencedMsg oid]);
-        [referencingMsg setValue:referencedMsg forKey: @"reference"];
+        [referencingMsg setValue:referencedMsg forKey:@"reference"];
         
         referencingMsg = referencedMsg;
     }

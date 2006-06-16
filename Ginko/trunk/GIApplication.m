@@ -270,6 +270,9 @@ NSNumber* yesNumber = nil;
     //                                             name: NSManagedObjectContextDidSaveNotification 
     //                                           object: nil];  
 	[self askForBecomingDefaultMailApplication];
+	
+	[self nonModalPresentError:[NSError errorWithDomain:@"TestDomain" description:@"Test Description"] withTimeout:0.0];
+
 }
 
 - (NSWindow *)groupsWindow
@@ -749,6 +752,20 @@ NSNumber* yesNumber = nil;
 - (NSString *)userEmail
 {
     return [[GIProfile defaultProfile] valueForKey:@"mailAddress"];
+}
+
+@end
+
+@implementation GIApplication (NonModalErrorPresenting)
+
+- (BOOL)nonModalPresentError:(NSError *)error withTimeout:(NSTimeInterval)timeout
+{
+//	NSAlert *alert = [[NSAlert alertWithError:error] retain];
+	
+//	[alert runModal];
+//	[[alert window] makeKeyAndOrderFront:self];
+	
+	return NO;
 }
 
 @end

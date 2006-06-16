@@ -9,6 +9,7 @@
 #import "GIMessageGroup+Statistics.h"
 #import "GIMessage.h"
 #import "OPJob.h"
+#import "GIThread.h"
 
 NSString *GINumberOfUnreadMessages = @"GINumberOfUnreadMessages";
 NSString *GINumberOfUnreadThreads = @"GINumberOfUnreadThreads";
@@ -81,6 +82,8 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 + (void)initialize
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageFlagsDidChange:) name:GIMessageDidChangeFlagsNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadDidChange:) name:GIThreadDidChangeNotification object:nil];
 }
 
 + (void)messageFlagsDidChange:(NSNotification *)aNotification
@@ -88,6 +91,16 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
     NSArray *affectedMessageGroups = [[(GIMessage *)[aNotification object] thread] valueForKey:@"groups"];    
     if ([affectedMessageGroups count] == 0) NSLog(@"warning: flags did change for a message without group.");
     
+	[affectedMessageGroups makeObjectsPerformSelector:@selector(invalidateStatistics)];
+}
+
++ (void)threadDidChange:(NSNotification *)aNotification
+{
+    NSArray *affectedMessageGroups = [(GIThread *)[aNotification object] valueForKey:@"groups"];    
+    if ([affectedMessageGroups count] == 0) NSLog(@"warning: thread did change for a thread without group.");
+    
+	NSLog(@"threadDidChange for groups: %@", affectedMessageGroups);
+
 	[affectedMessageGroups makeObjectsPerformSelector:@selector(invalidateStatistics)];
 }
 

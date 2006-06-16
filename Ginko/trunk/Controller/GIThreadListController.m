@@ -98,6 +98,8 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
 
 - (void)awakeFromNib
 {    
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadDidChange:) name:GIThreadDidChangeNotification object:nil];
+
     [threadsView setTarget:self];
     [threadsView setDoubleAction:@selector(openSelection:)];
     [threadsView setHighlightThreads:YES];
@@ -184,6 +186,23 @@ static BOOL isThreadItem(id item)
 	// Do nothing after this point!
 }
 
+- (void)threadDidChange:(NSNotification *)aNotification
+{
+    NSArray *affectedMessageGroups = [(GIThread *)[aNotification object] valueForKey:@"groups"];    
+    if ([affectedMessageGroups count] == 0) NSLog(@"warning: thread did change for a thread without group.");	
+	
+	if ([aNotification object] == displayedThread) 
+	{
+		[self updateCommentTree:YES];
+	}
+	
+	// check if a thread of this group changed:
+	if (group && [affectedMessageGroups containsObject:group])
+	{
+		[self reload];
+	}
+}
+
 - (NSArray *)threadsByDate
     /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
@@ -259,14 +278,8 @@ static BOOL isThreadItem(id item)
 	[displayedMessage addFlags: OPSeenStatus];
 	
 	if (isNewThread) {
-		[displayedThread removeObserver: self forKeyPath: @"messages"];
-
 		[displayedThread autorelease];
 		displayedThread = [aThread retain];
-		[displayedThread addObserver: self 
-						  forKeyPath: @"messages" 
-							 options: NSKeyValueObservingOptionNew 
-							 context: NULL];		
 	}
 	
 	if (aMessage) {
@@ -352,14 +365,15 @@ static BOOL isThreadItem(id item)
 						 change: (NSDictionary*) change 
 						context: (void*) context
 {
-	if ([keyPath isEqualToString: @"messages"]) {
+/*	if ([keyPath isEqualToString: @"messages"]) {
 		
 		if (object == displayedThread) {
 			[self updateCommentTree: YES];
 		}
 		[threadsView reloadItem: object reloadChildren: YES];
 		
-	} else if ([object isEqual: [self group]] && isAutoReloadEnabled) {
+	} else */
+	if ([object isEqual: [self group]] && isAutoReloadEnabled) {
 		
 		[threadsView noteNumberOfRowsChanged]; // make sure, we are not called back with illegal indexes
 		
@@ -1747,52 +1761,63 @@ static NSAttributedString* spacer2()
     return [hits count];
 }
 
-- (id) tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-    NSDictionary* hit = [hits objectAtIndex: rowIndex];
-    GIMessage* message = [hit objectForKey: @"message"];
-    //BOOL isAppActive = YES; // ([NSApp isActive] && [window isMainWindow]);
+    NSDictionary *hit = [hits objectAtIndex:rowIndex];
+    GIMessage *message = [hit objectForKey:@"message"];
 
-    if ([[aTableColumn identifier] isEqualToString: @"date"]) {
-        BOOL isRead = [message hasFlags: OPSeenStatus];
-        NSCalendarDate* date = [message valueForKey: @"date"];
-                
-#warning Use NSCalendar here!
-        NSString* dateString = [date descriptionWithCalendarFormat: [[NSUserDefaults standardUserDefaults] objectForKey: NSShortTimeDateFormatString] timeZone: [NSTimeZone localTimeZone] locale: [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+    if ([[aTableColumn identifier] isEqualToString:@"date"]) 
+	{
+        BOOL isRead = [message hasFlags:OPSeenStatus];
+        NSDate *date = [message valueForKey:@"date"];
+
+		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+		[dateFormatter setDateStyle:NSDateFormatterShortStyle];
+		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		
+        NSString *dateString = [dateFormatter stringFromDate:date];
+        //NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
         
-        return [[[NSAttributedString alloc] initWithString:dateString attributes: isRead ?  selectedReadFromAttributes() : unreadAttributes()] autorelease];
-    } else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"]) {
-        NSString* from;
+        return [[[NSAttributedString alloc] initWithString:dateString attributes:isRead ?  selectedReadFromAttributes() : unreadAttributes()] autorelease];
+    } 
+	else if ([[aTableColumn identifier] isEqualToString: @"subjectauthor"]) 
+	{
+        NSString *from;
         NSAttributedString *aFrom;
-        NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
+        NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
         
         BOOL isRead  = [message hasFlags:OPSeenStatus];
-        NSString* subject = [message valueForKey: @"subject"];
+        NSString *subject = [message valueForKey:@"subject"];
         
         if (!subject) subject = @"";
         
-        NSAttributedString* aSubject = [[NSAttributedString alloc] initWithString: subject attributes: isRead ? selectedReadAttributes() : unreadAttributes()];
+        NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:isRead ? selectedReadAttributes() : unreadAttributes()];
         
-        [result appendAttributedString: aSubject];
+        [result appendAttributedString:aSubject];
         
-        if ([message hasFlags: OPIsFromMeStatus]) {
+        if ([message hasFlags:OPIsFromMeStatus]) 
+		{
 			from = [NSString stringWithFormat:@" (%c %@)", 2782/*Right Arrow*/, [message recipientsForDisplay]];
-		} else {
+		} 
+		else 
+		{
 			from = [message senderName];
 			if (!from) from = @"- sender missing -";
 			from = [NSString stringWithFormat:@" (%@)", from];
 		}
         
-        aFrom = [[NSAttributedString alloc] initWithString: from attributes: isRead ? selectedReadFromAttributes()  :  selectedUnreadFromAttributes()];
+        aFrom = [[NSAttributedString alloc] initWithString:from attributes:isRead ? selectedReadFromAttributes() : selectedUnreadFromAttributes()];
         
-        [result appendAttributedString: aFrom];
+        [result appendAttributedString:aFrom];
         
         [aSubject release];
         [aFrom release];
         
         return result;
-    } else if ([[aTableColumn identifier] isEqualToString: @"relevance"]) {
-        return [hit objectForKey: @"score"]; // the score
+    } 
+	else if ([[aTableColumn identifier] isEqualToString:@"relevance"]) 
+	{
+        return [hit objectForKey:@"score"]; // the score
     }
     
     return @"";
