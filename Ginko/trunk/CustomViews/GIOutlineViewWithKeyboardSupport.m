@@ -48,18 +48,27 @@
     item = [self itemAtRow:selectedRow];
     level = [self levelForItem:item];
 
-    if (level)
-    {
+    if (level) {
         while (([self levelForItem:item] > level)
-                || (! [self isItemExpanded:item]) 
-                && (selectedRow > 0))
-        {
+                || (! [self isItemExpanded: item]) 
+                && (selectedRow > 0)) {
             selectedRow -= 1;
-            item = [self itemAtRow:selectedRow];
+            item = [self itemAtRow: selectedRow];
         }
     }
     return item;
 }
+
+- (void) mouseDown: (NSEvent*) theEvent 
+{
+	if ([theEvent clickCount]==2) {
+		if  ([theEvent modifierFlags] & NSCommandKeyMask) { 
+			return; // Ignore double clicks with alt key held down.
+		}
+	}
+	[super mouseDown: theEvent];
+}
+
 
 - (void) keyDown:(NSEvent *)theEvent 
 {
