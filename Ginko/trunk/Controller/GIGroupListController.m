@@ -56,17 +56,17 @@
 
 - (id) init
 {
-	NSArray *allGroups = [GIMessageGroup allObjects];
-#warning Hack to keep them in resolved memory. Dirk, is this as it should be? If so, please remove the warning. ;-)
-	[allGroups retain]; // hack to keep them in memory!
-	[allGroups makeObjectsPerformSelector:@selector(resolveFault)];
+	//NSArray *allGroups = [GIMessageGroup allObjects];
+//#warning Hack to keep them in resolved memory. Dirk, is this as it should be? If so, please remove the warning. ;-)
+	//[allGroups retain]; // hack to keep them in memory!
+	[[GIMessageGroup allObjects] makeObjectsPerformSelector: @selector(resolveFault)];
 	
     if (self = [super init]) {
 		
 		NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
 		
         [GIMessageGroup loadGroupStats];
-        [NSBundle loadNibNamed:@"Boxes" owner:self];
+        [NSBundle loadNibNamed: @"Boxes" owner: self];
 		
         [nc addObserver: self 
 			   selector: @selector(groupsChanged:) 
@@ -93,7 +93,10 @@
 				   name: GIMessageGroupStatisticsDidInvalidateNotification 
 				 object: nil];
 		
-		[nc addObserver:self selector:@selector(groupStatsDidUpdate:) name:GIMessageGroupStatisticsDidUpdateNotification object:nil];
+		[nc addObserver: self 
+			   selector: @selector(groupStatsDidUpdate:) 
+				   name: GIMessageGroupStatisticsDidUpdateNotification 
+				 object: nil];
     }
     
 	return [self retain]; // self retaining!

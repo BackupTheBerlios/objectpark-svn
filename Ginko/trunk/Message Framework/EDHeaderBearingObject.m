@@ -89,35 +89,34 @@
 
 - (void) setBody: (NSString*) fieldBody forHeaderField: (NSString*) fieldName
 {
-    OPObjectPair	*headerField;
-    NSString 		*canonicalName;
+    OPObjectPair*	headerField;
+    NSString*		canonicalName;
     unsigned int	i, n;
     
     fieldName = [fieldName sharedInstance];
     canonicalName = [[fieldName lowercaseString] sharedInstance];
     headerField = [[OPObjectPair allocWithZone:[self zone]] initWithObjects:fieldName:fieldBody];
-    if ([headerDictionary objectForKey:canonicalName] != nil)
-    {
+    if ([headerDictionary objectForKey: canonicalName] != nil) {
         //NSLog(@"will replace body for header field %@", fieldName);
         for(i = 0, n = [headerFields count]; i < n; i++)
-            if([[[headerFields objectAtIndex:i] firstObject] caseInsensitiveCompare:fieldName] == NSOrderedSame)
+            if([[[headerFields objectAtIndex: i] firstObject] caseInsensitiveCompare: fieldName] == NSOrderedSame)
                 break;
         NSAssert(i < n, @"header dictionary inconsistent with header fields");
-        [headerFields replaceObjectAtIndex:i withObject:headerField];
+        [headerFields replaceObjectAtIndex:i withObject: headerField];
     } else {
         [headerFields addObject:headerField];
     }
-    [headerDictionary setObject: fieldBody forKey:canonicalName];
+    [headerDictionary setObject: fieldBody forKey: canonicalName];
     [headerField release];
 }
 
 
 - (NSString*) bodyForHeaderField: (NSString*) fieldName
 {
-    NSString *fieldBody;
+    NSString* fieldBody = [headerDictionary objectForKey: fieldName];
 
-    if((fieldBody = [headerDictionary objectForKey:fieldName]) == nil)
-        if((fieldBody = [headerDictionary objectForKey:[fieldName lowercaseString]]) == nil)
+    if (! fieldBody)
+        if ((fieldBody = [headerDictionary objectForKey: [fieldName lowercaseString]]) == nil)
             return nil;
     return fieldBody;
 }
@@ -194,10 +193,10 @@
 
 - (NSString*) subject
 {
-    NSString *fBody;
+    NSString* fBody;
 
     if((subject == nil) && ((fBody = [self bodyForHeaderField: @"subject"]) != nil))
-        subject = [[[EDTextFieldCoder decoderWithFieldBody:fBody] text] retain];
+        subject = [[[EDTextFieldCoder decoderWithFieldBody: fBody] text] retain];
     return subject;
 }
 
@@ -234,13 +233,10 @@
 
 - (NSString *)replySubject
 {
-    // I do not want to see this localized!
-//    if([[self subject] isEqualToString:[self originalSubject]])
-    if (![[self subject] hasPrefix:@"Re: "])
-    {
+    // Axel: I do not want to see this localized!
+    if (![[self subject] hasPrefix: @"Re: "]) {
         return [@"Re: " stringByAppendingString:[self subject]];
-    }
-    
+    }    
     return [self subject];
 }
 

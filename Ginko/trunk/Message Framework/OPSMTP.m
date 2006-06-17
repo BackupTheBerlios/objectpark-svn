@@ -257,7 +257,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     return self;
 }
 
-/*" Sends message with given parameters. Raises an exception if the message could not be sent. "*/
+/*" Sends message with given parameters. Raises an exception if the message could not be sent. Only supports languages encodeable in ISO-Latin-1. "*/
 - (void) sendPlainText: (NSString*) body 
 				  from: (NSString*) from 
 					to: (NSArray*) recipients
@@ -333,7 +333,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 	[transferData appendData:[body dataUsingEncoding: NSISOLatin1StringEncoding]];
 	
-	NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding]);
+	if (NSDebugEnabled) NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding]);
 		
 	[self sendTransferData: transferData from: from to: recipients];
 }
@@ -832,7 +832,7 @@ static int getauthname_func(void *context,
 	// check to see if that worked */
 	if (result != SASL_OK) 
 	{
-		NSLog(@"sasl_client_new failed");
+		if (NSDebugEnabled) NSLog(@"sasl_client_new failed");
 		return NO;
 	}
 						   
@@ -866,7 +866,7 @@ static int getauthname_func(void *context,
                                                SASL_CONTINUE on success */
 	if (result != SASL_CONTINUE && result != SASL_OK) 
 	{
-		NSLog(@"sasl_client_start failed (result = %d)", result);
+		if (NSDebugEnabled) NSLog(@"sasl_client_start failed (result = %d)", result);
 		return NO;
 	}
 	
@@ -889,11 +889,11 @@ static int getauthname_func(void *context,
 	{
 		NSString *response = [[self _readResponse] objectAtIndex:0];
 		
-		NSLog(@"response = '%@'", response);
+		if (NSDebugEnabled) NSLog(@"response = '%@'", response);
 		
 		if ([response hasPrefix:@"5"]) 
 		{
-			NSLog(@"Authentication failure");
+			if (NSDebugEnabled) NSLog(@"Authentication failure");
 			return NO;
 		}
 		

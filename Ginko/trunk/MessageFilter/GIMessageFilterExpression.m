@@ -160,12 +160,13 @@
 
             enumerator = [_subjectsCache objectEnumerator];
             while (header = [enumerator nextObject]) {
-                NSString *fieldBody;
-
-                fieldBody = [[message internetMessage] bodyForHeaderField:header];
+				BOOL isRawHeader = [header hasSuffix: @"-raw"];
+				if (isRawHeader) header = [header substringToIndex: [header length]-4]; // strip -raw
+				
+                NSString* fieldBody = [[message internetMessage] bodyForHeaderField: header];
 
                 if (fieldBody) {
-                    [(NSMutableArray *)matchStrings addObject:[EDTextFieldCoder stringFromFieldBody:fieldBody withFallback: YES]];
+                    [(NSMutableArray*) matchStrings addObject: isRawHeader ? fieldBody : [EDTextFieldCoder stringFromFieldBody:fieldBody withFallback: YES]];
                 }
             }
             break;

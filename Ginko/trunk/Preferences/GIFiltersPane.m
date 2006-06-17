@@ -915,7 +915,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         
         if (! headerFieldsForPopup) 
         {
-            headerFieldsForPopup = [[NSMutableArray arrayWithObjects: @"From", @"To", @"Cc", @"To or Cc", @"Subject", @"Newsgroups", @"List-Id or To", @"Reply-To", nil] retain];
+            headerFieldsForPopup = [[NSMutableArray arrayWithObjects: @"From", @"To", @"Cc", @"To or Cc", @"Subject", @"Subject-RAW", @"Newsgroups", @"List-Id or To", @"Reply-To", @"Content-Type", nil] retain];
             [headerFieldsForPopup sortUsingSelector:@selector(caseInsensitiveCompare:)];
         }
     }

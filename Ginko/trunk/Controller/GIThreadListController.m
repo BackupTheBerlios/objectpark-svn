@@ -1168,7 +1168,7 @@ static BOOL isThreadItem(id item)
 {
 	// Re-query all threads keeping the selection, if possible.
 	//NSArray* selectedItems = [threadsView selectedItems];
-	if (NSDebugEnabled) NSLog(@"GroupController detected a model change. Cache cleared, OutlineView reloaded, group info text updated.");
+	if (NSDebugEnabled) NSLog(@"GroupController detected a model change (%@). Cache cleared, OutlineView reloaded, group info text updated.", aNotification);
 	[self updateGroupInfoTextField];
 	//[threadsView deselectAll:nil];
 	
@@ -1205,10 +1205,10 @@ static BOOL isThreadItem(id item)
 													 selector:@selector(modelChanged:) 
 														 name:@"GroupContentChangedNotification" 
 													   object:self];
-			[[NSNotificationCenter defaultCenter] addObserver:self 
-													 selector:@selector(modelChanged:) 
-														 name:JobDidFinishNotification 
-													   object:nil];
+			//[[NSNotificationCenter defaultCenter] addObserver:self 
+			//										 selector:@selector(modelChanged:) 
+			//											 name:JobDidFinishNotification 
+			//										   object:nil];
 			[aGroup addObserver:self 
 					 forKeyPath:@"threadsByDate" 
 						options:NSKeyValueObservingOptionNew 
