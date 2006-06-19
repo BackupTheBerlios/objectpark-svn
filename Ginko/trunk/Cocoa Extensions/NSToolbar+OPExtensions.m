@@ -65,7 +65,6 @@
                 
                 NSView *view = [[[viewClass alloc] initWithFrame:NSMakeRect(0, 0, maxW, maxH)] autorelease];
                 NSRect fRect = [view frame];
-                [item setView:view];
                 
                 fRect.size.width = minW;
                 fRect.size.height = minH;
@@ -89,7 +88,15 @@
                         [[control cell] setSendsWholeSearchString:NO];
                         [[control cell] setSendsSearchStringImmediately:NO];
                     }
+					
+					NSView *embeddingView = [[NSView alloc] initWithFrame:fRect];
+					[embeddingView addSubview:view];
+					[item setView:embeddingView];					
                 }
+				else
+				{
+					[item setView:view];
+				}
             }
             else
             {

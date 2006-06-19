@@ -987,12 +987,14 @@ static BOOL isThreadItem(id item)
 	NSAssert1([NSThread currentThread] == [GIApplication mainThread], @"called from wrong thread %@", [NSThread currentThread]);
 	
 	NSLog(@"Reloading outlineview data");
-	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
+//	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
 	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
 	isAutoReloadEnabled = YES;
-	[threadsView noteNumberOfRowsChanged];
+//	[threadsView noteNumberOfRowsChanged];
+	
 	[threadsView reloadData];
-	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
+	
+//	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
 }
 
 
@@ -2187,24 +2189,44 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
     return [self validateSelector:[theItem action]];
 }
 
-- (NSToolbarItem*) toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar: (BOOL) flag
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
-    return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
+	if ([itemIdentifier isEqualToString:@"search"]) 
+	{
+		NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+
+		NSRect fRect = [searchFieldView frame];
+		[item setLabel:@"Search"];
+		[item setPaletteLabel:[item label]];
+		[item setView:searchFieldView];
+		[item setMinSize:fRect.size];
+		
+		fRect.size.width += 150;
+		
+		[item setMaxSize:fRect.size];
+		
+		return [item autorelease];
+	}
+	else
+	{
+		return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
+	}
 }
 
-- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*) toolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
     return defaultIdentifiers;
 }
 
-- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
 {
-    static NSArray* allowedItemIdentifiers = nil;
+    static NSArray *allowedItemIdentifiers = nil;
     
-    if (! allowedItemIdentifiers) {
-        NSToolbarItem*  item;
-        NSMutableArray* allowed = [NSMutableArray arrayWithCapacity:[toolbarItems count] + 5];
-        NSEnumerator*   enumerator = [toolbarItems objectEnumerator];
+    if (! allowedItemIdentifiers) 
+	{
+        NSToolbarItem *item;
+        NSMutableArray *allowed = [NSMutableArray arrayWithCapacity:[toolbarItems count] + 5];
+        NSEnumerator *enumerator = [toolbarItems objectEnumerator];
 		
         while (item = [enumerator nextObject]) [allowed addObject:[item itemIdentifier]];
         

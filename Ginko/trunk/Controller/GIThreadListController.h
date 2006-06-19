@@ -27,6 +27,7 @@
     IBOutlet NSProgressIndicator *progressIndicator;
     IBOutlet NSTableView *searchHitsTableView;
     IBOutlet NSSearchField *searchField;
+	IBOutlet NSView *searchFieldView;
     IBOutlet NSDateFormatter *searchHitDateFormatter;
     IBOutlet NSArrayController *hitsController;
 	
