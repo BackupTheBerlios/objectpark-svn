@@ -61,7 +61,7 @@
 
 - (id) initWithFile: (NSString*) inPath
 {
-    if(self = [super init]) {
+    if (self = [super init]) {
     
         dbPath     = [inPath copy];
         connection = NULL;	
@@ -76,33 +76,34 @@
 	OPClassDescription* cd = [persistentClass persistentClassDescription];
     OPSQLiteStatement* statement = [self fetchStatementForClass: persistentClass];
 		
-	[statement reset];
-	[statement bindPlaceholderAtIndex: 0 toRowId: rid];
-	
-    if ([statement execute] == SQLITE_ROW) {
-		// We got a raw row, loop over all attributes and create a dictionary:
+	@synchronized(self) {
+		[statement reset];
+		[statement bindPlaceholderAtIndex: 0 toRowId: rid];
 		
-		NSArray* attributes = cd->attributeDescriptions;
-        int attrCount = cd->simpleAttributeCount;
-        int i = 0;
-		//NSLog(@"Processing attributeDescriptions %@", attributes);
-        result = [NSMutableDictionary dictionaryWithCapacity: attrCount];
-		NSAssert2(sqlite3_column_count([statement stmt])>=attrCount, @"Not enough columns returned. Expected %d, got %d", 
-				  attrCount, sqlite3_column_count([statement stmt]));
-		//NSLog(@"Got %d column return.", sqlite3_column_count([statement stmt]));
-        while (i<attrCount) {
-			OPAttributeDescription* desc = [attributes objectAtIndex: i];
-			id value = [desc->theClass newFromStatement: [statement stmt] index: i];
-			// if (NSDebugEnabled) NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
-			if (value) {
-				[result setObject: value forKey: desc->name];
-			} 
+		if ([statement execute] == SQLITE_ROW) {
+			// We got a raw row, loop over all attributes and create a dictionary:
 			
-            i++;
-        }
-    } 
-	[statement reset];
-
+			NSArray* attributes = cd->attributeDescriptions;
+			int attrCount = cd->simpleAttributeCount;
+			int i = 0;
+			//NSLog(@"Processing attributeDescriptions %@", attributes);
+			result = [NSMutableDictionary dictionaryWithCapacity: attrCount];
+			NSAssert2(sqlite3_column_count([statement stmt])>=attrCount, @"Not enough columns returned. Expected %d, got %d", 
+					  attrCount, sqlite3_column_count([statement stmt]));
+			//NSLog(@"Got %d column return.", sqlite3_column_count([statement stmt]));
+			while (i<attrCount) {
+				OPAttributeDescription* desc = [attributes objectAtIndex: i];
+				id value = [desc->theClass newFromStatement: [statement stmt] index: i];
+				// if (NSDebugEnabled) NSLog(@"Read attribute %@ (%@): %@",desc->name, desc->theClass, value);
+				if (value) {
+					[result setObject: value forKey: desc->name];
+				} 
+				
+				i++;
+			}
+		} 
+		[statement reset];
+	}
     return result;
 }
 
@@ -125,27 +126,30 @@
 
  
  - (OPSQLiteStatement*) updateStatementForClass: (Class) poClass
- {
-	 OPSQLiteStatement* result = [updateStatements objectForKey: poClass];
-	 if (!result) {
-		 // Create statement using class description and cache it in the updateStatements dictionary:
-		 OPClassDescription* cd = [poClass persistentClassDescription];
-		 NSMutableArray* columnNames = [cd columnNames];
-		 int i = [columnNames count] + 1;
-		 NSMutableArray* valuePlaceholders = [NSMutableArray array];
-		 while (i--) [valuePlaceholders addObject: @"?"];
-		 [columnNames addObject: @"ROWID"];
-		 
-		 NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [cd tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
-		 //NSLog(@"Preparing statement for updates: %@", queryString);
-		 
-		 result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
-		 
-		 //disabled [updateStatements setObject: result forKey: poClass]; // cache it
-		 
-	 }
-	 return result;
- }
+{
+	OPSQLiteStatement* result;
+	@synchronized(updateStatements) {
+		result = [updateStatements objectForKey: poClass];
+		if (!result) {
+			// Create statement using class description and cache it in the updateStatements dictionary:
+			OPClassDescription* cd = [poClass persistentClassDescription];
+			NSMutableArray* columnNames = [cd columnNames];
+			int i = [columnNames count] + 1;
+			NSMutableArray* valuePlaceholders = [NSMutableArray array];
+			while (i--) [valuePlaceholders addObject: @"?"];
+			[columnNames addObject: @"ROWID"];
+			
+			NSString* queryString = [NSString stringWithFormat: @"insert or replace into %@ (%@) values (%@);", [cd tableName], [columnNames componentsJoinedByString: @","], [valuePlaceholders componentsJoinedByString: @","]];
+			//NSLog(@"Preparing statement for updates: %@", queryString);
+			
+			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
+			
+			//disabled [updateStatements setObject: result forKey: poClass]; // cache it
+			
+		}
+	}
+	return result;
+}
  
  
 
@@ -183,21 +187,24 @@
 
 - (OPSQLiteStatement*) insertStatementForClass: (Class) poClass
 {
-	OPSQLiteStatement* result = [insertStatements objectForKey: poClass];
-	
-	if (!result) {
-		// Create statement using class description and cache it in the insertStatements dictionary:
-		OPClassDescription* cd = [poClass persistentClassDescription];
+	OPSQLiteStatement* result;
+	@synchronized(insertStatements) {
+		result = [insertStatements objectForKey: poClass];
 		
-		// Just create an empty entry to get a new ROWID:
-		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL)", [cd tableName]];
-		//NSLog(@"Preparing statement for inserts: %@", queryString);
-		//sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
-		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
-
-		NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);	
-		// Cache statement for later use:
-		[insertStatements setObject: result forKey: poClass]; 
+		if (!result) {
+			// Create statement using class description and cache it in the insertStatements dictionary:
+			OPClassDescription* cd = [poClass persistentClassDescription];
+			
+			// Just create an empty entry to get a new ROWID:
+			NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL)", [cd tableName]];
+			//NSLog(@"Preparing statement for inserts: %@", queryString);
+			//sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
+			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
+			
+			NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);	
+			// Cache statement for later use:
+			[insertStatements setObject: result forKey: poClass]; 
+		}
 	}
 	return result;
 }
@@ -212,16 +219,19 @@
 	NSParameterAssert([firstColumnName length]);
 	NSParameterAssert([secondColumnName length]);
 	
-	OPSQLiteStatement* result = [addRelationStatements objectForKey: joinTableName];
-	if (!result) {
-		NSParameterAssert(joinTableName != nil); // make sure this is a many-to-many attribute
-
-		NSString* queryString = [NSString stringWithFormat: @"insert into %@ (%@,%@) values (?,?);", joinTableName, firstColumnName, secondColumnName];
-		
-		//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
-		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
-		// Cache statement for later use:
-		[addRelationStatements setObject: result forKey: joinTableName];
+	OPSQLiteStatement* result;
+	@synchronized(addRelationStatements) {	
+		result = [addRelationStatements objectForKey: joinTableName];
+		if (!result) {
+			NSParameterAssert(joinTableName != nil); // make sure this is a many-to-many attribute
+			
+			NSString* queryString = [NSString stringWithFormat: @"insert into %@ (%@,%@) values (?,?);", joinTableName, firstColumnName, secondColumnName];
+			
+			//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
+			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+			// Cache statement for later use:
+			[addRelationStatements setObject: result forKey: joinTableName];
+		}
 	}
 	return result;
 }
@@ -235,16 +245,19 @@
 	NSParameterAssert([firstColumnName length]);
 	NSParameterAssert([secondColumnName length]);
 	
-	OPSQLiteStatement* result = [removeRelationStatements objectForKey: joinTableName];
-	if (!result) {
-		NSParameterAssert(joinTableName != nil); // make sure this is a many-to-many attribute
-		
-		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where \"%@\"=? and \"%@\"=?;", joinTableName, firstColumnName, secondColumnName];
-		
-		//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
-		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
-		// Cache statement for later use:
-		[removeRelationStatements setObject: result forKey: joinTableName];
+	OPSQLiteStatement* result;
+	@synchronized(removeRelationStatements) {
+		result = [removeRelationStatements objectForKey: joinTableName];
+		if (!result) {
+			NSParameterAssert(joinTableName != nil); // make sure this is a many-to-many attribute
+			
+			NSString* queryString = [NSString stringWithFormat: @"delete from %@ where \"%@\"=? and \"%@\"=?;", joinTableName, firstColumnName, secondColumnName];
+			
+			//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
+			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+			// Cache statement for later use:
+			[removeRelationStatements setObject: result forKey: joinTableName];
+		}
 	}
 	return result;
 }
@@ -252,18 +265,20 @@
 
 - (OPSQLiteStatement*) fetchStatementForClass: (Class) poClass
 {
-	OPSQLiteStatement* result = [fetchStatements objectForKey: poClass];
-	
-	if (!result) {
-		// Create statement using class description and cache it in the updateStatements dictionary:
-		OPClassDescription* cd = [poClass persistentClassDescription];
+	OPSQLiteStatement* result;
+	@synchronized(fetchStatements) {
+		result = [fetchStatements objectForKey: poClass];
 		
-		NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[cd columnNames] componentsJoinedByString: @","], [cd tableName]];
-		//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
-		result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
-		// Cache statement for later use:
-		[fetchStatements setObject: result forKey: poClass]; // cache it
-
+		if (!result) {
+			// Create statement using class description and cache it in the updateStatements dictionary:
+			OPClassDescription* cd = [poClass persistentClassDescription];
+			
+			NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[cd columnNames] componentsJoinedByString: @","], [cd tableName]];
+			//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
+			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+			// Cache statement for later use:
+			[fetchStatements setObject: result forKey: poClass]; // cache it
+		}
 	}
 	return result;
 }
@@ -282,27 +297,29 @@
 	int attrCount = [attributes count];
 	int i, placeholder;
 
-	[updateStatement reset];
-	// Bind all placeholders in updateStatement:
-	for (i=placeholder=0; i<attrCount; i++) {
-		OPAttributeDescription* ad = [attributes objectAtIndex: i];
-		if (![ad isToManyRelationship]) {
-			NSString* key = ad->name;
-			id value = [values objectForKey: key];
-			//NSLog(@"Binding value %@ to attribute #%d(%@) of update statement.", value, placeholder, key);
-			[updateStatement bindPlaceholderAtIndex: placeholder++ toValue: value];
+	@synchronized(self) {
+		[updateStatement reset];
+		// Bind all placeholders in updateStatement:
+		for (i=placeholder=0; i<attrCount; i++) {
+			OPAttributeDescription* ad = [attributes objectAtIndex: i];
+			if (![ad isToManyRelationship]) {
+				NSString* key = ad->name;
+				id value = [values objectForKey: key];
+				//NSLog(@"Binding value %@ to attribute #%d(%@) of update statement.", value, placeholder, key);
+				[updateStatement bindPlaceholderAtIndex: placeholder++ toValue: value];
+			}
 		}
-	}
-			//	NSLog(@"Binding rowid to attribute #%d(%@) of update statement.", i);
-
-	[updateStatement bindPlaceholderAtIndex: placeholder toRowId: rid]; // fill in where clause
-	
-	[updateStatement execute];
-	[updateStatement reset];
-
-	if (!rid) {
-		rid = sqlite3_last_insert_rowid(connection);
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"Got new oid for %@ object: %lld", poClass, rid);
+		//	NSLog(@"Binding rowid to attribute #%d(%@) of update statement.", i);
+		
+		[updateStatement bindPlaceholderAtIndex: placeholder toRowId: rid]; // fill in where clause
+		
+		[updateStatement execute];
+		[updateStatement reset];
+		
+		if (!rid) {
+			rid = sqlite3_last_insert_rowid(connection);
+			OPDebugLog(OPPERSISTENCE, OPINFO, @"Got new oid for %@ object: %lld", poClass, rid);
+		}
 	}
 	return rid;
 }
@@ -310,46 +327,51 @@
 - (ROWID) insertNewRowForClass: (Class) poClass
 /*" Creates an empty row and returns the rowid assigned by SQLite. "*/
 {
+	ROWID result;
 	OPSQLiteStatement* insertStatement = [self insertStatementForClass: poClass];
-	[insertStatement execute];
-	[insertStatement reset];
-	return sqlite3_last_insert_rowid(connection);
+	@synchronized(self) {
+		[insertStatement execute];
+		[insertStatement reset];
+		result = sqlite3_last_insert_rowid(connection);
+	}
+	return result;
+}
+
+- (OPSQLiteStatement*) deleteStatementForClass:  (Class) poClass
+{	
+	OPSQLiteStatement* result;
+	
+	@synchronized(deleteStatements) {
+		
+		result = [deleteStatements objectForKey: poClass];
+		
+		if (!result) {
+			
+			NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID=?;", [[poClass persistentClassDescription] tableName]];
+			
+			result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self]; 
+			
+			NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);
+			
+			[deleteStatements setObject: result forKey: poClass];
+		}
+	}
+	return result;
 }
 
 - (void) deleteRowOfClass: (Class) poClass 
 					rowId: (ROWID) rid
 {
-	OPSQLiteStatement* result = [deleteStatements objectForKey: poClass];
-
-	if (!result) {
+	OPSQLiteStatement* result = [self deleteStatementForClass: poClass];
 		
-		NSString* queryString = [NSString stringWithFormat: @"delete from %@ where ROWID=?;", [[poClass persistentClassDescription] tableName]];
-
-		result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self]; 
-		
-		NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);
-		
-		[deleteStatements setObject: result forKey: poClass];
+	@synchronized(self) {
+		[result reset];
+		[result bindPlaceholderAtIndex: 0 toRowId: rid];
+		[result execute];
+		[result reset];
 	}
-	
-	[result reset];
-	[result bindPlaceholderAtIndex: 0 toRowId: rid];
-	[result execute];
-	[result reset];
 }
 
-/*
-- (id) init
-{
-    if( ![super init] )
-        return nil;
-    
-    mPath = NULL;
-    mDatabase = NULL;
-    
-    return self;
-}
-*/
 
 - (void) dealloc
 {
@@ -404,13 +426,15 @@
 - (void) performCommand: (NSString*) sql
 /*" A command is a SQL statement not returning rows. "*/
 {
-	sqlite3_stmt* statement = NULL;
-	sqlite3_prepare(connection, [sql UTF8String], -1, &statement, NULL);
-	OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing Command: '%@'", sql);
-	int result = sqlite3_step(statement);
-	sqlite3_reset(statement);
-	if (result != SQLITE_DONE) {
-		[self raiseSQLiteError];
+	@synchronized(self) {
+		sqlite3_stmt* statement = NULL;
+		sqlite3_prepare(connection, [sql UTF8String], -1, &statement, NULL);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing Command: '%@'", sql);
+		int result = sqlite3_step(statement);
+		sqlite3_reset(statement);
+		if (result != SQLITE_DONE) {
+			[self raiseSQLiteError];
+		}
 	}
 }
 
@@ -427,8 +451,8 @@
 	//if (!transactionInProgress) {
 	//OPDebugLog(OPPERSISTENCE, OPINFO, @"Beginning db transaction for %@", self);
 	// Simplistic implementation. Should use a statement class/object and cache that:
-		[self performCommand: @"BEGIN TRANSACTION"];   
 		transactionInProgress = YES;
+		[self performCommand: @"BEGIN TRANSACTION"];   
 		return YES;
 	}
 	return NO;
@@ -454,12 +478,20 @@
 
 - (int) lastErrorNumber
 {
-    return sqlite3_errcode(connection); 
+	int result;
+	@synchronized(self) {
+		result = sqlite3_errcode(connection); 
+	}
+	return result;
 }
 
 - (NSString*) lastError
 {
-    return SQLITE_OK==sqlite3_errcode(connection) ? nil : [NSString stringWithUTF8String: sqlite3_errmsg(connection)];
+	NSString* result;
+	@synchronized(self) {
+		result = SQLITE_OK==sqlite3_errcode(connection) ? nil : [NSString stringWithUTF8String: sqlite3_errmsg(connection)];
+	}
+	return result;
 }
 
 /*

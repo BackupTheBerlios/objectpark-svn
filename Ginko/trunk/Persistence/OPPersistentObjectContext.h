@@ -91,6 +91,7 @@
 - (void) setDatabaseConnectionFromPath: (NSString*) dbPath;
 - (OPSQLiteConnection*) databaseConnection;
 - (void) setDatabaseConnection: (OPSQLiteConnection*) newConnection;
+- (OPSQLiteConnection*) newDatabaseConnection;
 
 // Methods for use by the appication developer:
 + (OPPersistentObjectContext*) defaultContext;

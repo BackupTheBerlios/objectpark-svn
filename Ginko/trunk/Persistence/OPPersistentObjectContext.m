@@ -274,7 +274,7 @@ typedef struct {
 	OID oid = [object currentOid];
 	id result = nil;
 		if (oid) {
-			@synchronized(db) {
+			@synchronized(db) { // to be gone
 				result = [db attributesForRowId: oid ofClass: [object class]];
 			}
 
@@ -368,11 +368,17 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     [self setDatabaseConnection: dbc];
 }
  
-- (OPSQLiteConnection*) databaseConnection
-/*" You need to lock the connection returned prior to using it! "*/
+- (OPSQLiteConnection*) newDatabaseConnection
+/*" Returns a new database connection to the same database as the default database. "*/
 {
-    return db;   
+    return [[[OPSQLiteConnection alloc] initWithFile: [db path]] autorelease];   
 }
+
+- (OPSQLiteConnection*) databaseConnection
+{
+	return db;
+}
+
 
 - (void) setDatabaseConnection: (OPSQLiteConnection*) newConnection
 {
@@ -447,7 +453,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
 		
-		@synchronized(db) {
+		@synchronized(db) { // to be gone
 			[db beginTransaction];
 		}
 		
@@ -465,7 +471,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 					
 					[changedObject willSave];
 					OID newOid;
-					@synchronized(db) {
+					@synchronized(db) { // to be gone
 						newOid = [db updateRowOfClass: [changedObject class] 
 												rowId: [changedObject currentOid] 
 											   values: [changedObject attributeValues]];
@@ -492,7 +498,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				while (deletedObject = [coe nextObject]) {
 					
 					//NSLog(@"Will honk %@", deletedObject);
-					@synchronized(db) {
+					@synchronized(db) { // to be gone
 						
 						[db deleteRowOfClass: [deletedObject class] 
 									   rowId: [deletedObject currentOid]];
@@ -516,11 +522,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 				// Add a row in the join table for each relation added:
 				OPSQLiteStatement* addStatement;
-				@synchronized(db) {
-					addStatement = [db addStatementForJoinTableName: [relationshipChanges joinTableName] 
-													firstColumnName: [relationshipChanges firstColumnName] 
-												   secondColumnName: [relationshipChanges secondColumnName]];
-				}
+
+				addStatement = [db addStatementForJoinTableName: [relationshipChanges joinTableName] 
+												firstColumnName: [relationshipChanges firstColumnName] 
+											   secondColumnName: [relationshipChanges secondColumnName]];
 				
 				// Prevent this relationship from being read:
 				@synchronized(relationshipChanges) { 
@@ -546,11 +551,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 					
 					OPSQLiteStatement* removeStatement;
 					
-					@synchronized(db) {
-						removeStatement = [db removeStatementForJoinTableName: [relationshipChanges joinTableName] 
-															  firstColumnName: [relationshipChanges firstColumnName] 
-															 secondColumnName: [relationshipChanges secondColumnName]];
-					}
+					removeStatement = [db removeStatementForJoinTableName: [relationshipChanges joinTableName] 
+														  firstColumnName: [relationshipChanges firstColumnName] 
+														 secondColumnName: [relationshipChanges secondColumnName]];
 					
 					pairEnum = [relationshipChanges removedRelationsEnumerator];
 					
@@ -577,7 +580,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		
 		[pool release]; pool = [[NSAutoreleasePool alloc] init];
 		
-		@synchronized(db) {
+		@synchronized(db) { // to be gone
 			[db commitTransaction];
 		}
 		
@@ -679,7 +682,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			}
 		}
 		
-		@synchronized(db) {
+		@synchronized(db) { // to be gone
 			[db rollBackTransaction]; // in case one is in progress
 		}
 		
