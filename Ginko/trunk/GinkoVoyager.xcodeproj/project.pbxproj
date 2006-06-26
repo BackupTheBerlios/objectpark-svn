@@ -367,7 +367,7 @@
 		8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE9646F089F9F1F0053ED6B /* GIThread.m */; };
 		8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */; };
 		8DE96484089FA0990053ED6B /* OPPersistentObject+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */; };
-		8DEFDBCA09C08CFD00F6FB25 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEFDBC909C08CFD00F6FB25 /* libsqlite3.a */; };
+		8DEFDBCA09C08CFD00F6FB25 /* libsqlite336.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEFDBC909C08CFD00F6FB25 /* libsqlite336.a */; };
 		8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */; };
 		8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
 /* End PBXBuildFile section */
@@ -794,7 +794,7 @@
 		8DE96482089FA0990053ED6B /* OPPersistentObject+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OPPersistentObject+Extensions.m"; sourceTree = "<group>"; };
 		8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroup.h; sourceTree = "<group>"; };
 		8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroup.m; sourceTree = "<group>"; };
-		8DEFDBC909C08CFD00F6FB25 /* libsqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite3.a; path = Resources/libsqlite3.a; sourceTree = "<group>"; };
+		8DEFDBC909C08CFD00F6FB25 /* libsqlite336.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite336.a; path = Resources/libsqlite336.a; sourceTree = "<group>"; };
 		8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPClassDescription.h; sourceTree = "<group>"; };
 		8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPClassDescription.m; sourceTree = "<group>"; };
 		8DF749FB085525B900049071 /* Bugs.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bugs.txt; sourceTree = "<group>"; };
@@ -805,6 +805,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DEFDBCA09C08CFD00F6FB25 /* libsqlite336.a in Frameworks */,
 				8D86D3DF0712FA7C001B6105 /* AddressBook.framework in Frameworks */,
 				8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */,
 				8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */,
@@ -818,7 +819,6 @@
 				77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */,
 				77D471E4095BF12E003CEAEA /* CoreFoundation.framework in Frameworks */,
 				774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */,
-				8DEFDBCA09C08CFD00F6FB25 /* libsqlite3.a in Frameworks */,
 				7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */,
 				771CD38609F800170062BEED /* libsasl2.dylib in Frameworks */,
 				8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */,
@@ -948,7 +948,7 @@
 				771CD38509F800170062BEED /* libsasl2.dylib */,
 				8DDFB45209F82C07000F73E2 /* IOKit.framework */,
 				77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */,
-				8DEFDBC909C08CFD00F6FB25 /* libsqlite3.a */,
+				8DEFDBC909C08CFD00F6FB25 /* libsqlite336.a */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 			);
 			name = Frameworks;
@@ -2048,9 +2048,10 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/../../..",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 					"$(SRCROOT)",
 				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
@@ -2098,7 +2099,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/../../..",
 					"$(SRCROOT)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
@@ -2306,7 +2309,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/../../..",
 					"$(SRCROOT)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
 				OTHER_CFLAGS = "-fobjc-exceptions";
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;

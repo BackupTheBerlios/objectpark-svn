@@ -69,6 +69,8 @@ static NSHashTable* allInstances;
 	NSParameterAssert(aConnection != nil);
 	if (self = [super init]) {
 		
+		//NSParameterAssert(aConnection->connection != NULL);
+		
 		@synchronized(connection) {
 			OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
 			connection = [aConnection retain];
@@ -170,10 +172,10 @@ static NSHashTable* allInstances;
 
 - (void) raiseSQLiteError
 {
-	NSLog(@"SQLite function returned with an error: %@", [self lastError]);
+	NSLog(@"SQLite %s function returned with an error: %@", sqlite3_libversion(), [self lastError]);
 	
 	[NSException raise: @"OPSQLiteError" 
-				format: @"Error executing a sqlite function: %@", [self lastError]];
+				format: @"Error executing a sqlite %s function: %@", sqlite3_libversion(), [self lastError]];
 	// todo: include error number!
 }
 
@@ -507,16 +509,18 @@ static NSHashTable* allInstances;
 
 - (BOOL) open
 {
-	BOOL result;
-	@synchronized(self) {
-		OPDebugLog(OPPERSISTENCE, OPINFO, @"Opening database at '%@'.", dbPath);
-		// Comment next three lines to disable statement caching:
-		updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-		insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-		fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
-		deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-		
-		result = SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
+	BOOL result = YES;
+	if (!connection) {
+		@synchronized(self) {
+			OPDebugLog(OPPERSISTENCE, OPINFO, @"Opening database at '%@'.", dbPath);
+			// Comment next three lines to disable statement caching:
+			updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			
+			result = SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
+		}
 	}
 	return result;
 }

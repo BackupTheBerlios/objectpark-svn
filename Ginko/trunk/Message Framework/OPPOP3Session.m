@@ -57,6 +57,12 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 - (void)_gatherStatsIfNeeded;
 @end
 
+static BOOL isOK(NSString* response) 
+/*" Returns YES, if the response string given begins with '+OK'. NO otherwise. "*/
+{
+	return [response hasPrefix: @"+OK"];
+}
+
 @implementation OPPOP3Session
 /*" Handles a POP3 client session to a POP3 server. Uses a delegate for UIDL handling,
     deletion of old messages, etc. The session will be automatically closed when the
@@ -143,15 +149,11 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 /*" Aborts the session with rollback of DELEs. "*/
 {
     if (_state == TRANSACTION) {
+		_state = UPDATE;
         // stream needs closing
-		@try {
-			[self _readOKForCommand: @"RSET"];
-			[self _readOKForCommand: @"QUIT"];
-		} @catch (NSException* localException) {
-			// Ignore Exceptions during abort.
+		if (!isOK([self responseForCommand: @"RSET"]) || !isOK([self responseForCommand: @"QUIT"])) {
 			_state = DIRTY_ABORTED; // Is this the right thing to do?
 		}
-        _state = UPDATE;
     } else {
         _state = DIRTY_ABORTED;
     }
@@ -207,13 +209,11 @@ UIDL. nil otherwise. "*/
     [self _gatherStatsIfNeeded];
     
     command = [@"UIDL" stringByAppendingFormat:@"%d", aPosition];
-    NS_DURING
-        [self _readOKForCommand:command]; 	// try to use UIDL command
-    NS_HANDLER
+    if (!isOK([self responseForCommand: command])) {
         if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.", self);
         while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
         return nil;				// UIDL command not understood.
-    NS_ENDHANDLER
+    }
 
     result = [[[_stream availableLine] componentsSeparatedByString: @" "] objectAtIndex:2];
     while ([_stream availableLine]) ; 	// eat the rest response
@@ -336,34 +336,31 @@ UIDL. nil otherwise. "*/
             long size = [[infoDict objectForKey:@"size"] longValue];
             NSString *messageId = [infoDict objectForKey:@"messageId"];
             NSDate *date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
-
+			
             //if (NSDebugEnabled) NSLog(@"Cleaning message #%d in %@", i, self);
             
-            if ( (! date) && (! messageId) ) // try to get info from message
-            {
+            if ( (! date) && (! messageId) ) {
+				// try to get info from message
                 OPInternetMessage *message;
                 NSData *headerData = [self _headerDataAtPosition:i];
-                NS_DURING
-                    message = [[[OPInternetMessage alloc] initWithTransferData:headerData] autorelease];
-
-                    if (message)
-                    {
-                        [self _takeInfoFromTransferData:headerData forPosition:i];
-
-                        messageId = [infoDict objectForKey:@"messageId"];
-                        date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
+                @try {
+                    message = [[[OPInternetMessage alloc] initWithTransferData: headerData] autorelease];
+					
+                    if (message) {
+                        [self _takeInfoFromTransferData: headerData forPosition: i];
+						
+                        messageId = [infoDict objectForKey: @"messageId"];
+                        date = [NSDate dateWithString: [[infoDict objectForKey: @"date"] description]];
                     }
-                NS_HANDLER
-                    ;
-                NS_ENDHANDLER
-            }
+                } @catch(NSException* localException) {}
+			}
+			
             
-            if ([_delegate shouldDeleteMessageWithMessageId:messageId date:date size:size inPOP3Session:self])
-            {
-                [self _readOKForCommand:[NSString stringWithFormat:@"DELE %d", i]];
-
+            if ([_delegate shouldDeleteMessageWithMessageId:messageId date:date size:size inPOP3Session:self]) {
+                [self responseForCommand: [NSString stringWithFormat: @"DELE %d", i]];
+				 
                 // remove message from message info
-                [_messageInfo replaceObjectAtIndex:i - 1 withObject:[NSNull null]];
+                [_messageInfo replaceObjectAtIndex: i - 1 withObject: [NSNull null]];
             }
             
             [pool release];            
@@ -816,11 +813,6 @@ UIDL. nil otherwise. "*/
 }
 */
 
-static BOOL isOK(NSString* response) 
-/*" Returns YES, if the response string given begins with '+OK'. NO otherwise. "*/
-{
-	return [response hasPrefix:@"+OK"];
-}
 
 - (NSString*) responseForCommand: (NSString*) command
 {	
