@@ -105,6 +105,9 @@
 										rowId: (ROWID) rid
 								 relationship: (NSString*) key;
 
+- (void) raiseSQLiteError; // for internal use only
+
+
 @end
 
 @interface NSObject (OPSQLiteSupport)
