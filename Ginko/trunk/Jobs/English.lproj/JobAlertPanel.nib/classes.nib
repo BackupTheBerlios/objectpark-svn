@@ -1,0 +1,25 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                alternateButtonPressed = id; 
+                defaultButtonPressed = id; 
+                otherButtonPressed = id; 
+            }; 
+            CLASS = GIJobAlertPanelController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                panel = id; 
+                panelAlternateButton = id; 
+                panelDefaultButton = id; 
+                panelMessage = id; 
+                panelOtherButton = id; 
+                panelTitle = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = java.lang.Object; LANGUAGE = Java; }
+    ); 
+    IBVersion = 1; 
+}
