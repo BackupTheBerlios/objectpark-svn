@@ -117,9 +117,10 @@
 @end
 
 @interface OPSQLiteStatement: NSObject {
-	sqlite3_stmt* statement;
 	OPSQLiteConnection* connection;
 	NSString* sqlString;
+	@private sqlite3_stmt* statement;
+
 }
 
 + (NSArray*) runningStatements;
@@ -130,7 +131,7 @@
 - (id) initWithSQL: (NSString*) sql connection: (OPSQLiteConnection*) connection;
 - (int) execute;
 - (void) reset;
-- (sqlite3_stmt*) stmt;
+//- (sqlite3_stmt*) stmt;
 
 
 @end

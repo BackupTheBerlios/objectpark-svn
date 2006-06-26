@@ -324,7 +324,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (void) dealloc
 {
-    [unreadMessageCount release];
+    //[unreadMessageCount release];
     [super dealloc];
 }
 

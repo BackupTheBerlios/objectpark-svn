@@ -186,27 +186,25 @@ static BOOL isThreadItem(id item)
 	// Do nothing after this point!
 }
 
-- (void)threadDidChange:(NSNotification *)aNotification
+- (void)threadDidChange: (NSNotification*) aNotification
 {
-    NSArray *affectedMessageGroups = [(GIThread *)[aNotification object] valueForKey:@"groups"];    
+    NSArray* affectedMessageGroups = [(GIThread*)[aNotification object] valueForKey: @"groups"];    
     if ([affectedMessageGroups count] == 0) NSLog(@"warning: thread did change for a thread without group.");	
 	
-	if ([aNotification object] == displayedThread) 
-	{
-		[self updateCommentTree:YES];
+	if ([aNotification object] == displayedThread) {
+		[self updateCommentTree: YES];
 	}
 	
 	// check if a thread of this group changed:
-	if (group && [affectedMessageGroups containsObject:group])
-	{
+	if (group && [affectedMessageGroups containsObject: group]) {
 		[self reload];
 	}
 }
 
-- (NSArray *)threadsByDate
+- (NSArray*) threadsByDate
     /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
 {
-	return [group valueForKey:@"threadsByDate"];
+	return [group valueForKey: @"threadsByDate"];
 }
 
 - (int) threadLimitCount 
@@ -990,7 +988,6 @@ static BOOL isThreadItem(id item)
 //	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
 	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
 	isAutoReloadEnabled = YES;
-//	[threadsView noteNumberOfRowsChanged];
 	
 	[threadsView reloadData];
 	
@@ -1002,15 +999,7 @@ static BOOL isThreadItem(id item)
 {
 	unsigned targetRow = [[threadsView selectedRowIndexes] lastIndex];
 	NSArray* selectedThreads = [self selectedThreads];
-    //NSEnumerator* enumerator = [selectedThreads objectEnumerator];
-//    GIThread* targetThread = [enumerator nextObject];
-//	// Find the most recent thread and store it in targetThread. This thread object will survive.
-//	GIThread* nextThread;
-//	while (nextThread = [enumerator nextObject]) {
-//		if ([[nextThread valueForKey: @"date"] compare: [targetThread valueForKey: @"date"]]>0) {
-//			targetThread = nextThread; // aThread is nore recent
-//		}
-//	}
+
 	GIThread* targetThread = [threadsView itemAtRow: targetRow]; // newest, with current, fixes sort order
 
     NSLog(@"Merging other threads into %@", targetThread);    
@@ -1055,14 +1044,14 @@ static BOOL isThreadItem(id item)
     }
 }
 
-- (IBAction) joinThreads:(id)sender
+- (IBAction) joinThreads: (id) sender
 /*" Joins the selected threads into one. "*/
 {
     [self joinThreads];
 }
 
 
-- (IBAction) extractThread:(id)sender
+- (IBAction) extractThread: (id) sender
 /*" Creates a new thread for the selected messages. "*/
 {
 	NSArray* items = [threadsView selectedItems];

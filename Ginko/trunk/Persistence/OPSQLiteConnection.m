@@ -785,20 +785,20 @@ static NSHashTable* allInstances;
 	NSParameterAssert(aConnection != nil);
 	if (self = [super init]) {
 		
-		OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
-		connection = [aConnection retain];
-		if (NSDebugEnabled) sqlString = [sql copy];
-		
-		int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
-		
-		if (res!=SQLITE_OK || !statement) {
-			NSLog(@"Error preparing sql statement %@: %@", self, [aConnection lastError]);
-			[self autorelease];
-			return nil;
+		@synchronized(connection) {
+			OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
+			connection = [aConnection retain];
+			if (NSDebugEnabled) sqlString = [sql copy];
+			
+			int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
+			
+			if (res!=SQLITE_OK || !statement) {
+				NSLog(@"Error preparing sql statement %@: %@", self, [aConnection lastError]);
+				[self autorelease];
+				return nil;
+			}
+			NSHashInsert(allInstances, self);
 		}
-
-		
-		NSHashInsert(allInstances, self);
 	}
 	return self;
 }
@@ -811,31 +811,37 @@ static NSHashTable* allInstances;
 - (void) bindPlaceholderAtIndex: (int) index toValue: (id) value
 /*" Index is zero-based. Be sure to call -reset before binding the first value. "*/
 {
-	index++;
-	if (value) {
-		[value bindValueToStatement: statement index: index];
-	} else {
-		sqlite3_bind_null(statement, index);
+	@synchronized(connection) {
+		index++;
+		if (value) {
+			[value bindValueToStatement: statement index: index];
+		} else {
+			sqlite3_bind_null(statement, index);
+		}
+		NSHashInsert(allInstances, self);
 	}
-	NSHashInsert(allInstances, self);
 }
 
 - (void) bindPlaceholderAtIndex: (int) index toRowId: (ROWID) rid
 /*" Index is zero-based. Be sure to call -reset before binding the first value. "*/
 {
-	index++;
-	if (rid) {
-		sqlite3_bind_int64(statement, index, rid);
-	} else {
-		sqlite3_bind_null(statement, index);
+	@synchronized(connection) {
+		index++;
+		if (rid) {
+			sqlite3_bind_int64(statement, index, rid);
+		} else {
+			sqlite3_bind_null(statement, index);
+		}
+		NSHashInsert(allInstances, self);
 	}
-	NSHashInsert(allInstances, self);
 }
 
 - (void) reset
 {
-	sqlite3_reset(statement);
-	NSHashRemove(allInstances, self);
+	@synchronized(connection) {
+		sqlite3_reset(statement);
+		NSHashRemove(allInstances, self);
+	}
 }
 
 - (void) dealloc

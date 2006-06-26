@@ -16,7 +16,7 @@
 @interface GIMessageGroup : OPPersistentObject 
 {
     // transient stats:
-    NSNumber *unreadMessageCount;
+    NSNumber* unreadMessageCount;
 	BOOL isStatisticsValid;
 }
 

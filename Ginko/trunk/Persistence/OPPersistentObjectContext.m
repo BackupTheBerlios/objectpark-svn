@@ -104,7 +104,7 @@ typedef struct {
 {
 	NSParameterAssert([object currentOid]>0); // hashing is based on oids here
     
-    @synchronized(registeredObjects) {
+    @synchronized((id)registeredObjects) {
         NSHashInsertIfAbsent(registeredObjects, object);
     }
 }
@@ -112,7 +112,7 @@ typedef struct {
 - (void) unregisterObject: (OPPersistentObject*) object
 /*" Called by -[OPPersistentObject dealloc] to make sure we do not keep references to stale objects. "*/
 {
-    @synchronized(registeredObjects) {
+    @synchronized((id)registeredObjects) {
         NSHashRemove(registeredObjects, object);
     }
 }
@@ -132,7 +132,7 @@ typedef struct {
     
     OPPersistentObject *result = nil;
     
-    @synchronized(registeredObjects) {
+    @synchronized((id)registeredObjects) {
         result = NSHashGet(registeredObjects, &searchStruct);
 		[[result retain] autorelease];
     }
@@ -144,7 +144,7 @@ typedef struct {
 - (void) didChangeObject: (OPPersistentObject*) object
 /*" This method retains object until changes are saved. "*/
 {
-	@synchronized(changedObjects) {
+	@synchronized((id)changedObjects) {
 		[changedObjects addObject: object];  
 	}
 }
@@ -324,7 +324,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	htCallBacks.hash = &oidHash;
 	htCallBacks.isEqual = &oidEqual;
 	
-	@synchronized(registeredObjects) {
+	@synchronized((id)registeredObjects) {
 		if (registeredObjects) NSFreeHashTable(registeredObjects);
 		registeredObjects = NSCreateHashTable(htCallBacks, 1000);
 	}

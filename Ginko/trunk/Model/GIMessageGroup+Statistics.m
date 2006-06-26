@@ -63,7 +63,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
     while (group = [enumerator nextObject])
     {
         NSDictionary *dict = [NSMutableDictionary dictionary];
-        NSNumber *unreadCount = group->unreadMessageCount;
+        NSNumber *unreadCount = [group unreadMessageCount];
         
         NSAssert(!unreadCount || [unreadCount isKindOfClass:[NSNumber class]], @"shit");
         
@@ -153,6 +153,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 
 - (NSNumber *)unreadMessageCount
 {
+	NSNumber* result;
 	@synchronized(self)
 	{
 		if (!isStatisticsValid)
@@ -163,8 +164,9 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 			}
 			isStatisticsValid = YES;
 		}
+		result = [[unreadMessageCount retain] autorelease];
 	}
-    return unreadMessageCount;
+    return result; 
 }
 
 - (void)statisticsJobDidEnd:(NSNotification *)aNotification
