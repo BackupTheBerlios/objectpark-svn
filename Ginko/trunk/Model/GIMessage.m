@@ -63,6 +63,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	@"  \",\""
 	@"  CREATE UNIQUE INDEX MY_MESSAGE_ID_INDEX ON ZMESSAGE (ZMESSAGEID)"
 	@"  \");"
+	@"  CREATE INDEX ZMESSAGE_ZISSEEN_INDEX ON ZMESSAGE (ZISSEEN)"
+	@"  \");"
+	@"  CREATE INDEX ZMESSAGE_ZISFULLTEXTINDEXED_INDEX ON ZMESSAGE (ZISFULLTEXTINDEXED)"
+	@"  \");"
 	@""
 	@"}";
 }

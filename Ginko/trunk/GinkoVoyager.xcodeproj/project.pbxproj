@@ -103,6 +103,9 @@
 		777436EF07780D7300899957 /* editor.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777436EE07780D7300899957 /* editor.toolbar */; };
 		7776259D0760DEC20066BE60 /* Group.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7776259C0760DEC20066BE60 /* Group.nib */; };
 		7776BBAA07D0773E00822246 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7776BBA907D0773E00822246 /* MainMenu.nib */; };
+		7780AC150A499FBE006970ED /* GIJobAlertPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7780AC130A499FBE006970ED /* GIJobAlertPanelController.h */; };
+		7780AC160A499FBE006970ED /* GIJobAlertPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7780AC140A499FBE006970ED /* GIJobAlertPanelController.m */; };
+		7780AC420A49A081006970ED /* JobAlertPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7780AC400A49A081006970ED /* JobAlertPanel.nib */; };
 		7781EBAA0833B55100830729 /* newDirectory.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781EBA90833B55100830729 /* newDirectory.tiff */; };
 		7782AE31095593D7005F1DC4 /* Lucene.h in Headers */ = {isa = PBXBuildFile; fileRef = 7782AE30095593D7005F1DC4 /* Lucene.h */; };
 		7786DC5007DE2F7200C5F9F7 /* ProfilePrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */; };
@@ -531,6 +534,9 @@
 		7779A7AB07C409E600F064D3 /* Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Test-Info.plist"; sourceTree = "<group>"; };
 		7779AC9A07C40D1B00F064D3 /* TestNSString+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSString+MessageUtils.h"; sourceTree = "<group>"; };
 		7779AC9B07C40D1B00F064D3 /* TestNSString+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSString+MessageUtils.m"; sourceTree = "<group>"; };
+		7780AC130A499FBE006970ED /* GIJobAlertPanelController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GIJobAlertPanelController.h; sourceTree = "<group>"; };
+		7780AC140A499FBE006970ED /* GIJobAlertPanelController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GIJobAlertPanelController.m; sourceTree = "<group>"; };
+		7780AC410A49A081006970ED /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/JobAlertPanel.nib; sourceTree = "<group>"; };
 		7781EBA90833B55100830729 /* newDirectory.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = newDirectory.tiff; sourceTree = "<group>"; };
 		7782AE30095593D7005F1DC4 /* Lucene.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.java; fileEncoding = 4; name = Lucene.h; path = FulltextSearch/Lucene.h; sourceTree = "<group>"; };
 		7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilePrefs.h; sourceTree = "<group>"; };
@@ -1113,6 +1119,9 @@
 			children = (
 				77B07A3D0A22F9C9009773FB /* OPJob.h */,
 				77B07A3E0A22F9CA009773FB /* OPJob.m */,
+				7780AC130A499FBE006970ED /* GIJobAlertPanelController.h */,
+				7780AC140A499FBE006970ED /* GIJobAlertPanelController.m */,
+				7780AC400A49A081006970ED /* JobAlertPanel.nib */,
 				775A96DE0839D5C2008EC276 /* Tests */,
 				77049FE60858570800253732 /* GIPOPJob.h */,
 				77049FE70858570800253732 /* GIPOPJob.m */,
@@ -1571,6 +1580,7 @@
 				8D61A4050A0F6E1300AB7C35 /* NSWindow+RecentPositions.h in Headers */,
 				77B07A3F0A22F9CA009773FB /* OPJob.h in Headers */,
 				771F9F5A0A27393A00937F89 /* TestOPJob.h in Headers */,
+				7780AC150A499FBE006970ED /* GIJobAlertPanelController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1767,6 +1777,7 @@
 				77CA735709F12C7800749461 /* Ginko.scriptTerminology in Resources */,
 				7718CA8E09F2CE5100D517CB /* GIGeneralPrefs.nib in Resources */,
 				8D218B500A19490600BD1DE8 /* Mail Sent.aiff in Resources */,
+				7780AC420A49A081006970ED /* JobAlertPanel.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1952,6 +1963,7 @@
 				8D61A4060A0F6E1300AB7C35 /* NSWindow+RecentPositions.m in Sources */,
 				77B07A400A22F9CA009773FB /* OPJob.m in Sources */,
 				771F9F5B0A27393A00937F89 /* TestOPJob.m in Sources */,
+				7780AC160A499FBE006970ED /* GIJobAlertPanelController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1996,6 +2008,14 @@
 				29B97319FDCFA39411CA2CEA /* English */,
 			);
 			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+		7780AC400A49A081006970ED /* JobAlertPanel.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7780AC410A49A081006970ED /* English */,
+			);
+			name = JobAlertPanel.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
