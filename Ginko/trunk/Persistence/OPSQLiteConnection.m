@@ -71,19 +71,22 @@ static NSHashTable* allInstances;
 		
 		//NSParameterAssert(aConnection->connection != NULL);
 		
-		@synchronized(connection) {
+		@synchronized(aConnection) {
 			OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
-			connection = [aConnection retain];
 			if (NSDebugEnabled) sqlString = [sql copy];
 			
 			int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
 			
-			if (res!=SQLITE_OK || !statement) {
-				NSLog(@"Error preparing sql statement %@: %@", self, [aConnection lastError]);
+			if ((res != SQLITE_OK) || !statement) {
 				[self autorelease];
-				return nil;
+				[aConnection raiseSQLiteError];
+				//NSLog(@"Error preparing sql statement %@: %@", self, [connection lastError]);
+				//[self autorelease];
+				//return nil;
 			}
 			NSHashInsert(allInstances, self);
+			
+			connection = [aConnection retain];
 		}
 	}
 	return self;
@@ -172,10 +175,10 @@ static NSHashTable* allInstances;
 
 - (void) raiseSQLiteError
 {
-	NSLog(@"SQLite %s function returned with an error: %@", sqlite3_libversion(), [self lastError]);
+	NSLog(@"SQLite %s function on connection %@ returned with an error: %@", sqlite3_libversion(), self, [self lastError]);
 	
 	[NSException raise: @"OPSQLiteError" 
-				format: @"Error executing a sqlite %s function: %@", sqlite3_libversion(), [self lastError]];
+				format: @"Error executing a sqlite %s function on connection %@: %@", sqlite3_libversion(), self, [self lastError]];
 	// todo: include error number!
 }
 
@@ -200,9 +203,9 @@ static NSHashTable* allInstances;
 {
     NSMutableDictionary* result = nil;
 	OPClassDescription* cd = [persistentClass persistentClassDescription];
-    OPSQLiteStatement* statement = [self fetchStatementForClass: persistentClass];
 		
 	@synchronized(self) {
+		OPSQLiteStatement* statement = [self fetchStatementForClass: persistentClass];
 		[statement reset];
 		[statement bindPlaceholderAtIndex: 0 toRowId: rid];
 		

@@ -820,14 +820,14 @@ static NSHashTable* allInstances;
 		id connection = [context databaseConnection];
 		
 		@synchronized(connection) {
-
+			
 			sqlite3_prepare([connection database], [sql UTF8String], -1, &statement, NULL);	
-
-		}
-		if (!statement) {
-			NSLog(@"Error preparing statement: %@", [[context databaseConnection] lastError]);
-			[self autorelease];
-			return nil;
+			
+			if (!statement) {
+				//NSLog(@"Error preparing statement: %@", [[context databaseConnection] lastError]);
+				[connection raiseSQLiteError];
+				return nil;
+			}
 		}
 		
 		NSHashInsert(allInstances, self);
