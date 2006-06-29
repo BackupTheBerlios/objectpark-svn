@@ -140,10 +140,10 @@
             } 
 			@finally 
 			{
-                [pool release];
                 [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in SMTP job"), [theAccount incomingServerName]]]];
                 [SMTP quit];
             }
+			[pool release];
         } 
 		@catch (NSException *localException) 
 		{

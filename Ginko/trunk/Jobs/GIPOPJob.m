@@ -138,9 +138,6 @@
             } @catch (NSException* localException) {
                 [pop3session abortSession];
                 [[NSFileManager defaultManager] removeFileAtPath: [mboxFile path] handler: NULL];     
-				[localException retain];
-				[pool release]; pool = nil;
-				[localException autorelease];
                 @throw;
             } 
 			[pool release]; pool = nil;

@@ -224,25 +224,33 @@
 - (IBAction)delete:(id)sender
 {
 	id item = [[boxesView selectedItems] lastObject];
-    if ([item isKindOfClass: [NSArray class]]) {
-        if ([item count] == 0) {
-            [GIMessageGroup removeHierarchyNode: item];
+    if ([item isKindOfClass:[NSArray class]]) 
+	{
+        if ([item count] == 1) 
+		{
+            [GIMessageGroup removeHierarchyNode:item];
             [GIMessageGroup saveHierarchy];
-        } else {
+        } 
+		else 
+		{
             NSBeep();
             NSLog(@"Unable to remove folder containing groups.");
             return;
         }
-    } else {
-		GIMessageGroup* selectedGroup = [self group];
-        if ([[selectedGroup valueForKey: @"threadsByDate"] count] == 0) {
-            [GIMessageGroup removeHierarchyNode: item];
+    } 
+	else 
+	{
+		GIMessageGroup *selectedGroup = [self group];
+        if ([[selectedGroup valueForKey:@"threadsByDate"] count] == 0) 
+		{
+            [GIMessageGroup removeHierarchyNode:item];
             [GIMessageGroup saveHierarchy];
 
             // Delete the group object:
             [selectedGroup delete];
-            
-        } else {
+        } 
+		else 
+		{
             NSBeep();
             NSLog(@"Unable to remove group containing threads.");
             return;

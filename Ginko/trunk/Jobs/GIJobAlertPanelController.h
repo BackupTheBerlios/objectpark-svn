@@ -42,6 +42,9 @@
     @private NSString *_otherButton;		/*" Text for the other button of the panel. "*/
     @private NSTimeInterval _duration;		/*" Determines how long the panel will be shown. "*/
     @private NSTimer *_expiryTimer;		/*" Timer for expiration of the panel. "*/
+	
+	@private volatile int _panelReturn;	/*" Used for synchronization when the job needs to run
+		an non job modal alert panel in the main (GUI) thread. "*/
 }
 
 /*" initialization "*/
@@ -51,6 +54,12 @@
 - (IBAction)defaultButtonPressed:(id)sender;
 - (IBAction)alternateButtonPressed:(id)sender;
 - (IBAction)otherButtonPressed:(id)sender;
+
+@end
+
+@interface GIJobAlertPanelController (JobSupport)
+
++ (int)runCriticalAlertPanelWithTitle:(NSString *)title message:(NSString *)message defaultButton:(NSString *)defaultButton alternateButton:(NSString *)alternateButton otherButton:(NSString *)otherButton duration:(NSTimeInterval)duration;
 
 @end
 

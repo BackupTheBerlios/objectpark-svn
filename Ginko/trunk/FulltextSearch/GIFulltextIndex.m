@@ -297,8 +297,10 @@
     NSCalendarDate *date = [aMessage valueForKey:@"date"];
     NSString *dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d"];
     
-	if (dateString) {
-		@try {
+	if (dateString) 
+	{;
+		@try 
+		{
 			jstring dateJavaString = (*env)->NewStringUTF(env, [dateString UTF8String]);
 			jthrowable exc = (*env)->ExceptionOccurred(env);
 			if (exc) 
@@ -310,16 +312,19 @@
 			}
 			[self document:document addUnStoredFieldWithName:@"date" text:dateJavaString];
 		}
-		@catch(NSException *localException) {
+		@catch(NSException *localException) 
+		{
 			NSLog(@"Date %@ could not be fulltext indexed", date);
 		}
     }
     // subject
     NSString *subject = [aMessage valueForKey:@"subject"];
-    if (subject) {
+    if (subject) 
+	{
         jstring subjectJavaString = (*env)->NewStringUTF(env, [subject UTF8String]);
         exc = (*env)->ExceptionOccurred(env);
-        if (exc) {
+        if (exc) 
+		{
             /* We don't do much with the exception, except that
             we print a debug message for it, clear it. */
             (*env)->ExceptionDescribe(env);
@@ -333,10 +338,12 @@
 	
     NSString *author = [internetMessage fromWithFallback:YES];
 	
-    if (author) {
+    if (author) 
+	{
         jstring authorJavaString = (*env)->NewStringUTF(env, [author UTF8String]);
         exc = (*env)->ExceptionOccurred(env);
-        if (exc) {
+        if (exc) 
+		{
             /* We don't do much with the exception, except that
             we print a debug message for it, clear it. */
             (*env)->ExceptionDescribe(env);
@@ -381,7 +388,6 @@
             (*env)->ExceptionDescribe(env);
             (*env)->ExceptionClear(env);
         }
-        
         
         [self document:document addUnStoredFieldWithName:@"body" text:bodyJavaString];
     }    
@@ -605,16 +611,17 @@
 						}
                         
 						[message setValue:yesNumber forKey:@"isFulltextIndexed"];
-					} @catch (NSException *localException) {
-						@throw localException;
+					} 
+					@catch (id localException) 
+					{
+						@throw;
 					} 
 					@finally 
 					{
 						(*env)->PopLocalFrame(env, NULL);
-						[pool release];
-						pool = [[NSAutoreleasePool alloc] init];
 						shouldTerminate = [job shouldTerminate];
 					}
+					[pool release]; pool = [[NSAutoreleasePool alloc] init];
 				} 
 				else 
 				{
@@ -622,17 +629,17 @@
 				}
 			}
         } 
-		@catch (NSException *localException) 
+		@catch (id localException) 
 		{
-            @throw localException;
+            @throw;
         } 
 		@finally 
 		{
             [self addChangeCount:counter];
             [self indexWriterClose:indexWriter];
-            [pool release];
             (*env)->PopLocalFrame(env, NULL);
         }
+		[pool release];
     }
 }
 

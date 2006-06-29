@@ -150,3 +150,102 @@ NSString *GIJobAlertPanelWillCloseNotification = @"GIJobAlertPanelWillCloseNotif
 }
 
 @end
+
+@implementation GIJobAlertPanelController (JobSupport)
+
+#define GINoReturnYet 42
+
+- (int)_panelReturn
+    /*" Returns the return code of the job modal panel. "*/
+{
+    int result;
+	
+	@synchronized(self)
+	{
+		result = _panelReturn;
+	}
+    return result;
+}
+
+- (void)_setPanelReturn:(int)aReturnValue
+    /*" Sets the return code of the job modal panel.
+
+    This method is usually only called by the main (GUI) thread to indicate a return value. "*/
+{
+	@synchronized(self)
+	{
+		_panelReturn = aReturnValue;
+    }
+}
+
+- (void)_alertPanelWillClose:(NSNotification *)aNotification
+	/*" Catches GIJobAlertPanelWillCloseNotification notifications. Sets the return value in ivar.
+    This causes the job thread to continue. "*/
+{
+	[self _setPanelReturn:[[[aNotification userInfo] objectForKey:@"return"] intValue]];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"GIDockIconControllerShouldStopBouncingIcon" object:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:GIJobAlertPanelWillCloseNotification object:self];
+}
+
++ (void)_openCriticalAlertPanel:(NSMutableDictionary *)parameterDict
+{
+	GIJobAlertPanelController *controller = [[[GIJobAlertPanelController alloc]
+        initWithTitle:[parameterDict objectForKey:@"title"]
+              message:[parameterDict objectForKey:@"message"]
+        defaultButton:[parameterDict objectForKey:@"defaultButton"]
+      alternateButton:[parameterDict objectForKey:@"alternateButton"]
+          otherButton:[parameterDict objectForKey:@"otherButton"]
+             duration:[[parameterDict objectForKey:@"duration"] doubleValue]]
+        autorelease];
+	
+	[controller _setPanelReturn:GINoReturnYet];
+
+	[parameterDict setObject:controller forKey:@"result"];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:controller selector:@selector(_alertPanelWillClose:) name:GIJobAlertPanelWillCloseNotification object:self];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"GIDockIconControllerShouldBounceIcon" object:self];
+}
+
++ (int)runCriticalAlertPanelWithTitle:(NSString *)title message:(NSString *)message defaultButton:(NSString *)defaultButton alternateButton:(NSString *)alternateButton otherButton:(NSString *)otherButton duration:(NSTimeInterval)duration
+{
+    int result = GINoReturnYet;
+    NSMutableDictionary *parameterDict;
+	
+    NSParameterAssert(title != nil);
+    NSParameterAssert(message != nil);
+	
+    // prepare parameter dictionary for cross thread method call
+    parameterDict = [NSMutableDictionary dictionary];
+	
+    [parameterDict setObject:title forKey:@"title"];
+    [parameterDict setObject:message forKey:@"message"];
+    if (defaultButton)
+        [parameterDict setObject:defaultButton forKey:@"defaultButton"];
+    if (alternateButton)
+        [parameterDict setObject:alternateButton forKey:@"alternateButton"];
+    if (otherButton)
+        [parameterDict setObject:otherButton forKey:@"otherButton"];
+    [parameterDict setObject:[NSNumber numberWithDouble:duration] forKey:@"duration"];
+    
+    // open panel in main thread
+	
+	GIJobAlertPanelController *controller = [GIJobAlertPanelController alloc];
+	
+	[controller performSelectorOnMainThread:@selector(_openCriticalAlertPanel:) withObject:parameterDict waitUntilDone:YES];
+	
+	controller = [parameterDict objectForKey:@"result"];
+	
+    // wait as long as no decision was made
+    while ( (result = [controller _panelReturn]) == GINoReturnYet)
+    {
+        // sleep for 2 seconds
+        [[NSRunLoop currentRunLoop] run];
+        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+    }
+	
+    return result;
+}
+
+@end
