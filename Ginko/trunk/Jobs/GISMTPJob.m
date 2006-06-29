@@ -59,7 +59,7 @@
                 [stream shutdownEncryption];
             }
         } 
-        @catch (NSException *localException) 
+        @catch (id localException) 
         {
             NSLog(@"Exception while authentication via SMTP after POP <%@>", [localException reason]);
         } 
@@ -127,14 +127,14 @@
 						[woosh stop];
 						[woosh play];
                     } 
-					@catch (NSException *localException) 
+					@catch (id localException) 
 					{
                         NSLog(@"Error sending message %@: %@", [message valueForKey: @"subject"], [localException reason]);
                     }
                     [pool release]; pool = [[NSAutoreleasePool alloc] init];
                 }
             } 
-			@catch (NSException *localException) 
+			@catch (id localException) 
 			{
                 @throw;
             } 
@@ -145,7 +145,7 @@
             }
 			[pool release];
         } 
-		@catch (NSException *localException) 
+		@catch (id localException) 
 		{
             @throw;
         } 

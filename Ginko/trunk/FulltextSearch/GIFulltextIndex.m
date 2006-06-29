@@ -312,7 +312,7 @@
 			}
 			[self document:document addUnStoredFieldWithName:@"date" text:dateJavaString];
 		}
-		@catch(NSException *localException) 
+		@catch(id localException) 
 		{
 			NSLog(@"Date %@ could not be fulltext indexed", date);
 		}
@@ -609,18 +609,15 @@
 							[self indexWriterOptimize:indexWriter];
 							[self addChangeCount:-5000];
 						}
-                        
-						[message setValue:yesNumber forKey:@"isFulltextIndexed"];
 					} 
 					@catch (id localException) 
 					{
-						@throw;
-					} 
-					@finally 
-					{
-						(*env)->PopLocalFrame(env, NULL);
-						shouldTerminate = [job shouldTerminate];
+						NSLog(@"Exception '%@' occured while indexing message with id %@. Skipping that message.", [localException reason], [message valueForKey:@"messageId"]);
 					}
+					
+					[message setValue:yesNumber forKey:@"isFulltextIndexed"];
+
+					(*env)->PopLocalFrame(env, NULL);
 					[pool release]; pool = [[NSAutoreleasePool alloc] init];
 				} 
 				else 
@@ -830,9 +827,9 @@
                         
                         [job setProgressInfo:[job progressInfoWithMinValue:1.0 maxValue:(double)maxCount currentValue:(double)removedCount description:NSLocalizedString(@"removing from fulltext index", @"progress description in fulltext index job")]];
                     } 
-                    @catch (NSException * localException) 
+                    @catch (id localException) 
                     {
-                        @throw localException;
+                        @throw;
                     } 
                     @finally 
                     {
@@ -842,9 +839,9 @@
                     [someMessages removeLastObject];
                 }
             } 
-            @catch (NSException *localException) 
+            @catch (id localException) 
             {
-                @throw localException;
+                @throw;
             } 
             @finally 
             {
@@ -869,9 +866,9 @@
             [self indexWriterClose:indexWriter];
             [self addChangeCount:[self changeCount] * -1];
         }
-        @catch (NSException *localException)
+        @catch (id localException)
         {
-            @throw localException;
+            @throw;
         }
         @finally
         {

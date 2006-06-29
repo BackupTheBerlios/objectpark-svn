@@ -280,7 +280,7 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
         return [self stringByDecodingMIMEWordsInString: body]; // throws
     @try {
         result = [self stringByDecodingMIMEWordsInString: body];
-	} @catch (NSException* localException) {
+	} @catch (id localException) {
         result = body;
 	}
     return result;    

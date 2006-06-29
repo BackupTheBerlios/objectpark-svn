@@ -172,7 +172,7 @@ static NSString *templatePostfix = nil;
                 @try {
                     coder = [aMessage decoderForHeaderField:fieldName];
                     decodedHeader = [coder stringValue];
-                } @catch(NSException* localException) {
+                } @catch(id localException) {
                     decodedHeader = [aMessage bodyForHeaderField:fieldName];
                 }
             }

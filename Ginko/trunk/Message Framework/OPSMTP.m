@@ -198,11 +198,11 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
             [NSException raise:OPSMTPException format:@"Failed to initialize SMTP connection; read \"%@\"", [response componentsJoinedByString:@" "]];
         }        
         
-        } @catch (NSException *localException) {
+        } @catch (id localException) {
             //OPDebugLog2(SMTPDEBUG, OPWARNING, @"Exception! name: %@ reason: %@", [localException name], [localException reason]); 
             
             if ([[localException name] isEqualToString:OPSMTPException]) {
-                [localException raise];
+				@throw;
             } else {
                 NSMutableDictionary *amendedUserInfo = [NSMutableDictionary dictionaryWithDictionary:[localException userInfo]];
                 
@@ -480,7 +480,7 @@ Raises an exception if the message could not be sent. "*/
 			[stream writeString: @"QUIT\r\n"];
 			//OPDebugLog(SMTPDEBUG, OPINFO, @"OPSMTP: shutting down encryption in dealloc");
 			[stream shutdownEncryption];
-		} @catch (NSException* localException) {
+		} @catch (id localException) {
 			// ignored
 		}
 		state = Disconnected;

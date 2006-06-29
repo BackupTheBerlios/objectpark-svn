@@ -213,7 +213,7 @@
             } 
             else shouldBeAttributed ? [result appendAttributedString:subpartContent] : [result appendString:subpartContent];
         } 
-        @catch (NSException *localException) 
+        @catch (id localException) 
         {
             [result appendString:[NSString stringWithFormat:@"\nsubpart decoding error [%@]\n", [localException reason]]];
             NSLog(@"subpart decoding error [%@]\n", [localException reason]);

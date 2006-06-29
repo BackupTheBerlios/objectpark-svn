@@ -66,7 +66,7 @@
 			[parameters addObject:message]; // out param
 		}
     } 
-	@catch (NSException *localException) 
+	@catch (id localException) 
 	{
         NSLog(@"Exception while adding message in main thread: %@", [localException reason]);
     } 
@@ -243,9 +243,8 @@ NSString* MboxImportJobName = @"mbox import";
                         }
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
                     }
-                } @catch (NSException* localException) {
-                    [localException retain]; [localException autorelease]; // Try to avoid zombie exception object
-                    [localException raise];
+                } @catch (id localException) {
+					@throw;
                 }
             }
             
@@ -275,18 +274,18 @@ NSString* MboxImportJobName = @"mbox import";
         //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
 		
     } 
-    @catch (NSException* localException) 
+    @catch (id localException) 
     {
         if (NSDebugEnabled) NSLog(@"Exception while adding messages in background: %@", localException);
-        [[localException retain] autorelease];
         @throw;
     } 
     @finally 
     {
         [lastProgressSet release];
-        [pool release];
     }
-    
+
+	[pool release];
+
     if ([job shouldTerminate])
         return;
         

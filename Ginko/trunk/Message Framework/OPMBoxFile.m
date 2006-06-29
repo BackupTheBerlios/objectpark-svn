@@ -53,7 +53,7 @@ NSString *OPMBoxException = @"OPMBoxException";
         NSAssert(fd != -1, @"invalid filehandle");
         result = [[[self alloc] initWithPath:[NSString stringWithUTF8String:template] andFileDescriptor:fd] autorelease];
     }
-    @catch (NSException* localException)
+    @catch (id localException)
     {
         @throw;
     }

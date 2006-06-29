@@ -84,7 +84,7 @@
     // else fall back to the body:
     @try {
 		result = [[self decoderWithFieldBody: body] stringValue];
-    } @catch(NSException* localException) {
+    } @catch(id localException) {
         result = body;
 	}
     return result;

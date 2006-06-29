@@ -323,11 +323,11 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
                 
                 [[job target] performSelector:[job selector] withObject:[job argument]];
             } 
-			@catch (NSException *localException) 
+			@catch (id localException) 
 			{
 				//#warning *** Selector 'isKindOfClass:' sent to dealloced instance 0x5581a80 of class NSException.
 				[job setException:localException];
-                NSLog(@"Job (%@) caused Exception: %@", job, [job exception]);
+                NSLog(@"Job (%@) caused Exception: %@", job, localException);
             }  
 			@finally 
 			{

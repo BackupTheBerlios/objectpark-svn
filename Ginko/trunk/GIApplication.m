@@ -178,7 +178,7 @@ static NSThread *mainThread = nil;
 		@try {
 			GIMessageGroup* group = [context objectWithURLString: groupURL];
 			[GIGroupListController showGroup: group];
-		} @catch(NSException* e) {
+		} @catch(id e) {
 		}
 	}
 }
@@ -380,7 +380,7 @@ static NSThread *mainThread = nil;
 {
 	@try {
 		[[OPPersistentObjectContext threadContext] saveChanges];
-	} @catch (NSException* exception) {
+	} @catch (id exception) {
 		NSString* localizedDescription;
 //        NSLog(@"Commit error: Affected objects = %@\nchanged objects = %@\nDeleted objects = %@", [[exception userInfo] objectForKey:NSAffectedObjectsErrorKey], [[OPPersistentObjectContext threadContext] changedObjects], [[OPPersistentObjectContext threadContext] deletedObjects]);
         localizedDescription = [exception description]; // todo: was: localizedDescription!

@@ -352,7 +352,7 @@ UIDL. nil otherwise. "*/
                         messageId = [infoDict objectForKey: @"messageId"];
                         date = [NSDate dateWithString: [[infoDict objectForKey: @"date"] description]];
                     }
-                } @catch(NSException* localException) {}
+                } @catch(id localException) {}
 			}
 			
             
@@ -420,7 +420,7 @@ UIDL. nil otherwise. "*/
 		{
 			[self keepAlive];
 		}
-		@catch (NSException *localException)
+		@catch (id localException)
 		{
 			[NSException raise:OPPOP3SessionException format: @"Timeout in POP3Session %@: ", self, localException];	
 		}
@@ -485,7 +485,7 @@ UIDL. nil otherwise. "*/
                 [_delegate authenticationMethod:OPPOP3USERPASSAuthenticationMethod succeededInPOP3Session:self];
             }
         }
-        @catch (NSException* localException) 
+        @catch (id localException) 
         {
             if (NSDebugEnabled) NSLog(@"USER/PASS failed for POP3Session %@.", self);
             
@@ -670,12 +670,12 @@ UIDL. nil otherwise. "*/
     
     @try {
         [self _readOKForCommand:@"UIDL"]; 	// try to use UIDL command
-    } @catch (NSException* localException) {
-		if ([localException isKindOfClass: [OPPOP3SessionException class]]) {
-		if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.");
-		while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
-		[pool release];
-        return 0;				// UIDL command not understood.
+    } @catch (id localException) {
+		if ([localException isKindOfClass:[OPPOP3SessionException class]]) {
+			if (NSDebugEnabled) NSLog(@"UIDL command not understood by POP3 server.");
+			while ([_stream availableLine]) ; 	// do nuffin but eat the whole response
+			[pool release];
+			return 0;				// UIDL command not understood.
 		} else {
 			@throw localException;
 		}
@@ -708,7 +708,7 @@ UIDL. nil otherwise. "*/
                 }
             }
         };
-    } @catch(NSException* localException) {
+    } @catch(id localException) {
         if (NSDebugEnabled) NSLog(@"%@: Error while retrieving UIDLs from POP3 server.", self);
     } @finally {
 		[pool release];
@@ -949,7 +949,7 @@ UIDL. nil otherwise. "*/
             [self _readOKForCommand:[NSString stringWithFormat:@"TOP %d 0", position]];
             headerData = [_stream availableTextData];
         } 
-		@catch (NSException *localException) 
+		@catch (id localException) 
 		{
             if (NSDebugEnabled) NSLog(@"POP3 server does not understand the optional TOP command. Using RETR instead.");
             headerData = [self _transferDataAtPosition:position];

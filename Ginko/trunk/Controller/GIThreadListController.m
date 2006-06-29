@@ -717,7 +717,7 @@ static BOOL isThreadItem(id item)
 						threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter filterMessage: message flags: 0];
 					}
 				} 
-				@catch (NSException *localException) 
+				@catch (id localException) 
 				{
 					@throw;
 				} 
@@ -831,7 +831,7 @@ static BOOL isThreadItem(id item)
             
             [searchHitsTableView reloadData];
         } 
-		@catch (NSException *localException) 
+		@catch (id localException) 
 		{
             @throw;
         } 
@@ -1244,7 +1244,7 @@ static BOOL isThreadItem(id item)
                     }
                     [self showMessageInThreadList:message];
                 }
-			} @catch (NSException *localException) {
+			} @catch (id localException) {
 				// ignored
 			}
 		}

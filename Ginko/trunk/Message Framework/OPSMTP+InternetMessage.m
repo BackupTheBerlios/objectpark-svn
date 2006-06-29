@@ -101,11 +101,11 @@ an exception if the 'message' will not be consumed. */
     @try {
         transferData = [message transferData];
         [self sendTransferData:transferData from:sender to:recipients];
-    } @catch (NSException *localException) {
+    } @catch (id localException) {
         if (bccBody) {
             [message setBody:bccBody forHeaderField:@"Bcc"];
         }
-        [localException raise];
+		@throw;
 	}
     
     if (bccBody) {

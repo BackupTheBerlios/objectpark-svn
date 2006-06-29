@@ -135,7 +135,7 @@
 					
 					[pop3session cleanUp];
 				}
-            } @catch (NSException* localException) {
+            } @catch (id localException) {
                 [pop3session abortSession];
                 [[NSFileManager defaultManager] removeFileAtPath: [mboxFile path] handler: NULL];     
                 @throw;
@@ -154,7 +154,7 @@
                 [stream shutdownEncryption];
             }
         }
-        @catch (NSException *localException)
+        @catch (id localException)
         {
             if ([[localException name] isEqualToString:OPPOP3AuthenticationFailedException])
             {

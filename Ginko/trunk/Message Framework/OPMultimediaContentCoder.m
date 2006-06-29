@@ -136,7 +136,7 @@
     
     @try {
         fileContents = [aFileWrapper regularFileContents];
-    } @catch (NSException* localException) {
+    } @catch (id localException) {
         [self dealloc];
         NSLog(@"OPMultimediaContentCoder can't encode attributedString. It's not a regular file.");
         return nil;

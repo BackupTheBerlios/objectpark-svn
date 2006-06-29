@@ -262,7 +262,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
     {
         bodyContent = [[NSMutableAttributedString alloc] initWithAttributedString:[self contentWithPreferredContentTypes:[EDMessagePart preferredContentTypes] attributed:YES]];
     } 
-    @catch (NSException *localException) 
+    @catch (id localException) 
     {
         NSLog(@"warning: [%@]\n", [localException reason]);
         bodyContent = [[NSMutableAttributedString alloc] initWithString: @"Not decodable.\nFallback to text/plain:\n\n"];

@@ -309,7 +309,7 @@
                 content = (shouldBeAttributed ? (id)[contentCoder attributedString] : (id)[contentCoder string]);
             }
         } 
-        @catch (NSException *localException) 
+        @catch (id localException) 
         {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = @"Exception while extracting contents as attributed string.";
@@ -337,7 +337,7 @@
             if (shouldBeAttributed) [content appendAttributedString:[contentCoder attributedString]];
             else content = [content stringByAppendingString:[contentCoder string]]; 
         } 
-        @catch (NSException *localException) 
+        @catch (id localException) 
         {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = @"Exception while extracting contents as attributed string.";

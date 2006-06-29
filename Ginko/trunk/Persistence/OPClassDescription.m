@@ -64,7 +64,7 @@
 																 connection: connection] autorelease];
 		@try {
 			[create execute];
-		} @catch (NSException* exception) {
+		} @catch (id exception) {
 			NSLog(@"Error: Unable to create table %@ using statements %@: %@", tableName, createStatements, exception);
 		}
 		[create reset];

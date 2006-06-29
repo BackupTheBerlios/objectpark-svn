@@ -148,7 +148,7 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 					return YES;
 				}
 			}
-		} @catch (NSException *localException) {
+		} @catch (id localException) {
 			return NO; // Expect our users to have correct email addresses.
 		}
     }

@@ -892,7 +892,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         replySubject = [internetMessage replySubject];
     } 
-    @catch (NSException *localException) 
+    @catch (id localException) 
     {
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
         replySubject = [internetMessage bodyForHeaderField:@"Subject"];
@@ -910,7 +910,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [headerFields setObject:[internetMessage forwardSubject] forKey:@"Subject"];
 		
     } 
-    @catch (NSException *localException) 
+    @catch (id localException) 
     {
         if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
         [headerFields setObject:[@"FWD: " stringByAppendingString:[internetMessage bodyForHeaderField:@"Subject"]] forKey:@"Subject"];
@@ -1108,7 +1108,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 			return result;
 		}
 	} 
-	@catch (NSException *localException) 
+	@catch (id localException) 
 	{
 		NSLog(@"Warning: Unable to append signature: %@", localException);
 	}
@@ -1299,7 +1299,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
                 }
 				return YES;
             }
-        } @catch (NSException* localException) {
+        } @catch (id localException) {
 			// Returns NO
 		}
     }
