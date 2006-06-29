@@ -614,10 +614,13 @@
 					{
 						NSLog(@"Exception '%@' occured while indexing message with id %@. Skipping that message.", [localException reason], [message valueForKey:@"messageId"]);
 					}
+					@finally
+					{
+						(*env)->PopLocalFrame(env, NULL);
+					}
 					
 					[message setValue:yesNumber forKey:@"isFulltextIndexed"];
 
-					(*env)->PopLocalFrame(env, NULL);
 					[pool release]; pool = [[NSAutoreleasePool alloc] init];
 				} 
 				else 

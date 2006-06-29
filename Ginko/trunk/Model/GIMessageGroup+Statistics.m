@@ -192,9 +192,9 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	
 	[context saveChanges];
 	
-	OPSQLiteConnection *connection = [context newDatabaseConnection];
+	OPSQLiteConnection *connection = [context databaseConnection];
 	
-	[connection open];
+	//[connection open];
 	
     @synchronized(connection) 
 	{
@@ -209,7 +209,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 		[statement reset];
     }
 	
-	[connection close];
+	//[connection close];
 }
 
 @end
