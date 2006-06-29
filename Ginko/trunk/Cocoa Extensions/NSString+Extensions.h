@@ -45,9 +45,10 @@
 
 /*" Line Breaks "*/
 
-- (NSString *)stringWithCanonicalLinebreaks;
-- (NSString *)stringWithUnixLinebreaks;
-- (NSString *)stringByRemovingLinebreaks;
+- (NSString*) stringWithCanonicalLinebreaks;
+- (NSString*) stringWithUnixLinebreaks;
+- (NSString*) stringByRemovingLinebreaks;
+- (NSString*) stringByStrippingHTML;
 
 
 
@@ -136,6 +137,7 @@ extern NSString *MIMEAttachmentContentDisposition;
 /*" Removing characters "*/
 - (void) removeWhitespace;
 - (void) removeCharactersInSet: (NSCharacterSet*) set;
+
 
 @end
 

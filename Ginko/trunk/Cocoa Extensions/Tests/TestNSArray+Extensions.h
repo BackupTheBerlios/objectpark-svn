@@ -9,7 +9,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 
-@interface TestNSArray_Extensions : SenTestCase {
+@interface TestNSArrayExtensions : SenTestCase {
 
 }
 

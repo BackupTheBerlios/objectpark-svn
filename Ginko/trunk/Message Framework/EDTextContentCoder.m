@@ -73,15 +73,7 @@
 - (id) initWithMessagePart: (EDMessagePart*) mpart
 {
     if (self = [super init]) {
-        NSString* type = [mpart contentType];
-        if([type hasPrefix: @"text/"]) {
-            if([type isEqualToString: @"text/plain"])
-                [self _takeTextFromPlainTextMessagePart: mpart];
-            else if([type isEqualToString: @"text/enriched"])
-                [self _takeTextFromEnrichedTextMessagePart: mpart];
-            else if([type isEqualToString: @"text/html"])
-                [self _takeTextFromHTMLMessagePart: mpart];
-        }
+		part = [mpart retain];
     }
     return self;
 }
@@ -90,6 +82,7 @@
 - (void) dealloc
 {
     [text release]; text = nil;
+    [part release]; part = nil;
     [super dealloc];
 }
 
@@ -98,8 +91,21 @@
 //	ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-- (NSAttributedString *)text
+- (NSAttributedString*) text
 {
+	if (!text) {
+		// Create text lazily:
+		NSString* type = [part contentType];
+
+		if([type hasPrefix: @"text/"]) {
+            if([type isEqualToString: @"text/plain"])
+                [self _takeTextFromPlainTextMessagePart: part];
+            else if([type isEqualToString: @"text/enriched"])
+                [self _takeTextFromEnrichedTextMessagePart: part];
+            else if([type isEqualToString: @"text/html"])
+                [self _takeTextFromHTMLMessagePart: part];
+        }	
+	}
     return text;
 }
 
@@ -324,40 +330,55 @@
     }
 }
 
-
-
 - (void) _takeTextFromHTMLMessagePart: (EDMessagePart*) mpart
 {
-    NSString *charset;
+	/*
+    NSString* charset;
     NSStringEncoding textEncoding;
-    NSData *data;
 
-    if((charset = [[mpart contentTypeParameters] objectForKey: @"charset"]) == nil)
-    {
+    if ((charset = [[mpart contentTypeParameters] objectForKey: @"charset"]) == nil) {
         charset = MIMEAsciiStringEncoding;
     }
     
-    if((textEncoding = [NSString stringEncodingForMIMEEncoding:charset]) == 0)
-    {
-        [NSException raise:EDMessageFormatException format: @"Invalid charset in message part; found '%@'", charset];
+    if((textEncoding = [NSString stringEncodingForMIMEEncoding: charset]) == 0) {
+        [NSException raise: EDMessageFormatException format: @"Invalid charset in message part; found '%@'", charset];
     }
+	*/
     
-    data = [[NSString stringWithData:[mpart contentData] encoding:textEncoding] dataUsingEncoding:NSUnicodeStringEncoding];
-    text = [[NSAttributedString allocWithZone:[self zone]] initWithHTML:data documentAttributes: NULL];
+    NSData* data = [[self _stringFromMessagePart: mpart] dataUsingEncoding: NSUnicodeStringEncoding];
+    text = [[NSMutableAttributedString allocWithZone: [self zone]] initWithHTML:data documentAttributes: NULL];
+	
+	/*
+	NSString* html = [[NSString alloc] initWithData: [mpart contentData] encoding: textEncoding];
+	text = [[NSMutableAttributedString alloc] initWithString: [html stringByStrippingHTML]];
+	if (NSDebugEnabled) NSLog(@"Converted html to text:\n%@", text);
+	[html release];
+	 */
 }
 
-- (NSAttributedString *)attributedString
+- (NSAttributedString*) attributedString
 {
-    NSMutableAttributedString *result;
+    NSMutableAttributedString* result;
     
-    result = [[[self text] mutableCopy] autorelease];
-    [result urlify];
-    
+    result = [[[self text] mutableCopy] autorelease]; // mutablecopy needed?
+	
+	[result urlify];
+  
     return result;
 }
 
-- (NSString *)string
-{
+- (NSString*) string
+{	
+	NSString* type = [part contentType];
+	
+	// Prevent HTML rendering - strip HTML instead!
+	if ([type isEqualToString: @"text/html"]) {
+		
+		NSString* html = [self _stringFromMessagePart: part];
+		NSString* result = [html stringByStrippingHTML];
+		if (NSDebugEnabled) NSLog(@"Converted html to the following text:\n%@", result);
+		return result;
+	}	
     return [[self text] string];
 }
 

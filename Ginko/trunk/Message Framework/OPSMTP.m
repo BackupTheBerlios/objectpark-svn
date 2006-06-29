@@ -338,7 +338,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[self sendTransferData: transferData from: from to: recipients];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [self quit];
     
@@ -472,13 +472,17 @@ Raises an exception if the message could not be sent. "*/
 }
 */
 
-- (void)quit
+- (void) quit
 /*" Logs off from the SMTP server. "*/
 {
 	if (state != Disconnected) {
-        [stream writeString:@"QUIT\r\n"];
-		//OPDebugLog(SMTPDEBUG, OPINFO, @"OPSMTP: shutting down encryption in dealloc");
-		[stream shutdownEncryption];
+		@try {
+			[stream writeString: @"QUIT\r\n"];
+			//OPDebugLog(SMTPDEBUG, OPINFO, @"OPSMTP: shutting down encryption in dealloc");
+			[stream shutdownEncryption];
+		} @catch (NSException* localException) {
+			// ignored
+		}
 		state = Disconnected;
 	}
 	

@@ -267,7 +267,7 @@ Returns YES, if the from: header contains one of my SMTP addresses configured.
         NSLog(@"warning: [%@]\n", [localException reason]);
         bodyContent = [[NSMutableAttributedString alloc] initWithString: @"Not decodable.\nFallback to text/plain:\n\n"];
         [self setContentType:@"text/plain"];
-        [bodyContent appendAttributedString:[self contentAsAttributedString]];
+        [bodyContent appendAttributedString: [self contentAsAttributedString]];
     }
 
     return [bodyContent autorelease];

@@ -368,7 +368,7 @@
     [self document:document addUnStoredFieldWithName:@"recipients" text:recipientsJavaString];    
     
     // body
-    NSString *body = [aMessage valueForKey:@"messageBodyAsPlainString"];
+    NSString *body = [aMessage contentAsString];
     [aMessage flushInternetMessageCache]; // get rid of the message's data
     if (body)
     {
@@ -605,8 +605,7 @@
 						}
                         
 						[message setValue:yesNumber forKey:@"isFulltextIndexed"];
-					} @catch (NSException *localException) 
-					{
+					} @catch (NSException *localException) {
 						@throw localException;
 					} 
 					@finally 

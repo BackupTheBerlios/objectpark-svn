@@ -279,9 +279,9 @@
     return [OPContentCoderCenter contentDecoderClass:self];
 }
 
-- (NSAttributedString *)contentAsAttributedString
+- (NSAttributedString*) contentAsAttributedString
 {
-    return [self contentWithPreferredContentTypes:nil attributed:YES];
+    return [self contentWithPreferredContentTypes: nil attributed: YES];
 }
 
 - (id)contentWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed
@@ -351,10 +351,10 @@
     return content;
 }
 
-- (NSString *)contentAsPlainString
+- (NSString*) contentAsPlainString
 /*" Returns the contents as a plain text string. Rich content is described as plain text. Suitable for fulltext indexing of the body content (not including the header texts). "*/
 {
-    return [self contentWithPreferredContentTypes:nil attributed:NO];
+    return [self contentWithPreferredContentTypes: nil attributed: NO];
 }
 
 @end

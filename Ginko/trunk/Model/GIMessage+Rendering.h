@@ -42,7 +42,5 @@
 - (NSAttributedString *)renderedMessageIncludingAllHeaders:(BOOL)allHeaders;
 - (NSImage *)personImage;
 
-/*" Fulltext index support "*/
-- (NSString *)messageBodyAsPlainString;
 
 @end

@@ -25,6 +25,7 @@
 @interface EDTextContentCoder : EDContentCoder
 {
     NSMutableAttributedString* text;
+	EDMessagePart* part;
 }
 
 - (NSAttributedString*) text;

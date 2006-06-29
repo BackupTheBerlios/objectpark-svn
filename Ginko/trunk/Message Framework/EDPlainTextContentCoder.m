@@ -234,10 +234,9 @@
 {
     NSMutableAttributedString* result = [[[self text] attributedStringWithQuotationAttributes] mutableCopy];
         
-    [result addAttribute:NSFontAttributeName value:[GIMessage font] range:NSMakeRange(0, [result length])];
+    [result addAttribute: NSFontAttributeName value: [GIMessage font] range: NSMakeRange(0, [result length])];
     
-    [result urlify];
-    
+	[result urlify];
     return [result autorelease];
 }
 

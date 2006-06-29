@@ -246,6 +246,7 @@
 		8D69432607F4B173008B7C20 /* TestOPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D69432407F4B173008B7C20 /* TestOPSMTP.m */; };
 		8D6E6A1207DA853900428E45 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8D6E6A1007DA853900428E45 /* Localizable.strings */; };
 		8D77114D0931C39B005D7DE3 /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D666EF607D523C50076C74D /* ActivePrefPanes.plist */; };
+		8D7C7EAC0A52EDD40031385D /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7C7EAB0A52EDD40031385D /* libxml2.dylib */; };
 		8D840C02090F8DF50093CFAD /* NSEnumerator+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D840C00090F8DF50093CFAD /* NSEnumerator+Extensions.h */; };
 		8D840C03090F8DF50093CFAD /* NSEnumerator+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D840C01090F8DF50093CFAD /* NSEnumerator+Extensions.m */; };
 		8D857FC60785CD5500B0D669 /* OPCollapsingSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D857FC40785CD5500B0D669 /* OPCollapsingSplitView.h */; };
@@ -363,6 +364,8 @@
 		8DDFB43F09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */; };
 		8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */; };
 		8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDFB45209F82C07000F73E2 /* IOKit.framework */; };
+		8DE2CF760A51B37C00FAE496 /* TestNSString+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE2CF740A51B37C00FAE496 /* TestNSString+Extensions.h */; };
+		8DE2CF770A51B37C00FAE496 /* TestNSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE2CF750A51B37C00FAE496 /* TestNSString+Extensions.m */; };
 		8DE96470089F9F1F0053ED6B /* GIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE9646E089F9F1F0053ED6B /* GIThread.h */; };
 		8DE96471089F9F1F0053ED6B /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE9646F089F9F1F0053ED6B /* GIThread.m */; };
 		8DE96483089FA0990053ED6B /* OPPersistentObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */; };
@@ -667,6 +670,7 @@
 		8D69432307F4B173008B7C20 /* TestOPSMTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestOPSMTP.h; sourceTree = "<group>"; };
 		8D69432407F4B173008B7C20 /* TestOPSMTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestOPSMTP.m; sourceTree = "<group>"; };
 		8D6E6A1007DA853900428E45 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		8D7C7EAB0A52EDD40031385D /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = /usr/lib/libxml2.dylib; sourceTree = "<absolute>"; };
 		8D840C00090F8DF50093CFAD /* NSEnumerator+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEnumerator+Extensions.h"; sourceTree = "<group>"; };
 		8D840C01090F8DF50093CFAD /* NSEnumerator+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEnumerator+Extensions.m"; sourceTree = "<group>"; };
 		8D857FC40785CD5500B0D669 /* OPCollapsingSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPCollapsingSplitView.h; sourceTree = "<group>"; };
@@ -788,6 +792,8 @@
 		8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPSleepNotifications.h"; sourceTree = "<group>"; };
 		8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPSleepNotifications.m"; sourceTree = "<group>"; };
 		8DDFB45209F82C07000F73E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
+		8DE2CF740A51B37C00FAE496 /* TestNSString+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSString+Extensions.h"; sourceTree = "<group>"; };
+		8DE2CF750A51B37C00FAE496 /* TestNSString+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSString+Extensions.m"; sourceTree = "<group>"; };
 		8DE9646E089F9F1F0053ED6B /* GIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThread.h; sourceTree = "<group>"; };
 		8DE9646F089F9F1F0053ED6B /* GIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThread.m; sourceTree = "<group>"; };
 		8DE96481089FA0990053ED6B /* OPPersistentObject+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OPPersistentObject+Extensions.h"; sourceTree = "<group>"; };
@@ -822,6 +828,7 @@
 				7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */,
 				771CD38609F800170062BEED /* libsasl2.dylib in Frameworks */,
 				8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */,
+				8D7C7EAC0A52EDD40031385D /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,6 +952,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8D7C7EAB0A52EDD40031385D /* libxml2.dylib */,
 				771CD38509F800170062BEED /* libsasl2.dylib */,
 				8DDFB45209F82C07000F73E2 /* IOKit.framework */,
 				77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */,
@@ -959,6 +967,8 @@
 			children = (
 				301F61240992C3B7001F2072 /* TestNSArray+Extensions.h */,
 				301F61250992C3B7001F2072 /* TestNSArray+Extensions.m */,
+				8DE2CF740A51B37C00FAE496 /* TestNSString+Extensions.h */,
+				8DE2CF750A51B37C00FAE496 /* TestNSString+Extensions.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1579,6 +1589,7 @@
 				77B07A3F0A22F9CA009773FB /* OPJob.h in Headers */,
 				771F9F5A0A27393A00937F89 /* TestOPJob.h in Headers */,
 				7780AC150A499FBE006970ED /* GIJobAlertPanelController.h in Headers */,
+				8DE2CF760A51B37C00FAE496 /* TestNSString+Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1962,6 +1973,7 @@
 				77B07A400A22F9CA009773FB /* OPJob.m in Sources */,
 				771F9F5B0A27393A00937F89 /* TestOPJob.m in Sources */,
 				7780AC160A499FBE006970ED /* GIJobAlertPanelController.m in Sources */,
+				8DE2CF770A51B37C00FAE496 /* TestNSString+Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2044,7 +2056,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = NO;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (

@@ -9,16 +9,18 @@
 
 #import <AppKit/AppKit.h>
 #import <SenTestingKit/SenTestProbe.h>
-
+#import "TestNSString+Extensions.h"
 
 int main(int argc, const char *argv[])
 {
-    //NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     // Make Ginko use the private sqlite dylib from application bundle
     // instead of the one installed in /usr/lib:
     //setenv("LD_LIBRARY_PATH", [[[NSBundle mainBundle] privateFrameworksPath] cString], 1);
     
-    //[pool release];
+	[TestNSStringExtensions testHTMLStrip];
+	
+    [pool release];
     // Hack to enable desktop launching:
 	if (argc>1 && [[[NSString alloc] initWithCString: argv[1]] hasPrefix: @"-psn"])
         argc = 1;

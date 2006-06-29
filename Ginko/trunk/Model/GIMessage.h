@@ -84,6 +84,7 @@
 - (void)addFlagsFromString:(NSString *)flagsString; // use only for import
 
 - (NSAttributedString *)contentAsAttributedString;
+- (NSString*) contentAsString;
 
 - (GIThread*) thread;
 - (GIThread*) assignThreadUseExisting: (BOOL) useExisting;

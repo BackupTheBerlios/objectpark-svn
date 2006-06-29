@@ -22,6 +22,7 @@
 #import "GIFulltextIndex.h"
 #import "NSArray+Extensions.h"
 #import "GIUserDefaultsKeys.h"
+#import "EDMessagePart+OPExtensions.h"
 
 NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotification";
 
@@ -474,6 +475,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (NSAttributedString*) contentAsAttributedString
 {
     return [[self internetMessage] bodyContent];
+}
+
+- (NSString*) contentAsString
+{
+	//return [[self contentAsAttributedString] string]; // loads images from the net etc. :-(
+   return [[self internetMessage] contentAsPlainString];
 }
 
 

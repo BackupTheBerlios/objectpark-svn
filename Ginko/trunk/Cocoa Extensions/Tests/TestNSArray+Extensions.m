@@ -10,7 +10,7 @@
 #import "NSArray+Extensions.h"
 
 
-@implementation TestNSArray_Extensions
+@implementation TestNSArrayExtensions
 
 - (void) testRemoveDuplicates_NothingToDo
 {
