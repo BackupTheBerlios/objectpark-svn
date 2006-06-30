@@ -56,6 +56,20 @@
     return path;
 }
 
++ (void)checkException
+{
+    JNIEnv *env = [self jniEnv];
+	
+	jthrowable exc = (*env)->ExceptionOccurred(env);
+	if (exc) 
+	{
+		/* We don't do much with the exception, except that
+		we print a debug message for it, clear it. */
+		(*env)->ExceptionDescribe(env);
+		(*env)->ExceptionClear(env);
+	}
+}
+
 + (jclass)documentClass
 {
     jclass documentClass = NULL;
@@ -83,14 +97,8 @@
     }
     
     document = (*env)->NewObject(env, [self documentClass], cid);
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	
+	[self checkException];
     
     return document;
 }
@@ -169,14 +177,7 @@
     jobject result = (*env)->CallStaticObjectMethod(env, [self fieldClass], mid, nameString, textString);
     NSAssert1(result != NULL, @"Text static method doesn't generate a Field object '%@'.", name);
     
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     
     [self document:document addField:result];
 }
@@ -197,14 +198,7 @@
 
     jobject result = (*env)->CallStaticObjectMethod(env, [self fieldClass], mid, nameString, textString);
     NSAssert(result != NULL, @"Keyword static method doesn't generate a Field object.");
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     
     [self document:document addField:result];
 }
@@ -258,14 +252,7 @@
     
     jlong javaMillis = (jlong)millis;
     jstring result = (*env)->CallStaticObjectMethod(env, [self dateFieldClass], mid, javaMillis);
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     NSAssert(result != NULL, @"timeToString static method doesn't generate a string object.");
     
     return result;
@@ -284,14 +271,7 @@
 	char utf8String[32];
 	sprintf(utf8String, "%llu", oid);
     jstring oidJavaString = (*env)->NewStringUTF(env, utf8String);
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     NSAssert(oidJavaString != NULL, @"textString not converted.");
 
     [self document:document addKeywordFieldWithName:@"id" text:oidJavaString];
@@ -325,14 +305,7 @@
     if (subject) 
 	{
         jstring subjectJavaString = (*env)->NewStringUTF(env, [subject UTF8String]);
-        exc = (*env)->ExceptionOccurred(env);
-        if (exc) 
-		{
-            /* We don't do much with the exception, except that
-            we print a debug message for it, clear it. */
-            (*env)->ExceptionDescribe(env);
-            (*env)->ExceptionClear(env);
-        }
+		[self checkException];
         
         [self document:document addUnStoredFieldWithName:@"subject" text:subjectJavaString];
     }
@@ -344,14 +317,7 @@
     if (author) 
 	{
         jstring authorJavaString = (*env)->NewStringUTF(env, [author UTF8String]);
-        exc = (*env)->ExceptionOccurred(env);
-        if (exc) 
-		{
-            /* We don't do much with the exception, except that
-            we print a debug message for it, clear it. */
-            (*env)->ExceptionDescribe(env);
-            (*env)->ExceptionClear(env);
-        }
+		[self checkException];
         
         [self document:document addUnStoredFieldWithName:@"author" text:authorJavaString];
     }
@@ -366,14 +332,7 @@
     recipients = [bcc length] ? [recipients stringByAppendingFormat:@", %@", bcc] : recipients;
     
     jstring recipientsJavaString = (*env)->NewStringUTF(env, [recipients UTF8String]);
-    exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     
     [self document:document addUnStoredFieldWithName:@"recipients" text:recipientsJavaString];    
     
@@ -383,15 +342,7 @@
     if (body)
     {
         jstring bodyJavaString = (*env)->NewStringUTF(env, [body UTF8String]);
-        exc = (*env)->ExceptionOccurred(env);
-        if (exc) 
-        {
-            /* We don't do much with the exception, except that
-            we print a debug message for it, clear it. */
-            (*env)->ExceptionDescribe(env);
-            (*env)->ExceptionClear(env);
-        }
-        
+		[self checkException];        
         [self document:document addUnStoredFieldWithName:@"body" text:bodyJavaString];
     }    
     
@@ -451,14 +402,7 @@
     jobject result = NULL;
     
     result = (*env)->CallStaticObjectMethod(env, fsdirClass, mid, path, create);
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
         
     return result;
 }
@@ -496,27 +440,13 @@
     jstring javaIndexPath = NULL;
     
     javaIndexPath = (*env)->NewStringUTF(env, [[self fulltextIndexPath] UTF8String]);
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     
     jobject analyzer = [self standardAnalyzerNew];
         
     jobject indexWriter = (*env)->NewObject(env, [self indexWriterClass], cid, javaIndexPath, analyzer, shouldCreateNewIndex);
     
-    exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     
     return indexWriter;
 }
@@ -532,19 +462,12 @@
 
     (*env)->CallVoidMethod(env, writer, mid, document);
     
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
 }
 
 + (void)indexWriterClose:(jobject)writer
 {
-    JNIEnv *env = [self jniEnv];
+	JNIEnv *env = [self jniEnv];
     jclass indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
     NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
     
@@ -619,6 +542,7 @@
 					}
 					@finally
 					{
+						[self checkException];
 						(*env)->PopLocalFrame(env, NULL);
 					}
 					
@@ -640,6 +564,7 @@
 		{
             [self addChangeCount:counter];
             [self indexWriterClose:indexWriter];
+			[self checkException];
             (*env)->PopLocalFrame(env, NULL);
         }
 		[pool release];
@@ -686,14 +611,7 @@
     NSAssert(mid != NULL, @"unlock static method couldn't be found.");
     
     (*env)->CallStaticVoidMethod(env, readerClass, mid, aDirectory);
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
 }
 
 + (void)indexReaderClose:(jobject)reader
@@ -728,14 +646,7 @@
     jint result = 0;
     result = (*env)->CallIntMethod(env, reader, mid);
     
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     return result;
 }
 
@@ -748,14 +659,7 @@
     jint result = 0;
     result = (*env)->CallIntMethod(env, reader, mid, term);
 
-    jthrowable exc = (*env)->ExceptionOccurred(env);
-    if (exc) 
-    {
-        /* We don't do much with the exception, except that
-        we print a debug message for it, clear it. */
-        (*env)->ExceptionDescribe(env);
-        (*env)->ExceptionClear(env);
-    }
+	[self checkException];
     return result;
 }
 
@@ -839,6 +743,7 @@
                     } 
                     @finally 
                     {
+						[self checkException];
                         (*env)->PopLocalFrame(env, NULL);
                         shouldTerminate = [job shouldTerminate];
                     }
@@ -852,6 +757,7 @@
             @finally 
             {
                 [self indexReaderClose:indexReader];
+				[self checkException];
                 (*env)->PopLocalFrame(env, NULL);
                 [self addChangeCount:removedCount];
             }
@@ -878,6 +784,7 @@
         }
         @finally
         {
+			[self checkException];
             (*env)->PopLocalFrame(env, NULL);
         }
     }
@@ -1014,7 +921,8 @@
     }
     
     jint result = (*env)->CallIntMethod(env, hits, mid);
-    
+	
+    [self checkException];
     (*env)->PopLocalFrame(env, NULL);
     
     return result;
@@ -1114,6 +1022,7 @@
                 }
             }
         }
+		[self checkException];
         (*env)->PopLocalFrame(env, NULL);
         [pool release];
     }
