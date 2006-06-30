@@ -61,7 +61,7 @@
     jclass documentClass = NULL;
     JNIEnv *env = [self jniEnv];
     
-    if (! documentClass)
+//    if (! documentClass)
     {
         documentClass = (*env)->FindClass(env, "org/apache/lucene/document/Document");
         NSAssert(documentClass != NULL, @"org.apache.lucene.document.Document couldn't be found.");
@@ -76,7 +76,7 @@
     jmethodID cid = NULL;
     JNIEnv *env = [self jniEnv];
     
-    if (! cid)
+//    if (! cid)
     {
         cid = (*env)->GetMethodID(env, [self documentClass], "<init>", "()V");
         NSAssert(cid != NULL, @"org.apache.lucene.document.Document constructor couldn't be found.");
@@ -100,7 +100,7 @@
     jclass fieldClass = NULL;
     JNIEnv *env = [self jniEnv];
 
-    if (! fieldClass)
+//    if (! fieldClass)
     {
         fieldClass = (*env)->FindClass(env, "org/apache/lucene/document/Field");
         NSAssert(fieldClass != NULL, @"org.apache.lucene.document.Field couldn't be found.");
@@ -114,7 +114,7 @@
     jclass dateFieldClass = NULL;
     JNIEnv *env = [self jniEnv];
     
-    if (! dateFieldClass)
+//    if (! dateFieldClass)
     {
         dateFieldClass = (*env)->FindClass(env, "org/apache/lucene/document/DateField");
         NSAssert(dateFieldClass != NULL, @"org.apache.lucene.document.DateField couldn't be found.");
@@ -128,7 +128,7 @@
     jmethodID mid = NULL;
     JNIEnv *env = [self jniEnv];
     
-    if (! mid)
+//    if (! mid)
     {
         mid = (*env)->GetMethodID(env, [self documentClass], "add", "(Lorg/apache/lucene/document/Field;)V");
     }
@@ -141,7 +141,7 @@
     jmethodID mid = NULL;
     JNIEnv *env = [self jniEnv];
     
-    if (! mid)
+//    if (! mid)
     {
         mid = (*env)->GetMethodID(env, [self documentClass], "get", "(Ljava/lang/String;)Ljava/lang/String;");
     }
@@ -157,7 +157,7 @@
     jmethodID mid = NULL;
     JNIEnv *env = [self jniEnv];
     
-    if (! mid)
+//    if (! mid)
     {
         mid = (*env)->GetStaticMethodID(env, [self fieldClass], "UnStored", "(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/lucene/document/Field;");
         NSAssert(mid != NULL, @"Text static method couldn't be found.");
@@ -186,7 +186,7 @@
     JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
-    if (! mid)
+//    if (! mid)
     {
         mid = (*env)->GetStaticMethodID(env, [self fieldClass], "Keyword", "(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/lucene/document/Field;");
         NSAssert(mid != NULL, @"Keyword static method couldn't be found.");
@@ -242,7 +242,7 @@
     jmethodID mid = NULL;
     JNIEnv *env = [self jniEnv];
     
-    if (! mid)
+//    if (! mid)
     {
         mid = (*env)->GetStaticMethodID(env, [self dateFieldClass], "timeToString", "(J)Ljava/lang/String;");
         NSAssert(mid != NULL, @"timeToString static method couldn't be found.");
@@ -403,7 +403,7 @@
     JNIEnv *env = [self jniEnv];
     jclass analyzerClass = NULL;
     
-    if (! analyzerClass)
+//    if (! analyzerClass)
     {
         analyzerClass = (*env)->FindClass(env, "org/apache/lucene/analysis/standard/StandardAnalyzer");
         NSAssert(analyzerClass != NULL, @"org.apache.lucene.analysis.standard.StandardAnalyzer couldn't be found.");
@@ -418,7 +418,7 @@
     jobject analyzer = NULL;
     jmethodID cid = NULL;
     
-    if (! cid)
+//    if (! cid)
     {
         cid = (*env)->GetMethodID(env, [self standardAnalyzerClass], "<init>", "()V");
         NSAssert(cid != NULL, @"org.apache.lucene.analysis.standard.StandardAnalyzer constructor couldn't be found.");
@@ -468,7 +468,7 @@
     JNIEnv *env = [self jniEnv];
     jclass indexWriterClass = NULL;
     
-    if (! indexWriterClass)
+//    if (! indexWriterClass)
     {
         indexWriterClass = (*env)->FindClass(env, "org/apache/lucene/index/IndexWriter");
         NSAssert(indexWriterClass != NULL, @"org.apache.lucene.index.IndexWriter couldn't be found.");
@@ -487,7 +487,7 @@
     
     jmethodID cid = NULL;
     
-    if (! cid)
+//    if (! cid)
     {
         cid = (*env)->GetMethodID(env, [self indexWriterClass], "<init>", "(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z)V");
         NSAssert(cid != NULL, @"(Ljava/lang/String;Lorg/apache/lucene/analysis/Analyzer;Z) constructor couldn't be found.");
@@ -559,7 +559,7 @@
     JNIEnv *env = [self jniEnv];
     jmethodID mid = NULL;
     
-    if (! mid)
+//    if (! mid)
     {
         mid = (*env)->GetMethodID(env, [self indexWriterClass], "optimize", "()V");
         NSAssert(mid != NULL, @"optimize method couldn't be found.");
