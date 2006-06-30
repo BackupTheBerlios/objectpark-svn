@@ -48,7 +48,6 @@
 - (NSString*) stringWithCanonicalLinebreaks;
 - (NSString*) stringWithUnixLinebreaks;
 - (NSString*) stringByRemovingLinebreaks;
-- (NSString*) stringByStrippingHTML;
 
 
 

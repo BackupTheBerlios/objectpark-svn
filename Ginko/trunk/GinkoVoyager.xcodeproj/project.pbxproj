@@ -327,6 +327,8 @@
 		8DAB5CF40803C4FB0036C0BA /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */; };
 		8DB2D4F90796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB2D4F70796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h */; };
 		8DB2D4FA0796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */; };
+		8DB3FDB60A55565B00709070 /* NSString+OPHTMLTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB3FDB40A55565B00709070 /* NSString+OPHTMLTools.h */; };
+		8DB3FDB70A55565B00709070 /* NSString+OPHTMLTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB3FDB50A55565B00709070 /* NSString+OPHTMLTools.m */; };
 		8DBBABC708B393DE002566B9 /* GIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */; };
 		8DBBABC808B393DF002566B9 /* GIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */; };
 		8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */; };
@@ -753,6 +755,8 @@
 		8DAB5CF20803C4FB0036C0BA /* GIMessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIMessageBase.m; path = ../GIMessageBase.m; sourceTree = "<group>"; };
 		8DB2D4F70796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMatrixWithKeyboardSupport.h; sourceTree = "<group>"; };
 		8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
+		8DB3FDB40A55565B00709070 /* NSString+OPHTMLTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OPHTMLTools.h"; sourceTree = "<group>"; };
+		8DB3FDB50A55565B00709070 /* NSString+OPHTMLTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OPHTMLTools.m"; sourceTree = "<group>"; };
 		8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = ../OPPreferences/build/Development/OPPreferences.framework; sourceTree = SOURCE_ROOT; };
 		8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = ../OPNetwork/build/Development/OPNetwork.framework; sourceTree = SOURCE_ROOT; };
 		8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSizingTextField.h; sourceTree = "<group>"; };
@@ -1279,6 +1283,8 @@
 				8D90293D077A49B2005365EA /* NSScanner+Extensions.m */,
 				8D902923077A471A005365EA /* NSString+Extensions.h */,
 				8D902924077A471A005365EA /* NSString+Extensions.m */,
+				8DB3FDB40A55565B00709070 /* NSString+OPHTMLTools.h */,
+				8DB3FDB50A55565B00709070 /* NSString+OPHTMLTools.m */,
 				7774362E0778055900899957 /* NSToolbar+OPExtensions.h */,
 				7774362F0778055900899957 /* NSToolbar+OPExtensions.m */,
 				7742E9DF076A1AB500B1B4BA /* NSView+ViewMoving.h */,
@@ -1590,6 +1596,7 @@
 				771F9F5A0A27393A00937F89 /* TestOPJob.h in Headers */,
 				7780AC150A499FBE006970ED /* GIJobAlertPanelController.h in Headers */,
 				8DE2CF760A51B37C00FAE496 /* TestNSString+Extensions.h in Headers */,
+				8DB3FDB60A55565B00709070 /* NSString+OPHTMLTools.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1989,6 +1996,7 @@
 				771F9F5B0A27393A00937F89 /* TestOPJob.m in Sources */,
 				7780AC160A499FBE006970ED /* GIJobAlertPanelController.m in Sources */,
 				8DE2CF770A51B37C00FAE496 /* TestNSString+Extensions.m in Sources */,
+				8DB3FDB70A55565B00709070 /* NSString+OPHTMLTools.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

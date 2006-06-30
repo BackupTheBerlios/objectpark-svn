@@ -21,6 +21,7 @@
 
 #import <AppKit/AppKit.h>
 #import "NSString+MessageUtils.h"
+#import "NSString+OPHTMLTools.h"
 #import "EDMessagePart.h"
 #import "EDTextContentCoder.h"
 #import "OPObjectPair.h"
@@ -376,7 +377,7 @@
 		
 		NSString* html = [self _stringFromMessagePart: part];
 		NSString* result = [html stringByStrippingHTML];
-		if (NSDebugEnabled) NSLog(@"Converted html to the following text:\n%@", result);
+		//if (NSDebugEnabled) NSLog(@"Converted html to the following text:\n%@", result);
 		return result;
 	}	
     return [[self text] string];

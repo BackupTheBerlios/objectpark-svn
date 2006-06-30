@@ -18,7 +18,7 @@ int main(int argc, const char *argv[])
     // instead of the one installed in /usr/lib:
     //setenv("LD_LIBRARY_PATH", [[[NSBundle mainBundle] privateFrameworksPath] cString], 1);
     
-	[TestNSStringExtensions testHTMLStrip];
+	//[TestNSStringExtensions testHTMLStrip];
 	
     [pool release];
     // Hack to enable desktop launching:

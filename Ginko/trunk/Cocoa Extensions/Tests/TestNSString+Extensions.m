@@ -7,7 +7,7 @@
 //
 
 #import "TestNSString+Extensions.h"
-#import "NSString+Extensions.h"
+#import "NSString+OPHTMLTools.h"
 
 
 @implementation TestNSStringExtensions
