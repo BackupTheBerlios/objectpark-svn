@@ -106,7 +106,7 @@
                 [self _takeTextFromHTMLMessagePart: part];
         }	
 	}
-    return text;
+    return [[text retain] autorelease];
 }
 
 

@@ -348,7 +348,7 @@
         [contentCoder release];
     }
     
-    return content;
+    return [[content retain] autorelease];
 }
 
 - (NSString*) contentAsPlainString

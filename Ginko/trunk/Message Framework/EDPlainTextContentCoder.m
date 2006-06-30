@@ -94,7 +94,7 @@
 
 - (NSString *)text
 {
-    return text;
+    return [[text retain] autorelease];
 }
 
 - (EDMessagePart *)messagePart

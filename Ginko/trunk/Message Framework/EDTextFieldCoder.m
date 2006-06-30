@@ -98,19 +98,19 @@ NSLocalizedString(@"Unknown encoding specifier in header field; found \"%@\"", "
 
 - (NSString*) text
 {
-    return text;
+    return [[text retain] autorelease];
 }
 
 
 - (NSString*) stringValue
 {
-    return text;
+    return [[text retain] autorelease];
 }
 
 
 - (NSString*) fieldBody
 {
-    return [[self class] stringByEncodingString:text];
+    return [[self class] stringByEncodingString: text];
 }
 
 
