@@ -278,9 +278,12 @@
     
     jobject document = [self documentNew];
     
-    // id
-    NSString *oidString = [[NSNumber numberWithUnsignedLongLong:[aMessage oid]] description];
-    jstring oidJavaString = (*env)->NewStringUTF(env, [oidString UTF8String]);
+	OID oid = [aMessage oid];
+    //NSString *oidString = [[NSNumber numberWithUnsignedLongLong: oid] description];
+	//const char* utf8String = [oidString UTF8String];
+	char utf8String[32];
+	sprintf(utf8String, "%llu", oid);
+    jstring oidJavaString = (*env)->NewStringUTF(env, utf8String);
     jthrowable exc = (*env)->ExceptionOccurred(env);
     if (exc) 
     {
