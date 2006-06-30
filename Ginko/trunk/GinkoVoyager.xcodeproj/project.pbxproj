@@ -1620,6 +1620,7 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				30672F8B092D4DA0005D7A7F /* Extract Aspects */,
 				8D1107290486CEB800E47090 /* Resources */,
+				77395D150A5523B700DCE6D2 /* Ranlib Phase */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				303DCD6A0943C3A100D8BCBE /* Copy Frameworks */,
 				8DC8047B099C99E300CF4660 /* Copy dylibs */,
@@ -1829,6 +1830,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "../OPDebug/bin/extractAspects.pl --outputdir ${PROJECT_DIR} .\n";
+		};
+		77395D150A5523B700DCE6D2 /* Ranlib Phase */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Ranlib Phase";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ranlib Resources/libsqlite336.a";
 		};
 		77AD780107CF1CC200A15B83 /* Run AutoDoc */ = {
 			isa = PBXShellScriptBuildPhase;
