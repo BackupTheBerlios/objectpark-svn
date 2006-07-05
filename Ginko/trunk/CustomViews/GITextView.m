@@ -26,6 +26,7 @@
 #import "NSFileWrapper+OPApplefileExtensions.h"
 #import "NSString+MessageUtils.h"
 #import "GIUserDefaultsKeys.h"
+#import "OPInternetMessageAttachmentCell.h"
 #import <Foundation/NSDebug.h>
 
 NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
@@ -169,6 +170,14 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
     [ts endEditing];
 }
 
+/*
+- (id) _attachmentCellForSelection
+{
+	return [(id)super _attachmentCellForSelection];
+}
+*/
+
+
 - (void)paste:(id)sender
 {
 // ##WARNING This method disables some attributes to be pasted. This has to be configurable at one time in order to allow "styled" texts.
@@ -255,6 +264,17 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
             // make text attachment from file wrapper
             attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
             
+			//NSCell* c = [attachment attachmentCell];
+			
+			//if ([c isKindOfClass: [NSTextAttachmentCell class])
+			OPInternetMessageAttachmentCell* aCell = [[OPInternetMessageAttachmentCell alloc] initImageCell: [[NSWorkspace sharedWorkspace] iconForFile: filename]];
+			//[aCell setTitle: @"TestTitle"];
+			//[aCell setInfoString: @"TestInfo"];
+			[aCell setAttachment: attachment];
+			[attachment setAttachmentCell: aCell];
+			
+			[aCell release];
+			
             // append text attachment to result attributedstring
             [result appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
             [attachment release];

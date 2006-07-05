@@ -744,8 +744,8 @@
 		8D902D78077AFBCD005365EA /* EDObjcRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDObjcRuntime.h; sourceTree = "<group>"; };
 		8D902DCD077B1048005365EA /* NSFileWrapper+OPApplefileExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileWrapper+OPApplefileExtensions.m"; sourceTree = "<group>"; };
 		8D902DCE077B1048005365EA /* NSFileWrapper+OPApplefileExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileWrapper+OPApplefileExtensions.h"; sourceTree = "<group>"; };
-		8D902E3E077B20D4005365EA /* OPInternetMessageAttachmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPInternetMessageAttachmentCell.m; sourceTree = "<group>"; };
-		8D902E3F077B20D4005365EA /* OPInternetMessageAttachmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPInternetMessageAttachmentCell.h; sourceTree = "<group>"; };
+		8D902E3E077B20D4005365EA /* OPInternetMessageAttachmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OPInternetMessageAttachmentCell.m; path = "../Message Framework/OPInternetMessageAttachmentCell.m"; sourceTree = "<group>"; };
+		8D902E3F077B20D4005365EA /* OPInternetMessageAttachmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OPInternetMessageAttachmentCell.h; path = "../Message Framework/OPInternetMessageAttachmentCell.h"; sourceTree = "<group>"; };
 		8D9032E5077B3BFC005365EA /* NSCalendarDate+NetExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSCalendarDate+NetExt.m"; sourceTree = "<group>"; };
 		8D9032E6077B3BFC005365EA /* NSCalendarDate+NetExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSCalendarDate+NetExt.h"; sourceTree = "<group>"; };
 		8D9E8A8306AC44080055F87C /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIApplication.h; path = ../GIApplication.h; sourceTree = "<group>"; };
@@ -1248,6 +1248,8 @@
 				77B28DB2082E8A72007FA384 /* OPTableColumn.m */,
 				77608AE10972F4030071A01F /* OPImageAndTextCell.h */,
 				77608AE20972F4030071A01F /* OPImageAndTextCell.m */,
+				8D902E3F077B20D4005365EA /* OPInternetMessageAttachmentCell.h */,
+				8D902E3E077B20D4005365EA /* OPInternetMessageAttachmentCell.m */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -1353,8 +1355,6 @@
 				8D90211C0779E6B9005365EA /* OPInternetMessage+GinkoExtensions.m */,
 				8D90211B0779E6B9005365EA /* OPInternetMessage.h */,
 				8D9021190779E6B9005365EA /* OPInternetMessage.m */,
-				8D902E3F077B20D4005365EA /* OPInternetMessageAttachmentCell.h */,
-				8D902E3E077B20D4005365EA /* OPInternetMessageAttachmentCell.m */,
 				8D68416607F5C434003DB791 /* OPMBoxFile.h */,
 				8D68416707F5C434003DB791 /* OPMBoxFile.m */,
 				77253D5F07ECB83E00375AFC /* OPMessageConsumer.h */,

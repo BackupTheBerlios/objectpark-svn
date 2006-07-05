@@ -602,45 +602,6 @@ NSColor* OPColorFromString(NSString* string)
 }
 
 
-NSString *bytes2Display(unsigned int bytes)
-{
-    NSString *unit, *format;
-    double result;
-    
-    if (bytes < 1024) {
-        unit = @"B";
-        result = bytes;
-    }
-    else if (bytes < 1048525) {   // 1023.95 KB
-        unit = @"KB";
-        result = bytes / 1024.0;
-    }
-    else if (bytes < 1073689395) {   // 1023.95 MB
-        unit = @"MB";
-        result = bytes / 1048576.0;
-    }
-    else {
-        unit = @"GB";
-        result = bytes / 1073741824.0;
-    }
-    
-    if (result < 10.05) {
-        format = @"%.2g %@";
-    }
-    else if (result < 100.05) {
-        format = @"%.3g %@";
-    }
-    else if (result < 1000.05) {
-        format = @"%.4g %@";
-    }
-    else {
-        format = @"%.5g %@";
-    }
-    
-    return [NSString stringWithFormat:format, result, unit];
-}
-
-
 - (void)appendAttachmentWithFileWrapper:(NSFileWrapper *)aFileWrapper 
                    showInlineIfPossible:(BOOL)shouldShowInline
 /*" The file wrapper is materialized in a temp location
@@ -687,7 +648,11 @@ NSString *bytes2Display(unsigned int bytes)
     //if (! shouldShowInline)
     {
         cell = [[[OPInternetMessageAttachmentCell alloc] initImageCell:[[NSWorkspace sharedWorkspace] iconForFile:path]] autorelease];
-        [cell setAttachment:attachment];
+		
+		
+		[cell setAttachment:attachment];
+
+		/*
         
         if ([aFileWrapper isRegularFile]) 
         {
@@ -708,6 +673,7 @@ NSString *bytes2Display(unsigned int bytes)
         } 
         
         [cell setTitle:[aFileWrapper filename]];
+		*/
         
         [attachment setAttachmentCell:cell];
     }
@@ -836,7 +802,7 @@ NSString *bytes2Display(unsigned int bytes)
     if (! [self containsAttachments]) 
     {
         if (NSDebugEnabled) NSLog(@"does not contain an attachment");
-        return [NSArray arrayWithObject:[OPObjectPair pairWithObjects: nil :self]];
+        return [NSArray arrayWithObject:[OPObjectPair pairWithObjects: nil : self]];
     }
     
     if (NSDebugEnabled) NSLog(@"contains an attachment!");
@@ -864,7 +830,7 @@ NSString *bytes2Display(unsigned int bytes)
         
         if (partContentStringsCount == 0) 
         {
-            typeAndContent = [OPObjectPair pairWithObjects:attribute :string];
+            typeAndContent = [OPObjectPair pairWithObjects: attribute : string];
             [partContentStrings addObject:typeAndContent];
         } 
         else 

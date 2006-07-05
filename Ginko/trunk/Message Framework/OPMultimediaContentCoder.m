@@ -184,7 +184,7 @@
 
 - (NSString*) filename
 {
-    return filename;
+    return [[filename retain] autorelease];
 }
 
 
@@ -303,20 +303,18 @@
     return result;
 }
 
-- (NSAttributedString *)attributedString
+- (NSAttributedString*) attributedString
 {
-    NSMutableAttributedString *result;
-    
-    result = [[[NSMutableAttributedString alloc] init] autorelease];
+    NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] init] autorelease];
 
-    [result appendAttachmentWithFileWrapper:[self fileWrapper]];
+    [result appendAttachmentWithFileWrapper: [self fileWrapper]];
     
     return result;
 }
 
-- (NSString *)string
+- (NSString*) string
 {
-    return [[@"\n" stringByAppendingString:filename] stringByAppendingString:@"\n"];
+    return filename ? [[@"\n" stringByAppendingString: filename] stringByAppendingString: @"\n"] : @" ";
 }
 
 @end

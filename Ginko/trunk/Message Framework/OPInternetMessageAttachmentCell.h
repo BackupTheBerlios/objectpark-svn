@@ -8,7 +8,7 @@
 
 #import <AppKit/AppKit.h>
 
-@interface OPInternetMessageAttachmentCell : NSTextAttachmentCell
+@interface OPInternetMessageAttachmentCell: NSTextAttachmentCell
 {
     @private
     NSString* infoString;
@@ -18,3 +18,5 @@
 - (void) setInfoString: (NSString*) newInfo;
 
 @end
+
+

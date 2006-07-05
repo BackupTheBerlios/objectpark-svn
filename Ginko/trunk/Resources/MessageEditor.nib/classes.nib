@@ -31,7 +31,6 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = G3MessageEditorWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
-        {CLASS = G3MessageTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             ACTIONS = {
                 addBcc = id; 
@@ -59,6 +58,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = GIMessageEditorWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = GIMessageTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {CLASS = OPSizingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }
     ); 
