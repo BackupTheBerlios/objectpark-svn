@@ -333,9 +333,12 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 	NSLog(@"Will -saveAttachment: %@", attachment);
 	NSFileWrapper* fwrapper = [attachment fileWrapper];
 	if (fwrapper) {
-		[fwrapper writeToFile: [@"/tmp" stringByAppendingPathComponent: [fwrapper filename]]
-				   atomically: NO
-			  updateFilenames: NO];
+		NSString* downloadFolder = @"/tmp";
+		NSString* fullpath = [downloadFolder stringByAppendingPathComponent: [fwrapper filename]];
+		[fwrapper writeToFile: fullpath atomically: NO updateFilenames: NO];
+		
+		[[NSWorkspace sharedWorkspace] selectFile: fullpath 
+						 inFileViewerRootedAtPath: downloadFolder];
 	}
 }
 
