@@ -170,13 +170,6 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
     [ts endEditing];
 }
 
-/*
-- (id) _attachmentCellForSelection
-{
-	return [(id)super _attachmentCellForSelection];
-}
-*/
-
 
 - (void)paste:(id)sender
 {
@@ -310,6 +303,54 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 
 	[[NSUserDefaults standardUserDefaults] setBool:[self isContinuousSpellCheckingEnabled] forKey:ContinuousSpellCheckingEnabled];
 }
+
++ (NSMenu*) attachmentMenu
+{
+	static NSMenu* attachmentMenu = nil;
+	if (!attachmentMenu) {
+		attachmentMenu = [[self defaultMenu] copy];
+		[attachmentMenu insertItemWithTitle: @"Save to Download Folder" 
+									 action: @selector(saveAttachmentToDownloadFolder:) 
+							  keyEquivalent: @"" 
+									atIndex: 0];		
+		[attachmentMenu insertItemWithTitle: @"Save..." 
+									 action: @selector(saveAttachment:) 
+							  keyEquivalent: @"" 
+									atIndex: 0];
+	}
+	return attachmentMenu;
+}
+
+- (NSTextAttachment*) selectedAttachment
+{
+	NSTextAttachment* attachment = [[self textStorage] attribute: NSAttachmentAttributeName atIndex: [self selectedRange].location effectiveRange: NULL];
+	return attachment;
+}
+
+- (void) saveAttachmentToDownloadFolder: (id) sender
+{
+	NSTextAttachment* attachment = [self selectedAttachment];
+	NSLog(@"Will -saveAttachment: %@", attachment);
+	NSFileWrapper* fwrapper = [attachment fileWrapper];
+	if (fwrapper) {
+		[fwrapper writeToFile: [@"/tmp" stringByAppendingPathComponent: [fwrapper filename]]
+				   atomically: NO
+			  updateFilenames: NO];
+	}
+}
+
+
+- (NSMenu*) menuForEvent: (NSEvent*) theEvent
+{
+	NSMenu* result = [super menuForEvent: theEvent];
+	
+	if ([self selectedAttachment]) {
+		// The user right-clicked on an attachment:
+		result = [[self class] attachmentMenu];
+	}
+	return result;
+}
+
 
 - (void)keyDown:(NSEvent *)theEvent
 /*" Enables in the case of a non editable text view the use of the spacebar. "*/
