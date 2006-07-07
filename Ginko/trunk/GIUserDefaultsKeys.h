@@ -36,7 +36,7 @@ extern NSString *SoonRipeMessageMinutes;
 extern NSString *DefaultProfileURLString;
 extern NSString *ContinuousSpellCheckingEnabled;
 extern NSString* RecentThreadListWindowPositions;
-
+extern NSString *AttachmentSaveFolder;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

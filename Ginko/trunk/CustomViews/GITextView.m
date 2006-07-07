@@ -309,11 +309,12 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 	static NSMenu* attachmentMenu = nil;
 	if (!attachmentMenu) {
 		attachmentMenu = [[self defaultMenu] copy];
-		[attachmentMenu insertItemWithTitle: @"Save to Download Folder" 
+		[attachmentMenu insertItem:[NSMenuItem separatorItem] atIndex:0];
+		[attachmentMenu insertItemWithTitle: NSLocalizedString(@"Save to Download Folder", @"Attachment Menu Item") 
 									 action: @selector(saveAttachmentToDownloadFolder:) 
 							  keyEquivalent: @"" 
 									atIndex: 0];		
-		[attachmentMenu insertItemWithTitle: @"Save..." 
+		[attachmentMenu insertItemWithTitle: NSLocalizedString(@"Save As...", @"Attachment Menu Item")
 									 action: @selector(saveAttachment:) 
 							  keyEquivalent: @"" 
 									atIndex: 0];
@@ -346,6 +347,39 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 	}
 }
 
+- (void)saveAttachmentSheetDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+{
+	if (returnCode == NSOKButton)
+	{
+		NSString *fullpath = [sheet filename];
+		
+		//NSLog(@"saving attachment to: %@", fullpath);
+		
+		[(NSFileWrapper *)contextInfo writeToFile:fullpath atomically:NO updateFilenames:NO];
+		[[NSWorkspace sharedWorkspace] selectFile:fullpath inFileViewerRootedAtPath:[sheet directory]];
+
+		[[NSUserDefaults standardUserDefaults] setObject:[sheet directory] forKey:AttachmentSaveFolder];
+	}
+}
+
+- (IBAction)saveAttachment:(id)sender
+{
+	NSTextAttachment *attachment = [self selectedAttachment];
+	NSFileWrapper *fwrapper = [attachment fileWrapper];
+	
+	if (fwrapper) 
+	{
+		NSString *saveFolder = [[NSUserDefaults standardUserDefaults] objectForKey:AttachmentSaveFolder];
+		BOOL isFolder = NO;
+		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:saveFolder isDirectory:&isFolder];
+		
+		if (!saveFolder || !exists || !isFolder ) saveFolder = [NSHomeDirectory() retain];
+		
+		NSSavePanel *savePanel = [NSSavePanel savePanel];
+		
+		[savePanel beginSheetForDirectory:saveFolder file:[fwrapper filename] modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(saveAttachmentSheetDidEnd:returnCode:contextInfo:) contextInfo:fwrapper];		
+	}
+}
 
 - (NSMenu*) menuForEvent: (NSEvent*) theEvent
 {

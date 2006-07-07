@@ -91,6 +91,8 @@
 		7759B41808535F830011B606 /* GIActivityPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7759B41608535F830011B606 /* GIActivityPanelController.m */; };
 		77608AE30972F4030071A01F /* OPImageAndTextCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 77608AE10972F4030071A01F /* OPImageAndTextCell.h */; };
 		77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77608AE20972F4030071A01F /* OPImageAndTextCell.m */; };
+		776376D00A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 776376CE0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h */; };
+		776376D10A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 776376CF0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m */; };
 		77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77738B0B0955B02000BAAB51 /* JavaVM.framework */; };
 		777435CB077755A000899957 /* group.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777435CA077755A000899957 /* group.toolbar */; };
 		777436300778055900899957 /* NSToolbar+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7774362E0778055900899957 /* NSToolbar+OPExtensions.h */; };
@@ -523,6 +525,8 @@
 		775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessageGroup.m; sourceTree = "<group>"; };
 		77608AE10972F4030071A01F /* OPImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPImageAndTextCell.h; sourceTree = "<group>"; };
 		77608AE20972F4030071A01F /* OPImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPImageAndTextCell.m; sourceTree = "<group>"; };
+		776376CE0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSWorkspace+OPExtensions.h"; sourceTree = "<group>"; };
+		776376CF0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSWorkspace+OPExtensions.m"; sourceTree = "<group>"; };
 		776B7D2707C41518009DA8B8 /* HowToTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = HowToTest.rtf; sourceTree = "<group>"; };
 		776B7DA007C41673009DA8B8 /* SenTestingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SenTestingKit.framework; path = /System/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
 		77738B0B0955B02000BAAB51 /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
@@ -1260,6 +1264,8 @@
 			isa = PBXGroup;
 			children = (
 				3017EBA109917089002C5579 /* Tests */,
+				776376CE0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h */,
+				776376CF0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m */,
 				8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */,
 				8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */,
 				77F01CFF09D29A45007C4CA5 /* NSPasteboard+OPExtendedFileTypeMatching.h */,
@@ -1600,6 +1606,7 @@
 				7780AC150A499FBE006970ED /* GIJobAlertPanelController.h in Headers */,
 				8DE2CF760A51B37C00FAE496 /* TestNSString+Extensions.h in Headers */,
 				8DB3FDB60A55565B00709070 /* NSString+OPHTMLTools.h in Headers */,
+				776376D00A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2001,6 +2008,7 @@
 				7780AC160A499FBE006970ED /* GIJobAlertPanelController.m in Sources */,
 				8DE2CF770A51B37C00FAE496 /* TestNSString+Extensions.m in Sources */,
 				8DB3FDB70A55565B00709070 /* NSString+OPHTMLTools.m in Sources */,
+				776376D10A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
