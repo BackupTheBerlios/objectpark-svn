@@ -28,6 +28,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "OPInternetMessageAttachmentCell.h"
 #import <Foundation/NSDebug.h>
+#import "NSWorkspace+OPExtensions.h"
 
 NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 
@@ -155,23 +156,23 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 	[printView print: sender];
 }
 
-- (void)_removeUnsupportedAttributesInRange:(NSRange)range
+- (void)_removeUnsupportedAttributesInRange: (NSRange) range
 {
     NSTextStorage *ts = [self textStorage];
     
     [ts beginEditing];
-    [ts removeAttribute:NSFontAttributeName range:range];
-    [ts removeAttribute:NSForegroundColorAttributeName range:range];
-    [ts removeAttribute:NSUnderlineStyleAttributeName range:range];
-    [ts removeAttribute:NSSuperscriptAttributeName range:range];
-    [ts removeAttribute:NSBackgroundColorAttributeName range:range];
-    [ts removeAttribute:NSBaselineOffsetAttributeName range:range];
+    [ts removeAttribute: NSFontAttributeName range: range];
+    [ts removeAttribute: NSForegroundColorAttributeName range: range];
+    [ts removeAttribute: NSUnderlineStyleAttributeName range: range];
+    [ts removeAttribute: NSSuperscriptAttributeName range: range];
+    [ts removeAttribute: NSBackgroundColorAttributeName range: range];
+    [ts removeAttribute: NSBaselineOffsetAttributeName range: range];
     //[ts removeAttribute:NSFontAttributeName range:range];    // do we need to set the selected font?
     [ts endEditing];
 }
 
 
-- (void)paste:(id)sender
+- (void) paste: (id) sender
 {
 // ##WARNING This method disables some attributes to be pasted. This has to be configurable at one time in order to allow "styled" texts.
     NSRange pasteRange;
@@ -180,24 +181,23 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
     [super paste:sender];
     pasteRange.length = [self rangeForUserTextChange].location-pasteRange.location;
 
-    [self _removeUnsupportedAttributesInRange:pasteRange];
+    [self _removeUnsupportedAttributesInRange: pasteRange];
 }
 
-- (void)pasteAsQuotation:(id)sender
+- (void)pasteAsQuotation: (id) sender
 {
     NSAttributedString *quoteContent;
     NSString *quote;
 
-    quoteContent = [[self class] _attributedStringFromPasteboard:[NSPasteboard generalPasteboard]];
-    quote = [[quoteContent quotedStringWithLineLength:72 byIncreasingQuoteLevelBy:1] stringByRemovingAttachmentChars];
+    quoteContent = [[self class] _attributedStringFromPasteboard: [NSPasteboard generalPasteboard]];
+    quote = [[quoteContent quotedStringWithLineLength: 72 byIncreasingQuoteLevelBy: 1] stringByRemovingAttachmentChars];
     
-    if ([quote length])
-    {
-        [self insertText:quote];
+    if ([quote length]) {
+        [self insertText: quote];
     }
 }
 
-- (NSArray *)writablePasteboardTypes
+- (NSArray*) writablePasteboardTypes
 {
     return [[super writablePasteboardTypes] arrayByAddingObject:OPAttributedStringPboardType];
 }
@@ -323,7 +323,11 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 
 - (NSTextAttachment*) selectedAttachment
 {
-	NSTextAttachment* attachment = [[self textStorage] attribute: NSAttachmentAttributeName atIndex: [self selectedRange].location effectiveRange: NULL];
+	NSTextAttachment* attachment = nil;
+	NSRange srange = [self selectedRange];
+	if (srange.length == 1) {
+		attachment = [[self textStorage] attribute: NSAttachmentAttributeName atIndex: srange.location effectiveRange: NULL];
+	}
 	return attachment;
 }
 
@@ -333,7 +337,7 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 	NSLog(@"Will -saveAttachment: %@", attachment);
 	NSFileWrapper* fwrapper = [attachment fileWrapper];
 	if (fwrapper) {
-		NSString* downloadFolder = @"/tmp";
+		NSString* downloadFolder = [[NSWorkspace sharedWorkspace] downloadDirectory];
 		NSString* fullpath = [downloadFolder stringByAppendingPathComponent: [fwrapper filename]];
 		[fwrapper writeToFile: fullpath atomically: NO updateFilenames: NO];
 		
