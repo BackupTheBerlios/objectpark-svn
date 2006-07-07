@@ -351,7 +351,7 @@
 		8DD602F1080ED9300050E973 /* GIFiltersPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8DDD2281080ECA57006C902D /* GIFiltersPane.nib */; };
 		8DD6030D080EDD470050E973 /* GIFiltersPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD6030C080EDD470050E973 /* GIFiltersPane.m */; };
 		8DD8C1790A5D89DD00DEA948 /* PaperClip.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8DD8C1780A5D89DD00DEA948 /* PaperClip.tiff */; };
-		8DD8C1D60A5D91CB00DEA948 /* PaperClip.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8DD8C1D50A5D91CB00DEA948 /* PaperClip.gif */; };
+		8DD8C1D60A5D91CB00DEA948 /* PaperClip.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8DD8C1D50A5D91CB00DEA948 /* PaperClip.tiff */; };
 		8DDD2269080EC99B006C902D /* GIJunkFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD225C080EC99B006C902D /* GIJunkFilter.h */; };
 		8DDD226A080EC99B006C902D /* GIJunkFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD225D080EC99B006C902D /* GIJunkFilter.m */; };
 		8DDD226B080EC99B006C902D /* GIMessageFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD225E080EC99B006C902D /* GIMessageFilter.h */; };
@@ -782,7 +782,7 @@
 		8DD6030C080EDD470050E973 /* GIFiltersPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFiltersPane.m; sourceTree = "<group>"; };
 		8DD61AAD089448CD009ED3A5 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = SOURCE_ROOT; };
 		8DD8C1780A5D89DD00DEA948 /* PaperClip.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = PaperClip.tiff; sourceTree = "<group>"; };
-		8DD8C1D50A5D91CB00DEA948 /* PaperClip.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = PaperClip.gif; sourceTree = "<group>"; };
+		8DD8C1D50A5D91CB00DEA948 /* PaperClip.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = PaperClip.tiff; sourceTree = "<group>"; };
 		8DDD225C080EC99B006C902D /* GIJunkFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIJunkFilter.h; sourceTree = "<group>"; };
 		8DDD225D080EC99B006C902D /* GIJunkFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIJunkFilter.m; sourceTree = "<group>"; };
 		8DDD225E080EC99B006C902D /* GIMessageFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageFilter.h; sourceTree = "<group>"; };
@@ -1413,7 +1413,7 @@
 		8DD2BEA50773257B00587AAA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				8DD8C1D50A5D91CB00DEA948 /* PaperClip.gif */,
+				8DD8C1D50A5D91CB00DEA948 /* PaperClip.tiff */,
 				8D34C67D09B4A31100615833 /* BackToolbarImage.tiff */,
 				8D61ED9109812DF000D1999A /* StopSign.tiff */,
 				77FF35940972FFA300AFD0DF /* Folder.tiff */,
@@ -1802,7 +1802,7 @@
 				8D218B500A19490600BD1DE8 /* Mail Sent.aiff in Resources */,
 				7780AC420A49A081006970ED /* JobAlertPanel.nib in Resources */,
 				8DD8C1790A5D89DD00DEA948 /* PaperClip.tiff in Resources */,
-				8DD8C1D60A5D91CB00DEA948 /* PaperClip.gif in Resources */,
+				8DD8C1D60A5D91CB00DEA948 /* PaperClip.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
