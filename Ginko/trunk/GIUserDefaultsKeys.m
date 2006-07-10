@@ -41,6 +41,7 @@ NSString *SearchHitLimit = @"SearchHitLimit";
 NSString *JunkReplySubjectPrefixes = @"JunkReplySubjectPrefixes";
 NSString* RecentThreadListWindowPositions = @"RecentThreadListWindowPositions";
 NSString *AttachmentSaveFolder = @"AttachmentSaveFolder";
+NSString *ReuseThreadListWindowByDefault = @"ReuseThreadListWindowByDefault";
 
 NSArray* allAdditionalHeadersForDisplay()
 {

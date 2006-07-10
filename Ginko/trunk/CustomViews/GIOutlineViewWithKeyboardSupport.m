@@ -59,16 +59,31 @@
     return item;
 }
 
-- (void) mouseDown: (NSEvent*) theEvent 
+- (BOOL)altKeyPressedWithMouseDown
 {
-	if ([theEvent clickCount]==2) {
-		if  ([theEvent modifierFlags] & NSCommandKeyMask) { 
-			return; // Ignore double clicks with alt key held down.
-		}
-	}
-	[super mouseDown: theEvent];
+	return altKeyPressedWithMouseDown;
 }
 
+- (void)mouseDown:(NSEvent *)theEvent 
+{
+	if ([theEvent modifierFlags] & NSAlternateKeyMask)
+	{
+		altKeyPressedWithMouseDown = YES;
+	}
+	else
+	{
+		altKeyPressedWithMouseDown = NO;
+	}
+	
+	if ([theEvent clickCount] == 2) 
+	{
+		if  ([theEvent modifierFlags] & NSCommandKeyMask) 
+		{ 
+			return; // Ignore double clicks with command key held down.
+		}
+	}
+	[super mouseDown:theEvent];
+}
 
 - (void) keyDown:(NSEvent *)theEvent 
 {

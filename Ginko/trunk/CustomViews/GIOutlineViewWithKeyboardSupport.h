@@ -198,7 +198,10 @@
 @interface GIOutlineViewWithKeyboardSupport : NSOutlineView 
 {
     BOOL highlightThreads;
+	BOOL altKeyPressedWithMouseDown;
 }
+
+- (BOOL)altKeyPressedWithMouseDown;
 
 @end
 

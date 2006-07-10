@@ -380,7 +380,7 @@ static BOOL isThreadItem(id item)
         //NSLog(@"observeValueForKeyPath %@", keyPath);
 
         [[NSNotificationQueue defaultQueue] enqueueNotification: notification 
-												   postingStyle: NSPostWhenIdle 
+												   postingStyle: NSPostASAP 
 												   coalesceMask: NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender 
 													   forModes: nil];
     }

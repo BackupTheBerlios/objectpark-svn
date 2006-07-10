@@ -8,15 +8,16 @@
 
 #import <Cocoa/Cocoa.h> 
 @class GIMessageGroup;
+@class GIOutlineViewWithKeyboardSupport;
 
 @interface GIGroupListController : NSObject 
 {	
-    IBOutlet NSOutlineView *boxesView;
+    IBOutlet GIOutlineViewWithKeyboardSupport *boxesView;
     IBOutlet NSWindow *window;
 	IBOutlet NSProgressIndicator *globalProgrssIndicator;
 }
 
-+ (void) showGroup: (GIMessageGroup*) group;
++ (void)showGroup:(GIMessageGroup *)group reuseWindow:(BOOL)shouldReuse;
 
 - (IBAction)addFolder:(id)sender;
 - (IBAction)rename:(id)sender;

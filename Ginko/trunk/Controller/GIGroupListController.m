@@ -163,26 +163,60 @@
 	[super dealloc];
 }
 
-+ (void) showGroup: (GIMessageGroup*) group
+// weak reference to group whose window should be reused if possible
+static GIMessageGroup *reuseGroup = nil;
+
++ (void)showGroup:(GIMessageGroup *)group reuseWindow:(BOOL)shouldReuse
 {	
-    if (group) {
-        NSWindow* groupWindow = [[GIThreadListController class] windowForGroup: group];
+    if (group) 
+	{
+        NSWindow *groupWindow = [[GIThreadListController class] windowForGroup:group];
         
-        if (groupWindow) {
-            [groupWindow makeKeyAndOrderFront: self];
-        } else {
-            GIThreadListController* newController = [[[GIThreadListController alloc] initWithGroup: group] autorelease];
-            groupWindow = [newController window];
+        if (groupWindow) 
+		{
+            [groupWindow makeKeyAndOrderFront:self];
+        } 
+		else 
+		{
+			if (shouldReuse && reuseGroup) 
+			{
+				groupWindow = [[GIThreadListController class] windowForGroup:reuseGroup];
+				
+				if (groupWindow) 
+				{
+					[[groupWindow delegate] setGroup:group];
+					reuseGroup = group;
+					[groupWindow makeKeyAndOrderFront:self];
+				} 
+			}
+			
+			if (!groupWindow)
+			{
+				GIThreadListController *newController = [[[GIThreadListController alloc] initWithGroup:group] autorelease];
+				groupWindow = [newController window];
+				
+				if (shouldReuse)
+				{
+					reuseGroup = group;
+				}
+			}
         }
         
-        [[groupWindow delegate] showThreads: self];
+        [[groupWindow delegate] showThreads:self];
     }	
 }
 
-- (IBAction) showGroupWindow: (id) sender
+- (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-	[[self class] showGroup: [self group]];
+	BOOL shouldReuseWindow = [[NSUserDefaults standardUserDefaults] boolForKey:ReuseThreadListWindowByDefault];
+	
+	if ([boxesView altKeyPressedWithMouseDown])
+	{
+		shouldReuseWindow = !shouldReuseWindow;
+	}
+	
+	[[self class] showGroup:[self group] reuseWindow:shouldReuseWindow];
 }
 
 - (IBAction)showGroupInspector:(id)sender

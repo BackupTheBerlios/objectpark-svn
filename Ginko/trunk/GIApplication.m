@@ -79,7 +79,8 @@ static NSThread *mainThread = nil;
 
 + (NSThread *)mainThread
 {
-	@synchronized(self) {
+	@synchronized(self) 
+	{
 		if (!mainThread)
 		{
 			[self performSelectorOnMainThread:@selector(acquireMainThread) withObject:nil waitUntilDone:YES];
@@ -167,18 +168,23 @@ static NSThread *mainThread = nil;
 	[[NSUserDefaults standardUserDefaults] setObject: groupNames forKey: OpenMessageGroups];
 }
 
-- (void) restoreOpenWindowsFromLastSession
+- (void)restoreOpenWindowsFromLastSession
 {
-	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];	
-	NSArray* groupsToOpen = [[NSUserDefaults standardUserDefaults] objectForKey: OpenMessageGroups];
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];	
+	NSArray *groupsToOpen = [[NSUserDefaults standardUserDefaults] objectForKey:OpenMessageGroups];
 	
-	NSEnumerator* groupEnumerator = [groupsToOpen objectEnumerator];
-	NSString* groupURL;
-	while (groupURL = [groupEnumerator nextObject]) {
-		@try {
-			GIMessageGroup* group = [context objectWithURLString: groupURL];
-			[GIGroupListController showGroup: group];
-		} @catch(id e) {
+	NSEnumerator *groupEnumerator = [groupsToOpen objectEnumerator];
+	NSString *groupURL;
+	while (groupURL = [groupEnumerator nextObject]) 
+	{;
+		@try 
+		{
+			GIMessageGroup *group = [context objectWithURLString:groupURL];
+			[GIGroupListController showGroup:group reuseWindow:NO];
+		} 
+		@catch(id e) 
+		{
+			// ignored
 		}
 	}
 }
