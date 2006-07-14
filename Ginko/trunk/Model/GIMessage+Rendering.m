@@ -68,7 +68,7 @@ static NSString *templatePostfix = nil;
     if (!templatePrefix)
     {
         NSError *error = nil;
-        NSString *template = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource: @"HeaderTemplate" ofType:@"html"] encoding:NSUTF8StringEncoding error:&error];
+        NSString *template = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource: @"HeaderTemplate" ofType: @"html"] encoding: NSUTF8StringEncoding error:&error];
         
         NSAssert(template != nil, @"header template could not be loaded");
 
@@ -87,24 +87,64 @@ static NSString *templatePostfix = nil;
     }
 }
 
-+ (NSMutableAttributedString *)fieldTableWithRowCount:(int)rowCount
+
+- (NSMutableAttributedString *) tableCellAttributedStringWithString:(NSString *)string
+															  table:(NSTextTable *)table
+													backgroundColor:(NSColor *)backgroundColor
+														borderColor:(NSColor *)borderColor
+																row:(int)row
+															 column:(int)column
+{
+    NSTextTableBlock *block = [[NSTextTableBlock alloc]
+        initWithTable:table 
+		  startingRow:row 
+			  rowSpan:1 
+	   startingColumn:column 
+		   columnSpan:1];
+    [block setBackgroundColor:backgroundColor];
+    [block setBorderColor:borderColor];
+    [block setWidth:4.0 type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockBorder];
+    [block setWidth:6.0 type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding];
+	
+    NSMutableParagraphStyle *paragraphStyle = 
+        [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [paragraphStyle setTextBlocks:[NSArray arrayWithObjects:block, nil]];
+    [block release];
+	
+    NSMutableAttributedString *cellString = 
+        [[NSMutableAttributedString alloc] initWithString:string];
+    [cellString addAttribute:NSParagraphStyleAttributeName 
+					   value:paragraphStyle 
+					   range:NSMakeRange(0, [cellString length])];
+    [paragraphStyle release];
+	
+    return [cellString autorelease];
+}
+
+	
++ (NSMutableAttributedString*) fieldTableWithRowCount: (int) rowCount
 {
     NSParameterAssert(rowCount > 0);
     
     [self initTemplate];
     
-    NSMutableString *string = [NSMutableString stringWithString:templatePrefix];
+    NSMutableString* string = [NSMutableString stringWithString:templatePrefix];
     int i;
     
-    for (i = 0; i < rowCount; i++) [string appendString:templateRow];
+    for (i = 0; i < rowCount; i++) [string appendString: templateRow];
     
     [string appendString:templatePostfix];
     
-    return [[[NSMutableAttributedString alloc] initWithHTML: [string dataUsingEncoding: NSUTF8StringEncoding] documentAttributes: NULL] autorelease];
+    NSMutableAttributedString* result = [[[NSMutableAttributedString alloc] initWithHTML: [string dataUsingEncoding: NSUTF8StringEncoding] documentAttributes: NULL] autorelease];
+	
+	
+	return result;
 }
+
 
 + (void) _appendFieldName: (NSString*) fieldName andDecodedHeader: (NSString*) decodedHeader  toAttributedString: (NSMutableAttributedString*) displayString
 {
+	
     /*
     NSMutableAttributedString *template = [self headerTemplate];
     NSRange nameRange = [[template string] rangeOfString: @"$fieldname$"];
@@ -273,7 +313,14 @@ static NSString *templatePostfix = nil;
     
     NSMutableAttributedString* messageContent = [[self class] renderedHeaders: [[self class] headersShown] 
                                                                    forMessage: theMessage 
-                                                                   showOthers: allHeaders];    
+                                                                   showOthers: allHeaders];   
+	
+	/*
+	NSFileWrapper* paperClip = [[[NSFileWrapper alloc] initWithPath: [[NSBundle mainBundle] pathForResource: @"PaperClip" ofType: @"tiff"] autorelease];
+	[messageContent appendAttachmentWithFileWrapper: paperClip
+							   showInlineIfPossible: YES];
+	*/
+	
     if (theMessage) [messageContent appendAttributedString:[[self class] renderedBodyForMessage:theMessage]];
     
     return messageContent;

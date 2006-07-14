@@ -648,34 +648,13 @@ NSColor* OPColorFromString(NSString* string)
     //if (! shouldShowInline)
     {
         cell = [[[OPInternetMessageAttachmentCell alloc] initImageCell:[[NSWorkspace sharedWorkspace] iconForFile:path]] autorelease];
-		
-		
 		[cell setAttachment:attachment];
-
-		/*
-        
-        if ([aFileWrapper isRegularFile]) 
-        {
-            unsigned int fileSize;
-            NSData *resourceForkData;
-            
-            fileSize = [[aFileWrapper regularFileContents] length];
-            
-            if (resourceForkData = [[aFileWrapper fileAttributes] objectForKey: OPFileResourceForkData]) 
-            {
-                // add the size of the resource fork also
-                fileSize += [resourceForkData length];
-            }
-            
-            NSString *infoString = bytes2Display(fileSize);
-            
-            [cell setInfoString:infoString];
-        } 
-        
-        [cell setTitle:[aFileWrapper filename]];
-		*/
-        
         [attachment setAttachmentCell:cell];
+		
+		NSMenu* menu = [[[NSMenu alloc] initWithTitle: @"Context"] autorelease];
+		[menu insertItemWithTitle: @"Save..." action: @selector(saveAttachment:) keyEquivalent: @"" atIndex: 0];
+		[cell setMenu: menu];
+		
     }
     
     attchString = [NSAttributedString attributedStringWithAttachment:attachment];

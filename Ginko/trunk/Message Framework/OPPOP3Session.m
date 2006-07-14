@@ -133,11 +133,10 @@ static BOOL isOK(NSString* response)
     [self _authenticationWithServerGreeting:[self _serverGreeting]];
 }
 
-- (void)closeSession
+- (void) closeSession
 /*" Closes session by sending the QUIT command if needed. "*/
 {
-    if ((_state != UPDATE) && (_state != DISCONNECTED))
-    {
+    if ((_state != UPDATE) && (_state != DISCONNECTED)) {
         // stream needs closing
         [self responseForCommand: @"QUIT"];
         [self _autosaveUIDLs];

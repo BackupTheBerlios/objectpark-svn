@@ -81,7 +81,89 @@
     [self setAttributes:attributes range:NSMakeRange(location, [self length] - location)];
 }
 
+/*
+- (NSTextTableBlock*) appendTableCellWithString:(NSString*) string
+
+- (*) tableCellAttributedStringWithString:(NSString *)string
+															  table:(NSTextTable *)table
+																row:(int)row
+								  rowSpan: (int) rowSpan
+															 column:(int)column
+{
+    NSTextTableBlock *block = [[NSTextTableBlock alloc]
+        initWithTable:table 
+		  startingRow:row 
+			  rowSpan:1 
+	   startingColumn:column 
+		   columnSpan:1];
+    [block setBackgroundColor:backgroundColor];
+    [block setBorderColor:borderColor];
+    [block setWidth:4.0 type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockBorder];
+    [block setWidth:6.0 type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding];
+	
+    NSMutableParagraphStyle *paragraphStyle = 
+        [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [paragraphStyle setTextBlocks:[NSArray arrayWithObjects:block, nil]];
+    [block release];
+	
+    NSMutableAttributedString *cellString = 
+        [[NSMutableAttributedString alloc] initWithString:string];
+    [cellString addAttribute:NSParagraphStyleAttributeName 
+					   value:paragraphStyle 
+					   range:NSMakeRange(0, [cellString length])];
+    [paragraphStyle release];
+	
+    return [cellString autorelease];
+}
+*/
 
 //---------------------------------------------------------------------------------------
     @end
 //---------------------------------------------------------------------------------------
+
+/*
+@implementation OPTextTable 
+
+
+- (void) appendToString: (NSMutableAttributedString*) string
+//" Appends empty strings with NSTextTableBlocks to the string given for each cell in the table. "/
+{
+	NSAssert(container == nil, @"Do not move OPTables between Containers.");
+	container = string; // not retained
+	
+	for (y=0; y<[self rows];y++) {
+		for (x=0; x<[self columns];x++) {
+			NSTextTableBlock* block = [[NSTextTableBlock alloc] initWithTable: self 
+																  startingRow: row rowSpan: 1 
+															   startingColumn: column columnSpan: 1];
+			
+			NSMutableParagraphStyle* paragraphStyle = 
+				[[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+			[paragraphStyle setTextBlocks: [NSArray arrayWithObject: block]];
+			[block release];
+			
+			NSMutableAttributedString* cellString = 
+				[[NSMutableAttributedString alloc] initWithString: @"\n"];
+			[cellString addAttribute: NSParagraphStyleAttributeName 
+							   value: paragraphStyle 
+							   range: NSMakeRange(0, [cellString length])];
+			[paragraphStyle release];
+			
+			[container appendString: cellString];
+		}
+	}
+}
+
+
+@end
+*/
+
+@implementation NSTextTableBlock (OPExtensions)
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ with (cols %d-%d, rows %d-%d) of %@", [super description], [self startingColumn], [self startingColumn]+[self columnSpan]-1, [self startingRow], [self startingRow]+[self rowSpan]-1, [self table]];
+}
+
+@end
+

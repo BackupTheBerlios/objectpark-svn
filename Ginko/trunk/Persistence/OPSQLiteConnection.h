@@ -89,6 +89,8 @@
 - (int) lastErrorNumber;
 - (NSString*) lastError;
 
+- (void) setBusyTimeout: (int) ms;
+
 - (void) performCommand: (NSString*) sql;
 
 - (ROWID) updateRowOfClass: (Class) poClass

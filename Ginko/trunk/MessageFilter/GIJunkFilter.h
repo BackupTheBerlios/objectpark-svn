@@ -1,13 +1,13 @@
 /*
  $Id: GIJunkFilter.h,v 1.1 2005/04/14 17:28:13 theisen Exp $
 
- Copyright (c) 2001, 2002 by Björn Bubbat. All rights reserved.
+ Copyright (c) 2001, 2002 by Bj√∂rn Bubbat. All rights reserved.
 
  Permission to use, copy, modify and distribute this software and its documentation
  is hereby granted, provided that both the copyright notice and this permission
  notice appear in all copies of the software, derivative works or modified versions,
  and any portions thereof, and that both notices appear in supporting documentation,
- and that credit is given to Björn Bubbat in all documents and publicity
+ and that credit is given to Bj√∂rn Bubbat in all documents and publicity
  pertaining to direct or indirect use of this code or its derivatives.
 
  THIS IS EXPERIMENTAL SOFTWARE AND IT IS KNOWN TO HAVE BUGS, SOME OF WHICH MAY HAVE
@@ -25,22 +25,24 @@
 // Notification names:
 extern NSString* GINewHamWordsInSpamFilter;
 extern NSString* GINewSpamWordsInSpamFilter;
+extern NSString* GIJunkFilterSpamThreshold;
 
 @interface GIJunkFilter : NSObject <NSCoding> {
     
-    NSMutableDictionary *hamWordList;
-    NSMutableDictionary *spamWordList;
+    NSMutableDictionary* hamWordList;
+    NSMutableDictionary* spamWordList;
     NSMutableArray *hamUniqueIdList;
     NSMutableArray *spamUniqueIdList;
     int spamMessageCount;
     int hamMessageCount;
+	int spamThreshold;
 }
 
-+(GIJunkFilter *)sharedInstance;
-+(void)writeJunkFilterDefintion;
++ (GIJunkFilter*) sharedInstance;
+- (void) writeJunkFilterDefintion;
 
--(id)init;
--(BOOL)optimize;
+- (id) init;
+- (BOOL) optimize;
 
 - (void) registerHamMessageTransferData: (NSData*) aMessageData
                            withUniqueId: (NSString*) aUniqueId;
@@ -48,6 +50,6 @@ extern NSString* GINewSpamWordsInSpamFilter;
 - (void) registerSpamMessageTransferData: (NSData*) aMessageData
                             withUniqueId: (NSString*) aUniqueId;
 
--(BOOL) isMessageSpam: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId;
+- (BOOL) isSpamMessage: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId;
 
 @end

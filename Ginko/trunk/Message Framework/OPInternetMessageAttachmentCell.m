@@ -88,9 +88,7 @@ NSString *bytes2Display(unsigned int bytes)
 			// Add support for directories?
 			[self setInfoString: @"Folder"];
 		}
-		 
 	}
-	
 	return infoString;
 }
 
@@ -116,49 +114,40 @@ NSString *bytes2Display(unsigned int bytes)
 - (void) drawWithFrame: (NSRect) cellFrame 
                 inView: (NSView*) controlView
 {
-    
     NSString* title          = [self title];
 	NSString* info           = [self infoString];
     NSRect    textFrame      = NSInsetRect(cellFrame, 2.0, 2.0);
     
-    //[super drawWithFrame:cellFrame inView:controlView];
-    
-    
-     NSImage*  image = [self image];
-     NSRect    fullImageRect  = NSMakeRect(0,0,[image size].width, [image size].height);
-     NSRect    drawImageRect  = NSOffsetRect(fullImageRect, (cellFrame.size.width-[image size].width)/2.0+cellFrame.origin.x, 5.0+cellFrame.origin.y);
-     
-     NSParameterAssert(image);
-     
-     if ([self isHighlighted]) {
-         NSColor* backgroundColor = [self highlightColorWithFrame: cellFrame inView: controlView];
-         [backgroundColor set];
-         NSRectFill(cellFrame);
-     }
-     
+	NSImage*  image = [self image];
+	NSRect    fullImageRect  = NSMakeRect(0,0,[image size].width, [image size].height);
+	NSRect    drawImageRect  = NSOffsetRect(fullImageRect, (cellFrame.size.width-[image size].width)/2.0+cellFrame.origin.x, 5.0+cellFrame.origin.y);
+	
+	NSParameterAssert(image);
+	
+	if ([self isHighlighted]) {
+		NSColor* backgroundColor = [self highlightColorWithFrame: cellFrame inView: controlView];
+		[backgroundColor set];
+		NSRectFill(cellFrame);
+	}
+	
     // Draw it flipped if we are in a flipped view, like NSMatrix:
-     [image setFlipped: [controlView isFlipped]];
-     
-     [image drawInRect: drawImageRect          
-              fromRect: fullImageRect 
-             operation: NSCompositeSourceOver 
-              fraction: 1.0];
-     
-    
-    
-    
-    // NSLineBreakByTruncatingMiddle
-    
-     if ([info length]) {
-         // We have two lines to show:
-         title = [NSString stringWithFormat: @"%@\n%@", title, info];
-
-         textFrame.origin.y    = NSMaxY(textFrame)-24.0;
-         textFrame.size.height = 24.0;
-     } else {
-         textFrame.origin.y    = NSMaxY(textFrame)-14.0;
-         textFrame.size.height = 14.0;
-     }
+	[image setFlipped: [controlView isFlipped]];
+	
+	[image drawInRect: drawImageRect          
+			 fromRect: fullImageRect 
+			operation: NSCompositeSourceOver 
+			 fraction: 1.0];
+	
+	if ([info length]) {
+		// We have two lines to show:
+		title = [NSString stringWithFormat: @"%@\n%@", title, info];
+		
+		textFrame.origin.y    = NSMaxY(textFrame)-24.0;
+		textFrame.size.height = 24.0;
+	} else {
+		textFrame.origin.y    = NSMaxY(textFrame)-14.0;
+		textFrame.size.height = 14.0;
+	}
     
     
     static NSDictionary* attributes = nil;
@@ -176,18 +165,7 @@ NSString *bytes2Display(unsigned int bytes)
                 options: NSStringDrawingUsesLineFragmentOrigin 
              attributes: attributes];
     
-    
 }
- 
-
-/*
-- (NSImage*) image
-{
-	NSImage* result = [super image];
-	
-	return result;
-}
-*/
 
 - (void) setTitle: (NSString*) newTitle
 {

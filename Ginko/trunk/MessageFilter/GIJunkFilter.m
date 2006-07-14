@@ -28,7 +28,7 @@
 #define KEEPERS		15		// how many extrema to keep
 #define MINIMUM_FREQ	5		// minimum freq
 #define UNKNOWN_WORD	0.4f		// odds that unknown word is spammish
-#define SPAM_CUTOFF	0.9f		// if it's spammier than this...
+//#define SPAM_CUTOFF	0.9f		// if it's spammier than this...
 #define MAX_REPEATS	4		// cap on word frequency per message
 #define MAX_WORDS       500             // do not use more words per message
 
@@ -57,7 +57,7 @@ static NSString *GIJunkFilterHamUniqueIdList = @"GIJunkFilter Ham Unique ID List
 static NSString *GIJunkFilterSpamUniqueIdList = @"GIJunkFilter Spam Unique ID List";
 static NSString *GIJunkFilterHamMessageCount = @"GIJunkFilter Ham Message Count";
 static NSString *GIJunkFilterSpamMessageCount = @"GIJunkFilter Spam Message Count";
-
+NSString* GIJunkFilterSpamThreshold = @"GIJunkFilterSpamThreshold";
 NSString* GINewHamWordsInSpamFilter = @"GINewHamWordsInSpamFilter";
 NSString* GINewSpamWordsInSpamFilter = @"GINewSpamWordsInSpamFilter";
 
@@ -80,14 +80,12 @@ NSString *_junkFilterDefinitionsPath()
 }
 
 
-+(GIJunkFilter *)sharedInstance
++ (GIJunkFilter*) sharedInstance 
 {
     static GIJunkFilter *_sharedInstance = nil;
-    if (!_sharedInstance)
-    {
+    if (!_sharedInstance) {
         _sharedInstance = [[NSKeyedUnarchiver unarchiveObjectWithFile:_junkFilterDefinitionsPath()] retain];
-        if (_sharedInstance == nil)
-        {
+        if (_sharedInstance == nil) {
             _sharedInstance = [[GIJunkFilter alloc] init];
         }
     }
@@ -95,62 +93,67 @@ NSString *_junkFilterDefinitionsPath()
 }
 
 
-+(void)writeJunkFilterDefintion
+- (void) writeJunkFilterDefintion
 {
-    GIJunkFilter *junkFilter = [GIJunkFilter sharedInstance];
-    BOOL result = [NSKeyedArchiver archiveRootObject:junkFilter
-                                              toFile:_junkFilterDefinitionsPath()];
-    if (!result)
-    {
-        [NSException raise:NSGenericException format: @"Couldn't write junk filter definition data to Ginko's Application Support folder!"];
+    BOOL result = [NSKeyedArchiver archiveRootObject: self
+                                              toFile: _junkFilterDefinitionsPath()];
+    if (!result) {
+        [NSException raise: NSGenericException format: @"Couldn't write junk filter definition data to '%@'!", _junkFilterDefinitionsPath()];
     }
-
 }
 
 
--(id)initWithCoder: (NSCoder*) decoder
+-(id) initWithCoder: (NSCoder*) decoder
 {
-    self = [super init];
-    if (self)
-    {
-        hamWordList = [[decoder decodeObjectForKey:GIJunkFilterHamWordList] retain];
-        spamWordList = [[decoder decodeObjectForKey:GIJunkFilterSpamWordList] retain];
-        hamUniqueIdList = [[decoder decodeObjectForKey:GIJunkFilterHamUniqueIdList] retain];
-        spamUniqueIdList = [[decoder decodeObjectForKey:GIJunkFilterSpamUniqueIdList] retain];
-        spamMessageCount = [decoder decodeIntForKey:GIJunkFilterHamMessageCount];
-        hamMessageCount = [decoder decodeIntForKey:GIJunkFilterSpamMessageCount];
+    if (self = [super init]) {
+        hamWordList = [[decoder decodeObjectForKey: GIJunkFilterHamWordList] retain];
+        spamWordList = [[decoder decodeObjectForKey: GIJunkFilterSpamWordList] retain];
+        hamUniqueIdList = [[decoder decodeObjectForKey: GIJunkFilterHamUniqueIdList] retain];
+        spamUniqueIdList = [[decoder decodeObjectForKey: GIJunkFilterSpamUniqueIdList] retain];
+        spamMessageCount = [decoder decodeIntForKey: GIJunkFilterHamMessageCount];
+        hamMessageCount = [decoder decodeIntForKey: GIJunkFilterSpamMessageCount];
+        spamThreshold = [decoder decodeFloatForKey: GIJunkFilterSpamThreshold];
     }
     return self;
 }
 
 
--(void)encodeWithCoder: (NSCoder*) encoder
+-(void) encodeWithCoder: (NSCoder*) encoder
 {
-    [encoder encodeObject:hamWordList forKey:GIJunkFilterHamWordList];
-    [encoder encodeObject:spamWordList forKey:GIJunkFilterSpamWordList];
-    [encoder encodeObject:hamUniqueIdList forKey:GIJunkFilterHamUniqueIdList];
-    [encoder encodeObject:spamUniqueIdList forKey:GIJunkFilterSpamUniqueIdList];
-    [encoder encodeInt:spamMessageCount forKey:GIJunkFilterHamMessageCount];
-    [encoder encodeInt:hamMessageCount forKey:GIJunkFilterSpamMessageCount];
+    [encoder encodeObject: hamWordList forKey: GIJunkFilterHamWordList];
+    [encoder encodeObject: spamWordList forKey: GIJunkFilterSpamWordList];
+    [encoder encodeObject: hamUniqueIdList forKey: GIJunkFilterHamUniqueIdList];
+    [encoder encodeObject: spamUniqueIdList forKey: GIJunkFilterSpamUniqueIdList];
+    [encoder encodeInt: spamMessageCount forKey: GIJunkFilterHamMessageCount];
+    [encoder encodeInt: hamMessageCount forKey: GIJunkFilterSpamMessageCount];
+    [encoder encodeFloat: spamThreshold forKey: GIJunkFilterSpamThreshold];
 }
 
 
--(id)init
+- (id) init
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         hamWordList = [[NSMutableDictionary dictionary] retain];
         spamWordList = [[NSMutableDictionary dictionary] retain];
         hamUniqueIdList = [[NSMutableArray array] retain];
         spamUniqueIdList = [[NSMutableArray array] retain];
         spamMessageCount = 0;
         hamMessageCount = 0;
+		spamThreshold = 0.9;
     }
     return self;
 }
 
--(BOOL)optimize
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@\nham words:\n%@\nspam words:\n%@", [super description], hamWordList, spamWordList];
+}
+
+- (BOOL) optimize 
+/*" New, unoptimized "*/
+
+
 {
     NSMutableSet *keys;
     NSEnumerator *enumerator;
@@ -172,8 +175,7 @@ NSString *_junkFilterDefinitionsPath()
             didOptimize = YES;
         }
     }
-    if (didOptimize)
-    {
+    if (didOptimize) {
         NSLog(@"Junk got optimized.");
     }
     return didOptimize;
@@ -266,33 +268,30 @@ NSString *_junkFilterDefinitionsPath()
     return privateWordList;
 }
 
--(void)merge: (NSDictionary*) sourceList withList:(NSMutableDictionary *)destinationList
+- (void) addList: (NSDictionary*) sourceList toList: (NSMutableDictionary*) destinationList
 {
-    NSEnumerator *enumerator = [sourceList keyEnumerator];
-    NSString *key;
+    NSEnumerator* enumerator = [sourceList keyEnumerator];
+    NSString* key;
 
-    while (key = [enumerator nextObject])
-    {
+    while (key = [enumerator nextObject]) {
         NSNumber *destinationValue;
         int count;
 
-        count = [[sourceList objectForKey:key] intValue];
-        destinationValue = [destinationList objectForKey:key];
-        if (destinationValue)
-        {
+        count = [[sourceList objectForKey: key] intValue];
+        destinationValue = [destinationList objectForKey: key];
+        if (destinationValue) {
             count += [destinationValue intValue];
         }
-        [destinationList setObject: [NSNumber numberWithInt:count]
-                            forKey:key];
+        [destinationList setObject: [NSNumber numberWithInt: count]
+                            forKey: key];
     }
-
 }
 
 
--(void)remove: (NSDictionary*) sourceList fromList:(NSMutableDictionary *)destinationList
+- (void) substractList: (NSDictionary*) sourceList fromList: (NSMutableDictionary*) destinationList
 {
-    NSEnumerator *enumerator = [sourceList keyEnumerator];
-    NSString *key;
+    NSEnumerator* enumerator = [sourceList keyEnumerator];
+    NSString* key;
 
     while (key = [enumerator nextObject])
     {
@@ -304,14 +303,11 @@ NSString *_junkFilterDefinitionsPath()
         if (destinationValue)
         {
             count -= [destinationValue intValue];
-            if (count <= 0)
-            {
+            if (count <= 0) {
                 [destinationList removeObjectForKey:key];
-            }
-            else
-            {
-                [destinationList setObject: [NSNumber numberWithInt:count]
-                                    forKey:key];
+            } else {
+                [destinationList setObject: [NSNumber numberWithInt: count]
+                                    forKey: key];
             }
         }
     }
@@ -328,24 +324,19 @@ NSString *_junkFilterDefinitionsPath()
     
     [[GIWordEnumerator enumeratorWithTransferData: aMessageData] allObjects];
     
-    if (![hamUniqueIdList containsObject:aUniqueId])
-    {
-        NSDictionary *wordList;
+    if (![hamUniqueIdList containsObject: aUniqueId]) {
+		
+        NSDictionary* wordList = [self processMessageData: aMessageData];
 
-        wordList = [self processMessageData: aMessageData];
-
-        if ([spamUniqueIdList containsObject:aUniqueId])
-        {
-            [self remove:wordList
-                fromList:spamWordList];
-            [spamUniqueIdList removeObject:aUniqueId];
+        if ([spamUniqueIdList containsObject: aUniqueId]) {
+            [self substractList: wordList fromList: spamWordList];
+            [spamUniqueIdList removeObject: aUniqueId];
             spamMessageCount--;
 
         }
         hamMessageCount++;
-        [hamUniqueIdList addObject:aUniqueId];
-        [self merge:wordList
-           withList:hamWordList];
+        [hamUniqueIdList addObject: aUniqueId];
+        [self addList: wordList toList: hamWordList];
 
         [[NSNotificationCenter defaultCenter] postNotificationName: GINewHamWordsInSpamFilter
                                                             object: self]; 
@@ -359,23 +350,19 @@ NSString *_junkFilterDefinitionsPath()
 {
     //NSString* aMessage = [[[NSString alloc] initWithData: aMessageData
     //                                            encoding: NSNonLossyASCIIStringEncoding] autorelease];
-    if (![spamUniqueIdList containsObject:aUniqueId])
-    {
+    if (![spamUniqueIdList containsObject:aUniqueId]) {
         NSDictionary *wordList;
 
         wordList = [self processMessageData: aMessageData];
 
-        if ([hamUniqueIdList containsObject:aUniqueId])
-        {
-            [self remove:wordList
-                fromList:hamWordList];
-            [hamUniqueIdList removeObject:aUniqueId];
+        if ([hamUniqueIdList containsObject:aUniqueId]) {
+            [self substractList: wordList fromList: hamWordList];
+            [hamUniqueIdList removeObject: aUniqueId];
             hamMessageCount--;
         }
         spamMessageCount++;
         [spamUniqueIdList addObject:aUniqueId];
-        [self merge:wordList
-           withList:spamWordList];
+        [self addList: wordList toList: spamWordList];
         
         [[NSNotificationCenter defaultCenter] postNotificationName: GINewSpamWordsInSpamFilter
                                                             object: self]; 
@@ -383,11 +370,12 @@ NSString *_junkFilterDefinitionsPath()
 }
 
 
--(BOOL)isMessageSpam: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId
+- (BOOL) isSpamMessage: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId
+/*" Returns a level of spam likeliness between 0.0 and 1.0. Spam should be at a level of 0.9 or higher. "*/
 {
     //NSDictionary *wordList;
-    NSEnumerator *enumerator;
-    NSString *key;
+    NSEnumerator* enumerator;
+    NSString* key;
 
     double prob;
     // double msg_prob;
@@ -398,15 +386,13 @@ NSString *_junkFilterDefinitionsPath()
     int wordCount;
     
     bogostat_t stats;
-    discrim_t *pp;
-    discrim_t *hit;
+    discrim_t* pp;
+    discrim_t* hit;
 
-    if ([spamUniqueIdList containsObject:aUniqueId])
-    {
+    if ([spamUniqueIdList containsObject: aUniqueId]) {
         return YES;
     }
-    if ([hamUniqueIdList containsObject:aUniqueId])
-    {
+    if ([hamUniqueIdList containsObject: aUniqueId]) {
         return NO;
     }
 
@@ -414,28 +400,24 @@ NSString *_junkFilterDefinitionsPath()
     // msg_prob = ((double)spamMessageCount / (double)hamMessageCount);
 
 
-    for (pp = stats.extrema; pp < stats.extrema+sizeof(stats.extrema)/sizeof(*stats.extrema); pp++)
-    {
+	// Initialize stats structure:
+    for (pp = stats.extrema; pp < stats.extrema + sizeof(stats.extrema)/sizeof(*stats.extrema); pp++) {
         pp->prob = 0.5f;
         pp->key = nil;
     }
 
     wordCount = MAX_WORDS; // use only the first MAX_WORDS words for the test (for efficiency).
     
-    while ((key = [enumerator nextObject]) && wordCount--)
-    {
-        int hamWordCount = [[hamWordList objectForKey:key] intValue];
-        int spamWordCount = [[spamWordList objectForKey:key] intValue];
+    while ((key = [enumerator nextObject]) && wordCount--) {
+        int hamWordCount = [[hamWordList objectForKey: key] intValue];
+        int spamWordCount = [[spamWordList objectForKey: key] intValue];
         double dev;
 
         hamWordCount *= HAM_BIAS;
-        if (hamWordCount + spamWordCount < MINIMUM_FREQ)
-        {
+        if (hamWordCount + spamWordCount < MINIMUM_FREQ) {
             // prob = msg_prob;
             prob = UNKNOWN_WORD;
-        }
-        else
-        {
+        } else {
             register double pSpam = min(1, ((double)spamWordCount / (double)spamMessageCount));
             register double pHam = min(1, ((double)hamWordCount / (double)hamMessageCount));
             // prob = (pSpam * msg_prob) / ((pHam * (1 - msg_prob)) + (pSpam * msg_prob));
@@ -447,28 +429,22 @@ NSString *_junkFilterDefinitionsPath()
         // update the list of tokens with maximum deviation
         dev = DEVIATION(prob);
         hit = NULL;
-        hitdev=0;
+        hitdev = 0;
 
-        for (pp = stats.extrema; pp < stats.extrema+sizeof(stats.extrema)/sizeof(*stats.extrema); pp++)
-        {
+        for (pp = stats.extrema; pp < stats.extrema+sizeof(stats.extrema)/sizeof(*stats.extrema); pp++) {
             // don't allow duplicate tokens in the stats.extrema
-            if (pp->key && [pp->key isEqualToString: key]) // compare: seems VERY expensive!
-            {
+            if (pp->key && [pp->key isEqualToString: key]) {
                 hit = NULL;
                 break;
-            }
-            else
-            {
+            } else {
                 slotdev=DEVIATION(pp->prob);
-                if (dev>slotdev && dev>hitdev)
-                {
+                if (dev>slotdev && dev>hitdev) {
                     hit=pp;
                     hitdev=slotdev;
                 }
             }
         }
-        if (hit)
-        {
+        if (hit) {
             hit->prob = prob;
             hit->key = key;
         }
@@ -477,17 +453,15 @@ NSString *_junkFilterDefinitionsPath()
     // Bayes' theorem.
     // For discussion, see <http://www.mathpages.com/home/kmath267.htm>.
     product = invproduct = 1.0f;
-    for (pp = stats.extrema; pp < stats.extrema+sizeof(stats.extrema)/sizeof(*stats.extrema); pp++)
-    {
-        if (pp->prob != 0.0)
-        {
+    for (pp = stats.extrema; pp < stats.extrema+sizeof(stats.extrema)/sizeof(*stats.extrema); pp++) {
+        if (pp->prob != 0.0) {
             product *= pp->prob;
             invproduct *= (1 - pp->prob);
         }
     }
     stats.spamicity = product / (product + invproduct);
     // NSLog(@"probability of spam: %f", stats.spamicity);
-    return stats.spamicity > SPAM_CUTOFF;
+    return stats.spamicity>=spamThreshold;
 }
 
 @end

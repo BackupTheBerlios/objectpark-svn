@@ -523,6 +523,7 @@ static NSHashTable* allInstances;
 			deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 			
 			result = SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
+			[self setBusyTimeout: 10000]; // Wait for 10 seconds
 		}
 	}
 	return result;
@@ -557,6 +558,10 @@ static NSHashTable* allInstances;
 	return dbName;
 }
 
+- (void) setBusyTimeout: (int) ms
+{
+	sqlite3_busy_timeout(connection, ms);	
+}
 
 - (void) performCommand: (NSString*) sql
 /*" A command is a SQL statement not returning rows. "*/
