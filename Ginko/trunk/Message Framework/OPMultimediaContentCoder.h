@@ -35,19 +35,19 @@
 
 + (BOOL)canEncodeAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
 
-- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper;
+- (id)initWithFileWrapper:(NSFileWrapper *)aFileWrapper;
 
-- (id)initWithData: (NSData*) someData filename: (NSString*) filename;
-- (id)initWithData: (NSData*) someData filename: (NSString*) filename inlineFlag:(BOOL)inlineFlag;
+- (id)initWithData:(NSData *)someData filename:(NSString *)filename;
+- (id)initWithData:(NSData *)someData filename:(NSString *)filename inlineFlag:(BOOL)inlineFlag;
 
-- (NSData*) data;
-- (NSString*) filename;
+- (NSData *)data;
+- (NSString *)filename;
 - (BOOL)shouldBeDisplayedInline;
 
 - (NSAttributedString *)attributedString;
 - (NSFileWrapper *)fileWrapper;
 
-- (NSString*) contentType;
-- (void) setContentType: (NSString*) aContentType;
+- (NSString *)contentType;
+- (void)setContentType:(NSString *)aContentType;
 
 @end

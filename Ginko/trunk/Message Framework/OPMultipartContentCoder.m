@@ -21,6 +21,7 @@
 #import "EDMessagePart+OPExtensions.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSString+Extensions.h"
+#import "NSArray+Extensions.h"
 
 // ##WARNING axel->all: Only decoding for now. Encoding is always multipart/mixed!
 
@@ -40,6 +41,7 @@
 
 - (id)_contentFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 - (id)_contentFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
+- (id)_contentFromMultipartSignedWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 //- (NSAttributedString *)_attributedStringFromMultipartRelatedWithPreferredContentTypes:(NSArray*) preferredContentTypes;
 //- (NSAttributedString *)_attributedStringFromMultipartReportWithPreferredContentTypes:(NSArray*) preferredContentTypes;
 
@@ -84,6 +86,9 @@
         return [self _contentFromMultipartAlternativeWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
     else if ([subtype caseInsensitiveCompare:@"mixed"] == NSOrderedSame)
         return [self _contentFromMultipartMixedWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
+	else if ([subtype caseInsensitiveCompare:@"signed"] == NSOrderedSame)
+        return [self _contentFromMultipartSignedWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
+
 /*    else if ([subtype caseInsensitiveCompare:@"related"] == NSOrderedSame)
         return [self _attributedStringFromMultipartRelatedWithPreferredContentTypes:preferredContentTypes];
     else if ([subtype caseInsensitiveCompare:@"report"] == NSOrderedSame)
@@ -219,6 +224,32 @@
             NSLog(@"subpart decoding error [%@]\n", [localException reason]);
         }
     }
+    
+    return result;
+}
+
+- (id)_contentFromMultipartSignedWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
+{
+    id result = shouldBeAttributed ? [[[NSMutableAttributedString alloc] init] autorelease] : [NSMutableString string];
+	
+	if ([[self subparts] count] != 2) NSLog(@"Warning: multipart/signed with %d subparts (should be 2)", [[self subparts] count]);
+	
+    EDMessagePart *subpart = [[self subparts] firstObject];
+    
+	@try 
+	{
+		id subpartContent = [subpart contentWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
+		if (!subpartContent) 
+		{
+			[result appendString:[NSString stringWithFormat: @"\nsubpart decoding error [%@]\n", subpart]];
+		} 
+		else shouldBeAttributed ? [result appendAttributedString:subpartContent] : [result appendString:subpartContent];
+	} 
+	@catch (id localException) 
+	{
+		[result appendString:[NSString stringWithFormat:@"\nsubpart decoding error [%@]\n", [localException reason]]];
+		NSLog(@"subpart decoding error [%@]\n", [localException reason]);
+	}
     
     return result;
 }

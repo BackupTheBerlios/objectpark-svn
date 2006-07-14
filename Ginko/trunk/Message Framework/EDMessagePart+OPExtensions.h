@@ -22,7 +22,7 @@
 @interface EDMessagePart (OPExtensions)
 
 /*" sorted by user preference "*/
-+ (NSArray*) preferredContentTypes;
++ (NSArray *)preferredContentTypes;
 
 /*" Returns the class capable of decoding the content of self. Returns nil if no decoder class found. "*/
 - (Class)contentDecoderClass;
@@ -36,4 +36,10 @@
 
 @end
 
+@interface EDMessagePart (OpenPGP)
+
+- (BOOL)isSigned;
+- (BOOL)isSignatureValid;
+
+@end
 

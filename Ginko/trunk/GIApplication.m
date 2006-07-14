@@ -172,6 +172,7 @@ static NSThread *mainThread = nil;
 {
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];	
 	NSArray *groupsToOpen = [[NSUserDefaults standardUserDefaults] objectForKey:OpenMessageGroups];
+	BOOL reuseWindow = [[NSUserDefaults standardUserDefaults] boolForKey:ReuseThreadListWindowByDefault];
 	
 	NSEnumerator *groupEnumerator = [groupsToOpen objectEnumerator];
 	NSString *groupURL;
@@ -180,7 +181,8 @@ static NSThread *mainThread = nil;
 		@try 
 		{
 			GIMessageGroup *group = [context objectWithURLString:groupURL];
-			[GIGroupListController showGroup:group reuseWindow:NO];
+			[GIGroupListController showGroup:group reuseWindow:reuseWindow];
+			reuseWindow = false;
 		} 
 		@catch(id e) 
 		{

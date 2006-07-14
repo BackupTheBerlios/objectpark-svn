@@ -351,43 +351,46 @@
     return [[content retain] autorelease];
 }
 
-- (NSString*) contentAsPlainString
+- (NSString *)contentAsPlainString
 /*" Returns the contents as a plain text string. Rich content is described as plain text. Suitable for fulltext indexing of the body content (not including the header texts). "*/
 {
-    return [self contentWithPreferredContentTypes: nil attributed: NO];
+    return [self contentWithPreferredContentTypes:nil attributed:NO];
 }
 
 @end
 
-/*
-@implementation EDMessagePart (Tests)
 
-- (void) testTakeHeaders
+#import <GPGME/GPGME.h>
+
+@implementation EDMessagePart (OpenPGP)
+
+- (BOOL)isSigned
 {
-    NSString *testString = @"From Hein Bloed\n\tfold me sucker\nSubject: Sowas\nContent-Type: multipart/mixed;\n   boundary=\"----_=_NextPart_000_01C12EF4.7146FC60\"\nThis message is in MIME format. Since your mail reader does not understand\nthis format, some or all of this message may not be legible.";
-
-    NSLog(@"message string = %@", testString);
-    [[[EDMessagePart alloc] initWithMboxData:[testString dataUsingEncoding:NSISOLatin1StringEncoding]] autorelease];
+	return [[self contentType] isEqualToString:@"multipart/signed"];
 }
 
-+ (id)testFixture
+- (BOOL)isSignatureValid
 {
-    return [[[EDMessagePart alloc] init] autorelease];
+	if (! [self isSigned]) return NO;
+	
+	GPGContext *context = nil;
+	
+	@try
+	{
+		context = [[GPGContext alloc] init];
+	}
+	@catch (id localException)
+	{
+		return NO;
+	}
+	@finally
+	{
+		[context release];
+	}
+	
+#warning TODO
+	
+	return YES;
 }
-
-+ (id)testSelectors
-{
-    return [NSArray arrayWithObjects: @"testTakeHeaders", nil];
-}
-
-- (void) testTeardown
-{
-}
-
-- (void) testSetup
-{
-}
-
 
 @end
-*/

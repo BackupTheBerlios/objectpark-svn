@@ -185,7 +185,8 @@ static GIMessageGroup *reuseGroup = nil;
 				if (groupWindow) 
 				{
 					[[groupWindow delegate] setGroup:group];
-					reuseGroup = group;
+					[reuseGroup autorelease];
+					reuseGroup = [group retain];
 					[groupWindow makeKeyAndOrderFront:self];
 				} 
 			}
@@ -197,7 +198,8 @@ static GIMessageGroup *reuseGroup = nil;
 				
 				if (shouldReuse)
 				{
-					reuseGroup = group;
+					[reuseGroup autorelease];
+					reuseGroup = [group retain];
 				}
 			}
         }

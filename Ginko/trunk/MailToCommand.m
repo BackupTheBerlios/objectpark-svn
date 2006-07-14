@@ -73,7 +73,18 @@ Could evolve to GURLCommand eventually to handle additional URL types like "news
         // getting the parameter's value/object value
         while (innerComponent = [innerEnumerator nextObject])
         {
-            [value appendString:(NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)innerComponent, CFSTR(""))];
+			// try UTF8 encoding:
+			NSString *withoutEscapes = (NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)innerComponent, CFSTR(""));
+			
+			if (!withoutEscapes)
+			{
+				// try latin 1 encoding:
+				withoutEscapes = (NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (CFStringRef)innerComponent, CFSTR(""), kCFStringEncodingISOLatin1);
+			}
+			
+            [value appendString:withoutEscapes ? withoutEscapes : innerComponent];
+			
+			[withoutEscapes release];
         }
         [result setObject:value forKey:key];
     }
