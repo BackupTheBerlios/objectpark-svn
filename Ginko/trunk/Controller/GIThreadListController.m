@@ -280,13 +280,15 @@ static BOOL isThreadItem(id item)
 		displayedThread = [aThread retain];
 	}
 	
-	if (aMessage) {
-		[self showMessageInThreadList: aMessage];
+	if (aMessage) 
+	{		
+		[self showMessageInThreadList:aMessage];
 		
 		// message display string:
-		NSAttributedString* messageText = nil;
+		NSAttributedString *messageText = nil;
 		
-		if (showRawSource) {
+		if (showRawSource) 
+		{
 			NSData* transferData = [displayedMessage transferData];
 			NSString* transferString = [NSString stringWithData: transferData encoding: NSUTF8StringEncoding];
 			
@@ -310,7 +312,7 @@ static BOOL isThreadItem(id item)
 			messageText = [[NSAttributedString alloc] initWithString: @"Warning: Unable to decode message. messageText == nil."];
 		}
 		
-		[[messageTextView textStorage] setAttributedString: messageText];
+		[[messageTextView textStorage] setAttributedString:messageText];
 		
 		// set the insertion point (cursor)to 0, 0
 		[messageTextView setSelectedRange: NSMakeRange(0, 0)];

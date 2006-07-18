@@ -40,30 +40,30 @@
     NSString *author;
 }
 
-- (void) addToHeaderFields: (OPObjectPair*) headerField;
-- (void) removeHeaderField: (NSString*) fieldName;
+- (void)addToHeaderFields:(OPObjectPair *)headerField;
+- (void)removeHeaderField:(NSString *)fieldName;
 
-- (NSArray*) headerFields;
+- (NSArray *)headerFields;
 
-+ (EDHeaderFieldCoder *)decoderForHeaderField: (OPObjectPair*) headerField;
-- (EDHeaderFieldCoder *)decoderForHeaderField: (NSString*) headerField;
++ (EDHeaderFieldCoder *)decoderForHeaderField:(OPObjectPair *)headerField;
+- (EDHeaderFieldCoder *)decoderForHeaderField:(NSString *)headerField;
 
-- (void) setBody: (NSString*) fieldBody forHeaderField: (NSString*) fieldName;
-- (NSString*) bodyForHeaderField: (NSString*) fieldName;
+- (void)setBody:(NSString *)fieldBody forHeaderField:(NSString *)fieldName;
+- (NSString *)bodyForHeaderField:(NSString *)fieldName;
 
-- (void) setMessageId: (NSString*) value;
-- (NSString*) messageId;
+- (void)setMessageId:(NSString *)value;
+- (NSString *)messageId;
 
-- (void) setDate: (NSCalendarDate*) value;
+- (void)setDate:(NSCalendarDate *)value;
 - (NSCalendarDate *)date;
 
-- (void) setSubject: (NSString*) value;
-- (NSString*) subject;
+- (void)setSubject:(NSString *)value;
+- (NSString *)subject;
 
-- (NSString*) originalSubject;
-- (NSString*) replySubject;
-- (NSString*) forwardSubject;
-- (NSString*) author;
+- (NSString *)originalSubject;
+- (NSString *)replySubject;
+- (NSString *)forwardSubject;
+- (NSString *)author;
 
 @end
 

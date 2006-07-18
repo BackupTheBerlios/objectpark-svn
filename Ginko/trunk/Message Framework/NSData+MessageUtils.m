@@ -652,6 +652,62 @@ void doFrom_Quoting(NSMutableString* aString)
     return mboxData;
 }
 
+- (NSData *)dataByConvertingEOLsToCRLF
+{
+    // Converts all LF or CR end-of-lines to CRLF end-of-lines
+//#define CR	'\r'
+//#define LF	'\n'
+    unsigned	length = [self length];
+    NSData		*result;
+	
+    if(length > 0)
+	{
+        unsigned			i = 0, newLength = 0;
+        BOOL				foundCR = NO;
+        const unsigned char	*oldBytes;
+        unsigned char		aByte, *newBytes;
+		
+        oldBytes = [self bytes];
+        newBytes = NSZoneMalloc(NSDefaultMallocZone(), 2 * length);
+		
+        for(; i < length; i++)
+		{
+            aByte = oldBytes[i];
+            if(aByte == LF)
+			{
+                if(!foundCR)
+				{
+                    newBytes[newLength++] = CR;
+                    newBytes[newLength++] = LF;
+                }
+                else
+				{
+                    newBytes[newLength++] = LF;
+                    foundCR = NO;
+                }
+            }
+            else
+			{
+                if(foundCR)
+                    newBytes[newLength++] = LF;
+                newBytes[newLength++] = aByte;
+                foundCR = (aByte == CR);
+            }
+        }
+        if(foundCR)
+            newBytes[newLength++] = LF; // Last byte!
+		
+        result = [NSData dataWithBytes:newBytes length:newLength];
+        NSZoneFree(NSDefaultMallocZone(), newBytes);
+    }
+    else
+        result = [NSData data];
+	
+    return result;
+//#undef LF
+//#undef CR
+}
+
 @end
 
 #if 0

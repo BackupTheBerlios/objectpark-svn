@@ -30,7 +30,7 @@
 #import "OPInternetMessage+GinkoExtensions.h"
 #import "NSString+MessageUtils.h"
 #import "NSAttributedString+MessageUtils.h"
-
+#import "EDMessagePart+OPExtensions.h"
 
 #define DEFAULTCACHECAPACITY ((unsigned int)10)
 
@@ -142,7 +142,7 @@ static NSString *templatePostfix = nil;
 }
 
 
-+ (void) _appendFieldName: (NSString*) fieldName andDecodedHeader: (NSString*) decodedHeader  toAttributedString: (NSMutableAttributedString*) displayString
++ (void)_appendFieldName:(NSString *)fieldName andDecodedHeader:(NSString *)decodedHeader  toAttributedString:(NSMutableAttributedString *)displayString
 {
 	
     /*
@@ -165,7 +165,7 @@ static NSString *templatePostfix = nil;
     
     startLocation = [displayString length];
     [displayString appendString: NSLocalizedString(fieldName, @"A field name in the message header like 'Subject'")];
-    [displayString appendString: @": "];
+    [displayString appendString:@": "];
     
     endLocation = [displayString length] - 1;
     
@@ -177,18 +177,19 @@ static NSString *templatePostfix = nil;
     startLocation = [displayString length];
     
     [displayString appendString:decodedHeader];
-    [displayString appendString: @"\n"];
+    [displayString appendString:@"\n"];
     
     endLocation = [displayString length] - 1;
     
     [displayString applyFontTraits:NSUnboldFontMask range:NSMakeRange(startLocation, endLocation - startLocation)];
 }
 
-+ (NSMutableAttributedString *)renderedHeaders:(NSArray*) headers forMessage: (OPInternetMessage*) aMessage showOthers:(BOOL)showOthers
++ (NSMutableAttributedString *)renderedHeaders:(NSArray*) headers forMessage:(OPInternetMessage *)aMessage showOthers:(BOOL)showOthers
 /*" Returns empty string if aMessage is nil. "*/
 {
     NSMutableAttributedString *displayString = [[[NSMutableAttributedString alloc] init] autorelease];
-    if (aMessage) {
+    if (aMessage) 
+	{
         NSEnumerator *enumerator = [headers objectEnumerator];
         NSString *fieldName;
         EDHeaderFieldCoder *coder;
@@ -198,31 +199,43 @@ static NSString *templatePostfix = nil;
         
         while (fieldName = [enumerator nextObject])
         {
-            if ([fieldName isEqualToString: @"Date"]) 
+            if ([fieldName isEqualToString:@"Date"]) 
             {
                 NSCalendarDate *myDate;
                 
                 myDate = [[aMessage date] copy];
                 [myDate setTimeZone:[NSTimeZone localTimeZone]];
                 
-                decodedHeader = [myDate descriptionWithCalendarFormat: @"%A %B %e, %Y (%I:%M %p)"];
+                decodedHeader = [myDate descriptionWithCalendarFormat:@"%A %B %e, %Y (%I:%M %p)"];
                 
                 [myDate release];
-            } else {
-                @try {
+            } 
+			else 
+			{;
+                @try 
+				{
                     coder = [aMessage decoderForHeaderField:fieldName];
                     decodedHeader = [coder stringValue];
-                } @catch(id localException) {
+                } 
+				@catch(id localException) 
+				{
                     decodedHeader = [aMessage bodyForHeaderField:fieldName];
                 }
             }
             
-            if (decodedHeader) {
+            if (decodedHeader) 
+			{
                 [fieldNames addObject:fieldName];
                 [fieldValues addObject:decodedHeader];
             }
         }
         
+		if ([aMessage isSigned])
+		{
+			[fieldNames addObject:@"Signature"];
+			[fieldValues addObject:[aMessage signatureDescription]];
+		}
+		
 #warning Exception occurs when [fieldNames count] delivers 0!
         NSMutableAttributedString *fieldTable = [self fieldTableWithRowCount:[fieldNames count]];
         int i, count = [fieldNames count];
@@ -231,20 +244,19 @@ static NSString *templatePostfix = nil;
         // replace templates
         for (i = 0; i < count; i++)
         {
-            NSRange nameRange = [[fieldTable string] rangeOfString: @"$fieldname$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+            NSRange nameRange = [[fieldTable string] rangeOfString:@"$fieldname$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
             NSAssert(nameRange.location != NSNotFound, @"name template could not be found");
             NSString *nameString = NSLocalizedString([fieldNames objectAtIndex:i], @"A field name in the message header like 'Subject'");
             [fieldTable replaceCharactersInRange:nameRange withString:nameString];
             
             startPosition = nameRange.location + [nameString length];
             
-            NSRange valueRange = [[fieldTable string] rangeOfString: @"$fieldvalue$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+            NSRange valueRange = [[fieldTable string] rangeOfString:@"$fieldvalue$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
             NSAssert(valueRange.location != NSNotFound, @"value template could not be found");
             [fieldTable replaceCharactersInRange:valueRange withString:[fieldValues objectAtIndex:i]];
             
             startPosition = valueRange.location + [[fieldValues objectAtIndex:i] length];
         }
-        
         
         [displayString appendAttributedString:fieldTable];
                 
@@ -291,29 +303,27 @@ static NSString *templatePostfix = nil;
         {
             [displayString appendString: @"\n"];
         }
-         */
+         */		
     }
     return displayString;
 }
 
 
-+ (NSMutableAttributedString*) renderedBodyForMessage: (OPInternetMessage*) aMessage
++ (NSMutableAttributedString *)renderedBodyForMessage:(OPInternetMessage *)aMessage
 {
-    NSMutableAttributedString* bodyContent = [aMessage bodyContent];
+    NSMutableAttributedString *bodyContent = [aMessage bodyContent];
     // prepare quotations
     [bodyContent prepareQuotationsForDisplay];
     return bodyContent;
 }
 
 
-- (NSAttributedString*) renderedMessageIncludingAllHeaders: (BOOL) allHeaders
-    /*" Eagerly renderes the internetmessage contained in the receiver. Includes all headers if flag set. Default list if headers otherise. Can be slow! Cache it somewhere! "*/
+- (NSAttributedString *)renderedMessageIncludingAllHeaders:(BOOL)allHeaders
+/*" Eagerly renderes the internetmessage contained in the receiver. Includes all headers if flag set. Default list if headers otherise. Can be slow! Cache it somewhere! "*/
 {
-    OPInternetMessage* theMessage = [self internetMessage];
+    OPInternetMessage *theMessage = [self internetMessage];
     
-    NSMutableAttributedString* messageContent = [[self class] renderedHeaders: [[self class] headersShown] 
-                                                                   forMessage: theMessage 
-                                                                   showOthers: allHeaders];   
+    NSMutableAttributedString *messageContent = [[self class] renderedHeaders:[[self class] headersShown] forMessage:theMessage showOthers:allHeaders];   
 	
 	/*
 	NSFileWrapper* paperClip = [[[NSFileWrapper alloc] initWithPath: [[NSBundle mainBundle] pathForResource: @"PaperClip" ofType: @"tiff"] autorelease];
@@ -326,10 +336,10 @@ static NSString *templatePostfix = nil;
     return messageContent;
 }
 
-- (NSImage*) personImage
+- (NSImage *)personImage
 /*"Tries multiple way to aquire an image of the sender. Returns nil, if unsuccessful."*/
 {
-    NSImage *cachedImage = [self primitiveValueForKey: @"CachedImage"];
+    NSImage *cachedImage = [self primitiveValueForKey:@"CachedImage"];
     
     if (!cachedImage) 
     {
@@ -341,7 +351,7 @@ static NSString *templatePostfix = nil;
         else 
         {
             //cachedImage = [[GIPeopleImageCache sharedInstance] getImageForName: [[theMessage replyToWithFallback: YES] addressFromEMailString]];
-            NSLog(@"Searching personImage for %@", [[self internetMessage] replyToWithFallback: YES]);
+            NSLog(@"Searching personImage for %@", [[self internetMessage] replyToWithFallback:YES]);
             
             if (!cachedImage) 
             {

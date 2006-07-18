@@ -48,7 +48,7 @@ NSString *OPPOP3USERPASSAuthenticationMethod = @"OPPOP3USERPASSAuthenticationMet
 @end
 
 @interface OPPOP3Session (ServerResponseAndSimpleCommands)
-
+- (NSString *)responseForCommand:(NSString *)command;
 - (NSString *)_readOKForCommand:(NSString *)command;
 - (NSString *)_serverGreeting;
 - (int)_maildropSize;
@@ -136,9 +136,10 @@ static BOOL isOK(NSString* response)
 - (void) closeSession
 /*" Closes session by sending the QUIT command if needed. "*/
 {
-    if ((_state != UPDATE) && (_state != DISCONNECTED)) {
+    if ((_state != UPDATE) && (_state != DISCONNECTED)) 
+	{
         // stream needs closing
-        [self responseForCommand: @"QUIT"];
+        [self responseForCommand:@"QUIT"];
         [self _autosaveUIDLs];
         _state = UPDATE;
     }
@@ -812,18 +813,14 @@ UIDL. nil otherwise. "*/
 }
 */
 
-
-- (NSString*) responseForCommand: (NSString*) command
+- (NSString *)responseForCommand:(NSString *)command
 {	
-    if (command) {
-        [_stream writeLine: command];
-		
-		// prevent printing of password
-        //if ([command hasPrefix:@"PASS "]) {
-        //    command = @"PASS ********";
-        //}
+    if (command) 
+	{
+        [_stream writeLine:command];
     }	
-	NSString* line = [_stream availableLine];
+	
+	NSString *line = [_stream availableLine];
 
 	return line;
 }

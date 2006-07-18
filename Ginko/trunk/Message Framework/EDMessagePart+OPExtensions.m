@@ -361,36 +361,103 @@
 
 
 #import <GPGME/GPGME.h>
+#import "EDEntityFieldCoder.h"
 
 @implementation EDMessagePart (OpenPGP)
 
 - (BOOL)isSigned
+/*" Returns YES if the receiver has "multipart/signed" content type. NO otherwise. "*/
 {
 	return [[self contentType] isEqualToString:@"multipart/signed"];
 }
 
-- (BOOL)isSignatureValid
+- (NSArray *)signatures
+/*" Returns the signatures if the receiver has the content type "multipart/signed".
+Check the signatures' status for details (e.g. if a signature is good or bad) "*/
 {
-	if (! [self isSigned]) return NO;
+	if (! [self isSigned]) return nil;
 	
 	GPGContext *context = nil;
+	NSArray *result = nil;
 	
 	@try
 	{
 		context = [[GPGContext alloc] init];
+		EDCompositeContentCoder *coder = [[[EDCompositeContentCoder alloc] initWithMessagePart:self] autorelease];
+		
+		NSArray *subparts = [coder subparts];
+		NSAssert1([subparts count] == 2, @"Found %d subparts instead of 2.", [subparts count]);
+		
+		NSData *signatureContentData = [(EDMessagePart *)[subparts objectAtIndex:1] transferData];
+		GPGData *signatureData = [[[GPGData alloc] initWithDataNoCopy:signatureContentData] autorelease];
+			
+		NSData *inputContentData = [(EDMessagePart *)[subparts objectAtIndex:0] transferData];
+		//NSData *inputContentData = [NSData dataWithBytes:"asbsfd" length:3];
+		GPGData *inputData = [[[GPGData alloc] initWithDataNoCopy:inputContentData] autorelease];
+
+		[context setUsesArmor:YES];
+        [context setUsesTextMode:YES];
+
+		result = [context verifySignatureData:signatureData againstData:inputData]; // Can raise an exception
 	}
 	@catch (id localException)
 	{
-		return NO;
+		NSLog(@"Exception while retrieving signatures: %@", localException);
+		return nil;
 	}
 	@finally
 	{
 		[context release];
 	}
+		
+	return result;
+}
+
+- (NSString *)signatureDescription
+/*" Returns a user presentable description of the signature. "*/
+{
+	NSArray *signatures = [self signatures];
+	GPGSignature *signature = [signatures lastObject];
 	
-#warning TODO
+	EDEntityFieldCoder *coder = (EDEntityFieldCoder *)[self decoderForHeaderField:@"content-type"];
+	NSAssert(coder, @"no content-type coder");
+				
+	NSString *protocol = [[coder parameters] objectForKey:@"protocol"];
+								
+	if (! protocol) protocol = @"<unknown>";
 	
-	return YES;
+	NSString *signatureDescription = [NSLocalizedString(@"Invalid Signature", @"Signature description") stringByAppendingFormat:@" - protocol: %@", protocol];
+	
+	if ([signatures count] == 1)
+	{				
+		GPGContext *context;
+		GPGKey *key = nil;
+		
+		@try
+		{
+			context = [[GPGContext alloc] init];
+			key = [context keyFromFingerprint:[signature fingerprint] secretKey:NO];
+		}
+		@catch (id localException)
+		{
+			NSLog(@"Exception while retrieving key: %@", localException);
+		}
+		@finally
+		{
+			[context release];
+		}
+		
+		NSString *userIds = [[key userIDs] componentsJoinedByString:@", "];
+		if (userIds)
+		{
+			signatureDescription = [GPGErrorDescription([signature status]) stringByAppendingFormat:@" (%@) - Trust: %@", userIds, [key ownerTrustDescription]];
+		}
+		else
+		{
+			signatureDescription = GPGErrorDescription([signature status]);
+		}
+	}	
+	return signatureDescription;
 }
 
 @end
