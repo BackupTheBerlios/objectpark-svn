@@ -523,7 +523,7 @@ static NSHashTable* allInstances;
 			deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
 			
 			result = SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
-			[self setBusyTimeout: 10000]; // Wait for 10 seconds
+			[self setBusyTimeout: 100000]; // Wait for 10 seconds
 		}
 	}
 	return result;
