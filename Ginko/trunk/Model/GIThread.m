@@ -135,20 +135,23 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 }
 */
 
-- (void)addMessage:(GIMessage *)aMessage
+- (void) addMessage: (GIMessage*) aMessage
 {
-    [aMessage setValue:self forKey:@"thread"];
+    [aMessage setValue: self forKey: @"thread"];
+//	if (! [[self valueForKey: @"subject"] length] && [[aMessage valueForKey: @"subject"] length]) {
+//		// If the thread does not yet have a proper subject, take the one from the first message thast does.
+//		[self setValue: [aMessage valueForKey: @"subject"] forKey: @"subject"];
+//	}
 }
 
-- (void)addMessages:(NSArray *)someMessages
+- (void) addMessages: (NSArray*) someMessages
 /*"Adds %someMessages to the receiver."*/
 {
-    NSEnumerator *messagesToAdd = [someMessages reverseObjectEnumerator];
-    GIMessage *message;
+    NSEnumerator* messagesToAdd = [someMessages reverseObjectEnumerator];
+    GIMessage* message;
     
-    while (message = [messagesToAdd nextObject])
-	{
-        [message setValue:self forKey:@"thread"];
+    while (message = [messagesToAdd nextObject]) {
+        [self addMessage: message];
 	}
 }
 

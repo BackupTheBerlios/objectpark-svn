@@ -507,6 +507,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         }
 		[thread setValue: [self valueForKey: @"date"] forKey: @"date"];
 
+		if (! [[thread valueForKey: @"subject"] length] && [[self valueForKey: @"subject"] length]) {
+			// If the thread does not yet have a proper subject, take the one from the first message thast does.
+			[thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
+		}
+		
         // We got one, so set it:
         [self setValue: thread forKey: @"thread"];
     }
