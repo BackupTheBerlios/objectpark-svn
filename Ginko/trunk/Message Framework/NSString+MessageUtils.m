@@ -2459,7 +2459,7 @@ enum punycode_status punycode_decode (DWORD input_length,
 
 @implementation NSString (OPPunycode)
 
-- (NSString*) punycodeDecodedString
+- (NSString *)punycodeDecodedString
 /*" Assumes that the receiver contains a punycode encoded string (RFC 3492). Returns the content string in decoded form. Raises an exception if an error occurs. See punycode.h for error codes. 
 
     Note: For IDNs please use the -IDNA... methods."*/
@@ -2485,7 +2485,7 @@ enum punycode_status punycode_decode (DWORD input_length,
         case punycode_bad_input:
         case punycode_big_output:
         case punycode_overflow:
-            [NSException raise:NSGenericException format: @"Punycode decode error %d.", status];
+            [NSException raise:NSGenericException format:@"Punycode decode error %d.", status];
             break;
         case punycode_success:
         default:
@@ -2497,7 +2497,7 @@ enum punycode_status punycode_decode (DWORD input_length,
     return result;
 }
 
-- (NSString*) punycodeEncodedString
+- (NSString *)punycodeEncodedString
 /*" Returns the receiver's content string in punycode encoded form (RFC 3492). Raises an exception if an error occurs. See punycode.h for error codes. 
 
     Note: For IDNs please use the -IDNA... methods."*/
@@ -2522,7 +2522,7 @@ enum punycode_status punycode_decode (DWORD input_length,
         case punycode_bad_input:
         case punycode_big_output:
         case punycode_overflow:
-            [NSException raise:NSGenericException format: @"Punycode encode error %d.", status];
+            [NSException raise:NSGenericException format:@"Punycode encode error %d.", status];
             break;
         case punycode_success:
         default:
@@ -2532,14 +2532,14 @@ enum punycode_status punycode_decode (DWORD input_length,
     return [[[NSString alloc] initWithCString:output length:output_length] autorelease];
 }
 
-- (NSString*) IDNADecodedDomainName
+- (NSString *)IDNADecodedDomainName
 /*" Returns the receiver's content string in IDNA decoded form (RFC 3490). Shouldn't do any harm on domain names that are not IDNA encoded. If the receivers contents don't need decoding the receiver is returned. Raises an exception if an error occurs. See punycode.h for error codes."*/
 {
     NSMutableArray *components;
     int i;
     BOOL decodingNeeded = NO;
     
-    components = [[[self componentsSeparatedByString: @"."] mutableCopy] autorelease];
+    components = [[[self componentsSeparatedByString:@"."] mutableCopy] autorelease];
     
     for (i = [components count] - 1; i >= 0; i--)
     {
@@ -2547,24 +2547,24 @@ enum punycode_status punycode_decode (DWORD input_length,
         
         component = [components objectAtIndex:i];
         
-        if (([component length] > 4) && ([[component substringToIndex:4] caseInsensitiveCompare: @"xn--"] == NSOrderedSame))
+        if (([component length] > 4) && ([[component substringToIndex:4] caseInsensitiveCompare:@"xn--"] == NSOrderedSame))
         {
             [components replaceObjectAtIndex:i withObject:[[component substringFromIndex:4] punycodeDecodedString]];
             decodingNeeded = YES;
         }
     }
     
-    return decodingNeeded ? [components componentsJoinedByString: @"."] : self;
+    return decodingNeeded ? [components componentsJoinedByString:@"."] : self;
 }
 
-- (NSString*) IDNAEncodedDomainName
+- (NSString *)IDNAEncodedDomainName
 /*" Returns the receiver's content string in IDNA encoded form (RFC 3490). Shouldn't do any harm on domain names that do not need IDNA encoding. If the receivers contents don't need encoding the receiver is returned. Raises an exception if an error occurs. See punycode.h for error codes."*/
 {
     NSMutableArray *components;
     int i;
     BOOL decodingNeeded = NO;
     
-    components = [[[self componentsSeparatedByString: @"."] mutableCopy] autorelease];
+    components = [[[self componentsSeparatedByString:@"."] mutableCopy] autorelease];
     
     for (i = [components count] - 1; i >= 0; i--)
     {
@@ -2579,7 +2579,7 @@ enum punycode_status punycode_decode (DWORD input_length,
         }
     }
     
-    return decodingNeeded ? [components componentsJoinedByString: @"."] : self;
+    return decodingNeeded ? [components componentsJoinedByString:@"."] : self;
 }
 
 @end

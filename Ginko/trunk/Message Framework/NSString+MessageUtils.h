@@ -31,32 +31,29 @@ extern NSString *OPAttachmentPathAttribute;
 @interface NSString (OPMessageUtilities) 
 
 - (BOOL)isValidMessageID;
-- (NSString*) getURLFromArticleID;
+- (NSString *)getURLFromArticleID;
 
-- (NSString*) stringByRemovingBracketComments;
+- (NSString *)stringByRemovingBracketComments;
 
-- (NSString*) realnameFromEMailString;
-- (NSString*) addressFromEMailString;
-- (NSArray*) addressListFromEMailString;
+- (NSString *)realnameFromEMailString;
+- (NSString *)addressFromEMailString;
+- (NSArray *)addressListFromEMailString;
 
-- (NSString*) stringByRemovingReplyPrefix;
+- (NSString *)stringByRemovingReplyPrefix;
 
-- (NSString*) stringByApplyingROT13;
+- (NSString *)stringByApplyingROT13;
 
-- (NSString*) stringByUnwrappingParagraphs;
-- (NSString*) stringByWrappingToLineLength:(unsigned int)length;
-- (NSString*) stringByPrefixingLinesWithString: (NSString*) prefix;
-//- (NSString*) stringByFoldingStringToLimit:(int)limit;
-//- (NSString*) stringByUnfoldingString;
+- (NSString *)stringByUnwrappingParagraphs;
+- (NSString *)stringByWrappingToLineLength:(unsigned int)length;
+- (NSString *)stringByPrefixingLinesWithString: (NSString*) prefix;
 
+- (NSString *)stringByFoldingToLimit:(unsigned int)limit;
+- (NSString *)stringByUnfoldingString;
 
-- (NSString*) stringByFoldingToLimit:(unsigned int)limit;
-- (NSString*) stringByUnfoldingString;
+- (NSString *)realnameFromEMailStringWithFallback; // falls back to self if no realname is found.
 
-- (NSString*) realnameFromEMailStringWithFallback; // falls back to self if no realname is found.
-
-+ (NSString*) temporaryFilename;
-+ (NSString*) xUnixModeString:(int)aNumber;
++ (NSString *)temporaryFilename;
++ (NSString *)xUnixModeString:(int)aNumber;
 
 - (NSAttributedString *)attributedStringWithQuotationAttributes;
 - (long)octalValue;
@@ -64,37 +61,37 @@ extern NSString *OPAttachmentPathAttribute;
 - (NSCalendarDate *)dateFromRFC2822String;
 //- (NSCalendarDate *)slowDateFromRFC2822String;
 
-- (NSString*) stringByNormalizingWhitespaces;
+- (NSString *)stringByNormalizingWhitespaces;
 
-- (NSArray*) fieldListFromEMailString;
+- (NSArray *)fieldListFromEMailString;
 // - (NSArray*) realnameListFromEMailString;
 
-- (NSString*) stringByEncodingFlowedFormat;
-- (NSString*) stringByWrappingToSoftLimit: (unsigned int) length;
+- (NSString *)stringByEncodingFlowedFormat;
+- (NSString *)stringByWrappingToSoftLimit:(unsigned int)length;
 
-- (NSString*) stringBySpaceStuffing;
-- (NSString*) stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp;
-- (NSString*) stringByEncodingFlowedFormat;
+- (NSString *)stringBySpaceStuffing;
+- (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp;
+- (NSString *)stringByEncodingFlowedFormat;
 
-- (NSString*) stringByStrippingTrailingWhitespacesAndNewlines;
+- (NSString *)stringByStrippingTrailingWhitespacesAndNewlines;
 - (long)longValue;
-- (NSString*) stringByRemovingAttachmentChars;
+- (NSString *)stringByRemovingAttachmentChars;
 
 @end
 
 
 @interface NSMutableString (OPMessageUtilities)
 
-- (void) appendAsLine: (NSString*) line withPrefix: (NSString*) prefix;
+- (void)appendAsLine:(NSString *)line withPrefix:(NSString *)prefix;
 
 @end
 
 @interface NSString (OPPunycode)
 
-- (NSString*) punycodeDecodedString;
-- (NSString*) punycodeEncodedString;
+- (NSString *)punycodeDecodedString;
+- (NSString *)punycodeEncodedString;
 
-- (NSString*) IDNADecodedDomainName;
-- (NSString*) IDNAEncodedDomainName;
+- (NSString *)IDNADecodedDomainName;
+- (NSString *)IDNAEncodedDomainName;
 
 @end

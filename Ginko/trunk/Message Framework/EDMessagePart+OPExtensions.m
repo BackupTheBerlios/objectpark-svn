@@ -447,16 +447,46 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 			[context release];
 		}
 		
-		NSString *userIds = [[key userIDs] componentsJoinedByString:@", "];
-		if (userIds)
+		signatureDescription = GPGErrorDescription([signature status]);
+
+		if ([signatureDescription isEqualToString:@"Success"]) signatureDescription = @"Valid";
+		
+		NSString *fromAddress = [[[self bodyForHeaderField:@"from"] addressFromEMailString] lowercaseString];
+		
+		NSString *userIds = nil;
+		
+		// show only the user id with the from email address if that can be found...:
+		if (fromAddress)
 		{
-			signatureDescription = [GPGErrorDescription([signature status]) stringByAppendingFormat:@" (%@) - Trust: %@", userIds, [key ownerTrustDescription]];
+			NSEnumerator *enumerator = [[key userIDs] objectEnumerator];
+			GPGUserID *userID;
+			while (userID = [enumerator nextObject])
+			{
+				NSString *emailAddress = [[userID email] lowercaseString];
+				if ([emailAddress isEqualToString:fromAddress])
+				{
+					//userIds = [userID description];
+					break;
+				}
+			}
 		}
 		else
 		{
-			signatureDescription = GPGErrorDescription([signature status]);
+			// ...otherwise list them all:
+			userIds = [[key userIDs] componentsJoinedByString:@", "];
 		}
+		
+		if (userIds)
+		{
+			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@) - trust: %@", userIds, [key ownerTrustDescription]];
+		}
+		else
+		{
+			signatureDescription = [signatureDescription stringByAppendingFormat:@" (trust: %@)", [key ownerTrustDescription]];
+		}
+		
 	}	
+		
 	return signatureDescription;
 }
 
