@@ -454,6 +454,7 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 		NSString *fromAddress = [[[self bodyForHeaderField:@"from"] addressFromEMailString] lowercaseString];
 		
 		NSString *userIds = nil;
+		NSString *trust = [key ownerTrustDescription];
 		
 		// show only the user id with the from email address if that can be found...:
 		if (fromAddress)
@@ -478,11 +479,12 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 		
 		if (userIds)
 		{
-			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@) - trust: %@", userIds, [key ownerTrustDescription]];
+			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@)", userIds];
 		}
-		else
+		
+		if (trust)
 		{
-			signatureDescription = [signatureDescription stringByAppendingFormat:@" (trust: %@)", [key ownerTrustDescription]];
+			signatureDescription = [signatureDescription stringByAppendingFormat:@", trust: %@", trust];
 		}
 		
 	}	
