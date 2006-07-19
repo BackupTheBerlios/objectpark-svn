@@ -215,23 +215,21 @@ static GIActivityPanelController *panel = nil;
 	//NSLog(@"willDisplayCell %@", aCell);
 	NSString *identifier = [aTableColumn identifier];
 
-	if ([identifier isEqualToString:@"stopButton"]) 
-	{
-		NSDictionary *progressInfo = [[jobs objectAtIndex:rowIndex] progressInfo];
-		NSString *progressTitle = @"Running";
-		if (! [progressInfo isJobProgressIndeterminate]) 
-		{
+	if ([identifier isEqualToString:@"stopButton"]) {
+		NSDictionary* progressInfo = [[jobs objectAtIndex:rowIndex] progressInfo];
+		NSString* progressTitle = @"Running";
+		if (! [progressInfo isJobProgressIndeterminate]) {
 			double minValue = [progressInfo jobProgressMinValue];
 			double normalizedMax = [progressInfo jobProgressMaxValue] - minValue;
 			double normalizedCurrentValue = [progressInfo jobProgressCurrentValue] - minValue;
-			double percentComplete = (normalizedCurrentValue / normalizedMax) * (double)100.0;
+			double percentComplete = normalizedMax == 0.0 ? 0.0 : (normalizedCurrentValue / normalizedMax) * (double)100.0;
 			
 			//progressTitle = [NSString stringWithFormat: @"%.1f %%\n%d/%d", percentComplete, 
 			progressTitle = [NSString stringWithFormat:@"%.1f %%", percentComplete]; 
 			//	(unsigned long)[progressInfo jobProgressCurrentValue], 
 			//	(unsigned long)[progressInfo jobProgressMaxValue]];
 		}
-		[aCell setTitle:progressTitle];
+		[aCell setTitle: progressTitle];
 	}
 }
 
