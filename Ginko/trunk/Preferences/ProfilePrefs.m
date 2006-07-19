@@ -10,6 +10,7 @@
 #import "GIProfile.h"
 #import "GIAccount.h"
 #import "OPPersistentObject+Extensions.h"
+#import "GIApplication.h"
 
 @implementation ProfilePrefs
 
@@ -83,6 +84,35 @@
 		[self willChangeValueForKey:@"accounts"];
 		[self didChangeValueForKey:@"accounts"];
 	}
+}
+
+- (BOOL)hasGPGAccess
+{
+	return [GIApp hasGPGAccess];
+}
+
+@end
+
+
+#import <GPGME/GPGME.h>
+
+@implementation ProfilePrefs (OpenPGP)
+
+- (NSArray *)matchingKeys
+{
+    GIProfile *selectedProfile = [[GIProfile allObjects] objectAtIndex:[profileTableView selectedRow]];
+	return [selectedProfile matchingKeys];
+}
+
+- (BOOL)hasMatchingKeys
+{
+	return [[self matchingKeys] count] > 0;
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+	[self willChangeValueForKey:@"hasMatchingKeys"];
+	[self didChangeValueForKey:@"hasMatchingKeys"];
 }
 
 @end

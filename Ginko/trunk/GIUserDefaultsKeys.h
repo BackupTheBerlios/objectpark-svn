@@ -38,7 +38,6 @@ extern NSString *ContinuousSpellCheckingEnabled;
 extern NSString* RecentThreadListWindowPositions;
 extern NSString *AttachmentSaveFolder;
 extern NSString *ReuseThreadListWindowByDefault;
-
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();
 

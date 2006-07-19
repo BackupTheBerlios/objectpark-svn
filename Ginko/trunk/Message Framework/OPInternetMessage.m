@@ -230,7 +230,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 }
 
 
-+ (id)messageWithAttributedStringContent: (NSAttributedString*) someContent
++ (id)messageWithAttributedStringContent:(NSAttributedString *)someContent type:(OPMessagePartType)messagePartType
 /*" Returns a message with the content corresponding to someContent and the corresponding header fields. 
     However, the message is not complete as vital header fields are missing. They have to be added before
     the message is a valid one. "*/
@@ -281,9 +281,16 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     // if no decoder found return empty message
     if ([encodersAndRanges count] == 0)
     {
-        return [[[OPInternetMessage alloc] init] autorelease];
+		if (messagePartType == OPMessagePartTypeFull)
+		{
+			return [[[OPInternetMessage alloc] init] autorelease];
+		}
+		else
+		{
+			return [[[EDMessagePart alloc] init] autorelease];
+		}
     }
-    
+    	
     // if one class is sufficient encode with OPInternetMessage as target
     if ([encodersAndRanges count] == 1)
     {
@@ -299,7 +306,14 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
         
         encoder = [[encoderClass alloc] initWithAttributedString:[someContent attributedSubstringFromRange:range]];
         
-        message = [[encoder message] retain];
+		if (messagePartType == OPMessagePartTypeFull)
+		{		
+			message = [[encoder message] retain];
+		}
+		else
+		{
+			message = [[encoder messagePart] retain];
+		}
         
         [encoder release];
     }
@@ -333,13 +347,20 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
         // ...and encode the parts multipart/mixed with OPInternetMessage as target
         multipartCoder = [[EDCompositeContentCoder alloc] initWithSubparts:subparts];
         
-        message = [[multipartCoder message] retain];
+		if (messagePartType == OPMessagePartTypeFull)
+		{		
+			message = [[multipartCoder message] retain];
+		}
+		else
+		{
+			message = [[multipartCoder messagePart] retain];
+		}
         
         [multipartCoder release];
     }
     
     [pool release];
-    
+		
     return [message autorelease];
 }
 

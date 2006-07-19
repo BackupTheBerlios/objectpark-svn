@@ -1,0 +1,47 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {myAction = id; passphraseDismissAction = id; passphraseOkayAction = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                addBcc = id; 
+                addCc = id; 
+                addReplyTo = id; 
+                followup = id; 
+                replyAll = id; 
+                replySender = id; 
+                saveMessage = id; 
+                switchProfile = id; 
+            }; 
+            CLASS = GIMessageEditorController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                encryptButton = NSButton; 
+                errorMessage = NSTextField; 
+                hiddenCaptionPrototype = NSTextField; 
+                hiddenTextFieldPrototype = OPSizingTextField; 
+                keyField = NSTextField; 
+                messageTextView = GITextView; 
+                passphraseField = NSSecureTextField; 
+                passphraseWindow = NSWindow; 
+                profileButton = NSPopUpButton; 
+                profileValidationButton = NSButton; 
+                selectedKey = id; 
+                signButton = NSButton; 
+                storeInKeychainCheckbox = NSButton; 
+                subjectField = OPSizingTextField; 
+                subtitleField = NSTextField; 
+                titleField = NSTextField; 
+                toField = OPSizingTextField; 
+                toFieldOptionsButton = NSPopUpButton; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

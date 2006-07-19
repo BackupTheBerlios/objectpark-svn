@@ -90,6 +90,24 @@ static NSThread *mainThread = nil;
 	return mainThread;
 }
 
+/*" GPG support "*/
+- (BOOL)hasGPGAccess;
+{
+	static BOOL alreadyChecked = NO;
+	static BOOL hasGPGAccess = NO;
+	
+	if (! alreadyChecked)
+	{;
+		@synchronized(self)
+		{
+			hasGPGAccess = [[NSFileManager defaultManager] fileExistsAtPath:@"/usr/local/libexec/gnupg"];
+			alreadyChecked = YES;
+		}
+	}
+	
+	return hasGPGAccess;
+}
+
 - (IBAction)addressbook:(id)sender
 /*" Launches the Addressbook application. "*/
 {

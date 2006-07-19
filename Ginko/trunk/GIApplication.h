@@ -42,6 +42,9 @@ extern NSNumber* yesNumber;
 
 - (IBAction)sendMessagesDueInNearFuture:(id)sender;
 
+/*" GPG support "*/
+- (BOOL)hasGPGAccess;
+
 @end
 
 @interface GIApplication (ScriptingSupport)

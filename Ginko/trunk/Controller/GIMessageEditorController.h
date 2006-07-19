@@ -34,7 +34,7 @@ typedef enum
     IBOutlet GITextView *messageTextView;
     IBOutlet NSPopUpButton *toFieldOptionsButton;
     IBOutlet NSButton *profileValidationButton;
-    
+	
     NSWindowController *windowController;
     GIProfile *profile;
     GIMessage *referencedMessage;
@@ -43,7 +43,8 @@ typedef enum
     NSMutableAttributedString *content;
     BOOL shouldAppendSignature;
     int type;
-    
+    BOOL awoken;
+	
     // -- Headers --
     NSMutableDictionary *headerTextFieldsForName;
     OPSizingTextField *bottomTextField;
@@ -51,6 +52,21 @@ typedef enum
     // -- Toolbar --
     NSArray *toolbarItems;
     NSArray *defaultIdentifiers;
+	
+	// -- OpenPGP --
+    IBOutlet NSButton *signButton;
+	IBOutlet NSButton *encryptButton;
+
+	IBOutlet NSWindow *passphraseWindow;
+	IBOutlet NSTextField *titleField;
+	IBOutlet NSTextField *subtitleField;
+	IBOutlet NSTextField *keyField;
+	IBOutlet NSSecureTextField *passphraseField;
+	IBOutlet NSButton *storeInKeychainCheckbox;
+	IBOutlet NSTextField *errorMessage;
+	
+	id selectedKey;
+	BOOL wasPassphraseDialogDismissed;
 }
 
 - (id)initWithMessage:(GIMessage *)aMessage;

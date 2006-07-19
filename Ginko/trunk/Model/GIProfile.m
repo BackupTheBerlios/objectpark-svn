@@ -28,13 +28,13 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 	@"  TableName = ZPROFILE;"
 	@"  CacheAllObjects = 1;"
 	@"  CreateStatements = (\""
-	@"  CREATE TABLE ZPROFILE (Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZSENDDELAY INTEGER, ZADDITIONALADDRESSES VARCHAR, ZDEFAULTCC VARCHAR, ZDEFAULTBCC VARCHAR, ZENABLED INTEGER, ZDEFAULTREPLYTO VARCHAR, ZMAILADDRESS VARCHAR, ZORGANIZATION VARCHAR, ZNAME VARCHAR, ZSIGNATURE BLOB, ZMESSAGETEMPLATE BLOB, ZREALNAME VARCHAR, ZSENDACCOUNT INTEGER);"
+	@"  CREATE TABLE ZPROFILE (Z_ENT INTEGER, Z_PK INTEGER PRIMARY KEY, Z_OPT INTEGER, ZSENDDELAY INTEGER, ZADDITIONALADDRESSES VARCHAR, ZDEFAULTCC VARCHAR, ZDEFAULTBCC VARCHAR, ZENABLED INTEGER, ZDEFAULTREPLYTO VARCHAR, ZMAILADDRESS VARCHAR, ZORGANIZATION VARCHAR, ZNAME VARCHAR, ZSIGNATURE BLOB, ZMESSAGETEMPLATE BLOB, ZREALNAME VARCHAR, ZSENDACCOUNT INTEGER, ZSIGNNEW INTEGER, ZENCRYPTNEW INTEGER);"
 	@"  \");"
 	@""
 	@"}";
 }
 
-+ (NSString*) persistentAttributesPlist
++ (NSString *)persistentAttributesPlist
 {
 	return 
 	@"{"
@@ -52,10 +52,12 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 	@"messageTemplate = {ColumnName = ZMESSAGETEMPLATE; AttributeClass = NSAttributedString;};"
 	@"sendAccount = {InverseRelationshipKey = profiles; ColumnName = ZSENDACCOUNT; AttributeClass = GIAccount;};"
 	@"messagesToSend = {InverseRelationshipKey = sendProfile; AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZPROFILE=$1\";};"
+	@"shouldSignNewMessagesByDefault = {ColumnName = ZSIGNNEW; AttributeClass = NSNumber;};"
+	@"shouldEncryptNewMessagesByDefault = {ColumnName = ZENCRYPTNEW; AttributeClass = NSNumber;};"
 	@"}";
 }
 
-+ (NSArray*) allObjects
++ (NSArray *)allObjects
 /*" Returns all profile instances, assuring there is at least one (by creating it). The array returned is sorted by name. "*/
 {    
     OPFaultingArray* result;
@@ -188,6 +190,38 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 	[super didChangeValueForKey:key];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIProfileDidChangNotification object:self userInfo:[NSDictionary dictionaryWithObject:key forKey:@"key"]];
+}
+
+@end
+
+
+#import <GPGME/GPGME.h>
+
+@implementation GIProfile (OpenPGP)
+
+- (NSArray *)matchingKeys
+{
+	GPGContext *context = nil;
+	NSArray *result = nil;
+	
+	@try
+	{
+		context = [[GPGContext alloc] init];
+		NSString *emailAddress = [[self valueForKey:@"mailAddress"] addressFromEMailString];
+		result = [[context keyEnumeratorForSearchPattern:[NSString stringWithFormat:@"<%@>", emailAddress] secretKeysOnly:YES] allObjects];
+		[context stopKeyEnumeration];
+	}
+	@catch (id localException)
+	{
+		NSLog(@"Exception while retrieving keys: %@", localException);
+		return [NSArray array];
+	}
+	@finally
+	{
+		[context release];
+	}
+	
+	return result;
 }
 
 @end

@@ -37,12 +37,14 @@
     [super dealloc];
 }
 
-- (NSString*) serverTypeString
+- (NSString *)serverTypeString
 {
-    NSString* serverType = @"UNKNOWN";
+    NSString *serverType = @"UNKNOWN";
     
-    if (isIncomingPassword) {
-        switch([account incomingServerType]) {
+    if (isIncomingPassword) 
+	{
+        switch([account incomingServerType]) 
+		{
             case POP3:
                 serverType = @"POP3";
                 break;
@@ -58,10 +60,13 @@
             default:
                 break;
         }
-    } else {
+    } 
+	else 
+	{
 		// outgoing password
 
-        switch([account incomingServerType]) {
+        switch([account incomingServerType]) 
+		{
             case SMTP:
                 serverType = @"SMTP";
                 break;
@@ -78,12 +83,14 @@
     return serverType;
 }
 
-- (NSString*) serviceTypeString
+- (NSString *)serviceTypeString
 {
-    NSString* serviceType = @"UNKNOWN";
+    NSString *serviceType = @"UNKNOWN";
     
-    if (isIncomingPassword) {
-        switch([account incomingServerType]) {
+    if (isIncomingPassword) 
+	{
+        switch([account incomingServerType]) 
+		{
             case POP3:
             case POP3S:
                 serviceType = @"EMail";
@@ -95,7 +102,9 @@
             default:
                 break;
         }
-    } else {
+    } 
+	else 
+	{
 		// outgoing password
         serviceType = @"EMail";
     }
@@ -103,57 +112,63 @@
     return serviceType;
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
-    [titleField setStringValue: [NSString stringWithFormat:NSLocalizedString(@"%@ Password Needed", @"password panel"), [self serviceTypeString]]];
+    [titleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%@ Password Needed", @"password panel"), [self serviceTypeString]]];
     
-    [subtitleField setStringValue: [NSString stringWithFormat:NSLocalizedString(@"for %@ account \"%@\"", @"password panel"), [self serverTypeString], [account name]]];
+    [subtitleField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"for %@ account \"%@\"", @"password panel"), [self serverTypeString], [account name]]];
     
-    [userNameField setStringValue: isIncomingPassword ? [account valueForKey: @"incomingUsername"] : [account valueForKey: @"outgoingUsername"]];
+    [userNameField setStringValue:isIncomingPassword ? [account valueForKey:@"incomingUsername"] : [account valueForKey: @"outgoingUsername"]];
     
-    [serverNameField setStringValue: isIncomingPassword ? [account valueForKey: @"incomingServerName"] : [account valueForKey: @"outgoingServerName"]];
+    [serverNameField setStringValue: isIncomingPassword ? [account valueForKey:@"incomingServerName"] : [account valueForKey:@"outgoingServerName"]];
     
-    [storeInKeychainCheckbox setState: [[[NSUserDefaults standardUserDefaults] objectForKey:DisableKeychainForPasswortDefault] boolValue] ? NSOffState : NSOnState];
+    [storeInKeychainCheckbox setState:[[[NSUserDefaults standardUserDefaults] objectForKey:DisableKeychainForPasswortDefault] boolValue] ? NSOffState : NSOnState];
         
     [window center];
-    [window makeKeyAndOrderFront: self];
+    [window makeKeyAndOrderFront:self];
 }
 
-- (void) windowWillClose: (NSNotification*) notification 
+- (void)windowWillClose:(NSNotification *)notification 
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self autorelease]; // balance self-retaining
 }
 
-- (IBAction) OKAction: (id) sender
+- (IBAction)OKAction:(id)sender
 {
     if (NSDebugEnabled) NSLog(@"OKAction");
     
-    @synchronized(result) {
-        [result setObject: [passwordField stringValue] forKey: @"password"];
-        [result setObject: yesNumber forKey: @"finished"];
+    @synchronized(result) 
+	{
+        [result setObject:[passwordField stringValue] forKey:@"password"];
+        [result setObject:yesNumber forKey:@"finished"];
     }
     
-    if ([storeInKeychainCheckbox state] == NSOnState) {
-        if (isIncomingPassword) {
-            [account setIncomingPassword: [passwordField stringValue]];
-        } else {
+    if ([storeInKeychainCheckbox state] == NSOnState) 
+	{
+        if (isIncomingPassword) 
+		{
+            [account setIncomingPassword:[passwordField stringValue]];
+        } 
+		else 
+		{
 			// outgoing
-            [account setOutgoingPassword: [passwordField stringValue]];
+            [account setOutgoingPassword:[passwordField stringValue]];
         }
     }
     
-    [[NSUserDefaults standardUserDefaults] setBool: [storeInKeychainCheckbox state] == NSOnState ? NO : YES forKey: DisableKeychainForPasswortDefault];
+    [[NSUserDefaults standardUserDefaults] setBool:[storeInKeychainCheckbox state] == NSOnState ? NO : YES forKey:DisableKeychainForPasswortDefault];
 
     [window close];
 }
 
-- (IBAction) cancelAction: (id) sender
+- (IBAction)cancelAction:(id)sender
 {
     if (NSDebugEnabled) NSLog(@"cancelAction");
     
-    @synchronized(result) {
-        [result setObject: yesNumber forKey: @"finished"];
+    @synchronized(result) 
+	{
+        [result setObject:yesNumber forKey:@"finished"];
     }
     
     [window close];

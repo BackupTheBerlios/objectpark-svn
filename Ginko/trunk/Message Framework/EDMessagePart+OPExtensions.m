@@ -27,6 +27,7 @@
 #import "OPXFolderContentCoder.h"
 #import "EDPLainTextContentCoder.h"
 #import "utilities.h"
+#import "GIApplication.h"
 #import "EDTextContentCoder.h" // can be removed
 
 #import <OPDebug/OPLog.h>
@@ -362,7 +363,7 @@
 
 #import <GPGME/GPGME.h>
 #import "EDEntityFieldCoder.h"
-
+#import "GIApplication.h"
 @implementation EDMessagePart (OpenPGP)
 
 - (BOOL)isSigned
@@ -376,6 +377,7 @@
 Check the signatures' status for details (e.g. if a signature is good or bad) "*/
 {
 	if (! [self isSigned]) return nil;
+	if (! [GIApp hasGPGAccess]) return nil;
 	
 	GPGContext *context = nil;
 	NSArray *result = nil;
@@ -398,6 +400,9 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 		[context setUsesArmor:YES];
         [context setUsesTextMode:YES];
 
+		// enable S/MIME:
+		// disabled for now [context setKeyListMode:[context keyListMode] | GPGKeyListModeValidate];
+		
 		result = [context verifySignatureData:signatureData againstData:inputData]; // Can raise an exception
 	}
 	@catch (id localException)
@@ -416,6 +421,8 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 - (NSString *)signatureDescription
 /*" Returns a user presentable description of the signature. "*/
 {
+	if (! [GIApp hasGPGAccess]) return NSLocalizedString(@"Could not be verified - GPG is not installed (see http://macgpg.sourceforge.net/)", @"Signature description");
+
 	NSArray *signatures = [self signatures];
 	GPGSignature *signature = [signatures lastObject];
 	
@@ -454,7 +461,6 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 		NSString *fromAddress = [[[self bodyForHeaderField:@"from"] addressFromEMailString] lowercaseString];
 		
 		NSString *userIds = nil;
-		NSString *trust = [key ownerTrustDescription];
 		
 		// show only the user id with the from email address if that can be found...:
 		if (fromAddress)
@@ -482,9 +488,10 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@)", userIds];
 		}
 		
-		if (trust)
+		NSString *validity = [key validityDescription];
+		if ([validity length])
 		{
-			signatureDescription = [signatureDescription stringByAppendingFormat:@", trust: %@", trust];
+			signatureDescription = [signatureDescription stringByAppendingFormat:@" (key validity: %@)", validity];
 		}
 		
 	}	

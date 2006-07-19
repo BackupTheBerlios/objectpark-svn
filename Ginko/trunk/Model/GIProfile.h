@@ -32,3 +32,7 @@
 @end
 
 extern NSString *GIProfileDidChangNotification;
+
+@interface GIProfile (OpenPGP)
+- (NSArray *)matchingKeys;
+@end

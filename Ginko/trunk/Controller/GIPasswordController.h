@@ -12,22 +12,22 @@
 
 @interface GIPasswordController : NSObject 
 {
-    GIAccount* account;
+    GIAccount *account;
     BOOL isIncomingPassword;
-    NSMutableDictionary* result;
+    NSMutableDictionary *result;
     
-    IBOutlet NSWindow* window;
-    IBOutlet NSTextField* titleField;
-    IBOutlet NSTextField* subtitleField;
-    IBOutlet NSTextField* userNameField;
-    IBOutlet NSTextField* serverNameField;
-    IBOutlet NSSecureTextField* passwordField;
-    IBOutlet NSButton* storeInKeychainCheckbox;
+    IBOutlet NSWindow *window;
+    IBOutlet NSTextField *titleField;
+    IBOutlet NSTextField *subtitleField;
+    IBOutlet NSTextField *userNameField;
+    IBOutlet NSTextField *serverNameField;
+    IBOutlet NSSecureTextField *passwordField;
+    IBOutlet NSButton *storeInKeychainCheckbox;
 }
 
-- (id) initWithParamenters: (NSMutableDictionary*) someParameters;
+- (id)initWithParamenters:(NSMutableDictionary *)someParameters;
 
-- (IBAction) OKAction: (id) sender;
-- (IBAction) cancelAction: (id) sender;
+- (IBAction)OKAction:(id)sender;
+- (IBAction)cancelAction:(id)sender;
 
 @end

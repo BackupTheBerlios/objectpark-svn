@@ -19,4 +19,6 @@
 - (IBAction)addProfile:(id)sender;
 - (IBAction)makeDefaultProfile:(id)sender;
 
+- (BOOL)hasGPGAccess;
+
 @end

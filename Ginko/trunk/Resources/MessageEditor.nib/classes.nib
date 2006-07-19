@@ -45,11 +45,14 @@
             CLASS = GIMessageEditorController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                encryptButton = NSButton; 
                 hiddenCaptionPrototype = NSTextField; 
                 hiddenTextFieldPrototype = OPSizingTextField; 
                 messageTextView = GITextView; 
                 profileButton = NSPopUpButton; 
                 profileValidationButton = NSButton; 
+                selectedKey = id; 
+                signButton = NSButton; 
                 subjectField = OPSizingTextField; 
                 toField = OPSizingTextField; 
                 toFieldOptionsButton = NSPopUpButton; 
