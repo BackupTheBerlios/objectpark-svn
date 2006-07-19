@@ -366,17 +366,34 @@
 #import "GIApplication.h"
 @implementation EDMessagePart (OpenPGP)
 
-- (BOOL)isSigned
+- (BOOL)isInlineSigned
+{
+	static NSData *magic = nil;
+	
+	if (! magic)
+	{
+		magic = [[@"-----BEGIN PGP SIGNED MESSAGE-----" dataUsingEncoding:NSASCIIStringEncoding] retain];
+	}
+	
+	NSData *contentDataChunk = [[self contentData] subdataWithRange:NSMakeRange(0, [magic length])];
+	return [contentDataChunk isEqualToData:magic];
+}
+
+- (BOOL)isMultipartSigned
 /*" Returns YES if the receiver has "multipart/signed" content type. NO otherwise. "*/
 {
 	return [[self contentType] isEqualToString:@"multipart/signed"];
+}
+
+- (BOOL)isSigned
+{
+	return [self isMultipartSigned] || [self isInlineSigned];
 }
 
 - (NSArray *)signatures
 /*" Returns the signatures if the receiver has the content type "multipart/signed".
 Check the signatures' status for details (e.g. if a signature is good or bad) "*/
 {
-	if (! [self isSigned]) return nil;
 	if (! [GIApp hasGPGAccess]) return nil;
 	
 	GPGContext *context = nil;
@@ -385,25 +402,33 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 	@try
 	{
 		context = [[GPGContext alloc] init];
-		EDCompositeContentCoder *coder = [[[EDCompositeContentCoder alloc] initWithMessagePart:self] autorelease];
-		
-		NSArray *subparts = [coder subparts];
-		NSAssert1([subparts count] == 2, @"Found %d subparts instead of 2.", [subparts count]);
-		
-		NSData *signatureContentData = [(EDMessagePart *)[subparts objectAtIndex:1] transferData];
-		GPGData *signatureData = [[[GPGData alloc] initWithDataNoCopy:signatureContentData] autorelease];
-			
-		NSData *inputContentData = [(EDMessagePart *)[subparts objectAtIndex:0] transferData];
-		//NSData *inputContentData = [NSData dataWithBytes:"asbsfd" length:3];
-		GPGData *inputData = [[[GPGData alloc] initWithDataNoCopy:inputContentData] autorelease];
-
 		[context setUsesArmor:YES];
-        [context setUsesTextMode:YES];
+		[context setUsesTextMode:YES];
 
 		// enable S/MIME:
 		// disabled for now [context setKeyListMode:[context keyListMode] | GPGKeyListModeValidate];
-		
-		result = [context verifySignatureData:signatureData againstData:inputData]; // Can raise an exception
+				
+		if ([self isMultipartSigned])
+		{
+			EDCompositeContentCoder *coder = [[[EDCompositeContentCoder alloc] initWithMessagePart:self] autorelease];
+			
+			NSArray *subparts = [coder subparts];
+			NSAssert1([subparts count] == 2, @"Found %d subparts instead of 2.", [subparts count]);
+			
+			NSData *signatureContentData = [(EDMessagePart *)[subparts objectAtIndex:1] transferData];
+			GPGData *signatureData = [[[GPGData alloc] initWithDataNoCopy:signatureContentData] autorelease];
+			
+			NSData *inputContentData = [(EDMessagePart *)[subparts objectAtIndex:0] transferData];
+			//NSData *inputContentData = [NSData dataWithBytes:"asbsfd" length:3];
+			GPGData *inputData = [[[GPGData alloc] initWithDataNoCopy:inputContentData] autorelease];
+			
+			result = [context verifySignatureData:signatureData againstData:inputData]; // Can raise an exception
+		}
+		else if ([self isInlineSigned])
+		{
+			GPGData *signedData = [[[GPGData alloc] initWithDataNoCopy:[self transferData]] autorelease];
+			result = [context verifySignedData:signedData]; // Can raise an exception
+		}
 	}
 	@catch (id localException)
 	{

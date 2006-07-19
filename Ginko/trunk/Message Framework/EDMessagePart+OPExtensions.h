@@ -38,7 +38,10 @@
 
 @interface EDMessagePart (OpenPGP)
 
+- (BOOL)isInlineSigned;
+- (BOOL)isMultipartSigned;
 - (BOOL)isSigned;
+
 - (NSArray *)signatures;
 - (NSString *)signatureDescription;
 
