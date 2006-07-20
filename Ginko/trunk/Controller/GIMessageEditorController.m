@@ -349,16 +349,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     if (returnCode == NSAlertDefaultReturn) 
 	{
-		[self checkpointMessageWithStatus:OPSendStatusQueuedReady];
-		
-        //GIMessage *message = [self checkpointMessageWithStatus:OPQueuedStatus];
-        BOOL sendNow = [(NSNumber *)contextInfo boolValue];
-        if (sendNow) 
+		if ([self checkpointMessageWithStatus:OPSendStatusQueuedReady])
 		{
-			[[profile valueForKey:@"sendAccount"] send];
-        }
-        [window performClose:self];
-		[window close];
+			BOOL sendNow = [(NSNumber *)contextInfo boolValue];
+			if (sendNow) 
+			{
+				[[profile valueForKey:@"sendAccount"] send];
+			}
+			[window performClose:self];
+			[window close];
+		}
     }
     
     [(NSNumber *)contextInfo release];
@@ -384,11 +384,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         return;
     }
     
-    [self checkpointMessageWithStatus:OPSendStatusQueuedReady];
-	[[profile valueForKey:@"sendAccount"] send];
-	
-    [window performClose:self];
-    [window close];
+    if ([self checkpointMessageWithStatus:OPSendStatusQueuedReady])
+	{
+		[[profile valueForKey:@"sendAccount"] send];
+		
+		[window performClose:self];
+		[window close];
+	}
 }
 
 - (IBAction)queue:(id)sender
@@ -411,15 +413,18 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     GIMessage *message = [self checkpointMessageWithStatus:OPSendStatusQueuedReady];
 	
-	// Send delay:
-	NSNumber *sendDelay = [profile valueForKey:@"sendDelay"];
-	if (sendDelay && ([sendDelay floatValue] > 0.1))
+	if (message)
 	{
-		[message setEarliestSendTime:[NSDate dateWithTimeIntervalSinceNow:[sendDelay floatValue] * 60.0]];
+		// Send delay:
+		NSNumber *sendDelay = [profile valueForKey:@"sendDelay"];
+		if (sendDelay && ([sendDelay floatValue] > 0.1))
+		{
+			[message setEarliestSendTime:[NSDate dateWithTimeIntervalSinceNow:[sendDelay floatValue] * 60.0]];
+		}
+		
+		[window performClose:self];
+		[window close];
 	}
-	
-    [window performClose:self];
-    [window close];
 }
 
 - (IBAction)saveMessage:(id)sender
@@ -615,19 +620,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         case NSAlertDefaultReturn:
         {
             // save as draft
-            [self checkpointMessageWithStatus:0];
-            
-            [window setDocumentEdited:NO];
-            [window close];
-            
-            if (contextInfo == [NSApp delegate]) [NSApp terminate:self];
+			if ([self checkpointMessageWithStatus:0])
+			{
+				[window setDocumentEdited:NO];
+				[window close];
+				
+				if (contextInfo == [NSApp delegate]) [NSApp terminate:self];
+			}
             break;
         }
         case NSAlertOtherReturn:
         {
             // dismiss
 			// unmark message as blocked for sending
-			if ([oldMessage sendStatus] == OPSendStatusQueuedBlocked) {
+			if ([oldMessage sendStatus] == OPSendStatusQueuedBlocked) 
+			{
 				[oldMessage setSendStatus:OPSendStatusQueuedReady]; 
 			}
             
@@ -728,10 +735,25 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     GIProfile *theProfile = [self profile];
 
 	if ([signButton state] == NSOnState) // Sign
-	{
-		result = [self signedMessageWithSignedPart:[OPInternetMessage messageWithAttributedStringContent:[messageTextView textStorage] type:OPMessagePartTypePart]];
+	{;
+		@try 
+		{
+			result = [self signedMessageWithSignedPart:[OPInternetMessage messageWithAttributedStringContent:[messageTextView textStorage] type:OPMessagePartTypePart]];
+		}
+		@catch (id localException)
+		{
+			NSAlert *alert = [NSAlert alertWithMessageText:@"Error while signing message" defaultButton:NSLocalizedString(@"Abort", @"Signing Error Message") alternateButton:NSLocalizedString(@"Continue without Signing", @"Signing Error Message") otherButton:nil informativeTextWithFormat:[localException reason]];
+			
+			int alertResult = [alert runModal];
+			
+			if (alertResult == NSAlertDefaultReturn)
+			{
+				return nil;
+			}
+		}
 	}
-	else
+	
+	if (!result)
 	{
 		result = [OPInternetMessage messageWithAttributedStringContent:[messageTextView textStorage] type:OPMessagePartTypeFull];
 	}
@@ -1245,6 +1267,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     GIMessage *message = nil;
     OPInternetMessage *internetMessage = [self message];
+	
+	if (!internetMessage) return nil;
+	
     message = [GIMessage messageWithTransferData:[internetMessage transferData]];
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [internetMessage transferData]);
     
@@ -2020,43 +2045,31 @@ NSDictionary *maxLinesForCalendarName()
 	GPGContext *context = nil;
 	OPInternetMessage *result = nil;
 	
-	@try
-	{
-		context = [[[GPGContext alloc] init] autorelease];
-		
-		[context setUsesArmor:YES];
-		[context setUsesTextMode:YES];
-		[context addSignerKey:[self selectedKey]];
-		[context setPassphraseDelegate:self];
-		
-		GPGData *dataToSign = [[GPGData alloc] initWithDataNoCopy:[partToSign transferData]];
-		GPGData *signatureData = [context signedData:dataToSign signatureMode:GPGSignatureModeDetach];
-		[dataToSign release];
-		
-		EDMessagePart *signaturePart = [[[EDMessagePart alloc] init] autorelease];
-		[signaturePart setContentType:@"application/pgp-signature" withParameters:[NSDictionary dictionary]];
-		[signaturePart setContentTransferEncoding:MIME7BitContentTransferEncoding];
-		[signaturePart setContentData:[signatureData data]];
-		
-		// construct OPInternetMessage:
-		NSArray *subparts = [NSArray arrayWithObjects:partToSign, signaturePart, nil];
-		EDCompositeContentCoder *coder = [[[EDCompositeContentCoder alloc] initWithSubparts:subparts] autorelease];
-		
-		result = [coder messageWithSubtype:@"signed"];
-		NSMutableDictionary *contentTypeParameters = [[[result contentTypeParameters] mutableCopy] autorelease];
-		[contentTypeParameters setObject:@"application/pgp-signature" forKey:@"protocol"];
-		[contentTypeParameters setObject:[[self selectedKey] algorithmDescription] forKey:@"micalg"];
-		[result setContentType:@"multipart/signed" withParameters:contentTypeParameters];
-	}
-	@catch (id localException)
-	{
-		NSAlert *alert = [NSAlert alertWithMessageText:@"Error while signing message" defaultButton:NSLocalizedString(@"Continue", @"Signing Error Message") alternateButton:nil otherButton:nil informativeTextWithFormat:[localException reason]];
-		
-		[alert runModal];
-		
-		NSLog(@"Exception while composing signed message: %@", localException);
-		return nil;
-	}
+	context = [[[GPGContext alloc] init] autorelease];
+	
+	[context setUsesArmor:YES];
+	[context setUsesTextMode:YES];
+	[context addSignerKey:[self selectedKey]];
+	[context setPassphraseDelegate:self];
+	
+	GPGData *dataToSign = [[GPGData alloc] initWithDataNoCopy:[partToSign transferData]];
+	GPGData *signatureData = [context signedData:dataToSign signatureMode:GPGSignatureModeDetach];
+	[dataToSign release];
+	
+	EDMessagePart *signaturePart = [[[EDMessagePart alloc] init] autorelease];
+	[signaturePart setContentType:@"application/pgp-signature" withParameters:[NSDictionary dictionary]];
+	[signaturePart setContentTransferEncoding:MIME7BitContentTransferEncoding];
+	[signaturePart setContentData:[signatureData data]];
+	
+	// construct OPInternetMessage:
+	NSArray *subparts = [NSArray arrayWithObjects:partToSign, signaturePart, nil];
+	EDCompositeContentCoder *coder = [[[EDCompositeContentCoder alloc] initWithSubparts:subparts] autorelease];
+	
+	result = [coder messageWithSubtype:@"signed"];
+	NSMutableDictionary *contentTypeParameters = [[[result contentTypeParameters] mutableCopy] autorelease];
+	[contentTypeParameters setObject:@"application/pgp-signature" forKey:@"protocol"];
+	[contentTypeParameters setObject:[[self selectedKey] algorithmDescription] forKey:@"micalg"];
+	[result setContentType:@"multipart/signed" withParameters:contentTypeParameters];
 	
 	return result;
 }

@@ -481,7 +481,15 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 		
 		signatureDescription = GPGErrorDescription([signature status]);
 
-		if ([signatureDescription isEqualToString:@"Success"]) signatureDescription = @"Valid";
+		if ([signatureDescription isEqualToString:@"Success"]) 
+		{
+			signatureDescription = @"Valid";
+			
+			if ([self isInlineSigned])
+			{
+				signatureDescription = [signatureDescription stringByAppendingString:@" (maybe only partly)"];
+			}
+		}
 		
 		NSString *fromAddress = [[[self bodyForHeaderField:@"from"] addressFromEMailString] lowercaseString];
 		
