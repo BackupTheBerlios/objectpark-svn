@@ -281,12 +281,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (void)awakeFromNib
 {
+	[self profileChanged];
+	
 	if (!awoken)
 	{
 		awoken = YES;
 		[self awakeHeaders];
 		[self awakeToolbar];
-		[self profileChanged];
         
 		[[messageTextView layoutManager] setDefaultAttachmentScaling:NSScaleProportionally];
 		
@@ -726,6 +727,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return versionString;
 }
 
+- (BOOL)shouldSign
+/*" Returns whether a sign operation should be performed. "*/
+{
+	return ([signButton state] == NSOnState) && (![signButton isHidden]);
+}
+
 - (OPInternetMessage *)message
 /*" Returns the current content of the message editor as a GIMessage. "*/
 {
@@ -734,7 +741,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSString *headerField, *from;
     GIProfile *theProfile = [self profile];
 
-	if ([signButton state] == NSOnState) // Sign
+	if ([self shouldSign]) // Sign
 	{;
 		@try 
 		{
