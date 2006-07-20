@@ -375,6 +375,8 @@
 		magic = [[@"-----BEGIN PGP SIGNED MESSAGE-----" dataUsingEncoding:NSASCIIStringEncoding] retain];
 	}
 	
+	if ([[self contentData] length] < [magic length]) return NO;
+
 	NSData *contentDataChunk = [[self contentData] subdataWithRange:NSMakeRange(0, [magic length])];
 	return [contentDataChunk isEqualToData:magic];
 }

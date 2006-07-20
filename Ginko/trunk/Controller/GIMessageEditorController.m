@@ -707,7 +707,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 // ### message generation ###
 
-#define GINKOVERSION @"Ginko(Voyager)/%@ (See <http://www.objectpark.org>)"
+#define GINKOVERSION @"Ginko/%@ (See <http://www.objectpark.org>)"
 
 - (NSString*) versionString
 /*" Returns the version string for use in new messages' headers. "*/
