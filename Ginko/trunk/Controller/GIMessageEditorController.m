@@ -749,7 +749,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 		}
 		@catch (id localException)
 		{
-			NSAlert *alert = [NSAlert alertWithMessageText:@"Error while signing message" defaultButton:NSLocalizedString(@"Abort", @"Signing Error Message") alternateButton:NSLocalizedString(@"Continue without Signing", @"Signing Error Message") otherButton:nil informativeTextWithFormat:[localException reason]];
+			NSAlert *alert = [NSAlert alertWithMessageText:@"Error while signing message" defaultButton:NSLocalizedString(@"Cancel", @"Signing Error Message") alternateButton:NSLocalizedString(@"Continue without Signing", @"Signing Error Message") otherButton:nil informativeTextWithFormat:[localException reason]];
 			
 			int alertResult = [alert runModal];
 			
@@ -1906,15 +1906,42 @@ NSDictionary *maxLinesForCalendarName()
 @interface GPGKey (Keychain)
 - (NSString *)passphraseFromKeychain;
 - (void)setPassphraseInKeychain:(NSString *)aPassword;
+- (NSString *)accountName;
 @end
 
 @implementation GPGKey (Keychain)
+
+- (GPGUserID *)primaryUID
+{
+	{
+		// It MIGHT happen that a key has NO userID!
+		NSArray	*userIDs = [self userIDs];
+		
+		if([userIDs lastObject] != nil)
+			return [userIDs objectAtIndex:0];
+		else
+			return nil;
+	}
+}
+
+- (NSString *)accountName
+{
+	if ([self isKindOfClass:[GPGSubkey class]])
+	{
+		return [[[(GPGSubkey *)self key] primaryUID] userID];
+	}
+	else
+	{
+		// self is a GPGKey:
+		return [[self primaryUID] userID];
+	}
+}
 
 - (NSString *)passphraseItemRef:(SecKeychainItemRef *)itemRef
 /*" Accesses keychain to get password. "*/
 {
     const char *serviceName = [@"OpenPGP Passphrase" UTF8String];
-    const char *accountName = [[[self userID] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
+    const char *accountName = [[[self accountName] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
     UInt32 passwordLength;
     void *passwordData;
     NSString *result = nil;
@@ -1962,7 +1989,7 @@ NSDictionary *maxLinesForCalendarName()
 	/*" Uses keychain to store password. "*/
 {
     const char *serviceName = [@"OpenPGP Passphrase" UTF8String];
-    const char *accountName = [[[self userID] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
+    const char *accountName = [[[self accountName] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
     const char *password = [aPassword UTF8String];
     OSStatus err;
     SecKeychainItemRef itemRef = NULL;
@@ -2100,7 +2127,7 @@ NSDictionary *maxLinesForCalendarName()
 	
 	[errorMessage setHidden:!again];
 	
-	[keyField setStringValue:[[key userID] stringByAppendingFormat:@", %@", [key shortKeyID]]];
+	[keyField setStringValue:[[key accountName] stringByAppendingFormat:@", %@", [key shortKeyID]]];
 	
     [storeInKeychainCheckbox setState:[[[NSUserDefaults standardUserDefaults] objectForKey:DisableKeychainForPasswortDefault] boolValue] ? NSOffState : NSOnState];
 	

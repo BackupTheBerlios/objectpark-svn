@@ -507,7 +507,7 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 				NSString *emailAddress = [[userID email] lowercaseString];
 				if ([emailAddress isEqualToString:fromAddress])
 				{
-					//userIds = [userID description];
+					userIds = [[userID description] stringByAppendingFormat:@", %@", [key shortKeyID]];
 					break;
 				}
 			}
@@ -522,11 +522,15 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 		{
 			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@)", userIds];
 		}
+		else
+		{
+			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@)", userIds];
+		}
 		
 		NSString *validity = [key validityDescription];
 		if ([validity length])
 		{
-			signatureDescription = [signatureDescription stringByAppendingFormat:@" (key validity: %@)", validity];
+			signatureDescription = [signatureDescription stringByAppendingFormat:@" - key trust: %@", validity];
 		}
 		
 	}	
