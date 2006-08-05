@@ -199,6 +199,7 @@
 		77F917E509D156B40069C455 /* lucene-core-1.9.1.jar in Resources */ = {isa = PBXBuildFile; fileRef = 77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */; };
 		77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */; };
 		77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF35940972FFA300AFD0DF /* Folder.tiff */; };
+		8D0C8C270A84220D0055D8E6 /* DefaultJunkFilter.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C8C260A84220D0055D8E6 /* DefaultJunkFilter.plist */; };
 		8D0EC28209A22577004563D4 /* NSString+Similarities.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0EC28009A22577004563D4 /* NSString+Similarities.h */; };
 		8D0EC28309A22577004563D4 /* NSString+Similarities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0EC28109A22577004563D4 /* NSString+Similarities.m */; };
 		8D1107280486CEB800E47090 /* GinkoVoyager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32CA4F630368D1EE00C91783 /* GinkoVoyager_Prefix.pch */; };
@@ -653,6 +654,7 @@
 		77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "lucene-core-1.9.1.jar"; path = "Resources/lucene-core-1.9.1.jar"; sourceTree = "<group>"; };
 		77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OtherMailbox.tiff; sourceTree = "<group>"; };
 		77FF35940972FFA300AFD0DF /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
+		8D0C8C260A84220D0055D8E6 /* DefaultJunkFilter.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = DefaultJunkFilter.plist; sourceTree = "<group>"; };
 		8D0EC28009A22577004563D4 /* NSString+Similarities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Similarities.h"; sourceTree = "<group>"; };
 		8D0EC28109A22577004563D4 /* NSString+Similarities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Similarities.m"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -949,6 +951,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8D0C8C260A84220D0055D8E6 /* DefaultJunkFilter.plist */,
 				8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */,
 				77CA735609F12C7800749461 /* Ginko.scriptTerminology */,
 				77CA735309F12BD000749461 /* Ginko.scriptSuite */,
@@ -1831,6 +1834,7 @@
 				7780AC420A49A081006970ED /* JobAlertPanel.nib in Resources */,
 				8DD8C1790A5D89DD00DEA948 /* PaperClip.tiff in Resources */,
 				77468B010A6E1EC50089DA7B /* Passphrase.nib in Resources */,
+				8D0C8C270A84220D0055D8E6 /* DefaultJunkFilter.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

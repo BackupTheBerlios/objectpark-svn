@@ -1,12 +1,12 @@
 Bugs:
 
+- additional email addresses are not used to determine, if message is from self
 - additional headers cannot be checked in Display preferences.
 - long lines without whitespaces does not wrap correctly (example: long url got a wrong space in it)
 - "move to trash" does not prevent sending
 - deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
 - updates to the list of messages (fetching messages) do not result in thread-list reloads
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
-- window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
 - while retrieving messages, sometimes only one account is used at first - the other accounts follow after the first has finished
 
 Regressions:
@@ -14,6 +14,7 @@ Regressions:
 
 Done:
 
+- (Dirk) - window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
 - (Dirk) - OPSizingTextField did does not resize when a new selection is added by the formatter
 - (Dirk) - "empty trash" no longer works (infinite loop)
 - (Dirk) - serching for messages, then selecting a hit, then hitting the "Back" icon closes the window. It should switch back to the thread list.

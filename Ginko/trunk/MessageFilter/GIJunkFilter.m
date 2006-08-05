@@ -92,14 +92,53 @@ NSString *_junkFilterDefinitionsPath()
     return _sharedInstance;
 }
 
+static int sumValuesInDictionary(NSDictionary* dict)
+{
+	int result = 0;
+	NSEnumerator* e = [dict objectEnumerator];
+	NSNumber* value;
+	while (value = [e nextObject]) {
+		result += [value intValue];
+	}
+	return result;
+}
+
+- (int) spamMessageCount
+{
+	if (spamMessageCount == NSNotFound) {
+		// Calculate frequency count:
+		spamMessageCount = sumValuesInDictionary(spamWordList);
+	}
+	return spamMessageCount;
+}
+
+- (int) hamMessageCount
+{
+	if (hamMessageCount == NSNotFound) {
+		// Calculate frequency count:
+		hamMessageCount = sumValuesInDictionary(hamWordList);
+
+	}
+	return hamMessageCount;
+}
 
 - (void) writeJunkFilterDefintion
 {
-    BOOL result = [NSKeyedArchiver archiveRootObject: self
-                                              toFile: _junkFilterDefinitionsPath()];
-    if (!result) {
-        [NSException raise: NSGenericException format: @"Couldn't write junk filter definition data to '%@'!", _junkFilterDefinitionsPath()];
-    }
+	if (YES || didChange) {
+		BOOL result = [NSKeyedArchiver archiveRootObject: self
+												  toFile: _junkFilterDefinitionsPath()];
+		if (!result) {
+			[NSException raise: NSGenericException format: @"Couldn't write junk filter definition data to '%@'!", _junkFilterDefinitionsPath()];
+		}
+		
+		NSDictionary* mainDict = [NSDictionary dictionaryWithObjectsAndKeys:
+			hamWordList, @"HamWordList",
+			spamWordList, @"SpamWordList", 
+			[NSNumber numberWithFloat: spamThreshold], @"SpamThreshold", 
+			nil, nil];
+		
+		[mainDict writeToFile: @"/Users/theisen/GIJunkFilter.plist" atomically: YES];
+	}
 }
 
 
@@ -110,9 +149,13 @@ NSString *_junkFilterDefinitionsPath()
         spamWordList = [[decoder decodeObjectForKey: GIJunkFilterSpamWordList] retain];
         hamUniqueIdList = [[decoder decodeObjectForKey: GIJunkFilterHamUniqueIdList] retain];
         spamUniqueIdList = [[decoder decodeObjectForKey: GIJunkFilterSpamUniqueIdList] retain];
+		spamMessageCount = NSNotFound;
+        hamMessageCount = NSNotFound;
+		
         spamMessageCount = [decoder decodeIntForKey: GIJunkFilterHamMessageCount];
         hamMessageCount = [decoder decodeIntForKey: GIJunkFilterSpamMessageCount];
         spamThreshold = [decoder decodeFloatForKey: GIJunkFilterSpamThreshold];
+		if (spamThreshold == 0) spamThreshold = 0.9;
     }
     return self;
 }
@@ -134,12 +177,12 @@ NSString *_junkFilterDefinitionsPath()
 {
     self = [super init];
     if (self) {
-        hamWordList = [[NSMutableDictionary dictionary] retain];
-        spamWordList = [[NSMutableDictionary dictionary] retain];
-        hamUniqueIdList = [[NSMutableArray array] retain];
+        hamWordList      = [[NSMutableDictionary dictionary] retain];
+        spamWordList     = [[NSMutableDictionary dictionary] retain];
+        hamUniqueIdList  = [[NSMutableArray array] retain];
         spamUniqueIdList = [[NSMutableArray array] retain];
-        spamMessageCount = 0;
-        hamMessageCount = 0;
+        spamMessageCount = NSNotFound;
+        hamMessageCount  = NSNotFound;
 		spamThreshold = 0.9;
     }
     return self;
@@ -151,10 +194,16 @@ NSString *_junkFilterDefinitionsPath()
 }
 
 - (BOOL) optimize 
-/*" New, unoptimized "*/
-
-
+/* New (unimplemented) version should normalize like follows: 
+ * 1. Check if any of the spam or ham word frequencies exceeds a given max value. If no, return.
+ * 2. Walk all words again and divide all frequencies by 2. Remove any word with frequency less than one. 
+ */
 {
+	// Clear count caches:
+	spamMessageCount = NSNotFound;
+	hamMessageCount  = NSNotFound;
+	
+	/*
     NSMutableSet *keys;
     NSEnumerator *enumerator;
     NSString *key;
@@ -178,7 +227,10 @@ NSString *_junkFilterDefinitionsPath()
     if (didOptimize) {
         NSLog(@"Junk got optimized.");
     }
+	 didChange |= didOptimize;
     return didOptimize;
+	 */
+	  return NO;
 }
 
 
@@ -189,7 +241,7 @@ NSString *_junkFilterDefinitionsPath()
 }
 */
 
--(NSDictionary*) processMessageData: (NSData*) aMessageData
+- (NSDictionary*) processMessageData: (NSData*) aMessageData
 {
     //NSMutableCharacterSet *workingSet;
     //NSCharacterSet *finalCharSet;
@@ -338,6 +390,7 @@ NSString *_junkFilterDefinitionsPath()
         [hamUniqueIdList addObject: aUniqueId];
         [self addList: wordList toList: hamWordList];
 
+		didChange = YES;
         [[NSNotificationCenter defaultCenter] postNotificationName: GINewHamWordsInSpamFilter
                                                             object: self]; 
     }
@@ -364,6 +417,7 @@ NSString *_junkFilterDefinitionsPath()
         [spamUniqueIdList addObject:aUniqueId];
         [self addList: wordList toList: spamWordList];
         
+		didChange = YES;
         [[NSNotificationCenter defaultCenter] postNotificationName: GINewSpamWordsInSpamFilter
                                                             object: self]; 
     }
@@ -516,24 +570,32 @@ static const BOOL* stopChars()
 - (id) nextObject
 /*" Returns the next word as a string object. "*/
 {
-    unsigned char* scanchar = (unsigned char*)[messageData bytes]+processPointer;
-    const unsigned char* lastchar = (const unsigned char*)scanchar-processPointer+[messageData length];
+    unsigned char* scanchar; 
+    const unsigned char* lastchar;
     const unsigned char* cresult;
     const BOOL* stopchar = stopChars();
-    NSString* result;
+    NSString* result = nil;
     unsigned  resultLength;
     
-    // Find a non-stop char:
-    while (scanchar<lastchar && (*scanchar<128 && stopchar[(unsigned)*scanchar]==YES))
-        scanchar++;
-    cresult = scanchar; // the word starts here
-    // Find a stop char:
-    while (scanchar<lastchar && (*scanchar>=128 || stopchar[(unsigned)*scanchar]==NO))
-        scanchar++;
-
-    processPointer = (void*)scanchar-[messageData bytes]; // update process pointer
-    result = nil;
-    resultLength = (void*)scanchar-(void*)cresult;
+	// Loop until word is long/short enough:
+	do {
+		scanchar = (unsigned char*)[messageData bytes]+processPointer;
+		lastchar = (const unsigned char*)scanchar-processPointer+[messageData length];
+		
+		
+		// Find a non-stop char:
+		while (scanchar<lastchar && (*scanchar<128 && stopchar[(unsigned)*scanchar]==YES))
+			scanchar++;
+		cresult = scanchar; // the word starts here
+							// Find a stop char:
+		while (scanchar<lastchar && (*scanchar>=128 || stopchar[(unsigned)*scanchar]==NO))
+			scanchar++;
+		
+		processPointer = (void*)scanchar-[messageData bytes]; // update process pointer
+		resultLength   = (void*)scanchar-(void*)cresult;
+		
+	} while (resultLength>0 && (resultLength > 22 || resultLength == 1)); // skip very long "words" and single char words - they are probably random chars
+	
     if (resultLength) {
         result = [NSMutableString stringWithCString: (char*)cresult length: resultLength];
         CFStringLowercase((CFMutableStringRef)result, NULL);

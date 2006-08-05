@@ -32,6 +32,7 @@
 #import "OPObjectPair.h"
 #import "NSArray+Extensions.h"
 #import "MailToCommand.h"
+#import "GIJunkFilter.h"
 #import <ApplicationServices/ApplicationServices.h>
 #include <unistd.h>
 
@@ -479,6 +480,9 @@ static NSThread *mainThread = nil;
     [self saveAction:self];
 	
 	[GIMessage repairEarliestSendTimes];
+	
+	[[GIJunkFilter sharedInstance] writeJunkFilterDefintion];
+
 	
     // temporary hack:
     [GIMessage sweepBadMessages];

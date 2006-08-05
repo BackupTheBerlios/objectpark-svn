@@ -35,7 +35,8 @@ extern NSString* GIJunkFilterSpamThreshold;
     NSMutableArray *spamUniqueIdList;
     int spamMessageCount;
     int hamMessageCount;
-	int spamThreshold;
+	float spamThreshold;
+	BOOL didChange; // YES, if the ham or spam word list changed.
 }
 
 + (GIJunkFilter*) sharedInstance;
@@ -51,5 +52,8 @@ extern NSString* GIJunkFilterSpamThreshold;
                             withUniqueId: (NSString*) aUniqueId;
 
 - (BOOL) isSpamMessage: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId;
+
+- (int) spamMessageCount;
+- (int) hamMessageCount;
 
 @end

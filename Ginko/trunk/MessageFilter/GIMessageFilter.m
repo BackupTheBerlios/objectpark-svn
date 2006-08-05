@@ -23,6 +23,7 @@
 #import "GIMessageFilter.h"
 #import "GIMessageFilterAction.h"
 #import "NSApplication+OPExtensions.h"
+#import "GIJunkfilter.h"
 
 NSString *GIMessageFiltersDidChangeNotification = @"GIMessageFiltersDidChangeNotification";
 NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDelayedWriteFilters";
@@ -494,30 +495,42 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return result;
 }
 
-+ (BOOL)filterMessage: (GIMessage*) message flags:(int)flags
++ (BOOL) filterMessage: (GIMessage*) message flags: (int) flags
 /*" Filters the given message. Returns YES if message was inserted/moved into a box
-    different to currentBox. NO otherwise. "*/
+    different to currentBox. NO otherwise. TODO: Document flags! "*/
 {
-    NSEnumerator *filterEnumerator;
-    GIMessageFilter *filter;
     BOOL inserted = NO;
     BOOL shouldStopFiltering = NO;
     
-    filterEnumerator = [[self filtersMatchingForMessage:message flags:flags] objectEnumerator];
-    while ( (filter = [filterEnumerator nextObject]) && (! shouldStopFiltering) ) 
-    {
-        NSEnumerator *actionEnumerator;
-        GIMessageFilterAction *action;
-        
-        actionEnumerator = [[filter actions] objectEnumerator];
-        while (action = [actionEnumerator nextObject]) 
-        {
-            if ([action state] == NSOnState) 
-            {
+	if (YES /* use junk filter */) {
+	
+		// DO not check own messages for spam.
+		// Do not check messages by people in our address book.
+	//	if (![message flags])
+		NSData* transferData = [message transferData];
+		NSString* messageId = [message messageId];
+		BOOL isSpam = [[GIJunkFilter sharedInstance] isSpamMessage: transferData
+													  withUniqueId: messageId];
+		if (isSpam) {
+			NSLog(@"Message %@ considered SPAM!", messageId);
+		}//[message addFlags: OPJunkMailStatus];
+	}
+	
+    NSEnumerator* filterEnumerator = [[self filtersMatchingForMessage: message 
+																flags: flags] objectEnumerator];
+	GIMessageFilter* filter;
+    while ( (filter = [filterEnumerator nextObject]) && (! shouldStopFiltering) ) {
+        NSEnumerator* actionEnumerator = [[filter actions] objectEnumerator];
+		GIMessageFilterAction* action;
+        while (action = [actionEnumerator nextObject]) {
+            if ([action state] == NSOnState) {
                 // Do it only when active:
                 BOOL filterPutInBox = NO;
                 
-                shouldStopFiltering |= [GIMessageFilterAction performAction:action withMessage:message flags:flags putIntoMessagebox:&filterPutInBox];
+                shouldStopFiltering |= [GIMessageFilterAction performAction: action 
+																withMessage: message 
+																	  flags: flags 
+														  putIntoMessagebox: &filterPutInBox];
                 
                 inserted |= filterPutInBox;
             }
