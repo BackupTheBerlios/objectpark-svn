@@ -532,17 +532,21 @@ static NSHashTable* allInstances;
 - (void) close
 {
     if (!connection) return;
-    	
-    sqlite3_close(connection);
-    connection = NULL;
-	
+    
 	[updateStatements release]; updateStatements = nil; 
 	[insertStatements release]; insertStatements = nil; 
 	[deleteStatements release]; deleteStatements = nil; 
 	[fetchStatements release];  fetchStatements  = nil; 
-	
 	[addRelationStatements release];    addRelationStatements    = nil;
 	[removeRelationStatements release]; removeRelationStatements = nil;
+	
+    int result = sqlite3_close(connection);
+	
+	if (result != SQLITE_BUSY) {
+		connection = NULL;
+	} else {
+		NSLog(@"Warning! Unable to close sqlite database - some statements are not finalized - still open.");
+	}
 }
 
 - (NSString*) path
