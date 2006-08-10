@@ -26,9 +26,6 @@
     _lineHeight = 17;	
 }
 
-
-
-
 - (id) initWithFrame: (NSRect) frame
 {
     if (self = [super initWithFrame: frame]) {
@@ -213,6 +210,19 @@
 	
 	//NSLog(@"textDidChange: %@", [self stringValue]);
     [super textDidChange: notification];
+}
+
+- (void)forceSizeToFit
+{
+	NSResponder *oldFirst = [[self window] firstResponder];
+	[[self window] makeFirstResponder:self];
+	[[self window] makeFirstResponder:oldFirst];
+}
+
+- (void)setStringValue:(NSString *)aString
+{
+	[super setStringValue:aString];
+	[self performSelector:@selector(forceSizeToFit) withObject:nil afterDelay:0.1];
 }
 
 - (BOOL) becomeFirstResponder
