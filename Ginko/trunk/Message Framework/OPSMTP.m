@@ -124,7 +124,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
         state = NonAuthenticated;
 		
 		// use only HELO if no password and no username given
-		if (![self password] && ![self username])
+		if (![[self username] length])
 		{
 			[self doHELOWithDomain:name];
 		}
@@ -280,7 +280,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 - (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates
 /*" If the use of a simple SMTP server (HELO) without any authentication is required, 
-	use nil for username and password. "*/
+	use nil (or a zero length string) for username. "*/
 {
     NSParameterAssert(aStream);
     
