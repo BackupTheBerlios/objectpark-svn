@@ -105,18 +105,27 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 + (OPFaultingArray *)messagesToAddToFulltextIndexWithLimit:(unsigned)limit
 {
     OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-	#warning (Indexing) Queries with 'or' sometimes prevent indexes from being used. Check with sqlite doku and rewrite.
-    OPFaultingArray *result = (OPFaultingArray *)[context fetchObjectsOfClass: self whereFormat:@"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) and not (ZMESSAGEDATA ISNULL) limit ?", [NSNumber numberWithUnsignedInt:limit], nil];
-
+	OPFaultingArray *result = nil;
+	
+//	@synchronized(context)
+	{
+#warning (Indexing) Queries with 'or' sometimes prevent indexes from being used. Check with sqlite doku and rewrite.
+		result = (OPFaultingArray *)[context fetchObjectsOfClass: self whereFormat:@"(ZISFULLTEXTINDEXED ISNULL or ZISFULLTEXTINDEXED==0) and (ZISJUNK ISNULL or ZISJUNK==0) and not (ZMESSAGEDATA ISNULL) limit ?", [NSNumber numberWithUnsignedInt:limit], nil];
+	}
+	
     return result;
 }
 
 + (OPFaultingArray *)messagesToRemoveFromFulltextIndexWithLimit:(unsigned)limit
 {
     OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-    
-    OPFaultingArray *result = (OPFaultingArray *)[context fetchObjectsOfClass:self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt:limit], nil];
-    
+    OPFaultingArray *result = nil;
+	
+//	@synchronized(context)
+	{
+		result = (OPFaultingArray *)[context fetchObjectsOfClass:self whereFormat:@"(ZISFULLTEXTINDEXED NOTNULL and ZISFULLTEXTINDEXED <> 0) and (ZISJUNK NOTNULL and ZISJUNK <> 0) limit ?", [NSNumber numberWithUnsignedInt:limit], nil];
+    }
+	
     return result;
 }
 
