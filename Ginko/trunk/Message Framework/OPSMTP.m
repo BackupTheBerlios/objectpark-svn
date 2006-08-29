@@ -32,24 +32,24 @@ NSString *OPSMTPException = @"OPSMTPException";
 NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 @interface OPSMTP (PrivateAPI)
-- (void)_assertServerAcceptedCommand;
-- (NSArray *)_readResponse;
-- (NSString *)_pathFromAddress:(NSString *)address;
-- (BOOL)_allowsPipelining;
-- (BOOL)_needsAuthentication;
-- (NSString *)_username;
-- (NSString *)_password;
-- (BOOL)_useSMTPS;
-- (BOOL)_allowAnyRootCertificate;
-- (BOOL)_allowExpiredCertificates;
-- (void)_writeSender:(NSString *)sender;
-- (void)_writeRecipient:(NSString *)recipient;
-- (void)_beginBody;
-- (void)_finishBody;
-- (BOOL)_hasPendingResponses;
-- (BOOL)_SASLAuthentication:(NSArray *)methods;
+- (void)assertServerAcceptedCommand;
+- (NSArray *)readResponse;
+- (NSString *)pathFromAddress:(NSString *)address;
+- (BOOL)allowsPipelining;
+//- (BOOL)needsAuthentication;
+- (NSString *)username;
+- (NSString *)password;
+- (BOOL)useSMTPS;
+- (BOOL)allowAnyRootCertificate;
+- (BOOL)allowExpiredCertificates;
+- (void)writeSender:(NSString *)sender;
+- (void)writeRecipient:(NSString *)recipient;
+- (void)beginBody;
+- (void)finishBody;
+- (BOOL)hasPendingResponses;
+- (BOOL)SASLAuthentication:(NSArray *)methods;
 //- (BOOL)__authPlainWithUsername:(NSString *)aUsername andPassword:(NSString *)aPassword;
-- (void)_freeSASLResources;
+- (void)freeSASLResources;
 @end
 
 @implementation OPSMTP
@@ -57,6 +57,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 //Factory Methods
 
 + (id)SMTPWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates
+/*" See -initWithUsername:password:stream:hostname:useSMTPS for details. "*/
 {
     return [[[OPSMTP alloc] initWithUsername:aUsername password:aPassword stream:aStream hostname:aHostname useSMTPS:shouldUseSMTPS allowAnyRootCertificate:shouldAllowAnyRootCertificate allowExpiredCertificates:shouldAllowExpiredCertificates] autorelease];
 }
@@ -68,7 +69,22 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 // Initialization and Deallocation Methods
 
-- (void)_connect 
+- (void)doHELOWithDomain:(NSString *)domain
+{
+	NSString *responseCode;
+    NSArray *response;     
+
+	//OPDebugLog1(SMTPDEBUG, OPALL, @"HELO %@\r\n", domain);
+	[stream writeFormat:@"HELO %@\r\n", domain];
+	response = [self readResponse];
+	responseCode = [[response objectAtIndex:0] substringToIndex:3];
+	if([responseCode isEqualToString:@"250"]) // okay!
+	{
+		state = Authenticated;
+	}
+}
+
+- (void)connect 
 {
     NSHost *localhost;
     NSString *name;
@@ -77,23 +93,25 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
     NSArray *response;     
     BOOL redoEHLO;
     
-    if ([self _useSMTPS]) {
+    if ([self useSMTPS]) 
+	{
         //OPDebugLog(SMTPDEBUG, OPINFO, @"Using SMTPS.");
-        [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:[self _allowAnyRootCertificate]];
-        [(OPSSLSocket*)[stream fileHandle] setAllowsExpiredCertificates:[self _allowExpiredCertificates]];
+        [(OPSSLSocket *)[stream fileHandle] setAllowsAnyRootCertificate:[self allowAnyRootCertificate]];
+        [(OPSSLSocket *)[stream fileHandle] setAllowsExpiredCertificates:[self allowExpiredCertificates]];
         
         [stream negotiateEncryption];
     }
     
     // read initial greeting
     [pendingResponses addObject:@"220"];
-    [self _assertServerAcceptedCommand];
+    [self assertServerAcceptedCommand];
     
     state = Connected;
     
     // preparing logon
     localhost = [NSHost currentHost];
-    if (! (name = [localhost fullyQualifiedName]) ) {
+    if (! (name = [localhost fullyQualifiedName]) ) 
+	{
         name = [localhost name];
         domain = [NSHost localDomain];
         if ( (! [name isEqualToString:@"localhost"]) && domain )
@@ -101,123 +119,145 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
                 name = [[name stringByAppendingString: @"."] stringByAppendingString:domain];
     }
     
-    @try {
+    @try 
+	{
         state = NonAuthenticated;
-        do {
-            redoEHLO = NO;  // default is only one pass of this loop
-            
-            // first try if it's an extended SMTP server
-            //OPDebugLog1(SMTPDEBUG, OPALL, @"EHLO %@\r\n", name);
-            [stream writeFormat:@"EHLO %@\r\n", name];
-            response = [self _readResponse];
-            responseCode = [[response objectAtIndex:0] substringToIndex:3];
-            if (![responseCode isEqualToString:@"250"]) {
-                if ([responseCode hasPrefix:@"5"]) {
-					// EHLO doesn't work, say HELO
-                    //OPDebugLog1(SMTPDEBUG, OPALL, @"HELO %@\r\n", name);
-                    [stream writeFormat:@"HELO %@\r\n", name];
-                    response = [self _readResponse];
-                    responseCode = [[response objectAtIndex:0] substringToIndex:3];
-                    if([responseCode isEqualToString:@"250"]) // okay!
-                        state = Authenticated;
-                }
-                break; // leave loop
-            } else {
-				// okay, it's an extended server!                
-                // parse extensions info
-                NSEnumerator *lineEnum = [response objectEnumerator];
-				NSString *line;
-                while (line = [lineEnum nextObject]) {
-                    //OPDebugLog1(SMTPDEBUG, OPINFO, @"%@", line);
-                    NSArray *components = [[line substringFromIndex:4] componentsSeparatedByString:@" "];
-                    NSString *key = [[components objectAtIndex: 0] uppercaseString];
-                    NSArray *value =  ([components count] > 1) ? [components subarrayWithRange:NSMakeRange(1, [components count] - 1)] : [NSArray array];
-                    
-                    [capabilities setObject:value forKey:key];
-                }
-                
-                // STARTTLS (must be first negotiated extension due to RFC2487, well not really true but easier :-) )
-                if ((![[stream fileHandle] isEncrypted]) &&
-                    ([capabilities objectForKey:@"STARTTLS"] && [[stream fileHandle] isKindOfClass:[OPSSLSocket class]])) {
-                    //OPDebugLog(SMTPDEBUG, OPINFO, @"Server is capable of STARTTLS. Trying to upgrade to TLS encryption...");
-                    
-                    [(OPSSLSocket *)[stream fileHandle] setAllowsAnyRootCertificate:[self _allowAnyRootCertificate]];
-                    [(OPSSLSocket *)[stream fileHandle] setAllowsExpiredCertificates:[self _allowExpiredCertificates]];
-                    
-                    [stream writeFormat:@"STARTTLS\r\n"];
-                    response = [self _readResponse];
-                    //OPDebugLog1(SMTPDEBUG, OPALL, @"Servers reply to STARTTLS comand: %@", [response objectAtIndex:0]);
-                    
-                    responseCode = [[response objectAtIndex:0] substringToIndex:3];
+		
+		// use only HELO if no password and no username given
+		if (![self password] && ![self username])
+		{
+			[self doHELOWithDomain:name];
+		}
+		else
+		{
+			do 
+			{
+				redoEHLO = NO;  // default is only one pass of this loop
+				
+				// first try if it's an extended SMTP server
+				//OPDebugLog1(SMTPDEBUG, OPALL, @"EHLO %@\r\n", name);
+				[stream writeFormat:@"EHLO %@\r\n", name];
+				response = [self readResponse];
+				responseCode = [[response objectAtIndex:0] substringToIndex:3];
+				if (![responseCode isEqualToString:@"250"]) 
+				{
+					if ([responseCode hasPrefix:@"5"]) 
+					{
+						[self doHELOWithDomain:name];
+					}
+					break; // leave loop
+				} 
+				else 
+				{
+					// okay, it's an extended server!                
+					// parse extensions info
+					NSEnumerator *lineEnum = [response objectEnumerator];
+					NSString *line;
+					while (line = [lineEnum nextObject]) 
+					{
+						//OPDebugLog1(SMTPDEBUG, OPINFO, @"%@", line);
+						NSArray *components = [[line substringFromIndex:4] componentsSeparatedByString:@" "];
+						NSString *key = [[components objectAtIndex: 0] uppercaseString];
+						NSArray *value =  ([components count] > 1) ? [components subarrayWithRange:NSMakeRange(1, [components count] - 1)] : [NSArray array];
+						
+						[capabilities setObject:value forKey:key];
+					}
 					
-                    if ([responseCode isEqualToString:@"220"]) {
-                        //OPDebugLog(SMTPDEBUG, OPINFO, @"Starting TLS encryption");
-                        [stream negotiateEncryption]; // throws an exception on error
-                        
-                        // RFC2487 requires us to forget all capabilities
-                        [capabilities release];
-                        capabilities = [[NSMutableDictionary allocWithZone:[self zone]] init];
-                        // Start again with an EHLO
-                        redoEHLO = YES;
-                    }
-                    
-                    continue;
-                }
-                
-                // AUTH
-                if (state != Authenticated) {
-                    NSArray *methods = [capabilities objectForKey:@"AUTH"];
-                    
-                    if (methods) {
-                        //OPDebugLog(SMTPDEBUG, OPINFO, @"Server supports AUTH. Trying to AUTHenticate"); 
-                        if ([self _SASLAuthentication:methods]) {
-                            state = Authenticated;
-                        } else {
-							[NSException raise:OPSMTPException format:@"SMTP Authentication failed. Please check login and password."];
+					// STARTTLS (must be first negotiated extension due to RFC2487, well not really true but easier :-) )
+					if ((![[stream fileHandle] isEncrypted]) &&
+						([capabilities objectForKey:@"STARTTLS"] && [[stream fileHandle] isKindOfClass:[OPSSLSocket class]])) {
+						//OPDebugLog(SMTPDEBUG, OPINFO, @"Server is capable of STARTTLS. Trying to upgrade to TLS encryption...");
+						
+						[(OPSSLSocket *)[stream fileHandle] setAllowsAnyRootCertificate:[self allowAnyRootCertificate]];
+						[(OPSSLSocket *)[stream fileHandle] setAllowsExpiredCertificates:[self allowExpiredCertificates]];
+						
+						[stream writeFormat:@"STARTTLS\r\n"];
+						response = [self readResponse];
+						//OPDebugLog1(SMTPDEBUG, OPALL, @"Servers reply to STARTTLS comand: %@", [response objectAtIndex:0]);
+						
+						responseCode = [[response objectAtIndex:0] substringToIndex:3];
+						
+						if ([responseCode isEqualToString:@"220"]) {
+							//OPDebugLog(SMTPDEBUG, OPINFO, @"Starting TLS encryption");
+							[stream negotiateEncryption]; // throws an exception on error
 							
-                            //OPDebugLog(SMTPDEBUG, OPWARNING, @"AUTHentication failed!");
-                        }
-                    } else {
-                        if ([[self _password] length] != 0) {
-                            //OPDebugLog(SMTPDEBUG, OPWARNING, @"Password provided but server does not support AUTHentication!");
-                            
-                            state = Authenticated;
+							// RFC2487 requires us to forget all capabilities
+							[capabilities release];
+							capabilities = [[NSMutableDictionary allocWithZone:[self zone]] init];
+							// Start again with an EHLO
+							redoEHLO = YES;
 						}
-                    }
-                }
-                
-            }
+						
+						continue;
+					}
+					
+					// AUTH
+					if (state != Authenticated) 
+					{
+						NSArray *methods = [capabilities objectForKey:@"AUTH"];
+						
+						if (methods) 
+						{
+							//OPDebugLog(SMTPDEBUG, OPINFO, @"Server supports AUTH. Trying to AUTHenticate"); 
+							if ([self SASLAuthentication:methods]) 
+							{
+								state = Authenticated;
+							} 
+							else 
+							{
+								[NSException raise:OPSMTPException format:@"SMTP Authentication failed. Please check login and password."];
+								
+								//OPDebugLog(SMTPDEBUG, OPWARNING, @"AUTHentication failed!");
+							}
+						} 
+						else 
+						{
+							if ([[self password] length] != 0) 
+							{
+								//OPDebugLog(SMTPDEBUG, OPWARNING, @"Password provided but server does not support AUTHentication!");
+								
+								state = Authenticated;
+							}
+						}
+					}
+				}
+			}
+			while (redoEHLO);
         }
-        while (redoEHLO);
-        
+		
         //OPDebugLog(SMTPDEBUG, OPALL, @"HELO/EHLO done.");
         
-        if (state != Authenticated) {
-			// Other error - most likely "421 - Service not available"
+        if (state != Authenticated) 
+		{
+			// Other error - most likely 421 - Service not available
             //OPDebugLog(SMTPDEBUG, OPWARNING, @"Failed SMTP init. Exception!"); 
-            [NSException raise:OPSMTPException format:@"Failed to initialize SMTP connection; read \"%@\"", [response componentsJoinedByString:@" "]];
+            [NSException raise:OPSMTPException format:@"Failed to initialize SMTP connection; read '%@'", [response componentsJoinedByString:@" "]];
         }        
-        
-        } @catch (id localException) {
-            //OPDebugLog2(SMTPDEBUG, OPWARNING, @"Exception! name: %@ reason: %@", [localException name], [localException reason]); 
+	} 
+	@catch (id localException) 
+	{
+		//OPDebugLog2(SMTPDEBUG, OPWARNING, @"Exception! name: %@ reason: %@", [localException name], [localException reason]); 
             
-            if ([[localException name] isEqualToString:OPSMTPException]) {
-				@throw;
-            } else {
-                NSMutableDictionary *amendedUserInfo = [NSMutableDictionary dictionaryWithDictionary:[localException userInfo]];
-                
-                // We can also get here if the extensions "parsing" fails; if for example
-                // a line in the response contains less than 4 characters. This is also
-                // counted as a broken server that doesn't really understand EHLO...
-                [amendedUserInfo setObject:@"YES" forKey:OPBrokenSMPTServerHint];
-                [[NSException exceptionWithName:[localException name] 
-										 reason:[localException reason] 
-									   userInfo:amendedUserInfo] raise];
-            }
+		if ([[localException name] isEqualToString:OPSMTPException]) 
+		{
+			@throw;
+		} 
+		else 
+		{
+			NSMutableDictionary *amendedUserInfo = [NSMutableDictionary dictionaryWithDictionary:[localException userInfo]];
+			
+			// We can also get here if the extensions "parsing" fails; if for example
+			// a line in the response contains less than 4 characters. This is also
+			// counted as a broken server that doesn't really understand EHLO...
+			[amendedUserInfo setObject:@"YES" forKey:OPBrokenSMPTServerHint];
+			[[NSException exceptionWithName:[localException name] 
+									 reason:[localException reason] 
+								   userInfo:amendedUserInfo] raise];
 		}
+	}
 }
 
-- (void)_commonInits
+- (void)commonInits
 {
     pendingResponses = [[NSMutableArray allocWithZone:[self zone]] init];
     capabilities = [[NSMutableDictionary allocWithZone:[self zone]] init];
@@ -228,16 +268,19 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 - (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject
 {
-    if (self = [super init]) {
+    if (self = [super init]) 
+	{
         _delegate = anObject;
         stream = [aStream retain];
-        [self _commonInits];
-        [self _connect];
+        [self commonInits];
+        [self connect];
     }
     return self;  
 }
 
 - (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates
+/*" If the use of a simple SMTP server (HELO) without any authentication is required, 
+	use nil for username and password. "*/
 {
     NSParameterAssert(aStream);
     
@@ -251,8 +294,8 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 		allowAnyRootCertificate = shouldAllowAnyRootCertificate;
 		allowExpiredCertificates = shouldAllowExpiredCertificates;
 		
-        [self _commonInits];
-        [self _connect];
+        [self commonInits];
+        [self connect];
     }
     return self;
 }
@@ -338,11 +381,11 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[self sendTransferData: transferData from: from to: recipients];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [self quit];
     
-	[self _freeSASLResources];
+	[self freeSASLResources];
 	
     [username release];
     [password release];
@@ -357,11 +400,13 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 // Methods of Interface OPMessageConsumer
 
 /* Returns YES if the receiver will accept at least one EDInternetMessage for consumption. NO otherwise.*/
-- (BOOL)willAcceptMessage {
+- (BOOL)willAcceptMessage 
+{
     return state == Authenticated;
 }
 
-- (BOOL)handles8BitBodies {
+- (BOOL)handles8BitBodies 
+{
     return [capabilities objectForKey:@"8BITMIME"] != nil;
 }
 
@@ -372,42 +417,43 @@ Raises an exception if the message could not be sent. "*/
     NSEnumerator *enumerator;
     NSString *recipient;
     
-    if ([self _allowsPipelining]) 
+    if ([self allowsPipelining]) 
 	{
-        [self _writeSender:sender];
+        [self writeSender:sender];
         
         enumerator = [recipients objectEnumerator];
         while (recipient = [enumerator nextObject])
-            [self _writeRecipient:recipient];
+            [self writeRecipient:recipient];
         
-        [self _beginBody];
+        [self beginBody];
         
         // check if all in order
-        while ([self _hasPendingResponses])
-            [self _assertServerAcceptedCommand];
+        while ([self hasPendingResponses])
+            [self assertServerAcceptedCommand];
     } 
 	else 
 	{
 		// No pipelining:
         
-        [self _writeSender:sender];
-        [self _assertServerAcceptedCommand];
+        [self writeSender:sender];
+        [self assertServerAcceptedCommand];
         
         enumerator = [recipients objectEnumerator];
-        while (recipient = [enumerator nextObject]) {
-            [self _writeRecipient:recipient];
-            [self _assertServerAcceptedCommand];
+        while (recipient = [enumerator nextObject]) 
+		{
+            [self writeRecipient:recipient];
+            [self assertServerAcceptedCommand];
         }
         
-        [self _beginBody];
-        [self _assertServerAcceptedCommand];
+        [self beginBody];
+        [self assertServerAcceptedCommand];
     }
     
     [stream setEscapesLeadingDots:YES];
     [stream writeData:data];
     [stream setEscapesLeadingDots:NO];
-    [self _finishBody];
-    [self _assertServerAcceptedCommand];
+    [self finishBody];
+    [self assertServerAcceptedCommand];
 }
 
 /*
@@ -493,19 +539,19 @@ Raises an exception if the message could not be sent. "*/
 
 @implementation OPSMTP (PrivateAPI)
 
-- (void)_assertServerAcceptedCommand
+- (void)assertServerAcceptedCommand
 {    
     if (! [pendingResponses count])
         [NSException raise:NSInternalInconsistencyException format:@"-[%@ %@]: No pending responses.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
     NSString *expectedCode = [[[pendingResponses objectAtIndex:0] retain] autorelease];
     [pendingResponses removeObjectAtIndex:0];
-    NSArray *response = [self _readResponse];
+    NSArray *response = [self readResponse];
     if (! [[response objectAtIndex:0] hasPrefix:expectedCode])
         [NSException raise: OPSMTPException format:@"Unexpected SMTP response code; expected %@, read \"%@\"", expectedCode, [response componentsJoinedByString:@" "]];
 }
 
-- (NSArray *)_readResponse
+- (NSArray *)readResponse
 {
     NSString *partialResponse;
     NSMutableArray *response;
@@ -519,7 +565,7 @@ Raises an exception if the message could not be sent. "*/
     return response;
 }
 
-- (NSString *)_pathFromAddress:(NSString *)address
+- (NSString *)pathFromAddress:(NSString *)address
 {
     NSString *path;
     
@@ -531,43 +577,49 @@ Raises an exception if the message could not be sent. "*/
     return path;
 }
 
-- (BOOL)_allowsPipelining
+- (BOOL)allowsPipelining
 {
     return [capabilities objectForKey: @"PIPELINING"] != nil;
 }
 
-- (BOOL)_needsAuthentication
+/*
+- (BOOL)needsAuthentication
 {
     return ([capabilities objectForKey: @"AUTH"] != nil) && (state != Authenticated);
 }
+*/
 
-- (NSString *)_username
+- (NSString *)username
 {
-    if (username) {
+    if (username) 
+	{
         return username;
     }
     
-    if ([_delegate respondsToSelector:@selector(usernameForSMTP:)]) {
+    if ([_delegate respondsToSelector:@selector(usernameForSMTP:)]) 
+	{
         return [_delegate usernameForSMTP:self];
     }
     
     return nil;
 }
 
-- (NSString *)_password
+- (NSString *)password
 {
-    if (password) {
+    if (password) 
+	{
         return password;
     }
     
-    if ([_delegate respondsToSelector:@selector(passwordForSMTP:)]) {
+    if ([_delegate respondsToSelector:@selector(passwordForSMTP:)]) 
+	{
         return [_delegate passwordForSMTP:self];
     }
     
     return nil;
 }
 
-- (NSString *)_hostname
+- (NSString *)hostname
 {
     if (hostname) {
         return hostname;
@@ -580,7 +632,7 @@ Raises an exception if the message could not be sent. "*/
     return nil;
 }
 
-- (BOOL)_useSMTPS
+- (BOOL)useSMTPS
 {
     if ([_delegate respondsToSelector:@selector(useSMTPS:)]) {
         return [_delegate useSMTPS:self];
@@ -589,7 +641,7 @@ Raises an exception if the message could not be sent. "*/
     return useSMTPS;
 }
 
-- (BOOL)_allowAnyRootCertificate
+- (BOOL)allowAnyRootCertificate
 {
     if ([_delegate respondsToSelector:@selector(allowAnyRootCertificateForSMTP:)]) {
         return [_delegate allowAnyRootCertificateForSMTP:self];
@@ -598,7 +650,7 @@ Raises an exception if the message could not be sent. "*/
     return allowAnyRootCertificate;
 }
 
-- (BOOL)_allowExpiredCertificates
+- (BOOL)allowExpiredCertificates
 {
     if ([_delegate respondsToSelector:@selector(allowExpiredCertificatesForSMTP:)]) {
         return [_delegate allowExpiredCertificatesForSMTP:self];
@@ -607,35 +659,35 @@ Raises an exception if the message could not be sent. "*/
     return allowExpiredCertificates;
 }
 
-- (void)_writeSender:(NSString *)sender
+- (void)writeSender:(NSString *)sender
 {
     if([self handles8BitBodies])
-        [stream writeFormat:@"MAIL FROM:%@ BODY=8BITMIME\r\n", [self _pathFromAddress:sender]];
+        [stream writeFormat:@"MAIL FROM:%@ BODY=8BITMIME\r\n", [self pathFromAddress:sender]];
     else
-        [stream writeFormat:@"MAIL FROM:%@\r\n", [self _pathFromAddress:sender]];
+        [stream writeFormat:@"MAIL FROM:%@\r\n", [self pathFromAddress:sender]];
     [pendingResponses addObject:@"250"];
 }
 
-- (void)_writeRecipient:(NSString *)recipient
+- (void)writeRecipient:(NSString *)recipient
 {
-    OPDebugLog(GISMTP, OPINFO, @"RCPT TO:%@ (orig: %@)", [self _pathFromAddress:recipient], recipient);
-    [stream writeFormat:@"RCPT TO:%@\r\n", [self _pathFromAddress:recipient]];
+    OPDebugLog(GISMTP, OPINFO, @"RCPT TO:%@ (orig: %@)", [self pathFromAddress:recipient], recipient);
+    [stream writeFormat:@"RCPT TO:%@\r\n", [self pathFromAddress:recipient]];
     [pendingResponses addObject:@"250"];
 }
 
-- (void)_beginBody
+- (void)beginBody
 {
     [stream writeString:@"DATA\r\n"];
     [pendingResponses addObject:@"354"];
 }
 
-- (void)_finishBody
+- (void)finishBody
 {
     [stream writeString:@"\r\n.\r\n"];
     [pendingResponses addObject:@"250"];
 }
 
-- (BOOL)_hasPendingResponses
+- (BOOL)hasPendingResponses
 {
     return [pendingResponses count] > 0;
 }
@@ -655,7 +707,7 @@ static int getsecret_func(sasl_conn_t *conn,
 		[NSException raise:NSGenericException format:@"Expected a OPSTMP object but got a %@ object", NSStringFromClass([smtp class])];
 	}
 	
-	const char *UTF8Password = [[smtp _password] UTF8String];
+	const char *UTF8Password = [[smtp password] UTF8String];
 	unsigned long passwordLength = 0;
 		
 	if (UTF8Password)
@@ -687,7 +739,7 @@ static int getauthname_func(void *context,
 		[NSException raise:NSGenericException format:@"Expected a OPSTMP object but got a %@ object", NSStringFromClass([smtp class])];
 	}
 	
-	const char *UTF8Username = [[smtp _username] UTF8String];
+	const char *UTF8Username = [[smtp username] UTF8String];
 	unsigned long usernameLength = 0;
 	if (UTF8Username) 
 	{
@@ -711,7 +763,7 @@ static int getauthname_func(void *context,
 	return SASL_OK;
 }
 
-- (void)_freeSASLResources
+- (void)freeSASLResources
 {
 	if (conn) sasl_dispose(&conn);
 
@@ -730,20 +782,20 @@ static int getauthname_func(void *context,
 	
     if (iid == SASL_CB_PASS) 
 	{
-		*tresult = (char *)[[self _password] UTF8String];
+		*tresult = (char *)[[self password] UTF8String];
 		*tlen = strlen(*tresult);
 		return;
     } 
 	else if (iid == SASL_CB_USER) 
 	{
 		puts("USER");
-		*tresult = (char *)[[self _username] UTF8String];
+		*tresult = (char *)[[self username] UTF8String];
 		*tlen = strlen(*tresult);
 		return;
     } 
 	else if (iid == SASL_CB_AUTHNAME) 
 	{
-		*tresult = (char *)[[self _username] UTF8String];
+		*tresult = (char *)[[self username] UTF8String];
 		*tlen = strlen(*tresult);
 		return;
     } 
@@ -775,7 +827,7 @@ static int getauthname_func(void *context,
     }
 }
 
-- (BOOL)_SASLAuthentication:(NSArray *)authMethods
+- (BOOL)SASLAuthentication:(NSArray *)authMethods
 {
 	static NSArray *supportedMethods = nil;
 	
@@ -827,7 +879,7 @@ static int getauthname_func(void *context,
 	
 	// client new connection
 	result = sasl_client_new("smtp",     // The service we are using
-							 [[self _hostname] UTF8String], // The fully qualified domain name of the server we're connecting to
+							 [[self hostname] UTF8String], // The fully qualified domain name of the server we're connecting to
 							 NULL, NULL, // Local and remote IP address strings
 							 myCallbacks,       // connection-specific callbacks
 							 0,          // security flags
@@ -891,7 +943,7 @@ static int getauthname_func(void *context,
 	
 	while (result == SASL_OK || result == SASL_CONTINUE) 
 	{
-		NSString *response = [[self _readResponse] objectAtIndex:0];
+		NSString *response = [[self readResponse] objectAtIndex:0];
 		
 		if (NSDebugEnabled) NSLog(@"response = '%@'", response);
 		
@@ -963,8 +1015,8 @@ static int getauthname_func(void *context,
     NSString *aUsername, *aPassword;
     NSEnumerator *methods = [authMethods reverseObjectEnumerator];
     
-    aUsername = [self _username];
-    aPassword = [self _password];
+    aUsername = [self username];
+    aPassword = [self password];
     
     // assume to be authenticated, if password is nil
     if ([aPassword length] == 0)
@@ -1002,7 +1054,7 @@ static int getauthname_func(void *context,
     
     [pendingResponses addObject:@"235"];
     
-    [self _assertServerAcceptedCommand];
+    [self assertServerAcceptedCommand];
     
     return YES;
 }
