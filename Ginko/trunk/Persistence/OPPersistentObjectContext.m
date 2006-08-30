@@ -41,6 +41,7 @@
 #import <OPObjectPair.h>
 #import "OPObjectRelationship.h"
 
+/*
 @interface OPPersistentObjectEnumerator : NSEnumerator {
 	sqlite3_stmt* statement;
 	Class resultClass;
@@ -62,6 +63,8 @@
 - (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey ofClass: (Class) sortKeyClass;
 
 @end
+
+*/
 
 
 @implementation OPPersistentObjectContext
@@ -723,10 +726,31 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 					 sortedByKey: (NSString*) sortKey
 						keyClass: (Class) sortKeyClass
 					 queryFormat: (NSString*) sql, ...
-/*" Pass a query string in the format string. The following parameters replace any occurrences of $1, $2 $3 etc. respectively. key and keyClass can be nil, if sorting is not required. "*/
+/*" Pass a query string in the format string. The following parameters replace any occurrences of ?1, ?2, ?3 etc. respectively. key and keyClass can be nil, if sorting is not required. "*/
 {
-	OPFaultingArray* result;
+	OPFaultingArray* result = nil;
 	@synchronized(db) {
+		
+		OPSQLiteStatement* statement = [[OPSQLiteStatement alloc] initWithSQL: sql
+																   connection: db];
+		va_list ap; // points to each unamed arg in turn 
+		va_start(ap, sql); // make ap point to 1st unnamed arg 
+		unsigned index = 0; // change that! make it 0 based!
+		
+		id binding;
+		while (binding = va_arg(ap, id)) {
+			[statement bindPlaceholderAtIndex: index toValue: binding];
+			index++;
+		}
+		va_end(ap); // clean up when done 
+		
+		result = [statement executeWithObjectResultsOfClass: poClass
+												sortedByKey: sortKey
+													ofClass: sortKeyClass];
+		
+		[statement release];
+		
+		/*
 		OPPersistentObjectEnumerator* e;
 		char variableValue[5] = "";
 		
@@ -735,8 +759,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 													  queryString: sql];
 		sqlite3_stmt* statement = [e statement];
 		
-		va_list ap; /* points to each unamed arg in turn */
-		va_start(ap, sql); /* make ap point to 1st unnamed arg */
+		va_list ap; // points to each unamed arg in turn 
+		va_start(ap, sql); // make ap point to 1st unnamed arg 
 		unsigned index = 1; // change that! make it 0 based!
 		id binding;
 		while (binding = va_arg(ap, id)) {
@@ -745,10 +769,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			if (placeholderIndex) [binding bindValueToStatement: statement index: placeholderIndex];
 			index++;
 		}
-		va_end(ap); /* clean up when done */
+		va_end(ap); // clean up when done //
 		
 		result = [e allObjectsSortedByKey: sortKey ofClass: sortKeyClass];
+		
 		[e release];
+		 
+		 */
 	}
 	return result;
 }
@@ -808,6 +835,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 @end
 
+/*
 @implementation OPPersistentObjectEnumerator 
 
 static NSHashTable* allInstances;
@@ -878,7 +906,7 @@ static NSHashTable* allInstances;
 }
 
 - (BOOL) skipObject
-	/*" Returns YES, if an object was skipped, NO otherwise (nothing to enumerate). Similar to nextObject, but does not create the result object (if any). "*/
+	//" Returns YES, if an object was skipped, NO otherwise (nothing to enumerate). Similar to nextObject, but does not create the result object (if any). "//
 {
 	int res;
 	res = sqlite3_step(statement);
@@ -896,8 +924,8 @@ static NSHashTable* allInstances;
 
 - (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey 
 								   ofClass: (Class) sortKeyClass;
-/*" Returns an OPFaultingArray containing all the faults.
-	If sortKey is a key-value-complient key for the resultClass, the result is sorted by the key given and the second result column is expected to contain the sort objects in ascending order while the first column must always contain ROWIDs. "*/
+//" Returns an OPFaultingArray containing all the faults.
+	If sortKey is a key-value-complient key for the resultClass, the result is sorted by the key given and the second result column is expected to contain the sort objects in ascending order while the first column must always contain ROWIDs. "//
 {
 	OPFaultingArray* result = [OPFaultingArray array];
 	[result setSortKey: sortKey];
@@ -916,7 +944,7 @@ static NSHashTable* allInstances;
 }
 
 - (id) nextObject
-	/*" Returns the next fetched object including all its attributes. "*/
+	//" Returns the next fetched object including all its attributes. "//
 {
 	id result = nil;
 	
@@ -952,6 +980,8 @@ static NSHashTable* allInstances;
 
 
 @end
+
+*/
 
 
 NSString* OPURLStringFromOidAndClass(OID oid, Class poClass, NSString* databaseName)

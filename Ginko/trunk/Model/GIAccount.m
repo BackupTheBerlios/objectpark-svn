@@ -52,7 +52,7 @@
 	@"isEnabled = {ColumnName = ZISENABLED; AttributeClass = NSNumber;};"
 	@"name = {ColumnName = ZNAME; AttributeClass = NSString;};"
 	@"incomingAuthenticationMethod = {ColumnName = ZINCOMINGAUTHENTICATIONMETHOD; AttributeClass = NSNumber;};"
-	@"profiles = {InverseRelationshipKey = sendAccount; AttributeClass = GIProfile; QueryString =\"select ZPROFILE.ROWID from ZPROFILE where ZSENDACCOUNT=$1\";};"
+	@"profiles = {InverseRelationshipKey = sendAccount; AttributeClass = GIProfile; QueryString =\"select ZPROFILE.ROWID from ZPROFILE where ZSENDACCOUNT=?1\";};"
 	@"}";
 }
 

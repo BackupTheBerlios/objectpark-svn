@@ -51,7 +51,7 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 	@"signature = {ColumnName = ZSIGNATURE; AttributeClass = NSAttributedString;};"
 	@"messageTemplate = {ColumnName = ZMESSAGETEMPLATE; AttributeClass = NSAttributedString;};"
 	@"sendAccount = {InverseRelationshipKey = profiles; ColumnName = ZSENDACCOUNT; AttributeClass = GIAccount;};"
-	@"messagesToSend = {InverseRelationshipKey = sendProfile; AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZPROFILE=$1\";};"
+	@"messagesToSend = {InverseRelationshipKey = sendProfile; AttributeClass = GIMessage; QueryString =\"select ZMESSAGE.ROWID from ZMESSAGE where ZPROFILE=?1\";};"
 	@"shouldSignNewMessagesByDefault = {ColumnName = ZSIGNNEW; AttributeClass = NSNumber;};"
 	@"shouldEncryptNewMessagesByDefault = {ColumnName = ZENCRYPTNEW; AttributeClass = NSNumber;};"
 	@"}";

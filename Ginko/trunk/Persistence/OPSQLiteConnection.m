@@ -62,7 +62,7 @@
 			if (NSDebugEnabled) { 
 				sqlString = [sql copy];
 				OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@.", self);
-				NSLog(@"Creating new %@", self);
+				//NSLog(@"Creating new %@", self);
 			}
 			
 			int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
