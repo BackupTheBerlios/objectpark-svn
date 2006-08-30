@@ -201,7 +201,7 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
                 }
 				else
 				{
-					NSLog(@"Job not started because of synchronized object: %@", synchronizedObject);
+					//NSLog(@"Job not started because of synchronized object: %@", synchronizedObject);
 				}
             }
             else
@@ -269,25 +269,26 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
     return job;
 }
 
++ (void)spawnThreadIfNeeded
+/*" Caution. Use only when locked. "*/
+{
+    // start new worker thread if no threads are idle and 
+    // the maximum number of worker thread is not reached:
+    if (([idleThreads count] == 0) && (threadCount < maxThreads))
+    {
+        [NSThread detachNewThreadSelector:@selector(workerThread:) toTarget:self withObject:nil];
+        threadCount++;
+		// NSLog(@"Spawned worker thread. Now %u worker threads", threadCount);
+    }
+}
+
 + (void)scheduleJob:(OPJob *)job
 {
     [jobsLock lock];
 	
     [pendingJobs addObject:job];
     
-    // start new worker thread if no threads are idle and 
-    // the maximum number of worker thread is not reached:
-    if (/*([idleThreads count] == 0) && */ (threadCount < maxThreads))
-    {
-        [NSThread detachNewThreadSelector:@selector(workerThread:) toTarget:self withObject:nil];
-        threadCount++;
-    }
-	/*
-	else
-	{
-		NSLog(@"[idleThreads count] = %u, threadCount = %u, maxThreads = %u", [idleThreads count], threadCount, maxThreads);
-	}
-	*/
+	[self spawnThreadIfNeeded];
 	
 	id nextEligibleJob = [self nextEligibleJob];
 		
@@ -321,6 +322,8 @@ NSString *JobDidSetProgressInfoNotification = @"OPJobDidSetProgressInfoNotificat
         [idleThreads removeObject:[NSThread currentThread]];
         [activeThreads addObject:[NSThread currentThread]];
         
+		[self spawnThreadIfNeeded];
+		
         [jobsLock unlockWithCondition:[self nextEligibleJob] ? OPPendingJobs : OPNoPendingJobs];
 		
         while (job) 
