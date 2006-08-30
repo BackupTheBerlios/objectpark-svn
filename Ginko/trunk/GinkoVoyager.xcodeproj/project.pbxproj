@@ -206,8 +206,6 @@
 		8D167D6109057508000F4F45 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D167D5F09057508000F4F45 /* GIAccount.m */; };
 		8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D17B5C70895BBC30057A1C6 /* GIProfile.h */; };
 		8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17B5C80895BBC30057A1C6 /* GIProfile.m */; };
-		8D1F442E0A67A1D500919C93 /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D1F442D0A67A1D500919C93 /* GPGME.framework */; };
-		8D1F44410A67A23000919C93 /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8D1F442D0A67A1D500919C93 /* GPGME.framework */; };
 		8D218B500A19490600BD1DE8 /* Mail Sent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */; };
 		8D313AE2094E3E39007D668A /* OPObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D313AE0094E3E39007D668A /* OPObjectPair.h */; };
 		8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D313AE1094E3E39007D668A /* OPObjectPair.m */; };
@@ -368,6 +366,8 @@
 		8DDD227F080ECA4A006C902D /* GIFiltersPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD227E080ECA4A006C902D /* GIFiltersPane.h */; };
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
+		8DDF372A0AA62BF400E1F591 /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
+		8DDF37430AA62CBA00E1F591 /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
 		8DDFB43F09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */; };
 		8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */; };
 		8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDFB45209F82C07000F73E2 /* IOKit.framework */; };
@@ -441,7 +441,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8D1F44410A67A23000919C93 /* GPGME.framework in Copy GPGME Framework */,
+				8DDF37430AA62CBA00E1F591 /* GPGME.framework in Copy GPGME Framework */,
 			);
 			name = "Copy GPGME Framework";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -663,7 +663,6 @@
 		8D17B5C80895BBC30057A1C6 /* GIProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIProfile.m; sourceTree = "<group>"; };
 		8D1F3F100A66315000919C93 /* GIJunkFilterJob.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; name = GIJunkFilterJob.h; path = ../Model/GIJunkFilterJob.h; sourceTree = "<group>"; };
 		8D1F3F110A66315000919C93 /* GIJunkFilterJob.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; name = GIJunkFilterJob.m; path = ../Model/GIJunkFilterJob.m; sourceTree = "<group>"; };
-		8D1F442D0A67A1D500919C93 /* GPGME.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPGME.framework; path = ../GPGME/build/EmbDevelopment/GPGME.framework; sourceTree = "<group>"; };
 		8D2147AD085114B2004C44B9 /* GISearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISearchController.h; sourceTree = "<group>"; };
 		8D2147AE085114B3004C44B9 /* GISearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISearchController.m; sourceTree = "<group>"; };
 		8D2147CE0851182E004C44B9 /* Search.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Search.nib; sourceTree = "<group>"; };
@@ -819,6 +818,7 @@
 		8DDD2281080ECA57006C902D /* GIFiltersPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIFiltersPane.nib; sourceTree = "<group>"; };
 		8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPExtensions.h"; sourceTree = "<group>"; };
 		8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPExtensions.m"; sourceTree = "<group>"; };
+		8DDF37290AA62BF400E1F591 /* GPGME.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPGME.framework; path = Resources/GPGME.framework; sourceTree = "<group>"; };
 		8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPSleepNotifications.h"; sourceTree = "<group>"; };
 		8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPSleepNotifications.m"; sourceTree = "<group>"; };
 		8DDFB45209F82C07000F73E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
@@ -859,7 +859,7 @@
 				771CD38609F800170062BEED /* libsasl2.dylib in Frameworks */,
 				8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */,
 				8D7C7EAC0A52EDD40031385D /* libxml2.dylib in Frameworks */,
-				8D1F442E0A67A1D500919C93 /* GPGME.framework in Frameworks */,
+				8DDF372A0AA62BF400E1F591 /* GPGME.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -898,7 +898,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8D1F442D0A67A1D500919C93 /* GPGME.framework */,
+				8DDF37290AA62BF400E1F591 /* GPGME.framework */,
 				7718C87F09F1762A00D517CB /* ApplicationServices.framework */,
 				77D471E3095BF12E003CEAEA /* CoreFoundation.framework */,
 				77738B0B0955B02000BAAB51 /* JavaVM.framework */,
@@ -1667,8 +1667,8 @@
 				77395D150A5523B700DCE6D2 /* Ranlib Phase */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				303DCD6A0943C3A100D8BCBE /* Copy Frameworks */,
-				773B63020A66B23A00C71E30 /* Copy GPGME Framework */,
 				8DC8047B099C99E300CF4660 /* Copy dylibs */,
+				773B63020A66B23A00C71E30 /* Copy GPGME Framework */,
 			);
 			buildRules = (
 			);
@@ -2107,9 +2107,9 @@
 					$USER_LIBRARY_DIR/Frameworks/,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDevelopment\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../GPGME/build/EmbDevelopment\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -2161,9 +2161,9 @@
 					$USER_LIBRARY_DIR/Frameworks/,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDevelopment\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../GPGME/build/EmbDevelopment\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
@@ -2374,9 +2374,9 @@
 					$USER_LIBRARY_DIR/Frameworks/,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDevelopment\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../GPGME/build/EmbDevelopment\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
 				GCC_DEBUGGING_SYMBOLS = default;
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;

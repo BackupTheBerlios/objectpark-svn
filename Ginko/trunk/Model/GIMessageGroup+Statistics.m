@@ -188,28 +188,28 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 
 - (void)calculateUnreadMessageCountJob:(NSDictionary *)arguments
 {
-    OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+    OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	
 	// Make sure, the disk is up-to-date:
 	[context saveChanges];
 	
-#warning why doesn't a new database connection work?
-	OPSQLiteConnection *connection = [context databaseConnection];
+//#warning why doesn't a new database connection work?
+	OPSQLiteConnection* connection = [context newDatabaseConnection];
 	
-	//[connection open];
+	[connection open];
 	
-    @synchronized(context) 
-	{
-        OPSQLiteStatement *statement = [[OPSQLiteStatement alloc] initWithSQL: [NSString stringWithFormat: @"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:connection];
-        
+    @synchronized(context) {
+        OPSQLiteStatement* statement = [[OPSQLiteStatement alloc] initWithSQL: @"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = ? and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);" 
+																   connection: connection];
+        [statement bindPlaceholderAtIndex: 0 toRowId: [self oid]];
         //NSLog(@"%lu", (unsigned long)[self oid]);
                 
 		[[OPJob job] setResult: [statement executeWithNumberResult]];
 		
 		[statement release];
     }
-	
-	//[connection close];
+	[connection close];
+	[connection release];
 }
 
 @end

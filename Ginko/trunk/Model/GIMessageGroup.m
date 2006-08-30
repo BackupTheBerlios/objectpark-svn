@@ -851,13 +851,13 @@ static NSMutableArray* root = nil;
 	[clauses addObject: @"Z_4THREADS.Z_4GROUPS=?1"];
 	
 	if ([subject length]) {
-		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZSUBJECT like $2", subject]];
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZSUBJECT like ?2", subject]];
 	}
 	if ([author length]) {
-		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZAUTHOR like $3", author]];
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZAUTHOR like ?3", author]];
 	}
 	if (sinceRefDate>0.0) {
-		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= $4", sinceRefDate]];
+		[clauses addObject: [NSString stringWithFormat: @"ZTHREAD.ZDATE >= ?4", sinceRefDate]];
 	}
 
 	

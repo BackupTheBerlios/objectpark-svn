@@ -369,9 +369,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
  
 - (OPSQLiteConnection*) newDatabaseConnection
-/*" Returns a new database connection to the same database as the default database. "*/
+/*" Returns a new database connection to the same database as the default database. The returned object is not autoreleased. "*/
 {
-    return [[[OPSQLiteConnection alloc] initWithFile: [db path]] autorelease];   
+    return [[OPSQLiteConnection alloc] initWithFile: [db path]];   
 }
 
 - (OPSQLiteConnection*) databaseConnection
