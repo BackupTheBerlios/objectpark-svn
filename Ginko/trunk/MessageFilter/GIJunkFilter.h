@@ -27,33 +27,42 @@ extern NSString* GINewHamWordsInSpamFilter;
 extern NSString* GINewSpamWordsInSpamFilter;
 extern NSString* GIJunkFilterSpamThreshold;
 
-@interface GIJunkFilter : NSObject <NSCoding> {
+@interface GIJunkFilter : NSObject {
     
     NSMutableDictionary* hamWordList;
     NSMutableDictionary* spamWordList;
-    NSMutableArray *hamUniqueIdList;
-    NSMutableArray *spamUniqueIdList;
-    int spamMessageCount;
-    int hamMessageCount;
+    NSMutableArray *hamUniqueIdList; // deprecated 
+    NSMutableArray *spamUniqueIdList; // deprecated
+    unsigned spamMessageCount; // The number of spam messages trained
+    unsigned hamMessageCount; // The number of ham messages trained
 	float spamThreshold;
 	BOOL didChange; // YES, if the ham or spam word list changed.
 }
+
++ (void) addWordsFromString: (NSString*) string 
+				 withPrefix: (NSString*) prefix
+					toArray: (NSMutableArray*) words;
 
 + (GIJunkFilter*) sharedInstance;
 - (void) writeJunkFilterDefintion;
 
 - (id) init;
+
+- (id) initWithPlist: (NSDictionary*) dict;
+- (NSDictionary*) plist;
+
+
 - (BOOL) optimize;
 
-- (void) registerHamMessageTransferData: (NSData*) aMessageData
-                           withUniqueId: (NSString*) aUniqueId;
+- (void) registerHamWords: (NSEnumerator*) wordEnumerator
+			 withUniqueId: (NSString*) aUniqueId;
 
-- (void) registerSpamMessageTransferData: (NSData*) aMessageData
-                            withUniqueId: (NSString*) aUniqueId;
+- (void) registerSpamWords: (NSEnumerator*) wordEnumerator
+			  withUniqueId: (NSString*) aUniqueId;
 
-- (BOOL) isSpamMessage: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId;
+//- (BOOL) isSpamMessage: (NSData*) aMessageData withUniqueId: (NSString*) aUniqueId; // deprecated
 
-- (int) spamMessageCount;
-- (int) hamMessageCount;
+- (BOOL) isSpamMessage: (NSEnumerator*) wordEnumerator;
+
 
 @end

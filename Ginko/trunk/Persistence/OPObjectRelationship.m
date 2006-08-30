@@ -89,7 +89,7 @@
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"%@ from %@ to %@¨added, %u removed.", [super description], firstAttribute, secondAttribute, [addedRelations count], [removedRelations count]];
+	return [NSString stringWithFormat: @"%@ from %@ to %@ (%u added, %u removed)", [super description], firstAttribute, secondAttribute, [addedRelations count], [removedRelations count]];
 }
 
 - (void) removeRelationNamed: (NSString*) relationName 

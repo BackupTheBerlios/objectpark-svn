@@ -1082,7 +1082,7 @@
 	}
 }
 
-+ (NSString *)jobName
++ (NSString*) jobName
 {
     return @"Fulltext indexing";
 }

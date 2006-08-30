@@ -190,6 +190,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 {
     OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	
+	// Make sure, the disk is up-to-date:
 	[context saveChanges];
 	
 #warning why doesn't a new database connection work?
@@ -199,13 +200,11 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	
     @synchronized(context) 
 	{
-        OPSQLiteStatement *statement = [[OPSQLiteStatement alloc] initWithSQL:[NSString stringWithFormat:@"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:connection];
+        OPSQLiteStatement *statement = [[OPSQLiteStatement alloc] initWithSQL: [NSString stringWithFormat: @"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = %lu and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);", (unsigned long)[self oid]] connection:connection];
         
         //NSLog(@"%lu", (unsigned long)[self oid]);
-        
-        [statement execute];
-        
-		[[OPJob job] setResult:[NSNumber newFromStatement:[statement stmt] index:0]];
+                
+		[[OPJob job] setResult: [statement executeWithNumberResult]];
 		
 		[statement release];
     }

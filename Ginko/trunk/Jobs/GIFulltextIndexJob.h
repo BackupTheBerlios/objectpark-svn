@@ -11,10 +11,10 @@
 
 @interface GIFulltextIndexJob : NSObject 
 {
-    OPPersistentObjectEnumerator *messagesToIndexEnumerator;
+    NSEnumerator* messagesToIndexEnumerator;
 }
 
-+ (void)indexMessages:(OPPersistentObjectEnumerator *)messagesToIndex;
-+ (NSString *)jobName;
++ (void) indexMessages: (NSEnumerator*) messagesToIndex;
++ (NSString*) jobName;
 
 @end

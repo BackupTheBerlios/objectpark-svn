@@ -19,12 +19,11 @@
     [GIFulltextIndex addMessages:messagesToIndexEnumerator];
 }
 
-- (id)initWithMessages:(OPPersistentObjectEnumerator *)someMessages
+- (id) initWithMessages: (NSEnumerator*) someMessages
 {
-    self = [super init];
-    
-    messagesToIndexEnumerator = [someMessages retain];
-    
+    if (self = [super init]) {
+		messagesToIndexEnumerator = [someMessages retain];
+    }
     return self;
 }
 
@@ -34,7 +33,7 @@
     [super dealloc];
 }
 
-+ (void)indexMessages:(OPPersistentObjectEnumerator *)someMessages
++ (void) indexMessages: (NSEnumerator*) someMessages
 /*" Starts a background job for fulltext indexing someMessages. Only one indexing job can be active at one time. "*/
 {
     NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];

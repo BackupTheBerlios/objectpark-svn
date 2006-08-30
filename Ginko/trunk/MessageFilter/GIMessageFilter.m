@@ -23,7 +23,10 @@
 #import "GIMessageFilter.h"
 #import "GIMessageFilterAction.h"
 #import "NSApplication+OPExtensions.h"
+#import "EDMessagePart+OPExtensions.h"
+#import "OPInternetMessage.h"
 #import "GIJunkfilter.h"
+#import "OPObjectPair.h"
 
 NSString *GIMessageFiltersDidChangeNotification = @"GIMessageFiltersDidChangeNotification";
 NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDelayedWriteFilters";
@@ -495,6 +498,17 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     return result;
 }
 
++ (NSSet*) relevantSpamFilterHeaders 
+/*" Returns a set of header names as NSStrings that are used in spam filter processing. "*/
+{
+	static NSSet* spamFilterHeaders = nil;
+	if (!spamFilterHeaders) {
+		spamFilterHeaders = [[NSSet alloc] initWithObjects: @"Subject", @"Content-Type", @"From", nil];
+	}
+	return spamFilterHeaders;
+}
+
+
 + (BOOL) filterMessage: (GIMessage*) message flags: (int) flags
 /*" Filters the given message. Returns YES if message was inserted/moved into a box
     different to currentBox. NO otherwise. TODO: Document flags! "*/
@@ -502,18 +516,48 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
     BOOL inserted = NO;
     BOOL shouldStopFiltering = NO;
     
-	if (YES /* use junk filter */) {
+	if (YES /* use junk filter preference here */) {
 	
 		// DO not check own messages for spam.
 		// Do not check messages by people in our address book.
-	//	if (![message flags])
-		NSData* transferData = [message transferData];
-		NSString* messageId = [message messageId];
-		BOOL isSpam = [[GIJunkFilter sharedInstance] isSpamMessage: transferData
-													  withUniqueId: messageId];
+
+		OPInternetMessage* im = [message internetMessage];
+		// Extract all words in the header and body into the words array:		
+		NSMutableArray* words = [NSMutableArray array];
+		// Headers:
+		NSEnumerator* headerEnumerator = [[im headerFields] objectEnumerator];
+		OPObjectPair* header;
+		while (header = [headerEnumerator nextObject]) {
+			//NSString* headerWords = [im bodyForHeaderField: headerName];
+			
+			
+			NSString* headerName = [header firstObject];
+			
+			// For now, only scan subject:
+			if ([headerName isEqualToString: @"Subject"] || [headerName isEqualToString: @"Content-Type"]) {
+				NSLog(@"Header: %@", header);
+				
+				// All header words get the "h:" prefix:
+				[GIJunkFilter addWordsFromString: [header secondObject] 
+									  withPrefix: @"h" 
+										 toArray: words];
+			}
+		}
+		
+		// Body:
+		[GIJunkFilter addWordsFromString: [im contentAsPlainString]
+							  withPrefix: nil
+								 toArray: words];
+
+		NSLog(@"Words used as spamfilter input: %@", words);
+		NSEnumerator* wordEnumerator = [words objectEnumerator];
+		
+		BOOL isSpam = [[GIJunkFilter sharedInstance] isSpamMessage: wordEnumerator];
 		if (isSpam) {
-			NSLog(@"Message %@ considered SPAM!", messageId);
-		}//[message addFlags: OPJunkMailStatus];
+			NSLog(@"Message %@ considered SPAM!", message);
+			[message addFlags: OPJunkMailStatus];
+			NSAssert([message flags] & OPJunkMailStatus, @"Setting Junk Flag did not work.");
+		}
 	}
 	
     NSEnumerator* filterEnumerator = [[self filtersMatchingForMessage: message 

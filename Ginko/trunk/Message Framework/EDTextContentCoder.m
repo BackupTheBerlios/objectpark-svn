@@ -376,6 +376,7 @@
 	if ([type isEqualToString: @"text/html"]) {
 		
 		NSString* html = [self _stringFromMessagePart: part];
+		//return @"";
 		NSString* result = [html stringByStrippingHTML];
 		//if (NSDebugEnabled) NSLog(@"Converted html to the following text:\n%@", result);
 		return result;

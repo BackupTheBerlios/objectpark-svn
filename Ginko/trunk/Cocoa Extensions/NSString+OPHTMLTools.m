@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Dirk Theisen on 30.06.06.
-//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 Objectpark Group. All rights reserved.
 //
 
 #import "NSString+OPHTMLTools.h"

@@ -130,7 +130,7 @@
             allowFurtherFiltering = NO;
             break;
         case kGIMFActionTypeMarkAsSpam:
-            [message addFlags:OPJunkMailStatus];
+            [message addFlags: OPJunkMailStatus];
             break;
             // ## missing code for other types
         default:

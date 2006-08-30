@@ -38,7 +38,6 @@
 
 @class OPPersistentObject;
 @class OPSQLiteConnection;
-@class OPPersistentObjectEnumerator;
 @class OPFaultingArray;
 @class OPObjectRelationship;
 @class OPAttributeDescription;

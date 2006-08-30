@@ -40,28 +40,14 @@
 @implementation OPSQLiteStatement
 
 
-static NSHashTable* allInstances;
-
+/*
 + (void) initialize
 {
 	if (!allInstances) {
 		allInstances = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 10);
 	}
 }
-
-+ (NSArray*) runningStatements
-{
-	NSMutableArray* allStatements = [NSMutableArray array];
-	NSHashEnumerator e = NSEnumerateHashTable(allInstances);
-	id item;
-	while (item = NSNextHashEnumeratorItem(&e)) {
-		//NSLog(@"Running Enumerator: %@", item);
-		[allStatements addObject: item];
-	}
-	NSEndHashTableEnumeration(&e);
-	return allStatements;
-}
-
+*/
 
 - (id) initWithSQL: (NSString*) sql connection: (OPSQLiteConnection*) aConnection 
 {
@@ -72,21 +58,22 @@ static NSHashTable* allInstances;
 		//NSParameterAssert(aConnection->connection != NULL);
 		
 		@synchronized(aConnection) {
-			OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@ '%@'", self, sql);
-			if (NSDebugEnabled) sqlString = [sql copy];
+
+			if (NSDebugEnabled) { 
+				sqlString = [sql copy];
+				OPDebugLog(OPPERSISTENCE, OPL_MEMORYMANAGEMENT, @"Creating new sql statement %@.", self);
+				NSLog(@"Creating new %@", self);
+			}
 			
 			int res = sqlite3_prepare([aConnection database], [sql UTF8String], -1, &statement, NULL);
 			
 			if ((res != SQLITE_OK) || !statement) {
 				[self autorelease];
+				NSLog(@"Error preparing sql statement %@: %@", self, [connection lastError]);
 				[aConnection raiseSQLiteError];
-				//NSLog(@"Error preparing sql statement %@: %@", self, [connection lastError]);
-				//[self autorelease];
-				//return nil;
 			}
-			NSHashInsert(allInstances, self);
 			
-			connection = [aConnection retain];
+			connection = [aConnection retain]; [aConnection addStatement: self];
 		}
 	}
 	return self;
@@ -101,13 +88,11 @@ static NSHashTable* allInstances;
 	/*" Index is zero-based. Be sure to call -reset before binding the first value. "*/
 {
 	@synchronized(connection) {
-		index++;
 		if (value) {
-			[value bindValueToStatement: statement index: index];
+			[value bindValueToStatement: statement index: index + 1];
 		} else {
-			sqlite3_bind_null(statement, index);
+			sqlite3_bind_null(statement, index + 1);
 		}
-		NSHashInsert(allInstances, self);
 	}
 }
 
@@ -115,13 +100,11 @@ static NSHashTable* allInstances;
 	/*" Index is zero-based. Be sure to call -reset before binding the first value. "*/
 {
 	@synchronized(connection) {
-		index++;
 		if (rid) {
-			sqlite3_bind_int64(statement, index, rid);
+			sqlite3_bind_int64(statement, index + 1, rid);
 		} else {
-			sqlite3_bind_null(statement, index);
+			sqlite3_bind_null(statement, index + 1);
 		}
-		NSHashInsert(allInstances, self);
 	}
 }
 
@@ -129,7 +112,6 @@ static NSHashTable* allInstances;
 {
 	@synchronized(connection) {
 		sqlite3_reset(statement);
-		NSHashRemove(allInstances, self);
 	}
 }
 
@@ -137,16 +119,51 @@ static NSHashTable* allInstances;
 {
 	//NSLog(@"Deallocing sql statement %@.", self);
 	
-	sqlite3_finalize(statement);
-	[connection release];
+	@synchronized(connection) {
+		int res = sqlite3_finalize(statement);
+		if (res != SQLITE_OK) {
+			NSLog(@"WARNING: Unable to finalize SQL statement: %@", self);
+		}
+		[connection removeStatement: self]; [connection release];
+	}
 	[sqlString release];
-	NSHashRemove(allInstances, self);
+	statement = NULL;
 	[super dealloc];
 }
 
 - (sqlite3_stmt*) stmt
 {
 	return statement;
+}
+
+
+- (NSNumber*) executeWithNumberResult
+{		
+    NSNumber* result = nil;
+	@synchronized(connection) {
+		[self execute];
+		result = [NSNumber newFromStatement: statement index: 0];
+	}
+	return result;
+}
+
+- (OPFaultingArray*) executeWithObjectResultsOfClass: (Class) resultClass
+									sortedByKey: (NSString*) sortKey	
+										ofClass: (Class) sortKeyClass
+/*" Expects rowids in the first column and sort object values (if any) in the second column. "*/
+{
+	OPFaultingArray* result = [OPFaultingArray array];
+	[result setSortKey: sortKey];
+	[result setElementClass: resultClass];
+	 while ([self execute] == SQLITE_ROW) {
+		ROWID rid = sqlite3_column_int64(statement, 0);
+		id sortObject = sortKey ? [sortKeyClass newFromStatement: statement index: 1] : nil;
+		[result addOid: rid sortObject: sortObject];
+	};
+	
+	[self reset];
+	
+	return result;
 }
 
 - (int) execute
@@ -168,9 +185,18 @@ static NSHashTable* allInstances;
 
 @implementation OPSQLiteConnection
 
+NSHashTable* allConnections = NULL;
 
 + (void) initialize
 {
+	if (!allConnections) {
+		allConnections = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 10);
+	}
+}
+
++ (NSArray*) openConnections
+{
+	return NSAllHashTableObjects(allConnections);
 }
 
 - (void) raiseSQLiteError
@@ -192,8 +218,9 @@ static NSHashTable* allInstances;
 {
     if (self = [super init]) {
     
-        dbPath     = [inPath copy];
-        connection = NULL;	
+        dbPath            = [inPath copy];
+        connection        = NULL;	
+		runningStatements = NULL;
     }
     return self;
 }
@@ -251,6 +278,18 @@ static NSHashTable* allInstances;
 	OPSQLiteStatement* result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
 	
 	return result;
+}
+
+- (void) printRunningStatements
+{
+	// Avoid retaining the statements!
+	NSHashEnumerator e = NSEnumerateHashTable(runningStatements);
+	id item;
+	while (item = NSNextHashEnumeratorItem(&e)) {
+		//NSLog(@"Running Enumerator: %@", item);
+		NSLog(@"Running: %@", item);
+	}
+	NSEndHashTableEnumeration(&e);
 }
 
  
@@ -328,11 +367,12 @@ static NSHashTable* allInstances;
 			NSString* queryString = [NSString stringWithFormat: @"insert into %@ (ROWID) values (NULL)", [cd tableName]];
 			//NSLog(@"Preparing statement for inserts: %@", queryString);
 			//sqlite3_prepare([connection database], [queryString UTF8String], -1, &insertStatement, NULL);
-			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease]; 
+			result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self]; 
 			
 			NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);	
 			// Cache statement for later use:
 			[insertStatements setObject: result forKey: poClass]; 
+			[result release];
 		}
 	}
 	return result;
@@ -357,9 +397,11 @@ static NSHashTable* allInstances;
 			NSString* queryString = [NSString stringWithFormat: @"insert into %@ (%@,%@) values (?,?);", joinTableName, firstColumnName, secondColumnName];
 			
 			//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
-			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+			result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self];
 			// Cache statement for later use:
 			[addRelationStatements setObject: result forKey: joinTableName];
+			
+			[result release];
 		}
 	}
 	return result;
@@ -383,9 +425,10 @@ static NSHashTable* allInstances;
 			NSString* queryString = [NSString stringWithFormat: @"delete from %@ where \"%@\"=? and \"%@\"=?;", joinTableName, firstColumnName, secondColumnName];
 			
 			//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
-			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+			result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self];
 			// Cache statement for later use:
 			[removeRelationStatements setObject: result forKey: joinTableName];
+			[result release];
 		}
 	}
 	return result;
@@ -404,9 +447,10 @@ static NSHashTable* allInstances;
 			
 			NSString* queryString = [NSString stringWithFormat: @"select %@ from %@ where ROWID=?;", [[cd columnNames] componentsJoinedByString: @","], [cd tableName]];
 			//OPDebugLog(OPPERSISTENCE, OPINFO, @"Preparing statement for fetches: %@", queryString);
-			result = [[[OPSQLiteStatement alloc] initWithSQL: queryString connection: self] autorelease];
+			result = [[OPSQLiteStatement alloc] initWithSQL: queryString connection: self];
 			// Cache statement for later use:
 			[fetchStatements setObject: result forKey: poClass]; // cache it
+			[result release];
 		}
 	}
 	return result;
@@ -483,6 +527,8 @@ static NSHashTable* allInstances;
 			NSAssert2(result, @"Could not prepare statement (%@): %@", queryString, [self lastError]);
 			
 			[deleteStatements setObject: result forKey: poClass];
+			
+			[result release];
 		}
 	}
 	return result;
@@ -505,9 +551,13 @@ static NSHashTable* allInstances;
 - (void) dealloc
 {
     [self close];
-    [dbPath release];
+	[dbPath release];
 	[dbName release];
-    [super dealloc];
+	NSFreeHashTable(runningStatements);
+	[super dealloc];
+	//} else {
+	//	[self autorelease]; // defer deallocation until all statements are finalized.
+	//}
 }
 
 - (BOOL) open
@@ -516,45 +566,80 @@ static NSHashTable* allInstances;
 	if (!connection) {
 		@synchronized(self) {
 			OPDebugLog(OPPERSISTENCE, OPINFO, @"Opening database at '%@'.", dbPath);
+			NSLog(@"Opening database (%@)", self);
 			// Comment next three lines to disable statement caching:
-			updateStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-			insertStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
-			fetchStatements  = [[NSMutableDictionary alloc] initWithCapacity: 10];
-			deleteStatements = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			updateStatements         = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			insertStatements         = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			fetchStatements          = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			deleteStatements         = [[NSMutableDictionary alloc] initWithCapacity: 10];
+			addRelationStatements    = [[NSMutableDictionary alloc] initWithCapacity: 8];
+			removeRelationStatements = [[NSMutableDictionary alloc] initWithCapacity: 8];
+			
+			runningStatements = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 5);
 			
 			result = SQLITE_OK==sqlite3_open([dbPath UTF8String], &connection);
 			[self setBusyTimeout: 100000]; // Wait for 10 seconds
 		}
+		NSHashInsertIfAbsent(allConnections, self);
 	}
 	return result;
 }
 
-- (void) close
+- (void) addStatement: (OPSQLiteStatement*) statement
+/*" Used for debugging. "*/
 {
-    if (!connection) return;
-    
-	[updateStatements release]; updateStatements = nil; 
-	[insertStatements release]; insertStatements = nil; 
-	[deleteStatements release]; deleteStatements = nil; 
-	[fetchStatements release];  fetchStatements  = nil; 
-	[addRelationStatements release];    addRelationStatements    = nil;
-	[removeRelationStatements release]; removeRelationStatements = nil;
+	NSHashInsertIfAbsent(runningStatements, statement);
+}
+
+- (void) removeStatement: (OPSQLiteStatement*) statement
+/*" Used for debugging. "*/
+{
+	NSHashRemove(runningStatements, statement);
+}
+
+- (BOOL) close
+{
+    if (connection) {
+	// Release all cached statements (retaining self) so self can (potentially) be released
+		[updateStatements release]; updateStatements = nil; 
+		[insertStatements release]; insertStatements = nil; 
+		[deleteStatements release]; deleteStatements = nil; 
+		[fetchStatements release];  fetchStatements  = nil; 
+		[addRelationStatements release];    addRelationStatements    = nil;
+		[removeRelationStatements release]; removeRelationStatements = nil;
 	
-    int result = sqlite3_close(connection);
-	
-	if (result != SQLITE_BUSY) {
+		NSLog(@"Closing database (try, %@)", self);
+		
+		if (NSCountHashTable(runningStatements)) {
+			NSLog(@"Warning: The following statements for %@ are still running:", self);
+			[self printRunningStatements];
+		}
+
+		int result = sqlite3_close(connection);
+		
+		if (result == SQLITE_BUSY) {
+			NSLog(@"Warning! Unable to close %@ - some statements are not finalized - still open. Running statements:", self);
+			[self printRunningStatements];
+			return NO;
+		}
+		
+		NSLog(@"Closed database (done, %@)", self);
+
+		
+		NSHashRemove(allConnections, self);
 		connection = NULL;
-	} else {
-		NSLog(@"Warning! Unable to close sqlite database - some statements are not finalized - still open.");
 	}
+	return YES;
 }
 
 - (NSString*) path
 {
+	/*" Returns the path to the database. "*/
     return dbPath;
 }
 
 - (NSString*) name
+/*" Returns the name of the database. "*/
 {
 	if (!dbName) {
 		dbName = [[[dbPath lastPathComponent] stringByDeletingPathExtension] retain];
@@ -575,7 +660,7 @@ static NSHashTable* allInstances;
 		sqlite3_prepare(connection, [sql UTF8String], -1, &statement, NULL);
 		OPDebugLog(OPPERSISTENCE, OPINFO, @"SQL: Executing Command: '%@'", sql);
 		int result = sqlite3_step(statement);
-		sqlite3_reset(statement);
+		sqlite3_finalize(statement);
 		if (result != SQLITE_DONE) {
 			[self raiseSQLiteError];
 		}
@@ -590,14 +675,16 @@ static NSHashTable* allInstances;
 - (BOOL) beginTransaction
 /*" Does nothing, if a transaction is already in progress and returns NO. Returns YES, if a transaction was started. "*/
 {
-	if (!transactionInProgress) {
+	@synchronized(self) {
+		if (!transactionInProgress) {
 	//NSAssert(transactionInProgress==NO, @"Transaction already in progress.");
 	//if (!transactionInProgress) {
 	//OPDebugLog(OPPERSISTENCE, OPINFO, @"Beginning db transaction for %@", self);
 	// Simplistic implementation. Should use a statement class/object and cache that:
-		transactionInProgress = YES;
-		[self performCommand: @"BEGIN TRANSACTION"];   
-		return YES;
+			transactionInProgress = YES;
+			[self performCommand: @"BEGIN TRANSACTION"];   
+			return YES;
+		}
 	}
 	return NO;
 }
@@ -704,7 +791,7 @@ static NSHashTable* allInstances;
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
 {
     NSParameterAssert(statement != NULL);
-    NSParameterAssert(index >= 0);
+    NSParameterAssert(index >= 1);
     
 	const char* utf8 = [self UTF8String];
 	int result = sqlite3_bind_text(statement, index, utf8, -1, SQLITE_TRANSIENT); // todo: optimize away copying!
@@ -822,8 +909,10 @@ static NSHashTable* allInstances;
 }
 
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+/*" First index is 1! "*/
 {
-    int type = sqlite3_column_type(statement, index);
+	NSParameterAssert(index>=1);
+    int type = sqlite3_column_type(statement, index-1); // this call is 0-based
     //SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, SQLITE_NULL
     if (type!=SQLITE_NULL) {
         if (type==SQLITE_FLOAT) {

@@ -186,20 +186,6 @@ static BOOL isThreadItem(id item)
 	// Do nothing after this point!
 }
 
-- (void)threadDidChange: (NSNotification*) aNotification
-{
-    NSArray* affectedMessageGroups = [(GIThread*)[aNotification object] valueForKey: @"groups"];    
-    if ([affectedMessageGroups count] == 0) NSLog(@"warning: thread did change for a thread without group.");	
-	
-	if ([aNotification object] == displayedThread) {
-		[self updateCommentTree: YES];
-	}
-	
-	// check if a thread of this group changed:
-	if (group && [affectedMessageGroups containsObject: group]) {
-		[self reload];
-	}
-}
 
 - (NSArray*) threadsByDate
     /*" Returns an ordered list of all message threads of the receiver, ordered by date. "*/
@@ -375,7 +361,7 @@ static BOOL isThreadItem(id item)
 	} else */
 	if ([object isEqual: [self group]] && isAutoReloadEnabled) {
 		
-		[threadsView noteNumberOfRowsChanged]; // make sure, we are not called back with illegal indexes
+		// mab be called in background thread! [threadsView noteNumberOfRowsChanged]; // make sure, we are not called back with illegal indexes
 		
         NSNotification* notification = [NSNotification notificationWithName: @"GroupContentChangedNotification" object: self];
         
@@ -732,6 +718,9 @@ static BOOL isThreadItem(id item)
 					}
 				}
 				[pool release];
+			} else {
+				NSBeep();
+				NSLog(@"Filtering single messages is currently not supported.");
 			}
 		}
 	}
@@ -988,6 +977,7 @@ static BOOL isThreadItem(id item)
 	
 	NSLog(@"Reloading outlineview data");
 //	NSLog(@"Statistics before reload: %@", [OPPersistentObjectContext defaultContext]);	
+	[threadsView noteNumberOfRowsChanged];
 	[itemRetainer release]; itemRetainer = [[NSMutableSet alloc] init];
 	isAutoReloadEnabled = YES;
 	
@@ -996,6 +986,20 @@ static BOOL isThreadItem(id item)
 //	NSLog(@"Statistics after reload: %@", [OPPersistentObjectContext defaultContext]);
 }
 
+- (void)threadDidChange: (NSNotification*) aNotification
+{
+    NSArray* affectedMessageGroups = [(GIThread*)[aNotification object] valueForKey: @"groups"];    
+    if ([affectedMessageGroups count] == 0) NSLog(@"warning: thread did change for a thread without group.");	
+	
+	if ([aNotification object] == displayedThread) {
+		[self updateCommentTree: YES];
+	}
+	
+	// check if a thread of this group changed:
+	if (group && [affectedMessageGroups containsObject: group]) {
+		[self reload];
+	}
+}
 
 - (void) joinThreads
 {
@@ -1543,46 +1547,53 @@ NSDictionary* readAttributes()
     return attributes;
 }
 
-NSDictionary* selectedReadAttributes()
+NSDictionary* newAttributesWithColor(NSColor* color) 
+{
+	NSDictionary* attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+		[NSFont systemFontOfSize: 12], NSFontAttributeName,
+		color, NSForegroundColorAttributeName, 
+		nil, nil];
+	return attributes;
+}
+
+
+static NSDictionary* spamMessageAttributes()
 {
     static NSDictionary *attributes = nil;
     
     if (! attributes) {
-        attributes = [[readAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject: [[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
-        attributes = [attributes copy];
+        attributes = newAttributesWithColor([[NSColor brownColor] highlightWithLevel: 0.0]);
     }
-    
     return attributes;
 }
 
-NSDictionary *fromAttributes()
+static NSDictionary* selectedReadAttributes()
 {
     static NSDictionary *attributes = nil;
     
     if (! attributes) {
-        attributes = [[readAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject: [[NSColor darkGrayColor] shadowWithLevel:0.3] forKey:NSForegroundColorAttributeName];
-
-        attributes = [attributes copy];
+        attributes = newAttributesWithColor([[NSColor selectedMenuItemTextColor] shadowWithLevel: 0.15]);
     }
+    
     return attributes;
 }
 
-NSDictionary *unreadFromAttributes()
+static NSDictionary* fromAttributes()
 {
     static NSDictionary *attributes = nil;
     
-    if (! attributes)
-    {
-        attributes = [[fromAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes addEntriesFromDictionary:unreadAttributes()];
-        attributes = [attributes copy];
+    if (! attributes) {
+        attributes = newAttributesWithColor([[NSColor darkGrayColor] shadowWithLevel:0.3]);
     }
     return attributes;
 }
 
-NSDictionary *selectedUnreadFromAttributes()
+static NSDictionary* unreadFromAttributes()
+{
+	return unreadAttributes();
+}
+
+static NSDictionary *selectedUnreadFromAttributes()
 {
     static NSDictionary *attributes = nil;
     
@@ -1595,7 +1606,7 @@ NSDictionary *selectedUnreadFromAttributes()
     return attributes;
 }
 
-NSDictionary *readFromAttributes()
+static NSDictionary *readFromAttributes()
 {
     static NSDictionary *attributes = nil;
     
@@ -1608,7 +1619,7 @@ NSDictionary *readFromAttributes()
     return attributes;
 }
 
-NSDictionary *selectedReadFromAttributes()
+static NSDictionary *selectedReadFromAttributes()
 {
     static NSDictionary *attributes = nil;
     
@@ -1641,13 +1652,14 @@ static NSAttributedString* spacer2()
     return spacer;
 }
 
-#define MAX_INDENTATION 4
+#define MAX_INDENTATION 6
 
-- (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
+- (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn 
+			byItem: (id) item
 {
     BOOL inSelection = [[threadsView selectedRowIndexes] containsIndex:[threadsView rowForItem:item]];
     BOOL inSelectionAndAppActive = (inSelection && [NSApp isActive] && [window isMainWindow]);
-    
+	
     if (outlineView == threadsView) {
 		// subjects list
         if ([[tableColumn identifier] isEqualToString: @"date"]) {
@@ -1671,15 +1683,13 @@ static NSAttributedString* spacer2()
 	        	// it's a thread:		
                 GIThread* thread = item;
                 
-                if ([thread containsSingleMessage]) 
-				{
+                if ([thread containsSingleMessage]) {
                     NSString *from;
                     NSAttributedString *aFrom;
                     GIMessage *message = [[thread valueForKey:@"messages"] lastObject];
                     
-                    if (message) 
-					{
-                        BOOL flags  = [message flags];
+                    if (message) {
+                        unsigned flags  = [message flags];
                         NSString *subject = [message valueForKey:@"subject"];
                         
                         if (!subject) subject = @"";
@@ -1688,17 +1698,20 @@ static NSAttributedString* spacer2()
                         
                         [result appendAttributedString:aSubject];
                         
-						if ([message hasFlags:OPIsFromMeStatus]) 
-						{
+						if (flags & OPIsFromMeStatus) {
 							from = [NSString stringWithFormat: @"(%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
-						} 
-						else 
-						{
+						} else {
 							from = [message senderName];
 							if (!from) from = @"- sender missing -";
 							from = [NSString stringWithFormat: @" (%@)", from];
-						}                        
-                        aFrom = [[NSAttributedString alloc] initWithString: from attributes: ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())];
+						}       
+						NSDictionary* attributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes());
+						
+						if (flags & OPJunkMailStatus) {
+							attributes = spamMessageAttributes();
+						}
+						
+                        aFrom = [[NSAttributedString alloc] initWithString: from attributes: attributes];
                         
                         [result appendAttributedString: aFrom];
                         
@@ -1712,6 +1725,8 @@ static NSAttributedString* spacer2()
             } else {
 				// a message, not a thread
                 NSString* from = [item senderName];
+				BOOL flags  = [item flags];
+
                 if (!from) {
 					from = @"- sender missing -";
 				}
@@ -1726,7 +1741,13 @@ static NSAttributedString* spacer2()
                 
                 [result appendAttributedString: (indentation > MAX_INDENTATION)? spacer2() : spacer()];
                 
-                [result appendAttributedString: [[NSAttributedString alloc] initWithString: from attributes: [(GIMessage *)item hasFlags: OPSeenStatus] ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes())]];
+				NSDictionary* attributes = (flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes());
+
+				if (flags & OPJunkMailStatus) {
+					attributes = spamMessageAttributes();
+				}
+				
+                [result appendAttributedString: [[[NSAttributedString alloc] initWithString: from attributes: attributes] autorelease]];
             }
             
             return result;

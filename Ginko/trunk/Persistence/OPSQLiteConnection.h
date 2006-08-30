@@ -39,6 +39,7 @@
 @class OPPersistentObject;
 @class OPSQLiteStatement;
 @class OPAttributeDescription;
+@class OPFaultingArray;
 
 @interface OPSQLiteConnection : NSObject {
     
@@ -53,19 +54,28 @@
 	NSMutableDictionary* deleteStatements; // keyed by Class
 	NSMutableDictionary* fetchStatements;  // keyed by Class
 	
-	NSMutableDictionary* fetchRelationStatements; // not used yet
+	//NSMutableDictionary* fetchRelationStatements; // not used yet
 	
 	NSMutableDictionary* addRelationStatements; // keyed by JoinTableName
 	NSMutableDictionary* removeRelationStatements; // keyed by JoinTableName
 	
+	NSHashTable* runningStatements;
+	
 }
+
++ (NSArray*) openConnections;
+- (void) printRunningStatements;
+
+- (void) addStatement: (OPSQLiteStatement*) statement;
+- (void) removeStatement: (OPSQLiteStatement*) statement;
+
 
 - (sqlite3*) database;
 
 - (id) initWithFile: (NSString*) inPath;
 
 - (BOOL) open;
-- (void) close;
+- (BOOL) close;
 - (NSString*) path;
 - (NSString*) name; 
 
@@ -128,8 +138,6 @@
 
 }
 
-+ (NSArray*) runningStatements;
-
 - (void) bindPlaceholderAtIndex: (int) index toValue: (id) value;
 - (void) bindPlaceholderAtIndex: (int) index toRowId: (ROWID) rid;
 
@@ -137,6 +145,10 @@
 - (int) execute;
 - (void) reset;
 //- (sqlite3_stmt*) stmt;
+- (NSNumber*) executeWithNumberResult;
 
+- (OPFaultingArray*) executeWithObjectResultsOfClass: (Class) resultClass
+										 sortedByKey: (NSString*) sortKey	
+											 ofClass: (Class) sortKeyClass;
 
 @end

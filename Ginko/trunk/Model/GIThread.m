@@ -158,11 +158,13 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) mergeMessagesFromThread: (GIThread*) otherThread
 /*" Moves all messages from otherThread into the receiver. otherThread is being deleted. "*/
 {
+	if (otherThread == self) return;
+	
     // Put all messages from otherThread into self and remove otherThread:
     GIMessage* message;
     NSArray* messages = [otherThread messages];
     
-    OPDebugLog(THREADING, MERGING, @"Mergeing messages %@ into thread %@ with messages %@", messages, self, [self messages]);
+    OPDebugLog(THREADING, MERGING, @"Merging messages %@ into thread %@ with messages %@", messages, self, [self messages]);
     
     while (message = [[otherThread messages] lastObject]) {
 		[message referenceFind: YES];
@@ -170,7 +172,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     }
 	NSAssert1([otherThread messageCount] ==  0, @"Thread not empty: %@ - loosing message.", otherThread);
 	
-    [otherThread delete];		
+    [otherThread delete];	
 }
 
 

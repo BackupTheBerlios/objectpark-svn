@@ -273,18 +273,12 @@ typedef struct {
 	NSParameterAssert(object!=nil);
 	OID oid = [object currentOid];
 	id result = nil;
-		if (oid) {
-			@synchronized(db) { // to be gone
-				result = [db attributesForRowId: oid ofClass: [object class]];
-			}
-
-			//if (!result) {
-			//	NSLog(@"Faulting problem: %@ with oid %llu not in the database!?", [object class], oid);
-			//}
-		} else {
-			result = [NSMutableDictionary dictionary];
-		}
-		numberOfFaultsFired++;
+	if (oid) {
+		result = [db attributesForRowId: oid ofClass: [object class]];
+	} else {
+		result = [NSMutableDictionary dictionary];
+	}
+	numberOfFaultsFired++;
 	return result;
 }
 
@@ -452,7 +446,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 {
 	@synchronized(self) {
 		
-		if ([[OPSQLiteStatement runningStatements] count]) NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
+		//if ([[OPSQLiteStatement runningStatements] count]) NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
+		//if ([[OPSQLiteConnection openConnections] count]) NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
 		
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
 		
@@ -548,7 +543,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 							[addStatement execute];
 						}
 					}
-					[addStatement reset];
+					//[addStatement reset];
 					
 					// Remove a row in the join table to each relation removed:
 					
@@ -759,41 +754,57 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 - (OPFaultingArray*) fetchObjectsOfClass: (Class) poClass
-					 whereFormat: (NSString*) clause, ...
+							 whereFormat: (NSString*) clause, ...
 	/*" Replaces all the question marks in the whereFormat string with the object 
-	values passed. Valid object classes return YES to +[canPersist]. key and keyClass can be nil, if sorting is not required. "*/
+	values passed. Valid object classes return YES to +[canPersist]. "*/
 {
-	OPFaultingArray* result;
+	OPFaultingArray* result = nil;
 	@synchronized(db) {
-		OPPersistentObjectEnumerator* e;
-		e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
-													  resultClass: poClass
-													  whereClause: clause];
+		
+		NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [[poClass persistentClassDescription] tableName], clause];
+		
+		OPSQLiteStatement* statement = [[OPSQLiteStatement alloc] initWithSQL: queryString
+																   connection: db];
 		
 		va_list ap; /* points to each unamed arg in turn */
 		va_start(ap, clause); /* make ap point to 1st unnamed arg */
-		unsigned index = 1; // change that! make it 0 based!
+		unsigned index = 0; 
 		id binding;
 		while (binding = va_arg(ap, id)) {
-			[binding bindValueToStatement: [e statement] index: index++];
+			[statement bindPlaceholderAtIndex: index toValue: binding];
+			index++;
 		}
 		va_end(ap); /* clean up when done */
 		
-		result = (OPFaultingArray*)[e allObjects];
-		[e release];
+		
+		result = [statement executeWithObjectResultsOfClass: poClass
+												sortedByKey: nil
+													ofClass: nil];
+		
+		[statement release];
+		
 	}
 	return result;
+		/*
+		 OPPersistentObjectEnumerator* e;
+		 e = [[OPPersistentObjectEnumerator alloc] initWithContext: self 
+													   resultClass: poClass
+													   whereClause: clause];
+		 
+		 va_list ap; // points to each unamed arg in turn 
+		 va_start(ap, clause); // make ap point to 1st unnamed arg 
+		 unsigned index = 1; // change that! make it 0 based!
+		 id binding;
+		 while (binding = va_arg(ap, id)) {
+			 [binding bindValueToStatement: [e statement] index: index++];
+		 }
+		 va_end(ap); // clean up when done 
+		 
+		 result = (OPFaultingArray*)[e allObjects];
+		 [e release];
+		 */
+		 
 }
-
-/*
-- (NSArray*) fetchObjectsOfClass: (Class) poClass
-					   where: (NSString*) clause
-{
-	return [[[OPPersistentObjectEnumerator alloc] initWithContext: self 
-													  resultClass: poClass
-													  whereClause: clause] allObjects];
-}
-*/
 
 @end
 

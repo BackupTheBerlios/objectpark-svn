@@ -114,6 +114,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 }
 
 - (void) bindValueToStatement: (sqlite3_stmt*)  statement index: (int) index
+/*" Index is 1-based as in sqlite. "*/
 {
 	sqlite3_bind_int64(statement, index, [self oid]);
 }

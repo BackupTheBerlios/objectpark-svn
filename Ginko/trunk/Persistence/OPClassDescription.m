@@ -47,13 +47,13 @@
 	/*" Checks with the master table, if the database table corresponding to the receiver does exists in the current database. Uses the dataase property's create statements to create one, iass needed. "*/
 {
 	NSString* queryString = [NSString stringWithFormat: @"select * from sqlite_master where tbl_name like \"%@\";", tableName];
-	OPSQLiteStatement* statement = [[[OPSQLiteStatement alloc] initWithSQL: queryString 
-																connection: connection] autorelease];
+	OPSQLiteStatement* statement = [[OPSQLiteStatement alloc] initWithSQL: queryString 
+																connection: connection];
 	if ([statement execute] == SQLITE_ROW) {
-		[statement reset];
+		[statement release];
 		return; // we found a table with a matching name - good enough for now.
 	}
-	[statement reset];
+	[statement release];
 	
 	[connection beginTransaction];
 	// Execute create statement(s) stored in the description:

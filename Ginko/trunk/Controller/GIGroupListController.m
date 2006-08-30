@@ -56,9 +56,7 @@
 
 - (id) init
 {
-	//NSArray *allGroups = [GIMessageGroup allObjects];
-//#warning Hack to keep them in resolved memory. Dirk, is this as it should be? If so, please remove the warning. ;-)
-	//[allGroups retain]; // hack to keep them in memory!
+	// MessageGroups are never deallocated. Make sure they are also resolved, so no disk activity is needed: 
 	[[GIMessageGroup allObjects] makeObjectsPerformSelector: @selector(resolveFault)];
 	
     if (self = [super init]) {
