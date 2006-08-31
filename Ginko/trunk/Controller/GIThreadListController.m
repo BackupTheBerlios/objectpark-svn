@@ -1699,7 +1699,7 @@ static NSAttributedString* spacer2()
                         [result appendAttributedString:aSubject];
                         
 						if (flags & OPIsFromMeStatus) {
-							from = [NSString stringWithFormat: @"(%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
+							from = [NSString stringWithFormat: @" (%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
 						} else {
 							from = [message senderName];
 							if (!from) from = @"- sender missing -";
