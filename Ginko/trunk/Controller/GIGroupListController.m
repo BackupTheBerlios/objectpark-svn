@@ -111,7 +111,7 @@
 	id selectedItem = [boxesView itemAtRow:[boxesView selectedRow]];
 	if ([selectedItem isKindOfClass:[NSString class]]) 
     {
-		GIMessageGroup *selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:selectedItem];
+		GIMessageGroup *selectedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:selectedItem resolve: YES];
 		
 		if (selectedGroup && [selectedGroup isKindOfClass:[GIMessageGroup class]]) return selectedGroup;
 	}
@@ -416,7 +416,7 @@ static GIMessageGroup *reuseGroup = nil;
         } 
         else if (item) 
         {
-            GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:item];
+            GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:item resolve: YES];
             return [group valueForKey: @"name"];
         }
     }
@@ -425,7 +425,7 @@ static GIMessageGroup *reuseGroup = nil;
     {
         if (![item isKindOfClass:[NSMutableArray class]]) 
         {
-            GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:item];
+            GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:item resolve: YES];
             //NSMutableArray *threadURIs = [NSMutableArray array];
             //NSCalendarDate *date = [[NSCalendarDate date] dateByAddingYears:0 months:0 days:-1 hours:0 minutes:0 seconds:0];
             
@@ -458,7 +458,7 @@ static GIMessageGroup *reuseGroup = nil;
     } 
     else // message group:
     {
-        GIMessageGroup *itemGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:item];
+        GIMessageGroup *itemGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:item resolve: NO];
         [itemGroup setValue:object forKey: @"name"];
         [NSApp saveAction:self];
     }
@@ -486,7 +486,7 @@ static GIMessageGroup *reuseGroup = nil;
 {
     if ([[tableColumn identifier] isEqualToString: @"box"]) {
         if (![item isKindOfClass: [NSMutableArray class]]) {
-            NSImage* image = [NSImage imageNamed: [[OPPersistentObjectContext objectWithURLString: item] imageName]];
+            NSImage* image = [NSImage imageNamed: [[OPPersistentObjectContext objectWithURLString: item resolve: YES] imageName]];
             
             [cell setImage: image];
         }
@@ -529,7 +529,7 @@ static GIMessageGroup *reuseGroup = nil;
         if ([threadOids count]) 
         {
             GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
-            GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item];
+            GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item resolve: YES];
             
             [GIMessageGroup moveThreadsWithOids:threadOids fromGroup:sourceGroup toGroup:destinationGroup];
             

@@ -1228,7 +1228,8 @@ static BOOL isThreadItem(id item)
             
             OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 			@try {
-                id lastSelectedMessageItem = [context objectWithURLString:[self valueForGroupProperty:@"LastSelectedMessageItem"]];
+                id lastSelectedMessageItem = [context objectWithURLString: [self valueForGroupProperty: @"LastSelectedMessageItem"]
+																  resolve: YES];
                 
                 if (lastSelectedMessageItem) 
 				{

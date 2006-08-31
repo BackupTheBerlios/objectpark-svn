@@ -163,7 +163,7 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 {
 	NSString *URLString = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultProfileURLString];
 	
-	GIProfile *result = [[OPPersistentObjectContext defaultContext] objectWithURLString:URLString];
+	GIProfile *result = [[OPPersistentObjectContext defaultContext] objectWithURLString:URLString resolve: YES];
 	
 	if (! result) result = [[GIProfile allObjects] firstObject];
 	

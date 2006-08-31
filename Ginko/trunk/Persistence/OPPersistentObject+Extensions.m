@@ -93,9 +93,11 @@ static volatile NSThread* mainThread = nil;
 
 
 
-+ (id) objectWithURLString: (NSString*) url
++ (id) objectWithURLString: (NSString*) url resolve: (BOOL) resolve
+/*" Pass YES to resolve to check with the dabase for object existence. "*/
 {
-	return [[self threadContext] objectWithURLString:url];
+	id result = [[self threadContext] objectWithURLString: url resolve: resolve];
+	return result;
 }
 
 

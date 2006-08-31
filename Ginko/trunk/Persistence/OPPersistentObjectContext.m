@@ -248,7 +248,7 @@ typedef struct {
 	return result;
 }
 
-- (id) objectWithURLString: (NSString*) urlString
+- (id) objectWithURLString: (NSString*) urlString resolve: (BOOL) doResolve
 /*" Returns (possibly a fault object to) an OPPersistentObject. "*/
 {
 	if (!urlString) return nil;
@@ -268,7 +268,12 @@ typedef struct {
 		// Fallback for transition from CoreData. Can be removed later:
 		oid = OPLongLongStringValue([oidString substringFromIndex: 1]);
 	}
-	return [self objectForOid: oid ofClass: pClass];
+	id result = [self objectForOid: oid ofClass: pClass];
+	
+	if (doResolve && ![result resolveFault]) {
+		result = nil;
+	}
+	return result;
 }
 
 - (NSDictionary*) persistentValuesForObject: (OPPersistentObject*) object

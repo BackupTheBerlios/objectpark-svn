@@ -674,11 +674,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	NSMutableArray *badKeys = [NSMutableArray array];
 	
-	while (objectURL = [enumerator nextObject])
-	{
-		if (![[context objectWithURLString:objectURL] resolveFault])
-		{
-			[badKeys addObject:objectURL];
+	while (objectURL = [enumerator nextObject]) {
+		if (![context objectWithURLString: objectURL resolve: YES]) {
+			[badKeys addObject: objectURL];
 		}
 	}
 	

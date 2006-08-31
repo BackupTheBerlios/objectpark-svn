@@ -97,7 +97,7 @@
 - (void) reset;
 - (void) close;
 
-- (id) objectWithURLString: (NSString*) urlString;
+- (id) objectWithURLString: (NSString*) urlString resolve: (BOOL) doResolve;
 - (id) objectForOid: (OID) oid ofClass: (Class) poClass;
 
 //- (void) willChangeObject: (OPPersistentObject*) object;
