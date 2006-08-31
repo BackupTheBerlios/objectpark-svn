@@ -186,30 +186,30 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
 }
 
-- (void)calculateUnreadMessageCountJob:(NSDictionary *)arguments
+- (void) calculateUnreadMessageCountJob: (NSDictionary*) arguments
 {
     OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	
 	// Make sure, the disk is up-to-date:
 	[context saveChanges];
 	
-//#warning why doesn't a new database connection work?
-	OPSQLiteConnection* connection = [context newDatabaseConnection];
+	static OPSQLiteConnection* connection = nil;
 	
-	[connection open];
+	if (!connection) {
+		connection = [context newDatabaseConnection];
+		[connection open];
+	}
 	
-    @synchronized(context) {
-        OPSQLiteStatement* statement = [[OPSQLiteStatement alloc] initWithSQL: @"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = ? and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);" 
-																   connection: connection];
-        [statement bindPlaceholderAtIndex: 0 toRowId: [self oid]];
-        //NSLog(@"%lu", (unsigned long)[self oid]);
-                
-		[[OPJob job] setResult: [statement executeWithNumberResult]];
-		
-		[statement release];
-    }
-	[connection close];
-	[connection release];
+	OPSQLiteStatement* statement = [[OPSQLiteStatement alloc] initWithSQL: @"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = ? and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);" 
+															   connection: connection];
+	[statement bindPlaceholderAtIndex: 0 toRowId: [self oid]];
+	//NSLog(@"%lu", (unsigned long)[self oid]);
+	
+	[[OPJob job] setResult: [statement executeWithNumberResult]];
+	
+	[statement release];
+	//[connection close];
+	//[connection release];
 }
 
 @end

@@ -176,11 +176,11 @@ static BOOL isThreadItem(id item)
 	[super retain];	
 }
 
-- (void)windowWillClose:(NSNotification *)notification 
+- (void) windowWillClose: (NSNotification*) notification 
 {
-	[self setGroup:nil];
+	[self setGroup: nil];
 	
-	NSLog(@"ThreadListController retainCount after window close (and self release): %d", [self retainCount]-1);
+	//NSLog(@"ThreadListController retainCount after window close (and self release): %d", [self retainCount]-1);
 
 	[self release]; // balance self-retaining
 	// Do nothing after this point!
