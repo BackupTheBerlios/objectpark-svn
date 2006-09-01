@@ -173,11 +173,9 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     {
         if ([entry isKindOfClass:[NSMutableArray class]])
         {
-            [self collectGroupPaths:paths andURIRepresenations:reps startingAtNode:entry prefix:[prefix stringByAppendingFormat:@"%@/", [[entry objectAtIndex:0] objectForKey:@"name"]]];
-        } 
-		else 
-		{
-            GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString:entry resolve:YES];
+            [self collectGroupPaths:paths andURIRepresenations:reps startingAtNode:entry prefix:[prefix stringByAppendingFormat: @"%@/", [[entry objectAtIndex:0] objectForKey:@"name"]]];
+        } else {
+            GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString: entry resolve: YES];
             [paths addObject:[prefix stringByAppendingString: [group valueForKey: @"name"]]];
             [reps addObject:entry];
         }

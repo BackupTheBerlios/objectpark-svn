@@ -198,9 +198,8 @@ static NSThread *mainThread = nil;
 	NSString *groupURL;
 	while (groupURL = [groupEnumerator nextObject]) 
 	{;
-		@try 
-		{
-			GIMessageGroup *group = [context objectWithURLString:groupURL resolve:YES];
+		@try {
+			GIMessageGroup *group = [context objectWithURLString:groupURL resolve: NO];
 			[GIGroupListController showGroup:group reuseWindow:reuseWindow];
 			reuseWindow = false;
 		} @catch(id e) 

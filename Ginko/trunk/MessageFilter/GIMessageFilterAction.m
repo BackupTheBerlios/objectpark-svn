@@ -109,7 +109,7 @@
             GIMessageGroup *destinationGroup;
             
             // get destination box
-            destinationGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:[action parameter] resolve:YES];
+            destinationGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [action parameter] resolve: YES];
             
             // if destination box can not be found fallback to default box
             if (! destinationGroup) 
