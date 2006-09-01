@@ -676,10 +676,57 @@
 	[[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:[self dateOfLastMessageRetrievalDefaultsKey]];
 }
 
+static NSMutableArray *timers = nil;
+
++ (NSTimer *)timerForAccount:(GIAccount *)anAccount
+{
+	NSTimer *result = nil;
+	NSTimeInterval timeIntervalSinceLastMessageRetrieval = [anAccount timeIntervalSinceLastMessageRetrieval];
+	
+	NSTimeInterval interval = [[anAccount valueForKey:@"retrieveMessageInterval"] floatValue] * 60.0;
+	if (interval > 0.1)
+	{
+		if (timeIntervalSinceLastMessageRetrieval > 0.0)
+		{
+			interval = interval - timeIntervalSinceLastMessageRetrieval;
+			
+			if (interval < 0.1) interval = 0.1;
+		}
+		
+		result = [NSTimer scheduledTimerWithTimeInterval:interval target:anAccount selector:@selector(sendAndReceiveTimerFired:) userInfo:anAccount repeats:NO];
+	}
+	
+	return result;
+}
+
++ (void)resetReceiveTimerForAccount:(GIAccount *)anAccount
+{
+	NSAssert(timers != nil, @"Timers array not in place.");
+	
+	// find timer with userinfo == anAccount
+	NSEnumerator *enumerator = [timers objectEnumerator];
+	NSTimer *timer;
+	
+	while (timer = [enumerator nextObject])
+	{
+		if ([timer userInfo] == anAccount) break;
+		else timer = nil;
+	}
+	
+	if (timer)
+	{
+		[timer invalidate];
+		[timers removeObjectIdenticalTo:timer];
+	}
+	
+	if (timer = [self timerForAccount:anAccount])
+	{
+		[timers addObject:timer];
+	}
+}
+
 + (void)resetAccountRetrieveAndSendTimers
 {
-	static NSMutableArray *timers = nil;
-	
 	if (!timers)
 	{
 		timers = [[NSMutableArray alloc] init];
@@ -695,19 +742,10 @@
 	
 	while (account = [enumerator nextObject])
 	{
-		NSTimeInterval timeIntervalSinceLastMessageRetrieval = [account timeIntervalSinceLastMessageRetrieval];
+		NSTimer *timer = [self timerForAccount:account];
 		
-		NSTimeInterval interval = [[account valueForKey:@"retrieveMessageInterval"] floatValue] * 60.0;
-		if (interval > 0.1)
+		if (timer)
 		{
-			if (timeIntervalSinceLastMessageRetrieval > 0.0)
-			{
-				interval = interval - timeIntervalSinceLastMessageRetrieval;
-				
-				if (interval < 0.1) interval = 0.1;
-			}
-			
-			NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:interval target:account selector:@selector(sendAndReceiveTimerFired:) userInfo:nil repeats:YES];
 			[timers addObject:timer];
 		}
 	}
@@ -805,6 +843,7 @@
 {
 	[self receive];
 	[self send];
+	[[self class] resetReceiveTimerForAccount:self];
 }
 
 - (void)didChangeValueForKey:(NSString *)key
