@@ -644,7 +644,37 @@
 
 @end
 
+#import "GIUserDefaultsKeys.h"
+
 @implementation GIAccount (SendingAndReceiving)
+
+- (NSString *)dateOfLastMessageRetrievalDefaultsKey
+{
+	return [DateOfLastMessageRetrieval stringByAppendingString:[self objectURLString]];
+}
+
+- (NSTimeInterval)timeIntervalSinceLastMessageRetrieval
+	/*" Returns the time interval since the last message retrieval if known. Returns -1.0 otherwise. "*/
+{
+	NSDate *dateOfLastMessageRetrieval = [[NSUserDefaults standardUserDefaults] objectForKey:[self dateOfLastMessageRetrievalDefaultsKey]];
+	
+	if (dateOfLastMessageRetrieval)
+	{
+		NSTimeInterval timeIntervalSinceNow = [dateOfLastMessageRetrieval timeIntervalSinceNow];
+		
+		if (timeIntervalSinceNow <= 0)
+		{
+			return timeIntervalSinceNow * -1.0;
+		}
+	}
+	
+	return -1.0;
+}
+
+- (void)checkpointLastMessageRetrieval
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:[self dateOfLastMessageRetrievalDefaultsKey]];
+}
 
 + (void)resetAccountRetrieveAndSendTimers
 {
@@ -665,10 +695,18 @@
 	
 	while (account = [enumerator nextObject])
 	{
-		NSTimeInterval interval = [[account valueForKey:@"retrieveMessageInterval"] floatValue] * 60.0;
+		NSTimeInterval timeIntervalSinceLastMessageRetrieval = [account timeIntervalSinceLastMessageRetrieval];
 		
+		NSTimeInterval interval = [[account valueForKey:@"retrieveMessageInterval"] floatValue] * 60.0;
 		if (interval > 0.1)
 		{
+			if (timeIntervalSinceLastMessageRetrieval > 0.0)
+			{
+				interval = interval - timeIntervalSinceLastMessageRetrieval;
+				
+				if (interval < 0.1) interval = 0.1;
+			}
+			
 			NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:interval target:account selector:@selector(sendAndReceiveTimerFired:) userInfo:nil repeats:YES];
 			[timers addObject:timer];
 		}
@@ -756,7 +794,11 @@
 - (void)receive
 /*" Starts an asynchronous receive job for the receiver. "*/
 {
-	if ([[self valueForKey:@"isEnabled"] boolValue] && [self isPOPAccount]) [GIPOPJob retrieveMessagesFromPOPAccount:self];
+	if ([[self valueForKey:@"isEnabled"] boolValue] && [self isPOPAccount]) 
+	{
+		[self checkpointLastMessageRetrieval];
+		[GIPOPJob retrieveMessagesFromPOPAccount:self];
+	}
 }
 
 - (void)sendAndReceiveTimerFired:(NSTimer *)aTimer

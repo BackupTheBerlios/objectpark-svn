@@ -198,11 +198,13 @@ static NSThread *mainThread = nil;
 	NSString *groupURL;
 	while (groupURL = [groupEnumerator nextObject]) 
 	{;
-		@try {
-			GIMessageGroup *group = [context objectWithURLString:groupURL];
+		@try 
+		{
+			GIMessageGroup *group = [context objectWithURLString:groupURL resolve:YES];
 			[GIGroupListController showGroup:group reuseWindow:reuseWindow];
 			reuseWindow = false;
-		} @catch(id e) {
+		} @catch(id e) 
+		{
 			// ignored
 		}
 	}
@@ -637,10 +639,9 @@ static NSThread *mainThread = nil;
 - (IBAction)sendAndReceiveInAllAccounts:(id)sender
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Creates receive jobs for all accounts."*/
 {
-	[GIAccount resetAccountRetrieveAndSendTimers];
 	[[GIAccount allObjects] makeObjectsPerformSelector:@selector(send)];
-	[GIAccount resetAccountRetrieveAndSendTimers];
 	[[GIAccount allObjects] makeObjectsPerformSelector:@selector(receive)];
+	[GIAccount resetAccountRetrieveAndSendTimers];
 }
 
 - (IBAction)sendMessagesDueInNearFuture:(id)sender

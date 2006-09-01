@@ -96,32 +96,35 @@
 
 @implementation GIMessageFilterAction (Performer)
 
-+ (BOOL)performAction: (GIMessageFilterAction*) action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox
++ (BOOL)performAction:(GIMessageFilterAction *)action withMessage:(GIMessage *)message flags:(int)flags putIntoMessagebox:(BOOL *)putInBox
 {
     BOOL allowFurtherFiltering = YES;
     
     if (putInBox) *putInBox = NO;
     
-    switch ([action type]) {
+    switch ([action type]) 
+	{
         case kGIMFActionTypePutInMessagebox: 
 		{
             GIMessageGroup *destinationGroup;
             
             // get destination box
-            destinationGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: [action parameter]];
+            destinationGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:[action parameter] resolve:YES];
             
             // if destination box can not be found fallback to default box
-            if (! destinationGroup) {
+            if (! destinationGroup) 
+			{
                 destinationGroup = [GIMessageGroup defaultMessageGroup];
                 
-                if (! destinationGroup) {
+                if (! destinationGroup) 
+				{
 					 // fatal -> Exception
                     [NSException raise:NSGenericException format: @"Default message group could neither be found nor created. FATAL ERROR! Aborting filtering."];
                 }
             }
             
             // now that a destination box is present put message in
-            [GIMessageBase addMessage:message toMessageGroup:destinationGroup suppressThreading: NO];
+            [GIMessageBase addMessage:message toMessageGroup:destinationGroup suppressThreading:NO];
             if (putInBox) *putInBox = YES;
             break;
         }
@@ -130,7 +133,7 @@
             allowFurtherFiltering = NO;
             break;
         case kGIMFActionTypeMarkAsSpam:
-            [message addFlags: OPJunkMailStatus];
+            [message addFlags:OPJunkMailStatus];
             break;
             // ## missing code for other types
         default:

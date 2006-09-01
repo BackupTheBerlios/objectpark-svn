@@ -42,6 +42,7 @@ NSString *JunkReplySubjectPrefixes = @"JunkReplySubjectPrefixes";
 NSString* RecentThreadListWindowPositions = @"RecentThreadListWindowPositions";
 NSString *AttachmentSaveFolder = @"AttachmentSaveFolder";
 NSString *ReuseThreadListWindowByDefault = @"ReuseThreadListWindowByDefault";
+NSString *DateOfLastMessageRetrieval = @"DateOfLastMessageRetrieval";
 
 NSArray* allAdditionalHeadersForDisplay()
 {
