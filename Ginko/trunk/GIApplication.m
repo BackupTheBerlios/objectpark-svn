@@ -40,6 +40,8 @@
 #import <OPDebug/OPLog.h>
 #import <JavaVM/JavaVM.h>
 #import "GIFulltextIndex.h"
+#import "NSApplication+NetworkNotifications.h"
+
 
 @implementation GIApplication
 
@@ -303,7 +305,16 @@ static NSThread *mainThread = nil;
     [OPJob setMaxThreads:16];
     [self startFulltextIndexingJobIfNeeded:self];
 	[GIAccount resetAccountRetrieveAndSendTimers];
+	[self callDelegateOnNetworkChange: YES];
+	
 }
+
+- (void) networkConfigurationDidChange
+{
+	if (NSDebugEnabled) NSLog(@"Got networkConfigurationDidChange notification! Resetting send timers...");
+	[GIAccount resetAccountRetrieveAndSendTimers];
+}
+
 
 - (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
 {

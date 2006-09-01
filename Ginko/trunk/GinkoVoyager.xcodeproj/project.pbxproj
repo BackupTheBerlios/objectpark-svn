@@ -368,6 +368,8 @@
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
 		8DDF372A0AA62BF400E1F591 /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
 		8DDF37430AA62CBA00E1F591 /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
+		8DDF3DC80AA8D81700E1F591 /* NSApplication+NetworkNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDF3DC60AA8D81600E1F591 /* NSApplication+NetworkNotifications.h */; };
+		8DDF3DC90AA8D81700E1F591 /* NSApplication+NetworkNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDF3DC70AA8D81600E1F591 /* NSApplication+NetworkNotifications.m */; };
 		8DDFB43F09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */; };
 		8DDFB44009F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */; };
 		8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDFB45209F82C07000F73E2 /* IOKit.framework */; };
@@ -819,6 +821,8 @@
 		8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPExtensions.h"; sourceTree = "<group>"; };
 		8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPExtensions.m"; sourceTree = "<group>"; };
 		8DDF37290AA62BF400E1F591 /* GPGME.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPGME.framework; path = Resources/GPGME.framework; sourceTree = "<group>"; };
+		8DDF3DC60AA8D81600E1F591 /* NSApplication+NetworkNotifications.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = "NSApplication+NetworkNotifications.h"; sourceTree = "<group>"; };
+		8DDF3DC70AA8D81600E1F591 /* NSApplication+NetworkNotifications.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+NetworkNotifications.m"; sourceTree = "<group>"; };
 		8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPSleepNotifications.h"; sourceTree = "<group>"; };
 		8DDFB43E09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPSleepNotifications.m"; sourceTree = "<group>"; };
 		8DDFB45209F82C07000F73E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
@@ -1290,6 +1294,8 @@
 				8D35C9410A85332E00467F5B /* OPEnumeratorEnumerator.h */,
 				8D35C9420A85332E00467F5B /* OPEnumeratorEnumerator.m */,
 				3017EBA109917089002C5579 /* Tests */,
+				8DDF3DC60AA8D81600E1F591 /* NSApplication+NetworkNotifications.h */,
+				8DDF3DC70AA8D81600E1F591 /* NSApplication+NetworkNotifications.m */,
 				776376CE0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h */,
 				776376CF0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m */,
 				8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */,
@@ -1634,6 +1640,7 @@
 				8DB3FDB60A55565B00709070 /* NSString+OPHTMLTools.h in Headers */,
 				776376D00A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h in Headers */,
 				773560F10A8B2725008F5EAB /* GIMessageGroup+Statistics.h in Headers */,
+				8DDF3DC80AA8D81700E1F591 /* NSApplication+NetworkNotifications.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2038,6 +2045,7 @@
 				8DE2CF770A51B37C00FAE496 /* TestNSString+Extensions.m in Sources */,
 				8DB3FDB70A55565B00709070 /* NSString+OPHTMLTools.m in Sources */,
 				776376D10A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m in Sources */,
+				8DDF3DC90AA8D81700E1F591 /* NSApplication+NetworkNotifications.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

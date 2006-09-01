@@ -679,6 +679,7 @@
 static NSMutableArray *timers = nil;
 
 + (NSTimer *)timerForAccount:(GIAccount *)anAccount
+/*" Returns a new autoreleased timer that is already scheduled. "*/
 {
 	NSTimer *result = nil;
 	NSTimeInterval timeIntervalSinceLastMessageRetrieval = [anAccount timeIntervalSinceLastMessageRetrieval];

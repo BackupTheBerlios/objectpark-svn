@@ -45,8 +45,7 @@
     NSString *urlString;
     OPPersistentObjectContext *myContext = [OPPersistentObjectContext threadContext];
     
-    while (urlString = [enumerator nextObject])
-    {
+    while (urlString = [enumerator nextObject]) {
         STAssertTrue([myContext objectWithURLString: urlString resolve: YES] != nil, @"Url %@ failed.", urlString);
     }
     
