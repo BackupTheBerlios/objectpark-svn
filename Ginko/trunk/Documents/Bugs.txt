@@ -1,9 +1,8 @@
 Bugs:
 
-- additional email addresses are not used to determine, if message is from self
+- "move to trash" does not prevent sending
 - additional headers cannot be checked in Display preferences.
 - long lines without whitespaces does not wrap correctly (example: long url got a wrong space in it)
-- "move to trash" does not prevent sending
 - deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
 - updates to the list of messages (fetching messages) do not result in thread-list reloads
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
@@ -28,3 +27,4 @@ Done:
 - (Axel) sometimes statistics display is not updated.
 - (Dirk) Editor's vertical scroll bar is too short (until window is resized)
 - (Axel) fixed suboptimal rendering of search field in group toolbar
+- (Axel) additional email addresses are not used to determine, if message is from self

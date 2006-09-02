@@ -35,15 +35,19 @@
 
 + (void)addMessage:(GIMessage *)aMessage
 {
-	if (aMessage) {
+	if (aMessage) 
+	{;
 		// Adding a message should be an atomic operation:
-		@synchronized([aMessage context]) {
-			if (![GIMessageFilter filterMessage: aMessage flags:0]) {
-				[self addMessage:aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup] suppressThreading:NO];
+		@synchronized([aMessage context]) 
+		{
+			if (![GIMessageFilter filterMessage:aMessage flags:0]) 
+			{
+				[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading:NO];
 			}
 			
-			if ([aMessage hasFlags: OPIsFromMeStatus]) {
-				[self addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup] suppressThreading: NO];
+			if ([aMessage hasFlags:OPIsFromMeStatus]) 
+			{
+				[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading:NO];
 			}
 			
 			NSAssert([[[aMessage valueForKey:@"thread"] valueForKey:@"groups"] count] > 0, @"message without group found");

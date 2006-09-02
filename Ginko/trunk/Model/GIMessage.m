@@ -313,23 +313,27 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-+ (id) messageWithTransferData: (NSData*) someTransferData
++ (id)messageWithTransferData:(NSData *)someTransferData
 /*" Returns a new message with the given transfer data someTransferData in the 
     managed object context aContext.
     If message is a dupe, the message not inserted into the context nil is returned. "*/
 {
     id result = nil;
-    OPInternetMessage* im = [[OPInternetMessage alloc] initWithTransferData: someTransferData];
+    OPInternetMessage *im = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
     
-    GIMessage* dupe = [self messageForMessageId: [im messageId]];
-    if (dupe) {
-        if ([dupe isDummy]) {
+    GIMessage *dupe = [self messageForMessageId:[im messageId]];
+    
+	if (dupe) 
+	{
+        if ([dupe isDummy]) 
+		{
             // replace message
             OPDebugLog(MESSAGE, MESSAGEREPLACING, @"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [im messageId]);
             [dupe setContentFromInternetMessage:im];
             [dupe referenceFind:YES];
         }
-        else if ([GIProfile isMyEmailAddress: [im fromWithFallback: YES]]) {
+        else if ([GIProfile isMyEmailAddress:[im fromWithFallback:YES]]) 
+		{
             // replace old message with new:
             OPDebugLog(MESSAGE, MESSAGEREPLACING, @"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [im messageId]);
             [dupe setContentFromInternetMessage:im];
@@ -337,7 +341,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         else
             OPDebugLog(MESSAGE, DUPECHECK, @"Dupe for message id %@ detected.", [im messageId]);        
     }
-    else {
+    else 
+	{
         // Create a new message in the default context:
         result = [[[GIMessage alloc] init] autorelease];
         [result insertIntoContext: [OPPersistentObjectContext threadContext]]; 

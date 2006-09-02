@@ -136,21 +136,40 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 }
 
 /*" Returns true if the given address is one of the known (present in any profile) user's addresses. "*/
-+ (BOOL)isMyEmailAddress:(NSString *)anAddress {
-	if (anAddress) {
++ (BOOL)isMyEmailAddress:(NSString *)anAddress 
+{
+	if (anAddress) 
+	{
 		NSEnumerator *enumerator;
 		GIProfile *profile;
 		
-		@try {
+		@try 
+		{
 			anAddress = [anAddress addressFromEMailString]; // to be sure to have only the address part
 			
 			enumerator = [[GIProfile allObjects] objectEnumerator];
-			while (profile = [enumerator nextObject]) {
-				if ([[[profile valueForKey:@"mailAddress"] addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch].location != NSNotFound) {
+			while (profile = [enumerator nextObject]) 
+			{
+				if ([[[profile valueForKey:@"mailAddress"] addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch].location != NSNotFound) 
+				{
 					return YES;
 				}
+				
+				NSArray *additionalAddresses = [[profile valueForKey:@"additionalAddresses"] componentsSeparatedByString:@","];
+				NSEnumerator *aaEnumerator = [additionalAddresses objectEnumerator];
+				NSString *aAddress;
+				
+				while (aAddress = [aaEnumerator nextObject])
+				{
+					if ([[aAddress addressFromEMailString] rangeOfString:anAddress options:NSCaseInsensitiveSearch].location != NSNotFound) 
+					{
+						return YES;
+					}
+				}
 			}
-		} @catch (id localException) {
+		} 
+		@catch (id localException) 
+		{
 			return NO; // Expect our users to have correct email addresses.
 		}
     }
