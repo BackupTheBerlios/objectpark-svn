@@ -13,7 +13,9 @@
 @class GIAccount;
 @class GIMessage;
 
-@interface GIProfile : OPPersistentObject {
+@interface GIProfile : OPPersistentObject 
+{
+	NSArray *cachedEmailAddresses;
 }
 
 /*" Accessing profiles "*/

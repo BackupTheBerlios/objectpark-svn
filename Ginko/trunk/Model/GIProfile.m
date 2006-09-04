@@ -78,6 +78,12 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
     return [result sortedArrayByComparingAttribute: @"name"]; // improve by making result sorted!
 }
 
+- (void)dealloc
+{
+	[cachedEmailAddresses release];
+	[super dealloc];
+}
+
 - (BOOL)validateMailAddress:(NSString **)address error:(NSError **)outError
 {
 	if ([*address length] < 3) {
@@ -88,8 +94,14 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 }
 
 /*" Returns all additional email addresses which are related of the receiver. "*/
-- (NSArray *)allAdditionalEmailAddresses {
-    return [[self valueForKey:@"additionalAddresses"] addressListFromEMailString];
+- (NSArray *)allAdditionalEmailAddresses 
+{
+	if (!cachedEmailAddresses)
+	{
+		cachedEmailAddresses = [[[self valueForKey:@"additionalAddresses"] addressListFromEMailString] retain];
+	}
+	
+    return cachedEmailAddresses;
 }
 
 + (GIProfile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage
@@ -155,8 +167,7 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 					return YES;
 				}
 				
-				NSArray *additionalAddresses = [[profile valueForKey:@"additionalAddresses"] componentsSeparatedByString:@","];
-				NSEnumerator *aaEnumerator = [additionalAddresses objectEnumerator];
+				NSEnumerator *aaEnumerator = [[profile allAdditionalEmailAddresses] objectEnumerator];
 				NSString *aAddress;
 				
 				while (aAddress = [aaEnumerator nextObject])
@@ -206,6 +217,12 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 
 - (void)didChangeValueForKey:(NSString *)key
 {
+	if ([key isEqualToString:@"additionalAddresses"])
+	{
+		[cachedEmailAddresses release];
+		cachedEmailAddresses = nil;
+	}
+	
 	[super didChangeValueForKey:key];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIProfileDidChangNotification object:self userInfo:[NSDictionary dictionaryWithObject:key forKey:@"key"]];
