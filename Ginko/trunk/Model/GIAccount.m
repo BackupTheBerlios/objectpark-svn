@@ -676,78 +676,73 @@
 	[[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:[self dateOfLastMessageRetrievalDefaultsKey]];
 }
 
-static NSMutableArray *timers = nil;
++ (NSMutableArray*) timers
+{
+	static NSMutableArray *timers = nil;
+	
+	if (!timers) {
+		timers = [[NSMutableArray alloc] init];
+	}
+	return timers;
+}
 
-+ (NSTimer *)timerForAccount:(GIAccount *)anAccount
+- (NSTimer*) receiveTimer
 /*" Returns a new autoreleased timer that is already scheduled. "*/
 {
-	NSTimer *result = nil;
-	NSTimeInterval timeIntervalSinceLastMessageRetrieval = [anAccount timeIntervalSinceLastMessageRetrieval];
+	NSTimer* result = nil;
 	
-	NSTimeInterval interval = [[anAccount valueForKey:@"retrieveMessageInterval"] floatValue] * 60.0;
-	if (interval > 0.1)
-	{
-		if (timeIntervalSinceLastMessageRetrieval > 0.0)
-		{
-			interval = interval - timeIntervalSinceLastMessageRetrieval;
-			
-			if (interval < 0.1) interval = 0.1;
-		}
+	if ([[self valueForKey: @"isEnabled"] boolValue]) {
+		NSTimeInterval timeIntervalSinceLastMessageRetrieval = [self timeIntervalSinceLastMessageRetrieval];
 		
-		result = [NSTimer scheduledTimerWithTimeInterval:interval target:anAccount selector:@selector(sendAndReceiveTimerFired:) userInfo:anAccount repeats:NO];
+		NSTimeInterval interval = [[self valueForKey: @"retrieveMessageInterval"] intValue] * 60; // this might no longer be legal on Intel!
+		if (interval > 0.1) {
+			if (timeIntervalSinceLastMessageRetrieval > 0.0) {
+				interval = MAX(0.1, interval - timeIntervalSinceLastMessageRetrieval);				
+			}
+			
+			result = [NSTimer scheduledTimerWithTimeInterval: interval
+													  target: self 
+													selector: @selector(sendAndReceiveTimerFired:)
+													userInfo: self 
+													 repeats: NO];
+		}
 	}
-	
 	return result;
 }
 
-+ (void)resetReceiveTimerForAccount:(GIAccount *)anAccount
-{
-	NSAssert(timers != nil, @"Timers array not in place.");
+- (void) resetReceiveTimer
+{	
+	// find timer with userinfo == self
+	NSEnumerator* enumerator = [[[self class] timers] objectEnumerator];
+	NSTimer* timer;
 	
-	// find timer with userinfo == anAccount
-	NSEnumerator *enumerator = [timers objectEnumerator];
-	NSTimer *timer;
-	
-	while (timer = [enumerator nextObject])
-	{
-		if ([timer userInfo] == anAccount) break;
-		else timer = nil;
+	while (timer = [enumerator nextObject]) {
+		if ([timer userInfo] == self) break;
 	}
 	
-	if (timer)
-	{
+	if (timer) {
 		[timer invalidate];
-		[timers removeObjectIdenticalTo:timer];
+		[[[self class] timers] removeObjectIdenticalTo: timer];
 	}
 	
-	if (timer = [self timerForAccount:anAccount])
-	{
-		[timers addObject:timer];
+	if (timer = [self receiveTimer]) {
+		[[[self class] timers] addObject: timer];
 	}
 }
 
-+ (void)resetAccountRetrieveAndSendTimers
++ (void) resetAccountRetrieveAndSendTimers
 {
-	if (!timers)
-	{
-		timers = [[NSMutableArray alloc] init];
-	}
-	else
-	{
-		[timers makeObjectsPerformSelector:@selector(invalidate)];
-		[timers removeAllObjects];
-	}
+	[[self timers] makeObjectsPerformSelector: @selector(invalidate)];
+	[[self timers] removeAllObjects];
 	
-	NSEnumerator *enumerator = [[self allObjects] objectEnumerator];
-	GIAccount *account;
+	NSEnumerator* enumerator = [[self allObjects] objectEnumerator];
+	GIAccount* account;
 	
-	while (account = [enumerator nextObject])
-	{
-		NSTimer *timer = [self timerForAccount:account];
+	while (account = [enumerator nextObject]) {
+		NSTimer* timer = [account receiveTimer];
 		
-		if (timer)
-		{
-			[timers addObject:timer];
+		if (timer) {
+			[[self timers] addObject: timer];
 		}
 	}
 }
@@ -844,7 +839,7 @@ static NSMutableArray *timers = nil;
 {
 	[self receive];
 	[self send];
-	[[self class] resetReceiveTimerForAccount:self];
+	[self resetReceiveTimer];
 }
 
 - (void)didChangeValueForKey:(NSString *)key
