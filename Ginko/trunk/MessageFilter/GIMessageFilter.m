@@ -28,6 +28,8 @@
 #import "GIJunkfilter.h"
 #import "OPObjectPair.h"
 
+#define GIMESSAGEFILTER OPL_DOMAIN @"GIMESSAGEFILTER"
+
 NSString *GIMessageFiltersDidChangeNotification = @"GIMessageFiltersDidChangeNotification";
 NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDelayedWriteFilters";
 
@@ -535,7 +537,7 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 			
 			// For now, only scan subject:
 			if ([headerName isEqualToString: @"Subject"] || [headerName isEqualToString: @"Content-Type"]) {
-				NSLog(@"Header: %@", header);
+				OPDebugLog(GIMESSAGEFILTER, OPINFO, @"Header: %@", header);
 				
 				// All header words get the "h:" prefix:
 				[GIJunkFilter addWordsFromString: [header secondObject] 
@@ -549,12 +551,12 @@ NSString *GIMessageFilterCenterDelayedWriteFilters = @"GIMessageFilterCenterDela
 							  withPrefix: nil
 								 toArray: words];
 
-		NSLog(@"Words used as spamfilter input: %@", words);
+		OPDebugLog(GIMESSAGEFILTER, OPINFO, @"Words used as spamfilter input: %@", words);
 		NSEnumerator* wordEnumerator = [words objectEnumerator];
 		
 		BOOL isSpam = [[GIJunkFilter sharedInstance] isSpamMessage: wordEnumerator];
 		if (isSpam) {
-			NSLog(@"Message %@ considered SPAM!", message);
+			OPDebugLog(GIMESSAGEFILTER, OPINFO, @"Message %@ considered SPAM!", message);
 			[message addFlags: OPJunkMailStatus];
 			NSAssert([message flags] & OPJunkMailStatus, @"Setting Junk Flag did not work.");
 		}
