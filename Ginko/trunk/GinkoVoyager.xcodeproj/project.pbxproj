@@ -92,6 +92,7 @@
 		77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77608AE20972F4030071A01F /* OPImageAndTextCell.m */; };
 		776376D00A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 776376CE0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h */; };
 		776376D10A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 776376CF0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m */; };
+		776411CE0AADB7DD009F78F7 /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
 		77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77738B0B0955B02000BAAB51 /* JavaVM.framework */; };
 		777435CB077755A000899957 /* group.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777435CA077755A000899957 /* group.toolbar */; };
 		777436300778055900899957 /* NSToolbar+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7774362E0778055900899957 /* NSToolbar+OPExtensions.h */; };
@@ -367,7 +368,6 @@
 		8DDD22B1080ED19D006C902D /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */; };
 		8DDD22B2080ED19D006C902D /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */; };
 		8DDF372A0AA62BF400E1F591 /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
-		8DDF37430AA62CBA00E1F591 /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
 		8DDF3DC80AA8D81700E1F591 /* NSApplication+NetworkNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDF3DC60AA8D81600E1F591 /* NSApplication+NetworkNotifications.h */; };
 		8DDF3DC90AA8D81700E1F591 /* NSApplication+NetworkNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DDF3DC70AA8D81600E1F591 /* NSApplication+NetworkNotifications.m */; };
 		8DDFB43F09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */; };
@@ -443,7 +443,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8DDF37430AA62CBA00E1F591 /* GPGME.framework in Copy GPGME Framework */,
+				776411CE0AADB7DD009F78F7 /* GPGME.framework in Copy GPGME Framework */,
 			);
 			name = "Copy GPGME Framework";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -902,7 +902,6 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8DDF37290AA62BF400E1F591 /* GPGME.framework */,
 				7718C87F09F1762A00D517CB /* ApplicationServices.framework */,
 				77D471E3095BF12E003CEAEA /* CoreFoundation.framework */,
 				77738B0B0955B02000BAAB51 /* JavaVM.framework */,
@@ -990,6 +989,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8DDF37290AA62BF400E1F591 /* GPGME.framework */,
 				8D7C7EAB0A52EDD40031385D /* libxml2.dylib */,
 				771CD38509F800170062BEED /* libsasl2.dylib */,
 				8DDFB45209F82C07000F73E2 /* IOKit.framework */,

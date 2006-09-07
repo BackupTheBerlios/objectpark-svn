@@ -522,10 +522,12 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 		{
 			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@)", userIds];
 		}
+		/*
 		else
 		{
 			signatureDescription = [signatureDescription stringByAppendingFormat:@" (%@)", userIds];
 		}
+		*/
 		
 		NSString *validity = [key validityDescription];
 		if ([validity length])

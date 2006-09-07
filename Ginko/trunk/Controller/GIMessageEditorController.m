@@ -75,7 +75,7 @@
 		// Make sure, aMessage is not send during edit:
         if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus:OPSendStatusQueuedBlocked];
         
-        profile = [[aMessage valueForKey: @"sendProfile"] retain];
+        profile = [[aMessage valueForKey:@"sendProfile"] retain];
         
         oldMessage = [aMessage retain];
         referencedMessage = nil;
@@ -118,7 +118,10 @@
         [self updateMessageTextView];
         [self updateWindowTitle];
         
-        [window makeKeyAndOrderFront:self];
+		// HACK ensure To is first responder:
+		[window performSelector:@selector(makeFirstResponder:) withObject:[self headerTextFieldWithFieldName:@"To"] afterDelay:0.01];
+		
+		[window makeKeyAndOrderFront:self];
     }
     
     return self;
@@ -1455,7 +1458,7 @@ NSDictionary *maxLinesForCalendarName()
             [field setStringValue:@""];
         }
     }
-        
+	
     if ((text = [profile valueForKey:@"defaultCc"]))
     {
         field = [self headerTextFieldWithFieldName:@"Cc"];
@@ -1478,7 +1481,7 @@ NSDictionary *maxLinesForCalendarName()
             [field setStringValue:@""];
         }
     }
-
+	
     if ((text = [profile valueForKey:@"defaultBcc"])) 
 	{
         NSTextField *field = [self headerTextFieldWithFieldName:@"Bcc"];
@@ -1532,8 +1535,8 @@ NSDictionary *maxLinesForCalendarName()
     
     // prepare dictionary for looking up header fields:
     headerTextFieldsForName = [[NSMutableDictionary alloc] init];
-    [headerTextFieldsForName setObject: toField forKey:@"To"];
-    [headerTextFieldsForName setObject: subjectField forKey:@"Subject"];
+    [headerTextFieldsForName setObject:toField forKey:@"To"];
+    [headerTextFieldsForName setObject:subjectField forKey:@"Subject"];
     bottomTextField = subjectField;
     
     maxLines = [[maxLinesForCalendarName() objectForKey:@"To"] unsignedIntValue];
@@ -1547,7 +1550,7 @@ NSDictionary *maxLinesForCalendarName()
 
     //NSLog(@"toField charset = %d", [[toField tokenizingCharacterSet] characterIsMember:' ']);
     
-    maxLines = [[maxLinesForCalendarName() objectForKey: @"Subject"] unsignedIntValue];
+    maxLines = [[maxLinesForCalendarName() objectForKey:@"Subject"] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [subjectField setMaxLines:maxLines];
     
