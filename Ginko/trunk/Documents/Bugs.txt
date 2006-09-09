@@ -1,12 +1,13 @@
 Bugs:
 
+- "move to trash" for queued messages does not prevent sending - ouch! Check, if fixed!
 - "general prefs" have no icon in release build (reported by Jörg)
 - Beim Anlegen einer Mailbox wird das Popup zu "Put in message box" in der Filter-Pane nicht automatisch aktualisiert (reported by Jörg)
-- "move to trash" does not prevent sending
 - additional headers cannot be checked in Display preferences.
 - long lines without whitespaces does not wrap correctly (example: long url got a wrong space in it)
 - deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
+- Drafts can be opened in multiple, unrelated editors - very confusing
 
 Regressions:
 

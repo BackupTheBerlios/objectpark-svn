@@ -111,12 +111,16 @@
     [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup] suppressThreading:YES];
 }
 
-+ (void)addTrashThread:(GIThread *)thread
++ (void) addTrashThread: (GIThread*) thread
 {
-    [[GIMessageGroup draftMessageGroup] removeValue:thread forKey: @"threadsByDate"];
-    [[GIMessageGroup queuedMessageGroup] removeValue:thread forKey: @"threadsByDate"];
-    
-    [[GIMessageGroup trashMessageGroup] addValue:thread forKey: @"threadsByDate"];
+    [[GIMessageGroup draftMessageGroup] removeValue: thread forKey: @"threadsByDate"];
+    [[GIMessageGroup queuedMessageGroup] removeValue: thread forKey: @"threadsByDate"];
+    [[GIMessageGroup trashMessageGroup] addValue: thread forKey: @"threadsByDate"];
+	
+	// Make sure trashed messages are not sent:
+	NSEnumerator* e = [[thread messages] objectEnumerator];
+	GIMessage* message;
+	while (message = [e nextObject]) [message setSendStatus: OPSendStatusNone];
 }
 
 + (void)removeDraftMessage:(GIMessage *)aMessage
