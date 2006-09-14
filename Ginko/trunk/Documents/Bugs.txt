@@ -1,5 +1,6 @@
 Bugs:
 
+- Wenn ein Eintrag im "Put in message box"-Popup ausgewählt wird, darf der Haken daneben ruhig aktiviert werden  (reported by Jörg)
 - "move to trash" for queued messages does not prevent sending - ouch! Check, if fixed!
 - "general prefs" have no icon in release build (reported by Jörg)
 - Beim Anlegen einer Mailbox wird das Popup zu "Put in message box" in der Filter-Pane nicht automatisch aktualisiert (reported by Jörg)
@@ -7,7 +8,7 @@ Bugs:
 - long lines without whitespaces does not wrap correctly (example: long url got a wrong space in it)
 - deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
-- Drafts can be opened in multiple, unrelated editors - very confusing
+- password handling for SMTP is broken (once a wrong password was entered there is no way of correcting/changing the password)
 
 Regressions:
 
@@ -31,3 +32,4 @@ Done:
 - (Axel) additional email addresses are not used to determine, if message is from self
 - (Dirk) updates to the list of messages (fetching messages) do not result in thread-list reloads
 - (Axel) while retrieving messages, sometimes only one account is used at first - the other accounts follow after the first has finished
+- (Axel) Already reopened queued messages can be opened again (should not be possible)

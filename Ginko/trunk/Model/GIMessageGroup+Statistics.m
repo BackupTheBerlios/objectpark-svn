@@ -11,6 +11,8 @@
 #import "OPJob.h"
 #import "GIThread.h"
 
+#define GIMESSAGESTATS OPL_DOMAIN @"GIMESSAGESTATS"
+
 NSString *GINumberOfUnreadMessages = @"GINumberOfUnreadMessages";
 NSString *GINumberOfUnreadThreads = @"GINumberOfUnreadThreads";
 
@@ -45,7 +47,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 			NSNumber *numberOfUnreadMessages = [stats objectForKey:GINumberOfUnreadMessages];
 			if (numberOfUnreadMessages)
 			{
-				//NSLog(@"set number of unread messages");
+				//OPDebugLog(GIMESSAGESTATS, OPINFO, @"set number of unread messages");
 				[group setUnreadMessageCount:numberOfUnreadMessages];
 				group->isStatisticsValid = YES;
 			}
@@ -89,7 +91,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 + (void)messageFlagsDidChange:(NSNotification *)aNotification
 {
     NSArray *affectedMessageGroups = [[(GIMessage *)[aNotification object] thread] valueForKey:@"groups"];    
-    if ([affectedMessageGroups count] == 0) NSLog(@"warning: flags did change for a message without group.");
+    if ([affectedMessageGroups count] == 0) OPDebugLog(GIMESSAGESTATS, OPWARNING, @"warning: flags did change for a message without group.");
     
 	[affectedMessageGroups makeObjectsPerformSelector:@selector(invalidateStatistics)];
 }
@@ -97,9 +99,9 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 + (void)threadDidChange:(NSNotification *)aNotification
 {
     NSArray *affectedMessageGroups = [(GIThread *)[aNotification object] valueForKey:@"groups"];    
-    if ([affectedMessageGroups count] == 0) NSLog(@"warning: thread did change for a thread without group.");
+    if ([affectedMessageGroups count] == 0) OPDebugLog(GIMESSAGESTATS, OPWARNING, @"warning: thread did change for a thread without group.");
     
-	NSLog(@"threadDidChange for groups: %@", affectedMessageGroups);
+	OPDebugLog(GIMESSAGESTATS, OPINFO, @"threadDidChange for groups: %@", affectedMessageGroups);
 
 	[affectedMessageGroups makeObjectsPerformSelector:@selector(invalidateStatistics)];
 }
@@ -140,7 +142,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 
 - (void)calculateUnreadMessageCount
 {
-	//NSLog(@"Starting statistics job for group %@", self);
+	//OPDebugLog(GIMESSAGESTATS, OPINFO, @"Starting statistics job for group %@", self);
 	
 	//OPJob *job = [[[OPJob alloc] initWithName:[self jobName] target:self selector:@selector(calculateUnreadMessageCountJob:) argument:[NSDictionary dictionaryWithObject:self forKey:@"group"] synchronizedObject:[NSNumber numberWithUnsignedLongLong:[self oid]]] autorelease];
 	OPJob *job = [[[OPJob alloc] initWithName:[self jobName] target:self selector:@selector(calculateUnreadMessageCountJob:) argument:[NSDictionary dictionaryWithObject:self forKey:@"group"] synchronizedObject:@"MessageGroupStatistics"] autorelease];
@@ -178,7 +180,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	
 	NSNumber *result = [job result];
 	
-	//NSLog(@"Finished statistics Job for group %@ with result %@.", self, result);
+	//OPDebugLog(GIMESSAGESTATS, OPINFO, @"Finished statistics Job for group %@ with result %@.", self, result);
 
 	[self setUnreadMessageCount:result];
 	
@@ -203,7 +205,7 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	OPSQLiteStatement* statement = [[OPSQLiteStatement alloc] initWithSQL: @"select count(*) from Z_4THREADS, ZTHREAD, ZMESSAGE where Z_4THREADS.Z_4GROUPS = ? and Z_4THREADS.Z_6THREADS = ZTHREAD.Z_PK and ZMESSAGE.ZTHREAD = ZTHREAD.Z_PK and (ZMESSAGE.ZISSEEN = 0 OR ZMESSAGE.ZISSEEN ISNULL);" 
 															   connection: connection];
 	[statement bindPlaceholderAtIndex: 0 toRowId: [self oid]];
-	//NSLog(@"%lu", (unsigned long)[self oid]);
+	//OPDebugLog(GIMESSAGESTATS, OPINFO, @"%lu", (unsigned long)[self oid]);
 	
 	[[OPJob job] setResult: [statement executeWithNumberResult]];
 	

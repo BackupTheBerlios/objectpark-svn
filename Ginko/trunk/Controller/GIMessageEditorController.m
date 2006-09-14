@@ -54,6 +54,22 @@
 
 @implementation GIMessageEditorController
 
++ (NSWindow *)windowForMessage:(GIMessage *)aMessage
+/*" Returns the window for the message aMessage or nil, if no such window exists. "*/
+{
+    NSWindow *win;
+    NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
+    while (win = [enumerator nextObject]) 
+	{
+        if ([[win delegate] isKindOfClass:self]) 
+		{
+            if ([[win delegate] oldMessage] == aMessage) return win;
+        }
+    }
+    
+    return nil;
+}
+
 - (id)init
 {
     if (self = [super init]) 
@@ -72,6 +88,16 @@
 {
     if (self = [self init]) 
     {        
+		// check if aMessage is already be edited:
+		NSWindow *existingEditorWindow = [[self class] windowForMessage:aMessage];
+		if (existingEditorWindow)
+		{
+			[existingEditorWindow makeKeyAndOrderFront:self];
+			
+			[self autorelease];
+			return nil;
+		}
+		
 		// Make sure, aMessage is not send during edit:
         if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus:OPSendStatusQueuedBlocked];
         
@@ -347,6 +373,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (GIProfile *)profile
 {
     return profile;
+}
+
+- (GIMessage *)oldMessage
+{
+	return oldMessage;
 }
 
 - (void)sendSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
