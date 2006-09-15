@@ -9,6 +9,8 @@ Bugs:
 - deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
 - password handling for SMTP is broken (once a wrong password was entered there is no way of correcting/changing the password)
+- Cancelling Keychain access requests leads to ugly stream-error alert dialogs
+- Messages with status "in send job" cannot be opened, nor are they sent - need to reset this at startup
 
 Regressions:
 

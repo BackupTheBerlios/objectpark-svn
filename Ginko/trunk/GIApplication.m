@@ -14,6 +14,7 @@
 #import "GIThreadListController.h"
 #import "GIMessageEditorController.h"
 #import "NSApplication+OPExtensions.h"
+#import "NSFileManager+Extensions.h"
 #import "GIMessageBase.h"
 #import "OPMBoxFile.h"
 #import "GIThread.h"
@@ -298,15 +299,57 @@ static NSThread *mainThread = nil;
     }
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void) importMboxFiles: (NSArray*) paths
+		   moveOnSuccess: (BOOL) doMove
+	/*" Schedules jobs for paths given. If doMove is YES, the file is moved to the imported folder - copied otherwise. "*/
+{
+	if ([paths count]) {
+		[self showActivityPanel: self];
+		
+		NSEnumerator* enumerator = [paths objectEnumerator];
+		NSString* boxFilename;
+		
+		while (boxFilename = [enumerator nextObject]) {
+			NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+			
+			[jobArguments setObject: boxFilename forKey: @"mboxFilename"];
+			[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+			if (!doMove) [jobArguments setObject: yesNumber forKey: @"copyOnly"];
+			
+			[OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
+		}
+	}
+}
+
+- (void) applicationDidFinishLaunching: (NSNotification*) aNotification
 /*" On launch, opens a group window. "*/
 {
-    [self applicationDidBecomeActive:aNotification];
-    [OPJob setMaxThreads:16];
-    [self startFulltextIndexingJobIfNeeded:self];
+    [self applicationDidBecomeActive: aNotification];
+    [OPJob setMaxThreads: 16];
+    [self startFulltextIndexingJobIfNeeded: self];
 	[GIAccount resetAccountRetrieveAndSendTimers];
 	[self callDelegateOnNetworkChange: YES];
-	
+
+	// Check, if there are mboxes to import in the respective folder:
+	NSArray* filesToImport = [[NSFileManager defaultManager] directoryContentsAtPath: [GIPOPJob mboxesToImportDirectory]
+																	   absolutePaths: YES];
+	if ([filesToImport count]) {
+		// Ask wether to import those:
+		NSAlert* alert = [NSAlert alertWithMessageText: @"There seem to be messages waiting to be imported. Do you want to import them now?" 
+										 defaultButton: NSLocalizedString(@"Import", @"Import alert box button")
+									   alternateButton: NSLocalizedString(@"Cancel", @"") 
+										   otherButton: nil 
+							 informativeTextWithFormat: @"This can happen if Ginko terminates unexpectedly. Ginko will import %d files.", [filesToImport count]];
+		
+		int alertResult = [alert runModal];
+		
+		if (alertResult == NSAlertDefaultReturn) {
+			// re-calculate files to import:
+			filesToImport = [[NSFileManager defaultManager] directoryContentsAtPath: [GIPOPJob mboxesToImportDirectory]
+																	  absolutePaths: YES];
+			[self importMboxFiles: filesToImport moveOnSuccess: YES];
+		} // else do nothing
+	}
 }
 
 - (void) networkConfigurationDidChange
@@ -322,7 +365,7 @@ static NSThread *mainThread = nil;
     return someFilePaths;
 }
 
-- (IBAction)importMboxFile:(id)sender
+- (IBAction) importMboxFile: (id) sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
@@ -339,29 +382,12 @@ static NSThread *mainThread = nil;
     
     result = [oPanel runModalForDirectory:directory file:nil types:fileTypes];
     
-    if (result == NSOKButton) 
-    {
+    if (result == NSOKButton) {
         [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
         
         NSArray *filesToOpen = [self filePathsSortedByCreationDate:[oPanel filenames]];
 
-        if ([filesToOpen count]) 
-        {
-            [self showActivityPanel:sender];
-            
-            NSEnumerator *enumerator = [filesToOpen objectEnumerator];
-            NSString *boxFilename;
-            
-            while (boxFilename = [enumerator nextObject]) {
-                NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
-                
-				[jobArguments setObject: boxFilename forKey: @"mboxFilename"];
-				[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
-                [jobArguments setObject: yesNumber forKey: @"copyOnly"];
-				
-                [OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
-            }
-        }
+		[self importMboxFiles: filesToOpen moveOnSuccess: NO];
     }    
 }
 

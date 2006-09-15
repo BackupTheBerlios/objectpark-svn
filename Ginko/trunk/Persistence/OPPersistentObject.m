@@ -299,12 +299,13 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	}
 }
 
-
+/*
 - (void) willChangeValueForKey: (NSString*) key
 {
     //[[self context] willChangeObject: self];
 	[super willChangeValueForKey: key]; // notify observers
 }
+*/
 
 - (void) didAccessValueForKey: (NSString*) key
 {
@@ -445,6 +446,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
+	// Do not allow setting values during e.g. a commit:
 	@synchronized([self context]) {
 		id oldValue = [self primitiveValueForKey: key];
 		

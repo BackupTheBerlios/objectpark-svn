@@ -47,6 +47,12 @@
 	[alert release];
 }
 
++ (NSString*) mboxesToImportDirectory
+{
+	NSString* mboxesToImportDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"mboxes to import"];
+	return mboxesToImportDirectory;
+}
+
 - (void)retrieveMessagesFromPOPAccountJob:(NSDictionary *)arguments
 /*" Retrieves using delegate for providing password. "*/
 {

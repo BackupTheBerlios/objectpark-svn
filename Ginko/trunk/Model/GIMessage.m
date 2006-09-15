@@ -760,35 +760,38 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 */
 
-- (void)removeFlags:(unsigned)someFlags
+- (void) removeFlags: (unsigned) someFlags
 {
-    NSNumber *oldValue = nil;
-    NSNumber *newValue = nil;
+    NSNumber* oldValue = nil;
+    NSNumber* newValue = nil;
     
-    @synchronized(self) {
-        int flags = [self flags];
-        
-        if ((flags & (~someFlags)) != flags) {
-            // flags to remove:
-            //NSNumber* no = [NSNumber numberWithBool: NO];
-            //if (someFlags & OPInSendJobStatus) [self setValue: nil forKey: @"isInSendJob"];
-            //if (someFlags & OPQueuedStatus) [self setValue: nil forKey: @"isQueued"];
-            if (someFlags & OPInterestingStatus) [self setValue: nil forKey: @"isInteresting"];
-            if (someFlags & OPSeenStatus) [self setValue: nil forKey: @"isSeen"];
-            if (someFlags & OPJunkMailStatus) [self setValue: nil forKey: @"isJunk"];
-            //if (someFlags & OPSendingBlockedStatus) [self setValue: nil forKey: @"isSendingBlocked"];
-            if (someFlags & OPFlaggedStatus) [self setValue: nil forKey: @"isFlagged"];
-            if (someFlags & OPIsFromMeStatus) [self setValue: nil forKey: @"isFromMe"];
-            if (someFlags & OPFulltextIndexedStatus) [self setValue: nil forKey: @"isFulltextIndexed"];
-            if (someFlags & OPAnsweredStatus) [self setValue: nil forKey: @"isAnswered"];
-            //if (someFlags & OPDraftStatus) [self setValue: nil forKey: @"isDraft"];
-            
-            flagsCache = (flags & (~someFlags));
-            
-            oldValue = [NSNumber numberWithInt:flags];
-            newValue = [NSNumber numberWithInt:flagsCache];
-        }
-    }
+	// Setters lock the context to prevent updates during commit:
+	@synchronized([self context]) {
+		@synchronized(self) {
+			int flags = [self flags];
+			
+			if ((flags & (~someFlags)) != flags) {
+				// flags to remove:
+				//NSNumber* no = [NSNumber numberWithBool: NO];
+				//if (someFlags & OPInSendJobStatus) [self setValue: nil forKey: @"isInSendJob"];
+				//if (someFlags & OPQueuedStatus) [self setValue: nil forKey: @"isQueued"];
+				if (someFlags & OPInterestingStatus) [self setValue: nil forKey: @"isInteresting"];
+				if (someFlags & OPSeenStatus) [self setValue: nil forKey: @"isSeen"];
+				if (someFlags & OPJunkMailStatus) [self setValue: nil forKey: @"isJunk"];
+				//if (someFlags & OPSendingBlockedStatus) [self setValue: nil forKey: @"isSendingBlocked"];
+				if (someFlags & OPFlaggedStatus) [self setValue: nil forKey: @"isFlagged"];
+				if (someFlags & OPIsFromMeStatus) [self setValue: nil forKey: @"isFromMe"];
+				if (someFlags & OPFulltextIndexedStatus) [self setValue: nil forKey: @"isFulltextIndexed"];
+				if (someFlags & OPAnsweredStatus) [self setValue: nil forKey: @"isAnswered"];
+				//if (someFlags & OPDraftStatus) [self setValue: nil forKey: @"isDraft"];
+				
+				flagsCache = (flags & (~someFlags));
+				
+				oldValue = [NSNumber numberWithInt:flags];
+				newValue = [NSNumber numberWithInt:flagsCache];
+			}
+		}
+	}
     
     // notify if needed (outside the synchronized block to avoid blocking problems)
     if (newValue) {

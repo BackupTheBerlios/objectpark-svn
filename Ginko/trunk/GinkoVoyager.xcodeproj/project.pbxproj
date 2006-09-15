@@ -382,6 +382,8 @@
 		8DEFDBCA09C08CFD00F6FB25 /* libsqlite336.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEFDBC909C08CFD00F6FB25 /* libsqlite336.a */; };
 		8DF0BD3C0897CA040017D6D1 /* OPClassDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */; };
 		8DF0BD3D0897CA040017D6D1 /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
+		8DF139100ABA1CD200A24563 /* NSFileManager+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DF1390E0ABA1CD200A24563 /* NSFileManager+Extensions.h */; };
+		8DF139110ABA1CD300A24563 /* NSFileManager+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF1390F0ABA1CD200A24563 /* NSFileManager+Extensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -837,6 +839,8 @@
 		8DEFDBC909C08CFD00F6FB25 /* libsqlite336.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite336.a; path = Resources/libsqlite336.a; sourceTree = "<group>"; };
 		8DF0BD3A0897CA040017D6D1 /* OPClassDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPClassDescription.h; sourceTree = "<group>"; };
 		8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPClassDescription.m; sourceTree = "<group>"; };
+		8DF1390E0ABA1CD200A24563 /* NSFileManager+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Extensions.h"; sourceTree = "<group>"; };
+		8DF1390F0ABA1CD200A24563 /* NSFileManager+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Extensions.m"; sourceTree = "<group>"; };
 		8DF749FB085525B900049071 /* Bugs.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bugs.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1338,6 +1342,8 @@
 				8D0EC28109A22577004563D4 /* NSString+Similarities.m */,
 				8D61A4030A0F6E1300AB7C35 /* NSWindow+RecentPositions.h */,
 				8D61A4040A0F6E1300AB7C35 /* NSWindow+RecentPositions.m */,
+				8DF1390E0ABA1CD200A24563 /* NSFileManager+Extensions.h */,
+				8DF1390F0ABA1CD200A24563 /* NSFileManager+Extensions.m */,
 			);
 			path = "Cocoa Extensions";
 			sourceTree = "<group>";
@@ -1641,6 +1647,7 @@
 				776376D00A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h in Headers */,
 				773560F10A8B2725008F5EAB /* GIMessageGroup+Statistics.h in Headers */,
 				8DDF3DC80AA8D81700E1F591 /* NSApplication+NetworkNotifications.h in Headers */,
+				8DF139100ABA1CD200A24563 /* NSFileManager+Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2046,6 +2053,7 @@
 				8DB3FDB70A55565B00709070 /* NSString+OPHTMLTools.m in Sources */,
 				776376D10A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m in Sources */,
 				8DDF3DC90AA8D81700E1F591 /* NSApplication+NetworkNotifications.m in Sources */,
+				8DF139110ABA1CD300A24563 /* NSFileManager+Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

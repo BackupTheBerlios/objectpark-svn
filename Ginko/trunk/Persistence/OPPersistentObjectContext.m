@@ -459,9 +459,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
 		
-		@synchronized(db) { // to be gone
-			[db beginTransaction];
-		}
+		[db beginTransaction];
 		
 		@synchronized(changedObjects) {
 			

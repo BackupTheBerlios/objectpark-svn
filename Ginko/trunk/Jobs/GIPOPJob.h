@@ -18,5 +18,7 @@
 
 + (void)retrieveMessagesFromPOPAccount:(GIAccount *)anAccount;
 + (NSString *)jobName;
++ (NSString*) mboxesToImportDirectory;
+
 
 @end
