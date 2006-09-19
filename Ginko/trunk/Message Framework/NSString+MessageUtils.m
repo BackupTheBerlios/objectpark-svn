@@ -421,8 +421,7 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
     return buffer;
 }
 
-
-- (NSString*) stringByWrappingToLineLength:(unsigned int)length
+- (NSString *)stringByWrappingToLineLength:(unsigned int)length
 {
     NSCharacterSet	*breakSet, *textSet;
     NSMutableString	*buffer;
@@ -436,8 +435,8 @@ RFC822/RFC2047 parser for structured fields such as mail address lists, etc.
     if([self rangeOfString:lineBreakSeq].length == 0)
         lineBreakSeq = @"\n";
 
-    breakSet = [NSCharacterSet characterSetWithCharactersInString: @" \t-"];
-    textSet = [[NSCharacterSet characterSetWithCharactersInString: @" \t>}#%|"] invertedSet];
+    breakSet = [NSCharacterSet characterSetWithCharactersInString:@" \t-"];
+    textSet = [[NSCharacterSet characterSetWithCharactersInString:@" \t>}#%|"] invertedSet];
     buffer = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
 	spillOver = nil; lastPrefix = nil; // keep compiler happy...
     lineEnum = [[self componentsSeparatedByString:lineBreakSeq] objectEnumerator];
@@ -1550,7 +1549,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
      */
 }
 
-- (NSString*) stringByWrappingToSoftLimit: (unsigned int) length
+- (NSString *)stringByWrappingToSoftLimit:(unsigned int)length
 /*" Returns a wrapped version of the receiver to the soft limit. Soft limit means that the string can only be wrapped on whitespaces. "*/
 {
     NSCharacterSet	*breakSet, *textSet;
@@ -1565,8 +1564,8 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     if([self rangeOfString:lineBreakSeq].length == 0)
         lineBreakSeq = @"\n";
 
-    breakSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
-    textSet = [[NSCharacterSet characterSetWithCharactersInString: @""] invertedSet];
+    breakSet = [NSCharacterSet characterSetWithCharactersInString:@" "];
+    textSet = [[NSCharacterSet characterSetWithCharactersInString:@""] invertedSet];
     buffer = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
     spillOver = nil; lastPrefix = nil; // keep compiler happy...
     lineEnum = [[self componentsSeparatedByString:lineBreakSeq] objectEnumerator];
@@ -1783,9 +1782,10 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         while ([paragraph hasSuffix: @" "])
             paragraph = [paragraph substringToIndex:[paragraph length] - 1]; // chop the last character
         
-        if ([paragraph length] > 79) {
-            NSString* wrappedParagraph;
-            NSArray* paragraphLines;
+        if ([paragraph length] > 79) 
+		{
+            NSString *wrappedParagraph;
+            NSArray *paragraphLines;
             int i, count;
             /*
              When creating flowed text, the generating agent wraps, that is,
@@ -1844,20 +1844,21 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return [flowedText substringToIndex: [flowedText length] - [lineBreakSeq length]];
 }
 
-- (NSString*) stringByDecodingFlowedUsingDelSp: (BOOL) useDelSp
+- (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp
 /*" See RFC3676. "*/
 {
-    NSMutableString* flowedText;
-	NSMutableString* paragraph;
-    NSArray* lines;
-    NSString* line;
-	NSString* lineBreakSeq;
-    NSEnumerator* lineEnumerator;
+    NSMutableString *flowedText;
+	NSMutableString *paragraph;
+    NSArray *lines;
+    NSString *line;
+	NSString *lineBreakSeq;
+    NSEnumerator *lineEnumerator;
     int paragraphQuoteDepth = 0;
     BOOL isFlowed;
     
     lineBreakSeq = @"\r\n";
-    if([self rangeOfString:lineBreakSeq].location == NSNotFound) {
+    if([self rangeOfString:lineBreakSeq].location == NSNotFound) 
+	{
         lineBreakSeq = @"\n";
     }
     
@@ -1865,9 +1866,12 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     
     paragraph = [NSMutableString string];
     
-    if ([self hasSuffix:lineBreakSeq]) {
+    if ([self hasSuffix:lineBreakSeq]) 
+	{
         lines = [[self substringToIndex:[self length] - [lineBreakSeq length]] componentsSeparatedByString:lineBreakSeq];
-    } else {
+    } 
+	else 
+	{
         lines = [self componentsSeparatedByString:lineBreakSeq];
     }
     
@@ -1891,7 +1895,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         
         pool = [[NSAutoreleasePool alloc] init];
         
-        while ([line hasPrefix: @">"])
+        while ([line hasPrefix:@">"])
         {
             line = [line substringFromIndex:1]; // chop of the first character
             quoteDepth += 1;
@@ -1909,7 +1913,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                                                     for flowed).   
          */
         
-        if ([line hasPrefix: @" "])
+        if ([line hasPrefix:@" "])
         {
             line = [line substringFromIndex:1]; // chop of the first character
         }
@@ -1921,7 +1925,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
          flowed nor fixed.
          */
         
-        isFlowed = [line hasSuffix: @" "] 
+        isFlowed = [line hasSuffix:@" "] 
             && (paragraphQuoteDepth == quoteDepth) 
             && ([line caseInsensitiveCompare: @"-- "] != NSOrderedSame);
         
@@ -1957,10 +1961,10 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 
                 for (i=0; i<paragraphQuoteDepth; i++)
                 {
-                    [flowedText appendString: @">"];
+                    [flowedText appendString:@">"];
                 }
                 
-                [flowedText appendString: @" "];
+                [flowedText appendString:@" "];
             }
             
             [flowedText appendString:paragraph];
@@ -1968,7 +1972,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             
             // reset values for next paragraph
             paragraphQuoteDepth = 0;
-            [paragraph setString: @""];
+            [paragraph setString:@""];
         }
         
         [pool release];
@@ -1983,10 +1987,10 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
             
             for (i=0; i<paragraphQuoteDepth; i++)
             {
-                [flowedText appendString: @">"];
+                [flowedText appendString:@">"];
             }
             
-            [flowedText appendString: @" "];
+            [flowedText appendString:@" "];
         }
         
         [flowedText appendString:paragraph];
@@ -1995,18 +1999,17 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return [[flowedText autorelease] substringToIndex:[flowedText length] - [lineBreakSeq length]];
 }
 
-- (NSString*) stringBySpaceStuffing
+- (NSString *)stringBySpaceStuffing
 {
-    if (([self hasPrefix: @" "]) || ([self hasPrefix: @"From "]))
+    if (([self hasPrefix:@" "]) || ([self hasPrefix:@"From "]))
     {
-        return [NSString stringWithFormat: @" %@", self];
+        return [NSString stringWithFormat:@" %@", self];
     }
     
     return self;
 }
 
-
-- (NSString*) stringByStrippingTrailingWhitespacesAndNewlines 
+- (NSString *)stringByStrippingTrailingWhitespacesAndNewlines 
 {
     NSCharacterSet *whitespaceAndNewlineCharacterSet;
     int position;
@@ -2025,17 +2028,18 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         return self;
 }
 
-- (long) longValue 
+- (long)longValue 
 {
     return atol([self lossyCString]);
 }
 
-- (NSString*) stringByRemovingAttachmentChars
+- (NSString *)stringByRemovingAttachmentChars
 {
     static NSCharacterSet *attachmentCharSet = nil;
     unichar attachmentChar = NSAttachmentCharacter;
     
-    if (! attachmentCharSet) {
+    if (! attachmentCharSet) 
+	{
         attachmentCharSet = [[NSCharacterSet characterSetWithCharactersInString:[NSString stringWithCharacters:&attachmentChar length:1]] retain];
     }
     
@@ -2052,11 +2056,11 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     @implementation NSMutableString (OPMessageUtilities)
 //---------------------------------------------------------------------------------------
 
-- (void) appendAsLine: (NSString*) line withPrefix: (NSString*) prefix
+- (void)appendAsLine:(NSString *)line withPrefix:(NSString *)prefix
 {
-	[self appendString: prefix];
-	[self appendString: line];
-	[self appendString: @"\n"];
+	[self appendString:prefix];
+	[self appendString:line];
+	[self appendString:@"\n"];
 }
 
 

@@ -182,7 +182,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     }
 }
 
-- (void) updateDetailView
+- (void)updateDetailView
 {
     GIMessageFilter *filter;
     int mode;
@@ -317,7 +317,13 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [[self _selectedFilter] setActions:actions];
 }
 
-- (void) tableViewSelectionDidChange: (NSNotification*) aNotification
+- (IBAction)actionMoveParameterDidChange:(id)sender
+{
+	[actionMoveCheckbox setState:NSOnState];
+	[self actionsChanged:sender];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     if ([aNotification object] == filtersTableView)
     {
@@ -348,25 +354,25 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 @implementation GIFiltersPane (OPPreferencePane)
 /*" Overridden methods from #{OPPreferencePane} (see OPPreferences framework). "*/
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
-    [[[matchingTableView tableColumnWithIdentifier: @"criteria"] dataCell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
-    [[[matchingTableView tableColumnWithIdentifier: @"target"] dataCell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+    [[[matchingTableView tableColumnWithIdentifier:@"criteria"] dataCell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+    [[[matchingTableView tableColumnWithIdentifier:@"target"] dataCell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
 }
 
-- (NSString*) displayName
+- (NSString *)displayName
     /*" The name which is displayed in the preferences dialog. "*/
 {
     return NSLocalizedString(@"Filters", Filter Preferences);
 }
 
-- (void) didSelect
+- (void)didSelect
 /*" Invoked when the pref panel was selected. Initialization stuff. "*/
 {
     // register for notifications
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(filtersDidChange:) name: GIMessageFiltersDidChangeNotification object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filtersDidChange:) name:GIMessageFiltersDidChangeNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(delayedFiltersDidChange:) name: GIFiltersPaneDelayedFiltersDidChange object: self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delayedFiltersDidChange:) name:GIFiltersPaneDelayedFiltersDidChange object:self];
     
     // Register to grok GIFILTERPREFTYPE drags
     [filtersTableView registerForDraggedTypes:[NSArray arrayWithObject:GIFILTERPREFTYPE]];
@@ -374,7 +380,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [self updateDetailView];
 }
 
-- (void) willUnselect
+- (void)willUnselect
 /*" Invoked when the pref panel is about to be quit. "*/
 {
     // unregister for notifications
@@ -384,10 +390,10 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     headerFieldsForPopup = nil;
 }
 
-- (void) dealloc
+- (void)dealloc
 /*" releases ivars. "*/
 {    
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [headerFieldsForPopup release];
     [super dealloc];
 }
@@ -397,29 +403,36 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 @implementation GIFiltersPane (NSTableViewDataSource)
 /*" Implementation of the methods for a NSTableView datasource. "*/
 
-- (int)numberOfRowsInTableView: (NSTableView*) aTableView
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
     if (aTableView == filtersTableView)
     {
         return [[GIMessageFilter filters] count];
-    } else {
+    } 
+	else 
+	{
         return [[[self _selectedFilter] expressions] count];
     }
 }
 
-- (id) tableView: (NSTableView*) aTableView objectValueForTableColumn: (NSTableColumn*) aTableColumn row: (int) rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-    if (aTableView == filtersTableView) {
-        NSArray* filters = [GIMessageFilter filters];
+    if (aTableView == filtersTableView) 
+	{
+        NSArray *filters = [GIMessageFilter filters];
         
-        if (rowIndex >= [filters count]) {
+        if (rowIndex >= [filters count]) 
+		{
             return nil;
         }
         
-        if ([[aTableColumn identifier] isEqualToString: @"enabled"]) {
-            return [NSNumber numberWithBool: [[filters objectAtIndex:rowIndex] isActive]];
-        } else {
-            return [[filters objectAtIndex: rowIndex] name];
+        if ([[aTableColumn identifier] isEqualToString:@"enabled"]) 
+		{
+            return [NSNumber numberWithBool:[[filters objectAtIndex:rowIndex] isActive]];
+        } 
+		else 
+		{
+            return [[filters objectAtIndex:rowIndex] name];
         }
     }
     else // matching table view
@@ -429,11 +442,11 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         
         expression = [[[self _selectedFilter] expressions] objectAtIndex:rowIndex];
         
-        if ([[aTableColumn identifier] isEqualToString: @"target"]) 
+        if ([[aTableColumn identifier] isEqualToString:@"target"]) 
         {
             result = [expression subjectValue];
         } 
-        else if ([[aTableColumn identifier] isEqualToString: @"argument"]) 
+        else if ([[aTableColumn identifier] isEqualToString:@"argument"]) 
         {
             result = [expression argument];
         }
@@ -442,11 +455,12 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     }
 }
 
-- (NSArray*) messageStatusPopUpTags
+- (NSArray *)messageStatusPopUpTags
 {
     static NSMutableArray *result = nil;
     
-    if (! result) {
+    if (! result) 
+	{
         result = [[NSMutableArray allocWithZone:[self zone]] init];
         
         [result addObject:[NSNumber numberWithInt:0]];
@@ -458,11 +472,12 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     return result;
 }
 
-- (NSArray*) messageStatusPopUpItems
+- (NSArray *)messageStatusPopUpItems
 {
     static NSMutableArray *result = nil;
     
-    if (! result) {
+    if (! result) 
+	{
         result = [[NSMutableArray allocWithZone:[self zone]] init];
         
         [result addObject:NSLocalizedString(@"None (no flag)", filter pref criteria name)];
@@ -474,11 +489,12 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     return result;
 }
 
-- (NSArray*) popUpButtonCellItemsForHeaderFields
+- (NSArray *)popUpButtonCellItemsForHeaderFields
 {
     static NSMutableArray *result = nil;
     
-    if (! result) {
+    if (! result) 
+	{
         result = [[NSMutableArray allocWithZone:[self zone]] init];
         
         [result addObject:NSLocalizedString(@"contains", filter pref criteria name)];
@@ -491,62 +507,65 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     return result;
 }
 
-- (NSArray*) popUpButtonCellTagsForHeaderFields
+- (NSArray *)popUpButtonCellTagsForHeaderFields
 {
     static NSMutableArray *result = nil;
     
-    if (! result) {
+    if (! result) 
+	{
         result = [[NSMutableArray allocWithZone: [self zone]] init];
         
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaContains]];
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaDoesNotContain]];
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaStartsWith]];
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaEndsWith]];
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaEquals]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaContains]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaDoesNotContain]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaStartsWith]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaEndsWith]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaEquals]];
     }
     
     return result;
 }
 
-- (NSArray*) popUpButtonCellItemsForFlags
+- (NSArray *)popUpButtonCellItemsForFlags
 {
     static NSMutableArray *result = nil;
     
-    if (! result) {
-        result = [[NSMutableArray allocWithZone: [self zone]] init];
+    if (! result) 
+	{
+        result = [[NSMutableArray alloc] init];
         
-        [result addObject: NSLocalizedString(@"has Flag", @"filter pref criteria name")];
-        [result addObject: NSLocalizedString(@"does not have Flag", @"filter pref criteria name")];
-        [result addObject: NSLocalizedString(@"has only Flag", @"filter pref criteria name")];
+        [result addObject:NSLocalizedString(@"has Flag", @"filter pref criteria name")];
+        [result addObject:NSLocalizedString(@"does not have Flag", @"filter pref criteria name")];
+        [result addObject:NSLocalizedString(@"has only Flag", @"filter pref criteria name")];
     }
     
     return result;
 }
 
-- (NSArray*) popUpButtonCellTagsForFlags
+- (NSArray *)popUpButtonCellTagsForFlags
 {
     static NSMutableArray *result = nil;
     
-    if (! result) {
-        result = [[NSMutableArray allocWithZone: [self zone]] init];
+    if (! result) 
+	{
+        result = [[NSMutableArray allocWithZone:[self zone]] init];
         
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaContains]];
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaDoesNotContain]];
-        [result addObject: [NSNumber numberWithInt: kGIMFCriteriaEquals]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaContains]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaDoesNotContain]];
+        [result addObject:[NSNumber numberWithInt:kGIMFCriteriaEquals]];
     }
     
     return result;
 }
 
-- (void) tableView: (NSTableView*) aTableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)aTableColumn row:(int)row
+- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)aTableColumn row:(int)row
 {
     if ((aTableView == filtersTableView) && (row >= 0))
     {
         GIMessageFilter *filter = [[GIMessageFilter filters] objectAtIndex:row];
         
-        if ( ([[aTableColumn identifier] isEqualToString: @"enabled"]) && (row >= 0) ) 
+        if ( ([[aTableColumn identifier] isEqualToString:@"enabled"]) && (row >= 0) ) 
         {            
-            [filter setIsActive: ! [filter isActive]]; // invert active state
+            [filter setIsActive:![filter isActive]]; // invert active state
         }
         else
         {
@@ -559,7 +578,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         
         expression = [[[self _selectedFilter] expressions] objectAtIndex:row];
         
-        if ([[aTableColumn identifier] isEqual: @"target"])
+        if ([[aTableColumn identifier] isEqual:@"target"])
         {
             if ([object isEqualToString:NSLocalizedString(@"<Message Status>", filter prefs sheet message status item)])
             {
@@ -582,16 +601,19 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
                 }
             }
             
-            [expression setSubjectValue: object];
+            [expression setSubjectValue:object];
 			
-        } else if ([[aTableColumn identifier] isEqual: @"argument"]) {
-			
-            switch ([expression subjectType]) {
+        } 
+		else if ([[aTableColumn identifier] isEqual:@"argument"]) 
+		{
+            switch ([expression subjectType]) 
+			{
                 case kGIMFTypeHeaderField:
                     [expression setArgument:object];
                     break;
-                case kGIMFTypeFlag: {
-                    NSArray* tags = [self messageStatusPopUpTags];
+                case kGIMFTypeFlag: 
+				{
+                    NSArray *tags = [self messageStatusPopUpTags];
                     [expression setFlagArgument:[[tags objectAtIndex:[object intValue]] intValue]];
                 }
                     break;
@@ -599,11 +621,13 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
                     break;
             }
 			
-        } else if ([[aTableColumn identifier] isEqual: @"criteria"]) {
-			
-            NSArray* tags = nil;
+        } 
+		else if ([[aTableColumn identifier] isEqual:@"criteria"]) 
+		{
+            NSArray *tags = nil;
             
-            switch ([expression subjectType]) {
+            switch ([expression subjectType]) 
+			{
                 case kGIMFTypeHeaderField:
                     tags = [self popUpButtonCellTagsForHeaderFields];
                     break;
@@ -616,14 +640,14 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
             
             [expression setCriteria:[[tags objectAtIndex:[object intValue]] intValue]];
         }
-        else if ([[aTableColumn identifier] isEqual: @"remove"])
+        else if ([[aTableColumn identifier] isEqual:@"remove"])
         {
             [self removeExpression:self];
         }
     }
 }
 
-- (void) tableView: (NSTableView*) aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
     if (aTableView == matchingTableView)
     {
@@ -631,20 +655,22 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         
         expression = [[[self _selectedFilter] expressions] objectAtIndex:rowIndex];
         
-        if ([[aTableColumn identifier] isEqual: @"target"])  {
-            [aCell setUsesDataSource: YES];
-            [aCell setDataSource: self];
-            [aCell setEditable: YES];
-			
-        } else if ([[aTableColumn identifier] isEqual: @"criteria"]) {
-			
-            NSArray* items = nil;
-            NSArray* tags = nil;
+        if ([[aTableColumn identifier] isEqual:@"target"])  
+		{
+            [aCell setUsesDataSource:YES];
+            [aCell setDataSource:self];
+            [aCell setEditable:YES];
+        } 
+		else if ([[aTableColumn identifier] isEqual: @"criteria"]) 
+		{
+            NSArray *items = nil;
+            NSArray *tags = nil;
             int count, i;
             
             [aCell removeAllItems];
             
-            switch ([expression subjectType]) {
+            switch ([expression subjectType]) 
+			{
                 case kGIMFTypeHeaderField:
                     items = [self popUpButtonCellItemsForHeaderFields];
                     tags = [self popUpButtonCellTagsForHeaderFields];
@@ -658,14 +684,15 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
             }
             
             count = [items count];
-            for (i = 0; i < count; i++) {
+            for (i = 0; i < count; i++) 
+			{
                 [aCell addItemWithTitle:[items objectAtIndex:i]];
                 [[aCell lastItem] setTag:[[tags objectAtIndex:i] intValue]];
             }
             
             [aCell selectItemAtIndex:[aCell indexOfItemWithTag:[expression criteria]]];
         }
-        else if ([[aTableColumn identifier] isEqual: @"argument"])
+        else if ([[aTableColumn identifier] isEqual:@"argument"])
         {
             switch ([expression subjectType])
             {
@@ -675,8 +702,8 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
                     break;
                 case kGIMFTypeFlag:
                 {
-                    NSArray* items = nil;
-                    NSArray* tags = nil;
+                    NSArray *items = nil;
+                    NSArray *tags = nil;
                     int count, i;
                     
                     [aCell removeAllItems];
@@ -701,7 +728,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     }
 }
 
-- (id)tableView: (NSTableView*) aTableView dataCellForTableColumn:(NSTableColumn *)aTableColumn row:(int)aRow
+- (id)tableView:(NSTableView *)aTableView dataCellForTableColumn:(NSTableColumn *)aTableColumn row:(int)aRow
 {
     static NSPopUpButtonCell *cell = nil;
     
@@ -711,13 +738,13 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         
         expression = [[[self _selectedFilter] expressions] objectAtIndex:aRow];
         
-        if ([[aTableColumn identifier] isEqualToString: @"argument"])
+        if ([[aTableColumn identifier] isEqualToString:@"argument"])
         {
             if ([expression subjectType] == kGIMFTypeFlag)
             {
                 if (! cell)
                 {
-                    cell = [[NSPopUpButtonCell alloc] initTextCell: @"" pullsDown: NO];
+                    cell = [[NSPopUpButtonCell alloc] initTextCell:@"" pullsDown:NO];
                     [cell setControlSize:NSRegularControlSize];
                     [cell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
                     //[cell setControlSize:NSSmallControlSize];
@@ -734,28 +761,28 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 
 @implementation GIFiltersPane (DragNDrop)
 
-- (BOOL)tableView: (NSTableView*) aTableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
+- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
 {
-    NSArray* rows = [[info draggingPasteboard] propertyListForType:GIFILTERPREFTYPE];
+    NSArray *rows = [[info draggingPasteboard] propertyListForType:GIFILTERPREFTYPE];
     
     NSAssert([rows count] == 1, @"More than one filter per drag is not supported");
     
     int index = [[rows objectAtIndex:0] intValue];
-    GIMessageFilter* filter = [[GIMessageFilter filters] objectAtIndex:index];
+    GIMessageFilter *filter = [[GIMessageFilter filters] objectAtIndex:index];
     [GIMessageFilter moveFilter:filter toIndex:row];
     
-    [filtersTableView selectRow:row byExtendingSelection: NO];
+    [filtersTableView selectRow:row byExtendingSelection:NO];
     
     return YES;
 }
 
-- (NSDragOperation)tableView: (NSTableView*) aTableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation
+- (NSDragOperation)tableView:(NSTableView *)aTableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
     [filtersTableView setDropRow:row dropOperation:NSTableViewDropAbove];
     return [info draggingSourceOperationMask];
 }
 
-- (BOOL)tableView: (NSTableView*) aTableView writeRows:(NSArray*) rows toPasteboard:(NSPasteboard *)pboard
+- (BOOL)tableView:(NSTableView *)aTableView writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard
 {
     [pboard declareTypes:[NSArray arrayWithObject:GIFILTERPREFTYPE] owner:self];
     [pboard setPropertyList:rows forType:GIFILTERPREFTYPE];
@@ -814,7 +841,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 
 @implementation GIFiltersPaneSheetController
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     static NSComboBoxCell *comboBoxCell = nil;
     static NSPopUpButtonCell *popUpButtonCell = nil;
@@ -823,7 +850,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
         comboBoxCell = [[NSComboBoxCell alloc] init];
         [comboBoxCell setControlSize:NSSmallControlSize];
         
-        popUpButtonCell = [[NSPopUpButtonCell alloc] initTextCell: @"" pullsDown: NO];
+        popUpButtonCell = [[NSPopUpButtonCell alloc] initTextCell:@"" pullsDown:NO];
         [popUpButtonCell setControlSize:NSSmallControlSize];
     }
     
@@ -831,9 +858,9 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [[matchingTableView tableColumnWithIdentifier: @"criteria"] setDataCell:popUpButtonCell];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
-    [matchingTableView setDelegate: nil];
+    [matchingTableView setDelegate:nil];
     [_lastArgumentValue release];
     _lastArgumentValue = nil;
     
@@ -845,7 +872,7 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     return _lastArgumentValue ? _lastArgumentValue : @"";
 }
 
-- (void) setLastArgumentValue:(id)value
+- (void)setLastArgumentValue:(id)value
 {
     [value autorelease];
     _lastArgumentValue = [value retain];
@@ -853,7 +880,6 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
 
 - (IBAction)acceptSheet:(id)sender
 {
-    
     [filter setName:[descriptionTextField stringValue]];
         
     int mode = [[matchingModePopUp selectedItem] tag];
@@ -923,17 +949,19 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     return headerFieldsForPopup;
 }
 
-- (int)numberOfItemsInComboBoxCell: (NSComboBoxCell*) aComboBoxCell
+- (int)numberOfItemsInComboBoxCell:(NSComboBoxCell *)aComboBoxCell
 {
     return [[self headerFieldsForPopup] count] + 1;
 }
 
-- (id)comboBoxCell: (NSComboBoxCell*) aComboBoxCell objectValueForItemAtIndex:(int)index
+- (id)comboBoxCell:(NSComboBoxCell *)aComboBoxCell objectValueForItemAtIndex:(int)index
 {
     if (index == [[self headerFieldsForPopup] count])
     {
         return NSLocalizedString(@"<Message Status>", filter prefs sheet message status item);
-    } else {
+    } 
+	else 
+	{
         return [[self headerFieldsForPopup] objectAtIndex:index];
     }
 }

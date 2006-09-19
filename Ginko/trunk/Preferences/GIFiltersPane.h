@@ -46,6 +46,7 @@
 
 - (IBAction)modeChanged:(id)sender;
 - (IBAction)actionsChanged:(id)sender;
+- (IBAction)actionMoveParameterDidChange:(id)sender;
 
 @end
 
