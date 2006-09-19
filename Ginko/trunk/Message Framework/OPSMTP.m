@@ -323,7 +323,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[headers setValue: from forKey: @"From"];
 	[headers setValue: date forKey: @"Date"];
 	[headers setValue: [recipients componentsJoinedByString: @","] forKey: @"To"];
-	[headers setValue: @"text/plain; charset=\"iso-8859-1\"; format=\"flowed\"" forKey: @"Content-Type"];
+	[headers setValue: @"text/plain; charset=\"iso-8859-1\"; format=\"flowed\"; delsp=\"yes\"" forKey: @"Content-Type"];
 	[headers setValue: @"1.0" forKey: @"MIME-Version"];
 
 	[headers setValue: [NSString stringWithFormat: @"<%@%u>", bundleName, ABS([date timeIntervalSince1970]+[body hash])] forKey: @"Message-ID"];
@@ -371,7 +371,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[transferData appendData: [@"\r\n" dataUsingEncoding: NSASCIIStringEncoding]]; // could be more efficient
 	
 	body = [body stringWithCanonicalLinebreaks];
-	body = [body stringByEncodingFlowedFormat];
+	body = [body stringByEncodingFlowedFormatUsingDelSp:YES];
 	body = [body stringWithCanonicalLinebreaks];
 
 	[transferData appendData:[body dataUsingEncoding: NSISOLatin1StringEncoding]];

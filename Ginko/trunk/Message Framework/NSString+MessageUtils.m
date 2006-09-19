@@ -1753,25 +1753,28 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 }
 */
 
-- (NSString*) stringByEncodingFlowedFormat
+- (NSString *)stringByEncodingFlowedFormatUsingDelSp:(BOOL)useDelSp
+/*" RFC3676 "*/
 {    
-    NSString* lineBreakSeq = @"\r\n";
+    NSString *lineBreakSeq = @"\r\n";
     if([self rangeOfString: lineBreakSeq].location == NSNotFound)
         lineBreakSeq = @"\n";
     
-    NSMutableString* flowedText = [[[NSMutableString allocWithZone:[self zone]] initWithCapacity:[self length]] autorelease];
+    NSMutableString *flowedText = [[[NSMutableString alloc] initWithCapacity:[self length]] autorelease];
     
-    NSArray* paragraphs = [self componentsSeparatedByString:lineBreakSeq];
+    NSArray *paragraphs = [self componentsSeparatedByString:lineBreakSeq];
     
-    NSEnumerator* paragraphEnumerator = [paragraphs objectEnumerator];
-	NSString* paragraph;
-    while ((paragraph = [paragraphEnumerator nextObject]) != nil) {
-		
-        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    NSEnumerator *paragraphEnumerator = [paragraphs objectEnumerator];
+	NSString *paragraph;
+	
+    while ((paragraph = [paragraphEnumerator nextObject]) != nil) 
+	{
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
         /*
-         1.  Ensure all lines (fixed and flowed) are 79 characters or
-         fewer in length, counting the trailing space but not
+         1.  Ensure all lines (fixed and flowed) are 79 characters 
+		 (78 characters when DelSP is used) 
+		 or fewer in length, counting the trailing space but not
          counting the CRLF, unless a word by itself exceeds 79
          characters.
          */
@@ -1779,10 +1782,10 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
         /*
          2.  Trim spaces before user-inserted hard line breaks.
          */
-        while ([paragraph hasSuffix: @" "])
+        while ([paragraph hasSuffix:@" "])
             paragraph = [paragraph substringToIndex:[paragraph length] - 1]; // chop the last character
         
-        if ([paragraph length] > 79) 
+        if ([paragraph length] > useDelSp ? 78 : 79) 
 		{
             NSString *wrappedParagraph;
             NSArray *paragraphLines;
@@ -1794,16 +1797,21 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
              generating agent creates one by inserting a CRLF after the occurance
              of a space.
              */
-            wrappedParagraph = [[paragraph stringByAppendingString:lineBreakSeq] stringByWrappingToLineLength:72];
+            wrappedParagraph = [[[paragraph stringByAppendingString:lineBreakSeq] stringByWrappingToLineLength:998] stringByWrappingToSoftLimit:72];
             
             // chop lineBreakSeq at the end
-            wrappedParagraph = [wrappedParagraph substringToIndex:[wrappedParagraph length] - [lineBreakSeq length]];
+			while ([wrappedParagraph hasSuffix:lineBreakSeq])
+			{
+				wrappedParagraph = [wrappedParagraph substringToIndex:[wrappedParagraph length] - [lineBreakSeq length]];
+			}
+			
             paragraphLines = [wrappedParagraph componentsSeparatedByString:lineBreakSeq];
             
-            count = [paragraphLines count];
-            
-            for (i = 0; i < count; i++) {	
-                NSString* line;
+            count = [paragraphLines count];  
+						
+            for (i = 0; i < count; i++) 
+			{	
+                NSString *line;
                 
                 line = [paragraphLines objectAtIndex:i];
                 
@@ -1812,13 +1820,22 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                  */  
                 line = [line stringBySpaceStuffing];
                 
-                if (i < (count-1) ) {
+                if (i < (count-1) ) 
+				{
 					// ensure soft-break:
-                    if (! [line hasSuffix: @" "]) {
-                        line = [line stringByAppendingString: @" "];
+                    if (! [line hasSuffix:@" "]) 
+					{
+                        line = [line stringByAppendingString:@" "];
                     }
-                } else {
-                    while ([line hasSuffix: @" "]) {
+					else if (useDelSp)
+					{
+                        line = [line stringByAppendingString:@" "];
+					}
+                } 
+				else 
+				{
+                    while ([line hasSuffix:@" "]) 
+					{
                         line = [line substringToIndex:[line length] - 1]; // chop the last character (space)
                     }
                 }
@@ -1841,10 +1858,10 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     }
     
     // chop lineBreakSeq at the end
-    return [flowedText substringToIndex: [flowedText length] - [lineBreakSeq length]];
+    return [flowedText substringToIndex:[flowedText length] - [lineBreakSeq length]];
 }
 
-- (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp
+- (NSString *)stringByDecodingFlowedFormatUsingDelSp:(BOOL)useDelSp
 /*" See RFC3676. "*/
 {
     NSMutableString *flowedText;

@@ -69,6 +69,7 @@
 		772F2942084F82BA004D50E0 /* TestOPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 772F2940084F82BA004D50E0 /* TestOPMultipartContentCoder.m */; };
 		773560F10A8B2725008F5EAB /* GIMessageGroup+Statistics.h in Headers */ = {isa = PBXBuildFile; fileRef = 772D9523094435EA00456485 /* GIMessageGroup+Statistics.h */; };
 		7739C40D0853564700FC0EBA /* Activity.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7739C40C0853564700FC0EBA /* Activity.nib */; };
+		773F875D0ABFEE5A00A8F0D2 /* TestOPXFolderContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B71CDE07CB30C9003A3BEF /* TestOPXFolderContentCoder.h */; };
 		773FFE970859778700E0767F /* Password.nib in Resources */ = {isa = PBXBuildFile; fileRef = 773FFE960859778700E0767F /* Password.nib */; };
 		7742E9E1076A1AB500B1B4BA /* NSView+ViewMoving.h in Headers */ = {isa = PBXBuildFile; fileRef = 7742E9DF076A1AB500B1B4BA /* NSView+ViewMoving.h */; };
 		7742E9E2076A1AB500B1B4BA /* NSView+ViewMoving.m in Sources */ = {isa = PBXBuildFile; fileRef = 7742E9E0076A1AB500B1B4BA /* NSView+ViewMoving.m */; };
@@ -134,7 +135,6 @@
 		77B8E35B07EEBDE300068222 /* TestEDTextFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DE91A707C6691C008E3C09 /* TestEDTextFieldCoder.m */; };
 		77B8E35C07EEBDE400068222 /* TestNSString+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7779AC9A07C40D1B00F064D3 /* TestNSString+MessageUtils.h */; };
 		77B8E35D07EEBDE500068222 /* TestNSString+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7779AC9B07C40D1B00F064D3 /* TestNSString+MessageUtils.m */; };
-		77B8E35E07EEBDE700068222 /* TestOPXFolderContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B71CDE07CB30C9003A3BEF /* TestOPXFolderContentCoder.h */; };
 		77B8E35F07EEBDE800068222 /* TestOPXFolderContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B71CDF07CB30C9003A3BEF /* TestOPXFolderContentCoder.m */; };
 		77BA8F4F076DCC480082F33F /* GIAddressFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */; };
 		77BA8F50076DCC480082F33F /* GIAddressFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */; };
@@ -1575,7 +1575,6 @@
 				77253D6507ECB83E00375AFC /* OPSMTP.h in Headers */,
 				77B8E35A07EEBDE200068222 /* TestEDTextFieldCoder.h in Headers */,
 				77B8E35C07EEBDE400068222 /* TestNSString+MessageUtils.h in Headers */,
-				77B8E35E07EEBDE700068222 /* TestOPXFolderContentCoder.h in Headers */,
 				8D69432507F4B173008B7C20 /* TestOPSMTP.h in Headers */,
 				8D68416807F5C434003DB791 /* OPMBoxFile.h in Headers */,
 				8DAB5CF30803C4FB0036C0BA /* GIMessageBase.h in Headers */,
@@ -1648,6 +1647,7 @@
 				773560F10A8B2725008F5EAB /* GIMessageGroup+Statistics.h in Headers */,
 				8DDF3DC80AA8D81700E1F591 /* NSApplication+NetworkNotifications.h in Headers */,
 				8DF139100ABA1CD200A24563 /* NSFileManager+Extensions.h in Headers */,
+				773F875D0ABFEE5A00A8F0D2 /* TestOPXFolderContentCoder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

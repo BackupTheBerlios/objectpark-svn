@@ -178,7 +178,7 @@
             useDelSp = YES;
         }
         
-        deflowed = [[text stringByDecodingFlowedUsingDelSp:useDelSp] retain];
+        deflowed = [[text stringByDecodingFlowedFormatUsingDelSp:useDelSp] retain];
         [text release];
         text = deflowed;
     }
@@ -191,13 +191,13 @@
     NSDictionary *parameters;
     NSData *contentData;
     
-    flowedText = [[text stringWithCanonicalLinebreaks] stringByEncodingFlowedFormat];
+    flowedText = [[text stringWithCanonicalLinebreaks] stringByEncodingFlowedFormatUsingDelSp:YES];
     
     if (NSDebugEnabled) NSLog(@"Encoding Text with Class %@", targetClass);
     
     result = [[[targetClass alloc] init] autorelease];
     charset = [flowedText recommendedMIMEEncoding];
-    parameters = [NSDictionary dictionaryWithObjectsAndKeys:charset ,@"charset", @"flowed", @"format", nil];
+    parameters = [NSDictionary dictionaryWithObjectsAndKeys:charset ,@"charset", @"flowed", @"format", @"yes", @"delsp", nil];
     [result setContentType: @"text/plain" withParameters:parameters];
     if ([charset caseInsensitiveCompare:MIMEAsciiStringEncoding] == NSOrderedSame)
         [result setContentTransferEncoding:MIME7BitContentTransferEncoding];

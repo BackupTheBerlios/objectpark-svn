@@ -66,12 +66,11 @@ extern NSString *OPAttachmentPathAttribute;
 - (NSArray *)fieldListFromEMailString;
 // - (NSArray*) realnameListFromEMailString;
 
-- (NSString *)stringByEncodingFlowedFormat;
 - (NSString *)stringByWrappingToSoftLimit:(unsigned int)length;
 
 - (NSString *)stringBySpaceStuffing;
-- (NSString *)stringByDecodingFlowedUsingDelSp:(BOOL)useDelSp;
-- (NSString *)stringByEncodingFlowedFormat;
+- (NSString *)stringByDecodingFlowedFormatUsingDelSp:(BOOL)useDelSp;
+- (NSString *)stringByEncodingFlowedFormatUsingDelSp:(BOOL)useDelSp;
 
 - (NSString *)stringByStrippingTrailingWhitespacesAndNewlines;
 - (long)longValue;

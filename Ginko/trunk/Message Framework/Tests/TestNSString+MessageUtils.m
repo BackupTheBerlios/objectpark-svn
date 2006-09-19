@@ -20,7 +20,7 @@
 {
 }
 
-- (void) testStringWithUnixLinebreaks
+- (void)testStringWithUnixLinebreaks
 {
     NSString *testString = @"This is a test string with mixed\nLinebreaks\r\nyou know?";
     NSString *stringWithUnixLinebreaks;
@@ -35,19 +35,31 @@
     STAssertEqualObjects(stringWithUnixLinebreaks, [stringWithCanonicalLinebreaks stringWithUnixLinebreaks], @"length %d != length %d.", [stringWithUnixLinebreaks length], [[stringWithCanonicalLinebreaks stringWithUnixLinebreaks] length]);
 }
 
-- (void) testFormatFlowed
+- (void)testFormatFlowed
 {
-    NSString *testString = @"This is\n a test";
+    NSString *testString = @"This is\n a test. And this test shows that there is much more complexity in format flowed wrapping than be visible at fist sight.";
     
-    STAssertEqualObjects(testString, [[testString stringByEncodingFlowedFormat] stringByDecodingFlowedUsingDelSp: NO], @"should be same.");
+	NSString *testEncoded = [testString stringByEncodingFlowedFormatUsingDelSp:NO];
+	
+	STAssertEqualObjects(testEncoded, @"This is\n  a test. And this test shows that there is much more complexity in \nformat flowed wrapping than be visible at fist sight.", @"Encoding without DelSp is broken");
+	
+	NSString *testDecoded = [testEncoded stringByDecodingFlowedFormatUsingDelSp:NO];
+	
+    STAssertEqualObjects(testString, testDecoded, @"should be same.");
+
+	NSString *expectedString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/no/sucking/umlauts/for/ma-king/a/good/example";
+
+	NSString *encodedString = [expectedString stringByEncodingFlowedFormatUsingDelSp:YES];
+	NSString *formerDelSpEncodedString = [encodedString stringByDecodingFlowedFormatUsingDelSp:YES];
+	
+	STAssertEqualObjects(expectedString, formerDelSpEncodedString, @"DelSp Encoding does not seem to work");
+	
+	testString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/ \r\nno/sucking/umlauts/for/ma-king/a/good/example";
     
-    testString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/ \r\nno/sucking/umlauts/for/making/a/good/example";
-    NSString *expectedString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/no/sucking/umlauts/for/making/a/good/example";
-    
-    STAssertTrue([[testString stringByDecodingFlowedUsingDelSp: YES] isEqualToString:expectedString], @"%@ is wrong", [testString stringByDecodingFlowedUsingDelSp: YES]);
+    STAssertTrue([[testString stringByDecodingFlowedFormatUsingDelSp:YES] isEqualToString:expectedString], @"%@ is wrong", [testString stringByDecodingFlowedFormatUsingDelSp:YES]);
 }
 
-- (void) testPunycode
+- (void)testPunycode
 {
     NSString *punycode = /* @"PorqunopuedensimplementehablarenEspaol-fmd56a"; */
     @"heinz-knig-kcb";
