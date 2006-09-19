@@ -331,8 +331,8 @@ static NSThread *mainThread = nil;
 	[self callDelegateOnNetworkChange: YES];
 
 	// Check, if there are mboxes to import in the respective folder:
-	NSArray* filesToImport = [[NSFileManager defaultManager] directoryContentsAtPath: [GIPOPJob mboxesToImportDirectory]
-																	   absolutePaths: YES];
+	NSArray* filesToImport = [NSArray arrayWithFilesOfType: @"mboxfile" 
+													inPath: [GIPOPJob mboxesToImportDirectory]];
 	if ([filesToImport count]) {
 		// Ask wether to import those:
 		NSAlert* alert = [NSAlert alertWithMessageText: @"There seem to be messages waiting to be imported. Do you want to import them now?" 
@@ -345,8 +345,8 @@ static NSThread *mainThread = nil;
 		
 		if (alertResult == NSAlertDefaultReturn) {
 			// re-calculate files to import:
-			filesToImport = [[NSFileManager defaultManager] directoryContentsAtPath: [GIPOPJob mboxesToImportDirectory]
-																	  absolutePaths: YES];
+			filesToImport = [NSArray arrayWithFilesOfType: @"mboxfile" 
+												   inPath: [GIPOPJob mboxesToImportDirectory]];
 			[self importMboxFiles: filesToImport moveOnSuccess: YES];
 		} // else do nothing
 	}
