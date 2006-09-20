@@ -469,10 +469,8 @@ static BOOL isThreadItem(id item)
             }
             
 			unsigned messageSendStatus = [message sendStatus];
-            if (messageSendStatus > OPSendStatusNone) 
-            {
-                if (messageSendStatus >= OPSendStatusSending) 
-                {
+            if (messageSendStatus > OPSendStatusNone) {
+                if (messageSendStatus >= OPSendStatusSending) {
 					NSLog(@"message is in send job"); // replace by alert
                     NSBeep();
                 } 
