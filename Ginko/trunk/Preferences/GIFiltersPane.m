@@ -281,6 +281,11 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     [[self _selectedFilter] setAllExpressionsMustMatch:[[matchingModePopUp selectedItem] tag] ? YES : NO];
 }
 
+- (void)messageGroupsDidChange:(NSNotification *)aNotification
+{
+	[self updateDetailView];
+}
+
 - (IBAction)actionsChanged:(id)sender
 {
     // actions
@@ -374,6 +379,8 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delayedFiltersDidChange:) name:GIFiltersPaneDelayedFiltersDidChange object:self];
     
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageGroupsDidChange:) name:GIMessageGroupsChangedNotification object:nil];
+	
     // Register to grok GIFILTERPREFTYPE drags
     [filtersTableView registerForDraggedTypes:[NSArray arrayWithObject:GIFILTERPREFTYPE]];
     [filtersTableView reloadData];

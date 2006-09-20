@@ -1,9 +1,7 @@
 Bugs:
 
-- long lines without whitespaces does not wrap correctly (example: long url got a wrong space in it)
+- deleting message groups crashes the application
 - "move to trash" for queued messages does not prevent sending - ouch! Check, if fixed!
-- "general prefs" have no icon in release build (reported by Jörg)
-- Beim Anlegen einer Mailbox wird das Popup zu "Put in message box" in der Filter-Pane nicht automatisch aktualisiert (reported by Jörg)
 - additional headers cannot be checked in Display preferences.
 - deleting a message opened via fulltext search, results in an exception: 2006-05-01 09:34:02.500 Ginko[2100] *** -[GIThread copyWithZone:]: selector not recognized [self = 0x7414150], that code can never have worked.
 - while extracting messages into a new thread, the old thread's date is not updated or this update is not noted (sort order not ok)
@@ -16,12 +14,12 @@ Regressions:
 
 Done:
 
-- (Dirk) - window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
-- (Dirk) - OPSizingTextField did does not resize when a new selection is added by the formatter
-- (Dirk) - "empty trash" no longer works (infinite loop)
-- (Dirk) - serching for messages, then selecting a hit, then hitting the "Back" icon closes the window. It should switch back to the thread list.
-- (Dirk) - primitiveBoolValue no longer works (claims that the key is not valid)
-- (Axel) - TAB key in To:-Field inserts a TAB char
+- (Dirk) window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
+- (Dirk) OPSizingTextField did does not resize when a new selection is added by the formatter
+- (Dirk) "empty trash" no longer works (infinite loop)
+- (Dirk) serching for messages, then selecting a hit, then hitting the "Back" icon closes the window. It should switch back to the thread list.
+- (Dirk) primitiveBoolValue no longer works (claims that the key is not valid)
+- (Axel) TAB key in To:-Field inserts a TAB char
 - (Dirk) KVO notifications don't work with inverse many-to-many relationships (see test TestGIMessageGroup/testStatistics)
 - (Axel) keyboard navigation in message tree no longer works
 - (Axel) "space" in searches no longer works (-> maybe related to "go to next message" functionality)
@@ -35,3 +33,6 @@ Done:
 - (Axel) while retrieving messages, sometimes only one account is used at first - the other accounts follow after the first has finished
 - (Axel) Already reopened queued messages can be opened again (should not be possible)
 - (Axel) Wenn ein Eintrag im "Put in message box"-Popup ausgewählt wird, darf der Haken daneben ruhig aktiviert werden  (reported by Jörg)
+- (Axel) long lines without whitespaces does not wrap correctly (example: long url got a wrong space in it)
+- (Axel) Beim Anlegen einer Mailbox wird das Popup zu "Put in message box" in der Filter-Pane nicht automatisch aktualisiert (reported by Jörg)
+- (Axel) "general prefs" have no icon in release build (reported by Jörg)
