@@ -287,7 +287,7 @@ NSHashTable* allConnections = NULL;
 	id item;
 	while (item = NSNextHashEnumeratorItem(&e)) {
 		//NSLog(@"Running Enumerator: %@", item);
-		NSLog(@"Running: %@", item);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Running: %@", item);
 	}
 	NSEndHashTableEnumeration(&e);
 }
@@ -566,7 +566,7 @@ NSHashTable* allConnections = NULL;
 	if (!connection) {
 		@synchronized(self) {
 			OPDebugLog(OPPERSISTENCE, OPINFO, @"Opening database at '%@'.", dbPath);
-			NSLog(@"Opening database (%@)", self);
+			OPDebugLog(OPPERSISTENCE, OPINFO, @"Opening database (%@)", self);
 			// Comment next three lines to disable statement caching:
 			updateStatements         = [[NSMutableDictionary alloc] initWithCapacity: 10];
 			insertStatements         = [[NSMutableDictionary alloc] initWithCapacity: 10];
@@ -608,22 +608,22 @@ NSHashTable* allConnections = NULL;
 		[addRelationStatements release];    addRelationStatements    = nil;
 		[removeRelationStatements release]; removeRelationStatements = nil;
 	
-		NSLog(@"Closing database (try, %@)", self);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Closing database (try, %@)", self);
 		
 		if (NSCountHashTable(runningStatements)) {
-			NSLog(@"Warning: The following statements for %@ are still running:", self);
+			OPDebugLog(OPPERSISTENCE, OPWARNING, @"Warning: The following statements for %@ are still running:", self);
 			[self printRunningStatements];
 		}
 
 		int result = sqlite3_close(connection);
 		
 		if (result == SQLITE_BUSY) {
-			NSLog(@"Warning! Unable to close %@ - some statements are not finalized - still open. Running statements:", self);
+			OPDebugLog(OPPERSISTENCE, OPWARNING, @"Warning! Unable to close %@ - some statements are not finalized - still open. Running statements:", self);
 			[self printRunningStatements];
 			return NO;
 		}
 		
-		NSLog(@"Closed database (done, %@)", self);
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"Closed database (done, %@)", self);
 
 		
 		NSHashRemove(allConnections, self);

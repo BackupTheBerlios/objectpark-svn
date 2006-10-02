@@ -24,6 +24,7 @@
 #import "NSAttributedString+MessageUtils.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSScanner+Extensions.h"
+#import <Foundation/NSDebug.h>
 #import "utilities.h"
 
 #include <sys/types.h>
@@ -1561,9 +1562,11 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     unsigned int	lineStart, nextLineStart, prefixLength;
 
     lineBreakSeq = @"\r\n";
-    if([self rangeOfString:lineBreakSeq].length == 0)
+    if([self rangeOfString:lineBreakSeq].location == NSNotFound)
+	{
         lineBreakSeq = @"\n";
-
+	}
+	
     breakSet = [NSCharacterSet characterSetWithCharactersInString:@" "];
     textSet = [[NSCharacterSet characterSetWithCharactersInString:@""] invertedSet];
     buffer = [[[NSMutableString allocWithZone:[self zone]] init] autorelease];
@@ -1587,7 +1590,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 else
                 {
                     originalLine = mcopy = [[originalLine mutableCopy] autorelease];
-                    [mcopy insertString: @" " atIndex:lineStart];
+//                    [mcopy insertString: @" " atIndex:lineStart];
                     [mcopy insertString:spillOver atIndex:lineStart];
                 }
 
@@ -1652,117 +1655,22 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     }
 }
 
-/* eriks version?
-- (NSString*) stringByEncodingFlowedFormat
-{
-    NSMutableString *flowedText;
-    NSArray*paragraphs;
-    NSString *paragraph, *lineBreakSeq;
-    NSEnumerator *paragraphEnumerator;
-
-    lineBreakSeq = @"\r\n";
-    if([self rangeOfString:lineBreakSeq].location == NSNotFound)
-        lineBreakSeq = @"\n";
-
-    flowedText = [[[NSMutableString allocWithZone:[self zone]] initWithCapacity:[self length]] autorelease];
-
-    paragraphs = [self componentsSeparatedByString:lineBreakSeq];
-
-    paragraphEnumerator = [paragraphs objectEnumerator];
-
-    while (paragraph = [paragraphEnumerator nextObject])
-    {
-        NSAutoreleasePool *pool;
-
-        pool = [[NSAutoreleasePool alloc] init];
-        
-        // 1.  Ensure all lines (fixed and flowed) are 79 characters or
-        // fewer in length, counting the trailing space but not
-        // counting the CRLF, unless a word by itself exceeds 79
-        // characters.
-         
-
-        //
-        // 2.  Trim spaces before user-inserted hard line breaks.
-        //
-        while ([paragraph hasSuffix: @" "])
-            paragraph = [paragraph substringToIndex:[paragraph length] - 1]; // chop the last character
-
-        if ([paragraph length] > 79)
-        {
-            NSString *wrappedParagraph;
-            NSArray*paragraphLines;
-            int i, count;
-            
-             //When creating flowed text, the generating agent wraps, that is,
-             //inserts 'soft' line breaks as needed.  Soft line breaks are added
-             //between words.  Because a soft line break is a SP CRLF sequence, the
-             //generating agent creates one by inserting a CRLF after the occurance
-             //of a space.
-             
-            wrappedParagraph = [paragraph stringByWrappingToSoftLimit:72];
-            paragraphLines = [wrappedParagraph componentsSeparatedByString:lineBreakSeq];
-
-            count = [paragraphLines count];
-
-            for (i = 0; i < count; i++)
-            {
-                NSString* line;
-
-                line = [paragraphLines objectAtIndex:i];
-
-                //
-                // 3.  Space-stuff lines which start with a space, "From ", or ">".
-                //
-                line = [line stringBySpaceStuffing];
-
-                if (i < (count-1) ) // ensure soft-break
-                {
-                    if (! [line hasSuffix: @" "])
-                    {
-                        line = [line stringByAppendingString: @" "];
-                    }
-                }
-                else
-                {
-                    while ([line hasSuffix: @" "])
-                    {
-                        line = [line substringToIndex:[line length] - 1]; // chop the last character (space)
-                    }
-                }
-                [flowedText appendString:line];
-                [flowedText appendString:lineBreakSeq];
-            }
-        }
-        else
-        {
-            // add paragraph to flowedText
-            //
-            // 3.  Space-stuff lines which start with a space, "From ", or ">".
-            //
-            paragraph = [paragraph stringBySpaceStuffing];
-            [flowedText appendString:paragraph];
-            [flowedText appendString:lineBreakSeq];
-        }
-
-        [pool release];
-    }
-
-    // chop lineBreakSeq at the end
-    return [flowedText substringToIndex:[flowedText length] - [lineBreakSeq length]];
-}
-*/
-
 - (NSString *)stringByEncodingFlowedFormatUsingDelSp:(BOOL)useDelSp
 /*" RFC3676 "*/
 {    
+	NSString *normalizedString = [self stringWithCanonicalLinebreaks];
+	
     NSString *lineBreakSeq = @"\r\n";
-    if([self rangeOfString: lineBreakSeq].location == NSNotFound)
+	/*
+    if([normalizedString rangeOfString: lineBreakSeq].location == NSNotFound)
+	{
         lineBreakSeq = @"\n";
+    }
+	*/
+	
+    NSMutableString *flowedText = [[[NSMutableString alloc] initWithCapacity:[normalizedString length]] autorelease];
     
-    NSMutableString *flowedText = [[[NSMutableString alloc] initWithCapacity:[self length]] autorelease];
-    
-    NSArray *paragraphs = [self componentsSeparatedByString:lineBreakSeq];
+    NSArray *paragraphs = [normalizedString componentsSeparatedByString:lineBreakSeq];
     
     NSEnumerator *paragraphEnumerator = [paragraphs objectEnumerator];
 	NSString *paragraph;
@@ -1814,7 +1722,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 NSString *line;
                 
                 line = [paragraphLines objectAtIndex:i];
-                
+								
                 /*
                  3.  Space-stuff lines which start with a space, "From ", or ">".
                  */  
@@ -1822,12 +1730,16 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 
                 if (i < (count-1) ) 
 				{
+					BOOL lineEndsWithSpace = [line hasSuffix:@" "];
+					BOOL isHardWrappedLine = [line length] >= 998;
+					
 					// ensure soft-break:
-                    if (! [line hasSuffix:@" "]) 
+                    if (!lineEndsWithSpace && !isHardWrappedLine) 
 					{
                         line = [line stringByAppendingString:@" "];
                     }
-					else if (useDelSp)
+					
+					if (useDelSp)
 					{
                         line = [line stringByAppendingString:@" "];
 					}

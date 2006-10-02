@@ -300,8 +300,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         // if message's date is a future date
         // broken message, set current date:
         messageDate = [NSCalendarDate date];
-        if (NSDebugEnabled)
-            NSLog(@"Found message with future date. Fixing broken date with 'now'.");
+		OPDebugLog(MESSAGE, OPINFO, @"Found message with future date. Fixing broken date with 'now'.");
     }
     [self setValue: messageDate forKey: @"date"];
     

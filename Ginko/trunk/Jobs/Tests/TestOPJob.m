@@ -3,7 +3,7 @@
 //  GinkoVoyager
 //
 //  Created by Axel Katerbau on 26.05.06.
-//  Copyright (c) 2006 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2006 Objectpark Group. All rights reserved.
 //
 
 #import "TestOPJob.h"
@@ -26,7 +26,7 @@
     
     [[OPJob job] setResult:@"TestResult"];
     
-    sleep(2);
+    usleep(20000);
     
     if ([[OPJob job] shouldTerminate])
     {
@@ -34,7 +34,7 @@
         return;
     }
     
-    sleep(3);
+    usleep(30000);
 }
 
 - (void) testBasics
@@ -43,7 +43,7 @@
     OPJob *job2 = [OPJob scheduleJobWithName:@"job2" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Basic Job 2" forKey:@"name"] synchronizedObject:nil];
     OPJob *job3 = [OPJob scheduleJobWithName:@"job3" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Basic Job 3" forKey:@"name"] synchronizedObject:nil];
     
-	// sleep(1);
+	// usleep(10000);
 	
     STAssertTrue([OPJob maxThreads] == 2, @"Max 2 Threads allowed otherwise many tests will fail.");
 	
@@ -52,7 +52,7 @@
     while ([job1 isRunning])
     {
         //NSLog(@"job1 still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     //NSLog(@"job1 completed");
@@ -60,12 +60,12 @@
     while ([job2 isRunning])
     {
         //NSLog(@"job2 still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     //NSLog(@"job2 completed");
 	
-    //sleep(1);
+    //usleep(10000);
     
     STAssertTrue([OPJob activeThreadCount] == 1, @"1 should be active");
     STAssertTrue([OPJob idleThreadCount] == 1, @"1 should be idle");
@@ -73,7 +73,7 @@
     while ([job3 isRunning])
     {
         //NSLog(@"job3 still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     //NSLog(@"job3 completed");    
@@ -88,7 +88,7 @@
     OPJob *jobKoeln2 = [OPJob scheduleJobWithName:@"koeln2" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Job Koeln2" forKey:@"name"] synchronizedObject:@"Koeln"];
     OPJob *jobDuisburg = [OPJob scheduleJobWithName:@"duisburg" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Job Duisburg" forKey:@"name"] synchronizedObject:@"Duisburg"];
     
-    sleep(1);
+    usleep(10000);
     
     STAssertTrue([jobKoeln1 isRunning], @"Koeln1 soll laufen");
     STAssertFalse([jobKoeln2 isRunning], @"Koeln2 soll nicht laufen");
@@ -98,7 +98,7 @@
     while ([jobKoeln1 isRunning])
     {
         //NSLog(@"jobKoeln1 still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     //NSLog(@"jobKoeln1 completed");
@@ -106,12 +106,12 @@
     while ([jobDuisburg isRunning])
     {
         //NSLog(@"jobDuisburg still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     //NSLog(@"jobDuisburg completed");
     
-    sleep(1);
+    usleep(10000);
     
     STAssertTrue([OPJob activeThreadCount] == 1, @"1 should be active");
     STAssertTrue([OPJob idleThreadCount] == 1, @"1 should be idle");
@@ -119,7 +119,7 @@
     while ([jobKoeln2 isRunning])
     {
         //NSLog(@"jobKoeln2 still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     //NSLog(@"jobKoeln2 completed");    
@@ -135,7 +135,7 @@
     
     OPJob *jobKoeln1 = [OPJob scheduleJobWithName:@"koeln1" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"Job Koeln1" forKey:@"name"] synchronizedObject:@"Koeln"];
     
-    sleep(1);
+    usleep(10000);
     
     STAssertTrue([jobKoeln1 isRunning], @"Koeln1 soll laufen");
     STAssertTrue([OPJob activeThreadCount] == 1, @"1 should be active but only %d are.", [OPJob activeThreadCount]);
@@ -143,7 +143,7 @@
     while ([jobKoeln1 isRunning])
     {
         //NSLog(@"jobKoeln1 still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     //NSLog(@"jobKoeln1 completed");
@@ -160,14 +160,14 @@
 {
     OPJob *job1 = [OPJob scheduleJobWithName:@"job1" target:self selector:@selector(jobToTest:) argument:[NSDictionary dictionaryWithObject:@"testTermination" forKey:@"name"] synchronizedObject:nil];
     
-    sleep(1);
+    usleep(10000);
     
     [job1 suggestTerminating];
     
     while ([job1 isRunning])
     {
         //NSLog(@"job1 still running...");
-        sleep(1);
+        usleep(10000);
     }
     
     STAssertTrue([[job1 result] isEqual:@"Terminated"], @"wrong result %@ = Terminated", [job1 result]);

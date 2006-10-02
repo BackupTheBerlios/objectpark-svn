@@ -37,11 +37,11 @@
 
 - (void)testFormatFlowed
 {
-    NSString *testString = @"This is\n a test. And this test shows that there is much more complexity in format flowed wrapping than be visible at fist sight.";
+    NSString *testString = @"This is\r\n a test. And this test shows that there is much more complexity in format flowed wrapping than be visible at fist sight.";
     
 	NSString *testEncoded = [testString stringByEncodingFlowedFormatUsingDelSp:NO];
 	
-	STAssertEqualObjects(testEncoded, @"This is\n  a test. And this test shows that there is much more complexity in \nformat flowed wrapping than be visible at fist sight.", @"Encoding without DelSp is broken");
+	STAssertEqualObjects(testEncoded, @"This is\r\n  a test. And this test shows that there is much more complexity in \r\nformat flowed wrapping than be visible at fist sight.", @"Encoding without DelSp is broken");
 	
 	NSString *testDecoded = [testEncoded stringByDecodingFlowedFormatUsingDelSp:NO];
 	
@@ -57,6 +57,64 @@
 	testString = @"this/is/simply/a/long/line/longer/than/80/characters/in/lenght/with/ \r\nno/sucking/umlauts/for/ma-king/a/good/example";
     
     STAssertTrue([[testString stringByDecodingFlowedFormatUsingDelSp:YES] isEqualToString:expectedString], @"%@ is wrong", [testString stringByDecodingFlowedFormatUsingDelSp:YES]);
+	
+	// -- just another test:
+	NSString *expectedEncodedParagraph = 
+		@"We can think of e.g. 15% rebate for this promotion. If you like to use  \r\n"
+		@"your infrastructure we'd suggest that you send us the buyers info (such  \r\n"
+		@"as email-address, name, address, etc.) and we would send out the  \r\n"
+		@"license information.";
+
+	NSString *paragraph = 
+		@"We can think of e.g. 15% rebate for this promotion. If you like to use "
+		@"your infrastructure we'd suggest that you send us the buyers info (such "
+		@"as email-address, name, address, etc.) and we would send out the "
+		@"license information.";
+	
+	NSString *encodedParagraph = [paragraph stringByEncodingFlowedFormatUsingDelSp:YES];
+	
+	STAssertEqualObjects(expectedEncodedParagraph, encodedParagraph, @"paragraph was not properly encoded.");
+
+	NSString *decodedParagraph = [encodedParagraph stringByDecodingFlowedFormatUsingDelSp:YES];
+	
+	STAssertEqualObjects(paragraph, decodedParagraph, @"paragraph was not properly decoded.");
+	
+	// test long paragraph:
+	NSString *longParagraph = 
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctationand"
+		@"Thisisalongparagraphwithoutanywhitespaceinitasitseemstobethecaseinsomelanguageswhichhavenointerpunctation";
+	
+	NSString *encodedLongParagraph = [longParagraph stringByEncodingFlowedFormatUsingDelSp:YES];
+	
+	NSString *decodedLongParagraph = [encodedLongParagraph stringByDecodingFlowedFormatUsingDelSp:YES];
+	
+	STAssertEqualObjects(longParagraph, decodedLongParagraph, @"long paragraph flowed encoding is broken.");
+	
+	// test empty lines:
+	NSString *emptyLinesString = @"This is a line\r\n"
+		@"\r\n"
+		@"Afer empty line.";
+	NSString *encodedEmptyLineString = [emptyLinesString stringByEncodingFlowedFormatUsingDelSp:YES];
+	NSString *decodedEmptyLineString = [encodedEmptyLineString stringByDecodingFlowedFormatUsingDelSp:YES];
+	
+	STAssertEqualObjects(emptyLinesString, decodedEmptyLineString, @"empty line flowed encoding is broken.");
 }
 
 - (void)testPunycode

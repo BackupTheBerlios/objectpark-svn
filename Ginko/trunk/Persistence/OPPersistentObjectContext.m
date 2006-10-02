@@ -361,7 +361,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
         [self reset];      
 		//lock = [[NSLock alloc] init];
 		
-		NSLog(@"OPPersistence initialized, running with SQLite %s.", sqlite3_libversion());
+		OPDebugLog(OPPERSISTENCE, OPINFO, @"OPPersistence initialized, running with SQLite %s.", sqlite3_libversion());
 
     }
     return self;
