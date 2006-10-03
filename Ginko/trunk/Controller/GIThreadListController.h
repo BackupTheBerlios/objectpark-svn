@@ -31,11 +31,15 @@
     IBOutlet NSDateFormatter *searchHitDateFormatter;
     IBOutlet NSArrayController *hitsController;
 	
+	IBOutlet NSPanel *threadInfoPanel;
+	IBOutlet NSDateFormatter *infoPanelDateFormatter;
+	
     GIMessageGroup *group;
     GIThread *displayedThread; // displayed as comment tree
     GIMessage *displayedMessage; // displayed with body
     NSMutableArray* border; // helper for comment tree creation
-    
+    GIThread *selectedThread;
+	
     BOOL showRawSource;
     NSTimeInterval nowForThreadFiltering;
 
@@ -70,6 +74,7 @@
 - (void)setDisplayedMessage:(GIMessage *)aMessage thread:(GIThread *)aThread;
 - (GIMessage *)displayedMessage;
 - (GIThread *)displayedThread;
+- (GIThread *)selectedThread;
 
 - (BOOL)isThreadlistShownCurrently;
 - (BOOL)isSearchShownCurrently;

@@ -43,6 +43,7 @@ NSString* RecentThreadListWindowPositions = @"RecentThreadListWindowPositions";
 NSString *AttachmentSaveFolder = @"AttachmentSaveFolder";
 NSString *ReuseThreadListWindowByDefault = @"ReuseThreadListWindowByDefault";
 NSString *DateOfLastMessageRetrieval = @"DateOfLastMessageRetrieval";
+NSString *ShowThreadInfoPanel = @"ShowThreadInfoPanel";
 
 NSArray* allAdditionalHeadersForDisplay()
 {

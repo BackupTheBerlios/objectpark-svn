@@ -39,6 +39,7 @@ extern NSString* RecentThreadListWindowPositions;
 extern NSString *AttachmentSaveFolder;
 extern NSString *ReuseThreadListWindowByDefault;
 extern NSString *DateOfLastMessageRetrieval;
+extern NSString *ShowThreadInfoPanel;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

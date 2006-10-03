@@ -115,8 +115,20 @@ static NSString *ShowOnlyRecentThreads = @"ShowOnlyRecentThreads";
     [searchHitDateFormatter setDateStyle:NSDateFormatterShortStyle];
     [searchHitDateFormatter setTimeStyle:NSDateFormatterShortStyle];
     
+	// configure info panel date formatter:
+	[infoPanelDateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [infoPanelDateFormatter setDateStyle:NSDateFormatterShortStyle];
+    [infoPanelDateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	
 	[self awakeToolbar];
     [self awakeCommentTree];  
+	
+	BOOL showTreadInfoPanel = [[NSUserDefaults standardUserDefaults] boolForKey:ShowThreadInfoPanel];
+	
+	if (showTreadInfoPanel)
+	{
+		[threadInfoPanel orderFront:self];
+	}
 }
 
 - (void)dealloc
@@ -411,7 +423,7 @@ static BOOL isThreadItem(id item)
         if (selectedRow >= 0) 
         {
             GIMessage *message = nil;
-            GIThread *selectedThread = nil;
+            GIThread *theSelectedThread = nil;
             id item = [threadsView itemAtRow:selectedRow];
             
             if (!isThreadItem(item)) 
@@ -419,15 +431,15 @@ static BOOL isThreadItem(id item)
                 // it's a message, show it:
                 message = item;
                 // find the thread above message:
-                selectedThread = [message valueForKey:@"thread"];
+                theSelectedThread = [message valueForKey:@"thread"];
             } 
             else 
             {
-                selectedThread = item;
+                theSelectedThread = item;
                 
-                if ([selectedThread containsSingleMessage]) 
+                if ([theSelectedThread containsSingleMessage]) 
                 {
-                    message = [[selectedThread valueForKey:@"messages"] lastObject];
+                    message = [[theSelectedThread valueForKey:@"messages"] lastObject];
                 } 
                 else 
                 {
@@ -442,7 +454,7 @@ static BOOL isThreadItem(id item)
                         // perhaps the next/first unread message
                         
 						/* Do this on hitting "space" only:
-                        NSEnumerator *enumerator = [[selectedThread messagesByTree] objectEnumerator];
+                        NSEnumerator *enumerator = [[theSelectedThread messagesByTree] objectEnumerator];
 						GIMessage *message;
 
                         while (message = [enumerator nextObject]) 
@@ -457,7 +469,7 @@ static BOOL isThreadItem(id item)
                         if (! message) 
                         {
                             // if no message found select last one:
-                            [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:[[selectedThread messagesByTree] lastObject]]] byExtendingSelection:NO];   
+                            [threadsView selectRowIndexes:[NSIndexSet indexSetWithIndex:[threadsView rowForItem:[[theSelectedThread messagesByTree] lastObject]]] byExtendingSelection:NO];   
                         }
                         
                         // make selection visible:
@@ -488,7 +500,7 @@ static BOOL isThreadItem(id item)
                 
                 //[message addFlags:OPSeenStatus];
                 
-                [self setDisplayedMessage:message thread:selectedThread];
+                [self setDisplayedMessage:message thread:theSelectedThread];
                 
                 //if ([self matrixIsVisible]) [window makeFirstResponder:commentsMatrix];
                 //else 
@@ -1159,7 +1171,7 @@ static BOOL isThreadItem(id item)
 
 
 
-- (void) modelChanged: (NSNotification*) aNotification
+- (void) modelChanged:(NSNotification *)aNotification
 {
 	// Re-query all threads keeping the selection, if possible.
 	//NSArray* selectedItems = [threadsView selectedItems];
@@ -1169,6 +1181,16 @@ static BOOL isThreadItem(id item)
 	
 	[self reload];
 	//[threadsView selectItems: selectedItems ordered: YES];
+}
+
+- (GIThread *)selectedThread
+{
+	return selectedThread;
+}
+
+- (void)setSelectedThread:(GIThread *)aThread
+{
+	selectedThread = aThread;
 }
 
 - (GIMessageGroup *)group
@@ -1457,10 +1479,24 @@ static BOOL isThreadItem(id item)
   {	  
         id item = [threadsView itemAtRow:[threadsView selectedRow]];
         
-        if ([item isKindOfClass: [OPPersistentObject class]]) {
-            item = [item objectURLString];
-			[self setValue:item forGroupProperty:@"LastSelectedMessageItem"];
+        if ([item isKindOfClass:[OPPersistentObject class]]) 
+		{
+            NSString *urlString = [item objectURLString];
+			[self setValue:urlString forGroupProperty:@"LastSelectedMessageItem"];
+			
+			if ([item isKindOfClass:[GIMessage class]])
+			{
+				[self setSelectedThread:[item thread]];
+			}
+			else
+			{
+				[self setSelectedThread:item];
+			}
         }
+		else
+		{
+			[self setSelectedThread:nil];
+		}
     }
 }
 
