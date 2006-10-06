@@ -69,10 +69,10 @@
 - (unsigned) numberOfReferences;
 - (void) flushNumberOfReferencesCache;
 
-- (unsigned) flags;
-- (BOOL) hasFlags: (unsigned) someFlags;
-- (void) addFlags: (unsigned) someFlags;
-- (void) removeFlags: (unsigned) someFlags;
+- (unsigned int)flags;
+- (BOOL)hasFlags:(unsigned int)someFlags;
+- (void)addFlags:(unsigned int)someFlags;
+- (void)removeFlags:(unsigned int)someFlags;
 
 - (unsigned)sendStatus;
 - (void)setSendStatus:(unsigned)newStatus;

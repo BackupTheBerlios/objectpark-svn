@@ -284,14 +284,15 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	}
 }
 
-
-- (BOOL) hasUnreadMessages
+- (BOOL)hasUnreadMessages
 /*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    
-	NSEnumerator* enumerator = [[self messages] objectEnumerator];
-	GIMessage* message;
-    while (message = [enumerator nextObject]) {
-        if (![message hasFlags: OPSeenStatus]) {
+	NSEnumerator *enumerator = [[self messages] objectEnumerator];
+	GIMessage *message;
+    while (message = [enumerator nextObject]) 
+	{
+        if (![message hasFlags:OPSeenStatus]) 
+		{
             return YES;
         }
     }
@@ -408,9 +409,5 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
         referencingMsg = referencedMsg;
     }
 }
-
-
-
-
 
 @end

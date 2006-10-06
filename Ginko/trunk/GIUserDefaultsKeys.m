@@ -15,6 +15,7 @@ NSString *MessageRendererFontSize = @"MessageRendererFontSize";
 NSString *MessageRendererShouldRenderAttachmentsInlineIfPossible = @"MessageRendererShouldRenderAttachmentsInlineIfPossible";
 NSString *UseAlternateDateDisplayInMessageLists = @"UseAlternateDateDisplayInMessageLists";
 NSString *ShowAllHeaders = @"ShowAllHeaders";
+NSString *ShowRawSource = @"ShowRawSource";
 NSString *ContentTypePreferences = @"ContentTypePreferences";
 NSString *GroupsDrawerMode = @"GroupsDrawerMode";
 NSString *HeadersShown = @"GIHeadersShown";

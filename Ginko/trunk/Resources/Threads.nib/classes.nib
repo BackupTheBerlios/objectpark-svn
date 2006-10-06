@@ -1,0 +1,25 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {selectTreeCell = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = GIMatrixWithKeyboardSupport; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
+        {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {
+            CLASS = GIThreadsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                messageDateColumn = NSTableColumn; 
+                messageTextView = NSTextView; 
+                messagesController = NSArrayController; 
+                threadDateColumn = NSTableColumn; 
+                threadsController = NSArrayController; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

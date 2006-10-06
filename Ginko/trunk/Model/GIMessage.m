@@ -485,17 +485,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-- (NSAttributedString*) contentAsAttributedString
+- (NSAttributedString *)contentAsAttributedString
 {
     return [[self internetMessage] bodyContent];
 }
 
-- (NSString*) contentAsString
+- (NSString *)contentAsString
 {
-	//return [[self contentAsAttributedString] string]; // loads images from the net etc. :-(
    return [[self internetMessage] contentAsPlainString];
 }
-
 
 - (GIThread*) assignThreadUseExisting: (BOOL) useExisting
 /*"Returns the one thread the message belongs to.

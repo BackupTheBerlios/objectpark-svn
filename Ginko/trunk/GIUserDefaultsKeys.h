@@ -13,6 +13,7 @@ extern NSString *MessageRendererFontSize;
 extern NSString *MessageRendererShouldRenderAttachmentsInlineIfPossible;
 extern NSString *UseAlternateDateDisplayInMessageLists;
 extern NSString *ShowAllHeaders;
+extern NSString *ShowRawSource;
 extern NSString *ContentTypePreferences;
 extern NSString *GroupsDrawerMode;
 extern NSString *HeadersShown;

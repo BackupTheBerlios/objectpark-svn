@@ -24,6 +24,7 @@
 #import "GIApplication.h"
 #import "OPImageAndTextCell.h"
 #import "GIMessageGroup+Statistics.h"
+#import "GIThreadsController.h"
 
 @implementation GIGroupListController
 
@@ -209,14 +210,25 @@ static GIMessageGroup *reuseGroup = nil;
 - (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-	BOOL shouldReuseWindow = [[NSUserDefaults standardUserDefaults] boolForKey:ReuseThreadListWindowByDefault];
-	
-	if ([boxesView altKeyPressedWithMouseDown])
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowExperimentalUI"])
 	{
-		shouldReuseWindow = !shouldReuseWindow;
+		NSArray *threadsByDate = [[self group] valueForKey:@"threadsByDate"];
+		
+		GIThreadsController *threadsController = [[[GIThreadsController alloc] initWithThreads:threadsByDate] autorelease];
+		[threadsController selectThread:[threadsByDate lastObject]];
+		[threadsController showWindow:self];
 	}
-	
-	[[self class] showGroup:[self group] reuseWindow:shouldReuseWindow];
+	else
+	{
+		BOOL shouldReuseWindow = [[NSUserDefaults standardUserDefaults] boolForKey:ReuseThreadListWindowByDefault];
+		
+		if ([boxesView altKeyPressedWithMouseDown])
+		{
+			shouldReuseWindow = !shouldReuseWindow;
+		}
+		
+		[[self class] showGroup:[self group] reuseWindow:shouldReuseWindow];
+	}
 }
 
 - (IBAction)showGroupInspector:(id)sender

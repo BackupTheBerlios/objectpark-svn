@@ -85,6 +85,9 @@
 		774DD4270994AC0E00F0A922 /* TestGIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 77136F3108438E2A002F9298 /* TestGIThread.m */; };
 		775025F408489586008DD1CD /* TestNSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 775025F208489585008DD1CD /* TestNSData+MessageUtils.h */; };
 		775025F508489586008DD1CD /* TestNSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 775025F308489586008DD1CD /* TestNSData+MessageUtils.m */; };
+		7754E9040AD41DCB00E76512 /* Threads.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7754E8FF0AD41DCB00E76512 /* Threads.nib */; };
+		7754E9090AD41E1C00E76512 /* GIThreadsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7754E9070AD41E1C00E76512 /* GIThreadsController.h */; };
+		7754E90A0AD41E1C00E76512 /* GIThreadsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7754E9080AD41E1C00E76512 /* GIThreadsController.m */; };
 		775597BF085506BE00E53108 /* OPPOP3Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 775597BD085506BE00E53108 /* OPPOP3Session.h */; };
 		775597C0085506BE00E53108 /* OPPOP3Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 775597BE085506BE00E53108 /* OPPOP3Session.m */; };
 		7759B41708535F830011B606 /* GIActivityPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7759B41508535F830011B606 /* GIActivityPanelController.h */; };
@@ -537,6 +540,9 @@
 		774A05B40859DAFD00AF321C /* Tasks.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Tasks.txt; sourceTree = "<group>"; };
 		775025F208489585008DD1CD /* TestNSData+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSData+MessageUtils.h"; sourceTree = "<group>"; };
 		775025F308489586008DD1CD /* TestNSData+MessageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSData+MessageUtils.m"; sourceTree = "<group>"; };
+		7754E8FF0AD41DCB00E76512 /* Threads.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Threads.nib; sourceTree = "<group>"; };
+		7754E9070AD41E1C00E76512 /* GIThreadsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThreadsController.h; sourceTree = "<group>"; };
+		7754E9080AD41E1C00E76512 /* GIThreadsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThreadsController.m; sourceTree = "<group>"; };
 		775597BD085506BE00E53108 /* OPPOP3Session.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPPOP3Session.h; sourceTree = "<group>"; };
 		775597BE085506BE00E53108 /* OPPOP3Session.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPPOP3Session.m; sourceTree = "<group>"; };
 		7759B41508535F830011B606 /* GIActivityPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIActivityPanelController.h; sourceTree = "<group>"; };
@@ -983,6 +989,7 @@
 				773FFE960859778700E0767F /* Password.nib */,
 				7776BBA907D0773E00822246 /* MainMenu.nib */,
 				7776259C0760DEC20066BE60 /* Group.nib */,
+				7754E8FF0AD41DCB00E76512 /* Threads.nib */,
 				77CD550F07699AD1003354A0 /* MessageEditor.nib */,
 				77E541AE0785AB9D00265DBB /* Boxes.nib */,
 				77D2A74007DB62F500CCF5C2 /* GroupInspector.nib */,
@@ -1135,8 +1142,6 @@
 			children = (
 				8D31443D09562178007D668A /* GIThreadListController.h */,
 				8D31443E09562178007D668A /* GIThreadListController.m */,
-				77D169150AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.h */,
-				77D169160AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.m */,
 				77BA8F4B076DCC1C0082F33F /* GIAddressFormatter.h */,
 				77BA8F4C076DCC1C0082F33F /* GIAddressFormatter.m */,
 				77EF040107DC4DEF007CD721 /* GIGroupInspectorController.h */,
@@ -1155,6 +1160,10 @@
 				8D2147AE085114B3004C44B9 /* GISearchController.m */,
 				8D9E8A8306AC44080055F87C /* GIApplication.h */,
 				8D9E8A8406AC44080055F87C /* GIApplication.m */,
+				7754E9070AD41E1C00E76512 /* GIThreadsController.h */,
+				7754E9080AD41E1C00E76512 /* GIThreadsController.m */,
+				77D169150AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.h */,
+				77D169160AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1655,6 +1664,7 @@
 				8DF139100ABA1CD200A24563 /* NSFileManager+Extensions.h in Headers */,
 				773F875D0ABFEE5A00A8F0D2 /* TestOPXFolderContentCoder.h in Headers */,
 				77D169170AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.h in Headers */,
+				7754E9090AD41E1C00E76512 /* GIThreadsController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1857,6 +1867,7 @@
 				8DD8C1790A5D89DD00DEA948 /* PaperClip.tiff in Resources */,
 				77468B010A6E1EC50089DA7B /* Passphrase.nib in Resources */,
 				8D0C8C270A84220D0055D8E6 /* DefaultJunkFilter.plist in Resources */,
+				7754E9040AD41DCB00E76512 /* Threads.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2062,6 +2073,7 @@
 				8DDF3DC90AA8D81700E1F591 /* NSApplication+NetworkNotifications.m in Sources */,
 				8DF139110ABA1CD300A24563 /* NSFileManager+Extensions.m in Sources */,
 				77D169180AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.m in Sources */,
+				7754E90A0AD41E1C00E76512 /* GIThreadsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
