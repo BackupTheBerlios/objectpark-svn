@@ -23,6 +23,10 @@
 	IBOutlet NSTableColumn *messageDateColumn;
 	
 	IBOutlet NSTextView *messageTextView;
+	
+	IBOutlet NSSplitView *thread_messageSplitView;
+	IBOutlet NSSplitView *verticalSplitView;
+	IBOutlet NSSplitView *infoSplitView;
 }
 
 - (id)initWithThreads:(NSArray *)someThreads;

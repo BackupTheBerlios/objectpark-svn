@@ -13,6 +13,7 @@
 #import "NSString+MessageUtils.h"
 #import "GIUserDefaultsKeys.h"
 #import "NSArray+Extensions.h"
+#import "NSSplitView+Autosave.h"
 
 static NSDateFormatter *sharedDateFormatter = nil;
 
@@ -154,7 +155,11 @@ static NSDateFormatter *dateFormatter()
 {
 	if (self = [self initWithWindowNibName:@"Threads"])
 	{
+		[self setShouldCascadeWindows:NO];
+		[self setWindowFrameAutosaveName:@"Threads"];
+
 		[self setThreads:someThreads];
+		
 		[self window]; // making sure the bindings are active
 	}
 	
@@ -168,11 +173,24 @@ static NSDateFormatter *dateFormatter()
 	[super dealloc];
 }
 
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	[self autorelease];
+}
+
 - (void)windowDidLoad
 {
 	// set up date formatters:
 	[[threadDateColumn dataCell] setFormatter:dateFormatter()];
 	[[messageDateColumn dataCell] setFormatter:dateFormatter()];
+			
+	// configure split views:
+	[thread_messageSplitView setAutosaveName:[[self windowFrameAutosaveName] stringByAppendingString:@"-Thread-Messages"]];
+	[thread_messageSplitView setAutosaveDividerPosition:YES];
+	[verticalSplitView setAutosaveName:[[self windowFrameAutosaveName] stringByAppendingString:@"-Vertical"]];
+	[verticalSplitView setAutosaveDividerPosition:YES];
+//	[infoSplitView setAutosaveName:[[self windowFrameAutosaveName] stringByAppendingString:@"-Info"]];
+//	[infoSplitView setAutosaveDividerPosition:YES];
 }
 
 /*" Sets the message text view scroll and cursor position to the upper left corner. "*/

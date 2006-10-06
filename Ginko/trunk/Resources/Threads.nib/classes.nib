@@ -12,11 +12,14 @@
             CLASS = GIThreadsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                infoSplitView = NSSplitView; 
                 messageDateColumn = NSTableColumn; 
                 messageTextView = NSTextView; 
                 messagesController = NSArrayController; 
                 threadDateColumn = NSTableColumn; 
+                "thread_messageSplitView" = NSSplitView; 
                 threadsController = NSArrayController; 
+                verticalSplitView = NSSplitView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }
