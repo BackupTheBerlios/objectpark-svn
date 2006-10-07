@@ -189,8 +189,8 @@ static NSDateFormatter *dateFormatter()
 	[thread_messageSplitView setAutosaveDividerPosition:YES];
 	[verticalSplitView setAutosaveName:[[self windowFrameAutosaveName] stringByAppendingString:@"-Vertical"]];
 	[verticalSplitView setAutosaveDividerPosition:YES];
-//	[infoSplitView setAutosaveName:[[self windowFrameAutosaveName] stringByAppendingString:@"-Info"]];
-//	[infoSplitView setAutosaveDividerPosition:YES];
+	[infoSplitView setAutosaveName:[[self windowFrameAutosaveName] stringByAppendingString:@"-Info"]];
+	[infoSplitView setAutosaveDividerPosition:YES];
 }
 
 /*" Sets the message text view scroll and cursor position to the upper left corner. "*/
