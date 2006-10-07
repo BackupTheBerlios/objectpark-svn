@@ -10,6 +10,7 @@
 
 @class GIMessage;
 @class GIThread;
+@class GICommentTreeView;
 
 @interface GIThreadsController : NSWindowController 
 {
@@ -27,6 +28,8 @@
 	IBOutlet NSSplitView *thread_messageSplitView;
 	IBOutlet NSSplitView *verticalSplitView;
 	IBOutlet NSSplitView *infoSplitView;
+	
+	IBOutlet GICommentTreeView *commentTreeView;
 }
 
 - (id)initWithThreads:(NSArray *)someThreads;

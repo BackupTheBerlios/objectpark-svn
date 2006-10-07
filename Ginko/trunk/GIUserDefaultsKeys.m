@@ -45,6 +45,7 @@ NSString *AttachmentSaveFolder = @"AttachmentSaveFolder";
 NSString *ReuseThreadListWindowByDefault = @"ReuseThreadListWindowByDefault";
 NSString *DateOfLastMessageRetrieval = @"DateOfLastMessageRetrieval";
 NSString *ShowThreadInfoPanel = @"ShowThreadInfoPanel";
+NSString *SelectFirstUnreadMessageInThread = @"SelectFirstUnreadMessageInThread";
 
 NSArray* allAdditionalHeadersForDisplay()
 {
@@ -110,6 +111,8 @@ void registerDefaultDefaults()
 		[NSNumber numberWithInt:30], SoonRipeMessageMinutes,
 		
 		[NSNumber numberWithBool:YES], NSPrintHeaderAndFooter,
+		
+		[NSNumber numberWithBool:YES], SelectFirstUnreadMessageInThread,
 		
         nil, nil];
     

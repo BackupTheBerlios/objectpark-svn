@@ -14,6 +14,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "NSArray+Extensions.h"
 #import "NSSplitView+Autosave.h"
+#import "GICommentTreeView.h"
 
 static NSDateFormatter *sharedDateFormatter = nil;
 
@@ -205,8 +206,7 @@ static NSDateFormatter *dateFormatter()
 
 - (void)threadSelectionDidChange
 {
-#warning bind to user defaults
-	BOOL selectFirstUnreadMessageInThread = YES;
+	BOOL selectFirstUnreadMessageInThread = [[NSUserDefaults standardUserDefaults] boolForKey:SelectFirstUnreadMessageInThread];
 	
 	if (selectFirstUnreadMessageInThread)
 	{
@@ -224,9 +224,27 @@ static NSDateFormatter *dateFormatter()
 		}
 		if (!message) // select first if all are read
 		{
-			[messagesController setSelectedObjects:[NSArray arrayWithObject:[messages firstObject]]];
+			message = [messages firstObject];
+			
+			if (message)
+			{
+				[messagesController setSelectedObjects:[NSArray arrayWithObject:message]];
+			}
 		}
 	}
+	
+	NSArray *selectedThreads = [threadsController selectedObjects];
+	
+	if ([selectedThreads count] == 1)
+	{
+		[commentTreeView setThread:[selectedThreads lastObject]];
+	}
+	else
+	{
+		[commentTreeView setThread:nil];
+	}
+	
+	[commentTreeView setSelectedMessage:[[messagesController selectedObjects] lastObject]];
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
@@ -236,6 +254,10 @@ static NSDateFormatter *dateFormatter()
 	if ([[aNotification object] tag] == 0) // the thread table view
 	{
 		[self threadSelectionDidChange];
+	}
+	else // the message table view
+	{
+		[commentTreeView setSelectedMessage:[[messagesController selectedObjects] lastObject]];
 	}
 }
 
@@ -253,6 +275,7 @@ static NSDateFormatter *dateFormatter()
 		[someThreads retain];
 		[threads release];
 		threads = [someThreads retain];
+		[self threadSelectionDidChange];
 	}
 }
 

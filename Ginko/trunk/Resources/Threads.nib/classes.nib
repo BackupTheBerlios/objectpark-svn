@@ -6,12 +6,14 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = GICommentTreeView; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
         {CLASS = GIMatrixWithKeyboardSupport; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
         {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             CLASS = GIThreadsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                commentTreeView = GICommentTreeView; 
                 infoSplitView = NSSplitView; 
                 messageDateColumn = NSTableColumn; 
                 messageTextView = NSTextView; 

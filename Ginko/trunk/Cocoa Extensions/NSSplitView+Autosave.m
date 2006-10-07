@@ -82,7 +82,7 @@ static NSString *NSSplitViewPositionsKey = @"NSSplitViewPositions";
 		autosaveEnables = [NSMutableDictionary new];
 	}
 	
-	if([[autosaveEnables objectForKey: self] boolValue]) // handle nil
+	if([[autosaveEnables objectForKey:self] boolValue]) // handle nil
 	{
 		flag = YES;
 	}

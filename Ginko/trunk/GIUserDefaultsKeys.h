@@ -41,6 +41,7 @@ extern NSString *AttachmentSaveFolder;
 extern NSString *ReuseThreadListWindowByDefault;
 extern NSString *DateOfLastMessageRetrieval;
 extern NSString *ShowThreadInfoPanel;
+extern NSString *SelectFirstUnreadMessageInThread;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

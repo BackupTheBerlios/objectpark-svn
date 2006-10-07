@@ -151,6 +151,8 @@
 		77C386E907AE9F1F00420AE9 /* MIME.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77C386E807AE9F1F00420AE9 /* MIME.plist */; };
 		77C62CC90AD66657008A124F /* NSSplitView+Autosave.h in Headers */ = {isa = PBXBuildFile; fileRef = 77C62CC70AD66657008A124F /* NSSplitView+Autosave.h */; };
 		77C62CCA0AD66657008A124F /* NSSplitView+Autosave.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C62CC80AD66657008A124F /* NSSplitView+Autosave.m */; };
+		77C62FED0AD77F61008A124F /* GICommentTreeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 77C62FEB0AD77F61008A124F /* GICommentTreeView.h */; };
+		77C62FEE0AD77F61008A124F /* GICommentTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C62FEC0AD77F61008A124F /* GICommentTreeView.m */; };
 		77CA730F09F1272C00749461 /* MailToCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CA730D09F1272C00749461 /* MailToCommand.h */; };
 		77CA731009F1272C00749461 /* MailToCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA730E09F1272C00749461 /* MailToCommand.m */; };
 		77CA735409F12BD000749461 /* Ginko.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 77CA735309F12BD000749461 /* Ginko.scriptSuite */; };
@@ -612,6 +614,8 @@
 		77C386E807AE9F1F00420AE9 /* MIME.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; path = MIME.plist; sourceTree = "<group>"; };
 		77C62CC70AD66657008A124F /* NSSplitView+Autosave.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSSplitView+Autosave.h"; sourceTree = "<group>"; };
 		77C62CC80AD66657008A124F /* NSSplitView+Autosave.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSSplitView+Autosave.m"; sourceTree = "<group>"; };
+		77C62FEB0AD77F61008A124F /* GICommentTreeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GICommentTreeView.h; sourceTree = "<group>"; };
+		77C62FEC0AD77F61008A124F /* GICommentTreeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GICommentTreeView.m; sourceTree = "<group>"; };
 		77CA730D09F1272C00749461 /* MailToCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MailToCommand.h; sourceTree = "<group>"; };
 		77CA730E09F1272C00749461 /* MailToCommand.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MailToCommand.m; sourceTree = "<group>"; };
 		77CA735309F12BD000749461 /* Ginko.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.scriptSuite; path = Ginko.scriptSuite; sourceTree = "<group>"; };
@@ -1283,6 +1287,8 @@
 				77F01CF209D299E2007C4CA5 /* GIHeaderFieldEditor.m */,
 				8D4C5753076E3B6F000F46DA /* GICommentTreeCell.h */,
 				8D4C5754076E3B6F000F46DA /* GICommentTreeCell.m */,
+				77C62FEB0AD77F61008A124F /* GICommentTreeView.h */,
+				77C62FEC0AD77F61008A124F /* GICommentTreeView.m */,
 				77BC581A07610AB700B70D8F /* GIGroupWindow.h */,
 				77BC581B07610AB700B70D8F /* GIGroupWindow.m */,
 				77A84B950771D32700112B7D /* GIMessageEditorWindow.h */,
@@ -1668,6 +1674,7 @@
 				77D169170AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.h in Headers */,
 				7754E9090AD41E1C00E76512 /* GIThreadsController.h in Headers */,
 				77C62CC90AD66657008A124F /* NSSplitView+Autosave.h in Headers */,
+				77C62FED0AD77F61008A124F /* GICommentTreeView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2078,6 +2085,7 @@
 				77D169180AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.m in Sources */,
 				7754E90A0AD41E1C00E76512 /* GIThreadsController.m in Sources */,
 				77C62CCA0AD66657008A124F /* NSSplitView+Autosave.m in Sources */,
+				77C62FEE0AD77F61008A124F /* GICommentTreeView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
