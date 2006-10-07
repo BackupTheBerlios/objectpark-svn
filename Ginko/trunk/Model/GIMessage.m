@@ -742,6 +742,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     // notify if needed (outside the synchronized block to avoid blocking problems)
     if (newValue) {
         [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageDidChangeFlagsNotification object: self userInfo: [NSDictionary dictionaryWithObjectsAndKeys: oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+		
+		[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
+		[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
     }    
 }
 
@@ -793,6 +796,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     // notify if needed (outside the synchronized block to avoid blocking problems)
     if (newValue) {
         [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+		
+		[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
+		[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
     }
 }
 

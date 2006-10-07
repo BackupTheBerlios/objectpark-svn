@@ -15,7 +15,7 @@
 @interface GIThreadsController : NSWindowController 
 {
 	NSArray *threads;
-	GIMessage *viewedMessage;
+	// GIMessage *viewedMessage;
 	
 	IBOutlet NSArrayController *threadsController;
 	IBOutlet NSArrayController *messagesController;
@@ -24,6 +24,7 @@
 	IBOutlet NSTableColumn *messageDateColumn;
 	
 	IBOutlet NSTextView *messageTextView;
+	IBOutlet NSScrollView *messageTextScrollView;
 	
 	IBOutlet NSSplitView *thread_messageSplitView;
 	IBOutlet NSSplitView *verticalSplitView;

@@ -24,8 +24,6 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
     [self setPrototype:commentCell];
     [self setCellSize:NSMakeSize(20,10)];
     [self setIntercellSpacing:NSMakeSize(0,0)]; 
-    [self setAction:@selector(selectTreeCell:)];
-    [self setTarget:self];
 }
 
 - (id)initWithFrame:(NSRect)frame 
@@ -42,6 +40,8 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 {
 	[commentsCache release];
 	[border release];
+	[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
+	[thread removeObserver:self forKeyPath:@"messages"];
 	[thread release];
 
 	[super dealloc];
@@ -65,9 +65,26 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 
 - (void)setThread:(GIThread *)aThread
 {
+	[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
+	[thread removeObserver:self forKeyPath:@"messages"];
 	[thread autorelease];
 	thread = [aThread retain];
+	[thread addObserver:self forKeyPath:@"hasUnreadMessages" options:0 context:NULL];
+	[thread addObserver:self forKeyPath:@"messages" options:0 context:NULL];
 	[self updateCommentTree:YES];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+					  ofObject:(id)object 
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+	[self updateCommentTree:YES];
+	
+//    [super observeValueForKeyPath:keyPath
+//						 ofObject:object 
+//						   change:change 
+//						  context:context];
 }
 
 - (GIMessage *)selectedMessage
@@ -271,14 +288,6 @@ The return value is the row the message was placed in."*/
     [self getRow:&row column:&column ofCell:cell];
     [self scrollCellToVisibleAtRow:MAX(row-1, 0) column:MAX(column-1,0)];
     [self scrollCellToVisibleAtRow:row+1 column:column+1];	
-}
-
-- (IBAction)selectTreeCell:(id)sender
-{
-    if ([self selectedMessage]) 
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];
-    }
 }
 
 - (BOOL)leftMostMessageIsSelected

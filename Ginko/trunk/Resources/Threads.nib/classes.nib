@@ -16,6 +16,7 @@
                 commentTreeView = GICommentTreeView; 
                 infoSplitView = NSSplitView; 
                 messageDateColumn = NSTableColumn; 
+                messageTextScrollView = NSScrollView; 
                 messageTextView = NSTextView; 
                 messagesController = NSArrayController; 
                 threadDateColumn = NSTableColumn; 
@@ -24,7 +25,8 @@
                 verticalSplitView = NSSplitView; 
             }; 
             SUPERCLASS = NSWindowController; 
-        }
+        }, 
+        {CLASS = GIThreadsWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }
     ); 
     IBVersion = 1; 
 }
