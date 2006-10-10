@@ -55,47 +55,82 @@
     [window makeKeyAndOrderFront:self];    
 }
 
+- (void)observeGroups
+{
+	NSEnumerator *enumerator = [[GIMessageGroup allObjects] objectEnumerator];
+	GIMessageGroup *group;
+	
+	while (group = [enumerator nextObject])
+	{
+//		[group removeObserver:self forKeyPath:@"threadsByDate"];
+		[group addObserver:self forKeyPath:@"threadsByDate" options:0 context:NULL];
+	}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+					  ofObject:(id)object 
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+	if ([object isKindOfClass:[GIMessageGroup class]])
+	{
+		if ([keyPath isEqualToString:@"threadsByDate"])
+		{
+			GIThreadsController *controller = [threadsControllerForGroup objectForKey:[object objectURLString]];
+			
+			[controller setThreads:[object valueForKey:@"threadsByDate"]];
+			NSLog(@"Updated threads for group %@", object);
+		}
+	}
+}
+
 - (id) init
 {
 	// MessageGroups are never deallocated. Make sure they are also resolved, so no disk activity is needed: 
-	[[GIMessageGroup allObjects] makeObjectsPerformSelector: @selector(resolveFault)];
+	[[GIMessageGroup allObjects] makeObjectsPerformSelector:@selector(resolveFault)];
 	
-    if (self = [super init]) {
-		
-		NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+	threadsControllerForGroup = [[NSMutableDictionary alloc] init];
+	
+	[self observeGroups];
+	
+    if (self = [super init]) 
+	{
+		NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 		
         [GIMessageGroup loadGroupStats];
         [NSBundle loadNibNamed: @"Boxes" owner: self];
 		
-        [nc addObserver: self 
+        [notificationCenter addObserver: self 
 			   selector: @selector(groupsChanged:) 
 				   name: GIMessageGroupWasAddedNotification 
 				 object: nil];
 		
-        [nc addObserver: self 
+        [notificationCenter addObserver: self 
 			   selector: @selector(groupsChanged:) 
 				   name: GIMessageGroupsChangedNotification 
 				 object: nil];
 		
-		[nc addObserver: self 
+		[notificationCenter addObserver: self 
 			   selector: @selector(jobStarted:) 
 				   name: JobWillStartNotification 
 				 object: nil];
 		
-		[nc addObserver: self 
+		[notificationCenter addObserver: self 
 			   selector: @selector(jobFinished:) 
 				   name: JobDidFinishNotification 
 				 object: nil];
         
-        [nc addObserver: self 
+        [notificationCenter addObserver: self 
 			   selector: @selector(groupStatsInvalidated:) 
 				   name: GIMessageGroupStatisticsDidInvalidateNotification 
 				 object: nil];
 		
-		[nc addObserver: self 
+		[notificationCenter addObserver: self 
 			   selector: @selector(groupStatsDidUpdate:) 
 				   name: GIMessageGroupStatisticsDidUpdateNotification 
 				 object: nil];
+		
+		[notificationCenter addObserver:self selector:@selector(threadsControllerWillDealloc:) name:GIThreadsControllerWillDeallocNotification object:nil];
     }
     
 	return [self retain]; // self retaining!
@@ -104,6 +139,15 @@
 - (void)windowWillClose:(NSNotification *)notification 
 {
     [self autorelease];
+}
+
+- (void)threadsControllerWillDealloc:(NSNotification *)notification
+{
+	NSString *objectURL = [[threadsControllerForGroup allKeysForObject:[notification object]] lastObject];
+	
+	NSAssert(objectURL != nil, @"controller without entry found.");
+	
+	[threadsControllerForGroup removeObjectForKey:objectURL];
 }
 
 - (GIMessageGroup *)group
@@ -126,6 +170,7 @@
 
 - (void)groupsChanged:(NSNotification *)aNotification
 {
+	[self observeGroups];
     [self reloadData];
 }
 
@@ -158,6 +203,7 @@
 
 - (void)dealloc
 {
+	[threadsControllerForGroup release];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
@@ -212,11 +258,25 @@ static GIMessageGroup *reuseGroup = nil;
 {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowExperimentalUI"])
 	{
-		NSArray *threadsByDate = [[self group] valueForKey:@"threadsByDate"];
+		GIThreadsController *threadsController = [threadsControllerForGroup objectForKey:[[self group] objectURLString]];
 		
-		GIThreadsController *threadsController = [[[GIThreadsController alloc] initWithThreads:threadsByDate] autorelease];
-		[threadsController selectThread:[threadsByDate lastObject]];
-		[threadsController showWindow:self];
+		if (threadsController)
+		{
+			[[threadsController window] makeKeyAndOrderFront:self];
+		}
+		else
+		{
+			NSArray *threadsByDate = [[self group] valueForKey:@"threadsByDate"];
+			
+			threadsController = [[[GIThreadsController alloc] initWithThreads:threadsByDate andAutosaveName:[[self group] objectURLString]] autorelease];
+			
+			[threadsControllerForGroup setObject:threadsController forKey:[[self group] objectURLString]];
+			
+			[[threadsController window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Group '%@'", @"Group window title"), [[self group] valueForKey:@"name"]]];
+			[threadsController setDefaultProfile:[[self group] defaultProfile]];
+			[threadsController selectThread:[threadsByDate lastObject]];
+			[threadsController showWindow:self];
+		}
 	}
 	else
 	{

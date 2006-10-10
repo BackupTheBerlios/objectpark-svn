@@ -15,6 +15,8 @@
     IBOutlet GIOutlineViewWithKeyboardSupport *boxesView;
     IBOutlet NSWindow *window;
 	IBOutlet NSProgressIndicator *globalProgrssIndicator;
+	
+	NSMutableDictionary *threadsControllerForGroup;
 }
 
 + (void)showGroup:(GIMessageGroup *)group reuseWindow:(BOOL)shouldReuse;

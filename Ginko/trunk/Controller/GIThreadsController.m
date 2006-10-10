@@ -15,6 +15,12 @@
 #import "NSArray+Extensions.h"
 #import "NSSplitView+Autosave.h"
 #import "GICommentTreeView.h"
+#import "GIMessageGroup.h"
+#import "GIMessageBase.h"
+#import "GIApplication.h"
+#import "GIMessageEditorController.h"
+
+NSString *GIThreadsControllerWillDeallocNotification = @"GIThreadsControllerWillDeallocNotification";
 
 static NSDateFormatter *sharedDateFormatter = nil;
 
@@ -158,12 +164,18 @@ static NSDateFormatter *dateFormatter()
 
 @implementation GIThreadsController
 
-- (id)initWithThreads:(NSArray *)someThreads
+- (id)initWithThreads:(NSArray *)someThreads andAutosaveName:(NSString *)autosaveName
 {
 	if (self = [self initWithWindowNibName:@"Threads"])
 	{
 		[self setShouldCascadeWindows:NO];
-		[self setWindowFrameAutosaveName:@"Threads"];
+		
+		if (!autosaveName)
+		{
+			autosaveName = @"Threads";
+		}
+		
+		[self setWindowFrameAutosaveName:autosaveName];
 
 		[self setThreads:someThreads];
 		
@@ -176,12 +188,14 @@ static NSDateFormatter *dateFormatter()
 - (void)dealloc
 {
 	[threads release];
-//	[viewedMessage release];
+	[defaultProfile release];
+	
 	[super dealloc];
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
+	[[NSNotificationCenter defaultCenter] postNotificationName:GIThreadsControllerWillDeallocNotification object:self];
 	[self autorelease];
 }
 
@@ -217,6 +231,17 @@ static NSDateFormatter *dateFormatter()
 - (NSArray *)threads
 {
 	return threads;
+}
+
+- (void)setDefaultProfile:(GIProfile *)aProfile
+{
+	[defaultProfile autorelease];
+	defaultProfile = [aProfile retain];
+}
+
+- (GIProfile *)defaultProfile
+{
+	return defaultProfile;
 }
 
 /*" Selects the thread threadToSelect in the receiver and makes sure the selection is visible. "*/
@@ -327,29 +352,6 @@ static NSDateFormatter *dateFormatter()
 		[commentTreeView setSelectedMessage:[[messagesController selectedObjects] lastObject]];
 	}
 }
-
-/*
-- (void)setViewedMessage:(GIMessage *)aMessage
-{
-	[aMessage retain];
-	[viewedMessage release];
-	viewedMessage = aMessage;
-}
-
-- (void)viewSelectedMessage
-{
-	NSArray *selectedMessages = [messagesController selectedObjects];
-	
-	if ([selectedMessages count] == 1)
-	{
-		[self setViewedMessage:[selectedMessages lastObject]];
-	}
-	else
-	{
-		[self setViewedMessage:nil];
-	}
-}
-*/
 
 - (int)infoPanelTableViewFontSize
 {
@@ -496,6 +498,122 @@ static NSDateFormatter *dateFormatter()
 			NSBeep();
 		}
 	}
+}
+
+/*" Removes selected threads from all groups and puts it into trash group "*/
+- (IBAction)moveSelectionToTrash:(id)sender
+{
+	NSIndexSet *selectionIndexes = [threadsController selectionIndexes];
+	NSArray *selectedThreads = [threadsController selectedObjects];
+
+	// select the thread before (if possible):
+	int newSelectionIndex = [selectionIndexes firstIndex] - 1;
+	
+	if (newSelectionIndex >= 0)
+	{
+		[threadsController setSelectionIndex:newSelectionIndex];
+		[self threadSelectionDidChange];
+	}
+	
+    NSEnumerator *enumerator = [selectedThreads objectEnumerator];
+    GIThread *thread;
+	GIMessageGroup *trash = [GIMessageGroup trashMessageGroup];
+        
+    while (thread = [enumerator nextObject]) 
+	{
+		[GIMessageBase addTrashThread:thread];
+		NSEnumerator *groupsEnumerator = [[thread valueForKey:@"groups"] objectEnumerator];
+		GIMessageGroup *group;
+		
+		while (group = [groupsEnumerator nextObject])
+		{
+			if (group != trash)
+			{
+				[group removeValue:thread forKey:@"threadsByDate"];
+			}
+		}
+    }
+    
+	[NSApp saveAction:self];
+}
+
+- (void)placeSelectedTextOnQuotePasteboard
+{
+    NSArray *types = [messageTextView writablePasteboardTypes];
+    NSPasteboard *quotePasteboard = [NSPasteboard pasteboardWithName:@"QuotePasteboard"];
+    
+    [quotePasteboard declareTypes:types owner:nil];
+    [messageTextView writeSelectionToPasteboard:quotePasteboard types:types];
+}
+
+- (GIProfile *)profileForMessage:(GIMessage *)aMessage
+/*" Return the profile to use for email replies. Tries first to guess a profile based on the replied email. If no matching profile can be found, the group default profile is chosen. May return nil in case of no group default and no match present. "*/
+{
+    GIProfile *result;
+    
+    result = [GIProfile guessedProfileForReplyingToMessage:[aMessage internetMessage]];
+    
+    if (!result)
+    {
+        result = [self defaultProfile];
+    }
+    
+    return result;
+}
+
+- (IBAction)replyAll:(id)sender
+{
+    GIMessage* message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
+}
+
+- (IBAction)followup:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initFollowupTo:message profile:[self defaultProfile]] autorelease];
+}
+
+- (IBAction)replyDefault:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+	
+    if ([message isListMessage] || [message isUsenetMessage]) 
+	{
+        [self followup:sender];
+    } 
+	else 
+	{
+        [self replyAll:sender];
+    }
+}
+
+- (BOOL)validateSelector:(SEL)aSelector
+{
+	if (aSelector == @selector(moveSelectionToTrash:)) 
+	{
+        return [[threadsController selectedObjects] count] > 0;
+    }
+	else if (aSelector == @selector(replyDefault:) || aSelector == @selector(replyAll:))
+	{
+		return [self selectedMessage] != nil;
+	}
+	else if (aSelector == @selector(followup:))
+	{
+		return [[self selectedMessage] isUsenetMessage];
+	}
+	
+	return NO;
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return [self validateSelector:[menuItem action]];
 }
 
 @end
