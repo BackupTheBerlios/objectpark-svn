@@ -112,6 +112,44 @@ static NSDateFormatter *dateFormatter()
 	}
 }
 
+- (unsigned)unreadMessageCount
+{
+    unsigned result = 0;
+	NSEnumerator *enumerator = [[self messages] objectEnumerator];
+	GIMessage *message;
+    while (message = [enumerator nextObject]) 
+	{
+        if (![message hasFlags:OPSeenStatus]) 
+		{
+            result += 1;
+        }
+    }
+	
+    return result;
+}
+
+- (GIMessage *)firstUnreadMessage
+{
+	NSArray *messages = [self messagesByTree];
+	NSEnumerator *enumerator = [messages objectEnumerator];
+	GIMessage *message;
+	
+	while (message = [enumerator nextObject])
+	{
+		if (![message hasFlags:OPSeenStatus] && ![message isDummy])
+		{
+			break;
+		}
+	}
+	
+	return message;
+}
+
+- (NSString *)statistics
+{
+	return [NSString stringWithFormat:@"%u/%u", [self unreadMessageCount], [self messageCount]];
+}
+
 @end
 
 @implementation GIMessage (ThreadControllerExtensions)
@@ -174,6 +212,10 @@ static NSDateFormatter *dateFormatter()
 		{
 			autosaveName = @"Threads";
 		}
+		else
+		{
+			autosaveName = [@"Threads-" stringByAppendingString:autosaveName];
+		}
 		
 		[self setWindowFrameAutosaveName:autosaveName];
 
@@ -205,6 +247,9 @@ static NSDateFormatter *dateFormatter()
 	[[threadDateColumn dataCell] setFormatter:dateFormatter()];
 	[[messageDateColumn dataCell] setFormatter:dateFormatter()];
 			
+	// set up linebreak mode:
+	[[subjectAndAuthorColumn dataCell] setLineBreakMode:NSLineBreakByTruncatingMiddle];
+	
 	// configure split views:
 	[thread_messageSplitView setAutosaveName:[[self windowFrameAutosaveName] stringByAppendingString:@"-Thread-Messages"]];
 	[thread_messageSplitView setAutosaveDividerPosition:YES];
@@ -505,7 +550,7 @@ static NSDateFormatter *dateFormatter()
 {
 	NSIndexSet *selectionIndexes = [threadsController selectionIndexes];
 	NSArray *selectedThreads = [threadsController selectedObjects];
-
+	
 	// select the thread before (if possible):
 	int newSelectionIndex = [selectionIndexes firstIndex] - 1;
 	
@@ -561,9 +606,21 @@ static NSDateFormatter *dateFormatter()
     return result;
 }
 
+- (IBAction)newMessage:(id)sender
+{
+    [[[GIMessageEditorController alloc] initNewMessageWithProfile:[self defaultProfile]] autorelease];
+}
+
+- (IBAction)forward:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+	
+    [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
+}
+
 - (IBAction)replyAll:(id)sender
 {
-    GIMessage* message = [self selectedMessage];
+    GIMessage *message = [self selectedMessage];
     
     [self placeSelectedTextOnQuotePasteboard];
     
@@ -593,19 +650,97 @@ static NSDateFormatter *dateFormatter()
     }
 }
 
+- (NSArray *)selectedMessages
+{
+	if ([[self window] firstResponder] == threadsTableView)
+	{
+		NSMutableArray *result = [NSMutableArray array];
+		NSEnumerator *enumerator = [[threadsController selectedObjects] objectEnumerator];
+		GIThread *thread;
+		
+		while (thread = [enumerator nextObject])
+		{
+			NSArray *messages = [thread valueForKey:@"messages"];
+			
+			if (messages)
+			{
+				[result addObjectsFromArray:messages];
+			}
+		}
+		
+		return result;
+	}
+	else
+	{
+		return [messagesController selectedObjects];
+	}
+}
+
+- (BOOL)isAnySelectedItemNotHavingMessageflag:(NSString *)attributeName allSelectedMessages:(NSArray **)allMessages
+{
+    (*allMessages) = [self selectedMessages];
+    NSEnumerator *enumerator = [(*allMessages) objectEnumerator];
+    GIMessage *message;
+    
+    while (message = [enumerator nextObject]) 
+    {
+        if (![[message valueForKey:attributeName] boolValue]) return YES;
+    }
+    
+    return NO;
+}
+
+- (void)toggleFlag:(NSString *)attributeName
+{
+    NSParameterAssert(attributeName != nil);
+    
+    NSArray *selectedMessages;
+    BOOL set = [self isAnySelectedItemNotHavingMessageflag:attributeName 
+                                       allSelectedMessages:&selectedMessages];
+    NSEnumerator *enumerator = [selectedMessages objectEnumerator];
+    GIMessage *message;
+    NSNumber *setNumber = [NSNumber numberWithBool:set];
+    
+    while (message = [enumerator nextObject]) 
+    {
+        [message setValue:setNumber forKey:attributeName];
+    }
+    
+    [GIApp saveAction:self];
+	[threadsController rearrangeObjects];
+}
+
+- (IBAction)toggleReadFlag:(id)sender
+{
+    [self toggleFlag:@"isSeen"];
+}
+
+- (IBAction)toggleJunkFlag:(id)sender
+{
+    [self toggleFlag:@"isJunk"];
+}
+
 - (BOOL)validateSelector:(SEL)aSelector
 {
 	if (aSelector == @selector(moveSelectionToTrash:)) 
 	{
         return [[threadsController selectedObjects] count] > 0;
     }
-	else if (aSelector == @selector(replyDefault:) || aSelector == @selector(replyAll:))
+	else if (aSelector == @selector(replyDefault:) || aSelector == @selector(replyAll:) || aSelector == @selector(forward:))
 	{
 		return [self selectedMessage] != nil;
 	}
 	else if (aSelector == @selector(followup:))
 	{
 		return [[self selectedMessage] isUsenetMessage];
+	}
+	else if ((aSelector == @selector(toggleReadFlag:)) || (aSelector == @selector(toggleJunkFlag:))) 
+	{
+        return ([self selectedMessage] != nil) || ([threadsController selectionIndex] >= 0);
+    } 
+	else if (aSelector == @selector(newMessage:))
+	{
+		return YES;
 	}
 	
 	return NO;

@@ -19,9 +19,11 @@
                 messageTextScrollView = NSScrollView; 
                 messageTextView = NSTextView; 
                 messagesController = NSArrayController; 
+                subjectAndAuthorColumn = NSTableColumn; 
                 threadDateColumn = NSTableColumn; 
                 "thread_messageSplitView" = NSSplitView; 
                 threadsController = NSArrayController; 
+                threadsTableView = NSTableView; 
                 verticalSplitView = NSSplitView; 
             }; 
             SUPERCLASS = NSWindowController; 

@@ -22,7 +22,10 @@
 	IBOutlet NSArrayController *messagesController;
 
 	IBOutlet NSTableColumn *threadDateColumn;
+	IBOutlet NSTableColumn *subjectAndAuthorColumn;
 	IBOutlet NSTableColumn *messageDateColumn;
+	
+	IBOutlet NSTableView *threadsTableView;
 	
 	IBOutlet NSTextView *messageTextView;
 	IBOutlet NSScrollView *messageTextScrollView;
