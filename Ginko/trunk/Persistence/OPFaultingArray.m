@@ -412,7 +412,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 
 
 - (unsigned) indexOfFirstSortObjectEqualTo: (id) sortObject
-/*" Returns the lowest index of an object with sort object equal to the sortObject given. "*/
+/*" Returns the lowest index of an object with sort object equal to the sortObject given. Returns NSNotFound, if no such index exists. "*/
 {
 	NSAssert(sortKey, @"indexOfFirstSortObjectEqualTo requires a sort key to be set.");
 	// Make sure, we are sorted:
