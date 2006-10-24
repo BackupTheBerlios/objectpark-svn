@@ -427,7 +427,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 		if (resultIndex>0) {
 			// Walk backward until the sortKey no longer matches : 
 			unsigned searchIndex = resultIndex-1;
-			while (searchIndex>0 && [sortObject compare: *sortObjectPtr(searchIndex)]==0) {
+			while (searchIndex >= 0 && [sortObject compare: *sortObjectPtr(searchIndex)]==0) {
 				resultIndex = searchIndex;
 				searchIndex--;
 			}
@@ -474,7 +474,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 							// Walk backward until the sortKey no longer matches or oid found: 
 							if (resultIndex) {
 								searchIndex = resultIndex-1;
-								while (searchIndex>0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
+								while (searchIndex >= 0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
 									if (oid == *oidPtr(searchIndex)) {
 										return searchIndex; // found
 									}
