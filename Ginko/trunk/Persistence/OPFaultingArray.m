@@ -245,6 +245,8 @@
 	return [OPPersistentObjectContext defaultContext];
 }
 
+
+
 - (id) sortObjectAtIndex: (unsigned) index
 /*" Returns the attribute used for sorting for the object at the index given. Raises, if "*/
 {
@@ -408,6 +410,32 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	}
 }
 
+
+- (unsigned) indexOfFirstSortObjectEqualTo: (id) sortObject
+/*" Returns the lowest index of an object with sort object equal to the sortObject given. "*/
+{
+	NSAssert(sortKey, @"indexOfFirstSortObjectEqualTo requires a sort key to be set.");
+	// Make sure, we are sorted:
+	[self sort]; // already done above?
+				 // Search for sortKey:
+	char* result = bsearch(&sortObject, data, count, entrySize, compare_sort_object_with_entry);
+	if (result) {
+		// We found a matching sort-key.		
+		
+		unsigned resultIndex = (result-data)/entrySize;
+		
+		if (resultIndex>0) {
+			// Walk backward until the sortKey no longer matches : 
+			unsigned searchIndex = resultIndex-1;
+			while (searchIndex>0 && [sortObject compare: *sortObjectPtr(searchIndex)]==0) {
+				resultIndex = searchIndex;
+				searchIndex--;
+			}
+		}
+		return resultIndex;
+	}
+	return NSNotFound;
+}
 
 - (unsigned) indexOfObject: (OPPersistentObject*) anObject
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. This method is reasonably efficient with less than O(n) runnning time for the second call in a row. "*/

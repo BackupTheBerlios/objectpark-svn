@@ -392,7 +392,7 @@
     return NO;
 }
 
-- (NSData*) _appleSingeDoubleFromFileWrapper: (NSFileWrapper*) aFileWrapper
+- (NSData*) _appleSingleDoubleFromFileWrapper: (NSFileWrapper*) aFileWrapper
 /*"
    Creates data containing an AppleSingle/AppleDouble structure with 3 entries:
      - resource fork
@@ -565,7 +565,7 @@
     }
 
 	[self setContentType: @"application/applefile"];
-    return [super initWithData:[self _appleSingeDoubleFromFileWrapper:aFileWrapper] filename: theFilename];
+    return [super initWithData:[self _appleSingleDoubleFromFileWrapper:aFileWrapper] filename: theFilename];
 }
 
 - (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype
@@ -583,33 +583,50 @@ Returns the entry out of the applesingle/appledouble data. E.g. data fork or res
 For possible parameter values see applefile.h.
   "*/
 {
-    AppleSingle *appleSingle;
+    AppleSingle appleSingle;
     uint16 numEntries, i;
     ASEntry *entries;
     NSData *result = nil;
     
-    appleSingle = (AppleSingle *)[data bytes];
+    const char* appleSingleData = [data bytes];
+	
+//	uint32 magicNum; // internal file type tag
+//	uint32 versionNum; // format version: 2 = 0x00020000
+//	uchar8 filler[16]; // filler, currently all bits 0
+//	uint16 numEntries; // number of entries which follow 
+	
+	appleSingle.header.magicNum   = NSSwapBigIntToHost(*(uint32*)appleSingleData);
+	appleSingle.header.versionNum = NSSwapBigIntToHost(*(uint32*)(appleSingleData + 4));
+	appleSingle.header.numEntries = NSSwapBigShortToHost(*(uint16*)(appleSingleData + 4+4+16));	
 
-    NSAssert( ((appleSingle->header).magicNum == 0x00051600) 
-        || ((appleSingle->header).magicNum == 0x00051607), 
+    NSAssert( (appleSingle.header.magicNum == 0x00051600) 
+        || (appleSingle.header.magicNum == 0x00051607), 
         @"Not a AppleSingle or AppleDouble.");
     
     // check version number
-    NSAssert((appleSingle->header).versionNum >= 0x00020000, @"AppleSingle version number < 2. Not decodable.");
+    NSAssert(appleSingle.header.versionNum >= 0x00020000, @"AppleSingle version number < 2. Not decodable.");
     
     // search in all entries for the given entry ID
-    numEntries = (appleSingle->header).numEntries;
+    numEntries = appleSingle.header.numEntries;
     
 //    if (NSDebugEnabled) NSLog(@"sizeof(ASHeader) = %d = 26", sizeof(ASHeader));
 //    if (NSDebugEnabled) NSLog(@"sizeof(ASHeader) = %d = 26", sizeof(ASHeader));
     
-//    entries = (ASEntry *) ([data bytes] + 26);
-    entries = appleSingle->entry;
-    
+    entries = (ASEntry *) (appleSingleData + 26);
+    //entries = appleSingle.entry; // does not work!!!
+	for (i = 0; i < numEntries; i++) {
+		entries[i].entryID     = NSSwapBigIntToHost(*(uint32*)appleSingleData + (26 + (i*12) + 0));
+		entries[i].entryOffset = NSSwapBigIntToHost(*(uint32*)appleSingleData + (26 + (i*12) + 4));
+		entries[i].entryLength = NSSwapBigIntToHost(*(uint32*)appleSingleData + (26 + (i*12) + 8));
+	}
+	
+	
     for (i = 0; i < numEntries; i++)
     {
 //        if (NSDebugEnabled) NSLog(@"entry with ID = %u", entries[i].entryID);
         
+#warning Make AppleDouble Entries work on Intel!!
+		
         if (entries[i].entryID == entryID) 
         {
 //            if (NSDebugEnabled) NSLog(@"Range = %@", NSStringFromRange(NSMakeRange(entries[i].entryOffset, entries[i].entryLength)));

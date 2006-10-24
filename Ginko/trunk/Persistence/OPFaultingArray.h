@@ -34,6 +34,7 @@
 - (unsigned) count;
 
 - (OID) oidAtIndex: (unsigned) index;
+- (id) sortObjectAtIndex: (unsigned) index;
 - (OID) lastOid;
 
 - (id) objectAtIndex: (unsigned) anIndex;
@@ -48,10 +49,10 @@
 - (void) setSortKey: (NSString*) newSortKey;
 - (void) setElementClass: (Class) eClass;
 
-
+- (unsigned) indexOfFirstSortObjectEqualTo: (id) sortObject;
 - (void) addOid: (OID) oid sortObject: (id) sortObject;
 - (void) addObject: (OPPersistentObject*) anObject;
-- (void) updateSortObjectForObject: (id) element ;
+- (void) updateSortObjectForObject: (id) element;
 
 
 @end
