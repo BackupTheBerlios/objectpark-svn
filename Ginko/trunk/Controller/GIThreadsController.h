@@ -12,11 +12,13 @@
 @class GIThread;
 @class GICommentTreeView;
 @class GIProfile;
+@class GIMessageGroup;
 
 @interface GIThreadsController : NSWindowController 
 {
 	NSArray *threads;
 	GIProfile *defaultProfile;
+	GIMessageGroup *group;   // optional for dragging
 	
 	IBOutlet NSArrayController *threadsController;
 	IBOutlet NSArrayController *messagesController;
@@ -38,14 +40,20 @@
 }
 
 - (id)initWithThreads:(NSArray *)someThreads andAutosaveName:(NSString *)autosaveName;
+- (id)initWithGroup:(GIMessageGroup *)aGroup andAutosaveName:(NSString *)autosaveName;
 
 - (void)setThreads:(NSArray *)someThreads;
 - (NSArray *)threads;
+
+- (void)setGroup:(GIMessageGroup *)aGroup;
+- (GIMessageGroup *)group;
 
 - (void)setDefaultProfile:(GIProfile *)aProfile;
 - (GIProfile *)defaultProfile;
 
 - (void)selectThread:(GIThread *)threadToSelect;
+
+- (int)numberOfRecentThreads;
 
 @end
 

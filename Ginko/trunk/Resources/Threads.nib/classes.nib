@@ -1,6 +1,12 @@
 {
     IBClasses = (
         {
+            CLASS = DNDArrayController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {dndDelegate = id; }; 
+            SUPERCLASS = NSArrayController; 
+        }, 
+        {
             ACTIONS = {selectTreeCell = id; }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 

@@ -64,6 +64,24 @@
     return self;
 }
 
+- (id)initWithArray:(NSArray *)otherArray andSortKey:(NSString *)aSortKey
+{
+    if (self = [self init]) 
+	{
+		[self setSortKey:aSortKey];
+		
+        NSEnumerator *enumerator = [otherArray objectEnumerator];
+        id element;
+		
+        while (element = [enumerator nextObject]) 
+		{
+            [self addObject:element];
+        }
+    }
+	
+    return self;
+}
+													  
 - (id) initWithObjects: (id) firstObject, ... {
 
 	 if (self = [super init]) {
@@ -598,6 +616,22 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	id result = [[self context] objectForOid: oid ofClass: elementClass];
 	NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
 	return [[result retain] autorelease];
+}
+
+- (NSArray *)subarrayWithRange:(NSRange)range
+{
+	OPFaultingArray *result = [[[OPFaultingArray alloc] init] autorelease];
+	[result setElementClass:elementClass];
+	[result setSortKey:sortKey];
+	
+	int i;
+	
+	for (i = range.location; i < NSMaxRange(range); i++)
+	{
+		[result addOid:[self oidAtIndex:i] sortObject:[self sortObjectAtIndex:i]];
+	}
+
+	return result;
 }
 
 /*

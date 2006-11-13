@@ -26,6 +26,8 @@
 #import "GIMessageGroup+Statistics.h"
 #import "GIThreadsController.h"
 
+NSString *GIThreadsByDateDidChangeNotification = @"GIThreadsByDateDidChangeNotification";
+
 @implementation GIGroupListController
 
 - (void)awakeFromNib
@@ -62,9 +64,18 @@
 	
 	while (group = [enumerator nextObject])
 	{
+		NSAssert([group isKindOfClass:[GIMessageGroup class]], @"group expected");
 //		[group removeObserver:self forKeyPath:@"threadsByDate"];
 		[group addObserver:self forKeyPath:@"threadsByDate" options:0 context:NULL];
 	}
+}
+
+- (void)threadsByDateDidChangeNotification:(NSNotification *)aNotification
+{
+	GIMessageGroup *theGroup = [aNotification object];
+	GIThreadsController *controller = [threadsControllerForGroup objectForKey:[theGroup objectURLString]];
+	
+	[controller setThreads:[theGroup valueForKey:@"threadsByDate"]];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -72,16 +83,27 @@
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-	if ([object isKindOfClass:[GIMessageGroup class]])
-	{
-		if ([keyPath isEqualToString:@"threadsByDate"])
-		{
-			GIThreadsController *controller = [threadsControllerForGroup objectForKey:[object objectURLString]];
-			
-			[controller setThreads:[object valueForKey:@"threadsByDate"]];
-			NSLog(@"Updated threads for group %@", object);
-		}
-	}
+//	if ([object isKindOfClass:[GIMessageGroup class]])
+//	{
+//		if ([keyPath isEqualToString:@"threadsByDate"])
+//		{
+//			GIThreadsController *controller = [threadsControllerForGroup objectForKey:[object objectURLString]];
+//			
+//			if (controller)
+//			{
+//				NSNotification *notification = [NSNotification notificationWithName:GIThreadsByDateDidChangeNotification object:object];
+//				[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+//			}
+//	
+//			/*
+//#warning better use coalescing notifications here
+//			[NSObject cancelPreviousPerformRequestsWithTarget:controller];
+//			[controller performSelector:@selector(setThreads:) withObject:[object valueForKey:@"threadsByDate"] afterDelay:0.0];
+//			 */
+////			[controller setThreads:[object valueForKey:@"threadsByDate"]];
+//			NSLog(@"Updated threads for group %@", object);
+//		}
+//	}
 }
 
 - (id) init
@@ -131,6 +153,8 @@
 				 object: nil];
 		
 		[notificationCenter addObserver:self selector:@selector(threadsControllerWillDealloc:) name:GIThreadsControllerWillDeallocNotification object:nil];
+		
+		[notificationCenter addObserver:self selector:@selector(threadsByDateDidChangeNotification:) name:GIThreadsByDateDidChangeNotification object:nil];
     }
     
 	return [self retain]; // self retaining!
@@ -266,15 +290,12 @@ static GIMessageGroup *reuseGroup = nil;
 		}
 		else
 		{
-			NSArray *threadsByDate = [[self group] valueForKey:@"threadsByDate"];
-			
-			threadsController = [[[GIThreadsController alloc] initWithThreads:threadsByDate andAutosaveName:[[self group] objectURLString]] autorelease];
+			threadsController = [[[GIThreadsController alloc] initWithGroup:[self group] andAutosaveName:[[self group] objectURLString]] autorelease];
 			
 			[threadsControllerForGroup setObject:threadsController forKey:[[self group] objectURLString]];
 			
 			[[threadsController window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Group '%@'", @"Group window title"), [[self group] valueForKey:@"name"]]];
 			[threadsController setDefaultProfile:[[self group] defaultProfile]];
-			[threadsController selectThread:[threadsByDate lastObject]];
 			[threadsController showWindow:self];
 		}
 	}
@@ -610,6 +631,8 @@ static GIMessageGroup *reuseGroup = nil;
             [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
             
             [NSApp saveAction:self];
+			
+			return YES;
         }
     }
     return NO;

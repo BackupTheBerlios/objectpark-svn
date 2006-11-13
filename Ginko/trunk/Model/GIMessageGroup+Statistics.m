@@ -108,7 +108,8 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 
 - (void)didAddValueForKey:(NSString *)key
 {
-	[super didChangeValueForKey:key];
+	[super didAddValueForKey:key];
+//	[super didChangeValueForKey:key];
 	if ([key isEqualToString:@"threadsByDate"]) 
     {
 		[self invalidateStatistics];

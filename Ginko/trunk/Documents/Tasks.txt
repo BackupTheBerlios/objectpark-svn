@@ -31,3 +31,16 @@ Low priority:
 (DONE Jšrg)- export database to mbox, preserving flags
 (DONE Axel)- completion of real names
 (DONE Jšrg)- configurable debug logging (better than if (NSDebugEnbled) NSLog() granularity)
+
+
+Experimental UI:
+(DONE Axel)- coalescing model changes
+(DONE Axel)- enable attachment handling (double clicking, dragging etc.)
+- drag & drop for threads
+- showing groups where the selected thread is contained
+- mailtags
+- keyboard support for tree (numpad and regular keyboard)
+
+BUGS in Experimental UI:
+- sometimes the change of (multiple?) isSeen flags does not result in a group statistics update
+(followup: it seems that all changes via the threads list are not reflected whereas the changes with spacebar are recognized)

@@ -65,6 +65,8 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 
 - (void)setThread:(GIThread *)aThread
 {
+	NSParameterAssert([aThread isKindOfClass:[GIThread class]]);
+	
 	[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
 	[thread removeObserver:self forKeyPath:@"messages"];
 	[thread autorelease];

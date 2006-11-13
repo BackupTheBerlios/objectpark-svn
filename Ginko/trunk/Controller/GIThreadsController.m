@@ -202,6 +202,11 @@ static NSDateFormatter *dateFormatter()
 
 @implementation GIThreadsController
 
++ (void)initialize
+{
+	[self setKeys:[NSArray arrayWithObjects:@"filterReadThreads", nil] triggerChangeNotificationsForDependentKey:@"threadsFilterPredicate"];
+}
+
 - (id)initWithThreads:(NSArray *)someThreads andAutosaveName:(NSString *)autosaveName
 {
 	if (self = [self initWithWindowNibName:@"Threads"])
@@ -227,10 +232,37 @@ static NSDateFormatter *dateFormatter()
 	return [self retain];
 }
 
+- (id)initWithGroup:(GIMessageGroup *)aGroup andAutosaveName:(NSString *)autosaveName
+{
+	if (self = [self initWithWindowNibName:@"Threads"])
+	{
+		[self setShouldCascadeWindows:NO];
+		
+		if (!autosaveName)
+		{
+			autosaveName = @"Threads";
+		}
+		else
+		{
+			autosaveName = [@"Threads-" stringByAppendingString:autosaveName];
+		}
+		
+		[self setWindowFrameAutosaveName:autosaveName];
+		
+		[self setGroup:aGroup];
+		
+		[self window]; // making sure the bindings are active
+	}
+	
+	return [self retain];
+}
+
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[threads release];
 	[defaultProfile release];
+	[group release];
 	
 	[super dealloc];
 }
@@ -260,17 +292,42 @@ static NSDateFormatter *dateFormatter()
 	
 	[commentTreeView setTarget:self];
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];
+	
+	// configuring threads table view:
+	[threadsTableView registerForDraggedTypes:[NSArray arrayWithObject:@"GinkoThreads"]];
+	[threadsTableView setDraggingSourceOperationMask:NSDragOperationMove | NSDragOperationCopy forLocal:YES];
+	[threadsTableView setDraggingSourceOperationMask:NSDragOperationMove | NSDragOperationCopy forLocal:NO];
+
+	// registering for notifications:
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableViewSelectionDidChange:) name:NSTableViewSelectionDidChangeNotification object:threadsTableView];
+	
+	// setting initial thread selection:
+	int selectionIndex = [[threadsController arrangedObjects] count] -1;
+	if (selectionIndex >= 0)
+	{
+		[threadsController setSelectionIndex:selectionIndex];
+	}
+	
+	[self threadSelectionDidChange];
 }
 
 - (void)setThreads:(NSArray *)someThreads
 {
-	if (someThreads != threads)
-	{
+//	if (someThreads != threads)
+//	{
+		int recents = [self numberOfRecentThreads];
+		int threadCount = [someThreads count];
+		
+		if (recents && (threadCount > recents))
+		{
+			someThreads = [someThreads subarrayWithRange:NSMakeRange(threadCount - recents, recents)];
+		}
+				
 		[someThreads retain];
 		[threads release];
 		threads = [someThreads retain];
 		[self threadSelectionDidChange];
-	}
+//	}
 }
 
 - (NSArray *)threads
@@ -287,6 +344,103 @@ static NSDateFormatter *dateFormatter()
 - (GIProfile *)defaultProfile
 {
 	return defaultProfile;
+}
+
+/*" Just for drag and drop and copy & paste support. May be nil. "*/
+- (void)setGroup:(GIMessageGroup *)aGroup
+{
+	NSParameterAssert([aGroup isKindOfClass:[GIMessageGroup class]]);
+	
+	if (group != aGroup)
+	{
+		[group removeObserver:self forKeyPath:@"threadsByDate"];
+
+		[group release];
+		group = [aGroup retain];
+		
+		[self setThreads:[group valueForKey:@"threadsByDate"]];
+
+		[group addObserver:self forKeyPath:@"threadsByDate" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+	}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+					  ofObject:(id)object 
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+    if ([keyPath isEqual:@"threadsByDate"]) 
+	{
+		NSNumber *kind = [change objectForKey:NSKeyValueChangeKindKey];
+				
+#warning OPPersistence KVO is broken. Can't do the right thing here.
+		if ([kind intValue]== NSKeyValueChangeSetting)
+		{
+			NSLog(@"OPPersistence KVO handling for to-many relationships still broken.");
+
+			NSArray *groupThreads = [[self group] valueForKey:@"threadsByDate"];
+			int recents = [self numberOfRecentThreads];
+			int threadCount = [groupThreads count];
+			
+			if (recents && (threadCount > recents))
+			{
+				groupThreads = [groupThreads subarrayWithRange:NSMakeRange(threadCount - recents, recents)];
+			}
+			
+			[self setThreads:groupThreads];
+		}
+		else
+		{
+			NSAssert(NO, @"OPPersistence KVO handling for to-many has been fixed.");
+		}
+    }
+}
+
+/*" Just for drag and drop and copy & paste support. May be nil. "*/
+- (GIMessageGroup *)group
+{
+	return group;
+}
+
+- (void)setNumberOfRecentThreads:(int)numberOfRecentThreads
+{
+	[[NSUserDefaults standardUserDefaults] setInteger:numberOfRecentThreads forKey:[[self windowFrameAutosaveName] stringByAppendingString:@"-NumberOfRecentThreads"]];
+	
+	[self setThreads:[[self group] valueForKey:@"threadsByDate"]];
+}
+
+- (int)numberOfRecentThreads
+{
+	return [[NSUserDefaults standardUserDefaults] integerForKey:[[self windowFrameAutosaveName] stringByAppendingString:@"-NumberOfRecentThreads"]];
+}
+
+- (void)setFilterReadThreads:(BOOL)aBool
+{
+	[[NSUserDefaults standardUserDefaults] setBool:aBool forKey:[[self windowFrameAutosaveName] stringByAppendingString:@"-FilterReadThreads"]];
+}
+
+- (BOOL)filterReadThreads
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:[[self windowFrameAutosaveName] stringByAppendingString:@"-FilterReadThreads"]];
+}
+
+- (NSPredicate *)threadsFilterPredicate
+{
+	static NSPredicate *threadsFilterPredicate = nil;
+	
+	if (!threadsFilterPredicate)
+	{
+		threadsFilterPredicate = [[NSPredicate predicateWithFormat:@"hasUnreadMessages != 0"] retain];
+	}
+	
+	if ([self filterReadThreads])
+	{
+		return threadsFilterPredicate;
+	}
+	else
+	{
+		return nil;
+	}
 }
 
 /*" Selects the thread threadToSelect in the receiver and makes sure the selection is visible. "*/
@@ -554,12 +708,13 @@ static NSDateFormatter *dateFormatter()
 	// select the thread before (if possible):
 	int newSelectionIndex = [selectionIndexes firstIndex] - 1;
 	
-	if (newSelectionIndex >= 0)
+	if (newSelectionIndex >= 0) 
 	{
 		[threadsController setSelectionIndex:newSelectionIndex];
-		[self threadSelectionDidChange];
 	}
-	
+
+	[self threadSelectionDidChange];
+
     NSEnumerator *enumerator = [selectedThreads objectEnumerator];
     GIThread *thread;
 	GIMessageGroup *trash = [GIMessageGroup trashMessageGroup];
@@ -568,13 +723,13 @@ static NSDateFormatter *dateFormatter()
 	{
 		[GIMessageBase addTrashThread:thread];
 		NSEnumerator *groupsEnumerator = [[thread valueForKey:@"groups"] objectEnumerator];
-		GIMessageGroup *group;
+		GIMessageGroup *aGroup;
 		
-		while (group = [groupsEnumerator nextObject])
+		while (aGroup = [groupsEnumerator nextObject])
 		{
-			if (group != trash)
+			if (aGroup != trash)
 			{
-				[group removeValue:thread forKey:@"threadsByDate"];
+				[aGroup removeValue:thread forKey:@"threadsByDate"];
 			}
 		}
     }
@@ -749,6 +904,158 @@ static NSDateFormatter *dateFormatter()
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	return [self validateSelector:[menuItem action]];
+}
+
+@end
+
+#import "NSAttributedString+MessageUtils.h"
+
+@implementation GIThreadsController (TextViewDelegate)
+
+- (void)textView:(NSTextView *)textView doubleClickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(unsigned)charIndex
+{
+    NSTextAttachment *attachment;
+    NSFileWrapper *fileWrapper;
+    NSString *filename;
+    NSRange range;
+    
+    attachment = [cell attachment];
+    fileWrapper = [attachment fileWrapper];
+    filename = [[textView textStorage] attribute:OPAttachmentPathAttribute atIndex:charIndex effectiveRange:&range];
+    
+    if (NSDebugEnabled) NSLog(@"double click on attachment with name %@", filename);
+    
+    [[NSWorkspace sharedWorkspace] openFile:filename];
+}
+
+- (void)textView:(NSTextView *)view draggedCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)rect event:(NSEvent *)event atIndex:(unsigned)charIndex
+{
+    NSTextAttachment *attachment;
+    NSFileWrapper *fileWrapper;
+    NSString *filename;
+    NSRange range;
+    	
+    attachment = [cell attachment];
+    fileWrapper = [attachment fileWrapper];
+    filename = [[view textStorage] attribute:OPAttachmentPathAttribute atIndex:charIndex effectiveRange:&range];
+    
+    if (NSDebugEnabled) NSLog(@"draggedCell %@", filename);
+    
+	// HTML may not contain attachment files, how do we handle D&D?
+	if (filename) 
+	{
+		NSPoint mouseLocation = [event locationInWindow];
+		mouseLocation.x -= 16; // file icons are guaranteed to have 32 by 32 pixels (Mac OS 10.4 NSWorkspace docs)
+		mouseLocation.y -= 16;
+		mouseLocation = [view convertPoint:mouseLocation toView:nil];
+		
+		rect = NSMakeRect(mouseLocation.x, mouseLocation.y, 1, 1);
+		[view dragFile:filename fromRect:rect slideBack:YES event:event];
+	}
+}
+
+- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)flag
+{
+    return NSDragOperationCopy | NSDragOperationMove;
+}
+
+- (BOOL)ignoreModifierKeysWhileDragging
+{
+    return NO;
+}
+
+@end
+
+@implementation GIThreadsController (DragAndDrop)
+
+- (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard 
+{
+	if (tv == threadsTableView)
+	{
+		NSArray *selectedThreads = [threadsController selectedObjects];
+		
+		if ([selectedThreads count])
+		{
+			// Copy the row numbers to the pasteboard.
+			[pboard declareTypes:[NSArray arrayWithObject:@"GinkoThreads"] owner:self];
+			
+			NSEnumerator *enumerator = [selectedThreads objectEnumerator];
+			NSMutableArray *pbItems = [NSMutableArray arrayWithCapacity:[selectedThreads count]];
+			GIThread *thread;
+			
+			while (thread = [enumerator nextObject])
+			{
+				NSNumber *oid = [NSNumber numberWithUnsignedLongLong:[thread oid]];
+				[pbItems addObject:oid];
+			}
+			
+			[pboard setPropertyList:pbItems forType:@"GinkoThreads"];
+			return YES;
+		}
+	}
+	return NO;	
+}
+
+- (NSDragOperation)tableView:(NSTableView *)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op 
+{
+    if (tv == threadsTableView) 
+    {
+		if ([self group])
+		{
+			if ([info draggingSource] != threadsTableView) // don't let drop on itself
+			{
+				NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+				
+				if ([items count] > 0) 
+				{
+					[tv setDropRow:-1 dropOperation:NSTableViewDropOn]; 
+					return op;
+				}
+			}
+		}
+    }
+    
+    return NSDragOperationNone;
+}
+
+- (BOOL)tableView:(NSTableView *)tv acceptDrop:(id <NSDraggingInfo>)info 
+			  row:(int)row dropOperation:(NSTableViewDropOperation)operation
+{
+    if (tv == threadsTableView)
+    {
+        // move threads from source group to destination group:
+        NSArray *threadOids = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+        GIMessageGroup *sourceGroup = [(GIThreadsController *)[[info draggingSource] delegate] group];
+        GIMessageGroup *destinationGroup = [self group];
+        
+		if (sourceGroup)
+		{
+			[GIMessageGroup moveThreadsWithOids:threadOids fromGroup:sourceGroup toGroup:destinationGroup];
+		}
+		else
+		{
+			NSEnumerator *enumerator = [threadOids objectEnumerator];
+			NSNumber *threadOid;
+			OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+			while (threadOid = [enumerator nextObject])
+			{
+				GIThread *thread = [context objectForOid:[threadOid unsignedLongLongValue] ofClass:[GIThread class]];
+				
+				// add thread to destination group:
+				[thread addValue:thread forKey:@"threadsByDate"];
+			}
+		}
+        
+//        // select all in dragging source:
+//        NSOutlineView *sourceView = [info draggingSource];        
+//        [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
+        
+        [NSApp saveAction:self];
+		
+		return YES;
+    }
+    
+    return NO;
 }
 
 @end
