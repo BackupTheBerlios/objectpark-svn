@@ -420,11 +420,11 @@ Raises an exception if the message could not be sent. "*/
     
     if ([self allowsPipelining]) 
 	{
-        [self writeSender:sender];
+        [self writeSender:[sender addressFromEMailString]];
         
         enumerator = [recipients objectEnumerator];
         while (recipient = [enumerator nextObject])
-            [self writeRecipient:recipient];
+            [self writeRecipient:[recipient addressFromEMailString]];
         
         [self beginBody];
         

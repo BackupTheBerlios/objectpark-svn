@@ -364,6 +364,21 @@ static NSDateFormatter *dateFormatter()
 	}
 }
 
+// OPPersistence is broken wrt changes made in a different thread. To avoid some crashes, update as lazily as possible. This is why the following mechanism is in place.
+- (void)delayedThreadsUpdateFromGroup
+{
+	NSArray *groupThreads = [[self group] valueForKey:@"threadsByDate"];
+	int recents = [self numberOfRecentThreads];
+	int threadCount = [groupThreads count];
+	
+	if (recents && (threadCount > recents))
+	{
+		groupThreads = [groupThreads subarrayWithRange:NSMakeRange(threadCount - recents, recents)];
+	}
+	
+	[self setThreads:groupThreads];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath
 					  ofObject:(id)object 
                         change:(NSDictionary *)change
@@ -378,16 +393,8 @@ static NSDateFormatter *dateFormatter()
 		{
 			NSLog(@"OPPersistence KVO handling for to-many relationships still broken.");
 
-			NSArray *groupThreads = [[self group] valueForKey:@"threadsByDate"];
-			int recents = [self numberOfRecentThreads];
-			int threadCount = [groupThreads count];
-			
-			if (recents && (threadCount > recents))
-			{
-				groupThreads = [groupThreads subarrayWithRange:NSMakeRange(threadCount - recents, recents)];
-			}
-			
-			[self setThreads:groupThreads];
+			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayedThreadsUpdateFromGroup) object:nil];
+			[self performSelector:@selector(delayedThreadsUpdateFromGroup) withObject:nil afterDelay:0.001];
 		}
 		else
 		{
