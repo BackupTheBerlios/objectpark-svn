@@ -23,6 +23,7 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
 #import "NSData+Extensions.h"
 #import "NSData+MessageUtils.h"
 #import "NSString+MessageUtils.h"
+#import "NSString+Extensions.h"
 #import <OPDebug/OPLog.h>
 #include <sasl.h>
 #include <saslutil.h>
@@ -313,7 +314,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	NSParameterAssert([body length]);
 	
 	NSMutableData* transferData = [NSMutableData data];
-	NSMutableDictionary* headers = userHeaders ? [userHeaders mutableCopy] : [NSMutableDictionary dictionary];
+	NSMutableDictionary* headers = userHeaders ? [[userHeaders mutableCopy] autorelease] : [NSMutableDictionary dictionary];
 	NSCalendarDate* date = [NSCalendarDate date];
 	NSString* bundleName = [[[[NSBundle bundleForClass: [self class]] bundlePath] lastPathComponent] stringByDeletingPathExtension];
 	if (!bundleName) bundleName = @"OPMessage";
