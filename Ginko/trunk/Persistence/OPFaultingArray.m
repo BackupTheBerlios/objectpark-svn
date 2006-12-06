@@ -498,6 +498,17 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 									}
 									searchIndex--;
 								}
+								
+									
+								searchIndex = resultIndex;
+								do {
+									searchIndex--;
+									if ([key compare: *sortObjectPtr(searchIndex)] != 0) break;
+									if (oid == *oidPtr(searchIndex)) {
+										return searchIndex; // found
+									}									
+								} while (searchIndex > 0); 
+								
 							}
 							// Walk forward until the sortKey no longer matches or oid found: 
 							searchIndex = resultIndex+1;
