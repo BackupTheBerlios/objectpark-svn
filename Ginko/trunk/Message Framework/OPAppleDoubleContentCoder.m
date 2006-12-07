@@ -397,12 +397,13 @@
         NSLog(@"Corrupt AppleDouble Messagepart (!= 2 subparts)");
     }
     
+	filename = nil;
+	
     if((filename = [[mpart contentDispositionParameters] objectForKey: @"filename"]) != nil)
         filename = [[filename lastPathComponent] retain];
     else if((filename = [[mpart contentTypeParameters] objectForKey: @"name"]) != nil)
         filename = [[filename lastPathComponent] retain];
-    else
-        filename = nil;
+#warning bug: nil filename results in exception in -string. Fall back to names of subparts?
     
     // decode filename
     if (filename)

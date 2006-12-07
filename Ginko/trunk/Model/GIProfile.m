@@ -245,15 +245,15 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 		context = [[GPGContext alloc] init];
 		NSString *emailAddress = [[self valueForKey:@"mailAddress"] addressFromEMailString];
 		result = [[context keyEnumeratorForSearchPattern:[NSString stringWithFormat:@"<%@>", emailAddress] secretKeysOnly:YES] allObjects];
-		[context stopKeyEnumeration];
 	}
 	@catch (id localException)
 	{
-		NSLog(@"Exception while retrieving keys: %@", localException);
+		//NSLog(@"Exception while retrieving keys: %@", localException);
 		return [NSArray array];
 	}
 	@finally
 	{
+		[context stopKeyEnumeration];
 		[context release];
 	}
 	

@@ -400,6 +400,7 @@
      - realname
 "*/
 {
+#warning AppleFileEncoding does not work on intel  
     uint32 resourceForkSize, realnameSize, totalSize, currentFileDataOffset;
     uint16 numEntries = 0, currentEntryIndex;
     NSData *resourceForkData, *finderInfo, *realnameData;

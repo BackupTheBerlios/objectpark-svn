@@ -211,8 +211,6 @@ NSString *GIMessageGroupStatisticsDidUpdateNotification = @"GIMessageGroupStatis
 	[[OPJob job] setResult: [statement executeWithNumberResult]];
 	
 	[statement release];
-	//[connection close];
-	//[connection release];
 }
 
 @end

@@ -327,7 +327,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[headers setValue: @"text/plain; charset=\"iso-8859-1\"; format=\"flowed\"; delsp=\"yes\"" forKey: @"Content-Type"];
 	[headers setValue: @"1.0" forKey: @"MIME-Version"];
 
-	[headers setValue: [NSString stringWithFormat: @"<%@%u>", bundleName, ABS([date timeIntervalSince1970]+[body hash])] forKey: @"Message-ID"];
+	[headers setValue: [NSString stringWithFormat: @"<%@#%x%x>", bundleName, ABS([date timeIntervalSince1970]+[body hash]), rand()] forKey: @"Message-ID"];
 
 	if (![body canBeConvertedToEncoding: NSASCIIStringEncoding]) {
 		// Signal that we are using the 8th bit:
@@ -382,7 +382,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	[self sendTransferData: transferData from: from to: recipients];
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [self quit];
     
