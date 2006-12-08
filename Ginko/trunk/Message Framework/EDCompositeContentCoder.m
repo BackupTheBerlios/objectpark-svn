@@ -59,14 +59,21 @@ static short boundaryId = 0;
 //	INIT & DEALLOC
 //---------------------------------------------------------------------------------------
 
-- (id) initWithMessagePart: (EDMessagePart*) mpart
+- (id)initWithMessagePart:(EDMessagePart *)mpart
 {
-    if (self = [self init]) {
-        if ([[mpart contentType] hasPrefix:@"multipart/"]) {
-            [self _takeSubpartsFromMultipartContent:mpart];
-        } else if([[mpart contentType] isEqualToString: @"message/rfc822"] || [[mpart contentType] isEqualToString: @"message/rfc2822"]) {
+    if (self = [self init]) 
+	{
+        if ([[mpart contentType] hasPrefix:@"multipart/"]) 
+		{
+			[self _takeSubpartsFromMultipartContent:mpart];
+        } 
+		else if ([[mpart contentType] isEqualToString:@"message/rfc822"] 
+				 || [[mpart contentType] isEqualToString:@"message/rfc2822"]) 
+		{
             [self _takeSubpartsFromMessageContent:mpart];
-        } else {
+        } 
+		else 
+		{
             // need [self dealloc] here?
             //[NSException raise:NSInvalidArgumentException format: @"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]];
             NSLog(@"%@: Invalid content type %@", NSStringFromClass([self class]), [mpart bodyForHeaderField:@"content-type"]);
@@ -128,18 +135,18 @@ static short boundaryId = 0;
 //	CODING
 //---------------------------------------------------------------------------------------
 
-- (void) _takeSubpartsFromMultipartContent: (EDMessagePart*) mpart
+- (void)_takeSubpartsFromMultipartContent:(EDMessagePart *)mpart
 {
-    NSDictionary*		defaultHeadersFields;
-    EDEntityFieldCoder*	fcoder;
-    NSString*			charset;
-	NSString*           boundary;
-    const char			*btext, *startPtr, *possibleEndPtr, *p, *pmin, *pmax, *q;
-    unsigned int		blen;
-    NSRange				subpartRange;
-    EDMessagePart*      subpart;
-    BOOL   				done = NO;
-
+    NSDictionary *defaultHeadersFields;
+    EDEntityFieldCoder *fcoder;
+    NSString *charset;
+	NSString *boundary;
+    const char *btext, *startPtr, *possibleEndPtr, *p, *pmin, *pmax, *q;
+    unsigned int blen;
+    NSRange	subpartRange;
+    EDMessagePart *subpart;
+    BOOL done = NO;
+	
     if ((boundary = [[mpart contentTypeParameters] objectForKey: @"boundary"]) == nil)
         [NSException raise:EDMessageFormatException format: @"no boundary for multipart"];
     btext = [boundary cString];
@@ -151,51 +158,54 @@ static short boundaryId = 0;
         charset = [NSString MIMEEncodingForStringEncoding:NSASCIIStringEncoding];
         fcoder = [EDEntityFieldCoder encoderWithValue: @"text/plain" andParameters: [NSDictionary dictionaryWithObject: charset forKey: @"charset"]];
         defaultHeadersFields = [NSDictionary dictionaryWithObject:[fcoder fieldBody] forKey: @"content-type"];
-        }
-
-    subparts = [[NSMutableArray allocWithZone:[self zone]] init];
-
+	}
+	
+    subparts = [[[NSMutableArray allocWithZone:[self zone]] init] autorelease]; // autoreleased for the case that an exception has to be thrown
+	
     pmin = p = [[mpart contentData] bytes];
     pmax = p + [[mpart contentData] length];
     startPtr = possibleEndPtr = NULL;
     while(done == NO)
-        {  // p == 0 can occur if part was empty, ie. had no body
-        if((p == 0) || (p > pmax - 5 - blen)) // --boundary--\n
+	{  // p == 0 can occur if part was empty, ie. had no body
+//        if((p == 0) || (p > pmax - 5 - blen)) // --boundary--\n
+		if((p == 0) || (p > pmax - 4 - blen)) // --boundary--
             [NSException raise: EDMessageFormatException format: @"final boundary not found"];
         if((*p == '-') && (*(p+1) == '-') && (strncmp(p+2, btext, blen) == 0))
-            {
+		{
             q = p + 2 + blen;
             if((*q == '-') && (*(q+1) == '-'))
-                {
+			{
                 done = YES;
                 q += 2;
-                }
+			}
             if((q = skipspace(q, pmax)) == NULL)  // might have been added
                 [NSException raise: EDMessageFormatException format: @"final boundary not found"];
             if(iscrlf(*q) == NO)
-                {
+			{
                 NSLog(@"Warning: ignoring junk after mime multipart boundary '%@'.", boundary);
                 if((q = skiptonewline(q, pmax)) == NULL)
                     [NSException raise:EDMessageFormatException format: @"final boundary not found"];
-                }
-
+			}
+			
             if(startPtr != NULL)
-                {
+			{
                 subpartRange.location = startPtr - (const char *)[[mpart contentData] bytes];
                 subpartRange.length = possibleEndPtr - startPtr;
                 subpart = [[[EDMessagePart allocWithZone:[self zone]] initWithTransferData:[[mpart contentData] subdataWithRange:subpartRange] fallbackHeaderFields:defaultHeadersFields] autorelease];
                 [subparts addObject:subpart];
-                }
+			}
             startPtr = p = skipnewline(q, pmax); // trailing crlf belongs to boundary
-            }
+		}
         else
-            {
+		{
             if((p = skiptonewline(p, pmax)) == NULL)
                 [NSException raise:EDMessageFormatException format: @"final boundary not found"];
             possibleEndPtr = p;
             p = skipnewline(p, pmax);
-            }
-       }
+		}
+	}
+	
+	[subparts retain]; // no exception had to be thrown...keep the subparts
 }
 
 
