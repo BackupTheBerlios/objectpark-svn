@@ -2,6 +2,7 @@
      $Id: NSFileWrapper+OPApplefileExtensions.h,v 1.1 2004/12/23 16:45:16 theisen Exp $
 
      Copyright (c) 2001 by Axel Katerbau. All rights reserved.
+     Copyright (c) 2006 by Dirk Theisen. All rights reserved.
 
      Permission to use, copy, modify and distribute this software and its documentation
      is hereby granted, provided that both the copyright notice and this permission
@@ -24,11 +25,14 @@
 
 @interface NSFileWrapper (OPApplefileExtensions)
 
-- (id)initWithPath: (NSString*) path forksAndFinderInfo:(BOOL)forksAndFinderInfo;
+- (id)initWithPath: (NSString*) path forksAndFinderInfo: (BOOL) forksAndFinderInfo;
 
-- (void) addForksAndFinderInfoWithPath: (NSString*) path;
+- (BOOL) writeForksToFile: (NSString*) path atomically: (BOOL) atomicFlag updateFilenames: (BOOL) updateNamesFlag;
 
-- (BOOL)writeForksToFile: (NSString*) path atomically:(BOOL)atomicFlag updateFilenames:(BOOL)updateNamesFlag;
+- (NSData*) applefileContentsIncludingDataFork: (BOOL) includeDataFork;
+
+- (id) initRegularFileWithContents: (NSData*) dataFork
+				 applefileContents: (NSData*) applefileData;
 
 @end
 

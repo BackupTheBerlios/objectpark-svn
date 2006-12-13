@@ -24,8 +24,8 @@
 @interface NSData(EDExtensions)
 
 /*" Calculating CRCs "*/
-- (unsigned short)crc16;
-- (unsigned int)crc32;
+- (unsigned short) crc16;
+- (unsigned int) crc32;
 
 
 /*" Base64 encoding "*/
@@ -33,6 +33,17 @@
 - (NSData*) decodeBase64;
 - (NSData*) encodeBase64;
 - (NSData*) encodeBase64WithLineLength:(unsigned int)lineLength andNewlineAtEnd:(BOOL)endWithNL;
+
+- (UInt32) deserializeUnsignedLongAt: (unsigned*) offset;
+- (UInt16) deserializeUnsignedShortAt: (unsigned*) offsetPtr;
+
+@end
+
+@interface NSMutableData (OPNetworkBytes)
+
+- (void) serializeUnsignedLong: (UInt32) value;
+- (void) serializeUnsignedShort: (UInt16) value;
+- (void) appendZeroedBytes: (unsigned) byteCount;
 
 @end
 

@@ -277,21 +277,18 @@
 	contentType = aContentType;
 }
 
-- (NSFileWrapper *)fileWrapper
+- (NSFileWrapper*) fileWrapper
 {
-    NSString *rawPreferredFilename, *preferredFilename;
-    NSFileWrapper *result;
-    
-    rawPreferredFilename = (preferredFilename = [self filename]) ? preferredFilename : @"unknown attachment";
+	NSString* preferredFilename = [self filename];
+    NSString* rawPreferredFilename = preferredFilename ? preferredFilename : @"unknown attachment";
     
     // use coder
-    preferredFilename = [(EDTextFieldCoder *)[EDTextFieldCoder decoderWithFieldBody:rawPreferredFilename] text];
+    preferredFilename = [(EDTextFieldCoder*)[EDTextFieldCoder decoderWithFieldBody: rawPreferredFilename] text];
     
-    result = [[[NSFileWrapper alloc] initRegularFileWithContents:data] autorelease];
+    NSFileWrapper* result = [[[NSFileWrapper alloc] initRegularFileWithContents: [self data]] autorelease];
     [result setPreferredFilename: preferredFilename]; // file name
     
-    if (xUnixMode)
-    {
+    if (xUnixMode) {
         NSMutableDictionary *attributes;
         // attributes
         attributes = [[result fileAttributes] mutableCopy];

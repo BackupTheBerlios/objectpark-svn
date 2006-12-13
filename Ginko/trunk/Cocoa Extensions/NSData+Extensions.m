@@ -19,6 +19,7 @@
 //---------------------------------------------------------------------------------------
 
 #import "NSData+Extensions.h"
+#include <strings.h>
 
 
 //---------------------------------------------------------------------------------------
@@ -317,10 +318,53 @@ If %lineLength is greater than 0, linebreaks are inserted after every %lineLengt
     return encodedData;
 }
 
+- (UInt32) deserializeUnsignedLongAt: (unsigned*) offsetPtr
+{
+	NSParameterAssert(*offsetPtr + 4 <= [self length]); // Range check
+		
+	UInt32 result;
+	memcpy(&result, [self bytes] + *offsetPtr, 4);
+	NSSwapBigShortToHost(result);
+	*offsetPtr += 4;
+	return result;
+}
 
+- (UInt16) deserializeUnsignedShortAt: (unsigned*) offsetPtr 
+{
+	NSParameterAssert(*offsetPtr+2 <= [self length]); // Range check
+	UInt16 result;
+	memcpy(&result, [self bytes]+*offsetPtr, 2);
+	NSSwapBigShortToHost(result);
+	*offsetPtr += 2;
+	return result;
+}
 
 
 
 //---------------------------------------------------------------------------------------
     @end
 //---------------------------------------------------------------------------------------
+
+
+@implementation NSMutableData (OPNetworkBytes)
+
+- (void) serializeUnsignedLong: (UInt32) value
+{
+	NSSwapHostLongToBig(value);
+	[self appendBytes: &value length: sizeof(UInt32)];
+}
+
+- (void) serializeUnsignedShort: (UInt16) value
+{
+	NSSwapHostShortToBig(value);
+	[self appendBytes: &value length: sizeof(UInt16)];
+}
+
+- (void) appendZeroedBytes: (unsigned) byteCount
+{
+	unsigned oldLength = [self length];
+	[self setLength: oldLength + byteCount];
+	bzero([self mutableBytes]+oldLength, byteCount);
+}
+
+@end

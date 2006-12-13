@@ -27,6 +27,137 @@
 
 #define NSFILEWRAPPEREXTENSIONS OPL_DOMAIN @"NSFILEWRAPPEREXTENSIONS"
 
+
+#import "NSData+Extensions.h"
+
+#define ASEntrySize 12 // 3x uint32
+#define ASHeaderSize 26
+
+/* Apple reserves the range of entry IDs from 1 to 0x7FFFFFFF.
+* Entry ID 0 is invalid.  The rest of the range is available
+* for applications to define their own entry types.  "Apple does
+* not arbitrate the use of the rest of the range."
+*/
+#define AS_DATA         1 /* data fork */
+#define AS_RESOURCE     2 /* resource fork */
+#define AS_REALNAME     3 /* File's name on home file system */
+#define AS_COMMENT      4 /* standard Mac comment */
+#define AS_ICONBW       5 /* Mac black & white icon */
+#define AS_ICONCOLOR    6 /* Mac color icon */
+/*                        7 *//* not used */
+#define AS_FILEDATES    8 /* file dates; create, modify, etc */
+#define AS_FINDERINFO   9 /* Mac Finder info & extended info */
+#define AS_MACINFO      10 /* Mac file info, attributes, etc */
+#define AS_PRODOSINFO   11 /* Pro-DOS file info, attrib., etc */
+#define AS_MSDOSINFO    12 /* MS-DOS file info, attributes, etc */
+#define AS_AFPNAME      13 /* Short name on AFP server */
+#define AS_AFPINFO      14 /* AFP file info, attrib., etc */
+
+@interface NSData (OPApplefile)
+
++ (id) appleFileDataWithDataDictionary: (NSDictionary*) dataDict;
+
+@end
+
+
+@implementation NSData (OPApplefile)
+
+/*
+ - (void) appendASEntryHeaderWithId: (UInt32) entryId
+ fileOffet: (UInt32) offset
+ length: (UInt32) length
+ {
+	 UInt32 offset = [self length];
+	 [self serializeUnsignedInt: entry_id];
+	 [self serializeUnsignedInt: offset];
+	 [self serializeUnsignedInt: length];
+ }
+ */
+
++ (id) appleFileDataWithDataDictionary: (NSDictionary*) dataDict
+	/*" Returns an AppleSingle data structure (see RFC1740) from a dictionary of data objects, keyed with NSNumbers, representing the entryIds. "*/
+{
+	NSMutableData* result = [NSMutableData data];
+	BOOL isAppleDouble = [dataDict objectForKey: [NSNumber numberWithUnsignedLong: AS_DATA]] != nil;
+	
+	NSEnumerator* dke;
+	NSNumber* entryId;
+	
+	UInt32 currentFileDataOffset = ASHeaderSize + [dataDict count] * ASEntrySize;
+	
+	// Append global header:
+	UInt32 as_magic       = isAppleDouble ? 0x00051607 : 0x00051600;
+	UInt32 as_version     = 0x00020000;
+	UInt16 as_entry_count = [dataDict count];
+	
+	[result serializeUnsignedLong: as_magic];
+	[result serializeUnsignedLong: as_version];
+	[result appendZeroedBytes: 16];
+	[result serializeUnsignedShort: as_entry_count];
+	
+	// Append all entry headers:
+	dke = [dataDict keyEnumerator];
+	while (entryId = [dke nextObject]) {
+		NSData* value = [dataDict objectForKey: entryId];
+		
+		UInt32 length = [value length];
+		[result serializeUnsignedLong: [entryId unsignedLongValue]]; // serialize entryId
+		[result serializeUnsignedLong: currentFileDataOffset]; // serialize offset from file start
+		[result serializeUnsignedLong: length]; // serialize length of entry
+		currentFileDataOffset += length;
+	}
+	
+	// Append all data values:
+	dke = [dataDict keyEnumerator];
+	while (entryId = [dke nextObject]) {
+		NSData* entry = [dataDict objectForKey: entryId];
+		[result appendData: entry];
+	}
+	
+	return result;
+}
+
+- (NSDictionary*) applefileDataDictionary
+/*" Returns a dictionary of sub-data objects keyed by applefile entryId (see RFC1740). "*/
+{
+	unsigned currentFileDataOffset = 0;
+	
+	// Read global header:
+	
+	UInt32 as_magic = [self deserializeUnsignedLongAt: &currentFileDataOffset];
+	
+	if (as_magic == 0x00051607 || as_magic == 0x00051600) {
+		
+		
+		UInt32 as_version     = [self deserializeUnsignedLongAt: &currentFileDataOffset];
+		currentFileDataOffset += 16; // skip 16 byte filler
+		UInt16 as_entry_count = [self deserializeUnsignedShortAt: &currentFileDataOffset];
+		
+		if (as_version > 0x00020000) {
+			if (as_entry_count > 0) {
+				NSMutableDictionary* dataDict = [NSMutableDictionary dictionary];
+				do {
+					// Read an applefile entry:
+					UInt32 entryId  = [self deserializeUnsignedLongAt: &currentFileDataOffset];
+					UInt32 offset   = [self deserializeUnsignedLongAt: &currentFileDataOffset];
+					UInt32 length   = [self deserializeUnsignedLongAt: &currentFileDataOffset];
+					NSData* subData = [self subdataWithRange: NSMakeRange(offset, length)];
+					
+					[dataDict setObject: subData forKey: [NSNumber numberWithUnsignedLong: entryId]];
+				} while (as_entry_count);
+				
+				return dataDict;
+			}
+		}
+	}
+
+	[self release];
+	return nil; // invalid header magic - throw?
+}
+
+@end
+
+
    /* applefile.h - Data structures used by AppleSingle/AppleDouble
     * file format
     *
@@ -119,29 +250,6 @@
    }; /* ASEntry */
 
    typedef struct ASEntry ASEntry;
-
-   /* Apple reserves the range of entry IDs from 1 to 0x7FFFFFFF.
-    * Entry ID 0 is invalid.  The rest of the range is available
-    * for applications to define their own entry types.  "Apple does
-    * not arbitrate the use of the rest of the range."
-    */
-
-   #define AS_DATA         1 /* data fork */
-   #define AS_RESOURCE     2 /* resource fork */
-   #define AS_REALNAME     3 /* File's name on home file system */
-   #define AS_COMMENT      4 /* standard Mac comment */
-   #define AS_ICONBW       5 /* Mac black & white icon */
-   #define AS_ICONCOLOR    6 /* Mac color icon */
-   /*                        7 *//* not used */
-   #define AS_FILEDATES    8 /* file dates; create, modify, etc */
-   #define AS_FINDERINFO   9 /* Mac Finder info & extended info */
-   #define AS_MACINFO      10 /* Mac file info, attributes, etc */
-   #define AS_PRODOSINFO   11 /* Pro-DOS file info, attrib., etc */
-   #define AS_MSDOSINFO    12 /* MS-DOS file info, attributes, etc */
-   #define AS_AFPNAME      13 /* Short name on AFP server */
-   #define AS_AFPINFO      14 /* AFP file info, attrib., etc */
-
-   #define AS_AFPDIRID     15 /* AFP directory ID */
 
    /* matrix of entry types and their usage:
     *
@@ -343,23 +451,6 @@ NSString *OPFinderInfo = @"OPFinderInfo";
 
 @implementation NSFileWrapper (OPApplefileExtensions)
 
-- (id)initWithPath: (NSString*) path forksAndFinderInfo:(BOOL)forksAndFinderInfo
-/*"
-   If forksAndFinderInfo is YES then adds the resource fork and the finder info 
-   to the file's attributes.
-"*/
-{
-    if(! [self initWithPath:path])
-        return nil;
-    
-    if (forksAndFinderInfo) // post process the file wrapper to add the resource fork and finder info
-    {
-        [self addForksAndFinderInfoWithPath:path];
-    }
-    
-    return self;
-}
-
 - (void) addForksAndFinderInfoWithPath: (NSString*) path
 /*"Adds resource fork and finder info to the file attributes."*/
 {
@@ -529,8 +620,22 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
     }
 }
 
+- (id) initWithPath: (NSString*) path forksAndFinderInfo: (BOOL) forksAndFinderInfo
+/*" If forksAndFinderInfo is YES then adds the resource fork and the finder info 
+	 to the file's attributes. "*/
+{
+    if (! [self initWithPath: path]) return nil;
+    
+     // post-process the file wrapper to add the resource fork and finder info
+	if (forksAndFinderInfo) {
+        [self addForksAndFinderInfoWithPath: path];
+    }
+    
+    return self;
+}
+
 //#warning axel->all: This is not atomic at the moment. Regardless of the atomicFlag.
-- (BOOL)writeForksToFile: (NSString*) path atomically:(BOOL)atomicFlag updateFilenames:(BOOL)updateNamesFlag
+- (BOOL) writeForksToFile: (NSString*) path atomically: (BOOL) atomicFlag updateFilenames: (BOOL) updateNamesFlag
 /*"
    In addition to the data fork it also writes the resource fork data given in the 
    attributes dictionary under the key OPFileResourceForkData and the finder info given
@@ -545,13 +650,13 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
     SInt16 refNum;
     NSData *resourceForkData, *finderInfo;
     
-    if (! [self writeToFile:path atomically:atomicFlag updateFilenames:updateNamesFlag])
+    if (! [self writeToFile:path atomically: atomicFlag updateFilenames: updateNamesFlag])
         return NO;
     
     // take care of resource fork
     
     // check if resource fork exists
-    if (! (resourceForkData = [[self fileAttributes] objectForKey:OPFileResourceForkData]))
+    if (! (resourceForkData = [[self fileAttributes] objectForKey: OPFileResourceForkData]))
         return YES;	// nothing to do
     
     // create resource fork and write resource data in it
@@ -599,11 +704,11 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
     err = FSCloseFork(refNum);
     if (err != noErr)
     {
-        [NSException raise: NSInvalidArgumentException format:@"Unable to close resource fork of file %@ (err = %d).", path, err];
+        [NSException raise: NSInvalidArgumentException format: @"Unable to close resource fork of file %@ (err = %d).", path, err];
     }
     
     // take care of Finder info
-    if (finderInfo = [[self fileAttributes] objectForKey:OPFinderInfo])
+    if (finderInfo = [[self fileAttributes] objectForKey: OPFinderInfo])
     {
         if (NSDebugEnabled) NSLog(@"Setting FinderInfo.");   
         
@@ -644,5 +749,85 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
     
     return YES;
 }
+
+- (NSData*) applefileContentsIncludingDataFork: (BOOL) includeDataFork
+/*" Creates data containing an AppleSingle/AppleDouble structure with 3 entries:
+	resource fork, finder info, realname.
+    The receiver must be a regularFile. If the includeDataFork is YES, an
+    AppleDouble header is generated and the data fork included. AppleSingle, otherwise.
+	"*/
+{
+	NSMutableDictionary* dataDict = [NSMutableDictionary dictionary];
+	NSDictionary* fileAttributes = [self fileAttributes];
+	
+	// resource fork
+	NSData* resourceForkData = [fileAttributes objectForKey: OPFileResourceForkData];
+	if (resourceForkData) [dataDict setObject: resourceForkData forKey: [NSNumber numberWithInt: AS_RESOURCE]];
+	
+	// finder info
+	NSData* finderInfo = [fileAttributes objectForKey: OPFinderInfo];
+	if (finderInfo) [dataDict setObject: finderInfo forKey: [NSNumber numberWithInt: AS_FINDERINFO]];
+	
+	// realname
+	NSData* realnameData = [[self filename] dataUsingEncoding: NSMacOSRomanStringEncoding allowLossyConversion: YES];
+	if (realnameData) [dataDict setObject: realnameData forKey: [NSNumber numberWithInt: AS_REALNAME]];
+	
+	if (includeDataFork) {
+		NSData* dataFork = [self regularFileContents];
+		if (dataFork) [dataDict setObject: dataFork forKey: [NSNumber numberWithInt: AS_DATA]];
+	}
+	
+	NSData* result = [NSData appleFileDataWithDataDictionary: dataDict];
+	return result;
+}
+
+- (id) initRegularFileWithContents: (NSData*) dataFork
+				 applefileContents: (NSData*) applefileData
+/*" Handles both AppleSingle and AppleDouble representations. Pass nil dataFork for AppleSingle. "*/
+{
+	NSDictionary* dataDictionary = [applefileData applefileDataDictionary];
+	
+	// Now we can access all entries by entryId (NSNumber):
+	
+	if (! dataFork) {
+		dataFork = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_DATA]];
+	}
+
+	if (dataFork) {
+		if (self = [self initRegularFileWithContents: dataFork]) {
+			
+			if (dataDictionary) {
+				NSMutableDictionary* attrs = [[self fileAttributes] mutableCopy];
+				NSData* finderInfo = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_FINDERINFO]];
+				NSData* resourceFork = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_RESOURCE]];
+				NSData* filenameData = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_REALNAME]];
+				
+				NSString* filename = nil;
+				
+				if (filenameData) {
+					filename = [[NSString alloc] initWithData: filenameData encoding: NSMacOSRomanStringEncoding];
+					[self setFilename: filename];
+					[filename release];
+				}
+				
+				if (resourceFork) {
+					[attrs setObject: resourceFork forKey: OPFileResourceForkData];
+				}
+				
+				if (finderInfo) {
+					[attrs setObject: finderInfo forKey: OPFinderInfo];
+				}
+				
+				[self setFileAttributes: attrs];
+				[attrs release];
+			}
+		}
+		return self;
+	}
+	
+	[self autorelease];
+	return nil;
+}
+
 
 @end

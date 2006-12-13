@@ -26,6 +26,7 @@
 #import "OPMultimediaContentCoder.h"
 #import "EDTextFieldCoder.h"
 
+
 @interface OPMultimediaContentCoder (PrivateAPI)
 - (id)_encodeDataWithClass:(Class)targetClass;
 @end
@@ -392,13 +393,14 @@
     return NO;
 }
 
+/*
 - (NSData*) _appleSingleDoubleFromFileWrapper: (NSFileWrapper*) aFileWrapper
-/*"
+/"
    Creates data containing an AppleSingle/AppleDouble structure with 3 entries:
      - resource fork
      - finder info
      - realname
-"*/
+"/
 {
 #warning AppleFileEncoding does not work on intel  
     uint32 resourceForkSize, realnameSize, totalSize, currentFileDataOffset;
@@ -542,8 +544,9 @@
     
     return result;
 }
+*/
 
-- (id)initWithFileWrapper: (NSFileWrapper*) aFileWrapper
+- (id) initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
     NSString *theFilename;
     NSDictionary *attributes;
@@ -551,22 +554,20 @@
 
     NSParameterAssert([aFileWrapper isRegularFile]);
     
-    if (! (theFilename = [aFileWrapper filename]))
-    {
+    if (! (theFilename = [aFileWrapper filename])) {
         theFilename = [aFileWrapper preferredFilename];
     }
             
     // get the permissions
     attributes = [aFileWrapper fileAttributes];
-    posixPermissions = [attributes objectForKey:NSFilePosixPermissions];
+    posixPermissions = [attributes objectForKey: NSFilePosixPermissions];
     
-    if (posixPermissions)
-    {
-        xUnixMode = [[NSString xUnixModeString:[posixPermissions intValue]] retain];
+    if (posixPermissions) {
+        xUnixMode = [[NSString xUnixModeString: [posixPermissions intValue]] retain];
     }
 
 	[self setContentType: @"application/applefile"];
-    return [super initWithData:[self _appleSingleDoubleFromFileWrapper:aFileWrapper] filename: theFilename];
+    return [super initWithData: [aFileWrapper applefileContentsIncludingDataFork: YES] filename: theFilename];
 }
 
 - (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype
@@ -578,11 +579,12 @@
     return messagePart;
 }
 
+/*
 - (NSData*) _dataForEntryID:(uint32)entryID
-/*"
+/"
 Returns the entry out of the applesingle/appledouble data. E.g. data fork or resource fork.
 For possible parameter values see applefile.h.
-  "*/
+  "/
 {
     AppleSingle appleSingle;
     uint16 numEntries, i;
@@ -642,9 +644,28 @@ For possible parameter values see applefile.h.
     
     return result;
 }
+*/
 
-- (NSFileWrapper *)fileWrapper
+- (NSFileWrapper*) fileWrapper
 {
+	NSFileWrapper* result = [[[NSFileWrapper alloc] initRegularFileWithContents: nil
+															  applefileContents: [self data]] autorelease];	
+	
+	// prefer content type parameter filename but fallback to applesingle realname if not present
+    NSString* rawPreferredFilename = [self filename];
+	NSString* preferredFilename = [result filename];
+	
+    if (rawPreferredFilename) {
+        // use coder
+        preferredFilename = [(EDTextFieldCoder*) [EDTextFieldCoder decoderWithFieldBody: rawPreferredFilename] text];
+	} 
+	if (! preferredFilename) preferredFilename = @"unknown attachment";
+    [result setPreferredFilename: preferredFilename]; 
+	
+	return result;
+}
+	
+/*
     NSString *preferredFilename = nil;
     NSString *rawPreferredFilename;
     NSFileWrapper *result;
@@ -708,6 +729,7 @@ For possible parameter values see applefile.h.
     
     return result;
 }
+*/
 
 - (NSAttributedString *)attributedString
 {
