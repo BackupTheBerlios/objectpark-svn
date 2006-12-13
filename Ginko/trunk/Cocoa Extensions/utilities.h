@@ -68,12 +68,15 @@ static __inline__ const char *skipnewline(const char *ptr, const char *limit)
 
 static __inline__ const char *skiptonewline(const char *ptr, const char *limit)
 {
-    while(iscrlf(*ptr) == NO)
+	if (ptr <= limit)
+	{
+		while(iscrlf(*ptr) == NO)
         {
-        ptr += 1;
-        if(ptr == limit)
-            return NULL;
+			ptr += 1;
+			if(ptr == limit)
+				return NULL;
         }
+	}
     return ptr;
 }
 

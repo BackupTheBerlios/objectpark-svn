@@ -40,7 +40,8 @@ NSString *GIThreadsByDateDidChangeNotification = @"GIThreadsByDateDidChangeNotif
     
     [boxesView setAutosaveName:@"boxesView"];
     [boxesView setAutosaveExpandedItems:YES];
-
+	[boxesView setAutoresizesOutlineColumn:NO];
+	
     // set cell for first table column
     {
         id cell;

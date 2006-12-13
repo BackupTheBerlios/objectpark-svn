@@ -355,45 +355,54 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return result;
 }
 
-
-- (BOOL) isUsenetMessage
-	/*" Returns YES, if Ginko thinks (from the message headers) that this message is an Usenet News article (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
+/*" Returns YES, if Ginko thinks (from the message headers) that this message is an Usenet News article (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
+- (BOOL)isUsenetMessage
 {
-    return ([[self internetMessage] bodyForHeaderField: @"Newsgroups"] != nil);
+    return ([[self internetMessage] bodyForHeaderField:@"Newsgroups"] != nil);
 }
 
-- (BOOL) isEMailMessage
-	/*" Returns YES, if Ginko thinks (from the message headers) that this message is some kind of email (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
+/*" Returns YES, if Ginko thinks (from the message headers) that this message is some kind of email (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
+- (BOOL)isEMailMessage
 {
-    return ([[self internetMessage] bodyForHeaderField: @"To"] != nil);
+    return ([[self internetMessage] bodyForHeaderField:@"To"] != nil);
 }
 
-- (BOOL) isPublicMessage 
+- (BOOL)isPublicMessage 
 {
     return [self isListMessage] || [self isUsenetMessage];
 }
 
-- (id) init 
+- (id)init 
 {
-	if (self = [super init]) {
+	if (self = [super init]) 
+	{
 		flagsCache = -1;
 	}
 	return self;
 }
 
-- (BOOL) isDummy
+- (BOOL)isDummy
 {
     return [self valueForKey:@"messageData"] == nil;
 }
 
-- (void) setIsSeen: (NSNumber*) aBoolean
+- (void)setIsSeen:(NSNumber *)aBoolean
 {
-    [self willChangeValueForKey: @"isSeen"];
-    [self setPrimitiveValue: aBoolean forKey: @"isSeen"];
-    flagsCache = [aBoolean boolValue] ? (flagsCache | OPSeenStatus) : -1;
-    [self didChangeValueForKey: @"isSeen"];
+	BOOL boolValue = [aBoolean boolValue];
+    [self willChangeValueForKey:@"isSeen"];
+    [self setPrimitiveValue:aBoolean forKey:@"isSeen"];
+	
+	NSNumber *oldValue = [NSNumber numberWithInt:flagsCache];
+    flagsCache = boolValue ? (flagsCache | OPSeenStatus) : -1;
+	NSNumber *newValue = [NSNumber numberWithInt:flagsCache];
+	
+    [self didChangeValueForKey:@"isSeen"];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+	
+	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
+	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
 }
-
 
 - (unsigned) flags
 {
@@ -707,10 +716,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[[NSUserDefaults standardUserDefaults] setObject:earliestSendTimes forKey:EarliestSendTimes];
 }
 
-- (void) addFlags: (unsigned) someFlags
+- (void)addFlags:(unsigned)someFlags
 {
-    NSNumber* oldValue = nil;
-    NSNumber* newValue = nil;
+    NSNumber *oldValue = nil;
+    NSNumber *newValue = nil;
 
     @synchronized(self) {
         int flags = [self flags];
@@ -734,14 +743,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 //            if ((someFlags & OPDraftStatus)) [self setValue: yes forKey: @"isDraft"];
 			
             flagsCache = someFlags | flags;
-			oldValue = [NSNumber numberWithInt: flags];
-			newValue = [NSNumber numberWithInt: flagsCache];
+			oldValue = [NSNumber numberWithInt:flags];
+			newValue = [NSNumber numberWithInt:flagsCache];
         }
     }
     
     // notify if needed (outside the synchronized block to avoid blocking problems)
-    if (newValue) {
-        [[NSNotificationCenter defaultCenter] postNotificationName: GIMessageDidChangeFlagsNotification object: self userInfo: [NSDictionary dictionaryWithObjectsAndKeys: oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+    if (newValue) 
+	{
+        [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
 		
 		[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
 		[[self thread] didChangeValueForKey:@"hasUnreadMessages"];

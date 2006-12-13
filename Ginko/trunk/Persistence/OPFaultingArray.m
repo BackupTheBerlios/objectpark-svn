@@ -625,7 +625,7 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 	}
 
 	id result = [[self context] objectForOid: oid ofClass: elementClass];
-	NSAssert1(result!=nil, @"Error! Object in FaultArray %@ no longer accessible!", self);
+	NSAssert1(result!=nil, @"Error! Object in FaultArray %x no longer accessible!", self);
 	return [[result retain] autorelease];
 }
 

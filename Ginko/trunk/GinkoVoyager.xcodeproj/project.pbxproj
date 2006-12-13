@@ -39,6 +39,9 @@
 		770878C108B4FCD600FBB196 /* HeaderTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 770878C008B4FCD600FBB196 /* HeaderTemplate.html */; };
 		7709374C08574DF200A29008 /* NSHost+GIReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 7709374A08574DF200A29008 /* NSHost+GIReachability.h */; };
 		7709374D08574DF200A29008 /* NSHost+GIReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7709374B08574DF200A29008 /* NSHost+GIReachability.m */; };
+		7711E0010B2EA92E00B76D97 /* TestEDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 7711DFFF0B2EA92E00B76D97 /* TestEDCompositeContentCoder.h */; };
+		7711E0020B2EA92E00B76D97 /* TestEDCompositeContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7711E0000B2EA92E00B76D97 /* TestEDCompositeContentCoder.m */; };
+		7711E0150B2EAA3200B76D97 /* TestMIMEBoundaries.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 7711E0140B2EAA3200B76D97 /* TestMIMEBoundaries.transferData */; };
 		7717AECA07DF30C700B0B0F5 /* ProfilePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */; };
 		7717AECE07DF30E400B0B0F5 /* AccountPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7717AECC07DF30E400B0B0F5 /* AccountPrefs.h */; };
 		7717AECF07DF30E400B0B0F5 /* AccountPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7717AECD07DF30E400B0B0F5 /* AccountPrefs.m */; };
@@ -488,6 +491,9 @@
 		770878C008B4FCD600FBB196 /* HeaderTemplate.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = HeaderTemplate.html; sourceTree = "<group>"; };
 		7709374A08574DF200A29008 /* NSHost+GIReachability.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSHost+GIReachability.h"; sourceTree = "<group>"; };
 		7709374B08574DF200A29008 /* NSHost+GIReachability.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSHost+GIReachability.m"; sourceTree = "<group>"; };
+		7711DFFF0B2EA92E00B76D97 /* TestEDCompositeContentCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestEDCompositeContentCoder.h; sourceTree = "<group>"; };
+		7711E0000B2EA92E00B76D97 /* TestEDCompositeContentCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestEDCompositeContentCoder.m; sourceTree = "<group>"; };
+		7711E0140B2EAA3200B76D97 /* TestMIMEBoundaries.transferData */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = TestMIMEBoundaries.transferData; sourceTree = "<group>"; };
 		77136F3008438E2A002F9298 /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
 		77136F3108438E2A002F9298 /* TestGIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIThread.m; sourceTree = "<group>"; };
 		7717AEC907DF30C700B0B0F5 /* ProfilePrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ProfilePrefs.nib; sourceTree = "<group>"; };
@@ -1075,6 +1081,7 @@
 		772F293C084F8249004D50E0 /* Test Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7711E0140B2EAA3200B76D97 /* TestMIMEBoundaries.transferData */,
 				772F293D084F826F004D50E0 /* multipartAlternativeTest-mbox.txt */,
 			);
 			path = "Test Resources";
@@ -1132,6 +1139,8 @@
 				775025F308489586008DD1CD /* TestNSData+MessageUtils.m */,
 				772F293F084F82BA004D50E0 /* TestOPMultipartContentCoder.h */,
 				772F2940084F82BA004D50E0 /* TestOPMultipartContentCoder.m */,
+				7711DFFF0B2EA92E00B76D97 /* TestEDCompositeContentCoder.h */,
+				7711E0000B2EA92E00B76D97 /* TestEDCompositeContentCoder.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1659,6 +1668,7 @@
 				7754E9090AD41E1C00E76512 /* GIThreadsController.h in Headers */,
 				77C62CC90AD66657008A124F /* NSSplitView+Autosave.h in Headers */,
 				7790EEA80AE7AC11003172B1 /* DNDArrayController.h in Headers */,
+				7711E0010B2EA92E00B76D97 /* TestEDCompositeContentCoder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1862,6 +1872,7 @@
 				77468B010A6E1EC50089DA7B /* Passphrase.nib in Resources */,
 				8D0C8C270A84220D0055D8E6 /* DefaultJunkFilter.plist in Resources */,
 				7754E9040AD41DCB00E76512 /* Threads.nib in Resources */,
+				7711E0150B2EAA3200B76D97 /* TestMIMEBoundaries.transferData in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2072,6 +2083,7 @@
 				77C62FEE0AD77F61008A124F /* GICommentTreeView.m in Sources */,
 				77C631CD0AD7DA2F008A124F /* GIThreadsWindow.m in Sources */,
 				7790EEA90AE7AC11003172B1 /* DNDArrayController.m in Sources */,
+				7711E0020B2EA92E00B76D97 /* TestEDCompositeContentCoder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

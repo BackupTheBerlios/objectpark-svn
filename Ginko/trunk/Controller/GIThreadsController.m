@@ -262,7 +262,8 @@ static NSDateFormatter *dateFormatter()
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[threads release];
 	[defaultProfile release];
-	[group release];
+	[group removeObserver:self forKeyPath:@"threadsByDate"];
+	[group release]; group = nil;
 	
 	[super dealloc];
 }
@@ -349,7 +350,7 @@ static NSDateFormatter *dateFormatter()
 /*" Just for drag and drop and copy & paste support. May be nil. "*/
 - (void)setGroup:(GIMessageGroup *)aGroup
 {
-	NSParameterAssert([aGroup isKindOfClass:[GIMessageGroup class]]);
+	NSParameterAssert(aGroup == nil || [aGroup isKindOfClass:[GIMessageGroup class]]);
 	
 	if (group != aGroup)
 	{
@@ -685,24 +686,29 @@ static NSDateFormatter *dateFormatter()
 	}
 }
 
+- (IBAction)goNextAndMarkSeen:(id)sender
+{
+	[[self selectedMessage] addFlags:OPSeenStatus];
+	
+	GIMessage *nextMessage = [self nextMessage];
+	
+	if (nextMessage)
+	{
+		[self setSelectedMessage:nextMessage];
+	}
+	else
+	{
+		NSBeep();
+	}
+}
+
 - (IBAction)goAheadAndMarkSeen:(id)sender
 {
 	// scroll message text view down if possible...
 	// ...mark as seen and go to "next" message otherwise:
 	if (![self scrollMessageTextViewPageDown])
 	{
-		[[self selectedMessage] addFlags:OPSeenStatus];
-		
-		GIMessage *nextMessage = [self nextMessage];
-		
-		if (nextMessage)
-		{
-			[self setSelectedMessage:nextMessage];
-		}
-		else
-		{
-			NSBeep();
-		}
+		[self goNextAndMarkSeen:sender];
 	}
 }
 
@@ -778,6 +784,8 @@ static NSDateFormatter *dateFormatter()
     GIMessage *message = [self selectedMessage];
 	
     [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
+	
+	[message setIsSeen:[NSNumber numberWithBool:YES]];
 }
 
 - (IBAction)replyAll:(id)sender
@@ -787,6 +795,8 @@ static NSDateFormatter *dateFormatter()
     [self placeSelectedTextOnQuotePasteboard];
     
     [[[GIMessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
+
+	[message setIsSeen:[NSNumber numberWithBool:YES]];
 }
 
 - (IBAction)followup:(id)sender
@@ -796,6 +806,8 @@ static NSDateFormatter *dateFormatter()
     [self placeSelectedTextOnQuotePasteboard];
     
     [[[GIMessageEditorController alloc] initFollowupTo:message profile:[self defaultProfile]] autorelease];
+
+	[message setIsSeen:[NSNumber numberWithBool:YES]];
 }
 
 - (IBAction)replyDefault:(id)sender
@@ -810,6 +822,8 @@ static NSDateFormatter *dateFormatter()
 	{
         [self replyAll:sender];
     }
+
+	[message setIsSeen:[NSNumber numberWithBool:YES]];
 }
 
 - (NSArray *)selectedMessages

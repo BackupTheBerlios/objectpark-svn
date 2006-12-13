@@ -74,6 +74,9 @@
 - (void)addFlags:(unsigned int)someFlags;
 - (void)removeFlags:(unsigned int)someFlags;
 
+/*" Special flag handling "*/
+- (void)setIsSeen:(NSNumber *)aBoolean;
+
 - (unsigned)sendStatus;
 - (void)setSendStatus:(unsigned)newStatus;
 - (NSDate *)earliestSendTime;
