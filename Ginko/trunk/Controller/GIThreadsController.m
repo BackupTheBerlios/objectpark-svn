@@ -385,6 +385,9 @@ static NSDateFormatter *dateFormatter()
                         change:(NSDictionary *)change
                        context:(void *)context
 {
+	
+	NSAssert1([NSThread currentThread] == [GIApplication mainThread], @"called from wrong thread %@", [NSThread currentThread]);
+	
     if ([keyPath isEqual:@"threadsByDate"]) 
 	{
 		NSNumber *kind = [change objectForKey:NSKeyValueChangeKindKey];
