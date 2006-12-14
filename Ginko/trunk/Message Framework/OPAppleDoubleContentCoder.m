@@ -317,28 +317,6 @@
    #define AS_AFP_System       0x04 /* system file */
    #define AS_AFP_BackupNeeded 0x40 /* new or modified (needs backup) */
 
-   struct ASAfpDirId       /* entry ID 15, AFP server directory ID */
-   {
-       uint32 dirid; /* file's directory ID on AFP server */
-   }; /* ASAfpDirId */
-
-   typedef struct ASAfpDirId ASAfpDirId;
-
-   /*
-    * The format of an AppleSingle/AppleDouble header
-    */
-   struct AppleSingle /* format of disk file */
-   {
-       ASHeader header; /* AppleSingle header part */
-       ASEntry  entry[1]; /* array of entry descriptors */
-   /* uchar8  filedata[]; *//* followed by rest of file */
-   }; /* AppleSingle */
-
-   typedef struct AppleSingle AppleSingle;
-
-   /*
-    * FINAL REMINDER: the Motorola 680x0 is a big-endian architecture!
-    */
 
    /* End of applefile.h */
 
@@ -416,71 +394,64 @@
 
 - (id) initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
-    NSDictionary *attributes;
-    NSNumber *posixPermissions;
-    NSMutableArray *someParts;
-    
-    if (! (filename = [[aFileWrapper filename] retain]))
-    {
+    if (! (filename = [[aFileWrapper filename] retain])) {
         filename = [[aFileWrapper preferredFilename] retain];
     }
-    
-    if (! filename)
-        filename = @"";
+    if (! filename) filename = @"";
         
     // strip doublequotes from theFilename
 	NSArray* components = [filename componentsSeparatedByString: @"\""];
 	filename = [components componentsJoinedByString: @"'"];
 
     // get the permissions
-    attributes = [aFileWrapper fileAttributes];
-    posixPermissions = [attributes objectForKey: NSFilePosixPermissions];
+    NSDictionary* attributes = [aFileWrapper fileAttributes];
+    NSNumber* posixPermissions = [attributes objectForKey: NSFilePosixPermissions];
     
     if (posixPermissions) {
         xUnixMode = [[NSString xUnixModeString: [posixPermissions intValue]] retain];
     }
     
     // collect subparts
-    someParts = [NSMutableArray array];
+    NSMutableArray* someParts = [NSMutableArray array];
     
     // Applefile part
     {
 		NSFileWrapper* emptyDataFileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: nil];
+		// Add resource fork etc. from aFileWrapper:
 		[emptyDataFileWrapper setFileAttributes: [aFileWrapper fileAttributes]];
         OPApplefileContentCoder* coder = [[OPApplefileContentCoder alloc] initWithFileWrapper: emptyDataFileWrapper];
         		
         [someParts addObject: [coder messagePart]];
-        
         [coder release];
 		[emptyDataFileWrapper release];
     }
     
     // Multimedia part
     {
-
         OPMultimediaContentCoder* coder = [[OPMultimediaContentCoder alloc] initWithFileWrapper: aFileWrapper];
         
         [someParts addObject: [coder messagePart]];
-        
         [coder release];
     }
         
     return [super initWithSubparts: someParts];
 }
 
-- (id)initWithAttributedString: (NSAttributedString*) anAttributedString
+- (id) initWithAttributedString: (NSAttributedString*) anAttributedString
 {
     NSRange effectiveRange;
-    NSTextAttachment *attachment;
+    NSTextAttachment* attachment = [anAttributedString attribute: NSAttachmentAttributeName 
+														 atIndex: 0 
+										   longestEffectiveRange: &effectiveRange 
+														 inRange: NSMakeRange(0, 1)];
     
-    if (! (attachment = [anAttributedString attribute:NSAttachmentAttributeName atIndex:0 longestEffectiveRange:&effectiveRange inRange:NSMakeRange(0, 1)]))
-    {
+    if (! attachment) {
         [self dealloc];
         NSLog(@"OPMultimediaContentCoder can't encode attributedString '%@'.", anAttributedString);
         return nil;
     }
 
-    return [self initWithFileWrapper:[attachment fileWrapper]];
+    return [self initWithFileWrapper: [attachment fileWrapper]];
 }
 
 - (void) dealloc
@@ -505,93 +476,96 @@
 
 - (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype
 {
-    id messagePart;
-    NSMutableDictionary *contentTypeParameters;
-    NSEnumerator *enumerator;
-    NSString *encodedFileName;
-    
     // ensure "attachment" content disposition for subparts
-    enumerator = [[self subparts] objectEnumerator];
-    while (messagePart = [enumerator nextObject])
-    {
+    NSEnumerator* enumerator = [[self subparts] objectEnumerator];
+	id messagePart;
+
+    while (messagePart = [enumerator nextObject]) {
         [self _ensureAttachmentDispositionForMessagePart:messagePart];
     }
     
     messagePart = [super _encodeSubpartsWithClass:targetClass subtype: @"mixed"];
     
-    contentTypeParameters = [[messagePart contentTypeParameters] mutableCopy];
+    NSMutableDictionary* contentTypeParameters = [[messagePart contentTypeParameters] mutableCopy];
     
-    if (xUnixMode)
-    {
+    if (xUnixMode) {
         [contentTypeParameters setObject: xUnixMode forKey: @"x-unix-mode"];
     }
     
-    encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
+    NSString* encodedFileName = [(EDTextFieldCoder *)[EDTextFieldCoder encoderWithText:filename] fieldBody];
     
     [contentTypeParameters setObject: encodedFileName forKey: @"name"];
     [messagePart setContentType: @"multipart/appledouble" withParameters:contentTypeParameters];
     
     [contentTypeParameters release];
 
-    [self _ensureAttachmentDispositionForMessagePart:messagePart];
+    [self _ensureAttachmentDispositionForMessagePart: messagePart];
     
     return messagePart;
 }
 
-- (EDMessagePart *)_headerPart
+- (EDMessagePart*)  headerPart
 {    
-    if ([[[self subparts] objectAtIndex:0] isApplefile])
-        return [[self subparts] objectAtIndex:0];
+    if ([[[self subparts] objectAtIndex: 0] isApplefile])
+        return [[self subparts] objectAtIndex: 0];
         
-    NSAssert([[[self subparts] objectAtIndex:1] isApplefile], @"Appledouble without applefile subpart.");
-    return [[self subparts] objectAtIndex:1];
+    NSAssert([[[self subparts] objectAtIndex: 1] isApplefile], @"Appledouble without applefile subpart.");
+    return [[self subparts] objectAtIndex: 1];
 }
 
-- (EDMessagePart *)_dataForkPart
+- (EDMessagePart*) dataForkPart
 {
-    if ([[[self subparts] objectAtIndex:0] isApplefile])
-    {
-        return [[self subparts] objectAtIndex:1];
+    if ([[[self subparts] objectAtIndex: 0] isApplefile]) {
+        return [[self subparts] objectAtIndex: 1];
     }
     
-    return [[self subparts] objectAtIndex:0];
+    return [[self subparts] objectAtIndex: 0];
 }
 
 
 
 - (NSFileWrapper*) fileWrapper
 {
-	EDMessagePart* headerPart   = [self _headerPart];
-    EDMessagePart* dataForkPart = [self _dataForkPart];
-    NSData*        dataFork = nil;
-	Class          coderClass = [dataForkPart contentDecoderClass];
-	
+	EDMessagePart* appleForkPart        = [self headerPart];
+    EDMessagePart* dataForkPart         = [self dataForkPart];
+    NSData*        dataFork             = nil;
+    NSData*        appleFork            = nil;
+	NSString*      rawPreferredFilename = nil;
+
     [self _ensureAttachmentDispositionForMessagePart: dataForkPart];
 	
-	if (coderClass) {
-        EDContentCoder* coder = nil;
+	@try {
+		id coder = [dataForkPart contentDecoder];
 		
-        @try {
-            coder = [[coderClass alloc] initWithMessagePart: dataForkPart];
-            
-            if ([coder respondsToSelector:@selector(data)]) {
-                dataFork = [(id)coder data];
-            } else {
-                NSLog(@"dataForkPart contains invalid or not decodable subpart (coder = %@).", coder);
-            }
-            [coder release];
-		} @catch (NSException* localException) {
-            [coder release]; // avoid memory leak
-            NSLog(@"Error in Appledouble subpart decoding. (%@)", [localException reason]);
-            return nil;
-		} 
-	}	
+		if ([coder respondsToSelector: @selector(data)]) {
+			dataFork = [(id)coder data];
+			rawPreferredFilename = [coder filename];
+		} else {
+			NSLog(@"dataForkPart contains invalid or not decodable subpart (coder = %@).", coder);
+		}
+	} @catch (NSException* localException) {
+		NSLog(@"Error in Appledouble subpart decoding. (%@)", [localException reason]);
+		return nil;
+	} 
 	
+	@try {
+		id coder = [appleForkPart contentDecoder];
+		
+		if ([coder respondsToSelector: @selector(data)]) {
+			appleFork = [(id)coder data];
+		} else {
+			NSLog(@"appleFork contains invalid or not decodable subpart (coder = %@).", coder);
+		}
+	} @catch (NSException* localException) {
+		NSLog(@"Error in Appledouble subpart decoding. (%@)", [localException reason]);
+		return nil;
+	} 
+
+
 	NSFileWrapper* result = [[[NSFileWrapper alloc] initRegularFileWithContents: dataFork
-															  applefileContents: [headerPart data]] autorelease];	
+															  applefileContents: appleFork] autorelease];	
 	
 	// prefer content type parameter filename but fallback to applesingle realname if not present
-    NSString* rawPreferredFilename = [dataForkPart filename];
 	NSString* preferredFilename = [result filename]; // default
 	
     if (rawPreferredFilename) {

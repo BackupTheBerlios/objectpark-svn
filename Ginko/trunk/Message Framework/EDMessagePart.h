@@ -63,10 +63,4 @@
 
 @end
 
-@interface EDMessagePart (OPApplefileExtensions)
-
-- (BOOL)isApplefile;
-- (BOOL)isAppleDouble;
-
-@end
 

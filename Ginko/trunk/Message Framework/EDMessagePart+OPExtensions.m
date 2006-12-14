@@ -18,7 +18,6 @@
 */
 
 #import "EDMessagePart+OPExtensions.h"
-#import "OPContentCoderCenter.h"
 #import "NSString+MessageUtils.h"
 #import "OPMultimediaContentCoder.h"
 #import "OPApplefileContentCoder.h"
@@ -274,56 +273,48 @@
     return defaultTypes;
 }
 
-- (Class)contentDecoderClass
-{
-    // deciding which content coder to use
-    return [OPContentCoderCenter contentDecoderClass:self];
-}
-
 - (NSAttributedString*) contentAsAttributedString
 {
     return [self contentWithPreferredContentTypes: nil attributed: YES];
 }
 
+- (id) contentDecoder
+{
+	// Decide which content coder to use:
+	Class contentCoderClass = [EDContentCoder contentDecoderClass: self];
+	EDContentCoder* contentCoder = [[[contentCoderClass alloc] initWithMessagePart: self] autorelease];
+	return contentCoder;
+}
+
+
 - (id)contentWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed
 /*" Returns the receivers content as a user presentable attributed string. Returns nil if not decodable. "*/
 {
     id content = nil;
-    Class contentCoderClass;
-    
-    contentCoderClass = [self contentDecoderClass];
+    Class contentCoderClass = [EDContentCoder contentDecoderClass: self];
     
     //if (NSDebugEnabled) NSLog(@"Using DecoderClass = %@", contentCoderClass);
     
     if (contentCoderClass != nil) // found a content coder willing to decode self
     {
-        EDContentCoder *contentCoder = [[contentCoderClass alloc] initWithMessagePart:self];
+        EDContentCoder* contentCoder = [[contentCoderClass alloc] initWithMessagePart:self];
         
-        @try 
-        {
-            if ([contentCoder respondsToSelector:@selector(contentWithPreferredContentTypes:attributed:)]) 
-            {
+        @try {
+            if ([contentCoder respondsToSelector:@selector(contentWithPreferredContentTypes:attributed:)]) {
                 content = [(id)contentCoder contentWithPreferredContentTypes:preferredContentTypes attributed:shouldBeAttributed];
-            } 
-            else 
-            {
+            } else {
                 content = (shouldBeAttributed ? (id)[contentCoder attributedString] : (id)[contentCoder string]);
             }
-        } 
-        @catch (id localException) 
-        {
+        } @catch (id localException) {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = @"Exception while extracting contents as attributed string.";
             if (shouldBeAttributed) content = [[[NSAttributedString alloc] initWithString:content] autorelease];
-        } 
-        
-//#warning debug only
-//        [contentCoder autorelease];
-        [contentCoder release];
+        } @finally {
+			[contentCoder release];
+		}
     }
     
-    if (! content) 
-    {
+    if (! content) {
         content = [NSString stringWithFormat:@"--- Content of type %@ could not be decoded. Falling back to text/plain: ---\n\n", [self contentType]];
         
         if (shouldBeAttributed) content = [[[NSMutableAttributedString alloc] initWithString:content] autorelease];
@@ -333,20 +324,17 @@
 
         EDContentCoder *contentCoder = [[EDPlainTextContentCoder alloc] initWithMessagePart:self];
 
-        @try 
-        {
+        @try {
             if (shouldBeAttributed) [content appendAttributedString:[contentCoder attributedString]];
             else content = [content stringByAppendingString:[contentCoder string]]; 
-        } 
-        @catch (id localException) 
-        {
+        } @catch (id localException) {
             OPDebugLog(MESSAGEDEBUG, OPERROR, @"[%@ %@] Exception while extracting contents as attributed string. (%@)", [self class], NSStringFromSelector(_cmd), [localException reason]);
             content = @"Exception while extracting contents as attributed string.";
             
             if (shouldBeAttributed) content = [[NSAttributedString alloc] initWithString:content];
-        }
-
-        [contentCoder release];
+        } @finally {
+			[contentCoder release];
+		}
     }
     
     return [[content retain] autorelease];

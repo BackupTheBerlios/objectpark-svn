@@ -34,6 +34,9 @@
 - (id) initRegularFileWithContents: (NSData*) dataFork
 				 applefileContents: (NSData*) applefileData;
 
+- (NSData*) resourceForkContents;
+- (NSData*) finderInfo;
+
 @end
 
 // additional key for file attributes

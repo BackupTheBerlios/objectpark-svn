@@ -259,7 +259,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
         localEffectiveRange.location = effectiveRange.location;
         localEffectiveRange.length = effectiveRange.length;
         
-        encoderClass = [OPContentCoderCenter contentEncoderClassForAttributedString:someContent atIndex:NSMaxRange(localEffectiveRange) effectiveRange:&localEffectiveRange];
+        encoderClass = [EDContentCoder contentEncoderClassForAttributedString:someContent atIndex:NSMaxRange(localEffectiveRange) effectiveRange:&localEffectiveRange];
         
 //        encoderClass = NSClassFromString(@"EDPlainTextContentCoder");
 //        localEffectiveRange.length = length;

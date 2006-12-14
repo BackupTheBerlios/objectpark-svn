@@ -19,6 +19,7 @@
 
 #import <AppKit/AppKit.h>
 #import "OPMultimediaContentCoder.h"
+#import "EDMessagePart.h"
 
 @interface OPApplefileContentCoder : OPMultimediaContentCoder 
 {
@@ -32,3 +33,9 @@
 
 @end
 
+@interface EDMessagePart (OPApplefileExtensions)
+
+- (BOOL)isApplefile;
+- (BOOL)isAppleDouble;
+
+@end

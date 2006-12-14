@@ -128,7 +128,7 @@
     NSEnumerator *enumerator = [[self subparts] reverseObjectEnumerator];
     while (subpart = [enumerator nextObject]) 
     {
-        if ([subpart contentDecoderClass] != nil) 
+        if ([EDContentCoder contentDecoderClass: subpart] != nil) 
         {
             NSString *aContentType = [[subpart contentType] lowercaseString];
             

@@ -95,38 +95,12 @@
     [originalTransferData release];
     [super dealloc];
 }
-/*
-- (void) _convertContentData
-{
-    if (cachedTransferData && bodyRange.location) {
-        NSString* cte = [self contentTransferEncoding];
-        NSData*   rawData = [cachedTransferData subdataWithRange: bodyRange];
-        [self setContentData:[rawData decodeContentWithTransferEncoding:cte]];
-    }
-}
-
-
-- (void) flushTransferDataCache
-{
-    if (cachedTransferData) {
-        if (bodyRange.location) {
-            // convert transferData to content data:
-            NSString* cte = [self contentTransferEncoding];
-            NSData*   rawData = [cachedTransferData subdataWithRange: bodyRange];
-            bodyRange = NSMakeRange(0,0);
-            [self setContentData: [rawData decodeContentWithTransferEncoding:cte]];
-        }
-        [cachedTransferData release]; // we are not thread safe anyway
-        cachedTransferData = nil;
-    }
-}
-*/
 
 //---------------------------------------------------------------------------------------
 //	TRANSFER LEVEL ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-- (NSData *)transferData
+- (NSData*) transferData
 {
     NSMutableData	*transferData;
     NSData			*headerData;
@@ -234,8 +208,7 @@
     NSString *fBody = [self bodyForHeaderField: @"content-type"];
     EDEntityFieldCoder *coder;
     
-    if ((contentType == nil) && fBody != nil) 
-    {
+    if ((contentType == nil) && fBody != nil) {
         coder = [EDEntityFieldCoder decoderWithFieldBody:fBody];
         contentType = [[coder value] retain];
         contentTypeParameters = [[coder parameters] retain];
@@ -261,9 +234,9 @@
 }
 
 
-- (void) setContentDisposition:(NSString*) aDispositionDirective withParameters: (NSDictionary*) someParameters
+- (void) setContentDisposition: (NSString*) aDispositionDirective withParameters: (NSDictionary*) someParameters
 {
-    EDEntityFieldCoder *fCoder;
+    EDEntityFieldCoder* fCoder;
 
     [aDispositionDirective retain];
     [contentDisposition release];
@@ -323,15 +296,19 @@
 - (void) setContentData: (NSData*) data
 {
     [self _forgetOriginalTransferData];
-    [contentData autorelease];
-    contentData = [data copyWithZone:[self zone]];
+		
+	if (data != contentData) {
+		[contentData release];
+		contentData = [data copy];
+	}
 }
 
 
 - (NSData*) contentData
 {
-    if((contentData == nil) && (originalTransferData != nil))
+    if ((contentData == nil) && (originalTransferData != nil)) {
        [self _takeContentDataFromOriginalTransferData];
+	}
     return contentData;
 }
     
@@ -506,16 +483,3 @@
 //---------------------------------------------------------------------------------------
 
 
-@implementation EDMessagePart (OPApplefileExtensions)
-
-- (BOOL)isApplefile
-{
-    return [[self contentType] isEqualToString: @"application/applefile"];
-}
-
-- (BOOL) isAppleDouble
-{
-    return [[self contentType] isEqualToString: @"multipart/appledouble"];
-}
-
-@end

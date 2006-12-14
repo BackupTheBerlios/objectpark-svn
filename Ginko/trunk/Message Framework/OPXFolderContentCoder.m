@@ -245,7 +245,7 @@
 
         [self _ensureAttachmentDispositionForMessagePart:subpart];
         
-        if ((coderClass = [subpart contentDecoderClass]) != nil)
+        if ((coderClass = [EDContentCoder contentDecoderClass: subpart]) != nil)
         {
             NSFileWrapper *fileWrapper;
             EDContentCoder *coder = nil;

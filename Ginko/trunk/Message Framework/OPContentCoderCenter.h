@@ -23,17 +23,13 @@
 
 @interface OPContentCoderCenter : NSObject {
     @private
-    NSMutableArray *_contentCoder; /*" private variable "*/
+    //NSMutableArray *_contentCoder; /*" private variable "*/
 }
 
-+(OPContentCoderCenter *)contentCoderCenter;
-+(Class)contentDecoderClass: (EDMessagePart*) mpart;
-+(Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
-+(void)registerContentCoder:(Class)coderClass;
++ (Class) contentDecoderClass: (EDMessagePart*) mpart;
++ (Class) contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
 
-- (void) registerContentCoder:(Class)coderClass;
-- (Class)contentDecoderClass: (EDMessagePart*) mpart;
-- (Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange;
++ (void) registerContentCoder:(Class)coderClass;
 
 
 @end

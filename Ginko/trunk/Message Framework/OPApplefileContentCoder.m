@@ -100,30 +100,6 @@
    #define F_fInvisible    0x4000 /* file's icon is invisible */
    #define F_fAlias        0x8000 /* file is an alias file (System 7) */
 
-   /* Pieces used by AppleSingle & AppleDouble (defined later). */
-
-   struct ASHeader /* header portion of AppleSingle */
-   {
-               /* AppleSingle = 0x00051600; AppleDouble = 0x00051607 */
-
-       uint32 magicNum; /* internal file type tag */
-       uint32 versionNum; /* format version: 2 = 0x00020000 */
-       uchar8 filler[16]; /* filler, currently all bits 0 */
-       uint16 numEntries; /* number of entries which follow */
-   }; /* ASHeader */
-
-   typedef struct ASHeader ASHeader;
-
-   struct ASEntry /* one AppleSingle entry descriptor */
-   {
-       uint32 entryID; /* entry type: see list, 0 invalid */
-       uint32 entryOffset; /* offset, in octets, from beginning */
-                                   /* of file to this entry's data */
-       uint32 entryLength; /* length of data in octets */
-   }; /* ASEntry */
-
-   typedef struct ASEntry ASEntry;
-
    /* Apple reserves the range of entry IDs from 1 to 0x7FFFFFFF.
     * Entry ID 0 is invalid.  The rest of the range is available
     * for applications to define their own entry types.  "Apple does
@@ -317,29 +293,6 @@
    #define AS_AFP_System       0x04 /* system file */
    #define AS_AFP_BackupNeeded 0x40 /* new or modified (needs backup) */
 
-   struct ASAfpDirId       /* entry ID 15, AFP server directory ID */
-   {
-       uint32 dirid; /* file's directory ID on AFP server */
-   }; /* ASAfpDirId */
-
-   typedef struct ASAfpDirId ASAfpDirId;
-
-   /*
-    * The format of an AppleSingle/AppleDouble header
-    */
-   struct AppleSingle /* format of disk file */
-   {
-       ASHeader header; /* AppleSingle header part */
-       ASEntry  entry[1]; /* array of entry descriptors */
-   /* uchar8  filedata[]; *//* followed by rest of file */
-   }; /* AppleSingle */
-
-   typedef struct AppleSingle AppleSingle;
-
-   /*
-    * FINAL REMINDER: the Motorola 680x0 is a big-endian architecture!
-    */
-
    /* End of applefile.h */
 
 
@@ -393,191 +346,50 @@
     return NO;
 }
 
-/*
-- (NSData*) _appleSingleDoubleFromFileWrapper: (NSFileWrapper*) aFileWrapper
-/"
-   Creates data containing an AppleSingle/AppleDouble structure with 3 entries:
-     - resource fork
-     - finder info
-     - realname
-"/
-{
-#warning AppleFileEncoding does not work on intel  
-    uint32 resourceForkSize, realnameSize, totalSize, currentFileDataOffset;
-    uint16 numEntries = 0, currentEntryIndex;
-    NSData *resourceForkData, *finderInfo, *realnameData;
-    BOOL isAppleDouble = NO;
-    NSDictionary *fileAttributes;
-    NSData *result = nil;
-    AppleSingle *appleSingle;
-    
-    fileAttributes = [aFileWrapper fileAttributes];
-    
-    // resource fork
-    resourceForkData = [fileAttributes objectForKey:OPFileResourceForkData];
-    resourceForkSize = [resourceForkData length];
-    
-    // finder info
-    finderInfo = [fileAttributes objectForKey:OPFinderInfo];
-    
-    // realname
-    realnameData = [[aFileWrapper filename] dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion: YES];
-    
-    realnameSize = [realnameData length];
-        
-    // is AppleDouble
-    isAppleDouble = [[aFileWrapper regularFileContents] length] != 0;
-    
-    // calculate total size of the structure
-    totalSize = sizeof(ASHeader);
-    
-    if (resourceForkData) 
-    {
-        totalSize += sizeof(ASEntry); // one entry for the resource fork
-        totalSize += resourceForkSize;
-        numEntries++;
-    }
-    
-    if (finderInfo) 
-    {
-        totalSize += sizeof(ASEntry); // one entry for the finder info
-        totalSize += sizeof(ASFinderInfo);
-        numEntries++;
-    }
-    
-    if (realnameData) // one entry for the realname
-    {
-        totalSize += sizeof(ASEntry); // one entry for the finder info
-        totalSize += realnameSize;
-        numEntries++;
-    }
-    
-    currentFileDataOffset = sizeof(ASHeader) + numEntries * sizeof(ASEntry);
-    currentEntryIndex = 0;
-    
-    // create structure
-    appleSingle = malloc(totalSize);
-    
-    // fill structure
-    
-    // -- fill ASHeader
-    {
-        ASHeader *header;
-        
-        header = &(appleSingle->header);
-        
-        if (isAppleDouble)
-            header->magicNum = 0x00051607;
-        else
-            header->magicNum = 0x00051600;
-        
-        header->versionNum = 0x00020000;
-        
-        memset(&(header->filler), 0, 16);
-        
-        header->numEntries = numEntries;
-    }
-    
-    // -- fill ASEntrys and filedata
-    
-    // ---- AS_REALNAME
-    if (realnameData)
-    {
-        ASEntry *entry;
-        
-        entry = &(appleSingle->entry[currentEntryIndex++]);
-        
-        entry->entryID = AS_REALNAME;
-        entry->entryOffset = currentFileDataOffset;
-        entry->entryLength = realnameSize;
-        
-        // fill in data
-        memcpy(((void *)appleSingle) + currentFileDataOffset, [realnameData bytes], [realnameData length]);
-        
-        currentFileDataOffset += realnameSize;
-    }
-    
-    // ---- AS_FINDERINFO
-    if (finderInfo)
-    {
-        ASEntry *entry;
-        ASFinderInfo *asFinderInfo;
-        
-        entry = &(appleSingle->entry[currentEntryIndex++]);
-        
-        entry->entryID = AS_FINDERINFO;
-        entry->entryOffset = currentFileDataOffset;
-        entry->entryLength = sizeof(ASFinderInfo);
-        
-        asFinderInfo = ((void *)appleSingle) + currentFileDataOffset;
-        
-        // clear data
-        memset(asFinderInfo, 0, sizeof(ASFinderInfo));
-        
-        // fill in data
-        memcpy(&(asFinderInfo->ioFlFndrInfo), [finderInfo bytes], [finderInfo length]);
-//#warning "axel->all: FXInfo is missing... ' hope that doesn't matter as it's not required for non HFS filesystems."
-        
-        currentFileDataOffset += sizeof(ASFinderInfo);
-    }
-    
-    // ---- AS_RESOURCE
-    if (realnameData)
-    {
-        ASEntry *entry;
-        
-        entry = &(appleSingle->entry[currentEntryIndex++]);
-        
-        entry->entryID = AS_RESOURCE;
-        entry->entryOffset = currentFileDataOffset;
-        entry->entryLength = resourceForkSize;
-        
-        // fill in data
-        memcpy(((void *)appleSingle) + currentFileDataOffset, [resourceForkData bytes], [resourceForkData length]);
-        
-        currentFileDataOffset += resourceForkSize;
-    }
-    
-    result = [NSData dataWithBytes:appleSingle length:totalSize];
-    
-    free(appleSingle);
-    
-    return result;
-}
-*/
 
 - (id) initWithFileWrapper: (NSFileWrapper*) aFileWrapper
 {
-    NSString *theFilename;
-    NSDictionary *attributes;
-    NSNumber *posixPermissions;
-
-    NSParameterAssert([aFileWrapper isRegularFile]);
-    
-    if (! (theFilename = [aFileWrapper filename])) {
+	NSParameterAssert([aFileWrapper isRegularFile]);
+	
+    NSString* theFilename = [aFileWrapper filename];
+	if (! theFilename) {
         theFilename = [aFileWrapper preferredFilename];
     }
-            
-    // get the permissions
-    attributes = [aFileWrapper fileAttributes];
-    posixPermissions = [attributes objectForKey: NSFilePosixPermissions];
-    
-    if (posixPermissions) {
-        xUnixMode = [[NSString xUnixModeString: [posixPermissions intValue]] retain];
-    }
-
-	[self setContentType: @"application/applefile"];
-    return [super initWithData: [aFileWrapper applefileContentsIncludingDataFork: YES] filename: theFilename];
+	
+	if (self = [super initWithData: [aFileWrapper applefileContentsIncludingDataFork: YES] filename: theFilename]) {
+		
+		NSDictionary* attributes       = [aFileWrapper fileAttributes];
+		NSNumber*     posixPermissions = [attributes objectForKey: NSFilePosixPermissions];
+		
+		if (posixPermissions) {
+			xUnixMode = [[NSString xUnixModeString: [posixPermissions intValue]] retain];
+		}
+		//[self setContentType: @"application/applefile"];
+		//[self messagePart];
+	}
+	return self;
 }
 
+/*
 - (id)_encodeSubpartsWithClass:(Class)targetClass subtype: (NSString*) subtype
 {
-    id messagePart = [super _encodeDataWithClass:targetClass];
+    id messagePart = [super _encodeDataWithClass: targetClass];
         
-    [messagePart setContentType: @"application/applefile" withParameters:[messagePart contentTypeParameters]];
+    [messagePart setContentType: @"application/applefile" withParameters: [messagePart contentTypeParameters]];
          
     return messagePart;
 }
+*/
+
+- (id) _encodeDataWithClass: (Class) targetClass
+{
+    id messagePart = [super _encodeDataWithClass: targetClass];
+	
+    [messagePart setContentType: @"application/applefile" withParameters: [messagePart contentTypeParameters]];
+	
+    return messagePart;
+}
+
 
 /*
 - (NSData*) _dataForEntryID:(uint32)entryID
@@ -731,7 +543,7 @@ For possible parameter values see applefile.h.
 }
 */
 
-- (NSAttributedString *)attributedString
+- (NSAttributedString*) attributedString
 {
     NSMutableAttributedString *result;
     
@@ -743,3 +555,170 @@ For possible parameter values see applefile.h.
 }
 
 @end
+
+@implementation EDMessagePart (OPApplefileExtensions)
+
+- (BOOL) isApplefile
+{
+    return [[self contentType] isEqualToString: @"application/applefile"];
+}
+
+- (BOOL) isAppleDouble
+{
+    return [[self contentType] isEqualToString: @"multipart/appledouble"];
+}
+
+@end
+
+/*
+ - (NSData*) _appleSingleDoubleFromFileWrapper: (NSFileWrapper*) aFileWrapper
+ /"
+ Creates data containing an AppleSingle/AppleDouble structure with 3 entries:
+ - resource fork
+ - finder info
+ - realname
+ "/
+ {
+#warning AppleFileEncoding does not work on intel  
+	 uint32 resourceForkSize, realnameSize, totalSize, currentFileDataOffset;
+	 uint16 numEntries = 0, currentEntryIndex;
+	 NSData *resourceForkData, *finderInfo, *realnameData;
+	 BOOL isAppleDouble = NO;
+	 NSDictionary *fileAttributes;
+	 NSData *result = nil;
+	 AppleSingle *appleSingle;
+	 
+	 fileAttributes = [aFileWrapper fileAttributes];
+	 
+	 // resource fork
+	 resourceForkData = [fileAttributes objectForKey:OPFileResourceForkData];
+	 resourceForkSize = [resourceForkData length];
+	 
+	 // finder info
+	 finderInfo = [fileAttributes objectForKey:OPFinderInfo];
+	 
+	 // realname
+	 realnameData = [[aFileWrapper filename] dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion: YES];
+	 
+	 realnameSize = [realnameData length];
+	 
+	 // is AppleDouble
+	 isAppleDouble = [[aFileWrapper regularFileContents] length] != 0;
+	 
+	 // calculate total size of the structure
+	 totalSize = sizeof(ASHeader);
+	 
+	 if (resourceForkData) 
+	 {
+		 totalSize += sizeof(ASEntry); // one entry for the resource fork
+		 totalSize += resourceForkSize;
+		 numEntries++;
+	 }
+	 
+	 if (finderInfo) 
+	 {
+		 totalSize += sizeof(ASEntry); // one entry for the finder info
+		 totalSize += sizeof(ASFinderInfo);
+		 numEntries++;
+	 }
+	 
+	 if (realnameData) // one entry for the realname
+	 {
+		 totalSize += sizeof(ASEntry); // one entry for the finder info
+		 totalSize += realnameSize;
+		 numEntries++;
+	 }
+	 
+	 currentFileDataOffset = sizeof(ASHeader) + numEntries * sizeof(ASEntry);
+	 currentEntryIndex = 0;
+	 
+	 // create structure
+	 appleSingle = malloc(totalSize);
+	 
+	 // fill structure
+	 
+	 // -- fill ASHeader
+	 {
+		 ASHeader *header;
+		 
+		 header = &(appleSingle->header);
+		 
+		 if (isAppleDouble)
+			 header->magicNum = 0x00051607;
+		 else
+			 header->magicNum = 0x00051600;
+		 
+		 header->versionNum = 0x00020000;
+		 
+		 memset(&(header->filler), 0, 16);
+		 
+		 header->numEntries = numEntries;
+	 }
+	 
+	 // -- fill ASEntrys and filedata
+	 
+	 // ---- AS_REALNAME
+	 if (realnameData)
+	 {
+		 ASEntry *entry;
+		 
+		 entry = &(appleSingle->entry[currentEntryIndex++]);
+		 
+		 entry->entryID = AS_REALNAME;
+		 entry->entryOffset = currentFileDataOffset;
+		 entry->entryLength = realnameSize;
+		 
+		 // fill in data
+		 memcpy(((void *)appleSingle) + currentFileDataOffset, [realnameData bytes], [realnameData length]);
+		 
+		 currentFileDataOffset += realnameSize;
+	 }
+	 
+	 // ---- AS_FINDERINFO
+	 if (finderInfo)
+	 {
+		 ASEntry *entry;
+		 ASFinderInfo *asFinderInfo;
+		 
+		 entry = &(appleSingle->entry[currentEntryIndex++]);
+		 
+		 entry->entryID = AS_FINDERINFO;
+		 entry->entryOffset = currentFileDataOffset;
+		 entry->entryLength = sizeof(ASFinderInfo);
+		 
+		 asFinderInfo = ((void *)appleSingle) + currentFileDataOffset;
+		 
+		 // clear data
+		 memset(asFinderInfo, 0, sizeof(ASFinderInfo));
+		 
+		 // fill in data
+		 memcpy(&(asFinderInfo->ioFlFndrInfo), [finderInfo bytes], [finderInfo length]);
+		 //#warning "axel->all: FXInfo is missing... ' hope that doesn't matter as it's not required for non HFS filesystems."
+		 
+		 currentFileDataOffset += sizeof(ASFinderInfo);
+	 }
+	 
+	 // ---- AS_RESOURCE
+	 if (realnameData)
+	 {
+		 ASEntry *entry;
+		 
+		 entry = &(appleSingle->entry[currentEntryIndex++]);
+		 
+		 entry->entryID = AS_RESOURCE;
+		 entry->entryOffset = currentFileDataOffset;
+		 entry->entryLength = resourceForkSize;
+		 
+		 // fill in data
+		 memcpy(((void *)appleSingle) + currentFileDataOffset, [resourceForkData bytes], [resourceForkData length]);
+		 
+		 currentFileDataOffset += resourceForkSize;
+	 }
+	 
+	 result = [NSData dataWithBytes:appleSingle length:totalSize];
+	 
+	 free(appleSingle);
+	 
+	 return result;
+ }
+ */

@@ -25,7 +25,8 @@
 + (NSArray *)preferredContentTypes;
 
 /*" Returns the class capable of decoding the content of self. Returns nil if no decoder class found. "*/
-- (Class)contentDecoderClass;
+
+- (id) contentDecoder;
 
 /*" Returns the contents as a user presentable attributed string "*/
 - (NSAttributedString *)contentAsAttributedString;

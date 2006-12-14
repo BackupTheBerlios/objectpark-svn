@@ -40,5 +40,13 @@
 - (NSAttributedString *)attributedString;
 - (NSString *)string;
 
++ (void) registerContentCoderNamed: (NSString*) coderClassName;
+
++ (Class) contentDecoderClass: (EDMessagePart*) mpart;
+
++ (Class) contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString 
+										 atIndex: (int) anIndex 
+								  effectiveRange: (NSRangePointer) effectiveRange;
+
 @end
 

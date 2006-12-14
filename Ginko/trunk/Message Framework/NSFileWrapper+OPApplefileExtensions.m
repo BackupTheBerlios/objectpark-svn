@@ -62,23 +62,12 @@
 
 @implementation NSData (OPApplefile)
 
-/*
- - (void) appendASEntryHeaderWithId: (UInt32) entryId
- fileOffet: (UInt32) offset
- length: (UInt32) length
- {
-	 UInt32 offset = [self length];
-	 [self serializeUnsignedInt: entry_id];
-	 [self serializeUnsignedInt: offset];
-	 [self serializeUnsignedInt: length];
- }
- */
 
 + (id) appleFileDataWithDataDictionary: (NSDictionary*) dataDict
 	/*" Returns an AppleSingle data structure (see RFC1740) from a dictionary of data objects, keyed with NSNumbers, representing the entryIds. "*/
 {
 	NSMutableData* result = [NSMutableData data];
-	BOOL isAppleDouble = [dataDict objectForKey: [NSNumber numberWithUnsignedLong: AS_DATA]] != nil;
+	BOOL isAppleDouble = [[dataDict objectForKey: [NSNumber numberWithUnsignedLong: AS_DATA]] length] > 0;
 	
 	NSEnumerator* dke;
 	NSNumber* entryId;
@@ -128,15 +117,15 @@
 	
 	if (as_magic == 0x00051607 || as_magic == 0x00051600) {
 		
-		
 		UInt32 as_version     = [self deserializeUnsignedLongAt: &currentFileDataOffset];
 		currentFileDataOffset += 16; // skip 16 byte filler
 		UInt16 as_entry_count = [self deserializeUnsignedShortAt: &currentFileDataOffset];
 		
-		if (as_version > 0x00020000) {
+		if (as_version >= 0x00020000) {
 			if (as_entry_count > 0) {
 				NSMutableDictionary* dataDict = [NSMutableDictionary dictionary];
-				do {
+				
+				for (int i = 0; i<as_entry_count; i++) {
 					// Read an applefile entry:
 					UInt32 entryId  = [self deserializeUnsignedLongAt: &currentFileDataOffset];
 					UInt32 offset   = [self deserializeUnsignedLongAt: &currentFileDataOffset];
@@ -144,16 +133,16 @@
 					NSData* subData = [self subdataWithRange: NSMakeRange(offset, length)];
 					
 					[dataDict setObject: subData forKey: [NSNumber numberWithUnsignedLong: entryId]];
-				} while (as_entry_count);
+				}
 				
 				return dataDict;
 			}
 		}
 	}
 
-	[self release];
 	return nil; // invalid header magic - throw?
 }
+
 
 @end
 
@@ -191,21 +180,7 @@
     *                 Original appleheader.h can be found in
     *                 RFC 1740
     */
-
-#pragma options align=mac68k
     
-   /* Following items define machine specific size (for porting). */
-
-   typedef char            xchar8;         /* 8-bit field */
-   typedef char            schar8;         /* signed 8-bit field */
-   typedef unsigned char   uchar8;         /* unsigned 8-bit field */
-   typedef short           xint16;         /* 16-bit field */
-   typedef unsigned short  uint16;         /* unsigned 16-bit field */
-   typedef long            xint32;         /* 32-bit field */
-   typedef long            sint32;         /* signed 32-bit field */
-   typedef unsigned long   uint32;         /* unsigned 32-bit field */
-
-   /* REMINDER: the Motorola 680x0 is a big-endian architecture! */
 
    /*
     * Masks for finder flag bits (field fdFlags in struct
@@ -228,28 +203,6 @@
    #define F_fAlias        0x8000 /* file is an alias file (System 7) */
 
    /* Pieces used by AppleSingle & AppleDouble (defined later). */
-
-   struct ASHeader /* header portion of AppleSingle */
-   {
-               /* AppleSingle = 0x00051600; AppleDouble = 0x00051607 */
-
-       uint32 magicNum; /* internal file type tag */
-       uint32 versionNum; /* format version: 2 = 0x00020000 */
-       uchar8 filler[16]; /* filler, currently all bits 0 */
-       uint16 numEntries; /* number of entries which follow */
-   }; /* ASHeader */
-
-   typedef struct ASHeader ASHeader;
-
-   struct ASEntry /* one AppleSingle entry descriptor */
-   {
-       uint32 entryID; /* entry type: see list, 0 invalid */
-       uint32 entryOffset; /* offset, in octets, from beginning */
-                                   /* of file to this entry's data */
-       uint32 entryLength; /* length of data in octets */
-   }; /* ASEntry */
-
-   typedef struct ASEntry ASEntry;
 
    /* matrix of entry types and their usage:
     *
@@ -295,12 +248,6 @@
     * resource.
     */
 
-   struct ASIconBW /* entry ID 5, standard Mac black and white icon */
-   {
-       uint32 bitrow[32]; /* 32 rows of 32 1-bit pixels */
-   }; /* ASIconBW */
-
-   typedef struct ASIconBW ASIconBW;
 
    /* entry ID 6, "standard" Macintosh color icon - several competing
     *              color icons are defined.  Given the copyright dates
@@ -331,66 +278,6 @@
     * (earliest reasonable time).
     */
 
-   struct ASFileDates      /* entry ID 8, file dates info */
-   {
-       sint32 create; /* file creation date/time */
-       sint32 modify; /* last modification date/time */
-       sint32 backup; /* last backup date/time */
-       sint32 access; /* last access date/time */
-   }; /* ASFileDates */
-
-   typedef struct ASFileDates ASFileDates;
-
-   /* See older Inside Macintosh, Volume II, page 115 for
-    * PBGetFileInfo(), and Volume IV, page 155, for PBGetCatInfo().
-    */
-
-   /* entry ID 9, Macintosh Finder info & extended info */
-   struct ASFinderInfo
-   {
-       FInfo ioFlFndrInfo; /* PBGetFileInfo() or PBGetCatInfo() */
-       FXInfo ioFlXFndrInfo; /* PBGetCatInfo() (HFS only) */
-   }; /* ASFinderInfo */
-
-   typedef struct ASFinderInfo ASFinderInfo;
-
-   struct ASMacInfo        /* entry ID 10, Macintosh file information */
-   {
-
-       uchar8 filler[3]; /* filler, currently all bits 0 */
-       uchar8 ioFlAttrib; /* PBGetFileInfo() or PBGetCatInfo() */
-   }; /* ASMacInfo */
-
-   typedef struct ASMacInfo ASMacInfo;
-
-   #define AS_PROTECTED    0x0002 /* protected bit */
-   #define AS_LOCKED       0x0001 /* locked bit */
-
-   /* NOTE: ProDOS-16 and GS/OS use entire fields.  ProDOS-8 uses low
-    * order half of each item (low byte in access & filetype, low word
-    * in auxtype); remainder of each field should be zero filled.
-    */
-
-   struct ASProdosInfo     /* entry ID 11, ProDOS file information */
-   {
-       uint16 access; /* access word */
-       uint16 filetype; /* file type of original file */
-       uint32 auxtype; /* auxiliary type of the orig file */
-   }; /* ASProDosInfo */
-
-   typedef struct ASProdosInfo ASProdosInfo;
-
-   /* MS-DOS file attributes occupy 1 octet; since the Developer Note
-    * is unspecific, I've placed them in the low order portion of the
-    * field (based on example of other ASMacInfo & ASProdosInfo).
-    */
-
-   struct ASMsdosInfo      /* entry ID 12, MS-DOS file information */
-   {
-       uchar8 filler; /* filler, currently all bits 0 */
-       uchar8 attr; /* _dos_getfileattr(), MS-DOS */
-                                   /* interrupt 21h function 4300h */
-   }; /* ASMsdosInfo */
 
    typedef struct ASMsdosInfo ASMsdosInfo;
 
@@ -408,37 +295,6 @@
 
     */
 
-   struct ASAfpInfo   /* entry ID 12, AFP server file information */
-   {
-       uchar8 filler[3]; /* filler, currently all bits 0 */
-       uchar8 attr; /* file attributes */
-   }; /* ASAfpInfo */
-
-   typedef struct ASAfpInfo ASAfpInfo;
-
-   #define AS_AFP_Invisible    0x01 /* file is invisible */
-   #define AS_AFP_MultiUser    0x02 /* simultaneous access allowed */
-   #define AS_AFP_System       0x04 /* system file */
-   #define AS_AFP_BackupNeeded 0x40 /* new or modified (needs backup) */
-
-   struct ASAfpDirId       /* entry ID 15, AFP server directory ID */
-   {
-       uint32 dirid; /* file's directory ID on AFP server */
-   }; /* ASAfpDirId */
-
-   typedef struct ASAfpDirId ASAfpDirId;
-
-   /*
-    * The format of an AppleSingle/AppleDouble header
-    */
-   struct AppleSingle /* format of disk file */
-   {
-       ASHeader header; /* AppleSingle header part */
-       ASEntry  entry[1]; /* array of entry descriptors */
-   /* uchar8  filedata[]; *//* followed by rest of file */
-   }; /* AppleSingle */
-
-   typedef struct AppleSingle AppleSingle;
 
    /*
     * FINAL REMINDER: the Motorola 680x0 is a big-endian architecture!
@@ -457,8 +313,7 @@ NSString *OPFinderInfo = @"OPFinderInfo";
     if (NSDebugEnabled) NSLog(@"addForksAndFinderInfoWithPath:%@", path);
     
     // if directory/folder descent
-    if ([self isDirectory])
-    {
+    if ([self isDirectory]) {
         NSEnumerator *enumerator;
         id key;
         
@@ -527,9 +382,9 @@ NSString *OPFinderInfo = @"OPFinderInfo";
                     free(buffer);
                     return;
                 }
-    
+				
                 resourceForkData = [NSData dataWithBytes:buffer length:actualCount];
-    
+				
                 if (NSDebugEnabled) NSLog(@"resource fork with length = %lu", actualCount);
                 
                 free(buffer);
@@ -543,7 +398,7 @@ NSString *OPFinderInfo = @"OPFinderInfo";
                 return;
             }
         }
-
+		
         // add Finder info
         FSCatalogInfo catalogInfo;
         
@@ -551,72 +406,37 @@ NSString *OPFinderInfo = @"OPFinderInfo";
         if (err != noErr)
         {
             NSLog(@"Unable to get an FSSpec for the file %@ (err = %d).", path, err);
-        }
-        else
-        {
+        } else {
             finderInfo = [NSData dataWithBytes:catalogInfo.finderInfo length:sizeof(FInfo)];
         }
-        
-        /*  deprecated stuff
-        // fsRef -> fsSpec
-        // http://homepage.mac.com/troy_stephens/software/objects/IconFamily/
-        err = FSGetCatalogInfo(&fsRef, kFSCatInfoNone, NULL, NULL, &fsSpec, NULL);
-        if (err != noErr)
-        {
-            NSLog(@"Unable to get an FSSpec for the file %@ (err = %d).", path, err);
-        }
-        else
-        {
-            // get Finder info if given:
-            
-            
-            err = FSpGetFInfo(&fsSpec, &fndrInfo);
-            if (err != noErr)
-            {
-                NSLog(@"Unable to set finder info of file %@ (err = %d).", path, err);
-            }
-            else
-            {
-                finderInfo = [NSData dataWithBytes:&fndrInfo length:sizeof(FInfo)];
-            }
-        }
-        */
+	
         
         // add resource fork to attributes
-        {
-            // set resource fork data as attribute
-            NSMutableDictionary *attributes;
-    
-            attributes = [[self fileAttributes] mutableCopy];
-            
-            if (resourceForkData)
-            {
-if (NSDebugEnabled) NSLog(@"adding resource fork.");
-            
-                [attributes setObject: resourceForkData forKey:OPFileResourceForkData];
-            }
-            
-            if (finderInfo)
-            {
-                FInfo *fInfo;
-                NSNumber *type, *creator;
-
-if (NSDebugEnabled) NSLog(@"adding finder info.");
-                            
-                fInfo = (FInfo *)[finderInfo bytes];
-                type = [NSNumber numberWithUnsignedLong:fInfo->fdType];
-                creator = [NSNumber numberWithUnsignedLong:fInfo->fdCreator];
-    //            [attributes setObject: type forKey:NSFileHFSTypeCode];
-    //            [attributes setObject: creator forKey:NSFileHFSCreatorCode];
-//    #warning axel->axel: report NSFileWrapper bug (type and creator are not set and resource forks not supported)
-                //
-                [attributes setObject: finderInfo forKey:OPFinderInfo];
-            }
-            
-            [self setFileAttributes:attributes]; 
-            [attributes release];
-        }            
-
+		
+		// set resource fork data as attribute
+		NSMutableDictionary* attributes = [[self fileAttributes] mutableCopy];
+		
+		if (resourceForkData) {
+			if (NSDebugEnabled) NSLog(@"adding resource fork.");
+			[attributes setObject: resourceForkData forKey:OPFileResourceForkData];
+		}
+		
+		if (finderInfo) {
+			
+			if (NSDebugEnabled) NSLog(@"adding finder info.");
+			
+			FInfo*    fInfo   = (FInfo *)[finderInfo bytes];
+			NSNumber* type    = [NSNumber numberWithUnsignedLong:fInfo->fdType];
+			NSNumber* creator = [NSNumber numberWithUnsignedLong:fInfo->fdCreator];
+			//            [attributes setObject: type forKey:NSFileHFSTypeCode];
+			//            [attributes setObject: creator forKey:NSFileHFSCreatorCode];
+			//    #warning axel->axel: report NSFileWrapper bug (type and creator are not set and resource forks not supported)
+			//
+			[attributes setObject: finderInfo forKey:OPFinderInfo];
+		}
+		
+		[self setFileAttributes:attributes]; 
+		[attributes release];		
     }
 }
 
@@ -774,7 +594,7 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
 	
 	if (includeDataFork) {
 		NSData* dataFork = [self regularFileContents];
-		if (dataFork) [dataDict setObject: dataFork forKey: [NSNumber numberWithInt: AS_DATA]];
+		if ([dataFork length]) [dataDict setObject: dataFork forKey: [NSNumber numberWithInt: AS_DATA]];
 	}
 	
 	NSData* result = [NSData appleFileDataWithDataDictionary: dataDict];
@@ -792,35 +612,33 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
 	if (! dataFork) {
 		dataFork = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_DATA]];
 	}
-
-	if (dataFork) {
-		if (self = [self initRegularFileWithContents: dataFork]) {
+	
+	if (self = [self initRegularFileWithContents: dataFork]) {
+		
+		if (dataDictionary) {
+			NSMutableDictionary* attrs = [[self fileAttributes] mutableCopy];
+			NSData* finderInfo = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_FINDERINFO]];
+			NSData* resourceFork = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_RESOURCE]];
+			NSData* filenameData = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_REALNAME]];
 			
-			if (dataDictionary) {
-				NSMutableDictionary* attrs = [[self fileAttributes] mutableCopy];
-				NSData* finderInfo = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_FINDERINFO]];
-				NSData* resourceFork = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_RESOURCE]];
-				NSData* filenameData = [dataDictionary objectForKey: [NSNumber numberWithUnsignedLong: AS_REALNAME]];
-				
-				NSString* filename = nil;
-				
-				if (filenameData) {
-					filename = [[NSString alloc] initWithData: filenameData encoding: NSMacOSRomanStringEncoding];
-					[self setFilename: filename];
-					[filename release];
-				}
-				
-				if (resourceFork) {
-					[attrs setObject: resourceFork forKey: OPFileResourceForkData];
-				}
-				
-				if (finderInfo) {
-					[attrs setObject: finderInfo forKey: OPFinderInfo];
-				}
-				
-				[self setFileAttributes: attrs];
-				[attrs release];
+			NSString* filename = nil;
+			
+			if (filenameData) {
+				filename = [[NSString alloc] initWithData: filenameData encoding: NSMacOSRomanStringEncoding];
+				[self setFilename: filename];
+				[filename release];
 			}
+			
+			if (resourceFork) {
+				[attrs setObject: resourceFork forKey: OPFileResourceForkData];
+			}
+			
+			if (finderInfo) {
+				[attrs setObject: finderInfo forKey: OPFinderInfo];
+			}
+			
+			[self setFileAttributes: attrs];
+			[attrs release];
 		}
 		return self;
 	}
@@ -829,5 +647,14 @@ if (NSDebugEnabled) NSLog(@"adding finder info.");
 	return nil;
 }
 
+- (NSData*) resourceForkContents
+{
+	return [[self fileAttributes] objectForKey: OPFileResourceForkData];
+}
+
+- (NSData*) finderInfo
+{
+	return [[self fileAttributes] objectForKey: OPFinderInfo];
+}
 
 @end

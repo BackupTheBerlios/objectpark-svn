@@ -90,6 +90,86 @@
     return nil; // keep compiler happy...
 }
 
+
+// Registering coders:
+
+static NSMutableArray* contentCoders = nil; /*" private variable "*/
+
+/*" OPContentCoderCenter is responsible for encoding and decoding email messages. Every coder has to be registered here. It must be either a sub class of EDContentCoder or has to implement the OPContentCoderProtocol. "*/
+
+
++ (void) initialize
+	/*"
+	Register all default content coder in reverse order. The content coder will be used in reverse order.
+	 "*/
+{
+    if (! contentCoders) {
+		
+		contentCoders = [[NSMutableArray alloc] initWithCapacity: 10];
+        // register in reverse order because the most recent registered decoder
+        // will be called first
+        [self registerContentCoderNamed: @"EDTextContentCoder"];
+        [self registerContentCoderNamed: @"EDPlainTextContentCoder"];
+        [self registerContentCoderNamed: @"OPMultimediaContentCoder"];
+        [self registerContentCoderNamed: @"OPApplefileContentCoder"];
+        [self registerContentCoderNamed: @"OPMultipartContentCoder"];
+        [self registerContentCoderNamed: @"OPAppleDoubleContentCoder"];
+        [self registerContentCoderNamed: @"OPXFolderContentCoder"];
+    }
+}
+
+
++ (void) registerContentCoderNamed: (NSString*) coderClassName
+{	
+	if (![contentCoders containsObject: coderClassName]) {
+		[contentCoders addObject: coderClassName];
+	}
+}
+
++ (Class) contentDecoderClass: (EDMessagePart*) mpart 
+	/* Returns the class of the message part or nil of none is available. Convenient method for [[OPContentCoderCenter contentCoderCenter] contentDecoderClass:mpart]. */
+{
+    NSEnumerator* enumerator = [contentCoders reverseObjectEnumerator];
+    NSString* contentCoderName;
+    Class contentCoder;
+    
+    // deciding which content coder to use
+    while (contentCoderName = [enumerator nextObject]) {
+        contentCoder = NSClassFromString(contentCoderName);
+        if ([contentCoder canDecodeMessagePart: mpart]) {
+            return contentCoder;
+        }
+    }
+    return nil;
+}
+
++ (Class) contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString 
+										 atIndex: (int) anIndex 
+								  effectiveRange: (NSRangePointer) effectiveRange 
+{
+    NSEnumerator *enumerator = [contentCoders reverseObjectEnumerator];
+    NSString *contentCoderName;
+    Class contentCoder;
+    Class result = nil;
+    
+    // deciding which content coder to use
+    while ((contentCoderName = [enumerator nextObject]) && (result == nil)) {
+        contentCoder = NSClassFromString(contentCoderName);
+        if (NSDebugEnabled) NSLog(@"Trying content encoder %@", NSStringFromClass(contentCoder));
+        @try {
+            if ([contentCoder canEncodeAttributedString: anAttributedString 
+												atIndex: anIndex 
+										 effectiveRange: effectiveRange]) {
+                result = contentCoder;
+            }
+        } @catch (id localException) {
+            NSLog(@"exception %@", [localException reason]);
+		}
+    }
+    return result;
+}
+
+
 //---------------------------------------------------------------------------------------
     @end
 //---------------------------------------------------------------------------------------

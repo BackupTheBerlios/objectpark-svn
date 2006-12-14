@@ -21,10 +21,10 @@
 
 @interface OPAppleDoubleContentCoder : EDCompositeContentCoder 
 {
-    NSString *filename;
-    NSString *xUnixMode;
+    NSString* filename;
+    NSString* xUnixMode;
 }
 
-- (NSFileWrapper *)fileWrapper;
+- (NSFileWrapper*) fileWrapper;
 
 @end

@@ -98,7 +98,6 @@
 		77608AE40972F4030071A01F /* OPImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77608AE20972F4030071A01F /* OPImageAndTextCell.m */; };
 		776376D00A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 776376CE0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h */; };
 		776376D10A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 776376CF0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m */; };
-		776411CE0AADB7DD009F78F7 /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
 		77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77738B0B0955B02000BAAB51 /* JavaVM.framework */; };
 		777435CB077755A000899957 /* group.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777435CA077755A000899957 /* group.toolbar */; };
 		777436300778055900899957 /* NSToolbar+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7774362E0778055900899957 /* NSToolbar+OPExtensions.h */; };
@@ -289,8 +288,6 @@
 		8D90221C077A0F82005365EA /* EDEntityFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D90221A077A0F82005365EA /* EDEntityFieldCoder.h */; };
 		8D902243077A1177005365EA /* NSData+OPMD5.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D902241077A1177005365EA /* NSData+OPMD5.h */; };
 		8D902244077A1177005365EA /* NSData+OPMD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D902242077A1177005365EA /* NSData+OPMD5.m */; };
-		8D902251077A1212005365EA /* OPContentCoderCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D90224F077A1212005365EA /* OPContentCoderCenter.h */; };
-		8D902252077A1212005365EA /* OPContentCoderCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D902250077A1212005365EA /* OPContentCoderCenter.m */; };
 		8D90229E077A3A55005365EA /* NSCharacterSet+MIME.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D90229C077A3A55005365EA /* NSCharacterSet+MIME.h */; };
 		8D90229F077A3A55005365EA /* NSCharacterSet+MIME.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D90229D077A3A55005365EA /* NSCharacterSet+MIME.m */; };
 		8D9022BB077A426A005365EA /* NSArray+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9022B9077A426A005365EA /* NSArray+Extensions.m */; };
@@ -334,6 +331,8 @@
 		8DB2D4FA0796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */; };
 		8DB3FDB60A55565B00709070 /* NSString+OPHTMLTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB3FDB40A55565B00709070 /* NSString+OPHTMLTools.h */; };
 		8DB3FDB70A55565B00709070 /* NSString+OPHTMLTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB3FDB50A55565B00709070 /* NSString+OPHTMLTools.m */; };
+		8DB717000B30599F00E54F6F /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
+		8DB717030B3059A700E54F6F /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
 		8DBBABC708B393DE002566B9 /* GIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */; };
 		8DBBABC808B393DF002566B9 /* GIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */; };
 		8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */; };
@@ -446,7 +445,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				776411CE0AADB7DD009F78F7 /* GPGME.framework in Copy GPGME Framework */,
+				8DB717030B3059A700E54F6F /* GPGME.framework in Copy GPGME Framework */,
 			);
 			name = "Copy GPGME Framework";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -883,6 +882,7 @@
 				8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */,
 				8D7C7EAC0A52EDD40031385D /* libxml2.dylib in Frameworks */,
 				8DDF372A0AA62BF400E1F591 /* GPGME.framework in Frameworks */,
+				8DB717000B30599F00E54F6F /* GPGME.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1566,7 +1566,6 @@
 				8D90220F077A0EF3005365EA /* EDCompositeContentCoder.h in Headers */,
 				8D90221C077A0F82005365EA /* EDEntityFieldCoder.h in Headers */,
 				8D902243077A1177005365EA /* NSData+OPMD5.h in Headers */,
-				8D902251077A1212005365EA /* OPContentCoderCenter.h in Headers */,
 				8D90229E077A3A55005365EA /* NSCharacterSet+MIME.h in Headers */,
 				8D9022BC077A426A005365EA /* NSArray+Extensions.h in Headers */,
 				8D902925077A471A005365EA /* NSString+Extensions.h in Headers */,
@@ -1702,8 +1701,8 @@
 				77395D150A5523B700DCE6D2 /* Ranlib Phase */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				303DCD6A0943C3A100D8BCBE /* Copy Frameworks */,
-				8DC8047B099C99E300CF4660 /* Copy dylibs */,
 				773B63020A66B23A00C71E30 /* Copy GPGME Framework */,
+				8DC8047B099C99E300CF4660 /* Copy dylibs */,
 			);
 			buildRules = (
 			);
@@ -1979,7 +1978,6 @@
 				8D90220E077A0EF3005365EA /* EDCompositeContentCoder.m in Sources */,
 				8D90221B077A0F82005365EA /* EDEntityFieldCoder.m in Sources */,
 				8D902244077A1177005365EA /* NSData+OPMD5.m in Sources */,
-				8D902252077A1212005365EA /* OPContentCoderCenter.m in Sources */,
 				8D90229F077A3A55005365EA /* NSCharacterSet+MIME.m in Sources */,
 				8D9022BB077A426A005365EA /* NSArray+Extensions.m in Sources */,
 				8D902926077A471A005365EA /* NSString+Extensions.m in Sources */,

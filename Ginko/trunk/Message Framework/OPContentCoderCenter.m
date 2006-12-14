@@ -30,119 +30,68 @@
 #import <Foundation/NSDebug.h>
 
 
-@interface OPContentCoderCenter(PrivateAPI)
-
--(void)registerContentCoder:(Class)coderClass;
-- (Class)contentDecoderClass: (EDMessagePart*) mpart;
-
-@end
-
-
 @implementation OPContentCoderCenter
-/*"
-OPContentCoderCenter is responsible for encoding and decoding email messages. Every coder has to be registered here. It must be either a sub class of EDContentCoder or has to implement the OPContentCoderProtocol.
-"*/
 
 
-+(void)initialize
+
+
+static NSMutableArray* contentCoder = nil; /*" private variable "*/
+
+/*" OPContentCoderCenter is responsible for encoding and decoding email messages. Every coder has to be registered here. It must be either a sub class of EDContentCoder or has to implement the OPContentCoderProtocol. "*/
+
+
++ (void) initialize
 /*"
 Register all default content coder in reverse order. The content coder will be used in reverse order.
 "*/
 {
-    static BOOL hasBeenInitialized = NO;
-    
-    if (!hasBeenInitialized) {
+    if (! contentCoders) {
+		
+		contentCoder = [[NSMutableArray alloc] initWithCapacity: 10];
         // register in reverse order because the most recent registered decoder
         // will be called first
-        [OPContentCoderCenter registerContentCoder:[EDTextContentCoder class]];
-        [OPContentCoderCenter registerContentCoder:[EDPlainTextContentCoder class]];
-        [OPContentCoderCenter registerContentCoder:[OPMultimediaContentCoder class]];
-        [OPContentCoderCenter registerContentCoder:[OPApplefileContentCoder class]];
-        [OPContentCoderCenter registerContentCoder:[OPMultipartContentCoder class]];
-        [OPContentCoderCenter registerContentCoder:[OPAppleDoubleContentCoder class]];
-        [OPContentCoderCenter registerContentCoder:[OPXFolderContentCoder class]];
-        hasBeenInitialized = YES;
+        [OPContentCoderCenter registerContentCoder: [EDTextContentCoder class]];
+        [OPContentCoderCenter registerContentCoder: [EDPlainTextContentCoder class]];
+        [OPContentCoderCenter registerContentCoder: [OPMultimediaContentCoder class]];
+        [OPContentCoderCenter registerContentCoder: [OPApplefileContentCoder class]];
+        [OPContentCoderCenter registerContentCoder: [OPMultipartContentCoder class]];
+        [OPContentCoderCenter registerContentCoder: [OPAppleDoubleContentCoder class]];
+        [OPContentCoderCenter registerContentCoder: [OPXFolderContentCoder class]];
     }
-}
-
-+(OPContentCoderCenter *)contentCoderCenter
-/*"
-This class returns a OPContentCoderCenter. If no one exists, it will also create one.
-"*/
-{
-    static OPContentCoderCenter* _contentCoderCenter = nil;
-    
-    if (!_contentCoderCenter) {
-        _contentCoderCenter = [[OPContentCoderCenter alloc] init];
-    }
-    return _contentCoderCenter;
-}
-
-
-+(Class)contentDecoderClass: (EDMessagePart*) mpart
-/*"
-Returns the class of the message part or nil of none is available. Convenient method for [[OPContentCoderCenter contentCoderCenter] contentDecoderClass:mpart].
-"*/
-{
-    return [[OPContentCoderCenter contentCoderCenter] contentDecoderClass:mpart];
-}
-
-
-+(Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange {
-    return [[OPContentCoderCenter contentCoderCenter] contentEncoderClassForAttributedString:anAttributedString atIndex:anIndex effectiveRange:effectiveRange];    
 }
 
 
 + (void) registerContentCoder: (Class) coderClass 
 {
-     [[OPContentCoderCenter contentCoderCenter] registerContentCoder:coderClass];
+    NSString* coderClassName = NSStringFromClass(coderClass);
+	
+	if (![contentCoder containsObject: coderClassName]) {
+		[_contentCoder addObject: coderClassName];
+	}
 }
 
--(id) init {
-    self = [super init];
-    if (self) {
-        _contentCoder = [[NSMutableArray array] retain];
-    }
-    return self;
-}
-
-
--(void)dealloc {
-    [_contentCoder release];
-    [super dealloc];
-}
-
--(void)registerContentCoder:(Class)coderClass 
++ (Class) contentDecoderClass: (EDMessagePart*) mpart 
+/* Returns the class of the message part or nil of none is available. Convenient method for [[OPContentCoderCenter contentCoderCenter] contentDecoderClass:mpart]. */
 {
-    NSString *coderClassName = NSStringFromClass(coderClass);
-    //if ([coderClass isKindOfClass:[EDContentCoder class]] || [coderClass conformsToProtocol:@protocol(OPContentCoder)]) {
-        if (![_contentCoder containsObject:coderClassName]) {
-            //if (NSDebugEnabled) NSLog(@"adding class: %@", coderClass);
-            [_contentCoder addObject:coderClassName];
-        }
-    //} else {
-    //    [NSException raise: @"OPContentCoderCenter" format: @"Class %@ does not implement OPContentCoderInterface protocol.", coderClassName];
-    //}
-}
-
-
--(Class)contentDecoderClass: (EDMessagePart*) mpart {
-    NSEnumerator *enumerator = [_contentCoder reverseObjectEnumerator];
-    NSString *contentCoderName;
+    NSEnumerator* enumerator = [contentCoders reverseObjectEnumerator];
+    NSString* contentCoderName;
     Class contentCoder;
     
     // deciding which content coder to use
     while (contentCoderName = [enumerator nextObject]) {
         contentCoder = NSClassFromString(contentCoderName);
-        if ([contentCoder canDecodeMessagePart:mpart]) {
+        if ([contentCoder canDecodeMessagePart: mpart]) {
             return contentCoder;
         }
     }
     return nil;
 }
 
--(Class)contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString atIndex:(int)anIndex effectiveRange:(NSRangePointer)effectiveRange {
-    NSEnumerator *enumerator = [_contentCoder reverseObjectEnumerator];
++ (Class) contentEncoderClassForAttributedString: (NSAttributedString*) anAttributedString 
+										 atIndex: (int) anIndex 
+								  effectiveRange: (NSRangePointer) effectiveRange 
+{
+    NSEnumerator *enumerator = [contentCoders reverseObjectEnumerator];
     NSString *contentCoderName;
     Class contentCoder;
     Class result = nil;
@@ -151,15 +100,16 @@ Returns the class of the message part or nil of none is available. Convenient me
     while ((contentCoderName = [enumerator nextObject]) && (result == nil)) {
         contentCoder = NSClassFromString(contentCoderName);
         if (NSDebugEnabled) NSLog(@"Trying content encoder %@", NSStringFromClass(contentCoder));
-        NS_DURING
-            if ([contentCoder canEncodeAttributedString:anAttributedString atIndex:anIndex effectiveRange:effectiveRange]) {
+        @try {
+            if ([contentCoder canEncodeAttributedString: anAttributedString 
+												atIndex: anIndex 
+										 effectiveRange: effectiveRange]) {
                 result = contentCoder;
             }
-        NS_HANDLER
+        } @catch (id localException) {
             NSLog(@"exception %@", [localException reason]);
-        NS_ENDHANDLER
+		}
     }
-   
     return result;
 }
 
