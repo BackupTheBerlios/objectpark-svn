@@ -16,6 +16,7 @@
         {CLASS = GIMatrixWithKeyboardSupport; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
         {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
+            ACTIONS = {search = id; }; 
             CLASS = GIThreadsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -25,6 +26,7 @@
                 messageTextScrollView = NSScrollView; 
                 messageTextView = NSTextView; 
                 messagesController = NSArrayController; 
+                searchField = NSSearchField; 
                 subjectAndAuthorColumn = NSTableColumn; 
                 threadDateColumn = NSTableColumn; 
                 "thread_messageSplitView" = NSSplitView; 
