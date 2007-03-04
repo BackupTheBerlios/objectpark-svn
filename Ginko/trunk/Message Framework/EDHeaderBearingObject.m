@@ -231,11 +231,16 @@
     return originalSubject;
 }
 
+static inline NSString* nilGuard(NSString* aString) 
+{
+	return aString ? aString : @"";
+}
+
 - (NSString *)replySubject
 {
     // Axel: I do not want to see this localized!
     if (![[self subject] hasPrefix: @"Re: "]) {
-        return [@"Re: " stringByAppendingString:[self subject]];
+        return [@"Re: " stringByAppendingString: nilGuard([self subject])];
     }    
     return [self subject];
 }
@@ -243,7 +248,7 @@
 - (NSString *)forwardSubject
 {
     // Maybe we should localize this.
-    return [[@"[FWD: " stringByAppendingString:[self subject]] stringByAppendingString: @"]"];
+    return [[@"[FWD: " stringByAppendingString: nilGuard([self subject])] stringByAppendingString: @"]"];
 }
 
 - (NSString *)author

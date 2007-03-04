@@ -161,28 +161,26 @@ NSString *GIFiltersPaneDelayedFiltersDidChange = @"GIFiltersPaneDelayedFiltersDi
     }
 }
 
-- (void)collectGroupPaths:(NSMutableArray *)paths andURIRepresenations:(NSMutableArray *)reps startingAtNode:(NSArray *)node prefix:(NSString *)prefix
+- (void)collectGroupPaths: (NSMutableArray*) paths andURIRepresenations: (NSMutableArray*) reps startingAtNode: (NSArray*) node prefix: (NSString*) prefix
 {
-    NSEnumerator *enumerator;
-    id entry;
-    
-    enumerator = [node objectEnumerator];
+    NSEnumerator* enumerator = [node objectEnumerator];
     [enumerator nextObject]; // first position is node info
-    
-    while (entry = [enumerator nextObject])
-    {
-        if ([entry isKindOfClass:[NSMutableArray class]])
-        {
-            [self collectGroupPaths:paths andURIRepresenations:reps startingAtNode:entry prefix:[prefix stringByAppendingFormat: @"%@/", [[entry objectAtIndex:0] objectForKey:@"name"]]];
+	id entry;
+    while (entry = [enumerator nextObject]) {
+        if ([entry isKindOfClass: [NSMutableArray class]]) {
+            [self collectGroupPaths: paths andURIRepresenations: reps startingAtNode:entry prefix: [prefix stringByAppendingFormat: @"%@/", [[entry objectAtIndex: 0] objectForKey: @"name"]]];
         } else {
-            GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString: entry resolve: YES];
-            [paths addObject:[prefix stringByAppendingString: [group valueForKey: @"name"]]];
-            [reps addObject:entry];
+            GIMessageGroup* group = [[OPPersistentObjectContext defaultContext] objectWithURLString: entry resolve: YES];
+			NSString* groupName = [group valueForKey: @"name"];
+			if ([groupName length]) {
+				[paths addObject: [prefix stringByAppendingString: groupName]];
+				[reps addObject: entry];
+			}
         }
     }
 }
 
-- (void)updateDetailView
+- (void) updateDetailView
 {
     GIMessageFilter *filter;
     int mode;

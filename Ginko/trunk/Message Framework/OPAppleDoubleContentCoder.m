@@ -368,11 +368,10 @@
 {
     [super initWithMessagePart:mpart];
 
-    if ([[self subparts] count] != 2)
-    {
+    if ([[self subparts] count] != 2) {
+		NSLog(@"Corrupt AppleDouble Messagepart (!= 2 subparts): %@", mpart);
         [self release];
         return nil;
-        NSLog(@"Corrupt AppleDouble Messagepart (!= 2 subparts)");
     }
     
 	filename = nil;

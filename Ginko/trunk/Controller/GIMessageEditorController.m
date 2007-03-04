@@ -993,16 +993,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     OPInternetMessage *internetMessage = [aMessage internetMessage];
     
-    @try 
-    {
-        [headerFields setObject:[internetMessage forwardSubject] forKey:@"Subject"];
-		
-    } 
-    @catch (id localException) 
-    {
-        if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
-        [headerFields setObject:[@"FWD: " stringByAppendingString:[internetMessage bodyForHeaderField:@"Subject"]] forKey:@"Subject"];
-    }
+//    @try {
+        [headerFields setObject: [internetMessage forwardSubject] forKey:@"Subject"];		
+//    } @catch (id localException) {
+//        if (NSDebugEnabled) NSLog(@"Fallback to raw subject header.");
+//        [headerFields setObject:[@"FWD: " stringByAppendingString:[internetMessage bodyForHeaderField:@"Subject"]] forKey:@"Subject"];
+//    }
 }
 
 - (void)setHeadersFromMessage:(GIMessage *)aMessage

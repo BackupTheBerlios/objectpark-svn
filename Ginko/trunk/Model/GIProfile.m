@@ -235,24 +235,21 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 
 @implementation GIProfile (OpenPGP)
 
-- (NSArray *)matchingKeys
+- (NSArray*) matchingKeys
 {
-	GPGContext *context = nil;
-	NSArray *result = nil;
+	GPGContext* context = nil;
+	NSArray* result = nil;
 	
-	@try
-	{
-		context = [[GPGContext alloc] init];
-		NSString *emailAddress = [[self valueForKey:@"mailAddress"] addressFromEMailString];
-		result = [[context keyEnumeratorForSearchPattern:[NSString stringWithFormat:@"<%@>", emailAddress] secretKeysOnly:YES] allObjects];
-	}
-	@catch (id localException)
-	{
-		//NSLog(@"Exception while retrieving keys: %@", localException);
+	@try {
+		if ([[[GPGEngine availableEngines] lastObject] version]) {
+			context = [[GPGContext alloc] init];
+			NSString *emailAddress = [[self valueForKey: @"mailAddress"] addressFromEMailString];
+			result = [[context keyEnumeratorForSearchPattern: [NSString stringWithFormat:@"<%@>", emailAddress] secretKeysOnly: YES] allObjects];
+		}
+	} @catch (id localException) {
+		NSLog(@"Exception while retrieving keys: %@", localException);
 		return [NSArray array];
-	}
-	@finally
-	{
+	} @finally {
 		[context stopKeyEnumeration];
 		[context release];
 	}
