@@ -85,7 +85,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	}
 }
 
-- (void)connect 
+- (void) connect 
 {
     NSHost *localhost;
     NSString *name;
@@ -274,7 +274,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
         _delegate = anObject;
         stream = [aStream retain];
         [self commonInits];
-        [self connect];
+        //[self connect]; may throw! Caller should do it!
     }
     return self;  
 }

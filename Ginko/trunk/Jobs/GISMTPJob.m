@@ -104,6 +104,9 @@
             [job setProgressInfo:[job indeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), [theAccount outgoingServerName]]]];
             
             OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
+			
+			[SMTP connect];
+			
             NSEnumerator *enumerator = [theMessages objectEnumerator];
             
             // sending messages:
@@ -147,6 +150,7 @@
         } 
 		@catch (id localException) 
 		{
+#warning We might have a wrong password, i.e. an auth failure. We should make sure, the respective dialog is displayed instead of failing silently!
             @throw;
         } 
 		@finally 

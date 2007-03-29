@@ -59,10 +59,11 @@ typedef enum _OPSMTPState {
 - (id)initWithUsername:(NSString *)aUsername password:(NSString *)aPassword stream:(OPStream *)aStream hostname:(NSString *)aHostname useSMTPS:(BOOL)shouldUseSMTPS allowAnyRootCertificate:(BOOL)shouldAllowAnyRootCertificate allowExpiredCertificates:(BOOL)shouldAllowExpiredCertificates;
 - (id)initWithStream:(OPStream *)aStream andDelegate:(id)anObject;
 
-- (BOOL)willAcceptMessage;
-- (BOOL)handles8BitBodies;
+- (void) connect; 
+- (BOOL) willAcceptMessage;
+- (BOOL) handles8BitBodies;
 
-- (void)sendTransferData:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients;
+- (void) sendTransferData:(NSData *)data from:(NSString *)sender to:(NSArray *)recipients;
 
 - (void) sendPlainText: (NSString*) body 
 				  from: (NSString*) from 
