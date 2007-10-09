@@ -42,8 +42,9 @@ static NSString *NSSplitViewPositionsKey = @"NSSplitViewPositions";
 	{
 		autosaveNames = [NSMutableDictionary new];
 	}
-	
-	[autosaveNames setObject:name forKey:self];
+	if (name) {
+		[autosaveNames setObject:name forKey:self];
+	}
 }
 
 - (NSString *)autosaveName
