@@ -7,100 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D3FB55F0933E8CA001B2DE3 /* NSApplicationOPPreferenceSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F592BE77020DDC2801A80003 /* NSApplicationOPPreferenceSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D3FB5600933E8CA001B2DE3 /* OPPreferenceController.h in Headers */ = {isa = PBXBuildFile; fileRef = F592BE79020DDC2801A80003 /* OPPreferenceController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D3FB5610933E8CA001B2DE3 /* OPPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = F592BE7B020DDC2801A80003 /* OPPreferencePane.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D3FB5620933E8CA001B2DE3 /* OPPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = F592BE86020DDC9F01A80003 /* OPPreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D3FB5640933E8CA001B2DE3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
-		8D3FB5650933E8CA001B2DE3 /* OPDefaultPreference.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F592BE8A020DDECA01A80003 /* OPDefaultPreference.tiff */; };
-		8D3FB5670933E8CA001B2DE3 /* NSApplicationOPPreferenceSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F592BE78020DDC2801A80003 /* NSApplicationOPPreferenceSupport.m */; };
-		8D3FB5680933E8CA001B2DE3 /* OPPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F592BE7A020DDC2801A80003 /* OPPreferenceController.m */; };
-		8D3FB5690933E8CA001B2DE3 /* OPPreferencePane.m in Sources */ = {isa = PBXBuildFile; fileRef = F592BE7C020DDC2801A80003 /* OPPreferencePane.m */; };
-		8D3FB56B0933E8CA001B2DE3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
-		8D3FB56C0933E8CA001B2DE3 /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F592BE88020DDD6F01A80003 /* PreferencePanes.framework */; };
+		8D0750D80CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0750D10CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8D0750D90CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0750D20CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.m */; };
+		8D0750DA0CBD1269007CC1F1 /* OPPreferenceController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0750D30CBD1269007CC1F1 /* OPPreferenceController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8D0750DB0CBD1269007CC1F1 /* OPPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0750D40CBD1269007CC1F1 /* OPPreferenceController.m */; };
+		8D0750DC0CBD1269007CC1F1 /* OPPreferencePane.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0750D50CBD1269007CC1F1 /* OPPreferencePane.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8D0750DD0CBD1269007CC1F1 /* OPPreferencePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0750D60CBD1269007CC1F1 /* OPPreferencePane.m */; };
+		8D0750DE0CBD1269007CC1F1 /* OPPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0750D70CBD1269007CC1F1 /* OPPreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8D0750F90CBD12A7007CC1F1 /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D0750F80CBD12A7007CC1F1 /* PreferencePanes.framework */; };
+		8D0750FD0CBD12C8007CC1F1 /* OPDefaultPreference.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D0750FC0CBD12C8007CC1F1 /* OPDefaultPreference.tiff */; };
+		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
+		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXBuildStyle section */
-		014CEA440018CDF011CA2923 /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OPTIMIZATION_CFLAGS = "-O0";
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		014CEA450018CDF011CA2923 /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		F51A6E6502C28CD401472672 /* Appwrapper Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_CPU = "";
-				GCC_MODEL_TUNING = G4;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_UNROLL_LOOPS = YES;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0xb0150000,
-				);
-				SKIP_INSTALL = YES;
-			};
-			name = "Appwrapper Deployment";
-		};
-		F5F9FB2502C28B670109CA24 /* Appwrapper Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OPTIMIZATION_CFLAGS = "-O0";
-				SKIP_INSTALL = YES;
-			};
-			name = "Appwrapper Development";
-		};
-/* End PBXBuildStyle section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		8D3FB5750933E8CA001B2DE3 /* OPPreferences.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPreferences.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F592BE77020DDC2801A80003 /* NSApplicationOPPreferenceSupport.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NSApplicationOPPreferenceSupport.h; sourceTree = "<group>"; };
-		F592BE78020DDC2801A80003 /* NSApplicationOPPreferenceSupport.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = NSApplicationOPPreferenceSupport.m; sourceTree = "<group>"; };
-		F592BE79020DDC2801A80003 /* OPPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPPreferenceController.h; sourceTree = "<group>"; };
-		F592BE7A020DDC2801A80003 /* OPPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPPreferenceController.m; sourceTree = "<group>"; };
-		F592BE7B020DDC2801A80003 /* OPPreferencePane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPPreferencePane.h; sourceTree = "<group>"; };
-		F592BE7C020DDC2801A80003 /* OPPreferencePane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPPreferencePane.m; sourceTree = "<group>"; };
-		F592BE86020DDC9F01A80003 /* OPPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPPreferences.h; sourceTree = "<group>"; };
-		F592BE88020DDD6F01A80003 /* PreferencePanes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PreferencePanes.framework; path = /System/Library/Frameworks/PreferencePanes.framework; sourceTree = "<absolute>"; };
-		F592BE8A020DDECA01A80003 /* OPDefaultPreference.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OPDefaultPreference.tiff; sourceTree = "<group>"; };
+		32DBCF5E0370ADEE00C91783 /* OPPreferences_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPreferences_Prefix.pch; sourceTree = "<group>"; };
+		8D0750D10CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = NSApplicationOPPreferenceSupport.h; sourceTree = "<group>"; };
+		8D0750D20CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = NSApplicationOPPreferenceSupport.m; sourceTree = "<group>"; };
+		8D0750D30CBD1269007CC1F1 /* OPPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = OPPreferenceController.h; sourceTree = "<group>"; };
+		8D0750D40CBD1269007CC1F1 /* OPPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = OPPreferenceController.m; sourceTree = "<group>"; };
+		8D0750D50CBD1269007CC1F1 /* OPPreferencePane.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = OPPreferencePane.h; sourceTree = "<group>"; };
+		8D0750D60CBD1269007CC1F1 /* OPPreferencePane.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = OPPreferencePane.m; sourceTree = "<group>"; };
+		8D0750D70CBD1269007CC1F1 /* OPPreferences.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = OPPreferences.h; sourceTree = "<group>"; };
+		8D0750F80CBD12A7007CC1F1 /* PreferencePanes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PreferencePanes.framework; path = /System/Library/Frameworks/PreferencePanes.framework; sourceTree = "<absolute>"; };
+		8D0750FC0CBD12C8007CC1F1 /* OPDefaultPreference.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OPDefaultPreference.tiff; sourceTree = "<group>"; };
+		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DC2EF5B0486A6940098B216 /* OPPreferences.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPreferences.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8D3FB56A0933E8CA001B2DE3 /* Frameworks */ = {
+		8DC2EF560486A6940098B216 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D3FB56B0933E8CA001B2DE3 /* Cocoa.framework in Frameworks */,
-				8D3FB56C0933E8CA001B2DE3 /* PreferencePanes.framework in Frameworks */,
+				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
+				8D0750F90CBD12A7007CC1F1 /* PreferencePanes.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +55,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D3FB5750933E8CA001B2DE3 /* OPPreferences.framework */,
+				8DC2EF5B0486A6940098B216 /* OPPreferences.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				08FB77AEFE84172EC02AAC07 /* Classes */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
@@ -138,8 +84,9 @@
 		089C1665FE841158C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8D0750FC0CBD12C8007CC1F1 /* OPDefaultPreference.tiff */,
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
-				F592BE8A020DDECA01A80003 /* OPDefaultPreference.tiff */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -147,13 +94,13 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				F592BE77020DDC2801A80003 /* NSApplicationOPPreferenceSupport.h */,
-				F592BE78020DDC2801A80003 /* NSApplicationOPPreferenceSupport.m */,
-				F592BE79020DDC2801A80003 /* OPPreferenceController.h */,
-				F592BE7A020DDC2801A80003 /* OPPreferenceController.m */,
-				F592BE7B020DDC2801A80003 /* OPPreferencePane.h */,
-				F592BE7C020DDC2801A80003 /* OPPreferencePane.m */,
-				F592BE86020DDC9F01A80003 /* OPPreferences.h */,
+				8D0750D10CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.h */,
+				8D0750D20CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.m */,
+				8D0750D30CBD1269007CC1F1 /* OPPreferenceController.h */,
+				8D0750D40CBD1269007CC1F1 /* OPPreferenceController.m */,
+				8D0750D50CBD1269007CC1F1 /* OPPreferencePane.h */,
+				8D0750D60CBD1269007CC1F1 /* OPPreferencePane.m */,
+				8D0750D70CBD1269007CC1F1 /* OPPreferences.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -161,7 +108,6 @@
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F592BE88020DDD6F01A80003 /* PreferencePanes.framework */,
 				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -170,70 +116,55 @@
 		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+				8D0750F80CBD12A7007CC1F1 /* PreferencePanes.framework */,
 				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32DBCF5E0370ADEE00C91783 /* OPPreferences_Prefix.pch */,
+			);
+			name = "Other Sources";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		8D3FB55E0933E8CA001B2DE3 /* Headers */ = {
+		8DC2EF500486A6940098B216 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D3FB55F0933E8CA001B2DE3 /* NSApplicationOPPreferenceSupport.h in Headers */,
-				8D3FB5600933E8CA001B2DE3 /* OPPreferenceController.h in Headers */,
-				8D3FB5610933E8CA001B2DE3 /* OPPreferencePane.h in Headers */,
-				8D3FB5620933E8CA001B2DE3 /* OPPreferences.h in Headers */,
+				8D0750D80CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.h in Headers */,
+				8D0750DA0CBD1269007CC1F1 /* OPPreferenceController.h in Headers */,
+				8D0750DC0CBD1269007CC1F1 /* OPPreferencePane.h in Headers */,
+				8D0750DE0CBD1269007CC1F1 /* OPPreferences.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D3FB55D0933E8CA001B2DE3 /* OPPreferences */ = {
+		8DC2EF4F0486A6940098B216 /* OPPreferences */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8D3FB56E0933E8CA001B2DE3 /* Build configuration list for PBXNativeTarget "OPPreferences" */;
+			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "OPPreferences" */;
 			buildPhases = (
-				8D3FB55E0933E8CA001B2DE3 /* Headers */,
-				8D3FB5630933E8CA001B2DE3 /* Resources */,
-				8D3FB5660933E8CA001B2DE3 /* Sources */,
-				8D3FB56A0933E8CA001B2DE3 /* Frameworks */,
-				8D3FB56D0933E8CA001B2DE3 /* Rez */,
+				8DC2EF500486A6940098B216 /* Headers */,
+				8DC2EF520486A6940098B216 /* Resources */,
+				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF560486A6940098B216 /* Frameworks */,
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "";
-				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = "";
-				INSTALL_PATH = $HOME/Library/Frameworks;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x36000000,
-				);
-				PREBINDING = YES;
-				PRODUCT_NAME = OPPreferences;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = framework;
-			};
 			dependencies = (
 			);
 			name = OPPreferences;
-			productInstallPath = $HOME/Library/Frameoworks;
+			productInstallPath = "$(HOME)/Library/Frameworks";
 			productName = OPPreferences;
-			productReference = 8D3FB5750933E8CA001B2DE3 /* OPPreferences.framework */;
+			productReference = 8DC2EF5B0486A6940098B216 /* OPPreferences.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -241,64 +172,39 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 30C0C2DE085B4A6300133D2E /* Build configuration list for PBXProject "OPPreferences" */;
-			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.2.7.sdk;
-			};
-			buildStyles = (
-				014CEA440018CDF011CA2923 /* Development */,
-				014CEA450018CDF011CA2923 /* Deployment */,
-				F5F9FB2502C28B670109CA24 /* Appwrapper Development */,
-				F51A6E6502C28CD401472672 /* Appwrapper Deployment */,
-			);
+			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "OPPreferences" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
-			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
-				Italian,
-			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* OPPreferences */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
-				8D3FB55D0933E8CA001B2DE3 /* OPPreferences */,
+				8DC2EF4F0486A6940098B216 /* OPPreferences */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8D3FB5630933E8CA001B2DE3 /* Resources */ = {
+		8DC2EF520486A6940098B216 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D3FB5640933E8CA001B2DE3 /* InfoPlist.strings in Resources */,
-				8D3FB5650933E8CA001B2DE3 /* OPDefaultPreference.tiff in Resources */,
+				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
+				8D0750FD0CBD12C8007CC1F1 /* OPDefaultPreference.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXRezBuildPhase section */
-		8D3FB56D0933E8CA001B2DE3 /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		8D3FB5660933E8CA001B2DE3 /* Sources */ = {
+		8DC2EF540486A6940098B216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D3FB5670933E8CA001B2DE3 /* NSApplicationOPPreferenceSupport.m in Sources */,
-				8D3FB5680933E8CA001B2DE3 /* OPPreferenceController.m in Sources */,
-				8D3FB5690933E8CA001B2DE3 /* OPPreferencePane.m in Sources */,
+				8D0750D90CBD1269007CC1F1 /* NSApplicationOPPreferenceSupport.m in Sources */,
+				8D0750DB0CBD1269007CC1F1 /* OPPreferenceController.m in Sources */,
+				8D0750DD0CBD1269007CC1F1 /* OPPreferencePane.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,201 +222,90 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		30C0C2E1085B4A6300133D2E /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-			};
-			name = Development;
-		};
-		30C0C2E2085B4A6300133D2E /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-			};
-			name = Deployment;
-		};
-		30C0C2E3085B4A6300133D2E /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-			};
-			name = Default;
-		};
-		8D3FB5710933E8CA001B2DE3 /* Development */ = {
+		1DEB91AE08733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x36000000,
-				);
-				PREBINDING = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPPreferences_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				PRODUCT_NAME = OPPreferences;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
 				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = YES;
 			};
-			name = Development;
+			name = Debug;
 		};
-		8D3FB5720933E8CA001B2DE3 /* Deployment */ = {
+		1DEB91AF08733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_CPU = "";
-				GCC_MODEL_TUNING = G4;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_UNROLL_LOOPS = YES;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0xb0150000,
-				);
-				PREBINDING = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPPreferences_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				PRODUCT_NAME = OPPreferences;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Deployment;
-		};
-		8D3FB5730933E8CA001B2DE3 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "";
-				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = $HOME/Library/Frameworks;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x36000000,
-				);
-				PREBINDING = YES;
-				PRODUCT_NAME = OPPreferences;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Default;
-		};
-		8DEFDB9809C081A700F6FB25 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "";
-				FRAMEWORK_VERSION = A;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_CPU = "";
-				GCC_MODEL_TUNING = G4;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_UNROLL_LOOPS = YES;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0xb0150000,
-				);
-				PREBINDING = YES;
-				PRODUCT_NAME = OPPreferences;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
 		};
-		8DEFDB9909C081A700F6FB25 /* Release */ = {
+		1DEB91B208733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
 					ppc,
 					i386,
 				);
-				MACOSX_DEPLOYMENT_TARGET = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.3.9.sdk;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		30C0C2DE085B4A6300133D2E /* Build configuration list for PBXProject "OPPreferences" */ = {
+		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "OPPreferences" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				30C0C2E1085B4A6300133D2E /* Development */,
-				30C0C2E2085B4A6300133D2E /* Deployment */,
-				8DEFDB9909C081A700F6FB25 /* Release */,
-				30C0C2E3085B4A6300133D2E /* Default */,
+				1DEB91AE08733DA50010E9CD /* Debug */,
+				1DEB91AF08733DA50010E9CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Release;
 		};
-		8D3FB56E0933E8CA001B2DE3 /* Build configuration list for PBXNativeTarget "OPPreferences" */ = {
+		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "OPPreferences" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8D3FB5710933E8CA001B2DE3 /* Development */,
-				8D3FB5720933E8CA001B2DE3 /* Deployment */,
-				8DEFDB9809C081A700F6FB25 /* Release */,
-				8D3FB5730933E8CA001B2DE3 /* Default */,
+				1DEB91B208733DA50010E9CD /* Debug */,
+				1DEB91B308733DA50010E9CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
