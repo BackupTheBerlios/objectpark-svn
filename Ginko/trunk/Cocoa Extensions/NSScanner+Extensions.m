@@ -48,6 +48,8 @@
 
 /*" Assumes that the scanner is located just behind an opening bracket, ie. round, angle, curly or square brackets, and scans up to the matching closing bracket. Nested bracket pairs are ignored in this process. Returns YES if the bracket was found and if %stringRef is not !{NULL} indirectly returns the string between the brackets. "*/
 
+#warning Scanner may choke on the following line.
+// Frank.Pypers@LiComTec.de,	?=@host89.sitepush.net (Frank =?ISO-8859-1?Q?P=FFpers)
 
 - (BOOL) scanUpToClosingBracketIntoString: (NSString**) stringRef
 {

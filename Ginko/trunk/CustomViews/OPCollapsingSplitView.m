@@ -11,25 +11,6 @@
 
 @implementation OPCollapsingSplitView
 
-//- (id)
-
-/*
-- initWithFrame: (NSRect) frameRect
-{
-    if (self = [super initWithFrame: frameRect]) {
-        collapsedSubviewIndex = NSNotFound;
-    }
-    return self;
-}
-
-- initWithCoder: (NSCoder*) coder
-{
-    if (self = [super initWithCoder:coder]) {
-        collapsedSubviewIndex = NSNotFound;
-    }
-    return self;
-}
-*/
 
 - (void) setSubview: (NSView*) subview isCollapsed: (BOOL) collapse
 /*" Collapses the subview specified. Only one subview can be collapsed.

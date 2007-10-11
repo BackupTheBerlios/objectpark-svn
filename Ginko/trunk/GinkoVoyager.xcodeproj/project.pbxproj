@@ -26,8 +26,6 @@
 		30450D81091051910085A02F /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
 		3083577209A015DE003D1D86 /* TestPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE38FC08940F4000F705EF /* TestPersistence.m */; };
 		3083577309A015E0003D1D86 /* TestPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE38FB08940F4000F705EF /* TestPersistence.h */; };
-		30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5553B093D148F00BCACCB /* OPDebug.framework */; };
-		30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D5555D093D1C2500BCACCB /* OPPreferences.framework */; };
 		30F74C7609994E120026B4A8 /* TestGIMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 30F74C7409994E120026B4A8 /* TestGIMessage.h */; };
 		30F74C7709994E120026B4A8 /* TestGIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 30F74C7509994E120026B4A8 /* TestGIMessage.m */; };
 		77006FF4085A08D400AB0064 /* GIPasswordController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77006FF2085A08D400AB0064 /* GIPasswordController.h */; };
@@ -81,7 +79,6 @@
 		77477316080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77477314080D72DD00A6A49C /* TestOPAppleDoubleContentCoder.m */; };
 		774791BD085DF0150001560D /* GISMTPJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 774791BB085DF0150001560D /* GISMTPJob.h */; };
 		774791BE085DF0150001560D /* GISMTPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 774791BC085DF0150001560D /* GISMTPJob.m */; };
-		774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 776B7DA007C41673009DA8B8 /* SenTestingKit.framework */; };
 		774DD4240994AC0900F0A922 /* TestGIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 775A96E10839D5EB008EC276 /* TestGIMessageGroup.h */; };
 		774DD4250994AC0A00F0A922 /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A96E20839D5EB008EC276 /* TestGIMessageGroup.m */; };
 		774DD4260994AC0C00F0A922 /* TestGIThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 77136F3008438E2A002F9298 /* TestGIThread.h */; };
@@ -212,6 +209,7 @@
 		8D167D6109057508000F4F45 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D167D5F09057508000F4F45 /* GIAccount.m */; };
 		8D17B5C90895BBC30057A1C6 /* GIProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D17B5C70895BBC30057A1C6 /* GIProfile.h */; };
 		8D17B5CA0895BBC30057A1C6 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17B5C80895BBC30057A1C6 /* GIProfile.m */; };
+		8D1EFB8E0CBE273700ED34E7 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7C7EAB0A52EDD40031385D /* libxml2.dylib */; };
 		8D218B500A19490600BD1DE8 /* Mail Sent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */; };
 		8D313AE2094E3E39007D668A /* OPObjectPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D313AE0094E3E39007D668A /* OPObjectPair.h */; };
 		8D313AE3094E3E39007D668A /* OPObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D313AE1094E3E39007D668A /* OPObjectPair.m */; };
@@ -224,6 +222,8 @@
 		8D31445A095622E2007D668A /* OPObjectRelationship.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D314456095622E2007D668A /* OPObjectRelationship.h */; };
 		8D31445B095622E2007D668A /* OPObjectRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D314457095622E2007D668A /* OPObjectRelationship.m */; };
 		8D34C67E09B4A31100615833 /* BackToolbarImage.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D34C67D09B4A31100615833 /* BackToolbarImage.tiff */; };
+		8D3AFBB50CBDA2E3007CB061 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D3AFBB40CBDA2E3007CB061 /* OPPreferences.framework */; };
+		8D3AFBCB0CBDA303007CB061 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8D3AFBB40CBDA2E3007CB061 /* OPPreferences.framework */; };
 		8D3CDEB7090D7ED3004657A0 /* GIGroupListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */; };
 		8D3CDEB8090D7ED3004657A0 /* GIGroupListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */; };
 		8D3EF45B08B543BD00EC41EC /* OPClassDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF0BD3B0897CA040017D6D1 /* OPClassDescription.m */; };
@@ -253,7 +253,6 @@
 		8D69432607F4B173008B7C20 /* TestOPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D69432407F4B173008B7C20 /* TestOPSMTP.m */; };
 		8D6E6A1207DA853900428E45 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8D6E6A1007DA853900428E45 /* Localizable.strings */; };
 		8D77114D0931C39B005D7DE3 /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D666EF607D523C50076C74D /* ActivePrefPanes.plist */; };
-		8D7C7EAC0A52EDD40031385D /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7C7EAB0A52EDD40031385D /* libxml2.dylib */; };
 		8D840C02090F8DF50093CFAD /* NSEnumerator+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D840C00090F8DF50093CFAD /* NSEnumerator+Extensions.h */; };
 		8D840C03090F8DF50093CFAD /* NSEnumerator+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D840C01090F8DF50093CFAD /* NSEnumerator+Extensions.m */; };
 		8D857FC70785CD5500B0D669 /* OPCollapsingSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D857FC50785CD5500B0D669 /* OPCollapsingSplitView.m */; };
@@ -331,14 +330,17 @@
 		8DB2D4FA0796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */; };
 		8DB3FDB60A55565B00709070 /* NSString+OPHTMLTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB3FDB40A55565B00709070 /* NSString+OPHTMLTools.h */; };
 		8DB3FDB70A55565B00709070 /* NSString+OPHTMLTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB3FDB50A55565B00709070 /* NSString+OPHTMLTools.m */; };
-		8DB717000B30599F00E54F6F /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
-		8DB717030B3059A700E54F6F /* GPGME.framework in Copy GPGME Framework */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
+		8DB7BC840CBACB5F006FA70A /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DB7BC830CBACB5F006FA70A /* SenTestingKit.framework */; };
+		8DB7BCC40CBAD08E006FA70A /* GPGME.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DDF37290AA62BF400E1F591 /* GPGME.framework */; };
+		8DB7BD360CBB108A006FA70A /* OPDebug.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 30450D7C091051910085A02F /* OPDebug.framework */; };
+		8DB7BD3D0CBB1094006FA70A /* OPNetwork.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */; };
 		8DBBABC708B393DE002566B9 /* GIMessageGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DE964D0089FFEBA0053ED6B /* GIMessageGroup.h */; };
 		8DBBABC808B393DF002566B9 /* GIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE964D1089FFEBA0053ED6B /* GIMessageGroup.m */; };
-		8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */; };
 		8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */; };
 		8DC773C606B27FCB00053CB7 /* OPSizingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */; };
 		8DCA9ABE08015F7600EEA49F /* SQLConfig.sqlstatements in Resources */ = {isa = PBXBuildFile; fileRef = 8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */; };
+		8DCCA3030C5040FC00CD90DD /* OPDerivedValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCCA3010C5040FC00CD90DD /* OPDerivedValue.h */; };
+		8DCCA3040C5040FC00CD90DD /* OPDerivedValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCCA3020C5040FC00CD90DD /* OPDerivedValue.m */; };
 		8DCE35F90891905600F705EF /* OPPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35F80891905600F705EF /* OPPersistence.h */; };
 		8DCE35FC0891905A00F705EF /* OPPersistentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DCE35E80891900B00F705EF /* OPPersistentObject.h */; };
 		8DCE35FD0891905A00F705EF /* OPPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE35E90891900B00F705EF /* OPPersistentObject.m */; };
@@ -415,13 +417,6 @@
 			remoteGlobalIDString = 8D3FB5750933E8CA001B2DE3;
 			remoteInfo = OPPreferences;
 		};
-		30D5555E093D1C7400BCACCB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 30D55555093D1C2500BCACCB /* OPPreferences.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D3FB55D0933E8CA001B2DE3;
-			remoteInfo = OPPreferences;
-		};
 		30D555AF093D3D6800BCACCB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 30D555A8093D3D6700BCACCB /* OPNetwork.xcodeproj */;
@@ -436,28 +431,28 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = OPNetwork;
 		};
+		8D1EFB580CBE23E300ED34E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30D55555093D1C2500BCACCB /* OPPreferences.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OPPreferences */;
+			remoteInfo = OPPreferences;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		773B63020A66B23A00C71E30 /* Copy GPGME Framework */ = {
+		8DB7BCC60CBAD0AC006FA70A /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8DB717030B3059A700E54F6F /* GPGME.framework in Copy GPGME Framework */,
+				8D3AFBCB0CBDA303007CB061 /* OPPreferences.framework in Copy Frameworks */,
+				8DB7BD3D0CBB1094006FA70A /* OPNetwork.framework in Copy Frameworks */,
+				8DB7BD360CBB108A006FA70A /* OPDebug.framework in Copy Frameworks */,
+				8DB7BCC40CBAD08E006FA70A /* GPGME.framework in Copy Frameworks */,
 			);
-			name = "Copy GPGME Framework";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8DC8047B099C99E300CF4660 /* Copy dylibs */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Copy dylibs";
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -552,7 +547,6 @@
 		776376CE0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSWorkspace+OPExtensions.h"; sourceTree = "<group>"; };
 		776376CF0A5ECBCB00534FCA /* NSWorkspace+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSWorkspace+OPExtensions.m"; sourceTree = "<group>"; };
 		776B7D2707C41518009DA8B8 /* HowToTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = HowToTest.rtf; sourceTree = "<group>"; };
-		776B7DA007C41673009DA8B8 /* SenTestingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SenTestingKit.framework; path = /System/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
 		77738B0B0955B02000BAAB51 /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
 		777435CA077755A000899957 /* group.toolbar */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = group.toolbar; sourceTree = "<group>"; };
 		7774362E0778055900899957 /* NSToolbar+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSToolbar+OPExtensions.h"; sourceTree = "<group>"; };
@@ -694,6 +688,7 @@
 		8D314456095622E2007D668A /* OPObjectRelationship.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; path = OPObjectRelationship.h; sourceTree = "<group>"; };
 		8D314457095622E2007D668A /* OPObjectRelationship.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; path = OPObjectRelationship.m; sourceTree = "<group>"; };
 		8D34C67D09B4A31100615833 /* BackToolbarImage.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = BackToolbarImage.tiff; sourceTree = "<group>"; };
+		8D3AFBB40CBDA2E3007CB061 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = ../OPPreferences/build/Release/OPPreferences.framework; sourceTree = SOURCE_ROOT; };
 		8D3CDEB5090D7ED3004657A0 /* GIGroupListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGroupListController.h; sourceTree = "<group>"; };
 		8D3CDEB6090D7ED3004657A0 /* GIGroupListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGroupListController.m; sourceTree = "<group>"; };
 		8D3EF4FF08B545B700EC41EC /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -799,11 +794,13 @@
 		8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
 		8DB3FDB40A55565B00709070 /* NSString+OPHTMLTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OPHTMLTools.h"; sourceTree = "<group>"; };
 		8DB3FDB50A55565B00709070 /* NSString+OPHTMLTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OPHTMLTools.m"; sourceTree = "<group>"; };
-		8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = ../OPPreferences/build/Development/OPPreferences.framework; sourceTree = SOURCE_ROOT; };
+		8DB7BC830CBACB5F006FA70A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /Developer/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
 		8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = ../OPNetwork/build/Development/OPNetwork.framework; sourceTree = SOURCE_ROOT; };
 		8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSizingTextField.h; sourceTree = "<group>"; };
 		8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSizingTextField.m; sourceTree = "<group>"; };
 		8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SQLConfig.sqlstatements; sourceTree = "<group>"; };
+		8DCCA3010C5040FC00CD90DD /* OPDerivedValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPDerivedValue.h; sourceTree = "<group>"; };
+		8DCCA3020C5040FC00CD90DD /* OPDerivedValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPDerivedValue.m; sourceTree = "<group>"; };
 		8DCE35E60891900B00F705EF /* GIMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessage.h; sourceTree = "<group>"; };
 		8DCE35E70891900B00F705EF /* GIMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessage.m; sourceTree = "<group>"; };
 		8DCE35E80891900B00F705EF /* OPPersistentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentObject.h; sourceTree = "<group>"; };
@@ -836,7 +833,7 @@
 		8DDD2281080ECA57006C902D /* GIFiltersPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIFiltersPane.nib; sourceTree = "<group>"; };
 		8DDD22AF080ED19C006C902D /* NSApplication+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPExtensions.h"; sourceTree = "<group>"; };
 		8DDD22B0080ED19D006C902D /* NSApplication+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+OPExtensions.m"; sourceTree = "<group>"; };
-		8DDF37290AA62BF400E1F591 /* GPGME.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPGME.framework; path = ../../Resources/GPGME.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DDF37290AA62BF400E1F591 /* GPGME.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPGME.framework; path = Resources/GPGME.framework; sourceTree = SOURCE_ROOT; };
 		8DDF3DC60AA8D81600E1F591 /* NSApplication+NetworkNotifications.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = "NSApplication+NetworkNotifications.h"; sourceTree = "<group>"; };
 		8DDF3DC70AA8D81600E1F591 /* NSApplication+NetworkNotifications.m */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.objc; path = "NSApplication+NetworkNotifications.m"; sourceTree = "<group>"; };
 		8DDFB43D09F82AAE000F73E2 /* NSApplication+OPSleepNotifications.h */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = sourcecode.c.h; path = "NSApplication+OPSleepNotifications.h"; sourceTree = "<group>"; };
@@ -863,26 +860,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D1EFB8E0CBE273700ED34E7 /* libxml2.dylib in Frameworks */,
+				771CD38609F800170062BEED /* libsasl2.dylib in Frameworks */,
 				8DEFDBCA09C08CFD00F6FB25 /* libsqlite336.a in Frameworks */,
 				8D86D3DF0712FA7C001B6105 /* AddressBook.framework in Frameworks */,
-				8DBFD4CB0826DCBE006D29DE /* OPPreferences.framework in Frameworks */,
 				8DBFD4CD0826DCFC006D29DE /* OPNetwork.framework in Frameworks */,
 				770070E7085B123500AB0064 /* Security.framework in Frameworks */,
 				7700727B085B129600AB0064 /* SystemConfiguration.framework in Frameworks */,
 				8D543D1E0873F018007245ED /* AppKit.framework in Frameworks */,
 				8D543D1F0873F019007245ED /* Foundation.framework in Frameworks */,
 				30450D81091051910085A02F /* OPDebug.framework in Frameworks */,
-				30D55578093D1E5A00BCACCB /* OPDebug.framework in Frameworks */,
-				30D55579093D1E5B00BCACCB /* OPPreferences.framework in Frameworks */,
 				77738B0C0955B02000BAAB51 /* JavaVM.framework in Frameworks */,
 				77D471E4095BF12E003CEAEA /* CoreFoundation.framework in Frameworks */,
-				774DD41D0994ABCC00F0A922 /* SenTestingKit.framework in Frameworks */,
 				7718C88009F1762A00D517CB /* ApplicationServices.framework in Frameworks */,
-				771CD38609F800170062BEED /* libsasl2.dylib in Frameworks */,
 				8DDFB45309F82C07000F73E2 /* IOKit.framework in Frameworks */,
-				8D7C7EAC0A52EDD40031385D /* libxml2.dylib in Frameworks */,
 				8DDF372A0AA62BF400E1F591 /* GPGME.framework in Frameworks */,
-				8DB717000B30599F00E54F6F /* GPGME.framework in Frameworks */,
+				8DB7BC840CBACB5F006FA70A /* SenTestingKit.framework in Frameworks */,
+				8D3AFBB50CBDA2E3007CB061 /* OPPreferences.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -921,6 +915,9 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8D3AFBB40CBDA2E3007CB061 /* OPPreferences.framework */,
+				8DDF37290AA62BF400E1F591 /* GPGME.framework */,
+				8DB7BC830CBACB5F006FA70A /* SenTestingKit.framework */,
 				7718C87F09F1762A00D517CB /* ApplicationServices.framework */,
 				77D471E3095BF12E003CEAEA /* CoreFoundation.framework */,
 				77738B0B0955B02000BAAB51 /* JavaVM.framework */,
@@ -930,8 +927,6 @@
 				770070E6085B123500AB0064 /* Security.framework */,
 				30450D7C091051910085A02F /* OPDebug.framework */,
 				8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */,
-				8DBFD4CA0826DCBE006D29DE /* OPPreferences.framework */,
-				776B7DA007C41673009DA8B8 /* SenTestingKit.framework */,
 				8D86D3DE0712FA7C001B6105 /* AddressBook.framework */,
 			);
 			name = "Linked Frameworks";
@@ -1009,7 +1004,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8DDF37290AA62BF400E1F591 /* GPGME.framework */,
 				8D7C7EAB0A52EDD40031385D /* libxml2.dylib */,
 				771CD38509F800170062BEED /* libsasl2.dylib */,
 				8DDFB45209F82C07000F73E2 /* IOKit.framework */,
@@ -1477,6 +1471,8 @@
 				8DCE36070891918900F705EF /* OPSQLiteConnection.m */,
 				8D314456095622E2007D668A /* OPObjectRelationship.h */,
 				8D314457095622E2007D668A /* OPObjectRelationship.m */,
+				8DCCA3010C5040FC00CD90DD /* OPDerivedValue.h */,
+				8DCCA3020C5040FC00CD90DD /* OPDerivedValue.m */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -1668,6 +1664,7 @@
 				77C62CC90AD66657008A124F /* NSSplitView+Autosave.h in Headers */,
 				7790EEA80AE7AC11003172B1 /* DNDArrayController.h in Headers */,
 				7711E0010B2EA92E00B76D97 /* TestEDCompositeContentCoder.h in Headers */,
+				8DCCA3030C5040FC00CD90DD /* OPDerivedValue.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1700,16 +1697,14 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				77395D150A5523B700DCE6D2 /* Ranlib Phase */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				303DCD6A0943C3A100D8BCBE /* Copy Frameworks */,
-				773B63020A66B23A00C71E30 /* Copy GPGME Framework */,
-				8DC8047B099C99E300CF4660 /* Copy dylibs */,
+				8DB7BCC60CBAD0AC006FA70A /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				30D55544093D19A200BCACCB /* PBXTargetDependency */,
-				30D5555F093D1C7400BCACCB /* PBXTargetDependency */,
 				30D555B2093D3D8700BCACCB /* PBXTargetDependency */,
+				8D1EFB590CBE23E300ED34E7 /* PBXTargetDependency */,
 			);
 			name = GinkoVoyager;
 			productInstallPath = "$(HOME)/Applications";
@@ -1741,6 +1736,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 7749E6D10855CB04009EF4F3 /* Build configuration list for PBXProject "GinkoVoyager" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* GinkoVoyager */;
 			projectDirPath = "";
@@ -1758,6 +1754,7 @@
 					ProjectRef = 30D55555093D1C2500BCACCB /* OPPreferences.xcodeproj */;
 				},
 			);
+			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* GinkoVoyager */,
 				77AD780207CF1CC200A15B83 /* Run AutoDoc */,
@@ -1885,20 +1882,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		303DCD6A0943C3A100D8BCBE /* Copy Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# copy a single framework\ncopyFramework()\n{\necho -n $1\n#echo cp -RHpf \"$PROJECT_DIR/../$1/build/$SOURCE_BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\ncp -RHpf \"$PROJECT_DIR/../$1/build/$SOURCE_BUILD_STYLE/$1.framework\" \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\necho \n}\n\nif [ \"$BUILD_STYLE\" = 'Development (linked)' ]; then\n    SOURCE_BUILD_STYLE=\"Development\"\nelse\n    SOURCE_BUILD_STYLE=$BUILD_STYLE\nfi\n\n# ensure there's an empty frameworks directory in the application bundle\nrm -rf \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\nmkdir -p \"$BUILD_DIR/$BUILD_STYLE/$FRAMEWORKS_FOLDER_PATH\"\n\n# copy the frameworks\necho Copying frameworks...\ncopyFramework \"OPDebug\"\ncopyFramework \"OPNetwork\"\ncopyFramework \"OPPreferences\"\n";
-		};
 		30672F8B092D4DA0005D7A7F /* Extract Aspects */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2082,6 +2065,7 @@
 				77C631CD0AD7DA2F008A124F /* GIThreadsWindow.m in Sources */,
 				7790EEA90AE7AC11003172B1 /* DNDArrayController.m in Sources */,
 				7711E0020B2EA92E00B76D97 /* TestEDCompositeContentCoder.m in Sources */,
+				8DCCA3040C5040FC00CD90DD /* OPDerivedValue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2107,15 +2091,15 @@
 			name = OPDebug;
 			targetProxy = 30D55543093D19A200BCACCB /* PBXContainerItemProxy */;
 		};
-		30D5555F093D1C7400BCACCB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = OPPreferences;
-			targetProxy = 30D5555E093D1C7400BCACCB /* PBXContainerItemProxy */;
-		};
 		30D555B2093D3D8700BCACCB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OPNetwork;
 			targetProxy = 30D555B1093D3D8700BCACCB /* PBXContainerItemProxy */;
+		};
+		8D1EFB590CBE23E300ED34E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OPPreferences;
+			targetProxy = 8D1EFB580CBE23E300ED34E7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2139,7 +2123,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		7749E6C80855CB04009EF4F3 /* Development */ = {
+		7749E6C80855CB04009EF4F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -2152,8 +2136,15 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/Resources\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../OPPreferences/build/Release\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -2192,7 +2183,7 @@
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
-			name = Development;
+			name = Debug;
 		};
 		7749E6CB0855CB04009EF4F3 /* Default */ = {
 			isa = XCBuildConfiguration;
@@ -2206,8 +2197,15 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/Resources\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../OPPreferences/build/Release\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
@@ -2246,7 +2244,7 @@
 			};
 			name = Default;
 		};
-		7749E6CD0855CB04009EF4F3 /* Development */ = {
+		7749E6CD0855CB04009EF4F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -2277,7 +2275,7 @@
 				);
 				ZERO_LINK = YES;
 			};
-			name = Development;
+			name = Debug;
 		};
 		7749E6D00855CB04009EF4F3 /* Default */ = {
 			isa = XCBuildConfiguration;
@@ -2295,42 +2293,38 @@
 			};
 			name = Default;
 		};
-		7749E6D20855CB04009EF4F3 /* Development */ = {
+		7749E6D20855CB04009EF4F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH)";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build/$BUILD_STYLE/,
-					../OPDebug/build/$BUILD_STYLE/,
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = "";
+				LD_RUNPATH_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				UNSTRIPPED_PRODUCT = YES;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 			};
-			name = Development;
+			name = Debug;
 		};
 		7749E6D50855CB04009EF4F3 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build/$BUILD_STYLE/,
-					../OPDebug/build/$BUILD_STYLE/,
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = "";
+				LD_RUNPATH_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 			};
 			name = Default;
 		};
-		8DCE35F40891902800F705EF /* Development */ = {
+		8DCE35F40891902800F705EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -2364,7 +2358,7 @@
 					"-Wno-unknown-pragmas",
 				);
 			};
-			name = Development;
+			name = Debug;
 		};
 		8DCE35F70891902800F705EF /* Default */ = {
 			isa = XCBuildConfiguration;
@@ -2419,8 +2413,15 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/Resources\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../OPPreferences/build/Release\"";
 				GCC_DEBUGGING_SYMBOLS = default;
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -2535,13 +2536,11 @@
 				);
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					../OPPreferences/build/$BUILD_STYLE/,
-					../OPDebug/build/$BUILD_STYLE/,
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = "";
+				LD_RUNPATH_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 				YACC_INSERT_LINE_DIRECTIVES = NO;
@@ -2554,7 +2553,7 @@
 		7749E6C70855CB04009EF4F3 /* Build configuration list for PBXNativeTarget "GinkoVoyager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7749E6C80855CB04009EF4F3 /* Development */,
+				7749E6C80855CB04009EF4F3 /* Debug */,
 				8DEFDC0C09C0962D00F6FB25 /* Release */,
 				7749E6CB0855CB04009EF4F3 /* Default */,
 			);
@@ -2564,7 +2563,7 @@
 		7749E6CC0855CB04009EF4F3 /* Build configuration list for PBXAggregateTarget "Run AutoDoc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7749E6CD0855CB04009EF4F3 /* Development */,
+				7749E6CD0855CB04009EF4F3 /* Debug */,
 				8DEFDC0D09C0962D00F6FB25 /* Release */,
 				7749E6D00855CB04009EF4F3 /* Default */,
 			);
@@ -2574,7 +2573,7 @@
 		7749E6D10855CB04009EF4F3 /* Build configuration list for PBXProject "GinkoVoyager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7749E6D20855CB04009EF4F3 /* Development */,
+				7749E6D20855CB04009EF4F3 /* Debug */,
 				8DEFDC0F09C0962D00F6FB25 /* Release */,
 				7749E6D50855CB04009EF4F3 /* Default */,
 			);
@@ -2584,7 +2583,7 @@
 		8DCE35F30891902800F705EF /* Build configuration list for PBXNativeTarget "OPPersistence" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8DCE35F40891902800F705EF /* Development */,
+				8DCE35F40891902800F705EF /* Debug */,
 				8DEFDC0E09C0962D00F6FB25 /* Release */,
 				8DCE35F70891902800F705EF /* Default */,
 			);

@@ -142,7 +142,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		//[objectEnum reset]; // might free some memory.
         
         if (! result) {
-            @synchronized(context) {
+            @synchronized([context changedObjects]) {
                 // Look in changed objects sequentially:
                 NSEnumerator *enumerator = [[context changedObjects] objectEnumerator];
                 OPPersistentObject *changedObject;

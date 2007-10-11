@@ -62,11 +62,7 @@
 {
     if ([string length])
     {
-#if 0
-        [self appendAttributedString:[[[NSAttributedString alloc] initWithString:string] autorelease]];
-#else
         [self replaceCharactersInRange:NSMakeRange([self length], 0) withString:string];
-#endif
     }
 }
 

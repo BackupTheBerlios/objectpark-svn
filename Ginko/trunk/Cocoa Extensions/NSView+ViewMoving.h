@@ -10,6 +10,7 @@
 
 @interface NSView (ViewMoving) 
 
-- (void) moveSubviewsWithinHeight:(float)height verticallyBy:(float)diff;
+- (void) moveSubviewsWithinHeight: (float) height verticallyBy: (float) diff;
+- (void) moveSubviewsWithinWidth: (float) width horizontallyBy: (float) diff;
 
 @end

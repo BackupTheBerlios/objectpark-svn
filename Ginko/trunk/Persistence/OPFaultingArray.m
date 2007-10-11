@@ -492,10 +492,12 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 							// Walk backward until the sortKey no longer matches or oid found: 
 							if (resultIndex) {
 								searchIndex = resultIndex-1;
-								while (searchIndex >= 0 && [key compare: *sortObjectPtr(searchIndex)]==0) {
+								while ([key compare: *sortObjectPtr(searchIndex)]==0) {
 									if (oid == *oidPtr(searchIndex)) {
 										return searchIndex; // found
 									}
+									if (searchIndex == 0) break; // not found
+
 									searchIndex--;
 								}
 								
@@ -524,7 +526,6 @@ static int compare_sort_object_with_entry(const void* sortObject, const void* en
 							resultIndex = NSNotFound;
 						}
 					}
-					
 				}
 			} else {
 				

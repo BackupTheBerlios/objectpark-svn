@@ -14,7 +14,6 @@
 
 @interface GIThread : OPPersistentObject {
 	@public // for testing only
-	//int age; // since reference date (should be 1970)
 }
 
 + (GIThread*) threadForMessage:(GIMessage*)aMessage;

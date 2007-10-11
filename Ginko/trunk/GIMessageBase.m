@@ -277,14 +277,10 @@ NSString* MboxImportJobName = @"mbox import";
         [context saveChanges];
         //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
 		
-    } 
-    @catch (id localException) 
-    {
+    } @catch (id localException) {
         if (NSDebugEnabled) NSLog(@"Exception while adding messages in background: %@", localException);
         @throw;
-    } 
-    @finally 
-    {
+    } @finally {
         [lastProgressSet release];
     }
 

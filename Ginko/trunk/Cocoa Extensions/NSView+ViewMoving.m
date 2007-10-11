@@ -11,26 +11,45 @@
 
 @implementation NSView (ViewMoving)
 
-- (void)moveSubviewsWithinHeight:(float)height verticallyBy:(float)diff
+- (void) moveSubviewsWithinHeight: (float) height verticallyBy: (float) diff
+{
+    BOOL didMove = NO;
+    NSEnumerator* e = [[self subviews] objectEnumerator];
+    NSView* subview;
+    
+    while (subview = [e nextObject]) {
+        NSRect frame = [subview frame];
+        
+        if (frame.origin.y <= height) {
+            if ([subview autoresizingMask] & NSViewHeightSizable) {
+                // size height
+                frame.size.height+=diff;
+            } else {
+                frame.origin.y+=diff;
+            }
+            [subview setFrame:frame];
+            didMove = YES;
+        }
+    }
+    
+    if (didMove) [self setNeedsDisplay: YES];
+}
+
+- (void) moveSubviewsWithinWidth: (float) width horizontallyBy: (float) diff
 {
     BOOL didMove = NO;
     NSEnumerator *e = [[self subviews] objectEnumerator];
-    NSView *subview;
+    NSView* subview;
     
-    while (subview = [e nextObject]) 
-    {
+    while (subview = [e nextObject]) {
         NSRect frame = [subview frame];
         
-        if (frame.origin.y <= height) 
-        {
-            if ([subview autoresizingMask] & NSViewHeightSizable) 
-            {
+        if (frame.origin.x <= width) {
+            if ([subview autoresizingMask] & NSViewHeightSizable) {
                 // size height
-                frame.size.height+=diff;
-            } 
-            else 
-            {
-                frame.origin.y+=diff;
+                frame.size.width+=diff;
+            } else {
+                frame.origin.x+=diff;
             }
             [subview setFrame:frame];
             didMove = YES;
