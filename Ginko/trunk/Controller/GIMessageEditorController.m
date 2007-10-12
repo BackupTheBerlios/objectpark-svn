@@ -807,7 +807,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // create from header:
 	if ([[theProfile valueForKey:@"realname"] length]) 
 	{
-		from = [NSString stringWithFormat:@"%@ <%@>", [theProfile valueForKey:@"realname"], [theProfile valueForKey:@"mailAddress"]];
+		from = [NSString stringWithFormat:@"\"%@\" <%@>", [theProfile valueForKey:@"realname"], [theProfile valueForKey:@"mailAddress"]];
 	} 
 	else 
 	{

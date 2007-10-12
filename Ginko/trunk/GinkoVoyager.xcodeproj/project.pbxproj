@@ -435,7 +435,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 30D55555093D1C2500BCACCB /* OPPreferences.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OPPreferences */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = OPPreferences;
 		};
 /* End PBXContainerItemProxy section */
@@ -464,7 +464,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		301F61240992C3B7001F2072 /* TestNSArray+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSArray+Extensions.h"; sourceTree = "<group>"; };
 		301F61250992C3B7001F2072 /* TestNSArray+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TestNSArray+Extensions.m"; sourceTree = "<group>"; };
-		30450D7C091051910085A02F /* OPDebug.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPDebug.framework; path = ../OPDebug/build/Development/OPDebug.framework; sourceTree = SOURCE_ROOT; };
+		30450D7C091051910085A02F /* OPDebug.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPDebug.framework; path = ../OPDebug/build/Debug/OPDebug.framework; sourceTree = SOURCE_ROOT; };
 		30672F5F092D3CB6005D7A7F /* OPL-Configuration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "OPL-Configuration.plist"; path = "../OPL-Configuration.plist"; sourceTree = "<group>"; };
 		30D5552D093D148E00BCACCB /* OPDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OPDebug.xcodeproj; path = ../OPDebug/OPDebug.xcodeproj; sourceTree = SOURCE_ROOT; };
 		30D55555093D1C2500BCACCB /* OPPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OPPreferences.xcodeproj; path = ../OPPreferences/OPPreferences.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -794,8 +794,8 @@
 		8DB2D4F80796C4A5005AFE6F /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
 		8DB3FDB40A55565B00709070 /* NSString+OPHTMLTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OPHTMLTools.h"; sourceTree = "<group>"; };
 		8DB3FDB50A55565B00709070 /* NSString+OPHTMLTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OPHTMLTools.m"; sourceTree = "<group>"; };
-		8DB7BC830CBACB5F006FA70A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /Developer/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
-		8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = ../OPNetwork/build/Development/OPNetwork.framework; sourceTree = SOURCE_ROOT; };
+		8DB7BC830CBACB5F006FA70A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
+		8DBFD4CC0826DCFC006D29DE /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = ../OPNetwork/build/Debug/OPNetwork.framework; sourceTree = SOURCE_ROOT; };
 		8DC773C306B27FCB00053CB7 /* OPSizingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSizingTextField.h; sourceTree = "<group>"; };
 		8DC773C406B27FCB00053CB7 /* OPSizingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSizingTextField.m; sourceTree = "<group>"; };
 		8DCA9ABD08015F7600EEA49F /* SQLConfig.sqlstatements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SQLConfig.sqlstatements; sourceTree = "<group>"; };
@@ -1736,7 +1736,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 7749E6D10855CB04009EF4F3 /* Build configuration list for PBXProject "GinkoVoyager" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* GinkoVoyager */;
 			projectDirPath = "";
@@ -2142,7 +2141,6 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/Resources\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../OPPreferences/build/Release\"";
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -2169,10 +2167,8 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Resources\"";
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "-fobjc-exceptions";
-				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = Ginko;
-				SECTORDER_FLAGS = "";
 				SEPARATE_STRIP = YES;
 				UNSTRIPPED_PRODUCT = YES;
 				WARNING_CFLAGS = (
@@ -2301,10 +2297,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = "";
-				LD_RUNPATH_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_LDFLAGS = "";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				UNSTRIPPED_PRODUCT = YES;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
@@ -2315,10 +2308,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				HEADER_SEARCH_PATHS = "";
-				LD_RUNPATH_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_LDFLAGS = "";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 			};
@@ -2537,10 +2527,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				HEADER_SEARCH_PATHS = "";
-				LD_RUNPATH_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_LDFLAGS = "";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 				YACC_INSERT_LINE_DIRECTIVES = NO;
