@@ -1,5 +1,6 @@
 Bugs:
 
+- having a real name with a comma in it, makes the SMTP-Server think there were multiple from addresses. Message is not sent, stays in queue, but sending makes woosh sound. :-/
 - deleting message groups crashes the application
 - "move to trash" for queued messages does not prevent sending - ouch! Check, if fixed!
 - additional headers cannot be checked in Display preferences.
