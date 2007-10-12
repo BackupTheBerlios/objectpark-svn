@@ -1,6 +1,5 @@
 Bugs:
 
-- having a real name with a comma in it, makes the SMTP-Server think there were multiple from addresses. Message is not sent, stays in queue, but sending makes woosh sound. :-/
 - deleting message groups crashes the application
 - "move to trash" for queued messages does not prevent sending - ouch! Check, if fixed!
 - additional headers cannot be checked in Display preferences.
@@ -15,6 +14,7 @@ Regressions:
 
 Done:
 
+- (Axel) having a real name with a comma in it, makes the SMTP-Server think there were multiple from addresses. Message is not sent, stays in queue, but sending makes woosh sound. :-/
 - (Dirk) window positions are not persistent - implement a pool of (say 6) thread-list window positions to pick from on open
 - (Dirk) OPSizingTextField did does not resize when a new selection is added by the formatter
 - (Dirk) "empty trash" no longer works (infinite loop)
