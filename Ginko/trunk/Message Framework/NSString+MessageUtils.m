@@ -1446,7 +1446,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     return result;
 }
 
-- (NSArray*) addressListFromEMailString 
+- (NSArray *)addressListFromEMailString 
 {
     NSEnumerator *enumerator;
     NSString *field;
