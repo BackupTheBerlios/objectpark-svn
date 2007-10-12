@@ -31,6 +31,8 @@
 - (BOOL)isDefaultProfile;
 - (void)makeDefaultProfile;
 
+- (NSString *)realnameForSending;
+
 @end
 
 extern NSString *GIProfileDidChangNotification;

@@ -228,6 +228,27 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIProfileDidChangNotification object:self userInfo:[NSDictionary dictionaryWithObject:key forKey:@"key"]];
 }
 
+- (NSString *)realnameForSending
+{
+	static NSCharacterSet *charactersThatNeedQuotingSet = nil;
+	static NSCharacterSet *quoteCharSet = nil;
+	
+	if (!charactersThatNeedQuotingSet)
+	{
+		charactersThatNeedQuotingSet = [[NSCharacterSet characterSetWithCharactersInString:@","] retain];
+		quoteCharSet = [[NSCharacterSet characterSetWithCharactersInString:@"\""] retain];
+	}
+	
+	NSString *result = [self valueForKey:@"realname"];
+	if ([result rangeOfCharacterFromSet:charactersThatNeedQuotingSet].location != NSNotFound)
+	{
+		// needs quoting
+		result = [NSString stringWithFormat:@"\"%@\"", [result stringByRemovingCharactersFromSet:quoteCharSet]];
+	}
+	
+	return result;
+}
+
 @end
 
 
