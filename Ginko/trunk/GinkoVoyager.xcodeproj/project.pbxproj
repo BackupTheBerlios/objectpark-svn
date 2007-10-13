@@ -57,6 +57,9 @@
 		771F9F5B0A27393A00937F89 /* TestOPJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 771F9F590A27393A00937F89 /* TestOPJob.m */; };
 		77253D6507ECB83E00375AFC /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77253D6107ECB83E00375AFC /* OPSMTP.h */; };
 		77253D6607ECB83E00375AFC /* OPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */; };
+		7726BECA0CBFFD8200E11F7C /* GIMainWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7726BEC80CBFFD8200E11F7C /* GIMainWindowController.h */; };
+		7726BECB0CBFFD8200E11F7C /* GIMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7726BEC90CBFFD8200E11F7C /* GIMainWindowController.m */; };
+		7726BED80CBFFE7000E11F7C /* MainWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7726BED40CBFFE7000E11F7C /* MainWindow.nib */; };
 		7727484C07D45FB30056D08F /* Ginko-big.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7727484A07D45FB30056D08F /* Ginko-big.tiff */; };
 		7727484D07D45FB30056D08F /* Ginko.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7727484B07D45FB30056D08F /* Ginko.icns */; };
 		7729F54E09C6ED9E002491A6 /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7729F54D09C6ED9E002491A6 /* utils.m */; };
@@ -509,6 +512,9 @@
 		77253D6007ECB83E00375AFC /* OPMessageConsumer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPMessageConsumer.m; sourceTree = "<group>"; };
 		77253D6107ECB83E00375AFC /* OPSMTP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OPSMTP.h; sourceTree = "<group>"; };
 		77253D6207ECB83E00375AFC /* OPSMTP.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPSMTP.m; sourceTree = "<group>"; };
+		7726BEC80CBFFD8200E11F7C /* GIMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMainWindowController.h; sourceTree = "<group>"; };
+		7726BEC90CBFFD8200E11F7C /* GIMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMainWindowController.m; sourceTree = "<group>"; };
+		7726BED40CBFFE7000E11F7C /* MainWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainWindow.nib; sourceTree = "<group>"; };
 		7727484A07D45FB30056D08F /* Ginko-big.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Ginko-big.tiff"; sourceTree = "<group>"; };
 		7727484B07D45FB30056D08F /* Ginko.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Ginko.icns; sourceTree = "<group>"; };
 		7729F54D09C6ED9E002491A6 /* utils.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = utils.m; sourceTree = "<group>"; };
@@ -968,6 +974,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7726BED40CBFFE7000E11F7C /* MainWindow.nib */,
 				8D0C8C260A84220D0055D8E6 /* DefaultJunkFilter.plist */,
 				8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */,
 				77CA735609F12C7800749461 /* Ginko.scriptTerminology */,
@@ -1166,6 +1173,8 @@
 				7754E9080AD41E1C00E76512 /* GIThreadsController.m */,
 				77D169150AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.h */,
 				77D169160AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.m */,
+				7726BEC80CBFFD8200E11F7C /* GIMainWindowController.h */,
+				7726BEC90CBFFD8200E11F7C /* GIMainWindowController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1665,6 +1674,7 @@
 				7790EEA80AE7AC11003172B1 /* DNDArrayController.h in Headers */,
 				7711E0010B2EA92E00B76D97 /* TestEDCompositeContentCoder.h in Headers */,
 				8DCCA3030C5040FC00CD90DD /* OPDerivedValue.h in Headers */,
+				7726BECA0CBFFD8200E11F7C /* GIMainWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1868,6 +1878,7 @@
 				8D0C8C270A84220D0055D8E6 /* DefaultJunkFilter.plist in Resources */,
 				7754E9040AD41DCB00E76512 /* Threads.nib in Resources */,
 				7711E0150B2EAA3200B76D97 /* TestMIMEBoundaries.transferData in Resources */,
+				7726BED80CBFFE7000E11F7C /* MainWindow.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2065,6 +2076,7 @@
 				7790EEA90AE7AC11003172B1 /* DNDArrayController.m in Sources */,
 				7711E0020B2EA92E00B76D97 /* TestEDCompositeContentCoder.m in Sources */,
 				8DCCA3040C5040FC00CD90DD /* OPDerivedValue.m in Sources */,
+				7726BECB0CBFFD8200E11F7C /* GIMainWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

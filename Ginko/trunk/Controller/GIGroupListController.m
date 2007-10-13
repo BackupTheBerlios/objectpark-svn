@@ -281,7 +281,8 @@ static GIMessageGroup *reuseGroup = nil;
 - (IBAction)showGroupWindow:(id)sender
 /*" Shows group in a own window if no such window exists. Otherwise brings up that window to front. "*/
 {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowExperimentalUI"])
+//	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowExperimentalUI"])
+	if (NO)
 	{
 		GIThreadsController *threadsController = [threadsControllerForGroup objectForKey:[[self group] objectURLString]];
 		

@@ -43,6 +43,7 @@
 #import "GIFulltextIndex.h"
 #import "NSApplication+NetworkNotifications.h"
 
+#import "GIMainWindowController.h"
 
 @implementation GIApplication
 
@@ -241,38 +242,48 @@ static NSThread *mainThread = nil;
 
 - (void) awakeFromNib
 {
-    [self setDelegate: self];
+	static BOOL once = YES;
+	
+	if (once)
+	{
+		once = NO;
+		[self setDelegate: self];
 	    
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prefpaneDidEndEditing:) name:OPPreferencePaneDidEndEditing object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prefpaneDidEndEditing:) name:OPPreferencePaneDidEndEditing object:nil];
 		
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jobFinished:) name:JobDidFinishNotification object:nil];
-    
-    // Some statistical messsages:
-    //OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	
-    //NSArray*allMessages = [GIMessage allObjects];
-    //GIMessage *aMessage  = [allMessages lastObject];
-    
-    //NSLog(@"MessageBase contains %d message objects in %d threads.", [allMessages count], [[GIThread allObjects] count]);
-    
-    //	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
-    //NSLog(@"last message = %@", aMessage);
-    [OPPersistentObjectContext setDefaultContext:[self initialPersistentObjectContext]];
-
-    [GIMessageGroup ensureDefaultGroups];
-    //NSLog(@"All Groups %@", [GIMessageGroup allObjects]);
-    [GIMessage resetSendStatus];
-	
-	[[[GIGroupListController alloc] init] autorelease]; // opens group list
-    [self restoreOpenWindowsFromLastSession];
-
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jobFinished:) name:JobDidFinishNotification object:nil];
+		
+		// Some statistical messsages:
+		//OPPersistentObjectContext* context = [OPPersistentObjectContext threadContext];	
+		//NSArray*allMessages = [GIMessage allObjects];
+		//GIMessage *aMessage  = [allMessages lastObject];
+		
+		//NSLog(@"MessageBase contains %d message objects in %d threads.", [allMessages count], [[GIThread allObjects] count]);
+		
+		//	NSLog(@"message = %@", [NSString stringWithData:[aMessage transferData] encoding:NSASCIIStringEncoding]);
+		//NSLog(@"last message = %@", aMessage);
+		[OPPersistentObjectContext setDefaultContext:[self initialPersistentObjectContext]];
+		
+		[GIMessageGroup ensureDefaultGroups];
+		//NSLog(@"All Groups %@", [GIMessageGroup allObjects]);
+		[GIMessage resetSendStatus];
+		
+		[[[GIGroupListController alloc] init] autorelease]; // opens group list
+		[self restoreOpenWindowsFromLastSession];
+		
         // Make sure, we receive NSManagedObjectContextDidSaveNotifications:
-    //[[NSNotificationCenter defaultCenter] addObserver: [OPPersistentObjectContext class] selector: @selector(objectsDidChange2:) 
-    //                                             name: NSManagedObjectContextDidSaveNotification 
-    //                                           object: nil];  
-	[self askForBecomingDefaultMailApplication];
-	
-	[self nonModalPresentError:[NSError errorWithDomain:@"TestDomain" description:@"Test Description"] withTimeout:0.0];
-
+		//[[NSNotificationCenter defaultCenter] addObserver: [OPPersistentObjectContext class] selector: @selector(objectsDidChange2:) 
+		//                                             name: NSManagedObjectContextDidSaveNotification 
+		//                                           object: nil];  
+		[self askForBecomingDefaultMailApplication];
+		
+		[self nonModalPresentError:[NSError errorWithDomain:@"TestDomain" description:@"Test Description"] withTimeout:0.0];
+		
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowExperimentalUI"])
+		{
+			[[GIMainWindowController alloc] init];
+		}
+	}
 }
 
 - (NSWindow *)groupsWindow
