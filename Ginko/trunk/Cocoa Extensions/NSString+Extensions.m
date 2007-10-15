@@ -829,17 +829,12 @@ Note: This method is not available on Windows NT platforms. "*/
         }
 }
 
-inline NSString *makeStringIfNil(NSString *str)
-/*"Utility function that returns the empty string in case of a nil parameter, str otherwise."*/
-{
-    return str ? str : @"";
-}
-
-
-
-
-
 //=======================================================================================
 @end
 //=======================================================================================
 
+extern inline NSString *makeStringIfNil(NSString *str)
+/*"Utility function that returns the empty string in case of a nil parameter, str otherwise."*/
+{
+    return str ? str : @"";
+}

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 44;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -1718,7 +1718,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 7749E6D10855CB04009EF4F3 /* Build configuration list for PBXProject "GinkoVoyager" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.0";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* GinkoVoyager */;
 			projectDirPath = "";
@@ -2287,7 +2287,7 @@
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				UNSTRIPPED_PRODUCT = YES;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 			};
@@ -2298,7 +2298,7 @@
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 			};
 			name = Default;
@@ -2517,7 +2517,7 @@
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 				YACC_INSERT_LINE_DIRECTIVES = NO;
 			};

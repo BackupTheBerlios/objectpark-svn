@@ -75,8 +75,9 @@
    typedef short           xint16;         /* 16-bit field */
    typedef unsigned short  uint16;         /* unsigned 16-bit field */
    typedef long            xint32;         /* 32-bit field */
-   typedef long            sint32;         /* signed 32-bit field */
-   typedef unsigned long   uint32;         /* unsigned 32-bit field */
+#warning commenting this out may break functionality
+//   typedef long            sint32;         /* signed 32-bit field */
+//   typedef unsigned long   uint32;         /* unsigned 32-bit field */
 
    /* REMINDER: the Motorola 680x0 is a big-endian architecture! */
 

@@ -141,4 +141,4 @@ extern NSString *MIMEAttachmentContentDisposition;
 @end
 
 
-extern inline NSString *makeStringIfNil(NSString *str);
+extern NSString *makeStringIfNil(NSString *str);
