@@ -65,14 +65,13 @@
 
 - (int)unreadCount
 {
-	return 3;
-	/*
+	//return 3;
+	
 	if ([[self hierarchyItem] isKindOfClass:[GIMessageGroup class]])
 	{
 		return [[(GIMessageGroup *)hierarchyItem unreadMessageCount] intValue];;
 	}
 	return 0;
-	 */
 }
 
 /*" Centers the image vertically. "*/
@@ -117,14 +116,14 @@
 //	NSSize titleSize = [[self title] sizeWithAttributes:nil];
 	NSRect titleRect = bounds;
 	
-	titleRect.origin.x += 5;
+	titleRect.origin.x += 10;
 	if ([self image] != nil) 
 	{
-		titleRect.origin.x += imageRect.origin.x + imageRect.size.width;
+		titleRect.origin.x += /*imageRect.origin.x + */ imageRect.size.width;
 		titleRect.size.width -= imageRect.size.width + 5;
 		if ([self unreadCount] != 0)
 		{
-			titleRect.size.width -= (countRect.size.width + 25);
+			titleRect.size.width -= (countRect.size.width + 8);
 		}
 	}
 //	titleRect.origin.y = titleRect.origin.y + (bounds.size.height - titleSize.height) / 2;
