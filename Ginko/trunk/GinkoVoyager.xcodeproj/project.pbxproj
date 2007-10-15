@@ -58,7 +58,6 @@
 		77253D6607ECB83E00375AFC /* OPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77253D6207ECB83E00375AFC /* OPSMTP.m */; };
 		7726BECA0CBFFD8200E11F7C /* GIMainWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7726BEC80CBFFD8200E11F7C /* GIMainWindowController.h */; };
 		7726BECB0CBFFD8200E11F7C /* GIMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7726BEC90CBFFD8200E11F7C /* GIMainWindowController.m */; };
-		7726BED80CBFFE7000E11F7C /* MainWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7726BED40CBFFE7000E11F7C /* MainWindow.nib */; };
 		7727484C07D45FB30056D08F /* Ginko-big.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7727484A07D45FB30056D08F /* Ginko-big.tiff */; };
 		7727484D07D45FB30056D08F /* Ginko.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7727484B07D45FB30056D08F /* Ginko.icns */; };
 		7729F54E09C6ED9E002491A6 /* utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7729F54D09C6ED9E002491A6 /* utils.m */; };
@@ -148,6 +147,7 @@
 		77C62CCA0AD66657008A124F /* NSSplitView+Autosave.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C62CC80AD66657008A124F /* NSSplitView+Autosave.m */; };
 		77C62FEE0AD77F61008A124F /* GICommentTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C62FEC0AD77F61008A124F /* GICommentTreeView.m */; };
 		77C631CD0AD7DA2F008A124F /* GIThreadsWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C631CB0AD7DA2F008A124F /* GIThreadsWindow.m */; };
+		77CA2E730CC3A970009EFCC5 /* MainWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77CA2E720CC3A970009EFCC5 /* MainWindow.nib */; };
 		77CA730F09F1272C00749461 /* MailToCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 77CA730D09F1272C00749461 /* MailToCommand.h */; };
 		77CA731009F1272C00749461 /* MailToCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CA730E09F1272C00749461 /* MailToCommand.m */; };
 		77CA735409F12BD000749461 /* Ginko.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 77CA735309F12BD000749461 /* Ginko.scriptSuite */; };
@@ -494,7 +494,6 @@
 		77253D6207ECB83E00375AFC /* OPSMTP.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OPSMTP.m; sourceTree = "<group>"; };
 		7726BEC80CBFFD8200E11F7C /* GIMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMainWindowController.h; sourceTree = "<group>"; };
 		7726BEC90CBFFD8200E11F7C /* GIMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMainWindowController.m; sourceTree = "<group>"; };
-		7726BED40CBFFE7000E11F7C /* MainWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainWindow.nib; sourceTree = "<group>"; };
 		7727484A07D45FB30056D08F /* Ginko-big.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Ginko-big.tiff"; sourceTree = "<group>"; };
 		7727484B07D45FB30056D08F /* Ginko.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Ginko.icns; sourceTree = "<group>"; };
 		7729F54D09C6ED9E002491A6 /* utils.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = utils.m; sourceTree = "<group>"; };
@@ -600,6 +599,7 @@
 		77C62FEC0AD77F61008A124F /* GICommentTreeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GICommentTreeView.m; sourceTree = "<group>"; };
 		77C631CA0AD7DA2F008A124F /* GIThreadsWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThreadsWindow.h; sourceTree = "<group>"; };
 		77C631CB0AD7DA2F008A124F /* GIThreadsWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThreadsWindow.m; sourceTree = "<group>"; };
+		77CA2E720CC3A970009EFCC5 /* MainWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainWindow.nib; sourceTree = "<group>"; };
 		77CA730D09F1272C00749461 /* MailToCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MailToCommand.h; sourceTree = "<group>"; };
 		77CA730E09F1272C00749461 /* MailToCommand.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MailToCommand.m; sourceTree = "<group>"; };
 		77CA735309F12BD000749461 /* Ginko.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.scriptSuite; path = Ginko.scriptSuite; sourceTree = "<group>"; };
@@ -962,7 +962,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7726BED40CBFFE7000E11F7C /* MainWindow.nib */,
+				77CA2E720CC3A970009EFCC5 /* MainWindow.nib */,
 				8D0C8C260A84220D0055D8E6 /* DefaultJunkFilter.plist */,
 				8D218B4F0A19490600BD1DE8 /* Mail Sent.aiff */,
 				77CA735609F12C7800749461 /* Ginko.scriptTerminology */,
@@ -1851,7 +1851,7 @@
 				8D0C8C270A84220D0055D8E6 /* DefaultJunkFilter.plist in Resources */,
 				7754E9040AD41DCB00E76512 /* Threads.nib in Resources */,
 				7711E0150B2EAA3200B76D97 /* TestMIMEBoundaries.transferData in Resources */,
-				7726BED80CBFFE7000E11F7C /* MainWindow.nib in Resources */,
+				77CA2E730CC3A970009EFCC5 /* MainWindow.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -53,13 +53,13 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {	
-	if ([item isKindOfClass:[GIMessageGroup class]]) 
+	if ([[item representedObject] isKindOfClass:[GIMessageGroup class]]) 
 	{
-		[cell setImage:[NSImage imageNamed:@"Folder"]];
+		[cell setImage:[NSImage imageNamed:@"OtherMailbox"]];
 	} 
 	else 
 	{
-		[cell setImage:[NSImage imageNamed:@"OtherMailbox"]];
+		[cell setImage:[NSImage imageNamed:@"Folder"]];
 	}
 	
 	if ([cell isKindOfClass:[GIMessageGroupCell class]]) 

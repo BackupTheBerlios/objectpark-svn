@@ -279,7 +279,7 @@ static NSThread *mainThread = nil;
 		
 		[self nonModalPresentError:[NSError errorWithDomain:@"TestDomain" description:@"Test Description"] withTimeout:0.0];
 		
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowExperimentalUI"])
+//		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowExperimentalUI"])
 		{
 			[[GIMainWindowController alloc] init];
 		}

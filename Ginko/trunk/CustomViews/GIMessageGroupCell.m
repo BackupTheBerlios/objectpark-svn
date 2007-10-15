@@ -7,6 +7,7 @@
 //
 
 #import "GIMessageGroupCell.h"
+#import "GIMessageGroup+Statistics.h"
 #import "NSBezierPath+RoundedRect.h"
 #import "NSColor+ContrastingLabelExtensions.h"
 
@@ -64,8 +65,14 @@
 
 - (int)unreadCount
 {
-#warning dummy implementation
 	return 3;
+	/*
+	if ([[self hierarchyItem] isKindOfClass:[GIMessageGroup class]])
+	{
+		return [[(GIMessageGroup *)hierarchyItem unreadMessageCount] intValue];;
+	}
+	return 0;
+	 */
 }
 
 /*" Centers the image vertically. "*/
@@ -95,9 +102,9 @@
 {
 	if ([self unreadCount] == 0) return NSZeroRect;
 	
-	float width = MAX(25.0, [[self attributedCountStringWithColor:[NSColor blackColor]] size].width + 10.5);
+	float width = MAX(25.0, [[self attributedCountStringWithColor:[NSColor blackColor]] size].width + 11.5);
 	
-#define PILLHEIGHT 16.5
+#define PILLHEIGHT 14
 	
 	float padding = ((bounds.size.height - PILLHEIGHT) / 2); // - .5;
 	return NSMakeRect((bounds.origin.x + bounds.size.width - width) - 5, bounds.origin.y + padding, width, PILLHEIGHT);
@@ -107,7 +114,7 @@
 {
 	NSRect imageRect = [self imageRectForBounds:bounds];
 	NSRect countRect = [self countRectForBounds:bounds];
-	NSSize titleSize = [[self title] sizeWithAttributes:nil];
+//	NSSize titleSize = [[self title] sizeWithAttributes:nil];
 	NSRect titleRect = bounds;
 	
 	titleRect.origin.x += 5;
@@ -117,10 +124,10 @@
 		titleRect.size.width -= imageRect.size.width + 5;
 		if ([self unreadCount] != 0)
 		{
-			titleRect.size.width -= countRect.size.width + 9;
+			titleRect.size.width -= (countRect.size.width + 25);
 		}
 	}
-	titleRect.origin.y = titleRect.origin.y + (bounds.size.height - titleSize.height) / 2;
+//	titleRect.origin.y = titleRect.origin.y + (bounds.size.height - titleSize.height) / 2;
 	titleRect.size.width -= 5; // padding right
 	
 	return titleRect;
@@ -136,14 +143,14 @@
 	return pillColor;
 }
 
-/*
 - (void)drawTextWithFrame:(NSRect)frame inView:(NSView *)controlView
 {	
-	static NSDictionary *statusLineAttributes = nil;
 	NSColor *contrastingLabelColor = nil;
 	
 	if ([self isHighlighted]) contrastingLabelColor = [[NSColor alternateSelectedControlColor] contrastingLabelColor];
 	
+	/*
+	static NSDictionary *statusLineAttributes = nil;
 	if (!statusLineAttributes)
 	{
 		NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -195,22 +202,39 @@
 		
 		[subscribedPoolLineAttributes setObject:[NSFont boldSystemFontOfSize:12] forKey:NSFontAttributeName];
 	}
+	*/
 	
-	WSFilePool *pool = [self filePool];
-	NSMutableDictionary *attributes = [[[pool isActive] ? subscribedPoolLineAttributes : unsubscribedPoolLineAttributes mutableCopy] autorelease];
+	static NSMutableDictionary *textAttributes = nil;
+	
+	if (!textAttributes)
+	{
+		textAttributes = [[NSMutableDictionary alloc] init];
+		NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        [style setLineBreakMode:NSLineBreakByTruncatingMiddle];
+		
+		[textAttributes setObject:style forKey:NSParagraphStyleAttributeName];
+		
+		[style release];
+		
+		[textAttributes setObject:[NSFont systemFontOfSize:12] forKey:NSFontAttributeName];
+	}
+	
+	NSMutableDictionary *attributes = [[textAttributes mutableCopy] autorelease];
 	
 	if ([self isHighlighted])
 	{
 		[attributes setObject:contrastingLabelColor forKey:NSForegroundColorAttributeName];
 	}
 	
-	NSMutableAttributedString *poolName = [[[NSMutableAttributedString alloc] initWithString:[pool displayName] attributes:attributes] autorelease];
+	NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:[[[self hierarchyItem] representedObject] valueForKey:@"name"] attributes:attributes] autorelease];
+	//NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:@"just testing" attributes:attributes] autorelease];
 	
 	NSRect poolNameRect = frame;
-	[poolName drawInRect:poolNameRect];
+	[nameString drawInRect:poolNameRect];
 	
 	NSAttributedString *statusLine = nil;
 	
+	/*
 	if ([pool isActive])
 	{
 		unsigned int conflictCount = [[pool conflictingFiles] count];
@@ -255,13 +279,13 @@
 	NSRect statusLineRect = poolNameRect;
 	statusLineRect.origin.y += [poolName size].height;
 	[statusLine drawInRect:statusLineRect];
+	 */
 }
-*/
 
 - (void)drawWithFrame:(NSRect)frame inView:(NSView *)controlView 
 {		
 	// draw the text:
-//	[self drawTextWithFrame:[self titleRectForBounds:frame] inView:controlView];
+	[self drawTextWithFrame:[self titleRectForBounds:frame] inView:controlView];
 	
 	// draw the image if given:
 	if ([self image] != nil)  
