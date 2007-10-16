@@ -7,7 +7,6 @@
 //
 
 #import "GIMainWindowController.h"
-#import "GIMessageGroupTreeNode.h"
 
 // helper
 #import "NSArray+Extensions.h"
@@ -42,7 +41,6 @@
 
 @interface NSArray (MessageGroupHierarchySupport)
 - (NSDictionary *)messageGroupHierarchyAsDictionaries;
-- (GIMessageGroupTreeNode *)messageGroupHierarchyAsTreeNodes;
 @end
 
 @implementation NSArray (MessageGroupHierarchySupport)
@@ -78,35 +76,6 @@
 		nil, nil];
 }
 
-- (GIMessageGroupTreeNode *)messageGroupHierarchyAsTreeNodes
-{
-	return nil;
-	/*
-	NSMutableArray *children = [NSMutableArray array];
-	if ([self count] >= 2) 
-	{
-		NSEnumerator *enumerator = [[self subarrayFromIndex:1] objectEnumerator];
-		id object;
-		
-		while (object = [enumerator nextObject])
-		{
-			if ([object isKindOfClass:[NSArray class]])
-			{
-				[children addObject:[object messageGroupHierarchyAsTreeNodes]];
-			}
-			else
-			{
-				GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:object resolve:YES];
-				NSAssert1([group isKindOfClass:[GIMessageGroup class]], @"Object is not a GIMessageGroup object: %@", object);
-				GIMessageGroupTreeNode *node = [GIMessageGroupTreeNode treeNodeWithRepresentedObject:group];
-				[children addObject:node];
-			}
-		}
-	}
-	
-	return [GIMessageTreeNode treeNodeWithRepresentedObject:[[self objectAtIndex:0] objectForKey:@"name"] childNodes:children];
-	 */
-}
 
 @end
 
