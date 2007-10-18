@@ -12,7 +12,7 @@
 #import "NSArray+Extensions.h"
 
 // model stuff
-#import "GIMessageGroup.h"
+#import "GIMessageGroup+Statistics.h"
 
 @implementation GIMessageGroup (copying)
 - (id)copyWithZone:(NSZone *)aZone
@@ -76,7 +76,6 @@
 		nil, nil];
 }
 
-
 @end
 
 @implementation GIMainWindowController
@@ -85,11 +84,34 @@
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
 	
-	[self loadWindow];
+	[GIMessageGroup loadGroupStats];
 	
+	// receiving update notifications:
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
+	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupsChangedNotification object:nil];
+	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupStatisticsDidUpdateNotification object:nil];
+	[notificationCenter addObserver:self selector:@selector(groupStatsInvalidated:) name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
+
+	[self loadWindow];
+
 	return self;
 }
 
+// --- change notification handling ---
+
+- (void)groupsChanged:(NSNotification *)aNotification
+{
+    [messageGroupTreeController rearrangeObjects];
+}
+
+- (void)groupStatsInvalidated:(NSNotification *)aNotification
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(groupsChanged:) object:nil];
+    [self performSelector:@selector(groupsChanged:) withObject:nil afterDelay:(NSTimeInterval)5.0];
+}
+
+// --- dinding data ---
 - (NSArray *)messageGroupHierarchyRoot
 {
 	return [[[GIMessageGroup hierarchyRootNode] messageGroupHierarchyAsDictionaries] objectForKey:@"children"];

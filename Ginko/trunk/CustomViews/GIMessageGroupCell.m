@@ -53,6 +53,11 @@
 	image = newImage;
 }
 
+- (NSRect)expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView *)view
+{
+	return NSZeroRect;
+}
+
 - (id)hierarchyItem
 {
 	return hierarchyItem;
@@ -67,9 +72,9 @@
 {
 	//return 3;
 	
-	if ([[self hierarchyItem] isKindOfClass:[GIMessageGroup class]])
+	if ([[[self hierarchyItem] representedObject] isKindOfClass:[GIMessageGroup class]])
 	{
-		return [[(GIMessageGroup *)hierarchyItem unreadMessageCount] intValue];;
+		return [[(GIMessageGroup *)[[self hierarchyItem] representedObject] unreadMessageCount] intValue];;
 	}
 	return 0;
 }

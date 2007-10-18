@@ -11,7 +11,7 @@
 
 @interface GIMainWindowController : NSWindowController 
 {
-
+	IBOutlet NSTreeController *messageGroupTreeController;
 }
 
 @end
