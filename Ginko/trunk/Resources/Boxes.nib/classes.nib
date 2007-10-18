@@ -1,83 +1,102 @@
-{
-    IBClasses = (
-        {
-            ACTIONS = {showActivityPanel = id; }; 
-            CLASS = FirstResponder; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {
-                addFolder = id; 
-                addMessageGroup = id; 
-                removeFolderMessageGroup = id; 
-                rename = id; 
-                selectThreadsWithCurrentSubject = id; 
-                showThreads = id; 
-                threadFilterPopUpChanged = id; 
-            }; 
-            CLASS = G3GroupController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                boxesDrawer = NSDrawer; 
-                boxesView = NSOutlineView; 
-                commentsMatrix = NSMatrix; 
-                groupInfoTextField = NSTextField; 
-                messageTextView = NSTextView; 
-                progressIndicator = NSProgressIndicator; 
-                tabView = NSTabView; 
-                threadFilterPopUp = NSPopUpButton; 
-                threadsView = GIOutlineViewWithKeyboardSupport; 
-                treeBodySplitter = OPCollapsingSplitView; 
-                window = NSWindow; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {
-                addFolder = id; 
-                addMessageGroup = id; 
-                delete = id; 
-                exportGroup = id; 
-                removeFolderMessageGroup = id; 
-                rename = id; 
-            }; 
-            CLASS = GIGroupListController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                boxesView = NSOutlineView; 
-                globalProgrssIndicator = NSProgressIndicator; 
-                window = NSWindow; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = GIOutlineViewWithKeyboardSupport; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSOutlineView; 
-        }, 
-        {
-            ACTIONS = {
-                selectThreadsWithCurrentSubject = id; 
-                showThreads = id; 
-                threadFilterPopUpChanged = id; 
-            }; 
-            CLASS = GIThreadListController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                commentsMatrix = NSMatrix; 
-                groupInfoTextField = NSTextField; 
-                messageTextView = NSTextView; 
-                progressIndicator = NSProgressIndicator; 
-                searchHitsTableView = NSTableView; 
-                tabView = NSTabView; 
-                threadFilterPopUp = NSPopUpButton; 
-                threadsView = GIOutlineViewWithKeyboardSupport; 
-                treeBodySplitter = OPCollapsingSplitView; 
-                window = NSWindow; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>NSOutlineView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTableView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSApplication</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addFolder</key>
+				<string>id</string>
+				<key>addMessageGroup</key>
+				<string>id</string>
+				<key>delete</key>
+				<string>id</string>
+				<key>exportGroup</key>
+				<string>id</string>
+				<key>removeFolderMessageGroup</key>
+				<string>id</string>
+				<key>rename</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>GIGroupListController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>boxesView</key>
+				<string>GIOutlineViewWithKeyboardSupport</string>
+				<key>globalProgrssIndicator</key>
+				<string>NSProgressIndicator</string>
+				<key>window</key>
+				<string>NSWindow</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>GIOutlineViewWithKeyboardSupport</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSOutlineView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>showActivityPanel</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

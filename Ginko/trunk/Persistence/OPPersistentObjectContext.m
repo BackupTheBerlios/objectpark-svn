@@ -454,9 +454,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 {
 	@synchronized(self) {
 		
-		//if ([[OPSQLiteStatement runningStatements] count]) NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
-		//if ([[OPSQLiteConnection openConnections] count]) NSLog(@"Open statements: %@", [OPSQLiteStatement runningStatements]);
-		
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
 		
 		[db beginTransaction];
@@ -469,9 +466,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				if (NSDebugEnabled) NSLog(/*OPDebugLog OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
 				
 			    // Process all updated objects and save their changed attribute sets:
-				NSEnumerator* coe = [changedObjects objectEnumerator];
 				OPPersistentObject* changedObject;
-				while (changedObject = [coe nextObject]) {
+				while (changedObject = [changedObjects anyObject]) {
 					
 					[changedObject willSave];
 					OID newOid;
@@ -482,13 +478,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 						//NSLog(@"Saving object: %@", changedObject);
 					}
 					
+					numberOfObjectsSaved++;
 					[changedObject setOid: newOid]; // also registers object
-					
+					[changedObjects removeObject: changedObject];
 				}
-				
-				numberOfObjectsSaved += [changedObjects count];
-				// Release all changed objects:
-				[changedObjects removeAllObjects];
 			}	
 			
 			[pool release]; pool = [[NSAutoreleasePool alloc] init];
@@ -497,9 +490,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			if ([deletedObjects count]) {
 				
 				if (NSDebugEnabled) NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
-				NSEnumerator* coe = [deletedObjects objectEnumerator];
 				OPPersistentObject* deletedObject;
-				while (deletedObject = [coe nextObject]) {
+				while (deletedObject = [deletedObjects anyObject]) {
 					
 					//NSLog(@"Will honk %@", deletedObject);
 					@synchronized(db) { // to be gone
@@ -507,11 +499,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 						[db deleteRowOfClass: [deletedObject class] 
 									   rowId: [deletedObject currentOid]];
 					}
+					numberOfObjectsDeleted ++;
+					[deletedObjects removeObject: deletedObject];
 				}
-				
-				numberOfObjectsDeleted += [deletedObjects count];
-				// Release all changed objects:
-				[deletedObjects removeAllObjects];
 			}
 		}
 		
