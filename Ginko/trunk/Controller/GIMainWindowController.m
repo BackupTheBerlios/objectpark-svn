@@ -10,6 +10,7 @@
 
 // helper
 #import "NSArray+Extensions.h"
+#import "GIUserDefaultsKeys.h"
 
 // model stuff
 #import "GIMessageGroup+Statistics.h"
@@ -26,13 +27,14 @@
 @interface GIThread (ThreadViewSupport)
 - (NSArray *)children;
 - (NSString *)subjectAndAuthor;
+- (NSAttributedString *)messageForDisplay;
 @end
 
 @implementation GIThread (ThreadViewSupport)
 
 - (NSArray *)children
 {
-	return [self messages];
+	return [self messagesByTree];
 }
 
 - (NSString *)subjectAndAuthor
@@ -40,11 +42,17 @@
 	return [self valueForKey:@"subject"];
 }
 
+- (NSAttributedString *)messageForDisplay
+{
+	return [[[NSAttributedString alloc] initWithString:@""] autorelease];
+}
+
 @end
 
 @interface GIMessage (ThreadViewSupport)
 - (NSArray *)children;
 - (NSString *)subjectAndAuthor;
+- (NSAttributedString *)messageForDisplay;
 @end
 
 @implementation GIMessage (ThreadViewSupport)
@@ -57,6 +65,11 @@
 - (NSString *)subjectAndAuthor
 {
 	return [self valueForKey:@"senderName"];
+}
+
+- (NSAttributedString *)messageForDisplay
+{
+	return [self renderedMessage];
 }
 
 @end
@@ -135,7 +148,20 @@
 
 	[self loadWindow];
 
+	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+														forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
+	
+	[commentTreeView bind:@"selectedMessage"
+				 toObject:threadTreeController
+			  withKeyPath:@"selection.self"
+				  options:options];
+	
 	return self;
+}
+
+- (void)windowDidLoad
+{
+	NSLog(@"windowDidLoad");
 }
 
 // --- change notification handling ---

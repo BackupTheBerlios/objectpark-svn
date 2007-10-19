@@ -17,6 +17,9 @@
 	GIThread *thread;
 	NSMutableDictionary *commentsCache;
     NSMutableArray *border; // helper for comment tree creation
+
+    id observedObjectForSelectedMessage;
+    NSString *observedKeyPathForSelectedMessage;
 }
 
 - (GIThread *)thread;

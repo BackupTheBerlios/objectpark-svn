@@ -15,6 +15,93 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 
 @implementation GICommentTreeView
 
+// -- binding stuff --
++ (void)initialize
+{
+    [self exposeBinding:@"selectedMessage"];	
+}
+
+- (Class)valueClassForBinding:(NSString *)binding
+{
+    // both require numbers
+    return [GIMessage class];	
+}
+
+- (id)observedObjectForSelectedMessage { return observedObjectForSelectedMessage; }
+- (void)setObservedObjectForSelectedMessage:(id)anObservedObjectForSelectedMessage
+{
+    if (observedObjectForSelectedMessage != anObservedObjectForSelectedMessage) 
+	{
+        [observedObjectForSelectedMessage release];
+        observedObjectForSelectedMessage = [anObservedObjectForSelectedMessage retain];
+    }
+}
+
+- (NSString *)observedKeyPathForSelectedMessage { return observedKeyPathForSelectedMessage; }
+- (void)setObservedKeyPathForSelectedMessage:(NSString *)anObservedKeyPathForSelectedMessage
+{
+    if (observedKeyPathForSelectedMessage != anObservedKeyPathForSelectedMessage) 
+	{
+        [observedKeyPathForSelectedMessage release];
+        observedKeyPathForSelectedMessage = [anObservedKeyPathForSelectedMessage copy];
+    }
+}
+
+- (void)bind:(NSString *)bindingName
+    toObject:(id)observableController
+ withKeyPath:(NSString *)keyPath
+     options:(NSDictionary *)options
+{	
+    if ([bindingName isEqualToString:@"selectedMessage"])
+    {
+		// observe the controller for changes
+		[observableController addObserver:self
+							   forKeyPath:keyPath 
+								  options:0
+								  context:nil];
+		
+		// register what controller and what keypath are 
+		// associated with this binding
+		[self setObservedObjectForSelectedMessage:observableController];
+		[self setObservedKeyPathForSelectedMessage:keyPath];		
+    }
+    	
+	[super bind:bindingName
+	   toObject:observableController
+	withKeyPath:keyPath
+		options:options];
+	
+	[self updateCommentTree:YES];
+}
+
+- (void)unbind:bindingName
+{
+    if ([bindingName isEqualToString:@"selectedMessage"])
+    {
+		[observedObjectForSelectedMessage removeObserver:self
+									forKeyPath:observedKeyPathForSelectedMessage];
+		[self setObservedObjectForSelectedMessage:nil];
+		[self setObservedKeyPathForSelectedMessage:nil];
+    }	
+
+	[super unbind:bindingName];
+	[self updateCommentTree:YES];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+					  ofObject:(id)object
+						change:(NSDictionary *)change
+					   context:(void *)context
+{
+	// selectedMessage changed
+	id newSelectedMessage = [observedObjectForSelectedMessage valueForKeyPath:observedKeyPathForSelectedMessage];
+	[self setSelectedMessage:newSelectedMessage];
+	
+	[self updateCommentTree:YES];
+}
+
+// -- regular stuff --
+
 - (void)setup
 {
     GICommentTreeCell *commentCell = [[[GICommentTreeCell alloc] init] autorelease];
@@ -38,6 +125,8 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 
 - (void)dealloc
 {
+	[self unbind:@"selectedMessage"];
+
 	[commentsCache release];
 	[border release];
 	[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
@@ -67,26 +156,16 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 {
 	NSParameterAssert(aThread == nil || [aThread isKindOfClass:[GIThread class]]);
 	
-	[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
-	[thread removeObserver:self forKeyPath:@"messages"];
-	[thread autorelease];
-	thread = [aThread retain];
-	[thread addObserver:self forKeyPath:@"hasUnreadMessages" options:0 context:NULL];
-	[thread addObserver:self forKeyPath:@"messages" options:0 context:NULL];
-	[self updateCommentTree:YES];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-					  ofObject:(id)object 
-                        change:(NSDictionary *)change
-                       context:(void *)context
-{
-	[self updateCommentTree:YES];
-	
-//    [super observeValueForKeyPath:keyPath
-//						 ofObject:object 
-//						   change:change 
-//						  context:context];
+	if (aThread != thread)
+	{
+		[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
+		[thread removeObserver:self forKeyPath:@"messages"];
+		[thread autorelease];
+		thread = [aThread retain];
+		[thread addObserver:self forKeyPath:@"hasUnreadMessages" options:0 context:NULL];
+		[thread addObserver:self forKeyPath:@"messages" options:0 context:NULL];
+		[self updateCommentTree:YES];
+	}
 }
 
 - (GIMessage *)selectedMessage
@@ -96,6 +175,18 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 
 - (void)setSelectedMessage:(GIMessage *)aMessage
 {
+	if (! [aMessage isKindOfClass:[GIMessage class]])
+	{
+		[self setThread:nil];
+		[self deselectAllCells];
+		return;
+	}
+	
+	if ([self thread] != [aMessage thread])
+	{
+		[self setThread:[aMessage thread]];
+	}
+	
 	if (aMessage)
 	{
 		[self selectCell:[self cellForRepresentedObject:aMessage]];

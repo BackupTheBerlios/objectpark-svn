@@ -7,11 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "GICommentTreeView.h"
 
 @interface GIMainWindowController : NSWindowController 
 {
 	IBOutlet NSTreeController *messageGroupTreeController;
+	IBOutlet NSTreeController *threadTreeController;
+	IBOutlet GICommentTreeView *commentTreeView;
 }
 
 @end

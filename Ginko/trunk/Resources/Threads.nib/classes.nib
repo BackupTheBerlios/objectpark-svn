@@ -1,42 +1,157 @@
-{
-    IBClasses = (
-        {
-            CLASS = DNDArrayController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {dndDelegate = id; }; 
-            SUPERCLASS = NSArrayController; 
-        }, 
-        {
-            ACTIONS = {selectTreeCell = id; }; 
-            CLASS = FirstResponder; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = GICommentTreeView; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
-        {CLASS = GIMatrixWithKeyboardSupport; LANGUAGE = ObjC; SUPERCLASS = NSMatrix; }, 
-        {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
-        {
-            ACTIONS = {search = id; }; 
-            CLASS = GIThreadsController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                commentTreeView = GICommentTreeView; 
-                infoSplitView = NSSplitView; 
-                messageDateColumn = NSTableColumn; 
-                messageTextScrollView = NSScrollView; 
-                messageTextView = NSTextView; 
-                messagesController = NSArrayController; 
-                searchField = NSSearchField; 
-                subjectAndAuthorColumn = NSTableColumn; 
-                threadDateColumn = NSTableColumn; 
-                "thread_messageSplitView" = NSSplitView; 
-                threadsController = NSArrayController; 
-                threadsTableView = NSTableView; 
-                verticalSplitView = NSSplitView; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }, 
-        {CLASS = GIThreadsWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>NSMatrix</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSControl</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>search</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>GIThreadsController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>commentTreeView</key>
+				<string>GICommentTreeView</string>
+				<key>infoSplitView</key>
+				<string>NSSplitView</string>
+				<key>messageDateColumn</key>
+				<string>NSTableColumn</string>
+				<key>messageTextScrollView</key>
+				<string>NSScrollView</string>
+				<key>messageTextView</key>
+				<string>NSTextView</string>
+				<key>messagesController</key>
+				<string>NSArrayController</string>
+				<key>searchField</key>
+				<string>NSSearchField</string>
+				<key>subjectAndAuthorColumn</key>
+				<string>NSTableColumn</string>
+				<key>threadDateColumn</key>
+				<string>NSTableColumn</string>
+				<key>thread_messageSplitView</key>
+				<string>NSSplitView</string>
+				<key>threadsController</key>
+				<string>NSArrayController</string>
+				<key>threadsTableView</key>
+				<string>NSTableView</string>
+				<key>verticalSplitView</key>
+				<string>NSSplitView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSApplication</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSSplitView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>GICommentTreeView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>GIMatrixWithKeyboardSupport</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>GIThreadsWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSWindow</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>GITextView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTextView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>DNDArrayController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>dndDelegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSArrayController</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>GIMatrixWithKeyboardSupport</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSMatrix</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>selectTreeCell</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
