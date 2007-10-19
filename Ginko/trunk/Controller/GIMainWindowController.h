@@ -16,4 +16,6 @@
 	IBOutlet GICommentTreeView *commentTreeView;
 }
 
+- (IBAction)commentTreeSelectionChanged:(id)sender;
+
 @end
