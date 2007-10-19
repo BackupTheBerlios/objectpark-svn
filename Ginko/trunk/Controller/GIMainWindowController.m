@@ -13,12 +13,52 @@
 
 // model stuff
 #import "GIMessageGroup+Statistics.h"
+#import "GIThread.h"
+#import "GIMessage.h"
 
 @implementation GIMessageGroup (copying)
 - (id)copyWithZone:(NSZone *)aZone
 {
 	return [self retain];
 }
+@end
+
+@interface GIThread (ThreadViewSupport)
+- (NSArray *)children;
+- (NSString *)subjectAndAuthor;
+@end
+
+@implementation GIThread (ThreadViewSupport)
+
+- (NSArray *)children
+{
+	return [self messages];
+}
+
+- (NSString *)subjectAndAuthor
+{
+	return [self valueForKey:@"subject"];
+}
+
+@end
+
+@interface GIMessage (ThreadViewSupport)
+- (NSArray *)children;
+- (NSString *)subjectAndAuthor;
+@end
+
+@implementation GIMessage (ThreadViewSupport)
+
+- (NSArray *)children
+{
+	return nil;
+}
+
+- (NSString *)subjectAndAuthor
+{
+	return [self valueForKey:@"senderName"];
+}
+
 @end
 
 @interface GIMessageGroup (MessageGroupHierarchySupport)
@@ -124,7 +164,7 @@
 
 - (float)messageGroupListRowHeight
 {
-	return 17.0;
+	return 18.0;
 }
 
 @end
