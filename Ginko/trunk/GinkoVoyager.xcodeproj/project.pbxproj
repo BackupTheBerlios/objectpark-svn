@@ -102,6 +102,8 @@
 		777436850778082000899957 /* MailIcon_more.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 777436840778082000899957 /* MailIcon_more.tiff */; };
 		7774368D0778082A00899957 /* MailIcon_less.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7774368C0778082A00899957 /* MailIcon_less.tiff */; };
 		777436EF07780D7300899957 /* editor.toolbar in Resources */ = {isa = PBXBuildFile; fileRef = 777436EE07780D7300899957 /* editor.toolbar */; };
+		77755D2E0CCC934900731959 /* GIOutlineViewWithThreadColoring.h in Headers */ = {isa = PBXBuildFile; fileRef = 77755D2C0CCC934900731959 /* GIOutlineViewWithThreadColoring.h */; };
+		77755D2F0CCC934900731959 /* GIOutlineViewWithThreadColoring.m in Sources */ = {isa = PBXBuildFile; fileRef = 77755D2D0CCC934900731959 /* GIOutlineViewWithThreadColoring.m */; };
 		7776259D0760DEC20066BE60 /* Group.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7776259C0760DEC20066BE60 /* Group.nib */; };
 		7776BBAA07D0773E00822246 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7776BBA907D0773E00822246 /* MainMenu.nib */; };
 		7780AC150A499FBE006970ED /* GIJobAlertPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7780AC130A499FBE006970ED /* GIJobAlertPanelController.h */; };
@@ -144,7 +146,6 @@
 		77BC581D07610AB700B70D8F /* GIGroupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC581B07610AB700B70D8F /* GIGroupWindow.m */; };
 		77BC58C90761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC58C70761CEA100B70D8F /* GIOutlineViewWithKeyboardSupport.m */; };
 		77C386E907AE9F1F00420AE9 /* MIME.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77C386E807AE9F1F00420AE9 /* MIME.plist */; };
-		77C62CCA0AD66657008A124F /* NSSplitView+Autosave.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C62CC80AD66657008A124F /* NSSplitView+Autosave.m */; };
 		77C62FEE0AD77F61008A124F /* GICommentTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C62FEC0AD77F61008A124F /* GICommentTreeView.m */; };
 		77C631CD0AD7DA2F008A124F /* GIThreadsWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C631CB0AD7DA2F008A124F /* GIThreadsWindow.m */; };
 		77CA2E730CC3A970009EFCC5 /* MainWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77CA2E720CC3A970009EFCC5 /* MainWindow.nib */; };
@@ -542,6 +543,8 @@
 		777436840778082000899957 /* MailIcon_more.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_more.tiff; sourceTree = "<group>"; };
 		7774368C0778082A00899957 /* MailIcon_less.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_less.tiff; sourceTree = "<group>"; };
 		777436EE07780D7300899957 /* editor.toolbar */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = editor.toolbar; sourceTree = "<group>"; };
+		77755D2C0CCC934900731959 /* GIOutlineViewWithThreadColoring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOutlineViewWithThreadColoring.h; sourceTree = "<group>"; };
+		77755D2D0CCC934900731959 /* GIOutlineViewWithThreadColoring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOutlineViewWithThreadColoring.m; sourceTree = "<group>"; };
 		7776259C0760DEC20066BE60 /* Group.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Group.nib; sourceTree = "<group>"; };
 		7779A7AB07C409E600F064D3 /* Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Test-Info.plist"; sourceTree = "<group>"; };
 		7779AC9A07C40D1B00F064D3 /* TestNSString+MessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestNSString+MessageUtils.h"; sourceTree = "<group>"; };
@@ -1310,6 +1313,8 @@
 				77C631CB0AD7DA2F008A124F /* GIThreadsWindow.m */,
 				7792C13A0CC10C72007F1C53 /* GIMessageGroupCell.h */,
 				7792C13B0CC10C72007F1C53 /* GIMessageGroupCell.m */,
+				77755D2C0CCC934900731959 /* GIOutlineViewWithThreadColoring.h */,
+				77755D2D0CCC934900731959 /* GIOutlineViewWithThreadColoring.m */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -1647,6 +1652,7 @@
 				7726BECA0CBFFD8200E11F7C /* GIMainWindowController.h in Headers */,
 				7792C13C0CC10C72007F1C53 /* GIMessageGroupCell.h in Headers */,
 				77FA0A6E0CC3592E00889D4C /* GIMessageGroupTreeController.h in Headers */,
+				77755D2E0CCC934900731959 /* GIOutlineViewWithThreadColoring.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2043,7 +2049,6 @@
 				8DF139110ABA1CD300A24563 /* NSFileManager+Extensions.m in Sources */,
 				77D169180AD27D85004EA0F2 /* GIThreadListController+ThreadInfoPanel.m in Sources */,
 				7754E90A0AD41E1C00E76512 /* GIThreadsController.m in Sources */,
-				77C62CCA0AD66657008A124F /* NSSplitView+Autosave.m in Sources */,
 				77C62FEE0AD77F61008A124F /* GICommentTreeView.m in Sources */,
 				77C631CD0AD7DA2F008A124F /* GIThreadsWindow.m in Sources */,
 				7790EEA90AE7AC11003172B1 /* DNDArrayController.m in Sources */,
@@ -2054,6 +2059,7 @@
 				7792C1460CC12E84007F1C53 /* NSBezierPath+RoundedRect.m in Sources */,
 				7792C14A0CC12E94007F1C53 /* NSColor+ContrastingLabelExtensions.m in Sources */,
 				77FA0A6F0CC3592E00889D4C /* GIMessageGroupTreeController.m in Sources */,
+				77755D2F0CCC934900731959 /* GIOutlineViewWithThreadColoring.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

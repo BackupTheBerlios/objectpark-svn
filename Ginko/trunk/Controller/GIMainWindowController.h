@@ -8,12 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 #import "GICommentTreeView.h"
+#import "GIOutlineViewWithThreadColoring.h"
 
 @interface GIMainWindowController : NSWindowController 
 {
 	IBOutlet NSTreeController *messageGroupTreeController;
 	IBOutlet NSTreeController *threadTreeController;
 	IBOutlet GICommentTreeView *commentTreeView;
+	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
 }
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;
