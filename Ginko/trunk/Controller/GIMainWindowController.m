@@ -17,6 +17,11 @@
 #import "GIThread.h"
 #import "GIMessage.h"
 
+static inline NSString *nilGuard(NSString *str)
+{
+    return str ? str : @"";
+}
+
 // diverse attributes
 static NSDictionary* unreadAttributes()
 {
@@ -163,6 +168,7 @@ static NSAttributedString *spacer()
 - (NSArray *)children;
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
+- (NSAttributedString *)dateForDisplay;
 @end
 
 @implementation GIThread (ThreadViewSupport)
@@ -192,7 +198,7 @@ static NSAttributedString *spacer()
 	if ([messagesByTree count] > 1)
 	{
 		// multi-message thread
-		return [[[NSAttributedString alloc] initWithString: [self valueForKey:@"subject"] attributes:[self hasUnreadMessages] ? unreadAttributes() : (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes())] autorelease];
+		return [[[NSAttributedString alloc] initWithString:nilGuard([self valueForKey:@"subject"]) attributes:[self hasUnreadMessages] ? unreadAttributes() : (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes())] autorelease];
 	}	
 	else
 	{
@@ -205,23 +211,21 @@ static NSAttributedString *spacer()
 		if (message) 
 		{
 			unsigned flags  = [message flags];
-			NSString *subject = [message valueForKey:@"subject"];
+			NSString *subject = nilGuard([message valueForKey:@"subject"]);
 			
-			if (!subject) subject = @"";
-			
-			NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:subject attributes:(flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+			NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subject) attributes:(flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
 			
 			[result appendAttributedString:aSubject];
 			
 			if (flags & OPIsFromMeStatus) 
 			{
-				from = [NSString stringWithFormat: @" (%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
+				from = [NSString stringWithFormat:@" (%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
 			} 
 			else 
 			{
 				from = [message senderName];
 				if (!from) from = @"- sender missing -";
-				from = [NSString stringWithFormat: @" (%@)", from];
+				from = [NSString stringWithFormat:@" (%@)", from];
 			}       
 			NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes());
 			
@@ -230,7 +234,7 @@ static NSAttributedString *spacer()
 				completeAttributes = spamMessageAttributes();
 			}
 			
-			aFrom = [[NSAttributedString alloc] initWithString:from attributes:completeAttributes];
+			aFrom = [[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes];
 			
 			[result appendAttributedString:aFrom];
 			
@@ -256,6 +260,20 @@ static NSAttributedString *spacer()
 		// single-message thread
 		return [[messagesByTree lastObject] renderedMessage];
 	}
+}
+
+- (NSAttributedString *)dateForDisplay
+{
+	//BOOL inSelectionAndAppActive = [[threadTreeController selectedObjects] containsObject:self];
+	BOOL inSelectionAndAppActive = NO;
+	BOOL isRead = ![self hasUnreadMessages];
+	
+	NSCalendarDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"
+	NSAssert2(date==nil || [date isKindOfClass:[NSCalendarDate class]], @"NSCalendarDate expected but got %@ from %@", NSStringFromClass([date class]), self);
+	
+	NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+	
+	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
 }
 
 @end
@@ -305,7 +323,7 @@ static NSAttributedString *spacer()
 		completeAttributes = spamMessageAttributes();
 	}
 	
-	[result appendAttributedString:[[[NSAttributedString alloc] initWithString:from attributes:completeAttributes] autorelease]];
+	[result appendAttributedString:[[[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes] autorelease]];
 	
 	return result;
 }
@@ -313,6 +331,20 @@ static NSAttributedString *spacer()
 - (NSAttributedString *)messageForDisplay
 {
 	return [self renderedMessage];
+}
+
+- (NSAttributedString *)dateForDisplay
+{
+	//BOOL inSelectionAndAppActive = [[threadTreeController selectedObjects] containsObject:self];
+	BOOL inSelectionAndAppActive = NO;
+	BOOL isRead = [self hasFlags:OPSeenStatus];
+	
+	NSCalendarDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"
+	NSAssert2(date==nil || [date isKindOfClass:[NSCalendarDate class]], @"NSCalendarDate expected but got %@ from %@", NSStringFromClass([date class]), self);
+	
+	NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+	
+	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
 }
 
 @end
@@ -447,7 +479,12 @@ static NSAttributedString *spacer()
 
 - (float)threadListRowHeight
 {
-	return 18.0;
+	return 16.0;
+}
+
+- (BOOL)isEditable
+{
+	return NO;
 }
 
 // -- handling message tree view selection --
