@@ -23,11 +23,12 @@ static inline NSString *nilGuard(NSString *str)
 }
 
 // diverse attributes
-static NSDictionary* unreadAttributes()
+static NSDictionary *unreadAttributes()
 {
     static NSDictionary *attributes = nil;
     
-    if (! attributes){
+    if (! attributes)
+	{
         attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
 					  [NSFont boldSystemFontOfSize:12], NSFontAttributeName,
 					  nil];
@@ -35,19 +36,20 @@ static NSDictionary* unreadAttributes()
     return attributes;
 }
 
-static NSDictionary* readAttributes()
+static NSDictionary *readAttributes()
 {
     static NSDictionary *attributes = nil;
     
-    if (! attributes) {
+    if (! attributes) 
+	{
         attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
 					  [NSFont systemFontOfSize:12], NSFontAttributeName,
-					  [[NSColor blackColor] highlightWithLevel:0.15], NSForegroundColorAttributeName, nil];
+					  /*[[NSColor blackColor] highlightWithLevel:0.15], NSForegroundColorAttributeName,*/ nil];
     }
     return attributes;
 }
 
-static NSDictionary* newAttributesWithColor(NSColor* color) 
+static NSDictionary *newAttributesWithColor(NSColor *color) 
 {
 	NSDictionary* attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
 								[NSFont systemFontOfSize: 12], NSFontAttributeName,
@@ -57,17 +59,19 @@ static NSDictionary* newAttributesWithColor(NSColor* color)
 }
 
 
-static NSDictionary* spamMessageAttributes()
+static NSDictionary *spamMessageAttributes()
 {
     static NSDictionary *attributes = nil;
     
-    if (! attributes) {
-        attributes = newAttributesWithColor([[NSColor brownColor] highlightWithLevel: 0.0]);
+    if (! attributes) 
+	{
+        attributes = newAttributesWithColor([[NSColor brownColor] highlightWithLevel:0.0]);
     }
     return attributes;
 }
 
-static NSDictionary* selectedReadAttributes()
+/*
+static NSDictionary *selectedReadAttributes()
 {
     static NSDictionary *attributes = nil;
     
@@ -78,21 +82,25 @@ static NSDictionary* selectedReadAttributes()
     return attributes;
 }
 
-static NSDictionary* fromAttributes()
+*/
+
+static NSDictionary *fromAttributes()
 {
     static NSDictionary *attributes = nil;
     
-    if (! attributes) {
+    if (! attributes) 
+	{
         attributes = newAttributesWithColor([[NSColor darkGrayColor] shadowWithLevel:0.3]);
     }
     return attributes;
 }
 
-static NSDictionary* unreadFromAttributes()
+static NSDictionary *unreadFromAttributes()
 {
-	return unreadAttributes();
+	return fromAttributes();
 }
 
+/*
 static NSDictionary *selectedUnreadFromAttributes()
 {
     static NSDictionary *attributes = nil;
@@ -105,6 +113,7 @@ static NSDictionary *selectedUnreadFromAttributes()
     }
     return attributes;
 }
+*/
 
 static NSDictionary *readFromAttributes()
 {
@@ -119,6 +128,7 @@ static NSDictionary *readFromAttributes()
     return attributes;
 }
 
+/*
 static NSDictionary *selectedReadFromAttributes()
 {
     static NSDictionary *attributes = nil;
@@ -131,6 +141,7 @@ static NSDictionary *selectedReadFromAttributes()
     
     return attributes;
 }
+*/
 
 static NSAttributedString *spacer()
 /*" String for inserting for message inset. "*/
@@ -169,6 +180,7 @@ static NSAttributedString *spacer()
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
 - (NSAttributedString *)dateForDisplay;
+- (NSImage *)statusImage;
 @end
 
 @implementation GIThread (ThreadViewSupport)
@@ -192,13 +204,11 @@ static NSAttributedString *spacer()
 - (id)subjectAndAuthor
 {
 	NSArray *messagesByTree = [self messagesByTree];
-	//BOOL inSelectionAndAppActive = [[threadTreeController selectedObjects] containsObject:self];
-	BOOL inSelectionAndAppActive = NO;
 
 	if ([messagesByTree count] > 1)
 	{
 		// multi-message thread
-		return [[[NSAttributedString alloc] initWithString:nilGuard([self valueForKey:@"subject"]) attributes:[self hasUnreadMessages] ? unreadAttributes() : (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes())] autorelease];
+		return [[[NSAttributedString alloc] initWithString:nilGuard([self valueForKey:@"subject"]) attributes:[self hasUnreadMessages] ? unreadAttributes() : readAttributes()] autorelease];
 	}	
 	else
 	{
@@ -213,7 +223,7 @@ static NSAttributedString *spacer()
 			unsigned flags  = [message flags];
 			NSString *subject = nilGuard([message valueForKey:@"subject"]);
 			
-			NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subject) attributes:(flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadAttributes() : readAttributes()) : unreadAttributes()];
+			NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subject) attributes:(flags & OPSeenStatus) ? readAttributes() : unreadAttributes()];
 			
 			[result appendAttributedString:aSubject];
 			
@@ -227,7 +237,7 @@ static NSAttributedString *spacer()
 				if (!from) from = @"- sender missing -";
 				from = [NSString stringWithFormat:@" (%@)", from];
 			}       
-			NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes());
+			NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? readFromAttributes() : unreadFromAttributes();
 			
 			if (flags & OPJunkMailStatus) 
 			{
@@ -264,8 +274,6 @@ static NSAttributedString *spacer()
 
 - (NSAttributedString *)dateForDisplay
 {
-	//BOOL inSelectionAndAppActive = [[threadTreeController selectedObjects] containsObject:self];
-	BOOL inSelectionAndAppActive = NO;
 	BOOL isRead = ![self hasUnreadMessages];
 	
 	NSCalendarDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"
@@ -273,7 +281,13 @@ static NSAttributedString *spacer()
 	
 	NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
 	
-	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
+	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
+}
+
+- (NSImage *)statusImage
+{
+	if ([self hasUnreadMessages]) return [NSImage imageNamed:@"unread"];
+	return nil;
 }
 
 @end
@@ -282,6 +296,7 @@ static NSAttributedString *spacer()
 - (NSArray *)children;
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
+- (NSImage *)statusImage;
 @end
 
 @implementation GIMessage (ThreadViewSupport)
@@ -295,8 +310,6 @@ static NSAttributedString *spacer()
 {
 	//	return [NSString stringWithFormat:@"    %@", [self valueForKey:@"senderName"]];
 	NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
-	//BOOL inSelectionAndAppActive = [[threadTreeController selectedObjects] containsObject:self];
-	BOOL inSelectionAndAppActive = NO;
 	NSString *from = [self senderName];
 	BOOL flags  = [self flags];
 	
@@ -316,7 +329,7 @@ static NSAttributedString *spacer()
 //	
 //	[result appendAttributedString: (indentation > MAX_INDENTATION)? spacer2() : spacer()];
 	
-	NSDictionary *completeAttributes = (flags & OPSeenStatus) ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : (inSelectionAndAppActive ? selectedUnreadFromAttributes() : unreadFromAttributes());
+	NSDictionary *completeAttributes = (flags & OPSeenStatus) ? readAttributes() : unreadAttributes();
 	
 	if (flags & OPJunkMailStatus) 
 	{
@@ -335,8 +348,6 @@ static NSAttributedString *spacer()
 
 - (NSAttributedString *)dateForDisplay
 {
-	//BOOL inSelectionAndAppActive = [[threadTreeController selectedObjects] containsObject:self];
-	BOOL inSelectionAndAppActive = NO;
 	BOOL isRead = [self hasFlags:OPSeenStatus];
 	
 	NSCalendarDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"
@@ -344,7 +355,13 @@ static NSAttributedString *spacer()
 	
 	NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
 	
-	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? (inSelectionAndAppActive ? selectedReadFromAttributes() : readFromAttributes()) : unreadAttributes()] autorelease];
+	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
+}
+
+- (NSImage *)statusImage
+{
+	if (![self hasFlags:OPSeenStatus]) return [NSImage imageNamed:@"unread"];
+	return nil;
 }
 
 @end
@@ -355,6 +372,7 @@ static NSAttributedString *spacer()
 @end
 
 @implementation GIMessageGroup (MessageGroupHierarchySupport)
+
 - (NSArray *)children
 {
 	return nil;
@@ -456,7 +474,68 @@ static NSAttributedString *spacer()
     [self performSelector:@selector(groupsChanged:) withObject:nil afterDelay:(NSTimeInterval)5.0];
 }
 
-// --- dinding data ---
+// -- handling message tree view selection --
+- (IBAction)commentTreeSelectionChanged:(id)sender
+{
+	GIMessage *message = [commentTreeView selectedMessage];
+	
+	if (message)
+	{
+		NSUInteger indexes[2];
+		
+		indexes[0] = [[threadTreeController selectionIndexPath] indexAtPosition:0];
+		indexes[1] = [[[message thread] messagesByTree] indexOfObjectIdenticalTo:message];
+		NSAssert(indexes[1] != NSNotFound, @"message should be found");
+
+		NSIndexPath *indexPath = [NSIndexPath indexPathWithIndexes:indexes length:2];
+		[threadTreeController setSelectionIndexPath:indexPath];
+	}
+	else
+	{
+		[threadTreeController setSelectionIndexPaths:[NSArray array]];
+	}
+}
+
+// -- handling menu commands --
+
+- (NSArray *)selectedMessages
+{
+	NSMutableArray *result = [NSMutableArray array];
+	NSEnumerator *enumerator = [[threadTreeController selectedObjects] objectEnumerator];
+	id selectedObject;
+	
+	while (selectedObject = [enumerator nextObject])
+	{
+		if ([selectedObject isKindOfClass:[GIThread class]])
+		{
+			[result addObjectsFromArray:[(GIThread *)selectedObject messages]];
+		}
+		else
+		{
+			NSAssert([selectedObject isKindOfClass:[GIMessage class]], @"expected a GIMessage object");
+			[result addObject:selectedObject];
+		}
+	}	
+	
+	return result;
+}
+
+- (IBAction)markAsRead:(id)sender
+{
+	[[self selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:YES]];
+	[threadTreeController rearrangeObjects];
+}
+
+- (IBAction)markAsUnread:(id)sender
+{
+	[[self selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:NO]];
+	[threadTreeController rearrangeObjects];
+}
+
+@end
+
+@implementation GIMainWindowController (GeneralBindings)
+
 - (NSArray *)messageGroupHierarchyRoot
 {
 	return [[[GIMessageGroup hierarchyRootNode] messageGroupHierarchyAsDictionaries] objectForKey:@"children"];
@@ -485,28 +564,6 @@ static NSAttributedString *spacer()
 - (BOOL)isEditable
 {
 	return NO;
-}
-
-// -- handling message tree view selection --
-- (IBAction)commentTreeSelectionChanged:(id)sender
-{
-	GIMessage *message = [commentTreeView selectedMessage];
-	
-	if (message)
-	{
-		NSUInteger indexes[2];
-		
-		indexes[0] = [[threadTreeController selectionIndexPath] indexAtPosition:0];
-		indexes[1] = [[[message thread] messagesByTree] indexOfObjectIdenticalTo:message];
-		NSAssert(indexes[1] != NSNotFound, @"message should be found");
-
-		NSIndexPath *indexPath = [NSIndexPath indexPathWithIndexes:indexes length:2];
-		[threadTreeController setSelectionIndexPath:indexPath];
-	}
-	else
-	{
-		[threadTreeController setSelectionIndexPaths:[NSArray array]];
-	}
 }
 
 @end

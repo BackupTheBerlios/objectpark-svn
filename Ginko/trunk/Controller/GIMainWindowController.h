@@ -20,4 +20,8 @@
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;
 
+/*" Message meta info manipulation "*/
+- (IBAction)markAsRead:(id)sender;
+- (IBAction)markAsUnread:(id)sender;
+
 @end

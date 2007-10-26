@@ -199,6 +199,7 @@
 		77F917E509D156B40069C455 /* lucene-core-1.9.1.jar in Resources */ = {isa = PBXBuildFile; fileRef = 77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */; };
 		77FA0A6E0CC3592E00889D4C /* GIMessageGroupTreeController.h in Headers */ = {isa = PBXBuildFile; fileRef = 77FA0A6C0CC3592E00889D4C /* GIMessageGroupTreeController.h */; };
 		77FA0A6F0CC3592E00889D4C /* GIMessageGroupTreeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA0A6D0CC3592E00889D4C /* GIMessageGroupTreeController.m */; };
+		77FC60E80CD231E100B6309B /* unread.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FC60E70CD231E100B6309B /* unread.tiff */; };
 		77FF358E0972F6EC00AFD0DF /* OtherMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */; };
 		77FF35950972FFA300AFD0DF /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77FF35940972FFA300AFD0DF /* Folder.tiff */; };
 		8D0C8C270A84220D0055D8E6 /* DefaultJunkFilter.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C8C260A84220D0055D8E6 /* DefaultJunkFilter.plist */; };
@@ -661,6 +662,7 @@
 		77F917D709D1569A0069C455 /* lucene-core-1.9.1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "lucene-core-1.9.1.jar"; path = "Resources/lucene-core-1.9.1.jar"; sourceTree = "<group>"; };
 		77FA0A6C0CC3592E00889D4C /* GIMessageGroupTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupTreeController.h; sourceTree = "<group>"; };
 		77FA0A6D0CC3592E00889D4C /* GIMessageGroupTreeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroupTreeController.m; sourceTree = "<group>"; };
+		77FC60E70CD231E100B6309B /* unread.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = unread.tiff; sourceTree = "<group>"; };
 		77FF358D0972F6EC00AFD0DF /* OtherMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OtherMailbox.tiff; sourceTree = "<group>"; };
 		77FF35940972FFA300AFD0DF /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
 		8D0C8C260A84220D0055D8E6 /* DefaultJunkFilter.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = DefaultJunkFilter.plist; sourceTree = "<group>"; };
@@ -1522,6 +1524,7 @@
 				77AD0FA0076EECB400D1DD65 /* MailIcon_send.tiff */,
 				8D9E9DC806AE215C0055F87C /* OPBanner.jpg */,
 				8DD8C1780A5D89DD00DEA948 /* PaperClip.tiff */,
+				77FC60E70CD231E100B6309B /* unread.tiff */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1858,6 +1861,7 @@
 				7754E9040AD41DCB00E76512 /* Threads.nib in Resources */,
 				7711E0150B2EAA3200B76D97 /* TestMIMEBoundaries.transferData in Resources */,
 				77CA2E730CC3A970009EFCC5 /* MainWindow.nib in Resources */,
+				77FC60E80CD231E100B6309B /* unread.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
