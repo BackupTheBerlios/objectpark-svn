@@ -113,6 +113,8 @@
 		7782AE31095593D7005F1DC4 /* Lucene.h in Headers */ = {isa = PBXBuildFile; fileRef = 7782AE30095593D7005F1DC4 /* Lucene.h */; };
 		7786DC5007DE2F7200C5F9F7 /* ProfilePrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */; };
 		7786DC5107DE2F7200C5F9F7 /* ProfilePrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */; };
+		7790B29D0CD5E4360054770C /* GIThreadTreeController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7790B29B0CD5E4360054770C /* GIThreadTreeController.h */; };
+		7790B29E0CD5E4360054770C /* GIThreadTreeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7790B29C0CD5E4360054770C /* GIThreadTreeController.m */; };
 		7790EEA90AE7AC11003172B1 /* DNDArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7790EEA70AE7AC11003172B1 /* DNDArrayController.m */; };
 		7792C13C0CC10C72007F1C53 /* GIMessageGroupCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7792C13A0CC10C72007F1C53 /* GIMessageGroupCell.h */; };
 		7792C13D0CC10C72007F1C53 /* GIMessageGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7792C13B0CC10C72007F1C53 /* GIMessageGroupCell.m */; };
@@ -557,6 +559,8 @@
 		7782AE30095593D7005F1DC4 /* Lucene.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.java; fileEncoding = 4; name = Lucene.h; path = FulltextSearch/Lucene.h; sourceTree = "<group>"; };
 		7786DC4E07DE2F7200C5F9F7 /* ProfilePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilePrefs.h; sourceTree = "<group>"; };
 		7786DC4F07DE2F7200C5F9F7 /* ProfilePrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilePrefs.m; sourceTree = "<group>"; };
+		7790B29B0CD5E4360054770C /* GIThreadTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThreadTreeController.h; sourceTree = "<group>"; };
+		7790B29C0CD5E4360054770C /* GIThreadTreeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThreadTreeController.m; sourceTree = "<group>"; };
 		7790BB9C0962F7F900988B3C /* GIFulltextIndexJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFulltextIndexJob.h; sourceTree = "<group>"; };
 		7790BB9D0962F7F900988B3C /* GIFulltextIndexJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFulltextIndexJob.m; sourceTree = "<group>"; };
 		7790EEA60AE7AC11003172B1 /* DNDArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DNDArrayController.h; sourceTree = "<group>"; };
@@ -1170,6 +1174,8 @@
 				7726BEC90CBFFD8200E11F7C /* GIMainWindowController.m */,
 				77FA0A6C0CC3592E00889D4C /* GIMessageGroupTreeController.h */,
 				77FA0A6D0CC3592E00889D4C /* GIMessageGroupTreeController.m */,
+				7790B29B0CD5E4360054770C /* GIThreadTreeController.h */,
+				7790B29C0CD5E4360054770C /* GIThreadTreeController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1656,6 +1662,7 @@
 				7792C13C0CC10C72007F1C53 /* GIMessageGroupCell.h in Headers */,
 				77FA0A6E0CC3592E00889D4C /* GIMessageGroupTreeController.h in Headers */,
 				77755D2E0CCC934900731959 /* GIOutlineViewWithThreadColoring.h in Headers */,
+				7790B29D0CD5E4360054770C /* GIThreadTreeController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2064,6 +2071,7 @@
 				7792C14A0CC12E94007F1C53 /* NSColor+ContrastingLabelExtensions.m in Sources */,
 				77FA0A6F0CC3592E00889D4C /* GIMessageGroupTreeController.m in Sources */,
 				77755D2F0CCC934900731959 /* GIOutlineViewWithThreadColoring.m in Sources */,
+				7790B29E0CD5E4360054770C /* GIThreadTreeController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2296,7 +2304,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				UNSTRIPPED_PRODUCT = YES;
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
@@ -2307,7 +2315,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 			};
@@ -2526,7 +2534,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = "FulltextSearch MessageFilter Persistence Controller Model Jobs \"Message Framework\" CustomViews \"Cocoa Extensions\" Preferences /usr/include/libxml2";
 				YACC_INSERT_LINE_DIRECTIVES = NO;
