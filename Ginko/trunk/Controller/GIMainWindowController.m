@@ -168,6 +168,20 @@ static NSAttributedString *spacer()
 //    return spacer;
 //}
 
+NSDateFormatter *timeAndDateFormatter()
+{
+	static NSDateFormatter *timeAndDateFormatter = nil;
+	
+	if (!timeAndDateFormatter)
+	{
+		timeAndDateFormatter = [[NSDateFormatter alloc] init];
+		[timeAndDateFormatter setDateStyle:NSDateFormatterShortStyle];
+		[timeAndDateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	}
+	
+	return timeAndDateFormatter;
+}
+
 @interface GIMessage (private)
 - (id)renderedMessage;
 @end
@@ -280,11 +294,9 @@ static NSAttributedString *spacer()
 {
 	BOOL isRead = ![self hasUnreadMessages];
 	
-	NSCalendarDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"
-	NSAssert2(date==nil || [date isKindOfClass:[NSCalendarDate class]], @"NSCalendarDate expected but got %@ from %@", NSStringFromClass([date class]), self);
-	
-	NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-	
+	NSDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"	
+	NSString *dateString = [timeAndDateFormatter() stringFromDate:date];
+		
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
 
@@ -354,10 +366,8 @@ static NSAttributedString *spacer()
 {
 	BOOL isRead = [self hasFlags:OPSeenStatus];
 	
-	NSCalendarDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"
-	NSAssert2(date==nil || [date isKindOfClass:[NSCalendarDate class]], @"NSCalendarDate expected but got %@ from %@", NSStringFromClass([date class]), self);
-	
-	NSString *dateString = [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString] timeZone:[NSTimeZone localTimeZone] locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+	NSDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"	
+	NSString *dateString = [timeAndDateFormatter() stringFromDate:date];
 	
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
