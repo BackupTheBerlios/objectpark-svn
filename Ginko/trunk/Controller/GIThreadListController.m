@@ -2440,7 +2440,7 @@ NSArray* commentsForMessage(GIMessage* aMessage, GIThread* aThread)
 		NSPoint mouseLocation = [event locationInWindow];
 		mouseLocation.x -= 16; // file icons are guaranteed to have 32 by 32 pixels (Mac OS 10.4 NSWorkspace docs)
 		mouseLocation.y -= 16;
-		mouseLocation = [view convertPoint:mouseLocation toView: nil];
+		mouseLocation = [view convertPoint:mouseLocation fromView: nil];
 		
 		rect = NSMakeRect(mouseLocation.x, mouseLocation.y, 1, 1);
 		[view dragFile:filename fromRect:rect slideBack: YES event:event];

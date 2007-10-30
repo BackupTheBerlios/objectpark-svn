@@ -86,18 +86,21 @@ static NSDictionary *selectedReadAttributes()
 
 static NSDictionary *fromAttributes()
 {
-    static NSDictionary *attributes = nil;
-    
-    if (! attributes) 
-	{
-        attributes = newAttributesWithColor([[NSColor darkGrayColor] shadowWithLevel:0.3]);
-    }
-    return attributes;
+	return readAttributes();
+	
+//    static NSDictionary *attributes = nil;
+//    
+//    if (! attributes) 
+//	{
+//        attributes = newAttributesWithColor([[NSColor darkGrayColor] shadowWithLevel:0.3]);
+//    }
+//    return attributes;
 }
 
 static NSDictionary *unreadFromAttributes()
 {
-	return fromAttributes();
+	//return fromAttributes();
+	return unreadAttributes();
 }
 
 /*
@@ -119,10 +122,11 @@ static NSDictionary *readFromAttributes()
 {
     static NSDictionary *attributes = nil;
     
-    if (! attributes) {
+    if (! attributes) 
+	{
         attributes = [[fromAttributes()mutableCopy] autorelease];
         [(NSMutableDictionary *)attributes addEntriesFromDictionary:readAttributes()];
-        [(NSMutableDictionary *)attributes setObject: [[NSColor darkGrayColor] highlightWithLevel:0.25] forKey:NSForegroundColorAttributeName];
+        //[(NSMutableDictionary *)attributes setObject: [[NSColor darkGrayColor] highlightWithLevel:0.25] forKey:NSForegroundColorAttributeName];
         attributes = [attributes copy];
     }
     return attributes;
@@ -532,6 +536,23 @@ static NSAttributedString *spacer()
 	[threadTreeController rearrangeObjects];
 }
 
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+{
+	SEL action = [theItem action];
+	
+	if (action == @selector(markAsRead:))
+	{
+		return [threadTreeController selectionHasUnreadMessages];
+	}
+
+	if (action == @selector(markAsUnread:))
+	{
+		return [threadTreeController selectionHasReadMessages];
+	}
+	
+	return YES;
+}
+
 @end
 
 @implementation GIMainWindowController (GeneralBindings)
@@ -566,4 +587,86 @@ static NSAttributedString *spacer()
 	return NO;
 }
 
+@end
+
+#import "NSString+MessageUtils.h"
+
+@implementation GIMainWindowController (TextViewDelegate)
+
+- (void)textView:(NSTextView *)textView doubleClickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(unsigned)charIndex
+{
+    NSTextAttachment *attachment;
+    NSFileWrapper *fileWrapper;
+    NSString *filename;
+    NSRange range;
+    
+    attachment = [cell attachment];
+    fileWrapper = [attachment fileWrapper];
+    filename = [[textView textStorage] attribute:OPAttachmentPathAttribute atIndex:charIndex effectiveRange:&range];
+    
+    if (NSDebugEnabled) NSLog(@"double click on attachment with name %@", filename);
+    
+    [[NSWorkspace sharedWorkspace] openFile: filename];
+}
+
+- (void)textView:(NSTextView *)view draggedCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)rect event:(NSEvent *)event atIndex:(unsigned)charIndex
+{
+    NSTextAttachment *attachment;
+    NSFileWrapper *fileWrapper;
+    NSString *filename;
+    NSRange range;
+    
+    attachment = [cell attachment];
+    fileWrapper = [attachment fileWrapper];
+    filename = [[view textStorage] attribute:OPAttachmentPathAttribute atIndex:charIndex effectiveRange:&range];
+    
+    if (NSDebugEnabled) NSLog(@"draggedCell %@", filename);
+    
+	// HTML may not contain attachment files, how do we handle D&D?
+	if (filename) 
+	{
+		NSPoint mouseLocation = [event locationInWindow];
+		
+		mouseLocation.x -= 16; // file icons are guaranteed to have 32 by 32 pixels (Mac OS 10.4 NSWorkspace docs)
+		mouseLocation.y -= 16;
+		
+		mouseLocation = [view convertPoint:mouseLocation fromView:nil];
+		
+		rect = NSMakeRect(mouseLocation.x, mouseLocation.y, 1, 1);
+		[view dragFile:filename fromRect:rect slideBack: YES event:event];
+	}
+}
+
+- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)flag
+{
+    return NSDragOperationCopy;
+}
+
+- (BOOL)ignoreModifierKeysWhileDragging
+{
+    return YES;
+}
+
+/*
+- (void)textView:(NSTextView *)textView spaceKeyPressedWithModifierFlags:(int)modifierFlags
+{
+    GIMessage *result = nil;
+    GIMessage *candidate;
+    
+    NSArray *orderedMessages = [[self displayedThread] messagesByTree];
+    int orderedMessageCount = [orderedMessages count];
+    int iStart = [orderedMessages indexOfObject: [self displayedMessage]];
+    int i = (iStart+1) % orderedMessageCount;
+    while (i!=iStart) {
+        if (([candidate = [orderedMessages objectAtIndex: i] flags] & OPSeenStatus) == 0) {
+            result = candidate; break;
+        }
+        i = (i+1) % orderedMessageCount;
+    } 
+    if (result) {
+        [self setDisplayedMessage: result thread: [self displayedThread]];
+    } else NSBeep();
+    return;
+}
+*/
 @end
