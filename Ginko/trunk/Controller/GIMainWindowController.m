@@ -7,10 +7,11 @@
 //
 
 #import "GIMainWindowController.h"
+#import "GIUserDefaultsKeys.h"
 
 // helper
 #import "NSArray+Extensions.h"
-#import "GIUserDefaultsKeys.h"
+#import "NSAttributedString+Extensions.h"
 
 // model stuff
 #import "GIMessageGroup+Statistics.h"
@@ -44,7 +45,7 @@ static NSDictionary *readAttributes()
 	{
         attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
 					  [NSFont systemFontOfSize:12], NSFontAttributeName,
-					  /*[[NSColor blackColor] highlightWithLevel:0.15], NSForegroundColorAttributeName,*/ nil];
+					  nil];
     }
     return attributes;
 }
@@ -70,20 +71,6 @@ static NSDictionary *spamMessageAttributes()
     return attributes;
 }
 
-/*
-static NSDictionary *selectedReadAttributes()
-{
-    static NSDictionary *attributes = nil;
-    
-    if (! attributes) {
-        attributes = newAttributesWithColor([[NSColor selectedMenuItemTextColor] shadowWithLevel: 0.15]);
-    }
-    
-    return attributes;
-}
-
-*/
-
 static NSDictionary *fromAttributes()
 {
 	return readAttributes();
@@ -103,21 +90,6 @@ static NSDictionary *unreadFromAttributes()
 	return unreadAttributes();
 }
 
-/*
-static NSDictionary *selectedUnreadFromAttributes()
-{
-    static NSDictionary *attributes = nil;
-    
-    if (! attributes)
-    {
-        attributes = [[unreadFromAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject: [[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
-        attributes = [attributes copy];
-    }
-    return attributes;
-}
-*/
-
 static NSDictionary *readFromAttributes()
 {
     static NSDictionary *attributes = nil;
@@ -126,29 +98,13 @@ static NSDictionary *readFromAttributes()
 	{
         attributes = [[fromAttributes()mutableCopy] autorelease];
         [(NSMutableDictionary *)attributes addEntriesFromDictionary:readAttributes()];
-        //[(NSMutableDictionary *)attributes setObject: [[NSColor darkGrayColor] highlightWithLevel:0.25] forKey:NSForegroundColorAttributeName];
         attributes = [attributes copy];
     }
     return attributes;
 }
 
-/*
-static NSDictionary *selectedReadFromAttributes()
-{
-    static NSDictionary *attributes = nil;
-    
-    if (! attributes) {
-        attributes = [[readFromAttributes()mutableCopy] autorelease];
-        [(NSMutableDictionary *)attributes setObject: [[NSColor selectedMenuItemTextColor] shadowWithLevel:0.15] forKey:NSForegroundColorAttributeName];
-        attributes = [attributes copy];
-    }
-    
-    return attributes;
-}
-*/
-
-static NSAttributedString *spacer()
 /*" String for inserting for message inset. "*/
+static NSAttributedString *spacer()
 {
     static NSAttributedString *spacer = nil;
     if (! spacer)
@@ -157,16 +113,6 @@ static NSAttributedString *spacer()
     }
     return spacer;
 }
-
-/*" String for inserting for messages which are to deep to display insetted. "*/
-//static NSAttributedString* spacer2()
-//{
-//    static NSAttributedString *spacer = nil;
-//    if (! spacer){
-//        spacer = [[NSAttributedString alloc] initWithString: [NSString stringWithFormat: @"%C ", 0x21e5]];
-//    }
-//    return spacer;
-//}
 
 NSDateFormatter *timeAndDateFormatter()
 {
@@ -281,7 +227,14 @@ NSDateFormatter *timeAndDateFormatter()
 	if ([messagesByTree count] > 1)
 	{
 		// multi-message thread
-		return [[[NSAttributedString alloc] initWithString:@""] autorelease];
+		NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
+		
+		if (NO) //[messagesByTree count] > 0)
+		{
+			[result appendString:[NSString stringWithFormat:@"\nThread '%@':\n", [[self subjectAndAuthor] string]]];
+			[result appendString:[NSString stringWithFormat:@"contains %d messages\n", [messagesByTree count]]];
+		}
+		return result;
 	}
 	else
 	{
@@ -440,6 +393,18 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIMainWindowController
 
+- (NSArray *)messageGroupTreeSelectionIndexPaths
+{
+	return messageGroupTreeSelectionIndexPaths;
+}
+
+- (void)setMessageGroupTreeSelectionIndexPaths:(NSArray *)somePaths
+{
+	NSLog(@"messageGroupTreeSelectionIndexPaths set to %@", somePaths);
+	[messageGroupTreeSelectionIndexPaths autorelease];
+	messageGroupTreeSelectionIndexPaths = [somePaths retain];
+}
+
 - (id)init
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
@@ -468,6 +433,12 @@ NSDateFormatter *timeAndDateFormatter()
 	[[self window] makeKeyAndOrderFront:self];
 	
 	return self;
+}
+
+- (void)dealloc
+{
+	[messageGroupTreeSelectionIndexPaths release];
+	[super dealloc];
 }
 
 - (void)windowDidLoad
@@ -512,40 +483,31 @@ NSDateFormatter *timeAndDateFormatter()
 
 // -- handling menu commands --
 
-- (NSArray *)selectedMessages
-{
-	NSMutableArray *result = [NSMutableArray array];
-	NSEnumerator *enumerator = [[threadTreeController selectedObjects] objectEnumerator];
-	id selectedObject;
-	
-	while (selectedObject = [enumerator nextObject])
-	{
-		if ([selectedObject isKindOfClass:[GIThread class]])
-		{
-			[result addObjectsFromArray:[(GIThread *)selectedObject messages]];
-		}
-		else
-		{
-			NSAssert([selectedObject isKindOfClass:[GIMessage class]], @"expected a GIMessage object");
-			[result addObject:selectedObject];
-		}
-	}	
-	
-	return result;
-}
-
 - (IBAction)markAsRead:(id)sender
 {
-	[[self selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:YES]];
-	[threadTreeController rearrangeObjects];
+	[[threadTreeController selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:YES]];
+	[threadTreeController rearrangeSelectedNodes];
 }
 
 - (IBAction)markAsUnread:(id)sender
 {
-	[[self selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:NO]];
-	[threadTreeController rearrangeObjects];
+	[[threadTreeController selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:NO]];
+	[threadTreeController rearrangeSelectedNodes];
 }
 
+- (IBAction)toggleRead:(id)sender
+{
+	if ([threadTreeController selectionHasUnreadMessages])
+	{
+		[self markAsRead:self];
+	}
+	else
+	{
+		[self markAsUnread:self];
+	}
+}
+
+/*
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
 	SEL action = [theItem action];
@@ -562,6 +524,7 @@ NSDateFormatter *timeAndDateFormatter()
 	
 	return YES;
 }
+*/
 
 @end
 

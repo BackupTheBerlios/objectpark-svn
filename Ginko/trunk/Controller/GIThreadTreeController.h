@@ -18,4 +18,6 @@
 - (BOOL)selectionHasUnreadMessages;
 - (BOOL)selectionHasReadMessages;
 
+- (void)rearrangeSelectedNodes;
+
 @end

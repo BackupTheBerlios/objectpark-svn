@@ -74,4 +74,13 @@
 	return NO;
 }
 
+- (void)rearrangeSelectedNodes
+{
+	for (NSTreeNode *node in [self selectedNodes])
+	{
+		[node willChangeValueForKey:@"representedObject"];
+		[node didChangeValueForKey:@"representedObject"];
+	}
+}
+
 @end

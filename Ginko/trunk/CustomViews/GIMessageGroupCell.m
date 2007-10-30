@@ -230,13 +230,15 @@
 		[attributes setObject:contrastingLabelColor forKey:NSForegroundColorAttributeName];
 	}
 	
-	NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:[[[self hierarchyItem] representedObject] valueForKey:@"name"] attributes:attributes] autorelease];
+	NSString *name = [[[self hierarchyItem] representedObject] valueForKey:@"name"];
+	if (!name) name = @"<unknown>";
+	NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:name attributes:attributes] autorelease];
 	//NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:@"just testing" attributes:attributes] autorelease];
 	
 	NSRect poolNameRect = frame;
 	[nameString drawInRect:poolNameRect];
 	
-	NSAttributedString *statusLine = nil;
+	//NSAttributedString *statusLine = nil;
 	
 	/*
 	if ([pool isActive])

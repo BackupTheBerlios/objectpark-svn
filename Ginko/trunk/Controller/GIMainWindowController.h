@@ -17,6 +17,8 @@
 	IBOutlet GIThreadTreeController *threadTreeController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
+	
+	NSArray *messageGroupTreeSelectionIndexPaths;
 }
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;
@@ -24,5 +26,6 @@
 /*" Message meta info manipulation "*/
 - (IBAction)markAsRead:(id)sender;
 - (IBAction)markAsUnread:(id)sender;
+- (IBAction)toggleRead:(id)sender;
 
 @end
