@@ -12,11 +12,15 @@
 // helper
 #import "NSArray+Extensions.h"
 #import "NSAttributedString+Extensions.h"
+#import "OPPersistentObject+Extensions.h"
 
 // model stuff
 #import "GIMessageGroup+Statistics.h"
 #import "GIThread.h"
 #import "GIMessage.h"
+
+static NSString *ContentContext = @"ContentContext";
+static NSString *SelectedObjectContext = @"selectedObjectContext";
 
 static inline NSString *nilGuard(NSString *str)
 {
@@ -393,18 +397,6 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIMainWindowController
 
-- (NSArray *)messageGroupTreeSelectionIndexPaths
-{
-	return messageGroupTreeSelectionIndexPaths;
-}
-
-- (void)setMessageGroupTreeSelectionIndexPaths:(NSArray *)somePaths
-{
-	NSLog(@"messageGroupTreeSelectionIndexPaths set to %@", somePaths);
-	[messageGroupTreeSelectionIndexPaths autorelease];
-	messageGroupTreeSelectionIndexPaths = [somePaths retain];
-}
-
 - (id)init
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
@@ -418,7 +410,40 @@ NSDateFormatter *timeAndDateFormatter()
 	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupStatisticsDidUpdateNotification object:nil];
 	[notificationCenter addObserver:self selector:@selector(groupStatsInvalidated:) name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
 
-	[self loadWindow];
+	[self showWindow:self];
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[threadTreeController removeObserver:self forKeyPath:@"content"];
+	[threadTreeController removeObserver:self forKeyPath:@"selectedObjects"];
+	
+	[super dealloc];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if (object == threadTreeController)
+	{
+		if (context == ContentContext)
+		{
+			if ([[threadTreeController content] count])
+			{
+				[threadTreeController setPreservesSelection:NO];
+				[threadTreeController invalidateThreadSelectionCache];
+				//	[threadTreeController performSelector:@selector(setSelectionIndexPaths:) withObject:[threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]] afterDelay:1.0];
+				[threadTreeController setSelectionIndexPaths:[threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]]];
+			}
+		}
+	}
+//	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+- (void)windowDidLoad
+{
+	NSLog(@"windowDidLoad");
 
 	// configuring message tree view:
 	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
@@ -430,20 +455,11 @@ NSDateFormatter *timeAndDateFormatter()
 	
 	// configuring thread view:
 	[threadsOutlineView setHighlightThreads:YES];
-	[[self window] makeKeyAndOrderFront:self];
+	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
+	[threadsOutlineView setTarget:self];
 	
-	return self;
-}
-
-- (void)dealloc
-{
-	[messageGroupTreeSelectionIndexPaths release];
-	[super dealloc];
-}
-
-- (void)windowDidLoad
-{
-	NSLog(@"windowDidLoad");
+	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
+	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:0 context:SelectedObjectContext];
 }
 
 // --- change notification handling ---
@@ -545,6 +561,17 @@ NSDateFormatter *timeAndDateFormatter()
 	return 18.0;
 }
 
+- (NSArray *)threadTreeSelectionIndexPaths
+{
+	[threadTreeController setPreservesSelection:YES];
+	return [threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]];
+}
+
+- (void)setThreadTreeSelectionIndexPaths:(NSArray *)somePaths
+{
+	[threadTreeController rememberThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]];
+}
+
 - (NSFont *)threadListFont
 {
 	return [NSFont systemFontOfSize:12.0];
@@ -642,4 +669,53 @@ NSDateFormatter *timeAndDateFormatter()
     return;
 }
 */
+@end
+
+@implementation GIMainWindowController (SplitViewDelegate)
+
+- (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset
+{
+	CGFloat result = [sender frame].size.height - 75.0;
+	return result;
+}
+
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview
+{
+	return YES;
+}
+
+@end
+
+@implementation GIMainWindowController (OutlineViewDelegateAndActions)
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+	// item is tree node!
+	
+	if ([cell interiorBackgroundStyle] == NSBackgroundStyleDark)
+	{
+		if ([cell isKindOfClass:[NSTextFieldCell class]])
+		{
+			//	[cell setTextColor:[NSColor grayColor]];
+			// change text to all white:
+			//[(NSCell *)cell 
+			//	NSLog(@"willDisplayCell dark item = %@", item);
+		}
+	}
+	//	[super outlineView:outlineView willDisplayCell:cell forTableColumn:tableColumn item:item];
+}
+
+- (IBAction)threadsDoubleAction:(id)sender
+{
+	NSLog(@"threadsDoubleAction");
+	if ([threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
+	{
+		NSLog(@"collapsed");
+	}
+	else
+	{
+		NSLog(@"NOT collapsed. Ignoring");
+	}
+}
+
 @end

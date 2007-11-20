@@ -7,6 +7,13 @@
  *
  */
 
+enum GISetSeenBehavior
+{
+	GISetSeenBehaviorImmediately = 0,
+	GISetSeenBehaviorAfterTimeinterval, // needs time interval from e.g. user defaults (default should be 1.5 seconds)
+	GISetSeenBehaviorManually
+};
+
 extern NSString* OpenMessageGroups;
 extern NSString *MessageRendererFontName;
 extern NSString *MessageRendererFontSize;
@@ -42,6 +49,8 @@ extern NSString *ReuseThreadListWindowByDefault;
 extern NSString *DateOfLastMessageRetrieval;
 extern NSString *ShowThreadInfoPanel;
 extern NSString *SelectFirstUnreadMessageInThread;
+extern NSString *SetSeenBehavior;
+extern NSString *SetSeenTimeinterval;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();

@@ -46,75 +46,78 @@ NSString *ReuseThreadListWindowByDefault = @"ReuseThreadListWindowByDefault";
 NSString *DateOfLastMessageRetrieval = @"DateOfLastMessageRetrieval";
 NSString *ShowThreadInfoPanel = @"ShowThreadInfoPanel";
 NSString *SelectFirstUnreadMessageInThread = @"SelectFirstUnreadMessageInThread";
+NSString *SetSeenBehavior = @"SetSeenBehavior";
+NSString *SetSeenTimeinterval = @"SetSeenTimeinterval";
 
 NSArray* allAdditionalHeadersForDisplay()
 {
     return [NSArray arrayWithObjects:
-        @"Organization",
-        @"X-Newsreader", 
-        @"X-Mailer", 
-        @"User-Agent",
-        @"X-Complaints-To",
-        @"Content-Type", 
-        @"Content-Transfer-Encoding",
-        @"Lines",
-        @"Xref",
-        @"Path",
-        @"Delivered-To",
-        @"Precedence",
-        @"List-Id",
-        @"List-Archive",
-        @"List-Help",
-        @"X-Profile",
-        @"X-Sender",
-        @"X-Accept-Language",
-        nil];
+			@"Organization",
+			@"X-Newsreader", 
+			@"X-Mailer", 
+			@"User-Agent",
+			@"X-Complaints-To",
+			@"Content-Type", 
+			@"Content-Transfer-Encoding",
+			@"Lines",
+			@"Xref",
+			@"Path",
+			@"Delivered-To",
+			@"Precedence",
+			@"List-Id",
+			@"List-Archive",
+			@"List-Help",
+			@"X-Profile",
+			@"X-Sender",
+			@"X-Accept-Language",
+			nil];
 }
 
 void registerDefaultDefaults()
 {    
     NSValueTransformer *archiverTransformer = [NSValueTransformer valueTransformerForName:NSUnarchiveFromDataTransformerName];
     
-    NSDictionary* appDefaults = [NSDictionary
-        dictionaryWithObjectsAndKeys:
-        [NSArray arrayWithObjects:
-            @"From",
-            @"Newsgroups",
-            @"Subject",
-            @"To",
-            @"Cc",
-            @"Bcc",
-            @"Reply-To",
-            @"Date",
-            nil], HeadersShown,
-        
-        [NSArray arrayWithObjects:@"Antw: ", nil], JunkReplySubjectPrefixes,
-        
-        [NSArray array], AdditionalHeadersShown,
-               
-        [NSArray arrayWithObjects:
-            @"multipart/mixed",
-            @"text/enriched",
-            @"text/plain",
-            @"text/html",
-            nil], ContentTypePreferences,
-        
-        // setting default sort ordering for phrases list in phrase browser:
-        [archiverTransformer reverseTransformedValue:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"phrasename" ascending:YES] autorelease]]], @"phrasesortdescriptors",
-    
-        [NSNumber numberWithInt:DEFAULTSEARCHHITLIMIT], SearchHitLimit,
-        
-		[NSNumber numberWithBool:YES], AskAgainToBecomeDefaultMailApplication, 
-				
-		[NSNumber numberWithBool:YES], SoonRipeMessagesShouldBeSent,
-		
-		[NSNumber numberWithInt:30], SoonRipeMessageMinutes,
-		
-		[NSNumber numberWithBool:YES], NSPrintHeaderAndFooter,
-		
-		[NSNumber numberWithBool:YES], SelectFirstUnreadMessageInThread,
-		
-        nil, nil];
+    NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
+								 [NSArray arrayWithObjects:
+								  @"From",
+								  @"Newsgroups",
+								  @"Subject",
+								  @"To",
+								  @"Cc",
+								  @"Bcc",
+								  @"Reply-To",
+								  @"Date",
+								  nil], HeadersShown,
+								 
+								 [NSArray arrayWithObjects:@"Antw: ", nil], JunkReplySubjectPrefixes,
+								 
+								 [NSArray array], AdditionalHeadersShown,
+								 
+								 [NSArray arrayWithObjects:
+								  @"multipart/mixed",
+								  @"text/enriched",
+								  @"text/plain",
+								  @"text/html",
+								  nil], ContentTypePreferences,
+								 
+								 // setting default sort ordering for phrases list in phrase browser:
+								 [archiverTransformer reverseTransformedValue:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"phrasename" ascending:YES] autorelease]]], @"phrasesortdescriptors",
+								 
+								 [NSNumber numberWithInt:DEFAULTSEARCHHITLIMIT], SearchHitLimit,
+								 
+								 [NSNumber numberWithBool:YES], AskAgainToBecomeDefaultMailApplication, 
+								 
+								 [NSNumber numberWithBool:YES], SoonRipeMessagesShouldBeSent,
+								 
+								 [NSNumber numberWithInt:30], SoonRipeMessageMinutes,
+								 
+								 [NSNumber numberWithBool:YES], NSPrintHeaderAndFooter,
+								 
+								 [NSNumber numberWithBool:YES], SelectFirstUnreadMessageInThread,
+								 
+								 [NSNumber numberWithFloat:1.5], SetSeenTimeinterval,
+								 
+								 nil, nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults: appDefaults];
 }

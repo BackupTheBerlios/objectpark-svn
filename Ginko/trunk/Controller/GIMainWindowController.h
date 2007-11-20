@@ -10,6 +10,9 @@
 #import "GICommentTreeView.h"
 #import "GIOutlineViewWithThreadColoring.h"
 #import "GIThreadTreeController.h"
+#import "OPPersistence.h"
+
+@class GIMessageGroup;
 
 @interface GIMainWindowController : NSWindowController 
 {
@@ -17,8 +20,8 @@
 	IBOutlet GIThreadTreeController *threadTreeController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
-	
-	NSArray *messageGroupTreeSelectionIndexPaths;
+	IBOutlet NSSplitView *threadMailSplitter;
+	IBOutlet NSSplitView *mailTreeSplitter;
 }
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;
