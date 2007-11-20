@@ -675,8 +675,13 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset
 {
-	CGFloat result = [sender frame].size.height - 75.0;
+	CGFloat result = [sender frame].size.height - 125.0;
 	return result;
+}
+
+- (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset
+{
+	return 17.0;
 }
 
 - (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview
