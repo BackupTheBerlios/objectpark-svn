@@ -13,6 +13,7 @@
 #import "OPPersistence.h"
 
 @class GIMessageGroup;
+@class GITextView;
 
 @interface GIMainWindowController : NSWindowController 
 {
@@ -22,6 +23,7 @@
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
 	IBOutlet NSSplitView *threadMailSplitter;
 	IBOutlet NSSplitView *mailTreeSplitter;
+	IBOutlet GITextView *messageTextView;
 }
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;

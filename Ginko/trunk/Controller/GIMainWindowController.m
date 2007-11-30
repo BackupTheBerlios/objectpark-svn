@@ -144,6 +144,7 @@ NSDateFormatter *timeAndDateFormatter()
 @end
 
 @interface GIThread (ThreadViewSupport)
+- (GIMessage *)message;
 - (NSArray *)children;
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
@@ -224,11 +225,29 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 }
 
-- (NSAttributedString *)messageForDisplay
+- (GIMessage *)message
 {
 	NSArray *messagesByTree = [self messagesByTree];
+	if ([messagesByTree count] == 1)
+	{
+		return [messagesByTree lastObject];
+	}
+	else
+	{
+		return nil;
+	}
+}
 
-	if ([messagesByTree count] > 1)
+- (NSAttributedString *)messageForDisplay
+{
+	GIMessage *message = [self message];
+
+	if (message)
+	{
+		// single-message thread
+		return [message renderedMessage];
+	}	
+	else
 	{
 		// multi-message thread
 		NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
@@ -236,14 +255,9 @@ NSDateFormatter *timeAndDateFormatter()
 		if (NO) //[messagesByTree count] > 0)
 		{
 			[result appendString:[NSString stringWithFormat:@"\nThread '%@':\n", [[self subjectAndAuthor] string]]];
-			[result appendString:[NSString stringWithFormat:@"contains %d messages\n", [messagesByTree count]]];
+			[result appendString:[NSString stringWithFormat:@"contains %d messages\n", [[self messages] count]]];
 		}
 		return result;
-	}
-	else
-	{
-		// single-message thread
-		return [[messagesByTree lastObject] renderedMessage];
 	}
 }
 
@@ -266,6 +280,7 @@ NSDateFormatter *timeAndDateFormatter()
 @end
 
 @interface GIMessage (ThreadViewSupport)
+- (GIMessage *)message;
 - (NSArray *)children;
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
@@ -273,6 +288,11 @@ NSDateFormatter *timeAndDateFormatter()
 @end
 
 @implementation GIMessage (ThreadViewSupport)
+
+- (GIMessage *)message
+{
+	return self;
+}
 
 - (NSArray *)children
 {
@@ -433,8 +453,55 @@ NSDateFormatter *timeAndDateFormatter()
 			{
 				[threadTreeController setPreservesSelection:NO];
 				[threadTreeController invalidateThreadSelectionCache];
-				//	[threadTreeController performSelector:@selector(setSelectionIndexPaths:) withObject:[threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]] afterDelay:1.0];
 				[threadTreeController setSelectionIndexPaths:[threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]]];
+			}
+		}
+		else if (context = SelectedObjectContext)
+		{
+			int setSeenBehavior = [[NSUserDefaults standardUserDefaults] integerForKey:SetSeenBehavior];
+			NSArray *selectedObjects = [threadTreeController selectedObjects];
+			GIMessage *selectedMessage = nil;
+			static GIMessage *delayedMessage = nil;
+			static NSNumber *yesNumber = nil;
+			
+			if (!yesNumber)
+			{
+				yesNumber = [[NSNumber alloc] initWithBool:YES];
+			}
+			
+			if (delayedMessage)
+			{
+				[NSObject cancelPreviousPerformRequestsWithTarget:delayedMessage selector:@selector(setIsSeen:) object:yesNumber];
+				delayedMessage = nil;
+			}
+			
+			if ([selectedObjects count] == 1)
+			{
+				selectedMessage = [(GIThread *)[selectedObjects lastObject] message];
+			}
+			
+			NSLog(@"Thread/Message selection changed. %@", selectedMessage);
+
+			switch(setSeenBehavior)
+			{
+				case GISetSeenBehaviorImmediately:
+				{
+					if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
+					{
+						[selectedMessage setIsSeen:yesNumber];
+					}
+					break;
+				}
+				case GISetSeenBehaviorAfterTimeinterval:
+				{
+					if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
+					{
+						[selectedMessage performSelector:@selector(setIsSeen:) withObject:yesNumber afterDelay:[[NSUserDefaults standardUserDefaults] floatForKey:SetSeenTimeinterval]];
+						delayedMessage = selectedMessage;
+					}
+				}
+				default:
+					break;
 			}
 		}
 	}
@@ -459,7 +526,7 @@ NSDateFormatter *timeAndDateFormatter()
 	[threadsOutlineView setTarget:self];
 	
 	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
-	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:0 context:SelectedObjectContext];
+	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedObjectContext];
 }
 
 // --- change notification handling ---
@@ -712,10 +779,10 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (IBAction)threadsDoubleAction:(id)sender
 {
-	NSLog(@"threadsDoubleAction");
 	if ([threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
 	{
-		NSLog(@"collapsed");
+		NSLog(@"collapsed. switching views.");
+		[threadMailSplitter setPosition:0.0 ofDividerAtIndex:0];
 	}
 	else
 	{

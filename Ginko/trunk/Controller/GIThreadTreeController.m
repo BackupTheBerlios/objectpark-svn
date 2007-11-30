@@ -260,6 +260,8 @@
 
 - (void)setContent:(NSArray *)aContent
 {
+//	[aContent retain];
+//	[[self content] release];
 //	[self rearrangeObjects];
 	[super setContent:nil];
 	[super setContent:aContent];
