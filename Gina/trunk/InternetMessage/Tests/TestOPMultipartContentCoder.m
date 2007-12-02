@@ -9,37 +9,31 @@
 #import "TestOPMultipartContentCoder.h"
 #import "OPMBoxFile.h"
 #import "NSData+MessageUtils.h"
-#import "GIMessage.h"
 #import "OPInternetMessage.h"
-#import "OPPersistentObject+Extensions.h"
+#import "EDMessagePart+OPExtensions.h"
 
 @implementation TestOPMultipartContentCoder
 
 - (void) tearDown
 {
-    [[OPPersistentObjectContext threadContext] revertChanges];
 }
 
-- (void) testAttributedString
+- (void)testAttributedString
 {
     // read message from resources:
     OPMBoxFile *mboxFile;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    mboxFile = [OPMBoxFile mboxWithPath:[[NSBundle bundleForClass:[self class]] pathForResource: @"multipartAlternativeTest-mbox" ofType:@"txt"]];
+    mboxFile = [OPMBoxFile mboxWithPath:[[NSBundle bundleWithIdentifier:@"org.objectpark.InternetMessageTest"] pathForResource: @"multipartAlternativeTest-mbox" ofType:@"txt"]];
     STAssertTrue(mboxFile != nil, @"mbox could not be read from resources.");
     NSEnumerator *enumerator = [mboxFile messageDataEnumerator];
     NSData *transferData = [[enumerator nextObject] transferDataFromMboxData];
     STAssertTrue(transferData != nil, @"transferData could not be enumerated.");
-    GIMessage *message = [GIMessage messageForMessageId:[[[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease] messageId]];
-    
-    if (!message)
-    {
-        message = [GIMessage messageWithTransferData:transferData];
-    }
-    
-    STAssertTrue([message messageId] != nil, @"message should have an message id.");
+	
+	OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
+	    
+    STAssertTrue([internetMessage messageId] != nil, @"message should have an message id.");
 
-    NSAttributedString *theAttributedString = [message contentAsAttributedString];
+    NSAttributedString *theAttributedString = [[NSMutableAttributedString alloc] initWithAttributedString:[internetMessage contentWithPreferredContentTypes:[EDMessagePart preferredContentTypes] attributed:YES]];
     STAssertTrue(theAttributedString != nil, @"message should have an message id.");
 
     //NSString *thePlainString = [theAttributedString string];

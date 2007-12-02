@@ -10,8 +10,8 @@
 #import "OPSMTP.h"
 #import <OPNetwork/OPStream+SSL.h>
 #import "NSString+MessageUtils.h"
-#import "GIMessage.h"
-#import "OPPersistentObject+Extensions.h"
+#import "OPInternetMessage.h"
+#import "OPSMTP+InternetMessage.h"
 
 @implementation TestOPSMTP
 
@@ -21,10 +21,9 @@
 
 - (void) tearDown
 {
-    [[OPPersistentObjectContext threadContext] revertChanges];
 }
 
-- (GIMessage*) makeAMessage
+- (OPInternetMessage *)makeAMessage
 {
     static int i = 1;
     NSString *messageId = [NSString stringWithFormat: @"<smtptest-message-%d@test.org>",i++];
@@ -33,19 +32,18 @@
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
     STAssertNotNil(transferData, @"nee");
     
-    GIMessage *message = [GIMessage messageWithTransferData:transferData];
+    OPInternetMessage *message = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
     STAssertNotNil(message, @"nee %@", messageId);
     STAssertTrue([[message messageId] isEqual: messageId], @"nee");
     
     return message;
 }
 
-/*
-- (void) testSMTPConnect
+- (void)testSMTPConnect
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    OPSMTP *SMTP;
-    NSHost* host;
+    OPSMTP *SMTP = nil;
+    NSHost *host;
     OPStream *smtpStream;
     NSString *hostName;
     
@@ -61,23 +59,23 @@
     NSAssert(smtpStream != nil, @"stream error");
     NSLog(@"smtpStream = %@", smtpStream);
 
+	SMTP = [OPSMTP SMTPWithStream:smtpStream andDelegate:self];
     NSAssert(SMTP != nil, @"SMTP error");
     NSLog(@"SMTP = %@", SMTP);
   
-    [SMTP acceptMessage: [[self makeAMessage] internetMessage]];
+    [SMTP sendMessage:[self makeAMessage]];
     
     [SMTP release];
     [smtpStream close];
     [pool release];
 }
-*/
 
-- (NSString*) usernameForSMTP:(OPSMTP*) aSMTP
+- (NSString *)usernameForSMTP:(OPSMTP *)aSMTP
 {
     return @"axel@xn--heinz-knig-kcb.de";
 }
 
-- (NSString*) passwordForSMTP: (OPSMTP*) aSMTP
+- (NSString *)passwordForSMTP:(OPSMTP *)aSMTP
 {
     return @"axelTest";
 }
