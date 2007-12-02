@@ -15,6 +15,8 @@
 		7761D9D00D0300E50044E65A /* MIME.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7761D9CF0D0300E50044E65A /* MIME.plist */; };
 		7761DA180D03142D0044E65A /* TestOPXFolderContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B40D00546B00A7BEFF /* TestOPXFolderContentCoder.m */; };
 		7761DADA0D0318D60044E65A /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B80D00546B00A7BEFF /* TestOPAppleDoubleContentCoder.m */; };
+		777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777B05CB0D031DE40080B76F /* InternetMessage.framework */; };
+		777B061B0D0320C80080B76F /* MailIcon_queue.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 777B061A0D0320C80080B76F /* MailIcon_queue.tiff */; };
 		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; };
 		77B6C5FD0D00546B00A7BEFF /* EDCompositeContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C00D00546B00A7BEFF /* EDCompositeContentCoder.m */; };
 		77B6C5FE0D00546B00A7BEFF /* EDContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C10D00546B00A7BEFF /* EDContentCoder.h */; };
@@ -156,9 +158,10 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* Gina_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gina_Prefix.pch; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
-		7761D9710D02FB4D0044E65A /* InternetMessage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = InternetMessage.framework; path = /Users/axel/Projects/Gina/build/Debug/InternetMessage.framework; sourceTree = "<absolute>"; };
 		7761D9780D02FB8B0044E65A /* InternetMessage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InternetMessage.framework; path = build/Debug/InternetMessage.framework; sourceTree = "<group>"; };
 		7761D9CF0D0300E50044E65A /* MIME.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = MIME.plist; sourceTree = "<group>"; };
+		777B05CB0D031DE40080B76F /* InternetMessage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InternetMessage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		777B061A0D0320C80080B76F /* MailIcon_queue.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_queue.tiff; sourceTree = "<group>"; };
 		77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InternetMessage-Info.plist"; sourceTree = "<group>"; };
 		77B6C5A90D00546B00A7BEFF /* saslutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saslutil.h; sourceTree = "<group>"; };
 		77B6C5AA0D00546B00A7BEFF /* prop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prop.h; sourceTree = "<group>"; };
@@ -307,6 +310,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				77CFC52D0D02F4D90039A2E8 /* GPGME.framework in Frameworks */,
 				7761D97A0D02FB8B0044E65A /* InternetMessage.framework in Frameworks */,
+				777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,6 +351,7 @@
 				7761D9780D02FB8B0044E65A /* InternetMessage.framework */,
 				8D1107320486CEB800E47090 /* Gina.app */,
 				77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */,
+				777B05CB0D031DE40080B76F /* InternetMessage.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -528,6 +533,7 @@
 		77B6C9860D01A2C200A7BEFF /* Test Resources */ = {
 			isa = PBXGroup;
 			children = (
+				777B061A0D0320C80080B76F /* MailIcon_queue.tiff */,
 				77B6C9990D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt */,
 				77B6C99A0D01A37000A7BEFF /* TestAppleDouble.transferData */,
 				77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */,
@@ -605,7 +611,7 @@
 			);
 			name = InternetMessage;
 			productName = InternetMessage;
-			productReference = 7761D9710D02FB4D0044E65A /* InternetMessage.framework */;
+			productReference = 777B05CB0D031DE40080B76F /* InternetMessage.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		77B6C8930D008D7C00A7BEFF /* InternetMessageTest */ = {
@@ -682,6 +688,7 @@
 				77B6C99C0D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt in Resources */,
 				77B6C99D0D01A37000A7BEFF /* TestAppleDouble.transferData in Resources */,
 				77B6C99E0D01A37000A7BEFF /* TestMIMEBoundaries.transferData in Resources */,
+				777B061B0D0320C80080B76F /* MailIcon_queue.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -888,7 +895,7 @@
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/InternetMessage.framework/Versions/A/InternetMessage";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/build/Debug",
+					"$(BUILT_PRODUCTS_DIR)",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
 					"\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\"",
@@ -902,7 +909,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
 				INFOPLIST_FILE = "InternetMessageTest-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = "\"$(SRCROOT)/build/Debug\" \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"";
+				LD_RUNPATH_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR) \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Cocoa,

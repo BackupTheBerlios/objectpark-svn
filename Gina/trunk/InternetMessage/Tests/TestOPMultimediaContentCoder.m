@@ -25,7 +25,8 @@
 	OPMultimediaContentCoder *coder;
 	NSAttributedString *attString, *attString1;
 	
-	wrapper = [[[NSFileWrapper alloc] initWithPath:[[NSBundle mainBundle] pathForResource: @"MailIcon_queue" ofType:@"tiff"]] autorelease];
+	NSString *path = [[NSBundle bundleWithIdentifier:@"org.objectpark.InternetMessageTest"] pathForResource:@"MailIcon_queue" ofType:@"tiff"];
+	wrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
 	
 	coder = [[[OPMultimediaContentCoder alloc] initWithFileWrapper:wrapper] autorelease];
 	
