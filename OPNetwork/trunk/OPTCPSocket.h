@@ -31,7 +31,7 @@
 }
 
 /*" Setting socket options "*/
-- (void)setSendsDataImmediately:(BOOL)flag;
+//- (void)setSendsDataImmediately:(BOOL)flag;
 
 /*" Server sockets "*/
 - (void)startListening;

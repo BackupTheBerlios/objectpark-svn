@@ -22,7 +22,6 @@
 #include "osdep.h"
 #include "OPTCPSocket.h"
 
-
 #ifdef WIN32
 #define OPSOCKETHANDLE ((int)[self nativeHandle])
 #else
@@ -87,11 +86,12 @@ Note that, generally, working with #EDStreams is a better choice than working di
 
 /*" Controls wether data written to the socket is sent immediatly or whether the operating system should try to accumulate some data before sending a packet to reduce overhead. This is commonly known as Nagle's algorithm (RFC 896) and corresponds to TCP_NODELAY. "*/
 
+/*
 - (void)setSendsDataImmediately:(BOOL)flag
 {
     [self setSocketOption:TCP_NODELAY level:IPPROTO_TCP value:flag];
 }
-
+*/
 
 //---------------------------------------------------------------------------------------
 //	LISTENING

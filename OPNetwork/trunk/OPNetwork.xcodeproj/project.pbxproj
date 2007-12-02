@@ -235,10 +235,12 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 770937220857490E00A29008 /* Build configuration list for PBXProject "OPNetwork" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* OPNetwork */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* OPNetwork */,
 			);
@@ -381,6 +383,55 @@
 			};
 			name = Default;
 		};
+		7759A7C20D02DF4500AD49CA /* Release (@rpath) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/OPNetwork.framework/Versions/A/OPNetwork";
+				PREBINDING = NO;
+			};
+			name = "Release (@rpath)";
+		};
+		7759A7C30D02DF4500AD49CA /* Release (@rpath) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = OPNetwork_Prefix.pch;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = Dynamic;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "-DOPNETWORK_OSXBUILD";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = OPNetwork;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
+			};
+			name = "Release (@rpath)";
+		};
 		8DBC70B20A249FCE0075691E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -490,6 +541,7 @@
 				7709371F0857490E00A29008 /* Development */,
 				8DBC70B20A249FCE0075691E /* Debug */,
 				8DEFDA6B09C0767F00F6FB25 /* Release */,
+				7759A7C30D02DF4500AD49CA /* Release (@rpath) */,
 				770937210857490E00A29008 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -501,6 +553,7 @@
 				770937230857490E00A29008 /* Development */,
 				8DBC70B30A249FCE0075691E /* Debug */,
 				8DEFDA6C09C0767F00F6FB25 /* Release */,
+				7759A7C20D02DF4500AD49CA /* Release (@rpath) */,
 				770937250857490E00A29008 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
