@@ -110,9 +110,6 @@
 		77B6C99E0D01A37000A7BEFF /* TestMIMEBoundaries.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */; };
 		77CFC5090D02F2CC0039A2E8 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		77CFC5140D02F32D0039A2E8 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
-		77CFC52C0D02F4D90039A2E8 /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CFC52B0D02F4D90039A2E8 /* GPGME.framework */; };
-		77CFC52D0D02F4D90039A2E8 /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CFC52B0D02F4D90039A2E8 /* GPGME.framework */; };
-		77CFC52E0D02F4D90039A2E8 /* GPGME.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CFC52B0D02F4D90039A2E8 /* GPGME.framework */; };
 		77DB2A120D03537500F23C06 /* TestOPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5BC0D00546B00A7BEFF /* TestOPMultipartContentCoder.m */; };
 		77DB2A4A0D03569F00F23C06 /* TestOPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5AE0D00546B00A7BEFF /* TestOPSMTP.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
@@ -291,7 +288,6 @@
 				77B6C8020D00754600A7BEFF /* libsasl2.dylib in Frameworks */,
 				77B6C80A0D0075AC00A7BEFF /* Cocoa.framework in Frameworks */,
 				7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */,
-				77CFC52C0D02F4D90039A2E8 /* GPGME.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,7 +296,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				77CFC5140D02F32D0039A2E8 /* OPNetwork.framework in Frameworks */,
-				77CFC52E0D02F4D90039A2E8 /* GPGME.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,7 +305,6 @@
 			files = (
 				77CFC5090D02F2CC0039A2E8 /* OPNetwork.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				77CFC52D0D02F4D90039A2E8 /* GPGME.framework in Frameworks */,
 				7761D97A0D02FB8B0044E65A /* InternetMessage.framework in Frameworks */,
 				777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */,
 			);

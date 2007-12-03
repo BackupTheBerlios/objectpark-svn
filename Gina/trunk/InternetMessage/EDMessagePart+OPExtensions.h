@@ -37,6 +37,7 @@
 
 @end
 
+#ifdef USEPGP
 @interface EDMessagePart (OpenPGP)
 
 - (BOOL)isInlineSigned;
@@ -47,4 +48,4 @@
 - (NSString *)signatureDescription;
 
 @end
-
+#endif

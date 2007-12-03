@@ -55,7 +55,7 @@
     NSAssert(host != nil, @"host error");
     NSLog(@"host = %@", host);
     
-    smtpStream = [OPStream streamConnectedToHost: host port: 25 sendTimeout: 30.0 receiveTimeout: 30.0];
+    smtpStream = [OPStream streamConnectedToHost:host port:25 sendTimeout:30.0 receiveTimeout:30.0];
     NSAssert(smtpStream != nil, @"stream error");
     NSLog(@"smtpStream = %@", smtpStream);
 

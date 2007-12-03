@@ -345,6 +345,7 @@
 
 @end
 
+#ifdef USEPGP
 
 #import <GPGME/GPGME.h>
 #import "EDEntityFieldCoder.h"
@@ -528,3 +529,5 @@ Check the signatures' status for details (e.g. if a signature is good or bad) "*
 }
 
 @end
+
+#endif
