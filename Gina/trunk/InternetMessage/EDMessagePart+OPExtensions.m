@@ -349,7 +349,6 @@
 
 #import <GPGME/GPGME.h>
 #import "EDEntityFieldCoder.h"
-//#import "GIApplication.h"
 @implementation EDMessagePart (OpenPGP)
 
 - (BOOL)isInlineSigned

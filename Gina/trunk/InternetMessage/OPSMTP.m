@@ -85,7 +85,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 	}
 }
 
-- (void) connect 
+- (void)connect 
 {
     NSHost *localhost;
     NSString *name;

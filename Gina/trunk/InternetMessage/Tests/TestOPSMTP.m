@@ -27,8 +27,14 @@
 {
     static int i = 1;
     NSString *messageId = [NSString stringWithFormat: @"<smtptest-message-%d@test.org>",i++];
+	NSString *recipient = [[[NSUserDefaults standardUserDefaults] persistentDomainForName:@"org.objectpark.InternetMessageTest"] objectForKey:@"SMTPTestRecipient"];
+    NSAssert(recipient != nil, @"SMTP test recipient must be specified in 'org.objectpark.InternetMessageTest' User Default with key 'SMTPTestRecipient'.");
+	
+	NSString *sender = [[[NSUserDefaults standardUserDefaults] persistentDomainForName:@"org.objectpark.InternetMessageTest"] objectForKey:@"SMTPTestUser"];
+    NSAssert(sender != nil, @"SMTP test user must be specified in 'org.objectpark.InternetMessageTest' User Default with key 'SMTPTestUser'.");
+	
     NSString *transferString = [NSString stringWithFormat:
-                                             @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nTo: axel@objectpark.org\r\nFrom: axel@xn--heinz-knig-kcb.de\r\nMIME-Version: 1.0\r\nSubject: SMTP-Test\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId];
+                                             @"Message-ID: %@\r\nDate: Fri, 16 Nov 2001 09:51:25 +0100\r\nTo: %@\r\nFrom: %@\r\nMIME-Version: 1.0\r\nSubject: SMTP-Test\r\nReferences: <Pine.LNX.4.33.0111151839560.23892-100000@bla.com\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Transfer-Encoding: 7bit\r\nNewsgroups: gnu.gnustep.discuss\r\n\r\nUlf Licht wrote:\r\n", messageId, recipient, sender];
     NSData *transferData = [transferString dataUsingEncoding:NSASCIIStringEncoding];
     STAssertNotNil(transferData, @"nee");
     
@@ -45,39 +51,47 @@
     OPSMTP *SMTP = nil;
     NSHost *host;
     OPStream *smtpStream;
-    NSString *hostName;
-    
-    hostName = [@"mail.xn--heinz-knig-kcb.de" IDNAEncodedDomainName];
-    NSAssert(hostName != nil, @"hostName error");
-    NSLog(@"hostName = %@", hostName);
+	
+	NSLog(@"bundle id = %@", [NSBundle mainBundle]);
+	NSString *hostName = [[[NSUserDefaults standardUserDefaults] persistentDomainForName:@"org.objectpark.InternetMessageTest"] objectForKey:@"SMTPTestHost"];	
+    NSAssert(hostName != nil, @"SMTP test hostname must be specified in 'org.objectpark.InternetMessageTest' User Default with key 'SMTPTestHost'.");
     
     host = [NSHost hostWithName:hostName];
     NSAssert(host != nil, @"host error");
-    NSLog(@"host = %@", host);
     
     smtpStream = [OPStream streamConnectedToHost:host port:25 sendTimeout:30.0 receiveTimeout:30.0];
     NSAssert(smtpStream != nil, @"stream error");
-    NSLog(@"smtpStream = %@", smtpStream);
+    //NSLog(@"smtpStream = %@", smtpStream);
 
 	SMTP = [OPSMTP SMTPWithStream:smtpStream andDelegate:self];
     NSAssert(SMTP != nil, @"SMTP error");
-    NSLog(@"SMTP = %@", SMTP);
-  
+
+	[SMTP connect];
     [SMTP sendMessage:[self makeAMessage]];
     
-    [SMTP release];
     [smtpStream close];
     [pool release];
 }
 
 - (NSString *)usernameForSMTP:(OPSMTP *)aSMTP
 {
-    return @"axel@xn--heinz-knig-kcb.de";
+	NSString *username = [[[NSUserDefaults standardUserDefaults] persistentDomainForName:@"org.objectpark.InternetMessageTest"] objectForKey:@"SMTPTestUser"];
+	
+    NSAssert(username != nil, @"SMTP test user must be specified in 'org.objectpark.InternetMessageTest' User Default with key 'SMTPTestUser'.");
+    return username;
 }
 
 - (NSString *)passwordForSMTP:(OPSMTP *)aSMTP
 {
-    return @"axelTest";
+	NSString *password = [[[NSUserDefaults standardUserDefaults] persistentDomainForName:@"org.objectpark.InternetMessageTest"] objectForKey:@"SMTPTestPassword"];
+	
+    NSAssert(password != nil, @"SMTP test password must be specified in 'org.objectpark.InternetMessageTest' User Default with key 'SMTPTestPassword'.");
+    return password;
+}
+
+- (BOOL)allowAnyRootCertificateForSMTP:(OPSMTP *)aSMTP
+{
+	return YES;
 }
 
 @end

@@ -35,8 +35,6 @@
     // encode file wrapper in X-Folder messagepart
     coder = [[[OPXFolderContentCoder alloc] initWithFileWrapper:wrapper] autorelease];
 
-	/*
-
     messagePart = [coder messagePart];
     STAssertNotNil(messagePart, @"no message part could be encoded.");
 
@@ -52,10 +50,8 @@
     fileWrappers = [wrapper fileWrappers];
     STAssertTrue([fileWrappers count] == 1, @"not exactly one file in folder");
     STAssertNotNil([fileWrappers objectForKey:[FILEPATH lastPathComponent]], @"file in folder has wrong name");
-	*/
 	
 	[pool release];
-	NSLog(@"after");
 }
 
 - (void)tearDown
