@@ -274,7 +274,6 @@
 		77B6C9990D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "multipartAlternativeTest-mbox.txt"; sourceTree = "<group>"; };
 		77B6C99A0D01A37000A7BEFF /* TestAppleDouble.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestAppleDouble.transferData; sourceTree = "<group>"; };
 		77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestMIMEBoundaries.transferData; sourceTree = "<group>"; };
-		77CFC52B0D02F4D90039A2E8 /* GPGME.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPGME.framework; path = "../GPGME-1.0.2/build/EmbDeployment (@rpath)/GPGME.framework"; sourceTree = SOURCE_ROOT; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Gina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -323,7 +322,6 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				77CFC52B0D02F4D90039A2E8 /* GPGME.framework */,
 				7759A8760D02E39800AD49CA /* OPNetwork.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				77B6C7FF0D00754600A7BEFF /* libxml2.dylib */,
@@ -844,6 +842,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "InternetMessage-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@rpath/InternetMessage.framework/Versions/A/InternetMessage";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
@@ -877,6 +876,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "InternetMessage-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@rpath/InternetMessage.framework/Versions/A/InternetMessage";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
