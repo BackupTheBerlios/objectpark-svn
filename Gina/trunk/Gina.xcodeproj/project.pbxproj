@@ -896,7 +896,6 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
-					"\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -915,8 +914,6 @@
 					SenTestingKit,
 					"-framework",
 					OPNetwork,
-					"-framework",
-					GPGME,
 					"-framework",
 					InternetMessage,
 				);
