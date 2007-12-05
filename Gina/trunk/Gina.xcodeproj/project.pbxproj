@@ -17,6 +17,12 @@
 		7761DADA0D0318D60044E65A /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B80D00546B00A7BEFF /* TestOPAppleDoubleContentCoder.m */; };
 		777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777B05CB0D031DE40080B76F /* InternetMessage.framework */; };
 		777B061B0D0320C80080B76F /* MailIcon_queue.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 777B061A0D0320C80080B76F /* MailIcon_queue.tiff */; };
+		778078000D0705F70091F21D /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = 778077FF0D0705F70091F21D /* schema.xml */; };
+		778078040D07065C0091F21D /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = 778078020D07065C0091F21D /* schema.strings */; };
+		778078100D0707DC0091F21D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780E0D0707DC0091F21D /* CoreFoundation.framework */; };
+		778078110D0707DC0091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
+		778078390D070AAA0091F21D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FD0D0705D20091F21D /* main.c */; };
+		7780783B0D070AC50091F21D /* GetMetadataForFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.c */; };
 		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; };
 		77B6C5FD0D00546B00A7BEFF /* EDCompositeContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C00D00546B00A7BEFF /* EDCompositeContentCoder.m */; };
 		77B6C5FE0D00546B00A7BEFF /* EDContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C10D00546B00A7BEFF /* EDContentCoder.h */; };
@@ -162,6 +168,12 @@
 		7761D9CF0D0300E50044E65A /* MIME.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = MIME.plist; sourceTree = "<group>"; };
 		777B05CB0D031DE40080B76F /* InternetMessage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InternetMessage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		777B061A0D0320C80080B76F /* MailIcon_queue.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_queue.tiff; sourceTree = "<group>"; };
+		778077FB0D0705830091F21D /* GetMetadataForFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GetMetadataForFile.c; sourceTree = "<group>"; };
+		778077FD0D0705D20091F21D /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		778077FF0D0705F70091F21D /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = schema.xml; sourceTree = "<group>"; };
+		778078030D07065C0091F21D /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
+		7780780E0D0707DC0091F21D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
+		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InternetMessage-Info.plist"; sourceTree = "<group>"; };
 		77B6C5A90D00546B00A7BEFF /* saslutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saslutil.h; sourceTree = "<group>"; };
 		77B6C5AA0D00546B00A7BEFF /* prop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prop.h; sourceTree = "<group>"; };
@@ -276,6 +288,8 @@
 		77B6C99A0D01A37000A7BEFF /* TestAppleDouble.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestAppleDouble.transferData; sourceTree = "<group>"; };
 		77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestMIMEBoundaries.transferData; sourceTree = "<group>"; };
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
+		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
+		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Gina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -297,6 +311,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				77CFC5140D02F32D0039A2E8 /* OPNetwork.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77E5676B0D0702670016594D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				778078100D0707DC0091F21D /* CoreFoundation.framework in Frameworks */,
+				778078110D0707DC0091F21D /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +358,8 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7780780E0D0707DC0091F21D /* CoreFoundation.framework */,
+				7780780F0D0707DC0091F21D /* CoreServices.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 			);
@@ -348,6 +373,7 @@
 				8D1107320486CEB800E47090 /* Gina.app */,
 				77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */,
 				777B05CB0D031DE40080B76F /* InternetMessage.framework */,
+				77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -355,6 +381,7 @@
 		29B97314FDCFA39411CA2CEA /* Gina */ = {
 			isa = PBXGroup;
 			children = (
+				778077F50D07053A0091F21D /* Spotlight */,
 				772B4C9C0D05890800853BEF /* Documentation */,
 				77B6C94E0D019D4B00A7BEFF /* Common */,
 				77B6C5980D00541A00A7BEFF /* InternetMessage */,
@@ -366,6 +393,7 @@
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */,
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
+				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -382,6 +410,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				778078010D0706190091F21D /* Spotlight */,
 				7761D9CF0D0300E50044E65A /* MIME.plist */,
 				77B6C9860D01A2C200A7BEFF /* Test Resources */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -407,6 +436,24 @@
 				772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */,
 			);
 			path = Documentation;
+			sourceTree = "<group>";
+		};
+		778077F50D07053A0091F21D /* Spotlight */ = {
+			isa = PBXGroup;
+			children = (
+				778077FD0D0705D20091F21D /* main.c */,
+				778077FB0D0705830091F21D /* GetMetadataForFile.c */,
+			);
+			path = Spotlight;
+			sourceTree = "<group>";
+		};
+		778078010D0706190091F21D /* Spotlight */ = {
+			isa = PBXGroup;
+			children = (
+				778078020D07065C0091F21D /* schema.strings */,
+				778077FF0D0705F70091F21D /* schema.xml */,
+			);
+			name = Spotlight;
 			sourceTree = "<group>";
 		};
 		77B6C5980D00541A00A7BEFF /* InternetMessage */ = {
@@ -639,6 +686,23 @@
 			productReference = 77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
+		77E5676C0D0702670016594D /* GinaSpotlight */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77E567710D0702680016594D /* Build configuration list for PBXNativeTarget "GinaSpotlight" */;
+			buildPhases = (
+				77E567690D0702670016594D /* Resources */,
+				77E5676A0D0702670016594D /* Sources */,
+				77E5676B0D0702670016594D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GinaSpotlight;
+			productName = GinaSpotlight;
+			productReference = 77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */;
+			productType = "com.apple.product-type.bundle";
+		};
 		8D1107260486CEB800E47090 /* Gina */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Gina" */;
@@ -674,6 +738,7 @@
 				8D1107260486CEB800E47090 /* Gina */,
 				77B6C58D0D0053AE00A7BEFF /* InternetMessage */,
 				77B6C8930D008D7C00A7BEFF /* InternetMessageTest */,
+				77E5676C0D0702670016594D /* GinaSpotlight */,
 			);
 		};
 /* End PBXProject section */
@@ -695,6 +760,15 @@
 				77B6C99D0D01A37000A7BEFF /* TestAppleDouble.transferData in Resources */,
 				77B6C99E0D01A37000A7BEFF /* TestMIMEBoundaries.transferData in Resources */,
 				777B061B0D0320C80080B76F /* MailIcon_queue.tiff in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77E567690D0702670016594D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				778078000D0705F70091F21D /* schema.xml in Resources */,
+				778078040D07065C0091F21D /* schema.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +864,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		77E5676A0D0702670016594D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				778078390D070AAA0091F21D /* main.c in Sources */,
+				7780783B0D070AC50091F21D /* GetMetadataForFile.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D11072C0486CEB800E47090 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -828,6 +911,14 @@
 				29B97319FDCFA39411CA2CEA /* English */,
 			);
 			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+		778078020D07065C0091F21D /* schema.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				778078030D07065C0091F21D /* English */,
+			);
+			name = schema.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -969,6 +1060,52 @@
 			};
 			name = Release;
 		};
+		77E5676F0D0702670016594D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "GinaSpotlight-Info.plist";
+				INSTALL_PATH = /Library/Spotlight;
+				OTHER_LDFLAGS = "";
+				PREBINDING = YES;
+				PRODUCT_NAME = GinaSpotlight;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+				WRAPPER_EXTENSION = mdimporter;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		77E567700D0702670016594D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "GinaSpotlight-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = GinaSpotlight;
+				WRAPPER_EXTENSION = bundle;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1062,6 +1199,15 @@
 			buildConfigurations = (
 				77B6C8970D008D7D00A7BEFF /* Debug */,
 				77B6C8980D008D7D00A7BEFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77E567710D0702680016594D /* Build configuration list for PBXNativeTarget "GinaSpotlight" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77E5676F0D0702670016594D /* Debug */,
+				77E567700D0702670016594D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
