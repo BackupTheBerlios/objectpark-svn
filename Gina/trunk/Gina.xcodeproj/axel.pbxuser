@@ -11,7 +11,7 @@
 		activeArchitecture = i386;
 		activeBuildConfigurationName = Debug;
 		activeExecutable = 77B6C56B0D0052EF00A7BEFF /* Gina */;
-		activeTarget = 77E5676C0D0702670016594D /* GinaSpotlight */;
+		activeTarget = 8D1107260486CEB800E47090 /* Gina */;
 		addToTargets = (
 			77E5676C0D0702670016594D /* GinaSpotlight */,
 		);
@@ -216,6 +216,13 @@
 			778078640D070CC20091F21D /* PBXTextBookmark */ = 778078640D070CC20091F21D /* PBXTextBookmark */;
 			778078650D070CC20091F21D /* PBXTextBookmark */ = 778078650D070CC20091F21D /* PBXTextBookmark */;
 			778078660D070CC20091F21D /* PBXTextBookmark */ = 778078660D070CC20091F21D /* PBXTextBookmark */;
+			778078690D070D360091F21D /* PBXTextBookmark */ = 778078690D070D360091F21D /* PBXTextBookmark */;
+			778078720D070DC90091F21D /* PBXTextBookmark */ = 778078720D070DC90091F21D /* PBXTextBookmark */;
+			778078730D070DC90091F21D /* PBXTextBookmark */ = 778078730D070DC90091F21D /* PBXTextBookmark */;
+			778078740D070DC90091F21D /* PBXBookmark */ = 778078740D070DC90091F21D /* PBXBookmark */;
+			778078750D070DC90091F21D /* PBXTextBookmark */ = 778078750D070DC90091F21D /* PBXTextBookmark */;
+			778078760D070DC90091F21D /* PBXTextBookmark */ = 778078760D070DC90091F21D /* PBXTextBookmark */;
+			778078770D070DC90091F21D /* PBXTextBookmark */ = 778078770D070DC90091F21D /* PBXTextBookmark */;
 			77B6C86E0D008C2700A7BEFF = 77B6C86E0D008C2700A7BEFF /* PBXTextBookmark */;
 			77B6C8840D008C2700A7BEFF = 77B6C8840D008C2700A7BEFF /* PBXTextBookmark */;
 			77B6CAC80D01B84A00A7BEFF = 77B6CAC80D01B84A00A7BEFF /* PBXTextBookmark */;
@@ -781,6 +788,7 @@
 	};
 	778078540D070B940091F21D /* ATSTypes.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = ATSTypes.h;
 		path = /Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/ApplicationServices.framework/Frameworks/ATS.framework/Headers/ATSTypes.h;
 		sourceTree = "<absolute>";
@@ -847,6 +855,70 @@
 		vrLen = 996;
 		vrLoc = 8043;
 	};
+	778078690D070D360091F21D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 778078540D070B940091F21D /* ATSTypes.h */;
+		name = "ATSTypes.h: 268";
+		rLen = 53;
+		rLoc = 9868;
+		rType = 0;
+		vrLen = 978;
+		vrLoc = 8043;
+	};
+	778078720D070DC90091F21D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 778078540D070B940091F21D /* ATSTypes.h */;
+		name = "ATSTypes.h: 268";
+		rLen = 53;
+		rLoc = 9868;
+		rType = 0;
+		vrLen = 996;
+		vrLoc = 8043;
+	};
+	778078730D070DC90091F21D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */;
+		name = "GinaSpotlight-Info.plist: 88";
+		rLen = 0;
+		rLoc = 2335;
+		rType = 0;
+		vrLen = 754;
+		vrLoc = 0;
+	};
+	778078740D070DC90091F21D /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */;
+	};
+	778078750D070DC90091F21D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 778078540D070B940091F21D /* ATSTypes.h */;
+		name = "ATSTypes.h: 268";
+		rLen = 53;
+		rLoc = 9868;
+		rType = 0;
+		vrLen = 996;
+		vrLoc = 8043;
+	};
+	778078760D070DC90091F21D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */;
+		name = "GinaSpotlight-Info.plist: 88";
+		rLen = 0;
+		rLoc = 2335;
+		rType = 0;
+		vrLen = 754;
+		vrLoc = 0;
+	};
+	778078770D070DC90091F21D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */;
+		name = "InternetMessage-Info.plist: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 622;
+		vrLoc = 0;
+	};
 	77B6C56B0D0052EF00A7BEFF /* Gina */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -887,6 +959,13 @@
 	};
 	77B6C58D0D0053AE00A7BEFF /* InternetMessage */ = {
 		activeExec = 0;
+	};
+	77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {699, 381}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 622}";
+		};
 	};
 	77B6C5AE0D00546B00A7BEFF /* TestOPSMTP.m */ = {
 		uiCtxt = {

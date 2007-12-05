@@ -174,7 +174,7 @@
 		778078030D07065C0091F21D /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		7780780E0D0707DC0091F21D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InternetMessage-Info.plist"; sourceTree = "<group>"; };
+		77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "InternetMessage-Info.plist"; path = "../InternetMessage-Info.plist"; sourceTree = "<group>"; };
 		77B6C5A90D00546B00A7BEFF /* saslutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saslutil.h; sourceTree = "<group>"; };
 		77B6C5AA0D00546B00A7BEFF /* prop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prop.h; sourceTree = "<group>"; };
 		77B6C5AB0D00546B00A7BEFF /* sasl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sasl.h; sourceTree = "<group>"; };
@@ -283,13 +283,13 @@
 		77B6C8000D00754600A7BEFF /* libsasl2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsasl2.dylib; path = /usr/lib/libsasl2.dylib; sourceTree = "<absolute>"; };
 		77B6C8150D00761E00A7BEFF /* EDObjcRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EDObjcRuntime.h; path = InternetMessage/EDObjcRuntime.h; sourceTree = "<group>"; };
 		77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InternetMessageTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InternetMessageTest-Info.plist"; sourceTree = "<group>"; };
+		77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "InternetMessageTest-Info.plist"; path = "../InternetMessageTest-Info.plist"; sourceTree = "<group>"; };
 		77B6C9990D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "multipartAlternativeTest-mbox.txt"; sourceTree = "<group>"; };
 		77B6C99A0D01A37000A7BEFF /* TestAppleDouble.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestAppleDouble.transferData; sourceTree = "<group>"; };
 		77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestMIMEBoundaries.transferData; sourceTree = "<group>"; };
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
 		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
-		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
+		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaSpotlight-Info.plist"; path = "../GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Gina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -391,9 +391,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */,
-				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
-				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -415,6 +412,9 @@
 				77B6C9860D01A2C200A7BEFF /* Test Resources */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */,
+				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
+				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 			);
 			path = Resources;
