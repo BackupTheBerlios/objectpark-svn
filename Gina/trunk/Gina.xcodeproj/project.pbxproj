@@ -8,7 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		7702EC870D04773F00D0D506 /* TestOPXFolderContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B40D00546B00A7BEFF /* TestOPXFolderContentCoder.m */; };
+		7708F07B0D0DB6CA008A4A2B /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7708F07A0D0DB6CA008A4A2B /* ActivePrefPanes.plist */; };
+		7708F0C10D0DB8CD008A4A2B /* GIGeneralPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */; };
+		7708F0C20D0DB8CD008A4A2B /* GIGeneralPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7708F0C00D0DB8CD008A4A2B /* GIGeneralPrefs.nib */; };
+		7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */; };
+		7708F11D0D0E8DDA008A4A2B /* StandardEmailApp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7708F11C0D0E8DDA008A4A2B /* StandardEmailApp.xib */; };
+		7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB4C0D0E97A300CBEC7B /* Localizable.strings */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
+		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
+		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
+		775C31140D0D40EA0098DA07 /* OPNetwork.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
+		775C31150D0D40EA0098DA07 /* Cocoa.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		775C31310D0D46280098DA07 /* GIApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 775C31300D0D46280098DA07 /* GIApplication.m */; };
 		7761D97A0D02FB8B0044E65A /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		7761D9AE0D02FF040044E65A /* TestEDTextFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B00D00546B00A7BEFF /* TestEDTextFieldCoder.m */; };
 		7761D9B30D02FF170044E65A /* TestOPMultimediaContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B60D00546B00A7BEFF /* TestOPMultimediaContentCoder.m */; };
@@ -148,6 +159,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */,
+				775C31140D0D40EA0098DA07 /* OPNetwork.framework in Copy Frameworks */,
+				775C31150D0D40EA0098DA07 /* Cocoa.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,8 +176,19 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* Gina_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gina_Prefix.pch; sourceTree = "<group>"; };
+		7708F07A0D0DB6CA008A4A2B /* ActivePrefPanes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = ActivePrefPanes.plist; sourceTree = "<group>"; };
+		7708F0BE0D0DB8CD008A4A2B /* GIGeneralPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIGeneralPrefs.h; sourceTree = "<group>"; };
+		7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGeneralPrefs.m; sourceTree = "<group>"; };
+		7708F0C00D0DB8CD008A4A2B /* GIGeneralPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = GIGeneralPrefs.nib; sourceTree = "<group>"; };
+		7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIUserDefaultsKeys.h; sourceTree = "<group>"; };
+		7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIUserDefaultsKeys.m; sourceTree = "<group>"; };
+		7708F11C0D0E8DDA008A4A2B /* StandardEmailApp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StandardEmailApp.xib; sourceTree = "<group>"; };
+		7713AB4C0D0E97A300CBEC7B /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug InternetMessageTest.rtf"; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
+		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
+		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
+		775C31300D0D46280098DA07 /* GIApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIApplication.m; sourceTree = "<group>"; };
 		7761D9780D02FB8B0044E65A /* InternetMessage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InternetMessage.framework; path = build/Debug/InternetMessage.framework; sourceTree = "<group>"; };
 		7761D9CF0D0300E50044E65A /* MIME.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = MIME.plist; sourceTree = "<group>"; };
 		777B05CB0D031DE40080B76F /* InternetMessage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InternetMessage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -331,6 +356,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				7761D97A0D02FB8B0044E65A /* InternetMessage.framework in Frameworks */,
 				777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */,
+				775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +366,8 @@
 		080E96DDFE201D6D7F000001 /* Gina */ = {
 			isa = PBXGroup;
 			children = (
+				775C312E0D0D45E50098DA07 /* Controllers */,
+				775C30D70D0D3C870098DA07 /* Preferences */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -347,6 +375,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				775C30FB0D0D40620098DA07 /* OPPreferences.framework */,
 				7759A8760D02E39800AD49CA /* OPNetwork.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				77B6C7FF0D00754600A7BEFF /* libxml2.dylib */,
@@ -400,6 +429,8 @@
 			children = (
 				32CA4F630368D1EE00C91783 /* Gina_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */,
+				7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -407,6 +438,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7713AB4C0D0E97A300CBEC7B /* Localizable.strings */,
+				7708F07A0D0DB6CA008A4A2B /* ActivePrefPanes.plist */,
 				778078010D0706190091F21D /* Spotlight */,
 				7761D9CF0D0300E50044E65A /* MIME.plist */,
 				77B6C9860D01A2C200A7BEFF /* Test Resources */,
@@ -416,6 +449,7 @@
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
 				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				7708F11C0D0E8DDA008A4A2B /* StandardEmailApp.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -436,6 +470,25 @@
 				772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */,
 			);
 			path = Documentation;
+			sourceTree = "<group>";
+		};
+		775C30D70D0D3C870098DA07 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				7708F0BE0D0DB8CD008A4A2B /* GIGeneralPrefs.h */,
+				7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */,
+				7708F0C00D0DB8CD008A4A2B /* GIGeneralPrefs.nib */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		775C312E0D0D45E50098DA07 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				775C312F0D0D46280098DA07 /* GIApplication.h */,
+				775C31300D0D46280098DA07 /* GIApplication.m */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		778077F50D07053A0091F21D /* Spotlight */ = {
@@ -778,6 +831,10 @@
 			files = (
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				7708F07B0D0DB6CA008A4A2B /* ActivePrefPanes.plist in Resources */,
+				7708F0C20D0DB8CD008A4A2B /* GIGeneralPrefs.nib in Resources */,
+				7708F11D0D0E8DDA008A4A2B /* StandardEmailApp.xib in Resources */,
+				7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -878,6 +935,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				775C31310D0D46280098DA07 /* GIApplication.m in Sources */,
+				7708F0C10D0DB8CD008A4A2B /* GIGeneralPrefs.m in Sources */,
+				7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1116,6 +1176,7 @@
 					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
 					"\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\"",
 					"\"$(SRCROOT)/build/Debug\"",
+					"\"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1141,6 +1202,7 @@
 					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
 					"\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\"",
 					"\"$(SRCROOT)/build/Debug\"",
+					"\"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"",
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1158,7 +1220,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\" \"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"";
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -1175,7 +1237,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"/Users/axel/Projects/OPNetwork/build/Release (@rpath)\"";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\" \"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"";
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = /usr/include/libxml2;
