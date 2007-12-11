@@ -30,7 +30,7 @@
 		{
 			if (!defaultEmailAppWindow)
 			{
-				[NSBundle loadNibNamed:@"StandardEmailApp" owner:self];
+				[NSBundle loadNibNamed:@"DefaultEmailApp" owner:self];
 			}
 			
 			[defaultEmailAppWindow center];

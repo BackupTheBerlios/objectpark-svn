@@ -11,7 +11,7 @@
 		7708F07B0D0DB6CA008A4A2B /* ActivePrefPanes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7708F07A0D0DB6CA008A4A2B /* ActivePrefPanes.plist */; };
 		7708F0C10D0DB8CD008A4A2B /* GIGeneralPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */; };
 		7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */; };
-		7708F11D0D0E8DDA008A4A2B /* StandardEmailApp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7708F11C0D0E8DDA008A4A2B /* StandardEmailApp.xib */; };
+		7708F11D0D0E8DDA008A4A2B /* DefaultEmailApp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */; };
 		7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB4C0D0E97A300CBEC7B /* Localizable.strings */; };
 		7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
@@ -181,7 +181,7 @@
 		7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIGeneralPrefs.m; sourceTree = "<group>"; };
 		7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIUserDefaultsKeys.h; sourceTree = "<group>"; };
 		7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIUserDefaultsKeys.m; sourceTree = "<group>"; };
-		7708F11C0D0E8DDA008A4A2B /* StandardEmailApp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StandardEmailApp.xib; sourceTree = "<group>"; };
+		7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DefaultEmailApp.xib; sourceTree = "<group>"; };
 		7713AB4C0D0E97A300CBEC7B /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIGeneralPrefs.xib; sourceTree = "<group>"; };
 		772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug InternetMessageTest.rtf"; sourceTree = "<group>"; };
@@ -449,7 +449,7 @@
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
 				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
-				7708F11C0D0E8DDA008A4A2B /* StandardEmailApp.xib */,
+				7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -832,7 +832,7 @@
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				7708F07B0D0DB6CA008A4A2B /* ActivePrefPanes.plist in Resources */,
-				7708F11D0D0E8DDA008A4A2B /* StandardEmailApp.xib in Resources */,
+				7708F11D0D0E8DDA008A4A2B /* DefaultEmailApp.xib in Resources */,
 				7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */,
 				7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */,
 			);
