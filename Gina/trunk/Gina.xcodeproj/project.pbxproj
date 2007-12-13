@@ -124,6 +124,8 @@
 		77B6C99C0D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C9990D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt */; };
 		77B6C99D0D01A37000A7BEFF /* TestAppleDouble.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C99A0D01A37000A7BEFF /* TestAppleDouble.transferData */; };
 		77B6C99E0D01A37000A7BEFF /* TestMIMEBoundaries.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */; };
+		77BF5C250D1132A600BE0F31 /* GIFilterPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF5C240D1132A600BE0F31 /* GIFilterPrefs.m */; };
+		77BF5C280D1132EB00BE0F31 /* GIFilterPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77BF5C270D1132EB00BE0F31 /* GIFilterPrefs.xib */; };
 		77C3BD040D103F860003634C /* Gina.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77C3BD020D103F860003634C /* Gina.tiff */; };
 		77CFC5090D02F2CC0039A2E8 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		77CFC5140D02F32D0039A2E8 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
@@ -311,6 +313,9 @@
 		77B6C9990D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "multipartAlternativeTest-mbox.txt"; sourceTree = "<group>"; };
 		77B6C99A0D01A37000A7BEFF /* TestAppleDouble.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestAppleDouble.transferData; sourceTree = "<group>"; };
 		77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestMIMEBoundaries.transferData; sourceTree = "<group>"; };
+		77BF5C230D1132A600BE0F31 /* GIFilterPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFilterPrefs.h; sourceTree = "<group>"; };
+		77BF5C240D1132A600BE0F31 /* GIFilterPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFilterPrefs.m; sourceTree = "<group>"; };
+		77BF5C270D1132EB00BE0F31 /* GIFilterPrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIFilterPrefs.xib; sourceTree = "<group>"; };
 		77C3BD020D103F860003634C /* Gina.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Gina.tiff; sourceTree = "<group>"; };
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
 		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -479,6 +484,9 @@
 				7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */,
 				7708F0BE0D0DB8CD008A4A2B /* GIGeneralPrefs.h */,
 				7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */,
+				77BF5C270D1132EB00BE0F31 /* GIFilterPrefs.xib */,
+				77BF5C230D1132A600BE0F31 /* GIFilterPrefs.h */,
+				77BF5C240D1132A600BE0F31 /* GIFilterPrefs.m */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -837,6 +845,7 @@
 				7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */,
 				7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */,
 				77C3BD040D103F860003634C /* Gina.tiff in Resources */,
+				77BF5C280D1132EB00BE0F31 /* GIFilterPrefs.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -940,6 +949,7 @@
 				775C31310D0D46280098DA07 /* GIApplication.m in Sources */,
 				7708F0C10D0DB8CD008A4A2B /* GIGeneralPrefs.m in Sources */,
 				7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */,
+				77BF5C250D1132A600BE0F31 /* GIFilterPrefs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
