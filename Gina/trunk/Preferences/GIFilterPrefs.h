@@ -11,7 +11,10 @@
 
 @interface GIFilterPrefs : OPPreferencePane 
 {
-
+	IBOutlet NSArrayController *filterArrayController;
+	IBOutlet NSPredicateEditor *predicateEditor;
+	
+	NSIndexSet *selectedFilterIndexes;
 }
 
 @end
