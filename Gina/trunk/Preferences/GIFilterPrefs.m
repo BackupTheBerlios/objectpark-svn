@@ -76,4 +76,9 @@ static NSMutableArray *filters = nil;
 	[[NSUserDefaults standardUserDefaults] setObject:filters forKey:@"Filters"];
 }
 
+- (NSArray *)messageGroupsByTree
+{
+	return [NSArray arrayWithObjects:@"A Group", @"Another Group", nil];
+}
+
 @end
