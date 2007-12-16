@@ -13,4 +13,6 @@
 {
 }
 
+- (IBAction)clone:(id)sender;
+
 @end
