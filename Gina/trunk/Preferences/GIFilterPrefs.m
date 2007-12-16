@@ -49,6 +49,8 @@ static NSMutableArray *filters = nil;
 	
 	[self willChangeValueForKey:@"selectedFilterPredicate"];
 	[self didChangeValueForKey:@"selectedFilterPredicate"];
+	[self willChangeValueForKey:@"selectedFilterMessageGroup"];
+	[self didChangeValueForKey:@"selectedFilterMessageGroup"];
 	
 	if ([predicateEditor numberOfRows] == 0)
 	{
@@ -78,7 +80,43 @@ static NSMutableArray *filters = nil;
 
 - (NSArray *)messageGroupsByTree
 {
-	return [NSArray arrayWithObjects:@"A Group", @"Another Group", nil];
+	return [NSArray arrayWithObjects:
+			[NSDictionary dictionaryWithObjectsAndKeys:
+			 @"A Group", @"name",
+			 @"Private/A Group", @"treePathDescription",
+			 @"OPMessageGroup-fake1", @"objectURLString",
+			 nil, nil],
+			[NSDictionary dictionaryWithObjectsAndKeys:
+			 @"Another Group", @"name",
+			 @"Business/Another Group", @"treePathDescription",
+			 @"OPMessageGroup-fake2", @"objectURLString",
+			 nil, nil]
+			, nil];
+}
+
+- (id)selectedFilterMessageGroup
+{
+	id currentFilter = [[filterArrayController selectedObjects] lastObject];
+	id objectURLString = [currentFilter valueForKey:@"putInMessageGroupObjectURLString"];
+	
+	for (id result in [self messageGroupsByTree])
+	{
+		if ([[result valueForKey:@"objectURLString"] isEqualToString:objectURLString])
+		{
+			return result;
+		}
+	}
+	
+	return nil;
+}
+
+- (void)setSelectedFilterMessageGroup:(id)aMessageGroup
+{
+	id currentFilter = [[filterArrayController selectedObjects] lastObject];
+	id objectURLString = [aMessageGroup valueForKey:@"objectURLString"];
+	if (!objectURLString) objectURLString = [NSNull null];
+	[currentFilter setValue:objectURLString forKey:@"putInMessageGroupObjectURLString"];
+	[[NSUserDefaults standardUserDefaults] setObject:filters forKey:@"Filters"];
 }
 
 @end
