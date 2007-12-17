@@ -11,6 +11,7 @@
 
 @interface GIFilterArrayController : NSArrayController 
 {
+	IBOutlet NSTableView *tableView;
 }
 
 - (IBAction)clone:(id)sender;
