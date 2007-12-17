@@ -33,6 +33,9 @@
 		7780783B0D070AC50091F21D /* GetMetadataForFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.c */; };
 		7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780E0D0707DC0091F21D /* CoreFoundation.framework */; };
 		7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
+		778A689A0D16981B00CAA693 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
+		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; };
 		77B6C5FD0D00546B00A7BEFF /* EDCompositeContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C00D00546B00A7BEFF /* EDCompositeContentCoder.m */; };
 		77B6C5FE0D00546B00A7BEFF /* EDContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C10D00546B00A7BEFF /* EDContentCoder.h */; };
@@ -135,8 +138,6 @@
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		8D8B1B9C0D11485D008E02D7 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,6 +164,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */,
 				775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */,
 				775C31140D0D40EA0098DA07 /* OPNetwork.framework in Copy Frameworks */,
 			);
@@ -363,10 +365,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				77CFC5090D02F2CC0039A2E8 /* OPNetwork.framework in Frameworks */,
-				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				7761D97A0D02FB8B0044E65A /* InternetMessage.framework in Frameworks */,
 				777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */,
 				775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */,
+				778A689A0D16981B00CAA693 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,7 +856,7 @@
 				7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */,
 				77C3BD040D103F860003634C /* Gina.tiff in Resources */,
 				77BF5C280D1132EB00BE0F31 /* GIFilterPrefs.xib in Resources */,
-				8D8B1B9C0D11485D008E02D7 /* Gina.icns in Resources */,
+				778A68BC0D1699E900CAA693 /* Gina.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
