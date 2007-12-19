@@ -652,11 +652,12 @@ Note: This method is not available on Windows NT platforms. "*/
 
 - (BOOL)isValidEncryptionOfString: (NSString*) aString
 {
-  char salt[3];
-
-  [self getCString:salt maxLength:2];
-  salt[2] = '\0';
-  return [self isEqualToString:[aString encryptedStringWithSalt:salt]];
+	char salt[3];
+	
+	strncpy(salt, [self UTF8String], 2);
+	//  [self getCString:salt maxLength:2];
+	salt[2] = '\0';
+	return [self isEqualToString:[aString encryptedStringWithSalt:salt]];
 }
 #endif // !defined(WIN32)
 
