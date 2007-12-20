@@ -10,7 +10,6 @@
 #import "GICommentTreeView.h"
 #import "GIOutlineViewWithThreadColoring.h"
 #import "GIThreadTreeController.h"
-#import "OPPersistence.h"
 
 @class GIMessageGroup;
 @class GITextView;
