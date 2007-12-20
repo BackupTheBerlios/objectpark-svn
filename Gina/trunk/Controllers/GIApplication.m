@@ -8,6 +8,7 @@
 
 #import "GIApplication.h"
 #import "GIUserDefaultsKeys.h"
+//#import "GIMainWindowController.h"
 
 @implementation GIApplication
 
@@ -50,6 +51,25 @@
 {
 	LSSetDefaultHandlerForURLScheme((CFStringRef)@"mailto", (CFStringRef)[[[NSBundle mainBundle] bundleIdentifier] lowercaseString]);
 	[defaultEmailAppWindow close];
+}
+
+- (void)ensureMainWindowIsPresent
+{
+	// ensure a main window:
+	for (NSWindow *window in [self windows])
+	{
+//		if ([[window windowController] isKindOfClass:[GIMainWindowController class]])
+		{
+			return;
+		}
+	}
+	
+//	[[GIMainWindowController alloc] init];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)aNotification
+{
+	[self ensureMainWindowIsPresent];
 }
 
 @end
