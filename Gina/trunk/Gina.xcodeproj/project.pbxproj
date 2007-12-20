@@ -14,6 +14,9 @@
 		7708F11D0D0E8DDA008A4A2B /* DefaultEmailApp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */; };
 		7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB4C0D0E97A300CBEC7B /* Localizable.strings */; };
 		7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */; };
+		7736124E0D1AB69F007FC630 /* MainWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7736124D0D1AB69F007FC630 /* MainWindow.nib */; };
+		7736125A0D1AB7CE007FC630 /* GICommentTreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612570D1AB7CE007FC630 /* GICommentTreeCell.m */; };
+		7736125F0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736125E0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -190,6 +193,15 @@
 		7713AB4C0D0E97A300CBEC7B /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIGeneralPrefs.xib; sourceTree = "<group>"; };
 		772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug InternetMessageTest.rtf"; sourceTree = "<group>"; };
+		7736124D0D1AB69F007FC630 /* MainWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainWindow.nib; sourceTree = "<group>"; };
+		773612500D1AB6F2007FC630 /* GIMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMainWindowController.h; sourceTree = "<group>"; };
+		773612510D1AB6F2007FC630 /* GIMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMainWindowController.m; sourceTree = "<group>"; };
+		773612560D1AB7CE007FC630 /* GICommentTreeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GICommentTreeCell.h; sourceTree = "<group>"; };
+		773612570D1AB7CE007FC630 /* GICommentTreeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GICommentTreeCell.m; sourceTree = "<group>"; };
+		773612580D1AB7CE007FC630 /* GICommentTreeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GICommentTreeView.h; sourceTree = "<group>"; };
+		773612590D1AB7CE007FC630 /* GICommentTreeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GICommentTreeView.m; sourceTree = "<group>"; };
+		7736125D0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMatrixWithKeyboardSupport.h; sourceTree = "<group>"; };
+		7736125E0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -378,6 +390,7 @@
 		080E96DDFE201D6D7F000001 /* Gina */ = {
 			isa = PBXGroup;
 			children = (
+				773612550D1AB796007FC630 /* Custom Views */,
 				775C312E0D0D45E50098DA07 /* Controllers */,
 				775C30D70D0D3C870098DA07 /* Preferences */,
 			);
@@ -462,6 +475,7 @@
 				77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */,
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
 				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
+				7736124D0D1AB69F007FC630 /* MainWindow.nib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 				7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */,
 			);
@@ -486,6 +500,19 @@
 			path = Documentation;
 			sourceTree = "<group>";
 		};
+		773612550D1AB796007FC630 /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				7736125D0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.h */,
+				7736125E0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m */,
+				773612560D1AB7CE007FC630 /* GICommentTreeCell.h */,
+				773612570D1AB7CE007FC630 /* GICommentTreeCell.m */,
+				773612580D1AB7CE007FC630 /* GICommentTreeView.h */,
+				773612590D1AB7CE007FC630 /* GICommentTreeView.m */,
+			);
+			path = "Custom Views";
+			sourceTree = "<group>";
+		};
 		775C30D70D0D3C870098DA07 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -506,6 +533,8 @@
 			children = (
 				775C312F0D0D46280098DA07 /* GIApplication.h */,
 				775C31300D0D46280098DA07 /* GIApplication.m */,
+				773612500D1AB6F2007FC630 /* GIMainWindowController.h */,
+				773612510D1AB6F2007FC630 /* GIMainWindowController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -857,6 +886,7 @@
 				77C3BD040D103F860003634C /* Gina.tiff in Resources */,
 				77BF5C280D1132EB00BE0F31 /* GIFilterPrefs.xib in Resources */,
 				778A68BC0D1699E900CAA693 /* Gina.icns in Resources */,
+				7736124E0D1AB69F007FC630 /* MainWindow.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -962,6 +992,8 @@
 				7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */,
 				77BF5C250D1132A600BE0F31 /* GIFilterPrefs.m in Sources */,
 				77BF61AB0D12882700BE0F31 /* GIFilterArrayController.m in Sources */,
+				7736125A0D1AB7CE007FC630 /* GICommentTreeCell.m in Sources */,
+				7736125F0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
