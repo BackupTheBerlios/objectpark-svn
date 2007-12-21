@@ -10,18 +10,20 @@
 #import "GIUserDefaultsKeys.h"
 
 // helper
+#import <Foundation/NSDebug.h>
 #import "NSArray+Extensions.h"
 #import "NSAttributedString+Extensions.h"
 
-#import "OPPersistentObject+Extensions.h"
-
 // model stuff
-#import "GIMessageGroup+Statistics.h"
+#import "OPPersistentObject.h"
+
+//#import "GIMessageGroup+Statistics.h"
 #import "GIThread.h"
 #import "GIMessage.h"
+#import "GIMessageGroup.h"
 
-static NSString *ContentContext = @"ContentContext";
-static NSString *SelectedObjectContext = @"selectedObjectContext";
+//static NSString *ContentContext = @"ContentContext";
+//static NSString *SelectedObjectContext = @"selectedObjectContext";
 
 static inline NSString *nilGuard(NSString *str)
 {
@@ -146,7 +148,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 @interface GIThread (ThreadViewSupport)
 - (GIMessage *)message;
-- (NSArray *)children;
+- (OPFaultingArray *)children;
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
 - (NSAttributedString *)dateForDisplay;
@@ -155,14 +157,14 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIThread (ThreadViewSupport)
 
-- (NSArray *)children
+- (OPFaultingArray *)children
 {
-	NSArray *messagesByTree = [self messagesByTree];
+	OPFaultingArray *children = [self messagesByTree];
 	
-	if ([messagesByTree count] > 1)
+	if ([children count] > 1)
 	{
 		// multi-message thread
-		return messagesByTree;
+		return children;
 	}
 	else
 	{
@@ -173,9 +175,9 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (id)subjectAndAuthor
 {
-	NSArray *messagesByTree = [self messagesByTree];
+	OPFaultingArray *msgs = [self messagesByTree];
 
-	if ([messagesByTree count] > 1)
+	if ([msgs count] > 1)
 	{
 		// multi-message thread
 		return [[[NSAttributedString alloc] initWithString:nilGuard([self valueForKey:@"subject"]) attributes:[self hasUnreadMessages] ? unreadAttributes() : readAttributes()] autorelease];
@@ -191,9 +193,9 @@ NSDateFormatter *timeAndDateFormatter()
 		if (message) 
 		{
 			unsigned flags  = [message flags];
-			NSString *subject = nilGuard([message valueForKey:@"subject"]);
+			NSString *subjectString = nilGuard([message valueForKey:@"subject"]);
 			
-			NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subject) attributes:(flags & OPSeenStatus) ? readAttributes() : unreadAttributes()];
+			NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subjectString) attributes:(flags & OPSeenStatus) ? readAttributes() : unreadAttributes()];
 			
 			[result appendAttributedString:aSubject];
 			
@@ -228,10 +230,10 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (GIMessage *)message
 {
-	NSArray *messagesByTree = [self messagesByTree];
-	if ([messagesByTree count] == 1)
+	OPFaultingArray *msgs = [self messagesByTree];
+	if ([msgs count] == 1)
 	{
-		return [messagesByTree lastObject];
+		return [msgs lastObject];
 	}
 	else
 	{
@@ -266,8 +268,7 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	BOOL isRead = ![self hasUnreadMessages];
 	
-	NSDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"	
-	NSString *dateString = [timeAndDateFormatter() stringFromDate:date];
+	NSString *dateString = [timeAndDateFormatter() stringFromDate:[self valueForKey:@"date"]];
 		
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
@@ -305,7 +306,6 @@ NSDateFormatter *timeAndDateFormatter()
 	//	return [NSString stringWithFormat:@"    %@", [self valueForKey:@"senderName"]];
 	NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
 	NSString *from = [self senderName];
-	BOOL flags  = [self flags];
 	
 	if (!from) 
 	{
@@ -323,7 +323,7 @@ NSDateFormatter *timeAndDateFormatter()
 //	
 //	[result appendAttributedString: (indentation > MAX_INDENTATION)? spacer2() : spacer()];
 	
-	NSDictionary *completeAttributes = (flags & OPSeenStatus) ? readAttributes() : unreadAttributes();
+	NSDictionary *completeAttributes = ([self flags] & OPSeenStatus) ? readAttributes() : unreadAttributes();
 	
 	if (flags & OPJunkMailStatus) 
 	{
@@ -344,8 +344,7 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	BOOL isRead = [self hasFlags:OPSeenStatus];
 	
-	NSDate *date = [self valueForKey:@"date"]; // both thread an message respond to "date"	
-	NSString *dateString = [timeAndDateFormatter() stringFromDate:date];
+	NSString *dateString = [timeAndDateFormatter() stringFromDate:[self valueForKey:@"date"]];
 	
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
@@ -399,7 +398,7 @@ NSDateFormatter *timeAndDateFormatter()
 			}
 			else
 			{
-				GIMessageGroup *group = [OPPersistentObjectContext objectWithURLString:object resolve:YES];
+				GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString:object];
 				NSAssert1([group isKindOfClass:[GIMessageGroup class]], @"Object is not a GIMessageGroup object: %@", object);
 				[children addObject:group];
 			}
@@ -422,14 +421,14 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
 	
-	[GIMessageGroup loadGroupStats];
+//	[GIMessageGroup loadGroupStats];
 	
 	// receiving update notifications:
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
 	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupsChangedNotification object:nil];
-	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupStatisticsDidUpdateNotification object:nil];
-	[notificationCenter addObserver:self selector:@selector(groupStatsInvalidated:) name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
+//	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupStatisticsDidUpdateNotification object:nil];
+//	[notificationCenter addObserver:self selector:@selector(groupStatsInvalidated:) name:GIMessageGroupStatisticsDidInvalidateNotification object:nil];
 
 	[self showWindow:self];
 
@@ -438,14 +437,15 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (void)dealloc
 {
-	[threadTreeController removeObserver:self forKeyPath:@"content"];
-	[threadTreeController removeObserver:self forKeyPath:@"selectedObjects"];
+//	[threadTreeController removeObserver:self forKeyPath:@"content"];
+//	[threadTreeController removeObserver:self forKeyPath:@"selectedObjects"];
 	
 	[super dealloc];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+#ifdef _NO
 	if (object == threadTreeController)
 	{
 		if (context == ContentContext)
@@ -507,17 +507,17 @@ NSDateFormatter *timeAndDateFormatter()
 		}
 	}
 //	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+#endif
 }
-
 - (void)windowDidLoad
 {
 	NSLog(@"windowDidLoad");
 
 	// configuring message tree view:
-	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-														forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
+//	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+//														forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
 	
-	[commentTreeView bind:@"selectedMessage" toObject:threadTreeController withKeyPath:@"selection.self" options:options];
+//	[commentTreeView bind:@"selectedMessage" toObject:threadTreeController withKeyPath:@"selection.self" options:options];
 	[commentTreeView setTarget:self];
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];
 	
@@ -526,8 +526,8 @@ NSDateFormatter *timeAndDateFormatter()
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
 	
-	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
-	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedObjectContext];
+//	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
+//	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedObjectContext];
 }
 
 // --- change notification handling ---
@@ -546,6 +546,7 @@ NSDateFormatter *timeAndDateFormatter()
 // -- handling message tree view selection --
 - (IBAction)commentTreeSelectionChanged:(id)sender
 {
+	/*
 	GIMessage *message = [commentTreeView selectedMessage];
 	
 	if (message)
@@ -563,24 +564,29 @@ NSDateFormatter *timeAndDateFormatter()
 	{
 		[threadTreeController setSelectionIndexPaths:[NSArray array]];
 	}
+	 */
 }
 
 // -- handling menu commands --
 
 - (IBAction)markAsRead:(id)sender
 {
-	[[threadTreeController selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:YES]];
+/*	[[threadTreeController selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:YES]];
 	[threadTreeController rearrangeSelectedNodes];
+ */
 }
 
 - (IBAction)markAsUnread:(id)sender
 {
+	/*
 	[[threadTreeController selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:NO]];
 	[threadTreeController rearrangeSelectedNodes];
+	 */
 }
 
 - (IBAction)toggleRead:(id)sender
 {
+	/*
 	if ([threadTreeController selectionHasUnreadMessages])
 	{
 		[self markAsRead:self];
@@ -589,6 +595,7 @@ NSDateFormatter *timeAndDateFormatter()
 	{
 		[self markAsUnread:self];
 	}
+	 */
 }
 
 /*
@@ -616,7 +623,8 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSArray *)messageGroupHierarchyRoot
 {
-	return [[[GIMessageGroup hierarchyRootNode] messageGroupHierarchyAsDictionaries] objectForKey:@"children"];
+//	return [[[GIMessageGroup hierarchyRootNode] messageGroupHierarchyAsDictionaries] objectForKey:@"children"];
+	return [NSArray array];
 }
 
 - (NSFont *)messageGroupListFont
@@ -631,13 +639,16 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSArray *)threadTreeSelectionIndexPaths
 {
+	/*
 	[threadTreeController setPreservesSelection:YES];
 	return [threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]];
+	 */
+	return nil;
 }
 
 - (void)setThreadTreeSelectionIndexPaths:(NSArray *)somePaths
 {
-	[threadTreeController rememberThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]];
+//	[threadTreeController rememberThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]];
 }
 
 - (NSFont *)threadListFont

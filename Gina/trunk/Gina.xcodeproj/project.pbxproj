@@ -70,6 +70,7 @@
 		7736148A0D1C1562007FC630 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614040D1C0F2E007FC630 /* hash.c */; };
 		7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		773614A30D1C18B7007FC630 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
+		7736153F0D1C33D2007FC630 /* GIMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612510D1AB6F2007FC630 /* GIMainWindowController.m */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -203,6 +204,13 @@
 			remoteGlobalIDString = 773614590D1C152A007FC630;
 			remoteInfo = OPPersistence;
 		};
+		773615190D1C30CB007FC630 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D1107260486CEB800E47090 /* Gina */;
+			remoteInfo = Gina;
+		};
 		77B6C5940D00540100A7BEFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -325,6 +333,8 @@
 		7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPPersistence-Info.plist"; path = "../OPPersistence-Info.plist"; sourceTree = "<group>"; };
 		773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OPPersistenceTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		773614CA0D1C1AB0007FC630 /* OPPersistenceTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPPersistenceTest-Info.plist"; path = "../OPPersistenceTest-Info.plist"; sourceTree = "<group>"; };
+		773615130D1C30A7007FC630 /* GinaTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		773615140D1C30A7007FC630 /* GinaTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaTest-Info.plist"; path = "../GinaTest-Info.plist"; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -481,6 +491,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		773615100D1C30A6007FC630 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		77B6C58C0D0053AE00A7BEFF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -533,6 +550,11 @@
 				775C312E0D0D45E50098DA07 /* Controllers */,
 				7736141A0D1C1000007FC630 /* Model */,
 				775C30D70D0D3C870098DA07 /* Preferences */,
+				7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */,
+				7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */,
+				773613550D1BBA11007FC630 /* GIMessageFilter.h */,
+				773613560D1BBA11007FC630 /* GIMessageFilter.m */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -571,6 +593,7 @@
 				77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */,
 				7736145A0D1C152A007FC630 /* OPPersistence.framework */,
 				773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */,
+				773615130D1C30A7007FC630 /* GinaTest.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -584,8 +607,9 @@
 				773614E50D1C1D9A007FC630 /* PersistenceTests */,
 				77B6C5980D00541A00A7BEFF /* InternetMessage */,
 				77B6C5AC0D00546B00A7BEFF /* InternetMessageTests */,
-				778077F50D07053A0091F21D /* Spotlight */,
 				080E96DDFE201D6D7F000001 /* Gina */,
+				773615230D1C3245007FC630 /* GinaTests */,
+				778077F50D07053A0091F21D /* Spotlight */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -598,11 +622,6 @@
 			isa = PBXGroup;
 			children = (
 				32CA4F630368D1EE00C91783 /* Gina_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
-				7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */,
-				7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */,
-				773613550D1BBA11007FC630 /* GIMessageFilter.h */,
-				773613560D1BBA11007FC630 /* GIMessageFilter.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -619,6 +638,8 @@
 				77B6C9860D01A2C200A7BEFF /* Test Resources */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				773615140D1C30A7007FC630 /* GinaTest-Info.plist */,
+				7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */,
 				77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */,
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
 				7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */,
@@ -626,7 +647,6 @@
 				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				7736124D0D1AB69F007FC630 /* MainWindow.nib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
-				7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -746,6 +766,14 @@
 			);
 			name = PersistenceTests;
 			path = Persistence/Tests;
+			sourceTree = "<group>";
+		};
+		773615230D1C3245007FC630 /* GinaTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = GinaTests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		775C30D70D0D3C870098DA07 /* Preferences */ = {
@@ -1047,6 +1075,25 @@
 			productReference = 773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
+		773615120D1C30A6007FC630 /* GinaTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 773615180D1C30A7007FC630 /* Build configuration list for PBXNativeTarget "GinaTest" */;
+			buildPhases = (
+				7736150E0D1C30A6007FC630 /* Resources */,
+				7736150F0D1C30A6007FC630 /* Sources */,
+				773615100D1C30A6007FC630 /* Frameworks */,
+				773615110D1C30A6007FC630 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7736151A0D1C30CB007FC630 /* PBXTargetDependency */,
+			);
+			name = GinaTest;
+			productName = GinaTest;
+			productReference = 773615130D1C30A7007FC630 /* GinaTest.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		77B6C58D0D0053AE00A7BEFF /* InternetMessage */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 77B6C5930D0053AF00A7BEFF /* Build configuration list for PBXNativeTarget "InternetMessage" */;
@@ -1140,6 +1187,7 @@
 				77B6C8930D008D7C00A7BEFF /* InternetMessageTest */,
 				773614590D1C152A007FC630 /* OPPersistence */,
 				773614C80D1C1AB0007FC630 /* OPPersistenceTest */,
+				773615120D1C30A6007FC630 /* GinaTest */,
 			);
 		};
 /* End PBXProject section */
@@ -1153,6 +1201,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		773614C40D1C1AB0007FC630 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7736150E0D1C30A6007FC630 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1220,6 +1275,19 @@
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
+		773615110D1C30A6007FC630 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
 		77B6C8920D008D7C00A7BEFF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1265,6 +1333,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		773614C50D1C1AB0007FC630 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7736150F0D1C30A6007FC630 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1365,6 +1440,7 @@
 				7736142D0D1C1041007FC630 /* GIMessageGroup.m in Sources */,
 				7736142E0D1C1041007FC630 /* GIProfile.m in Sources */,
 				7736142F0D1C1041007FC630 /* GIThread.m in Sources */,
+				7736153F0D1C33D2007FC630 /* GIMainWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1375,6 +1451,11 @@
 			isa = PBXTargetDependency;
 			target = 773614590D1C152A007FC630 /* OPPersistence */;
 			targetProxy = 7736149F0D1C1897007FC630 /* PBXContainerItemProxy */;
+		};
+		7736151A0D1C30CB007FC630 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D1107260486CEB800E47090 /* Gina */;
+			targetProxy = 773615190D1C30CB007FC630 /* PBXContainerItemProxy */;
 		};
 		77B6C5950D00540100A7BEFF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1529,6 +1610,62 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = OPPersistenceTest;
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		773615160D1C30A7007FC630 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Gina.app/Contents/MacOS/Gina";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "GinaTest-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = GinaTest;
+				"Test Host" = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		773615170D1C30A7007FC630 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Gina.app/Contents/MacOS/Gina";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "GinaTest-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = GinaTest;
+				"Test Host" = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 				ZERO_LINK = NO;
 			};
@@ -1774,6 +1911,7 @@
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				ZERO_LINK = NO;
 			};
 			name = Debug;
 		};
@@ -1791,6 +1929,7 @@
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -1811,6 +1950,15 @@
 			buildConfigurations = (
 				773614CB0D1C1AB0007FC630 /* Debug */,
 				773614CC0D1C1AB0007FC630 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		773615180D1C30A7007FC630 /* Build configuration list for PBXNativeTarget "GinaTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				773615160D1C30A7007FC630 /* Debug */,
+				773615170D1C30A7007FC630 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -8,7 +8,7 @@
 
 #import "GIApplication.h"
 #import "GIUserDefaultsKeys.h"
-//#import "GIMainWindowController.h"
+#import "GIMainWindowController.h"
 
 @implementation GIApplication
 
@@ -58,13 +58,13 @@
 	// ensure a main window:
 	for (NSWindow *window in [self windows])
 	{
-//		if ([[window windowController] isKindOfClass:[GIMainWindowController class]])
+		if ([[window windowController] isKindOfClass:[GIMainWindowController class]])
 		{
 			return;
 		}
 	}
 	
-//	[[GIMainWindowController alloc] init];
+	[[GIMainWindowController alloc] init];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification

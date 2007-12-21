@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "GICommentTreeView.h"
 #import "GIOutlineViewWithThreadColoring.h"
-#import "GIThreadTreeController.h"
 
 @class GIMessageGroup;
 @class GITextView;
@@ -17,7 +16,7 @@
 @interface GIMainWindowController : NSWindowController 
 {
 	IBOutlet NSTreeController *messageGroupTreeController;
-	IBOutlet GIThreadTreeController *threadTreeController;
+//	IBOutlet GIThreadTreeController *threadTreeController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
 	IBOutlet NSSplitView *threadMailSplitter;
