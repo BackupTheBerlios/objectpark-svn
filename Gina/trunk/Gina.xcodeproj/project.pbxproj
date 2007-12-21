@@ -324,6 +324,8 @@
 		773614340D1C10AD007FC630 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		7736145A0D1C152A007FC630 /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPPersistence-Info.plist"; path = "../OPPersistence-Info.plist"; sourceTree = "<group>"; };
+		773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OPPersistenceTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		773614CA0D1C1AB0007FC630 /* OPPersistenceTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPPersistenceTest-Info.plist"; path = "../OPPersistenceTest-Info.plist"; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -474,6 +476,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		773614C60D1C1AB0007FC630 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		77B6C58C0D0053AE00A7BEFF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -563,6 +572,7 @@
 				777B05CB0D031DE40080B76F /* InternetMessage.framework */,
 				77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */,
 				7736145A0D1C152A007FC630 /* OPPersistence.framework */,
+				773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -573,6 +583,7 @@
 				772B4C9C0D05890800853BEF /* Documentation */,
 				77B6C94E0D019D4B00A7BEFF /* Common */,
 				773613CF0D1C0EA4007FC630 /* Persistence */,
+				773614E50D1C1D9A007FC630 /* PersistenceTests */,
 				77B6C5980D00541A00A7BEFF /* InternetMessage */,
 				77B6C5AC0D00546B00A7BEFF /* InternetMessageTests */,
 				778077F50D07053A0091F21D /* Spotlight */,
@@ -613,6 +624,7 @@
 				77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */,
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
 				7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */,
+				773614CA0D1C1AB0007FC630 /* OPPersistenceTest-Info.plist */,
 				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				7736124D0D1AB69F007FC630 /* MainWindow.nib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
@@ -728,6 +740,14 @@
 				773614280D1C1041007FC630 /* GIThread.m */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		773614E50D1C1D9A007FC630 /* PersistenceTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = PersistenceTests;
+			path = Persistence/Tests;
 			sourceTree = "<group>";
 		};
 		775C30D70D0D3C870098DA07 /* Preferences */ = {
@@ -1011,6 +1031,24 @@
 			productReference = 7736145A0D1C152A007FC630 /* OPPersistence.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		773614C80D1C1AB0007FC630 /* OPPersistenceTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 773614CD0D1C1AB0007FC630 /* Build configuration list for PBXNativeTarget "OPPersistenceTest" */;
+			buildPhases = (
+				773614C40D1C1AB0007FC630 /* Resources */,
+				773614C50D1C1AB0007FC630 /* Sources */,
+				773614C60D1C1AB0007FC630 /* Frameworks */,
+				773614C70D1C1AB0007FC630 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OPPersistenceTest;
+			productName = OPPersistenceTest;
+			productReference = 773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		77B6C58D0D0053AE00A7BEFF /* InternetMessage */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 77B6C5930D0053AF00A7BEFF /* Build configuration list for PBXNativeTarget "InternetMessage" */;
@@ -1103,12 +1141,20 @@
 				77B6C58D0D0053AE00A7BEFF /* InternetMessage */,
 				77B6C8930D008D7C00A7BEFF /* InternetMessageTest */,
 				773614590D1C152A007FC630 /* OPPersistence */,
+				773614C80D1C1AB0007FC630 /* OPPersistenceTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		773614560D1C152A007FC630 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		773614C40D1C1AB0007FC630 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1163,6 +1209,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		773614C70D1C1AB0007FC630 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
 		77B6C8920D008D7C00A7BEFF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1204,6 +1263,13 @@
 				773614850D1C155F007FC630 /* pager.c in Sources */,
 				773614870D1C1560007FC630 /* btree.c in Sources */,
 				7736148A0D1C1562007FC630 /* hash.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		773614C50D1C1AB0007FC630 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1409,6 +1475,63 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = OPPersistence;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		773614CB0D1C1AB0007FC630 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OPPersistence.framework/Versions/A/OPPersistence";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "OPPersistenceTest-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistenceTest;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		773614CC0D1C1AB0007FC630 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "OPPersistenceTest-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistenceTest;
+				WRAPPER_EXTENSION = octest;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -1681,6 +1804,15 @@
 			buildConfigurations = (
 				7736145D0D1C152A007FC630 /* Debug */,
 				7736145E0D1C152A007FC630 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		773614CD0D1C1AB0007FC630 /* Build configuration list for PBXNativeTarget "OPPersistenceTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				773614CB0D1C1AB0007FC630 /* Debug */,
+				773614CC0D1C1AB0007FC630 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
