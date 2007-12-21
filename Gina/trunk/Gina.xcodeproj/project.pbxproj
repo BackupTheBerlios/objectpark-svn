@@ -323,7 +323,7 @@
 		773614280D1C1041007FC630 /* GIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThread.m; sourceTree = "<group>"; };
 		773614340D1C10AD007FC630 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		7736145A0D1C152A007FC630 /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OPPersistence-Info.plist"; sourceTree = "<group>"; };
+		7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPPersistence-Info.plist"; path = "../OPPersistence-Info.plist"; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -581,7 +581,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -613,6 +612,7 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */,
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
+				7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */,
 				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				7736124D0D1AB69F007FC630 /* MainWindow.nib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
