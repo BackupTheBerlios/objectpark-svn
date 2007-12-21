@@ -8,34 +8,18 @@
 
 #import "GIFilterPrefs.h"
 #import <Foundation/NSDebug.h>
+#import "GIMessageFilter.h"
 
 @implementation GIFilterPrefs
 
-static NSMutableArray *filters = nil;
-
-- (NSMutableArray *)filters
-{	
-	if (!filters)
-	{
-		filters = [[[NSUserDefaults standardUserDefaults] objectForKey:@"Filters"] mutableCopy];
-		if (!filters)
-		{
-			filters = [[NSMutableArray alloc] init];
-		}
-	}
-	
-	return filters;
-}
-
-- (void)setFilters:(NSMutableArray *)someFilters
+- (Class)messageFilterClass
 {
-	[filters autorelease];
-	filters = [someFilters retain];
-	[[NSUserDefaults standardUserDefaults] setObject:filters forKey:@"Filters"];
+	return [GIMessageFilter class];
 }
 
 - (void)ruleEditorRowsDidChange:(NSNotification *)notification
 {
+//	[predicateEditor reloadPredicate];
 }
 
 - (NSIndexSet *)selectedFilterIndexes
@@ -75,7 +59,7 @@ static NSMutableArray *filters = nil;
 	
 	if (NSDebugEnabled) NSLog(@"predicate = %@", predicateFormat);
 	
-	[[NSUserDefaults standardUserDefaults] setObject:filters forKey:@"Filters"];
+	[[GIMessageFilter class] saveFilters];
 }
 
 - (NSArray *)messageGroupsByTree
@@ -116,7 +100,7 @@ static NSMutableArray *filters = nil;
 	id objectURLString = [aMessageGroup valueForKey:@"objectURLString"];
 	if (!objectURLString) objectURLString = [NSNull null];
 	[currentFilter setValue:objectURLString forKey:@"putInMessageGroupObjectURLString"];
-	[[NSUserDefaults standardUserDefaults] setObject:filters forKey:@"Filters"];
+	[[GIMessageFilter class] saveFilters];
 }
 
 @end

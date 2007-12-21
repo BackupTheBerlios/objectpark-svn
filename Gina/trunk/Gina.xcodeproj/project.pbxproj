@@ -18,6 +18,7 @@
 		7736125A0D1AB7CE007FC630 /* GICommentTreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612570D1AB7CE007FC630 /* GICommentTreeCell.m */; };
 		7736125F0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736125E0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m */; };
 		773612630D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612620D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m */; };
+		773613570D1BBA11007FC630 /* GIMessageFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613560D1BBA11007FC630 /* GIMessageFilter.m */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -205,6 +206,8 @@
 		7736125E0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
 		773612610D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOutlineViewWithThreadColoring.h; sourceTree = "<group>"; };
 		773612620D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOutlineViewWithThreadColoring.m; sourceTree = "<group>"; };
+		773613550D1BBA11007FC630 /* GIMessageFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageFilter.h; sourceTree = "<group>"; };
+		773613560D1BBA11007FC630 /* GIMessageFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageFilter.m; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -459,6 +462,8 @@
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */,
 				7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */,
+				773613550D1BBA11007FC630 /* GIMessageFilter.h */,
+				773613560D1BBA11007FC630 /* GIMessageFilter.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -1000,6 +1005,7 @@
 				7736125A0D1AB7CE007FC630 /* GICommentTreeCell.m in Sources */,
 				7736125F0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m in Sources */,
 				773612630D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m in Sources */,
+				773613570D1BBA11007FC630 /* GIMessageFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
