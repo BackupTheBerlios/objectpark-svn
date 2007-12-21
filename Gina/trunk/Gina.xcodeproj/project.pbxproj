@@ -19,27 +19,6 @@
 		7736125F0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736125E0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m */; };
 		773612630D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612620D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m */; };
 		773613570D1BBA11007FC630 /* GIMessageFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613560D1BBA11007FC630 /* GIMessageFilter.m */; };
-		773613E70D1C0F12007FC630 /* OPDBLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D20D1C0F12007FC630 /* OPDBLite.m */; };
-		773613E80D1C0F12007FC630 /* OPFaultingArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D40D1C0F12007FC630 /* OPFaultingArray.m */; };
-		773613E90D1C0F12007FC630 /* OPKeyedArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D60D1C0F12007FC630 /* OPKeyedArchiver.m */; };
-		773613EA0D1C0F12007FC630 /* OPKeyedUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D80D1C0F12007FC630 /* OPKeyedUnarchiver.m */; };
-		773613EB0D1C0F12007FC630 /* OPPersistenceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613DB0D1C0F12007FC630 /* OPPersistenceWrapper.m */; };
-		773613EC0D1C0F12007FC630 /* OPPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613DD0D1C0F12007FC630 /* OPPersistentObject.m */; };
-		773613ED0D1C0F12007FC630 /* OPPersistentObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */; };
-		773613EE0D1C0F12007FC630 /* OPPersistentSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E10D1C0F12007FC630 /* OPPersistentSet.m */; };
-		773613F00D1C0F12007FC630 /* OPOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E40D1C0F12007FC630 /* OPOutlineViewController.m */; };
-		773613F10D1C0F12007FC630 /* OPPersistentStringDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E60D1C0F12007FC630 /* OPPersistentStringDictionary.m */; };
-		773614050D1C0F2E007FC630 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F20D1C0F2E007FC630 /* printf.c */; };
-		773614060D1C0F2E007FC630 /* random.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F30D1C0F2E007FC630 /* random.c */; };
-		773614070D1C0F2E007FC630 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F60D1C0F2E007FC630 /* util.c */; };
-		773614080D1C0F2E007FC630 /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F70D1C0F2E007FC630 /* malloc.c */; };
-		773614090D1C0F2E007FC630 /* mem2.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F80D1C0F2E007FC630 /* mem2.c */; };
-		7736140A0D1C0F2E007FC630 /* os.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FA0D1C0F2E007FC630 /* os.c */; };
-		7736140B0D1C0F2E007FC630 /* os_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FC0D1C0F2E007FC630 /* os_unix.c */; };
-		7736140C0D1C0F2E007FC630 /* os_win.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FD0D1C0F2E007FC630 /* os_win.c */; };
-		7736140D0D1C0F2E007FC630 /* pager.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FF0D1C0F2E007FC630 /* pager.c */; };
-		7736140E0D1C0F2E007FC630 /* btree.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614010D1C0F2E007FC630 /* btree.c */; };
-		7736140F0D1C0F2E007FC630 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614040D1C0F2E007FC630 /* hash.c */; };
 		773614290D1C1041007FC630 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736141C0D1C1041007FC630 /* GIAccount.m */; };
 		7736142A0D1C1041007FC630 /* GIHierarchyNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736141E0D1C1041007FC630 /* GIHierarchyNode.m */; };
 		7736142B0D1C1041007FC630 /* OPMBoxFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614200D1C1041007FC630 /* OPMBoxFile.m */; };
@@ -49,6 +28,49 @@
 		7736142F0D1C1041007FC630 /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614280D1C1041007FC630 /* GIThread.m */; };
 		7736143A0D1C10D1007FC630 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		7736143B0D1C10D3007FC630 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773614340D1C10AD007FC630 /* Security.framework */; };
+		773614630D1C1545007FC630 /* OPDBLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D20D1C0F12007FC630 /* OPDBLite.m */; };
+		773614640D1C1546007FC630 /* OPFaultingArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D40D1C0F12007FC630 /* OPFaultingArray.m */; };
+		773614650D1C1547007FC630 /* OPKeyedArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D60D1C0F12007FC630 /* OPKeyedArchiver.m */; };
+		773614660D1C1549007FC630 /* OPDBLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613D10D1C0F12007FC630 /* OPDBLite.h */; };
+		773614670D1C1549007FC630 /* OPFaultingArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613D30D1C0F12007FC630 /* OPFaultingArray.h */; };
+		773614680D1C154A007FC630 /* OPKeyedArchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613D50D1C0F12007FC630 /* OPKeyedArchiver.h */; };
+		773614690D1C154A007FC630 /* OPKeyedUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613D70D1C0F12007FC630 /* OPKeyedUnarchiver.h */; };
+		7736146A0D1C154B007FC630 /* OPKeyedUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613D80D1C0F12007FC630 /* OPKeyedUnarchiver.m */; };
+		7736146B0D1C154B007FC630 /* OPPersistenceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613D90D1C0F12007FC630 /* OPPersistenceConstants.h */; };
+		7736146C0D1C154C007FC630 /* OPPersistenceWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613DA0D1C0F12007FC630 /* OPPersistenceWrapper.h */; };
+		7736146D0D1C154C007FC630 /* OPPersistenceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613DB0D1C0F12007FC630 /* OPPersistenceWrapper.m */; };
+		7736146E0D1C154C007FC630 /* OPPersistentObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613DC0D1C0F12007FC630 /* OPPersistentObject.h */; };
+		7736146F0D1C154D007FC630 /* OPPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613DD0D1C0F12007FC630 /* OPPersistentObject.m */; };
+		773614700D1C154E007FC630 /* OPPersistentObjectContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613DE0D1C0F12007FC630 /* OPPersistentObjectContext.h */; };
+		773614710D1C154E007FC630 /* OPPersistentObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */; };
+		773614720D1C154F007FC630 /* OPPersistentSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613E00D1C0F12007FC630 /* OPPersistentSet.h */; };
+		773614730D1C154F007FC630 /* OPPersistentSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E10D1C0F12007FC630 /* OPPersistentSet.m */; };
+		773614740D1C1550007FC630 /* OPOutlineViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613E30D1C0F12007FC630 /* OPOutlineViewController.h */; };
+		773614750D1C1551007FC630 /* OPOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E40D1C0F12007FC630 /* OPOutlineViewController.m */; };
+		773614760D1C1551007FC630 /* OPPersistentStringDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613E50D1C0F12007FC630 /* OPPersistentStringDictionary.h */; };
+		773614770D1C1552007FC630 /* OPPersistentStringDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E60D1C0F12007FC630 /* OPPersistentStringDictionary.m */; };
+		773614780D1C1555007FC630 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F20D1C0F2E007FC630 /* printf.c */; };
+		773614790D1C1555007FC630 /* random.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F30D1C0F2E007FC630 /* random.c */; };
+		7736147A0D1C1556007FC630 /* sqliteInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613F40D1C0F2E007FC630 /* sqliteInt.h */; };
+		7736147B0D1C1556007FC630 /* sqliteLimit.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613F50D1C0F2E007FC630 /* sqliteLimit.h */; };
+		7736147C0D1C1557007FC630 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F60D1C0F2E007FC630 /* util.c */; };
+		7736147D0D1C1558007FC630 /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F70D1C0F2E007FC630 /* malloc.c */; };
+		7736147E0D1C155A007FC630 /* mem2.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F80D1C0F2E007FC630 /* mem2.c */; };
+		7736147F0D1C155A007FC630 /* os.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613F90D1C0F2E007FC630 /* os.h */; };
+		773614800D1C155B007FC630 /* os.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FA0D1C0F2E007FC630 /* os.c */; };
+		773614810D1C155C007FC630 /* os_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613FB0D1C0F2E007FC630 /* os_common.h */; };
+		773614820D1C155D007FC630 /* os_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FC0D1C0F2E007FC630 /* os_unix.c */; };
+		773614830D1C155E007FC630 /* os_win.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FD0D1C0F2E007FC630 /* os_win.c */; };
+		773614840D1C155E007FC630 /* pager.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613FE0D1C0F2E007FC630 /* pager.h */; };
+		773614850D1C155F007FC630 /* pager.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FF0D1C0F2E007FC630 /* pager.c */; };
+		773614860D1C1560007FC630 /* btree.h in Headers */ = {isa = PBXBuildFile; fileRef = 773614000D1C0F2E007FC630 /* btree.h */; };
+		773614870D1C1560007FC630 /* btree.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614010D1C0F2E007FC630 /* btree.c */; };
+		773614880D1C1561007FC630 /* btreeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 773614020D1C0F2E007FC630 /* btreeInt.h */; };
+		773614890D1C1562007FC630 /* hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 773614030D1C0F2E007FC630 /* hash.h */; };
+		7736148A0D1C1562007FC630 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614040D1C0F2E007FC630 /* hash.c */; };
+		7736148C0D1C1598007FC630 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
+		773614A30D1C18B7007FC630 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -175,6 +197,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		7736149F0D1C1897007FC630 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 773614590D1C152A007FC630 /* OPPersistence */;
+			remoteInfo = OPPersistence;
+		};
 		77B6C5940D00540100A7BEFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -198,6 +227,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				773614A30D1C18B7007FC630 /* OPPersistence.framework in Copy Frameworks */,
 				778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */,
 				775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */,
 				775C31140D0D40EA0098DA07 /* OPNetwork.framework in Copy Frameworks */,
@@ -292,6 +322,8 @@
 		773614270D1C1041007FC630 /* GIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThread.h; sourceTree = "<group>"; };
 		773614280D1C1041007FC630 /* GIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThread.m; sourceTree = "<group>"; };
 		773614340D1C10AD007FC630 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		7736145A0D1C152A007FC630 /* OPPersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPPersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OPPersistence-Info.plist"; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -434,6 +466,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		773614580D1C152A007FC630 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7736148C0D1C1598007FC630 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		77B6C58C0D0053AE00A7BEFF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -472,6 +512,7 @@
 				775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */,
 				7736143A0D1C10D1007FC630 /* Cocoa.framework in Frameworks */,
 				7736143B0D1C10D3007FC630 /* Security.framework in Frameworks */,
+				7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,6 +562,7 @@
 				77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */,
 				777B05CB0D031DE40080B76F /* InternetMessage.framework */,
 				77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */,
+				7736145A0D1C152A007FC630 /* OPPersistence.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -539,6 +581,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -872,6 +915,32 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		773614550D1C152A007FC630 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				773614660D1C1549007FC630 /* OPDBLite.h in Headers */,
+				773614670D1C1549007FC630 /* OPFaultingArray.h in Headers */,
+				773614680D1C154A007FC630 /* OPKeyedArchiver.h in Headers */,
+				773614690D1C154A007FC630 /* OPKeyedUnarchiver.h in Headers */,
+				7736146B0D1C154B007FC630 /* OPPersistenceConstants.h in Headers */,
+				7736146C0D1C154C007FC630 /* OPPersistenceWrapper.h in Headers */,
+				7736146E0D1C154C007FC630 /* OPPersistentObject.h in Headers */,
+				773614700D1C154E007FC630 /* OPPersistentObjectContext.h in Headers */,
+				773614720D1C154F007FC630 /* OPPersistentSet.h in Headers */,
+				773614740D1C1550007FC630 /* OPOutlineViewController.h in Headers */,
+				773614760D1C1551007FC630 /* OPPersistentStringDictionary.h in Headers */,
+				7736147A0D1C1556007FC630 /* sqliteInt.h in Headers */,
+				7736147B0D1C1556007FC630 /* sqliteLimit.h in Headers */,
+				7736147F0D1C155A007FC630 /* os.h in Headers */,
+				773614810D1C155C007FC630 /* os_common.h in Headers */,
+				773614840D1C155E007FC630 /* pager.h in Headers */,
+				773614860D1C1560007FC630 /* btree.h in Headers */,
+				773614880D1C1561007FC630 /* btreeInt.h in Headers */,
+				773614890D1C1562007FC630 /* hash.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		77B6C5890D0053AE00A7BEFF /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -924,6 +993,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		773614590D1C152A007FC630 /* OPPersistence */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7736145F0D1C152B007FC630 /* Build configuration list for PBXNativeTarget "OPPersistence" */;
+			buildPhases = (
+				773614550D1C152A007FC630 /* Headers */,
+				773614560D1C152A007FC630 /* Resources */,
+				773614570D1C152A007FC630 /* Sources */,
+				773614580D1C152A007FC630 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OPPersistence;
+			productName = OPPersistence;
+			productReference = 7736145A0D1C152A007FC630 /* OPPersistence.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		77B6C58D0D0053AE00A7BEFF /* InternetMessage */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 77B6C5930D0053AF00A7BEFF /* Build configuration list for PBXNativeTarget "InternetMessage" */;
@@ -990,6 +1077,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				773614A00D1C1897007FC630 /* PBXTargetDependency */,
 				77B6C5950D00540100A7BEFF /* PBXTargetDependency */,
 			);
 			name = Gina;
@@ -1014,11 +1102,19 @@
 				77E5676C0D0702670016594D /* GinaSpotlight */,
 				77B6C58D0D0053AE00A7BEFF /* InternetMessage */,
 				77B6C8930D008D7C00A7BEFF /* InternetMessageTest */,
+				773614590D1C152A007FC630 /* OPPersistence */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		773614560D1C152A007FC630 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		77B6C58A0D0053AE00A7BEFF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1083,6 +1179,34 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		773614570D1C152A007FC630 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				773614630D1C1545007FC630 /* OPDBLite.m in Sources */,
+				773614640D1C1546007FC630 /* OPFaultingArray.m in Sources */,
+				773614650D1C1547007FC630 /* OPKeyedArchiver.m in Sources */,
+				7736146A0D1C154B007FC630 /* OPKeyedUnarchiver.m in Sources */,
+				7736146D0D1C154C007FC630 /* OPPersistenceWrapper.m in Sources */,
+				7736146F0D1C154D007FC630 /* OPPersistentObject.m in Sources */,
+				773614710D1C154E007FC630 /* OPPersistentObjectContext.m in Sources */,
+				773614730D1C154F007FC630 /* OPPersistentSet.m in Sources */,
+				773614750D1C1551007FC630 /* OPOutlineViewController.m in Sources */,
+				773614770D1C1552007FC630 /* OPPersistentStringDictionary.m in Sources */,
+				773614780D1C1555007FC630 /* printf.c in Sources */,
+				773614790D1C1555007FC630 /* random.c in Sources */,
+				7736147C0D1C1557007FC630 /* util.c in Sources */,
+				7736147D0D1C1558007FC630 /* malloc.c in Sources */,
+				7736147E0D1C155A007FC630 /* mem2.c in Sources */,
+				773614800D1C155B007FC630 /* os.c in Sources */,
+				773614820D1C155D007FC630 /* os_unix.c in Sources */,
+				773614830D1C155E007FC630 /* os_win.c in Sources */,
+				773614850D1C155F007FC630 /* pager.c in Sources */,
+				773614870D1C1560007FC630 /* btree.c in Sources */,
+				7736148A0D1C1562007FC630 /* hash.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		77B6C58B0D0053AE00A7BEFF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1170,27 +1294,6 @@
 				7736125F0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m in Sources */,
 				773612630D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m in Sources */,
 				773613570D1BBA11007FC630 /* GIMessageFilter.m in Sources */,
-				773613E70D1C0F12007FC630 /* OPDBLite.m in Sources */,
-				773613E80D1C0F12007FC630 /* OPFaultingArray.m in Sources */,
-				773613E90D1C0F12007FC630 /* OPKeyedArchiver.m in Sources */,
-				773613EA0D1C0F12007FC630 /* OPKeyedUnarchiver.m in Sources */,
-				773613EB0D1C0F12007FC630 /* OPPersistenceWrapper.m in Sources */,
-				773613EC0D1C0F12007FC630 /* OPPersistentObject.m in Sources */,
-				773613ED0D1C0F12007FC630 /* OPPersistentObjectContext.m in Sources */,
-				773613EE0D1C0F12007FC630 /* OPPersistentSet.m in Sources */,
-				773613F00D1C0F12007FC630 /* OPOutlineViewController.m in Sources */,
-				773613F10D1C0F12007FC630 /* OPPersistentStringDictionary.m in Sources */,
-				773614050D1C0F2E007FC630 /* printf.c in Sources */,
-				773614060D1C0F2E007FC630 /* random.c in Sources */,
-				773614070D1C0F2E007FC630 /* util.c in Sources */,
-				773614080D1C0F2E007FC630 /* malloc.c in Sources */,
-				773614090D1C0F2E007FC630 /* mem2.c in Sources */,
-				7736140A0D1C0F2E007FC630 /* os.c in Sources */,
-				7736140B0D1C0F2E007FC630 /* os_unix.c in Sources */,
-				7736140C0D1C0F2E007FC630 /* os_win.c in Sources */,
-				7736140D0D1C0F2E007FC630 /* pager.c in Sources */,
-				7736140E0D1C0F2E007FC630 /* btree.c in Sources */,
-				7736140F0D1C0F2E007FC630 /* hash.c in Sources */,
 				773614290D1C1041007FC630 /* GIAccount.m in Sources */,
 				7736142A0D1C1041007FC630 /* GIHierarchyNode.m in Sources */,
 				7736142B0D1C1041007FC630 /* OPMBoxFile.m in Sources */,
@@ -1204,6 +1307,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		773614A00D1C1897007FC630 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 773614590D1C152A007FC630 /* OPPersistence */;
+			targetProxy = 7736149F0D1C1897007FC630 /* PBXContainerItemProxy */;
+		};
 		77B6C5950D00540100A7BEFF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 77B6C58D0D0053AE00A7BEFF /* InternetMessage */;
@@ -1244,6 +1352,67 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		7736145D0D1C152A007FC630 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
+					"\"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\"",
+					"\"$(SRCROOT)/build/Debug\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "OPPersistence-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@rpath/InternetMessage.framework/Versions/A/InternetMessage";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistence;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		7736145E0D1C152A007FC630 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "OPPersistence-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@rpath/InternetMessage.framework/Versions/A/InternetMessage";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = OPPersistence;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		77B6C5910D0053AE00A7BEFF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1507,6 +1676,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7736145F0D1C152B007FC630 /* Build configuration list for PBXNativeTarget "OPPersistence" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7736145D0D1C152A007FC630 /* Debug */,
+				7736145E0D1C152A007FC630 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		77B6C5930D0053AF00A7BEFF /* Build configuration list for PBXNativeTarget "InternetMessage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
