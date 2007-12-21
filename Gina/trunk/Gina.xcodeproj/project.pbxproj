@@ -40,6 +40,15 @@
 		7736140D0D1C0F2E007FC630 /* pager.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613FF0D1C0F2E007FC630 /* pager.c */; };
 		7736140E0D1C0F2E007FC630 /* btree.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614010D1C0F2E007FC630 /* btree.c */; };
 		7736140F0D1C0F2E007FC630 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614040D1C0F2E007FC630 /* hash.c */; };
+		773614290D1C1041007FC630 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736141C0D1C1041007FC630 /* GIAccount.m */; };
+		7736142A0D1C1041007FC630 /* GIHierarchyNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736141E0D1C1041007FC630 /* GIHierarchyNode.m */; };
+		7736142B0D1C1041007FC630 /* OPMBoxFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614200D1C1041007FC630 /* OPMBoxFile.m */; };
+		7736142C0D1C1041007FC630 /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614220D1C1041007FC630 /* GIMessage.m */; };
+		7736142D0D1C1041007FC630 /* GIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614240D1C1041007FC630 /* GIMessageGroup.m */; };
+		7736142E0D1C1041007FC630 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614260D1C1041007FC630 /* GIProfile.m */; };
+		7736142F0D1C1041007FC630 /* GIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614280D1C1041007FC630 /* GIThread.m */; };
+		7736143A0D1C10D1007FC630 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		7736143B0D1C10D3007FC630 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773614340D1C10AD007FC630 /* Security.framework */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -59,7 +68,6 @@
 		7780783B0D070AC50091F21D /* GetMetadataForFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.c */; };
 		7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780E0D0707DC0091F21D /* CoreFoundation.framework */; };
 		7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
-		778A689A0D16981B00CAA693 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; };
@@ -269,6 +277,21 @@
 		773614020D1C0F2E007FC630 /* btreeInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btreeInt.h; sourceTree = "<group>"; };
 		773614030D1C0F2E007FC630 /* hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
 		773614040D1C0F2E007FC630 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
+		7736141B0D1C1041007FC630 /* GIAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccount.h; sourceTree = "<group>"; };
+		7736141C0D1C1041007FC630 /* GIAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIAccount.m; sourceTree = "<group>"; };
+		7736141D0D1C1041007FC630 /* GIHierarchyNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIHierarchyNode.h; sourceTree = "<group>"; };
+		7736141E0D1C1041007FC630 /* GIHierarchyNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIHierarchyNode.m; sourceTree = "<group>"; };
+		7736141F0D1C1041007FC630 /* OPMBoxFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPMBoxFile.h; sourceTree = "<group>"; };
+		773614200D1C1041007FC630 /* OPMBoxFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPMBoxFile.m; sourceTree = "<group>"; };
+		773614210D1C1041007FC630 /* GIMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessage.h; sourceTree = "<group>"; };
+		773614220D1C1041007FC630 /* GIMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessage.m; sourceTree = "<group>"; };
+		773614230D1C1041007FC630 /* GIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroup.h; sourceTree = "<group>"; };
+		773614240D1C1041007FC630 /* GIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroup.m; sourceTree = "<group>"; };
+		773614250D1C1041007FC630 /* GIProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIProfile.h; sourceTree = "<group>"; };
+		773614260D1C1041007FC630 /* GIProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIProfile.m; sourceTree = "<group>"; };
+		773614270D1C1041007FC630 /* GIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThread.h; sourceTree = "<group>"; };
+		773614280D1C1041007FC630 /* GIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThread.m; sourceTree = "<group>"; };
+		773614340D1C10AD007FC630 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -447,7 +470,8 @@
 				7761D97A0D02FB8B0044E65A /* InternetMessage.framework in Frameworks */,
 				777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */,
 				775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */,
-				778A689A0D16981B00CAA693 /* Cocoa.framework in Frameworks */,
+				7736143A0D1C10D1007FC630 /* Cocoa.framework in Frameworks */,
+				7736143B0D1C10D3007FC630 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +483,7 @@
 			children = (
 				773612550D1AB796007FC630 /* Custom Views */,
 				775C312E0D0D45E50098DA07 /* Controllers */,
+				7736141A0D1C1000007FC630 /* Model */,
 				775C30D70D0D3C870098DA07 /* Preferences */,
 			);
 			name = Gina;
@@ -479,6 +504,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				773614340D1C10AD007FC630 /* Security.framework */,
 				7780780E0D0707DC0091F21D /* CoreFoundation.framework */,
 				7780780F0D0707DC0091F21D /* CoreServices.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
@@ -638,6 +664,27 @@
 				773614040D1C0F2E007FC630 /* hash.c */,
 			);
 			name = btree;
+			sourceTree = "<group>";
+		};
+		7736141A0D1C1000007FC630 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7736141B0D1C1041007FC630 /* GIAccount.h */,
+				7736141C0D1C1041007FC630 /* GIAccount.m */,
+				7736141D0D1C1041007FC630 /* GIHierarchyNode.h */,
+				7736141E0D1C1041007FC630 /* GIHierarchyNode.m */,
+				7736141F0D1C1041007FC630 /* OPMBoxFile.h */,
+				773614200D1C1041007FC630 /* OPMBoxFile.m */,
+				773614210D1C1041007FC630 /* GIMessage.h */,
+				773614220D1C1041007FC630 /* GIMessage.m */,
+				773614230D1C1041007FC630 /* GIMessageGroup.h */,
+				773614240D1C1041007FC630 /* GIMessageGroup.m */,
+				773614250D1C1041007FC630 /* GIProfile.h */,
+				773614260D1C1041007FC630 /* GIProfile.m */,
+				773614270D1C1041007FC630 /* GIThread.h */,
+				773614280D1C1041007FC630 /* GIThread.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		775C30D70D0D3C870098DA07 /* Preferences */ = {
@@ -1144,6 +1191,13 @@
 				7736140D0D1C0F2E007FC630 /* pager.c in Sources */,
 				7736140E0D1C0F2E007FC630 /* btree.c in Sources */,
 				7736140F0D1C0F2E007FC630 /* hash.c in Sources */,
+				773614290D1C1041007FC630 /* GIAccount.m in Sources */,
+				7736142A0D1C1041007FC630 /* GIHierarchyNode.m in Sources */,
+				7736142B0D1C1041007FC630 /* OPMBoxFile.m in Sources */,
+				7736142C0D1C1041007FC630 /* GIMessage.m in Sources */,
+				7736142D0D1C1041007FC630 /* GIMessageGroup.m in Sources */,
+				7736142E0D1C1041007FC630 /* GIProfile.m in Sources */,
+				7736142F0D1C1041007FC630 /* GIThread.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
