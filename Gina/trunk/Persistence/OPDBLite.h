@@ -34,7 +34,6 @@
 - (int) commitTransaction;
 - (int) rollbackTransaction;
 - (BOOL) isInTransaction;
-- (BOOL) isValid;
 
 - (OPBTree*) objectTree;
 
@@ -97,6 +96,7 @@
 	char* reserved[sizeof(struct BtCursor)+4];
 }
 
+- (BOOL) isValid;
 
 - (int (*) (void*,int,const void*,int,const void*)) compareFunction;
 
