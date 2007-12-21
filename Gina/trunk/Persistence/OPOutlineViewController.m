@@ -33,21 +33,6 @@
 	[knownItems removeAllObjects];
 }
 
-
-//- (NSOutlineView*) outlineView
-//{
-//	return outlineView;
-//}
-//
-//- (void) setOutlineView: (NSOutlineView*) newOutline
-//{
-//	if (! [outlineView isEqual: newOutline]) {
-//		[self resetKnownItems];
-//		[outlineView release];
-//		outlineView = [newOutline retain];
-//	}
-//}
-
 - (void) reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
 {
@@ -66,7 +51,6 @@
 		[rootItem removeObserver: self forKeyPath: childKey];
 		[rootItem release];
 		rootItem = [newItem retain];
-#warning add childKeyPath and add dependency
 		[rootItem addObserver: self forKeyPath: childKey options: 0 context: NULL];
 		[self reloadData];
 	}
@@ -102,11 +86,9 @@
 	id result = [[item valueForKeyPath: childKey] objectAtIndex: index];
 	if (! [knownItems containsObject: result]) {
 		[knownItems addObject: result];
-		//if ([self outlineView: outlineView isItemExpandable: item]) {
 		// Observe the child relation so we can react on that.
 		NSLog(@"Controller observes %@.%@", result, childKey);
 		[result addObserver: self forKeyPath: childKey options: 0 context: NULL];
-		//}
 	}
 	return result;
 }

@@ -17,12 +17,10 @@
 	IBOutlet NSOutlineView* outlineView;
 	NSMutableSet* knownItems; // used to keep track of the observed items and to retain them
 	NSString* childKey;
-	//NSString* isLeafKey;
 	id rootItem;
 }
 
 @property (copy) NSString* childKey;
-//@property (retain) NSOutlineView* outlineView;
 @property (retain) id rootItem;
 @property (retain, readonly) NSSet* knownItems;
 
