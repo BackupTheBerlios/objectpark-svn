@@ -21,7 +21,6 @@
 		773613570D1BBA11007FC630 /* GIMessageFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613560D1BBA11007FC630 /* GIMessageFilter.m */; };
 		773614290D1C1041007FC630 /* GIAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736141C0D1C1041007FC630 /* GIAccount.m */; };
 		7736142A0D1C1041007FC630 /* GIHierarchyNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 7736141E0D1C1041007FC630 /* GIHierarchyNode.m */; };
-		7736142B0D1C1041007FC630 /* OPMBoxFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614200D1C1041007FC630 /* OPMBoxFile.m */; };
 		7736142C0D1C1041007FC630 /* GIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614220D1C1041007FC630 /* GIMessage.m */; };
 		7736142D0D1C1041007FC630 /* GIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614240D1C1041007FC630 /* GIMessageGroup.m */; };
 		7736142E0D1C1041007FC630 /* GIProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 773614260D1C1041007FC630 /* GIProfile.m */; };
@@ -71,6 +70,7 @@
 		7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		773614A30D1C18B7007FC630 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		7736153F0D1C33D2007FC630 /* GIMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612510D1AB6F2007FC630 /* GIMainWindowController.m */; };
+		773615B00D1CFA69007FC630 /* TestGIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 773615AF0D1CFA68007FC630 /* TestGIMessage.m */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -318,8 +318,6 @@
 		7736141C0D1C1041007FC630 /* GIAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIAccount.m; sourceTree = "<group>"; };
 		7736141D0D1C1041007FC630 /* GIHierarchyNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIHierarchyNode.h; sourceTree = "<group>"; };
 		7736141E0D1C1041007FC630 /* GIHierarchyNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIHierarchyNode.m; sourceTree = "<group>"; };
-		7736141F0D1C1041007FC630 /* OPMBoxFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPMBoxFile.h; sourceTree = "<group>"; };
-		773614200D1C1041007FC630 /* OPMBoxFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPMBoxFile.m; sourceTree = "<group>"; };
 		773614210D1C1041007FC630 /* GIMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessage.h; sourceTree = "<group>"; };
 		773614220D1C1041007FC630 /* GIMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessage.m; sourceTree = "<group>"; };
 		773614230D1C1041007FC630 /* GIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroup.h; sourceTree = "<group>"; };
@@ -335,6 +333,9 @@
 		773614CA0D1C1AB0007FC630 /* OPPersistenceTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPPersistenceTest-Info.plist"; path = "../OPPersistenceTest-Info.plist"; sourceTree = "<group>"; };
 		773615130D1C30A7007FC630 /* GinaTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		773615140D1C30A7007FC630 /* GinaTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaTest-Info.plist"; path = "../GinaTest-Info.plist"; sourceTree = "<group>"; };
+		773615AE0D1CFA68007FC630 /* TestGIMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIMessage.h; sourceTree = "<group>"; };
+		773615AF0D1CFA68007FC630 /* TestGIMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessage.m; sourceTree = "<group>"; };
+		773615FB0D1CFFC6007FC630 /* How to debug GinaTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug GinaTest.rtf"; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -663,6 +664,7 @@
 		772B4C9C0D05890800853BEF /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
+				773615FB0D1CFFC6007FC630 /* How to debug GinaTest.rtf */,
 				77E567580D05A3550016594D /* How to set up.rtf */,
 				772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */,
 			);
@@ -746,8 +748,6 @@
 				7736141C0D1C1041007FC630 /* GIAccount.m */,
 				7736141D0D1C1041007FC630 /* GIHierarchyNode.h */,
 				7736141E0D1C1041007FC630 /* GIHierarchyNode.m */,
-				7736141F0D1C1041007FC630 /* OPMBoxFile.h */,
-				773614200D1C1041007FC630 /* OPMBoxFile.m */,
 				773614210D1C1041007FC630 /* GIMessage.h */,
 				773614220D1C1041007FC630 /* GIMessage.m */,
 				773614230D1C1041007FC630 /* GIMessageGroup.h */,
@@ -771,6 +771,8 @@
 		773615230D1C3245007FC630 /* GinaTests */ = {
 			isa = PBXGroup;
 			children = (
+				773615AE0D1CFA68007FC630 /* TestGIMessage.h */,
+				773615AF0D1CFA68007FC630 /* TestGIMessage.m */,
 			);
 			name = GinaTests;
 			path = Tests;
@@ -1343,6 +1345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				773615B00D1CFA69007FC630 /* TestGIMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1435,7 +1438,6 @@
 				773613570D1BBA11007FC630 /* GIMessageFilter.m in Sources */,
 				773614290D1C1041007FC630 /* GIAccount.m in Sources */,
 				7736142A0D1C1041007FC630 /* GIHierarchyNode.m in Sources */,
-				7736142B0D1C1041007FC630 /* OPMBoxFile.m in Sources */,
 				7736142C0D1C1041007FC630 /* GIMessage.m in Sources */,
 				7736142D0D1C1041007FC630 /* GIMessageGroup.m in Sources */,
 				7736142E0D1C1041007FC630 /* GIProfile.m in Sources */,
