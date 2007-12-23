@@ -88,7 +88,7 @@
 - (OPBTree*) btree
 {
 	if (!btree) {
-		btree = [[OPKeyOnlyBTree alloc] initWithCompareFunctionName: NULL withRoot: 0 inDatabase: [[self context] database]];
+		btree = [[OPBTree alloc] initWithCompareFunctionName: nil withRoot: 0 inDatabase: [[self context] database] flags: 0]; // only used for new objects, also set in -initWithCoder.
 	}
 	return btree;
 }
@@ -155,9 +155,9 @@
 	int rootPage = [coder decodeInt32ForKey: @"BTreeRootPage"];
 
 	
-	btree = [[OPKeyOnlyBTree alloc] initWithCompareFunctionName: nil 
-													   withRoot: rootPage 
-													 inDatabase: [[self context] database]];
+	btree = [[OPBTree alloc] initWithCompareFunctionName: nil 
+												withRoot: rootPage 
+											  inDatabase: [[self context] database]];
 	
 	count = NSNotFound;
 	return self;

@@ -252,7 +252,7 @@
 
 + (Class) cursorClass
 {
-	return nil;
+	return [OPBTreeCursor class];
 }
 
 + (NSMapTable*) compareFunctions
@@ -266,12 +266,6 @@
 	return compareFunctions;
 }
 
-//- (void) saveProperties
-//{
-//	OPIntKeyBTreeCursor* cursor = [[db treeDescriptionTree] newCursorWithError: NULL];
-//	[cursor insertPlistValue: properties forIntKey: 0];
-//	[cursor release];
-//}
 
 + (int (*)(void*,int,const void*,int,const void*)) keyCompareFunctionForKey: (NSString*) name
 {
@@ -387,6 +381,7 @@
 			return nil;
 		}
 		result->objcSupport = cursorClass; // set isa pointer
+		NSLog(@"Creating Cursor of class %@", cursorClass);
 	}
 	return [(id)result init];
 }
