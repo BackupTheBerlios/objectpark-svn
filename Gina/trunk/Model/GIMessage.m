@@ -21,6 +21,7 @@
 //#import "NSArray+Extensions.h"
 #import "GIUserDefaultsKeys.h"
 //#import "EDMessagePart+OPExtensions.h"
+#import "OPPersistentStringDictionary.h"
 
 NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotification";
 
@@ -50,9 +51,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	static OPPersistentStringDictionary* globalIndex = nil;
 	
 	if (!globalIndex) {
-		globalIndex = [context rootObjectForKey: @"MessagesById"];
+		globalIndex = [[context rootObjectForKey: @"MessagesById"] retain];
 		if (!globalIndex) {
-			globalIndex = [[[OPPersistentStringDictionary alloc] init] autorelease];
+			globalIndex = [[OPPersistentStringDictionary alloc] init];
 			[context setRootObject: globalIndex forKey: @"MessagesById"];
 		}
 	}
