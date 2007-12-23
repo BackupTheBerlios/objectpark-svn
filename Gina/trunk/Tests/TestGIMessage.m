@@ -8,6 +8,7 @@
 
 #import "TestGIMessage.h"
 #import "GIMessage.h"
+#import "OPInternetMessage.h"
 
 @implementation TestGIMessage
 
@@ -19,8 +20,9 @@
 	NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];
 	NSAssert(transferData != nil, @"couldn't read transferdata");
 	
-	GIMessage *message = [GIMessage messageWithTransferData:transferData];
-	NSAssert(message != nil, @"couldn't create message from transferdata");
+	OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
+	GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
+	NSAssert(message != nil, @"couldn't create message from internetMessage");
 }
 
 @end

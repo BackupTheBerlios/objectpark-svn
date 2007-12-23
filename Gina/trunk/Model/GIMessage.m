@@ -10,7 +10,7 @@
 #import <Foundation/NSDebug.h>
 #import "GIProfile.h"
 #import "GIThread.h"
-//#import "OPInternetMessage.h"
+#import "OPInternetMessage.h"
 //#import "NSString+MessageUtils.h"
 //#import "OPPersistentObject+Extensions.h"
 //#import "OPInternetMessage+GinkoExtensions.h"
@@ -226,32 +226,31 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-+ (id)messageWithTransferData:(NSData *)someTransferData
-/*" Returns a new message with the given transfer data someTransferData.
-    If message is a dupe, the message not inserted into the context nil is returned. "*/
+/*" Returns a new message with the internetmessage object.
+ If message is a dupe, the message not inserted into the context nil is returned. "*/
++ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 {
     id result = nil;
-    OPInternetMessage *im = [[OPInternetMessage alloc] initWithTransferData:someTransferData];
     
-    GIMessage *dupe = [self messageForMessageId:[im messageId]];
+    GIMessage *dupe = [self messageForMessageId:[anInternetMessage messageId]];
     
 	if (dupe) 
 	{
         if ([dupe isDummy]) 
 		{
             // replace message
-			if (NSDebugEnabled) NSLog(@"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [im messageId]);
-            [dupe setContentFromInternetMessage:im];
+			if (NSDebugEnabled) NSLog(@"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
+            [dupe setContentFromInternetMessage:anInternetMessage];
             [dupe referenceFind:YES];
         }
-        else if ([GIProfile isMyEmailAddress:[im fromWithFallback:YES]]) 
+        else if ([GIProfile isMyEmailAddress:[anInternetMessage fromWithFallback:YES]]) 
 		{
             // replace old message with new:
-			if (NSDebugEnabled) NSLog(@"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [im messageId]);
-            [dupe setContentFromInternetMessage:im];
+			if (NSDebugEnabled) NSLog(@"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
+            [dupe setContentFromInternetMessage:anInternetMessage];
         }
         else
-			if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [im messageId]);        
+			if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [anInternetMessage messageId]);        
     }
     else 
 	{
@@ -261,10 +260,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         
 		NSAssert(result != nil, @"Could not create message object");
         
-        [result setContentFromInternetMessage: im];
+        [result setContentFromInternetMessage: anInternetMessage];
     }
     
-    [im release];
     return result;
 }
 
@@ -321,7 +319,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (BOOL)isDummy
 {
-    return [self valueForKey:@"messageData"] == nil;
+    return self.transferData == nil;
 }
 
 @synthesize referenceOID;
@@ -794,7 +792,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	static NSString* result = nil;
 	if (result == nil) {
-		result = [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Gina/MessageData/"];
+		result = [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Gina/TransferData/"];
 	}
 	return result;
 }

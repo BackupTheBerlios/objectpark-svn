@@ -11,7 +11,7 @@
 
 //@class GIThread;
 @class GIProfile;
-//@class OPInternetMessage;
+@class OPInternetMessage;
 @class OPFaultingArray;
 
 #define OPSeenStatus 1
@@ -100,9 +100,9 @@
 + (void) resetSendStatus;
 
 + (id) messageForMessageId: (NSString*) messageId;
-+ (id) messageWithTransferData: (NSData*) someTransferData;
+//+ (id) messageWithTransferData: (NSData*) someTransferData;
 + (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
-
++ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 
 
 //- (NSData*) transferData;
