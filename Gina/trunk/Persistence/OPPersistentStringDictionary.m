@@ -11,8 +11,6 @@
 
 @implementation OPPersistentStringDictionary
 
-
-
 - (NSUInteger) count
 /*" Can be slow, initial invocation does a table scan. "*/
 {
@@ -117,7 +115,9 @@
 		OID oidFound = [[self setterCursor] currentEntryIntValue];
 		if (oidFound != objectOID) {
 			changeCount++;
-			
+			[[self setterCursor] deleteCurrentEntry];
+			[[self setterCursor] insertValueBytes: &objectOID ofLength: sizeof(OID)
+									  forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
 		} else {
 			// nothing to do, anObject already present
 			NSLog(@"Ignoring addition of existing key/value pair to persistent string dictionary.");

@@ -20,17 +20,37 @@
 	[context saveChanges];
 }
 
-- (void) testSetSingleObjectSet
+- (void) testSetSingleObject
 {
-	OPPersistentTestObject* object = [[OPPersistentTestObject alloc] initWithName: @"object 1"];
+	OPPersistentTestObject* object = [[OPPersistentTestObject alloc] initWithName: @"object"];
 	
-	[dict setObject: object forKey: @"key 1"];
+	[dict setObject: object forKey: @"key"];
 	[context saveChanges];
 	[object release]; object = nil;
 	
-	object = [dict objectForKey: @"key 1"];
+	object = [dict objectForKey: @"key"];
 	
-	STAssertEqualObjects(object.name, @"object 1", @"Unable to retrieve same test object from dictionary."); 
+	STAssertEqualObjects(object.name, @"object", @"Unable to retrieve same test object from dictionary."); 
+	STAssertEquals([dict count], (NSUInteger)1, @"Multiple inserts for the same key should still yield count == 1.");
+}
+
+- (void) testSetSingleObject2times
+{
+	OPPersistentTestObject* object1 = [[OPPersistentTestObject alloc] initWithName: @"object 1"];
+	OPPersistentTestObject* object2 = [[OPPersistentTestObject alloc] initWithName: @"object 2"];
+	
+	[dict setObject: object1 forKey: @"key"];
+	[context saveChanges];
+	
+	[dict setObject: object2 forKey: @"key"];
+
+	
+	[object1 release]; object1 = nil;
+	[object2 release]; object2 = nil;
+	
+	OPPersistentTestObject* object = [dict objectForKey: @"key"];
+	
+	STAssertEqualObjects(object.name, @"object 2", @"Unable to retrieve same test object from dictionary."); 
 }
 
 @end
