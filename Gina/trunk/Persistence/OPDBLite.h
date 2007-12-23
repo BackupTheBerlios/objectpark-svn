@@ -117,9 +117,9 @@
 
 - (i64) currentEntryKeyLengthError: (int*) error;
 - (int) getCurrentEntryKeyBytes: (void*) bytes length: (i64) length offset: (u32) offset;
-- (int) insertValueBytes: (const char*) data 
+- (int) insertValueBytes: (const void*) data 
 				ofLength: (unsigned) dataLength 
-			 forKeyBytes: (const char*) key 
+			 forKeyBytes: (const void*) key 
 				ofLength: (unsigned) keyLength
 				isAppend: (BOOL) append;
 

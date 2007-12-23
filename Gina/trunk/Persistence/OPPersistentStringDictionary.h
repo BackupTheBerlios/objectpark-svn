@@ -14,12 +14,15 @@
 	OPBTreeCursor* setterCursor;
 	NSUInteger count;
 	OID oid;
+	
+@public 
+	NSUInteger changeCount; // increased on every add/remove; do not change from outside
+
 }
 
 - (OPPersistentObjectContext*) context;
 
 - (OID) oid;
-- (NSString*) objectURLString;
 
 - (OID) currentOID; // internal method
 - (void) setOID: (OID) theOID; // for internal use
