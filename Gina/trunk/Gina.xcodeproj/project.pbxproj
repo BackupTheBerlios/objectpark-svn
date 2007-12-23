@@ -193,6 +193,11 @@
 		77CFC5140D02F32D0039A2E8 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		77DB2A120D03537500F23C06 /* TestOPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5BC0D00546B00A7BEFF /* TestOPMultipartContentCoder.m */; };
 		77DB2A4A0D03569F00F23C06 /* TestOPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5AE0D00546B00A7BEFF /* TestOPSMTP.m */; };
+		77F2E2EC0D1E4AF90003D25B /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
+		77F2E2ED0D1E4AFB0003D25B /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
+		77F2E2EF0D1E4B060003D25B /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
+		77F2E2F00D1E4B160003D25B /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777B05CB0D031DE40080B76F /* InternetMessage.framework */; };
+		77F2E2F90D1E4BFD0003D25B /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -498,6 +503,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77F2E2EC0D1E4AF90003D25B /* OPPreferences.framework in Frameworks */,
+				77F2E2ED0D1E4AFB0003D25B /* OPNetwork.framework in Frameworks */,
+				77F2E2EF0D1E4B060003D25B /* OPPersistence.framework in Frameworks */,
+				77F2E2F00D1E4B160003D25B /* InternetMessage.framework in Frameworks */,
+				77F2E2F90D1E4BFD0003D25B /* InternetMessage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1292,7 +1302,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+			shellScript = "# Run the unit tests in this test bundle.\n#\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 		77B6C8920D008D7C00A7BEFF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1626,7 +1636,12 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Gina.app/Contents/MacOS/Gina";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"\"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"",
+					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
+					"\"$(SRCROOT)/build/Debug\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -1655,7 +1670,12 @@
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Gina.app/Contents/MacOS/Gina";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"\"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"",
+					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
+					"\"$(SRCROOT)/build/Debug\"",
+				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_MODEL_TUNING = G5;
