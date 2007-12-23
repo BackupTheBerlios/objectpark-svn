@@ -201,6 +201,9 @@
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8DABA1AA0D1C1F8400991279 /* TestPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA1A90D1C1F8400991279 /* TestPersistentObject.m */; };
+		8DABA1BC0D1E689C00991279 /* TestPersistentStringDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA1BB0D1E689C00991279 /* TestPersistentStringDictionary.m */; };
+		8DABA2570D1EA23000991279 /* OPPersistentTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -482,6 +485,12 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Gina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D8B1B9B0D11485D008E02D7 /* Gina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Gina.icns; sourceTree = "<group>"; };
+		8DABA1A80D1C1F8400991279 /* TestPersistentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPersistentObject.h; path = ../../TestPersistentObject.h; sourceTree = "<group>"; };
+		8DABA1A90D1C1F8400991279 /* TestPersistentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestPersistentObject.m; path = ../../TestPersistentObject.m; sourceTree = "<group>"; };
+		8DABA1BA0D1E689C00991279 /* TestPersistentStringDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestPersistentStringDictionary.h; sourceTree = "<group>"; };
+		8DABA1BB0D1E689C00991279 /* TestPersistentStringDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestPersistentStringDictionary.m; sourceTree = "<group>"; };
+		8DABA2550D1EA23000991279 /* OPPersistentTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentTestObject.h; sourceTree = "<group>"; };
+		8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentTestObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -776,6 +785,12 @@
 		773614E50D1C1D9A007FC630 /* PersistenceTests */ = {
 			isa = PBXGroup;
 			children = (
+				8DABA1A80D1C1F8400991279 /* TestPersistentObject.h */,
+				8DABA1A90D1C1F8400991279 /* TestPersistentObject.m */,
+				8DABA1BA0D1E689C00991279 /* TestPersistentStringDictionary.h */,
+				8DABA1BB0D1E689C00991279 /* TestPersistentStringDictionary.m */,
+				8DABA2550D1EA23000991279 /* OPPersistentTestObject.h */,
+				8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */,
 			);
 			name = PersistenceTests;
 			path = Persistence/Tests;
@@ -1352,6 +1367,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DABA1AA0D1C1F8400991279 /* TestPersistentObject.m in Sources */,
+				8DABA1BC0D1E689C00991279 /* TestPersistentStringDictionary.m in Sources */,
+				8DABA2570D1EA23000991279 /* OPPersistentTestObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
