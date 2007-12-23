@@ -381,7 +381,7 @@
 			return nil;
 		}
 		result->objcSupport = cursorClass; // set isa pointer
-		NSLog(@"Creating Cursor of class %@", cursorClass);
+		//NSLog(@"Creating Cursor of class %@", cursorClass);
 	}
 	return [(id)result init];
 }
