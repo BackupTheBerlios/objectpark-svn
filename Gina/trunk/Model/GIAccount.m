@@ -10,7 +10,7 @@
 //#import "OPPersistentObject+Extensions.h"
 #import <Security/Security.h>
 #import <Foundation/NSDebug.h>
-//#import "NSString+Extensions.h"
+#import "NSString+Extensions.h"
 //#import "GIPOPJob.h"
 //#import "GISMTPJob.h"
 //#import "GIApplication.h"
