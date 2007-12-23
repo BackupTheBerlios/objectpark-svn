@@ -11,8 +11,7 @@
 #import "GIProfile.h"
 #import "GIThread.h"
 #import "OPInternetMessage.h"
-//#import "NSString+MessageUtils.h"
-//#import "OPPersistentObject+Extensions.h"
+#import "NSString+MessageUtils.h"
 //#import "OPInternetMessage+GinkoExtensions.h"
 #import "GIMessageGroup.h"
 //#import "GIMessageBase.h"
@@ -42,6 +41,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @synthesize date;
 @synthesize subject;
+@synthesize internetMessage;
 
 + (id)messageForMessageId:(NSString *)messageId
 /*" Returns either nil or the message specified by its messageId. "*/
@@ -127,6 +127,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return filename;
 }
 
+/*
 - (NSData*) transferData
 {
 	if (! transferData) {
@@ -134,6 +135,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	}
 	return transferData;
 }
+*/
 
 //- (void) setTransferData: (NSData*) newData
 //{
@@ -184,9 +186,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     dummy = [[[GIMessage alloc] init] autorelease];
     //[dummy insertIntoContext: [OPPersistentObjectContext threadContext]]; 
     NSAssert(dummy != nil, @"Could not create a dummy message object");
-    
-    [dummy setTransferData: nil];
-    [dummy setValue: aMessageId forKey: @"messageId"];  
+
+    [dummy setValue:aMessageId forKey:@"messageId"];  
 
     // dummy messages should not show up as unread
     [dummy addFlags:OPSeenStatus];
@@ -204,11 +205,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     if ([self isDummy])
         [self removeFlags: OPSeenStatus];
         
-    //[self setTransientValue: im forKey: @"internetMessageCache"];
-	[transferData autorelease]; transferData = [[im transferData] retain];
+	internetMessage = [im retain];
 	messageId = [[im messageId] retain];
 //    [self setValue: [im messageId] forKey: @"messageId"];  
-    self.subject = [im normalizedSubject];
+    subject = [[im normalizedSubject] retain];
     [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
     
     // sanity check for date header field:
@@ -306,7 +306,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (BOOL)isDummy
 {
-    return self.transferData == nil;
+    return self.internetMessage == nil;
 }
 
 @synthesize referenceOID;
@@ -461,13 +461,13 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     char result[sizeof(unsigned) * 8 + 1];  // size of flags vector in bits + 1
     int i = 0;
-    unsigned flags = [self flags];
+    unsigned f = [self flags];
     
-    if (flags & OPInterestingStatus) result[i++] = 'I';
-    if (flags & OPAnsweredStatus)    result[i++] = 'A';
-    if (flags & OPJunkMailStatus)    result[i++] = 'J';
-    if (flags & OPSeenStatus)        result[i++] = 'R';
-    //if (flags & OPDraftStatus)       result[i++] = 'D';
+    if (f & OPInterestingStatus) result[i++] = 'I';
+    if (f & OPAnsweredStatus)    result[i++] = 'A';
+    if (f & OPJunkMailStatus)    result[i++] = 'J';
+    if (f & OPSeenStatus)        result[i++] = 'R';
+    //if (f & OPDraftStatus)       result[i++] = 'D';
     
     result[i++] = '\0'; // terminate string
     
@@ -479,8 +479,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	NSString *result = [self valueForKey:@"to"];
 	if ([result length] == 0)
 	{
-		id internetMessage = [self internetMessage];
-		result = [internetMessage toWithFallback:YES];
+		result = [self.internetMessage toWithFallback:YES];
 		
 		// self repairing:
 		if ([self hasFlags:OPIsFromMeStatus])
@@ -502,28 +501,28 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) addFlagsFromString: (NSString*) flagsString
 	/*" Not all available flags are supported. "*/
 {
-    unsigned flags = 0;
+    unsigned f = 0;
     
     int flagsCount = [flagsString length];
     for (int i = 0; i < flagsCount; i++) {
         unichar flagChar = [flagsString characterAtIndex:i];
         
         switch (flagChar) {
-            case 'I': flags |= OPInterestingStatus;
+            case 'I': f |= OPInterestingStatus;
                       break;
-            case 'A': flags |= OPAnsweredStatus;
+            case 'A': f |= OPAnsweredStatus;
                       break;
-            case 'J': flags |= OPJunkMailStatus;
+            case 'J': f |= OPJunkMailStatus;
                       break;
-            case 'R': flags |= OPSeenStatus;
+            case 'R': f |= OPSeenStatus;
                       break;
-//             case 'D': flags |= OPDraftStatus;
+//             case 'D': f |= OPDraftStatus;
 //                       break;
             default: if (NSDebugEnabled) NSLog(@"Unknown flag character in flags string: '%C' (0x%X)", flagChar, flagChar);
         }
     }
     
-    [self addFlags:flags];
+    [self addFlags:f];
 }
 
 
@@ -618,8 +617,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     NSNumber *newValue = nil;
 
     @synchronized(self) {
-        int flags = [self flags];
-		someFlags = (0xffffffff ^ flags) & someFlags;
+		someFlags = (0xffffffff ^ [self flags]) & someFlags;
 //        if (someFlags) {
 //			// Some flags actually changed!
 //

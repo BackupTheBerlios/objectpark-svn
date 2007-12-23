@@ -29,8 +29,12 @@
 	return message;
 }
 
-/*
-- (void)testMessageCreationAndRetrieval
+- (void)testMessageCreation
+{
+	[[self class] messageForTest];
+}
+
+- (void)testMessageRetrieval
 {
 	GIMessage *message = [[self class] messageForTest];
 	
@@ -41,5 +45,5 @@
 	NSAssert(fetchedMessage != nil, @"could not fetched previously created message for message id");
 	NSAssert([[fetchedMessage messageId] isEqualToString:messageId], @"message id from fetched message not correct");
 }
-*/
+
 @end

@@ -46,6 +46,7 @@
 #define OPSendStatusSending 4
 
 @class GIThread;
+@class OPInternetMessage;
 
 @interface GIMessage : OPPersistentObject {
 @private
@@ -59,10 +60,10 @@
 	OID referenceOID;
 	NSArray* comments; // transient cache
     unsigned flags; 
-	NSData* transferData;
+	OPInternetMessage *internetMessage;
 }
 
-@property (readonly, retain) NSData* transferData;
+@property (readonly, retain) OPInternetMessage *internetMessage;
 @property OID referenceOID;
 @property (readonly, retain) NSString* subject;
 @property (readonly, retain) NSDate* date;
@@ -106,7 +107,6 @@
 + (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 
-
 - (GIMessage*) reference;
 - (GIMessage*) referenceFind: (BOOL)find;
 
@@ -147,10 +147,7 @@
 - (NSString*) senderName;
 - (NSString*) recipientsForDisplay;
 
-- (void) flushInternetMessageCache;
-//- (OPInternetMessage*) internetMessage;
 - (void) addOrderedSubthreadToArray: (NSMutableArray*) result;
-
 
 @end
 

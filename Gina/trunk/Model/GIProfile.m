@@ -11,7 +11,9 @@
 
 //#import "GIAccount.h"
 #import "GIMessage.h"
-//#import "NSString+MessageUtils.h"
+#import "OPInternetMessage.h"
+#import "NSString+MessageUtils.h"
+#import "NSString+Extensions.h"
 //#import "NSArray+Extensions.h"
 //#import "OPInternetMessage.h"
 //#import "OPPersistentObject+Extensions.h"
