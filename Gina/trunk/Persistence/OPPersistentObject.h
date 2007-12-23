@@ -87,9 +87,9 @@
 - (void) willDelete;
 
 //- (void) willChangeValueForKey: (NSString*) key;
-//- (void) willAccessValueForKey: (NSString*) key;
+- (void) willAccessValueForKey: (NSString*) key;
 //- (void) didChangeValueForKey: (NSString*) key;
-//- (void) didAccessValueForKey: (NSString*) key;
+- (void) didAccessValueForKey: (NSString*) key;
 
 
 @end
