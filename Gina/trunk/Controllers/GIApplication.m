@@ -9,6 +9,7 @@
 #import "GIApplication.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIMainWindowController.h"
+#import "GIMessage.h"
 
 @implementation GIApplication
 

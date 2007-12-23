@@ -68,9 +68,9 @@
 		773614890D1C1562007FC630 /* hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 773614030D1C0F2E007FC630 /* hash.h */; };
 		7736148A0D1C1562007FC630 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 773614040D1C0F2E007FC630 /* hash.c */; };
 		7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
-		773614A30D1C18B7007FC630 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		7736153F0D1C33D2007FC630 /* GIMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612510D1AB6F2007FC630 /* GIMainWindowController.m */; };
 		773615B00D1CFA69007FC630 /* TestGIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 773615AF0D1CFA68007FC630 /* TestGIMessage.m */; };
+		773616100D1D7204007FC630 /* TestMIMEBoundaries.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -92,6 +92,8 @@
 		7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
+		77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
+		77B647560D1E46A1001E21D8 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; };
 		77B6C5FD0D00546B00A7BEFF /* EDCompositeContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C00D00546B00A7BEFF /* EDCompositeContentCoder.m */; };
 		77B6C5FE0D00546B00A7BEFF /* EDContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C10D00546B00A7BEFF /* EDContentCoder.h */; };
@@ -208,7 +210,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D1107260486CEB800E47090 /* Gina */;
+			remoteGlobalIDString = 8D1107260486CEB800E47090;
 			remoteInfo = Gina;
 		};
 		77B6C5940D00540100A7BEFF /* PBXContainerItemProxy */ = {
@@ -234,10 +236,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				773614A30D1C18B7007FC630 /* OPPersistence.framework in Copy Frameworks */,
 				778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */,
 				775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */,
 				775C31140D0D40EA0098DA07 /* OPNetwork.framework in Copy Frameworks */,
+				77B647560D1E46A1001E21D8 /* OPPersistence.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -538,6 +540,7 @@
 				7736143A0D1C10D1007FC630 /* Cocoa.framework in Frameworks */,
 				7736143B0D1C10D3007FC630 /* Security.framework in Frameworks */,
 				7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */,
+				77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1213,6 +1216,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				773616100D1D7204007FC630 /* TestMIMEBoundaries.transferData in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1520,7 +1524,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "OPPersistence-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
-				LD_DYLIB_INSTALL_NAME = "@rpath/InternetMessage.framework/Versions/A/InternetMessage";
+				LD_DYLIB_INSTALL_NAME = "@rpath/OPPersistence.framework/Versions/A/OPPersistence";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -1547,7 +1551,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "OPPersistence-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
-				LD_DYLIB_INSTALL_NAME = "@rpath/InternetMessage.framework/Versions/A/InternetMessage";
+				LD_DYLIB_INSTALL_NAME = "@rpath/OPPersistence.framework/Versions/A/OPPersistence";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,

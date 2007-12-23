@@ -7,14 +7,20 @@
 //
 
 #import "TestGIMessage.h"
-
+#import "GIMessage.h"
 
 @implementation TestGIMessage
 
-- (void)testInfrastructure
+- (void)testMessageCreation
 {
-	NSNumber *aNumber = [NSNumber numberWithInt:42];
-	NSLog(@"this is a test %@", aNumber);
+	NSString *transferDataPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestMIMEBoundaries" ofType:@"transferData"];
+	NSAssert(transferDataPath != nil, @"couldn't find transferdata resource");
+	
+	NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];
+	NSAssert(transferData != nil, @"couldn't read transferdata");
+	
+	GIMessage *message = [GIMessage messageWithTransferData:transferData];
+	NSAssert(message != nil, @"couldn't create message from transferdata");
 }
 
 @end
