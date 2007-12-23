@@ -53,4 +53,14 @@
 	STAssertEqualObjects(object.name, @"object 2", @"Unable to retrieve same test object from dictionary."); 
 }
 
+- (void) testDeleteSingleObject
+{
+	[self testSetSingleObject];
+	
+	[dict removeObjectForKey: @"key"];
+
+	STAssertEquals([dict count], (NSUInteger)0, @"Single insert and remove should yield count == 0.");
+}
+
+
 @end

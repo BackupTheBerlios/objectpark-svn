@@ -149,6 +149,22 @@
 	return result;
 }
 
+- (void) removeObjectForKey: (id) key
+{
+	NSParameterAssert([key isKindOfClass: [NSString class]]);
+	const void* keyBytes = [(NSString*)key UTF8String];
+	i64 keyLength = strlen(keyBytes);
+	int pos = [[self setterCursor] moveToKeyBytes: keyBytes length: keyLength error: NULL];
+	if (pos == 0) {
+		// We found an entry under the given string key.
+		[self willChangeValueForKey: @"count"];
+		if (count!=NSNotFound) count--;
+		changeCount++;
+		[[self setterCursor] deleteCurrentEntry];
+		[self didChangeValueForKey: @"count"];
+	}
+}
+
 
 - (id) initWithCoder: (NSCoder*) coder
 {
