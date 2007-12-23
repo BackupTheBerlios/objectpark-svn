@@ -199,6 +199,7 @@
 		77F2E2F00D1E4B160003D25B /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777B05CB0D031DE40080B76F /* InternetMessage.framework */; };
 		77F2E2F90D1E4BFD0003D25B /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		77F2E3630D1EA8160003D25B /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
+		77F2E3DB0D1EB2DC0003D25B /* TestGIThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F2E3DA0D1EB2DC0003D25B /* TestGIThread.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -240,7 +241,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 773614590D1C152A007FC630 /* OPPersistence */;
+			remoteGlobalIDString = 773614590D1C152A007FC630;
 			remoteInfo = OPPersistence;
 		};
 /* End PBXContainerItemProxy section */
@@ -490,6 +491,8 @@
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
 		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaSpotlight-Info.plist"; path = "../GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
+		77F2E3D90D1EB2DC0003D25B /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
+		77F2E3DA0D1EB2DC0003D25B /* TestGIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIThread.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Gina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D8B1B9B0D11485D008E02D7 /* Gina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Gina.icns; sourceTree = "<group>"; };
@@ -810,6 +813,8 @@
 			children = (
 				773615AE0D1CFA68007FC630 /* TestGIMessage.h */,
 				773615AF0D1CFA68007FC630 /* TestGIMessage.m */,
+				77F2E3D90D1EB2DC0003D25B /* TestGIThread.h */,
+				77F2E3DA0D1EB2DC0003D25B /* TestGIThread.m */,
 			);
 			name = GinaTests;
 			path = Tests;
@@ -1388,6 +1393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				773615B00D1CFA69007FC630 /* TestGIMessage.m in Sources */,
+				77F2E3DB0D1EB2DC0003D25B /* TestGIThread.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

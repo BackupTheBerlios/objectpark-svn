@@ -192,7 +192,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
         }
     }
     
-	return [[[subj stringByRemovingSurroundingWhitespace] stringByNormalizingWhitespaces] sharedInstance];
+	return [[subj stringByRemovingSurroundingWhitespace] stringByNormalizingWhitespaces];
 }
 
 

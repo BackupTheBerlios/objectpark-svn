@@ -8,9 +8,12 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+@class GIMessage;
 
 @interface TestGIMessage : SenTestCase 
 {
 }
+
++ (GIMessage *)messageForTest;
 
 @end

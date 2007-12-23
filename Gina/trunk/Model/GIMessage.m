@@ -204,7 +204,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         
     //[self setTransientValue: im forKey: @"internetMessageCache"];
 	[transferData autorelease]; transferData = [[im transferData] retain];
-    [self setValue: [im messageId] forKey: @"messageId"];  
+	messageId = [[im messageId] retain];
+//    [self setValue: [im messageId] forKey: @"messageId"];  
     self.subject = [im normalizedSubject];
     [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
     
@@ -347,13 +348,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return flags;
 }
 
-//- (NSString*) messageId
-//{
-//	[self willAccessValueForKey: @"messageId"];
-//    id result = [self primitiveValueForKey: @"messageId"];
-//	[self didAccessValueForKey: @"messageId"];
-//	return result;
-//}
+- (NSString *)messageId
+{
+	return [[messageId retain] autorelease];
+}
 
 - (unsigned) numberOfReferences
 	/*" Returns the number of referenced messages until a root message is reached. "*/

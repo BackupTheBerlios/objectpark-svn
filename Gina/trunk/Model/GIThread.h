@@ -14,6 +14,7 @@
 @class OPFaultingArray;
 
 @interface GIThread : OPPersistentObject {
+@private
 	NSString* subject;  // persistent
 	NSDate* date;       // persistent
 	OPFaultingArray* messages;           // persistent

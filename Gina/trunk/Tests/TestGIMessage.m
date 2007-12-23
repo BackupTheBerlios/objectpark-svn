@@ -12,7 +12,7 @@
 
 @implementation TestGIMessage
 
-- (void)testMessageCreation
++ (GIMessage *)messageForTest
 {
 	NSString *transferDataPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestMIMEBoundaries" ofType:@"transferData"];
 	NSAssert(transferDataPath != nil, @"couldn't find transferdata resource");
@@ -23,6 +23,23 @@
 	OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
 	GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
 	NSAssert(message != nil, @"couldn't create message from internetMessage");
+	
+	NSString *subject = message.subject;
+	NSAssert([subject isEqualToString:@"strained"], @"wrong subject in message");
+	return message;
 }
 
+/*
+- (void)testMessageCreationAndRetrieval
+{
+	GIMessage *message = [[self class] messageForTest];
+	
+	NSString *messageId = [message messageId];
+	NSAssert(messageId != nil, @"could not get message id from message");
+	
+	GIMessage *fetchedMessage = [GIMessage messageForMessageId:messageId];
+	NSAssert(fetchedMessage != nil, @"could not fetched previously created message for message id");
+	NSAssert([[fetchedMessage messageId] isEqualToString:messageId], @"message id from fetched message not correct");
+}
+*/
 @end

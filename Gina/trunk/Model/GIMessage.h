@@ -48,6 +48,7 @@
 @class GIThread;
 
 @interface GIMessage : OPPersistentObject {
+@private
 	NSString* messageId;
 	NSString* subject;
 	NSString* to;
@@ -64,6 +65,7 @@
 @property (readonly) NSData* transferData;
 @property OID referenceOID;
 @property (copy) NSString* subject;
+@property (readonly, retain) NSString* messageId;
 @property (retain) GIThread* thread;
 
 //+ (NSString*) persistentAttributesPlist
@@ -100,14 +102,10 @@
 + (void) resetSendStatus;
 
 + (id) messageForMessageId: (NSString*) messageId;
-//+ (id) messageWithTransferData: (NSData*) someTransferData;
 + (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 
 
-//- (NSData*) transferData;
-
-- (NSString*) messageId;
 - (GIMessage*) reference;
 - (GIMessage*) referenceFind: (BOOL)find;
 

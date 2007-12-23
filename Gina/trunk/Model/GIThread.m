@@ -65,7 +65,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {
 	if (! [date isEqual: newDate]) {
 		[self willChangeValueForKey: @"date"];
-		[subject release];
+		[date release];
 		date = [newDate retain];
 		[self didChangeValueForKey: @"date"];
 	}
