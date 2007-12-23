@@ -62,9 +62,10 @@
 	NSData* transferData;
 }
 
-@property (readonly) NSData* transferData;
+@property (readonly, retain) NSData* transferData;
 @property OID referenceOID;
-@property (copy) NSString* subject;
+@property (readonly, retain) NSString* subject;
+@property (readonly, retain) NSDate* date;
 @property (readonly, retain) NSString* messageId;
 @property (retain) GIThread* thread;
 

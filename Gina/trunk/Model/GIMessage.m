@@ -40,6 +40,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @implementation GIMessage
 
+@synthesize date;
+@synthesize subject;
 
 + (id)messageForMessageId:(NSString *)messageId
 /*" Returns either nil or the message specified by its messageId. "*/
@@ -292,16 +294,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return self;
 }
 
-- (void) setSubject: (NSString*) newSubject
-{
-	if (! [subject isEqualToString: newSubject]) {
-		[self willChangeValueForKey: @"subject"];
-		[subject release];
-		subject = [newSubject copy];
-		[self didChangeValueForKey: @"subject"];
-	}
-}
-
 - (BOOL) isLeaf
 {
 	return YES;
@@ -311,12 +303,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	return nil; // just for the gui
 }
-
-- (NSString*) subject
-{
-	return subject;
-}
-
 
 - (BOOL)isDummy
 {

@@ -387,16 +387,16 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
    message into it."*/
 + (GIThread *)threadForMessage:(GIMessage *)aMessage
 {
-    GIThread *thread = [aMessage thread];
+    GIThread *thread = aMessage.thread;
     
     if (thread) return thread;
         
     thread = [[[self alloc] init] autorelease];
 	[[aMessage context] insertObject: thread];
-    [thread setValue:[aMessage valueForKey:@"subject"] forKey:@"subject"];
-    [thread setValue:[aMessage valueForKey:@"date"] forKey:@"date"];
-    
-	[aMessage setThread: thread];
+	
+	thread.subject = aMessage.subject;
+	thread.date = aMessage.date;
+	aMessage.thread = thread;    
     
 	if (NSDebugEnabled) NSLog(@"Created thread %@ for message %@ (%qu)", [aMessage messageId], [aMessage oid]);
     
