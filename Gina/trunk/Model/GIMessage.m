@@ -43,40 +43,29 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 @synthesize subject;
 @synthesize internetMessage;
 
++ (NSMutableDictionary*) messagesByMessageId
+{
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	
+	static OPPersistentStringDictionary* globalIndex = nil;
+	
+	if (!globalIndex) {
+		globalIndex = [context rootObjectForKey: @"MessagesById"];
+		if (!globalIndex) {
+			globalIndex = [[[OPPersistentStringDictionary alloc] init] autorelease];
+			[context setRootObject: globalIndex forKey: @"MessagesById"];
+		}
+	}
+	return globalIndex;
+}
+
 + (id)messageForMessageId:(NSString *)messageId
 /*" Returns either nil or the message specified by its messageId. "*/
 {
-	GIMessage* result = nil;
-
-//    if (messageId) {
-//		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-//		NSArray* objects = [context fetchObjectsOfClass: self whereFormat: @"ZMESSAGEID=?", messageId, nil];
-//		
-//		result = [objects lastObject];
-//		//[objectEnum reset]; // might free some memory.
-//        
-//        if (! result) {
-//            @synchronized([context changedObjects]) {
-//                // Look in changed objects sequentially:
-//                NSEnumerator *enumerator = [[context changedObjects] objectEnumerator];
-//                OPPersistentObject *changedObject;
-//                while (changedObject = [enumerator nextObject]) 
-//                {
-//                    if ([changedObject isKindOfClass:[GIMessage class]])
-//                    {
-//                        if ([[changedObject valueForKey: @"messageId"] isEqualToString:messageId])
-//                        {
-//                            result = (GIMessage *)changedObject;
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//	}
-    
+	GIMessage* result = [[self messagesByMessageId] objectForKey: messageId];
 	return result;
 }
+
 
 
 - (GIThread*) thread
@@ -117,6 +106,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		}
 	}
 #warning delete message file here!
+	
+	[[[self class] messagesByMessageId] removeObjectForKey: self.messageId];
 	
 	[super willDelete];
 }
@@ -228,7 +219,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     }
 }
 
-
 /*" Returns a new message with the internetmessage object.
  If message is a dupe, the message not inserted into the context nil is returned. "*/
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
@@ -258,15 +248,24 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     else 
 	{
         // Create a new message in the default context:
-        result = [[[GIMessage alloc] init] autorelease];
-        //[result insertIntoContext: [OPPersistentObjectContext threadContext]]; 
-        
+        result = [[[GIMessage alloc] initWithInternetMessage: anInternetMessage] autorelease];
 		NSAssert(result != nil, @"Could not create message object");
-        
-        [result setContentFromInternetMessage: anInternetMessage];
     }
     
     return result;
+}
+
+/*" Returns a new message with the internetmessage object.
+ If message is a dupe, the message not inserted into the context nil is returned. "*/
+- (id) initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
+{
+    if (self = [super init]) {
+		// Create a new message in the default context:
+        [self setContentFromInternetMessage: anInternetMessage];
+		[[[self class] messagesByMessageId] setObject: self forKey: self.messageId];
+    }
+    
+    return self;
 }
 
 /*" Returns YES, if Ginko thinks (from the message headers) that this message is an Usenet News article (note, that a message can be both, a usenet article and an email). This message causes the message to be decoded. "*/
@@ -288,10 +287,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (id)init 
 {
-	if (self = [super init]) 
-	{
-	}
-	return self;
+	NSParameterAssert(NO);
 }
 
 - (BOOL) isLeaf
