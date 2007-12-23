@@ -13,6 +13,15 @@
 	OPBTree* btree;
 	OPBTreeCursor* setterCursor;
 	NSUInteger count;
+	OID oid;
 }
+
+- (OPPersistentObjectContext*) context;
+
+- (OID) oid;
+- (NSString*) objectURLString;
+
+- (OID) currentOID; // internal method
+- (void) setOID: (OID) theOID; // for internal use
 
 @end
