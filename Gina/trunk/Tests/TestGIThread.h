@@ -9,6 +9,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "TestWithPersistence.h"
 
+@class GIThread;
+
 @interface TestGIThread : TestWithPersistence 
 {
 
