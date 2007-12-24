@@ -289,6 +289,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (id)init 
 {
 	NSParameterAssert(NO);
+	return nil;
 }
 
 - (BOOL) isLeaf
@@ -360,27 +361,27 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 //	[attributes removeObjectForKey: @"numberOfReferences"];
 //}
 
-//- (NSArray*) commentsInThread: (GIThread*) aThread
-//	/* Returns all directly commenting messages in the thread given. */
-//{
-//    NSMutableArray* result = [NSMutableArray array];
-//	for (GIMessage* other in [aThread messages]) {
-//        if ([other reference] == self) {
-//            [result addObject: other];
-//        }
-//    }
-//    return result;
-//}
-//
-//- (NSArray*) comments
-///*" Returns the (cached) comments in the receiver's thread. "*/
-//{
-//	NSArray* result = comments;
-//	if (!result) {
-//		comments = [[self commentsInThread: [self thread]] retain]; // fires fault
-//	}
-//	return result;
-//}
+- (NSArray*) commentsInThread: (GIThread*) aThread
+	/* Returns all directly commenting messages in the thread given. */
+{
+    NSMutableArray* result = [NSMutableArray array];
+	for (GIMessage* other in [aThread messages]) {
+        if ([other reference] == self) {
+            [result addObject: other];
+        }
+    }
+    return result;
+}
+
+- (NSArray*) comments
+/*" Returns the (cached) comments in the receiver's thread. "*/
+{
+	NSArray* result = comments;
+	if (!result) {
+		comments = [[self commentsInThread: [self thread]] retain]; // fires fault
+	}
+	return result;
+}
 
 - (void) willRevert
 {

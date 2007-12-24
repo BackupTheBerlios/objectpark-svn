@@ -35,6 +35,7 @@
 #import <AppKit/AppKit.h>
 #import "OPDBLite.h"
 #import "OPPersistenceConstants.h"
+#import "OPPersistentObject.h"
 
 
 @class OPPersistentObject;
@@ -78,13 +79,13 @@
 // Methods for internal use ONLY:
 
 - (id) objectRegisteredForOID: (OID) oid;
-- (void) registerObject: (OPPersistentObject*) object;
-- (void) unregisterObject: (OPPersistentObject*) object;
-- (void) insertObject: (OPPersistentObject*) object;
+- (void) registerObject: (id <OPPersisting>) object;
+- (void) unregisterObject: (id <OPPersisting>) object;
+- (void) insertObject: (id <OPPersisting>) object;
 - (OID) nextOIDForClass: (Class) poClass;
 
 - (id) rootObjectForKey: (NSString*) key;
-- (void) setRootObject: (OPPersistentObject*) pObject forKey: (NSString*) key;
+- (void) setRootObject: (id <OPPersisting>) pObject forKey: (NSString*) key;
 
 // Archiving to the objectTree:
 - (void) archiveObject: (id) object usingCursor: (OPIntKeyBTreeCursor*) cursor;	
@@ -122,14 +123,14 @@
 - (id) objectWithURLString: (NSString*) urlString;
 - (id) objectForOID: (OID) oid;
 
-//- (void) willChangeObject: (OPPersistentObject*) object;
-- (void) didChangeObject: (OPPersistentObject*) object;
+//- (void) willChangeObject: (id <OPPersisting>) object;
+- (void) didChangeObject: (id <OPPersisting>) object;
 
-- (void) willRevertObject: (OPPersistentObject*) object;
-- (void) didRevertObject: (OPPersistentObject*) object;
+- (void) willRevertObject: (id <OPPersisting>) object;
+- (void) didRevertObject: (id <OPPersisting>) object;
 
 - (void) willFireFault: (OPPersistentObject*) fault forKey: (NSString*) key;
-//- (void) willAccessObject: (OPPersistentObject*) fault forKey: (NSString*) key;
+//- (void) willAccessObject: (id <OPPersisting>) fault forKey: (NSString*) key;
 
 
 - (void) saveChanges;

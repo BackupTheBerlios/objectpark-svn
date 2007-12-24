@@ -127,7 +127,7 @@ typedef struct {
 	OID oid;
 } FakeObject;
 
-- (void) registerObject: (OPPersistentObject*) object
+- (void) registerObject: (id <OPPersisting>) object
 {
 	NSParameterAssert([object currentOID]>0); // hashing is based on oids here
     
@@ -140,7 +140,7 @@ typedef struct {
 	}
 }
 
-- (void) unregisterObject: (OPPersistentObject*) object
+- (void) unregisterObject: (id <OPPersisting>) object
 /*" Called by -[OPPersistentObject dealloc] to make sure we do not keep references to stale objects. "*/
 {
     @synchronized((id)registeredObjects) {
@@ -167,7 +167,7 @@ typedef struct {
     return result;
 }
 
-- (void) didChangeObject: (OPPersistentObject*) object
+- (void) didChangeObject: (id <OPPersisting>) object
 /*" This method retains object until changes are saved. "*/
 {
 	@synchronized((id)changedObjects) {
@@ -188,18 +188,15 @@ typedef struct {
 	[faultFireCountsByKey addObject: key];
 }
 
-//- (void) didChangeObject: (OPPersistentObject*) object
-//{
-//}
 
-- (void) willRevertObject: (OPPersistentObject*) object
+- (void) willRevertObject: (id <OPPersisting>) object
 {
 	@synchronized(changedObjects) {
 		[changedObjects removeObject: object]; 
 	}
 }
 
-- (void) didRevertObject: (OPPersistentObject*) object
+- (void) didRevertObject: (id <OPPersisting>) object
 {
 }
 
@@ -221,7 +218,7 @@ typedef struct {
 	return oidNumber ? [self objectForOID: [oidNumber unsignedLongLongValue]] : nil;
 }
 
-- (void) setRootObject: (OPPersistentObject*) pObject forKey: (NSString*) key
+- (void) setRootObject: (id <OPPersisting>) pObject forKey: (NSString*) key
 {
 	[rootObjects setObject: [NSNumber numberWithUnsignedLongLong: [pObject oid]] forKey: key];
 	[database setPlist: rootObjects forOid: ROOTOBJECTSOID error: NULL];
@@ -838,7 +835,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	return oid;
 }
 
-- (void) insertObject: (OPPersistentObject*) newObject
+- (void) insertObject: (id <OPPersisting>) newObject
 {
 	NSParameterAssert([newObject context] == NULL || [newObject context] == self);
 	if (![newObject currentOID]) {

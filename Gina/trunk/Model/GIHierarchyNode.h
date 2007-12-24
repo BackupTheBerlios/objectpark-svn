@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "OPPersistentObject.h"
 
+@class OPFaultingArray;
+
 @interface GIHierarchyNode : OPPersistentObject {
 	NSString* name;
 	OPFaultingArray* children;

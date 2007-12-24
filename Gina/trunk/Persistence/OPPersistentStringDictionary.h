@@ -9,7 +9,7 @@
 #import "OPPersistentObject.h"
 #import "OPDBLite.h"
 
-@interface OPPersistentStringDictionary : NSMutableDictionary <NSCoding> {
+@interface OPPersistentStringDictionary : NSMutableDictionary <OPPersisting> {
 	OPBTree* btree;
 	OPBTreeCursor* setterCursor;
 	NSUInteger count;

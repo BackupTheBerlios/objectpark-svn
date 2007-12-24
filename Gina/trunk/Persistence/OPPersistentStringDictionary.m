@@ -37,7 +37,7 @@
 			
 			OPPersistentObjectContext* context = [self context];
 			if (context) {
-				[context insertObject: (OPPersistentObject*) self];
+				[context insertObject: self];
 			}
 		}
 	}
@@ -57,7 +57,7 @@
 		if (oid != theOid) {
 			NSAssert(oid==0, @"Object ids can be set only once per instance.");
 			oid = theOid;
-			[[self context] registerObject: (OPPersistentObject*)self];
+			[[self context] registerObject: self];
 		}
 	}
 }

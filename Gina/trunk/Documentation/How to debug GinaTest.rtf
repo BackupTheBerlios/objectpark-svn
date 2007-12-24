@@ -15,5 +15,5 @@ Note: GinaTest currently will not run all tests while building (due to unsolved 
 {\listtext	3)	}In "Debug Gina Tests" inspector "Arguments" add Arguments "-SenTest Self"\
 {\listtext	4)	}In "Debug Gina Tests" inspector "Arguments" add environment variables "DYLD_INSERT_LIBRARIES" to "$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks/DevToolsBundleInjection.framework/DevToolsBundleInjection", "XCInjectBundle" to "GinaTest.octest" and "DYLD_FALLBACK_FRAMEWORK_PATH" to "$(DEVELOPER_LIBRARY_DIR)/Frameworks:$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks".\
 {\listtext	5)	}Modify the file ~/.gdbinit to have a line "set start-with-shell 0"\
-{\listtext	6)	}Use Target "InternetMessageTest", configuration "Debug" and active executable "Debug Gina Tests" for debugging the tests. Note, to use Debug (without building) ALT-Cmd-Y to debug. Otherwise the tests will be tested along with building without debugging.\
+{\listtext	6)	}Use Target "GinaTest", configuration "Debug" and active executable "Debug Gina Tests" for debugging the tests. Note, to use Debug (without building) ALT-Cmd-Y to debug. Otherwise the tests will be tested along with building without debugging.\
 }

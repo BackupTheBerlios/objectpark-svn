@@ -12,12 +12,13 @@
 @class OPPersistentSetArray;
 
 /*" Backed directly by a btree "*/
-@interface OPPersistentSet : NSMutableSet <NSCoding> {
+@interface OPPersistentSet : NSMutableSet <OPPersisting> {
 	NSString* sortKeyPath;
 	OPBTree* btree;
 	OPBTreeCursor* setterCursor;
 	NSUInteger count;
 	OPPersistentSetArray* array;
+	OID oid;
 	
 	@public 
 	NSUInteger changeCount; // increased on every add/remove; do not change from outside

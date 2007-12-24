@@ -21,7 +21,7 @@
 //#import "OPJob.h"
 #import "OPMBoxFile.h"
 #import "OPFaultingArray.h"
-#import "OPPersistentSet.h"
+#import "OPPersistence.h"
 #import <Foundation/NSDebug.h>
 
 #define MESSAGEGROUP     OPL_DOMAIN  @"MessageGroup"

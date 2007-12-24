@@ -16,7 +16,7 @@
 //#import "GIApplication.h"
 #import "GIProfile.h"
 #import "GIMessage.h"
-#import "OPFaultingArray.h"
+#import "OPPersistence.h"
 
 @implementation GIAccount
 
@@ -75,36 +75,32 @@
 
 - (int)incomingServerType 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"incomingServerType"];
-    tmpValue = [self primitiveValueForKey:@"incomingServerType"];
-    [self didAccessValueForKey:@"incomingServerType"];
-    
-    return (tmpValue != nil) ? [tmpValue intValue] : 0;
+	return incomingServerType;
 }
 
 - (void)setIncomingServerType:(int)value 
 {
     [self willChangeValueForKey:@"incomingServerType"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"incomingServerType"];
-    [self didChangeValueForKey:@"incomingServerType"];
 
-    [self willChangeValueForKey:@"POPAccount"]; // signalling -isPOPAccount changed
-    [self didChangeValueForKey:@"POPAccount"];	
+#warning Add dependency "incomingServerType" - "isPOPAccount"!
+//    [self willChangeValueForKey:@"POPAccount"]; // signalling -isPOPAccount changed
+//    [self didChangeValueForKey:@"POPAccount"];	
 
     // A change of the server type also has effect on the port. The Account is 'touched' to have bindings recognize the change.
     [self setIncomingServerPort:0];
     [self willChangeValueForKey:@"incomingServerDefaultPort"];
-    [self didChangeValueForKey:@"incomingServerDefaultPort"];
+	incomingServerType = value;
     
-    if (![self isPOPAccount])
-    {
+    if (![self isPOPAccount]) {
         if ([self incomingAuthenticationMethod] != PlainText)
         {
             [self setIncomingAuthenticationMethod:PlainText];
         }
     }
+	[self didChangeValueForKey:@"incomingServerDefaultPort"];
+	[self didChangeValueForKey:@"incomingServerType"];
+
+
 }
 
 
@@ -324,134 +320,109 @@
 	}
 }
 
-- (int)retrieveMessageInterval 
+- (int) retrieveMessageInterval 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"retrieveMessageInterval"];
-    tmpValue = [self primitiveValueForKey:@"retrieveMessageInterval"];
-    [self didAccessValueForKey:@"retrieveMessageInterval"];
-    
-    return (tmpValue != nil) ? [tmpValue intValue] : 0;
+	return retrieveMessageInterval;
 }
 
-- (void)setRetrieveMessageInterval:(int)value 
+- (void) setRetrieveMessageInterval: (int) value 
 {
     [self willChangeValueForKey:@"retrieveMessageInterval"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value]
-                     forKey:@"retrieveMessageInterval"];
+	retrieveMessageInterval = value;
     [self didChangeValueForKey:@"retrieveMessageInterval"];
 }
 
-- (int)leaveOnServerDuration 
-{
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"leaveOnServerDuration"];
-    tmpValue = [self primitiveValueForKey:@"leaveOnServerDuration"];
-    [self didAccessValueForKey:@"leaveOnServerDuration"];
-    
-    return (tmpValue != nil) ? [tmpValue intValue] : 0;
+- (int) leaveOnServerDuration 
+{    
+    return leaveOnServerDuration;
 }
 
 - (void)setLeaveOnServerDuration:(int)value 
 {
     [self willChangeValueForKey:@"leaveOnServerDuration"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value]
-                     forKey:@"leaveOnServerDuration"];
+	leaveOnServerDuration = value;
     [self didChangeValueForKey:@"leaveOnServerDuration"];
 }
 
 - (int) outgoingServerType 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"outgoingServerType"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerType"];
-    [self didAccessValueForKey:@"outgoingServerType"];
-    
-    return (tmpValue != nil) ? [tmpValue intValue] : 0;
+    return outgoingServerType;
 }
 
 - (void) setOutgoingServerType:(int)value 
 {
     [self willChangeValueForKey:@"outgoingServerType"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value]
-                     forKey:@"outgoingServerType"];
+	outgoingServerType = value;
     [self didChangeValueForKey:@"outgoingServerType"];
 
-    [self setOutgoingServerPort:0];
-    [self willChangeValueForKey:@"outgoingServerDefaultPort"];
-    [self didChangeValueForKey:@"outgoingServerDefaultPort"];	
+    [self setOutgoingServerPort: 0];
 }
 
 - (NSString *)outgoingServerName 
 {
-    NSString *tmpValue;
-    
-    [self willAccessValueForKey:@"outgoingServerName"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerName"];
-    [self didAccessValueForKey:@"outgoingServerName"];
-    
-    return tmpValue;
+    return outgoingServerName;
 }
 
-- (void)setOutgoingServerName:(NSString *)value 
+- (void) setOutgoingServerName: (NSString*) value 
 {
-    [self willChangeValueForKey:@"outgoingServerName"];
-    [self setPrimitiveValue:value forKey:@"outgoingServerName"];
-    [self didChangeValueForKey:@"outgoingServerName"];
+	if (! [outgoingServerName isEqualToString: value]) {
+		[self willChangeValueForKey:@"outgoingServerName"];
+		[outgoingServerName release];
+		outgoingServerName = [value retain];
+		[self didChangeValueForKey:@"outgoingServerName"];
+	}
 }
 
-- (int)outgoingServerPort 
+- (unsigned) outgoingServerPort 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"outgoingServerPort"];
-    tmpValue = [self primitiveValueForKey:@"outgoingServerPort"];
-    [self didAccessValueForKey:@"outgoingServerPort"];
-    
-    int result = (tmpValue != nil) ? [tmpValue intValue] : 0;
-    return result ? result : [[self class] defaultPortForOutgoingServerType:[self outgoingServerType]];
+    return outgoingServerPort ? outgoingServerPort : [self outgoingServerDefaultPort];
 }
 
-- (void)setOutgoingServerPort:(int)value 
+- (void)setOutgoingServerPort:(unsigned)value 
 {
     [self willChangeValueForKey:@"outgoingServerPort"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"outgoingServerPort"];
+    outgoingServerPort = value;
     [self didChangeValueForKey:@"outgoingServerPort"];
 }
 
-- (int)outgoingServerDefaultPort
+- (unsigned) incomingServerPort 
+{
+    return incomingServerPort ? incomingServerPort : [self incomingServerDefaultPort];
+}
+
+- (void)setIncomingServerPort: (unsigned) value 
+{
+    [self willChangeValueForKey:@"incomingServerPort"];
+    incomingServerPort = value;
+    [self didChangeValueForKey:@"incomingServerPort"];
+}
+
+
+- (int) outgoingServerDefaultPort
 {
     return [[self class] defaultPortForOutgoingServerType:[self outgoingServerType]];
 }
 
-- (int)outgoingAuthenticationMethod 
+- (int) outgoingAuthenticationMethod 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"outgoingAuthenticationMethod"];
-    tmpValue = [self primitiveValueForKey:@"outgoingAuthenticationMethod"];
-    [self didAccessValueForKey:@"outgoingAuthenticationMethod"];
-    
-    return (tmpValue != nil) ? [tmpValue intValue] : 0;
+	return outgoingAuthenticationMethod;
 }
 
 - (void)setOutgoingAuthenticationMethod:(int)value 
 {
     [self willChangeValueForKey:@"outgoingAuthenticationMethod"];
-    [self setPrimitiveValue:[NSNumber numberWithInt:value] forKey:@"outgoingAuthenticationMethod"];
+    outgoingAuthenticationMethod = value;
     [self didChangeValueForKey:@"outgoingAuthenticationMethod"];
 	
-    [self willChangeValueForKey:@"outgoingUsernameNeeded"];
-    [self didChangeValueForKey:@"outgoingUsernameNeeded"];
+#warning Add dependencies outgoingAuthenticationMethod - outgoingUsernameNeeded, outgoingUsername
+    //[self willChangeValueForKey:@"outgoingUsernameNeeded"];
+    //[self didChangeValueForKey:@"outgoingUsernameNeeded"];
     
-    [self willChangeValueForKey:@"outgoingUsername"];
-    [self didChangeValueForKey:@"outgoingUsername"];
+    //[self willChangeValueForKey:@"outgoingUsername"];
+    //[self didChangeValueForKey:@"outgoingUsername"];
 }
 
-- (BOOL)outgoingUsernameNeeded
+- (BOOL) outgoingUsernameNeeded
 {
     return [self outgoingAuthenticationMethod] == SMTPAuthentication;
 }

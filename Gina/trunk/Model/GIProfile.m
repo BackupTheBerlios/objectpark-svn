@@ -14,11 +14,10 @@
 #import "OPInternetMessage.h"
 #import "NSString+MessageUtils.h"
 #import "NSString+Extensions.h"
-//#import "NSArray+Extensions.h"
-//#import "OPInternetMessage.h"
-//#import "OPPersistentObject+Extensions.h"
+#import "NSArray+Extensions.h"
+#import "OPInternetMessage.h"
 #import "GIUserDefaultsKeys.h"
-#import "OPFaultingArray.h"
+#import "OPPersistence.h"
 
 NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 

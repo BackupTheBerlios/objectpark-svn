@@ -8,9 +8,9 @@
 
 #import "GIThread.h"
 #import "OPPersistentObjectContext.h"
-//#import "NSArray+Extensions.h"
+#import "NSArray+Extensions.h"
 #import "GIMessage.h"
-//#import "OPInternetMessage.h"
+#import "OPInternetMessage.h"
 #import "OPFaultingArray.h"
 #import <Foundation/NSDebug.h>
 
@@ -300,7 +300,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	if (!messagesByTree) {
 		NSArray* allMessages = [self messages];
 		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: [allMessages count]];
-		[messagesByTree setParent: self];
+		//[messagesByTree setParent: self];
 		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: messagesByTree];
 	}	
     return messagesByTree;

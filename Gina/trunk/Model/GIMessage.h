@@ -70,6 +70,8 @@
 @property (readonly, retain) NSString* messageId;
 @property (retain) GIThread* thread;
 
+
+
 //+ (NSString*) persistentAttributesPlist
 //{
 //	return 
@@ -107,6 +109,8 @@
 + (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 
+- (id) initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
+
 - (GIMessage*) reference;
 - (GIMessage*) referenceFind: (BOOL)find;
 
@@ -133,10 +137,9 @@
 - (NSAttributedString *)contentAsAttributedString;
 - (NSString*) contentAsString;
 
-//- (GIThread*) thread;
 //- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
 
-//- (NSArray*) commentsInThread: (GIThread*) thread;
+- (NSArray*) commentsInThread: (GIThread*) thread;
 
 - (BOOL) isListMessage;
 - (BOOL) isUsenetMessage;

@@ -7,6 +7,7 @@
 //
 
 #import "OPPersistentSet.h"
+#import "OPPersistentObjectContext.h"
 
 @interface OPPersistentSetArray : NSArray {
 @public
@@ -222,6 +223,42 @@
 	[coder encodeInt: [btree rootPage] forKey: @"BTreeRootPage"];
 	[coder encodeObject: [btree keyCompareFunctionName] forKey: @"BTreeKeyCompareFunctionName"];	
 	[coder encodeObject: sortKeyPath forKey: @"OPSortKeyPath"];
+}
+
+- (OID) oid
+/*" Returns the object id for the receiver or NILOID if the object has no context.
+ Currently, the defaultContext is always used. "*/
+{
+	if (!oid) {
+		@synchronized(self) {
+			// Create oid on demand, this means that this is now becoming persistent.
+			// Persistent objects unarchived are explicitly given an oid:
+			
+			OPPersistentObjectContext* context = [self context];
+			if (context) {
+				[context insertObject: self];
+			}
+		}
+	}
+	return oid;
+}
+
+- (OID) currentOID
+/*" Private method to be used within the framework only. "*/
+{
+	return oid;
+}
+
+- (void) setOID: (OID) theOid
+/*" Registers the receiver with the context, if neccessary. "*/
+{
+	@synchronized(self) {
+		if (oid != theOid) {
+			NSAssert(oid==0, @"Object ids can be set only once per instance.");
+			oid = theOid;
+			[[self context] registerObject: self];
+		}
+	}
 }
 
 - (NSEnumerator*) objectEnumerator

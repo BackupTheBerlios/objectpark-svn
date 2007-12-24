@@ -206,6 +206,8 @@
 		8DABA1AA0D1C1F8400991279 /* TestPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA1A90D1C1F8400991279 /* TestPersistentObject.m */; };
 		8DABA1BC0D1E689C00991279 /* TestPersistentStringDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA1BB0D1E689C00991279 /* TestPersistentStringDictionary.m */; };
 		8DABA2570D1EA23000991279 /* OPPersistentTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */; };
+		8DABA4640D1F46D300991279 /* GICommentTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612590D1AB7CE007FC630 /* GICommentTreeView.m */; };
+		8DABA47C0D1F497B00991279 /* OPPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DABA47B0D1F497B00991279 /* OPPersistence.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -502,6 +504,7 @@
 		8DABA1BB0D1E689C00991279 /* TestPersistentStringDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestPersistentStringDictionary.m; sourceTree = "<group>"; };
 		8DABA2550D1EA23000991279 /* OPPersistentTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentTestObject.h; sourceTree = "<group>"; };
 		8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentTestObject.m; sourceTree = "<group>"; };
+		8DABA47B0D1F497B00991279 /* OPPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistence.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -724,6 +727,7 @@
 			isa = PBXGroup;
 			children = (
 				773613D00D1C0EDD007FC630 /* btree */,
+				8DABA47B0D1F497B00991279 /* OPPersistence.h */,
 				773613D10D1C0F12007FC630 /* OPDBLite.h */,
 				773613D20D1C0F12007FC630 /* OPDBLite.m */,
 				773613D30D1C0F12007FC630 /* OPFaultingArray.h */,
@@ -1028,6 +1032,7 @@
 				773614860D1C1560007FC630 /* btree.h in Headers */,
 				773614880D1C1561007FC630 /* btreeInt.h in Headers */,
 				773614890D1C1562007FC630 /* hash.h in Headers */,
+				8DABA47C0D1F497B00991279 /* OPPersistence.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1491,6 +1496,7 @@
 				7736142E0D1C1041007FC630 /* GIProfile.m in Sources */,
 				7736142F0D1C1041007FC630 /* GIThread.m in Sources */,
 				7736153F0D1C33D2007FC630 /* GIMainWindowController.m in Sources */,
+				8DABA4640D1F46D300991279 /* GICommentTreeView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

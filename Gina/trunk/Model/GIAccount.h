@@ -47,11 +47,12 @@ enum LeaveOnServerDuration
 	
 	NSString* incomingUsername;
 	NSString* outgoingUsername;
-	NSNumber* retrieveMessageInterval;
+	int retrieveMessageInterval;
 
 	unsigned leaveOnServerDuration;
 	int outgoingAuthenticationMethod;
 	unsigned incomingServerPort;
+	unsigned outgoingServerPort;
 	NSString* outgoingServerName;
 	unsigned outgoingServerType;
 	NSString* incomingServerName;
@@ -88,8 +89,8 @@ enum LeaveOnServerDuration
 - (NSString *)incomingServerName;
 - (void)setIncomingServerName:(NSString *)aName;
 
-- (int)incomingServerPort;
-- (void)setIncomingServerPort:(int)aPort;
+- (unsigned)incomingServerPort;
+- (void)setIncomingServerPort:(unsigned)aPort;
 
 - (int)incomingServerDefaultPort;
 
@@ -118,8 +119,8 @@ enum LeaveOnServerDuration
 - (NSString *)outgoingServerName;
 - (void)setOutgoingServerName:(NSString *)aName;
 
-- (int)outgoingServerPort;
-- (void)setOutgoingServerPort:(int)aPort;
+- (unsigned)outgoingServerPort;
+- (void)setOutgoingServerPort:(unsigned)aPort;
 
 - (int)outgoingServerDefaultPort;
 

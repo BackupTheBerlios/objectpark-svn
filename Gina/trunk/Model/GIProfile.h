@@ -12,6 +12,7 @@
 @class OPInternetMessage;
 @class GIAccount;
 @class GIMessage;
+@class OPFaultingArray;
 
 @interface GIProfile : OPPersistentObject 
 {

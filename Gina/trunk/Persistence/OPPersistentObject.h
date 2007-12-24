@@ -34,7 +34,17 @@
 
 #import <AppKit/AppKit.h>
 #import "OPPersistenceConstants.h"
-#import "OPPersistentObjectContext.h";
+
+@class OPPersistentObjectContext;
+
+@protocol OPPersisting <NSCoding, NSObject>
+
+- (OID) oid;
+- (OID) currentOID; // internal method
+- (void) setOID: (OID) theOID; // for internal use
+- (OPPersistentObjectContext*) context;
+
+@end
 
 /*
  * New persistent object life cycle
@@ -56,7 +66,7 @@
 
 @end
 
-@interface OPPersistentObject : NSObject  <NSCoding> {
+@interface OPPersistentObject : NSObject  <OPPersisting> {
 	@private
 	OID oid;
 }
