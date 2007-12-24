@@ -20,18 +20,20 @@
 	GIThread *thread = [[[GIThread alloc] init] autorelease];
 	
 	message.thread = thread;
-	STAssertEqualObjects(message.thread, thread, @"couldn't set thread in message");
+	NSAssert(message.thread == thread, @"couldn't set thread in message");
 	
 	thread = [GIThread threadForMessage:message];
 	NSAssert(thread != nil, @"couldn't get thread for message");
 	
 	NSAssert([[thread messages] indexOfObject:message] != NSNotFound, @"thread doesn't contain message");
-	STAssertEqualObjects(message.thread, thread, @"wrong thread in message");
+	NSAssert(message.thread == thread, @"wrong thread in message");
+	
+	return thread;
 }
 
 - (void)testThreadMessageRelationship
 {
-	[self threadForTest];
+	[[self class] threadForTest];
 }
 
 @end
