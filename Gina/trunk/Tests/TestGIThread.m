@@ -16,6 +16,7 @@
 
 - (void)setUp
 {
+	[OPPersistentObjectContext setDefaultContext:nil];
 	OPPersistentObjectContext *context = [[OPPersistentObjectContext alloc] init];
 	[OPPersistentObjectContext setDefaultContext: context];
 	[[NSFileManager defaultManager] removeFileAtPath: @"/tmp/persistent-testobjects.btrees" handler: nil];
