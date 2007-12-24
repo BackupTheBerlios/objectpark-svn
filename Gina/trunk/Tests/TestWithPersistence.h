@@ -7,9 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <SenTestingKit/SenTestingKit.h>
 
-
-@interface TestWithPersistence : NSObject 
+@interface TestWithPersistence : SenTestCase 
 {
 
 }

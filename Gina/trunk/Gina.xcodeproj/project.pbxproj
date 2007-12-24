@@ -72,6 +72,7 @@
 		773615B00D1CFA69007FC630 /* TestGIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 773615AF0D1CFA68007FC630 /* TestGIMessage.m */; };
 		773616100D1D7204007FC630 /* TestMIMEBoundaries.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */; };
 		77369CC90D1FAF53004D1DCF /* TestWithPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 77369CC80D1FAF53004D1DCF /* TestWithPersistence.m */; };
+		77369CE70D1FB078004D1DCF /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -360,6 +361,8 @@
 		773615FB0D1CFFC6007FC630 /* How to debug GinaTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug GinaTest.rtf"; sourceTree = "<group>"; };
 		77369CC70D1FAF53004D1DCF /* TestWithPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestWithPersistence.h; sourceTree = "<group>"; };
 		77369CC80D1FAF53004D1DCF /* TestWithPersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestWithPersistence.m; sourceTree = "<group>"; };
+		77369CE50D1FB078004D1DCF /* TestGIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIMessageGroup.h; sourceTree = "<group>"; };
+		77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessageGroup.m; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -818,12 +821,14 @@
 		773615230D1C3245007FC630 /* GinaTests */ = {
 			isa = PBXGroup;
 			children = (
+				77369CC70D1FAF53004D1DCF /* TestWithPersistence.h */,
+				77369CC80D1FAF53004D1DCF /* TestWithPersistence.m */,
 				773615AE0D1CFA68007FC630 /* TestGIMessage.h */,
 				773615AF0D1CFA68007FC630 /* TestGIMessage.m */,
 				77F2E3D90D1EB2DC0003D25B /* TestGIThread.h */,
 				77F2E3DA0D1EB2DC0003D25B /* TestGIThread.m */,
-				77369CC70D1FAF53004D1DCF /* TestWithPersistence.h */,
-				77369CC80D1FAF53004D1DCF /* TestWithPersistence.m */,
+				77369CE50D1FB078004D1DCF /* TestGIMessageGroup.h */,
+				77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */,
 			);
 			name = GinaTests;
 			path = Tests;
@@ -1405,6 +1410,7 @@
 				773615B00D1CFA69007FC630 /* TestGIMessage.m in Sources */,
 				77F2E3DB0D1EB2DC0003D25B /* TestGIThread.m in Sources */,
 				77369CC90D1FAF53004D1DCF /* TestWithPersistence.m in Sources */,
+				77369CE70D1FB078004D1DCF /* TestGIMessageGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
