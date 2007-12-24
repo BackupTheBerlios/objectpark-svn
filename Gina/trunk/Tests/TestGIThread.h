@@ -7,9 +7,9 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "TestWithPersistence.h"
 
-
-@interface TestGIThread : SenTestCase 
+@interface TestGIThread : TestWithPersistence 
 {
 
 }

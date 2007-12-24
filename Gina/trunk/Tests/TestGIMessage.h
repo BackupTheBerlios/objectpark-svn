@@ -7,10 +7,11 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "TestWithPersistence.h"
 
 @class GIMessage;
 
-@interface TestGIMessage : SenTestCase 
+@interface TestGIMessage : TestWithPersistence 
 {
 }
 

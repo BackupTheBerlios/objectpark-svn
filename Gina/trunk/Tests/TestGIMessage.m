@@ -9,7 +9,6 @@
 #import "TestGIMessage.h"
 #import "GIMessage.h"
 #import "OPInternetMessage.h"
-#import "OPPersistence.h"
 
 @implementation TestGIMessage
 
@@ -28,15 +27,6 @@
 	NSString *subject = message.subject;
 	NSAssert([subject isEqualToString:@"strained"], @"wrong subject in message");
 	return message;
-}
-
-- (void)setUp
-{
-	[OPPersistentObjectContext setDefaultContext:nil];
-	OPPersistentObjectContext *context = [[OPPersistentObjectContext alloc] init];
-	[OPPersistentObjectContext setDefaultContext: context];
-	[[NSFileManager defaultManager] removeFileAtPath: @"/tmp/persistent-testobjects.btrees" handler: nil];
-	[context setDatabaseFromPath: @"/tmp/persistent-testobjects.btrees"];
 }
 
 - (void)testMessageCreation
