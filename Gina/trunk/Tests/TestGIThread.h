@@ -14,4 +14,6 @@
 
 }
 
++ (GIThread *)threadForTest;
+
 @end
