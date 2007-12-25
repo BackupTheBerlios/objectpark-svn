@@ -73,6 +73,8 @@
 		773616100D1D7204007FC630 /* TestMIMEBoundaries.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C99B0D01A37000A7BEFF /* TestMIMEBoundaries.transferData */; };
 		77369CC90D1FAF53004D1DCF /* TestWithPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 77369CC80D1FAF53004D1DCF /* TestWithPersistence.m */; };
 		77369CE70D1FB078004D1DCF /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */; };
+		774FC3060D215A4100CE5FD6 /* GIAccountPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 774FC3050D215A4000CE5FD6 /* GIAccountPrefs.m */; };
+		774FC33B0D215F5400CE5FD6 /* GIAccountPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 774FC33A0D215F5400CE5FD6 /* GIAccountPrefs.xib */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
@@ -363,6 +365,9 @@
 		77369CC80D1FAF53004D1DCF /* TestWithPersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestWithPersistence.m; sourceTree = "<group>"; };
 		77369CE50D1FB078004D1DCF /* TestGIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIMessageGroup.h; sourceTree = "<group>"; };
 		77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessageGroup.m; sourceTree = "<group>"; };
+		774FC3040D215A4000CE5FD6 /* GIAccountPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIAccountPrefs.h; sourceTree = "<group>"; };
+		774FC3050D215A4000CE5FD6 /* GIAccountPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIAccountPrefs.m; sourceTree = "<group>"; };
+		774FC33A0D215F5400CE5FD6 /* GIAccountPrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIAccountPrefs.xib; sourceTree = "<group>"; };
 		7759A8760D02E39800AD49CA /* OPNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPNetwork.framework; path = "../OPNetwork/build/Release (@rpath)/OPNetwork.framework"; sourceTree = SOURCE_ROOT; };
 		775C30FB0D0D40620098DA07 /* OPPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OPPreferences.framework; path = "../OPPreferences/build/Release (@rpath)/OPPreferences.framework"; sourceTree = SOURCE_ROOT; };
 		775C312F0D0D46280098DA07 /* GIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIApplication.h; sourceTree = "<group>"; };
@@ -837,6 +842,9 @@
 		775C30D70D0D3C870098DA07 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				774FC33A0D215F5400CE5FD6 /* GIAccountPrefs.xib */,
+				774FC3040D215A4000CE5FD6 /* GIAccountPrefs.h */,
+				774FC3050D215A4000CE5FD6 /* GIAccountPrefs.m */,
 				7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */,
 				7708F0BE0D0DB8CD008A4A2B /* GIGeneralPrefs.h */,
 				7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */,
@@ -1317,6 +1325,7 @@
 				77BF5C280D1132EB00BE0F31 /* GIFilterPrefs.xib in Resources */,
 				778A68BC0D1699E900CAA693 /* Gina.icns in Resources */,
 				7736124E0D1AB69F007FC630 /* MainWindow.nib in Resources */,
+				774FC33B0D215F5400CE5FD6 /* GIAccountPrefs.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1509,6 +1518,7 @@
 				7736142F0D1C1041007FC630 /* GIThread.m in Sources */,
 				7736153F0D1C33D2007FC630 /* GIMainWindowController.m in Sources */,
 				8DABA4640D1F46D300991279 /* GICommentTreeView.m in Sources */,
+				774FC3060D215A4100CE5FD6 /* GIAccountPrefs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -97,7 +97,7 @@ enum LeaveOnServerDuration
 /*" Other Properties "*/
 @property(readwrite) BOOL isEnabled;
 @property(readwrite, copy) NSString *name;
-
+		  
 /*" Designated initializer "*/
 - (id)init;
 
