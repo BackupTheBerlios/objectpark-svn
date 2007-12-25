@@ -1,8 +1,9 @@
 //
 //  GIAccount.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 18.10.05.
+//  Revised by Axel Katerbau on 25.12.07.
 //  Copyright 2005 Objectpark Group. All rights reserved.
 //
 
@@ -43,19 +44,19 @@ enum LeaveOnServerDuration
 @interface GIAccount : OPPersistentObject 
 {
 	BOOL isEnabled;
-	NSString* name;
+	NSString *name;
 	
-	NSString* incomingUsername;
-	NSString* outgoingUsername;
+	NSString *incomingUsername;
+	NSString *outgoingUsername;
 	int retrieveMessageInterval;
 
 	unsigned leaveOnServerDuration;
 	int outgoingAuthenticationMethod;
 	unsigned incomingServerPort;
 	unsigned outgoingServerPort;
-	NSString* outgoingServerName;
+	NSString *outgoingServerName;
 	unsigned outgoingServerType;
-	NSString* incomingServerName;
+	NSString *incomingServerName;
 	unsigned incomingServerType;
 	unsigned incomingAuthenticationMethod;
 	
@@ -63,15 +64,39 @@ enum LeaveOnServerDuration
 	BOOL allowExpiredSSLCertificates;
 	BOOL verifySSLCertificateChain;
 	
-	OPFaultingArray* profiles;
+	OPFaultingArray *profiles;
 }
 
+/*" Incoming Properties "*/
+@property(readwrite, copy) NSString *incomingUsername;
+@property(readwrite, copy) NSString *incomingServerName;
+@property(readwrite) int incomingAuthenticationMethod;
+@property(readwrite) int incomingServerType;
+@property(readwrite) unsigned incomingServerPort;
+@property(readonly) int incomingServerDefaultPort;
+@property(readwrite, copy) NSString *incomingPassword;
+@property(readwrite) int retrieveMessageInterval;
+@property(readwrite) int leaveOnServerDuration;
+- (BOOL)isPOPAccount;
 
-@property(readwrite, copy) NSString* incomingUsername;
-@property(readwrite, copy) NSString* incomingServerName;
+/*" Outgoing Properties "*/
+@property(readwrite, copy) NSString *outgoingUsername;
+@property(readwrite, copy) NSString *outgoingServerName;
+@property(readwrite) int outgoingServerType;
+@property(readwrite) unsigned outgoingServerPort;
+@property(readonly) int outgoingServerDefaultPort;
+@property(readwrite) int outgoingAuthenticationMethod;
+@property(readwrite, copy) NSString *outgoingPassword;
+@property(readonly) BOOL outgoingUsernameNeeded;
 
-@property(readwrite, copy) NSString* outgoingUsername;
-@property(readwrite, copy) NSString* outgoingServerName;
+/*" SSL Properties "*/
+@property(readwrite) BOOL allowExpiredSSLCertificates;
+@property(readwrite) BOOL allowAnyRootSSLCertificate;
+@property(readwrite) BOOL verifySSLCertificateChain;
+
+/*" Other Properties "*/
+@property(readwrite) BOOL isEnabled;
+@property(readwrite, copy) NSString *name;
 
 /*" Designated initializer "*/
 - (id)init;
@@ -80,67 +105,6 @@ enum LeaveOnServerDuration
 + (int)defaultPortForIncomingServerType:(int)serverType;
 + (int)defaultPortForOutgoingServerType:(int)serverType;
 
-/*" Accessors "*/
-
-
-- (int)incomingServerType;
-- (void)setIncomingServerType:(int)aType;
-
-- (NSString *)incomingServerName;
-- (void)setIncomingServerName:(NSString *)aName;
-
-- (unsigned)incomingServerPort;
-- (void)setIncomingServerPort:(unsigned)aPort;
-
-- (int)incomingServerDefaultPort;
-
-- (int)incomingAuthenticationMethod;
-- (void)setIncomingAuthenticationMethod:(int)aMethod;
-
-/*
-- (NSString *)incomingUsername;
-- (void)setIncomingUsername:(NSString *)aName;
-*/
-
-- (NSString *)incomingPassword;
-- (void)setIncomingPassword:(NSString *)aPassword;
-
-- (int)retrieveMessageInterval;
-- (void) setRetrieveMessageInterval:(int)minutes;
-
-- (int)leaveOnServerDuration;
-- (void)setLeaveOnServerDuration:(int)days;
-
-- (int)outgoingServerType;
-- (void)setOutgoingServerType:(int)aType;
-
-- (BOOL)isPOPAccount;
-
-- (NSString *)outgoingServerName;
-- (void)setOutgoingServerName:(NSString *)aName;
-
-- (unsigned)outgoingServerPort;
-- (void)setOutgoingServerPort:(unsigned)aPort;
-
-- (int)outgoingServerDefaultPort;
-
-- (int)outgoingAuthenticationMethod;
-- (void)setOutgoingAuthenticationMethod:(int)aMethod;
-
-//- (NSString* )outgoingUsername;
-//- (void)setOutgoingUsername:(NSString* )aName;
-
-- (NSString *)outgoingPassword;
-- (void)setOutgoingPassword:(NSString *)aPassword;
-
-- (BOOL)outgoingUsernameNeeded;
-
-/*
-- (BOOL)allowExpiredSSLCertificates;
-- (BOOL)allowAnyRootSSLCertificate;
-- (BOOL)verifySSLCertificateChain;
-- (void)setVerifySSLCertificateChain:(BOOL)value;
-*/
 @end
 
 /*" Sending and Retrieving "*/

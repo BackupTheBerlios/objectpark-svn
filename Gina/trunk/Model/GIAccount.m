@@ -1,8 +1,9 @@
 //
 //  GIAccount.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 18.10.05.
+//  Revised by Axel Katerbau on 25.12.07.
 //  Copyright 2005 The Objectpark Group. All rights reserved.
 //
 
@@ -20,11 +21,29 @@
 
 @implementation GIAccount
 
-@synthesize incomingUsername, outgoingUsername, outgoingServerName, incomingServerName;
-
-+ (BOOL) cachesAllObjects
++ (BOOL)cachesAllObjects
 {
 	return YES;
+}
+
++ (NSSet *)keyPathsForValuesAffectingPOPAccount
+{
+	return [NSSet setWithObject:@"incomingServerType"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingOutgoingUsernameNeeded
+{
+	return [NSSet setWithObject:@"outgoingAuthenticationMethod"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingOutgoingUsername
+{
+	return [NSSet setWithObject:@"outgoingAuthenticationMethod"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingIncomingServerDefaultPort
+{
+	return [NSSet setWithObject:@"incomingServerType"];
 }
 
 + (int)defaultPortForIncomingServerType:(int)serverType
@@ -53,24 +72,49 @@
 - (id)init
 /*" Designated initializer. "*/
 {
-	if (self = [super init]) {
+	if (self = [super init]) 
+	{
 		verifySSLCertificateChain = YES;
 	}
 	return self;
 }
 
 
-- (void) dealloc
+- (void)dealloc
 {
 	[name release];
 	[incomingUsername release];
 	[outgoingUsername release];
-	[retrieveMessageInterval release];
 	[outgoingServerName release];
 	[incomingServerName release];
 	[profiles release];
 
     [super dealloc];
+}
+
+- (BOOL)isEnabled
+{
+	return isEnabled;
+}
+
+- (void)setIsEnabled:(BOOL)aBool
+{
+	[self willChangeValueForKey:@"enabled"];
+	isEnabled = aBool;
+	[self didChangeValueForKey:@"enabled"];
+}
+
+- (NSString *)name
+{
+	return name;
+}
+
+- (void)setName:(NSString *)aName
+{
+	[self willChangeValueForKey:@"name"];
+	[name autorelease];
+	name = [aName copy];
+	[self didChangeValueForKey:@"name"];
 }
 
 - (int)incomingServerType 
@@ -82,25 +126,18 @@
 {
     [self willChangeValueForKey:@"incomingServerType"];
 
-#warning Add dependency "incomingServerType" - "isPOPAccount"!
-//    [self willChangeValueForKey:@"POPAccount"]; // signalling -isPOPAccount changed
-//    [self didChangeValueForKey:@"POPAccount"];	
-
     // A change of the server type also has effect on the port. The Account is 'touched' to have bindings recognize the change.
     [self setIncomingServerPort:0];
-    [self willChangeValueForKey:@"incomingServerDefaultPort"];
 	incomingServerType = value;
     
-    if (![self isPOPAccount]) {
+    if (![self isPOPAccount]) 
+	{
         if ([self incomingAuthenticationMethod] != PlainText)
         {
             [self setIncomingAuthenticationMethod:PlainText];
         }
     }
-	[self didChangeValueForKey:@"incomingServerDefaultPort"];
 	[self didChangeValueForKey:@"incomingServerType"];
-
-
 }
 
 
@@ -233,8 +270,8 @@
 - (NSString *)outgoingPasswordItemRef:(SecKeychainItemRef *)itemRef
 /*" Accesses keychain to get password. "*/
 {
-    const char *serverName = [[self outgoingServerName] UTF8String];
-    const char *accountName = [[self valueForKey: @"outgoingUsername"] UTF8String];
+    const char *serverName = [self.outgoingServerName UTF8String];
+    const char *accountName = [self.outgoingUsername UTF8String];
     UInt32 passwordLength;
     void *passwordData;
     NSString *result = nil;
@@ -320,19 +357,19 @@
 	}
 }
 
-- (int) retrieveMessageInterval 
+- (int)retrieveMessageInterval 
 {
 	return retrieveMessageInterval;
 }
 
-- (void) setRetrieveMessageInterval: (int) value 
+- (void)setRetrieveMessageInterval:(int)value 
 {
     [self willChangeValueForKey:@"retrieveMessageInterval"];
 	retrieveMessageInterval = value;
     [self didChangeValueForKey:@"retrieveMessageInterval"];
 }
 
-- (int) leaveOnServerDuration 
+- (int)leaveOnServerDuration 
 {    
     return leaveOnServerDuration;
 }
@@ -344,12 +381,12 @@
     [self didChangeValueForKey:@"leaveOnServerDuration"];
 }
 
-- (int) outgoingServerType 
+- (int)outgoingServerType 
 {
     return outgoingServerType;
 }
 
-- (void) setOutgoingServerType:(int)value 
+- (void)setOutgoingServerType:(int)value 
 {
     [self willChangeValueForKey:@"outgoingServerType"];
 	outgoingServerType = value;
@@ -363,9 +400,10 @@
     return outgoingServerName;
 }
 
-- (void) setOutgoingServerName: (NSString*) value 
+- (void)setOutgoingServerName:(NSString *)value 
 {
-	if (! [outgoingServerName isEqualToString: value]) {
+	if (! [outgoingServerName isEqualToString:value]) 
+	{
 		[self willChangeValueForKey:@"outgoingServerName"];
 		[outgoingServerName release];
 		outgoingServerName = [value retain];
@@ -373,7 +411,23 @@
 	}
 }
 
-- (unsigned) outgoingServerPort 
+- (NSString *)outgoingUsername
+{
+	return outgoingUsername;
+}
+
+- (void)setOutgoingUsername:(NSString *)aName
+{
+	if (![aName isEqualToString:outgoingUsername])
+	{
+		[self willChangeValueForKey:@"outgoingUsername"];
+		[outgoingUsername release];
+		outgoingUsername = [aName copy];
+		[self didChangeValueForKey:@"outgoingUsername"];
+	}
+}
+
+- (unsigned)outgoingServerPort 
 {
     return outgoingServerPort ? outgoingServerPort : [self outgoingServerDefaultPort];
 }
@@ -385,25 +439,76 @@
     [self didChangeValueForKey:@"outgoingServerPort"];
 }
 
-- (unsigned) incomingServerPort 
+- (NSString *)incomingServerName
+{
+	return incomingServerName;
+}
+
+- (void)setIncomingServerName:(NSString *)aName
+{
+	if (![aName isEqualToString:incomingServerName])
+	{
+		[self willChangeValueForKey:@"incomingServerName"];
+		[incomingServerName release];
+		incomingServerName = [aName copy];
+		[self didChangeValueForKey:@"incomingServerName"];
+	}
+}
+
+- (unsigned)incomingServerPort 
 {
     return incomingServerPort ? incomingServerPort : [self incomingServerDefaultPort];
 }
 
-- (void)setIncomingServerPort: (unsigned) value 
+- (void)setIncomingServerPort:(unsigned)value 
 {
     [self willChangeValueForKey:@"incomingServerPort"];
     incomingServerPort = value;
     [self didChangeValueForKey:@"incomingServerPort"];
 }
 
-
-- (int) outgoingServerDefaultPort
+- (NSString *)incomingUsername
 {
-    return [[self class] defaultPortForOutgoingServerType:[self outgoingServerType]];
+	return incomingUsername;
 }
 
-- (int) outgoingAuthenticationMethod 
+- (void)setIncomingUsername:(NSString *)aName
+{
+	if (![aName isEqualToString:incomingUsername])
+	{
+		[self willChangeValueForKey:@"incomingUsername"];
+		[incomingUsername release];
+		incomingUsername = [aName copy];
+		[self didChangeValueForKey:@"incomingUsername"];
+	}
+}
+
+- (int)incomingAuthenticationMethod
+{
+	return incomingAuthenticationMethod;
+}
+
+- (void)setIncomingAuthenticationMethod:(int)aMethod
+{
+	if (aMethod != incomingAuthenticationMethod)
+	{
+		[self willChangeValueForKey:@"incomingAuthenticationMethod"];
+		incomingAuthenticationMethod = aMethod;
+		[self didChangeValueForKey:@"incomingAuthenticationMethod"];
+	}
+}
+
+- (int)incomingServerDefaultPort
+{
+    return [[self class] defaultPortForIncomingServerType:self.incomingServerType];
+}
+
+- (int)outgoingServerDefaultPort
+{
+    return [[self class] defaultPortForOutgoingServerType:self.outgoingServerType];
+}
+
+- (int)outgoingAuthenticationMethod 
 {
 	return outgoingAuthenticationMethod;
 }
@@ -413,82 +518,55 @@
     [self willChangeValueForKey:@"outgoingAuthenticationMethod"];
     outgoingAuthenticationMethod = value;
     [self didChangeValueForKey:@"outgoingAuthenticationMethod"];
-	
-#warning Add dependencies outgoingAuthenticationMethod - outgoingUsernameNeeded, outgoingUsername
-    //[self willChangeValueForKey:@"outgoingUsernameNeeded"];
-    //[self didChangeValueForKey:@"outgoingUsernameNeeded"];
-    
-    //[self willChangeValueForKey:@"outgoingUsername"];
-    //[self didChangeValueForKey:@"outgoingUsername"];
 }
 
-- (BOOL) outgoingUsernameNeeded
+- (BOOL)outgoingUsernameNeeded
 {
     return [self outgoingAuthenticationMethod] == SMTPAuthentication;
 }
 
-/*
 - (BOOL)allowExpiredSSLCertificates 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"allowExpiredSSLCertificates"];
-    tmpValue = [self primitiveValueForKey:@"allowExpiredSSLCertificates"];
-    [self didAccessValueForKey:@"allowExpiredSSLCertificates"];
-    
-    return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
+	return allowExpiredSSLCertificates;
 }
 
 - (void)setAllowExpiredSSLCertificates:(BOOL)value 
 {
     [self willChangeValueForKey:@"allowExpiredSSLCertificates"];
-    [self setPrimitiveBool:value forKey:@"allowExpiredSSLCertificates"];
+	allowExpiredSSLCertificates = value;
     [self didChangeValueForKey:@"allowExpiredSSLCertificates"];
 }
 
 - (BOOL)allowAnyRootSSLCertificate 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"allowAnyRootSSLCertificate"];
-    tmpValue = [self primitiveValueForKey:@"allowAnyRootSSLCertificate"];
-    [self didAccessValueForKey:@"allowAnyRootSSLCertificate"];
-    
-    return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
+	return allowAnyRootSSLCertificate;
 }
 
 - (void)setAllowAnyRootSSLCertificate:(BOOL)value 
 {
     [self willChangeValueForKey:@"allowAnyRootSSLCertificate"];
-    [self setPrimitiveBool:value forKey:@"allowAnyRootSSLCertificate"];
+	allowAnyRootSSLCertificate = value;
     [self didChangeValueForKey:@"allowAnyRootSSLCertificate"];
 }
 
 - (BOOL)verifySSLCertificateChain 
 {
-    NSNumber *tmpValue;
-    
-    [self willAccessValueForKey:@"verifySSLCertificateChain"];
-    tmpValue = [self primitiveValueForKey:@"verifySSLCertificateChain"];
-    [self didAccessValueForKey:@"verifySSLCertificateChain"];
-    
-    return (tmpValue != nil) ? [tmpValue boolValue] : FALSE;
+	return verifySSLCertificateChain;
 }
 
 - (void)setVerifySSLCertificateChain:(BOOL)value 
 {
     [self willChangeValueForKey:@"verifySSLCertificateChain"];
-    [self setPrimitiveBool:value forKey:@"verifySSLCertificateChain"];
+	verifySSLCertificateChain = value;
     [self didChangeValueForKey:@"verifySSLCertificateChain"];
 }
-*/
+
 - (BOOL)isPOPAccount
 {
     int type = [self incomingServerType];
     
     return (type == POP3) || (type == POP3S);
 }
-
 
 @end
 
