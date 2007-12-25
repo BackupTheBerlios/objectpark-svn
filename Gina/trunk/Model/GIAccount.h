@@ -48,9 +48,9 @@ enum LeaveOnServerDuration
 	
 	NSString *incomingUsername;
 	NSString *outgoingUsername;
-	int retrieveMessageInterval;
+	int retrieveMessageInterval; // in minutes
 
-	unsigned leaveOnServerDuration;
+	unsigned leaveOnServerDuration; // in days
 	int outgoingAuthenticationMethod;
 	unsigned incomingServerPort;
 	unsigned outgoingServerPort;

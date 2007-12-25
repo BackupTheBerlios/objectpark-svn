@@ -140,7 +140,6 @@
 	[self didChangeValueForKey:@"incomingServerType"];
 }
 
-
 - (SecProtocolType)incomingSecProtocolType
 {
     switch ([self incomingServerType])
@@ -579,8 +578,8 @@
 	return [DateOfLastMessageRetrieval stringByAppendingString:[self objectURLString]];
 }
 
+/*" Returns the time interval since the last message retrieval if known. Returns -1.0 otherwise. "*/
 - (NSTimeInterval)timeIntervalSinceLastMessageRetrieval
-	/*" Returns the time interval since the last message retrieval if known. Returns -1.0 otherwise. "*/
 {
 	NSDate *dateOfLastMessageRetrieval = [[NSUserDefaults standardUserDefaults] objectForKey:[self dateOfLastMessageRetrievalDefaultsKey]];
 	
@@ -602,72 +601,78 @@
 	[[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:[self dateOfLastMessageRetrievalDefaultsKey]];
 }
 
-+ (NSMutableArray*) timers
++ (NSMutableArray *)timers
 {
 	static NSMutableArray *timers = nil;
 	
-	if (!timers) {
+	if (!timers) 
+	{
 		timers = [[NSMutableArray alloc] init];
 	}
 	return timers;
 }
 
-- (NSTimer*) receiveTimer
 /*" Returns a new autoreleased timer that is already scheduled. "*/
+- (NSTimer *)receiveTimer
 {
-	NSTimer* result = nil;
+	NSTimer *result = nil;
 	
-	if ([[self valueForKey: @"isEnabled"] boolValue]) {
+	if (self.isEnabled) 
+	{
 		NSTimeInterval timeIntervalSinceLastMessageRetrieval = [self timeIntervalSinceLastMessageRetrieval];
 		
-		NSTimeInterval interval = [[self valueForKey: @"retrieveMessageInterval"] intValue] * 60; // this might no longer be legal on Intel!
-		if (interval > 0.1) {
-			if (timeIntervalSinceLastMessageRetrieval > 0.0) {
+		NSTimeInterval interval = self.retrieveMessageInterval * 60.0;
+		
+		if (interval > 0.1) 
+		{
+			if (timeIntervalSinceLastMessageRetrieval > 0.0) 
+			{
 				interval = MAX(0.1, interval - timeIntervalSinceLastMessageRetrieval);				
 			}
 			
-			result = [NSTimer scheduledTimerWithTimeInterval: interval
-													  target: self 
-													selector: @selector(sendAndReceiveTimerFired:)
-													userInfo: self 
-													 repeats: NO];
+			result = [NSTimer scheduledTimerWithTimeInterval:interval
+													  target:self 
+													selector:@selector(sendAndReceiveTimerFired:)
+													userInfo:self 
+													 repeats:NO];
 		}
 	}
+	
 	return result;
 }
 
-- (void) resetReceiveTimer
+- (void)resetReceiveTimer
 {	
 	// find timer with userinfo == self
-	NSEnumerator* enumerator = [[[self class] timers] objectEnumerator];
-	NSTimer* timer;
-	
-	while (timer = [enumerator nextObject]) {
+	NSTimer *timer = nil;
+	for (timer in [[self class] timers])
+	{
 		if ([timer userInfo] == self) break;
 	}
 	
-	if (timer) {
+	if (timer) 
+	{
 		[timer invalidate];
-		[[[self class] timers] removeObjectIdenticalTo: timer];
+		[[[self class] timers] removeObjectIdenticalTo:timer];
 	}
 	
-	if (timer = [self receiveTimer]) {
-		[[[self class] timers] addObject: timer];
+	if (timer = [self receiveTimer]) 
+	{
+		[[[self class] timers] addObject:timer];
 	}
 }
 
-+ (void) resetAccountRetrieveAndSendTimers
++ (void)resetAccountRetrieveAndSendTimers
 {
-	[[self timers] makeObjectsPerformSelector: @selector(invalidate)];
+	[[self timers] makeObjectsPerformSelector:@selector(invalidate)];
 	[[self timers] removeAllObjects];
 	
-	NSEnumerator* enumerator = [[[OPPersistentObjectContext defaultContext] allObjectsOfClass: self] objectEnumerator];
-	GIAccount* account;
-	
-	while (account = [enumerator nextObject]) {
-		NSTimer* timer = [account receiveTimer];
+	for (GIAccount *account in [[OPPersistentObjectContext defaultContext] allObjectsOfClass:self])
+	{
+		NSTimer *timer = [account receiveTimer];
 		
-		if (timer) {
+		if (timer) 
+		{
 			[[self timers] addObject: timer];
 		}
 	}
@@ -677,10 +682,8 @@
 {
     // iterate over all profiles:
 	NSMutableArray *messagesQualifyingForSend = [NSMutableArray array];
-    NSEnumerator *enumerator = [[[OPPersistentObjectContext defaultContext] allObjectsOfClass: [GIProfile class]] objectEnumerator];
-    GIProfile *profile;
-    
-    while (profile = [enumerator nextObject]) 
+	
+	for (GIProfile *profile in [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIProfile class]])
 	{
 		if ([profile valueForKey:@"sendAccount"] == self)
 		{
@@ -712,13 +715,12 @@
 	return messagesQualifyingForSend;
 }
 
-+ (BOOL) anyMessagesRipeForSendingAtTimeIntervalSinceNow: (NSTimeInterval) interval
++ (BOOL)anyMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval
 {
-	NSEnumerator* enumerator = [[[OPPersistentObjectContext defaultContext] allObjectsOfClass: self] objectEnumerator];
-	GIAccount* account;
-	
-	while (account = [enumerator nextObject]) {
-		if ([[account messagesRipeForSendingAtTimeIntervalSinceNow:interval] count]) {
+	for (GIAccount *account in [[OPPersistentObjectContext defaultContext] allObjectsOfClass:self])
+	{
+		if ([[account messagesRipeForSendingAtTimeIntervalSinceNow:interval] count]) 
+		{
 			return YES;
 		}
 	}
@@ -774,6 +776,64 @@
 	{
 		[[self class] resetAccountRetrieveAndSendTimers];
 	}
+}
+
+@end
+
+@implementation GIAccount (Coding)
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+	isEnabled = [coder decodeBoolForKey:@"enabled"];
+	name = [coder decodeObjectForKey:@"name"];
+	incomingUsername = [coder decodeObjectForKey:@"incomingUsername"];
+	outgoingUsername = [coder decodeObjectForKey:@"outgoingUsername"];
+	retrieveMessageInterval = [coder decodeInt32ForKey:@"retrieveMessageInterval"];
+
+	leaveOnServerDuration = [coder decodeInt32ForKey:@"leaveOnServerDuration"];
+	outgoingAuthenticationMethod = [coder decodeInt32ForKey:@"outgoingAuthenticationMethod"];
+	incomingServerPort = [coder decodeInt32ForKey:@"incomingServerPort"];
+	outgoingServerPort = [coder decodeInt32ForKey:@"outgoingServerPort"];
+	outgoingServerName = [coder decodeObjectForKey:@"outgoingServerName"];
+	outgoingServerType = [coder decodeInt32ForKey:@"outgoingServerType"];
+	incomingServerName = [coder decodeObjectForKey:@"incomingServerName"];
+	incomingServerType = [coder decodeInt32ForKey:@"incomingServerType"];
+	incomingAuthenticationMethod = [coder decodeInt32ForKey:@"incomingAuthenticationMethod"];
+	
+	allowAnyRootSSLCertificate = [coder decodeBoolForKey:@"allowAnyRootSSLCertificate"];
+	allowExpiredSSLCertificates = [coder decodeBoolForKey:@"allowExpiredSSLCertificates"];
+	verifySSLCertificateChain = [coder decodeBoolForKey:@"verifySSLCertificateChain"];
+	
+#warning Axel -> Dirk: Please check if relationship coding is done right!
+	profiles = [coder decodeObjectForKey:@"profiles"];
+	
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+	[coder encodeBool:isEnabled forKey:@"enabled"];
+	[coder encodeObject:name forKey:@"name"];
+	[coder encodeObject:incomingUsername forKey:@"incomingUsername"];
+	[coder encodeObject:outgoingUsername forKey:@"outgoingUsername"];
+	[coder encodeInt32:retrieveMessageInterval forKey:@"retrieveMessageInterval"];
+	
+	[coder encodeInt32:leaveOnServerDuration forKey:@"leaveOnServerDuration"];
+	[coder encodeInt32:outgoingAuthenticationMethod forKey:@"outgoingAuthenticationMethod"];
+	[coder encodeInt32:incomingServerPort forKey:@"incomingServerPort"];
+	[coder encodeInt32:outgoingServerPort forKey:@"outgoingServerPort"];
+	[coder encodeObject:outgoingServerName forKey:@"outgoingServerName"];
+	[coder encodeInt32:outgoingServerType forKey:@"outgoingServerType"];
+	[coder encodeObject:incomingServerName forKey:@"incomingServerName"];
+	[coder encodeInt32:incomingServerType forKey:@"incomingServerType"];
+	[coder encodeInt32:incomingAuthenticationMethod forKey:@"incomingAuthenticationMethod"];
+	
+	[coder encodeBool:allowAnyRootSSLCertificate forKey:@"allowAnyRootSSLCertificate"];
+	[coder encodeBool:allowExpiredSSLCertificates forKey:@"allowExpiredSSLCertificates"];
+	[coder encodeBool:verifySSLCertificateChain forKey:@"verifySSLCertificateChain"];
+	
+#warning Axel -> Dirk: Please check if relationship coding is done right!
+	[coder encodeObject:profiles forKey:@"profiles"];
 }
 
 @end
