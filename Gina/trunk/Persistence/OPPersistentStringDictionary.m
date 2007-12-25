@@ -7,9 +7,32 @@
 //
 
 #import "OPPersistentStringDictionary.h"
+#import "OPPersistentObjectContext.h"
+
+@interface OPPersistentStringDictionaryEnumerator : NSEnumerator {
+	OPPersistentStringDictionary* dict;
+	NSUInteger changeCount;
+	BOOL enumerateKeys;
+	OPBTreeCursor* cursor;
+}
+
+- (id) initWithPersistentDict: (OPPersistentStringDictionary*) dict keys: (BOOL) getKeys;
+
+@end
+
 
 
 @implementation OPPersistentStringDictionary
+
+- (NSEnumerator*) objectEnumerator
+{
+	return [[[OPPersistentStringDictionaryEnumerator alloc] initWithPersistentDict: self keys: NO] autorelease];
+}
+
+- (NSEnumerator*) keyEnumerator
+{
+	return [[[OPPersistentStringDictionaryEnumerator alloc] initWithPersistentDict: self keys: YES] autorelease];
+}
 
 - (NSUInteger) count
 /*" Can be slow, initial invocation does a table scan. "*/
@@ -184,5 +207,33 @@
 	[coder encodeInt: [btree rootPage] forKey: @"BTreeRootPage"];
 }
 
+
+@end
+
+
+@implementation OPPersistentStringDictionaryEnumerator
+
+- (id) initWithPersistentDict: (OPPersistentStringDictionary*) theDict 
+						 keys: (BOOL) getKeys;
+{
+	dict = [theDict retain];
+	changeCount = dict->changeCount;
+	enumerateKeys = getKeys;
+	return self;
+}
+
+- (void) dealloc
+{
+	[dict release];
+	[super dealloc];
+}
+
+- (id) nextObject
+{
+	id result = nil;
+	NSAssert(changeCount == dict->changeCount, @"set/array mutated during enumeration.");
+	cursor;
+	return result;
+}
 
 @end
