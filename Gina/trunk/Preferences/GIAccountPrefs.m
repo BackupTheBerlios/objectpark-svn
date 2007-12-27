@@ -14,7 +14,8 @@
 
 - (NSSet *)accounts
 {
-    return [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIAccount class]];
+	NSSet *result = [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIAccount class]];
+    return result;
 }
 
 - (IBAction)removeAccount:(id)sender
@@ -36,7 +37,7 @@
 {
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	[self willChangeValueForKey:@"accounts"];
-	[[GIAccount alloc] init];
+	[context insertObject:[[GIAccount alloc] init]];
 	[context saveChanges];
 	[self didChangeValueForKey:@"accounts"];
 }

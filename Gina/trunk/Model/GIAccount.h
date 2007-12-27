@@ -43,7 +43,7 @@ enum LeaveOnServerDuration
 
 @interface GIAccount : OPPersistentObject 
 {
-	BOOL isEnabled;
+	BOOL enabled;
 	NSString *name;
 	
 	NSString *incomingUsername;
@@ -95,7 +95,7 @@ enum LeaveOnServerDuration
 @property(readwrite) BOOL verifySSLCertificateChain;
 
 /*" Other Properties "*/
-@property(readwrite) BOOL isEnabled;
+@property(readwrite) BOOL enabled;
 @property(readwrite, copy) NSString *name;
 		  
 /*" Designated initializer "*/

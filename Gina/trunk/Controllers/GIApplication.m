@@ -10,8 +10,19 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIMainWindowController.h"
 #import "GIMessage.h"
+#import "OPPersistence.h"
+#import "NSApplication+OPExtensions.h"
 
 @implementation GIApplication
+
+- (void)awakeFromNib
+{
+	NSString *path = [[self applicationSupportPath] stringByAppendingPathComponent:@"Gina.btrees"];
+    	
+	OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
+	[OPPersistentObjectContext setDefaultContext:context];
+	[context setDatabaseFromPath:path];
+}
 
 - (BOOL)isDefaultMailApplication
 {
@@ -71,6 +82,20 @@
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
 	[self ensureMainWindowIsPresent];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+//	[self saveOpenWindowsFromThisSession];
+	
+	[[self windows] makeObjectsPerformSelector:@selector(performClose:) withObject:self];
+		
+	[GIMessage repairEarliestSendTimes];
+	
+//	[[GIJunkFilter sharedInstance] writeJunkFilterDefintion];
+		
+	[[OPPersistentObjectContext defaultContext] saveChanges];
+	[[OPPersistentObjectContext defaultContext] close];
 }
 
 @end

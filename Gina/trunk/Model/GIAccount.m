@@ -45,6 +45,24 @@
 	return [NSSet setWithObject:@"incomingServerType"];
 }
 
++ (OPPersistentSet *)accounts
+{
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	
+	static OPPersistentSet *accounts = nil;
+	
+	if (!accounts) 
+	{
+		accounts = [[context rootObjectForKey:@"Accounts"] retain];
+		if (!accounts) 
+		{
+			accounts = [[OPPersistentStringDictionary alloc] init];
+			[context setRootObject:accounts forKey:@"Accounts"];
+		}
+	}
+	return accounts;
+}
+
 + (int)defaultPortForIncomingServerType:(int)serverType
 {
     switch (serverType) 
@@ -91,15 +109,15 @@
     [super dealloc];
 }
 
-- (BOOL)isEnabled
+- (BOOL)enabled
 {
-	return isEnabled;
+	return enabled;
 }
 
-- (void)setIsEnabled:(BOOL)aBool
+- (void)setEnabled:(BOOL)aBool
 {
 	[self willChangeValueForKey:@"enabled"];
-	isEnabled = aBool;
+	enabled = aBool;
 	[self didChangeValueForKey:@"enabled"];
 }
 
@@ -616,7 +634,7 @@
 {
 	NSTimer *result = nil;
 	
-	if (self.isEnabled) 
+	if (self.enabled) 
 	{
 		NSTimeInterval timeIntervalSinceLastMessageRetrieval = [self timeIntervalSinceLastMessageRetrieval];
 		
@@ -783,7 +801,7 @@
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	isEnabled = [coder decodeBoolForKey:@"enabled"];
+	enabled = [coder decodeBoolForKey:@"enabled"];
 	name = [coder decodeObjectForKey:@"name"];
 	incomingUsername = [coder decodeObjectForKey:@"incomingUsername"];
 	outgoingUsername = [coder decodeObjectForKey:@"outgoingUsername"];
@@ -811,7 +829,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-	[coder encodeBool:isEnabled forKey:@"enabled"];
+	[coder encodeBool:enabled forKey:@"enabled"];
 	[coder encodeObject:name forKey:@"name"];
 	[coder encodeObject:incomingUsername forKey:@"incomingUsername"];
 	[coder encodeObject:outgoingUsername forKey:@"outgoingUsername"];
