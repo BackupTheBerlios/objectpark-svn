@@ -17,11 +17,11 @@
 
 - (void)awakeFromNib
 {
-	NSString *path = [[self applicationSupportPath] stringByAppendingPathComponent:@"Gina.btrees"];
-    	
+	// setting up persistence:
+	NSString *databasePath = [[self applicationSupportPath] stringByAppendingPathComponent:@"Gina.btrees"];
 	OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
 	[OPPersistentObjectContext setDefaultContext:context];
-	[context setDatabaseFromPath:path];
+	[context setDatabaseFromPath:databasePath];
 }
 
 - (BOOL)isDefaultMailApplication
@@ -70,7 +70,7 @@
 	// ensure a main window:
 	for (NSWindow *window in [self windows])
 	{
-		if ([[window windowController] isKindOfClass:[GIMainWindowController class]])
+		if ([[window delegate] isKindOfClass:[GIMainWindowController class]])
 		{
 			return;
 		}
@@ -88,12 +88,14 @@
 {
 //	[self saveOpenWindowsFromThisSession];
 	
-	[[self windows] makeObjectsPerformSelector:@selector(performClose:) withObject:self];
+#warning the following line will make Ginko beep at the end
+//	[[self windows] makeObjectsPerformSelector:@selector(performClose:) withObject:self];
 		
 	[GIMessage repairEarliestSendTimes];
 	
 //	[[GIJunkFilter sharedInstance] writeJunkFilterDefintion];
 		
+	// shutting down persistence:
 	[[OPPersistentObjectContext defaultContext] saveChanges];
 	[[OPPersistentObjectContext defaultContext] close];
 }

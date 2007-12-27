@@ -45,24 +45,6 @@
 	return [NSSet setWithObject:@"incomingServerType"];
 }
 
-+ (OPPersistentSet *)accounts
-{
-	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-	
-	static OPPersistentSet *accounts = nil;
-	
-	if (!accounts) 
-	{
-		accounts = [[context rootObjectForKey:@"Accounts"] retain];
-		if (!accounts) 
-		{
-			accounts = [[OPPersistentStringDictionary alloc] init];
-			[context setRootObject:accounts forKey:@"Accounts"];
-		}
-	}
-	return accounts;
-}
-
 + (int)defaultPortForIncomingServerType:(int)serverType
 {
     switch (serverType) 

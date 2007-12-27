@@ -11,12 +11,17 @@
 
 @class OPFaultingArray;
 
-@interface GIHierarchyNode : OPPersistentObject {
-	NSString* name;
-	OPFaultingArray* children;
+@interface GIHierarchyNode : OPPersistentObject 
+{
+	NSString *name;
+	OPFaultingArray *children;
 }
 
-@property (readwrite, copy) NSString* name;
-@property (readonly, retain) OPFaultingArray* children;
+@property (readwrite, copy) NSString *name;
+@property (readonly, retain) OPFaultingArray *children;
 
+@end
+
+@interface GIHierarchyNode (MessageGroupHierarchy)
++ (id)messageGroupHierarchyRootNode;
 @end

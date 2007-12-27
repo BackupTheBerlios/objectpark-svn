@@ -20,6 +20,7 @@
 //#import "GIMessageGroup+Statistics.h"
 #import "GIThread.h"
 #import "GIMessage.h"
+#import "GIHierarchyNode.h"
 #import "GIMessageGroup.h"
 
 //static NSString *ContentContext = @"ContentContext";
@@ -376,45 +377,6 @@ NSDateFormatter *timeAndDateFormatter()
 
 @end
 
-@interface NSArray (MessageGroupHierarchySupport)
-- (NSDictionary *)messageGroupHierarchyAsDictionaries;
-@end
-
-@implementation NSArray (MessageGroupHierarchySupport)
-
-- (NSDictionary *)messageGroupHierarchyAsDictionaries
-{
-	NSMutableArray *children = [NSMutableArray array];
-	if ([self count] >= 2) 
-	{
-		NSEnumerator *enumerator = [[self subarrayFromIndex:1] objectEnumerator];
-		id object;
-		
-		while (object = [enumerator nextObject])
-		{
-			if ([object isKindOfClass:[NSArray class]])
-			{
-				[children addObject:[object messageGroupHierarchyAsDictionaries]];
-			}
-			else
-			{
-				GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString:object];
-				NSAssert1([group isKindOfClass:[GIMessageGroup class]], @"Object is not a GIMessageGroup object: %@", object);
-				[children addObject:group];
-			}
-		}
-	}
-	
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		[[self objectAtIndex:0] objectForKey:@"name"], @"name",
-		[[self objectAtIndex:0] objectForKey:@"uid"], @"uid",
-		[NSNumber numberWithInt:[children count]], @"count",
-		children, @"children",
-		nil, nil];
-}
-
-@end
-
 @implementation GIMainWindowController
 
 - (id)init
@@ -623,8 +585,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSArray *)messageGroupHierarchyRoot
 {
-//	return [[[GIMessageGroup hierarchyRootNode] messageGroupHierarchyAsDictionaries] objectForKey:@"children"];
-	return [NSArray array];
+	return [[GIHierarchyNode messageGroupHierarchyRootNode] children];
 }
 
 - (NSFont *)messageGroupListFont
