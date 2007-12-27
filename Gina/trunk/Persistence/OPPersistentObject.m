@@ -178,7 +178,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 {
-	NSString* uriString = [[[NSString alloc] initWithFormat: @"x-oppk://%@/%@/%llx", 
+	NSString* uriString = [[[NSString alloc] initWithFormat: @"x-oppk://%@/%llx", 
 							[databaseName stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding], 
 							oid] autorelease];
 	return uriString;

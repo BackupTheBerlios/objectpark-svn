@@ -40,8 +40,9 @@
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	
 	[self willChangeValueForKey:@"accounts"];
-	GIAccount *newAccount = [[GIAccount alloc] init];
-	[context insertObject:newAccount];
+
+	GIAccount* newAccount = [[GIAccount alloc] init];
+	[context insertObject: newAccount];
 	[context saveChanges];
 	[self didChangeValueForKey:@"accounts"];
 	
