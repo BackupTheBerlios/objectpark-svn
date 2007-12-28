@@ -368,8 +368,7 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 {
 	if (aProfile)
 	{
-#warning disabled while objectURLString is broken
-//		[[NSUserDefaults standardUserDefaults] setObject:[aProfile objectURLString] forKey:DefaultProfileURLString];
+		[[NSUserDefaults standardUserDefaults] setObject:[aProfile objectURLString] forKey:DefaultProfileURLString];
 	}
 }
 
