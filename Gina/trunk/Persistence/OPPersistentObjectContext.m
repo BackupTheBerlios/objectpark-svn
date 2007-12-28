@@ -288,9 +288,9 @@ typedef struct {
 	NSParameterAssert([pathComponents count]>=3);
 	//NSParameterAssert([[pathComponents objectAtIndex: 0] isEqualToString: @"x-opo"]);
 	//NSParameterAssert([[db name] isEqualToString: [pathComponents objectAtIndex: 2]]);
-	NSString* className = [pathComponents objectAtIndex: 2];
+	NSString* className = [pathComponents objectAtIndex: 1];
 	Class pClass = NSClassFromString(className);
-	NSString*  lidString = [pathComponents objectAtIndex: 3];
+	NSString*  lidString = [pathComponents objectAtIndex: 2];
 
     if (pClass == NULL) return nil;
     
