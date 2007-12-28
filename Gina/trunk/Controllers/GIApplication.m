@@ -17,11 +17,14 @@
 
 - (void)awakeFromNib
 {
-	// setting up persistence:
-	NSString *databasePath = [[self applicationSupportPath] stringByAppendingPathComponent:@"Gina.btrees"];
-	OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
-	[OPPersistentObjectContext setDefaultContext:context];
-	[context setDatabaseFromPath:databasePath];
+	// Will be called multiple times, so guard against that:
+	if (! [OPPersistentObjectContext defaultContext]) {
+		// Setting up persistence:
+		NSString *databasePath = [[self applicationSupportPath] stringByAppendingPathComponent:@"Gina.btrees"];
+		OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
+		[context setDatabaseFromPath:databasePath];
+		[OPPersistentObjectContext setDefaultContext:context];
+	}
 }
 
 - (BOOL)isDefaultMailApplication
