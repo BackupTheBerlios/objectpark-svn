@@ -102,8 +102,9 @@ static OPPersistentObjectContext* defaultContext = nil;
     NSAssert(context == nil || defaultContext==nil || defaultContext==context, @"Default context can not be changed.");
     
     if (context!=defaultContext) {
-        [defaultContext release];
+        id oldContext = defaultContext;
         defaultContext = [context retain];
+		[oldContext release]; // important after the assingment due to timing
     }
 }
 
