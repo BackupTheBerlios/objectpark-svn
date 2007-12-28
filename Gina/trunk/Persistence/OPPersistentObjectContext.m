@@ -81,6 +81,14 @@ static long long OPLongLongStringValue(NSString* self)
 	return atoll(buffer);	
 }
 
+static long OPLongStringValue(NSString* self)
+{
+	char buffer[100];
+	[self getBytes: buffer maxLength: 99 usedLength: nil encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy range: NSMakeRange(0,[self length]) remainingRange: NULL];
+	return atol(buffer);	
+}
+
+
 static OPPersistentObjectContext* defaultContext = nil;
 
 + (OPPersistentObjectContext*) defaultContext
@@ -271,27 +279,23 @@ typedef struct {
     return result;
 }
 
-
 - (id) objectWithURLString: (NSString*) urlString
 /*" Returns (possibly a fault object to) an OPPersistentObject. "*/
 {
 	if (!urlString) return nil;
 	
 	NSArray* pathComponents = [[urlString stringByReplacingPercentEscapesUsingEncoding: NSISOLatin1StringEncoding] pathComponents];
-	NSParameterAssert([pathComponents count]>=4);
+	NSParameterAssert([pathComponents count]>=3);
 	//NSParameterAssert([[pathComponents objectAtIndex: 0] isEqualToString: @"x-opo"]);
 	//NSParameterAssert([[db name] isEqualToString: [pathComponents objectAtIndex: 2]]);
 	NSString* className = [pathComponents objectAtIndex: 2];
 	Class pClass = NSClassFromString(className);
-	NSString* oidString = [pathComponents objectAtIndex: 3];
+	NSString*  lidString = [pathComponents objectAtIndex: 3];
 
     if (pClass == NULL) return nil;
     
-	OID oid = OPLongLongStringValue(oidString);
-	if (oid==0LL && [oidString hasPrefix: @"p"]) {
-		// Fallback for transition from CoreData. Can be removed later:
-		oid = OPLongLongStringValue([oidString substringFromIndex: 1]);
-	}
+	OID oid = MakeOID([self cidForClass: pClass], OPLongStringValue(lidString));
+
 	id result = [self objectForOID: oid];
 	
 	return result;
