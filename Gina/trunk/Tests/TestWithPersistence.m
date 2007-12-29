@@ -8,6 +8,8 @@
 
 #import "TestWithPersistence.h"
 #import "OPPersistence.h"
+#import "GIMessage.h"
+#import "OPInternetMessage.h"
 
 @implementation TestWithPersistence
 
@@ -35,7 +37,7 @@
 	NSAssert(transferData != nil, @"couldn't read transferdata");
 	
 	OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
-	GIMessage *message = [[GIMessage alloc] initWthInternetMessage: internetMessage];
+	GIMessage *message = [[GIMessage alloc] initWithInternetMessage: internetMessage];
 	NSAssert(message != nil, @"couldn't create message from internetMessage");
 
 	return message;
