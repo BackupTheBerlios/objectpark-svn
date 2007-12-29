@@ -89,12 +89,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	}
 }
 
-- (void) willSave
-{
-	[super willSave];
-	if (![self valueForKey: @"thread"]) 
-		NSLog(@"Warning! Will save message without thread: %@", self);
-}
 
 - (void) willDelete
 {
@@ -396,6 +390,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[date release];
 	[senderName release];
 	[comments release];
+	[internetMessage release]; internetMessage = nil;
 	[super dealloc];
 }
 
@@ -656,11 +651,18 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[super setValue: value forKey: key];
 }
 
+ */
+
 - (void) willSave
 {
 	NSLog(@"Will save %@", self);
+	if (![self valueForKey: @"thread"]) {
+		NSLog(@"Warning! Will save message without thread: %@", self);
+	}
+	NSString* transferDataPath = [self messageFilename];
+	[self.internetMessage.transferData writeToFile: transferDataPath];
 }
-*/
+
 
 - (void) removeFlags: (unsigned) someFlags
 {
@@ -735,6 +737,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     }
 } 
 
+- (OPInternetMessage*) internetMessage
+{
+	if (!internetMessage) {
+
+		NSString* transferDataPath = [self messageFilename];
+		NSData* transferData = [NSData dataWithContentsOfFile: transferDataPath];
+		internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+	}
+	return internetMessage;
+}
+
 - (id) initWithCoder: (NSCoder*) coder
 {
 	messageId = [coder decodeObjectForKey: @"messageId"];
@@ -745,7 +758,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	sendProfileOID = [coder decodeOIDForKey: @"sendProfileOID"];
 	threadOID = [coder decodeOIDForKey: @"threadOID"];
 	referenceOID = [coder decodeOIDForKey: @"referenceOID"];
-	flags = [coder decodeInt32ForKey: @"flags"];
+	flags = [coder decodeInt32ForKey: @"flags"];	
 	return self;
 }
 

@@ -191,7 +191,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (NSString*) objectURLString
 {
-	NSString* databaseName = [[[self context] databasePath] lastPathComponent];
+	NSString* databaseName = [[[[self context] databasePath] lastPathComponent] stringByDeletingPathExtension]; // cache this!
 	NSString* uriString = [[[NSString alloc] initWithFormat: @"x-oppk-%@://%@/%lx", 
 							[databaseName stringByAddingPercentEscapesUsingEncoding: NSISOLatin1StringEncoding], [[self classForCoder] description],
 							LIDFromOID([self oid])] autorelease];

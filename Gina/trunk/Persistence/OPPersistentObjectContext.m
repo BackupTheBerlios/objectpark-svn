@@ -750,7 +750,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			[self reset]; 
 			[database release]; database = nil;
 			if (self == [OPPersistentObjectContext defaultContext]) {
-#warning Axel -> Dirk: Seems like a bug because release of a context also calls -close (-> twofold dealloc -> boom!)
 				[OPPersistentObjectContext setDefaultContext: nil];
 			}
 		}
@@ -850,6 +849,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		[self didChangeObject: newObject];
 	}
 }
+
 
 @end
 

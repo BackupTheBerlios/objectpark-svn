@@ -60,7 +60,7 @@
 	OID referenceOID;
 	NSArray* comments; // transient cache
     unsigned flags; 
-	OPInternetMessage *internetMessage;
+	OPInternetMessage* internetMessage;
 }
 
 @property (readonly, retain) OPInternetMessage *internetMessage;
