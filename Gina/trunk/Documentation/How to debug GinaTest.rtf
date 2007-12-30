@@ -12,7 +12,7 @@ Note: GinaTest currently will not run all tests while building (due to unsolved 
 \pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\ql\qnatural\pardirnatural
 \ls1\ilvl0\cf0 {\listtext	1)	}Create a custom executable named "Debug Gina Tests" by duplicating (e.g. use context menu) the Gina executable\
 {\listtext	2)	}In "Debug Gina Tests" inspector "General" set working directory to "Build products directory"\
-{\listtext	3)	}In "Debug Gina Tests" inspector "Arguments" add Arguments "-SenTest Self"\
+{\listtext	3)	}In "Debug Gina Tests" inspector "Arguments" add Arguments "-SenTest All"\
 {\listtext	4)	}In "Debug Gina Tests" inspector "Arguments" add environment variables "DYLD_INSERT_LIBRARIES" to "$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks/DevToolsBundleInjection.framework/DevToolsBundleInjection", "XCInjectBundle" to "GinaTest.octest" and "DYLD_FALLBACK_FRAMEWORK_PATH" to "$(DEVELOPER_LIBRARY_DIR)/Frameworks:$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks".\
 {\listtext	5)	}Modify the file ~/.gdbinit to have a line "set start-with-shell 0"\
 {\listtext	6)	}Use Target "GinaTest", configuration "Debug" and active executable "Debug Gina Tests" for debugging the tests. Note, to use Debug (without building) ALT-Cmd-Y to debug. Otherwise the tests will be tested along with building without debugging.\
