@@ -785,7 +785,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	static NSString* result = nil;
 	if (result == nil) {
-		result = [NSHomeDirectory() stringByAppendingPathComponent: @"Library/Gina/TransferData/"];
+		result = [[NSHomeDirectory() stringByAppendingPathComponent: @"Library/Gina/TransferData/"] retain];
 	}
 	return result;
 }
