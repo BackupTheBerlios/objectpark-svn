@@ -64,6 +64,13 @@
 - (BOOL) canPersist;
 - (BOOL) isPlistMemberClass;
 
+// Subclass hooks:
+- (void) willSave;
+- (void) willRevert;
+- (void) willDelete;
+
+
+
 @end
 
 @interface OPPersistentObject : NSObject  <OPPersisting> {
@@ -90,11 +97,6 @@
 - (OID) currentOID; // internal method
 - (void) setOID: (OID) theOID; // for internal use
 
-// Subclass hooks:
-
-- (void) willSave;
-- (void) willRevert;
-- (void) willDelete;
 
 //- (void) willChangeValueForKey: (NSString*) key;
 - (void) willAccessValueForKey: (NSString*) key;

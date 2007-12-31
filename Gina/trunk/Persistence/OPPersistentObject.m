@@ -85,10 +85,6 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 //	return result;
 //}
 
-- (void) willRevert
-{
-	// subclass hook
-}
 
 
 - (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
@@ -130,10 +126,6 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	return [[[self context] deletedObjects] containsObject: self];
 }
 
-- (void) willSave
-/*" Subclass hook. Called prior to the object's attribute values being saved to the database. "*/
-{
-}
 
 //- (id) valueForUndefinedKey: (NSString*) key
 //{
@@ -222,10 +214,6 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 }
 
 
-- (void) willDelete
-	/*" Called whenever the receiver is marked for deletion. Delete any dependent objects here. After this call, -refault will free all attribute values. Default implementation does nothing. "*/
-{
-}
 
 /*
 - (void) willChangeValueForKey: (NSString*) key
@@ -618,6 +606,23 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 {
 	return NO;
 }
+
+- (void) willSave
+/*" Subclass hook. Called prior to the object's attribute values being saved to the database. "*/
+{
+}
+
+
+- (void) willDelete
+/*" Subclass hook. Called whenever the receiver is marked for deletion. Delete any dependent objects here. After this call, -refault will free all attribute values. Default implementation does nothing. "*/
+{
+}
+
+- (void) willRevert
+{
+	// subclass hook
+}
+
 
 @end
 

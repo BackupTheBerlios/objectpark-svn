@@ -54,8 +54,8 @@
 //	if (sortKeyPath) {
 //		[anObject appendBTreeBytesForKey: sortKeyPath to: result];
 //	}	
-	OID oid = NSSwapHostLongLongToBig([anObject oid]);
-	[result appendBytes: &oid length: sizeof(OID)];
+	OID objectOid = NSSwapHostLongLongToBig([anObject oid]);
+	[result appendBytes: &objectOid length: sizeof(OID)];
 	return result;
 }
 
