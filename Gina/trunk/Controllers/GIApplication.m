@@ -10,6 +10,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIMainWindowController.h"
 #import "GIMessage.h"
+#import "GIMessageGroup.h"
 #import "OPPersistence.h"
 #import "NSApplication+OPExtensions.h"
 
@@ -24,6 +25,8 @@
 		OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
 		[context setDatabaseFromPath:databasePath];
 		[OPPersistentObjectContext setDefaultContext:context];
+		
+		[GIMessageGroup ensureDefaultGroups];
 	}
 }
 

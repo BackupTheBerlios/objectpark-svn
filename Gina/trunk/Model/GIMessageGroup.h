@@ -43,7 +43,7 @@ extern NSString *GIMessageGroupsChangedNotification;
 - (void) setDefaultProfile: (GIProfile*) newProfile;
 
 /*" Dealing with the group hierarchie: "*/
-+ (GIMessageGroup *)newMessageGroupWithName:(NSString* )aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex;
++ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
 + (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
 + (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)aUid;
 + (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly;

@@ -104,10 +104,10 @@
 		{
 			rootNode = [[self alloc] init];
 
-			GIMessageGroup *defaultGroup = [[[GIMessageGroup alloc] init] autorelease];
-			[defaultGroup setName:NSLocalizedString(@"Default Inbox", @"default group name for default inbox")];
-			
-			[[rootNode mutableArrayValueForKey:@"children"] addObject:defaultGroup];
+//			GIMessageGroup *defaultGroup = [[[GIMessageGroup alloc] init] autorelease];
+//			[defaultGroup setName:NSLocalizedString(@"Default Inbox", @"default group name for default inbox")];
+//			
+//			[[rootNode mutableArrayValueForKey:@"children"] addObject:defaultGroup];
 			[context setRootObject:rootNode forKey:@"MessageGroupHierarchyRootNode"];
 		}
 	}

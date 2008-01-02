@@ -70,12 +70,9 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     [self trashMessageGroup];
 }
 
-+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(NSMutableArray *)aNode atIndex:(int)anIndex
 /*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
++ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex
 {
-    GIMessageGroup *result = nil;
-    NSString* resultURLString = nil;
-    
     if (!aName) 
 	{
         aName = NSLocalizedString(@"New Group", @"Default name for new group");
@@ -83,70 +80,53 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     if (!aNode) 
 	{
-        aNode = [self hierarchyRootNode];
-        anIndex = [aNode count];
+        aNode = [GIHierarchyNode messageGroupHierarchyRootNode];
+        if (anIndex == NSNotFound) anIndex = [[aNode children] count];
     }
     
     // creating new group and setting name:
-    result = [[[self alloc] init] autorelease];
-	[[OPPersistentObjectContext defaultContext] insertObject: self];
-    [result setValue:aName forKey:@"name"];
+    GIMessageGroup *result = [[[self alloc] init] autorelease];
+    [result setName:aName];
 
     // placing new group in hierarchy:
-    NSParameterAssert((anIndex >= 0) && (anIndex <= [aNode count]));
-    anIndex += 1; // first position is node info
-    resultURLString = [result objectURLString];
+    NSParameterAssert((anIndex >= 0) && (anIndex <= [[aNode children] count]));
     
-    if (anIndex = [aNode count]) 
+	NSMutableArray *children = [aNode mutableArrayValueForKey:@"children"];
+    if (anIndex == [[aNode children] count]) 
 	{
-        [aNode addObject:resultURLString];
+        [children addObject:result];
     } 
 	else 
 	{
-        [aNode insertObject:resultURLString atIndex:anIndex];
+        [children insertObject:result atIndex:anIndex];
     }
-    
-//	[GIApp saveAction:nil]; // hack
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupWasAddedNotification object:result];
-    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupsChangedNotification object:self];
+        
+//    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupWasAddedNotification object:result];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupsChangedNotification object:self];
 
     return result;
 }
 
-+ (id) messageGroupWithURIReferenceString: (NSString*) anUrl
 /*" Returns the message group object referenced by the given reference string anUrl. See also: #{-URIReferenceString}. "*/
++ (id)messageGroupWithURLString:(NSString *)anUrl
 {
-    id referencedGroup = nil;
+    id result = nil;
     
     NSParameterAssert([anUrl isKindOfClass:[NSString class]]);
     
-    if ([anUrl length]) {
-        @try {
-            referencedGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString: anUrl];
+    if ([anUrl length]) 
+	{
+        @try 
+		{
+            result = [[OPPersistentObjectContext defaultContext] objectWithURLString:anUrl];
         }
-        @catch (id e) {
+        @catch (id e) 
+		{
             if (NSDebugEnabled) NSLog(@"Could not find group for URI ''", anUrl);
         }
     }
     
-    return referencedGroup;
-    /*
-    id result = nil;
-    NSEnumerator *e = [[self allObjects] objectEnumerator];
-    id group;
-    
-    while (group = [e nextObject]) 
-    {
-        if ([[group URIReferenceString] isEqualToString:anUrl]) 
-        {
-            result = group;
-            break;
-        }
-    }
-    
     return result;
-     */
 }
 
 /*
@@ -688,8 +668,8 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	}
 }
 
-+ (GIMessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
 /*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
++ (GIMessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
 {
     NSParameterAssert(defaultName != nil);
 	GIMessageGroup *result = nil;
@@ -700,7 +680,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
         
 		if (URLString) 
 		{
-			result = [GIMessageGroup messageGroupWithURIReferenceString: URLString];
+			result = [GIMessageGroup messageGroupWithURLString:URLString];
 
 			if (!result) if (NSDebugEnabled) NSLog(@"Couldn't find standard box '%@'", defaultName);
 		}
@@ -708,9 +688,9 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		if (!result) 
 		{
 			// not found creating new:
-			result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:0];
+			result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:NSNotFound];
 			
-			NSAssert1([result valueForKey:@"name"] != nil, @"group should have a name: %@", defaultName);
+			NSAssert1([result name] != nil, @"group should have a name: %@", defaultName);
 			
 			[[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
 			[[NSUserDefaults standardUserDefaults] synchronize];
