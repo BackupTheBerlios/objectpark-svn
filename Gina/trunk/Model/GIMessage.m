@@ -665,7 +665,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		NSLog(@"Warning! Will save message without thread: %@", self);
 	}
 	NSString* transferDataPath = [self messageFilename];
-	[self.internetMessage.transferData writeToFile: transferDataPath];
+	[self.internetMessage.transferData writeToFile: transferDataPath atomically: NO];
 }
 
 

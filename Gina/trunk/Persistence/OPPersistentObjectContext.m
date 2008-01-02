@@ -564,6 +564,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			OPPersistentObject* object;
 			while (object = [changedObjects anyObject]) {
 				if (NSDebugEnabled) NSLog(@"Archiving %@", object);
+				[object willSave];
 				[self archiveObject: object usingCursor: saveCursor];
 				[changedObjects removeObject: object];
 			}

@@ -42,7 +42,7 @@
 	NSAssert(messageId != nil, @"could not get message id from message");
 	
 	GIMessage *fetchedMessage = [GIMessage messageForMessageId:messageId];
-	NSAssert(fetchedMessage != nil, @"could not fetched previously created message for message id");
+	NSAssert(fetchedMessage != nil, @"could not fetch previously created message for message id");
 	NSAssert([[fetchedMessage messageId] isEqualToString:messageId], @"message id from fetched message not correct");
 }
 
