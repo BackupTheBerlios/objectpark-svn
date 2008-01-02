@@ -101,6 +101,15 @@
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77A30A8B0D25724300B0F1DF /* TestURLString.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A30A8A0D25724300B0F1DF /* TestURLString.m */; };
+		77AA23740D2BE559004EF1DF /* OPSASL.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C64D0D00549A00A7BEFF /* OPSASL.m */; };
+		77AA23750D2BE55C004EF1DF /* OPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6370D00548C00A7BEFF /* OPSMTP.m */; };
+		77AA23770D2BE5AD004EF1DF /* NSCharacterSet+MIME.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5DC0D00546B00A7BEFF /* NSCharacterSet+MIME.m */; };
+		77AA23780D2BE5B1004EF1DF /* NSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5DE0D00546B00A7BEFF /* NSData+MessageUtils.m */; };
+		77AA23790D2BE5B6004EF1DF /* NSString+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5E20D00546B00A7BEFF /* NSString+MessageUtils.m */; };
+		77AA237A0D2BE5C4004EF1DF /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C75B0D0067F000A7BEFF /* NSData+Extensions.m */; };
+		77AA23860D2BE602004EF1DF /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
+		77AA238D0D2BE642004EF1DF /* libsasl2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B6C8000D00754600A7BEFF /* libsasl2.dylib */; };
+		77AA239F0D2BE86B004EF1DF /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6360D00548C00A7BEFF /* OPSMTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77AF82EA0D2B9420002771BA /* GIMessageGroupTreeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF82E90D2B9420002771BA /* GIMessageGroupTreeController.m */; };
 		77AF83060D2B943C002771BA /* GIMessageGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF83050D2B943C002771BA /* GIMessageGroupCell.m */; };
 		77AF83090D2B9479002771BA /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AF83070D2B9479002771BA /* Folder.tiff */; };
@@ -401,6 +410,8 @@
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
 		77A30A8A0D25724300B0F1DF /* TestURLString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestURLString.m; sourceTree = "<group>"; };
+		77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPMailSending.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OPMailSending-Info.plist"; sourceTree = "<group>"; };
 		77AF82E80D2B9420002771BA /* GIMessageGroupTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupTreeController.h; sourceTree = "<group>"; };
 		77AF82E90D2B9420002771BA /* GIMessageGroupTreeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroupTreeController.m; sourceTree = "<group>"; };
 		77AF83040D2B943C002771BA /* GIMessageGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupCell.h; sourceTree = "<group>"; };
@@ -535,7 +546,7 @@
 		77BF61AA0D12882700BE0F31 /* GIFilterArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFilterArrayController.m; sourceTree = "<group>"; };
 		77C3BD020D103F860003634C /* Gina.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Gina.tiff; sourceTree = "<group>"; };
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
-		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
+		77E5676D0D0702670016594D /* GinaSpotlight.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaSpotlight-Info.plist"; path = "../GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
 		77F2E3D90D1EB2DC0003D25B /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
 		77F2E3DA0D1EB2DC0003D25B /* TestGIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIThread.m; sourceTree = "<group>"; };
@@ -575,6 +586,15 @@
 				77F2E2ED0D1E4AFB0003D25B /* OPNetwork.framework in Frameworks */,
 				77F2E2EF0D1E4B060003D25B /* OPPersistence.framework in Frameworks */,
 				77F2E2F00D1E4B160003D25B /* InternetMessage.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77AA236C0D2BE54B004EF1DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77AA23860D2BE602004EF1DF /* OPNetwork.framework in Frameworks */,
+				77AA238D0D2BE642004EF1DF /* libsasl2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,10 +692,11 @@
 				8D1107320486CEB800E47090 /* Gina.app */,
 				77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */,
 				777B05CB0D031DE40080B76F /* InternetMessage.framework */,
-				77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */,
+				77E5676D0D0702670016594D /* GinaSpotlight.bundle */,
 				7736145A0D1C152A007FC630 /* OPPersistence.framework */,
 				773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */,
 				773615130D1C30A7007FC630 /* GinaTest.octest */,
+				77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -696,6 +717,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -1115,6 +1137,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		77AA23690D2BE54B004EF1DF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77AA239F0D2BE86B004EF1DF /* OPSMTP.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		77B6C5890D0053AE00A7BEFF /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1224,6 +1254,24 @@
 			productReference = 773615130D1C30A7007FC630 /* GinaTest.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
+		77AA236D0D2BE54B004EF1DF /* OPMailSending */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77AA23730D2BE54C004EF1DF /* Build configuration list for PBXNativeTarget "OPMailSending" */;
+			buildPhases = (
+				77AA23690D2BE54B004EF1DF /* Headers */,
+				77AA236A0D2BE54B004EF1DF /* Resources */,
+				77AA236B0D2BE54B004EF1DF /* Sources */,
+				77AA236C0D2BE54B004EF1DF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OPMailSending;
+			productName = OPMailSending;
+			productReference = 77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		77B6C58D0D0053AE00A7BEFF /* InternetMessage */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 77B6C5930D0053AF00A7BEFF /* Build configuration list for PBXNativeTarget "InternetMessage" */;
@@ -1275,7 +1323,7 @@
 			);
 			name = GinaSpotlight;
 			productName = GinaSpotlight;
-			productReference = 77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */;
+			productReference = 77E5676D0D0702670016594D /* GinaSpotlight.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		8D1107260486CEB800E47090 /* Gina */ = {
@@ -1318,6 +1366,7 @@
 				77B6C8930D008D7C00A7BEFF /* InternetMessageTest */,
 				773614590D1C152A007FC630 /* OPPersistence */,
 				773614C80D1C1AB0007FC630 /* OPPersistenceTest */,
+				77AA236D0D2BE54B004EF1DF /* OPMailSending */,
 			);
 		};
 /* End PBXProject section */
@@ -1342,6 +1391,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				773616100D1D7204007FC630 /* TestMIMEBoundaries.transferData in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77AA236A0D2BE54B004EF1DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1486,6 +1542,19 @@
 				77F2E3DB0D1EB2DC0003D25B /* TestGIThread.m in Sources */,
 				77369CC90D1FAF53004D1DCF /* TestWithPersistence.m in Sources */,
 				77369CE70D1FB078004D1DCF /* TestGIMessageGroup.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77AA236B0D2BE54B004EF1DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77AA23740D2BE559004EF1DF /* OPSASL.m in Sources */,
+				77AA23750D2BE55C004EF1DF /* OPSMTP.m in Sources */,
+				77AA23770D2BE5AD004EF1DF /* NSCharacterSet+MIME.m in Sources */,
+				77AA23780D2BE5B1004EF1DF /* NSData+MessageUtils.m in Sources */,
+				77AA23790D2BE5B6004EF1DF /* NSString+MessageUtils.m in Sources */,
+				77AA237A0D2BE5C4004EF1DF /* NSData+Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1838,6 +1907,69 @@
 			};
 			name = Release;
 		};
+		77AA23710D2BE54C004EF1DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "OPMailSending-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@rpath/OPMailSending.framework/Versions/A/OPMailSending";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = OPMailSending;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		77AA23720D2BE54C004EF1DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
+				);
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "OPMailSending-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@rpath/OPMailSending.framework/Versions/A/OPMailSending";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = OPMailSending;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		77B6C5910D0053AE00A7BEFF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2126,6 +2258,15 @@
 			buildConfigurations = (
 				773615160D1C30A7007FC630 /* Debug */,
 				773615170D1C30A7007FC630 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77AA23730D2BE54C004EF1DF /* Build configuration list for PBXNativeTarget "OPMailSending" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77AA23710D2BE54C004EF1DF /* Debug */,
+				77AA23720D2BE54C004EF1DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
