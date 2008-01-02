@@ -364,8 +364,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[allObjectsByClass release]; allObjectsByClass = nil;
 	allObjectsByClass = [[NSMutableDictionary alloc] init];
 
-	[cidsByClass release];
-	cidsByClass = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 30);
+	//[cidsByClass release];
+	if (!cidsByClass) {
+		cidsByClass = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 30);
+	}
 	
 	[encoder release];
 	encoder = [[OPKeyedArchiver alloc] initWithContext: self];

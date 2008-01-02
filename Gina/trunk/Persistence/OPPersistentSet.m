@@ -280,6 +280,16 @@
 	return count;
 }
 
+- (NSUInteger) hash
+{
+	return LIDFromOID([self oid]);
+}
+
+- (BOOL) isEqual: (id) other
+{
+	return self == other;
+}
+
 - (NSString*) description
 {
 	return [NSString stringWithFormat: @"<%@ 0x%x> with %u items.", [self class], self, [self count]];
