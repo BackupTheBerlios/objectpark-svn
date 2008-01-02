@@ -101,6 +101,14 @@
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77A30A8B0D25724300B0F1DF /* TestURLString.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A30A8A0D25724300B0F1DF /* TestURLString.m */; };
+		77AF82EA0D2B9420002771BA /* GIMessageGroupTreeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF82E90D2B9420002771BA /* GIMessageGroupTreeController.m */; };
+		77AF83060D2B943C002771BA /* GIMessageGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF83050D2B943C002771BA /* GIMessageGroupCell.m */; };
+		77AF83090D2B9479002771BA /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AF83070D2B9479002771BA /* Folder.tiff */; };
+		77AF830A0D2B9479002771BA /* OtherMailbox.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AF83080D2B9479002771BA /* OtherMailbox.tiff */; };
+		77AF83160D2B951B002771BA /* NSBezierPath+RoundedRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF83150D2B951B002771BA /* NSBezierPath+RoundedRect.m */; };
+		77AF83200D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF831F0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m */; };
+		77AF834C0D2B95AD002771BA /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF834B0D2B95AD002771BA /* GITextView.m */; };
+		77AF83500D2B95E2002771BA /* NSWorkspace+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF834F0D2B95E2002771BA /* NSWorkspace+OPExtensions.m */; };
 		77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		77B647560D1E46A1001E21D8 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; };
@@ -393,6 +401,20 @@
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
 		77A30A8A0D25724300B0F1DF /* TestURLString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestURLString.m; sourceTree = "<group>"; };
+		77AF82E80D2B9420002771BA /* GIMessageGroupTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupTreeController.h; sourceTree = "<group>"; };
+		77AF82E90D2B9420002771BA /* GIMessageGroupTreeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroupTreeController.m; sourceTree = "<group>"; };
+		77AF83040D2B943C002771BA /* GIMessageGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupCell.h; sourceTree = "<group>"; };
+		77AF83050D2B943C002771BA /* GIMessageGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroupCell.m; sourceTree = "<group>"; };
+		77AF83070D2B9479002771BA /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
+		77AF83080D2B9479002771BA /* OtherMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = OtherMailbox.tiff; sourceTree = "<group>"; };
+		77AF83140D2B951B002771BA /* NSBezierPath+RoundedRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBezierPath+RoundedRect.h"; sourceTree = "<group>"; };
+		77AF83150D2B951B002771BA /* NSBezierPath+RoundedRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+RoundedRect.m"; sourceTree = "<group>"; };
+		77AF831E0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+ContrastingLabelExtensions.h"; sourceTree = "<group>"; };
+		77AF831F0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+ContrastingLabelExtensions.m"; sourceTree = "<group>"; };
+		77AF834A0D2B95AD002771BA /* GITextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GITextView.h; sourceTree = "<group>"; };
+		77AF834B0D2B95AD002771BA /* GITextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITextView.m; sourceTree = "<group>"; };
+		77AF834E0D2B95E2002771BA /* NSWorkspace+OPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWorkspace+OPExtensions.h"; sourceTree = "<group>"; };
+		77AF834F0D2B95E2002771BA /* NSWorkspace+OPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWorkspace+OPExtensions.m"; sourceTree = "<group>"; };
 		77B6C58F0D0053AE00A7BEFF /* InternetMessage-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "InternetMessage-Info.plist"; path = "../InternetMessage-Info.plist"; sourceTree = "<group>"; };
 		77B6C5A90D00546B00A7BEFF /* saslutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saslutil.h; sourceTree = "<group>"; };
 		77B6C5AA0D00546B00A7BEFF /* prop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prop.h; sourceTree = "<group>"; };
@@ -605,6 +627,7 @@
 		080E96DDFE201D6D7F000001 /* Gina */ = {
 			isa = PBXGroup;
 			children = (
+				77AF83130D2B94E9002771BA /* Cocoa Extensions */,
 				773612550D1AB796007FC630 /* Custom Views */,
 				775C312E0D0D45E50098DA07 /* Controllers */,
 				7736141A0D1C1000007FC630 /* Model */,
@@ -688,6 +711,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				77AF83070D2B9479002771BA /* Folder.tiff */,
+				77AF83080D2B9479002771BA /* OtherMailbox.tiff */,
 				8D8B1B9B0D11485D008E02D7 /* Gina.icns */,
 				77C3BD020D103F860003634C /* Gina.tiff */,
 				7713AB4C0D0E97A300CBEC7B /* Localizable.strings */,
@@ -740,6 +765,10 @@
 				773612590D1AB7CE007FC630 /* GICommentTreeView.m */,
 				773612610D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.h */,
 				773612620D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m */,
+				77AF83040D2B943C002771BA /* GIMessageGroupCell.h */,
+				77AF83050D2B943C002771BA /* GIMessageGroupCell.m */,
+				77AF834A0D2B95AD002771BA /* GITextView.h */,
+				77AF834B0D2B95AD002771BA /* GITextView.m */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -879,6 +908,8 @@
 				775C31300D0D46280098DA07 /* GIApplication.m */,
 				773612500D1AB6F2007FC630 /* GIMainWindowController.h */,
 				773612510D1AB6F2007FC630 /* GIMainWindowController.m */,
+				77AF82E80D2B9420002771BA /* GIMessageGroupTreeController.h */,
+				77AF82E90D2B9420002771BA /* GIMessageGroupTreeController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -899,6 +930,19 @@
 				778077FF0D0705F70091F21D /* schema.xml */,
 			);
 			name = Spotlight;
+			sourceTree = "<group>";
+		};
+		77AF83130D2B94E9002771BA /* Cocoa Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				77AF83140D2B951B002771BA /* NSBezierPath+RoundedRect.h */,
+				77AF83150D2B951B002771BA /* NSBezierPath+RoundedRect.m */,
+				77AF831E0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.h */,
+				77AF831F0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m */,
+				77AF834E0D2B95E2002771BA /* NSWorkspace+OPExtensions.h */,
+				77AF834F0D2B95E2002771BA /* NSWorkspace+OPExtensions.m */,
+			);
+			path = "Cocoa Extensions";
 			sourceTree = "<group>";
 		};
 		77B6C5980D00541A00A7BEFF /* InternetMessage */ = {
@@ -1345,6 +1389,8 @@
 				7736124E0D1AB69F007FC630 /* MainWindow.nib in Resources */,
 				774FC33B0D215F5400CE5FD6 /* GIAccountPrefs.xib in Resources */,
 				773B57730D241A3F00A11972 /* GIProfilePrefs.xib in Resources */,
+				77AF83090D2B9479002771BA /* Folder.tiff in Resources */,
+				77AF830A0D2B9479002771BA /* OtherMailbox.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1541,6 +1587,12 @@
 				8DABA4640D1F46D300991279 /* GICommentTreeView.m in Sources */,
 				774FC3060D215A4100CE5FD6 /* GIAccountPrefs.m in Sources */,
 				774FC4C40D24149A00CE5FD6 /* GIProfilePrefs.m in Sources */,
+				77AF82EA0D2B9420002771BA /* GIMessageGroupTreeController.m in Sources */,
+				77AF83060D2B943C002771BA /* GIMessageGroupCell.m in Sources */,
+				77AF83160D2B951B002771BA /* NSBezierPath+RoundedRect.m in Sources */,
+				77AF83200D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m in Sources */,
+				77AF834C0D2B95AD002771BA /* GITextView.m in Sources */,
+				77AF83500D2B95E2002771BA /* NSWorkspace+OPExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
