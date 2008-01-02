@@ -34,7 +34,7 @@
 	[[self class] messageForTest];
 }
 
-- (void)testMessageRetrieval
+- (void)testMessageIdIndexPersistence
 {
 	GIMessage *message = [[self class] messageForTest];
 	

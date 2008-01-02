@@ -49,7 +49,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	
 	OPPersistentStringDictionary* globalIndex = nil;
-	
+
 	if (!globalIndex) {
 		globalIndex = [[context rootObjectForKey: @"MessagesById"] retain];
 		if (!globalIndex) {
@@ -197,7 +197,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         
 	internetMessage = [im retain];
 	messageId = [[im messageId] retain];
-//    [self setValue: [im messageId] forKey: @"messageId"];  
+	
+	// Add self to global message id index:
+    [[GIMessage messagesByMessageId] setValue: self forKey: messageId];  
+	
+	
     subject = [[im normalizedSubject] retain];
     [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
     
@@ -240,12 +244,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
             // replace old message with new:
 			if (NSDebugEnabled) NSLog(@"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
             [dupe setContentFromInternetMessage:anInternetMessage];
-        }
-        else
-			if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [anInternetMessage messageId]);        
-    }
-    else 
-	{
+        } else {
+			if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [anInternetMessage messageId]);    
+			result = dupe;
+		}
+    } else  {
         // Create a new message in the default context:
         result = [[[GIMessage alloc] initWithInternetMessage: anInternetMessage] autorelease];
 		NSAssert(result != nil, @"Could not create message object");

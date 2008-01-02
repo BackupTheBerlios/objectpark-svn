@@ -615,7 +615,7 @@
 	int result = 0;
 	int dummy; if (!error) error = &dummy;
 	*error = sqlite3BtreeMoveto((BtCursor*) self, key, keyLength, YES, &result); /* Search result flag */
-	NSLog(@"Seeking in %@", self);
+	//NSLog(@"Seeking in %@", self);
 	NSAssert1(*error != 11, @"SQLite: The database disk image is malformed (%@)", self); 
 
 	if (NSDebugEnabled) { 

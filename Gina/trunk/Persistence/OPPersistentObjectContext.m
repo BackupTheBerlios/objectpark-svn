@@ -232,8 +232,15 @@ typedef struct {
 
 - (void) setRootObject: (id <OPPersisting>) pObject forKey: (NSString*) key
 {
-	[rootObjects setObject: [NSNumber numberWithUnsignedLongLong: [pObject oid]] forKey: key];
-	[database setPlist: rootObjects forOid: ROOTOBJECTSOID error: NULL];
+	NSNumber* oidNumber = [NSNumber numberWithUnsignedLongLong: [pObject oid]];
+	// Check, if we are indeed changing the value:
+	if (! [[rootObjects objectForKey: key] isEqual: oidNumber]) {
+		if (! rootObjects) {
+			rootObjects = [[NSMutableDictionary alloc] init];
+		}
+		[rootObjects setObject: oidNumber forKey: key];
+		[database setPlist: rootObjects forOid: ROOTOBJECTSOID error: NULL];
+	}
 }
 
 - (id) newUnarchivedObjectForOID: (OID) oid
@@ -374,8 +381,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	[rootObjects release];
 	rootObjects = [[database plistForOid: ROOTOBJECTSOID error: &error] retain];
-	NSAssert(@"Unable to read root object plist from %@", database);
-
 	
 	[decoder release];
 	decoder = [[OPKeyedUnarchiver alloc] initWithContext: self];
@@ -729,7 +734,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		OPIntKeyBTreeCursor* readCursor = [[database objectTree] newCursorWithError: NULL];
 		NSMutableData* data = [[NSMutableData alloc] init];
 
-		NSLog(@"Reverting %u objects: ", [changedObjects count]);
+		//NSLog(@"Reverting %u objects: ", [changedObjects count]);
 		
 		@synchronized(changedObjects) {
 			OPPersistentObject* changedObject;
