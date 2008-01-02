@@ -120,7 +120,9 @@ static OPPersistentObjectContext* defaultContext = nil;
 {
 	NSMutableSet* cache = [allObjectsByClass objectForKey: [object class]];
 	if (! cache) {
-		[allObjectsByClass setObject: (cache = [NSMutableSet set]) forKey: [object class]];
+		// create cache set on demand:
+		cache = [NSMutableSet set];
+		[allObjectsByClass setObject: cache forKey: [object class]];
 	}
 	
 	[cache addObject: object];
@@ -211,6 +213,7 @@ typedef struct {
 
 - (id) newUnarchivedObjectAtCursor: (OPIntKeyBTreeCursor*) readCursor
 {
+	NSParameterAssert([readCursor isValid]);
 	NSMutableData* data = [[NSMutableData alloc] init];
 	OID oid = [readCursor currentEntryIntKey]; 
 	[readCursor appendCurrentEntryValueToData: data];
@@ -348,15 +351,15 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (void) reset
 /*" Resets the internal state of the receiver, excluding the database connection. The context can be used afterwards. "*/
 {
+	int error = SQLITE_OK;
 	[self revertChanges]; // just to be sure
 
 	NSHashTableCallBacks htCallBacks = NSNonRetainedObjectHashCallBacks;
 	htCallBacks.hash = &oidHash;
 	htCallBacks.isEqual = &oidEqual;
 	
-		//if (registeredObjects) NSFreeHashTable(registeredObjects);
-		[registeredObjects release];
-		registeredObjects = NSCreateHashTable(htCallBacks, 1000);
+	[registeredObjects release];
+	registeredObjects = NSCreateHashTable(htCallBacks, 1000);
 	
 	[allObjectsByClass release]; allObjectsByClass = nil;
 	allObjectsByClass = [[NSMutableDictionary alloc] init];
@@ -367,8 +370,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[encoder release];
 	encoder = [[OPKeyedArchiver alloc] initWithContext: self];
 	
-	[rootObjects release]; rootObjects = nil;
-	//rootObjects = [[NSMutableDictionary alloc] init];
+	[rootObjects release];
+	rootObjects = [[database plistForOid: ROOTOBJECTSOID error: &error] retain];
+	NSAssert(@"Unable to read root object plist from %@", database);
+
 	
 	[decoder release];
 	decoder = [[OPKeyedUnarchiver alloc] initWithContext: self];
@@ -389,12 +394,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	faultCacheSize = 1000;
 	[faultCache release]; faultCache = [[NSMutableArray alloc] initWithCapacity: faultCacheSize+1];
 	
-	@synchronized(database) {
-		if ([database isInTransaction]) {
-			[database commitTransaction];
-			[database beginTransaction];
-		}
-	}
+//	@synchronized(database) {
+//		if ([database isInTransaction]) {
+//			[database commitTransaction];
+//			[database beginTransaction];
+//		}
+//	}
 }
 
 - (id) init 
@@ -423,9 +428,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 		oidFound = [cursor currentEntryIntKey];
 
-		if (pos>0) {[cursor moveToPrevious]; 
-			
-		oidFound = [cursor currentEntryIntKey];}
+		if (pos>0) {
+			[cursor moveToPrevious]; 
+			oidFound = [cursor currentEntryIntKey];
+		}
 		//pos = [cursor moveToNext];
 		//OID oidFound2 = [cursor currentEntryIntKey];
 
@@ -720,9 +726,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		OPIntKeyBTreeCursor* readCursor = [[database objectTree] newCursorWithError: NULL];
 		NSMutableData* data = [[NSMutableData alloc] init];
 
+		NSLog(@"Reverting %u objects: ", [changedObjects count]);
+		
 		@synchronized(changedObjects) {
 			OPPersistentObject* changedObject;
 			while (changedObject = [changedObjects anyObject]) {
+				//NSLog(@"Reverting %@", changedObject);
 				[changedObject willRevert];
 				// revert to database state:
 				[data setLength: 0];
@@ -736,7 +745,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		[data release];
 		
 		@synchronized(database) { // to be gone
-			[database rollbackTransaction]; // in case one is in progress
+			if ([database isInTransaction]) {
+				[database rollbackTransaction]; // in case one is in progress
+				[database beginTransaction];
+			}
 		}
 		
 	}

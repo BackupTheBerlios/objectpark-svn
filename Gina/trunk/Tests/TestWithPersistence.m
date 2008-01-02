@@ -15,17 +15,18 @@
 
 - (void)setUp
 {
-	[[OPPersistentObjectContext defaultContext] close];
-	OPPersistentObjectContext *context = [[OPPersistentObjectContext alloc] init];
-	[[NSFileManager defaultManager] removeFileAtPath: @"/tmp/persistent-testobjects.btrees" handler: nil];
-	[context setDatabaseFromPath: @"/tmp/persistent-testobjects.btrees"];
-	[OPPersistentObjectContext setDefaultContext: context];
+	if (! [OPPersistentObjectContext defaultContext]) {
+		OPPersistentObjectContext *context = [[OPPersistentObjectContext alloc] init];
+		[[NSFileManager defaultManager] removeFileAtPath: @"/tmp/persistent-testobjects.btrees" handler: nil];
+		[context setDatabaseFromPath: @"/tmp/persistent-testobjects.btrees"];
+		[OPPersistentObjectContext setDefaultContext: context];
+	}
 }
 
-- (void)tearDown
+- (void) tearDown
 {
-	[[OPPersistentObjectContext defaultContext] close];
-	[[NSFileManager defaultManager] removeFileAtPath: @"/tmp/persistent-testobjects.btrees" handler: nil];
+	[[OPPersistentObjectContext defaultContext] reset];
+	//[[NSFileManager defaultManager] removeFileAtPath: @"/tmp/persistent-testobjects.btrees" handler: nil];
 }
 
 + (GIMessage*) newMessageForTest
@@ -54,7 +55,7 @@
 	[msgIn release];
 	[context reset];
 	GIMessage* msgOut = [context objectForOID: oid];
-	NSAssert(msgOut.internetMessage, @"Unable to rerieve interne message for GIMessage.");
+	NSAssert(msgOut.internetMessage, @"Unable to retrieve internet message for GIMessage.");
 }
 
 @end

@@ -96,6 +96,8 @@
 	char* reserved[sizeof(struct BtCursor)+4];
 }
 
+- (OPDBLite*) database;
+
 - (BOOL) isValid;
 
 - (int (*) (void*,int,const void*,int,const void*)) compareFunction;

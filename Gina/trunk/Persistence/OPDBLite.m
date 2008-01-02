@@ -93,6 +93,16 @@
 	return self;
 }
 
+- (NSString*) path
+{
+	return [NSString stringWithUTF8String: sqlite3PagerFilename(((Btree*)self)->pBt->pPager)];
+}
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ at '%@'", [super description], [self path]];
+}
+
 - (OPBTree*) objectTree
 {
 	return objectTree;
@@ -312,6 +322,7 @@
 		if (createTree) {
 			int result = sqlite3BtreeCreateTable((Btree*)aDB, &root, treeFlags);
 			if (result != SQLITE_OK) {
+				sqlite3BtreeCreateTable((Btree*)aDB, &root, treeFlags);
 				[self autorelease];
 				return nil;
 			}
@@ -604,6 +615,9 @@
 	int result = 0;
 	int dummy; if (!error) error = &dummy;
 	*error = sqlite3BtreeMoveto((BtCursor*) self, key, keyLength, YES, &result); /* Search result flag */
+	NSLog(@"Seeking in %@", self);
+	NSAssert1(*error != 11, @"SQLite: The database disk image is malformed (%@)", self); 
+
 	if (NSDebugEnabled) { 
 		if (result == 0) {
 			NSLog(@"Found: entry for key: %016llx", key);
@@ -614,6 +628,15 @@
 	return result;
 }
 
+- (OPDBLite*) database
+{
+	return (OPDBLite*)((BtCursor*)self)->pBtree;
+}
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ in %@", [super description], [self database]];
+}
 
 @end
 

@@ -44,6 +44,16 @@
 	return count;
 }
 
+- (NSUInteger) hash
+{
+	return LIDFromOID([self oid]);
+}
+
+- (BOOL) isEqual: (id) other
+{
+	return self == other;
+}
+
 - (OPPersistentObjectContext*) context
 {
 	return [OPPersistentObjectContext defaultContext];
@@ -87,7 +97,7 @@
 
 + (BOOL) cachesAllObjects
 {
-	return NO;
+	return YES;
 }
 
 + (BOOL) canPersist
@@ -102,6 +112,7 @@
 
 - (id) init
 {
+	NSLog(@"Created new String Dictionary 0x%x", self);
 	count = NSNotFound;
 	return self;
 }
@@ -109,7 +120,12 @@
 - (OPBTree*) btree
 {
 	if (!btree) {
-		btree = [[OPBTree alloc] initWithCompareFunctionName: nil withRoot: 0 inDatabase: [[self context] database] flags: 0]; // only used for new objects, also set in -initWithCoder.
+		OPDBLite* db = [[self context] database];
+		btree = [[OPBTree alloc] initWithCompareFunctionName: nil withRoot: 0 inDatabase: db flags: 0]; // only used for new objects, also set in -initWithCoder.
+		if (!btree) {
+			btree = [[OPBTree alloc] initWithCompareFunctionName: nil withRoot: 0 inDatabase: db flags: 0]; // only used for new objects, also set in -initWithCoder.
+			NSAssert1(btree, @"unable to create btree in database %@", db);
+		}
 	}
 	return btree;
 }
@@ -119,9 +135,17 @@
 	if (! setterCursor) {
 		int error = SQLITE_OK;
 		setterCursor = [[self btree] newCursorWithError: &error];
-		NSAssert(setterCursor, @"Unable to read from the database.");
+		if (! setterCursor)
+			NSAssert(setterCursor, @"Unable to read from the database.");
 	}
 	return setterCursor;
+}
+
+- (void) willRevert
+{
+	NSLog(@"Reverting %@ 0x%x", [self class], self);
+	[setterCursor release]; setterCursor = nil;
+	[btree release]; btree = nil;
 }
 
 - (void) setObject: (id) object forKey: (id) key
@@ -131,7 +155,8 @@
 	//@synchronized(setCursor) {
 	const void* keyBytes = [(NSString*)key UTF8String];
 	i64 keyLength = strlen(keyBytes);
-	int pos = [[self setterCursor] moveToKeyBytes: keyBytes length: keyLength error: NULL];
+	int error = 0;
+	int pos = [[self setterCursor] moveToKeyBytes: keyBytes length: keyLength error: &error];
 	if (pos == 0) {
 		// We found an entry under the given string key.
 		// Check, of the entry is already present by also comparing the value:
@@ -162,11 +187,15 @@
 	NSParameterAssert([key isKindOfClass: [NSString class]]);
 	const void* keyBytes = [(NSString*)key UTF8String];
 	i64 keyLength = strlen(keyBytes);
+	int error = SQLITE_OK;
+	OPBTreeCursor* theCursor = [self setterCursor];
 	OPPersistentObject* result = nil;
-	int pos = [[self setterCursor] moveToKeyBytes: keyBytes length: keyLength error: NULL];
+	int pos = [theCursor moveToKeyBytes: keyBytes length: keyLength error: &error];
 	if (pos == 0) {
 		// We found a value the key given. Extract the oid:
-		OID objectOID = [[self setterCursor] currentEntryIntValue];
+		if ([theCursor currentEntryKeyLengthError: NULL] == 0) 
+			return nil;
+		OID objectOID = [theCursor currentEntryIntValue];
 		result = [[self context] objectForOID: objectOID];
 	}	
 	return result;
@@ -193,10 +222,12 @@
 {
 	int rootPage = [coder decodeInt32ForKey: @"BTreeRootPage"];
 
+
 	
 	btree = [[OPBTree alloc] initWithCompareFunctionName: nil 
 												withRoot: rootPage 
-											  inDatabase: [[self context] database]];
+											  inDatabase: [[self context] database]
+												   flags: 0];
 	
 	count = NSNotFound;
 	return self;

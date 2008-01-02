@@ -48,13 +48,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	
-	static OPPersistentStringDictionary* globalIndex = nil;
+	OPPersistentStringDictionary* globalIndex = nil;
 	
 	if (!globalIndex) {
 		globalIndex = [[context rootObjectForKey: @"MessagesById"] retain];
 		if (!globalIndex) {
-			globalIndex = [[OPPersistentStringDictionary alloc] init];
+			if (!NSDebugEnabled) {
+				globalIndex = [[OPPersistentStringDictionary alloc] init]; 
+			}
 			[context setRootObject: globalIndex forKey: @"MessagesById"];
+		} else {
+			NSLog(@"Reusing messageId Index 0x%x", globalIndex);
 		}
 	}
 	return globalIndex;
@@ -256,7 +260,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     if (self = [super init]) {
 		// Create a new message in the default context:
-        [self setContentFromInternetMessage: anInternetMessage];
+		internetMessage = [anInternetMessage retain];
+        [self setContentFromInternetMessage: internetMessage];
 		[[[self class] messagesByMessageId] setObject: self forKey: self.messageId];
     }
     
