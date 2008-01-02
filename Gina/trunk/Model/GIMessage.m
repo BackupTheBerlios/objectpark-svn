@@ -791,6 +791,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	static NSString* result = nil;
 	if (result == nil) {
 		result = [[NSHomeDirectory() stringByAppendingPathComponent: @"Library/Gina/TransferData/"] retain];
+		NSFileManager* fm = [NSFileManager defaultManager];
+		if (! [fm fileExistsAtPath: result isDirectory: NULL]) {
+			NSLog(@"Trying to create folder '%@'.", result);	
+			BOOL created = [fm createDirectoryAtPath: result withIntermediateDirectories: YES attributes: nil error: nil];
+			NSAssert1(created, @"Unable to create support directory at '%@'", result);
+		}
 	}
 	return result;
 }
