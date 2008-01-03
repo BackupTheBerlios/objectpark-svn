@@ -7,18 +7,13 @@
 //
 
 #import "GIMessageGroup.h"
-//#import "OPPersistentObject+Extensions.h"
 #import "GIThread.h"
 #import "GIProfile.h"
-//#import "GIApplication.h"
 #import "NSApplication+OPExtensions.h"
 #import "GIUserDefaultsKeys.h"
-//#import "OPPersistentObject+Extensions.h"
-//#import "NSEnumerator+Extensions.h"
 #import "OPFaultingArray.h"
 #import "GIMessage.h"
-//#import "NSData+MessageUtils.h"
-//#import "OPJob.h"
+#import "OPInternetMessage.h"
 #import "OPMBoxFile.h"
 #import "OPFaultingArray.h"
 #import "OPPersistence.h"
@@ -696,6 +691,21 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			
 			NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
+			
+			if ([defaultsKey isEqualToString:DefaultMessageGroupURLString])
+			{
+				// generate greeting e-mail in default group:
+				NSString *transferDataPath = [[NSBundle mainBundle] pathForResource:@"GreetingMail" ofType:@"transferData"];				
+				NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];				
+				OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
+				GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
+				NSAssert(message != nil, @"couldn't create greeting message");
+				
+				GIThread *thread = [[[GIThread alloc] init] autorelease];
+				message.thread = thread;	
+				
+				[[result mutableSetValueForKey:@"threads"] addObject:thread];
+			}
 		}
 		
 		NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);
@@ -817,6 +827,12 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		threads.sortKeyPath = @"date";
 	}
 	return threads;
+}
+
+- (NSUInteger)unreadMessageCount;
+{
+#warning dummy implementation for now
+	return [[self threads] count];
 }
 
 - (id) init

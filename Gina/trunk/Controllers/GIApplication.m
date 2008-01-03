@@ -93,10 +93,7 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 //	[self saveOpenWindowsFromThisSession];
-	
-#warning the following line will make Ginko beep at the end
-//	[[self windows] makeObjectsPerformSelector:@selector(performClose:) withObject:self];
-		
+			
 	[GIMessage repairEarliestSendTimes];
 	
 //	[[GIJunkFilter sharedInstance] writeJunkFilterDefintion];

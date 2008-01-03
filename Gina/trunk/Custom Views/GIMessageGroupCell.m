@@ -68,17 +68,13 @@
 	hierarchyItem = anItem;
 }
 
-- (int)unreadCount
+- (NSUInteger)unreadCount
 {
-#warning not yet implemented
-	return 0;
-	/*
 	if ([[[self hierarchyItem] representedObject] isKindOfClass:[GIMessageGroup class]])
 	{
-		return [[(GIMessageGroup *)[[self hierarchyItem] representedObject] unreadMessageCount] intValue];;
+		return [(GIMessageGroup *)[[self hierarchyItem] representedObject] unreadMessageCount];
 	}
 	return 0;
-	 */
 }
 
 /*" Centers the image vertically. "*/

@@ -79,5 +79,6 @@ extern NSString *GIMessageGroupsChangedNotification;
 
 - (void)exportAsMboxFileWithPath:(NSString *)path;
 
+- (NSUInteger)unreadMessageCount;
 
 @end
