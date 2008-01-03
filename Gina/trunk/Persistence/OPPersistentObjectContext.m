@@ -111,7 +111,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 - (NSSet*) allObjectsOfClass: (Class) aClass
 /*" Returns a set of all persistent, known instances of a class at a time. Objects never stored nor set as a persistent property of another persistent object might not appear here. Call -oid to force this. "*/
 {
-	NSAssert1([aClass cachesAllObjects], @"- allObjects may only be called with +[%@ cachesAllObjects] returning YES."), aClass;
+	NSAssert1([aClass cachesAllObjects], @"- allObjects may only be called with +[%@ cachesAllObjects] returning YES.", aClass);
 	NSMutableSet* result = [allObjectsByClass objectForKey: aClass];
 	return [result copy]; // to be sure - allow changes?
 }
@@ -123,7 +123,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 		// create cache set on demand:
 		cache = [NSMutableSet set];
 		[allObjectsByClass setObject: cache forKey: [object class]];
-		[cache addObserver: self forKeyPath: "@count" options: NSKeyValueMinusSetMutation context:<#(void *)context#>
+//		[cache addObserver: self forKeyPath: @"@count" options: NSKeyValueMinusSetMutation context:
 	}
 	
 	[cache addObject: object];
@@ -131,7 +131,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 
 
 
-NSKeyValueChangeOldKey
+//NSKeyValueChangeOldKey
 
 // SearchStruct is a fake object made for searching in the hashtable:
 typedef struct {

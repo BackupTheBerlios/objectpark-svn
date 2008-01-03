@@ -7,6 +7,8 @@
 //
 
 #import "GIMainWindowController.h"
+#import "OPOutlineViewController.h"
+
 #import "GIUserDefaultsKeys.h"
 
 // helper
@@ -473,8 +475,6 @@ NSDateFormatter *timeAndDateFormatter()
 }
 - (void)windowDidLoad
 {
-	NSLog(@"windowDidLoad");
-
 	// configuring message tree view:
 //	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
 //														forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
@@ -487,6 +487,9 @@ NSDateFormatter *timeAndDateFormatter()
 	[threadsOutlineView setHighlightThreads:YES];
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
+	
+	
+	[threadsController setRootItem:nil];
 	
 //	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
 //	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedObjectContext];

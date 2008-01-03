@@ -68,7 +68,7 @@
 
 - (NSString*) childKey
 {
-	return childKey;
+	return childKey ? childKey : @"children";
 }
 
 - (void) setChildKey: (NSString*) aChildKey

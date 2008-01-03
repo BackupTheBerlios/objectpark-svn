@@ -23,6 +23,8 @@
 	IBOutlet NSSplitView *threadMailSplitter;
 	IBOutlet NSSplitView *mailTreeSplitter;
 	IBOutlet GITextView *messageTextView;
+	
+	GIMessageGroup *selectedMessageGroup;
 }
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;
