@@ -1,0 +1,243 @@
+//
+//  GIMessageBase.m
+//  Gina
+//
+//  Created by Dirk Theisen on 03.01.08.
+//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//
+
+#import "GIMessageBase.h"
+#import "GIMessage.h"
+#import <Foundation/NSDebug.h>
+#import "OPMBoxFile.h"
+#import "NSData+MessageUtils.h"
+#import "NSApplication+OPExtensions.h"
+#import "OPInternetMessage.h"
+
+
+@implementation OPPersistentObjectContext (GIMessageBase)
+
+- (NSMutableDictionary*) messagesByMessageId
+{	
+	OPPersistentStringDictionary* globalIndex = nil;
+	
+	if (!globalIndex) {
+		globalIndex = [[self rootObjectForKey: @"MessagesById"] retain];
+		if (!globalIndex) {
+			if (!NSDebugEnabled) {
+				globalIndex = [[OPPersistentStringDictionary alloc] init]; 
+			}
+			[self setRootObject: globalIndex forKey: @"MessagesById"];
+		} else {
+			NSLog(@"Reusing messageId Index 0x%x", globalIndex);
+		}
+	}
+	return globalIndex;
+}
+
+- (GIMessage*) messageForMessageId: (NSString*) messageId;
+/*" Returns either nil or the message specified by its messageId. "*/
+{
+	GIMessage* result = [[self messagesByMessageId] objectForKey: messageId];
+	return result;
+}
+
+
+
+NSString* MboxImportJobName = @"mbox import";
+
+- (void) importMessagesFromMboxFileJob: (NSMutableDictionary*) arguments
+/*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
+ 
+ Should run as job (#{see OPJobs})."*/
+{
+    NSString* mboxFilePath = [arguments objectForKey:@"mboxFilename"];
+    NSParameterAssert(mboxFilePath != nil);
+    BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
+    int percentComplete = -1;
+    NSDate* lastProgressSet = [[NSDate alloc] init];
+    
+    // Create mbox file object for enumerating the contained messages:
+    OPMBoxFile* mboxFile;
+	BOOL isFolder = NO;
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath: mboxFilePath 
+											 isDirectory: &isFolder]) {
+		if (isFolder) {
+			mboxFilePath = [mboxFilePath stringByAppendingPathComponent: @"mbox"];
+		} 
+		mboxFile = [OPMBoxFile mboxWithPath: mboxFilePath];
+		
+	} else {
+		// Error handling here
+	}
+	
+	
+    NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
+    unsigned int mboxFileSize = [mboxFile mboxFileSize];
+    
+    NSEnumerator* enumerator = [mboxFile messageDataEnumerator];
+    NSData* mboxData;
+	
+    BOOL messagesWereAdded = NO;
+    unsigned mboxDataCount = 0;
+    unsigned addedMessageCount = 0;
+	
+	NSOperation* operation = nil;
+//	OPJob *job = [OPJob job];
+//	
+//    [job setProgressInfo:[job progressInfoWithMinValue:0 
+//											  maxValue:mboxFileSize 
+//										  currentValue:[enumerator offsetOfNextObject] 
+//										   description:@""]];
+	
+    NSAutoreleasePool *pool = nil;
+    @try 
+	{
+        pool = [[NSAutoreleasePool alloc] init];
+        
+        while ((mboxData = [enumerator nextObject]) && ![operation isCancelled]) {
+            //NSLog(@"Found mbox data of length %d", [mboxData length]);
+            NSData *transferData = [mboxData transferDataFromMboxData];
+            
+            if (transferData) {
+                @try {
+                    NSString* flags = nil;
+                    unsigned int length = [transferData length];
+                    const char* bytes = [transferData bytes];
+                    
+                    if (! strncasecmp("X-Ginko-Flags:", bytes, strlen("X-Ginko-Flags:"))) {
+                        const char *pos = bytes;
+                        while ((pos < bytes+length) && (*pos++ != 0x0A))
+                            ;
+						
+                        flags = [[NSString stringWithCString:bytes+strlen("X-Ginko-Flags:") length:pos - (bytes + strlen("X-Ginko-Flags:") + 2)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+						//                        OPDebugLog(IMPORT, FLAGS, @"Flags: '%@'", flags);
+                        
+                        transferData = [NSData dataWithBytes:pos length:bytes+length-pos];
+						//                       OPDebugLog(IMPORT, TRANSFERDATA, @"transferData: %@", transferData);
+                    }
+                    
+                    
+                    //NSMutableArray* args = [NSMutableArray arrayWithObject: transferData];
+					
+                    // Moved addition to background thread:
+					OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+					GIMessage *persistentMessage = [GIMessage messageWithInternetMessage: iMessage];
+					[iMessage release];
+					
+					
+                    //if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
+                    
+                    if (persistentMessage) {
+						
+						[self addMessage:persistentMessage];
+						
+                        if (flags) [persistentMessage addFlagsFromString:flags];
+                        
+                        messagesWereAdded = YES;
+                        ++addedMessageCount;
+                    }
+                    
+                    [persistentMessage flushInternetMessageCache]; // free some memory
+                    
+                    if ((++mboxDataCount % 100) == 99) {
+                        if (messagesWereAdded) {
+							//                          OPDebugLog(OPPERSISTENCE, OPINFO, @"*** Committing changes (added %u messages)...", addedMessageCount);
+                            
+                            [self saveChanges];
+                            
+                            messagesWereAdded = NO;
+                        }
+                        [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
+                    }
+                } @catch (id localException) {
+					@throw;
+                }
+            }
+            
+			// Avoid division by zero:
+            if (mboxFileSize > 0) {
+                int newPercentComplete = (int) floor(((float)[enumerator offsetOfNextObject] / (float) mboxFileSize) * 100.0);
+                NSDate *now = [[NSDate alloc] init];
+                BOOL timeIsRipe = [now timeIntervalSinceDate:lastProgressSet] > 1.5;
+                
+				// Report only when percentage changes:
+                if (timeIsRipe || (newPercentComplete > percentComplete)) {
+//                    [job setProgressInfo:[job progressInfoWithMinValue:0 maxValue:mboxFileSize currentValue:[enumerator offsetOfNextObject] description:[mboxFilePath lastPathComponent]]];
+                    
+                    percentComplete = newPercentComplete;
+                    [lastProgressSet release];
+                    lastProgressSet = [now retain];
+                }
+                
+                [now release];
+            }     
+            
+        }
+        
+        if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
+        
+        [self saveChanges];
+        //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    
+		
+    } @catch (id localException) {
+        if (NSDebugEnabled) NSLog(@"Exception while adding messages in background: %@", localException);
+        @throw;
+    } @finally {
+        [lastProgressSet release];
+    }
+	
+	[pool release];
+	
+    if ([operation isCancelled])
+        return;
+	
+    // move imported mbox to imported boxes:
+    NSString* importedMboxesDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"imported mboxes"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:importedMboxesDirectory])
+    {
+        NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:importedMboxesDirectory attributes: nil], @"Could not create directory %@", importedMboxesDirectory);
+    }
+    
+    NSString* destinationPath = [importedMboxesDirectory stringByAppendingPathComponent:[mboxFilePath lastPathComponent]];
+    
+    // only move if not already there:
+    if (![[NSFileManager defaultManager] fileExistsAtPath:destinationPath])
+    {
+        if (shouldCopyOnly)
+        {
+            NSAssert2([[NSFileManager defaultManager] copyPath:mboxFilePath toPath:destinationPath handler: NULL], @"Could not copy imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+        }
+        else
+        {
+            NSAssert2([[NSFileManager defaultManager] movePath:mboxFilePath toPath:destinationPath handler: NULL], @"Could not move imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+        }
+    }
+}
+
+- (void) importMboxFiles: (NSArray*) paths
+		   moveOnSuccess: (BOOL) doMove
+/*" Schedules jobs for paths given. If doMove is YES, the file is moved to the imported folder - copied otherwise. "*/
+{
+	if ([paths count]) {
+		//[self showActivityPanel: self];
+		
+		NSEnumerator* enumerator = [paths objectEnumerator];
+		NSString* boxFilename;
+		
+		while (boxFilename = [enumerator nextObject]) {
+			NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
+			
+			[jobArguments setObject: boxFilename forKey: @"mboxFilename"];
+			//[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
+			if (!doMove) [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
+			
+			[self importMessagesFromMboxFileJob: jobArguments]; // synchronious for now
+			//[OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
+		}
+	}
+}
+
+
+@end

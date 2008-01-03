@@ -70,6 +70,7 @@
 @property (readonly, retain) NSString* messageId;
 @property (retain) GIThread* thread;
 
+- (void) flushInternetMessageCache;
 
 
 //+ (NSString*) persistentAttributesPlist
@@ -105,7 +106,6 @@
 
 + (void) resetSendStatus;
 
-+ (id) messageForMessageId: (NSString*) messageId;
 + (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 

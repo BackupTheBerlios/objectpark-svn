@@ -14,7 +14,7 @@
 #import "NSString+MessageUtils.h"
 //#import "OPInternetMessage+GinkoExtensions.h"
 #import "GIMessageGroup.h"
-//#import "GIMessageBase.h"
+#import "GIMessageBase.h"
 #import "GIApplication.h"
 #import "OPPersistentObjectContext.h"
 //#import <Foundation/NSDebug.h>
@@ -43,33 +43,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 @synthesize date;
 @synthesize subject;
 @synthesize internetMessage;
-
-+ (NSMutableDictionary*) messagesByMessageId
-{
-	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-	
-	OPPersistentStringDictionary* globalIndex = nil;
-
-	if (!globalIndex) {
-		globalIndex = [[context rootObjectForKey: @"MessagesById"] retain];
-		if (!globalIndex) {
-			if (!NSDebugEnabled) {
-				globalIndex = [[OPPersistentStringDictionary alloc] init]; 
-			}
-			[context setRootObject: globalIndex forKey: @"MessagesById"];
-		} else {
-			NSLog(@"Reusing messageId Index 0x%x", globalIndex);
-		}
-	}
-	return globalIndex;
-}
-
-+ (id)messageForMessageId:(NSString *)messageId
-/*" Returns either nil or the message specified by its messageId. "*/
-{
-	GIMessage* result = [[self messagesByMessageId] objectForKey: messageId];
-	return result;
-}
 
 
 
@@ -106,7 +79,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	}
 #warning delete message file here!
 	
-	[[[self class] messagesByMessageId] removeObjectForKey: self.messageId];
+	[[[self context] messagesByMessageId] removeObjectForKey: self.messageId];
 	
 	[super willDelete];
 }
@@ -168,7 +141,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     // if there already is a message with that id we'll use that
 	// This may not be dummy! So what happens then?
-    if (dummy = [self messageForMessageId:aMessageId])
+    if (dummy = [[OPPersistentObjectContext defaultContext] messageForMessageId: aMessageId])
         return dummy;
         
     if (NSDebugEnabled) NSLog(@"creating dummy message for message id %@", aMessageId);
@@ -199,7 +172,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	messageId = [[im messageId] retain];
 	
 	// Add self to global message id index:
-    [[GIMessage messagesByMessageId] setValue: self forKey: messageId];  
+    [[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
 	
 	
     subject = [[im normalizedSubject] retain];
@@ -224,23 +197,19 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 /*" Returns a new message with the internetmessage object.
  If message is a dupe, the message not inserted into the context nil is returned. "*/
-+ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
++ (id)messageWithInternetMessage: (OPInternetMessage *)anInternetMessage;
 {
     id result = nil;
     
-    GIMessage *dupe = [self messageForMessageId:[anInternetMessage messageId]];
+    GIMessage* dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId: [anInternetMessage messageId]];
     
-	if (dupe) 
-	{
-        if ([dupe isDummy]) 
-		{
+	if (dupe) {
+        if ([dupe isDummy]) {
             // replace message
 			if (NSDebugEnabled) NSLog(@"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
             [dupe setContentFromInternetMessage:anInternetMessage];
             [dupe referenceFind:YES];
-        }
-        else if ([GIProfile isMyEmailAddress:[anInternetMessage fromWithFallback:YES]]) 
-		{
+        } else if ([GIProfile isMyEmailAddress:[anInternetMessage fromWithFallback:YES]]) {
             // replace old message with new:
 			if (NSDebugEnabled) NSLog(@"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
             [dupe setContentFromInternetMessage:anInternetMessage];
@@ -265,7 +234,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		// Create a new message in the default context:
 		internetMessage = [anInternetMessage retain];
         [self setContentFromInternetMessage: internetMessage];
-		[[[self class] messagesByMessageId] setObject: self forKey: self.messageId];
+		[[[self context] messagesByMessageId] setObject: self forKey: self.messageId];
     }
     
     return self;
@@ -754,6 +723,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
 	}
 	return internetMessage;
+}
+
+- (void) flushInternetMessageCache
+{
+	[internetMessage release]; internetMessage = nil;
 }
 
 - (id) initWithCoder: (NSCoder*) coder

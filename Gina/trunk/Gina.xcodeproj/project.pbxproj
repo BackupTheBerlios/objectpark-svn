@@ -234,6 +234,8 @@
 		8DABA2570D1EA23000991279 /* OPPersistentTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */; };
 		8DABA4640D1F46D300991279 /* GICommentTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612590D1AB7CE007FC630 /* GICommentTreeView.m */; };
 		8DABA47C0D1F497B00991279 /* OPPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DABA47B0D1F497B00991279 /* OPPersistence.h */; };
+		8DCE4D8B0D2C7E6300B47189 /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */; };
+		8DCE4D8C0D2C7E6400B47189 /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -562,6 +564,8 @@
 		8DABA2550D1EA23000991279 /* OPPersistentTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentTestObject.h; sourceTree = "<group>"; };
 		8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentTestObject.m; sourceTree = "<group>"; };
 		8DABA47B0D1F497B00991279 /* OPPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistence.h; sourceTree = "<group>"; };
+		8DCE4D890D2C7E6300B47189 /* GIMessageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageBase.h; sourceTree = "<group>"; };
+		8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageBase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -869,6 +873,8 @@
 				773614260D1C1041007FC630 /* GIProfile.m */,
 				773614270D1C1041007FC630 /* GIThread.h */,
 				773614280D1C1041007FC630 /* GIThread.m */,
+				8DCE4D890D2C7E6300B47189 /* GIMessageBase.h */,
+				8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1546,6 +1552,7 @@
 				77F2E3DB0D1EB2DC0003D25B /* TestGIThread.m in Sources */,
 				77369CC90D1FAF53004D1DCF /* TestWithPersistence.m in Sources */,
 				77369CE70D1FB078004D1DCF /* TestGIMessageGroup.m in Sources */,
+				8DCE4D8C0D2C7E6400B47189 /* GIMessageBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1666,6 +1673,7 @@
 				77AF83200D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m in Sources */,
 				77AF834C0D2B95AD002771BA /* GITextView.m in Sources */,
 				77AF83500D2B95E2002771BA /* NSWorkspace+OPExtensions.m in Sources */,
+				8DCE4D8B0D2C7E6300B47189 /* GIMessageBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,7 @@
 #import "GIMessageGroup.h"
 #import "OPPersistence.h"
 #import "NSApplication+OPExtensions.h"
+#import <Foundation/NSDebug.h>
 
 @implementation GIApplication
 
@@ -102,5 +103,33 @@
 	[[OPPersistentObjectContext defaultContext] saveChanges];
 	[[OPPersistentObjectContext defaultContext] close];
 }
+
+
+- (IBAction) importMboxFile: (id) sender
+/*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
+{
+    int result;
+    NSArray *fileTypes = [NSArray arrayWithObjects: @"mboxfile", @"mbox", @"mbx", nil];
+    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+    NSString *directory = [[NSUserDefaults standardUserDefaults] objectForKey:ImportPanelLastDirectory];
+    
+    if (!directory) directory = NSHomeDirectory();
+    
+    [oPanel setAllowsMultipleSelection:YES];
+    [oPanel setAllowsOtherFileTypes:YES];
+    [oPanel setPrompt:NSLocalizedString(@"Import", @"Import open panel OK button")];
+    [oPanel setTitle:NSLocalizedString(@"Import mbox Files", @"Import open panel title")];
+    
+    result = [oPanel runModalForDirectory:directory file:nil types:fileTypes];
+    
+    if (result == NSOKButton) {
+        [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
+        
+        NSArray *filesToOpen = [self filePathsSortedByCreationDate:[oPanel filenames]];
+		
+		[self importMboxFiles: filesToOpen moveOnSuccess: NO];
+    }    
+}
+
 
 @end
