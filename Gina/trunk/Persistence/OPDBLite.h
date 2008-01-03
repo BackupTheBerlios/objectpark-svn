@@ -132,6 +132,7 @@
 - (int) appendEntryValueForIntKey: (i64) key toData: (NSMutableData*) data;
 - (i64) currentEntryIntKey;
 - (int) moveToIntKey: (i64) key error: (int*) error;
+- (void) deleteEntriesWithIntKey: (i64) key;
 
 - (int) insertIntValue: (i64) data 
 			 forIntKey: (i64) key 

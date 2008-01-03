@@ -680,6 +680,14 @@
 	return result;
 }
 
+- (void) deleteEntriesWithIntKey: (i64) key
+{
+	int error = 0;
+	while ([self moveToIntKey: key error: &error] == 0) {
+		[self deleteCurrentEntry];
+	}
+}
+
 
 - (int) appendEntryValueForIntKey: (i64) key toData: (NSMutableData*) data 
 {

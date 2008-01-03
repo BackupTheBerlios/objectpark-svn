@@ -557,8 +557,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	}
 		
 		
-	NSLog(@"Saving %u changed objects...\n%@", [changedObjects count],  NSDebugEnabled ? [changedObjects allObjects] : nil);
-	
+	NSLog(@"Saving %u changed objects...\n%@", [changedObjects count],  NSDebugEnabled ? [changedObjects allObjects] : @"");
+	NSLog(@"Deleting %u objects...\n%@", [deletedObjects count],  NSDebugEnabled ? [deletedObjects allObjects] : @"");
+
 	@synchronized(self) {
 		NSParameterAssert([database isInTransaction]);
 		int error = SQLITE_OK;
@@ -574,6 +575,16 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				[changedObjects removeObject: object];
 			}
 		}
+		
+		@synchronized(deletedObjects) {
+			OPPersistentObject* object;
+			while (object = [deletedObjects anyObject]) {
+				if (NSDebugEnabled) NSLog(@"Deleting %@", object);
+				[saveCursor deleteEntriesWithIntKey: [object oid]];
+				[deletedObjects removeObject: object];
+			}
+		}
+		
 									 
 		[saveCursor release];
 									 
@@ -671,7 +682,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			
 			// Remove object from the all-objects cache:
 			NSMutableSet* cache = [allObjectsByClass objectForKey: [object class]];
-			[cache removeObject: self];
+			[cache removeObject: object];
 		}
 	}
 }
