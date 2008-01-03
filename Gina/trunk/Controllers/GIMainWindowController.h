@@ -12,11 +12,12 @@
 
 @class GIMessageGroup;
 @class GITextView;
+@class OPOutlineViewController;
 
 @interface GIMainWindowController : NSWindowController 
 {
 	IBOutlet NSTreeController *messageGroupTreeController;
-//	IBOutlet GIThreadTreeController *threadTreeController;
+	IBOutlet OPOutlineViewController *threadsController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
 	IBOutlet NSSplitView *threadMailSplitter;
