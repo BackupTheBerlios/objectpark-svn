@@ -44,8 +44,6 @@
 		773614710D1C154E007FC630 /* OPPersistentObjectContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */; };
 		773614720D1C154F007FC630 /* OPPersistentSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613E00D1C0F12007FC630 /* OPPersistentSet.h */; };
 		773614730D1C154F007FC630 /* OPPersistentSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E10D1C0F12007FC630 /* OPPersistentSet.m */; };
-		773614740D1C1550007FC630 /* OPOutlineViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613E30D1C0F12007FC630 /* OPOutlineViewController.h */; };
-		773614750D1C1551007FC630 /* OPOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E40D1C0F12007FC630 /* OPOutlineViewController.m */; };
 		773614760D1C1551007FC630 /* OPPersistentStringDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 773613E50D1C0F12007FC630 /* OPPersistentStringDictionary.h */; };
 		773614770D1C1552007FC630 /* OPPersistentStringDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 773613E60D1C0F12007FC630 /* OPPersistentStringDictionary.m */; };
 		773614780D1C1555007FC630 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 773613F20D1C0F2E007FC630 /* printf.c */; };
@@ -111,6 +109,7 @@
 		77AA238D0D2BE642004EF1DF /* libsasl2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B6C8000D00754600A7BEFF /* libsasl2.dylib */; };
 		77AA239F0D2BE86B004EF1DF /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6360D00548C00A7BEFF /* OPSMTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77AA25050D2CE073004EF1DF /* GreetingMail.transferData in Resources */ = {isa = PBXBuildFile; fileRef = 77AA25040D2CE073004EF1DF /* GreetingMail.transferData */; };
+		77AA256B0D2D1B93004EF1DF /* OPOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */; };
 		77AF82EA0D2B9420002771BA /* GIMessageGroupTreeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF82E90D2B9420002771BA /* GIMessageGroupTreeController.m */; };
 		77AF83060D2B943C002771BA /* GIMessageGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF83050D2B943C002771BA /* GIMessageGroupCell.m */; };
 		77AF83090D2B9479002771BA /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77AF83070D2B9479002771BA /* Folder.tiff */; };
@@ -340,8 +339,6 @@
 		773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentObjectContext.m; sourceTree = "<group>"; };
 		773613E00D1C0F12007FC630 /* OPPersistentSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentSet.h; sourceTree = "<group>"; };
 		773613E10D1C0F12007FC630 /* OPPersistentSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentSet.m; sourceTree = "<group>"; };
-		773613E30D1C0F12007FC630 /* OPOutlineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPOutlineViewController.h; sourceTree = "<group>"; };
-		773613E40D1C0F12007FC630 /* OPOutlineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPOutlineViewController.m; sourceTree = "<group>"; };
 		773613E50D1C0F12007FC630 /* OPPersistentStringDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentStringDictionary.h; sourceTree = "<group>"; };
 		773613E60D1C0F12007FC630 /* OPPersistentStringDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentStringDictionary.m; sourceTree = "<group>"; };
 		773613F20D1C0F2E007FC630 /* printf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = printf.c; sourceTree = "<group>"; };
@@ -416,6 +413,8 @@
 		77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPMailSending.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OPMailSending-Info.plist"; sourceTree = "<group>"; };
 		77AA25040D2CE073004EF1DF /* GreetingMail.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GreetingMail.transferData; sourceTree = "<group>"; };
+		77AA25690D2D1B93004EF1DF /* OPOutlineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPOutlineViewController.h; sourceTree = "<group>"; };
+		77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPOutlineViewController.m; sourceTree = "<group>"; };
 		77AF82E80D2B9420002771BA /* GIMessageGroupTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupTreeController.h; sourceTree = "<group>"; };
 		77AF82E90D2B9420002771BA /* GIMessageGroupTreeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroupTreeController.m; sourceTree = "<group>"; };
 		77AF83040D2B943C002771BA /* GIMessageGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupCell.h; sourceTree = "<group>"; };
@@ -824,8 +823,6 @@
 				773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */,
 				773613E00D1C0F12007FC630 /* OPPersistentSet.h */,
 				773613E10D1C0F12007FC630 /* OPPersistentSet.m */,
-				773613E30D1C0F12007FC630 /* OPOutlineViewController.h */,
-				773613E40D1C0F12007FC630 /* OPOutlineViewController.m */,
 				773613E50D1C0F12007FC630 /* OPPersistentStringDictionary.h */,
 				773613E60D1C0F12007FC630 /* OPPersistentStringDictionary.m */,
 			);
@@ -935,6 +932,8 @@
 		775C312E0D0D45E50098DA07 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				77AA25690D2D1B93004EF1DF /* OPOutlineViewController.h */,
+				77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */,
 				775C312F0D0D46280098DA07 /* GIApplication.h */,
 				775C31300D0D46280098DA07 /* GIApplication.m */,
 				773612500D1AB6F2007FC630 /* GIMainWindowController.h */,
@@ -1132,7 +1131,6 @@
 				7736146E0D1C154C007FC630 /* OPPersistentObject.h in Headers */,
 				773614700D1C154E007FC630 /* OPPersistentObjectContext.h in Headers */,
 				773614720D1C154F007FC630 /* OPPersistentSet.h in Headers */,
-				773614740D1C1550007FC630 /* OPOutlineViewController.h in Headers */,
 				773614760D1C1551007FC630 /* OPPersistentStringDictionary.h in Headers */,
 				7736147A0D1C1556007FC630 /* sqliteInt.h in Headers */,
 				7736147B0D1C1556007FC630 /* sqliteLimit.h in Headers */,
@@ -1517,7 +1515,6 @@
 				7736146F0D1C154D007FC630 /* OPPersistentObject.m in Sources */,
 				773614710D1C154E007FC630 /* OPPersistentObjectContext.m in Sources */,
 				773614730D1C154F007FC630 /* OPPersistentSet.m in Sources */,
-				773614750D1C1551007FC630 /* OPOutlineViewController.m in Sources */,
 				773614770D1C1552007FC630 /* OPPersistentStringDictionary.m in Sources */,
 				773614780D1C1555007FC630 /* printf.c in Sources */,
 				773614790D1C1555007FC630 /* random.c in Sources */,
@@ -1674,6 +1671,7 @@
 				77AF834C0D2B95AD002771BA /* GITextView.m in Sources */,
 				77AF83500D2B95E2002771BA /* NSWorkspace+OPExtensions.m in Sources */,
 				8DCE4D8B0D2C7E6300B47189 /* GIMessageBase.m in Sources */,
+				77AA256B0D2D1B93004EF1DF /* OPOutlineViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

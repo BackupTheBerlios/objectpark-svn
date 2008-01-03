@@ -24,7 +24,6 @@
 	return knownItems;
 }
 
-
 - (void) resetKnownItems
 {
 	for (id item in knownItems) {
@@ -55,7 +54,6 @@
 		[self reloadData];
 	}
 }
-
 
 - (void) observeValueForKeyPath: (NSString*) keyPath 
 					   ofObject: (id) object 
