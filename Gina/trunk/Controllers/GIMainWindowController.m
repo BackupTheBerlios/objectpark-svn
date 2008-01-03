@@ -490,6 +490,7 @@ NSDateFormatter *timeAndDateFormatter()
 	
 //	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
 //	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedObjectContext];
+	[[self window] makeKeyAndOrderFront:self];
 }
 
 // --- change notification handling ---

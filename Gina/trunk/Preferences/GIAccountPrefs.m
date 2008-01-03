@@ -26,7 +26,6 @@
 	int selectedRow = [accountTableView selectedRow];
 
 	[self willChangeValueForKey:@"accounts"];
-#warning Axel->Dirk: How to get rid of the account?
 	[selectedAccount delete];
 	[selectedAccount release];
 	[[selectedAccount context] saveChanges];
