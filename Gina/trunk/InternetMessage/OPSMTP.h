@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import <OPNetwork/OPStream+SSL.h>
-#include <sasl.h>
+#include "sasl.h"
 
 #define GISMTP OPL_DOMAIN @"GISMTP"
 
