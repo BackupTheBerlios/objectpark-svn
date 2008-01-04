@@ -365,9 +365,7 @@ NSDateFormatter *timeAndDateFormatter()
 - (id)init
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
-	
-//	[GIMessageGroup loadGroupStats];
-	
+		
 	// receiving update notifications:
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
@@ -455,18 +453,14 @@ NSDateFormatter *timeAndDateFormatter()
 #endif
 }
 
-- (void)awakeFromNib
-{
-	[threadsController setChildKey:@"threadChildren"];
-	[threadsController setRootItem:[GIMessageGroup defaultMessageGroup]];
-}
-
 - (void)windowDidLoad
 {
-	// configuring message tree view:
-//	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-//														forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
+	// configuring manual bindings:
+	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+														forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
 	
+	[threadsController setChildKey:@"threadChildren"];
+	[threadsController bind:@"rootItem" toObject:messageGroupTreeController withKeyPath:@"selection.self" options:options];
 //	[commentTreeView bind:@"selectedMessage" toObject:threadTreeController withKeyPath:@"selection.self" options:options];
 	[commentTreeView setTarget:self];
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];

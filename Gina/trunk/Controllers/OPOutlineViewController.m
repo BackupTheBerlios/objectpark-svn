@@ -1,15 +1,90 @@
 //
 //  OPOutlineViewController.m
-//  PersistenceKit-Test
+//  Gina
 //
 //  Created by Dirk Theisen on 21.11.07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 Objectpark Group. All rights reserved.
 //
 
 #import "OPOutlineViewController.h"
 
 
 @implementation OPOutlineViewController
+
+// -- binding stuff --
+
++ (void)initialize
+{
+    [self exposeBinding:@"rootItem"];	
+}
+
+- (Class)valueClassForBinding:(NSString *)binding
+{
+    return [NSObject class];	
+}
+
+- (id)observedObjectForRootItem { return observedObjectForRootItem; }
+- (void)setObservedObjectForRootItem:(id)anObservedObjectForRootItem
+{
+    if (observedObjectForRootItem != anObservedObjectForRootItem) 
+	{
+        [observedObjectForRootItem release];
+        observedObjectForRootItem = [anObservedObjectForRootItem retain];
+    }
+}
+
+- (NSString *)observedKeyPathForRootItem { return observedKeyPathForRootItem; }
+- (void)setObservedKeyPathForRootItem:(NSString *)anObservedKeyPathForRootItem
+{
+    if (observedKeyPathForRootItem != anObservedKeyPathForRootItem) 
+	{
+        [observedKeyPathForRootItem release];
+        observedKeyPathForRootItem = [anObservedKeyPathForRootItem copy];
+    }
+}
+
+- (void)bind:(NSString *)bindingName
+    toObject:(id)observableController
+ withKeyPath:(NSString *)keyPath
+     options:(NSDictionary *)options
+{	
+    if ([bindingName isEqualToString:@"rootItem"])
+    {
+		// observe the controller for changes
+		[observableController addObserver:self
+							   forKeyPath:keyPath 
+								  options:0
+								  context:nil];
+		
+		// register what controller and what keypath are 
+		// associated with this binding
+		[self setObservedObjectForRootItem:observableController];
+		[self setObservedKeyPathForRootItem:keyPath];		
+    }
+	
+	[super bind:bindingName
+	   toObject:observableController
+	withKeyPath:keyPath
+		options:options];
+	
+	[self reloadData];
+}
+
+- (void)unbind:bindingName
+{
+    if ([bindingName isEqualToString:@"rootItem"])
+    {
+		[observedObjectForRootItem removeObserver:self
+											  forKeyPath:observedKeyPathForRootItem];
+		[self setObservedObjectForRootItem:nil];
+		[self setObservedKeyPathForRootItem:nil];
+    }	
+	
+	[super unbind:bindingName];
+	[self reloadData];
+}
+
+// -- regular stuff --
 
 - (id) init
 {
@@ -60,10 +135,19 @@
 						 change: (NSDictionary*) change 
 						context: (void*) context
 {
-	// if the cildKey relation changes, reload that item:
-	if (object==rootItem) object = nil;
-	[outlineView reloadItem: object reloadChildren: YES]; 
-	// todo: if we got a qualified notification, could we be more efficient?
+	if ([keyPath isEqualToString:[self childKey]])
+	{
+		// if the cildKey relation changes, reload that item:
+		if (object==rootItem) object = nil;
+		[outlineView reloadItem: object reloadChildren: YES]; 
+		// todo: if we got a qualified notification, could we be more efficient?
+	}
+	else
+	{
+		// rootItem changed
+		id newRootItem = [observedObjectForRootItem valueForKeyPath:observedKeyPathForRootItem];
+		[self setRootItem:newRootItem];
+	}
 }
 
 - (NSString*) childKey
