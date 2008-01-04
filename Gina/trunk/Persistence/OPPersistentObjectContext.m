@@ -130,7 +130,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 		// create cache set on demand:
 		cache = [NSMutableSet set];
 		[allObjectsByClass setObject: cache forKey: className];
-		[self addObserver: self forKeyPath: [@"allObjectsByClass." stringByAppendingString: className] 
+		[allObjectsByClass addObserver: self forKeyPath: className//[@"allObjectsByClass." stringByAppendingString: className] 
 				  options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld 
 				  context: allObjectsByClass];
 	}
