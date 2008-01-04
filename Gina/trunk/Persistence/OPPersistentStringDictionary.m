@@ -222,11 +222,9 @@
 {
 	int rootPage = [coder decodeInt32ForKey: @"BTreeRootPage"];
 
-
-	
 	btree = [[OPBTree alloc] initWithCompareFunctionName: nil 
 												withRoot: rootPage 
-											  inDatabase: [[self context] database]
+											  inDatabase: [[coder context] database]
 												   flags: 0];
 	
 	count = NSNotFound;
