@@ -108,30 +108,62 @@ static OPPersistentObjectContext* defaultContext = nil;
     }
 }
 
+- (NSDictionary*) allObjectsByClass
+/*" Returns a dictionary of NSMutableSets keyed by class(forCoder) name. Only objects of classes which -cachesAllObjects are recorded here. "*/
+{
+	return allObjectsByClass;
+}
+
 - (NSSet*) allObjectsOfClass: (Class) aClass
 /*" Returns a set of all persistent, known instances of a class at a time. Objects never stored nor set as a persistent property of another persistent object might not appear here. Call -oid to force this. "*/
 {
 	NSAssert1([aClass cachesAllObjects], @"- allObjects may only be called with +[%@ cachesAllObjects] returning YES.", aClass);
-	NSMutableSet* result = [allObjectsByClass objectForKey: aClass];
-	return [result copy]; // to be sure - allow changes?
+	NSMutableSet* result = [allObjectsByClass objectForKey: [aClass description]];
+	return result;
 }
 
 - (void) cacheObject: (OPPersistentObject*) object
 {
-	NSMutableSet* cache = [allObjectsByClass objectForKey: [object class]];
+	NSString* className = [[object classForCoder] description];
+	NSMutableSet* cache = [allObjectsByClass objectForKey: className];
 	if (! cache) {
 		// create cache set on demand:
 		cache = [NSMutableSet set];
-		[allObjectsByClass setObject: cache forKey: [object class]];
-//		[cache addObserver: self forKeyPath: @"@count" options: NSKeyValueMinusSetMutation context:
+		[allObjectsByClass setObject: cache forKey: className];
+		[self addObserver: self forKeyPath: [@"allObjectsByClass." stringByAppendingString: className] 
+				  options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld 
+				  context: allObjectsByClass];
 	}
 	
-	[cache addObject: object];
+	[cache addObject: object]; // should trigger a notification!
 }
 
-
-
-//NSKeyValueChangeOldKey
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context == allObjectsByClass) {
+		int changeKind = [[change objectForKey: NSKeyValueChangeKindKey] intValue];
+		NSSet* removed = nil;
+		NSSet* added = nil;
+		if (changeKind == NSKeyValueChangeRemoval) {
+			// Removals from this set trigger a deletion:
+			removed = [change objectForKey: NSKeyValueChangeOldKey];
+		} else if (changeKind == NSKeyValueChangeInsertion) {
+			added = [change objectForKey: NSKeyValueChangeNewKey];
+		} else if (changeKind == NSKeyValueChangeSetting) {
+			// Why do we get this kind from an NSArrayController on insertion/deletion?
+			removed = [[[change objectForKey: NSKeyValueChangeOldKey] mutableCopy] autorelease];
+			[(NSMutableSet*)removed minusSet: [change objectForKey: NSKeyValueChangeNewKey]];
+			added = [[[change objectForKey: NSKeyValueChangeNewKey] mutableCopy] autorelease];
+			[(NSMutableSet*)added minusSet: [change objectForKey: NSKeyValueChangeOldKey]];
+		}
+		
+		[removed makeObjectsPerformSelector: @selector(delete)]; // deletes from the database
+		[added makeObjectsPerformSelector: @selector(oid)]; // inserts into context
+		NSLog(@"allObjects changed: %@\ndeleted: %@\ninserted:%@", keyPath, removed, added);
+	} else {
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
+}
 
 // SearchStruct is a fake object made for searching in the hashtable:
 typedef struct {
@@ -682,7 +714,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			}
 			
 			// Remove object from the all-objects cache:
-			NSMutableSet* cache = [allObjectsByClass objectForKey: [object class]];
+			NSMutableSet* cache = [allObjectsByClass objectForKey: [[object classForCoder] description]];
 			[cache removeObject: object];
 		}
 	}

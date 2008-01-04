@@ -93,6 +93,8 @@
 
 // Public Methods:
 
+@property (readonly) NSDictionary* allObjectsByClass;
+
 - (NSSet*) allObjectsOfClass: (Class) poClass;
 
 - (OPKeyedArchiver*) encoder;

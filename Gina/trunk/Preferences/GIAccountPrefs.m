@@ -34,6 +34,11 @@
 	[accountTableView selectRow:MIN(selectedRow, count - 2) byExtendingSelection:NO];
 }
 
+- (OPPersistentObjectContext*) context
+{
+	return [OPPersistentObjectContext defaultContext];
+}
+
 - (IBAction)addAccount:(id)sender
 {
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
