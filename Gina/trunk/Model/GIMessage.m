@@ -90,6 +90,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return filename;
 }
 
+- (NSString *)senderName
+{
+	return senderName;
+}
+
 /*
 - (NSData*) transferData
 {
@@ -662,14 +667,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	//    }
 }
 
-//- (GIMessage *)reference
-///*" Returns the direct message reference stored. "*/
-//{
+- (GIMessage *)reference
+/*" Returns the direct message reference stored. "*/
+{
+	return nil;
+	
+#warning reference is broken! needs fixing!
 //    [self willAccessValueForKey: @"reference"];
 //    id reference = [self primitiveValueForKey: @"reference"];
 //    [self didAccessValueForKey: @"reference"];
 //    return reference;
-//}
+}
 
 - (GIMessage*) referenceFind: (BOOL) find
 /*" Returns the direct message reference stored.

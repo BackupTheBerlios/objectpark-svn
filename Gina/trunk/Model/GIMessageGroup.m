@@ -507,14 +507,14 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     return YES;
 }
 
-- (NSArray*) children
+- (NSArray *)children
 {
-	return [[self threads] sortedArray];
+	return nil;
 }
 
-- (void) setChildren: (OPFaultingArray*) newChildren
+- (NSArray *)threadChildren
 {
-	NSParameterAssert(newChildren == nil);
+	return [[self threads] sortedArray];
 }
 
 - (void) willDelete

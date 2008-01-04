@@ -12,6 +12,8 @@
 
 @implementation OPKeyedUnarchiver
 
+@synthesize context;
+
 - (id) initWithContext: (OPPersistentObjectContext*) aContext;
 {
 	if (self = [super init]) {
@@ -184,5 +186,3 @@
 }
 
 @end
-
-

@@ -19,6 +19,8 @@
 	OPPersistentObjectContext* context;
 }
 
+@property (readonly) OPPersistentObjectContext* context;
+
 - (id) initWithContext: (OPPersistentObjectContext*) aContext;
 
 - (BOOL)containsValueForKey:(NSString *)key;

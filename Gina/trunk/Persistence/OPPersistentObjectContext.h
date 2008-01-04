@@ -143,6 +143,7 @@
 
 - (OID) decodeOIDForKey: (NSString*) key;
 - (void) encodeOID: (OID) oid forKey: (NSString*) key;
+- (OPPersistentObjectContext*) context;
 
 @end
 

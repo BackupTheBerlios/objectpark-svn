@@ -316,6 +316,7 @@
 **     BTREE_ZERODATA                  Used for SQL indices
 */
 {
+	NSParameterAssert(aDB != nil);
 	if (self = [super init]) {
 		BOOL createTree = (root == 0);
 		

@@ -27,7 +27,7 @@
 - (void) resetKnownItems
 {
 	for (id item in knownItems) {
-		[item removeObserver: self forKeyPath: childKey];
+		[item removeObserver: self forKeyPath: [self childKey]];
 	}
 	[knownItems removeAllObjects];
 }
@@ -47,10 +47,10 @@
 - (void) setRootItem: (id) newItem
 {
 	if (! [rootItem isEqual: newItem]) {
-		[rootItem removeObserver: self forKeyPath: childKey];
+		[rootItem removeObserver: self forKeyPath: [self childKey]];
 		[rootItem release];
 		rootItem = [newItem retain];
-		[rootItem addObserver: self forKeyPath: childKey options: 0 context: NULL];
+		[rootItem addObserver: self forKeyPath: [self childKey] options: 0 context: NULL];
 		[self reloadData];
 	}
 }
@@ -81,12 +81,12 @@
 - (id) outlineView: (NSOutlineView*) outlineView child: (NSInteger) index ofItem: (id) item
 {
 	if (! item) item = [self rootItem];
-	id result = [[item valueForKeyPath: childKey] objectAtIndex: index];
+	id result = [[item valueForKeyPath: [self childKey]] objectAtIndex: index];
 	if (! [knownItems containsObject: result]) {
 		[knownItems addObject: result];
 		// Observe the child relation so we can react on that.
-		NSLog(@"Controller observes %@.%@", result, childKey);
-		[result addObserver: self forKeyPath: childKey options: 0 context: NULL];
+		NSLog(@"Controller observes %@.%@", result, [self childKey]);
+		[result addObserver: self forKeyPath: [self childKey] options: 0 context: NULL];
 	}
 	return result;
 }
@@ -94,13 +94,13 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
 	if (! item) item = [self rootItem];
-	return [[item valueForKeyPath: childKey] count] > 1;
+	return [[item valueForKeyPath: [self childKey]] count] > 1;
 }
 
 - (NSInteger) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
 {
 	if (! item) item = [self rootItem];
-	return [[item valueForKeyPath: childKey] count];
+	return [[item valueForKeyPath: [self childKey]] count];
 }
 
 - (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
@@ -111,6 +111,7 @@
 		NSAssert([knownItems containsObject: item], @"item not known!?");
 	}
 	NSString* columnKey = [tableColumn identifier];
+	if ([columnKey hasPrefix:@"empty"]) return @"";
 	return [item valueForKey: columnKey];
 }
 

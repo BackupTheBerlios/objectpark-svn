@@ -69,6 +69,7 @@
 @property (readonly, retain) NSDate* date;
 @property (readonly, retain) NSString* messageId;
 @property (retain) GIThread* thread;
+@property (readonly, retain) NSString *senderName;
 
 - (void) flushInternetMessageCache;
 
@@ -111,8 +112,8 @@
 
 - (id) initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 
-- (GIMessage*) reference;
-- (GIMessage*) referenceFind: (BOOL)find;
+- (GIMessage *)reference;
+- (GIMessage *)referenceFind:(BOOL)find;
 
 - (unsigned) numberOfReferences;
 - (void) flushNumberOfReferencesCache;
@@ -147,7 +148,6 @@
 - (BOOL) isPublicMessage;
 - (BOOL) isDummy;
 
-- (NSString*) senderName;
 - (NSString*) recipientsForDisplay;
 
 - (void) addOrderedSubthreadToArray: (NSMutableArray*) result;

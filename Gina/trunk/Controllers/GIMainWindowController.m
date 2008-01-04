@@ -151,7 +151,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 @interface GIThread (ThreadViewSupport)
 - (GIMessage *)message;
-- (OPFaultingArray *)children;
+- (OPFaultingArray *)threadChildren;
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
 - (NSAttributedString *)dateForDisplay;
@@ -160,14 +160,14 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIThread (ThreadViewSupport)
 
-- (OPFaultingArray *)children
+- (OPFaultingArray *)threadChildren
 {
-	OPFaultingArray *children = [self messagesByTree];
+	OPFaultingArray *threadChildren = [self messagesByTree];
 	
-	if ([children count] > 1)
+	if ([threadChildren count] > 1)
 	{
 		// multi-message thread
-		return children;
+		return threadChildren;
 	}
 	else
 	{
@@ -286,7 +286,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 @interface GIMessage (ThreadViewSupport)
 - (GIMessage *)message;
-- (NSArray *)children;
+- (NSArray *)threadChildren;
 - (id)subjectAndAuthor;
 - (NSAttributedString *)messageForDisplay;
 - (NSImage *)statusImage;
@@ -299,7 +299,7 @@ NSDateFormatter *timeAndDateFormatter()
 	return self;
 }
 
-- (NSArray *)children
+- (NSArray *)threadChildren
 {
 	return nil;
 }
@@ -356,25 +356,6 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	if (![self hasFlags:OPSeenStatus]) return [NSImage imageNamed:@"unread"];
 	return nil;
-}
-
-@end
-
-@interface GIMessageGroup (MessageGroupHierarchySupport)
-- (NSArray *)children;
-- (NSNumber *)count;
-@end
-
-@implementation GIMessageGroup (MessageGroupHierarchySupport)
-
-- (NSArray *)children
-{
-	return nil;
-}
-
-- (NSNumber *)count
-{
-	return [NSNumber numberWithInt:0];
 }
 
 @end
@@ -473,6 +454,13 @@ NSDateFormatter *timeAndDateFormatter()
 //	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 #endif
 }
+
+- (void)awakeFromNib
+{
+	[threadsController setChildKey:@"threadChildren"];
+	[threadsController setRootItem:[GIMessageGroup defaultMessageGroup]];
+}
+
 - (void)windowDidLoad
 {
 	// configuring message tree view:
@@ -487,9 +475,6 @@ NSDateFormatter *timeAndDateFormatter()
 	[threadsOutlineView setHighlightThreads:YES];
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
-	
-	
-	[threadsController setRootItem:nil];
 	
 //	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
 //	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedObjectContext];

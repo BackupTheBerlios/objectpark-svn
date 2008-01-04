@@ -211,7 +211,7 @@
 	
 	btree = [[OPKeyOnlyBTree alloc] initWithCompareFunctionName: keyCompareFunctionName 
 													   withRoot: rootPage 
-													 inDatabase: [[self context] database]];
+													 inDatabase: [[coder context] database]];
 	
 	sortKeyPath = [coder decodeObjectForKey: @"OPSortKeyPath"];
 	count = NSNotFound;

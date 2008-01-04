@@ -1034,7 +1034,6 @@ static NSHashTable* allInstances;
 */
 
 
-
 @implementation NSCoder (OPPersistence)
 
 - (OID) decodeOIDForKey: (NSString*) key
@@ -1045,6 +1044,11 @@ static NSHashTable* allInstances;
 - (void) encodeOID: (OID) oid forKey: (NSString*) key
 {
 	[self encodeInt64: oid forKey: key];
+}
+
+- (OPPersistentObjectContext*) context
+{
+	return nil;
 }
 
 @end
