@@ -21,6 +21,8 @@
 	@private
 	id observedObjectForRootItem;
 	NSString *observedKeyPathForRootItem;
+	id observedObjectForSelectedObjects;
+	NSString *observedKeyPathForSelectedObjects;
 }
 
 @property (copy) NSString *childKey;
@@ -28,6 +30,8 @@
 @property (retain, readonly) NSSet *knownItems;
 
 - (NSArray *)selectedObjects;
-- (void) reloadData;
+- (void)setSelectedObjects:(NSArray *)anArray;
+
+- (void)reloadData;
 
 @end

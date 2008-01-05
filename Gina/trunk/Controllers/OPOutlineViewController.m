@@ -7,7 +7,7 @@
 //
 
 #import "OPOutlineViewController.h"
-
+#import <Foundation/NSDebug.h>
 
 @implementation OPOutlineViewController
 
@@ -16,11 +16,19 @@
 + (void)initialize
 {
     [self exposeBinding:@"rootItem"];	
+    [self exposeBinding:@"selectedObjects"];	
 }
 
 - (Class)valueClassForBinding:(NSString *)binding
 {
-    return [NSObject class];	
+	if ([binding isEqualToString:@"selectedObjects"])
+	{
+		return [NSArray class];
+	}
+	else
+	{
+		return [NSObject class];	
+	}
 }
 
 - (id)observedObjectForRootItem { return observedObjectForRootItem; }
@@ -43,6 +51,26 @@
     }
 }
 
+- (id)observedObjectForSelectedObjects { return observedObjectForSelectedObjects; }
+- (void)setObservedObjectForSelectedObjects:(id)anObservedObjectForSelectedObjects
+{
+    if (observedObjectForSelectedObjects != anObservedObjectForSelectedObjects) 
+	{
+        [observedObjectForSelectedObjects release];
+        observedObjectForSelectedObjects = [anObservedObjectForSelectedObjects retain];
+    }
+}
+
+- (NSString *)observedKeyPathForSelectedObjects { return observedKeyPathForSelectedObjects; }
+- (void)setObservedKeyPathForSelectedObjects:(NSString *)anObservedKeyPathForSelectedObjects
+{
+    if (observedKeyPathForSelectedObjects != anObservedKeyPathForSelectedObjects) 
+	{
+        [observedKeyPathForSelectedObjects release];
+        observedKeyPathForSelectedObjects = [anObservedKeyPathForSelectedObjects copy];
+    }
+}
+
 - (void)bind:(NSString *)bindingName
     toObject:(id)observableController
  withKeyPath:(NSString *)keyPath
@@ -59,15 +87,28 @@
 		// register what controller and what keypath are 
 		// associated with this binding
 		[self setObservedObjectForRootItem:observableController];
-		[self setObservedKeyPathForRootItem:keyPath];		
+		[self setObservedKeyPathForRootItem:keyPath];	
+		
+		[self reloadData];
+    }
+	else if ([bindingName isEqualToString:@"selectedObjects"])
+    {
+		// observe the controller for changes
+		[observableController addObserver:self
+							   forKeyPath:keyPath 
+								  options:0
+								  context:nil];
+		
+		// register what controller and what keypath are 
+		// associated with this binding
+		[self setObservedObjectForSelectedObjects:observableController];
+		[self setObservedKeyPathForSelectedObjects:keyPath];	
     }
 	
 	[super bind:bindingName
 	   toObject:observableController
 	withKeyPath:keyPath
 		options:options];
-	
-	[self reloadData];
 }
 
 - (void)unbind:bindingName
@@ -78,99 +119,120 @@
 											  forKeyPath:observedKeyPathForRootItem];
 		[self setObservedObjectForRootItem:nil];
 		[self setObservedKeyPathForRootItem:nil];
+		[self reloadData];
     }	
+	else if ([bindingName isEqualToString:@"selectedObjects"])
+    {
+		[observedObjectForSelectedObjects removeObserver:self
+											  forKeyPath:observedKeyPathForSelectedObjects];
+		[self setObservedObjectForSelectedObjects:nil];
+		[self setObservedKeyPathForSelectedObjects:nil];
+    }
 	
 	[super unbind:bindingName];
-	[self reloadData];
 }
 
 // -- regular stuff --
 
-- (id) init
+- (id)init
 {
-	if (self = [super init]) {
+	if (self = [super init]) 
+	{
 		knownItems = [[NSMutableSet alloc] init];
 	}
 	return self;
 }
 
-- (NSSet*) knownItems
+- (NSSet *)knownItems
 {
 	return knownItems;
 }
 
-- (void) resetKnownItems
+- (void)resetKnownItems
 {
-	for (id item in knownItems) {
-		[item removeObserver: self forKeyPath: [self childKey]];
+	for (id item in knownItems) 
+	{
+		[item removeObserver:self forKeyPath:[self childKey]];
 	}
 	[knownItems removeAllObjects];
 }
 
-- (void) reloadData
+- (void)reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
 {
 	[self resetKnownItems];
 	[outlineView reloadData];
 }
 
-- (id) rootItem
+- (id)rootItem
 {
 	return rootItem;
 }
 
-- (void) setRootItem: (id) newItem
+- (void)setRootItem:(id)newItem
 {
-	if (! [rootItem isEqual: newItem]) {
-		[rootItem removeObserver: self forKeyPath: [self childKey]];
+	if (! [rootItem isEqual:newItem]) 
+	{
+		[rootItem removeObserver:self forKeyPath:[self childKey]];
 		[rootItem release];
 		rootItem = [newItem retain];
-		[rootItem addObserver: self forKeyPath: [self childKey] options: 0 context: NULL];
+		[rootItem addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
 		[self reloadData];
 	}
 }
 
-- (void) observeValueForKeyPath: (NSString*) keyPath 
-					   ofObject: (id) object 
-						 change: (NSDictionary*) change 
-						context: (void*) context
+- (void)observeValueForKeyPath:(NSString *)keyPath 
+					   ofObject:(id)object 
+						 change:(NSDictionary *)change 
+						context:(void *)context
 {
 	if ([keyPath isEqualToString:[self childKey]])
 	{
-		// if the cildKey relation changes, reload that item:
-		if (object==rootItem) object = nil;
-		[outlineView reloadItem: object reloadChildren: YES]; 
+		// if the childKey relation changes, reload that item:
+		if (object == rootItem) object = nil;
+		[outlineView reloadItem:object reloadChildren:YES]; 
 		// todo: if we got a qualified notification, could we be more efficient?
 	}
-	else
-	{
+	else if ([keyPath isEqualToString:[self observedKeyPathForRootItem]])
+	{ 
 		// rootItem changed
 		id newRootItem = [observedObjectForRootItem valueForKeyPath:observedKeyPathForRootItem];
 		[self setRootItem:newRootItem];
 	}
+	else if ([keyPath isEqualToString:[self observedKeyPathForSelectedObjects]])
+	{ 
+		// selectedObjects changed
+		id newSelectedObjects = [observedObjectForSelectedObjects valueForKeyPath:[self observedKeyPathForSelectedObjects]];
+		[self setSelectedObjects:newSelectedObjects];
+	}
+	else 
+	{
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}	
 }
 
-- (NSString*) childKey
+- (NSString *)childKey
 {
-	return childKey ? childKey : @"children";
+	return childKey;
 }
 
-- (void) setChildKey: (NSString*) aChildKey
+- (void)setChildKey:(NSString *)aChildKey
 /*" This can never change once it has been set to an non-nil value. Raises otherwise. "*/
 {
-	NSParameterAssert(childKey == nil || [childKey isEqualToString: aChildKey]);
+	NSParameterAssert(childKey == nil || [childKey isEqualToString:aChildKey]);
 	childKey = [aChildKey copy];
 }
 
-- (id) outlineView: (NSOutlineView*) outlineView child: (NSInteger) index ofItem: (id) item
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
 	if (! item) item = [self rootItem];
-	id result = [[item valueForKeyPath: [self childKey]] objectAtIndex: index];
-	if (! [knownItems containsObject: result]) {
-		[knownItems addObject: result];
+	id result = [[item valueForKeyPath:[self childKey]] objectAtIndex:index];
+	if (! [knownItems containsObject:result]) 
+	{
+		[knownItems addObject:result];
 		// Observe the child relation so we can react on that.
-		NSLog(@"Controller observes %@.%@", result, [self childKey]);
-		[result addObserver: self forKeyPath: [self childKey] options: 0 context: NULL];
+		if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", result, [self childKey]);
+		[result addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
 	}
 	return result;
 }
@@ -178,25 +240,35 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
 	if (! item) item = [self rootItem];
-	return [[item valueForKeyPath: [self childKey]] count] > 1;
+	return [[item valueForKeyPath:[self childKey]] count] > 1;
 }
 
-- (NSInteger) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
 	if (! item) item = [self rootItem];
-	return [[item valueForKeyPath: [self childKey]] count];
+	return [[item valueForKeyPath:[self childKey]] count];
 }
 
-- (id) outlineView: (NSOutlineView*) outlineView objectValueForTableColumn: (NSTableColumn*) tableColumn byItem: (id) item
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-	if (! item) {
+	if (! item) 
+	{
 		item = [self rootItem];
-	} else {
-		NSAssert([knownItems containsObject: item], @"item not known!?");
+	} 
+	else 
+	{
+		NSAssert([knownItems containsObject:item], @"item not known!?");
 	}
-	NSString* columnKey = [tableColumn identifier];
+	
+	NSString *columnKey = [tableColumn identifier];
 	if ([columnKey hasPrefix:@"empty"]) return @"";
-	return [item valueForKey: columnKey];
+	return [item valueForKey:columnKey];
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	[self willChangeValueForKey:@"selectedObjects"];
+	[self didChangeValueForKey:@"selectedObjects"];
 }
 
 - (NSArray *)selectedObjects
@@ -214,8 +286,14 @@
 	return result;
 }
 
+- (void)setSelectedObjects:(NSArray *)anArray
+{
+#warning not yet implemented
+}
+
 - (void) dealloc 
 {
+	[self resetKnownItems];
 	[knownItems release];
 	[childKey release];
 	[rootItem release];

@@ -701,9 +701,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 				GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
 				NSAssert(message != nil, @"couldn't create greeting message");
 				
-				GIThread *thread = [[[GIThread alloc] init] autorelease];
-				message.thread = thread;	
-				
+				GIThread *thread = [GIThread threadForMessage:message];				
 				[[result mutableSetValueForKey:@"threads"] addObject:thread];
 			}
 		}

@@ -61,21 +61,21 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	return subject;
 }
 
-- (void) setDate: (NSDate*) newDate
+- (void)setDate:(NSDate *)newDate
 {
-	if (! [date isEqual: newDate]) {
-		[self willChangeValueForKey: @"date"];
+	if (! [date isEqual:newDate]) 
+	{
+		[self willChangeValueForKey:@"date"];
 		[date release];
 		date = [newDate retain];
-		[self didChangeValueForKey: @"date"];
+		[self didChangeValueForKey:@"date"];
 	}
 }
 
-- (NSDate*) date
+- (NSDate *)date
 {
 	return date;
 }
-
 
 - (void) dealloc
 {
