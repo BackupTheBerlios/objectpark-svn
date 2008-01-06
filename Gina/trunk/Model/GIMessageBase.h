@@ -14,6 +14,7 @@
 
 - (NSMutableDictionary*) messagesByMessageId;
 - (GIMessage*) messageForMessageId: (NSString*) messageId;
-
+- (void) importMboxFiles: (NSArray*) paths
+		   moveOnSuccess: (BOOL) doMove;
 
 @end

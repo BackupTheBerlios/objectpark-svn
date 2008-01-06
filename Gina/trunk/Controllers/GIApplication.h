@@ -12,12 +12,16 @@
 
 @interface GIApplication : NSApplication 
 {
-	IBOutlet NSWindow *defaultEmailAppWindow;
+	IBOutlet NSWindow* defaultEmailAppWindow;
 }
 
-- (BOOL)isDefaultMailApplication;
-- (void)askForBecomingDefaultMailApplication;
 
-- (IBAction)makeDefaultApp:(id)sender;
+- (BOOL) isDefaultMailApplication;
+- (void) askForBecomingDefaultMailApplication;
+
+// Actions:
+
+- (IBAction) makeDefaultApp: (id) sender;
+- (IBAction) importMboxFile: (id) sender;
 
 @end

@@ -11,6 +11,7 @@
 #import "GIMainWindowController.h"
 #import "GIMessage.h"
 #import "GIMessageGroup.h"
+#import "GIMessageBase.h"
 #import "OPPersistence.h"
 #import "NSApplication+OPExtensions.h"
 #import <Foundation/NSDebug.h>
@@ -104,6 +105,11 @@
 	[[OPPersistentObjectContext defaultContext] close];
 }
 
+- (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
+{
+#warning Implement filePathsSortedByCreationDate for better mbox restore
+    return someFilePaths;
+}
 
 - (IBAction) importMboxFile: (id) sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
@@ -127,7 +133,7 @@
         
         NSArray *filesToOpen = [self filePathsSortedByCreationDate:[oPanel filenames]];
 		
-		[self importMboxFiles: filesToOpen moveOnSuccess: NO];
+		[[OPPersistentObjectContext defaultContext] importMboxFiles: filesToOpen moveOnSuccess: NO];
     }    
 }
 

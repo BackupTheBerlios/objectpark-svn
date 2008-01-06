@@ -62,31 +62,36 @@
 {
 	if (aMessage) {
 		// Adding a message should be an atomic operation:
-		if (![GIMessageFilter filterMessage:aMessage flags:0]) {
+		//if (![GIMessageFilter filterMessage:aMessage flags:0]) {
 			[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading: NO];
-		}
+		//}
 		
 		if ([aMessage hasFlags:OPIsFromMeStatus]) 
 		{
 			[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
 		}
 		
-		NSAssert([[[aMessage valueForKey:@"thread"] valueForKey:@"groups"] count] > 0, @"message without group found");
-		
+		NSAssert(aMessage.thread.messageGroups.count > 0, @"message without group found");
 	} 	
 }
 
 - (void) addDraftMessage: (GIMessage*) aMessage
 {
     GIThread *thread = aMessage.thread;
-    if (thread) [[GIMessageGroup queuedMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+	// Remove it from the queued message box (if there):
+    if (thread) {
+		[[[GIMessageGroup queuedMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
+	}
     [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup] suppressThreading: YES];
 }
 
 - (void) addQueuedMessage: (GIMessage*) aMessage
 {
     GIThread *thread = aMessage.thread;
-    if (thread) [[GIMessageGroup draftMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+	// Remove it from the queued message box (if there):
+    if (thread) {
+		[[[GIMessageGroup draftMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
+	}
     [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup] suppressThreading: YES];
 }
 
