@@ -74,6 +74,7 @@
 	NSMutableDictionary* allObjectsByClass; // eagerly cached objects keys are classes, values are mutalbe sets
 	
 	NSMutableDictionary* rootObjects;
+	NSMutableDictionary* rootObjectOIDs;
 }
 
 // Methods for internal use ONLY:

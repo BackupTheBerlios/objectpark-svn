@@ -261,20 +261,34 @@ typedef struct {
 
 - (id) rootObjectForKey: (NSString*) key
 {
-	NSNumber* oidNumber = [rootObjects objectForKey: key];
-	return oidNumber ? [self objectForOID: [oidNumber unsignedLongLongValue]] : nil;
+	NSAssert(rootObjectOIDs != nil, @"rootObjectOIDs dictionary not set up.");
+	id result = [rootObjects objectForKey: key];
+	if (! result) {
+		NSNumber* oidNumber = [rootObjectOIDs objectForKey: key];
+		if (oidNumber) {
+			result = [self objectForOID: [oidNumber unsignedLongLongValue]];
+			if (result) {
+				// Cache the result:
+				[rootObjects setObject: result forKey: key];
+			}
+		}
+	}
+	return result;
 }
 
 - (void) setRootObject: (id <OPPersisting>) pObject forKey: (NSString*) key
 {
+	NSAssert(rootObjectOIDs != nil, @"Root object oid table not set up");
 	NSNumber* oidNumber = [NSNumber numberWithUnsignedLongLong: [pObject oid]];
 	// Check, if we are indeed changing the value:
-	if (! [[rootObjects objectForKey: key] isEqual: oidNumber]) {
-		if (! rootObjects) {
-			rootObjects = [[NSMutableDictionary alloc] init];
-		}
-		[rootObjects setObject: oidNumber forKey: key];
-		[database setPlist: rootObjects forOid: ROOTOBJECTSOID error: NULL];
+	if (! [[rootObjectOIDs objectForKey: key] isEqual: oidNumber]) {
+//		if (! rootObjectOIDs) {
+//			rootObjectOIDs = [[NSMutableDictionary alloc] init];
+//			rootObjects = [[NSMutableDictionary alloc] init];
+//		}
+		[rootObjectOIDs setObject: oidNumber forKey: key];
+		[rootObjects setObject: pObject forKey: key];
+		[database setPlist: rootObjectOIDs forOid: ROOTOBJECTSOID error: NULL];
 	}
 }
 
@@ -414,8 +428,10 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[encoder release];
 	encoder = [[OPKeyedArchiver alloc] initWithContext: self];
 	
-	[rootObjects release];
-	rootObjects = [[database plistForOid: ROOTOBJECTSOID error: &error] retain];
+	[rootObjects release]; rootObjects = [[NSMutableDictionary alloc] init];
+	[rootObjectOIDs release];
+	rootObjectOIDs = [[database plistForOid: ROOTOBJECTSOID error: &error] retain];
+	if (! rootObjectOIDs) rootObjectOIDs = [[NSMutableDictionary alloc] init];
 	
 	[decoder release];
 	decoder = [[OPKeyedUnarchiver alloc] initWithContext: self];
@@ -529,8 +545,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	NSAssert([database isInTransaction], @"Unable to start db transaction");
 
-	rootObjects = [[database plistForOid: ROOTOBJECTSOID error: &error] retain];
-	if (! rootObjects) rootObjects = [[NSMutableDictionary alloc] init];
+	rootObjectOIDs = [[database plistForOid: ROOTOBJECTSOID error: &error] retain];
+	if (! rootObjectOIDs) rootObjectOIDs = [[NSMutableDictionary alloc] init];
 	
 	
 	[self populateMaxLidArray];
@@ -849,6 +865,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[cidsByClass release];
 	[databasePath release];
 	[rootObjects release];
+	[rootObjectOIDs release];
 	[super dealloc];
 }
 

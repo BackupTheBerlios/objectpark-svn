@@ -12,6 +12,7 @@
 
 @interface  OPPersistentObjectContext (GIMessageBase)
 
+- (void)addMessage: (GIMessage*) aMessage;
 - (NSMutableDictionary*) messagesByMessageId;
 - (GIMessage*) messageForMessageId: (NSString*) messageId;
 - (void) importMboxFiles: (NSArray*) paths

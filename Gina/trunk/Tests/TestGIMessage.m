@@ -8,7 +8,9 @@
 
 #import "TestGIMessage.h"
 #import "GIMessage.h"
+#import "GIThread.h"
 #import "OPInternetMessage.h"
+#import "GIMessageBase.h"
 
 @implementation TestGIMessage
 
@@ -44,6 +46,14 @@
 	GIMessage *fetchedMessage = [[OPPersistentObjectContext defaultContext] messageForMessageId:messageId];
 	NSAssert(fetchedMessage != nil, @"could not fetch previously created message for message id");
 	NSAssert([[fetchedMessage messageId] isEqualToString:messageId], @"message id from fetched message not correct");
+}
+
+- (void) testMessageAddition
+{
+	GIMessage* message = [[self class] messageForTest];
+	[[OPPersistentObjectContext defaultContext] addMessage: message];
+	NSAssert(message.thread != nil, @"No thread assigned to message.");
+	NSAssert(message.thread.messageGroups.count, @"No group assigned to message thread.");
 }
 
 @end
