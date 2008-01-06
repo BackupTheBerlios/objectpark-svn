@@ -324,8 +324,8 @@
 		7736125E0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMatrixWithKeyboardSupport.m; sourceTree = "<group>"; };
 		773612610D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOutlineViewWithThreadColoring.h; sourceTree = "<group>"; };
 		773612620D1ABB01007FC630 /* GIOutlineViewWithThreadColoring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOutlineViewWithThreadColoring.m; sourceTree = "<group>"; };
-		773613550D1BBA11007FC630 /* GIMessageFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageFilter.h; sourceTree = "<group>"; };
-		773613560D1BBA11007FC630 /* GIMessageFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageFilter.m; sourceTree = "<group>"; };
+		773613550D1BBA11007FC630 /* GIMessageFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIMessageFilter.h; path = ../GIMessageFilter.h; sourceTree = "<group>"; };
+		773613560D1BBA11007FC630 /* GIMessageFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIMessageFilter.m; path = ../GIMessageFilter.m; sourceTree = "<group>"; };
 		773613D10D1C0F12007FC630 /* OPDBLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPDBLite.h; sourceTree = "<group>"; };
 		773613D20D1C0F12007FC630 /* OPDBLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPDBLite.m; sourceTree = "<group>"; };
 		773613D30D1C0F12007FC630 /* OPFaultingArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPFaultingArray.h; sourceTree = "<group>"; };
@@ -665,8 +665,6 @@
 				775C30D70D0D3C870098DA07 /* Preferences */,
 				7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */,
 				7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */,
-				773613550D1BBA11007FC630 /* GIMessageFilter.h */,
-				773613560D1BBA11007FC630 /* GIMessageFilter.m */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = Gina;
@@ -878,6 +876,8 @@
 				773614260D1C1041007FC630 /* GIProfile.m */,
 				773614270D1C1041007FC630 /* GIThread.h */,
 				773614280D1C1041007FC630 /* GIThread.m */,
+				773613550D1BBA11007FC630 /* GIMessageFilter.h */,
+				773613560D1BBA11007FC630 /* GIMessageFilter.m */,
 				8DCE4D890D2C7E6300B47189 /* GIMessageBase.h */,
 				8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */,
 			);

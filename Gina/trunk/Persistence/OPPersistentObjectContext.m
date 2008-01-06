@@ -153,12 +153,14 @@ static OPPersistentObjectContext* defaultContext = nil;
 			// Why do we get this kind from an NSArrayController on insertion/deletion?
 			removed = [[[change objectForKey: NSKeyValueChangeOldKey] mutableCopy] autorelease];
 			[(NSMutableSet*)removed minusSet: [change objectForKey: NSKeyValueChangeNewKey]];
-			added = [[[change objectForKey: NSKeyValueChangeNewKey] mutableCopy] autorelease];
-			[(NSMutableSet*)added minusSet: [change objectForKey: NSKeyValueChangeOldKey]];
+			added = [change objectForKey: NSKeyValueChangeNewKey]; // [[[change objectForKey: NSKeyValueChangeNewKey] mutableCopy] autorelease];
+			//[(NSMutableSet*)added minusSet: [change objectForKey: NSKeyValueChangeOldKey]]; // does not work old and new set yield same elements on addition :-/ 
 		}
 		
 		[removed makeObjectsPerformSelector: @selector(delete)]; // deletes from the database
-		[added makeObjectsPerformSelector: @selector(oid)]; // inserts into context
+		for (id object in added) {
+			[self insertObject: object];
+		}
 		NSLog(@"allObjects changed: %@\ndeleted: %@\ninserted:%@", keyPath, removed, added);
 	} else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -714,7 +716,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			}
 			
 			// Remove object from the all-objects cache:
-			NSMutableSet* cache = [allObjectsByClass objectForKey: [[object classForCoder] description]];
+			NSMutableSet* cache = [allObjectsByClass objectForKey: [[object classForCoder] description]]; // might be nil - ok!
 			[cache removeObject: object];
 		}
 	}

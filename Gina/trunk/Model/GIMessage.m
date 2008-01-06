@@ -393,40 +393,39 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
    return [[self internetMessage] contentAsPlainString];
 }
 
-//- (GIThread*) assignThreadUseExisting: (BOOL) useExisting
-///*"Returns the one thread the message belongs to.
-//   If useExisting is NO, this method creates a new thread in the receiver's
-//   context containing just the receiver, otherwise, it uses the message 
-//   reference to find an existing thread object."*/
-//{
-//    GIThread* thread = [self thread];
-//    
-//	if (!thread) {
-//		if (useExisting) {
-//			// do threading by reference
-//			thread = [[self referenceFind: YES] thread];
-//        }
-//		if (!thread) {
-//            thread = [[[GIThread alloc] init] autorelease];
-//			[thread insertIntoContext: [self context]];
-//			// Set the thread's subject to be the first message's subject:
-//            [thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
-//        } else {
-//             if (NSDebugEnabled) NSLog(@"Found Existing Thread with %d message(s). Updating it...", [thread messageCount]);
-//        }
-//		[thread setValue: [self valueForKey: @"date"] forKey: @"date"];
-//
-//		if (! [[thread valueForKey: @"subject"] length] && [[self valueForKey: @"subject"] length]) {
-//			// If the thread does not yet have a proper subject, take the one from the first message thast does.
-//			[thread setValue: [self valueForKey: @"subject"] forKey: @"subject"];
-//		}
-//		
-//        // We got one, so set it:
-//        [self setValue: thread forKey: @"thread"];
-//    }
-//    
-//    return thread;
-//}
+- (GIThread*) assignThreadUseExisting: (BOOL) useExisting
+/*"Returns the one thread the message belongs to.
+   If useExisting is NO, this method creates a new thread in the receiver's
+   context containing just the receiver, otherwise, it uses the message 
+   reference to find an existing thread object."*/
+{
+    GIThread* result = self.thread;
+    
+	if (!result) {
+		if (useExisting) {
+			// do threading by reference
+			result = [[self referenceFind: YES] thread];
+        }
+		if (!result) {
+            result = [[[GIThread alloc] init] autorelease];
+			// Set the thread's subject to be the first message's subject:
+            result.subject = self.subject;
+        } else {
+             if (NSDebugEnabled) NSLog(@"Found Existing Thread with %d message(s). Updating it...", [result messageCount]);
+        }
+		result.date = self.date; 
+
+		if ((! [result.subject length]) && [self.subject length]) {
+			// If the thread does not yet have a proper subject, take the one from the first message thast does.
+			result.subject = self.subject;
+		}
+		
+        // We got one, so set it:
+        self.thread = result;
+    }
+    
+    return result;
+}
 
 
 

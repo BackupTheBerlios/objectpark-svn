@@ -11,6 +11,7 @@
 #import "NSArray+Extensions.h"
 #import "GIMessage.h"
 #import "OPInternetMessage.h"
+#import "GIMessageBase.h"
 #import "OPFaultingArray.h"
 #import <Foundation/NSDebug.h>
 
@@ -429,7 +430,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     NSString *refId;
     while (refId = [enumerator nextObject]) 
 	{
-        referencedMsg = [[message class] messageForMessageId:refId];
+        referencedMsg = [[OPPersistentObjectContext defaultContext] messageForMessageId:refId];
         
         if (referencedMsg) 
 		{

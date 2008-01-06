@@ -138,7 +138,7 @@
 - (NSAttributedString *)contentAsAttributedString;
 - (NSString*) contentAsString;
 
-//- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
+- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
 
 - (NSArray*) commentsInThread: (GIThread*) thread;
 

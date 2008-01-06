@@ -8,6 +8,9 @@
 
 #import "GIMessageBase.h"
 #import "GIMessage.h"
+#import "GIThread.h"
+#import "GIMessageGroup.h"
+#import "GIMessageFilter.h"
 #import <Foundation/NSDebug.h>
 #import "OPMBoxFile.h"
 #import "NSData+MessageUtils.h"
@@ -42,11 +45,55 @@
 	return result;
 }
 
+- (void) addMessage: (GIMessage*) aMessage 
+	 toMessageGroup: (GIMessageGroup*) aGroup 
+  suppressThreading: (BOOL) suppressThreading
+{
+    NSParameterAssert(aMessage != nil);
+    
+	GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
+
+	if (! [thread.messageGroups containsObject: aGroup]) {
+		[[thread mutableArrayValueForKey: @"messageGroups"] addObject: aGroup];
+	}
+}
+
+- (void)addMessage: (GIMessage*) aMessage
+{
+	if (aMessage) {
+		// Adding a message should be an atomic operation:
+		if (![GIMessageFilter filterMessage:aMessage flags:0]) {
+			[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading: NO];
+		}
+		
+		if ([aMessage hasFlags:OPIsFromMeStatus]) 
+		{
+			[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
+		}
+		
+		NSAssert([[[aMessage valueForKey:@"thread"] valueForKey:@"groups"] count] > 0, @"message without group found");
+		
+	} 	
+}
+
+- (void) addDraftMessage: (GIMessage*) aMessage
+{
+    GIThread *thread = aMessage.thread;
+    if (thread) [[GIMessageGroup queuedMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup] suppressThreading: YES];
+}
+
+- (void) addQueuedMessage: (GIMessage*) aMessage
+{
+    GIThread *thread = aMessage.thread;
+    if (thread) [[GIMessageGroup draftMessageGroup] removeValue:thread forKey:@"threadsByDate"];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup] suppressThreading: YES];
+}
 
 
 NSString* MboxImportJobName = @"mbox import";
 
-- (void) importMessagesFromMboxFileJob: (NSMutableDictionary*) arguments
+- (void) importMessagesFromMboxFileWithArguments: (NSDictionary*) arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
  
  Should run as job (#{see OPJobs})."*/
@@ -233,7 +280,7 @@ NSString* MboxImportJobName = @"mbox import";
 			//[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
 			if (!doMove) [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
 			
-			[self importMessagesFromMboxFileJob: jobArguments]; // synchronious for now
+			[self importMessagesFromMboxFileWithArguments: jobArguments]; // synchronious for now
 			//[OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
 		}
 	}
