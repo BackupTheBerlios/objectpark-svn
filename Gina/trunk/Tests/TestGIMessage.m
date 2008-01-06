@@ -8,6 +8,7 @@
 
 #import "TestGIMessage.h"
 #import "GIMessage.h"
+#import "GIMessageGroup.h"
 #import "GIThread.h"
 #import "OPInternetMessage.h"
 #import "GIMessageBase.h"
@@ -54,6 +55,7 @@
 	[[OPPersistentObjectContext defaultContext] addMessage: message];
 	NSAssert(message.thread != nil, @"No thread assigned to message.");
 	NSAssert(message.thread.messageGroups.count, @"No group assigned to message thread.");
+	NSAssert([GIMessageGroup defaultMessageGroup].threads.count > 0, @"Inverse relationships not set.");
 }
 
 @end
