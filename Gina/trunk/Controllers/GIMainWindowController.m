@@ -26,7 +26,7 @@
 #import "GIMessageGroup.h"
 
 //static NSString *ContentContext = @"ContentContext";
-//static NSString *SelectedObjectContext = @"selectedObjectContext";
+static NSString *SelectedThreadsContext = @"SelectedThreadsContext";
 
 static inline NSString *nilGuard(NSString *str)
 {
@@ -362,6 +362,17 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIMainWindowController
 
+- (NSArray *)selectedThreads
+{
+	return selectedThreads;
+}
+
+- (void)setSelectedThreads:(NSArray *)someThreads
+{
+	NSLog(@"selected threads = %@", someThreads);
+	selectedThreads = someThreads;
+}
+
 - (id)init
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
@@ -388,22 +399,22 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-#ifdef _NO
-	if (object == threadTreeController)
+	if (object == threadsController)
 	{
-		if (context == ContentContext)
-		{
-			if ([[threadTreeController content] count])
-			{
-				[threadTreeController setPreservesSelection:NO];
-				[threadTreeController invalidateThreadSelectionCache];
-				[threadTreeController setSelectionIndexPaths:[threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]]];
-			}
-		}
-		else if (context = SelectedObjectContext)
+//		if (context == ContentContext)
+//		{
+//			if ([[threadTreeController content] count])
+//			{
+//				[threadTreeController setPreservesSelection:NO];
+//				[threadTreeController invalidateThreadSelectionCache];
+//				[threadTreeController setSelectionIndexPaths:[threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]]];
+//			}
+//		}
+//		else 
+		if (context == SelectedThreadsContext)
 		{
 			int setSeenBehavior = [[NSUserDefaults standardUserDefaults] integerForKey:SetSeenBehavior];
-			NSArray *selectedObjects = [threadTreeController selectedObjects];
+			NSArray *selectedObjects = [threadsController selectedObjects];
 			GIMessage *selectedMessage = nil;
 			static GIMessage *delayedMessage = nil;
 			static NSNumber *yesNumber = nil;
@@ -424,7 +435,7 @@ NSDateFormatter *timeAndDateFormatter()
 				selectedMessage = [(GIThread *)[selectedObjects lastObject] message];
 			}
 			
-			NSLog(@"Thread/Message selection changed. %@", selectedMessage);
+			if (NSDebugEnabled) NSLog(@"Thread/Message selection changed. %@", selectedMessage);
 
 			switch(setSeenBehavior)
 			{
@@ -449,8 +460,10 @@ NSDateFormatter *timeAndDateFormatter()
 			}
 		}
 	}
-//	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-#endif
+	else
+	{
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
 }
 
 - (void)windowDidLoad
@@ -461,6 +474,12 @@ NSDateFormatter *timeAndDateFormatter()
 	
 	[threadsController setChildKey:@"threadChildren"];
 	[threadsController bind:@"rootItem" toObject:messageGroupTreeController withKeyPath:@"selection.self" options:options];
+	
+	[threadsController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedThreadsContext];
+
+//	[threadsController bind:@"selectedObjects" toObject:self withKeyPath:@"selectedThreads" options:options];
+	
+	 
 //	[commentTreeView bind:@"selectedMessage" toObject:threadTreeController withKeyPath:@"selection.self" options:options];
 	[commentTreeView setTarget:self];
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];
@@ -471,7 +490,7 @@ NSDateFormatter *timeAndDateFormatter()
 	[threadsOutlineView setTarget:self];
 	
 //	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
-//	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedObjectContext];
+//	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedThreadsContext];
 	[[self window] makeKeyAndOrderFront:self];
 }
 

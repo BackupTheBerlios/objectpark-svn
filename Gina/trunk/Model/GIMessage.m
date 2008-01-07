@@ -285,25 +285,34 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @synthesize referenceOID;
 
-//- (void)setIsSeen:(NSNumber *)aBoolean
-//{
-//	BOOL boolValue = [aBoolean boolValue];
-//    [self willChangeValueForKey:@"isSeen"];
-//    [self setPrimitiveValue:aBoolean forKey:@"isSeen"];
-//	
-//	NSNumber *oldValue = [NSNumber numberWithInt:flagsCache];
-//    flagsCache = boolValue ? (flagsCache | OPSeenStatus) : -1;
-//	NSNumber *newValue = [NSNumber numberWithInt:flagsCache];
-//	
-//    [self didChangeValueForKey:@"isSeen"];
-//	
-//	[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
-//	
-//	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
-//	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
-//}
+- (void)setIsSeen:(NSNumber *)aBoolean
+{
+	BOOL boolValue = [aBoolean boolValue];
+    [self willChangeValueForKey:@"isSeen"];
+	
+	NSNumber *oldValue = [NSNumber numberWithInt:self.flags];
 
-- (unsigned) flags
+	if (boolValue)
+	{
+		[self addFlags:OPSeenStatus];
+	}
+	else
+	{
+		[self removeFlags:OPSeenStatus];
+	}
+		
+//    flagsCache = boolValue ? (flagsCache | OPSeenStatus) : -1;
+	NSNumber *newValue = [NSNumber numberWithInt:self.flags];
+	
+    [self didChangeValueForKey:@"isSeen"];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+	
+	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
+	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
+}
+
+- (unsigned)flags
 {
     return flags;
 }
@@ -676,6 +685,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 //    id reference = [self primitiveValueForKey: @"reference"];
 //    [self didAccessValueForKey: @"reference"];
 //    return reference;
+}
+
+- (void)setReference:(GIMessage *)aReferencedMessage
+{
+#warning setReference is broken! needs fixing!
 }
 
 - (GIMessage*) referenceFind: (BOOL) find

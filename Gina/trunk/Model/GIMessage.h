@@ -65,6 +65,7 @@
 
 @property (readonly, retain) OPInternetMessage *internetMessage;
 @property OID referenceOID;
+@property (retain) GIMessage *reference;
 @property (readonly, retain) NSString* subject;
 @property (readonly, retain) NSDate* date;
 @property (readonly, retain) NSString* messageId;

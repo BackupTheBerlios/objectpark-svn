@@ -19,11 +19,4 @@
 
 @property (readonly) OPPersistentObjectContext* context;
 
-
-- (IBAction)removeAccount:(id)sender;
-- (IBAction)addAccount:(id)sender;
-- (IBAction)rearrangeObjects:(id)sender;
-//- (OPPersistentObjectContext*) context;
-
-
 @end

@@ -37,9 +37,9 @@
 
 /*" Groups handling "*/
 
-- (unsigned) messageCount;
+- (NSUInteger)messageCount;
 - (NSArray*) rootMessages;
-- (unsigned) commentDepth;
+- (NSUInteger)commentDepth;
 - (BOOL) hasUnreadMessages;
 - (BOOL) containsSingleMessage;
 

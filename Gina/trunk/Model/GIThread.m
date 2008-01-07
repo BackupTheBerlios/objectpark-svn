@@ -9,6 +9,7 @@
 #import "GIThread.h"
 #import "OPPersistentObjectContext.h"
 #import "NSArray+Extensions.h"
+#import "GIMessageBase.h"
 #import "GIMessage.h"
 #import "OPInternetMessage.h"
 #import "GIMessageBase.h"
@@ -26,14 +27,15 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 - (id) init
 {
-	if (self = [super init]) {
+	if (self = [super init]) 
+	{
 		messages = [[OPFaultingArray alloc] init];
 		messageGroups = [[OPFaultingArray alloc] init];
 	}
 	return self;
 }
 
-- (NSArray*) messageGroups
+- (NSArray *)messageGroups
 {
 	return messageGroups;
 }
@@ -78,7 +80,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	return date;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
 	[date release];
 	[subject release];
@@ -87,7 +89,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[super dealloc];	
 }
 
-- (id) initWithCoder: (NSCoder*) coder
+- (id)initWithCoder:(NSCoder *)coder
 {
 	subject = [coder decodeObjectForKey: @"subject"];
 	date = [coder decodeObjectForKey: @"date"];
@@ -97,7 +99,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	return self;
 }
 
-- (void) encodeWithCoder: (NSCoder*) coder
+- (void)encodeWithCoder:(NSCoder *)coder
 {
 	[coder encodeObject: subject forKey: @"subject"];
 	[coder encodeObject: date forKey: @"date"];
@@ -105,13 +107,9 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[coder encodeObject: messageGroups forKey: @"messageGroups"];
 }
 
-
-
-
-
-- (NSString*) description
+- (NSString *)description
 {
-	return [NSString stringWithFormat: @"%@ '%@' with %u messages", [super description], subject, [messages count]];
+	return [NSString stringWithFormat:@"%@ '%@' with %u messages", [super description], subject, [messages count]];
 }
 
 - (void) willDelete
@@ -121,23 +119,21 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[super willDelete];
 }
 
-- (void) calculateDate
 /*" Sets the date attribute according to that of the latest message in the receiver. This method fires all message faults - so be careful."*/
+- (void)calculateDate
 {
-	NSDate* result = nil;
-	NSEnumerator* enumerator = [[self valueForKey: @"messages"] objectEnumerator];
-	GIMessage *message;
+	NSDate *result = nil;
 	
-	while (message = [enumerator nextObject]) 
+	for (GIMessage *message in [self messages])
 	{
-		NSDate *theDate = [message valueForKey: @"date"];
+		NSDate *theDate = message.date;
 		if ([result compare:theDate] == NSOrderedDescending) 
 		{
 			result = theDate;
 		}
 	}
 	
-	[self setValue: result forKey: @"date"];
+	self.date = result;
 }
 
 - (void) appendBTreeBytesForKey: (NSString*) key to: (NSMutableData*) data
@@ -231,9 +227,8 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	
     // Put all messages from otherThread into self and remove otherThread:
     GIMessage* message;
-    NSArray* otherMessages = [otherThread messages];
     
-    if (NSDebugEnabled) NSLog(@"Merging messages %@ into thread %@ with messages %@", otherMessages, self, [self messages]);
+    if (NSDebugEnabled) NSLog(@"Merging messages %@ into thread %@ with messages %@", [otherThread messages], self, [self messages]);
     
     while (message = [[otherThread messages] lastObject]) {
 		[message referenceFind: YES];
@@ -262,12 +257,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //	return result;
 //}
 
-- (unsigned) messageCount
+- (NSUInteger)messageCount
 {
-    return (unsigned)[[self valueForKey: @"messages"] count]; 
+    return [[self messages] count]; 
 }
 
-- (BOOL) containsSingleMessage
+- (BOOL)containsSingleMessage
 {
 	return [self messageCount] <= 1;
 }
@@ -294,9 +289,8 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 }
 */
 
-
+/*" Returns an array containing the result of a depth first search over all tree roots. "*/
 - (OPFaultingArray*) messagesByTree
-	/* Returns an array containing the result of a depth first search over all tree roots. */
 {
 	if (!messagesByTree) {
 		NSArray* allMessages = [self messages];
@@ -307,16 +301,13 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     return messagesByTree;
 }
 
-- (BOOL) isLeaf
+- (BOOL)isLeaf
 {
 	return NO;
 }
 
-
-- (NSArray*) messages
+- (NSArray *)messages
 {
-    //[self willAccessValueForKey: @"messages"];
-    //[self didAccessValueForKey: @"messages"];
     return messages;
 }
 
@@ -331,9 +322,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (BOOL)hasUnreadMessages
 /*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    
-	NSEnumerator *enumerator = [[self messages] objectEnumerator];
-	GIMessage *message;
-    while (message = [enumerator nextObject]) 
+	for (GIMessage *message in [self messages])
 	{
         if (![message hasFlags:OPSeenStatus]) 
 		{
@@ -343,45 +332,33 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     return NO;
 }
 
-- (NSArray*) rootMessages
+- (NSArray *)rootMessages
 /*" Returns all messages without reference in the receiver. "*/
 {
     NSMutableArray* result = [NSMutableArray array];
-    NSEnumerator* me = [messages objectEnumerator];
-    GIMessage *message;
-    while (message = [me nextObject]) {
-		GIMessage* reference = [message reference];
-        if (!reference || NSNotFound == [messages indexOfObjectIdenticalTo: reference]) {
-            [result addObject: message];
+	
+	for (GIMessage *message in [self messages])
+	{
+		GIMessage *reference = message.reference;
+        if (!reference || NSNotFound == [messages indexOfObjectIdenticalTo:reference]) 
+		{
+            [result addObject:message];
         }
     }
     return result;
 }
 
-//- (void) setDate: (NSDate*) newDate
-//{
-//	NSDate* oldDate = [self valueForKey: @"date"];
-////	if (oldDate == nil || [oldDate compare: newDate]<0) {
-//		[self willChangeValueForKey: @"date"];	
-//		[self setPrimitiveValue: newDate forKey: @"date"];
-//		[self didChangeValueForKey: @"date"];	
-////		[[self valueForKey: @"groups"] makeObjectsPerformSelector: @selector(dateDidChangeOfThread:) 
-////													   withObject: self];
-////	}
-//}
-
-- (unsigned) commentDepth
-	/*" Returns the the length of the longest comment chain in this thread. "*/
+/*" Returns the the length of the longest comment chain in this thread. "*/
+- (NSUInteger)commentDepth
 {
-    NSEnumerator *re = [[self messages] objectEnumerator];
-    GIMessage *msg;
-    unsigned result = 0;
-    while (msg = [re nextObject]) {
-        result = MAX(result, [msg numberOfReferences]);
+    NSUInteger result = 0;
+	
+	for (GIMessage *message in [self messages])
+	{
+        result = MAX(result, [message numberOfReferences]);
     }
     return result + 1;
 }
-
 
 /*"Returns the thread a message is in.
    If the message is not yet in a thread it creates a new one and inserts the
@@ -404,7 +381,6 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     return thread;
 }
 
-
 /*"Adds aMessage to the thread it belongs to.
    I.e. a chain of messages is created from the references that starts with the
    nearest non existing ancestor of aMessage and ends with aMessage.
@@ -418,7 +394,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 + (void)addMessageToAppropriateThread:(GIMessage *)message
 {
     NSMutableArray *references = [NSMutableArray arrayWithArray:[[message internetMessage] references]];
-    [references removeObject:[message messageId]];  // no self referencing allowed
+    [references removeObject:message.messageId];  // no self referencing allowed
     //[references removeDuplicates];
     
     GIThread *thread = [self threadForMessage:message];
@@ -434,8 +410,8 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
         
         if (referencedMsg) 
 		{
-			if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", [referencingMsg messageId], [referencingMsg oid], [referencedMsg messageId], [referencedMsg oid]);
-            [referencingMsg setValue:referencedMsg forKey:@"reference"];
+			if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", referencingMsg.messageId, referencingMsg.oid, referencedMsg.messageId, referencedMsg.oid);
+            referencingMsg.reference = referencedMsg;
             
             [[referencedMsg thread] mergeMessagesFromThread:thread];
             
@@ -443,12 +419,11 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
         }
         
         // create dummy message
-        referencedMsg = [GIMessage dummyMessageWithId:refId andDate:[message valueForKey:@"date"]];
-        [referencedMsg setThread: thread];
+        referencedMsg = [GIMessage dummyMessageWithId:refId andDate:message.date];
+        referencedMsg.thread = thread;
 		
-		
-		if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", [referencingMsg messageId], [referencingMsg oid], [referencedMsg messageId], [referencedMsg oid]);
-        [referencingMsg setValue:referencedMsg forKey:@"reference"];
+		if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", referencingMsg.messageId, referencingMsg.oid, referencedMsg.messageId, referencedMsg.oid);
+        referencingMsg.reference = referencedMsg;
         
         referencingMsg = referencedMsg;
     }

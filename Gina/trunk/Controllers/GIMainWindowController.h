@@ -25,7 +25,10 @@
 	IBOutlet GITextView *messageTextView;
 	
 	GIMessageGroup *selectedMessageGroup;
+	NSArray *selectedThreads;
 }
+
+@property (assign) NSArray *selectedThreads;
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;
 
