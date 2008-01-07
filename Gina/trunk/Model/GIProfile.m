@@ -380,6 +380,8 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 - (void)makeDefaultProfile
 {
 	[[self class] setDefaultProfile:self];
+	[self willChangeValueForKey:@"isDefaultProfile"];
+	[self didChangeValueForKey:@"isDefaultProfile"];
 }
 
 - (void)didChangeValueForKey:(NSString *)key
