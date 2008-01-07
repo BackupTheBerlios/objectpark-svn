@@ -8,6 +8,7 @@
 
 #import "TestGIMessageGroup.h"
 #import "GIMessageGroup.h"
+#import "GIThread.h"
 #import "TestGIThread.h"
 
 @implementation TestGIMessageGroup
@@ -17,7 +18,8 @@
 	GIMessageGroup *group = [[[GIMessageGroup alloc] init] autorelease];
 	GIThread *thread = [TestGIThread threadForTest];
 	
-//	[group addThreadsObject:thread];
+	[[group mutableSetValueForKey: @"threads"] addObject: thread];
+	NSAssert([thread.messageGroups containsObject: group], @"inverse relaionship not set.");
 }
 
 @end
