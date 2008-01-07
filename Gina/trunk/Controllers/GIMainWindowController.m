@@ -15,6 +15,7 @@
 #import <Foundation/NSDebug.h>
 #import "NSArray+Extensions.h"
 #import "NSAttributedString+Extensions.h"
+#import "NSString+Extensions.h"
 
 // model stuff
 #import "OPPersistentObject.h"
@@ -22,6 +23,7 @@
 //#import "GIMessageGroup+Statistics.h"
 #import "GIThread.h"
 #import "GIMessage.h"
+#import "GIMessage+Rendering.h"
 #import "GIHierarchyNode.h"
 #import "GIMessageGroup.h"
 
@@ -137,6 +139,48 @@ NSDateFormatter *timeAndDateFormatter()
 	
 	return timeAndDateFormatter;
 }
+
+@implementation GIMessage (ThreadControllerExtensions)
+
+- (NSAttributedString *)renderedMessage
+{
+	NSAttributedString *result;
+	BOOL showRawSource = [[NSUserDefaults standardUserDefaults] boolForKey:ShowRawSource];;
+	
+	if (showRawSource) 
+	{
+		NSData *transferData = [[self internetMessage] transferData];
+		NSString *transferString = [NSString stringWithData:transferData encoding:NSUTF8StringEncoding];
+		
+		static NSDictionary *fixedFont = nil;
+		
+		if (!fixedFont) 
+		{
+			fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
+		}
+		
+		// joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
+		if (! transferString) 
+		{
+			transferString = [NSString stringWithData:transferData encoding:NSISOLatin1StringEncoding];
+		}
+		
+		result = [[[NSAttributedString alloc] initWithString:transferString attributes:fixedFont] autorelease]; 
+	} 
+	else 
+	{
+		result = [self renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
+	}
+	
+	if (!result) 
+	{
+		result = [[NSAttributedString alloc] initWithString:@"Warning: Unable to decode message. messageText == nil."];
+	}
+	
+	return result;
+}
+
+@end
 
 @interface GIMessage (private)
 - (id)renderedMessage;
@@ -362,6 +406,10 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIMainWindowController
 
++ (NSSet *)keyPathsForValuesAffectingMessageForDisplay
+{
+	return [NSSet setWithObject:@"selectedThreads"];
+}
 - (NSArray *)selectedThreads
 {
 	return selectedThreads;
@@ -371,6 +419,17 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	NSLog(@"selected threads = %@", someThreads);
 	selectedThreads = someThreads;
+}
+
+- (NSAttributedString *)messageForDisplay
+{
+	NSArray *threads = self.selectedThreads;
+	if ([threads count] == 1)
+	{
+		return [[threads lastObject] messageForDisplay];
+	}
+	
+	return nil;
 }
 
 - (id)init
@@ -415,6 +474,8 @@ NSDateFormatter *timeAndDateFormatter()
 		{
 			int setSeenBehavior = [[NSUserDefaults standardUserDefaults] integerForKey:SetSeenBehavior];
 			NSArray *selectedObjects = [threadsController selectedObjects];
+			[self setSelectedThreads:selectedObjects];
+			
 			GIMessage *selectedMessage = nil;
 			static GIMessage *delayedMessage = nil;
 			static NSNumber *yesNumber = nil;

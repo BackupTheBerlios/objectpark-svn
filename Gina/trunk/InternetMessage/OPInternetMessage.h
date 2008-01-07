@@ -41,6 +41,8 @@ typedef enum
 - (void)zapHeaderGremlins;
 - (void)generateMessageIdWithSuffix:(NSString *)aString;
 
+- (NSData *)transferData;
+
 // The message ids of the messages the message refer to.
 - (NSArray *)references;
 
