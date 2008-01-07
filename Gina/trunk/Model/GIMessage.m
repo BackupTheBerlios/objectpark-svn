@@ -285,12 +285,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @synthesize referenceOID;
 
+- (BOOL)isSeen
+{
+	return (self.flags & OPSeenStatus) != 0;
+}
+
 - (void)setIsSeen:(NSNumber *)aBoolean
 {
 	BOOL boolValue = [aBoolean boolValue];
     [self willChangeValueForKey:@"isSeen"];
 	
-	NSNumber *oldValue = [NSNumber numberWithInt:self.flags];
+//	NSNumber *oldValue = [NSNumber numberWithInt:self.flags];
 
 	if (boolValue)
 	{
@@ -302,14 +307,14 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	}
 		
 //    flagsCache = boolValue ? (flagsCache | OPSeenStatus) : -1;
-	NSNumber *newValue = [NSNumber numberWithInt:self.flags];
+//	NSNumber *newValue = [NSNumber numberWithInt:self.flags];
 	
     [self didChangeValueForKey:@"isSeen"];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+//	[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
 	
-	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
-	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
+//	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
+//	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
 }
 
 - (unsigned)flags
@@ -599,30 +604,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     NSNumber *oldValue = nil;
     NSNumber *newValue = nil;
 
-    @synchronized(self) {
-		someFlags = (0xffffffff ^ [self flags]) & someFlags;
-//        if (someFlags) {
-//			// Some flags actually changed!
-//
-//            // flags to set:
-////#warning isInSendJob not in DB schema ignored.
-//            //if ((someFlags & OPInSendJobStatus)) [self setValue: yes forKey: @"isInSendJob"]; // not in DB schema!?
-////            if ((someFlags & OPQueuedStatus)) [self setValue: yes forKey: @"isQueued"];
-//            if ((someFlags & OPInterestingStatus)) [self setValue: yesNumber forKey: @"isInteresting"];
-//            if ((someFlags & OPSeenStatus)) [self setValue: yesNumber forKey: @"isSeen"];
-//            if ((someFlags & OPJunkMailStatus)) [self setValue: yesNumber forKey: @"isJunk"];
-////#warning isSendingBlocked not in DB schema ignored.
-//            //if ((someFlags & OPSendingBlockedStatus)) [self setValue: yes forKey: @"isSendingBlocked"];
-//            if ((someFlags & OPFlaggedStatus)) [self setValue: yesNumber forKey: @"isFlagged"];
-//            if ((someFlags & OPIsFromMeStatus)) [self setValue: yesNumber forKey: @"isFromMe"];
-//            if ((someFlags & OPFulltextIndexedStatus)) [self setValue: yesNumber forKey: @"isFulltextIndexed"];
-//            if ((someFlags & OPAnsweredStatus)) [self setValue: yesNumber forKey: @"isAnswered"];
-////            if ((someFlags & OPDraftStatus)) [self setValue: yes forKey: @"isDraft"];
-//			
-//            flagsCache = someFlags | flags;
-//			oldValue = [NSNumber numberWithInt:flags];
-//			newValue = [NSNumber numberWithInt:flagsCache];
-//        }
+    @synchronized(self) 
+	{
+		unsigned someFlags = (0xffffffff ^ flags) & someFlags;
+        if (someFlags) 
+		{
+			// Some flags actually changed!
+			oldValue = [NSNumber numberWithInt:flags];
+            flags = someFlags | flags;
+			newValue = [NSNumber numberWithInt:flags];
+        }
     }
     
     // notify if needed (outside the synchronized block to avoid blocking problems)
@@ -635,14 +626,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     }    
 }
 
-/*
-- (void) setValue: (id) value forKey: (NSString*) key
-{
-	[super setValue: value forKey: key];
-}
-
- */
-
 - (void) willSave
 {
 	NSLog(@"Will save %@", self);
@@ -654,14 +637,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-- (void) removeFlags: (unsigned) someFlags
+- (void)removeFlags:(unsigned)someFlags
 {
 	//    NSNumber* oldValue = nil;
 	//    NSNumber* newValue = nil;
     
 	// Setters lock the context to prevent updates during commit:
-	@synchronized([self context]) {
-		@synchronized(self) {
+	@synchronized([self context]) 
+	{
+		@synchronized(self) 
+		{
 			flags = (flags & (~someFlags));
 		}
 	}
@@ -673,6 +658,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	//		[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
 	//		[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
 	//    }
+	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
+	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
 }
 
 - (GIMessage *)reference

@@ -552,8 +552,8 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (void) dateDidChangeOfThread: (GIThread*) thread 
 {
-	OPFaultingArray* threads = [self valueForKey: @"threadsByDate"]; // changed thread date causes problem here!
-	[threads updateSortObjectForObject: thread];
+	OPPersistentSet *someThreads = (OPPersistentSet *)self.threads; // changed thread date causes problem here!
+	[someThreads updateSortObjectForObject:thread];
 }
 
 //- (void)exportAsMboxFileWithPath:(NSString *)path
@@ -818,9 +818,10 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	}
 }
 
-- (NSSet*) threads
+- (NSSet *)threads
 {
-	if (!threads) {
+	if (!threads) 
+	{
 		threads = [[OPPersistentSet alloc] init];
 		threads.sortKeyPath = @"date";
 	}
