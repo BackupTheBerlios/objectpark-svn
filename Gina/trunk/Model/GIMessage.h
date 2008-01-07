@@ -72,7 +72,6 @@
 @property (retain) GIThread* thread;
 @property (readonly, retain) NSString *senderName;
 @property (readonly) unsigned flags;
-@property BOOL isSeen;
 
 - (void) flushInternetMessageCache;
 
@@ -124,6 +123,10 @@
 - (BOOL)hasFlags:(unsigned int)someFlags;
 - (void)addFlags:(unsigned int)someFlags;
 - (void)removeFlags:(unsigned int)someFlags;
+
+/*" Special flag handling "*/
+- (void)setIsSeen:(NSNumber *)aBoolean;
+- (BOOL)isSeen;
 
 - (unsigned)sendStatus;
 - (void)setSendStatus:(unsigned)newStatus;

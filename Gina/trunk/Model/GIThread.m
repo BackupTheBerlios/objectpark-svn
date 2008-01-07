@@ -324,7 +324,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {    
 	for (GIMessage *message in [self messages])
 	{
-        if (![message hasFlags:OPSeenStatus]) 
+        if (!message.isSeen) 
 		{
             return YES;
         }

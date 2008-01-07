@@ -354,7 +354,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSImage *)statusImage
 {
-	if (![self hasFlags:OPSeenStatus]) return [NSImage imageNamed:@"unread"];
+	if (!self.isSeen) return [NSImage imageNamed:@"unread"];
 	return nil;
 }
 

@@ -516,7 +516,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (BOOL) hasFlags: (unsigned) someFlags
 {
-    return (someFlags & [self flags]) == someFlags;
+    return (someFlags & self.flags) == someFlags;
 }
 
 + (void) resetSendStatus
