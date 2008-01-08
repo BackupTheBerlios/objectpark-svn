@@ -180,6 +180,21 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIMessage (ThreadViewSupport)
 
++ (NSSet *)keyPathsForValuesAffectingSubjectAndAuthor
+{
+	return [NSSet setWithObjects:@"senderName", @"flags", nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingDateForDisplay
+{
+	return [NSSet setWithObjects:@"date", @"flags", nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingStatusImage
+{
+	return [NSSet setWithObject:@"flags"];
+}
+
 - (GIMessage *)message
 {
 	return self;
@@ -212,7 +227,7 @@ NSDateFormatter *timeAndDateFormatter()
 	//	
 	//	[result appendAttributedString: (indentation > MAX_INDENTATION)? spacer2() : spacer()];
 	
-	NSDictionary *completeAttributes = ([self flags] & OPSeenStatus) ? readAttributes() : unreadAttributes();
+	NSDictionary *completeAttributes = (self.flags & OPSeenStatus) ? readAttributes() : unreadAttributes();
 	
 	if (flags & OPJunkMailStatus) 
 	{
@@ -233,7 +248,7 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	BOOL isRead = [self hasFlags:OPSeenStatus];
 	
-	NSString *dateString = [timeAndDateFormatter() stringFromDate:[self valueForKey:@"date"]];
+	NSString *dateString = [timeAndDateFormatter() stringFromDate:self.date];
 	
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
@@ -257,9 +272,29 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIThread (ThreadViewSupport)
 
++ (NSSet *)keyPathsForValuesAffectingThreadChildren
+{
+	return [NSSet setWithObject:@"messagesByTree"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingSubjectAndAuthor
+{
+	return [NSSet setWithObjects:@"messagesByTree", @"messages", @"subject", nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingDateForDisplay
+{
+	return [NSSet setWithObjects:@"date", @"hasUnreadMessages", nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingStatusImage
+{
+	return [NSSet setWithObject:@"hasUnreadMessages"];
+}
+
 - (OPFaultingArray *)threadChildren
 {
-	OPFaultingArray *threadChildren = [self messagesByTree];
+	OPFaultingArray *threadChildren = self.messagesByTree;
 	
 	if ([threadChildren count] > 1)
 	{
@@ -275,19 +310,19 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (id)subjectAndAuthor
 {
-	OPFaultingArray *msgs = [self messagesByTree];
+	OPFaultingArray *msgs = self.messagesByTree;
 	
 	if ([msgs count] > 1)
 	{
 		// multi-message thread
-		return [[[NSAttributedString alloc] initWithString:nilGuard([self valueForKey:@"subject"]) attributes:[self hasUnreadMessages] ? unreadAttributes() : readAttributes()] autorelease];
+		return [[[NSAttributedString alloc] initWithString:nilGuard(self.subject) attributes:[self hasUnreadMessages] ? unreadAttributes() : readAttributes()] autorelease];
 	}	
 	else
 	{
 		// single-message thread
 		NSString *from;
 		NSAttributedString *aFrom;
-		GIMessage *message = [[self valueForKey:@"messages"] lastObject];
+		GIMessage *message = [self.messages lastObject];
 		NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
 		
 		if (message) 
@@ -301,11 +336,11 @@ NSDateFormatter *timeAndDateFormatter()
 			
 			if (flags & OPIsFromMeStatus) 
 			{
-				from = [NSString stringWithFormat:@" (%C %@)", 0x279F/*Right Arrow*/, [message recipientsForDisplay]];
+				from = [NSString stringWithFormat:@" (%C %@)", 0x279F/*Right Arrow*/, message.recipientsForDisplay];
 			} 
 			else 
 			{
-				from = [message senderName];
+				from = message.senderName;
 				if (!from) from = @"- sender missing -";
 				from = [NSString stringWithFormat:@" (%@)", from];
 			}       
@@ -366,9 +401,9 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSAttributedString *)dateForDisplay
 {
-	BOOL isRead = ![self hasUnreadMessages];
+	BOOL isRead = !self.hasUnreadMessages;
 	
-	NSString *dateString = [timeAndDateFormatter() stringFromDate:[self valueForKey:@"date"]];
+	NSString *dateString = [timeAndDateFormatter() stringFromDate:self.date];
 	
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
