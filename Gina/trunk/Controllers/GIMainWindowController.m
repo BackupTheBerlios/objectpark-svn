@@ -28,7 +28,7 @@
 #import "GIMessageGroup.h"
 
 //static NSString *ContentContext = @"ContentContext";
-static NSString *SelectedThreadsContext = @"SelectedThreadsContext";
+//static NSString *SelectedThreadsContext = @"SelectedThreadsContext";
 
 static inline NSString *nilGuard(NSString *str)
 {
@@ -406,19 +406,16 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIMainWindowController
 
+@synthesize selectedThreads;
+
 + (NSSet *)keyPathsForValuesAffectingMessageForDisplay
 {
 	return [NSSet setWithObject:@"selectedThreads"];
 }
-- (NSArray *)selectedThreads
-{
-	return selectedThreads;
-}
 
-- (void)setSelectedThreads:(NSArray *)someThreads
++ (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
 {
-	NSLog(@"selected threads = %@", someThreads);
-	selectedThreads = someThreads;
+	return [NSSet setWithObject:@"selectedThreads"];
 }
 
 - (NSAttributedString *)messageForDisplay
@@ -430,6 +427,17 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 	
 	return nil;
+}
+
+- (id)selectedMessageOrThread
+{
+	NSArray *threads = self.selectedThreads;
+	if ([threads count] == 1)
+	{
+		return [threads lastObject];
+	}
+	
+	return nil;	
 }
 
 - (id)init
@@ -456,77 +464,6 @@ NSDateFormatter *timeAndDateFormatter()
 	[super dealloc];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-	if (object == threadsController)
-	{
-//		if (context == ContentContext)
-//		{
-//			if ([[threadTreeController content] count])
-//			{
-//				[threadTreeController setPreservesSelection:NO];
-//				[threadTreeController invalidateThreadSelectionCache];
-//				[threadTreeController setSelectionIndexPaths:[threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]]];
-//			}
-//		}
-//		else 
-		if (context == SelectedThreadsContext)
-		{
-			int setSeenBehavior = [[NSUserDefaults standardUserDefaults] integerForKey:SetSeenBehavior];
-			NSArray *selectedObjects = [threadsController selectedObjects];
-			[self setSelectedThreads:selectedObjects];
-			
-			GIMessage *selectedMessage = nil;
-			static GIMessage *delayedMessage = nil;
-			static NSNumber *yesNumber = nil;
-			
-			if (!yesNumber)
-			{
-				yesNumber = [[NSNumber alloc] initWithBool:YES];
-			}
-			
-			if (delayedMessage)
-			{
-				[NSObject cancelPreviousPerformRequestsWithTarget:delayedMessage selector:@selector(setIsSeen:) object:yesNumber];
-				delayedMessage = nil;
-			}
-			
-			if ([selectedObjects count] == 1)
-			{
-				selectedMessage = [(GIThread *)[selectedObjects lastObject] message];
-			}
-			
-			if (NSDebugEnabled) NSLog(@"Thread/Message selection changed. %@", selectedMessage);
-
-			switch(setSeenBehavior)
-			{
-				case GISetSeenBehaviorImmediately:
-				{
-					if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
-					{
-						[selectedMessage setIsSeen: YES];
-					}
-					break;
-				}
-				case GISetSeenBehaviorAfterTimeinterval:
-				{
-					if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
-					{
-						[selectedMessage performSelector:@selector(setIsSeen:) withObject:yesNumber afterDelay:[[NSUserDefaults standardUserDefaults] floatForKey:SetSeenTimeinterval]];
-						delayedMessage = selectedMessage;
-					}
-				}
-				default:
-					break;
-			}
-		}
-	}
-	else
-	{
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
-}
-
 - (void)windowDidLoad
 {
 	// configuring manual bindings:
@@ -536,12 +473,9 @@ NSDateFormatter *timeAndDateFormatter()
 	[threadsController setChildKey:@"threadChildren"];
 	[threadsController bind:@"rootItem" toObject:messageGroupTreeController withKeyPath:@"selection.self" options:options];
 	
-	[threadsController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedThreadsContext];
-
-//	[threadsController bind:@"selectedObjects" toObject:self withKeyPath:@"selectedThreads" options:options];
-	
-	 
-//	[commentTreeView bind:@"selectedMessage" toObject:threadTreeController withKeyPath:@"selection.self" options:options];
+	[self bind:@"selectedThreads" toObject:threadsController withKeyPath:@"selectedObjects" options:options];
+		
+	[commentTreeView bind:@"selectedMessageOrThread" toObject:self withKeyPath:@"selectedMessageOrThread" options:options];
 	[commentTreeView setTarget:self];
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];
 	
@@ -826,4 +760,140 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 }
 
+@end
+
+@implementation GIMainWindowController (BindingStuff)
+// -- binding stuff --
+
++ (void)initialize
+{
+    [self exposeBinding:@"selectedThreads"];	
+}
+
+- (Class)valueClassForBinding:(NSString *)binding
+{
+	return [NSArray class];
+}
+
+- (id)observedObjectForSelectedThreads { return observedObjectForSelectedThreads; }
+- (void)setObservedObjectForSelectedThreads:(id)anObservedObjectForSelectedThreads
+{
+    if (observedObjectForSelectedThreads != anObservedObjectForSelectedThreads) 
+	{
+        [observedObjectForSelectedThreads release];
+        observedObjectForSelectedThreads = [anObservedObjectForSelectedThreads retain];
+    }
+}
+
+- (NSString *)observedKeyPathForSelectedThreads { return observedKeyPathForSelectedThreads; }
+- (void)setObservedKeyPathForSelectedThreads:(NSString *)anObservedKeyPathForSelectedThreads
+{
+    if (observedKeyPathForSelectedThreads != anObservedKeyPathForSelectedThreads) 
+	{
+        [observedKeyPathForSelectedThreads release];
+        observedKeyPathForSelectedThreads = [anObservedKeyPathForSelectedThreads copy];
+    }
+}
+
+- (void)bind:(NSString *)bindingName
+    toObject:(id)observableController
+ withKeyPath:(NSString *)keyPath
+     options:(NSDictionary *)options
+{	
+    if ([bindingName isEqualToString:@"selectedThreads"])
+    {
+		// observe the controller for changes
+		[observableController addObserver:self
+							   forKeyPath:keyPath 
+								  options:0
+								  context:nil];
+		
+		// register what controller and what keypath are 
+		// associated with this binding
+		[self setObservedObjectForSelectedThreads:observableController];
+		[self setObservedKeyPathForSelectedThreads:keyPath];	
+    }
+	
+	[super bind:bindingName
+	   toObject:observableController
+	withKeyPath:keyPath
+		options:options];
+}
+
+- (void)unbind:bindingName
+{
+    if ([bindingName isEqualToString:@"selectedThreads"])
+    {
+		[observedObjectForSelectedThreads removeObserver:self
+									   forKeyPath:observedKeyPathForSelectedThreads];
+		[self setObservedObjectForSelectedThreads:nil];
+		[self setObservedKeyPathForSelectedThreads:nil];
+    }	
+	
+	[super unbind:bindingName];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath 
+					  ofObject:(id)object 
+						change:(NSDictionary *)change 
+					   context:(void *)context
+{
+	if ([keyPath isEqualToString:[self observedKeyPathForSelectedThreads]])
+	{ 
+		// selected threads changed
+		id newSelectedThreads = [observedObjectForSelectedThreads valueForKeyPath:observedKeyPathForSelectedThreads];
+		[self setSelectedThreads:newSelectedThreads];
+		
+		int setSeenBehavior = [[NSUserDefaults standardUserDefaults] integerForKey:SetSeenBehavior];
+		
+		GIMessage *selectedMessage = nil;
+		static GIMessage *delayedMessage = nil;
+		static NSNumber *yesNumber = nil;
+		
+		if (!yesNumber)
+		{
+			yesNumber = [[NSNumber alloc] initWithBool:YES];
+		}
+		
+		if (delayedMessage)
+		{
+			[NSObject cancelPreviousPerformRequestsWithTarget:delayedMessage selector:@selector(setIsSeen:) object:yesNumber];
+			delayedMessage = nil;
+		}
+		
+		if ([[self selectedThreads] count] == 1)
+		{
+			selectedMessage = [(GIThread *)[[self selectedThreads] lastObject] message];
+		}
+		
+		if (NSDebugEnabled) NSLog(@"Thread/Message selection changed. %@", selectedMessage);
+		
+		switch(setSeenBehavior)
+		{
+			case GISetSeenBehaviorImmediately:
+			{
+				if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
+				{
+					[selectedMessage setIsSeen: YES];
+				}
+				break;
+			}
+			case GISetSeenBehaviorAfterTimeinterval:
+			{
+				if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
+				{
+					[selectedMessage performSelector:@selector(setIsSeen:) withObject:yesNumber afterDelay:[[NSUserDefaults standardUserDefaults] floatForKey:SetSeenTimeinterval]];
+					delayedMessage = selectedMessage;
+				}
+			}
+			default:
+				break;
+		}
+	}
+	else
+	{
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}	
+}
+	
 @end

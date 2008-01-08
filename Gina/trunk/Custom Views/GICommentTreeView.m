@@ -18,32 +18,31 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 // -- binding stuff --
 + (void)initialize
 {
-    [self exposeBinding:@"selectedMessage"];	
+    [self exposeBinding:@"selectedMessageOrThread"];	
 }
 
 - (Class)valueClassForBinding:(NSString *)binding
 {
-    // both require numbers
-    return [GIMessage class];	
+    return [NSObject class];	
 }
 
-- (id)observedObjectForSelectedMessage { return observedObjectForSelectedMessage; }
-- (void)setObservedObjectForSelectedMessage:(id)anObservedObjectForSelectedMessage
+- (id)observedObjectForSelectedMessageOrThread { return observedObjectForSelectedMessageOrThread; }
+- (void)setObservedObjectForSelectedMessageOrThread:(id)anObservedObjectForSelectedMessageOrThread
 {
-    if (observedObjectForSelectedMessage != anObservedObjectForSelectedMessage) 
+    if (observedObjectForSelectedMessageOrThread != anObservedObjectForSelectedMessageOrThread) 
 	{
-        [observedObjectForSelectedMessage release];
-        observedObjectForSelectedMessage = [anObservedObjectForSelectedMessage retain];
+        [observedObjectForSelectedMessageOrThread release];
+        observedObjectForSelectedMessageOrThread = [anObservedObjectForSelectedMessageOrThread retain];
     }
 }
 
-- (NSString *)observedKeyPathForSelectedMessage { return observedKeyPathForSelectedMessage; }
-- (void)setObservedKeyPathForSelectedMessage:(NSString *)anObservedKeyPathForSelectedMessage
+- (NSString *)observedKeyPathForSelectedMessageOrThread { return observedKeyPathForSelectedMessageOrThread; }
+- (void)setObservedKeyPathForSelectedMessageOrThread:(NSString *)anObservedKeyPathForSelectedMessageOrThread
 {
-    if (observedKeyPathForSelectedMessage != anObservedKeyPathForSelectedMessage) 
+    if (observedKeyPathForSelectedMessageOrThread != anObservedKeyPathForSelectedMessageOrThread) 
 	{
-        [observedKeyPathForSelectedMessage release];
-        observedKeyPathForSelectedMessage = [anObservedKeyPathForSelectedMessage copy];
+        [observedKeyPathForSelectedMessageOrThread release];
+        observedKeyPathForSelectedMessageOrThread = [anObservedKeyPathForSelectedMessageOrThread copy];
     }
 }
 
@@ -52,7 +51,7 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
  withKeyPath:(NSString *)keyPath
      options:(NSDictionary *)options
 {	
-    if ([bindingName isEqualToString:@"selectedMessage"])
+    if ([bindingName isEqualToString:@"selectedMessageOrThread"])
     {
 		// observe the controller for changes
 		[observableController addObserver:self
@@ -62,8 +61,8 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 		
 		// register what controller and what keypath are 
 		// associated with this binding
-		[self setObservedObjectForSelectedMessage:observableController];
-		[self setObservedKeyPathForSelectedMessage:keyPath];		
+		[self setObservedObjectForSelectedMessageOrThread:observableController];
+		[self setObservedKeyPathForSelectedMessageOrThread:keyPath];		
     }
     	
 	[super bind:bindingName
@@ -76,12 +75,12 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 
 - (void)unbind:bindingName
 {
-    if ([bindingName isEqualToString:@"selectedMessage"])
+    if ([bindingName isEqualToString:@"selectedMessageOrThread"])
     {
-		[observedObjectForSelectedMessage removeObserver:self
-									forKeyPath:observedKeyPathForSelectedMessage];
-		[self setObservedObjectForSelectedMessage:nil];
-		[self setObservedKeyPathForSelectedMessage:nil];
+		[observedObjectForSelectedMessageOrThread removeObserver:self
+									forKeyPath:observedKeyPathForSelectedMessageOrThread];
+		[self setObservedObjectForSelectedMessageOrThread:nil];
+		[self setObservedKeyPathForSelectedMessageOrThread:nil];
     }	
 
 	[super unbind:bindingName];
@@ -93,9 +92,9 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 						change:(NSDictionary *)change
 					   context:(void *)context
 {
-	// selectedMessage changed
-	id newSelectedMessage = [observedObjectForSelectedMessage valueForKeyPath:observedKeyPathForSelectedMessage];
-	[self setSelectedMessage:newSelectedMessage];
+	// SelectedMessageOrThread changed
+	id newSelectedMessageOrThread = [observedObjectForSelectedMessageOrThread valueForKeyPath:observedKeyPathForSelectedMessageOrThread];
+	[self setSelectedMessageOrThread:newSelectedMessageOrThread];
 	
 	[self updateCommentTree:YES];
 }
@@ -125,7 +124,7 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 
 - (void)dealloc
 {
-	[self unbind:@"selectedMessage"];
+	[self unbind:@"selectedMessageOrThread"];
 
 	[commentsCache release];
 	[border release];
@@ -173,28 +172,39 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 	return [[self selectedCell] representedObject];
 }
 
-- (void)setSelectedMessage:(GIMessage *)aMessage
+- (void)setSelectedMessageOrThread:(id)anObject
 {
-	if (! [aMessage isKindOfClass:[GIMessage class]])
+	GIMessage *message = [anObject isKindOfClass:[GIMessage class]] ? anObject : nil;
+	GIThread *theThread = message ? message.thread : anObject;
+	
+	if (![theThread isKindOfClass:[GIThread class]] || [theThread.messages count] <= 1) 
 	{
 		[self setThread:nil];
 		[self deselectAllCells];
+		selectedMessageOrThread = nil;
 		return;
 	}
 	
-	if ([self thread] != [aMessage thread])
+	selectedMessageOrThread = anObject;
+	
+	if ([self thread] != theThread)
 	{
-		[self setThread:[aMessage thread]];
+		[self setThread:theThread];
 	}
 	
-	if (aMessage)
+	if (message)
 	{
-		[self selectCell:[self cellForRepresentedObject:aMessage]];
+		[self selectCell:[self cellForRepresentedObject:message]];
 	}
 	else
 	{
 		[self deselectAllCells];
 	}
+}
+
+- (id)selectedMessageOrThread;
+{
+	return selectedMessageOrThread;
 }
 
 - (NSArray *)commentsForMessage:(GIMessage *)aMessage inThread:(GIThread *)aThread
@@ -404,7 +414,7 @@ The return value is the row the message was placed in."*/
 	
 	if ((indexOfSelectedMessage - 1) >= 0) 
 	{
-		[self setSelectedMessage:[comments objectAtIndex:indexOfSelectedMessage - 1]];
+		[self setSelectedMessageOrThread:[comments objectAtIndex:indexOfSelectedMessage - 1]];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];
 		return;
@@ -420,7 +430,7 @@ The return value is the row the message was placed in."*/
 	
 	if ([comments count] > indexOfSelectedMessage + 1) 
 	{
-		[self setSelectedMessage:[comments objectAtIndex:indexOfSelectedMessage + 1]];
+		[self setSelectedMessageOrThread:[comments objectAtIndex:indexOfSelectedMessage + 1]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];
 		return;
 	}
@@ -437,7 +447,7 @@ The return value is the row the message was placed in."*/
 		// check if the current thread has the reference:
 		if ([[[self thread] messages] containsObject:newMessage]) 
 		{
-			[self setSelectedMessage:newMessage];
+			[self setSelectedMessageOrThread:newMessage];
 			[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];
 			return;
 		}
@@ -452,7 +462,7 @@ The return value is the row the message was placed in."*/
         
         if ([comments count]) 
         {
-            [self setSelectedMessage:[comments objectAtIndex:0]];
+            [self setSelectedMessageOrThread:[comments objectAtIndex:0]];
 			[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];	
             return;
         }

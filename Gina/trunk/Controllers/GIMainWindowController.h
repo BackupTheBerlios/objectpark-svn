@@ -26,6 +26,10 @@
 	
 	GIMessageGroup *selectedMessageGroup;
 	NSArray *selectedThreads;
+	
+	/* Binding stuff */
+	id observedObjectForSelectedThreads;
+	NSString *observedKeyPathForSelectedThreads;
 }
 
 @property (assign) NSArray *selectedThreads;

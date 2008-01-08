@@ -18,14 +18,16 @@
 	NSMutableDictionary *commentsCache;
     NSMutableArray *border; // helper for comment tree creation
 
-    id observedObjectForSelectedMessage;
-    NSString *observedKeyPathForSelectedMessage;
+	id selectedMessageOrThread;
+    id observedObjectForSelectedMessageOrThread;
+    NSString *observedKeyPathForSelectedMessageOrThread;
 }
 
 - (GIThread *)thread;
 - (void)setThread:(GIThread *)aThread;
 - (GIMessage *)selectedMessage;
-- (void)setSelectedMessage:(GIMessage *)aMessage;
+- (void)setSelectedMessageOrThread:(id)anObject;
+- (id)selectedMessageOrThread;
 - (void)updateCommentTree:(BOOL)rebuildThread;
 
 @end
