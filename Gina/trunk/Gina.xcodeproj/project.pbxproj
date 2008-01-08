@@ -72,6 +72,7 @@
 		77369CC90D1FAF53004D1DCF /* TestWithPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 77369CC80D1FAF53004D1DCF /* TestWithPersistence.m */; };
 		77369CE70D1FB078004D1DCF /* TestGIMessageGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */; };
 		773B57730D241A3F00A11972 /* GIProfilePrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 773B57720D241A3F00A11972 /* GIProfilePrefs.xib */; };
+		7741A6300D33960400654FA7 /* GIThreadOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */; };
 		7744CB510D32A37A008E6567 /* GIMessage+Rendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 7744CB500D32A37A008E6567 /* GIMessage+Rendering.m */; };
 		7744CB990D32A60C008E6567 /* HeaderTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 7744CB980D32A60C008E6567 /* HeaderTemplate.html */; };
 		774FC3060D215A4100CE5FD6 /* GIAccountPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 774FC3050D215A4000CE5FD6 /* GIAccountPrefs.m */; };
@@ -393,6 +394,8 @@
 		77369CE50D1FB078004D1DCF /* TestGIMessageGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIMessageGroup.h; sourceTree = "<group>"; };
 		77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIMessageGroup.m; sourceTree = "<group>"; };
 		773B57720D241A3F00A11972 /* GIProfilePrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIProfilePrefs.xib; sourceTree = "<group>"; };
+		7741A62E0D33960400654FA7 /* GIThreadOutlineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIThreadOutlineViewController.h; sourceTree = "<group>"; };
+		7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIThreadOutlineViewController.m; sourceTree = "<group>"; };
 		7744CB4F0D32A37A008E6567 /* GIMessage+Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GIMessage+Rendering.h"; sourceTree = "<group>"; };
 		7744CB500D32A37A008E6567 /* GIMessage+Rendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GIMessage+Rendering.m"; sourceTree = "<group>"; };
 		7744CB980D32A60C008E6567 /* HeaderTemplate.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = HeaderTemplate.html; sourceTree = "<group>"; };
@@ -421,7 +424,7 @@
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
 		77A30A8A0D25724300B0F1DF /* TestURLString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestURLString.m; sourceTree = "<group>"; };
 		77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPMailSending.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OPMailSending-Info.plist"; sourceTree = "<group>"; };
+		77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPMailSending-Info.plist"; path = "../OPMailSending-Info.plist"; sourceTree = "<group>"; };
 		77AA25040D2CE073004EF1DF /* GreetingMail.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GreetingMail.transferData; sourceTree = "<group>"; };
 		77AA25690D2D1B93004EF1DF /* OPOutlineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPOutlineViewController.h; sourceTree = "<group>"; };
 		77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPOutlineViewController.m; sourceTree = "<group>"; };
@@ -731,7 +734,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */,
 			);
 			name = Gina;
 			sourceTree = "<group>";
@@ -768,6 +770,7 @@
 				7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */,
 				773614CA0D1C1AB0007FC630 /* OPPersistenceTest-Info.plist */,
 				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
+				77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */,
 				7736124D0D1AB69F007FC630 /* MainWindow.nib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 			);
@@ -950,6 +953,8 @@
 			children = (
 				77AA25690D2D1B93004EF1DF /* OPOutlineViewController.h */,
 				77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */,
+				7741A62E0D33960400654FA7 /* GIThreadOutlineViewController.h */,
+				7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */,
 				775C312F0D0D46280098DA07 /* GIApplication.h */,
 				775C31300D0D46280098DA07 /* GIApplication.m */,
 				773612500D1AB6F2007FC630 /* GIMainWindowController.h */,
@@ -1694,6 +1699,7 @@
 				8DCE4D8B0D2C7E6300B47189 /* GIMessageBase.m in Sources */,
 				77AA256B0D2D1B93004EF1DF /* OPOutlineViewController.m in Sources */,
 				7744CB510D32A37A008E6567 /* GIMessage+Rendering.m in Sources */,
+				7741A6300D33960400654FA7 /* GIThreadOutlineViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

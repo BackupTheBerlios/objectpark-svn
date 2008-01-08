@@ -349,7 +349,12 @@
     NSData* data = [[self _stringFromMessagePart: mpart] dataUsingEncoding: NSUnicodeStringEncoding];
     text = [[NSMutableAttributedString allocWithZone: [self zone]] initWithHTML:data documentAttributes: NULL];
 	
+	//text = [[NSMutableAttributedString alloc] initWithHTML:data options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", nil, @"BaseURL", nil] documentAttributes:NULL];
 	/*
+	 
+	 [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", url, @"BaseURL", nil]
+	 
+	 
 	NSString* html = [[NSString alloc] initWithData: [mpart contentData] encoding: textEncoding];
 	text = [[NSMutableAttributedString alloc] initWithString: [html stringByStrippingHTML]];
 	if (NSDebugEnabled) NSLog(@"Converted html to text:\n%@", text);

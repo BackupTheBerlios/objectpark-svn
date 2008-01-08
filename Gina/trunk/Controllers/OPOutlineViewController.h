@@ -9,7 +9,9 @@
 #import <Cocoa/Cocoa.h>
 
 /*" This class is used in Gina to excapsulate some needed behaviour to make the outline view happy. OutlineViews do not retain their data and nor does the model as it relies on oids and the cache for unchanged objects. So there is a chance of unchanged objects being deallocated but still referenced by the outline view. It implements the outlineView dataSource protocol. 
-    This implementation requires the tableColumn identifiers to be valid item (KVC) keys. "*/
+    This implementation requires the tableColumn identifiers to be valid item (KVC) keys. 
+    Must be delegate and data source of the outline view to control.
+ "*/
 
 @interface OPOutlineViewController : NSController 
 {
