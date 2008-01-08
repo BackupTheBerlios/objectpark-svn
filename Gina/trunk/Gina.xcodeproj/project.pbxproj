@@ -99,6 +99,7 @@
 		7780783B0D070AC50091F21D /* GetMetadataForFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.c */; };
 		7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780E0D0707DC0091F21D /* CoreFoundation.framework */; };
 		7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
+		7781686B0D33F04D004AFCC1 /* ToggleSeen.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */; };
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77A30A8B0D25724300B0F1DF /* TestURLString.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A30A8A0D25724300B0F1DF /* TestURLString.m */; };
@@ -421,6 +422,7 @@
 		778078030D07065C0091F21D /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		7780780E0D0707DC0091F21D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ToggleSeen.tiff; sourceTree = "<group>"; };
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
 		77A30A8A0D25724300B0F1DF /* TestURLString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestURLString.m; sourceTree = "<group>"; };
 		77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPMailSending.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -753,6 +755,7 @@
 				77BDB4690D2E4387008034C0 /* unread.tiff */,
 				77AA25040D2CE073004EF1DF /* GreetingMail.transferData */,
 				77AF83070D2B9479002771BA /* Folder.tiff */,
+				7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */,
 				77AF83080D2B9479002771BA /* OtherMailbox.tiff */,
 				8D8B1B9B0D11485D008E02D7 /* Gina.icns */,
 				77C3BD020D103F860003634C /* Gina.tiff */,
@@ -1481,6 +1484,7 @@
 				77AA25050D2CE073004EF1DF /* GreetingMail.transferData in Resources */,
 				77BDB46A0D2E4387008034C0 /* unread.tiff in Resources */,
 				7744CB990D32A60C008E6567 /* HeaderTemplate.html in Resources */,
+				7781686B0D33F04D004AFCC1 /* ToggleSeen.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,4 +14,8 @@
 
 }
 
+- (NSArray *)selectedMessages;
+- (BOOL)selectionHasUnreadMessages;
+- (BOOL)selectionHasReadMessages;
+
 @end
