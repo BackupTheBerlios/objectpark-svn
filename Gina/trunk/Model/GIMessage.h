@@ -1,6 +1,6 @@
 //
 //  GIMessage.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 22.07.05.
 //  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
@@ -61,6 +61,7 @@
 	NSArray* comments; // transient cache
     unsigned flags; 
 	OPInternetMessage* internetMessage;
+	unsigned referenceCount;
 }
 
 @property (readonly, retain) OPInternetMessage *internetMessage;
@@ -121,11 +122,12 @@
 - (void) flushNumberOfReferencesCache;
 
 - (BOOL)hasFlags:(unsigned int)someFlags;
-- (void)addFlags:(unsigned int)someFlags;
-- (void)removeFlags:(unsigned int)someFlags;
+- (void) toggleFlags: (unsigned) someFlags;
+
 
 /*" Special flag handling "*/
-- (void)setIsSeen:(NSNumber *)aBoolean;
+- (BOOL) isSeen;
+- (void) setIsSeen: (BOOL) boolValue;
 - (BOOL)isSeen;
 
 - (unsigned)sendStatus;

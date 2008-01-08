@@ -168,7 +168,7 @@
 									  forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
 		} else {
 			// nothing to do, anObject already present
-			NSLog(@"Ignoring addition of existing key/value pair to persistent string dictionary.");
+			// if (NSDebugEnabled) NSLog(@"Ignoring addition of existing key/value pair to persistent string dictionary.");
 		}
 	} else {	
 		// We did not find key, so insert the given key/value pair:

@@ -1,6 +1,6 @@
 /*
  *  UserDefaultsKeys.c
- *  GinkoVoyager
+ *  Gina
  *
  *  Created by Dirk Theisen on 22.12.04.
  *  Copyright 2004 Objectpark Group <http://www.objectpark.org>. All rights reserved.

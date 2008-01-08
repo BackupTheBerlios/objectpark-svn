@@ -178,7 +178,6 @@
 	[sortKeyPath release];
 	[setterCursor release];
 	[btree release];
-	[setterCursor release];
 	[array forgetSet];
 	[array release];
 	[super dealloc];

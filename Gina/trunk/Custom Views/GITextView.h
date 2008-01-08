@@ -17,7 +17,7 @@
      OR OF ANY DERIVATIVE WORK.
 
      Further information can be found on the project's web pages
-     at http://www.objectpark.org/Ginko.html
+     at http://www.objectpark.org/Gina.html
 */
 
 #import <AppKit/AppKit.h>

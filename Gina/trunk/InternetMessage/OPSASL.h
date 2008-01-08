@@ -1,6 +1,6 @@
 //
 //  OPSASL.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 21.04.06.
 //  Copyright 2006 Objectpark Group. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  $Id: GICommentTreeCell.h,v 1.13 2005/04/05 09:11:38 theisen Exp $
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 13.12.04.
 //  Copyright 2004, 2005 Objectpark.org. All rights reserved.

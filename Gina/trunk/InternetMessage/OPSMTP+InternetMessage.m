@@ -1,6 +1,6 @@
 //
 //  OPSMTP+InternetMessage.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 03.03.06.
 //  Copyright 2006 __MyCompanyName__. All rights reserved.

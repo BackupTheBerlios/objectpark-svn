@@ -1,6 +1,6 @@
 //
 //  TestEDMultipartContentCoder.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 02.06.05.
 //  Copyright (c) 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.

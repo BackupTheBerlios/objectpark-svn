@@ -1,6 +1,6 @@
 //
 //  NSString+OPHTMLTools.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 30.06.06.
 //  Copyright 2006 __MyCompanyName__. All rights reserved.

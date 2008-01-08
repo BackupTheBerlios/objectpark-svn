@@ -26,7 +26,7 @@
 
 /* Macros for accessing the two fields in the array entries */
 
-#define oidPtr(oindex) (OID*)(data+((oindex)*entrySize))
+#define oidPtr(oindex) ((OID*)(data+((oindex)*entrySize)))
 
 #define sortObjectPtr(oindex) (id*)(data+((oindex)*entrySize)+sizeof(OID))
 
@@ -358,6 +358,21 @@ static int compare_oids(const void* entry1, const void* entry2)
 	[self replaceOIDAtIndex: anIndex withOID: [anObject oid]];
 }
 
+
+- (void) insertObject: (id) object atIndex: (NSUInteger) anIndex
+{
+	NSParameterAssert(object != nil);
+	NSParameterAssert(anIndex <= count);
+	@synchronized(self) {
+		if (count+1 >= capacity) {
+			[self _growTo: count+1];
+		}
+		
+		memmove(oidPtr(anIndex+1), oidPtr(anIndex), (count-anIndex) * entrySize);
+		*oidPtr(anIndex) = [object oid];
+		count+=1;
+	}
+}
 
 - (NSString*) description
 {

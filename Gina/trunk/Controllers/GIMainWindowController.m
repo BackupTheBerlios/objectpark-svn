@@ -1,6 +1,6 @@
 //
 //  GIMainWindowController.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 12.10.07.
 //  Copyright 2007 Objectpark Group. All rights reserved.
@@ -504,7 +504,7 @@ NSDateFormatter *timeAndDateFormatter()
 				{
 					if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
 					{
-						[selectedMessage setIsSeen:yesNumber];
+						[selectedMessage setIsSeen: YES];
 					}
 					break;
 				}

@@ -1,6 +1,6 @@
 //
 //  GIThread.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 02.08.05.
 //  Copyright 2005 Objectpark Group. All rights reserved.

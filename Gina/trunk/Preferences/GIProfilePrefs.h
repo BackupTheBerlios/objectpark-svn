@@ -1,6 +1,6 @@
 //
 //  ProfilePrefs.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 08.03.05.
 //  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.

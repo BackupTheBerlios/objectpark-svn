@@ -1,6 +1,6 @@
 //
 //  GIProfile.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 26.07.05.
 //  Copyright 2005 The Objectpark Group. All rights reserved.

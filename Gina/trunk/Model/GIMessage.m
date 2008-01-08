@@ -1,6 +1,6 @@
 //
 //  GIMessage.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 22.07.05.
 //  Copyright 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.
@@ -158,7 +158,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     [dummy setValue:aMessageId forKey:@"messageId"];  
 
     // dummy messages should not show up as unread
-    [dummy addFlags:OPSeenStatus];
+    [dummy toggleFlags: OPSeenStatus];
     
 	NSAssert([dummy isDummy], @"Dummy message not marked as such");
 	
@@ -170,8 +170,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     NSString* fromHeader = [im fromWithFallback: YES];
     
-    if ([self isDummy])
-        [self removeFlags: OPSeenStatus];
+    //if ([self isDummy])
+    //    [self removeFlags: OPSeenStatus];
         
 	internetMessage = [im retain];
 	messageId = [[im messageId] retain];
@@ -196,7 +196,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
     if ([GIProfile isMyEmailAddress: fromHeader]) {
-        [self addFlags: OPIsFromMeStatus];
+        [self toggleFlags: OPIsFromMeStatus]; // never changes, hopefully
     }
 }
 
@@ -237,6 +237,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     if (self = [super init]) {
 		// Create a new message in the default context:
+		referenceCount = NSNotFound;
 		internetMessage = [anInternetMessage retain];
         [self setContentFromInternetMessage: internetMessage];
 		[[[self context] messagesByMessageId] setObject: self forKey: self.messageId];
@@ -285,44 +286,33 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @synthesize referenceOID;
 
-- (BOOL)isSeen
+- (BOOL) isSeen
 {
-	return (self.flags & OPSeenStatus) != 0;
+	return (flags & OPSeenStatus) != 0;
 }
 
-- (void)setIsSeen:(NSNumber *)aBoolean
+- (void) setIsSeen: (BOOL) boolValue
 {
-	BOOL boolValue = [aBoolean boolValue];
-    [self willChangeValueForKey:@"isSeen"];
-	
-//	NSNumber *oldValue = [NSNumber numberWithInt:self.flags];
-
-	if (boolValue)
-	{
-		[self addFlags:OPSeenStatus];
-	}
-	else
-	{
-		[self removeFlags:OPSeenStatus];
-	}
+	if (self.isSeen != boolValue) {
 		
-//    flagsCache = boolValue ? (flagsCache | OPSeenStatus) : -1;
-//	NSNumber *newValue = [NSNumber numberWithInt:self.flags];
-	
-    [self didChangeValueForKey:@"isSeen"];
-	
-//	[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
-	
-//	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
-//	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
+		[self willChangeValueForKey: @"isSeen"];
+		[self toggleFlags: OPSeenStatus];
+		[self didChangeValueForKey: @"isSeen"];
+		NSAssert(self.isSeen == boolValue, @"flag set did fail.");
+		
+		//[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
+		
+		[self.thread willChangeValueForKey: @"hasUnreadMessages"];
+		[self.thread didChangeValueForKey: @"hasUnreadMessages"];
+	}
 }
 
-- (unsigned)flags
+- (unsigned) flags
 {
     return flags;
 }
 
-- (NSString *)messageId
+- (NSString*) messageId
 {
 	return [[messageId retain] autorelease];
 }
@@ -330,26 +320,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (unsigned) numberOfReferences
 	/*" Returns the number of referenced messages until a root message is reached. "*/
 {
-	[self willAccessValueForKey: @"numberOfReferences"];
-    NSNumber* cachedValue = [self primitiveValueForKey: @"numberOfReferences"];
-	[self didAccessValueForKey: @"numberOfReferences"];
-    
-    if (cachedValue)
-        return [cachedValue unsignedIntValue];
-        
-    if (![self reference])
-        return 0;
-        
-    cachedValue = [NSNumber numberWithUnsignedInt: [[self reference] numberOfReferences]+1];
-    [self setPrimitiveValue: cachedValue forKey: @"numberOfReferences"];
-    
-    return [cachedValue unsignedIntValue];
+    if (referenceCount == NSNotFound) {
+		referenceCount = [[self reference] numberOfReferences]+1;
+    }
+	return referenceCount;
 }
 
-//- (void) flushNumberOfReferencesCache
-//{
-//	[attributes removeObjectForKey: @"numberOfReferences"];
-//}
+- (void) flushNumberOfReferencesCache
+{
+	referenceCount = NSNotFound;
+}
 
 - (NSArray*) commentsInThread: (GIThread*) aThread
 	/* Returns all directly commenting messages in the thread given. */
@@ -510,7 +490,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         }
     }
     
-    [self addFlags:f];
+    [self toggleFlags: f & ~flags];
 }
 
 
@@ -599,31 +579,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[[NSUserDefaults standardUserDefaults] setObject:earliestSendTimes forKey:EarliestSendTimes];
 }
 
-- (void)addFlags:(unsigned)someFlags
+- (void) toggleFlags: (unsigned) someFlags
+/*" Inverts the flags given. "*/
 {
-    NSNumber *oldValue = nil;
-    NSNumber *newValue = nil;
+	if (!someFlags) return;
 
-    @synchronized(self) 
-	{
-		unsigned someFlags = (0xffffffff ^ flags) & someFlags;
-        if (someFlags) 
-		{
-			// Some flags actually changed!
-			oldValue = [NSNumber numberWithInt:flags];
-            flags = someFlags | flags;
-			newValue = [NSNumber numberWithInt:flags];
-        }
-    }
-    
-    // notify if needed (outside the synchronized block to avoid blocking problems)
-    if (newValue) 
-	{
-        [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
-		
-		[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
-		[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
-    }    
+	flags = flags ^ someFlags;
 }
 
 - (void) willSave
@@ -728,7 +689,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 		NSString* transferDataPath = [self messageFilename];
 		NSData* transferData = [NSData dataWithContentsOfFile: transferDataPath];
-		internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+		if (transferData) {
+			internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+		} // else return nil
 	}
 	return internetMessage;
 }
@@ -749,6 +712,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	threadOID = [coder decodeOIDForKey: @"threadOID"];
 	referenceOID = [coder decodeOIDForKey: @"referenceOID"];
 	flags = [coder decodeInt32ForKey: @"flags"];	
+	referenceCount = NSNotFound;
 	return self;
 }
 

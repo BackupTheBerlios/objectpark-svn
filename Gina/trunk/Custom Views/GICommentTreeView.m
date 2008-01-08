@@ -1,6 +1,6 @@
 //
 //  GICommentTreeView.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 07.10.06.
 //  Copyright 2006 __MyCompanyName__. All rights reserved.

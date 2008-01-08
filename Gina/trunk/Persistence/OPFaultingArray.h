@@ -1,6 +1,6 @@
 //
 //  OPFaultingArray.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 01.09.05.
 //  Copyright 2005 The Objectpark Group. All rights reserved.

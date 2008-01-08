@@ -1,6 +1,6 @@
 //
 //  TestEDTextFieldCoder.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 18.02.05.
 //  Copyright (c) 2005 The Objectpark Group <http://www.objectpark.org>. All rights reserved.

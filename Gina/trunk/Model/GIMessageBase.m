@@ -58,7 +58,7 @@
 	}
 }
 
-- (void)addMessage: (GIMessage*) aMessage
+- (void) addMessage: (GIMessage*) aMessage
 {
 	if (aMessage) {
 		// Adding a message should be an atomic operation:
@@ -158,12 +158,12 @@ NSString* MboxImportJobName = @"mbox import";
                     unsigned int length = [transferData length];
                     const char* bytes = [transferData bytes];
                     
-                    if (! strncasecmp("X-Ginko-Flags:", bytes, strlen("X-Ginko-Flags:"))) {
+                    if (! strncasecmp("X-Gina-Flags:", bytes, strlen("X-Gina-Flags:"))) {
                         const char *pos = bytes;
                         while ((pos < bytes+length) && (*pos++ != 0x0A))
                             ;
 						
-                        flags = [[NSString stringWithCString:bytes+strlen("X-Ginko-Flags:") length:pos - (bytes + strlen("X-Ginko-Flags:") + 2)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                        flags = [[NSString stringWithCString:bytes+strlen("X-Gina-Flags:") length:pos - (bytes + strlen("X-Gina-Flags:") + 2)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 						//                        OPDebugLog(IMPORT, FLAGS, @"Flags: '%@'", flags);
                         
                         transferData = [NSData dataWithBytes:pos length:bytes+length-pos];
@@ -288,5 +288,30 @@ NSString* MboxImportJobName = @"mbox import";
 	}
 }
 
+
+- (void) moveThreadsWithOids: (NSArray*) threadOids 
+				   fromGroup: (GIMessageGroup*) sourceGroup 
+					 toGroup: (GIMessageGroup*) destinationGroup
+{
+	if (sourceGroup != destinationGroup) {
+		
+		NSEnumerator *enumerator = [threadOids objectEnumerator];
+		NSNumber *oid;
+		
+		while (oid = [enumerator nextObject]) {
+			GIThread *thread = [[OPPersistentObjectContext defaultContext] objectForOID:[oid unsignedLongLongValue]];
+			
+			NSMutableArray* threadGroups = [thread mutableArrayValueForKey: @"messageGroups"];
+			// remove thread from source group:
+			[threadGroups removeObject: sourceGroup];
+			
+			// add thread to destination group:
+			[threadGroups addObject: destinationGroup];
+			
+		}
+	} else {
+		NSLog(@"Warning: Try to move thread into same group %@", self);
+	}
+}
 
 @end

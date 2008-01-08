@@ -1,6 +1,6 @@
 //
 //  NSString+OPHTMLTools.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 30.06.06.
 //  Copyright 2006 Objectpark Group. All rights reserved.

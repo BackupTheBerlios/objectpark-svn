@@ -62,7 +62,7 @@
 {
 	GIMessage *message = [[self class] messageForTest];
 	NSAssert(!message.isSeen, @"message should not be seen");
-	[message setIsSeen:[NSNumber numberWithBool:YES]];
+	[message setIsSeen: YES];
 	NSAssert(message.isSeen, @"message should be seen");
 }
 

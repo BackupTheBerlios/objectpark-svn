@@ -1,6 +1,6 @@
 //
 //  GIMessageGroup.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 02.08.05.
 //  Copyright 2005 The Objectpark Group. All rights reserved.
@@ -43,12 +43,12 @@ extern NSString *GIMessageGroupsChangedNotification;
 - (void) setDefaultProfile: (GIProfile*) newProfile;
 
 /*" Dealing with the group hierarchie: "*/
-+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
-+ (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
-+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)aUid;
-+ (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly;
-+ (NSMutableArray *)findHierarchyNodeForEntry:(id)entry startingWithHierarchyNode:(NSMutableArray *)aHierarchy;
-+ (void) removeHierarchyNode: (id) entry;
+//+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
+//+ (void)addNewHierarchyNodeAfterEntry:(id)anEntry;
+//+ (NSMutableArray *)hierarchyNodeForUid:(NSNumber *)aUid;
+//+ (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly;
+//+ (NSMutableArray *)findHierarchyNodeForEntry:(id)entry startingWithHierarchyNode:(NSMutableArray *)aHierarchy;
+//+ (void) removeHierarchyNode: (id) entry;
 
 /*" Standard message groups "*/
 + (GIMessageGroup *)defaultMessageGroup;
@@ -69,13 +69,6 @@ extern NSString *GIMessageGroupsChangedNotification;
 
 
 + (void)ensureDefaultGroups;
-
-/*" Thread handling "*/
-+ (void) moveThreadsWithOids: (NSArray*) threadOids 
-				   fromGroup: (GIMessageGroup*) sourceGroup 
-					 toGroup: (GIMessageGroup*) destinationGroup;
-
-
 
 - (void)exportAsMboxFileWithPath:(NSString *)path;
 

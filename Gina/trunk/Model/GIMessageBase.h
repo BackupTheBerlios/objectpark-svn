@@ -9,6 +9,7 @@
 #import "OPPersistence.h"
 
 @class GIMessage;
+@class GIMessageGroup;
 
 @interface  OPPersistentObjectContext (GIMessageBase)
 
@@ -17,5 +18,9 @@
 - (GIMessage*) messageForMessageId: (NSString*) messageId;
 - (void) importMboxFiles: (NSArray*) paths
 		   moveOnSuccess: (BOOL) doMove;
+
+- (void) moveThreadsWithOids: (NSArray*) threadOids 
+				   fromGroup: (GIMessageGroup*) sourceGroup 
+					 toGroup: (GIMessageGroup*) destinationGroup;
 
 @end

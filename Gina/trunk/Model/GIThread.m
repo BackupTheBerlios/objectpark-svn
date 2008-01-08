@@ -1,6 +1,6 @@
 //
 //  GIThread.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Dirk Theisen on 02.08.05.
 //  Copyright 2005 Dirk Theisen. All rights reserved.
@@ -11,6 +11,7 @@
 #import "NSArray+Extensions.h"
 #import "GIMessageBase.h"
 #import "GIMessage.h"
+#import "GIMessageGroup.h"
 #import "OPInternetMessage.h"
 #import "GIMessageBase.h"
 #import "OPFaultingArray.h"
@@ -33,6 +34,21 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 		messageGroups = [[OPFaultingArray alloc] init];
 	}
 	return self;
+}
+
+- (void) insertObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index
+/*" Sent by the mutableArray proxy. "*/
+{
+	[messageGroups insertObject: group atIndex: index];
+	[(OPPersistentSet*)group.threads addObject: self]; // what about KVO?
+}
+
+- (void) removeObjectFromMessageGroupsAtIndex: (NSUInteger) index
+/*" Sent by the mutableArray proxy. "*/
+{
+	GIMessageGroup* group = [messageGroups objectAtIndex: index];
+	[messageGroups removeObjectAtIndex: index];
+	[(OPPersistentSet*) group.threads removeObject: self]; // what about KVO?
 }
 
 - (NSArray *)messageGroups
@@ -152,6 +168,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	//if (![self valueForKey: @"date"]) [self calculateDate]; // fixing only for broken databases - can be removed later.
 }
 */
+
+- (void)didChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key
+{
+	while (YES) {};
+}
+
 
 - (void)noteChange
 {

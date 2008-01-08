@@ -1,6 +1,6 @@
 //
 //  GICommentTreeView.h
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 07.10.06.
 //  Copyright 2006 Objectpark Group. All rights reserved.

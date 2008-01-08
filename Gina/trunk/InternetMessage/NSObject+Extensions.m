@@ -1,6 +1,6 @@
 //
 //  NSObject+Extensions.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 25.12.04.
 //  Copyright 2004 Objectpark Group <http://www.objectpark.org>. All rights reserved.

@@ -25,7 +25,7 @@
         {
             if (! [[NSFileManager defaultManager] createDirectoryAtPath:path attributes: nil]) 
             {
-                [NSException raise:NSGenericException format: @"Ginko's Application Support folder could not be created!"];
+                [NSException raise:NSGenericException format: @"Gina's Application Support folder could not be created!"];
             }
         }
     }

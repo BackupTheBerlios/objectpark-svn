@@ -1,6 +1,6 @@
 //
 //  GIGeneralPrefs.m
-//  GinkoVoyager
+//  Gina
 //
 //  Created by Axel Katerbau on 16.04.06.
 //  Copyright 2006 Objectpark Group. All rights reserved.
