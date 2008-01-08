@@ -8,10 +8,10 @@
 
 #import <AppKit/AppKit.h>
 #import "OPPersistentObject.h"
+#import "OPInternetMessage.h"
 
 //@class GIThread;
 @class GIProfile;
-@class OPInternetMessage;
 @class OPFaultingArray;
 
 #define OPSeenStatus 1
@@ -46,7 +46,6 @@
 #define OPSendStatusSending 4
 
 @class GIThread;
-@class OPInternetMessage;
 
 @interface GIMessage : OPPersistentObject {
 @private

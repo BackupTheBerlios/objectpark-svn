@@ -149,7 +149,7 @@ NSDateFormatter *timeAndDateFormatter()
 	
 	if (showRawSource) 
 	{
-		NSData *transferData = [[self internetMessage] transferData];
+		NSData *transferData = [(OPInternetMessage *)[self internetMessage] transferData];
 		NSString *transferString = [NSString stringWithData:transferData encoding:NSUTF8StringEncoding];
 		
 		static NSDictionary *fixedFont = nil;
@@ -458,9 +458,10 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (void)dealloc
 {
-//	[threadTreeController removeObserver:self forKeyPath:@"content"];
-//	[threadTreeController removeObserver:self forKeyPath:@"selectedObjects"];
-	
+	[self unbind:@"selectedThreads"];
+	[threadsController unbind:@"rootItem"];
+	[commentTreeView unbind:@"selectedMessageOrThread"];
+		
 	[super dealloc];
 }
 
@@ -484,8 +485,6 @@ NSDateFormatter *timeAndDateFormatter()
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
 	
-//	[threadTreeController addObserver:self forKeyPath:@"content" options:0 context:ContentContext];
-//	[threadTreeController addObserver:self forKeyPath:@"selectedObjects" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:SelectedThreadsContext];
 	[[self window] makeKeyAndOrderFront:self];
 }
 
@@ -593,20 +592,6 @@ NSDateFormatter *timeAndDateFormatter()
 - (float)messageGroupListRowHeight
 {
 	return 18.0;
-}
-
-- (NSArray *)threadTreeSelectionIndexPaths
-{
-	/*
-	[threadTreeController setPreservesSelection:YES];
-	return [threadTreeController recallThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]];
-	 */
-	return nil;
-}
-
-- (void)setThreadTreeSelectionIndexPaths:(NSArray *)somePaths
-{
-//	[threadTreeController rememberThreadSelectionForGroup:[[messageGroupTreeController selectedObjects] lastObject]];
 }
 
 - (NSFont *)threadListFont

@@ -12,7 +12,7 @@
 #import "GIThread.h"
 #import "OPInternetMessage.h"
 #import "NSString+MessageUtils.h"
-//#import "OPInternetMessage+GinkoExtensions.h"
+#import "OPInternetMessage+GinkoExtensions.h"
 #import "GIMessageGroup.h"
 #import "GIMessageBase.h"
 #import "GIApplication.h"
@@ -42,9 +42,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @synthesize date;
 @synthesize subject;
-@synthesize internetMessage;
-
-
 
 - (GIThread*) thread
 {
