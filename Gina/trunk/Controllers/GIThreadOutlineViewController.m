@@ -484,4 +484,9 @@ NSDateFormatter *timeAndDateFormatter()
 	return NO;
 }
 
+- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
+{
+	return [NSSet setWithObjects: @"isSeen", @"hasUnreadMessages", nil];
+}
+
 @end

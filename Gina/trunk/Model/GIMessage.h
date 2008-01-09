@@ -63,6 +63,7 @@
 	unsigned referenceCount;
 }
 
+@property BOOL isSeen;
 @property (readonly, retain) OPInternetMessage *internetMessage;
 @property OID referenceOID;
 @property (retain) GIMessage *reference;
@@ -125,9 +126,6 @@
 
 
 /*" Special flag handling "*/
-- (BOOL) isSeen;
-- (void) setIsSeen: (BOOL) boolValue;
-- (BOOL)isSeen;
 
 - (unsigned)sendStatus;
 - (void)setSendStatus:(unsigned)newStatus;

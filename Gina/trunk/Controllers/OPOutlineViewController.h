@@ -36,4 +36,6 @@
 
 - (void)reloadData;
 
+- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item;
+
 @end

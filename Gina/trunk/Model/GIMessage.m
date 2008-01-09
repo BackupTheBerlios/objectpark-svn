@@ -295,6 +295,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		[self willChangeValueForKey: @"isSeen"];
 		[self toggleFlags: OPSeenStatus];
 		[self didChangeValueForKey: @"isSeen"];
+		BOOL ok = self.isSeen == boolValue;
 		NSAssert(self.isSeen == boolValue, @"flag set did fail.");
 		
 		//[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
@@ -580,8 +581,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 /*" Inverts the flags given. "*/
 {
 	if (!someFlags) return;
-
-	flags = flags ^ someFlags;
+	BOOL oldValue = flags & someFlags != 0;
+	flags ^= someFlags;
+	BOOL newValue = flags & someFlags != 0;
+	NSAssert(oldValue!=newValue, @"toggle failed.");
 }
 
 - (void) willSave

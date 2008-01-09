@@ -156,25 +156,24 @@
 
 - (IBAction)markAsRead:(id)sender
 {
-	[[threadsController selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:YES]];
-	[threadsController reloadData];
+	for (GIMessage* message in [threadsController selectedMessages]) {
+		message.isSeen = YES;
+	}
 }
 
-- (IBAction)markAsUnread:(id)sender
+- (IBAction) markAsUnread: (id) sender
 {
-	[[threadsController selectedMessages] makeObjectsPerformSelector:@selector(setIsSeen:) withObject:[NSNumber numberWithBool:NO]];
-	[threadsController reloadData];
+	for (GIMessage* message in [threadsController selectedMessages]) {
+		message.isSeen = NO;
+	}
 }
 
 - (IBAction)toggleRead:(id)sender
 {
-	if ([threadsController selectionHasUnreadMessages])
-	{
-		[self markAsRead:self];
-	}
-	else
-	{
-		[self markAsUnread:self];
+	if ([threadsController selectionHasUnreadMessages]) {
+		[self markAsRead: self];
+	} else {
+		[self markAsUnread: self];
 	}
 }
 

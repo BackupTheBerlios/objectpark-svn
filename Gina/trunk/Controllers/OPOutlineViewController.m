@@ -15,23 +15,21 @@
 
 + (void)initialize
 {
-    [self exposeBinding:@"rootItem"];	
-    [self exposeBinding:@"selectedObjects"];	
+    [self exposeBinding: @"rootItem"];	
+    [self exposeBinding: @"selectedObjects"];	
 }
 
-- (Class)valueClassForBinding:(NSString *)binding
+- (Class) valueClassForBinding: (NSString*) binding
 {
-	if ([binding isEqualToString:@"selectedObjects"])
-	{
+	if ([binding isEqualToString:@"selectedObjects"]) {
 		return [NSArray class];
-	}
-	else
-	{
+	} else {
 		return [NSObject class];	
 	}
 }
 
 - (id)observedObjectForRootItem { return observedObjectForRootItem; }
+
 - (void)setObservedObjectForRootItem:(id)anObservedObjectForRootItem
 {
     if (observedObjectForRootItem != anObservedObjectForRootItem) 
@@ -42,6 +40,7 @@
 }
 
 - (NSString *)observedKeyPathForRootItem { return observedKeyPathForRootItem; }
+
 - (void)setObservedKeyPathForRootItem:(NSString *)anObservedKeyPathForRootItem
 {
     if (observedKeyPathForRootItem != anObservedKeyPathForRootItem) 
@@ -52,6 +51,7 @@
 }
 
 - (id)observedObjectForSelectedObjects { return observedObjectForSelectedObjects; }
+
 - (void)setObservedObjectForSelectedObjects:(id)anObservedObjectForSelectedObjects
 {
     if (observedObjectForSelectedObjects != anObservedObjectForSelectedObjects) 
@@ -62,6 +62,7 @@
 }
 
 - (NSString *)observedKeyPathForSelectedObjects { return observedKeyPathForSelectedObjects; }
+
 - (void)setObservedKeyPathForSelectedObjects:(NSString *)anObservedKeyPathForSelectedObjects
 {
     if (observedKeyPathForSelectedObjects != anObservedKeyPathForSelectedObjects) 
@@ -134,75 +135,85 @@
 
 // -- regular stuff --
 
-- (id)init
+- (id) init
 {
-	if (self = [super init]) 
-	{
+	if (self = [super init]) {
 		knownItems = [[NSMutableSet alloc] init];
 	}
 	return self;
 }
 
-- (NSSet *)knownItems
+- (NSSet*) knownItems
 {
 	return knownItems;
 }
 
-- (void)resetKnownItems
+- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
 {
-	for (id item in knownItems) 
-	{
-		[item removeObserver:self forKeyPath:[self childKey]];
+	return nil;
+}
+
+- (void) resetKnownItems
+{
+	for (id item in knownItems) {
+		[item removeObserver: self forKeyPath: [self childKey]];
+		for (id keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
+			[item removeObserver: self forKeyPath: keyPath];
+		}
 	}
 	[knownItems removeAllObjects];
 }
 
-- (void)reloadData
+- (void) reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
 {
 	[self resetKnownItems];
 	[outlineView reloadData];
 }
 
-- (id)rootItem
+- (id) rootItem
 {
 	return rootItem;
 }
 
-- (void)setRootItem:(id)newItem
+- (void) setRootItem: (id) newItem
 {
-	if (! [rootItem isEqual:newItem]) 
-	{
-		[rootItem removeObserver:self forKeyPath:[self childKey]];
+	if (! [rootItem isEqual: newItem]) {
+		[rootItem removeObserver: self forKeyPath: [self childKey]];
 		[rootItem release];
 		rootItem = [newItem retain];
-		[rootItem addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
+		[rootItem addObserver:self forKeyPath: [self childKey] options: 0 context: NULL];
 		[self reloadData];
 	}
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath 
-					   ofObject:(id)object 
-						 change:(NSDictionary *)change 
-						context:(void *)context
+- (void) observeValueForKeyPath: (NSString*) keyPath 
+					   ofObject: (id) object 
+						 change: (NSDictionary*) change 
+						context: (void*) context
 {
+	if (context == outlineView) {
+		// just redisplay the affected item:
+		[outlineView reloadItem: object reloadChildren: NO]; 
+	}
+	
 	if ([keyPath isEqualToString:[self childKey]])
 	{
 		// if the childKey relation changes, reload that item:
 		if (object == rootItem) object = nil;
-		[outlineView reloadItem:object reloadChildren:YES]; 
+		[outlineView reloadItem: object reloadChildren: YES]; 
 		// todo: if we got a qualified notification, could we be more efficient?
 	}
-	else if ([keyPath isEqualToString:[self observedKeyPathForRootItem]])
+	else if ([keyPath isEqualToString: [self observedKeyPathForRootItem]])
 	{ 
 		// rootItem changed
-		id newRootItem = [observedObjectForRootItem valueForKeyPath:observedKeyPathForRootItem];
-		[self setRootItem:newRootItem];
+		id newRootItem = [observedObjectForRootItem valueForKeyPath: observedKeyPathForRootItem];
+		[self setRootItem: newRootItem];
 	}
 	else if ([keyPath isEqualToString:[self observedKeyPathForSelectedObjects]])
 	{ 
 		// selectedObjects changed
-		id newSelectedObjects = [observedObjectForSelectedObjects valueForKeyPath:[self observedKeyPathForSelectedObjects]];
+		id newSelectedObjects = [observedObjectForSelectedObjects valueForKeyPath: [self observedKeyPathForSelectedObjects]];
 		[self setSelectedObjects:newSelectedObjects];
 	}
 	else 
@@ -223,16 +234,24 @@
 	childKey = [aChildKey copy];
 }
 
+- (void) addToKnownItems: (id) item
+{
+	[knownItems addObject: item];
+	// Observe the child relation so we can react on that.
+	if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", item, [self childKey]);
+	[item addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
+	// Also observe additional keyPaths that will affect display:
+	for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
+		[item addObserver: self forKeyPath: keyPath options: 0 context: outlineView];
+	}
+}
+
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
 	if (! item) item = [self rootItem];
 	id result = [[item valueForKeyPath:[self childKey]] objectAtIndex:index];
-	if (! [knownItems containsObject:result]) 
-	{
-		[knownItems addObject:result];
-		// Observe the child relation so we can react on that.
-		if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", result, [self childKey]);
-		[result addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
+	if (! [knownItems containsObject:result]) {
+		[self addToKnownItems: result];
 	}
 	return result;
 }
