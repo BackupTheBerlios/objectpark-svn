@@ -608,8 +608,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	}
 		
 		
-	NSLog(@"Saving %u changed objects...\n%@", [changedObjects count],  NSDebugEnabled ? [changedObjects allObjects] : @"");
-	NSLog(@"Deleting %u objects...\n%@", [deletedObjects count],  NSDebugEnabled ? [deletedObjects allObjects] : @"");
+	NSLog(@"Saving %u changed objects...\n%@", [changedObjects count],  /*NSDebugEnabled ? changedObjects :*/ @"");
+	NSLog(@"Deleting %u objects...\n%@", [deletedObjects count],  /*NSDebugEnabled ? [deletedObjects allObjects] :*/ @"");
 
 	@synchronized(self) {
 		NSParameterAssert([database isInTransaction]);

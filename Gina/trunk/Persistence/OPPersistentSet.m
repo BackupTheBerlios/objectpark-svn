@@ -172,6 +172,11 @@
 	}
 }
 
+- (NSString*) descriptionWithLocale: (id) locale indent: (unsigned) indent
+{
+	return [NSString stringWithFormat: @"<%@ 0x%x> with %u entries", [self class], self, self.count];
+}
+
 
 - (void) dealloc 
 {

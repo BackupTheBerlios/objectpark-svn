@@ -27,9 +27,7 @@
 	if (!globalIndex) {
 		globalIndex = [[self rootObjectForKey: @"MessagesById"] retain];
 		if (!globalIndex) {
-			if (!NSDebugEnabled) {
-				globalIndex = [[OPPersistentStringDictionary alloc] init]; 
-			}
+			globalIndex = [[OPPersistentStringDictionary alloc] init]; 
 			[self setRootObject: globalIndex forKey: @"MessagesById"];
 		} else {
 			//NSLog(@"Reusing messageId Index 0x%x", globalIndex);

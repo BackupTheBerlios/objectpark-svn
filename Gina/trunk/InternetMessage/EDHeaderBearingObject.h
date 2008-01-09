@@ -50,9 +50,6 @@
 - (void)setBody:(NSString *)fieldBody forHeaderField:(NSString *)fieldName;
 - (NSString *)bodyForHeaderField:(NSString *)fieldName;
 
-- (void)setMessageId:(NSString *)value;
-- (NSString *)messageId;
-
 - (void)setDate:(NSCalendarDate *)value;
 - (NSCalendarDate *)date;
 

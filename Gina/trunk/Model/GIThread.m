@@ -398,7 +398,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	thread.date = aMessage.date;
 	aMessage.thread = thread;    
     
-	if (NSDebugEnabled) NSLog(@"Created thread %@ for message %@ (%qu)", [aMessage messageId], [aMessage oid]);
+	if (NSDebugEnabled) NSLog(@"Created thread %@ for message %@ (%llx)", self, [aMessage messageId], [aMessage oid]);
     
     return thread;
 }

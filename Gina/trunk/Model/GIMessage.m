@@ -211,7 +211,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     id result = nil;
     
-#warning Need to add message id generation.
     GIMessage* dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId: [anInternetMessage messageId]];
     
 	if (dupe) {
@@ -327,13 +326,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (NSString *)messageId
 {
-	if (!messageId.length)
-	{
-		[self willChangeValueForKey:@"messageId"];
-		[self.internetMessage generateMessageIdWithSuffix:@"missingId"];
-		messageId = [self.internetMessage bodyForHeaderField:@"Message-ID"];
-		[self didChangeValueForKey:@"messageId"];
-	}
 	return [[messageId retain] autorelease];
 }
 

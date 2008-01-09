@@ -369,6 +369,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     return [super initWithTransferData: transferData];
 }
 
+/*
 - (NSRange)takeHeadersFromData: (NSData*) data
 {
     NSRange result = [super takeHeadersFromData:data];
@@ -379,6 +380,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     }
     return result;
 }
+*/
 
 /*"Returns a NSData containing the complete header as a string."*/
 - (NSData*) _headerData
@@ -428,16 +430,44 @@ static NSCharacterSet *gremlinCharacterSet()
 }
 
 /*"Generates a message ID string (to use for messages without a message ID)."*/
-- (void) generateMessageIdWithSuffix: (NSString*) aString
+- (NSString *)generatedMessageIdWithSuffix:(NSString *)aString
 {
     static NSCharacterSet *equalsSet = nil;
     if (!equalsSet) equalsSet = [[NSCharacterSet characterSetWithCharactersInString: @"="] retain];
     
     NSString *md5sum = [[[self _headerData] md5Base64String] stringByTrimmingCharactersInSet:equalsSet];
-    [self setBody:[NSString stringWithFormat: @"<GI%@%@>", md5sum, aString] forHeaderField:@"Message-ID"];
-    // Make sure we can generate the transferData:
-    [self zapHeaderGremlins]; // we destroyed the original transferData anyway
+    return [NSString stringWithFormat: @"<GI%@%@>", md5sum, aString];
 }
+
+- (NSString *)messageId
+{
+    NSString *fBody;
+	
+    if((messageId == nil) && ((fBody = [self bodyForHeaderField: @"message-id"]) != nil))
+        messageId = [[[[EDIdListFieldCoder decoderWithFieldBody:fBody] list] lastObject] retain];
+	
+	if (!messageId.length)
+	{
+		messageId = [[self generatedMessageIdWithSuffix:@"@fakedMissingId"] retain];
+		if (NSDebugEnabled) NSLog(@"generated message id = %@", messageId);
+	}
+	
+    return messageId;
+}
+
+- (void) setMessageId: (NSString*) value
+{
+    EDIdListFieldCoder *fCoder;
+	
+    [value retain];
+    [messageId release];
+    messageId = value;
+	
+    fCoder = [[EDIdListFieldCoder alloc] initWithIdList:[NSArray arrayWithObject:messageId]];
+    [self setBody:[fCoder fieldBody] forHeaderField: @"Message-Id"];
+    [fCoder release];
+}
+
 
 //---------------------------------------------------------------------------------------
     @end

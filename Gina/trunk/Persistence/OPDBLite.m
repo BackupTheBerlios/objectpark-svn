@@ -150,11 +150,11 @@
 	int dummy; if (!error) error = &dummy;
 	*error = sqlite3BtreeMoveto((BtCursor*) self, NULL, key, YES, &result); /* Search result flag */
 	if (NSDebugEnabled) { 
-		if (result == 0) {
-			NSLog(@"Found: entry for key: %016llx", key);
-		} else {
-			NSLog(@"NOT Found: entry for key: %016llx", key);
-		}
+//		if (result == 0) {
+//			NSLog(@"Found: entry for key: %016llx", key);
+//		} else {
+//			NSLog(@"NOT Found: entry for key: %016llx", key);
+//		}
 	}
 	return result;
 }
@@ -620,11 +620,11 @@
 	NSAssert1(*error != 11, @"SQLite: The database disk image is malformed (%@)", self); 
 
 	if (NSDebugEnabled) { 
-		if (result == 0) {
-			NSLog(@"Found: entry for key: %016llx", key);
-		} else {
-			NSLog(@"NOT Found: entry for key: %016llx", key);
-		}
+//		if (result == 0) {
+//			NSLog(@"Found: entry for key: %016llx", key);
+//		} else {
+//			NSLog(@"NOT Found: entry for key: %016llx", key);
+//		}
 	}
 	return result;
 }

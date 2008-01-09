@@ -182,8 +182,24 @@
 	} 
 }
 
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"<%@ 0x%x> with %u entries", [self class], self, self.count];
+}
+
+- (NSString*) descriptionWithLocale: (id) locale
+{
+	return [NSString stringWithFormat: @"<%@ 0x%x> with %u entries", [self class], self, self.count];
+}
+
 - (id) objectForKey: (id) key
 {	
+	if (![key isKindOfClass: [NSString class]])
+	{
+		NSBeep();
+	}
+	
+	NSParameterAssert(key != nil);
 	NSParameterAssert([key isKindOfClass: [NSString class]]);
 	const void* keyBytes = [(NSString*)key UTF8String];
 	i64 keyLength = strlen(keyBytes);

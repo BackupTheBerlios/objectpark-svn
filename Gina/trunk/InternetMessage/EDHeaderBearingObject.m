@@ -124,29 +124,6 @@
 //	CONVENIENCE HEADER ACCESSORS (CACHED)
 //---------------------------------------------------------------------------------------
 
-- (void) setMessageId: (NSString*) value
-{
-    EDIdListFieldCoder *fCoder;
-
-    [value retain];
-    [messageId release];
-    messageId = value;
-
-    fCoder = [[EDIdListFieldCoder alloc] initWithIdList:[NSArray arrayWithObject:messageId]];
-    [self setBody:[fCoder fieldBody] forHeaderField: @"Message-Id"];
-    [fCoder release];
-}
-
-
-- (NSString*) messageId
-{
-    NSString *fBody;
-
-    if((messageId == nil) && ((fBody = [self bodyForHeaderField: @"message-id"]) != nil))
-        messageId = [[[[EDIdListFieldCoder decoderWithFieldBody:fBody] list] lastObject] retain];
-    return messageId;
-}
-
 
 - (void) setDate: (NSCalendarDate*) value
 {

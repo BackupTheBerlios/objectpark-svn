@@ -39,9 +39,11 @@ typedef enum
 + (id)messageWithAttributedStringContent:(NSAttributedString *)someContent type:(OPMessagePartType)messagePartType;
 
 - (void)zapHeaderGremlins;
-- (void)generateMessageIdWithSuffix:(NSString *)aString;
+- (NSString *)generatedMessageIdWithSuffix:(NSString *)aString;
 
 - (NSData *)transferData;
+- (NSString *)messageId;
+- (void) setMessageId: (NSString*) value;
 
 // The message ids of the messages the message refer to.
 - (NSArray *)references;
