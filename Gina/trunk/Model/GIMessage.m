@@ -596,7 +596,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	if (!someFlags) return;
 	//BOOL oldValue = flags & someFlags != 0;
-	flags = flags ^ someFlags;
+	flags ^= someFlags;
 	//BOOL newValue = flags & someFlags != 0;
 	//NSAssert(oldValue!=newValue, @"toggle failed.");
 }

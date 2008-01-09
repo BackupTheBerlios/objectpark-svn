@@ -899,10 +899,11 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	
 	NSLog(@"Registering persistent class %@ (cid %u)", poClass, newCid);
 
+	//if (NSDebugEnabled) NSLog(@"Storing plist with cid mappings: %@", plist);
+
 	// Make a plist out of the table and store that:
 	[database setPlist: plist forOid: CLASSTABLEOID error: &error];
 	
-	//NSLog(@"plist with cid mappings: %@", plist);
 	
 	NSAssert([self cidForClass: poClass] == newCid, @"Internal error in class table bookkeeping.");
 	return newCid;
