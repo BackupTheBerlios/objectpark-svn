@@ -180,7 +180,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	// Add self to global message id index:
 	if (messageId.length)
 	{
-#warning generate message id when not present
 		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
 	}
 	
@@ -189,14 +188,14 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
     
     // sanity check for date header field:
-    NSCalendarDate* messageDate = [im date];
-    if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare: messageDate] != NSOrderedDescending) {
+    date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate: [[im date] timeIntervalSinceReferenceDate]];
+    if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare: date] != NSOrderedDescending) {
         // if message's date is a future date
         // broken message, set current date:
-        messageDate = [NSCalendarDate date];
+		[date release]; 
+        date = [[NSDate date] retain];
 		if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
     }
-    [self setValue: messageDate forKey: @"date"];
     
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
@@ -276,8 +275,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (id)initDummy
 {
-	return [super init];
+	self = [super init];
 	flags = OPDummyStatus;
+	return self;
 }
 
 - (BOOL) isLeaf
@@ -292,7 +292,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (BOOL)isDummy
 {
-    return self.flags & OPDummyStatus != 0;
+    return (flags & OPDummyStatus) != 0;
 }
 
 @synthesize referenceOID;
@@ -596,7 +596,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	if (!someFlags) return;
 	//BOOL oldValue = flags & someFlags != 0;
-	flags ^= someFlags;
+	flags = flags ^ someFlags;
 	//BOOL newValue = flags & someFlags != 0;
 	//NSAssert(oldValue!=newValue, @"toggle failed.");
 }
