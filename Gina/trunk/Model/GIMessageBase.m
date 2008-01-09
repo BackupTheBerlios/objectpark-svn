@@ -53,7 +53,8 @@
 	GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
 
 	if (! [thread.messageGroups containsObject: aGroup]) {
-		[[thread mutableArrayValueForKey: @"messageGroups"] addObject: aGroup];
+		[[aGroup mutableSetValueForKey: @"threads"] addObject: thread];
+		//[[thread mutableArrayValueForKey: @"messageGroups"] addObject: aGroup];
 	}
 }
 

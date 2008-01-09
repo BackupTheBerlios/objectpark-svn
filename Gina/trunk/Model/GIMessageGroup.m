@@ -476,6 +476,12 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return nil;
 }
 
++ (NSSet *)keyPathsForValuesAffectingThreadChildren
+{
+	return [NSSet setWithObject:@"threads"];
+}
+
+
 - (NSArray *)threadChildren
 {
 	return [(OPPersistentSet*)[self threads] sortedArray];
@@ -820,15 +826,15 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	[(OPFaultingArray*)oldThread removeObject: self];  // update inverse relationship - what about KVO?
 }
 
-- (void)willChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
-{
-	while (YES) {};	
-}
-
-- (void)didChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
-{
-	while (YES) {};	
-}
+//- (void)willChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
+//{
+////	while (YES) {};	
+//}
+//
+//- (void)didChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
+//{
+////	while (YES) {};	
+//}
 
 - (void) encodeWithCoder: (NSCoder*) coder
 {
