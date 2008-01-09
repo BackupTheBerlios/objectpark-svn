@@ -17,10 +17,10 @@
 #import "GIMessageBase.h"
 #import "GIApplication.h"
 #import "OPPersistentObjectContext.h"
-//#import <Foundation/NSDebug.h>
-//#import "NSArray+Extensions.h"
+#import <Foundation/NSDebug.h>
+#import "NSApplication+OPExtensions.h"
 #import "GIUserDefaultsKeys.h"
-//#import "EDMessagePart+OPExtensions.h"
+#import "EDMessagePart+OPExtensions.h"
 #import "OPPersistentStringDictionary.h"
 
 NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotification";
@@ -83,7 +83,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (NSString*) messageFilePath
 {
-	NSString* filename = [NSString stringWithFormat: @"%@/Msg%08x.gml", [[self context] transferDataDirectory], LIDFromOID([self oid])];
+	NSString* filename = [[[self context] transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%08x.gml", LIDFromOID([self oid])]];
+	
+//	[NSString stringWithFormat: @"%@/Msg%08x.gml", [[self context] transferDataDirectory], LIDFromOID([self oid])];
 	return filename;
 }
 
@@ -745,7 +747,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	static NSString* result = nil;
 	if (result == nil) {
-		result = [[NSHomeDirectory() stringByAppendingPathComponent: @"Library/Gina/TransferData/"] retain];
+		result = [[[GIApp applicationSupportPath] stringByAppendingPathComponent:@"TransferData"] retain];
 		NSFileManager* fm = [NSFileManager defaultManager];
 		if (! [fm fileExistsAtPath: result isDirectory: NULL]) {
 			NSLog(@"Trying to create folder '%@'.", result);	
