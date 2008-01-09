@@ -32,7 +32,7 @@
 			}
 			[self setRootObject: globalIndex forKey: @"MessagesById"];
 		} else {
-			NSLog(@"Reusing messageId Index 0x%x", globalIndex);
+			//NSLog(@"Reusing messageId Index 0x%x", globalIndex);
 		}
 	}
 	return globalIndex;
@@ -190,9 +190,7 @@ NSString* MboxImportJobName = @"mbox import";
                         messagesWereAdded = YES;
                         ++addedMessageCount;
                     }
-                    
-                    [persistentMessage flushInternetMessageCache]; // free some memory
-                    
+                                        
                     if ((++mboxDataCount % 100) == 99) {
                         if (messagesWereAdded) {                            
                             [self saveChanges];

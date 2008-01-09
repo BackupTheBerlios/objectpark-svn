@@ -108,7 +108,6 @@
 
 
 
-+ (void) resetSendStatus;
 
 + (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;

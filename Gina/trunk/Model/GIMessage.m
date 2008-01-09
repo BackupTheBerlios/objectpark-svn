@@ -81,7 +81,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[super willDelete];
 }
 
-- (NSString*) messageFilename
+- (NSString*) messageFilePath
 {
 	NSString* filename = [NSString stringWithFormat: @"%@/Msg%08x.gml", [[self context] transferDataDirectory], LIDFromOID([self oid])];
 	return filename;
@@ -295,8 +295,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		[self willChangeValueForKey: @"isSeen"];
 		[self toggleFlags: OPSeenStatus];
 		[self didChangeValueForKey: @"isSeen"];
-		BOOL ok = self.isSeen == boolValue;
-		NSAssert(self.isSeen == boolValue, @"flag set did fail.");
+		//BOOL ok = self.isSeen == boolValue;
+		//NSAssert(self.isSeen == boolValue, @"flag set did fail.");
 		
 		//[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
 		
@@ -497,12 +497,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return (someFlags & self.flags) == someFlags;
 }
 
-+ (void) resetSendStatus
-/*" Run during startup to set the sendStatus of OPSendStatusSending or OPSendStatusQueuedBlocked back to OPSendStatusQueuedReady "*/
-{
-	NSString* command = @"update ZMESSAGE set ZISQUEUED=3 where ZISQUEUED=2 or ZISQUEUED=4;";
-	[[[OPPersistentObjectContext defaultContext] databaseConnection] performCommand: command];
-}
+//+ (void) resetSendStatus
+///*" Run during startup to set the sendStatus of OPSendStatusSending or OPSendStatusQueuedBlocked back to OPSendStatusQueuedReady "*/
+//{
+//	NSString* command = @"update ZMESSAGE set ZISQUEUED=3 where ZISQUEUED=2 or ZISQUEUED=4;";
+//	[[[OPPersistentObjectContext defaultContext] databaseConnection] performCommand: command];
+//}
 
 - (unsigned)sendStatus
 {
@@ -581,10 +581,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 /*" Inverts the flags given. "*/
 {
 	if (!someFlags) return;
-	BOOL oldValue = flags & someFlags != 0;
+	//BOOL oldValue = flags & someFlags != 0;
 	flags ^= someFlags;
-	BOOL newValue = flags & someFlags != 0;
-	NSAssert(oldValue!=newValue, @"toggle failed.");
+	//BOOL newValue = flags & someFlags != 0;
+	//NSAssert(oldValue!=newValue, @"toggle failed.");
 }
 
 - (void) willSave
@@ -593,8 +593,14 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	if (![self valueForKey: @"thread"]) {
 		NSLog(@"Warning! Will save message without thread: %@", self);
 	}
-	NSString* transferDataPath = [self messageFilename];
-	[self.internetMessage.transferData writeToFile: transferDataPath atomically: NO];
+	NSString* transferDataPath = [self messageFilePath];
+	if (! [[NSFileManager defaultManager] fileExistsAtPath: transferDataPath]) {
+		if (! internetMessage) {
+			NSLog(@"Warning! TransferDataFile at %@ not available on safe.", transferDataPath);
+		}
+		[self.internetMessage.transferData writeToFile: transferDataPath atomically: NO];
+	}
+	[self flushInternetMessageCache]; // free some memory
 }
 
 
@@ -687,7 +693,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	if (!internetMessage) {
 
-		NSString* transferDataPath = [self messageFilename];
+		NSString* transferDataPath = [self messageFilePath];
 		NSData* transferData = [NSData dataWithContentsOfFile: transferDataPath];
 		if (transferData) {
 			internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
