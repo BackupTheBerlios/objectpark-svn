@@ -105,6 +105,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[subject release];
 	[messages release];
 	[messagesByTree release];
+	[messageGroups release];
 	[super dealloc];	
 }
 
