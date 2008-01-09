@@ -17,7 +17,7 @@
 #define OPSeenStatus 1
 #define OPAnsweredStatus 2
 #define OPFlaggedStatus 4
-//#define OPDeletedStatus 8
+#define OPDummyStatus 8
 //#define OPDraftStatus 16
 //#define OPRecentStatus 32
 //#define OPQueuedStatus 64
@@ -113,6 +113,7 @@
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 
 - (id) initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
+- (id)initDummy;
 
 - (GIMessage *)reference;
 - (GIMessage *)referenceFind:(BOOL)find;

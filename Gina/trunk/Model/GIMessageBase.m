@@ -41,6 +41,7 @@
 - (GIMessage*) messageForMessageId: (NSString*) messageId;
 /*" Returns either nil or the message specified by its messageId. "*/
 {
+	if (! messageId.length) return nil;
 	GIMessage* result = [[self messagesByMessageId] objectForKey: messageId];
 	return result;
 }

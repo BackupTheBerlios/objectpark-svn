@@ -32,7 +32,7 @@
 	NSString *observedKeyPathForSelectedThreads;
 }
 
-@property (assign) NSArray *selectedThreads;
+@property (retain) NSArray *selectedThreads;
 
 - (IBAction)commentTreeSelectionChanged:(id)sender;
 

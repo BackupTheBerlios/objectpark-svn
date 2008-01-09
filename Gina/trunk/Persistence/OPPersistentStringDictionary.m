@@ -183,7 +183,7 @@
 }
 
 - (id) objectForKey: (id) key
-{
+{	
 	NSParameterAssert([key isKindOfClass: [NSString class]]);
 	const void* keyBytes = [(NSString*)key UTF8String];
 	i64 keyLength = strlen(keyBytes);

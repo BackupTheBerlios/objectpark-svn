@@ -43,17 +43,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 @synthesize date;
 @synthesize subject;
 
-- (GIThread*) thread
+- (GIThread *)thread
 {
-	return [[self context] objectForOID: threadOID];
+	return [[self context] objectForOID:threadOID];
 }
 
-- (void) setThread: (GIThread*) aThread
+- (void)setThread:(GIThread *)aThread
 {
 	if (threadOID != [aThread oid]) {
-		[self willChangeValueForKey: @"thread"];
+		[self willChangeValueForKey:@"thread"];
 		if (threadOID) {
-			[[self.thread mutableArrayValueForKey: @"messages"] removeObject: self];
+			[[self.thread mutableArrayValueForKey:@"messages"] removeObject: self];
 		}
 		threadOID = [aThread oid];
 		if (threadOID) {
@@ -66,17 +66,19 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (void) willDelete
 {
-	id thread = [self valueForKey: @"thread"];
-	if (thread) {
-		[self setValue: nil forKey: @"thread"];
+	id thread = self.thread;
+	if (thread) 
+	{
+		self.thread = nil;
 
-		if ([thread messageCount]<=1) {
+		if ([thread messageCount] <=1 ) 
+		{
 			[thread delete]; 
 		}
 	}
 #warning delete message file here!
 	
-	[[[self context] messagesByMessageId] removeObjectForKey: self.messageId];
+	[[[self context] messagesByMessageId] removeObjectForKey:self.messageId];
 	
 	[super willDelete];
 }
@@ -150,7 +152,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         
     if (NSDebugEnabled) NSLog(@"creating dummy message for message id %@", aMessageId);
     
-    dummy = [[[GIMessage alloc] init] autorelease];
+    dummy = [[[GIMessage alloc] initDummy] autorelease];
     //[dummy insertIntoContext: [OPPersistentObjectContext threadContext]]; 
     NSAssert(dummy != nil, @"Could not create a dummy message object");
 
@@ -176,7 +178,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	messageId = [[im messageId] retain];
 	
 	// Add self to global message id index:
-    [[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
+	if (messageId.length)
+	{
+#warning generate message id when not present
+		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
+	}
 	
 	
     subject = [[im normalizedSubject] retain];
@@ -205,6 +211,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     id result = nil;
     
+#warning Need to add message id generation.
     GIMessage* dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId: [anInternetMessage messageId]];
     
 	if (dupe) {
@@ -239,7 +246,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		referenceCount = NSNotFound;
 		internetMessage = [anInternetMessage retain];
         [self setContentFromInternetMessage: internetMessage];
-		[[[self context] messagesByMessageId] setObject: self forKey: self.messageId];
+
     }
     
     return self;
@@ -268,6 +275,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return nil;
 }
 
+- (id)initDummy
+{
+	return [super init];
+	flags = OPDummyStatus;
+}
+
 - (BOOL) isLeaf
 {
 	return YES;
@@ -280,7 +293,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (BOOL)isDummy
 {
-    return self.internetMessage == nil;
+    return self.flags & OPDummyStatus != 0;
 }
 
 @synthesize referenceOID;
@@ -312,8 +325,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return flags;
 }
 
-- (NSString*) messageId
+- (NSString *)messageId
 {
+	if (!messageId.length)
+	{
+		[self willChangeValueForKey:@"messageId"];
+		[self.internetMessage generateMessageIdWithSuffix:@"missingId"];
+		messageId = [self.internetMessage bodyForHeaderField:@"Message-ID"];
+		[self didChangeValueForKey:@"messageId"];
+	}
 	return [[messageId retain] autorelease];
 }
 
@@ -591,18 +611,22 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (void) willSave
 {
-	NSLog(@"Will save %@", self);
+	//NSLog(@"Will save %@", self);
 	if (![self valueForKey: @"thread"]) {
 		NSLog(@"Warning! Will save message without thread: %@", self);
 	}
-	NSString* transferDataPath = [self messageFilePath];
-	if (! [[NSFileManager defaultManager] fileExistsAtPath: transferDataPath]) {
-		if (! internetMessage) {
-			NSLog(@"Warning! TransferDataFile at %@ not available on safe.", transferDataPath);
+	
+	if (! [self isDummy])
+	{
+		NSString* transferDataPath = [self messageFilePath];
+		if (! [[NSFileManager defaultManager] fileExistsAtPath: transferDataPath]) {
+			if (! internetMessage) {
+				NSLog(@"Warning! TransferDataFile at %@ not available on save.", transferDataPath);
+			}
+			[self.internetMessage.transferData writeToFile: transferDataPath atomically: NO];
 		}
-		[self.internetMessage.transferData writeToFile: transferDataPath atomically: NO];
+		[self flushInternetMessageCache]; // free some memory
 	}
-	[self flushInternetMessageCache]; // free some memory
 }
 
 
@@ -634,41 +658,36 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (GIMessage *)reference
 /*" Returns the direct message reference stored. "*/
 {
-	return nil;
-	
-#warning reference is broken! needs fixing!
-//    [self willAccessValueForKey: @"reference"];
-//    id reference = [self primitiveValueForKey: @"reference"];
-//    [self didAccessValueForKey: @"reference"];
-//    return reference;
+	return [self.context objectForOID:referenceOID];
 }
 
 - (void)setReference:(GIMessage *)aReferencedMessage
 {
-#warning setReference is broken! needs fixing!
+	[self willChangeValueForKey:@"reference"];
+	referenceOID = [aReferencedMessage oid];
+	[self didChangeValueForKey:@"reference"];
 }
 
-- (GIMessage*) referenceFind: (BOOL) find
 /*" Returns the direct message reference stored.
-    If there is none and find is YES, looks up the references header(s) in the
-    internet message object and caches the result (if any).
-    
-    #ATTENTION: This method will generate dummy messages and add them to the 
-    thread if required and %find is YES! "*/
+ If there is none and find is YES, looks up the references header(s) in the
+ internet message object and caches the result (if any).
+ 
+ #ATTENTION: This method will generate dummy messages and add them to the 
+ thread if required and %find is YES! "*/
+- (GIMessage *)referenceFind:(BOOL)find
 {
-    GIMessage* result = [self valueForKey: @"reference"];
+    GIMessage *result = self.reference;
     
     if (result || !find)
         return result;
      
-#warning thread lookup disabled for now.
-    //[GIThread addMessageToAppropriateThread:self];
+    [GIThread addMessageToAppropriateThread:self];
     
-    return [self valueForKey: @"reference"];
+    return self.reference;
 }        
         
-- (BOOL) isListMessage
-	/*" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). Decodes internet message to compute the result - so it may be slow! "*/
+/*" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). Decodes internet message to compute the result - so it may be slow! "*/
+- (BOOL)isListMessage
 {
     id m = [self internetMessage];   
     
