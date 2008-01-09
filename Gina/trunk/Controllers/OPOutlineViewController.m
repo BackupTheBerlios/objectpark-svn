@@ -7,9 +7,12 @@
 //
 
 #import "OPOutlineViewController.h"
+#import "GIApplication.h"
 #import <Foundation/NSDebug.h>
 
 @implementation OPOutlineViewController
+
+@synthesize suspendUpdatesUntilNextReloadData;
 
 // -- binding stuff --
 
@@ -139,8 +142,20 @@
 {
 	if (self = [super init]) {
 		knownItems = [[NSMutableSet alloc] init];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(suspend:) name:GISuspendThreadViewUpdatesNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resume:) name:GIResumeThreadViewUpdatesNotification object:nil];
 	}
 	return self;
+}
+
+- (void)suspend:(NSNotification *)aNotification
+{
+	self.suspendUpdatesUntilNextReloadData = YES;
+}
+
+- (void)resume:(NSNotification *)aNotification
+{
+	[self reloadData];
 }
 
 - (NSSet*) knownItems
@@ -167,6 +182,7 @@
 - (void) reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
 {
+	self.suspendUpdatesUntilNextReloadData = NO;
 	[self resetKnownItems];
 	[outlineView reloadData];
 }
@@ -193,16 +209,22 @@
 						context: (void*) context
 {
 	if (context == outlineView) {
-		// just redisplay the affected item:
-		[outlineView reloadItem: object reloadChildren: NO]; 
+		if (! self.suspendUpdatesUntilNextReloadData)
+		{
+			// just redisplay the affected item:
+			[outlineView reloadItem: object reloadChildren: NO]; 
+		}
 	}
 	
 	if ([keyPath isEqualToString:[self childKey]])
 	{
-		// if the childKey relation changes, reload that item:
-		if (object == rootItem) object = nil;
-		[outlineView reloadItem: object reloadChildren: YES]; 
-		// todo: if we got a qualified notification, could we be more efficient?
+		if (! self.suspendUpdatesUntilNextReloadData)
+		{
+			// if the childKey relation changes, reload that item:
+			if (object == rootItem) object = nil;
+			[outlineView reloadItem: object reloadChildren: YES]; 
+			// todo: if we got a qualified notification, could we be more efficient?
+		}
 	}
 	else if ([keyPath isEqualToString: [self observedKeyPathForRootItem]])
 	{ 

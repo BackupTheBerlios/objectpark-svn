@@ -16,6 +16,9 @@
 #import "NSApplication+OPExtensions.h"
 #import <Foundation/NSDebug.h>
 
+NSString *GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
+NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNotification";
+
 @implementation GIApplication
 
 - (void)awakeFromNib
@@ -133,7 +136,9 @@
         
         NSArray *filesToOpen = [self filePathsSortedByCreationDate:[oPanel filenames]];
 		
+		[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];
 		[[OPPersistentObjectContext defaultContext] importMboxFiles: filesToOpen moveOnSuccess: NO];
+		[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
     }    
 }
 

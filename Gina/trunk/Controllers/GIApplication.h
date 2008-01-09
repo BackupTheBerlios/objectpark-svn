@@ -25,3 +25,6 @@
 - (IBAction) importMboxFile: (id) sender;
 
 @end
+
+extern NSString *GISuspendThreadViewUpdatesNotification;
+extern NSString *GIResumeThreadViewUpdatesNotification;

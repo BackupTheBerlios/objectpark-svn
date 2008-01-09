@@ -25,11 +25,13 @@
 	NSString *observedKeyPathForRootItem;
 	id observedObjectForSelectedObjects;
 	NSString *observedKeyPathForSelectedObjects;
+	BOOL suspendUpdatesUntilNextReloadData;
 }
 
 @property (copy) NSString *childKey;
 @property (retain) id rootItem;
 @property (retain, readonly) NSSet *knownItems;
+@property BOOL suspendUpdatesUntilNextReloadData;
 
 - (NSArray *)selectedObjects;
 - (void)setSelectedObjects:(NSArray *)anArray;
