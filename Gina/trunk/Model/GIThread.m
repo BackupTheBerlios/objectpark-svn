@@ -40,7 +40,10 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 /*" Sent by the mutableArray proxy. "*/
 {
 	[messageGroups insertObject: group atIndex: index];
-	[(OPPersistentSet*)group.threads addObject: self]; // what about KVO?
+	NSSet* selfSet = [NSSet setWithObject: self];
+	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+	[(OPPersistentSet*)group.threads addObject: self];
+	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
 }
 
 - (void) removeObjectFromMessageGroupsAtIndex: (NSUInteger) index
@@ -169,10 +172,10 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 }
 */
 
-- (void)didChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key
-{
-	while (YES) {};
-}
+//- (void)didChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key
+//{
+//	while (YES) {};
+//}
 
 
 - (void)noteChange

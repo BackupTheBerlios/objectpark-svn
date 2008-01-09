@@ -124,18 +124,6 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     return result;
 }
 
-/*
-- (void) addThread: (GIThread*) thread 
-{    
-#warning lots of work for Dirk here
-    [thread addToGroups: self];
-}
-
-- (void) removeThread: (GIThread*) thread 
-{
-    [thread removeFromGroups: self];
-}
-*/
 
 /*
 - (NSArray*) threadsByDate
@@ -501,22 +489,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 }
 */
 
-/*
-- (BOOL) contentDidChange 
-{
-	return contentDidChangeFlag;
-}
 
-- (void) noteContentDidChange
-{
-	contentDidChangeFlag = YES;
-}
-
-- (void) resetContentDidChange
-{
-	contentDidChangeFlag = NO;
-}
-*/
 
 //- (void)exportAsMboxFileWithPath:(NSString *)path
 //{
@@ -815,8 +788,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) addThreadsObject: (GIThread*) newThread
 /*" Sent by the mutableSet proxy. "*/
 {
+	NSIndexSet* insertSet = [NSIndexSet indexSetWithIndex: self.threads.count];
 	[(OPPersistentSet*)self.threads addObject: newThread];
+	[newThread willChange: NSKeyValueChangeInsertion valuesAtIndexes: insertSet forKey: @"messageGroups"];
 	[(OPFaultingArray*)newThread.messageGroups addObject: self]; // update inverse relationship - what about KVO?
+	[newThread didChange: NSKeyValueChangeInsertion valuesAtIndexes: insertSet forKey: @"messageGroups"];
 }
 
 - (void) removeThreadsObject: (GIThread*) oldThread
