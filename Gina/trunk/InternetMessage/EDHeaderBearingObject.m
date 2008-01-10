@@ -44,8 +44,8 @@
 - (id)init
 {
     [super init];
-    headerFields = [[NSMutableArray allocWithZone:[self zone]] init];
-    headerDictionary = [[NSMutableDictionary allocWithZone:[self zone]] init];
+    headerFields = [[NSMutableArray alloc] init];
+    headerDictionary = [[NSMutableDictionary alloc] init];
     return self;
 }
 
@@ -73,10 +73,11 @@
 	
 	// todo: optimize by setting the firstObject to sharedName
     sharedName = [fieldName sharedInstance];
-	NSArray *headerField = [NSArray arrayWithObjects:sharedName, fieldBody, nil];
+	NSArray *headerField = [[NSArray alloc] initWithObjects:sharedName, fieldBody, nil];
         //headerField = [[[OPObjectPair allocWithZone:[self zone]] initWithObjects:sharedName:fieldBody] autorelease];
     [headerFields addObject:headerField];
     [headerDictionary setObject:fieldBody forKey:[[fieldName lowercaseString] sharedInstance]];
+	[headerField release];
 }
 
 - (NSArray *)headerFields

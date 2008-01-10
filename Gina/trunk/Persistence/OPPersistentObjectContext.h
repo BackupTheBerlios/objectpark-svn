@@ -75,6 +75,7 @@
 	
 	NSMutableDictionary* rootObjects;
 	NSMutableDictionary* rootObjectOIDs;
+	NSCountedSet* instanceStatistic;
 }
 
 // Methods for internal use ONLY:

@@ -32,7 +32,7 @@
 //  is charged for more than the price for shipping and handling.
 //
 
-#import <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
 #import "OPPersistenceConstants.h"
 
 @class OPPersistentObjectContext;

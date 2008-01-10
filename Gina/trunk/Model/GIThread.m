@@ -425,12 +425,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     
     GIThread *thread = [self threadForMessage:message];
     
-    NSEnumerator *enumerator = [references reverseObjectEnumerator];
+    //NSEnumerator *enumerator = [references reverseObjectEnumerator];
     GIMessage *referencingMsg = message;
     GIMessage *referencedMsg;
     
     NSString *refId;
-    while (refId = [enumerator nextObject]) 
+    while (refId = [references lastObject]) 
 	{
         referencedMsg = [[OPPersistentObjectContext defaultContext] messageForMessageId:refId];
         
@@ -452,6 +452,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
         referencingMsg.reference = referencedMsg;
         
         referencingMsg = referencedMsg;
+		[references removeLastObject];
     }
 }
 

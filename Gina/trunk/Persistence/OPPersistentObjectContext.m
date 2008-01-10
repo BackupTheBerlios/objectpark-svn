@@ -130,7 +130,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 		// create cache set on demand:
 		cache = [NSMutableSet set];
 		[allObjectsByClass setObject: cache forKey: className];
-		[allObjectsByClass addObserver: self forKeyPath: className//[@"allObjectsByClass." stringByAppendingString: className] 
+		[allObjectsByClass addObserver: self forKeyPath: className
 				  options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld 
 				  context: allObjectsByClass];
 	}
@@ -184,6 +184,8 @@ typedef struct {
 	if ([[object class] cachesAllObjects]) {
 		[self cacheObject: object];
 	}
+	
+	[instanceStatistic addObject: [(NSObject*)object classForCoder]];
 }
 
 - (void) unregisterObject: (id <OPPersisting>) object
@@ -192,6 +194,8 @@ typedef struct {
     @synchronized((id)registeredObjects) {
         NSHashRemove(registeredObjects, object);
     }
+	
+	[instanceStatistic removeObject: [(NSObject*)object classForCoder]];
 }
 
 - (id) objectRegisteredForOID: (OID) oid
@@ -452,6 +456,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	faultCacheSize = 1000;
 	[faultCache release]; faultCache = [[NSMutableArray alloc] initWithCapacity: faultCacheSize+1];
 	
+	[instanceStatistic release]; instanceStatistic = [[NSCountedSet alloc] init];
+
+	
 //	@synchronized(database) {
 //		if ([database isInTransaction]) {
 //			[database commitTransaction];
@@ -620,13 +627,16 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		@synchronized(changedObjects) {
 			OPPersistentObject* object;
 			while (object = [changedObjects anyObject]) {
+				NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 				if (NSDebugEnabled) NSLog(@"Archiving %@", object);
 				[object willSave];
 				[self archiveObject: object usingCursor: saveCursor];
 				[changedObjects removeObject: object];
+				[pool release];
 			}
 		}
 		
+		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 		@synchronized(deletedObjects) {
 			OPPersistentObject* object;
 			while (object = [deletedObjects anyObject]) {
@@ -635,7 +645,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				[deletedObjects removeObject: object];
 			}
 		}
-		
+		[pool release];
+
 									 
 		[saveCursor release];
 									 
@@ -643,6 +654,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		error = [database beginTransaction];
 		
 	}
+	
+	NSLog(@"Allocated instances after -saveChanges: %@", instanceStatistic);
 }
 
 //- (void) saveChanges
@@ -866,6 +879,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[databasePath release];
 	[rootObjects release];
 	[rootObjectOIDs release];
+	[instanceStatistic release];
 	[super dealloc];
 }
 

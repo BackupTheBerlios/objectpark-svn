@@ -158,6 +158,7 @@ NSString* MboxImportJobName = @"mbox import";
                     unsigned int length = [transferData length];
                     const char* bytes = [transferData bytes];
                     
+					// See, if we can find a Gina/Ginko header:
                     if (! strncasecmp("X-Gina-Flags:", bytes, strlen("X-Gina-Flags:"))) {
                         const char *pos = bytes;
                         while ((pos < bytes+length) && (*pos++ != 0x0A))
