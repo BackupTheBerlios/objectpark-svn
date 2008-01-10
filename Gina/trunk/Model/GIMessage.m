@@ -211,7 +211,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     id result = nil;
     
     GIMessage* dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId: [anInternetMessage messageId]];
-    
 	if (dupe) {
         if ([dupe isDummy]) {
             // replace message
@@ -383,7 +382,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"%@ msgId %@, flags %@", self.messageId, self.flagsString];
+	return [NSString stringWithFormat: @"%@ msgId %@, flags %@", super.description, self.messageId, self.flagsString];
 }
 //- (void) flushCommentsCache
 ///*" Needs to be called whenever any other message changes its reference to the receiver (additions or removals). Preferable in -setPrimitiviveReference:. "*/
