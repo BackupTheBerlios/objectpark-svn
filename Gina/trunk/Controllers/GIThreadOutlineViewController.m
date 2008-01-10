@@ -499,6 +499,22 @@ NSDateFormatter *timeAndDateFormatter()
 	return result;
 }
 
+
+- (void)setSelectedMessages:(NSArray *)someMessages
+{
+	if (![someMessages isEqual:[self selectedObjects]]) 
+	{
+		
+		for (GIMessage *messageToSelect in someMessages)
+		{
+			// make sure thread is expanded:
+			[outlineView expandItem:[messageToSelect thread] expandChildren:YES];
+		}
+		
+		[self setSelectedObjects:someMessages];
+	}
+}
+
 - (BOOL)selectionHasUnreadMessages
 {
 	for (GIMessage *message in [self selectedMessages])

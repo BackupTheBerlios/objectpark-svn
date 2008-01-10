@@ -131,25 +131,12 @@
 // -- handling message tree view selection --
 - (IBAction)commentTreeSelectionChanged:(id)sender
 {
-	/*
 	GIMessage *message = [commentTreeView selectedMessage];
 	
 	if (message)
 	{
-		NSUInteger indexes[2];
-		
-		indexes[0] = [[threadTreeController selectionIndexPath] indexAtPosition:0];
-		indexes[1] = [[[message thread] messagesByTree] indexOfObjectIdenticalTo:message];
-		NSAssert(indexes[1] != NSNotFound, @"message should be found");
-
-		NSIndexPath *indexPath = [NSIndexPath indexPathWithIndexes:indexes length:2];
-		[threadTreeController setSelectionIndexPath:indexPath];
+		[threadsController setSelectedMessages:[NSArray arrayWithObject:message]];
 	}
-	else
-	{
-		[threadTreeController setSelectionIndexPaths:[NSArray array]];
-	}
-	 */
 }
 
 // -- handling menu commands --

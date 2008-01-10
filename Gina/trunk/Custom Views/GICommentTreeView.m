@@ -215,10 +215,7 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 	
 	selectedMessageOrThread = [anObject retain];
 	
-	if ([self thread] != theThread)
-	{
-		[self setThread:theThread];
-	}
+	[self setThread:theThread];
 	
 	if (message)
 	{

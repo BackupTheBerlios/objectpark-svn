@@ -315,8 +315,18 @@
 }
 
 - (void)setSelectedObjects:(NSArray *)anArray
-{
-#warning not yet implemented
+{	
+	[outlineView deselectAll:self];
+	
+	for (id itemToSelect in anArray)
+	{
+		[outlineView selectRow:[outlineView rowForItem:itemToSelect] byExtendingSelection:YES];
+	}
+	
+	if ([anArray count])
+	{
+		[outlineView scrollRowToVisible:[outlineView rowForItem:[anArray lastObject]]];
+	}
 }
 
 - (void) dealloc 
