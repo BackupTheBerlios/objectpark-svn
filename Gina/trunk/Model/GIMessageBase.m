@@ -143,6 +143,8 @@ NSString* MboxImportJobName = @"mbox import";
 //										  currentValue:[enumerator offsetOfNextObject] 
 //										   description:@""]];
 	
+	NSDate *startDate = [NSDate date];
+	
     NSAutoreleasePool *pool = nil;
     @try 
 	{
@@ -193,7 +195,9 @@ NSString* MboxImportJobName = @"mbox import";
                     }
                                         
                     if ((++mboxDataCount % 100) == 99) {
-                        if (messagesWereAdded) {                            
+                        if (messagesWereAdded) {   
+							NSDate *lapDate = [NSDate date];
+							NSLog(@"Added %u messages so far... (average %.2lf messages/second)", addedMessageCount, (double)addedMessageCount / (double)(([lapDate timeIntervalSinceReferenceDate] - [startDate timeIntervalSinceReferenceDate])));
                             [self saveChanges];
                             messagesWereAdded = NO;
                         }
@@ -224,7 +228,8 @@ NSString* MboxImportJobName = @"mbox import";
             
         }
         
-        if (NSDebugEnabled) NSLog(@"*** Added %d messages.", addedMessageCount);
+		NSDate *stopDate = [NSDate date];
+        NSLog(@"*** Added %u messages in %.2f seconds.", addedMessageCount, [stopDate timeIntervalSinceReferenceDate] - [startDate timeIntervalSinceReferenceDate]);
         
         [self saveChanges];
         //NSAssert1(!error, @"Fatal Error. Committing of added messages failed (%@).", error);    

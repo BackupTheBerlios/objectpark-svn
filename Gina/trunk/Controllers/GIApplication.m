@@ -67,7 +67,6 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 {
 	registerDefaultDefaults();
 	[super finishLaunching];
-	[self askForBecomingDefaultMailApplication];
 }
 
 - (IBAction)makeDefaultApp:(id)sender
@@ -92,7 +91,15 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
+	static BOOL firstTime = YES;
+	
 	[self ensureMainWindowIsPresent];
+	
+	if (firstTime)
+	{
+		[self askForBecomingDefaultMailApplication];
+		firstTime = NO;
+	}
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification
