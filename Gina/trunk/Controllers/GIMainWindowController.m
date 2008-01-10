@@ -481,7 +481,7 @@
 			{
 				if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
 				{
-					[selectedMessage setIsSeen: YES];
+					[selectedMessage setIsSeen:YES];
 				}
 				break;
 			}

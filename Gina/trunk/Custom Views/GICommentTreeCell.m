@@ -119,6 +119,10 @@ void ensureIntegrity()
     navigation.west = 0;
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%@ - represented Object: %@", [super description], [self representedObject]];
+}
 
 - (void) setIsDummyMessage:(BOOL) aBool
 {
@@ -137,6 +141,10 @@ void ensureIntegrity()
     flags.isSeen = aBool;
 }
 
+- (BOOL)seen
+{
+	return flags.isSeen;
+}
 
 - (void) setColorIndex:(unsigned int) anIndex
 {

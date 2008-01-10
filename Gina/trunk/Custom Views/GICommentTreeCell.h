@@ -34,6 +34,7 @@
 - (void) setIsDummyMessage:(BOOL) aBool;
 - (void) setHasConnectionToDummyMessage:(BOOL) aBool;
 - (void) setSeen:(BOOL) aBool;
+- (BOOL) seen;
 - (void) setColorIndex:(unsigned int) anIndex;
 
 - (void) reset;
