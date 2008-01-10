@@ -224,6 +224,7 @@ NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidCh
 	{
 		NSCell *cell = [self cellForRepresentedObject:message];
 		[self selectCell:cell];
+		[self updateCommentTree:NO];
 //		NSLog(@"selecting message: %@", message);
 	}
 	else
