@@ -11,8 +11,10 @@
 
 @interface GIThreadOutlineViewController : OPOutlineViewController 
 {
-
+	BOOL suspendUpdatesUntilNextReloadData;
 }
+
+@property BOOL suspendUpdatesUntilNextReloadData;
 
 - (NSArray *)selectedMessages;
 - (BOOL)selectionHasUnreadMessages;

@@ -7,6 +7,7 @@
 //
 
 #import "GIThreadOutlineViewController.h"
+#import "GIApplication.h"
 #import "GIMessage.h"
 #import "GIMessage+Rendering.h"
 #import "GIThread.h"
@@ -417,6 +418,46 @@ NSDateFormatter *timeAndDateFormatter()
 @end
 
 @implementation GIThreadOutlineViewController
+
+@synthesize suspendUpdatesUntilNextReloadData;
+
+- (id) init
+{
+	if (self = [super init]) 
+	{
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(suspend:) name:GISuspendThreadViewUpdatesNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resume:) name:GIResumeThreadViewUpdatesNotification object:nil];
+	}
+	return self;
+}
+
+- (void)suspend:(NSNotification *)aNotification
+{
+	self.suspendUpdatesUntilNextReloadData = YES;
+}
+
+- (void)resume:(NSNotification *)aNotification
+{
+	[self reloadData];
+}
+
+- (void) observeValueForKeyPath: (NSString*) keyPath 
+					   ofObject: (id) object 
+						 change: (NSDictionary*) change 
+						context: (void*) context
+{
+	if (!self.suspendUpdatesUntilNextReloadData)
+	{
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
+}	
+
+- (void) reloadData
+/*" Call this instead of calling reloadData on the outline. "*/
+{
+	self.suspendUpdatesUntilNextReloadData = NO;
+	[super reloadData];
+}
 
 /*" Changes the text color to white, if the cell's background is darkish. "*/
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
