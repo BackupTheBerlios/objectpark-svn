@@ -499,12 +499,10 @@ NSDateFormatter *timeAndDateFormatter()
 	return result;
 }
 
-
 - (void)setSelectedMessages:(NSArray *)someMessages
 {
 	if (![someMessages isEqual:[self selectedObjects]]) 
 	{
-		
 		for (GIMessage *messageToSelect in someMessages)
 		{
 			// make sure thread is expanded:
