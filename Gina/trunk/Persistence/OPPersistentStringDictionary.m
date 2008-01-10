@@ -150,6 +150,12 @@
 
 - (void) setObject: (id) object forKey: (id) key
 {
+//	if (!key)
+//	{
+//		NSBeep();
+//	}
+	
+	NSParameterAssert(key != nil);
 	NSParameterAssert([key isKindOfClass: [NSString class]]);
 	OID objectOID = [(OPPersistentObject*)object oid];
 	//@synchronized(setCursor) {

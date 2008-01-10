@@ -453,7 +453,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		 //[cachedObjectsByClass release]; cachedObjectsByClass = [[NSMutableDictionary alloc] init];
 	 }
 	
-	faultCacheSize = 1000;
+	faultCacheSize = 10000;
 	[faultCache release]; faultCache = [[NSMutableArray alloc] initWithCapacity: faultCacheSize+1];
 	
 	[instanceStatistic release]; instanceStatistic = [[NSCountedSet alloc] init];

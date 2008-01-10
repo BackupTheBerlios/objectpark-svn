@@ -236,13 +236,17 @@
 
 - (void) addToKnownItems: (id) item
 {
-	[knownItems addObject: item];
-	// Observe the child relation so we can react on that.
-	if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", item, [self childKey]);
-	[item addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
-	// Also observe additional keyPaths that will affect display:
-	for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
-		[item addObserver: self forKeyPath: keyPath options: 0 context: outlineView];
+	if (item) {
+		[knownItems addObject: item];
+		// Observe the child relation so we can react on that.
+		if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", item, [self childKey]);
+		[item addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
+		// Also observe additional keyPaths that will affect display:
+		for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
+			[item addObserver: self forKeyPath: keyPath options: 0 context: outlineView];
+		}
+	} else {
+		NSLog(@"Warning: nil item in outline data detected.");
 	}
 }
 
@@ -250,6 +254,9 @@
 {
 	if (! item) item = [self rootItem];
 	id result = [[item valueForKeyPath:[self childKey]] objectAtIndex:index];
+#warning hack to circumvent bug. REMOVE!
+	if (!result) result = [NSDictionary dictionary];
+	
 	if (! [knownItems containsObject:result]) {
 		[self addToKnownItems: result];
 	}
@@ -276,9 +283,9 @@
 	} 
 	else 
 	{
-		NSAssert([knownItems containsObject:item], @"item not known!?");
+		if (NSDebugEnabled) NSAssert([knownItems containsObject:item], @"item not known!?");
 	}
-	
+		
 	NSString *columnKey = [tableColumn identifier];
 	if ([columnKey hasPrefix:@"empty"]) return @"";
 	return [item valueForKey:columnKey];

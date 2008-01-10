@@ -145,6 +145,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     GIMessage* dummy;
     
+	NSParameterAssert(aMessageId);
+	
     // if there already is a message with that id we'll use that
 	// This may not be dummy! So what happens then?
     if (dummy = [[OPPersistentObjectContext defaultContext] messageForMessageId: aMessageId])
@@ -163,6 +165,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
 	NSAssert([dummy isDummy], @"Dummy message not marked as such");
 	
+	[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: dummy forKey: aMessageId];  
+	
     return dummy;
 }
 
@@ -171,6 +175,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     NSString* fromHeader = [im fromWithFallback: YES];
     
+	[self removeFlags:OPDummyStatus];
+	
     //if ([self isDummy])
     //    [self removeFlags: OPSeenStatus];
 	[internetMessage release];
@@ -182,7 +188,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	{
 		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
 	}
-	
 	
     subject = [[im normalizedSubject] retain];
     [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
@@ -209,7 +214,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 + (id)messageWithInternetMessage: (OPInternetMessage *)anInternetMessage;
 {
     id result = nil;
-    
+	
     GIMessage* dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId: [anInternetMessage messageId]];
 	if (dupe) {
         if ([dupe isDummy]) {
