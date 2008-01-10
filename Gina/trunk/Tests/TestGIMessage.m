@@ -15,6 +15,19 @@
 
 @implementation TestGIMessage
 
++ (OPInternetMessage*) newInternetMessageForTest
+{
+	NSString *transferDataPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestMIMEBoundaries" ofType:@"transferData"];
+	NSAssert(transferDataPath != nil, @"couldn't find transferdata resource");
+	
+	NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];
+	NSAssert(transferData != nil, @"couldn't read transferdata");
+	
+	OPInternetMessage *result = [[OPInternetMessage alloc] initWithTransferData:transferData];
+	
+	return result;
+}
+
 + (GIMessage *)messageForTest
 {
 	NSString *transferDataPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestMIMEBoundaries" ofType:@"transferData"];
@@ -23,8 +36,9 @@
 	NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];
 	NSAssert(transferData != nil, @"couldn't read transferdata");
 	
-	OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
+	OPInternetMessage *internetMessage = [self newInternetMessageForTest];
 	GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
+	[internetMessage release];
 	NSAssert(message != nil, @"couldn't create message from internetMessage");
 	
 	//NSString *subject = message.subject;
@@ -64,6 +78,19 @@
 	NSAssert(!message.isSeen, @"message should not be seen");
 	[message setIsSeen: YES];
 	NSAssert(message.isSeen, @"message should be seen");
+}
+
+- (void) testRetains
+{
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	OPInternetMessage* msg = [[self class] newInternetMessageForTest];
+	NSDictionary* headerDict = [msg valueForKey: @"headerDictionary"];
+	NSDictionary* headerFields = [msg valueForKey: @"headerFields"];
+	[pool release];
+	NSAssert([headerDict retainCount] == 1, @"Leaking header dict?");
+	NSAssert([headerFields retainCount] == 1, @"Leaking header dict?");
+	[msg release];
+	
 }
 
 @end

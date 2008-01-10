@@ -173,7 +173,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     //if ([self isDummy])
     //    [self removeFlags: OPSeenStatus];
-        
+	[internetMessage release];
 	internetMessage = [im retain];
 	messageId = [[im messageId] retain];
 	
@@ -242,9 +242,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     if (self = [super init]) {
 		// Create a new message in the default context:
 		referenceCount = NSNotFound;
-		internetMessage = [anInternetMessage retain];
-        [self setContentFromInternetMessage: internetMessage];
-
+        [self setContentFromInternetMessage: anInternetMessage]; // also retains anInternetMessage
     }
     
     return self;
