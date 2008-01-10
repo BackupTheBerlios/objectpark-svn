@@ -225,6 +225,7 @@
 		77CFC5140D02F32D0039A2E8 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		77DB2A120D03537500F23C06 /* TestOPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5BC0D00546B00A7BEFF /* TestOPMultipartContentCoder.m */; };
 		77DB2A4A0D03569F00F23C06 /* TestOPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5AE0D00546B00A7BEFF /* TestOPSMTP.m */; };
+		77E387D70D36193900C31A29 /* ThreadingTest.mbox in Resources */ = {isa = PBXBuildFile; fileRef = 77E387D60D36193900C31A29 /* ThreadingTest.mbox */; };
 		77F2E2EC0D1E4AF90003D25B /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		77F2E2ED0D1E4AFB0003D25B /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		77F2E2EF0D1E4B060003D25B /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
@@ -564,6 +565,7 @@
 		77BF61A90D12882700BE0F31 /* GIFilterArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFilterArrayController.h; sourceTree = "<group>"; };
 		77BF61AA0D12882700BE0F31 /* GIFilterArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFilterArrayController.m; sourceTree = "<group>"; };
 		77C3BD020D103F860003634C /* Gina.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Gina.tiff; sourceTree = "<group>"; };
+		77E387D60D36193900C31A29 /* ThreadingTest.mbox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ThreadingTest.mbox; sourceTree = "<group>"; };
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
 		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaSpotlight-Info.plist"; path = "../GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
@@ -1131,6 +1133,7 @@
 		77B6C9860D01A2C200A7BEFF /* Test Resources */ = {
 			isa = PBXGroup;
 			children = (
+				77E387D60D36193900C31A29 /* ThreadingTest.mbox */,
 				777B061A0D0320C80080B76F /* MailIcon_queue.tiff */,
 				77B6C9990D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt */,
 				77B6C99A0D01A37000A7BEFF /* TestAppleDouble.transferData */,
@@ -1425,6 +1428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				773616100D1D7204007FC630 /* TestMIMEBoundaries.transferData in Resources */,
+				77E387D70D36193900C31A29 /* ThreadingTest.mbox in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

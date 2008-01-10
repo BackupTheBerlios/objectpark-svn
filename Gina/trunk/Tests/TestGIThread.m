@@ -11,6 +11,7 @@
 #import "GIThread.h"
 #import "GIMessage.h"
 #import "OPPersistentObjectContext.h"
+#import "GIMessageBase.h"
 
 @implementation TestGIThread
 
@@ -34,6 +35,22 @@
 - (void)testThreadMessageRelationship
 {
 	[[self class] threadForTest];
+}
+
+// WARNING: It is important to have Gina's database deleted before this test really works!
+- (void)testThreading
+{
+	NSString *mboxPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ThreadingTest" ofType:@"mbox"];
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+	
+	[context importMboxFiles:[NSArray arrayWithObject:mboxPath] moveOnSuccess:NO];
+	GIMessage *msg1 = [context messageForMessageId:@"<id1@test.com>"];
+	NSAssert(msg1 != nil, @"could not find message 1");
+	GIMessage *msg2 = [context messageForMessageId:@"<id2@test.com>"];
+	NSAssert(msg2 != nil, @"could not find message 2");
+	
+	NSAssert([[msg2 reference] isEqual:msg1], @"reference is not expected");
+	NSAssert2([msg2 reference] == msg1, @"not correctly threaded (reference is %@. should be %@)", [msg2 reference], msg1);
 }
 
 @end

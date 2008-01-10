@@ -27,7 +27,7 @@
 	GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
 	NSAssert(message != nil, @"couldn't create message from internetMessage");
 	
-	NSString *subject = message.subject;
+	//NSString *subject = message.subject;
 	//NSAssert([subject isEqualToString:@"strained"], @"wrong subject in message");
 	return message;
 }
