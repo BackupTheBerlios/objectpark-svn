@@ -380,6 +380,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[super dealloc];
 }
 
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ msgId %@, flags %@", self.messageId, self.flagsString];
+}
 //- (void) flushCommentsCache
 ///*" Needs to be called whenever any other message changes its reference to the receiver (additions or removals). Preferable in -setPrimitiviveReference:. "*/
 //{
@@ -441,11 +446,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     int i = 0;
     unsigned f = [self flags];
     
+	if (f & OPDummyStatus)       result[i++] = '?';
     if (f & OPInterestingStatus) result[i++] = 'I';
     if (f & OPAnsweredStatus)    result[i++] = 'A';
     if (f & OPJunkMailStatus)    result[i++] = 'J';
     if (f & OPSeenStatus)        result[i++] = 'R';
-    //if (f & OPDraftStatus)       result[i++] = 'D';
     
     result[i++] = '\0'; // terminate string
     

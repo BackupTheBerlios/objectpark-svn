@@ -49,7 +49,7 @@
 	GIMessage *msg2 = [context messageForMessageId:@"<id2@test.com>"];
 	NSAssert(msg2 != nil, @"could not find message 2");
 	
-	NSAssert([[msg2 reference] isEqual:msg1], @"reference is not expected");
+	NSAssert1([[msg2 reference] isEqual:msg1], @"reference is not not set on import, got %@ as reference instead.", [msg2 reference]);
 	NSAssert2([msg2 reference] == msg1, @"not correctly threaded (reference is %@. should be %@)", [msg2 reference], msg1);
 }
 
