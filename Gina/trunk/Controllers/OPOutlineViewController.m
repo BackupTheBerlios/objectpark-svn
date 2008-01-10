@@ -255,7 +255,9 @@
 	if (! item) item = [self rootItem];
 	id result = [[item valueForKeyPath:[self childKey]] objectAtIndex:index];
 #warning hack to circumvent bug. REMOVE!
-	if (!result) result = [NSDictionary dictionary];
+	static NSDictionary *hackDict = nil;
+	if (! hackDict) hackDict = [[NSDictionary alloc] init];
+	if (!result) result = hackDict;
 	
 	if (! [knownItems containsObject:result]) {
 		[self addToKnownItems: result];
