@@ -285,12 +285,12 @@ NSDateFormatter *timeAndDateFormatter()
 
 + (NSSet *)keyPathsForValuesAffectingDateForDisplay
 {
-	return [NSSet setWithObjects:@"date", @"hasUnreadMessages", nil];
+	return [NSSet setWithObjects:@"date", @"isSeen", nil];
 }
 
 + (NSSet *)keyPathsForValuesAffectingStatusImage
 {
-	return [NSSet setWithObject:@"hasUnreadMessages"];
+	return [NSSet setWithObject:@"isSeen"];
 }
 
 - (OPFaultingArray *)threadChildren
@@ -314,7 +314,7 @@ NSDateFormatter *timeAndDateFormatter()
 	if ([msgs count] > 1)
 	{
 		// multi-message thread
-		return [[[NSAttributedString alloc] initWithString:nilGuard(self.subject) attributes:[self hasUnreadMessages] ? unreadAttributes() : readAttributes()] autorelease];
+		return [[[NSAttributedString alloc] initWithString:nilGuard(self.subject) attributes:![self isSeen] ? unreadAttributes() : readAttributes()] autorelease];
 	}	
 	else
 	{
@@ -400,7 +400,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSAttributedString *)dateForDisplay
 {
-	BOOL isRead = !self.hasUnreadMessages;
+	BOOL isRead = self.isSeen;
 	
 	NSString *dateString = [timeAndDateFormatter() stringFromDate:self.date];
 	
@@ -409,7 +409,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSImage *)statusImage
 {
-	if ([self hasUnreadMessages]) return [NSImage imageNamed:@"unread"];
+	if (![self isSeen]) return [NSImage imageNamed:@"unread"];
 	return nil;
 }
 
@@ -539,7 +539,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
 {
-	return [NSSet setWithObjects: @"isSeen", @"hasUnreadMessages", nil];
+	return [NSSet setWithObjects: @"isSeen", nil];
 }
 
 @end

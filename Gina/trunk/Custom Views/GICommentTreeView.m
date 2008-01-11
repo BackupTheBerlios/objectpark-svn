@@ -110,7 +110,7 @@
 		id newSelectedMessageOrThread = [observedObjectForSelectedMessageOrThread valueForKeyPath:observedKeyPathForSelectedMessageOrThread];
 		[self setSelectedMessageOrThread:newSelectedMessageOrThread];
 	}
-	else if ([keyPath isEqualToString:@"hasUnreadMessages"])
+	else if ([keyPath isEqualToString:@"isSeen"])
 	{
 		[self refreshFlags];
 	}
@@ -153,7 +153,7 @@
 
 	[commentsCache release];
 	[border release];
-	[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
+	[thread removeObserver:self forKeyPath:@"isSeen"];
 	[thread removeObserver:self forKeyPath:@"messages"];
 	[thread release];
 
@@ -182,11 +182,11 @@
 	
 	if (aThread != thread)
 	{
-		[thread removeObserver:self forKeyPath:@"hasUnreadMessages"];
+		[thread removeObserver:self forKeyPath:@"isSeen"];
 		[thread removeObserver:self forKeyPath:@"messages"];
 		[thread autorelease];
 		thread = [aThread retain];
-		[thread addObserver:self forKeyPath:@"hasUnreadMessages" options:0 context:NULL];
+		[thread addObserver:self forKeyPath:@"isSeen" options:0 context:NULL];
 		[thread addObserver:self forKeyPath:@"messages" options:0 context:NULL];
 		
 		[self updateCommentTree:YES];

@@ -316,8 +316,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		
 		//[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
 		
-		[self.thread willChangeValueForKey: @"hasUnreadMessages"];
-		[self.thread didChangeValueForKey: @"hasUnreadMessages"];
+		[self.thread willChangeValueForKey: @"isSeen"];
+		[self.thread didChangeValueForKey: @"isSeen"];
 	}
 }
 

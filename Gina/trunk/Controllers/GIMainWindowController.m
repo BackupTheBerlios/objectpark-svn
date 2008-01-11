@@ -95,8 +95,9 @@
 - (void)windowDidLoad
 {
 	// configuring manual bindings:
-	NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-														forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
+	//NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+	//													forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
+	NSDictionary *options = nil;
 	
 	[threadsController setChildKey:@"threadChildren"];
 	[threadsController bind:@"rootItem" toObject:messageGroupTreeController withKeyPath:@"selection.self" options:options];

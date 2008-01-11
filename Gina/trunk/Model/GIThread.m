@@ -349,7 +349,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //}
 
 #warning improve performance here! DIRK
-- (BOOL)hasUnreadMessages
+- (BOOL)isSeen
 /*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    
 //	return YES;
@@ -358,10 +358,10 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	{
         if (!message.isSeen) 
 		{
-            return YES;
+            return NO;
         }
     }
-    return NO;
+    return YES;
 }
 
 - (NSArray *)rootMessages

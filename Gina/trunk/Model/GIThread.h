@@ -40,7 +40,7 @@
 - (NSUInteger)messageCount;
 - (NSArray*) rootMessages;
 - (NSUInteger)commentDepth;
-- (BOOL) hasUnreadMessages;
+- (BOOL) isSeen;
 - (BOOL) containsSingleMessage;
 
 //- (void) addToGroups_Manually: (GIMessageGroup*) newGroup;
