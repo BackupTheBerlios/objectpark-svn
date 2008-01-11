@@ -318,6 +318,9 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 /*" Returns an array containing the result of a depth first search over all tree roots. "*/
 - (OPFaultingArray*) messagesByTree
 {
+#warning do the right thing here! -> DIRK
+	return self.messages;
+	/*
 	if (!messagesByTree) {
 		NSArray* allMessages = [self messages];
 		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: [allMessages count]];
@@ -325,6 +328,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: messagesByTree];
 	}	
     return messagesByTree;
+	 */
 }
 
 - (BOOL)isLeaf
@@ -344,10 +348,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //
 //}
 
-
+#warning improve performance here! DIRK
 - (BOOL)hasUnreadMessages
 /*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    
+//	return YES;
+	
 	for (GIMessage *message in [self messages])
 	{
         if (!message.isSeen) 

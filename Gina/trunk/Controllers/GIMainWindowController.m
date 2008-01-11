@@ -324,23 +324,6 @@
 
 @implementation GIMainWindowController (OutlineViewDelegateAndActions)
 
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-	// item is tree node!
-	
-	if ([cell interiorBackgroundStyle] == NSBackgroundStyleDark)
-	{
-		if ([cell isKindOfClass:[NSTextFieldCell class]])
-		{
-			//	[cell setTextColor:[NSColor grayColor]];
-			// change text to all white:
-			//[(NSCell *)cell 
-			//	NSLog(@"willDisplayCell dark item = %@", item);
-		}
-	}
-	//	[super outlineView:outlineView willDisplayCell:cell forTableColumn:tableColumn item:item];
-}
-
 - (IBAction)threadsDoubleAction:(id)sender
 {
 	if ([threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
@@ -490,4 +473,62 @@
 	}	
 }
 	
+@end
+
+@implementation GIMainWindowController (KeyboardShortcuts)
+
+#define LEFT_A 0
+#define DOWN_S 1
+#define RIGHT_D 2
+#define UP_W 13
+#define ESC 53
+#define BACKSPACE 51
+#define RETURN 36
+
+- (BOOL)keyPressed:(NSEvent *)event
+{
+	switch([event keyCode])
+	{
+		case LEFT_A:
+			[commentTreeView navigateLeftInMatrix:self];
+			return YES;
+		case DOWN_S:
+			[commentTreeView navigateDownInMatrix:self];
+			return YES;
+		case RIGHT_D:
+			[commentTreeView navigateRightInMatrix:self];
+			return YES;
+		case UP_W:
+			[commentTreeView navigateUpInMatrix:self];
+			return YES;
+		case ESC:
+		case BACKSPACE:
+		{
+			// if only mail is visible, switch back to only thread list visible
+			NSLog(@"subviews of thread mail splitter = %@", [threadMailSplitter subviews]);
+			NSLog(@"[threadsOutlineView superview] = %@", [[threadsOutlineView superview] superview]);
+			
+			if ([threadMailSplitter isSubviewCollapsed:[[threadsOutlineView superview] superview]])
+			{
+				NSLog(@"only mail visible. switching to only threads visible.");
+				@try
+				{
+					[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
+				}
+				@catch(id exception)
+				{
+					NSLog(@"exception: %@", exception);
+				}
+			}
+			return YES;
+		}
+		case RETURN:
+			break;
+		default:
+			break;
+	}
+	
+	return NO;
+}
+
 @end

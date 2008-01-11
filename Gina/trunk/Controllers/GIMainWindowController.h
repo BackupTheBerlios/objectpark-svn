@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "GICommentTreeView.h"
 #import "GIOutlineViewWithThreadColoring.h"
+#import "GIMainWindow.h"
 
 @class GIMessageGroup;
 @class GITextView;
@@ -41,4 +42,7 @@
 - (IBAction)markAsUnread:(id)sender;
 - (IBAction)toggleRead:(id)sender;
 
+@end
+
+@interface GIMainWindowController (KeyboardShortcuts) <GIMainWindowDelegate>
 @end

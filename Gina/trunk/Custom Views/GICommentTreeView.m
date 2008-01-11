@@ -11,8 +11,6 @@
 #import "GIMessage.h"
 #import "GIThread.h"
 
-NSString *CommentTreeViewDidChangeSelectionNotification = @"CommentTreeViewDidChangeSelectionNotification";
-
 @implementation GICommentTreeView
 
 // -- binding stuff --
@@ -444,8 +442,10 @@ The return value is the row the message was placed in."*/
 	if ((indexOfSelectedMessage - 1) >= 0) 
 	{
 		[self setSelectedMessageOrThread:[comments objectAtIndex:indexOfSelectedMessage - 1]];
-		
-		[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];
+		if (self.target && self.action)
+		{
+			[self.target performSelector:self.action withObject:nil];
+		}
 		return;
 	}
 	NSBeep();
@@ -460,7 +460,10 @@ The return value is the row the message was placed in."*/
 	if ([comments count] > indexOfSelectedMessage + 1) 
 	{
 		[self setSelectedMessageOrThread:[comments objectAtIndex:indexOfSelectedMessage + 1]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];
+		if (self.target && self.action)
+		{
+			[self.target performSelector:self.action withObject:nil];
+		}
 		return;
 	}
 	NSBeep();
@@ -477,7 +480,10 @@ The return value is the row the message was placed in."*/
 		if ([[[self thread] messages] containsObject:newMessage]) 
 		{
 			[self setSelectedMessageOrThread:newMessage];
-			[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];
+			if (self.target && self.action)
+			{
+				[self.target performSelector:self.action withObject:nil];
+			}
 			return;
 		}
 	}
@@ -492,7 +498,10 @@ The return value is the row the message was placed in."*/
         if ([comments count]) 
         {
             [self setSelectedMessageOrThread:[comments objectAtIndex:0]];
-			[[NSNotificationCenter defaultCenter] postNotificationName:CommentTreeViewDidChangeSelectionNotification object:self];	
+			if (self.target && self.action)
+			{
+				[self.target performSelector:self.action withObject:nil];
+			}
             return;
         }
         NSBeep();

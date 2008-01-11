@@ -102,6 +102,7 @@
 		7781686B0D33F04D004AFCC1 /* ToggleSeen.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */; };
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
+		77A260990D3755DB0011FEE9 /* GIMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A260980D3755DB0011FEE9 /* GIMainWindow.m */; };
 		77A30A8B0D25724300B0F1DF /* TestURLString.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A30A8A0D25724300B0F1DF /* TestURLString.m */; };
 		77AA23740D2BE559004EF1DF /* OPSASL.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C64D0D00549A00A7BEFF /* OPSASL.m */; };
 		77AA23750D2BE55C004EF1DF /* OPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6370D00548C00A7BEFF /* OPSMTP.m */; };
@@ -424,6 +425,8 @@
 		7780780E0D0707DC0091F21D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ToggleSeen.tiff; sourceTree = "<group>"; };
+		77A260970D3755DB0011FEE9 /* GIMainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMainWindow.h; sourceTree = "<group>"; };
+		77A260980D3755DB0011FEE9 /* GIMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMainWindow.m; sourceTree = "<group>"; };
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
 		77A30A8A0D25724300B0F1DF /* TestURLString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestURLString.m; sourceTree = "<group>"; };
 		77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPMailSending.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -567,7 +570,7 @@
 		77C3BD020D103F860003634C /* Gina.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Gina.tiff; sourceTree = "<group>"; };
 		77E387D60D36193900C31A29 /* ThreadingTest.mbox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ThreadingTest.mbox; sourceTree = "<group>"; };
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
-		77E5676D0D0702670016594D /* GinaSpotlight.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaSpotlight-Info.plist"; path = "../GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
 		77F2E3D90D1EB2DC0003D25B /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
 		77F2E3DA0D1EB2DC0003D25B /* TestGIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIThread.m; sourceTree = "<group>"; };
@@ -713,7 +716,7 @@
 				8D1107320486CEB800E47090 /* Gina.app */,
 				77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */,
 				777B05CB0D031DE40080B76F /* InternetMessage.framework */,
-				77E5676D0D0702670016594D /* GinaSpotlight.bundle */,
+				77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */,
 				7736145A0D1C152A007FC630 /* OPPersistence.framework */,
 				773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */,
 				773615130D1C30A7007FC630 /* GinaTest.octest */,
@@ -817,6 +820,8 @@
 				77AF83050D2B943C002771BA /* GIMessageGroupCell.m */,
 				77AF834A0D2B95AD002771BA /* GITextView.h */,
 				77AF834B0D2B95AD002771BA /* GITextView.m */,
+				77A260970D3755DB0011FEE9 /* GIMainWindow.h */,
+				77A260980D3755DB0011FEE9 /* GIMainWindow.m */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -1360,7 +1365,7 @@
 			);
 			name = GinaSpotlight;
 			productName = GinaSpotlight;
-			productReference = 77E5676D0D0702670016594D /* GinaSpotlight.bundle */;
+			productReference = 77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */;
 			productType = "com.apple.product-type.bundle";
 		};
 		8D1107260486CEB800E47090 /* Gina */ = {
@@ -1708,6 +1713,7 @@
 				77AA256B0D2D1B93004EF1DF /* OPOutlineViewController.m in Sources */,
 				7744CB510D32A37A008E6567 /* GIMessage+Rendering.m in Sources */,
 				7741A6300D33960400654FA7 /* GIThreadOutlineViewController.m in Sources */,
+				77A260990D3755DB0011FEE9 /* GIMainWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

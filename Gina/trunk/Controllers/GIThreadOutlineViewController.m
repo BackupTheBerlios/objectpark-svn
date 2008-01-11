@@ -295,12 +295,10 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (OPFaultingArray *)threadChildren
 {
-	OPFaultingArray *threadChildren = self.messagesByTree;
-	
-	if ([threadChildren count] > 1)
+	if ([self.messages count] > 1)
 	{
 		// multi-message thread
-		return threadChildren;
+		return self.messagesByTree;
 	}
 	else
 	{

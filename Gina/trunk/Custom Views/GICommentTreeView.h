@@ -30,6 +30,9 @@
 - (id)selectedMessageOrThread;
 - (void)updateCommentTree:(BOOL)rebuildThread;
 
-@end
+- (IBAction)navigateUpInMatrix:(id)sender;
+- (IBAction)navigateDownInMatrix:(id)sender;
+- (IBAction)navigateLeftInMatrix:(id)sender;
+- (IBAction)navigateRightInMatrix:(id)sender;
 
-extern NSString *CommentTreeViewDidChangeSelectionNotification;
+@end
