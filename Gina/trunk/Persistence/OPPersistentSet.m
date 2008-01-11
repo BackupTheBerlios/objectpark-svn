@@ -51,9 +51,13 @@
 /*" Keys consist of the sort key data (if any), followed by the oid. "*/
 {
 	NSMutableData* result = [[NSMutableData alloc] init];
-//	if (sortKeyPath) {
-//		[anObject appendBTreeBytesForKey: sortKeyPath to: result];
-//	}	
+	if (sortKeyPath) {
+#warning implement [anObject appendBTreeBytesForKey: sortKeyPath to: result]
+		//[anObject appendBTreeBytesForKey: sortKeyPath to: result];
+		int time = [(NSDate*)[anObject valueForKey: sortKeyPath] timeIntervalSince1970];
+		time = NSSwapHostIntToBig(time);
+		[result appendBytes: &time length: sizeof(time)];
+	}	
 	OID objectOid = NSSwapHostLongLongToBig([anObject oid]);
 	[result appendBytes: &objectOid length: sizeof(OID)];
 	return result;
@@ -166,9 +170,11 @@
 - (void) setSortKeyPath: (NSString*) newSortKeyPath
 {
 	if (! [sortKeyPath isEqualToString: newSortKeyPath]) {
+		[self willChangeValueForKey: @"sortKeyPath"];
 		NSParameterAssert(sortKeyPath == nil || [self count] == 0);
 		[newSortKeyPath release];
 		sortKeyPath = [newSortKeyPath retain];
+		[self didChangeValueForKey: @"sortKeyPath"];
 	}
 }
 
