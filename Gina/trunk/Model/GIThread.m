@@ -75,8 +75,8 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) removeObjectFromMessageGroupsAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. "*/
 {
-	[messageGroups removeObjectAtIndex: index];
 	GIMessageGroup* group = [messageGroups objectAtIndex: index];
+	[messageGroups removeObjectAtIndex: index];
 	NSSet* selfSet = [NSSet setWithObject: self];
 	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
 	[(OPPersistentSet*) group.threads removeObject: self]; 
@@ -165,8 +165,9 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 - (void) willDelete
 {
-	//NSLog(@"Will delete Thread!");
+	NSLog(@"Will delete Thread %@.", self);
 	[[self valueForKey: @"messages"] makeObjectsPerformSelector: @selector(delete)];
+	[[self mutableArrayValueForKey: @"messageGroups"] removeAllObjects];
 	[super willDelete];
 }
 
