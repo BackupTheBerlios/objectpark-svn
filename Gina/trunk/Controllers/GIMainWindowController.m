@@ -485,6 +485,7 @@
 #define ESC 53
 #define BACKSPACE 51
 #define RETURN 36
+#define SPACE 49
 
 - (BOOL)keyPressed:(NSEvent *)event
 {
@@ -524,6 +525,10 @@
 			return YES;
 		}
 		case RETURN:
+			if ([[threadsOutlineView window] firstResponder] == threadsOutlineView)
+			{
+				[self threadsDoubleAction:threadsOutlineView];
+			}
 			break;
 		default:
 			break;

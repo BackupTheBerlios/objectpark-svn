@@ -430,8 +430,9 @@ The return value is the row the message was placed in."*/
 }
 
 // navigation (triggered by menu and keyboard shortcuts)
-- (IBAction)navigateUpInMatrix:(id)sender
+
 /*" Displays the previous sibling message if present in the current thread. Beeps otherwise. "*/
+- (IBAction)navigateUpInMatrix:(id)sender
 {
 	NSArray *comments;
 	int indexOfSelectedMessage;
@@ -451,8 +452,8 @@ The return value is the row the message was placed in."*/
 	NSBeep();
 }
 
-- (IBAction)navigateDownInMatrix:(id)sender
 /*" Displays the next sibling message if present in the current thread. Beeps otherwise. "*/
+- (IBAction)navigateDownInMatrix:(id)sender
 {
 	NSArray *comments = [[[self selectedMessage] reference] commentsInThread:[self thread]];
 	int indexOfSelectedMessage = [comments indexOfObject:[self selectedMessage]];
@@ -469,8 +470,8 @@ The return value is the row the message was placed in."*/
 	NSBeep();
 }
 
+/*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 - (IBAction)navigateLeftInMatrix:(id)sender
-	/*" Displays the parent message if present in the current thread. Beeps otherwise. "*/
 {
 	GIMessage *newMessage;
 	
@@ -490,8 +491,8 @@ The return value is the row the message was placed in."*/
 	NSBeep();
 }
 
+/*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 - (IBAction)navigateRightInMatrix:(id)sender
-	/*" Displays the first child message if present in the current thread. Beeps otherwise. "*/
 {
         NSArray *comments = [[self selectedMessage] commentsInThread:[self thread]];
         

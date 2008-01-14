@@ -171,14 +171,6 @@ NSDateFormatter *timeAndDateFormatter()
 - (id)renderedMessage;
 @end
 
-@interface GIMessage (ThreadViewSupport)
-- (GIMessage *)message;
-- (NSArray *)threadChildren;
-- (id)subjectAndAuthor;
-- (NSAttributedString *)messageForDisplay;
-- (NSImage *)statusImage;
-@end
-
 @implementation GIMessage (ThreadViewSupport)
 
 + (NSSet *)keyPathsForValuesAffectingSubjectAndAuthor
@@ -260,15 +252,6 @@ NSDateFormatter *timeAndDateFormatter()
 	return nil;
 }
 
-@end
-
-@interface GIThread (ThreadViewSupport)
-- (GIMessage *)message;
-- (OPFaultingArray *)threadChildren;
-- (id)subjectAndAuthor;
-- (NSAttributedString *)messageForDisplay;
-- (NSAttributedString *)dateForDisplay;
-- (NSImage *)statusImage;
 @end
 
 @implementation GIThread (ThreadViewSupport)

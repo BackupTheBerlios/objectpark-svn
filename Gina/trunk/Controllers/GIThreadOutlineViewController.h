@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import "OPOutlineViewController.h"
+#import "GIMessage.h"
+#import "GIThread.h"
 
 @interface GIThreadOutlineViewController : OPOutlineViewController 
 {
@@ -23,3 +25,21 @@
 - (BOOL)selectionHasReadMessages;
 
 @end
+
+@interface GIMessage (ThreadViewSupport)
+- (GIMessage *)message;
+- (NSArray *)threadChildren;
+- (id)subjectAndAuthor;
+- (NSAttributedString *)messageForDisplay;
+- (NSImage *)statusImage;
+@end
+
+@interface GIThread (ThreadViewSupport)
+- (GIMessage *)message;
+- (OPFaultingArray *)threadChildren;
+- (id)subjectAndAuthor;
+- (NSAttributedString *)messageForDisplay;
+- (NSAttributedString *)dateForDisplay;
+- (NSImage *)statusImage;
+@end
+

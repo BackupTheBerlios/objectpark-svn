@@ -29,6 +29,7 @@
 #import "OPInternetMessageAttachmentCell.h"
 #import <Foundation/NSDebug.h>
 #import "NSWorkspace+OPExtensions.h"
+#import "GIMainWindow.h"
 
 NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 
@@ -393,11 +394,20 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 }
 
 
-- (void)keyDown:(NSEvent *)theEvent
 /*" Enables in the case of a non editable text view the use of the spacebar. "*/
+- (void)keyDown:(NSEvent *)theEvent
 {
     if (! [self isEditable])
     {
+		if ([[self delegate] respondsToSelector:@selector(keyPressed:)])
+		{
+			if ([[self delegate] keyPressed:theEvent])
+			{
+				return;
+			}
+		}
+			
+		/*
         NSString *characters = [theEvent characters];
 		
 		if ([characters length]) 
@@ -426,6 +436,7 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 					break;
 			}
 		}
+		 */
     }
 
     [super keyDown:theEvent];

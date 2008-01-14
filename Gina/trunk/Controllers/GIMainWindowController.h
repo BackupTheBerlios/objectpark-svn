@@ -46,3 +46,9 @@
 
 @interface GIMainWindowController (KeyboardShortcuts) <GIMainWindowDelegate>
 @end
+
+@interface GIMainWindowController (OutlineViewDelegateAndActions)
+
+- (IBAction)threadsDoubleAction:(id)sender;
+
+@end
