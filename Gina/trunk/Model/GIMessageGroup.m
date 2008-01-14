@@ -475,6 +475,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return [(OPPersistentSet*)[self threads] sortedArray];
 }
 
+- (unsigned) threadChildrenCount
+{
+	return self.threads.count;
+}
+
 - (void) willDelete
 {
 	// delete dependent objects

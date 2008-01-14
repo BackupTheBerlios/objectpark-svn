@@ -305,7 +305,7 @@ typedef struct {
 	if (pos == 0 && error == SQLITE_OK) {
 		result = [self newUnarchivedObjectAtCursor: readCursor];
 	} else {
-		NSLog(@"Warning - no object data found for oid %016llx", oid);
+		NSLog(@"Warning - no object data found for %@, oid %016llx", [self classForCID: CIDFromOID(oid)], oid);
 	}
 	[readCursor release];
 	return result;

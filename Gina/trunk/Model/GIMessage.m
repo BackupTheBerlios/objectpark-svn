@@ -43,22 +43,21 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 @synthesize date;
 @synthesize subject;
 
-- (GIThread *)thread
+- (GIThread*) thread
 {
-	return [[self context] objectForOID:threadOID];
+	return [[self context] objectForOID: threadOID];
 }
 
-- (void)setThread:(GIThread *)aThread
+- (void) setThread: (GIThread*) aThread
 {
 	if (threadOID != [aThread oid]) {
-		[self willChangeValueForKey:@"thread"];
+		[self willChangeValueForKey: @"thread"];
+
 		if (threadOID) {
-			[[self.thread mutableArrayValueForKey:@"messages"] removeObject: self];
+			[[self.thread mutableArrayValueForKey: @"messages"] removeObjectIdenticalTo: self];
 		}
 		threadOID = [aThread oid];
-		if (threadOID) {
-			[[self.thread mutableArrayValueForKey: @"messages"] addObject: self];
-		}
+		[[aThread mutableArrayValueForKey: @"messages"] addObject: self];
 		[self didChangeValueForKey: @"thread"];
 	}
 }
@@ -159,9 +158,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     NSAssert(dummy != nil, @"Could not create a dummy message object");
 
     [dummy setValue:aMessageId forKey:@"messageId"];  
-
-    // dummy messages should not show up as unread
-    [dummy toggleFlags: OPSeenStatus];
     
 	NSAssert([dummy isDummy], @"Dummy message not marked as such");
 	
@@ -175,10 +171,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     NSString* fromHeader = [im fromWithFallback: YES];
     
-	[self removeFlags:OPDummyStatus];
+	[self toggleFlags: flags & OPDummyStatus]; // remove Dummy status
 	
-    //if ([self isDummy])
-    //    [self removeFlags: OPSeenStatus];
 	[internetMessage release];
 	internetMessage = [im retain];
 	messageId = [[im messageId] retain];
@@ -278,7 +272,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (id)initDummy
 {
 	self = [super init];
-	flags = OPDummyStatus;
+	flags = OPDummyStatus | OPSeenStatus;
 	return self;
 }
 
@@ -606,6 +600,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	flags ^= someFlags;
 	//BOOL newValue = flags & someFlags != 0;
 	//NSAssert(oldValue!=newValue, @"toggle failed.");
+	[self.thread didToggleFlags: someFlags ofContainedMessage: self];
 }
 
 - (void) willSave
@@ -629,30 +624,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-- (void)removeFlags:(unsigned)someFlags
-{
-	//    NSNumber* oldValue = nil;
-	//    NSNumber* newValue = nil;
-    
-	// Setters lock the context to prevent updates during commit:
-	@synchronized([self context]) 
-	{
-		@synchronized(self) 
-		{
-			flags = (flags & (~someFlags));
-		}
-	}
-    
-	//    // notify if needed (outside the synchronized block to avoid blocking problems)
-	//    if (newValue) {
-	//        [[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
-	//		
-	//		[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
-	//		[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
-	//    }
-	[[self thread] willChangeValueForKey:@"hasUnreadMessages"];
-	[[self thread] didChangeValueForKey:@"hasUnreadMessages"];
-}
+
 
 - (GIMessage *)reference
 /*" Returns the direct message reference stored. "*/

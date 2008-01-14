@@ -198,6 +198,11 @@ NSDateFormatter *timeAndDateFormatter()
 	return nil;
 }
 
+- (unsigned)threadChildrenCount
+{
+	return 0;
+}
+
 - (id)subjectAndAuthor
 {
 	//	return [NSString stringWithFormat:@"    %@", [self valueForKey:@"senderName"]];
@@ -258,12 +263,17 @@ NSDateFormatter *timeAndDateFormatter()
 
 + (NSSet *)keyPathsForValuesAffectingThreadChildren
 {
-	return [NSSet setWithObject:@"messagesByTree"];
+	return [NSSet setWithObject:@"messages"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingMessagesByTree
+{
+	return [NSSet setWithObject:@"messages"];
 }
 
 + (NSSet *)keyPathsForValuesAffectingSubjectAndAuthor
 {
-	return [NSSet setWithObjects:@"messagesByTree", @"messages", @"subject", nil];
+	return [NSSet setWithObjects: @"messages", @"subject", nil];
 }
 
 + (NSSet *)keyPathsForValuesAffectingDateForDisplay
@@ -276,15 +286,18 @@ NSDateFormatter *timeAndDateFormatter()
 	return [NSSet setWithObject:@"isSeen"];
 }
 
-- (OPFaultingArray *)threadChildren
+- (unsigned) threadChildrenCount
 {
-	if ([self.messages count] > 1)
-	{
+	return self.messages.count;
+}
+
+
+- (NSArray*) threadChildren
+{
+	if (self.messages.count > 1) {
 		// multi-message thread
 		return self.messagesByTree;
-	}
-	else
-	{
+	} else {
 		// single-message thread
 		return nil;
 	}
@@ -292,10 +305,9 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (id)subjectAndAuthor
 {
-	OPFaultingArray *msgs = self.messagesByTree;
+	NSArray* msgs = self.messagesByTree;
 	
-	if ([msgs count] > 1)
-	{
+	if ([msgs count] > 1) {
 		// multi-message thread
 		return [[[NSAttributedString alloc] initWithString:nilGuard(self.subject) attributes:![self isSeen] ? unreadAttributes() : readAttributes()] autorelease];
 	}	
@@ -345,9 +357,9 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 }
 
-- (GIMessage *)message
+- (GIMessage*) message
 {
-	OPFaultingArray *msgs = [self messagesByTree];
+	NSArray* msgs = self.messages;
 	if ([msgs count] == 1)
 	{
 		return [msgs lastObject];
@@ -472,8 +484,10 @@ NSDateFormatter *timeAndDateFormatter()
 		}
 		else
 		{
-			NSAssert([selectedObject isKindOfClass:[GIMessage class]], @"expected a GIMessage object");
-			[result addObject:selectedObject];
+			if ([selectedObject isKindOfClass:[GIMessage class]]) {
+				[result addObject:selectedObject];
+			}
+			//NSAssert([selectedObject isKindOfClass:[GIMessage class]], @"expected a GIMessage object");
 		}
 	}	
 	

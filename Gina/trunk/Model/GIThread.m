@@ -36,6 +36,32 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	return self;
 }
 
+- (void) insertObject: (GIMessage*) message inMessagesAtIndex: (NSUInteger) index
+/*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
+{
+	[messages insertObject: message atIndex: index];
+//	[message willChangeValueForKey: @"thread"];
+//	message.thread = self;
+//	[message didChangeValueForKey: @"thread"];
+	if (! message.isSeen) {
+		unreadMessageCount++;
+	}
+}
+
+- (void) removeObjectFromMessagesAtIndex: (NSUInteger) index
+/*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
+{
+	GIMessage* message = [messages objectAtIndex: index];
+	[messages removeObjectAtIndex: index];
+//	[message willChangeValueForKey: @"thread"];
+//	message.thread = nil; 
+//	[message didChangeValueForKey: @"thread"];
+	if (! message.isSeen) {
+		unreadMessageCount--;
+	}
+}
+
+
 - (void) insertObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. "*/
 {
@@ -49,9 +75,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) removeObjectFromMessageGroupsAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. "*/
 {
-	GIMessageGroup* group = [messageGroups objectAtIndex: index];
 	[messageGroups removeObjectAtIndex: index];
-	[(OPPersistentSet*) group.threads removeObject: self]; // what about KVO?
+	GIMessageGroup* group = [messageGroups objectAtIndex: index];
+	NSSet* selfSet = [NSSet setWithObject: self];
+	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
+	[(OPPersistentSet*) group.threads removeObject: self]; 
+	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
 }
 
 - (NSArray *)messageGroups
@@ -64,7 +93,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[date release]; date = nil;
 	[subject release]; subject = nil;
 	[messages release]; messages = nil;
-	[messagesByTree release]; messagesByTree = nil;
+	//[messagesByTree release]; messagesByTree = nil;
 	[messageGroups release]; messageGroups = nil;
 }
 
@@ -104,27 +133,29 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[date release];
 	[subject release];
 	[messages release];
-	[messagesByTree release];
+	//[messagesByTree release];
 	[messageGroups release];
 	[super dealloc];	
 }
 
-- (id)initWithCoder:(NSCoder *)coder
+- (id) initWithCoder: (NSCoder*) coder
 {
 	subject = [coder decodeObjectForKey: @"subject"];
 	date = [coder decodeObjectForKey: @"date"];
 	messages = [coder decodeObjectForKey: @"messages"];
 	messageGroups = [coder decodeObjectForKey: @"messageGroups"];
+	unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];
 	//[messages setParent: self];
 	return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder
+- (void) encodeWithCoder: (NSCoder*) coder
 {
 	[coder encodeObject: subject forKey: @"subject"];
 	[coder encodeObject: date forKey: @"date"];
 	[coder encodeObject: messages forKey: @"messages"];
 	[coder encodeObject: messageGroups forKey: @"messageGroups"];
+	[coder encodeInt: unreadMessageCount forKey: @"unreadMessageCount"];
 }
 
 - (NSString *)description
@@ -188,7 +219,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void)didChangeValueForKey:(NSString *)key 
 {
 	// invalidating cache:
-	[messagesByTree release]; messagesByTree = nil;
+	//[messagesByTree release]; messagesByTree = nil;
 
 	// notifying main thread about message relation changes:
 //	if ([key isEqualToString:@"messages"])
@@ -283,12 +314,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //	return result;
 //}
 
-- (NSUInteger)messageCount
+- (NSUInteger) messageCount
 {
     return [[self messages] count]; 
 }
 
-- (BOOL)containsSingleMessage
+- (BOOL) containsSingleMessage
 {
 	return [self messageCount] <= 1;
 }
@@ -316,7 +347,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 */
 
 /*" Returns an array containing the result of a depth first search over all tree roots. "*/
-- (OPFaultingArray*) messagesByTree
+- (NSArray*) messagesByTree
 {
 #warning do the right thing here! -> DIRK
 	return self.messages;
@@ -352,6 +383,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (BOOL)isSeen
 /*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    
+	return unreadMessageCount == 0;
 //	return YES;
 	
 	for (GIMessage *message in [self messages])
@@ -378,6 +410,13 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
         }
     }
     return result;
+}
+
+- (void) didToggleFlags: (unsigned) flags ofContainedMessage: (GIMessage*) message
+{
+	if (flags & OPSeenStatus) {
+		unreadMessageCount += [message hasFlags: OPSeenStatus] ? -1 : 1; 
+	}
 }
 
 /*" Returns the the length of the longest comment chain in this thread. "*/
@@ -460,6 +499,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
         referencingMsg = referencedMsg;
 		[references removeLastObject];
     }
+	
 }
 
 @end

@@ -99,7 +99,8 @@
 	//													forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
 	NSDictionary *options = nil;
 	
-	[threadsController setChildKey:@"threadChildren"];
+	threadsController.childKey = @"threadChildren";
+	threadsController.childCountKey = @"threadChildrenCount";
 	[threadsController bind:@"rootItem" toObject:messageGroupTreeController withKeyPath:@"selection.self" options:options];
 	
 	[self bind:@"selectedThreads" toObject:threadsController withKeyPath:@"selectedObjects" options:options];

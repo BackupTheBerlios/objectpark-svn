@@ -18,6 +18,7 @@
 	IBOutlet NSOutlineView *outlineView;
 	NSMutableSet *knownItems; // used to keep track of the observed items and to retain them
 	NSString *childKey;
+	NSString *childCountKey;
 	id rootItem;
 	
 	@private
@@ -28,6 +29,7 @@
 }
 
 @property (copy) NSString *childKey;
+@property (copy) NSString *childCountKey;
 @property (retain) id rootItem;
 @property (retain, readonly) NSSet *knownItems;
 

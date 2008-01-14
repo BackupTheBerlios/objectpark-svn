@@ -19,7 +19,8 @@
 	NSDate* date;       // persistent
 	OPFaultingArray* messages;           // persistent
 	OPFaultingArray* messageGroups;      // persistent
-	OPFaultingArray* messagesByTree;     // transient cache - needed?
+	//OPFaultingArray* messagesByTree;     // transient cache - needed?
+	unsigned unreadMessageCount;
 }
 
 @property (copy) NSString* subject;  // persistent
@@ -32,7 +33,7 @@
 - (NSArray*) messages;
 - (NSArray*) messageGroups;
 
-- (OPFaultingArray*) messagesByTree;
+- (NSArray*) messagesByTree; // slow!!
 
 
 /*" Groups handling "*/
@@ -46,6 +47,9 @@
 //- (void) addToGroups_Manually: (GIMessageGroup*) newGroup;
 
 - (void) mergeMessagesFromThread: (GIThread*) anotherThread;
+
+- (void) didToggleFlags: (unsigned) flag ofContainedMessage: (GIMessage*) message;
+
 
 @end
 

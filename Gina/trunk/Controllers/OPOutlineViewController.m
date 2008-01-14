@@ -227,12 +227,27 @@
 	return childKey;
 }
 
-- (void)setChildKey:(NSString *)aChildKey
+- (void) setChildKey: (NSString*) aChildKey
 /*" This can never change once it has been set to an non-nil value. Raises otherwise. "*/
 {
 	NSParameterAssert(childKey == nil || [childKey isEqualToString:aChildKey]);
 	childKey = [aChildKey copy];
 }
+
+- (NSString*) childCountKey
+/*" An items KVC-Key pointing to the child count. Optimization, optional. "*/
+{
+	return childCountKey;
+}
+
+- (void) setChildCountKey: (NSString*) aChildCountKey
+/*" This can never change once it has been set to an non-nil value. Raises otherwise. "*/
+{
+	NSParameterAssert(childCountKey == nil || [childCountKey isEqualToString:aChildCountKey]);
+	childCountKey = [aChildCountKey copy];
+}
+
+
 
 - (void) addToKnownItems: (id) item
 {
@@ -254,10 +269,14 @@
 {
 	if (! item) item = [self rootItem];
 	id result = [[item valueForKeyPath:[self childKey]] objectAtIndex:index];
-#warning hack to circumvent bug. REMOVE!
-	static NSDictionary *hackDict = nil;
-	if (! hackDict) hackDict = [[NSDictionary alloc] init];
-	if (!result) result = hackDict;
+	
+#warning hack to circumvent bug. Remove later:
+	static NSDictionary* hackDict = nil; 
+	
+	if (!result) {
+		if (! hackDict) hackDict = [[NSDictionary alloc] init];
+		result = hackDict;
+	}
 	
 	if (! [knownItems containsObject:result]) {
 		[self addToKnownItems: result];
@@ -265,16 +284,20 @@
 	return result;
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+- (BOOL) outlineView: (NSOutlineView*) anOutlineView isItemExpandable: (id) item
 {
-	if (! item) item = [self rootItem];
-	return [[item valueForKeyPath:[self childKey]] count] > 1;
+	NSParameterAssert(anOutlineView == outlineView);
+	return [self outlineView: anOutlineView numberOfChildrenOfItem: item] > 1;
 }
 
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (NSInteger)outlineView:(NSOutlineView *)anOutlineView numberOfChildrenOfItem: (id) item
 {
+	NSParameterAssert(anOutlineView == outlineView);
 	if (! item) item = [self rootItem];
-	return [[item valueForKeyPath:[self childKey]] count];
+	unsigned count = childCountKey 
+	? [[item valueForKey: childCountKey] unsignedIntValue] 
+	: [[item valueForKeyPath:[self childKey]] count];
+	return count;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item

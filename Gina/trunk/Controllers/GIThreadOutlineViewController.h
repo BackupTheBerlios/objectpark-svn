@@ -21,8 +21,8 @@
 - (NSArray *)selectedMessages;
 - (void)setSelectedMessages:(NSArray *)someMessages;
 
-- (BOOL)selectionHasUnreadMessages;
-- (BOOL)selectionHasReadMessages;
+- (BOOL) selectionHasUnreadMessages;
+- (BOOL) selectionHasReadMessages;
 
 @end
 
@@ -35,11 +35,11 @@
 @end
 
 @interface GIThread (ThreadViewSupport)
-- (GIMessage *)message;
-- (OPFaultingArray *)threadChildren;
-- (id)subjectAndAuthor;
-- (NSAttributedString *)messageForDisplay;
-- (NSAttributedString *)dateForDisplay;
-- (NSImage *)statusImage;
+- (GIMessage*) message;
+- (NSArray*) threadChildren;
+- (id) subjectAndAuthor;
+- (NSAttributedString*) messageForDisplay;
+- (NSAttributedString*) dateForDisplay;
+- (NSImage*) statusImage;
 @end
 

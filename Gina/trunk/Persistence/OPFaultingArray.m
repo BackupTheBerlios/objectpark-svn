@@ -318,6 +318,9 @@ static int compare_oids(const void* entry1, const void* entry2)
 {
 	id result = nil;
 	@synchronized(self) {
+		if (anIndex  >= count) {
+			NSBeep();
+		}
 		NSParameterAssert(anIndex<count);
 		OID oid = *oidPtr(anIndex);
 		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext]; // todo - obtain context from either coder or inserted objects
