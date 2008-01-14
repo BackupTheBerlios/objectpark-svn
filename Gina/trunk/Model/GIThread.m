@@ -93,7 +93,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[date release]; date = nil;
 	[subject release]; subject = nil;
 	[messages release]; messages = nil;
-	//[messagesByTree release]; messagesByTree = nil;
+	[messagesByTree release]; messagesByTree = nil;
 	[messageGroups release]; messageGroups = nil;
 }
 
@@ -133,7 +133,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[date release];
 	[subject release];
 	[messages release];
-	//[messagesByTree release];
+	[messagesByTree release];
 	[messageGroups release];
 	[super dealloc];	
 }
@@ -219,7 +219,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void)didChangeValueForKey:(NSString *)key 
 {
 	// invalidating cache:
-	//[messagesByTree release]; messagesByTree = nil;
+	[messagesByTree release]; messagesByTree = nil;
 
 	// notifying main thread about message relation changes:
 //	if ([key isEqualToString:@"messages"])
@@ -347,19 +347,16 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 */
 
 /*" Returns an array containing the result of a depth first search over all tree roots. "*/
-- (NSArray*) messagesByTree
+- (NSArray *)messagesByTree
 {
-#warning do the right thing here! -> DIRK
-	return self.messages;
-	/*
-	if (!messagesByTree) {
+	if (!messagesByTree) 
+	{
 		NSArray* allMessages = [self messages];
 		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: [allMessages count]];
 		//[messagesByTree setParent: self];
 		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: messagesByTree];
 	}	
     return messagesByTree;
-	 */
 }
 
 - (BOOL)isLeaf
@@ -379,21 +376,10 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //
 //}
 
-#warning improve performance here! DIRK
 - (BOOL)isSeen
 /*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
 {    
 	return unreadMessageCount == 0;
-//	return YES;
-	
-	for (GIMessage *message in [self messages])
-	{
-        if (!message.isSeen) 
-		{
-            return NO;
-        }
-    }
-    return YES;
 }
 
 - (NSArray *)rootMessages

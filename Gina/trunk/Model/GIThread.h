@@ -19,7 +19,7 @@
 	NSDate* date;       // persistent
 	OPFaultingArray* messages;           // persistent
 	OPFaultingArray* messageGroups;      // persistent
-	//OPFaultingArray* messagesByTree;     // transient cache - needed?
+	OPFaultingArray* messagesByTree;     // transient cache - needed?
 	unsigned unreadMessageCount;
 }
 

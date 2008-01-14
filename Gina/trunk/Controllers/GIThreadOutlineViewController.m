@@ -305,9 +305,10 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (id)subjectAndAuthor
 {
-	NSArray* msgs = self.messagesByTree;
+	NSArray* msgs = self.messages;
 	
-	if ([msgs count] > 1) {
+	if ([msgs count] > 1) 
+	{
 		// multi-message thread
 		return [[[NSAttributedString alloc] initWithString:nilGuard(self.subject) attributes:![self isSeen] ? unreadAttributes() : readAttributes()] autorelease];
 	}	
@@ -384,7 +385,7 @@ NSDateFormatter *timeAndDateFormatter()
 		// multi-message thread
 		NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
 		
-		if (NO) //[messagesByTree count] > 0)
+		if ([self.messages count] > 0)
 		{
 			[result appendString:[NSString stringWithFormat:@"\nThread '%@':\n", [[self subjectAndAuthor] string]]];
 			[result appendString:[NSString stringWithFormat:@"contains %d messages\n", [[self messages] count]]];
