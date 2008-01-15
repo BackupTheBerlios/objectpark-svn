@@ -26,4 +26,10 @@
 	}
 }
 
+- (void)dealloc
+{
+	NSLog(@"GIMainWindow dealloc");
+	[super dealloc];
+}
+
 @end

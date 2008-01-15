@@ -86,7 +86,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		}
 	}
 	
-	[[GIMainWindowController alloc] init];
+	[[[GIMainWindowController alloc] init] autorelease];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification

@@ -73,24 +73,31 @@
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
 		
-	// receiving update notifications:
-	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupWasAddedNotification object:nil];
-	[notificationCenter addObserver:self selector:@selector(groupsChanged:) name:GIMessageGroupsChangedNotification object:nil];
+	[self retain];
+	
+	[self loadWindow];
+//	[self showWindow:self];
 
-	[self showWindow:self];
-
+	[self.window makeKeyAndOrderFront:self];
 	return self;
 }
 
 - (void)dealloc
 {
+	NSLog(@"GIMainWindowController dealloc");
+	[self.window release];
+ 	[super dealloc];
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
 	[self unbind:@"selectedThreads"];
 	[threadsController unbind:@"rootItem"];
 	[commentTreeView unbind:@"selectedMessageOrThread"];
-		
-	[super dealloc];
+	
+	[self autorelease];
 }
+
 
 - (void)windowDidLoad
 {
@@ -114,20 +121,7 @@
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
 	
-	[[self window] makeKeyAndOrderFront:self];
-}
-
-// --- change notification handling ---
-
-- (void)groupsChanged:(NSNotification *)aNotification
-{
-    [messageGroupTreeController rearrangeObjects];
-}
-
-- (void)groupStatsInvalidated:(NSNotification *)aNotification
-{
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(groupsChanged:) object:nil];
-    [self performSelector:@selector(groupsChanged:) withObject:nil afterDelay:(NSTimeInterval)5.0];
+	[self.window makeKeyAndOrderFront:self];
 }
 
 // -- handling message tree view selection --
