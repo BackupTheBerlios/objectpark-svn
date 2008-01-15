@@ -75,17 +75,16 @@
 		
 	[self retain];
 	
-	[self loadWindow];
-//	[self showWindow:self];
+//	[self loadWindow];
+	[self showWindow:self];
 
-	[self.window makeKeyAndOrderFront:self];
 	return self;
 }
 
 - (void)dealloc
 {
 	NSLog(@"GIMainWindowController dealloc");
-	[self.window release];
+//	[self.window release];
  	[super dealloc];
 }
 
