@@ -290,13 +290,25 @@
 	return [self outlineView: anOutlineView numberOfChildrenOfItem: item] > 1;
 }
 
-- (NSInteger)outlineView:(NSOutlineView *)anOutlineView numberOfChildrenOfItem: (id) item
+- (NSInteger)outlineView:(NSOutlineView *)anOutlineView numberOfChildrenOfItem:(id)item
 {
 	NSParameterAssert(anOutlineView == outlineView);
 	if (! item) item = [self rootItem];
-	unsigned count = childCountKey 
-	? [[item valueForKey: childCountKey] unsignedIntValue] 
-	: [[item valueForKeyPath:[self childKey]] count];
+	unsigned count = 0;
+	
+	if (childCountKey)
+	{
+		id childCountObject = [item valueForKey:childCountKey];
+		if ([childCountObject respondsToSelector:@selector(unsignedIntValue)])
+		{
+			count = [childCountObject unsignedIntValue];
+		}
+	}
+	else
+	{
+		count = [[item valueForKeyPath:[self childKey]] count];
+	}
+	
 	return count;
 }
 
