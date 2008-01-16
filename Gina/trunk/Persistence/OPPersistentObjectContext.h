@@ -43,6 +43,11 @@
 @class OPKeyedArchiver;
 @class OPKeyedUnarchiver;
 
+@interface NSNumber (OPPerstistenceAdditions)
++ (NSNumber *)numberWithOID:(OID)anOid;
+- (OID)OIDValue;
+@end
+
 @interface OPPersistentObjectContext : NSObject {
     
 	@private

@@ -68,6 +68,20 @@
 
 */
 
+@implementation NSNumber (OPPerstistenceAdditions)
+
++ (NSNumber *)numberWithOID:(OID)anOid
+{
+	return [NSNumber numberWithUnsignedLongLong:anOid];
+}
+
+- (OID)OIDValue
+{
+	return (OID)[self unsignedLongLongValue];
+}
+
+@end
+
 // Special oids:
 #define CLASSTABLEOID 1 // cid 0, lid 1 
 #define ROOTOBJECTSOID 2 // cid 0, lid 2 

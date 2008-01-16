@@ -14,6 +14,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSString+Extensions.h"
+#import "OPPersistentObjectContext.h"
 
 static inline NSString *nilGuard(NSString *str)
 {
@@ -451,6 +452,61 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	self.suspendUpdatesUntilNextReloadData = NO;
 	[super reloadData];
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	[super outlineViewSelectionDidChange:notification];
+	
+	if ([self.rootItem isKindOfClass:[OPPersistentObject class]])
+	{
+		// remember selection for messsage group (root item):
+		NSArray *selectedObjects = self.selectedObjects;
+		
+		NSMutableArray *oidsOfSelectedObjects = [NSMutableArray arrayWithCapacity:[selectedObjects count]];
+		for (OPPersistentObject *selectedObject in selectedObjects)
+		{
+			[oidsOfSelectedObjects addObject:[NSNumber numberWithOID:[selectedObject oid]]];
+		}
+		
+		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)self.rootItem oid]];
+		[[NSUserDefaults standardUserDefaults] setObject:oidsOfSelectedObjects forKey:groupSelectionDefaultKey];
+	}
+}
+
+- (void)setRootItem:(id)newItem
+{
+	[super setRootItem:newItem];
+	
+	if ([newItem isKindOfClass:[OPPersistentObject class]])
+	{
+		// restore selection for message group (root item):
+		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)newItem oid]];
+		NSArray *oidsOfSelectedObjects = [[NSUserDefaults standardUserDefaults] objectForKey:groupSelectionDefaultKey];
+		
+		NSMutableArray *selectedObjects = [NSMutableArray arrayWithCapacity:[oidsOfSelectedObjects count]];
+		for (NSNumber *oidNumber in oidsOfSelectedObjects)
+		{
+			OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
+			
+			if (selectedObject)
+			{
+				[selectedObjects addObject:selectedObject];
+				
+				if ([selectedObject isKindOfClass:[GIMessage class]])
+				{
+					// make sure thread is expanded:
+					[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:YES];
+				}
+			}
+			else
+			{
+				NSLog(@"warning could not retrieve object with OID: %llu", [oidNumber OIDValue]);
+			}
+		}
+		
+		self.selectedObjects = selectedObjects;
+	}
 }
 
 /*" Changes the text color to white, if the cell's background is darkish. "*/
