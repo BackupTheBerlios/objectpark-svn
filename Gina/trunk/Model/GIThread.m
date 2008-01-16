@@ -200,7 +200,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 - (void) willDelete
 {
-	NSLog(@"Will delete Thread %@.", self);
+	//NSLog(@"Will delete Thread %@.", self);
 	[[self valueForKey: @"messages"] makeObjectsPerformSelector: @selector(delete)];
 	[[self mutableArrayValueForKey: @"messageGroups"] removeAllObjects];
 	[super willDelete];
