@@ -353,11 +353,15 @@
 {	
 	[outlineView deselectAll:self];
 	
+	NSMutableIndexSet *indexesToSelect = [NSMutableIndexSet indexSet];
+
 	for (id itemToSelect in anArray)
 	{
-		[outlineView selectRow:[outlineView rowForItem:itemToSelect] byExtendingSelection:YES];
+		[indexesToSelect addIndex:[outlineView rowForItem:itemToSelect]];
 	}
 	
+	[outlineView selectRowIndexes:indexesToSelect byExtendingSelection:NO];
+
 	if ([anArray count])
 	{
 		[outlineView scrollRowToVisible:[outlineView rowForItem:[anArray lastObject]]];

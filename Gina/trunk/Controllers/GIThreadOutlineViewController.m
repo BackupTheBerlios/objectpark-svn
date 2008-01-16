@@ -15,6 +15,7 @@
 #import "NSAttributedString+Extensions.h"
 #import "NSString+Extensions.h"
 #import "OPPersistentObjectContext.h"
+#import "OPPersistentObject.h"
 
 static inline NSString *nilGuard(NSString *str)
 {
@@ -465,7 +466,10 @@ NSDateFormatter *timeAndDateFormatter()
 		NSMutableArray *oidsOfSelectedObjects = [NSMutableArray arrayWithCapacity:[selectedObjects count]];
 		for (OPPersistentObject *selectedObject in selectedObjects)
 		{
-			[oidsOfSelectedObjects addObject:[NSNumber numberWithOID:[selectedObject oid]]];
+			if ([selectedObject conformsToProtocol:@protocol(OPPersisting)])
+			{
+				[oidsOfSelectedObjects addObject:[NSNumber numberWithOID:[selectedObject oid]]];
+			}
 		}
 		
 		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)self.rootItem oid]];
