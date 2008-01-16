@@ -273,9 +273,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (void) dealloc
 {
-	//[threadsByDate release];
 	[threads release];
-	[unreadMessageCount release];
     [super dealloc];
 }
 
@@ -767,10 +765,9 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return threads;
 }
 
-- (NSUInteger)unreadMessageCount;
+- (int) unreadMessageCount;
 {
-#warning dummy implementation for now
-	return [[self threads] count];
+	return unreadMessageCount;
 }
 
 - (id) init
@@ -786,42 +783,73 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	if (self = [super initWithCoder: coder]) {
 		threads = [coder decodeObjectForKey: @"threads"];
 		defaultProfileOID = [coder decodeOIDForKey: @"defaultProfile"];
+		unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];
 	}
 	return self;
+}
+
+
+- (void) adjustUnreadMessageCountBy: (int) changeCount
+{
+	if (changeCount) {
+		NSParameterAssert((int)unreadMessageCount+changeCount >=0);
+		[self willChangeValueForKey: @"unreadMessageCount"];
+		unreadMessageCount += changeCount;
+		[self didChangeValueForKey: @"unreadMessageCount"];
+	}
+}
+
+- (void) addPrimitiveThreadsObject: (GIThread*) newThread
+{
+	[(OPPersistentSet*)self.threads addObject: newThread];
+	[self adjustUnreadMessageCountBy: newThread.unreadMessageCount];
 }
 
 - (void) addThreadsObject: (GIThread*) newThread
 /*" Sent by the mutableSet proxy. "*/
 {
-	NSIndexSet* insertSet = [NSIndexSet indexSetWithIndex: self.threads.count];
-	[(OPPersistentSet*)self.threads addObject: newThread];
+	NSIndexSet* insertSet = [NSIndexSet indexSetWithIndex: newThread.messages.count];
+	[self addPrimitiveThreadsObject: newThread];
+	// Update the inverse relation:
 	[newThread willChange: NSKeyValueChangeInsertion valuesAtIndexes: insertSet forKey: @"messageGroups"];
-	[(OPFaultingArray*)newThread.messageGroups addObject: self]; // update inverse relationship - what about KVO?
+	[(OPFaultingArray*)newThread.messageGroups addObject: self]; 
 	[newThread didChange: NSKeyValueChangeInsertion valuesAtIndexes: insertSet forKey: @"messageGroups"];
+}
+
+
+- (void) removePrimitiveThreadsObject: (GIThread*) oldThread
+{
+	[(OPPersistentSet*)self.threads removeObject: oldThread];
+	[self adjustUnreadMessageCountBy: -oldThread.unreadMessageCount];
 }
 
 - (void) removeThreadsObject: (GIThread*) oldThread
 /*" Sent by the mutableSet proxy. "*/
 {
-	[(OPPersistentSet*)self.threads removeObject: oldThread];
-	[(OPFaultingArray*)oldThread removeObject: self];  // update inverse relationship - what about KVO?
+	NSIndexSet* removeSet = [NSIndexSet indexSetWithIndex: [oldThread.messages indexOfObjectIdenticalTo: self]];
+	[self removePrimitiveThreadsObject: oldThread];
+	// Update the inverse relation:
+	[oldThread willChange: NSKeyValueChangeRemoval valuesAtIndexes: removeSet forKey: @"messageGroups"];
+	[(OPFaultingArray*)oldThread removeObject: self];  
+	[oldThread didChange: NSKeyValueChangeRemoval valuesAtIndexes: removeSet forKey: @"messageGroups"];
 }
 
-//- (void)willChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
-//{
-////	while (YES) {};	
-//}
-//
-//- (void)didChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
-//{
-////	while (YES) {};	
-//}
+- (void) increaseUnreadMessageCount
+{
+	[self adjustUnreadMessageCountBy: 1];
+}
+
+- (void) decreaseUnreadMessageCount
+{
+	[self adjustUnreadMessageCountBy: -1];
+}
 
 - (void) encodeWithCoder: (NSCoder*) coder
 {
 	[super encodeWithCoder: coder];
 	[coder encodeObject: threads forKey: @"threads"];
 	[coder encodeOID: defaultProfileOID forKey: @"defaultProfile"];
+	[coder encodeInt: unreadMessageCount forKey: @"unreadMessageCount"];
 }
 
 - (void) addThreadsByDateObject: (GIThread*) aThread

@@ -41,6 +41,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 @implementation GIMessage
 
 @synthesize date;
+@synthesize unreadMessageCount;
 @synthesize subject;
 
 - (GIThread*) thread
@@ -710,6 +711,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	threadOID = [coder decodeOIDForKey: @"threadOID"];
 	referenceOID = [coder decodeOIDForKey: @"referenceOID"];
 	flags = [coder decodeInt32ForKey: @"flags"];	
+	unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];	
 	referenceCount = NSNotFound;
 	return self;
 }
@@ -722,6 +724,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[coder encodeObject: date forKey: @"date"];
 	[coder encodeObject: senderName forKey: @"senderName"];
 	[coder encodeInt32: flags forKey: @"flags"];
+	[coder encodeInt32: unreadMessageCount forKey: @"unreadMessageCount"];
 
 	[coder encodeOID: sendProfileOID forKey: @"sendProfileOID"];
 	[coder encodeOID: threadOID forKey: @"threadOID"];

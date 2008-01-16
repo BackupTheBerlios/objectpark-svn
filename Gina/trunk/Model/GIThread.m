@@ -26,6 +26,11 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 @implementation GIThread
 
++ (NSSet*) keyPathsForValuesAffectingIsSeen
+{
+	return [NSSet setWithObject: @"unreadMessageCount"];
+}
+
 - (id) init
 {
 	if (self = [super init]) 
@@ -36,50 +41,80 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	return self;
 }
 
+- (BOOL) isSeen
+/*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
+{    
+	return unreadMessageCount == 0;
+}
+
+- (int) unreadMessageCount
+{
+	return unreadMessageCount;
+}
+
+- (void) adjustUnreadMessageCountBy: (int) change
+{
+	if (change) {
+		[self willChangeValueForKey: @"unreadMessageCount"];
+		unreadMessageCount += change;
+		[self didChangeValueForKey: @"unreadMessageCount"];
+		NSParameterAssert(change<=1 && change >=-1);
+		[messageGroups makeObjectsPerformSelector: change == -1 ? @selector(decreaseUnreadMessageCount) : @selector(increaseUnreadMessageCount)];
+	}
+}
+
 - (void) insertObject: (GIMessage*) message inMessagesAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
 {
 	[messages insertObject: message atIndex: index];
-//	[message willChangeValueForKey: @"thread"];
-//	message.thread = self;
-//	[message didChangeValueForKey: @"thread"];
+	// No inverse relationship handling here - use only setThread in GIMessage.
 	if (! message.isSeen) {
-		unreadMessageCount++;
+		[self adjustUnreadMessageCountBy: 1];
 	}
 }
+
 
 - (void) removeObjectFromMessagesAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
 {
 	GIMessage* message = [messages objectAtIndex: index];
 	[messages removeObjectAtIndex: index];
-//	[message willChangeValueForKey: @"thread"];
-//	message.thread = nil; 
-//	[message didChangeValueForKey: @"thread"];
+	// No inverse relationship handling here - use only setThread in GIMessage.
+
 	if (! message.isSeen) {
-		unreadMessageCount--;
+		[self adjustUnreadMessageCountBy: -1];
 	}
 }
 
+- (void) insertPrimitiveObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index
+{
+	[messageGroups insertObject: group atIndex: index];
+}
 
 - (void) insertObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. "*/
 {
-	[messageGroups insertObject: group atIndex: index];
+	[self insertPrimitiveObject: group inMessageGroupsAtIndex: index];
 	NSSet* selfSet = [NSSet setWithObject: self];
 	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
-	[(OPPersistentSet*)group.threads addObject: self];
+	[group addPrimitiveThreadsObject: self];
 	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+}
+
+- (void) removePrimitiveObjectFromMessageGroupsAtIndex: (NSUInteger) index
+{
+	[messageGroups removeObjectAtIndex: index];
 }
 
 - (void) removeObjectFromMessageGroupsAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. "*/
 {
 	GIMessageGroup* group = [messageGroups objectAtIndex: index];
-	[messageGroups removeObjectAtIndex: index];
+	[self removePrimitiveObjectFromMessageGroupsAtIndex: index];
 	NSSet* selfSet = [NSSet setWithObject: self];
 	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
-	[(OPPersistentSet*) group.threads removeObject: self]; 
+//	[(OPPersistentSet*) group.threads removeObject: self]; 
+	[group removePrimitiveThreadsObject: self];
 	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
 }
 
@@ -211,11 +246,11 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //}
 
 
-- (void)noteChange
-{
-	NSNotification *notification = [NSNotification notificationWithName:GIThreadDidChangeNotification object:self];
-	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
-}
+//- (void)noteChange
+//{
+//	NSNotification *notification = [NSNotification notificationWithName:GIThreadDidChangeNotification object:self];
+//	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender forModes:nil];
+//}
 
 - (void)didChangeValueForKey:(NSString *)key 
 {
@@ -377,11 +412,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //
 //}
 
-- (BOOL)isSeen
-/*" Returns YES, if any message contained is unread (OPSeenStatus). "*/
-{    
-	return unreadMessageCount == 0;
-}
+
 
 - (NSArray *)rootMessages
 /*" Returns all messages without reference in the receiver. "*/
@@ -399,10 +430,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     return result;
 }
 
+
 - (void) didToggleFlags: (unsigned) flags ofContainedMessage: (GIMessage*) message
 {
 	if (flags & OPSeenStatus) {
-		unreadMessageCount += [message hasFlags: OPSeenStatus] ? -1 : 1; 
+		BOOL nowSeen = [message hasFlags: OPSeenStatus];
+		[self adjustUnreadMessageCountBy: nowSeen ? -1 : 1]; 
 	}
 }
 

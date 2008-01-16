@@ -70,9 +70,9 @@
 
 - (NSUInteger)unreadCount
 {
-	if ([[[self hierarchyItem] representedObject] isKindOfClass:[GIMessageGroup class]])
-	{
-		return [(GIMessageGroup *)[[self hierarchyItem] representedObject] unreadMessageCount];
+	id object = [[self hierarchyItem] representedObject];
+	if ([object isKindOfClass: [GIMessageGroup class]]) {
+		return [(GIMessageGroup*) object unreadMessageCount];
 	}
 	return 0;
 }

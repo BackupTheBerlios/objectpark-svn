@@ -61,8 +61,10 @@
     unsigned flags; 
 	OPInternetMessage* internetMessage;
 	unsigned referenceCount;
+	unsigned unreadMessageCount;
 }
 
+@property (readonly) unsigned unreadMessageCount;
 @property BOOL isSeen;
 @property (readonly, retain) OPInternetMessage *internetMessage;
 @property OID referenceOID;

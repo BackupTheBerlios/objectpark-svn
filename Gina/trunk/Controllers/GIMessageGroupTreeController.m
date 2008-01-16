@@ -39,8 +39,10 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([@"selectionIndexPaths" isEqualToString:keyPath]) 
+	if ([@"selectionIndexPaths" isEqualToString:keyPath]) {
+		[self willChangeValueForKey:@"selectedObject"]; // depedent keys do not seem to work
 		[self didChangeValueForKey:@"selectedObject"]; // depedent keys do not seem to work
+	}
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 

@@ -45,6 +45,7 @@
 @end
 
 @interface GIMainWindowController (KeyboardShortcuts) <GIMainWindowDelegate>
+- (void) setThreadsOnlyMode;
 @end
 
 @interface GIMainWindowController (OutlineViewDelegateAndActions)

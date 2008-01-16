@@ -186,15 +186,15 @@ NSString* MboxImportJobName = @"mbox import";
                     
                     if (persistentMessage) {
 						
-						[self addMessage:persistentMessage];
+						[self addMessage: persistentMessage];
 						
-                        if (flags) [persistentMessage addFlagsFromString:flags];
+                        if (flags) [persistentMessage addFlagsFromString: flags];
                         
                         messagesWereAdded = YES;
                         ++addedMessageCount;
                     }
                                         
-                    if ((++mboxDataCount % 100) == 99) {
+                    if ((++mboxDataCount % 100) == 0) {
                         if (messagesWereAdded) {   
 							NSDate *lapDate = [NSDate date];
 							NSLog(@"Added %u messages so far... (average %.2lf messages/second)", addedMessageCount, (double)addedMessageCount / (double)(([lapDate timeIntervalSinceReferenceDate] - [startDate timeIntervalSinceReferenceDate])));

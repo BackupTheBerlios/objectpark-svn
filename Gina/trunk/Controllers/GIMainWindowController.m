@@ -119,6 +119,7 @@
 	[threadsOutlineView setHighlightThreads:YES];
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
+	[self setThreadsOnlyMode];
 	
 	[self.window makeKeyAndOrderFront:self];
 }
@@ -481,6 +482,15 @@
 #define RETURN 36
 #define SPACE 49
 
+- (void) setThreadsOnlyMode
+{
+	if ([threadMailSplitter isSubviewCollapsed:[[threadsOutlineView superview] superview]])
+	{
+		NSLog(@"only mail visible. switching to only threads visible.");
+		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
+	}
+}
+
 - (BOOL)keyPressed:(NSEvent *)event
 {
 	switch([event keyCode])
@@ -504,18 +514,7 @@
 			NSLog(@"subviews of thread mail splitter = %@", [threadMailSplitter subviews]);
 			NSLog(@"[threadsOutlineView superview] = %@", [[threadsOutlineView superview] superview]);
 			
-			if ([threadMailSplitter isSubviewCollapsed:[[threadsOutlineView superview] superview]])
-			{
-				NSLog(@"only mail visible. switching to only threads visible.");
-				@try
-				{
-					[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
-				}
-				@catch(id exception)
-				{
-					NSLog(@"exception: %@", exception);
-				}
-			}
+			[self setThreadsOnlyMode];
 			return YES;
 		}
 		case RETURN:

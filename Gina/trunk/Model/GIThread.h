@@ -20,11 +20,13 @@
 	OPFaultingArray* messages;           // persistent
 	OPFaultingArray* messageGroups;      // persistent
 	OPFaultingArray* messagesByTree;     // transient cache - needed?
-	unsigned unreadMessageCount;
+	int unreadMessageCount;
 }
 
 @property (copy) NSString* subject;  // persistent
 @property (retain) NSDate* date;     // persistent
+@property (readonly) int unreadMessageCount; // persistent
+@property (readonly) BOOL isSeen; // calculated from unreadMessageCount
 
 + (GIThread*) threadForMessage:(GIMessage*)aMessage;
 + (void) addMessageToAppropriateThread:(GIMessage*)message;
@@ -36,12 +38,15 @@
 - (NSArray*) messagesByTree; // slow!!
 
 
+/*" Used in inverse relationship handling. "*/
+- (void) insertPrimitiveObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index;
+- (void) removePrimitiveObjectFromMessageGroupsAtIndex: (NSUInteger) index;
+
 /*" Groups handling "*/
 
 - (NSUInteger)messageCount;
 - (NSArray*) rootMessages;
 - (NSUInteger)commentDepth;
-- (BOOL) isSeen;
 - (BOOL) containsSingleMessage;
 
 //- (void) addToGroups_Manually: (GIMessageGroup*) newGroup;

@@ -21,10 +21,11 @@
 	OID defaultProfileOID;
 	
     // transient stats:
-    NSNumber* unreadMessageCount;
+    int unreadMessageCount;
 }
 
 @property (readonly) NSSet* threads;
+@property (readonly) int unreadMessageCount;
 
 /*" MessageGroup types "*/
 #define GIRegularMessageGroup 1
@@ -72,6 +73,10 @@ extern NSString *GIMessageGroupsChangedNotification;
 
 - (void)exportAsMboxFileWithPath:(NSString *)path;
 
-- (NSUInteger)unreadMessageCount;
+- (int) unreadMessageCount;
+
+/*" Inverse relationship handling "*/
+- (void) addPrimitiveThreadsObject: (GIThread*) newThread;
+- (void) removePrimitiveThreadsObject: (GIThread*) oldThread;
 
 @end
