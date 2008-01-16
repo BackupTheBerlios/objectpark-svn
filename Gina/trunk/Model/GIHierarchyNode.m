@@ -115,4 +115,9 @@
 	return rootNode;
 }
 
+- (int)unreadMessageCount
+{
+	return 0;
+}
+
 @end

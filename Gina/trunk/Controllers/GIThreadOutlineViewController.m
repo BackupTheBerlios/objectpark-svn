@@ -57,7 +57,6 @@ static NSDictionary *newAttributesWithColor(NSColor *color)
 	return attributes;
 }
 
-
 static NSDictionary *spamMessageAttributes()
 {
     static NSDictionary *attributes = nil;
@@ -476,36 +475,39 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (void)setRootItem:(id)newItem
 {
-	[super setRootItem:newItem];
-	
-	if ([newItem isKindOfClass:[OPPersistentObject class]])
-	{
-		// restore selection for message group (root item):
-		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)newItem oid]];
-		NSArray *oidsOfSelectedObjects = [[NSUserDefaults standardUserDefaults] objectForKey:groupSelectionDefaultKey];
-		
-		NSMutableArray *selectedObjects = [NSMutableArray arrayWithCapacity:[oidsOfSelectedObjects count]];
-		for (NSNumber *oidNumber in oidsOfSelectedObjects)
+	if (self.rootItem != newItem)
+	{		
+		[super setRootItem:newItem];
+
+		if ([newItem isKindOfClass:[OPPersistentObject class]])
 		{
-			OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
+			// restore selection for message group (root item):
+			NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)newItem oid]];
+			NSArray *oidsOfSelectedObjects = [[NSUserDefaults standardUserDefaults] objectForKey:groupSelectionDefaultKey];
 			
-			if (selectedObject)
+			NSMutableArray *selectedObjects = [NSMutableArray arrayWithCapacity:[oidsOfSelectedObjects count]];
+			for (NSNumber *oidNumber in oidsOfSelectedObjects)
 			{
-				[selectedObjects addObject:selectedObject];
+				OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
 				
-				if ([selectedObject isKindOfClass:[GIMessage class]])
+				if (selectedObject)
 				{
-					// make sure thread is expanded:
-					[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:YES];
+					[selectedObjects addObject:selectedObject];
+					
+					if ([selectedObject isKindOfClass:[GIMessage class]])
+					{
+						// make sure thread is expanded:
+						[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:YES];
+					}
+				}
+				else
+				{
+					NSLog(@"warning could not retrieve object with OID: %llu", [oidNumber OIDValue]);
 				}
 			}
-			else
-			{
-				NSLog(@"warning could not retrieve object with OID: %llu", [oidNumber OIDValue]);
-			}
+			
+			self.selectedObjects = selectedObjects;
 		}
-		
-		self.selectedObjects = selectedObjects;
 	}
 }
 

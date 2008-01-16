@@ -756,7 +756,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	}
 }
 
-- (NSSet*) threads
+- (NSSet *)threads
 {
 	if (!threads) {
 		threads = [[OPPersistentSet alloc] init];
@@ -765,7 +765,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return threads;
 }
 
-- (int) unreadMessageCount;
+- (int)unreadMessageCount
 {
 	return unreadMessageCount;
 }
@@ -796,6 +796,8 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		[self willChangeValueForKey: @"unreadMessageCount"];
 		unreadMessageCount += changeCount;
 		[self didChangeValueForKey: @"unreadMessageCount"];
+		[self willChangeValueForKey:@"self"];
+		[self didChangeValueForKey:@"self"];
 	}
 }
 
