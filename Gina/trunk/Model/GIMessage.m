@@ -67,12 +67,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) willDelete
 {
 	id thread = self.thread;
-	if (thread) 
-	{
+	if (thread) {
 		self.thread = nil;
 
-		if ([thread messageCount] <=1 ) 
-		{
+		if ([thread messageCount] <=1 ) {
 			[thread delete]; 
 		}
 	}
@@ -179,8 +177,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	messageId = [[im messageId] retain];
 	
 	// Add self to global message id index:
-	if (messageId.length)
-	{
+	if (messageId.length) {
 		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
 	}
 	

@@ -24,6 +24,9 @@
 - (IBAction) makeDefaultApp: (id) sender;
 - (IBAction) importMboxFile: (id) sender;
 
+- (void) runConsistentcyChecks: (id) sender;
+
+
 @end
 
 extern NSString *GISuspendThreadViewUpdatesNotification;

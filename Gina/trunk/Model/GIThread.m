@@ -63,9 +63,11 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	}
 }
 
+
 - (void) insertObject: (GIMessage*) message inMessagesAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
 {
+	[messagesByTree release]; messagesByTree = nil;
 	[messages insertObject: message atIndex: index];
 	// No inverse relationship handling here - use only setThread in GIMessage.
 	if (! message.isSeen) {
@@ -77,6 +79,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) removeObjectFromMessagesAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
 {
+	[messagesByTree release]; messagesByTree = nil;
 	GIMessage* message = [messages objectAtIndex: index];
 	[messages removeObjectAtIndex: index];
 	// No inverse relationship handling here - use only setThread in GIMessage.
@@ -200,8 +203,11 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 - (void) willDelete
 {
-	//NSLog(@"Will delete Thread %@.", self);
-	[[self valueForKey: @"messages"] makeObjectsPerformSelector: @selector(delete)];
+	if (LIDFromOID(self.oid) == 30) {
+		NSBeep();
+	}
+	NSLog(@"Will delete Thread %@ with %u messages.", self, self.messages.count);
+	[self.messages makeObjectsPerformSelector: @selector(delete)];
 	[[self mutableArrayValueForKey: @"messageGroups"] removeAllObjects];
 	[super willDelete];
 }
@@ -385,8 +391,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 /*" Returns an array containing the result of a depth first search over all tree roots. "*/
 - (NSArray *)messagesByTree
 {
-	if (!messagesByTree) 
-	{
+	if (!messagesByTree) {
 		NSArray* allMessages = [self messages];
 		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: [allMessages count]];
 		//[messagesByTree setParent: self];

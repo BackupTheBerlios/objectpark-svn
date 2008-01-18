@@ -506,7 +506,7 @@ NSDateFormatter *timeAndDateFormatter()
 				}
 				else
 				{
-					NSLog(@"warning could not retrieve object with OID: %llu", [oidNumber OIDValue]);
+					NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
 				}
 			}
 			

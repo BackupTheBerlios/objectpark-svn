@@ -10,6 +10,7 @@
 #import "GIUserDefaultsKeys.h"
 #import "GIMainWindowController.h"
 #import "GIMessage.h"
+#import "GIThread.h"
 #import "GIMessageGroup.h"
 #import "GIMessageBase.h"
 #import "OPPersistence.h"
@@ -149,5 +150,23 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
     }    
 }
 
+- (void) runConsistentcyChecks: (id) sender
+{
+	GIMessageGroup* group = [GIMessageGroup defaultMessageGroup];
+	for (GIThread* thread in group.threads) {
+		NSLog(@"Walking %@", thread);
+		for (GIMessage* message in thread.messages) {
+			//NSLog(@"Walking %@", message);
+			GIMessage* referenced = message.reference;
+			if (referenced) {
+				if (referenced.thread != message.thread) {
+					NSLog(@"inconsistency detected. Message %@ refers to %@, but they are not in the same thread.", message, referenced);
+				}
+			}
+		}
+	}
+	NSLog(@"Finished successfully.");
+
+}
 
 @end

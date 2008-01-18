@@ -273,6 +273,7 @@
 
 - (NSEnumerator*) objectEnumerator
 {
+	//return self.sortedArray.objectEnumerator;
 	return [[[OPPersistentSetArrayEnumerator alloc] initWithPersistentSet: self] autorelease];
 }
 
@@ -448,7 +449,7 @@
 - (id) initWithPersistentSet: (OPPersistentSet*) theSet
 {
 	pSet = [theSet retain];
-	array = (OPPersistentSetArray*)[pSet sortedArray];
+	array = [(OPPersistentSetArray*)[pSet sortedArray] retain];
 	arrayCount = array.count;
 	changeCount = pSet->changeCount;
 	return self;
