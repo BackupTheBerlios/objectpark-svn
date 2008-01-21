@@ -50,10 +50,9 @@
 {
     NSParameterAssert(aMessage != nil);
     
-	GIThread* thread = [aMessage assignThreadUseExisting: !suppressThreading];
-
+	GIThread* thread = aMessage.thread;
+	
 	if (! [thread.messageGroups containsObject: aGroup]) {
-		//[[aGroup mutableSetValueForKey: @"threads"] addObject: thread];
 		[[thread mutableArrayValueForKey: @"messageGroups"] addObject: aGroup];
 	}
 }

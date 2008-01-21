@@ -265,10 +265,10 @@
 	}
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
+- (id) outlineView: (NSOutlineView*) outlineView child: (NSInteger) index ofItem: (id) item
 {
 	if (! item) item = [self rootItem];
-	id result = [[item valueForKeyPath:[self childKey]] objectAtIndex:index];
+	id result = [[item valueForKeyPath: [self childKey]] objectAtIndex: index];
 	
 #warning hack to circumvent bug. Remove later:
 	static NSDictionary* hackDict = nil; 
@@ -278,7 +278,7 @@
 		result = hackDict;
 	}
 	
-	if (! [knownItems containsObject:result]) {
+	if (! [knownItems containsObject: result]) {
 		[self addToKnownItems: result];
 	}
 	return result;

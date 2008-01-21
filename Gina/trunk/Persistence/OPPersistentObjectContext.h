@@ -48,6 +48,8 @@
 - (OID)OIDValue;
 @end
 
+extern NSString* OPStringFromOID(OID oid);
+
 @interface OPPersistentObjectContext : NSObject {
     
 	@private

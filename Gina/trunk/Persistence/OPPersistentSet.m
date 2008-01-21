@@ -145,8 +145,9 @@
 			[array noteEntryRemovedWithKeyBytes: keyBytes length: keyLength];
 			
 			[self didChangeValueForKey: @"sortedArray"];
+		} else {
+			NSLog(@"Warning: Unable to delete set element %@ from %@", anObject, self);
 		}
-		//}
 		[keyData release];
 	}
 }
@@ -412,6 +413,7 @@
 	error = [arrayCursor getCurrentEntryKeyBytes: &oid length: sizeof(OID) offset: keyLength-sizeof(OID)];
 	oid = NSSwapBigLongLongToHost(oid);
 	id result = [[pSet context] objectForOID: oid];
+	NSAssert3(result != nil, @"Warning: %@ objectAtIndex: %u is a dangling reference to %@. Returning nil.", self, index, OPStringFromOID(oid));
 	return result;
 }
 
@@ -432,7 +434,7 @@
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"<%@ %0x%x> cursor at %u/%u", [self class], self, cursorPosition, [self count]];
+	return [NSString stringWithFormat: @"<%@ 0x%x, cursor at %u/%u>", [self class], self, cursorPosition, [self count]];
 }
 
 - (void) dealloc
@@ -467,6 +469,7 @@
 	id result = nil;
 	NSAssert(changeCount == pSet->changeCount, @"set/array mutated during enumeration.");
 	if (nextIndex < arrayCount) {
+		NSLog(@"enumerating index %u/%u", nextIndex, arrayCount);
 		result = [array objectAtIndex: nextIndex];
 		nextIndex++;
 	}

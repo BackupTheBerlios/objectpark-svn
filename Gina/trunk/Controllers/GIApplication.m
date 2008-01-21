@@ -110,10 +110,14 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[GIMessage repairEarliestSendTimes];
 	
 //	[[GIJunkFilter sharedInstance] writeJunkFilterDefintion];
-		
+}
+
+- (void) terminate: (id) sender
+{
+	[super terminate: sender];
 	// shutting down persistence:
 	[[OPPersistentObjectContext defaultContext] saveChanges];
-	[[OPPersistentObjectContext defaultContext] close];
+	[[OPPersistentObjectContext defaultContext] close];	
 }
 
 - (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
@@ -153,6 +157,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 - (void) runConsistentcyChecks: (id) sender
 {
 	GIMessageGroup* group = [GIMessageGroup defaultMessageGroup];
+	NSLog(@"Walking %u threads:", group.threads.count);
+	unsigned threadCounter = 0;
 	for (GIThread* thread in group.threads) {
 		NSLog(@"Walking %@", thread);
 		for (GIMessage* message in thread.messages) {
@@ -164,8 +170,9 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 				}
 			}
 		}
+		threadCounter++;
 	}
-	NSLog(@"Finished successfully.");
+	NSLog(@"Finished successfully. Walked %u threads.", threadCounter);
 
 }
 

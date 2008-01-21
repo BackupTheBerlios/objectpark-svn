@@ -310,6 +310,15 @@ typedef struct {
 	}
 }
 
+NSString* OPStringFromOID(OID oid)
+{
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	unsigned cid = CIDFromOID(oid);
+	Class theClass = [context classForCID: cid];
+	return [NSString stringWithFormat: @"%@, lid %u", theClass, LIDFromOID(oid)];
+
+}
+
 - (id) newUnarchivedObjectForOID: (OID) oid
 {
 	id result = nil;
@@ -319,7 +328,7 @@ typedef struct {
 	if (pos == 0 && error == SQLITE_OK) {
 		result = [self newUnarchivedObjectAtCursor: readCursor];
 	} else {
-		NSLog(@"Warning - no object data found for %@, lid %u", [self classForCID: CIDFromOID(oid)], LIDFromOID(oid));
+		NSLog(@"Warning - no object data found for %@", OPStringFromOID(oid));
 	}
 	[readCursor release];
 	return result;
