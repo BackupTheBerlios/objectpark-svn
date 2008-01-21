@@ -117,7 +117,7 @@
     if ([bindingName isEqualToString:@"rootItem"])
     {
 		[observedObjectForRootItem removeObserver:self
-											  forKeyPath:observedKeyPathForRootItem];
+									   forKeyPath:observedKeyPathForRootItem];
 		[self setObservedObjectForRootItem:nil];
 		[self setObservedKeyPathForRootItem:nil];
 		[self reloadData];

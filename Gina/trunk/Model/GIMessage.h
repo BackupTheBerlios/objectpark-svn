@@ -118,7 +118,7 @@
 - (id)initDummy;
 
 - (GIMessage *)reference;
-- (GIMessage *)referenceFind:(BOOL)find;
+//- (GIMessage *)referenceFind:(BOOL)find;
 
 - (unsigned) numberOfReferences;
 - (void) flushNumberOfReferencesCache;
@@ -141,7 +141,7 @@
 - (NSAttributedString *)contentAsAttributedString;
 - (NSString*) contentAsString;
 
-- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
+//- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
 
 - (NSArray*) commentsInThread: (GIThread*) thread;
 

@@ -236,6 +236,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
         
         referencingMsg = referencedMsg;
 		[references removeLastObject];
+		[references removeObject: refId]; // buggy messages can have circles in their references
     }
 	
 	if (! thread) {
@@ -455,41 +456,41 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
    return [[self internetMessage] contentAsPlainString];
 }
 
-- (GIThread*) assignThreadUseExisting: (BOOL) useExisting
-/*"Returns the one thread the message belongs to.
-   If useExisting is NO, this method creates a new thread in the receiver's
-   context containing just the receiver, otherwise, it uses the message 
-   reference to find an existing thread object."*/
-{
-    GIThread* result = self.thread;
-    
-	if (!result) {
-		if (useExisting) {
-			// do threading by reference
-			result = [[self referenceFind: YES] thread];
-        }
-		if (!result) {
-            result = [[[GIThread alloc] init] autorelease];
-			// Set the thread's subject to be the first message's subject:
-            result.subject = self.subject;
-        } else {
-             if (NSDebugEnabled) NSLog(@"Found Existing Thread with %d message(s). Updating it...", [result messageCount]);
-        }
-		result.date = self.date; 
-
-		if ((! [result.subject length]) && [self.subject length]) {
-			// If the thread does not yet have a proper subject, take the one from the first message thast does.
-			result.subject = self.subject;
-		}
-		
-        // We got one, so set it:
-        self.thread = result;
-    }
-    
-    return result;
-}
-
-
+//- (GIThread*) assignThreadUseExisting: (BOOL) useExisting
+///*"Returns the one thread the message belongs to.
+//   If useExisting is NO, this method creates a new thread in the receiver's
+//   context containing just the receiver, otherwise, it uses the message 
+//   reference to find an existing thread object."*/
+//{
+//    GIThread* result = self.thread;
+//    
+//	if (!result) {
+//		if (useExisting) {
+//			// do threading by reference
+//			result = [[self referenceFind: YES] thread];
+//        }
+//		if (!result) {
+//            result = [[[GIThread alloc] init] autorelease];
+//			// Set the thread's subject to be the first message's subject:
+//            result.subject = self.subject;
+//        } else {
+//             if (NSDebugEnabled) NSLog(@"Found Existing Thread with %d message(s). Updating it...", [result messageCount]);
+//        }
+//		result.date = self.date; 
+//
+//		if ((! [result.subject length]) && [self.subject length]) {
+//			// If the thread does not yet have a proper subject, take the one from the first message thast does.
+//			result.subject = self.subject;
+//		}
+//		
+//        // We got one, so set it:
+//        self.thread = result;
+//    }
+//    
+//    return result;
+//}
+//
+//
 
 
 - (NSString *)flagsString
@@ -700,17 +701,19 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
  
  #ATTENTION: This method will generate dummy messages and add them to the 
  thread if required and %find is YES! "*/
-- (GIMessage *)referenceFind:(BOOL)find
-{
-    GIMessage *result = self.reference;
-    
-    if (result || !find)
-        return result;
-     
-    [GIThread addMessageToAppropriateThread:self];
-    
-    return self.reference;
-}        
+//- (GIMessage *)referenceFind:(BOOL)find
+//{
+//    GIMessage *result = self.reference;
+//    
+//    if (result || !find)
+//        return result;
+//     
+//    [GIThread addMessageToAppropriateThread:self];
+//    
+//    return self.reference;
+//}        
+
+
         
 /*" Returns YES, if Ginko thinks (from the message headers) that this message is from a mailing list (note, that a message can be both, a usenet article and an email). Decodes internet message to compute the result - so it may be slow! "*/
 - (BOOL)isListMessage

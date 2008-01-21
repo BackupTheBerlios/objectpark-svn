@@ -330,7 +330,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     if (NSDebugEnabled) NSLog(@"Merging messages %@ into thread %@ with messages %@", [otherThread messages], self, [self messages]);
     
     while (message = [[otherThread messages] lastObject]) {
-		[message referenceFind: YES];
+		//[message referenceFind: YES];
         message.thread = self; // removes message from messages
     }
 	NSAssert1([otherThread messageCount] ==  0, @"Thread not empty: %@ - loosing message.", otherThread);
