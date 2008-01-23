@@ -10,6 +10,8 @@
 #import "GIMessageGroup.h"
 #import "GIMessageGroupCell.h"
 
+#define SelectedMessageGroup @"SelectedMessageGroup"
+
 @implementation GIMessageGroupTreeController
 
 #warning drag & drop is missing
@@ -27,6 +29,30 @@
 	
 	[self addObserver:self forKeyPath:@"selectionIndexPaths" options:0 context:NULL];
 	// [[self class] setKeys: [NSArray arrayWithObject: @"selectionIndexes"] triggerChangeNotificationsForDependentKey: @"selectedObject"]; // not working, see http://www.cocoabuilder.com/archive/message/cocoa/2004/10/1/118614
+
+}
+
+- (void)setContent:(id)content
+{
+	[super setContent:content];
+	
+	// restore remembered selection:
+	NSArray *indexPathComponents = [[NSUserDefaults standardUserDefaults] objectForKey:SelectedMessageGroup];
+	if ([indexPathComponents count])
+	{
+		NSUInteger *indexes = malloc([indexPathComponents count] * sizeof(NSUInteger));
+		
+		for (int i = 0; i < [indexPathComponents count]; i++)
+		{
+			indexes[i] = [[indexPathComponents objectAtIndex:i] unsignedIntValue];
+		}
+		
+		NSIndexPath *indexPath = [NSIndexPath indexPathWithIndexes:indexes length:[indexPathComponents count]];
+		
+		free(indexes);
+		
+		[self setSelectionIndexPath:indexPath];
+	}
 }
 
 - (void)dealloc
@@ -68,6 +94,19 @@
 	{
 		[cell setHierarchyItem:item];
 	}
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	NSIndexPath *indexPath = [self selectionIndexPath];
+	NSMutableArray *indexPathComponents = [NSMutableArray arrayWithCapacity:[indexPath length]];
+	
+	for (int i = 0; i < [indexPath length]; i++)
+	{
+		[indexPathComponents addObject:[NSNumber numberWithUnsignedInt:[indexPath indexAtPosition:i]]];
+	}
+	
+	[[NSUserDefaults standardUserDefaults] setObject:indexPathComponents forKey:SelectedMessageGroup];
 }
 
 @end

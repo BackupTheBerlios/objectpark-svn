@@ -64,18 +64,6 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	}
 }
 
-- (void)finishLaunching 
-{
-	registerDefaultDefaults();
-	[super finishLaunching];
-}
-
-- (IBAction)makeDefaultApp:(id)sender
-{
-	LSSetDefaultHandlerForURLScheme((CFStringRef)@"mailto", (CFStringRef)[[[NSBundle mainBundle] bundleIdentifier] lowercaseString]);
-	[defaultEmailAppWindow close];
-}
-
 - (void)ensureMainWindowIsPresent
 {
 	// ensure a main window:
@@ -88,6 +76,21 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	}
 	
 	[[[GIMainWindowController alloc] init] autorelease];
+}
+
+- (void)finishLaunching 
+{
+	registerDefaultDefaults();
+	[super finishLaunching];
+	
+	[self ensureMainWindowIsPresent];
+//	[self findMissingMessageIds:self];
+}
+
+- (IBAction)makeDefaultApp:(id)sender
+{
+	LSSetDefaultHandlerForURLScheme((CFStringRef)@"mailto", (CFStringRef)[[[NSBundle mainBundle] bundleIdentifier] lowercaseString]);
+	[defaultEmailAppWindow close];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
@@ -173,7 +176,32 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		threadCounter++;
 	}
 	NSLog(@"Finished successfully. Walked %u threads.", threadCounter);
+}
 
+@end
+	
+@implementation GIApplication (MessageLeakingTest)
+
+- (IBAction)findMissingMessageIds:(id)sender
+{
+	NSString *messageIdsFilePath = [[NSBundle mainBundle] pathForResource:@"Message-Ids" ofType:@"txt"];
+	NSAssert(messageIdsFilePath != nil, @"could not find file");
+	
+	NSString *messageIdsString = [NSString stringWithContentsOfFile:messageIdsFilePath];
+	NSAssert(messageIdsString != nil, @"could not read file");
+	
+	NSArray *messageIds = [messageIdsString componentsSeparatedByCharactersInSet:[NSCharacterSet linebreakCharacterSet]];
+	
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+	
+	for (NSString *messageId in messageIds)
+	{
+		GIMessage *message = [context messageForMessageId:messageId];
+		if (!message)
+		{
+			NSLog(@"Found missing message with ID: %@", messageId);
+		}
+	}
 }
 
 @end

@@ -120,7 +120,7 @@
 									   forKeyPath:observedKeyPathForRootItem];
 		[self setObservedObjectForRootItem:nil];
 		[self setObservedKeyPathForRootItem:nil];
-		[self reloadData];
+//		[self reloadData];
     }	
 	else if ([bindingName isEqualToString:@"selectedObjects"])
     {
