@@ -253,7 +253,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	if (didCreateDummy) {
 		// Make sure, all referenced messages, esp the dummies have the same thread set:
 		int refCounter = 1000; // stop after 1000 hops => probably a circle.
-		while (refCounter > 0 && referencedMsg = referencingMsg.reference) {
+		while (refCounter > 0 && (referencedMsg = referencingMsg.reference)) {
 			referencedMsg.thread = thread;
 			referencingMsg = referencedMsg;
 			refCounter--;
