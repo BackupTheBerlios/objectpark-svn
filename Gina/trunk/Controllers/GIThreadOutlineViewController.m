@@ -389,7 +389,7 @@ NSDateFormatter *timeAndDateFormatter()
 		if ([self.messages count] > 0)
 		{
 			[result appendString:[NSString stringWithFormat:@"\nThread '%@':\n", [[self subjectAndAuthor] string]]];
-			[result appendString:[NSString stringWithFormat:@"contains %d messages\n", [[self messages] count]]];
+			[result appendString:[NSString stringWithFormat:@"contains %d messages (%u unread)\n", [[self messages] count], [self unreadMessageCount]]];
 		}
 		return result;
 	}
@@ -447,11 +447,42 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 }	
 
-- (void) reloadData
+- (void)restoreSelectionForMessageGroup:(GIMessageGroup *)aGroup
+{
+	// restore selection for message group (root item):
+	NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)aGroup oid]];
+	NSArray *oidsOfSelectedObjects = [[NSUserDefaults standardUserDefaults] objectForKey:groupSelectionDefaultKey];
+	
+	NSMutableArray *selectedObjects = [NSMutableArray arrayWithCapacity:[oidsOfSelectedObjects count]];
+	for (NSNumber *oidNumber in oidsOfSelectedObjects)
+	{
+		OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
+		
+		if (selectedObject)
+		{
+			[selectedObjects addObject:selectedObject];
+			
+			if ([selectedObject isKindOfClass:[GIMessage class]])
+			{
+				// make sure thread is expanded:
+				[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:YES];
+			}
+		}
+		else
+		{
+			NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
+		}
+	}
+	
+	self.selectedObjects = selectedObjects;
+}
+
+- (void)reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
 {
 	self.suspendUpdatesUntilNextReloadData = NO;
 	[super reloadData];
+	[self restoreSelectionForMessageGroup:self.rootItem];
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
@@ -477,41 +508,12 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 }
 
-- (void)setRootItem:(id)newItem
+- (void)setRootItem:(GIMessageGroup *)aGroup
 {
-	if (self.rootItem != newItem)
+	if (self.rootItem != aGroup)
 	{		
-		[super setRootItem:newItem];
-
-		if ([newItem isKindOfClass:[OPPersistentObject class]])
-		{
-			// restore selection for message group (root item):
-			NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)newItem oid]];
-			NSArray *oidsOfSelectedObjects = [[NSUserDefaults standardUserDefaults] objectForKey:groupSelectionDefaultKey];
-			
-			NSMutableArray *selectedObjects = [NSMutableArray arrayWithCapacity:[oidsOfSelectedObjects count]];
-			for (NSNumber *oidNumber in oidsOfSelectedObjects)
-			{
-				OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
-				
-				if (selectedObject)
-				{
-					[selectedObjects addObject:selectedObject];
-					
-					if ([selectedObject isKindOfClass:[GIMessage class]])
-					{
-						// make sure thread is expanded:
-						[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:YES];
-					}
-				}
-				else
-				{
-					NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
-				}
-			}
-			
-			self.selectedObjects = selectedObjects;
-		}
+		[super setRootItem:aGroup];
+		[self restoreSelectionForMessageGroup:aGroup];
 	}
 }
 

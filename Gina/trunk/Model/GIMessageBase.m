@@ -149,6 +149,9 @@ NSString* MboxImportJobName = @"mbox import";
 	{
         pool = [[NSAutoreleasePool alloc] init];
         
+		NSDate *lastLapDate = nil;
+		unsigned lastLapCount = 0;
+		
         while ((mboxData = [enumerator nextObject]) && ![operation isCancelled]) {
             //NSLog(@"Found mbox data of length %d", [mboxData length]);
             NSData *transferData = [mboxData transferDataFromMboxData];
@@ -196,9 +199,15 @@ NSString* MboxImportJobName = @"mbox import";
                     if ((++mboxDataCount % 100) == 0) {
                         if (messagesWereAdded) {   
 							NSDate *lapDate = [NSDate date];
-							NSLog(@"Added %u messages so far... (average %.2lf messages/second)", addedMessageCount, (double)addedMessageCount / (double)(([lapDate timeIntervalSinceReferenceDate] - [startDate timeIntervalSinceReferenceDate])));
+							double overallAverage = (double)addedMessageCount / (double)([lapDate timeIntervalSinceReferenceDate] - [startDate timeIntervalSinceReferenceDate]);
+							double localAverage = (double)(addedMessageCount - lastLapCount) / (double)([lapDate timeIntervalSinceReferenceDate] - [lastLapDate timeIntervalSinceReferenceDate]);
+							
+							NSLog(@"Added %u messages so far... (overall average %.2lf, local average %.2lf (in messages/second)) %.2lf%%", addedMessageCount, overallAverage, localAverage, ((double)[enumerator offsetOfNextObject] / (double)mboxFileSize) * 100.0);
                             [self saveChanges];
                             messagesWereAdded = NO;
+							[lastLapDate release];
+							lastLapDate = [lapDate retain];
+							lastLapCount = addedMessageCount;
                         }
                         [pool release]; pool = [[NSAutoreleasePool alloc] init];                            
                     }

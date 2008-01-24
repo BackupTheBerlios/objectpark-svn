@@ -169,6 +169,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) setContentFromInternetMessage: (OPInternetMessage*) im
 /*" Does not set the reference ivar. "*/
 {
+	NSParameterAssert(im != nil);
+	
     NSString* fromHeader = [im fromWithFallback: YES];
     
 	[self toggleFlags: flags & OPDummyStatus]; // remove Dummy status
@@ -280,8 +282,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
             [dupe setContentFromInternetMessage:anInternetMessage];
         } else {
 			if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [anInternetMessage messageId]);    
-			result = dupe;
 		}
+		result = dupe;
     } else  {
         // Create a new message in the default context:
         result = [[[GIMessage alloc] initWithInternetMessage: anInternetMessage] autorelease];
