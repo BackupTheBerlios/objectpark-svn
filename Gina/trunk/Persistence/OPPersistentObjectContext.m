@@ -645,7 +645,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	NSLog(@"Deleting %u objects...\n%@", [deletedObjects count],  /*NSDebugEnabled ? [deletedObjects allObjects] :*/ @"");
 
 	@synchronized(self) {
-		NSParameterAssert([database isInTransaction]);
+		NSParameterAssert([database isInTransaction]); // Make sure, there is a transaction running
 		int error = SQLITE_OK;
 
 		OPIntKeyBTreeCursor* saveCursor = [[[self database] objectTree] newCursorWithError: &error];

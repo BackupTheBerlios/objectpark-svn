@@ -165,7 +165,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return dummy;
 }
 
-
 - (void) setContentFromInternetMessage: (OPInternetMessage*) im
 /*" Does not set the reference ivar. "*/
 {
@@ -185,16 +184,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
 	}
 	
-    subject = [[im normalizedSubject] retain];
+    [subject release]; subject = [[im normalizedSubject] copy];
     [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
     
     // sanity check for date header field:
-    date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate: [[im date] timeIntervalSinceReferenceDate]];
+    [date release]; date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate: [[im date] timeIntervalSinceReferenceDate]];
     if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare: date] != NSOrderedDescending) {
         // if message's date is a future date
         // broken message, set current date:
-		[date release]; 
-        date = [[NSDate date] retain];
+		[date release]; date = [[NSDate date] retain];
 		if (NSDebugEnabled) NSLog(@"Found message with future date. Fixing broken date with 'now'.");
     }
     
@@ -656,10 +654,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 /*" Inverts the flags given. "*/
 {
 	if (!someFlags) return;
-	//BOOL oldValue = flags & someFlags != 0;
+
+	[self willChangeValueForKey: @"flags"];
 	flags ^= someFlags;
-	//BOOL newValue = flags & someFlags != 0;
-	//NSAssert(oldValue!=newValue, @"toggle failed.");
+	[self didChangeValueForKey: @"flags"];
+	
 	[self.thread didToggleFlags: someFlags ofContainedMessage: self];
 }
 
