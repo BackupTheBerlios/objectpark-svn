@@ -662,10 +662,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[self.thread didToggleFlags: someFlags ofContainedMessage: self];
 }
 
-- (void) willSave
+- (void)willSave
 {
 	//NSLog(@"Will save %@", self);
-	if (![self valueForKey: @"thread"]) {
+	if (!self.thread) 
+	{
 		NSLog(@"Warning! Will save message without thread: %@", self);
 	}
 	

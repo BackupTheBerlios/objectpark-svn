@@ -180,6 +180,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 @end
 	
+#import "NSCharacterSet+MIME.h"
+
 @implementation GIApplication (MessageLeakingTest)
 
 - (IBAction)findMissingMessageIds:(id)sender

@@ -465,7 +465,7 @@ NSDateFormatter *timeAndDateFormatter()
 			if ([selectedObject isKindOfClass:[GIMessage class]])
 			{
 				// make sure thread is expanded:
-				[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:YES];
+				[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:NO];
 			}
 		}
 		else
