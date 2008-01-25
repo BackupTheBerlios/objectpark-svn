@@ -104,6 +104,7 @@ NSString* MboxImportJobName = @"mbox import";
 {
     NSString* mboxFilePath = [arguments objectForKey:@"mboxFilename"];
     NSParameterAssert(mboxFilePath != nil);
+	NSString* groupName = [mboxFilePath lastPathComponent];
     BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
     NSDate* lastProgressSet = [[NSDate alloc] init];
@@ -144,6 +145,8 @@ NSString* MboxImportJobName = @"mbox import";
 	
 	NSDate *startDate = [NSDate date];
 	
+	GIMessageGroup* importGroup = [GIMessageGroup newMessageGroupWithName: groupName atHierarchyNode: nil atIndex: NSNotFound];
+	
     NSAutoreleasePool *pool = nil;
     @try 
 	{
@@ -183,12 +186,11 @@ NSString* MboxImportJobName = @"mbox import";
 					GIMessage *persistentMessage = [GIMessage messageWithInternetMessage: iMessage];
 					[iMessage release];
 					
-					
-                    //if (persistentMessage == (GIMessage *)[NSNull null]) persistentMessage = nil;
-                    
+					                    
                     if (persistentMessage) {
 						
-						[self addMessage: persistentMessage];
+						[self addMessage: persistentMessage toMessageGroup: importGroup suppressThreading: NO];
+						//[self addMessage: persistentMessage];
 						
                         if (flags) [persistentMessage addFlagsFromString: flags];
                         
