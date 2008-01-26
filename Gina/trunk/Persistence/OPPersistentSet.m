@@ -86,7 +86,7 @@
 		[self didChangeValueForKey: @"sortedArray"]; // test, if we should post the indexed notification here
 	} else {
 		// nothing to do, anObject already present
-		NSLog(@"Ignoring addition of existing object to persistent set.");
+		//NSLog(@"Ignoring addition of existing object to persistent set.");
 	}
 	//}
 	[keyData release];
@@ -395,19 +395,24 @@
 	return oid;
 }
 
-- (NSUInteger)indexOfOid:(OID)anOid
+- (NSUInteger)indexOfOID: (OID) anOID
 {
 	NSUInteger count = self.count;
 	
 	for (NSUInteger i = 0; i < count; i++)
 	{
-		if ([self oidAtIndex:i] == anOid)
+		if ([self oidAtIndex:i] == anOID)
 		{
 			return i;
 		}
 	}
 	
 	return NSNotFound;
+}
+
+- (NSUInteger) indexOfObjectIdenticalTo: (id) other
+{
+	return [self indexOfOID: [other oid]];
 }
 
 - (id) objectAtIndex: (NSUInteger) index

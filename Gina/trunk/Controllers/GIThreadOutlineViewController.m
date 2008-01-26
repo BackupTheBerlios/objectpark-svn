@@ -489,8 +489,7 @@ NSDateFormatter *timeAndDateFormatter()
 				// make sure thread is expanded:
 				if (![outlineView isItemExpanded:thread])
 				{			
-					OID oid = thread.oid;
-					NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfOid:oid] + openThreadOffset;
+					//NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
 
 //					[outlineView reloadItem:thread reloadChildren:NO];
 //					[outlineView selectRow:indexOfThread byExtendingSelection:NO];
@@ -502,8 +501,7 @@ NSDateFormatter *timeAndDateFormatter()
 				messageOffset = ([[thread messagesByTree] indexOfObject:message] - [thread messageCount]) + 1;
 			}
 			
-			OID oid = thread.oid;
-			NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfOid:oid] + openThreadOffset;
+			NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
 			[rowIndexesToSelect addIndex:indexOfThread + messageOffset];
 		}
 		else

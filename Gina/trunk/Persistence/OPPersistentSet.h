@@ -27,8 +27,6 @@
 - (void) noteEntryAddedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
 - (void) noteEntryRemovedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
 
-- (NSUInteger)indexOfOid:(OID)anOid;
-
 @end
 
 /*" Backed directly by a btree "*/
