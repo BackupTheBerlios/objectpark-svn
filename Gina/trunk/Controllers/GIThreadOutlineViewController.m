@@ -488,7 +488,13 @@ NSDateFormatter *timeAndDateFormatter()
 			{
 				// make sure thread is expanded:
 				if (![outlineView isItemExpanded:thread])
-				{
+				{			
+					OID oid = thread.oid;
+					NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfOid:oid] + openThreadOffset;
+
+//					[outlineView reloadItem:thread reloadChildren:NO];
+//					[outlineView selectRow:indexOfThread byExtendingSelection:NO];
+					
 					[outlineView expandItem:thread expandChildren:NO];
 					openThreadOffset += [thread messageCount];
 				}

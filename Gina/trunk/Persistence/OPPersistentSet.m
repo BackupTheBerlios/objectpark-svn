@@ -292,8 +292,6 @@
 
 @end
 
-
-
 @implementation OPPersistentSetArray
 
 - (id) initWithPersistentSet: (OPPersistentSet*) aSet
@@ -445,7 +443,6 @@
 	[arrayCursor release];
 	[super dealloc];
 }
-
 
 @end
 
