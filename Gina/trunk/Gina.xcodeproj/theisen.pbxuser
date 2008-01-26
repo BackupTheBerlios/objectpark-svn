@@ -22,7 +22,7 @@
 			8DA197E10D3ED5A400E2845C /* GIThread.m:207 */,
 			8D8546270D4238B90004DD84 /* GIMessageGroup.m:817 */,
 			8D8547AF0D443A540004DD84 /* -[NSException raise] */,
-			8D25889B0D4BAB7B00AE413F /* GIApplication.m:122 */,
+			8D25889B0D4BAB7B00AE413F /* GIApplication.m:121 */,
 			8D25889D0D4BAB8100AE413F /* OPPersistentObjectContext.m:639 */,
 		);
 		codeSenseManager = 8DA22F700D04CDE600D24EBA /* Code sense */;
@@ -207,6 +207,10 @@
 			8D2588BA0D4BADCD00AE413F /* PBXTextBookmark */ = 8D2588BA0D4BADCD00AE413F /* PBXTextBookmark */;
 			8D2588BB0D4BADCD00AE413F /* PBXTextBookmark */ = 8D2588BB0D4BADCD00AE413F /* PBXTextBookmark */;
 			8D2588BC0D4BADCD00AE413F /* PBXTextBookmark */ = 8D2588BC0D4BADCD00AE413F /* PBXTextBookmark */;
+			8D2588BF0D4BAE6200AE413F /* PBXTextBookmark */ = 8D2588BF0D4BAE6200AE413F /* PBXTextBookmark */;
+			8D2588C00D4BAE6200AE413F /* PBXTextBookmark */ = 8D2588C00D4BAE6200AE413F /* PBXTextBookmark */;
+			8D2588C10D4BAE6200AE413F /* PBXTextBookmark */ = 8D2588C10D4BAE6200AE413F /* PBXTextBookmark */;
+			8D2588C20D4BAE6200AE413F /* PBXTextBookmark */ = 8D2588C20D4BAE6200AE413F /* PBXTextBookmark */;
 			8D73E0280D3BB73D000A368A = 8D73E0280D3BB73D000A368A /* PBXTextBookmark */;
 			8D82927B0D4A298B00F4FBB5 = 8D82927B0D4A298B00F4FBB5 /* PBXTextBookmark */;
 			8D82927C0D4A298B00F4FBB5 = 8D82927C0D4A298B00F4FBB5 /* PBXTextBookmark */;
@@ -499,9 +503,9 @@
 	};
 	773614220D1C1041007FC630 /* GIMessage.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {647, 10724}}";
+			sepNavIntBoundsRect = "{{0, 0}, {954, 10920}}";
 			sepNavSelRange = "{24379, 0}";
-			sepNavVisRange = "{7216, 1071}";
+			sepNavVisRange = "{7414, 563}";
 		};
 	};
 	773614230D1C1041007FC630 /* GIMessageGroup.h */ = {
@@ -644,9 +648,9 @@
 	};
 	775C31300D0D46280098DA07 /* GIApplication.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {647, 3136}}";
-			sepNavSelRange = "{3159, 11}";
-			sepNavVisRange = "{2715, 834}";
+			sepNavIntBoundsRect = "{{0, 0}, {647, 3094}}";
+			sepNavSelRange = "{3228, 0}";
+			sepNavVisRange = "{2804, 904}";
 			sepNavWindowFrame = "{{1307, 78}, {626, 705}}";
 		};
 	};
@@ -1293,7 +1297,7 @@
 		isa = PBXBookmark;
 		fRef = 8D25888C0D4AE58D00AE413F /* BackToolbarImage.tiff */;
 	};
-	8D25889B0D4BAB7B00AE413F /* GIApplication.m:122 */ = {
+	8D25889B0D4BAB7B00AE413F /* GIApplication.m:121 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -1305,7 +1309,7 @@
 		functionName = "-terminate:";
 		hitCount = 0;
 		ignoreCount = 0;
-		lineNumber = 122;
+		lineNumber = 121;
 		location = Gina;
 		modificationTime = 223062947.568264;
 		state = 1;
@@ -1336,7 +1340,7 @@
 		fRef = 775C31300D0D46280098DA07 /* GIApplication.m */;
 		name = "GIApplication.m: 122";
 		rLen = 11;
-		rLoc = 3159;
+		rLoc = 3131;
 		rType = 0;
 		vrLen = 834;
 		vrLoc = 2715;
@@ -1357,7 +1361,7 @@
 		fRef = 775C31300D0D46280098DA07 /* GIApplication.m */;
 		name = "GIApplication.m: 122";
 		rLen = 11;
-		rLoc = 3159;
+		rLoc = 3131;
 		rType = 0;
 		vrLen = 834;
 		vrLoc = 2715;
@@ -1547,6 +1551,46 @@
 		rType = 0;
 		vrLen = 1017;
 		vrLoc = 11914;
+	};
+	8D2588BF0D4BAE6200AE413F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */;
+		name = "GIThreadOutlineViewController.m: 492";
+		rLen = 0;
+		rLoc = 12118;
+		rType = 0;
+		vrLen = 1017;
+		vrLoc = 11914;
+	};
+	8D2588C00D4BAE6200AE413F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */;
+		name = "GIThreadOutlineViewController.m: 492";
+		rLen = 0;
+		rLoc = 12118;
+		rType = 0;
+		vrLen = 1017;
+		vrLoc = 11914;
+	};
+	8D2588C10D4BAE6200AE413F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 775C31300D0D46280098DA07 /* GIApplication.m */;
+		name = "GIApplication.m: 124";
+		rLen = 0;
+		rLoc = 3228;
+		rType = 0;
+		vrLen = 730;
+		vrLoc = 2715;
+	};
+	8D2588C20D4BAE6200AE413F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 775C31300D0D46280098DA07 /* GIApplication.m */;
+		name = "GIApplication.m: 124";
+		rLen = 0;
+		rLoc = 3228;
+		rType = 0;
+		vrLen = 904;
+		vrLoc = 2804;
 	};
 	8D73DB6C0D3790C2000A368A /* GIMessageGroup.m:471 */ = {
 		isa = PBXFileBreakpoint;
@@ -2080,7 +2124,7 @@
 		argumentStrings = (
 		);
 		autoAttachOnCrash = 1;
-		breakpointsEnabled = 1;
+		breakpointsEnabled = 0;
 		configStateDict = {
 		};
 		customDataFormattersEnabled = 1;

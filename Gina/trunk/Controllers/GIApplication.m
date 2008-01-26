@@ -117,10 +117,11 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 - (void) terminate: (id) sender
 {
-	[super terminate: sender];
 	// shutting down persistence:
 	[[OPPersistentObjectContext defaultContext] saveChanges];
 	[[OPPersistentObjectContext defaultContext] close];	
+	
+	[super terminate: sender];
 }
 
 - (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
