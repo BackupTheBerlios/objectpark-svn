@@ -334,16 +334,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return self;
 }
 
-- (BOOL) isLeaf
-{
-	return YES;
-}
-
-- (NSArray*) messages
-{
-	return nil; // just for the gui
-}
-
 - (BOOL)isDummy
 {
     return (flags & OPDummyStatus) != 0;
@@ -351,29 +341,22 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @synthesize referenceOID;
 
-- (BOOL) isSeen
+- (BOOL)isSeen
 {
 	return (flags & OPSeenStatus) != 0;
 }
 
-- (void) setIsSeen: (BOOL) boolValue
+- (void)setIsSeen:(BOOL)boolValue
 {
-	if (self.isSeen != boolValue) {
-		
+	if (self.isSeen != boolValue) 
+	{
 		[self willChangeValueForKey: @"isSeen"];
-		[self toggleFlags: OPSeenStatus];
+		[self toggleFlags:OPSeenStatus];
 		[self didChangeValueForKey: @"isSeen"];
-		//BOOL ok = self.isSeen == boolValue;
-		//NSAssert(self.isSeen == boolValue, @"flag set did fail.");
-		
-		//[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageDidChangeFlagsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldValue, @"oldValue", newValue, @"newValue", nil, nil]];
-		
-		[self.thread willChangeValueForKey: @"isSeen"];
-		[self.thread didChangeValueForKey: @"isSeen"];
 	}
 }
 
-- (unsigned) flags
+- (unsigned)flags
 {
     return flags;
 }
@@ -383,8 +366,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return [[messageId retain] autorelease];
 }
 
+/*" Returns the number of referenced messages until a root message is reached. "*/
 - (unsigned) numberOfReferences
-	/*" Returns the number of referenced messages until a root message is reached. "*/
 {
     if (referenceCount == NSNotFound) {
 		referenceCount = [[self reference] numberOfReferences]+1;

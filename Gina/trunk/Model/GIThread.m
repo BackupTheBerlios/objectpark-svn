@@ -439,7 +439,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) didToggleFlags: (unsigned) flags ofContainedMessage: (GIMessage*) message
 {
 	if (flags & OPSeenStatus) {
-		BOOL nowSeen = [message hasFlags: OPSeenStatus];
+		BOOL nowSeen = [message hasFlags:OPSeenStatus];
 		[self adjustUnreadMessageCountBy: nowSeen ? -1 : 1]; 
 	}
 }
