@@ -10,12 +10,14 @@
 #import "GIApplication.h"
 #import "GIMessage.h"
 #import "GIMessage+Rendering.h"
+#import "GIMessageGroup.h"
 #import "GIThread.h"
 #import "GIUserDefaultsKeys.h"
 #import "NSAttributedString+Extensions.h"
 #import "NSString+Extensions.h"
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentObject.h"
+#import "OPPersistentSet.h"
 
 static inline NSString *nilGuard(NSString *str)
 {
@@ -449,32 +451,88 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (void)restoreSelectionForMessageGroup:(GIMessageGroup *)aGroup
 {
+	if (!aGroup) return;
+	
 	// restore selection for message group (root item):
 	NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)aGroup oid]];
 	NSArray *oidsOfSelectedObjects = [[NSUserDefaults standardUserDefaults] objectForKey:groupSelectionDefaultKey];
 	
-	NSMutableArray *selectedObjects = [NSMutableArray arrayWithCapacity:[oidsOfSelectedObjects count]];
+	NSUInteger openThreadOffset = 0;
+	NSMutableIndexSet *rowIndexesToSelect = [NSMutableIndexSet indexSet];
+	
 	for (NSNumber *oidNumber in oidsOfSelectedObjects)
-	{
+	{			
 		OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
-		
 		if (selectedObject)
 		{
-			[selectedObjects addObject:selectedObject];
+			GIMessage *message = nil;
+			GIThread *thread = nil;
 			
 			if ([selectedObject isKindOfClass:[GIMessage class]])
 			{
-				// make sure thread is expanded:
-				[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:NO];
+				message = (GIMessage *)selectedObject;
+				if ([message.thread messageCount] < 1)
+				{
+					message = nil;
+				}
+				thread = message.thread;
 			}
+			else
+			{
+				thread = (GIThread *)selectedObject;
+			}
+			
+			NSInteger messageOffset = 0;
+			
+			if (message)
+			{
+				// make sure thread is expanded:
+				if (![outlineView isItemExpanded:thread])
+				{
+					[outlineView expandItem:thread expandChildren:NO];
+					openThreadOffset += [thread messageCount];
+				}
+				
+				messageOffset = ([[thread messagesByTree] indexOfObject:message] - [thread messageCount]) + 1;
+			}
+			
+			OID oid = thread.oid;
+			NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfOid:oid] + openThreadOffset;
+			[rowIndexesToSelect addIndex:indexOfThread + messageOffset];
 		}
 		else
 		{
 			NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
 		}
 	}
+
+	if ([rowIndexesToSelect count])
+	{
+		[outlineView selectRowIndexes:rowIndexesToSelect byExtendingSelection:NO];
+		[outlineView scrollRowToVisible:[rowIndexesToSelect lastIndex]];
+	}
 	
-	self.selectedObjects = selectedObjects;
+//	for (NSNumber *oidNumber in oidsOfSelectedObjects)
+//	{
+//		OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
+//		
+//		if (selectedObject)
+//		{
+//			[selectedObjects addObject:selectedObject];
+//			
+//			if ([selectedObject isKindOfClass:[GIMessage class]])
+//			{
+//				// make sure thread is expanded:
+//				[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:NO];
+//			}
+//		}
+//		else
+//		{
+//			NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
+//		}
+//	}
+//	
+//	self.selectedObjects = selectedObjects;
 }
 
 - (void)reloadData
@@ -505,15 +563,6 @@ NSDateFormatter *timeAndDateFormatter()
 		
 		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)self.rootItem oid]];
 		[[NSUserDefaults standardUserDefaults] setObject:oidsOfSelectedObjects forKey:groupSelectionDefaultKey];
-	}
-}
-
-- (void)setRootItem:(GIMessageGroup *)aGroup
-{
-	if (self.rootItem != aGroup)
-	{		
-		[super setRootItem:aGroup];
-		[self restoreSelectionForMessageGroup:aGroup];
 	}
 }
 

@@ -9,23 +9,6 @@
 #import "OPPersistentSet.h"
 #import "OPPersistentObjectContext.h"
 
-@interface OPPersistentSetArray : NSArray {
-@public
-	OPPersistentSet* pSet;
-	OPBTreeCursor* arrayCursor;
-	NSUInteger cursorPosition;
-}
-
-@property (readonly) OPPersistentSet* pSet;
-@property (readonly) NSUInteger cursorPosition;
-
-- (id) initWithPersistentSet: (OPPersistentSet*) aSet;
-- (void) forgetSet;
-
-- (void) noteEntryAddedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
-- (void) noteEntryRemovedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
-
-@end
 
 
 @interface OPPersistentSetArrayEnumerator : NSEnumerator {
@@ -397,21 +380,41 @@
 	NSAssert1(cursorPosition == index, @"Moving the cursor to position %u failed.", index);
 }
 
-- (id) objectAtIndex: (NSUInteger) index
-// todo: incorporate sort key.
+- (OID)oidAtIndex:(NSUInteger)index
 {
 	//NSLog(@"objectAtIndex: %u", index);
-
+	
 	NSParameterAssert(index < [pSet count]);
 	[self positionCursorToIndex: index];
-		
+	
 	OID oid = NILOID;
 	int error = 0; 
 	i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
 	NSAssert2(keyLength >= sizeof(OID), @"Not enough key data (%u bytes) found (error %d).", keyLength, error);
-
+	
 	error = [arrayCursor getCurrentEntryKeyBytes: &oid length: sizeof(OID) offset: keyLength-sizeof(OID)];
 	oid = NSSwapBigLongLongToHost(oid);
+	return oid;
+}
+
+- (NSUInteger)indexOfOid:(OID)anOid
+{
+	NSUInteger count = self.count;
+	
+	for (NSUInteger i = 0; i < count; i++)
+	{
+		if ([self oidAtIndex:i] == anOid)
+		{
+			return i;
+		}
+	}
+	
+	return NSNotFound;
+}
+
+- (id) objectAtIndex: (NSUInteger) index
+{
+	OID oid = [self oidAtIndex:index];
 	id result = [[pSet context] objectForOID: oid];
 	NSAssert3(result != nil, @"Warning: %@ objectAtIndex: %u is a dangling reference to %@. Returning nil.", self, index, OPStringFromOID(oid));
 	return result;

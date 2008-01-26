@@ -9,7 +9,27 @@
 #import "OPPersistentObject.h"
 #import "OPDBLite.h"
 
-@class OPPersistentSetArray;
+@class OPPersistentSet;
+
+@interface OPPersistentSetArray : NSArray {
+@public
+	OPPersistentSet* pSet;
+	OPBTreeCursor* arrayCursor;
+	NSUInteger cursorPosition;
+}
+
+@property (readonly) OPPersistentSet* pSet;
+@property (readonly) NSUInteger cursorPosition;
+
+- (id) initWithPersistentSet: (OPPersistentSet*) aSet;
+- (void) forgetSet;
+
+- (void) noteEntryAddedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
+- (void) noteEntryRemovedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
+
+- (NSUInteger)indexOfOid:(OID)anOid;
+
+@end
 
 /*" Backed directly by a btree "*/
 @interface OPPersistentSet : NSMutableSet <OPPersisting> {
@@ -31,3 +51,4 @@
 - (NSArray*) sortedArray;
 
 @end
+
