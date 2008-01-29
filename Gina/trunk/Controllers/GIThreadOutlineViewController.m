@@ -484,7 +484,7 @@ NSDateFormatter *timeAndDateFormatter()
 			
 			NSInteger messageOffset = 0;
 			
-			if (message)
+			if (NO) //(message)
 			{
 				// make sure thread is expanded:
 				if (![outlineView isItemExpanded:thread])

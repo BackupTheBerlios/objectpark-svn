@@ -42,10 +42,11 @@
 - (IBAction)markAsUnread:(id)sender;
 - (IBAction)toggleRead:(id)sender;
 
-@end
+- (void)setThreadsOnlyMode;
+- (BOOL)isShowingThreadsOnly;
 
-@interface GIMainWindowController (KeyboardShortcuts) <GIMainWindowDelegate>
-- (void) setThreadsOnlyMode;
+- (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
+
 @end
 
 @interface GIMainWindowController (OutlineViewDelegateAndActions)

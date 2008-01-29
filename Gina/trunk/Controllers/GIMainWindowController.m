@@ -42,11 +42,6 @@
 	return [NSSet setWithObject:@"selectedThreads"];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
-{
-	return [NSSet setWithObject:@"selectedThreads"];
-}
-
 - (NSAttributedString *)messageForDisplay
 {
 	NSArray *threads = self.selectedThreads;
@@ -56,6 +51,11 @@
 	}
 	
 	return nil;
+}
+
++ (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
+{
+	return [NSSet setWithObject:@"selectedThreads"];
 }
 
 - (id)selectedMessageOrThread
@@ -69,13 +69,29 @@
 	return nil;	
 }
 
++ (NSSet *)keyPathsForValuesAffectingSelectedMessage
+{
+	return [NSSet setWithObject:@"selectedThreads"];
+}
+
+- (GIMessage *)selectedMessage
+{
+	GIMessage *result = nil;
+	
+	if ([[self selectedThreads] count] == 1)
+	{
+		result = [(GIThread *)[[self selectedThreads] lastObject] message];
+	}
+	
+	return result;
+}
+
 - (id)init
 {
 	self = [self initWithWindowNibName:@"MainWindow"];
 		
 	[self retain];
 	
-//	[self loadWindow];
 	[self showWindow:self];
 
 	return self;
@@ -84,7 +100,6 @@
 - (void)dealloc
 {
 	NSLog(@"GIMainWindowController dealloc");
-//	[self.window release];
  	[super dealloc];
 }
 
@@ -97,12 +112,9 @@
 	[self autorelease];
 }
 
-
 - (void)windowDidLoad
 {
 	// configuring manual bindings:
-	//NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-	//													forKey:NSAllowsEditingMultipleValuesSelectionBindingOption];
 	NSDictionary *options = nil;
 	
 	threadsController.childKey = @"threadChildren";
@@ -122,6 +134,64 @@
 	[self setThreadsOnlyMode];
 	
 	[self.window makeKeyAndOrderFront:self];
+}
+
+- (void)setThreadsOnlyMode
+{
+	if ([threadMailSplitter isSubviewCollapsed:[[threadsOutlineView superview] superview]])
+	{
+		NSLog(@"only mail visible. switching to only threads visible.");
+		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
+		[self.window makeFirstResponder:threadsOutlineView];
+	}
+}
+
+- (BOOL)isShowingThreadsOnly
+{
+	return [threadMailSplitter isSubviewCollapsed:mailTreeSplitter];
+}
+
+- (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage
+{
+	static GIMessage *delayedMessage = nil;
+	static NSNumber *yesNumber = nil;
+	
+	if (!yesNumber)
+	{
+		yesNumber = [[NSNumber alloc] initWithBool:YES];
+	}
+	
+	if (delayedMessage)
+	{
+		[NSObject cancelPreviousPerformRequestsWithTarget:delayedMessage selector:@selector(setIsSeen:) object:yesNumber];
+		delayedMessage = nil;
+	}
+	
+	if (!aMessage) return;
+	
+	int setSeenBehavior = [[NSUserDefaults standardUserDefaults] integerForKey:SetSeenBehavior];
+	
+	switch(setSeenBehavior)
+	{
+		case GISetSeenBehaviorImmediately:
+		{
+			if (![aMessage hasFlags:OPSeenStatus])
+			{
+				[aMessage setIsSeen:YES];
+			}
+			break;
+		}
+		case GISetSeenBehaviorAfterTimeinterval:
+		{
+			if ([aMessage hasFlags:OPSeenStatus])
+			{
+				[aMessage performSelector:@selector(setIsSeen:) withObject:yesNumber afterDelay:[[NSUserDefaults standardUserDefaults] floatForKey:SetSeenTimeinterval]];
+				delayedMessage = aMessage;
+			}
+		}
+		default:
+			break;
+	}	
 }
 
 // -- handling message tree view selection --
@@ -324,8 +394,10 @@
 {
 	if ([threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
 	{
-		NSLog(@"collapsed. switching views.");
+		// show message view and graphical thread view:
 		[threadMailSplitter setPosition:0.0 ofDividerAtIndex:0];
+		[self.window makeFirstResponder:(NSResponder *)messageTextView];
+		[self performSetSeenBehaviorForMessage:self.selectedMessage];
 	}
 	else
 	{
@@ -417,50 +489,10 @@
 		id newSelectedThreads = [observedObjectForSelectedThreads valueForKeyPath:observedKeyPathForSelectedThreads];
 		[self setSelectedThreads:newSelectedThreads];
 		
-		int setSeenBehavior = [[NSUserDefaults standardUserDefaults] integerForKey:SetSeenBehavior];
-		
-		GIMessage *selectedMessage = nil;
-		static GIMessage *delayedMessage = nil;
-		static NSNumber *yesNumber = nil;
-		
-		if (!yesNumber)
+		if (!self.isShowingThreadsOnly)
 		{
-			yesNumber = [[NSNumber alloc] initWithBool:YES];
-		}
-		
-		if (delayedMessage)
-		{
-			[NSObject cancelPreviousPerformRequestsWithTarget:delayedMessage selector:@selector(setIsSeen:) object:yesNumber];
-			delayedMessage = nil;
-		}
-		
-		if ([[self selectedThreads] count] == 1)
-		{
-			selectedMessage = [(GIThread *)[[self selectedThreads] lastObject] message];
-		}
-		
-		if (NSDebugEnabled) NSLog(@"Thread/Message selection changed. %@", selectedMessage);
-		
-		switch(setSeenBehavior)
-		{
-			case GISetSeenBehaviorImmediately:
-			{
-				if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
-				{
-					[selectedMessage setIsSeen:YES];
-				}
-				break;
-			}
-			case GISetSeenBehaviorAfterTimeinterval:
-			{
-				if (selectedMessage && (![selectedMessage hasFlags:OPSeenStatus]))
-				{
-					[selectedMessage performSelector:@selector(setIsSeen:) withObject:yesNumber afterDelay:[[NSUserDefaults standardUserDefaults] floatForKey:SetSeenTimeinterval]];
-					delayedMessage = selectedMessage;
-				}
-			}
-			default:
-				break;
+			GIMessage *selectedMessage = self.selectedMessage;		
+			[self performSetSeenBehaviorForMessage:selectedMessage];
 		}
 	}
 	else
@@ -481,15 +513,6 @@
 #define BACKSPACE 51
 #define RETURN 36
 #define SPACE 49
-
-- (void) setThreadsOnlyMode
-{
-	if ([threadMailSplitter isSubviewCollapsed:[[threadsOutlineView superview] superview]])
-	{
-		NSLog(@"only mail visible. switching to only threads visible.");
-		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
-	}
-}
 
 - (BOOL)keyPressed:(NSEvent *)event
 {
@@ -518,9 +541,10 @@
 			return YES;
 		}
 		case RETURN:
-			if ([[threadsOutlineView window] firstResponder] == threadsOutlineView)
+			if ([self.window firstResponder] == threadsOutlineView)
 			{
 				[self threadsDoubleAction:threadsOutlineView];
+				return YES;
 			}
 			break;
 		default:
