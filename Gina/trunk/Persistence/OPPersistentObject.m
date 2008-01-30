@@ -37,6 +37,7 @@
 #import "OPPersistentObjectContext.h"
 #import <Foundation/NSDebug.h>
 #import "OPFaultingArray.h"
+//#import <objc/message.h>
 
 
 #define PERSISTENTOBJECT  OPL_DOMAIN  @"PersistentObject"
@@ -215,45 +216,12 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 
 
-/*
-- (void) willChangeValueForKey: (NSString*) key
-{
-    //[[self context] willChangeObject: self];
-	[super willChangeValueForKey: key]; // notify observers
-}
-*/
-
-- (void) didAccessValueForKey: (NSString*) key
-{
-} 
-
-- (void) willAccessValueForKey: (NSString*) key
-{
-}
-
 
 - (void) willChangeValueForKey: (NSString*) key
 {
 	[super willChangeValueForKey: key];
 }
 
-//- (id) primitiveValueForKey: (NSString*) key
-///*" currently only works for object values. "*/
-//{
-//	void* result = nil;
-//	Ivar ivar = object_getInstanceVariable(self, [key cString], &result);
-//	const char* ivar_type = ivar_getTypeEncoding(ivar);
-//	NSAssert(ivar_type[0] == '@', @"primitiveValueForKey called for non-object value.");
-//	return (id)result;
-//}
-//
-//- (void) setPrimitiveValue: (id) value forKey: (NSString*) key
-//{
-//	
-//	Ivar ivar object_setInstanceVariable(self, [key cString], value);
-//
-//	
-//}
 
 - (void) didChangeValueForKey: (NSString*) key
 /*" Notify context of the change. "*/
@@ -377,12 +345,6 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 		[super setValue: value forUndefinedKey: key];
 	}
 }
-
-//- (NSDictionary*) attributeValues
-///*" For internal use only! @synchronize the receiver while accessing values of the dictionary returned. "*/
-//{
-//	return attributes;
-//}
 
 - (BOOL) hasChanged
 {
@@ -586,8 +548,109 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 //	return validationErrors;
 //}
 
+- (void) turnIntoFault
+{
+	Class faultClass = [OPPersistentObjectFault class];
+	isa = faultClass;
+}
+
+- (void) awakeAfterUsingCoder: (NSCoder*) aCoder
+{
+	if ([aCoder isKindOfClass: [OPKeyedUnarchiver class]]) {
+//		 [self turnIntoFault];
+	}
+}
 
 @end
+
+@implementation OPPersistentObjectFault : OPPersistentObject
+
+- (void) resolveFault
+{
+	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
+	isa = theClass;
+}
+
+
+//static IMP nsObjectPerform = NULL;
+static Class OPPersistentObjectFaultClass = Nil;
+
+//+ (void) initialize {
+//    if (! OPPersistentObjectFaultClass) {
+//        Class NSObjectClass = objc_getClass("NSObject");
+//        OPPersistentObjectFaultClass  = self;
+//        nsObjectPerform = [NSObjectClass instanceMethodForSelector: @selector(performv::)];
+//		
+//        [super initialize];
+//        NSLog(@"%@ class initialized.\n", self);
+//    }
+//}
+
+
++ allocWithZone: (NSZone*) aZone 
+{
+    NSParameterAssert(NO);
+    return nil;
+}
+
++ (id) alloc
+{
+	NSParameterAssert(NO);
+    return nil;
+}
+
+- (Class) class
+{
+	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
+	return theClass;
+}
+
+- (BOOL) respondsToSelector: (SEL) aSelector
+{
+	return [[self class] instancesRespondToSelector: aSelector];
+}
+
+- (void) forwardInvocation: (NSInvocation*) invocation
+{
+	NSLog(@"Firing %@ after call to '%@'.", isa, NSStringFromSelector([invocation selector]));
+
+	[self resolveFault];
+	
+	[invocation invokeWithTarget: self];
+}
+
+- (id) valueForKey: (NSString*) key 
+{
+    // For some reason, faults do not fire automatically:
+	NSLog(@"Firing %@ after call to 'valueForKey: %@'.", isa, key);
+	[self resolveFault];
+    return [self valueForKey: key];
+}
+
+- (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
+{
+	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
+	[self resolveFault];
+    return [self addObserver: observer forKeyPath: keyPath options: options context: context];
+}
+
+//- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
+//{
+//	
+//}
+
+//-  forward: (SEL) sel : (marg_list) args 
+//{
+//    //NSLog(@"Firing %@ triggered by a call to \"%s\" ... ", NSStringFromClass(selfClass), SELNAME(sel));
+//
+//	
+//	[self resolveFault];
+//    //return nsObjectPerform(self, _cmd, sel, args);
+//	[self performv: _cmd];
+//}
+
+@end
+
 
 @implementation NSObject (OPPersistence)
 
@@ -644,10 +707,3 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 @end
 
-//@implementation NSNumber (OPPersistence)
-//
-//- (BOOL) isPlistMemberClass
-//{
-//	return YES;
-//}
-//@end

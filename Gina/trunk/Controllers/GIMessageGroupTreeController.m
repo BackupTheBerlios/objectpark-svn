@@ -96,6 +96,11 @@
 	}
 }
 
+- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+	NSLog(@"- outlineView setObjectValue %@", object);
+}
+
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	NSIndexPath *indexPath = [self selectionIndexPath];

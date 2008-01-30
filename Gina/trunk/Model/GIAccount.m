@@ -803,7 +803,6 @@
 	allowExpiredSSLCertificates = [coder decodeBoolForKey:@"allowExpiredSSLCertificates"];
 	verifySSLCertificateChain = [coder decodeBoolForKey:@"verifySSLCertificateChain"];
 	
-#warning Axel -> Dirk: Please check if relationship coding is done right!
 	profiles = [coder decodeObjectForKey:@"profiles"];
 	
 	return self;
@@ -831,7 +830,6 @@
 	[coder encodeBool:allowExpiredSSLCertificates forKey:@"allowExpiredSSLCertificates"];
 	[coder encodeBool:verifySSLCertificateChain forKey:@"verifySSLCertificateChain"];
 	
-#warning Axel -> Dirk: Please check if relationship coding is done right!
 	[coder encodeObject:profiles forKey:@"profiles"];
 }
 

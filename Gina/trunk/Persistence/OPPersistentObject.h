@@ -99,9 +99,16 @@
 
 
 //- (void) willChangeValueForKey: (NSString*) key;
-- (void) willAccessValueForKey: (NSString*) key;
+//- (void) willAccessValueForKey: (NSString*) key;
 //- (void) didChangeValueForKey: (NSString*) key;
-- (void) didAccessValueForKey: (NSString*) key;
+//- (void) didAccessValueForKey: (NSString*) key;
 
+- (void) turnIntoFault;
+
+@end
+
+@interface OPPersistentObjectFault : OPPersistentObject
+
+- (void) resolveFault;
 
 @end
