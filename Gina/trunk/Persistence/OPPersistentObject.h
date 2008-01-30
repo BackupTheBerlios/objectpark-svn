@@ -102,6 +102,7 @@
 //- (void) willAccessValueForKey: (NSString*) key;
 //- (void) didChangeValueForKey: (NSString*) key;
 //- (void) didAccessValueForKey: (NSString*) key;
+- (id) initFaultWithContext: (OPPersistentObjectContext*) context oid: (OID) anOID;
 
 - (void) turnIntoFault;
 

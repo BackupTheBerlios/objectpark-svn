@@ -136,7 +136,7 @@ static OPPersistentObjectContext* defaultContext = nil;
 	return result;
 }
 
-- (void) cacheObject: (OPPersistentObject*) object
+- (void) cacheObject: (NSObject<OPPersisting>*) object
 {
 	NSString* className = [[object classForCoder] description];
 	NSMutableSet* cache = [allObjectsByClass objectForKey: className];
@@ -264,13 +264,12 @@ typedef struct {
 {
 }
 
-- (id) newUnarchivedObjectAtCursor: (OPIntKeyBTreeCursor*) readCursor
+- (id) unarchiveObject: (id <OPPersisting>) result atCursor: (OPIntKeyBTreeCursor*) readCursor
 {
 	NSParameterAssert([readCursor isValid]);
 	NSMutableData* data = [[NSMutableData alloc] init];
 	OID oid = [readCursor currentEntryIntKey]; 
 	[readCursor appendCurrentEntryValueToData: data];
-	OPPersistentObject* result = [[self classForCID: CIDFromOID(oid)] alloc];
 	[result setOID: oid];
 	[decoder unarchiveObject: result fromData: data];
 	[data release];
@@ -319,19 +318,19 @@ NSString* OPStringFromOID(OID oid)
 
 }
 
-- (id) newUnarchivedObjectForOID: (OID) oid
+- (id) unarchiveObject: (NSObject<OPPersisting>*) object
 {
-	id result = nil;
 	int error = SQLITE_OK;
 	OPIntKeyBTreeCursor* readCursor = [[database objectTree] newCursorWithError: &error];
-	int pos = [readCursor moveToIntKey: oid error: &error];
+	int pos = [readCursor moveToIntKey: [object currentOID] error: &error];
 	if (pos == 0 && error == SQLITE_OK) {
-		result = [self newUnarchivedObjectAtCursor: readCursor];
+		object = [self unarchiveObject: object atCursor: readCursor];
 	} else {
-		NSLog(@"Warning - no object data found for %@", OPStringFromOID(oid));
+		NSLog(@"Warning - no object data found for %@", OPStringFromOID([object oid]));
 	}
 	[readCursor release];
-	return result;
+	[object awakeAfterUsingCoder: decoder];
+	return object;
 }
 
 // 2008-01-17 00:59:12.223 Gina[1533:10b] Warning - no object data found for GIThread, lid 30
@@ -348,10 +347,11 @@ NSString* OPStringFromOID(OID oid)
         // not found - create a fault object:
 		numberOfFaultsCreated++;
         //result = [[[poClass alloc] initFaultWithContext: self oid: oid] autorelease]; // also registers result with self
+		result = [[self classForCID: CIDFromOID(oid)] alloc];
+		result = [[result initFaultWithContext: self oid: oid] autorelease];
 		//NSLog(@"Caching persistent object (oid 0x%016llx)", oid);
-		result = [[self newUnarchivedObjectForOID: oid] autorelease];
+		//result = [[self unarchiveObject: result] autorelease];
 		
-		[result awakeAfterUsingCoder: decoder];
 		//NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
         //NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
     } else {
@@ -392,7 +392,7 @@ NSString* OPStringFromOID(OID oid)
 }
 
 /*" Cursor is created on demand, if nil. "*/
-- (void) archiveObject: (id) object 
+- (void) archiveObject: (NSObject <OPPersisting>*) object 
 		   usingCursor: (OPIntKeyBTreeCursor*) cursor
 {
 	@synchronized(encoder) {
@@ -534,7 +534,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 			if ([classes[cid] cachesAllObjects]) {
 				BOOL moveOk = YES;
 				do {
-					id instance = [self newUnarchivedObjectAtCursor: cursor];
+					NSObject<OPPersisting>* instance = [classes[cid] alloc];
+					instance = [self unarchiveObject: instance atCursor: cursor];
 					[self cacheObject: instance];
 					moveOk = [cursor moveToPrevious];
 					oidFound = [cursor currentEntryIntKey];

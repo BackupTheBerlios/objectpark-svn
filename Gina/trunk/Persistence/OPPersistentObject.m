@@ -554,12 +554,19 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 	isa = faultClass;
 }
 
-- (void) awakeAfterUsingCoder: (NSCoder*) aCoder
+- (id) initFaultWithContext: (OPPersistentObjectContext*) context oid: (OID) anOID
 {
-	if ([aCoder isKindOfClass: [OPKeyedUnarchiver class]]) {
-//		 [self turnIntoFault];
-	}
+	[self turnIntoFault];
+	[self setOID: anOID];
+	return self;
 }
+
+//- (void) awakeAfterUsingCoder: (NSCoder*) aCoder
+//{
+//	if ([aCoder isKindOfClass: [OPKeyedUnarchiver class]]) {
+////		 [self turnIntoFault];
+//	}
+//}
 
 @end
 
@@ -569,6 +576,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 {
 	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
 	isa = theClass;
+	[[self context] unarchiveObject: self];
 }
 
 

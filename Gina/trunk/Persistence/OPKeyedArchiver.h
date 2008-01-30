@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class OPPersistentObjectContext;
-@class OPPersistentObject;
+#import "OPPersistentObject.h";
 
 @interface OPKeyedArchiver : NSCoder {
 	//NSMutableData* blob;
@@ -23,7 +23,7 @@
 - (id) initWithContext: (OPPersistentObjectContext*) context;
 
 - (NSData*) resultData;
-- (NSData*) dataFromObject: (OPPersistentObject*) object;
+- (NSData*) dataFromObject: (NSObject <OPPersisting>*) object;
 
 
  // For debugging only:

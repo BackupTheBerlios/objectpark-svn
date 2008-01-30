@@ -38,7 +38,7 @@
 	return result;
 }
 
-- (NSData*) dataFromObject: (OPPersistentObject*) object
+- (NSData*) dataFromObject: (NSObject <OPPersisting>*) object
 {
 	[self encodeRootObject: object];
 	//if (NSDebugEnabled) NSLog(@"Encoding %@ to plist: %@", object, [self resultPlist]);
