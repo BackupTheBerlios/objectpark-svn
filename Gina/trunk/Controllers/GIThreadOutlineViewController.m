@@ -493,17 +493,17 @@ NSDateFormatter *timeAndDateFormatter()
 			
 			if (message)
 			{
+				NSUInteger threadRow = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
+
 				// make sure thread is expanded:
-				//if (![outlineView isItemExpanded:thread])
-				{			
+				if (! [outlineView isItemExpandedAtRow: threadRow]) {			
 					//NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
 
 //					[outlineView reloadItem:thread reloadChildren:NO];
 //					[outlineView selectRow:indexOfThread byExtendingSelection:NO];
-					NSUInteger index = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
-					[outlineView expandItemAtRow: index expandChildren: NO];
+					[outlineView expandItemAtRow: threadRow expandChildren: NO];
 					
-					[outlineView expandItem:thread expandChildren:NO];
+					//[outlineView expandItem:thread expandChildren:NO];
 					openThreadOffset += [thread messageCount];
 				}
 				messageOffset = ([[thread messagesByTree] indexOfObject:message] - [thread messageCount]) + 1;

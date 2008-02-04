@@ -387,22 +387,37 @@
 
 @implementation NSOutlineView (OPPrivate)
 
-//struct __NSOVRowEntry {
-//    struct __NSOVRowEntry *_field1;
-//    int _field2;
-//    id _field3;
-//    short _field4;
-//    int _field5;
-//    struct __NSOVRowEntry **_field6;
-//    int *_field7;
-//    //struct __REFlags _field8;
-//};
+struct __REFlags {
+    unsigned int expandable:1;
+    unsigned int expanded:1;
+    unsigned int inited:1;
+    unsigned int initedItemData:1;
+    unsigned int initedIsExpandableData:1;
+    unsigned int reserved:27;
+};
+
+struct __NSOVRowEntry {
+    struct __NSOVRowEntry *_field1;
+    int _field2;
+    id _field3;
+    short _field4;
+    int _field5;
+    struct __NSOVRowEntry **_field6;
+    int *_field7;
+    struct __REFlags flags;
+};
 
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
 {
 	struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
 	[self _expandItemEntry: rowEntry expandChildren: expand];
+}
+
+- (BOOL) isItemExpandedAtRow: (int) row
+{
+	struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
+	return rowEntry ? rowEntry->flags.expanded : NO;
 }
 
 @end

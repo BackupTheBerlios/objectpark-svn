@@ -51,5 +51,6 @@
 - (struct __NSOVRowEntry *)_rowEntryForRow:(int)fp8 requiredRowEntryLoadMask:(unsigned int)fp12;
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand;
+- (BOOL) isItemExpandedAtRow: (int) row;
 
 @end
