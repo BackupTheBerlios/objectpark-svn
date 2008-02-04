@@ -637,6 +637,10 @@ static Class OPPersistentObjectFaultClass = Nil;
 
 - (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
 {
+//	if ([[self "class"] automaticallyNotifiesObserversForKey:(NSString *)key]) {
+//		
+//	}
+//])
 	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
 	[self resolveFault];
     return [self addObserver: observer forKeyPath: keyPath options: options context: context];

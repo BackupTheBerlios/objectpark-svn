@@ -26,8 +26,11 @@
 	NSString *observedKeyPathForRootItem;
 	id observedObjectForSelectedObjects;
 	NSString *observedKeyPathForSelectedObjects;
+	
+	//BOOL cachesItems;
 }
 
+//@property BOOL cachesItems;
 @property (copy) NSString *childKey;
 @property (copy) NSString *childCountKey;
 @property (retain) id rootItem;
@@ -39,5 +42,14 @@
 - (void)reloadData;
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item;
+
+@end
+
+@interface NSOutlineView (OPPrivate)
+
+- (void)_expandItemEntry:(struct __NSOVRowEntry *)fp8 expandChildren:(BOOL)fp12;
+- (struct __NSOVRowEntry *)_rowEntryForRow:(int)fp8 requiredRowEntryLoadMask:(unsigned int)fp12;
+
+- (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand;
 
 @end

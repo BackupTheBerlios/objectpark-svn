@@ -449,6 +449,13 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 }	
 
+//- (void) expandItem: (id) item expandChildren: (BOOL) expandChildren
+//{
+//	[self setCachesItems: NO];
+//	[outlineView expandItem: item expandChildren: expandChildren];
+//	[self setCachesItems: YES];	
+//}
+
 - (void)restoreSelectionForMessageGroup:(GIMessageGroup *)aGroup
 {
 	if (!aGroup) return;
@@ -487,17 +494,18 @@ NSDateFormatter *timeAndDateFormatter()
 			if (message)
 			{
 				// make sure thread is expanded:
-				if (![outlineView isItemExpanded:thread])
+				//if (![outlineView isItemExpanded:thread])
 				{			
 					//NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
 
 //					[outlineView reloadItem:thread reloadChildren:NO];
 //					[outlineView selectRow:indexOfThread byExtendingSelection:NO];
+					NSUInteger index = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
+					[outlineView expandItemAtRow: index expandChildren: NO];
 					
 					[outlineView expandItem:thread expandChildren:NO];
 					openThreadOffset += [thread messageCount];
 				}
-				
 				messageOffset = ([[thread messagesByTree] indexOfObject:message] - [thread messageCount]) + 1;
 			}
 			

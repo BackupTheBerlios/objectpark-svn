@@ -11,6 +11,8 @@
 
 @implementation OPOutlineViewController
 
+//@synthesize cachesItems;
+
 // -- binding stuff --
 
 + (void)initialize
@@ -139,6 +141,7 @@
 {
 	if (self = [super init]) {
 		knownItems = [[NSMutableSet alloc] init];
+		//cachesItems = YES;
 	}
 	return self;
 }
@@ -251,17 +254,19 @@
 
 - (void) addToKnownItems: (id) item
 {
-	if (item) {
-		[knownItems addObject: item];
-		// Observe the child relation so we can react on that.
-		if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", item, [self childKey]);
-		[item addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
-		// Also observe additional keyPaths that will affect display:
-		for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
-			[item addObserver: self forKeyPath: keyPath options: 0 context: outlineView];
+	if (YES) {
+		if (item) {
+			[knownItems addObject: item];
+			// Observe the child relation so we can react on that.
+			if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", item, [self childKey]);
+			[item addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
+			// Also observe additional keyPaths that will affect display:
+			for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
+				[item addObserver: self forKeyPath: keyPath options: 0 context: outlineView];
+			}
+		} else {
+			NSLog(@"Warning: nil item in outline data detected.");
 		}
-	} else {
-		NSLog(@"Warning: nil item in outline data detected.");
 	}
 }
 
@@ -375,6 +380,29 @@
 	[childKey release];
 	[rootItem release];
 	[super dealloc];
+}
+
+@end
+
+
+@implementation NSOutlineView (OPPrivate)
+
+//struct __NSOVRowEntry {
+//    struct __NSOVRowEntry *_field1;
+//    int _field2;
+//    id _field3;
+//    short _field4;
+//    int _field5;
+//    struct __NSOVRowEntry **_field6;
+//    int *_field7;
+//    //struct __REFlags _field8;
+//};
+
+
+- (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
+{
+	struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
+	[self _expandItemEntry: rowEntry expandChildren: expand];
 }
 
 @end
