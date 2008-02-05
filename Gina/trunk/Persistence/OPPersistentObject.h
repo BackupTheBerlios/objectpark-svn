@@ -110,6 +110,6 @@
 
 @interface OPPersistentObjectFault : OPPersistentObject
 
-- (void) resolveFault;
+- (BOOL) resolveFault;
 
 @end

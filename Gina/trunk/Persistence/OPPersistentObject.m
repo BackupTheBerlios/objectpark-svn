@@ -573,11 +573,12 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 @implementation OPPersistentObjectFault : OPPersistentObject
 
-- (void) resolveFault
+- (BOOL) resolveFault
 {
 	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
 	isa = theClass;
-	[[self context] unarchiveObject: self];
+	id result = [[self context] unarchiveObject: self];
+	return result != nil;
 }
 
 

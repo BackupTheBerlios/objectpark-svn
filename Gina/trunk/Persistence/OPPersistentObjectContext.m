@@ -327,6 +327,7 @@ NSString* OPStringFromOID(OID oid)
 		object = [self unarchiveObject: object atCursor: readCursor];
 	} else {
 		NSLog(@"Warning - no object data found for %@", OPStringFromOID([object oid]));
+		object = nil;
 	}
 	[readCursor release];
 	[object awakeAfterUsingCoder: decoder];
