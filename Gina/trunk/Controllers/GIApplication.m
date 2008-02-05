@@ -24,6 +24,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 - (void)awakeFromNib
 {
+	NSLog(@"awakeFromNib");
 	// Will be called multiple times, so guard against that:
 	if (! [OPPersistentObjectContext defaultContext]) {
 		// Setting up persistence:

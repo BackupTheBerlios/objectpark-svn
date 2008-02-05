@@ -107,6 +107,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
         @try 
 		{
             result = [[OPPersistentObjectContext defaultContext] objectWithURLString:anUrl];
+			result = [result resolveFault];
         }
         @catch (id e) 
 		{
