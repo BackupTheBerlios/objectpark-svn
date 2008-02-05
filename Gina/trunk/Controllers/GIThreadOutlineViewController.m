@@ -467,40 +467,35 @@ NSDateFormatter *timeAndDateFormatter()
 	NSUInteger openThreadOffset = 0;
 	NSMutableIndexSet *rowIndexesToSelect = [NSMutableIndexSet indexSet];
 	
-	for (NSNumber *oidNumber in oidsOfSelectedObjects)
-	{			
+	for (NSNumber *oidNumber in oidsOfSelectedObjects) {			
 		OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
-		if (selectedObject)
-		{
+		if (selectedObject) {
 			GIMessage *message = nil;
 			GIThread *thread = nil;
 			
-			if ([selectedObject isKindOfClass:[GIMessage class]])
-			{
+			if ([selectedObject isKindOfClass:[GIMessage class]]) {
 				message = (GIMessage *)selectedObject;
-				if ([message.thread messageCount] < 1)
-				{
-					message = nil;
-				}
+				if ([message.thread messageCount] < 1)  message = nil;
 				thread = message.thread;
-			}
-			else
-			{
+			} else {
 				thread = (GIThread *)selectedObject;
 			}
 			
 			NSInteger messageOffset = 0;
 			
-			if (message)
-			{
-				NSUInteger threadRow = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
-
+			if (message) {
+				NSUInteger threadRow = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread];
+				
+				if (threadRow == NSNotFound)
+					continue;
+				threadRow += openThreadOffset;
+				
 				// make sure thread is expanded:
 				if (! [outlineView isItemExpandedAtRow: threadRow]) {			
 					//NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
-
-//					[outlineView reloadItem:thread reloadChildren:NO];
-//					[outlineView selectRow:indexOfThread byExtendingSelection:NO];
+					
+					//					[outlineView reloadItem:thread reloadChildren:NO];
+					//					[outlineView selectRow:indexOfThread byExtendingSelection:NO];
 					[outlineView expandItemAtRow: threadRow expandChildren: NO];
 					
 					//[outlineView expandItem:thread expandChildren:NO];
@@ -509,11 +504,12 @@ NSDateFormatter *timeAndDateFormatter()
 				messageOffset = ([[thread messagesByTree] indexOfObject:message] - [thread messageCount]) + 1;
 			}
 			
-			NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
-			[rowIndexesToSelect addIndex:indexOfThread + messageOffset];
-		}
-		else
-		{
+			NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread];
+			if (indexOfThread != NSNotFound) {
+				indexOfThread += openThreadOffset;
+				[rowIndexesToSelect addIndex:indexOfThread + messageOffset];
+			}
+		} else {
 			NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
 		}
 	}

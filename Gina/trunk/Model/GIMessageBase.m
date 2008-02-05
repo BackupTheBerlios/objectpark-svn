@@ -40,7 +40,8 @@
 /*" Returns either nil or the message specified by its messageId. "*/
 {
 	if (! messageId.length) return nil;
-	GIMessage* result = [[self messagesByMessageId] objectForKey: messageId];
+	NSDictionary* messageIdIndex = [self messagesByMessageId];
+	GIMessage* result = [messageIdIndex objectForKey: messageId];
 	return result;
 }
 

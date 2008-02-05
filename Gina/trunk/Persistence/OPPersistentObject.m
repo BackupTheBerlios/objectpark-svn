@@ -51,6 +51,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 
 + (BOOL) cachesAllObjects
+/*" Default implementation - returns NO. Subclasses mey override. "*/
 {
 	return NO;
 }
@@ -583,16 +584,16 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 //static IMP nsObjectPerform = NULL;
 static Class OPPersistentObjectFaultClass = Nil;
 
-//+ (void) initialize {
-//    if (! OPPersistentObjectFaultClass) {
-//        Class NSObjectClass = objc_getClass("NSObject");
-//        OPPersistentObjectFaultClass  = self;
-//        nsObjectPerform = [NSObjectClass instanceMethodForSelector: @selector(performv::)];
-//		
-//        [super initialize];
-//        NSLog(@"%@ class initialized.\n", self);
-//    }
-//}
++ (void) initialize {
+    if (! OPPersistentObjectFaultClass) {
+        //Class NSObjectClass = objc_getClass("NSObject");
+        OPPersistentObjectFaultClass  = self;
+        //nsObjectPerform = [NSObjectClass instanceMethodForSelector: @selector(performv::)];
+		
+        [super initialize];
+        //NSLog(@"%@ class initialized.\n", self);
+    }
+}
 
 
 + allocWithZone: (NSZone*) aZone 

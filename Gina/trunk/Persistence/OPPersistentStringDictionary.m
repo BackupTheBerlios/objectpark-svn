@@ -141,6 +141,19 @@
 	return setterCursor;
 }
 
+- (void) turnIntoFault
+{
+	Class faultClass = [OPPersistentObjectFault class];
+	isa = faultClass;
+}
+
+- (id) initFaultWithContext: (OPPersistentObjectContext*) context oid: (OID) anOID
+{
+	[self turnIntoFault];
+	[self setOID: anOID];
+	return self;
+}
+
 - (void) willRevert
 {
 	NSLog(@"Reverting %@ 0x%x", [self class], self);

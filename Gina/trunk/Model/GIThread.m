@@ -73,6 +73,9 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	if (! message.isSeen) {
 		[self adjustUnreadMessageCountBy: 1];
 	}
+	if (message.date.timeIntervalSince1970 > self.date.timeIntervalSince1970) {
+		self.date = message.date;
+	}
 }
 
 
@@ -150,14 +153,17 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	return subject;
 }
 
-- (void)setDate:(NSDate *)newDate
+- (void) setDate: (NSDate*) newDate
 {
-	if (! [date isEqual:newDate]) 
-	{
+	if (! [date isEqualToDate: newDate]) {
+		
+		//[(OPPersistentSet*)[self.messageGroups.lastObject threads] removeObject: self];
 		[self willChangeValueForKey:@"date"];
 		[date release];
 		date = [newDate retain];
 		[self didChangeValueForKey:@"date"];
+		//[(OPPersistentSet*)[self.messageGroups.lastObject threads] addObject: self];
+		//[self.messageGroups makeObjectsPerformSelector: @selector(updateIndexForThread)
 	}
 }
 
