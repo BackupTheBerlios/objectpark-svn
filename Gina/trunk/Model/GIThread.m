@@ -157,12 +157,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {
 	if (! [date isEqualToDate: newDate]) {
 		
-		//[(OPPersistentSet*)[self.messageGroups.lastObject threads] removeObject: self];
+		[(OPPersistentSet*)[self.messageGroups.lastObject threads] removeObject: self];
 		[self willChangeValueForKey:@"date"];
 		[date release];
 		date = [newDate retain];
 		[self didChangeValueForKey:@"date"];
-		//[(OPPersistentSet*)[self.messageGroups.lastObject threads] addObject: self];
+		[(OPPersistentSet*)[self.messageGroups.lastObject threads] addObject: self];
 		//[self.messageGroups makeObjectsPerformSelector: @selector(updateIndexForThread)
 	}
 }
