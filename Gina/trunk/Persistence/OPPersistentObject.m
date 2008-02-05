@@ -573,12 +573,12 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 @implementation OPPersistentObjectFault : OPPersistentObject
 
-- (BOOL) resolveFault
+- (id <OPPersisting>) resolveFault
 {
 	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
 	isa = theClass;
 	id result = [[self context] unarchiveObject: self];
-	return result != nil;
+	return result;
 }
 
 
@@ -624,7 +624,7 @@ static Class OPPersistentObjectFaultClass = Nil;
 {
 	NSLog(@"Firing %@ after call to '%@'.", isa, NSStringFromSelector([invocation selector]));
 
-	[self resolveFault];
+	self = [self resolveFault];
 	
 	[invocation invokeWithTarget: self];
 }
@@ -633,7 +633,7 @@ static Class OPPersistentObjectFaultClass = Nil;
 {
     // For some reason, faults do not fire automatically:
 	NSLog(@"Firing %@ after call to 'valueForKey: %@'.", isa, key);
-	[self resolveFault];
+	self = [self resolveFault];
     return [self valueForKey: key];
 }
 
@@ -644,7 +644,7 @@ static Class OPPersistentObjectFaultClass = Nil;
 //	}
 //])
 	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
-	[self resolveFault];
+	self = [self resolveFault];
     return [self addObserver: observer forKeyPath: keyPath options: options context: context];
 }
 
