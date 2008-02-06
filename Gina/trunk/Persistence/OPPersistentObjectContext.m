@@ -348,8 +348,15 @@ NSString* OPStringFromOID(OID oid)
         // not found - create a fault object:
 		numberOfFaultsCreated++;
         //result = [[[poClass alloc] initFaultWithContext: self oid: oid] autorelease]; // also registers result with self
-		result = [[self classForCID: CIDFromOID(oid)] alloc];
-		result = [[result initFaultWithContext: self oid: oid] autorelease];
+		Class theClass = [self classForCID: CIDFromOID(oid)];
+		result = [theClass alloc];
+		
+		if (YES || [theClass cachesAllObjects]) {
+			[result setOID: oid];
+			result = [self unarchiveObject: result];
+		} else {
+			result = [[result initFaultWithContext: self oid: oid] autorelease];
+		}
 		//NSLog(@"Caching persistent object (oid 0x%016llx)", oid);
 		//result = [[self unarchiveObject: result] autorelease];
 		

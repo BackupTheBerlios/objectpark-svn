@@ -211,9 +211,9 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 - (void) willDelete
 {
-	if (LIDFromOID(self.oid) == 366) {
-		NSBeep();
-	}
+//	if (LIDFromOID(self.oid) == 366) {
+//		NSBeep();
+//	}
 	NSLog(@"Will delete Thread %@ from %@", self, self.messageGroups);
 	[self.messages makeObjectsPerformSelector: @selector(delete)];
 	[[self mutableArrayValueForKey: @"messageGroups"] removeAllObjects];

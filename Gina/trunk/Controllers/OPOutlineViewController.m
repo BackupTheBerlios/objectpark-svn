@@ -410,14 +410,19 @@ struct __NSOVRowEntry {
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
 {
-	struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
-	[self _expandItemEntry: rowEntry expandChildren: expand];
+	if (row < [self numberOfRows]) {
+		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
+		if (rowEntry) 
+			[self _expandItemEntry: rowEntry expandChildren: expand];
+	}
 }
 
 - (BOOL) isItemExpandedAtRow: (int) row
 {
-	struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
-	return rowEntry ? rowEntry->flags.expanded : NO;
+	if (row < [self numberOfRows]) {
+		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
+		return rowEntry ? rowEntry->flags.expanded : NO;
+	}
 }
 
 @end
