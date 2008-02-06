@@ -458,7 +458,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (void)restoreSelectionForMessageGroup:(GIMessageGroup *)aGroup
 {
-	if (!aGroup) return;
+	if (!aGroup || ![aGroup isKindOfClass:[GIMessageGroup class]]) return;
 	
 	// restore selection for message group (root item):
 	NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)aGroup oid]];
