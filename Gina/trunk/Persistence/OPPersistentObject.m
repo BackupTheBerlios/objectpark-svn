@@ -562,6 +562,12 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 	return self;
 }
 
+- (id <OPPersisting>) resolveFault
+{
+	return self;
+}
+
+
 //- (void) awakeAfterUsingCoder: (NSCoder*) aCoder
 //{
 //	if ([aCoder isKindOfClass: [OPKeyedUnarchiver class]]) {
@@ -615,6 +621,23 @@ static Class OPPersistentObjectFaultClass = Nil;
 	return theClass;
 }
 
++ (BOOL) isFault
+{
+	return YES;	
+}
+
+
+- (BOOL) conformsToProtocol: (id) fp8
+{
+	NSLog(@"oops! implement!");
+	return YES;
+}
+
+- (id) methodSignatureForSelector: (SEL) aSelector
+{
+	return [[self class] instanceMethodSignatureForSelector: (SEL) aSelector];
+}
+
 - (BOOL) respondsToSelector: (SEL) aSelector
 {
 	return [[self class] instancesRespondToSelector: aSelector];
@@ -628,6 +651,15 @@ static Class OPPersistentObjectFaultClass = Nil;
 	
 	[invocation invokeWithTarget: self];
 }
+
+- (void) setValue: (id) value forKey: (NSString*) key
+{
+	// For some reason, faults do not fire automatically:
+	NSLog(@"Firing %@ after call to 'setValue:forKey: %@'.", isa, key);
+	self = [self resolveFault];
+    return [self setValue: value forKey: key];
+}
+
 
 - (id) valueForKey: (NSString*) key 
 {

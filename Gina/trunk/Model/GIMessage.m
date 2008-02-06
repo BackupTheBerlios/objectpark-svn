@@ -181,7 +181,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
 	// Add self to global message id index:
 	if (messageId.length) {
-		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setValue: self forKey: messageId];  
+		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setObject: self forKey: messageId];  
 	}
 	
     [subject release]; subject = [[im normalizedSubject] copy];

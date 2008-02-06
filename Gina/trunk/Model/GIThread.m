@@ -157,12 +157,14 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {
 	if (! [date isEqualToDate: newDate]) {
 		
-		[(OPPersistentSet*)[self.messageGroups.lastObject threads] removeObject: self];
+		// The group's thread relation (the set array) is sorted by date. Update it:
+		OPPersistentSet* threadIndex = (OPPersistentSet*)[self.messageGroups.lastObject threads];
+		[threadIndex removeObject: self];
 		[self willChangeValueForKey:@"date"];
 		[date release];
 		date = [newDate retain];
 		[self didChangeValueForKey:@"date"];
-		[(OPPersistentSet*)[self.messageGroups.lastObject threads] addObject: self];
+		[threadIndex addObject: self];
 		//[self.messageGroups makeObjectsPerformSelector: @selector(updateIndexForThread)
 	}
 }

@@ -480,7 +480,7 @@ NSDateFormatter *timeAndDateFormatter()
 			} else {
 				thread = (GIThread *)selectedObject;
 			}
-			
+			// thread is now set
 			NSInteger messageOffset = 0;
 			
 			if (message) {
