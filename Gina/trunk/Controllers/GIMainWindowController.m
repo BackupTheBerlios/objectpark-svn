@@ -386,12 +386,19 @@
 	return YES;
 }
 
+static BOOL isShowingThreadsOnly = NO;
+
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
 {
-	if (![self isShowingThreadsOnly])
+	if (![self isShowingThreadsOnly] && isShowingThreadsOnly)
 	{
 		[self performSetSeenBehaviorForMessage:self.selectedMessage];
 	}
+}
+
+- (void)splitViewWillResizeSubviews:(NSNotification *)aNotification
+{
+	isShowingThreadsOnly = [self isShowingThreadsOnly];
 }
 
 @end
