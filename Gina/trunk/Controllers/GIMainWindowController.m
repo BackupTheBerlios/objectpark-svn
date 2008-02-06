@@ -386,6 +386,14 @@
 	return YES;
 }
 
+- (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
+{
+	if (![self isShowingThreadsOnly])
+	{
+		[self performSetSeenBehaviorForMessage:self.selectedMessage];
+	}
+}
+
 @end
 
 @implementation GIMainWindowController (OutlineViewDelegateAndActions)
