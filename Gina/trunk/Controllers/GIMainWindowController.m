@@ -112,6 +112,11 @@
 	[self autorelease];
 }
 
+- (IBAction) groupTreeSelectionChanged: (id) sender
+{
+	[self setThreadsOnlyMode];
+}
+
 - (void)windowDidLoad
 {
 	// configuring manual bindings:
@@ -127,11 +132,14 @@
 	[commentTreeView setTarget:self];
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];
 	
-	// configuring thread view:
+	// Configure thread view:
 	[threadsOutlineView setHighlightThreads:YES];
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
 	[self setThreadsOnlyMode];
+	
+	// Configure group view:
+//[groupsOutlineView
 	
 	[self.window makeKeyAndOrderFront:self];
 }
@@ -146,9 +154,16 @@
 	}
 }
 
-- (BOOL)isShowingThreadsOnly
+- (BOOL) isShowingThreadsOnly
 {
-	return [threadMailSplitter isSubviewCollapsed:mailTreeSplitter];
+	return [threadMailSplitter isSubviewCollapsed: mailTreeSplitter];
+}
+
+
+- (BOOL) isShowingMessageOnly
+{
+	BOOL result = [threadMailSplitter isSubviewCollapsed: threadsOutlineView];
+	return result;
 }
 
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage

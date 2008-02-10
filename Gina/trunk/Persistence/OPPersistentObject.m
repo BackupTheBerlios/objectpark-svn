@@ -243,6 +243,11 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 	[super didChangeValueForKey: key withSetMutation: mutationKind usingObjects: objects];
 }
 
+- (BOOL) hasUnsavedChanges
+{
+	return [[[self context] changedObjects] containsObject: self];
+}
+
 - (void) delete
 /*" Deletes the receiver from the persistent store associated with it's context. Does nothing, if the reciever does not have a context or has never been stored persistently. "*/
 {	
@@ -447,6 +452,11 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 //	[self removePrimitiveValue: value forKey: key];
 //	[self didAddValueForKey: key];
 //}
+
+- (BOOL) accessInstanceVariablesDirectly
+{
+	return NO;
+}
  
 + (BOOL) canPersist
 {
@@ -562,9 +572,9 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 	return self;
 }
 
-- (id <OPPersisting>) resolveFault
+- (BOOL) resolveFault
 {
-	return self;
+	return YES;
 }
 
 
@@ -579,12 +589,12 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 @implementation OPPersistentObjectFault : OPPersistentObject
 
-- (id <OPPersisting>) resolveFault
+- (BOOL) resolveFault
 {
 	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
 	isa = theClass;
-	id result = [[self context] unarchiveObject: self];
-	return result;
+	BOOL ok = [[self context] unarchiveObject: self];
+	return ok;
 }
 
 
@@ -647,17 +657,17 @@ static Class OPPersistentObjectFaultClass = Nil;
 {
 	NSLog(@"Firing %@ after call to '%@'.", isa, NSStringFromSelector([invocation selector]));
 
-	self = [self resolveFault];
+	BOOL ok = [self resolveFault];
 	
-	[invocation invokeWithTarget: self];
+	if (ok) [invocation invokeWithTarget: self];
 }
 
 - (void) setValue: (id) value forKey: (NSString*) key
 {
 	// For some reason, faults do not fire automatically:
 	NSLog(@"Firing %@ after call to 'setValue:forKey: %@'.", isa, key);
-	self = [self resolveFault];
-    return [self setValue: value forKey: key];
+	BOOL ok = [self resolveFault];
+    if (ok) [self setValue: value forKey: key];
 }
 
 
@@ -665,8 +675,8 @@ static Class OPPersistentObjectFaultClass = Nil;
 {
     // For some reason, faults do not fire automatically:
 	NSLog(@"Firing %@ after call to 'valueForKey: %@'.", isa, key);
-	self = [self resolveFault];
-    return [self valueForKey: key];
+	BOOL ok = [self resolveFault];
+    return ok ? [self valueForKey: key] : nil;
 }
 
 - (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
@@ -676,8 +686,8 @@ static Class OPPersistentObjectFaultClass = Nil;
 //	}
 //])
 	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
-	self = [self resolveFault];
-    return [self addObserver: observer forKeyPath: keyPath options: options context: context];
+	BOOL ok = [self resolveFault];
+    if (ok) [self addObserver: observer forKeyPath: keyPath options: options context: context];
 }
 
 //- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel

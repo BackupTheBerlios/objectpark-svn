@@ -98,7 +98,7 @@ extern NSString* OPStringFromOID(OID oid);
 
 // Archiving to the objectTree:
 - (void) archiveObject: (NSObject <OPPersisting>*) object usingCursor: (OPIntKeyBTreeCursor*) cursor;	
-- (id) unarchiveObject: (NSObject <OPPersisting>*) object;
+- (BOOL) unarchiveObject: (NSObject<OPPersisting>*) object;
 
 // Public Methods:
 

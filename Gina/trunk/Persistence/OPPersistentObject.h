@@ -106,10 +106,13 @@
 
 - (void) turnIntoFault;
 
+- (BOOL) hasUnsavedChanges;
+
+
 @end
 
 @interface OPPersistentObjectFault : OPPersistentObject
 
-- (id <OPPersisting>) resolveFault;
+- (BOOL) resolveFault;
 
 @end

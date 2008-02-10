@@ -40,6 +40,7 @@
 {
 	if (self = [super init]) 
 	{
+		NSLog(@"Initialized %@", self);
 		if ([self canHaveChildren]) 
 		{
 			children = [[OPFaultingArray alloc] init];
@@ -82,7 +83,22 @@
 
 - (OPFaultingArray *)children
 {
+	NSLog(@"Requesting children of %@", self);
 	return children;
+}
+
+- (void) insertObject: (GIHierarchyNode*) node inChildrenAtIndex: (NSUInteger) index
+{
+	[self willChangeValueForKey: @"children"];
+	[children insertObject: node atIndex: index];
+	[self didChangeValueForKey: @"children"];
+}
+
+- (void) removeObjectFromChildrenAtIndex: (NSUInteger) index
+{
+	[self willChangeValueForKey: @"children"];
+	[children removeObjectAtIndex: index];	
+	[self didChangeValueForKey: @"children"];
 }
 
 @end

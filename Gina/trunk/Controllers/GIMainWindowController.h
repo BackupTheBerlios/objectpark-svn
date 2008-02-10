@@ -21,11 +21,12 @@
 	IBOutlet GIThreadOutlineViewController *threadsController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
+	IBOutlet NSOutlineView *groupsOutlineView;
 	IBOutlet NSSplitView *threadMailSplitter;
 	IBOutlet NSSplitView *mailTreeSplitter;
 	IBOutlet GITextView *messageTextView;
 	
-	GIMessageGroup *selectedMessageGroup;
+	//GIMessageGroup *selectedMessageGroup;
 	NSArray *selectedThreads;
 	
 	/* Binding stuff */
@@ -35,7 +36,9 @@
 
 @property (retain) NSArray *selectedThreads;
 
-- (IBAction)commentTreeSelectionChanged:(id)sender;
+- (IBAction) commentTreeSelectionChanged: (id) sender;
+- (IBAction) groupTreeSelectionChanged: (id) sender;
+
 
 /*" Message meta info manipulation "*/
 - (IBAction)markAsRead:(id)sender;

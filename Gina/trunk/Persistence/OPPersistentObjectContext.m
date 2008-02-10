@@ -318,20 +318,20 @@ NSString* OPStringFromOID(OID oid)
 
 }
 
-- (id) unarchiveObject: (NSObject<OPPersisting>*) object
+- (BOOL) unarchiveObject: (NSObject<OPPersisting>*) object
 {
 	int error = SQLITE_OK;
 	OPIntKeyBTreeCursor* readCursor = [[database objectTree] newCursorWithError: &error];
 	int pos = [readCursor moveToIntKey: [object currentOID] error: &error];
 	if (pos == 0 && error == SQLITE_OK) {
-		object = [self unarchiveObject: object atCursor: readCursor];
+		[self unarchiveObject: object atCursor: readCursor];
 	} else {
 		NSLog(@"Warning - no object data found for %@", OPStringFromOID([object oid]));
 		object = nil;
 	}
 	[readCursor release];
 	[object awakeAfterUsingCoder: decoder];
-	return object;
+	return object != nil;
 }
 
 // 2008-01-17 00:59:12.223 Gina[1533:10b] Warning - no object data found for GIThread, lid 30
@@ -353,7 +353,11 @@ NSString* OPStringFromOID(OID oid)
 		
 		if (YES || [theClass cachesAllObjects]) {
 			[result setOID: oid];
-			result = [self unarchiveObject: result];
+			BOOL ok = [self unarchiveObject: result];
+			if (! ok) {
+				[result release];
+				result = nil;
+			}
 		} else {
 			result = [[result initFaultWithContext: self oid: oid] autorelease];
 		}

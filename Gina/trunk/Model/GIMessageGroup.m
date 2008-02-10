@@ -86,13 +86,16 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
 	NSMutableArray *children = [aNode mutableArrayValueForKey: @"children"];
 	
-    if (anIndex == [[aNode children] count]) {
+    if (anIndex >= [[aNode children] count]) {
         [children addObject: result];
     } else {
         [children insertObject: result atIndex: anIndex];
     }
 
-    return result;
+	NSAssert([[aNode children] objectAtIndex: anIndex] == result, @"Message group not inserted.");
+	NSAssert([aNode hasUnsavedChanges], @"parent hierarchy node not dirty.");
+    
+	return result;
 }
 
 /*" Returns the message group object referenced by the given reference string anUrl. See also: #{-URIReferenceString}. "*/
