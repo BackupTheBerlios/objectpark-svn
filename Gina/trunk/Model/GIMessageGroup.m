@@ -99,27 +99,27 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
 }
 
 /*" Returns the message group object referenced by the given reference string anUrl. See also: #{-URIReferenceString}. "*/
-+ (id)messageGroupWithURLString:(NSString *)anUrl
-{
-    id result = nil;
-    
-    NSParameterAssert([anUrl isKindOfClass:[NSString class]]);
-    
-    if ([anUrl length]) 
-	{
-        @try 
-		{
-            result = [[OPPersistentObjectContext defaultContext] objectWithURLString:anUrl];
-			result = [result resolveFault];
-        }
-        @catch (id e) 
-		{
-            if (NSDebugEnabled) NSLog(@"Could not find group for URI ''", anUrl);
-        }
-    }
-    
-    return result;
-}
+//+ (id)messageGroupWithURLString:(NSString *)anUrl
+//{
+//    id result = nil;
+//    
+//    NSParameterAssert([anUrl isKindOfClass:[NSString class]]);
+//    
+//    if ([anUrl length]) 
+//	{
+//        @try 
+//		{
+//            result = [[OPPersistentObjectContext defaultContext] objectWithURLString:anUrl];
+//			result = [result resolveFault];
+//        }
+//        @catch (id e) 
+//		{
+//            if (NSDebugEnabled) NSLog(@"Could not find group for URI ''", anUrl);
+//        }
+//    }
+//    
+//    return result;
+//}
 
 
 /*
@@ -603,15 +603,15 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 {
     NSParameterAssert(defaultName != nil);
 	GIMessageGroup *result = nil;
-    
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+
 	@synchronized(self)
 	{
 		NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
         
 		if (URLString) 
 		{
-			result = [GIMessageGroup messageGroupWithURLString:URLString];
-
+			result = [context rootObjectForKey:defaultsKey];
 			if (!result) if (NSDebugEnabled) NSLog(@"Couldn't find standard box '%@'", defaultName);
 		}
 		
@@ -622,8 +622,9 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 			
 			NSAssert1([result name] != nil, @"group should have a name: %@", defaultName);
 			
-			[[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
-			[[NSUserDefaults standardUserDefaults] synchronize];
+			[context setRootObject:result forKey:defaultsKey];
+//			[[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
+//			[[NSUserDefaults standardUserDefaults] synchronize];
 			
 			NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
 			
@@ -639,6 +640,8 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 				GIThread *thread = [GIThread threadForMessage:message];				
 				[[result mutableSetValueForKey:@"threads"] addObject:thread];
 			}
+			
+			[context saveChanges];
 		}
 		
 		NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);
