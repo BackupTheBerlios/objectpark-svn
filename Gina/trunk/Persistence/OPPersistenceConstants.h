@@ -42,7 +42,9 @@
  * LID - local object id, 1 word-1 bytes wide
  * LID and CID can be encoded into an OID and back.
  */
-#define OID UInt64 
+
+typedef UInt64 OID;
+//#define OID UInt64 
 #define NILOID (OID)0L
 #define ROWID UInt64
 

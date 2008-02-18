@@ -493,37 +493,86 @@ static int compare_oids(const void* entry1, const void* entry2)
 
 @end
 
-@implementation NSMutableArray (CocotronTest)
-
-
--(void)removeObjectsFromIndices2: (unsigned *)indices
-					  numIndices: (unsigned)count {
-	int i;
-	
-	for(i=0;i<count;i++)
-		[self removeObjectAtIndex:indices[i]];
-}
-
-static int _nsmutablearraycompareindices(const void * index1, const void * index2)
-{
-	return index1 < index2 ? -1 : index1 == index2 ? 0 : 1;
-}
-
--(void)removeObjectsFromIndices3: (unsigned *)indices
-					  numIndices: (unsigned)count 
-{
-	unsigned sortedIndices[count]; // large stack allocations could fail, optimize to use heap allocation then?
-	memcpy(sortedIndices, indices, sizeof(unsigned)*count);
-	mergesort(sortedIndices, sizeof(unsigned), count, &_nsmutablearraycompareindices);
-
-	int i;
-	
-	for(i=count-1;i>=0;i--) {
-		[self removeObjectAtIndex:sortedIndices[i]];
-	}
-}
-
-@end
+//@implementation NSMutableArray (CocotronTest)
+//
+//
+//-(void)removeObjectsFromIndices2: (unsigned *)indices
+//					  numIndices: (unsigned)count {
+//	int i;
+//	
+//	for(i=0;i<count;i++)
+//		[self removeObjectAtIndex:indices[i]];
+//}
+//
+//static int _nsmutablearraycompareindices(const void * index1, const void * index2)
+//{
+//	return index1 < index2 ? -1 : index1 == index2 ? 0 : 1;
+//}
+//
+//static int _nsmutablearraycompareindices(const void* v1, const void* v2) 
+//{
+//	int i1 = (*(int*)v1);
+//	int i2 = (*(int*)v2);
+//	int result = i1 == i2 ? 0 : (i1<i2 ? -1 : 1);
+//	return result;
+//}
+//
+//-(void)removeObjectsFromIndices3: (unsigned *)indices
+//					  numIndices: (unsigned) indexCount 
+//{
+//	if (count) {
+//		unsigned sortedIndices[count]; 
+//		memcpy(sortedIndices, indices, sizeof(unsigned)*count);
+//		mergesort(sortedIndices, sizeof(unsigned), count, &_nsmutablearraycompareindices);
+//		
+//		
+//		unsigned released = NSNotFound;
+//		unsigned i, gap = 0;
+//		unsigned imax = [self count];
+//		for(i=sortedIndices[0]; i+gap<imax; i++) {
+//			if (i == sortedIndices[gap]) {
+//				gap += 1;
+//				
+//				[_objects[i] release];
+//				released = i;
+//			}
+//			_objects[i] = _objects[i+gap];
+//		}
+//	}
+//	
+//	
+//	unsigned lastIndex = NSNotFound;
+//	for(i=count-1;i>=0;i--) {
+//		unsigned index = sortedIndices[i];
+//		if (index!=lastIndex) {
+//			[self removeObjectAtIndex: index];
+//		}
+//		lastIndex = index;
+//	}	
+//}
+//
+//
+//-(void) removeObjectsFromIndices: (unsigned*) indices
+//					 numIndices: (unsigned) indexCount 
+//{
+//	if (count) {
+//		unsigned sortedIndices[count]; 
+//		memcpy(sortedIndices, indices, sizeof(unsigned)*count);
+//		mergesort(sortedIndices, sizeof(unsigned), count, &_nsmutablearraycompareindices);
+//		
+//		unsigned lastIndex = NSNotFound;
+//		int i;
+//		for(i=count-1;i>=0;i--) {
+//			unsigned index = sortedIndices[i];
+//			if (index!=lastIndex) {
+//				[self removeObjectAtIndex: index];
+//			}
+//			lastIndex = index;
+//		}	
+//	}
+//}
+//
+//@end
 
 /*
 @implementation OPFaultingArray (testing)

@@ -591,9 +591,9 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (BOOL) resolveFault
 {
-	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
+	Class theClass = [[self context] classForCID: CIDFromOID(self.currentOID)];
 	isa = theClass;
-	BOOL ok = [[self context] unarchiveObject: self];
+	BOOL ok = [[self context] unarchiveObject: self forOID: self.currentOID];
 	return ok;
 }
 

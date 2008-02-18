@@ -191,6 +191,8 @@ typedef struct {
 {
 	NSParameterAssert([object currentOID]>0); // hashing is based on oids here
     
+	NSLog(@"Will register object 0x%x for oid %llx", object, [object currentOID]);
+	
     @synchronized((id)registeredObjects) {
         NSHashInsertIfAbsent(registeredObjects, object);
     }
@@ -232,10 +234,13 @@ typedef struct {
 }
 
 - (void) didChangeObject: (id <OPPersisting>) object
-/*" This method retains object until changes are saved. "*/
+/*" Marks object for saving. This method retains object until changes are saved. Does nothing, if this object has no oid set. "*/
 {
 	@synchronized((id)changedObjects) {
-		[changedObjects addObject: object];  
+		//[self insertObject: object];
+		if ([object currentOID]) { 
+			[changedObjects addObject: object];  
+		}
 	}
 }
 
@@ -318,15 +323,15 @@ NSString* OPStringFromOID(OID oid)
 
 }
 
-- (BOOL) unarchiveObject: (NSObject<OPPersisting>*) object
+- (BOOL) unarchiveObject: (NSObject<OPPersisting>*) object forOID: (OID) oid
 {
 	int error = SQLITE_OK;
 	OPIntKeyBTreeCursor* readCursor = [[database objectTree] newCursorWithError: &error];
-	int pos = [readCursor moveToIntKey: [object currentOID] error: &error];
+	int pos = [readCursor moveToIntKey: oid error: &error];
 	if (pos == 0 && error == SQLITE_OK) {
 		[self unarchiveObject: object atCursor: readCursor];
 	} else {
-		NSLog(@"Warning - no object data found for %@", OPStringFromOID([object oid]));
+		NSLog(@"Warning - no object data found for %@", OPStringFromOID(oid));
 		object = nil;
 	}
 	[readCursor release];
@@ -338,10 +343,11 @@ NSString* OPStringFromOID(OID oid)
 
 
 - (id) objectForOID: (OID) oid
-/*" Returns (a fault for) the persistent object with the oid given of class poClass (which must be a subclass of OPPersistentObject). It does so, regardless wether such an object is contained in the database or not. The result is autoreleased. For NILOID, returns nil. "*/
+/*" Returns (a fault for) the persistent object (subclass of OPPersistentObject) with the oid given. It does so, regardless wether such an object is contained in the database or not. The result is autoreleased. For NILOID, returns nil. "*/
 {
 	if (!oid) return nil;
-	
+	//int oidSize = sizeof(oid);
+	NSLog(@"Requesting object for oid %llx", oid);
 	// First, look up oid in registered objects cache:
     OPPersistentObject* result = [self objectRegisteredForOID: oid];
     if (!result) { 
@@ -352,12 +358,13 @@ NSString* OPStringFromOID(OID oid)
 		result = [theClass alloc];
 		
 		if (YES || [theClass cachesAllObjects]) {
-			[result setOID: oid];
 			BOOL ok = [self unarchiveObject: result];
 			if (! ok) {
 				[result release];
-				result = nil;
-			}
+				return nil;
+			} 
+			[result setOID: oid]; // registers result - do not do that until we know there is data for oid
+
 		} else {
 			result = [[result initFaultWithContext: self oid: oid] autorelease];
 		}
@@ -397,7 +404,7 @@ NSString* OPStringFromOID(OID oid)
     if (pClass == NULL) return nil;
     
 	OID oid = MakeOID([self cidForClass: pClass], OPLongStringValue(lidString));
-
+	NSLog(@"Requesting object for oid %llx", oid);
 	id result = [self objectForOID: oid];
 	
 	return result;
@@ -978,6 +985,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 - (void) insertObject: (id <OPPersisting>) newObject
+/*" inserts newObject into the receiver context and sets an oid. Does nothing, if newObject already has an oid. "*/
 {
 	NSParameterAssert([newObject context] == NULL || [newObject context] == self);
 	if (![newObject currentOID]) {
