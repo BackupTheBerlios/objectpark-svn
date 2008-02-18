@@ -423,6 +423,7 @@ struct __NSOVRowEntry {
 		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
 		return rowEntry ? rowEntry->flags.expanded : NO;
 	}
+	return NO;
 }
 
 @end

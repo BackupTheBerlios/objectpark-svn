@@ -269,7 +269,7 @@
 
 @implementation GIMainWindowController (GeneralBindings)
 
-- (NSArray *)messageGroupHierarchyRoot
+- (NSArray *)messageGroupHierarchyRootNodes
 {
 	return [[GIHierarchyNode messageGroupHierarchyRootNode] children];
 }

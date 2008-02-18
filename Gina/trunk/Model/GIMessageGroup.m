@@ -74,9 +74,9 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     if (!aNode) {
         aNode = [GIHierarchyNode messageGroupHierarchyRootNode];
-        if (anIndex == NSNotFound) anIndex = [[aNode children] count];
     }
-    
+	if (anIndex == NSNotFound) anIndex = [[aNode children] count];
+
     // creating new group and setting name:
     GIMessageGroup* result = [[[self alloc] init] autorelease];
     [result setName: aName];
@@ -86,7 +86,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
 	NSMutableArray *children = [aNode mutableArrayValueForKey: @"children"];
 	
-    if (anIndex >= [[aNode children] count]) {
+    if (anIndex >= [children count]) {
         [children addObject: result];
     } else {
         [children insertObject: result atIndex: anIndex];

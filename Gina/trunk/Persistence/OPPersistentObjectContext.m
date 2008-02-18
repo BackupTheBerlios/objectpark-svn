@@ -191,7 +191,7 @@ typedef struct {
 {
 	NSParameterAssert([object currentOID]>0); // hashing is based on oids here
     
-	NSLog(@"Will register object 0x%x for oid %llx", object, [object currentOID]);
+	//NSLog(@"Will register object 0x%x for oid %llx", object, [object currentOID]);
 	
     @synchronized((id)registeredObjects) {
         NSHashInsertIfAbsent(registeredObjects, object);
@@ -347,7 +347,7 @@ NSString* OPStringFromOID(OID oid)
 {
 	if (!oid) return nil;
 	//int oidSize = sizeof(oid);
-	NSLog(@"Requesting object for oid %llx", oid);
+	//NSLog(@"Requesting object for oid %llx", oid);
 	// First, look up oid in registered objects cache:
     OPPersistentObject* result = [self objectRegisteredForOID: oid];
     if (!result) { 
@@ -404,7 +404,7 @@ NSString* OPStringFromOID(OID oid)
     if (pClass == NULL) return nil;
     
 	OID oid = MakeOID([self cidForClass: pClass], OPLongStringValue(lidString));
-	NSLog(@"Requesting object for oid %llx", oid);
+	//NSLog(@"Requesting object for oid %llx", oid);
 	id result = [self objectForOID: oid];
 	
 	return result;
