@@ -358,7 +358,7 @@ NSString* OPStringFromOID(OID oid)
 		result = [theClass alloc];
 		
 		if (YES || [theClass cachesAllObjects]) {
-			BOOL ok = [self unarchiveObject: result];
+			BOOL ok = [self unarchiveObject: result forOID: oid];
 			if (! ok) {
 				[result release];
 				return nil;
