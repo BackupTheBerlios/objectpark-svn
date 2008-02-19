@@ -167,7 +167,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"<%@: 0x%x, lid %u>", isa, self, (unsigned)LIDFromOID(oid)];
+	return [NSString stringWithFormat: @"<%@: 0x%x, lid %llu>", isa, self, LIDFromOID(oid)];
 }
 
 NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
@@ -186,7 +186,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 - (NSString*) objectURLString
 {
 	NSString* databaseName = [[[[self context] databasePath] lastPathComponent] stringByDeletingPathExtension]; // cache this!
-	NSString* uriString = [[[NSString alloc] initWithFormat: @"x-oppk-%@://%@/%lx", 
+	NSString* uriString = [[[NSString alloc] initWithFormat: @"x-oppk-%@://%@/%llx", 
 							[databaseName stringByAddingPercentEscapesUsingEncoding: NSISOLatin1StringEncoding], [[self classForCoder] description],
 							LIDFromOID([self oid])] autorelease];
 	return uriString;

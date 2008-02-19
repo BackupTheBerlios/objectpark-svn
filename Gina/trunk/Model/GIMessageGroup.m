@@ -626,7 +626,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 //			[[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
 //			[[NSUserDefaults standardUserDefaults] synchronize];
 			
-			NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
+//			NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
 			
 			if ([defaultsKey isEqualToString:DefaultMessageGroupURLString])
 			{

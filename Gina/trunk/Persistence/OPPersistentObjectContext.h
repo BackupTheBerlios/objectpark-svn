@@ -54,7 +54,7 @@ extern NSString* OPStringFromOID(OID oid);
     
 	@private
 	
-	OID maxLid[256];
+	LID maxLid[256];
 	Class classes[256]; // classes contained in the archive, indexed by cid
 	
 	NSMapTable* cidsByClass;

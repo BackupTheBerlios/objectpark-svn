@@ -241,7 +241,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {
 	// The sortKeyPath should be "date":
 	NSInteger time = (NSInteger)[[self valueForKey: @"date"] timeIntervalSince1970];
-	time = NSSwapHostIntToLittle(time);
+	time = NSSwapHostIntToBig(time);
 	[data appendBytes: &time length: 4];
 }
 

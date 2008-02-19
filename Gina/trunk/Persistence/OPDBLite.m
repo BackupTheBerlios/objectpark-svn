@@ -514,7 +514,7 @@
 	i64 result = 0;
 	int rc = sqlite3BtreeData((BtCursor*) self, 0, sizeof(result), &result);
 	NSAssert1(rc == SQLITE_OK, @"Getting int data failed with return code %d", rc);
-	result = NSSwapLittleLongLongToHost(result);
+	result = NSSwapBigLongLongToHost(result);
 	return result;
 }
 
@@ -575,6 +575,14 @@
 	return err;
 }
 
+- (int) insertIntValue: (i64) intValue 
+		   forKeyBytes: (const void*) key 
+			  ofLength: (unsigned) keyLength
+			  isAppend: (BOOL) append
+{
+	i64 data = NSSwapHostLongLongToBig(intValue);
+	return [self insertValueBytes: &data ofLength: sizeof(i64) forKeyBytes: key ofLength: keyLength isAppend: append];
+}
 
 - (void) dealloc
 {
@@ -733,7 +741,7 @@
 			 forIntKey: (i64) key 
 			  isAppend: (BOOL) append
 {
-	data = NSSwapHostLongLongToLittle(data);
+	data = NSSwapHostLongLongToBig(data);
 	return sqlite3BtreeInsert((BtCursor*) self, /* Insert data into the table of this cursor */
 							  NULL, key,   /* The key of the new record */
 							  &data, sizeof(i64), /* The data of the new record */

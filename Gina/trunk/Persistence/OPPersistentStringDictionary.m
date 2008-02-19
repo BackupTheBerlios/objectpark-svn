@@ -183,8 +183,8 @@
 		if (oidFound != objectOID) {
 			changeCount++;
 			[[self setterCursor] deleteCurrentEntry];
-			[[self setterCursor] insertValueBytes: &objectOID ofLength: sizeof(OID)
-									  forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
+			[[self setterCursor] insertIntValue: objectOID forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
+			
 		} else {
 			// nothing to do, anObject already present
 			// if (NSDebugEnabled) NSLog(@"Ignoring addition of existing key/value pair to persistent string dictionary.");

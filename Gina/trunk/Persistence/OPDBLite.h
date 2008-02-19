@@ -125,6 +125,12 @@
 				ofLength: (unsigned) keyLength
 				isAppend: (BOOL) append;
 
+- (int) insertIntValue: (i64) intValue 
+		   forKeyBytes: (const void*) key 
+			  ofLength: (unsigned) keyLength
+			  isAppend: (BOOL) append;
+
+
 @end
 
 @interface OPIntKeyBTreeCursor : OPBTreeCursor

@@ -319,7 +319,7 @@ NSString* OPStringFromOID(OID oid)
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	unsigned cid = CIDFromOID(oid);
 	Class theClass = [context classForCID: cid];
-	return [NSString stringWithFormat: @"%@, lid %u", theClass, LIDFromOID(oid)];
+	return [NSString stringWithFormat: @"%@, lid %llu", theClass, LIDFromOID(oid)];
 
 }
 
@@ -346,8 +346,8 @@ NSString* OPStringFromOID(OID oid)
 /*" Returns (a fault for) the persistent object (subclass of OPPersistentObject) with the oid given. It does so, regardless wether such an object is contained in the database or not. The result is autoreleased. For NILOID, returns nil. "*/
 {
 	if (!oid) return nil;
-	//int oidSize = sizeof(oid);
-	//NSLog(@"Requesting object for oid %llx", oid);
+	int oidSize = sizeof(oid);
+	NSLog(@"Requesting object for oid %llx", oid);
 	// First, look up oid in registered objects cache:
     OPPersistentObject* result = [self objectRegisteredForOID: oid];
     if (!result) { 
@@ -548,7 +548,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		if (CIDFromOID(oidFound) == cid) {
 			// Found maximum oid for cid
 			maxLid[cid] = LIDFromOID(oidFound);
-			NSLog(@"Found max lid for cid %u (%@) to be %u", cid, [self classForCID: cid], maxLid[cid]);
+			NSLog(@"Found max lid for cid %u (%@) to be %llu", cid, [self classForCID: cid], maxLid[cid]);
 			// Cache all instances, if the class wants that:
 			if ([classes[cid] cachesAllObjects]) {
 				BOOL moveOk = YES;
