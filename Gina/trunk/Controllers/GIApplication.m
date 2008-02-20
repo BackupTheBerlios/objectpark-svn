@@ -7,6 +7,7 @@
 //
 
 #import "GIApplication.h"
+#import "OPPersistentObjectContext.h";
 #import "GIUserDefaultsKeys.h"
 #import "GIMainWindowController.h"
 #import "GIMessage.h"
@@ -131,13 +132,36 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
     return someFilePaths;
 }
 
-- (IBAction) importMboxFile: (id) sender
+- (BOOL) application: (NSApplication*) sender openFile: (NSString*) filename
+{
+	[self application: sender openFiles: [NSArray arrayWithObject: filename]];
+	return YES;
+}
+
+
+- (void) application: (NSApplication*) sender openFiles: (NSArray*) filePaths
+{
+	filePaths = [self filePathsSortedByCreationDate: filePaths];
+	NSArray* mboxPaths = [filePaths pathsMatchingExtensions: [NSArray arrayWithObjects: @"mbox", @"mboxfile", @"mbx", nil]];
+	NSArray* gmls = [filePaths pathsMatchingExtensions: [NSArray arrayWithObjects: @"gml", nil]];
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];	
+	if (gmls.count)
+		[context importTransferDataFromFilePath: gmls moveOnSuccess: NO];	
+	if (mboxPaths.count)
+		[context importMboxFiles: mboxPaths moveOnSuccess: NO];
+	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
+}
+
+
+- (IBAction) openFile: (id) sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
-    NSArray *fileTypes = [NSArray arrayWithObjects: @"mboxfile", @"mbox", @"mbx", nil];
-    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
-    NSString *directory = [[NSUserDefaults standardUserDefaults] objectForKey:ImportPanelLastDirectory];
+    NSArray* fileTypes = [NSArray arrayWithObjects: @"mboxfile", @"mbox", @"mbx", @"gml", nil];
+    NSOpenPanel* oPanel = [NSOpenPanel openPanel];
+    NSString *directory = [[NSUserDefaults standardUserDefaults] objectForKey: ImportPanelLastDirectory];
     
     if (!directory) directory = NSHomeDirectory();
     
@@ -151,12 +175,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
     if (result == NSOKButton) {
         [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
         
-        NSArray *filesToOpen = [self filePathsSortedByCreationDate:[oPanel filenames]];
-		
-		[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];
-		[[OPPersistentObjectContext defaultContext] importMboxFiles: filesToOpen moveOnSuccess: NO];
-		[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
-    }    
+		[self application: self openFiles: [oPanel filenames]];
+	}    
 }
 
 - (void) runConsistentcyChecks: (id) sender

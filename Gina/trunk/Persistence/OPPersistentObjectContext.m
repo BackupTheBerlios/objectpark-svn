@@ -346,8 +346,8 @@ NSString* OPStringFromOID(OID oid)
 /*" Returns (a fault for) the persistent object (subclass of OPPersistentObject) with the oid given. It does so, regardless wether such an object is contained in the database or not. The result is autoreleased. For NILOID, returns nil. "*/
 {
 	if (!oid) return nil;
-	int oidSize = sizeof(oid);
-	NSLog(@"Requesting object for oid %llx", oid);
+	//int oidSize = sizeof(oid);
+	//if (NSDebugEnabled) NSLog(@"Requesting object for oid %016llx", oid);
 	// First, look up oid in registered objects cache:
     OPPersistentObject* result = [self objectRegisteredForOID: oid];
     if (!result) { 

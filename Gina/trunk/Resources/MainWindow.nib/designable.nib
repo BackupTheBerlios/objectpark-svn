@@ -31,7 +31,7 @@
 				<string key="NSWindowRect">{{302, 192}, {922, 664}}</string>
 				<int key="NSWTFlags">536871936</int>
 				<string key="NSWindowTitle">Gina</string>
-				<string key="NSWindowClass" id="483920618">GIMainWindow</string>
+				<string key="NSWindowClass" id="100406356">GIMainWindow</string>
 				<object class="NSToolbar" key="NSViewClass" id="1010937192">
 					<object class="NSMutableString" key="NSToolbarIdentifier">
 						<characters key="NS.bytes">D7946077-E55C-4405-A221-26AD071655BB</characters>
@@ -86,7 +86,7 @@
 										<int key="NSTextBezelStyle">1</int>
 										<object class="NSColor" key="NSBackgroundColor" id="219825390">
 											<int key="NSColorSpace">6</int>
-											<string key="NSCatalogName" id="880529420">System</string>
+											<string key="NSCatalogName" id="82801698">System</string>
 											<string key="NSColorName">textBackgroundColor</string>
 											<object class="NSColor" key="NSColor" id="583649851">
 												<int key="NSColorSpace">3</int>
@@ -95,7 +95,7 @@
 										</object>
 										<object class="NSColor" key="NSTextColor" id="257439391">
 											<int key="NSColorSpace">6</int>
-											<reference key="NSCatalogName" ref="880529420"/>
+											<reference key="NSCatalogName" ref="82801698"/>
 											<string key="NSColorName">controlTextColor</string>
 											<object class="NSColor" key="NSColor" id="465990353">
 												<int key="NSColorSpace">3</int>
@@ -167,7 +167,7 @@
 								<reference key="NSToolbarItemToolTip" ref="531416845"/>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSCustomResource" key="NSToolbarItemImage">
-									<string key="NSClassName" id="134559027">NSImage</string>
+									<string key="NSClassName" id="518793126">NSImage</string>
 									<string key="NSResourceName">BackToolbarImage</string>
 								</object>
 								<nil key="NSToolbarItemTarget"/>
@@ -189,7 +189,7 @@
 								<nil key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSCustomResource" key="NSToolbarItemImage">
-									<reference key="NSClassName" ref="134559027"/>
+									<reference key="NSClassName" ref="518793126"/>
 									<string key="NSResourceName">ToggleSeen</string>
 								</object>
 								<nil key="NSToolbarItemTarget"/>
@@ -204,8 +204,8 @@
 							</object>
 							<object class="NSToolbarItem" id="106079852">
 								<string key="NSToolbarItemIdentifier">NSToolbarCustomizeToolbarItem</string>
-								<string key="NSToolbarItemLabel" id="751468340">Anpassen</string>
-								<reference key="NSToolbarItemPaletteLabel" ref="751468340"/>
+								<string key="NSToolbarItemLabel" id="717474438">Anpassen</string>
+								<reference key="NSToolbarItemPaletteLabel" ref="717474438"/>
 								<string key="NSToolbarItemToolTip">Symbolleiste anpassen</string>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSImage" key="NSToolbarItemImage">
@@ -311,7 +311,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							</object>
 							<object class="NSToolbarFlexibleSpaceItem" id="555247360">
 								<string key="NSToolbarItemIdentifier">NSToolbarFlexibleSpaceItem</string>
-								<string key="NSToolbarItemLabel" id="395481620"/>
+								<string key="NSToolbarItemLabel" id="385839214"/>
 								<string key="NSToolbarItemPaletteLabel">Flexibler Zwischenraum</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
@@ -328,25 +328,25 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								<object class="NSMenuItem" key="NSToolbarItemMenuFormRepresentation">
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle" id="740020146"/>
-									<reference key="NSKeyEquiv" ref="740020146"/>
+									<string key="NSTitle" id="809226144"/>
+									<reference key="NSKeyEquiv" ref="809226144"/>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
-									<object class="NSCustomResource" key="NSOnImage" id="767345634">
-										<reference key="NSClassName" ref="134559027"/>
+									<object class="NSCustomResource" key="NSOnImage" id="296761237">
+										<reference key="NSClassName" ref="518793126"/>
 										<string key="NSResourceName">NSMenuCheckmark</string>
 									</object>
-									<object class="NSCustomResource" key="NSMixedImage" id="147652416">
-										<reference key="NSClassName" ref="134559027"/>
+									<object class="NSCustomResource" key="NSMixedImage" id="1038627138">
+										<reference key="NSClassName" ref="518793126"/>
 										<string key="NSResourceName">NSMenuMixedState</string>
 									</object>
 								</object>
 							</object>
 							<object class="NSToolbarItem" id="1011708256">
 								<string key="NSToolbarItemIdentifier">NSToolbarPrintItem</string>
-								<string key="NSToolbarItemLabel" id="486271846">Drucken</string>
-								<reference key="NSToolbarItemPaletteLabel" ref="486271846"/>
-								<reference key="NSToolbarItemToolTip" ref="486271846"/>
+								<string key="NSToolbarItemLabel" id="253992088">Drucken</string>
+								<reference key="NSToolbarItemPaletteLabel" ref="253992088"/>
+								<reference key="NSToolbarItemToolTip" ref="253992088"/>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSImage" key="NSToolbarItemImage">
 									<int key="NSImageFlags">750780416</int>
@@ -392,7 +392,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							</object>
 							<object class="NSToolbarSeparatorItem" id="642937871">
 								<string key="NSToolbarItemIdentifier">NSToolbarSeparatorItem</string>
-								<reference key="NSToolbarItemLabel" ref="395481620"/>
+								<reference key="NSToolbarItemLabel" ref="385839214"/>
 								<string key="NSToolbarItemPaletteLabel">Trennlinie</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
@@ -409,18 +409,18 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								<object class="NSMenuItem" key="NSToolbarItemMenuFormRepresentation">
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
-									<reference key="NSTitle" ref="740020146"/>
-									<reference key="NSKeyEquiv" ref="740020146"/>
+									<reference key="NSTitle" ref="809226144"/>
+									<reference key="NSKeyEquiv" ref="809226144"/>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="767345634"/>
-									<reference key="NSMixedImage" ref="147652416"/>
+									<reference key="NSOnImage" ref="296761237"/>
+									<reference key="NSMixedImage" ref="1038627138"/>
 								</object>
 							</object>
 							<object class="NSToolbarItem" id="132066527">
 								<string key="NSToolbarItemIdentifier">NSToolbarShowColorsItem</string>
-								<string key="NSToolbarItemLabel" id="922961558">Farben</string>
-								<reference key="NSToolbarItemPaletteLabel" ref="922961558"/>
+								<string key="NSToolbarItemLabel" id="199942309">Farben</string>
+								<reference key="NSToolbarItemPaletteLabel" ref="199942309"/>
 								<string key="NSToolbarItemToolTip">Farbfenster anzeigen</string>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSImage" key="NSToolbarItemImage">
@@ -523,8 +523,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							</object>
 							<object class="NSToolbarItem" id="700283188">
 								<string key="NSToolbarItemIdentifier">NSToolbarShowFontsItem</string>
-								<string key="NSToolbarItemLabel" id="256170364">Schriften</string>
-								<reference key="NSToolbarItemPaletteLabel" ref="256170364"/>
+								<string key="NSToolbarItemLabel" id="873092679">Schriften</string>
+								<reference key="NSToolbarItemPaletteLabel" ref="873092679"/>
 								<string key="NSToolbarItemToolTip">Schriftfenster anzeigen</string>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSImage" key="NSToolbarItemImage">
@@ -627,7 +627,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							</object>
 							<object class="NSToolbarSpaceItem" id="609458389">
 								<string key="NSToolbarItemIdentifier">NSToolbarSpaceItem</string>
-								<reference key="NSToolbarItemLabel" ref="395481620"/>
+								<reference key="NSToolbarItemLabel" ref="385839214"/>
 								<string key="NSToolbarItemPaletteLabel">Zwischenraum</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
@@ -644,12 +644,12 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								<object class="NSMenuItem" key="NSToolbarItemMenuFormRepresentation">
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
-									<reference key="NSTitle" ref="740020146"/>
-									<reference key="NSKeyEquiv" ref="740020146"/>
+									<reference key="NSTitle" ref="809226144"/>
+									<reference key="NSKeyEquiv" ref="809226144"/>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="767345634"/>
-									<reference key="NSMixedImage" ref="147652416"/>
+									<reference key="NSOnImage" ref="296761237"/>
+									<reference key="NSMixedImage" ref="1038627138"/>
 								</object>
 							</object>
 						</object>
@@ -770,7 +770,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																						</object>
 																						<object class="NSColor" key="NSTextColor" id="130099985">
 																							<int key="NSColorSpace">6</int>
-																							<reference key="NSCatalogName" ref="880529420"/>
+																							<reference key="NSCatalogName" ref="82801698"/>
 																							<string key="NSColorName">headerTextColor</string>
 																							<reference key="NSColor" ref="465990353"/>
 																						</object>
@@ -778,7 +778,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																					<object class="NSTextFieldCell" key="NSDataCell" id="667539284">
 																						<int key="NSCellFlags">337772032</int>
 																						<int key="NSCellFlags2">0</int>
-																						<string key="NSContents" id="452109065">Text Cell</string>
+																						<string key="NSContents" id="462028389">Text Cell</string>
 																						<object class="NSFont" key="NSSupport">
 																							<reference key="NSName" ref="347070304"/>
 																							<double key="NSSize">1.200000e+01</double>
@@ -797,7 +797,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																			<double key="NSIntercellSpacingWidth">3.000000e+00</double>
 																			<object class="NSColor" key="NSBackgroundColor">
 																				<int key="NSColorSpace">6</int>
-																				<reference key="NSCatalogName" ref="880529420"/>
+																				<reference key="NSCatalogName" ref="82801698"/>
 																				<string key="NSColorName">_sourceListBackgroundColor</string>
 																				<object class="NSColor" key="NSColor">
 																					<int key="NSColorSpace">1</int>
@@ -806,7 +806,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																			</object>
 																			<object class="NSColor" key="NSGridColor" id="858065171">
 																				<int key="NSColorSpace">6</int>
-																				<reference key="NSCatalogName" ref="880529420"/>
+																				<reference key="NSCatalogName" ref="82801698"/>
 																				<string key="NSColorName">gridColor</string>
 																				<object class="NSColor" key="NSColor">
 																					<int key="NSColorSpace">3</int>
@@ -832,7 +832,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																	<reference key="NSDocView" ref="334208335"/>
 																	<object class="NSColor" key="NSBGColor" id="521395933">
 																		<int key="NSColorSpace">6</int>
-																		<reference key="NSCatalogName" ref="880529420"/>
+																		<reference key="NSCatalogName" ref="82801698"/>
 																		<string key="NSColorName">controlBackgroundColor</string>
 																		<object class="NSColor" key="NSColor" id="979717948">
 																			<int key="NSColorSpace">3</int>
@@ -1113,7 +1113,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																	<object class="NSTextFieldCell" key="NSDataCell" id="302223897">
 																		<int key="NSCellFlags">337772096</int>
 																		<int key="NSCellFlags2">2048</int>
-																		<reference key="NSContents" ref="452109065"/>
+																		<reference key="NSContents" ref="462028389"/>
 																		<reference key="NSSupport" ref="174063615"/>
 																		<reference key="NSControlView" ref="457002999"/>
 																		<reference key="NSBackgroundColor" ref="521395933"/>
@@ -1133,7 +1133,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																		<reference key="NSSupport" ref="26"/>
 																		<object class="NSColor" key="NSBackgroundColor">
 																			<int key="NSColorSpace">6</int>
-																			<reference key="NSCatalogName" ref="880529420"/>
+																			<reference key="NSCatalogName" ref="82801698"/>
 																			<string key="NSColorName">headerColor</string>
 																			<reference key="NSColor" ref="583649851"/>
 																		</object>
@@ -1142,7 +1142,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																	<object class="NSTextFieldCell" key="NSDataCell" id="661630835">
 																		<int key="NSCellFlags">337772096</int>
 																		<int key="NSCellFlags2">2048</int>
-																		<reference key="NSContents" ref="452109065"/>
+																		<reference key="NSContents" ref="462028389"/>
 																		<reference key="NSSupport" ref="174063615"/>
 																		<reference key="NSControlView" ref="457002999"/>
 																		<reference key="NSBackgroundColor" ref="521395933"/>
@@ -1168,7 +1168,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																	<object class="NSTextFieldCell" key="NSDataCell" id="196839996">
 																		<int key="NSCellFlags">337772096</int>
 																		<int key="NSCellFlags2">1073743872</int>
-																		<reference key="NSContents" ref="452109065"/>
+																		<reference key="NSContents" ref="462028389"/>
 																		<reference key="NSSupport" ref="174063615"/>
 																		<reference key="NSControlView" ref="457002999"/>
 																		<reference key="NSBackgroundColor" ref="521395933"/>
@@ -1273,7 +1273,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																	<string key="NSFrame">{{0, 1}, {683, 152}}</string>
 																	<reference key="NSSuperview" ref="13389518"/>
 																	<reference key="NSWindow"/>
-																	<string key="NSClassName" id="426667344">GICommentTreeView</string>
+																	<string key="NSClassName" id="428307169">GICommentTreeView</string>
 																</object>
 															</object>
 															<string key="NSFrame">{{1, 1}, {683, 153}}</string>
@@ -1284,7 +1284,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 															<reference key="NSDocView" ref="212187249"/>
 															<object class="NSColor" key="NSBGColor">
 																<int key="NSColorSpace">6</int>
-																<reference key="NSCatalogName" ref="880529420"/>
+																<reference key="NSCatalogName" ref="82801698"/>
 																<string key="NSColorName">controlColor</string>
 																<reference key="NSColor" ref="979717948"/>
 															</object>
@@ -1351,8 +1351,8 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																						<bool key="EncodedWithXMLCoder">YES</bool>
 																						<object class="NSMutableArray" key="dict.sortedKeys">
 																							<bool key="EncodedWithXMLCoder">YES</bool>
-																							<string id="355061336">NSFont</string>
-																							<string id="1067907747">NSParagraphStyle</string>
+																							<string id="868566898">NSFont</string>
+																							<string id="849060732">NSParagraphStyle</string>
 																						</object>
 																						<object class="NSMutableArray" key="dict.values">
 																							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1469,8 +1469,8 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																						<bool key="EncodedWithXMLCoder">YES</bool>
 																						<object class="NSMutableArray" key="dict.sortedKeys">
 																							<bool key="EncodedWithXMLCoder">YES</bool>
-																							<reference ref="355061336"/>
-																							<reference ref="1067907747"/>
+																							<reference ref="868566898"/>
+																							<reference ref="849060732"/>
 																						</object>
 																						<object class="NSMutableArray" key="dict.values">
 																							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1551,13 +1551,13 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 																				<bool key="EncodedWithXMLCoder">YES</bool>
 																				<object class="NSColor">
 																					<int key="NSColorSpace">6</int>
-																					<reference key="NSCatalogName" ref="880529420"/>
+																					<reference key="NSCatalogName" ref="82801698"/>
 																					<string key="NSColorName">selectedTextBackgroundColor</string>
 																					<reference key="NSColor" ref="979717948"/>
 																				</object>
 																				<object class="NSColor">
 																					<int key="NSColorSpace">6</int>
-																					<reference key="NSCatalogName" ref="880529420"/>
+																					<reference key="NSCatalogName" ref="82801698"/>
 																					<string key="NSColorName">selectedTextColor</string>
 																					<reference key="NSColor" ref="465990353"/>
 																				</object>
@@ -2006,13 +2006,13 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label" id="760615654">contentArray: messageGroupHierarchyRootNodes</string>
+						<string key="label" id="421553040">contentArray: messageGroupHierarchyRootNodes</string>
 						<reference key="source" ref="440125465"/>
 						<reference key="destination" ref="644843659"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="440125465"/>
 							<reference key="NSDestination" ref="644843659"/>
-							<reference key="NSLabel" ref="760615654"/>
+							<reference key="NSLabel" ref="421553040"/>
 							<string key="NSBinding">contentArray</string>
 							<string key="NSKeyPath">messageGroupHierarchyRootNodes</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
@@ -2536,7 +2536,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 					<reference ref="854275185"/>
 					<string>{{305, 801}, {616, 0}}</string>
 					<reference ref="854275185"/>
-					<string id="548543261">GIOutlineViewWithThreadColoring</string>
+					<string id="55927001">GIOutlineViewWithThreadColoring</string>
 					<reference ref="854275185"/>
 					<reference ref="9"/>
 					<reference ref="854275185"/>
@@ -2566,12 +2566,12 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 					<reference ref="9"/>
 					<reference ref="854275185"/>
 					<reference ref="9"/>
-					<string id="381020767">GITextView</string>
+					<string id="401083598">GITextView</string>
 					<reference ref="854275185"/>
 					<reference ref="9"/>
 					<reference ref="854275185"/>
 					<reference ref="9"/>
-					<string id="754463679">GIMessageGroupTreeController</string>
+					<string id="614911237">GIMessageGroupTreeController</string>
 					<reference ref="854275185"/>
 					<reference ref="9"/>
 					<reference ref="854275185"/>
@@ -2627,7 +2627,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey" id="137207106">IBProjectSource</string>
+						<string key="majorKey" id="635525082">IBProjectSource</string>
 						<string key="minorKey">Custom Views/GIMatrixWithKeyboardSupport.h</string>
 					</object>
 				</object>
@@ -2653,12 +2653,12 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Custom Views/GIMainWindow.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<reference key="className" ref="483920618"/>
+					<reference key="className" ref="100406356"/>
 					<reference key="superclassName" ref="187081369"/>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2684,7 +2684,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<reference key="className" ref="548543261"/>
+					<reference key="className" ref="55927001"/>
 					<string key="superclassName">NSOutlineView</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2731,7 +2731,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Custom Views/GIOutlineViewWithThreadColoring.h</string>
 					</object>
 				</object>
@@ -2757,12 +2757,12 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Custom Views/GICommentTreeCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<reference key="className" ref="426667344"/>
+					<reference key="className" ref="428307169"/>
 					<string key="superclassName">GIMatrixWithKeyboardSupport</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2801,10 +2801,10 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string id="838238854">id</string>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
+							<string id="1004300309">id</string>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -2816,12 +2816,12 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Custom Views/GICommentTreeView.h</string>
 					</object>
 				</object>
@@ -2847,7 +2847,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Persistence/OPPersistentObject.h</string>
 					</object>
 				</object>
@@ -2873,7 +2873,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">InternetMessage/NSObject+Extensions.h</string>
 					</object>
 				</object>
@@ -2899,7 +2899,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">InternetMessage/NSApplication+OPExtensions.h</string>
 					</object>
 				</object>
@@ -2925,7 +2925,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Controllers/GIThreadOutlineViewController.h</string>
 					</object>
 				</object>
@@ -2946,12 +2946,12 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						<string key="NS.object.0">NSOutlineView</string>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Controllers/GIMessageGroupTreeController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<reference key="className" ref="754463679"/>
+					<reference key="className" ref="614911237"/>
 					<string key="superclassName">NSTreeController</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2992,12 +2992,12 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -3021,14 +3021,14 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 							<string>NSSplitView</string>
 							<string>NSTreeController</string>
 							<string>GITextView</string>
-							<reference ref="838238854"/>
+							<reference ref="1004300309"/>
 							<string>NSSplitView</string>
 							<string>GIThreadOutlineViewController</string>
 							<string>GIOutlineViewWithThreadColoring</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Controllers/GIMainWindowController.h</string>
 					</object>
 				</object>
@@ -3080,7 +3080,7 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Controllers/OPOutlineViewController.h</string>
 					</object>
 				</object>
@@ -3106,12 +3106,12 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Custom Views/GITextView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<reference key="className" ref="381020767"/>
+					<reference key="className" ref="401083598"/>
 					<string key="superclassName">NSTextView</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3185,14 +3185,14 @@ AAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSwgSW5jLiwgMjAwOAA</bytes>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="838238854"/>
-							<reference ref="838238854"/>
+							<reference ref="1004300309"/>
+							<reference ref="1004300309"/>
 							<string>NSOutlineView</string>
-							<reference ref="838238854"/>
+							<reference ref="1004300309"/>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="137207106"/>
+						<reference key="majorKey" ref="635525082"/>
 						<string key="minorKey">Controllers/OPOutlineViewController.h</string>
 					</object>
 				</object>
@@ -3223,9 +3223,9 @@ B/wIAQgCCAcIDAgNCBIIEwgYCBkIIwgkCCUIJggpCDIIMwg0CDUIUQhSCFMIVAhVCFYIVwhYCFkIWghb
 CFwIXQheCGUIZghnCGgIbwhwCHEIcgh5CHoIewh8CIMIhAiFCIYIjQiOCI8IkAiZCJoImwjTCNYI1wkP
 CUgJgQmCCYMJhAmFCYYJhwmICYkJigmLCYwJjQmOCY8JkAmRCZIJkwmUCZUJlgmXCZgJmQmaCZsJnAmd
 CZ4JnwmgCaEJogmjCaQJpQmmCacJqAmpCaoJqwmsCa0JrgmvCbAJsQmyCbMJtAm1CbYJtwm9CcMKGgpx
-CnIKcwp0CnUKdgWxCncBIgp4CnkKegp7CnwKfQp+Cn8KgAqBCoIKgwqECoUKhgqHCogKiQqKCosKjAQr
-Co0KjgqPCpAKkQqSCpMKlAqVCpYKlwqYCpkKmgJACpsKnABVCp0KngqfCqAKoQqiCqMKpAqlCqYKpwqo
-CqkKqgqrCqwKrQquCq8KsAqxCrICJAOECrMKtAq1CrYE2gq3CrgKuQq6CrsKvAq/CsIKxVUkbnVsbN8Q
+CnIKcwp0BbEKdQEiCnYKdwp4CnkKegp7CnwKfQp+Cn8EKwqACoEKggqDCoQKhQqGCocKiAqJCooKiwqM
+Co0KjgqPCpAKkQqSCpMKlAqVCpYKlwqYAkAKmQqaCpsAVQqcCp0KngqfCqAKoQqiCqMKpAqlCqYKpwqo
+CqkKqgqrCqwKrQquCq8KsAqxAiQDhAqyCrMKtAq1CrYE2gq3CrgKuQq6CrsKvAq/CsIKxVUkbnVsbN8Q
 EgANAA4ADwAQABEAEgATABQAFQAWABcAGAAZABoAGwAcAB0AHgAfACAAIQAiACMAJAAlACYAJwAoACkA
 KgArACwALQAuAC8AMFZOU1Jvb3RWJGNsYXNzXU5TT2JqZWN0c0tleXNfEA9OU0NsYXNzZXNWYWx1ZXNf
 EBlOU0FjY2Vzc2liaWxpdHlPaWRzVmFsdWVzXU5TQ29ubmVjdGlvbnNbTlNOYW1lc0tleXNbTlNGcmFt
@@ -3894,24 +3894,24 @@ b25dU2Nyb2xsIFZpZXctM1xPdXRsaW5lIFZpZXdbU2Nyb2xsIFZpZXdfEB9UYWJsZSBDb2x1bW4gKHN1
 YmplY3RBbmRBdXRob3IpXxAhVG9vbGJhciBTcGFjZSBJdGVtIChad2lzY2hlbnJhdW0pXxATVGFibGUg
 Q29sdW1uIChuYW1lKV8QGlRhYmxlIENvbHVtbiAoc3RhdHVzSW1hZ2UpXxARU2VhcmNoIEZpZWxkIENl
 bGxfEBdUb29sYmFyIEl0ZW0gKEFucGFzc2VuKVlCb3ggKEJveCnSAA4APgELCbmANqMHpQRjBcWBAbCA
-84EBPdIADgA+AQsJv4A2owezBHgF3oEBsYD0gQE+0gAOAD4BCwnFgDavEFQAlAddBQQAjAdNA0oEYwTq
-AyAAkQdQB1MHZARIB1YFagLeBWAHZQdaAJIEfQMlBKgErgdYAu4AHwBXBWQHVQdiA0EFxQCLB6UAkAeA
-B04AjwdoB1QHYwdRB2oDpQL9B2cATQdeB1cHYQSCB1sHXwMfB2kB3gdgAEEFtQdSB1kERARTBXkAjgWu
-Au8FIgjIBWEDXwRDBKkAkwdPB2YDlAdcBKYB9wCNAvyAlYEBx4EBF4AkgQGegNeA84EBEICzgFyBAaeB
-Aa2BAdeBASKBAb2BATSAp4EBKYEB6YEBwoBtgPeAsYEBEYEBAoEBwICpgAKAC4EBNoEBvIEB0IDbgQE9
-gBmBAbCAVYEBpIEBoYBKgQH1gQGvgQHSgQGqgQH9gMWA5oEB8YCkgQHJgQG/gQHOgQEMgQHDgQHLgK+B
-AfmAcIEBzIAHgQGMgQGsgQHBgQEngQEggQEtgDyBAY6A7YEBHIECAYEBOYC3gO+BARiAjoEBo4EB7YC9
-gQHFgP6AcoAqgKvSAA4APgELChyANq8QVAodCh4KHwogCiEKIgojCiQKJQomCicKKAopCioKKwosCi0K
+84EBPdIADgA+AQsJv4A2owezBHgF3oEBsYD0gQE+0gAOAD4BCwnFgDavEFQAlAUEAIwDSgRjBOoDIACR
+B04HZARIBWoHYQLeBWAHZQdSB1UAkgdiBH0HWwMlBKgErgLuB1wAHwBXBWQHXgNBBcUAiwelAJAHgAdo
+AI8HWAdjB1EHagOlAv0HTwdTAE0HUAdnB10EggMfB2kB3gdgB1YHWQBBBbUHVwREBFMFeQCOBa4C7wUi
+B00IyAVhA18EQwSpB1oHXwCTB2YDlASmAfcAjQdUAvyAlYEBF4AkgNeA84EBEICzgFyBAaGBAdeBASKB
+ATSBAc6Ap4EBKYEB6YEBrIEBvIBtgQHQgPeBAcOAsYEBEYEBAoCpgQHFgAKAC4EBNoEByYDbgQE9gBmB
+AbCAVYEBpIEB9YBKgQHAgQHSgQGqgQH9gMWA5oEBo4EBrYCkgQGngQHxgQHHgQEMgK+BAfmAcIEBzIEB
+vYEBwYAHgQGMgQG/gQEngQEggQEtgDyBAY6A7YEBHIEBnoECAYEBOYC3gO+BARiBAcKBAcuAjoEB7YC9
+gP6AcoAqgQGvgKvSAA4APgELChyANq8QVAodCh4KHwogCiEKIgojCiQKJQomCicKKAopCioKKwosCi0K
 LgovCjAKMQoyCjMKNAo1CjYKNwo4CjkKOgo7CjwKPQo+Cj8KQApBCkIKQwpECkUKRgpHCkgKSQpKCksK
-TApNCk4KTwpQClEKUgpTClQKVQpWClcCYgpZCloKWwpcCl0KXgpfCmAKYQpiCmMKZAplCmYKZwpoCmkK
+TApNCk4KTwpQClEKUgpTClQKVQpWAmIKWApZCloKWwpcCl0KXgpfCmAKYQpiCmMKZAplCmYKZwpoCmkK
 agprCmwKbQpuCm8KcIECQIECQYECQoECQ4ECRIECRYECRoECR4ECSIECSYECSoECS4ECTIECTYECToEC
 T4ECUIECUYECUoECU4ECVIECVYECVoECV4ECWIECWYECWoECW4ECXIECXYECXoECX4ECYIECYYECYoEC
 Y4ECZIECZYECZoECZ4ECaIECaYECaoECa4ECbIECbYECboECb4ECcIECcYECcoECc4ECdIECdYECdoEC
-d4ECeIECeYECeoCIgQJ7gQJ8gQJ9gQJ+gQJ/gQKAgQKBgQKCgQKDgQKEgQKFgQKGgQKHgQKIgQKJgQKK
-gQKLgQKMgQKNgQKOgQKPgQKQgQKRgQKSELMRAQkQiBDXELAQbBAXELYRARoRAQoRARkQbxB2EIwQkRCL
-EK0Q9hEBGBBwEHoQhxDkEQECEHgRARwQshCNEQEFEG0QOBEBFRA8ELgRAQgQnBC0EEQQWhBGELEQaBAN
-EQEPEQEEEK8RAQcQFBEBBhDyEHkQZxEBFhCZEHEQrhEBERCPEG4QjhC1EHIQkBAWE//////////9EDUQ
-FRC3EQELEQEbEPwQ4hEBFxC5EHfSAA4APgEHCr6AN6DSAA4APgELCsGANqDSAA4APgELCsSANqDSADcA
+d4ECeIECeYCIgQJ6gQJ7gQJ8gQJ9gQJ+gQJ/gQKAgQKBgQKCgQKDgQKEgQKFgQKGgQKHgQKIgQKJgQKK
+gQKLgQKMgQKNgQKOgQKPgQKQgQKRgQKSELMQiBDXEGwQFxC2EJwRARkQbxCMEQEHEJEQixCtEK4RARgR
+AQUQcBEBBhB6EIcQ5BB4EPwRARwQshCNEQEEEG0QOBEBFRA8ELgRAQgQRBC0EQECEEYQsRBoEA0RAQsR
+AQoRARoRAQ8RAQkQFBB5EGcRARYQmRB2EQEREHEQrxCPEG4QjhC1EHIQkBAWELAT//////////0QNRAV
+EPYQ8hC3EQEbEOIRARcQuRBaEHfSAA4APgEHCr6AN6DSAA4APgELCsGANqDSAA4APgELCsSANqDSADcA
 OArGCseiCscAO15OU0lCT2JqZWN0RGF0YQAIABkAIgAnADEAOgA/AEQAUgBUAGYFmAWeBekF8AX3BgUG
 FwYzBkEGTQZZBmcGcgaABpwGqga9Bs8G6QbzBwAHAgcFBwgHCwcOBxEHFAcWBxkHHAcfByIHJAcmBykH
 LAcvBzIHOwdHB0kHSwdkB20HdgeBB4YHlQeeB7EHugfFB8gHywfNB/oIBwgUCCoIOAhCCFAIXQhvCIMI
@@ -3995,15 +3995,15 @@ YZtkm2ebapttm2+bcpt0m3ebept9m3+bgZuEm4abiJuKm4ybjpuQm5mbm5wKnA2cEJwTnBacGZwcnB+c
 IpwlnCicK5wunDGcNJw3nDqcPZxAnEOcRpxJnEycT5xSnFWcWJxbnF6cYZxknGecapxtnHCcc5x2nHmc
 fJx/nIKchZyInIucjpyRnJScl5yanJ2coJyjnKacqZysnMSc4p0InUedYJ12nYSdpJ26ndCd253pngqe
 Hp4qnkqe858Anw2fFZ8tn0WfaJ+Jn6Sf25/loACgIKAsoDmgXaBkoHGggKCWoKOgt6DLoPGhCaEWoTah
-QqFQoV2haaGLoa+hxaHiofaiEKIaoiOiJaIsoi+iMaI0oj2iP6JGokmiS6JOoleiWaMEowajCaMMow6j
-EaMToxWjGKMaoxyjH6MioyWjKKMroy6jMKMzozajOaM7oz2jP6NCo0WjSKNKo0yjTqNRo1SjV6NZo1yj
-XqNho2OjZqNpo2ujbqNxo3Sjd6N6o3yjfqOBo4OjhqOJo4yjj6OSo5Wjl6Oao5yjn6Oho6Sjp6Oqo62j
-sKOzo7WjuKO6o72jwKPDo8Wjx6PKo8yjz6PSo9Sj16PZo9uj3aPfo+ij6qSVpJikm6SepKGkpKSnpKqk
+QqFQoV2haaGLoa+hxaHiofaiEKIaoiOiJaIsoi+iMaI0oj2iP6JGokmiS6JOoleiWaMEowajCaMLow2j
+D6MSoxSjFqMZoxyjH6MioyWjJ6Mqoy2jMKMzozWjOKM6oz2jP6NCo0WjR6NKo0yjTqNRo1SjVqNZo1uj
+XqNgo2OjZqNoo2ujbqNxo3SjdqN4o3ujfqOAo4OjhqOJo4yjjqORo5OjlqOZo5yjnqOho6Sjp6Oqo62j
+r6Oyo7Sjt6O6o72jwKPCo8Sjx6PKo82jz6PSo9Sj1qPYo9qj3aPfo+ij6qSVpJikm6SepKGkpKSnpKqk
 raSwpLOktqS5pLykv6TCpMWkyKTLpM6k0aTUpNek2qTdpOCk46TmpOmk7KTvpPKk9aT4pPuk/qUBpQSl
-B6UKpQ2lEKUTpRalGaUcpR+lIqUlpSilK6UupTGlNKU3pTqlPaVApUOlRqVIpUulTqVRpVSlV6VapV2l
-YKVjpWalaaVspW+lcqV1pXile6V+pYGlhKWHpYqljaWQpZKllaWXpZmlm6WdpZ+loaWkpaelqqWspa6l
-sKWypbSltqW4pbulvaW/pcGlw6XGpcily6XNpc+l0qXUpdal2aXbpd2l4KXipeSl5qXopeql7KXupfCl
-86X2pfil+6X9pgCmAqYEpgamCaYLpg2mD6YSphSmFqYYphqmHKYepiCmKaYrpi2mL6YypjWmN6Y5pjym
+B6UKpQ2lEKUTpRalGaUcpR+lIqUlpSilK6UupTGlNKU3pTqlPaVApUOlRaVIpUulTqVRpVSlV6VapV2l
+YKVjpWalaaVspW+lcqV1pXile6V+pYGlhKWHpYqljaWQpZKllKWWpZilmqWcpZ6loaWjpaWlqKWqpayl
+rqWwpbOltqW4pbulvaW/pcGlw6XFpcilyqXMpc+l0aXTpdal2KXapd2l36XhpeSl5qXopeql7KXvpfKl
+9aX4pful/aX/pgGmBKYGpgimC6YNpg+mEaYTphWmF6YZphumHaYfpiimKqYspi6mMKYypjWmN6Y6pjym
 PqZApkmmS6ZMplWmV6ZYpmGmY6Zkpm2mcgAAAAAAAAICAAAAAAAACsgAAAAAAAAAAAAAAAAAAKaBA</bytes>
 		</object>
 	</data>

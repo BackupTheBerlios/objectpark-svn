@@ -22,7 +22,7 @@
 // Actions:
 
 - (IBAction) makeDefaultApp: (id) sender;
-- (IBAction) importMboxFile: (id) sender;
+- (IBAction) openFile: (id) sender;
 
 - (void) runConsistentcyChecks: (id) sender;
 
