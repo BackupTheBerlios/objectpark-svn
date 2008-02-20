@@ -479,7 +479,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (NSUInteger) hash
 {
-	return LIDFromOID([self oid]);// + (CIDFromOID(oid)<<24);
+	return (NSUInteger)(LIDFromOID([self oid]) % NSUIntegerMax);
 }
 
 
@@ -679,16 +679,16 @@ static Class OPPersistentObjectFaultClass = Nil;
     return ok ? [self valueForKey: key] : nil;
 }
 
-- (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
-{
-//	if ([[self "class"] automaticallyNotifiesObserversForKey:(NSString *)key]) {
-//		
-//	}
-//])
-	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
-	BOOL ok = [self resolveFault];
-    if (ok) [self addObserver: observer forKeyPath: keyPath options: options context: context];
-}
+//- (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
+//{
+////	if ([[self "class"] automaticallyNotifiesObserversForKey:(NSString *)key]) {
+////		
+////	}
+////])
+//	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
+//	BOOL ok = [self resolveFault];
+//    if (ok) [self addObserver: observer forKeyPath: keyPath options: options context: context];
+//}
 
 //- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
 //{
