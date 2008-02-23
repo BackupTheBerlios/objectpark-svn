@@ -79,6 +79,30 @@
 	return [selected count] == 1 ? [selected objectAtIndex:0] : nil;
 }
 
+- (NSIndexPath*) findObject: (id) object inTreeArray: (NSArray*) array indexPath: (NSIndexPath*) path
+{
+	NSUInteger index = 0;
+	for (id element in array) {
+		NSIndexPath* newIndexPath = path ? [path indexPathByAddingIndex: index] : [NSIndexPath indexPathWithIndex: index];
+		if (element == object) return newIndexPath;
+		NSArray* kids = [element children];
+		if (newIndexPath = [self findObject: object inTreeArray: kids indexPath: newIndexPath]) {
+			return newIndexPath;
+		}
+		path = newIndexPath;
+		index+=1;
+	}
+	return nil;
+}
+
+- (void) setSelectedObject: (id) object
+{
+	if (object) {
+		NSIndexPath* indexPath = [self findObject: object inTreeArray: [self arrangedObjects] indexPath: nil];
+		[self setSelectionIndexPath: indexPath];
+	}
+}
+
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {	
 	if ([[item representedObject] isKindOfClass:[GIMessageGroup class]]) 

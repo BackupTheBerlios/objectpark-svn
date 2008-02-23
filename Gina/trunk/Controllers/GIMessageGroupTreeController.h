@@ -14,4 +14,7 @@
     IBOutlet NSOutlineView *outlineView;
 }
 
+- (void) setSelectedObject: (id) object;
+
+
 @end

@@ -14,10 +14,11 @@
 @class GIMessageGroup;
 @class GITextView;
 @class GIThreadOutlineViewController;
+@class GIMessageGroupTreeController;
 
 @interface GIMainWindowController : NSWindowController 
 {
-	IBOutlet NSTreeController *messageGroupTreeController;
+	IBOutlet GIMessageGroupTreeController *messageGroupTreeController;
 	IBOutlet GIThreadOutlineViewController *threadsController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
@@ -44,6 +45,8 @@
 - (IBAction)markAsRead:(id)sender;
 - (IBAction)markAsUnread:(id)sender;
 - (IBAction)toggleRead:(id)sender;
+
+- (void) showMessage: (GIMessage*) message;
 
 - (void)setThreadsOnlyMode;
 - (BOOL)isShowingThreadsOnly;

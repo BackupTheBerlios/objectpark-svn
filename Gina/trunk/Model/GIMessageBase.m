@@ -16,6 +16,7 @@
 #import "NSData+MessageUtils.h"
 #import "NSApplication+OPExtensions.h"
 #import "OPInternetMessage.h"
+#import "NSString+Extensions.h"
 
 
 @implementation OPPersistentObjectContext (GIMessageBase)
@@ -306,6 +307,37 @@ NSString* MboxImportJobName = @"mbox import";
 		}
 	}
 }
+
+
+- (NSArray*) importGmlFiles: gmls moveOnSuccess: (BOOL) move
+{
+	NSMutableArray* result = [NSMutableArray array];
+	CID cidMessage = [self cidForClass: [GIMessage class]];
+	for (NSString* gmlPath in gmls) {
+		NSString* gmlName = [gmlPath lastPathComponent];
+		// gmlName should have the format "Msg%014x.gml":
+		if (! [gmlName hasPrefix: @"Msg"]) continue;
+		NSString* oidString = [gmlName substringWithRange: NSMakeRange(3,14)];
+		OID oid = MakeOID(cidMessage, [oidString intValueForHex]);
+		
+		GIMessage* message = [self objectForOID: oid];
+		if (message) {
+			[result addObject: message];
+			continue;
+		}
+		
+		NSData* transferData = [NSData dataWithContentsOfFile: gmlPath];
+		OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+		GIMessage *persistentMessage = [GIMessage messageWithInternetMessage: iMessage];
+		[iMessage release];
+		
+		if (persistentMessage) {
+			[self addMessage: persistentMessage];
+		}
+	}
+	return result;
+}
+
 
 
 - (void) moveThreadsWithOids: (NSArray*) threadOids 

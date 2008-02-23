@@ -101,8 +101,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	
 	[self ensureMainWindowIsPresent];
 	
-	if (firstTime)
-	{
+	if (firstTime) {
 		[self askForBecomingDefaultMailApplication];
 		firstTime = NO;
 	}
@@ -139,6 +138,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 }
 
 
+
+
 - (void) application: (NSApplication*) sender openFiles: (NSArray*) filePaths
 {
 	filePaths = [self filePathsSortedByCreationDate: filePaths];
@@ -147,8 +148,11 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];	
-	if (gmls.count)
-		[context importTransferDataFromFilePath: gmls moveOnSuccess: NO];	
+	if (gmls.count) {
+		NSArray* messages = [context importGmlFiles: gmls moveOnSuccess: NO];	
+		GIMessage* lastMessage = [messages lastObject];
+		[defaultEmailAppWindow.windowController showMessage: lastMessage];
+	}
 	if (mboxPaths.count)
 		[context importMboxFiles: mboxPaths moveOnSuccess: NO];
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];

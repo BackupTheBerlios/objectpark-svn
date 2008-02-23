@@ -16,8 +16,9 @@
 - (void)addMessage: (GIMessage*) aMessage;
 - (NSMutableDictionary*) messagesByMessageId;
 - (GIMessage*) messageForMessageId: (NSString*) messageId;
-- (void) importMboxFiles: (NSArray*) paths
-		   moveOnSuccess: (BOOL) doMove;
+
+- (void) importMboxFiles: (NSArray*) paths moveOnSuccess: (BOOL) doMove;
+- (NSArray*) importGmlFiles: gmls moveOnSuccess: (BOOL) move;
 
 - (void) moveThreadsWithOids: (NSArray*) threadOids 
 				   fromGroup: (GIMessageGroup*) sourceGroup 

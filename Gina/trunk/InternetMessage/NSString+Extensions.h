@@ -57,7 +57,7 @@
 
 /*" Conversions "*/
 - (BOOL) boolValue;
-- (unsigned int) intValueForHex;
+- (unsigned long long) intValueForHex; 
 - (long long) longLongValue;
 
 /*" Using MIME encoding names "*/

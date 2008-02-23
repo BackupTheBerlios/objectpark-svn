@@ -259,10 +259,11 @@ static NSCharacterSet *iwsSet = nil;
 }
 
 /*" Assumes the string contains an integer written in hexadecimal notation and returns its value. Uses #scanHexInt in #NSScanner. "*/
-- (unsigned int)intValueForHex {
-    unsigned int value;
+- (unsigned long long) intValueForHex 
+{
+    unsigned long long value;
 
-    if([[NSScanner scannerWithString:self] scanHexInt:&value] == NO)
+    if([[NSScanner scannerWithString:self] scanHexLongLong: &value] == NO)
         return 0;
     
     return value;
@@ -271,7 +272,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns yes if the string contains no text characters. Note that its length can still be non-zero. "*/
 - (BOOL)isEmpty {
-    return [self isEqualToString: @""];
+    return [self lengh] == 0;
 }
 
 

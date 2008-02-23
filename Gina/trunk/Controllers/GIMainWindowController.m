@@ -8,6 +8,7 @@
 
 #import "GIMainWindowController.h"
 #import "GIThreadOutlineViewController.h"
+#import "GIMessageGroupTreeController.h"
 
 #import "GIUserDefaultsKeys.h"
 
@@ -416,6 +417,15 @@ static BOOL isShowingThreadsOnly = NO;
 	isShowingThreadsOnly = [self isShowingThreadsOnly];
 }
 
+- (void) showMessage: (GIMessage*) message
+{
+	GIMessageGroup* group = message.thread.messageGroups.lastObject;
+	if (group) {
+		[messageGroupTreeController setSelectedObject: group];
+	}
+}
+
+
 @end
 
 @implementation GIMainWindowController (OutlineViewDelegateAndActions)
@@ -530,7 +540,8 @@ static BOOL isShowingThreadsOnly = NO;
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}	
 }
-	
+
+
 @end
 
 @implementation GIMainWindowController (KeyboardShortcuts)

@@ -411,7 +411,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 - (void) addObserver:(NSObject*) observer toObjectsAtIndexes: (NSIndexSet*) indexes forKeyPath: (NSString*) keyPath options:(NSKeyValueObservingOptions) options context: (void*) context
 {
 	NSLog(@"Warning: addObserver:toObjectsAtIndexes... called on %@", self);
-	[self addObserver: observer toObjectsAtIndexes: indexes forKeyPath: keyPath options: options context: context];	
+	[super addObserver: observer toObjectsAtIndexes: indexes forKeyPath: keyPath options: options context: context];	
 }
 - (void) removeObserver: (NSObject*) observer fromObjectsAtIndexes: (NSIndexSet*) indexes forKeyPath: (NSString*) keyPath
 {
