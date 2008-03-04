@@ -8,7 +8,7 @@
 
 #import "GIMainWindowController.h"
 #import "GIThreadOutlineViewController.h"
-#import "GIMessageGroupTreeController.h"
+//#import "GIMessageGroupTreeController.h"
 
 #import "GIUserDefaultsKeys.h"
 
@@ -37,7 +37,7 @@
 @implementation GIMainWindowController
 
 @synthesize selectedThreads;
-@synthesize messageGroupTreeController;
+@synthesize messageGroupsController;
 
 + (NSSet *)keyPathsForValuesAffectingMessageForDisplay
 {
@@ -433,7 +433,7 @@ static BOOL isShowingThreadsOnly = NO;
 {
 	GIMessageGroup* group = message.thread.messageGroups.lastObject;
 	if (group) {
-		[messageGroupTreeController setSelectedObject: group];
+		[messageGroupsController setSelectedObject: group];
 	}
 }
 

@@ -6,7 +6,7 @@
 //  Copyright 2007 Objectpark Group. All rights reserved.
 //
 
-#import "GIMessageGroupTreeController.h"
+//#import "GIMessageGroupTreeController.h"
 #import "GIMessageGroup.h"
 #import "GIMessageGroupCell.h"
 

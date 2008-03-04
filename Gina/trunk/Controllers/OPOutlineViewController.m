@@ -354,23 +354,32 @@
 	return result;
 }
 
-- (void)setSelectedObjects:(NSArray *)anArray
+- (void) setSelectedObjects: (NSArray*) anArray
 {	
 	[outlineView deselectAll:self];
 	
 	NSMutableIndexSet *indexesToSelect = [NSMutableIndexSet indexSet];
 
-	for (id itemToSelect in anArray)
-	{
+	for (id itemToSelect in anArray) {
 		[indexesToSelect addIndex:[outlineView rowForItem:itemToSelect]];
 	}
 	
 	[outlineView selectRowIndexes:indexesToSelect byExtendingSelection:NO];
 
-	if ([anArray count])
-	{
+	if ([anArray count]) {
 		[outlineView scrollRowToVisible:[outlineView rowForItem:[anArray lastObject]]];
 	}
+}
+
+- (void) setSelectedObject: (id) object
+{
+	self.selectedObjects = [NSArray arrayWithObject: object];
+}
+
+- (id) selectedObject
+{
+	NSAssert([outlineView allowsMultipleSelection] == NO, @"selectedObject only available for single selection outline views.");
+	return self.selectedObjects.lastObject;
 }
 
 - (void) dealloc 

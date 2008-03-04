@@ -156,7 +156,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	if (mboxPaths.count) {
 		NSArray* importGroups = [context importMboxFiles: mboxPaths moveOnSuccess: NO];
 		
-		[[defaultEmailAppWindow.windowController messageGroupTreeController] setSelectedObject: importGroups.lastObject];
+		[[defaultEmailAppWindow.windowController messageGroupsController] setSelectedObjects: importGroups];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
 }

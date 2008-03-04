@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "GICommentTreeView.h"
 #import "GIOutlineViewWithThreadColoring.h"
-#import "GIMessageGroupTreeController.h"
+//#import "GIMessageGroupTreeController.h"
 #import "GIMainWindow.h"
 
 @class GIMessageGroup;
@@ -19,7 +19,7 @@
 
 @interface GIMainWindowController : NSWindowController 
 {
-	IBOutlet GIMessageGroupTreeController *messageGroupTreeController;
+	//IBOutlet GIMessageGroupTreeController *messageGroupTreeController;
 	IBOutlet OPOutlineViewController* messageGroupsController;
 	IBOutlet GIThreadOutlineViewController *threadsController;
 	IBOutlet GICommentTreeView *commentTreeView;
@@ -37,7 +37,7 @@
 	NSString *observedKeyPathForSelectedThreads;
 }
 
-@property (readonly) GIMessageGroupTreeController* messageGroupTreeController;
+@property (readonly) OPOutlineViewController* messageGroupsController;
 @property (retain) NSArray *selectedThreads;
 
 - (IBAction) commentTreeSelectionChanged: (id) sender;

@@ -15,17 +15,17 @@
 
 @interface OPOutlineViewController : NSController 
 {
-	IBOutlet NSOutlineView *outlineView;
-	NSMutableSet *knownItems; // used to keep track of the observed items and to retain them
-	NSString *childKey;
-	NSString *childCountKey;
+	IBOutlet NSOutlineView* outlineView;
+	NSMutableSet* knownItems; // used to keep track of the observed items and to retain them
+	NSString* childKey;
+	NSString* childCountKey;
 	id rootItem;
 	
 	@private
 	id observedObjectForRootItem;
-	NSString *observedKeyPathForRootItem;
+	NSString* observedKeyPathForRootItem;
 	id observedObjectForSelectedObjects;
-	NSString *observedKeyPathForSelectedObjects;
+	NSString* observedKeyPathForSelectedObjects;
 	
 	//BOOL cachesItems;
 }
@@ -36,10 +36,13 @@
 @property (retain) id rootItem;
 @property (retain, readonly) NSSet *knownItems;
 
-- (NSArray *)selectedObjects;
-- (void)setSelectedObjects:(NSArray *)anArray;
+- (NSArray*) selectedObjects;
+- (void) setSelectedObjects: (NSArray*) anArray;
 
-- (void)reloadData;
+- (void) setSelectedObject: (id) object;
+- (id) selectedObject;
+
+- (void) reloadData;
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item;
 
