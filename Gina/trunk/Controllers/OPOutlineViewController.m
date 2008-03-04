@@ -15,6 +15,17 @@
 
 // -- binding stuff --
 
++ (NSSet*) keyPathsForValuesAffectingSelectedObject
+{
+	return [NSSet setWithObjects: @"selectedObjects", nil];
+}
+
++ (NSSet*) keyPathsForValuesAffectingSelectedObjects
+{
+	return [NSSet setWithObjects: @"selectedObject", nil];
+}
+
+
 + (void)initialize
 {
     [self exposeBinding: @"rootItem"];	
@@ -41,7 +52,10 @@
     }
 }
 
-- (NSString *)observedKeyPathForRootItem { return observedKeyPathForRootItem; }
+- (NSString *)observedKeyPathForRootItem 
+{ 
+	return observedKeyPathForRootItem; 
+}
 
 - (void)setObservedKeyPathForRootItem:(NSString *)anObservedKeyPathForRootItem
 {
@@ -52,7 +66,10 @@
     }
 }
 
-- (id)observedObjectForSelectedObjects { return observedObjectForSelectedObjects; }
+- (id) observedObjectForSelectedObjects 
+{ 
+	return observedObjectForSelectedObjects; 
+}
 
 - (void)setObservedObjectForSelectedObjects:(id)anObservedObjectForSelectedObjects
 {
