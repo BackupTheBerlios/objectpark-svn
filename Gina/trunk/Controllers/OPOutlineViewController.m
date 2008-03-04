@@ -59,8 +59,7 @@
 
 - (void)setObservedKeyPathForRootItem:(NSString *)anObservedKeyPathForRootItem
 {
-    if (observedKeyPathForRootItem != anObservedKeyPathForRootItem) 
-	{
+    if (observedKeyPathForRootItem != anObservedKeyPathForRootItem) {
         [observedKeyPathForRootItem release];
         observedKeyPathForRootItem = [anObservedKeyPathForRootItem copy];
     }
@@ -73,8 +72,7 @@
 
 - (void)setObservedObjectForSelectedObjects:(id)anObservedObjectForSelectedObjects
 {
-    if (observedObjectForSelectedObjects != anObservedObjectForSelectedObjects) 
-	{
+    if (observedObjectForSelectedObjects != anObservedObjectForSelectedObjects) {
         [observedObjectForSelectedObjects release];
         observedObjectForSelectedObjects = [anObservedObjectForSelectedObjects retain];
     }
@@ -107,23 +105,36 @@
 		// register what controller and what keypath are 
 		// associated with this binding
 		[self setObservedObjectForRootItem:observableController];
-		[self setObservedKeyPathForRootItem:keyPath];	
-		
+		[self setObservedKeyPathForRootItem:keyPath];
+		[self setRootItem: [observableController valueForKeyPath: keyPath]];
+
 		[self reloadData];
-    }
-	else if ([bindingName isEqualToString:@"selectedObjects"])
-    {
+		
+    } else if ([bindingName isEqualToString: @"selectedObjects"]) {
 		// observe the controller for changes
-		[observableController addObserver:self
-							   forKeyPath:keyPath 
-								  options:0
-								  context:nil];
+		[observableController addObserver: self
+							   forKeyPath: keyPath 
+								  options: 0
+								  context: nil];
 		
 		// register what controller and what keypath are 
 		// associated with this binding
 		[self setObservedObjectForSelectedObjects:observableController];
 		[self setObservedKeyPathForSelectedObjects:keyPath];	
+		
+    } else if ([bindingName isEqualToString: @"selectedObject"]) {
+		// observe the controller for changes
+		[observableController addObserver: self
+							   forKeyPath: @"selectedObjects" 
+								  options: 0
+								  context: nil];
+		
+		// register what controller and what keypath are 
+		// associated with this binding
+		[self setObservedObjectForSelectedObjects: observableController];
+		[self setObservedKeyPathForSelectedObjects: keyPath];	
     }
+	
 	
 	[super bind:bindingName
 	   toObject:observableController
@@ -190,6 +201,13 @@
 	[self resetKnownItems];
 	[outlineView reloadData];
 }
+
+- (void)addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context
+{
+	[super addObserver: observer forKeyPath: keyPath options: options context: context];
+	NSLog(@"%@ is now observing %@.%@", observer, self, keyPath);
+}
+
 
 - (id) rootItem
 {
@@ -352,6 +370,8 @@
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
+	[self willChangeValueForKey:@"selectedObject"];
+	[self didChangeValueForKey:@"selectedObject"];
 	[self willChangeValueForKey:@"selectedObjects"];
 	[self didChangeValueForKey:@"selectedObjects"];
 }
