@@ -98,7 +98,8 @@
 - (void) setSelectedObject: (id) object
 {
 	if (object) {
-		NSIndexPath* indexPath = [self findObject: object inTreeArray: [self arrangedObjects] indexPath: nil];
+		id root = [self arrangedObjects];
+		NSIndexPath* indexPath = [self findObject: object inTreeArray: [root childNodes] indexPath: nil];
 		[self setSelectionIndexPath: indexPath];
 	}
 }

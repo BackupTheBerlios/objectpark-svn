@@ -37,6 +37,7 @@
 @implementation GIMainWindowController
 
 @synthesize selectedThreads;
+@synthesize messageGroupTreeController;
 
 + (NSSet *)keyPathsForValuesAffectingMessageForDisplay
 {
@@ -125,9 +126,9 @@
 	
 	threadsController.childKey = @"threadChildren";
 	threadsController.childCountKey = @"threadChildrenCount";
-	[threadsController bind:@"rootItem" toObject:messageGroupTreeController withKeyPath:@"selection.self" options:options];
+	[threadsController bind:@"rootItem" toObject:messageGroupsController withKeyPath:@"selection.self" options:options];
 	
-	[self bind:@"selectedThreads" toObject:threadsController withKeyPath:@"selectedObjects" options:options];
+	if (threadsController) [self bind:@"selectedThreads" toObject:threadsController withKeyPath:@"selectedObjects" options:options];
 		
 	[commentTreeView bind:@"selectedMessageOrThread" toObject:self withKeyPath:@"selectedMessageOrThread" options:options];
 	[commentTreeView setTarget:self];
@@ -140,7 +141,13 @@
 	[self setThreadsOnlyMode];
 	
 	// Configure group view:
-//[groupsOutlineView
+
+	messageGroupsController.childKey = @"children";
+	//messageGroupsController.childCountKey = @"threadChildrenCount";
+	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
+	
+	
+	
 	
 	[self.window makeKeyAndOrderFront:self];
 }
@@ -273,6 +280,11 @@
 - (NSArray *)messageGroupHierarchyRootNodes
 {
 	return [[GIHierarchyNode messageGroupHierarchyRootNode] children];
+}
+
+- (NSArray*) messageGroupHierarchyRootNode
+{
+	return [GIHierarchyNode messageGroupHierarchyRootNode];
 }
 
 - (NSFont *)messageGroupListFont

@@ -367,7 +367,7 @@
 		error = [arrayCursor moveToNext]; cursorPosition++;
 		i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
 		NSAssert1(keyLength > 0, @"invalid (empty key) btree entry (error %u).", error);
-		if (error) NSLog(@"Moved cursor forward  to %u, error? %u", cursorPosition, error);
+		if (error) NSLog(@"Moved cursor forward to %u, error? %u", cursorPosition, error);
 	}
 	while (cursorPosition>index) {
 		error = [arrayCursor moveToPrevious]; cursorPosition--;
@@ -378,7 +378,7 @@
 	NSAssert1(cursorPosition == index, @"Moving the cursor to position %u failed.", index);
 }
 
-- (OID)oidAtIndex:(NSUInteger)index
+- (OID) oidAtIndex: (NSUInteger) index
 {
 	//NSLog(@"objectAtIndex: %u", index);
 	

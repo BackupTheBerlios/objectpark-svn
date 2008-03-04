@@ -153,8 +153,11 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		GIMessage* lastMessage = [messages lastObject];
 		[defaultEmailAppWindow.windowController showMessage: lastMessage];
 	}
-	if (mboxPaths.count)
-		[context importMboxFiles: mboxPaths moveOnSuccess: NO];
+	if (mboxPaths.count) {
+		NSArray* importGroups = [context importMboxFiles: mboxPaths moveOnSuccess: NO];
+		
+		[[defaultEmailAppWindow.windowController messageGroupTreeController] setSelectedObject: importGroups.lastObject];
+	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
 }
 

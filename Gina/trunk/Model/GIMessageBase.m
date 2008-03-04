@@ -99,7 +99,7 @@
 
 NSString* MboxImportJobName = @"mbox import";
 
-- (void) importMessagesFromMboxFileWithArguments: (NSDictionary*) arguments
+- (GIMessageGroup*) importMessagesFromMboxFileWithArguments: (NSDictionary*) arguments
 /*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
  
  Should run as job (#{see OPJobs})."*/
@@ -260,7 +260,7 @@ NSString* MboxImportJobName = @"mbox import";
 	[pool release];
 	
     if ([operation isCancelled])
-        return;
+        return nil;
 	
     // move imported mbox to imported boxes:
     NSString* importedMboxesDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"imported mboxes"];
@@ -283,12 +283,14 @@ NSString* MboxImportJobName = @"mbox import";
             NSAssert2([[NSFileManager defaultManager] movePath:mboxFilePath toPath:destinationPath handler: NULL], @"Could not move imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
         }
     }
+	return importGroup;
 }
 
-- (void) importMboxFiles: (NSArray*) paths
+- (NSArray*) importMboxFiles: (NSArray*) paths
 		   moveOnSuccess: (BOOL) doMove
-/*" Schedules jobs for paths given. If doMove is YES, the file is moved to the imported folder - copied otherwise. "*/
+/*" Schedules jobs for paths given. If doMove is YES, the file is moved to the imported folder - copied otherwise. Returns an array of MessageBox objects created. "*/
 {
+	NSMutableArray* groups = [NSMutableArray array];
 	if ([paths count]) {
 		//[self showActivityPanel: self];
 		
@@ -302,10 +304,12 @@ NSString* MboxImportJobName = @"mbox import";
 			//[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
 			if (!doMove) [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
 			
-			[self importMessagesFromMboxFileWithArguments: jobArguments]; // synchronious for now
+			id group = [self importMessagesFromMboxFileWithArguments: jobArguments]; // synchronious for now
 			//[OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
+			[groups addObject: group];
 		}
 	}
+	return groups;
 }
 
 

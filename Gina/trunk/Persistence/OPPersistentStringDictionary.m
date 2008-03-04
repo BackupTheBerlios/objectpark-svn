@@ -181,6 +181,7 @@
 		// Check, of the entry is already present by also comparing the value:
 		OID oidFound = [[self setterCursor] currentEntryIntValue];
 		if (oidFound != objectOID) {
+			// replace:
 			changeCount++;
 			[[self setterCursor] deleteCurrentEntry];
 			[[self setterCursor] insertIntValue: objectOID forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
@@ -194,8 +195,9 @@
 		changeCount++;
 		
 		[self willChangeValueForKey: @"count"];
-		[[self setterCursor] insertValueBytes: &objectOID ofLength: sizeof(OID)
-								  forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
+
+		[[self setterCursor] insertIntValue: objectOID forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
+
 		if (count!=NSNotFound) count++;
 		[self didChangeValueForKey: @"count"];
 	} 

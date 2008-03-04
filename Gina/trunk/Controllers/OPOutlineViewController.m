@@ -275,13 +275,13 @@
 	if (! item) item = [self rootItem];
 	id result = [[item valueForKeyPath: [self childKey]] objectAtIndex: index];
 	
-#warning hack to circumvent bug. Remove later:
-	static NSDictionary* hackDict = nil; 
-	
-	if (!result) {
-		if (! hackDict) hackDict = [[NSDictionary alloc] init];
-		result = hackDict;
-	}
+//#warning hack to circumvent bug. Remove later:
+//	static NSDictionary* hackDict = nil; 
+//	
+//	if (!result) {
+//		if (! hackDict) hackDict = [[NSDictionary alloc] init];
+//		result = hackDict;
+//	}
 	
 	if (! [knownItems containsObject: result]) {
 		[self addToKnownItems: result];
@@ -330,7 +330,7 @@
 		
 	NSString *columnKey = [tableColumn identifier];
 	if ([columnKey hasPrefix:@"empty"]) return @"";
-	return [item valueForKey:columnKey];
+	return columnKey ? [item valueForKey:columnKey] : nil;
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
