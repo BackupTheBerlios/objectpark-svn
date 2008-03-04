@@ -126,7 +126,7 @@
 	
 	threadsController.childKey = @"threadChildren";
 	threadsController.childCountKey = @"threadChildrenCount";
-	[threadsController bind:@"rootItem" toObject:messageGroupsController withKeyPath:@"selection.self" options:options];
+	[threadsController bind:@"rootItem" toObject:messageGroupsController withKeyPath:@"selectedObject" options:options];
 	
 	if (threadsController) [self bind:@"selectedThreads" toObject:threadsController withKeyPath:@"selectedObjects" options:options];
 		

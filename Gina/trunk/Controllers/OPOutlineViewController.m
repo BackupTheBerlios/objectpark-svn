@@ -342,15 +342,16 @@
 - (NSArray *)selectedObjects
 {
 	NSMutableArray *result = [NSMutableArray array];
-	NSIndexSet *selectedRowIndexes = [outlineView selectedRowIndexes];
-	NSUInteger index = 0;
 	
-	while ((index = [selectedRowIndexes indexGreaterThanOrEqualToIndex:index]) != NSNotFound)
-	{
-		[result addObject:[outlineView itemAtRow:index]];
-		index += 1;
+	if (outlineView) {
+		NSIndexSet* selectedRowIndexes = [outlineView selectedRowIndexes];
+		NSUInteger index = 0;
+		
+		while ((index = [selectedRowIndexes indexGreaterThanOrEqualToIndex:index]) != NSNotFound) {
+			[result addObject:[outlineView itemAtRow:index]];
+			index += 1;
+		}
 	}
-	
 	return result;
 }
 
