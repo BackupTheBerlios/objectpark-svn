@@ -15,15 +15,15 @@
 
 // -- binding stuff --
 
-+ (NSSet*) keyPathsForValuesAffectingSelectedObject
-{
-	return [NSSet setWithObjects: @"selectedObjects", nil];
-}
-
-+ (NSSet*) keyPathsForValuesAffectingSelectedObjects
-{
-	return [NSSet setWithObjects: @"selectedObject", nil];
-}
+//+ (NSSet*) keyPathsForValuesAffectingSelectedObject
+//{
+//	return [NSSet setWithObjects: @"selectedObjects", nil];
+//}
+//
+//+ (NSSet*) keyPathsForValuesAffectingSelectedObjects
+//{
+//	return [NSSet setWithObjects: @"selectedObject", nil];
+//}
 
 
 + (void)initialize
