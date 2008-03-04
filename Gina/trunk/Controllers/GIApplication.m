@@ -186,7 +186,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	}    
 }
 
-- (void) runConsistentcyChecks: (id) sender
+- (void) runConsistencyChecks: (id) sender
 {
 	GIMessageGroup* group = [GIMessageGroup defaultMessageGroup];
 	NSLog(@"Walking %u threads:", group.threads.count);

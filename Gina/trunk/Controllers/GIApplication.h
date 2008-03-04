@@ -24,7 +24,7 @@
 - (IBAction) makeDefaultApp: (id) sender;
 - (IBAction) openFile: (id) sender;
 
-- (void) runConsistentcyChecks: (id) sender;
+- (void) runConsistencyChecks: (id) sender;
 
 
 @end
