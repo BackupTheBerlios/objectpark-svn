@@ -30,6 +30,7 @@
 {
     [self exposeBinding: @"rootItem"];	
     [self exposeBinding: @"selectedObjects"];	
+    [self exposeBinding: @"selectedObject"];	
 }
 
 - (Class) valueClassForBinding: (NSString*) binding

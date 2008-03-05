@@ -253,6 +253,14 @@
 	}
 }
 
+- (void) showMessage: (GIMessage*) message
+{
+	GIMessageGroup* group = message.thread.messageGroups.lastObject;
+	if (group) {
+		[messageGroupsController setSelectedObjects: [NSArray arrayWithObject: group]];
+	}
+}
+
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
 	SEL action = [theItem action];
@@ -429,13 +437,6 @@ static BOOL isShowingThreadsOnly = NO;
 	isShowingThreadsOnly = [self isShowingThreadsOnly];
 }
 
-- (void) showMessage: (GIMessage*) message
-{
-	GIMessageGroup* group = message.thread.messageGroups.lastObject;
-	if (group) {
-		[messageGroupsController setSelectedObject: group];
-	}
-}
 
 
 @end
