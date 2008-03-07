@@ -67,7 +67,7 @@
 	if (!selectedObject) return [[[NSAttributedString alloc] init] autorelease];
 	
 	NSAttributedString *result = [selectedObject messageForDisplay];
-	NSLog(@"message for display: %@", [result string]);
+	//NSLog(@"message for display: %@", [result string]);
 	
 	return result;
 }

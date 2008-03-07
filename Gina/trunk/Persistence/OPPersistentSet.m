@@ -419,7 +419,7 @@
 {
 	OID oid = [self oidAtIndex:index];
 	id result = [[pSet context] objectForOID: oid];
-	NSAssert3(result != nil, @"Warning: %@ objectAtIndex: %u is a dangling reference to %@. Returning nil.", self, index, OPStringFromOID(oid));
+	NSAssert3(result != nil, @"Warning: %@ objectAtIndex: %u is a dangling reference to %llx. Returning nil.", self, index, oid);
 	return result;
 }
 
