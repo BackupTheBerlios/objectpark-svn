@@ -19,8 +19,7 @@
 
 @interface GIMainWindowController : NSWindowController 
 {
-	//IBOutlet GIMessageGroupTreeController *messageGroupTreeController;
-	IBOutlet OPOutlineViewController* messageGroupsController;
+	IBOutlet OPOutlineViewController *messageGroupsController;
 	IBOutlet GIThreadOutlineViewController *threadsController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;

@@ -83,7 +83,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (NSString*) messageFilePath
 {
-	NSString* filename = [[[self context] transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%014x.gml", LIDFromOID([self oid])]];
+	NSString* filename = [[[self context] transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%014llx.gml", LIDFromOID([self oid])]];
 	
 //	[NSString stringWithFormat: @"%@/Msg%08x.gml", [[self context] transferDataDirectory], LIDFromOID([self oid])];
 	return filename;

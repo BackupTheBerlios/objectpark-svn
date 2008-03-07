@@ -39,22 +39,6 @@
 @synthesize selectedThreads;
 @synthesize messageGroupsController;
 
-+ (NSSet *)keyPathsForValuesAffectingMessageForDisplay
-{
-	return [NSSet setWithObject:@"selectedThreads"];
-}
-
-- (NSAttributedString *)messageForDisplay
-{
-	NSArray *threads = self.selectedThreads;
-	if ([threads count] == 1)
-	{
-		return [[threads lastObject] messageForDisplay];
-	}
-	
-	return nil;
-}
-
 + (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
 {
 	return [NSSet setWithObject:@"selectedThreads"];
@@ -69,6 +53,23 @@
 	}
 	
 	return nil;	
+}
+
++ (NSSet *)keyPathsForValuesAffectingMessageForDisplay
+{
+	return [NSSet setWithObject:@"selectedMessageOrThread"];
+}
+
+- (NSAttributedString *)messageForDisplay
+{
+	id selectedObject = self.selectedMessageOrThread;
+	
+	if (!selectedObject) return [[[NSAttributedString alloc] init] autorelease];
+	
+	NSAttributedString *result = [selectedObject messageForDisplay];
+	NSLog(@"message for display: %@", [result string]);
+	
+	return result;
 }
 
 + (NSSet *)keyPathsForValuesAffectingSelectedMessage
@@ -130,6 +131,7 @@
 	
 	if (threadsController) [self bind:@"selectedThreads" toObject:threadsController withKeyPath:@"selectedObjects" options:options];
 		
+	// configuring comment tree view binding:
 	[commentTreeView bind:@"selectedMessageOrThread" toObject:self withKeyPath:@"selectedMessageOrThread" options:options];
 	[commentTreeView setTarget:self];
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];
@@ -436,8 +438,6 @@ static BOOL isShowingThreadsOnly = NO;
 {
 	isShowingThreadsOnly = [self isShowingThreadsOnly];
 }
-
-
 
 @end
 
