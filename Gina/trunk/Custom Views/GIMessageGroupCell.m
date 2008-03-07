@@ -70,7 +70,7 @@
 
 - (NSUInteger)unreadCount
 {
-	id object = [[self hierarchyItem] representedObject];
+	id object = [self hierarchyItem];
 	if ([object isKindOfClass: [GIMessageGroup class]]) {
 		return [(GIMessageGroup*) object unreadMessageCount];
 	}
@@ -119,6 +119,7 @@
 //	NSSize titleSize = [[self title] sizeWithAttributes:nil];
 	NSRect titleRect = bounds;
 	
+	titleRect.origin.y += 1;
 	titleRect.origin.x += 10;
 	if ([self image] != nil) 
 	{
@@ -228,7 +229,7 @@
 		[attributes setObject:contrastingLabelColor forKey:NSForegroundColorAttributeName];
 	}
 	
-	NSString *name = [[[self hierarchyItem] representedObject] valueForKey:@"name"];
+	NSString *name = [[self hierarchyItem] valueForKey:@"name"];
 	if (!name) name = @"<unknown>";
 	NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:name attributes:attributes] autorelease];
 	//NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:@"just testing" attributes:attributes] autorelease];

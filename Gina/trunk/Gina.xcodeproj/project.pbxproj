@@ -240,6 +240,7 @@
 		77F4F3B60D81AB5D008B0103 /* Hide_Status.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77F4F3B40D81AB5D008B0103 /* Hide_Status.tiff */; };
 		77F4F3BA0D81BCC3008B0103 /* MailboxViewSpacer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77F4F3B90D81BCC3008B0103 /* MailboxViewSpacer.tiff */; };
 		77F4F3BC0D81BD44008B0103 /* SplitterHandle.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77F4F3BB0D81BD44008B0103 /* SplitterHandle.tiff */; };
+		77F4F3F20D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F3F10D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -590,6 +591,8 @@
 		77F4F3B40D81AB5D008B0103 /* Hide_Status.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Hide_Status.tiff; sourceTree = "<group>"; };
 		77F4F3B90D81BCC3008B0103 /* MailboxViewSpacer.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailboxViewSpacer.tiff; sourceTree = "<group>"; };
 		77F4F3BB0D81BD44008B0103 /* SplitterHandle.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SplitterHandle.tiff; sourceTree = "<group>"; };
+		77F4F3F00D81C7AD008B0103 /* GIMessageGroupOutlineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupOutlineViewController.h; sourceTree = "<group>"; };
+		77F4F3F10D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroupOutlineViewController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Gina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D25888C0D4AE58D00AE413F /* BackToolbarImage.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = BackToolbarImage.tiff; sourceTree = "<group>"; };
@@ -989,6 +992,8 @@
 			children = (
 				77AA25690D2D1B93004EF1DF /* OPOutlineViewController.h */,
 				77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */,
+				77F4F3F00D81C7AD008B0103 /* GIMessageGroupOutlineViewController.h */,
+				77F4F3F10D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m */,
 				7741A62E0D33960400654FA7 /* GIThreadOutlineViewController.h */,
 				7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */,
 				77AF82E80D2B9420002771BA /* GIMessageGroupTreeController.h */,
@@ -1748,6 +1753,7 @@
 				7744CB510D32A37A008E6567 /* GIMessage+Rendering.m in Sources */,
 				7741A6300D33960400654FA7 /* GIThreadOutlineViewController.m in Sources */,
 				77A260990D3755DB0011FEE9 /* GIMainWindow.m in Sources */,
+				77F4F3F20D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
