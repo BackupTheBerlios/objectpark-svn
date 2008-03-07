@@ -272,7 +272,7 @@ static NSCharacterSet *iwsSet = nil;
 
 /*" Returns yes if the string contains no text characters. Note that its length can still be non-zero. "*/
 - (BOOL)isEmpty {
-    return [self lengh] == 0;
+    return [self length] == 0;
 }
 
 
