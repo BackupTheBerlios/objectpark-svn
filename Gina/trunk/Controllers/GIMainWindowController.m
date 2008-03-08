@@ -143,13 +143,9 @@
 	[self setThreadsOnlyMode];
 	
 	// Configure group view:
-
 	messageGroupsController.childKey = @"children";
 	//messageGroupsController.childCountKey = @"threadChildrenCount";
 	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
-	
-	
-	
 	
 	[self.window makeKeyAndOrderFront:self];
 }
