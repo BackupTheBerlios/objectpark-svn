@@ -796,8 +796,8 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		[self willChangeValueForKey: @"unreadMessageCount"];
 		unreadMessageCount += changeCount;
 		[self didChangeValueForKey: @"unreadMessageCount"];
-		[self willChangeValueForKey:@"self"];
-		[self didChangeValueForKey:@"self"];
+//		[self willChangeValueForKey:@"self"];
+//		[self didChangeValueForKey:@"self"];
 	}
 }
 
