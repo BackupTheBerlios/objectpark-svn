@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="3"/>
+			<integer value="38"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -69,11 +69,11 @@
 																	<string key="NSFrameSize">{254, 483}</string>
 																	<reference key="NSSuperview" ref="481938278"/>
 																	<bool key="NSEnabled">YES</bool>
-																	<object class="NSTableHeaderView" key="NSHeaderView" id="885403456">
-																		<reference key="NSNextResponder" ref="752915193"/>
+																	<object class="NSTableHeaderView" key="NSHeaderView" id="630506018">
+																		<reference key="NSNextResponder" ref="295838649"/>
 																		<int key="NSvFlags">256</int>
 																		<string key="NSFrameSize">{254, 17}</string>
-																		<reference key="NSSuperview" ref="752915193"/>
+																		<reference key="NSSuperview" ref="295838649"/>
 																		<reference key="NSTableView" ref="724564600"/>
 																	</object>
 																	<object class="_NSCornerView" key="NSCornerView" id="200081764">
@@ -198,17 +198,17 @@
 															<string key="NSAction">_doScroller:</string>
 															<double key="NSPercent">4.038461e-01</double>
 														</object>
-														<object class="NSClipView" id="752915193">
+														<object class="NSClipView" id="295838649">
 															<reference key="NSNextResponder" ref="133244802"/>
 															<int key="NSvFlags">2304</int>
 															<object class="NSMutableArray" key="NSSubviews">
 																<bool key="EncodedWithXMLCoder">YES</bool>
-																<reference ref="885403456"/>
+																<reference ref="630506018"/>
 															</object>
 															<string key="NSFrameSize">{254, 17}</string>
 															<reference key="NSSuperview" ref="133244802"/>
-															<reference key="NSNextKeyView" ref="885403456"/>
-															<reference key="NSDocView" ref="885403456"/>
+															<reference key="NSNextKeyView" ref="630506018"/>
+															<reference key="NSDocView" ref="630506018"/>
 															<reference key="NSBGColor" ref="1037779458"/>
 															<int key="NScvFlags">4</int>
 														</object>
@@ -221,7 +221,7 @@
 													<reference key="NSVScroller" ref="269581431"/>
 													<reference key="NSHScroller" ref="915739063"/>
 													<reference key="NSContentView" ref="481938278"/>
-													<reference key="NSHeaderClipView" ref="752915193"/>
+													<reference key="NSHeaderClipView" ref="295838649"/>
 													<reference key="NSCornerView" ref="200081764"/>
 													<bytes key="NSScrollAmts">QSAAAEEgAABBoAAAQaAAAA</bytes>
 												</object>
@@ -636,7 +636,7 @@
 												</object>
 												<object class="NSScrollView" id="440559076">
 													<reference key="NSNextResponder" ref="979681536"/>
-													<int key="NSvFlags">290</int>
+													<int key="NSvFlags">274</int>
 													<object class="NSMutableArray" key="NSSubviews">
 														<bool key="EncodedWithXMLCoder">YES</bool>
 														<object class="NSClipView" id="227750452">
@@ -647,7 +647,7 @@
 																<object class="NSTextView" id="751445563">
 																	<reference key="NSNextResponder" ref="227750452"/>
 																	<int key="NSvFlags">2322</int>
-																	<string key="NSFrameSize">{354, 108}</string>
+																	<string key="NSFrameSize">{483, 84}</string>
 																	<reference key="NSSuperview" ref="227750452"/>
 																	<object class="NSTextContainer" key="NSTextContainer" id="869923238">
 																		<object class="NSLayoutManager" key="NSLayoutManager">
@@ -843,7 +843,7 @@
 																			<nil key="NSDelegate"/>
 																		</object>
 																		<reference key="NSTextView" ref="751445563"/>
-																		<double key="NSWidth">3.540000e+02</double>
+																		<double key="NSWidth">4.830000e+02</double>
 																		<int key="NSTCFlags">1</int>
 																	</object>
 																	<object class="NSTextViewSharedData" key="NSSharedData">
@@ -892,9 +892,9 @@
 																		</object>
 																		<nil key="NSDefaultParagraphStyle"/>
 																	</object>
-																	<int key="NSTVFlags">6</int>
+																	<int key="NSTVFlags">7</int>
 																	<string key="NSMaxSize">{947, 1e+07}</string>
-																	<string key="NSMinize">{45, 0}</string>
+																	<string key="NSMinize">{100, 0}</string>
 																	<nil key="NSDelegate"/>
 																</object>
 															</object>
@@ -1217,7 +1217,7 @@
 							<reference ref="724564600"/>
 							<reference ref="915739063"/>
 							<reference ref="269581431"/>
-							<reference ref="885403456"/>
+							<reference ref="630506018"/>
 						</object>
 						<reference key="parent" ref="352235746"/>
 					</object>
@@ -1463,7 +1463,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">98</int>
-						<reference key="object" ref="885403456"/>
+						<reference key="object" ref="630506018"/>
 						<reference key="parent" ref="133244802"/>
 					</object>
 				</object>
