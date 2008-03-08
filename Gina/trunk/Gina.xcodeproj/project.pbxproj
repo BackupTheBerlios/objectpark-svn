@@ -241,6 +241,8 @@
 		77F4F3BA0D81BCC3008B0103 /* MailboxViewSpacer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77F4F3B90D81BCC3008B0103 /* MailboxViewSpacer.tiff */; };
 		77F4F3BC0D81BD44008B0103 /* SplitterHandle.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77F4F3BB0D81BD44008B0103 /* SplitterHandle.tiff */; };
 		77F4F3F20D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F3F10D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m */; };
+		77F4F59F0D8276C1008B0103 /* GISplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F59E0D8276C1008B0103 /* GISplitView.m */; };
+		77F4F5AE0D827EFA008B0103 /* GISeparatorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F5AD0D827EFA008B0103 /* GISeparatorButton.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -593,6 +595,10 @@
 		77F4F3BB0D81BD44008B0103 /* SplitterHandle.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SplitterHandle.tiff; sourceTree = "<group>"; };
 		77F4F3F00D81C7AD008B0103 /* GIMessageGroupOutlineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageGroupOutlineViewController.h; sourceTree = "<group>"; };
 		77F4F3F10D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageGroupOutlineViewController.m; sourceTree = "<group>"; };
+		77F4F59D0D8276C1008B0103 /* GISplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISplitView.h; sourceTree = "<group>"; };
+		77F4F59E0D8276C1008B0103 /* GISplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISplitView.m; sourceTree = "<group>"; };
+		77F4F5AC0D827EFA008B0103 /* GISeparatorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISeparatorButton.h; sourceTree = "<group>"; };
+		77F4F5AD0D827EFA008B0103 /* GISeparatorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISeparatorButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Gina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D25888C0D4AE58D00AE413F /* BackToolbarImage.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = BackToolbarImage.tiff; sourceTree = "<group>"; };
@@ -851,6 +857,10 @@
 				77AF834B0D2B95AD002771BA /* GITextView.m */,
 				77A260970D3755DB0011FEE9 /* GIMainWindow.h */,
 				77A260980D3755DB0011FEE9 /* GIMainWindow.m */,
+				77F4F59D0D8276C1008B0103 /* GISplitView.h */,
+				77F4F59E0D8276C1008B0103 /* GISplitView.m */,
+				77F4F5AC0D827EFA008B0103 /* GISeparatorButton.h */,
+				77F4F5AD0D827EFA008B0103 /* GISeparatorButton.m */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -1754,6 +1764,8 @@
 				7741A6300D33960400654FA7 /* GIThreadOutlineViewController.m in Sources */,
 				77A260990D3755DB0011FEE9 /* GIMainWindow.m in Sources */,
 				77F4F3F20D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m in Sources */,
+				77F4F59F0D8276C1008B0103 /* GISplitView.m in Sources */,
+				77F4F5AE0D827EFA008B0103 /* GISeparatorButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
