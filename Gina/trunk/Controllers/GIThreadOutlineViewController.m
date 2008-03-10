@@ -616,24 +616,32 @@ NSDateFormatter *timeAndDateFormatter()
 	return result;
 }
 
-- (void)setSelectedMessages:(NSArray *)someMessages
-{
-	if (![someMessages isEqual:[self selectedObjects]]) 
-	{
-		NSMutableArray *itemPaths = [NSMutableArray arrayWithCapacity:[someMessages count]];
-		
-		for (GIMessage *messageToSelect in someMessages)
-		{
-			[itemPaths addObject:[NSArray arrayWithObject:messageToSelect]];
-			// make sure thread is expanded:
-//			[outlineView expandItem:[messageToSelect thread] expandChildren:YES];
-		}
-		
-//		[self setSelectedObjects:someMessages];
-		
-		[self setSelectedItemsPaths:itemPaths byExtendingSelection:NO];
-	}
-}
+//- (void)setSelectedMessages:(NSArray *)someMessages
+//{
+//	if (![someMessages isEqual:[self selectedObjects]]) 
+//	{
+//		NSMutableArray *itemPaths = [NSMutableArray arrayWithCapacity:[someMessages count]];
+//		
+//		for (GIMessage *messageToSelect in someMessages)
+//		{
+//			GIThread *thread = messageToSelect.thread;
+//			if ([thread messageCount] == 1)
+//			{
+//				[itemPaths addObject:[NSArray arrayWithObject:thread]];
+//			}
+//			else
+//			{
+//				[itemPaths addObject:[NSArray arrayWithObjects:thread, messageToSelect, nil]];
+//			}
+//			// make sure thread is expanded:
+////			[outlineView expandItem:[messageToSelect thread] expandChildren:YES];
+//		}
+//		
+////		[self setSelectedObjects:someMessages];
+//		
+//		[self setSelectedItemsPaths:itemPaths byExtendingSelection:NO];
+//	}
+//}
 
 - (BOOL)selectionHasUnreadMessages
 {

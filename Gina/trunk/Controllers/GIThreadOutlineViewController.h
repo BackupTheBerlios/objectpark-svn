@@ -19,7 +19,7 @@
 @property BOOL suspendUpdatesUntilNextReloadData;
 
 - (NSArray *)selectedMessages;
-- (void)setSelectedMessages:(NSArray *)someMessages;
+//- (void)setSelectedMessages:(NSArray *)someMessages;
 
 - (BOOL) selectionHasUnreadMessages;
 - (BOOL) selectionHasReadMessages;
