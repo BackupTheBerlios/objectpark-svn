@@ -397,7 +397,7 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 /*" Enables in the case of a non editable text view the use of the spacebar. "*/
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (! [self isEditable])
+//    if (! [self isEditable])
     {
 		if ([[self delegate] respondsToSelector:@selector(keyPressed:)])
 		{

@@ -147,6 +147,9 @@
 	//messageGroupsController.childCountKey = @"threadChildrenCount";
 	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
 	
+	[messageTextView setEditable:NO];
+	NSAssert(![messageTextView isEditable], @"should be non editable");
+	
 	[self.window makeKeyAndOrderFront:self];
 }
 
@@ -574,7 +577,8 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (BOOL)keyPressed:(NSEvent *)event
 {
-	switch([event keyCode])
+	int keyCode = event.keyCode;
+	switch(keyCode)
 	{
 		case LEFT_A:
 			[commentTreeView navigateLeftInMatrix:self];

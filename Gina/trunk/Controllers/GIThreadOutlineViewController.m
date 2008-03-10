@@ -620,13 +620,18 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	if (![someMessages isEqual:[self selectedObjects]]) 
 	{
+		NSMutableArray *itemPaths = [NSMutableArray arrayWithCapacity:[someMessages count]];
+		
 		for (GIMessage *messageToSelect in someMessages)
 		{
+			[itemPaths addObject:[NSArray arrayWithObject:messageToSelect]];
 			// make sure thread is expanded:
-			[outlineView expandItem:[messageToSelect thread] expandChildren:YES];
+//			[outlineView expandItem:[messageToSelect thread] expandChildren:YES];
 		}
 		
-		[self setSelectedObjects:someMessages];
+//		[self setSelectedObjects:someMessages];
+		
+		[self setSelectedItemsPaths:itemPaths byExtendingSelection:NO];
 	}
 }
 

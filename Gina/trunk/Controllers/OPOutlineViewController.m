@@ -267,6 +267,7 @@
 	}
 	else if ([keyPath isEqualToString:[self observedKeyPathForSelectedObjects]])
 	{ 
+		NSAssert(NO, @"should never be bound to selected objects");
 		// selectedObjects changed
 		id newSelectedObjects = [observedObjectForSelectedObjects valueForKeyPath: [self observedKeyPathForSelectedObjects]];
 		[self setSelectedObjects:newSelectedObjects];
