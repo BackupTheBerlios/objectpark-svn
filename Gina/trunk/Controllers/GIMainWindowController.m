@@ -219,14 +219,12 @@
 }
 
 // -- handling message tree view selection --
-- (IBAction)commentTreeSelectionChanged:(id)sender
+- (IBAction) commentTreeSelectionChanged: (id) sender
 {
-	GIMessage *message = [commentTreeView selectedMessage];
+	GIMessage* message = [commentTreeView selectedMessage];
 	
-	if (message)
-	{
-#warning implement
-		[threadsController setSelectedMessages:[NSArray arrayWithObject:message]];
+	if (message) {
+		[self showMessage: message];
 	}
 }
 

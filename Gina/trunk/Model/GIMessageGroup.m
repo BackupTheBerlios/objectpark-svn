@@ -454,14 +454,20 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 //    return YES;
 //}
 
-- (NSArray *)children
+- (NSArray*) children
 {
 	return nil;
 }
 
-+ (NSSet *)keyPathsForValuesAffectingThreadChildren
++ (NSSet*) keyPathsForValuesAffectingThreadChildren
 {
 	return [NSSet setWithObject:@"threads"];
+}
+
+
++ (NSSet*) keyPathsForValuesAffectingName
+{
+	return [NSSet setWithObject:@"unreadMessageCount"];
 }
 
 
