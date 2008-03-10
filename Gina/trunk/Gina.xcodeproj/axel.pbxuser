@@ -18,7 +18,7 @@
 		breakpoints = (
 			773B58020D24E4F200A11972 /* -[NSException raise] */,
 			770458EF0D65E4CF004EEA7A /* - [NSException raise] */,
-			776B769E0D853CAE008317E5 /* OPOutlineViewController.m:271 */,
+			776B769E0D853CAE008317E5 /* OPOutlineViewController.m:208 */,
 			776B77ED0D854AF8008317E5 /* GIThreadOutlineViewController.m:619 */,
 		);
 		codeSenseManager = 77B6C5730D00530D00A7BEFF /* Code sense */;
@@ -300,6 +300,18 @@
 			776B77FA0D854DEE008317E5 /* PBXTextBookmark */ = 776B77FA0D854DEE008317E5 /* PBXTextBookmark */;
 			776B77FB0D854DF8008317E5 /* PBXTextBookmark */ = 776B77FB0D854DF8008317E5 /* PBXTextBookmark */;
 			776B77FC0D854E1B008317E5 /* PBXTextBookmark */ = 776B77FC0D854E1B008317E5 /* PBXTextBookmark */;
+			776B78010D8566B9008317E5 /* PBXTextBookmark */ = 776B78010D8566B9008317E5 /* PBXTextBookmark */;
+			776B78020D8566B9008317E5 /* PBXTextBookmark */ = 776B78020D8566B9008317E5 /* PBXTextBookmark */;
+			776B78030D8566B9008317E5 /* PBXTextBookmark */ = 776B78030D8566B9008317E5 /* PBXTextBookmark */;
+			776B78040D8566B9008317E5 /* PBXTextBookmark */ = 776B78040D8566B9008317E5 /* PBXTextBookmark */;
+			776B78050D8566B9008317E5 /* PBXTextBookmark */ = 776B78050D8566B9008317E5 /* PBXTextBookmark */;
+			776B78060D8566B9008317E5 /* PBXTextBookmark */ = 776B78060D8566B9008317E5 /* PBXTextBookmark */;
+			776B78080D8566B9008317E5 /* PBXTextBookmark */ = 776B78080D8566B9008317E5 /* PBXTextBookmark */;
+			776B78090D8566B9008317E5 /* PBXTextBookmark */ = 776B78090D8566B9008317E5 /* PBXTextBookmark */;
+			776B780A0D8566B9008317E5 /* PBXTextBookmark */ = 776B780A0D8566B9008317E5 /* PBXTextBookmark */;
+			776B780B0D8566B9008317E5 /* PBXTextBookmark */ = 776B780B0D8566B9008317E5 /* PBXTextBookmark */;
+			776B780C0D8566B9008317E5 /* PBXTextBookmark */ = 776B780C0D8566B9008317E5 /* PBXTextBookmark */;
+			776B780D0D8566B9008317E5 /* PBXTextBookmark */ = 776B780D0D8566B9008317E5 /* PBXTextBookmark */;
 			77F4F3E10D81C616008B0103 = 77F4F3E10D81C616008B0103 /* PBXTextBookmark */;
 			77F4F3FC0D81C875008B0103 = 77F4F3FC0D81C875008B0103 /* PBXTextBookmark */;
 			77F4F3FF0D81C875008B0103 = 77F4F3FF0D81C875008B0103 /* PBXTextBookmark */;
@@ -640,9 +652,9 @@
 	};
 	773613E10D1C0F12007FC630 /* OPPersistentSet.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {980, 8000}}";
-			sepNavSelRange = "{11606, 25}";
-			sepNavVisRange = "{11558, 240}";
+			sepNavIntBoundsRect = "{{0, 0}, {980, 7952}}";
+			sepNavSelRange = "{11186, 0}";
+			sepNavVisRange = "{11062, 364}";
 			sepNavWindowFrame = "{{79, 1}, {793, 851}}";
 		};
 	};
@@ -676,9 +688,9 @@
 	};
 	773614010D1C0F2E007FC630 /* btree.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {866, 101424}}";
-			sepNavSelRange = "{164922, 0}";
-			sepNavVisRange = "{164416, 1002}";
+			sepNavIntBoundsRect = "{{0, 0}, {980, 101216}}";
+			sepNavSelRange = "{26003, 0}";
+			sepNavVisRange = "{25727, 466}";
 		};
 	};
 	7736141B0D1C1041007FC630 /* GIAccount.h */ = {
@@ -939,10 +951,10 @@
 		continueAfterActions = 0;
 		countType = 0;
 		delayBeforeContinue = 0;
-		hitCount = 0;
+		hitCount = 1;
 		ignoreCount = 0;
 		location = CoreFoundation;
-		modificationTime = 226840064.812077;
+		modificationTime = 226840734.167458;
 		state = 1;
 		symbolName = "-[NSException raise]";
 	};
@@ -950,7 +962,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {640, 736}}";
 			sepNavSelRange = "{457, 0}";
-			sepNavVisRange = "{179, 598}";
+			sepNavVisRange = "{0, 589}";
 		};
 	};
 	7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */ = {
@@ -1523,7 +1535,7 @@
 		fRef = 77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 459";
 		rLen = 0;
-		rLoc = 12830;
+		rLoc = 10605;
 		rType = 0;
 		vrLen = 957;
 		vrLoc = 11590;
@@ -1563,7 +1575,7 @@
 		fRef = 77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 459";
 		rLen = 0;
-		rLoc = 12830;
+		rLoc = 10605;
 		rType = 0;
 		vrLen = 957;
 		vrLoc = 11590;
@@ -1585,12 +1597,12 @@
 		path = /Users/axel/Projects/Gina/Controllers/OPOutlineViewController.m;
 		sourceTree = "<group>";
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {640, 8560}}";
-			sepNavSelRange = "{12417, 0}";
-			sepNavVisRange = "{11877, 954}";
+			sepNavIntBoundsRect = "{{0, 0}, {980, 8432}}";
+			sepNavSelRange = "{12122, 0}";
+			sepNavVisRange = "{11877, 666}";
 		};
 	};
-	776B769E0D853CAE008317E5 /* OPOutlineViewController.m:271 */ = {
+	776B769E0D853CAE008317E5 /* OPOutlineViewController.m:208 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -1602,7 +1614,7 @@
 		functionName = "-observeValueForKeyPath:ofObject:change:context:";
 		hitCount = 0;
 		ignoreCount = 0;
-		lineNumber = 271;
+		lineNumber = 208;
 		location = Gina;
 		modificationTime = 226840075.783748;
 		state = 1;
@@ -1612,7 +1624,7 @@
 		fRef = 776B769C0D853CAE008317E5 /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 270";
 		rLen = 0;
-		rLoc = 7214;
+		rLoc = 4989;
 		rType = 0;
 		vrLen = 705;
 		vrLoc = 6840;
@@ -1640,7 +1652,7 @@
 		fRef = 776B769C0D853CAE008317E5 /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 270";
 		rLen = 0;
-		rLoc = 7214;
+		rLoc = 4989;
 		rType = 0;
 		vrLen = 705;
 		vrLoc = 6840;
@@ -1767,7 +1779,7 @@
 		fRef = 776B769C0D853CAE008317E5 /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 447";
 		rLen = 0;
-		rLoc = 12417;
+		rLoc = 10192;
 		rType = 0;
 		vrLen = 954;
 		vrLoc = 11877;
@@ -1814,7 +1826,7 @@
 		fRef = 776B769C0D853CAE008317E5 /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 447";
 		rLen = 0;
-		rLoc = 12417;
+		rLoc = 10192;
 		rType = 0;
 		vrLen = 954;
 		vrLoc = 11877;
@@ -1888,6 +1900,133 @@
 		rType = 0;
 		vrLen = 598;
 		vrLoc = 179;
+	};
+	776B78010D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7741A62F0D33960400654FA7 /* GIThreadOutlineViewController.m */;
+		name = "GIThreadOutlineViewController.m: 645";
+		rLen = 0;
+		rLoc = 17588;
+		rType = 0;
+		vrLen = 352;
+		vrLoc = 16559;
+	};
+	776B78020D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7741A62E0D33960400654FA7 /* GIThreadOutlineViewController.h */;
+		name = "GIThreadOutlineViewController.h: 22";
+		rLen = 0;
+		rLoc = 457;
+		rType = 0;
+		vrLen = 368;
+		vrLoc = 215;
+	};
+	776B78030D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 776B769C0D853CAE008317E5 /* OPOutlineViewController.m */;
+		name = "OPOutlineViewController.m: 443";
+		rLen = 0;
+		rLoc = 9897;
+		rType = 0;
+		vrLen = 666;
+		vrLoc = 11877;
+	};
+	776B78040D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773613E10D1C0F12007FC630 /* OPPersistentSet.m */;
+		name = "OPPersistentSet.m: 421";
+		rLen = 0;
+		rLoc = 11186;
+		rType = 0;
+		vrLen = 364;
+		vrLoc = 11062;
+	};
+	776B78050D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773614010D1C0F2E007FC630 /* btree.c */;
+		name = "btree.c: 843";
+		rLen = 0;
+		rLoc = 26003;
+		rType = 0;
+		vrLen = 466;
+		vrLoc = 25727;
+	};
+	776B78060D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 776B78070D8566B9008317E5 /* asm -[NSException raise]  0x967b0bb4 */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	776B78070D8566B9008317E5 /* asm -[NSException raise]  0x967b0bb4 */ = {
+		isa = PBXFileReference;
+		path = "asm -[NSException raise]  0x967b0bb4";
+		sourceTree = "<group>";
+	};
+	776B78080D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7741A62E0D33960400654FA7 /* GIThreadOutlineViewController.h */;
+		name = "GIThreadOutlineViewController.h: 22";
+		rLen = 0;
+		rLoc = 457;
+		rType = 0;
+		vrLen = 368;
+		vrLoc = 215;
+	};
+	776B78090D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773614010D1C0F2E007FC630 /* btree.c */;
+		name = "btree.c: 843";
+		rLen = 0;
+		rLoc = 26003;
+		rType = 0;
+		vrLen = 466;
+		vrLoc = 25727;
+	};
+	776B780A0D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 776B769C0D853CAE008317E5 /* OPOutlineViewController.m */;
+		name = "OPOutlineViewController.m: 443";
+		rLen = 0;
+		rLoc = 9897;
+		rType = 0;
+		vrLen = 666;
+		vrLoc = 11877;
+	};
+	776B780B0D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773613E10D1C0F12007FC630 /* OPPersistentSet.m */;
+		name = "OPPersistentSet.m: 421";
+		rLen = 0;
+		rLoc = 11186;
+		rType = 0;
+		vrLen = 364;
+		vrLoc = 11062;
+	};
+	776B780C0D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773614010D1C0F2E007FC630 /* btree.c */;
+		name = "btree.c: 843";
+		rLen = 0;
+		rLoc = 26003;
+		rType = 0;
+		vrLen = 466;
+		vrLoc = 25727;
+	};
+	776B780D0D8566B9008317E5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 776B780E0D8566B9008317E5 /* asm -[NSException raise]  0x967b0bb4 */;
+		name = "asm -[NSException raise]  0x967b0bb4: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 182;
+		vrLoc = 0;
+	};
+	776B780E0D8566B9008317E5 /* asm -[NSException raise]  0x967b0bb4 */ = {
+		isa = PBXFileReference;
+		path = "asm -[NSException raise]  0x967b0bb4";
+		sourceTree = "<group>";
 	};
 	778077FB0D0705830091F21D /* GetMetadataForFile.c */ = {
 		uiCtxt = {
@@ -2930,7 +3069,7 @@
 		fRef = 77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 356";
 		rLen = 117;
-		rLoc = 9849;
+		rLoc = 7624;
 		rType = 0;
 		vrLen = 570;
 		vrLoc = 9764;
@@ -3168,7 +3307,7 @@
 		fRef = 77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 229";
 		rLen = 154;
-		rLoc = 6040;
+		rLoc = 3815;
 		rType = 0;
 		vrLen = 924;
 		vrLoc = 7934;
@@ -3362,7 +3501,7 @@
 		fRef = 77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 208";
 		rLen = 0;
-		rLoc = 5546;
+		rLoc = 3321;
 		rType = 0;
 		vrLen = 553;
 		vrLoc = 5260;
@@ -3372,7 +3511,7 @@
 		fRef = 77AA256A0D2D1B93004EF1DF /* OPOutlineViewController.m */;
 		name = "OPOutlineViewController.m: 208";
 		rLen = 0;
-		rLoc = 5546;
+		rLoc = 3321;
 		rType = 0;
 		vrLen = 553;
 		vrLoc = 5260;
