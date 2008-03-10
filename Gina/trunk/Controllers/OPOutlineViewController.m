@@ -440,7 +440,7 @@
 			// root index is the minimum index the first item on the path can be on.
 			NSArray* container = [self.rootItem valueForKey: childKey];
 			for (id item in path) {
-				row += [container indexOfObject: item] + 1; // adds one in order to skip the container item
+				row += [container indexOfObjectIdenticalTo: item] + 1; // adds one in order to skip the container item
 				// Now do a linear search for item. This only happens if items are expanded on the way:
 				while (row < [outlineView numberOfRows] && [outlineView itemAtRow: row] != item) {
 					row += 1;
