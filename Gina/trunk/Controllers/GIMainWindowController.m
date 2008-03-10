@@ -617,3 +617,33 @@ static BOOL isShowingThreadsOnly = NO;
 }
 
 @end
+
+@implementation GIMainWindowController (StatusPane)
+
+- (BOOL)showsStatusPane
+{
+#warning dummy for now (status/progress pane)
+	return NO;
+}
+
++ (NSSet *)keyPathsForValuesAffectingStatusPaneButtonImage
+{
+	return [NSSet setWithObject:@"showsStatusPane"];
+}
+
+- (NSImage *)statusPaneButtonImage
+{
+	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status" : @"Show_Status"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingStatusPaneButtonAlternateImage
+{
+	return [NSSet setWithObject:@"showsStatusPane"];
+}
+
+- (NSImage *)statusPaneButtonAlternateImage
+{
+	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status_Pressed" : @"Show_Status_Pressed"];
+}
+
+@end
