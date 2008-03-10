@@ -465,12 +465,6 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 }
 
 
-+ (NSSet*) keyPathsForValuesAffectingName
-{
-	return [NSSet setWithObject:@"unreadMessageCount"];
-}
-
-
 - (NSArray *)threadChildren
 {
 	return [(OPPersistentSet*)[self threads] sortedArray];

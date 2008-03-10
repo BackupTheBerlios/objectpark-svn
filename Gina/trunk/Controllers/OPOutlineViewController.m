@@ -254,8 +254,7 @@
 		[outlineView reloadItem: object reloadChildren: NO]; 
 	}
 	
-	if ([keyPath isEqualToString:[self childKey]])
-	{
+	if ([keyPath isEqualToString:[self childKey]]) {
 		// if the childKey relation changes, reload that item:
 		if (object == rootItem) object = nil;
 		[outlineView reloadItem: object reloadChildren: YES]; 
@@ -503,7 +502,7 @@ struct __REFlags {
 struct __NSOVRowEntry {
     struct __NSOVRowEntry *_field1;
     int _field2;
-    id _field3;
+    id item;
     short _field4;
     int _field5;
     struct __NSOVRowEntry **_field6;
@@ -514,10 +513,20 @@ struct __NSOVRowEntry {
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
 {
+	BOOL isExpanded = [self isItemExpandedAtRow: row];
 	if (row < [self numberOfRows]) {
-		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
-		if (rowEntry) 
-			[self _expandItemEntry: rowEntry expandChildren: expand];
+		
+//		struct __REFlags flags;
+//		flags.expanded = YES;
+		
+		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: -1];
+		@try {
+			if (rowEntry && !(rowEntry->flags.expanded)) { 
+				[self _expandItemEntry: rowEntry expandChildren: expand];
+			}
+		} @catch (NSException* e) {
+			// ignore :-(
+		}
 	}
 }
 
