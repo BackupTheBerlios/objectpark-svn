@@ -222,6 +222,7 @@
 	
 	if (message)
 	{
+#warning implement
 		[threadsController setSelectedMessages:[NSArray arrayWithObject:message]];
 	}
 }
@@ -252,11 +253,18 @@
 }
 
 - (void) showMessage: (GIMessage*) message
+/*" Tries to show the message given. Selects any group the thread is in. "*/
 {
 	GIMessageGroup* group = message.thread.messageGroups.lastObject;
 	if (group) {
-		[messageGroupsController setSelectedObjects: [NSArray arrayWithObject: group]];
+		// select group:
+		[messageGroupsController setSelectedItemsPaths: [NSArray arrayWithObject: [NSArray arrayWithObject: group]] byExtendingSelection: NO];
+		// expand thread, if necessary:
+		NSArray* itemPath =  (message.thread.messageCount > 1) ? [NSArray arrayWithObjects: message.thread, message, nil] : [NSArray arrayWithObjects: message.thread, nil];
+
+		[threadsController setSelectedItemsPaths: [NSArray arrayWithObject: itemPath] byExtendingSelection: NO];
 	}
+	[threadsOutlineView.window makeFirstResponder: threadsOutlineView];
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem

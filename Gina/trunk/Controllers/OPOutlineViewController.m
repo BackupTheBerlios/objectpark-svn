@@ -11,7 +11,8 @@
 
 @implementation OPOutlineViewController
 
-//@synthesize cachesItems;
+
+
 
 // -- binding stuff --
 
@@ -201,6 +202,21 @@
 {
 	[self resetKnownItems];
 	[outlineView reloadData];
+}
+
+- (NSOutlineView*) outlineView
+{
+	return outlineView;
+}
+
+- (void) setOutlineView: (NSOutlineView*) newView
+{
+	if (newView != outlineView) {
+		[self reloadData];
+		[outlineView release];
+		outlineView = [newView retain];
+		outlineView.delegate = self;
+	}
 }
 
 - (void)addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context
@@ -393,27 +409,63 @@
 	return result;
 }
 
-- (void) setSelectedObjects: (NSArray*) anArray
-{	
-	[outlineView deselectAll:self];
-	
-	NSMutableIndexSet *indexesToSelect = [NSMutableIndexSet indexSet];
+//- (void) setSelectedObjects: (NSArray*) anArray
+//{	
+//	[outlineView deselectAll:self];
+//	
+//	if (anArray.count) {
+//		NSUInteger row;
+//		NSMutableIndexSet *indexesToSelect = [NSMutableIndexSet indexSet];
+//		
+//		for (id itemToSelect in anArray) {
+//			row = [outlineView rowForItem:itemToSelect];
+//			[indexesToSelect addIndex: row];
+//		}
+//		
+//		[outlineView selectRowIndexes:indexesToSelect byExtendingSelection:NO];
+//		
+//		//[outlineView scrollRowToVisible: row];
+//	}
+//}
 
-	for (id itemToSelect in anArray) {
-		[indexesToSelect addIndex:[outlineView rowForItem:itemToSelect]];
-	}
-	
-	[outlineView selectRowIndexes:indexesToSelect byExtendingSelection:NO];
-
-	if ([anArray count]) {
-		[outlineView scrollRowToVisible:[outlineView rowForItem:[anArray lastObject]]];
-	}
-}
-
-- (void) setSelectedObject: (id) object
+- (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend
+/*" Tries to set the selection to the item paths given as an array of arrays. "*/
 {
-	self.selectedObjects = [NSArray arrayWithObject: object];
+	
+	[self willChangeValueForKey: @"selectedItems"];
+	for (NSArray* path in itemPaths) {
+		if (path.count) {
+			NSInteger row = -1;
+			// root index is the minimum index the first item on the path can be on.
+			NSArray* container = [self.rootItem valueForKey: childKey];
+			for (id item in path) {
+				row += [container indexOfObject: item] + 1; // adds one in order to skip the container item
+				// Now do a linear search for item. This only happens if items are expanded on the way:
+				while (row < [outlineView numberOfRows] && [outlineView itemAtRow: row] != item) {
+					row += 1;
+				}
+				if (row >= [outlineView numberOfRows]) {
+					NSLog(@"Unable to find item %@ in outline view.", item);
+					break;
+				}
+				if ([self outlineView: outlineView isItemExpandable: item]) {
+					[outlineView expandItemAtRow: row expandChildren: NO];
+					container = [item valueForKey: childKey];
+				} else {
+					break;
+				}
+			}
+			[outlineView selectRow: row byExtendingSelection: extend];
+			extend = YES;
+		}
+	}
+	[self didChangeValueForKey: @"selectedItems"];
 }
+
+//- (void) setSelectedObject: (id) object
+//{
+//	self.selectedObjects = [NSArray arrayWithObject: object];
+//}
 
 - (id) selectedObject
 {

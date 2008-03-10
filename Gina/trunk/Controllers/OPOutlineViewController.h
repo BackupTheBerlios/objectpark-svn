@@ -20,6 +20,7 @@
 	NSString* childKey;
 	NSString* childCountKey;
 	id rootItem;
+	NSMutableSet* expandedItems;
 	
 	@private
 	id observedObjectForRootItem;
@@ -35,16 +36,20 @@
 @property (copy) NSString *childCountKey;
 @property (retain) id rootItem;
 @property (retain, readonly) NSSet *knownItems;
+@property (retain, readwrite) NSOutlineView* outlineView;
 
 - (NSArray*) selectedObjects;
-- (void) setSelectedObjects: (NSArray*) anArray;
+//- (void) setSelectedObjects: (NSArray*) anArray;
 
-- (void) setSelectedObject: (id) object;
+//- (void) setSelectedObject: (id) object;
 - (id) selectedObject;
 
 - (void) reloadData;
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item;
+
+- (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend;
+
 
 @end
 
