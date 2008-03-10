@@ -49,6 +49,9 @@
 - (IBAction)markAsUnread:(id)sender;
 - (IBAction)toggleRead:(id)sender;
 
+/*" Message Group Actions "*/
+- (IBAction)addNewMessageGroup:(id)sender;
+
 - (void) showMessage: (GIMessage*) message;
 
 - (void)setThreadsOnlyMode;

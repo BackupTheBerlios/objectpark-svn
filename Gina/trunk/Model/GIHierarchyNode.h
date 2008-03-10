@@ -20,6 +20,8 @@
 @property (readwrite, copy) NSString *name;
 @property (readonly, retain) OPFaultingArray *children;
 
+- (void) insertObject: (GIHierarchyNode*) node inChildrenAtIndex: (NSUInteger) index;
+
 @end
 
 @interface GIHierarchyNode (MessageGroupHierarchy)

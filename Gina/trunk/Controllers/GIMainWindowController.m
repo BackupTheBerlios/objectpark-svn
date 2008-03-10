@@ -255,6 +255,27 @@
 	}
 }
 
+- (IBAction)addNewMessageGroup:(id)sender
+{
+	// if selection of message hierarchy is a folder, add new message group in
+	// this folder (at the end)
+	// if selection is a message group, add new message group after the selection
+	
+	id selectedObject = [messageGroupsController selectedObject];
+	
+	GIMessageGroup *newGroup = [[[GIMessageGroup alloc] init] autorelease];
+	newGroup.name = @"New Box";
+	GIHierarchyNode *hierarchyNode = [GIHierarchyNode messageGroupHierarchyRootNode];
+	
+	if (![selectedObject isKindOfClass:[GIMessageGroup class]])
+	{
+		hierarchyNode = selectedObject;
+	}
+	
+	NSUInteger position = [[hierarchyNode children] count];
+	[hierarchyNode insertObject:newGroup inChildrenAtIndex:position];
+}
+
 - (void) showMessage: (GIMessage*) message
 /*" Tries to show the message given. Selects any group the thread is in. "*/
 {
