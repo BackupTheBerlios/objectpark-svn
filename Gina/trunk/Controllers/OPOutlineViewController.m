@@ -29,12 +29,19 @@
 
 + (void)initialize
 {
-    [self exposeBinding: @"rootItem"];	
+    [self exposeBinding:@"rootItem"];	
+    [self exposeBinding:@"selectedObjects"];	
+    [self exposeBinding:@"selectedObject"];	
 }
 
-- (Class) valueClassForBinding: (NSString*) binding
+- (Class)valueClassForBinding:(NSString *)binding
 {
-	return [NSObject class];	
+	if ([binding isEqualToString:@"selectedObjects"]) 
+	{
+		return [NSArray class];
+	} else {
+		return [NSObject class];	
+	}
 }
 
 - (id)observedObjectForRootItem { return observedObjectForRootItem; }
@@ -61,6 +68,30 @@
     }
 }
 
+- (id) observedObjectForSelectedObjects 
+{ 
+	return observedObjectForSelectedObjects; 
+}
+
+- (void)setObservedObjectForSelectedObjects:(id)anObservedObjectForSelectedObjects
+{
+    if (observedObjectForSelectedObjects != anObservedObjectForSelectedObjects) {
+        [observedObjectForSelectedObjects release];
+        observedObjectForSelectedObjects = [anObservedObjectForSelectedObjects retain];
+    }
+}
+
+- (NSString *)observedKeyPathForSelectedObjects { return observedKeyPathForSelectedObjects; }
+
+- (void)setObservedKeyPathForSelectedObjects:(NSString *)anObservedKeyPathForSelectedObjects
+{
+    if (observedKeyPathForSelectedObjects != anObservedKeyPathForSelectedObjects) 
+	{
+        [observedKeyPathForSelectedObjects release];
+        observedKeyPathForSelectedObjects = [anObservedKeyPathForSelectedObjects copy];
+    }
+}
+
 - (void)bind:(NSString *)bindingName
     toObject:(id)observableController
  withKeyPath:(NSString *)keyPath
@@ -82,7 +113,32 @@
 
 		[self reloadData];
 		
-    } 	
+    } else if ([bindingName isEqualToString: @"selectedObjects"]) {
+		// observe the controller for changes
+		[observableController addObserver: self
+							   forKeyPath: keyPath 
+								  options: 0
+								  context: nil];
+		
+		// register what controller and what keypath are 
+		// associated with this binding
+		[self setObservedObjectForSelectedObjects:observableController];
+		[self setObservedKeyPathForSelectedObjects:keyPath];	
+		
+    } else if ([bindingName isEqualToString: @"selectedObject"]) {
+		// observe the controller for changes
+		[observableController addObserver: self
+							   forKeyPath: @"selectedObjects" 
+								  options: 0
+								  context: nil];
+		
+		// register what controller and what keypath are 
+		// associated with this binding
+		[self setObservedObjectForSelectedObjects: observableController];
+		[self setObservedKeyPathForSelectedObjects: keyPath];	
+    }
+	
+	
 	[super bind:bindingName
 	   toObject:observableController
 	withKeyPath:keyPath
@@ -97,7 +153,15 @@
 									   forKeyPath:observedKeyPathForRootItem];
 		[self setObservedObjectForRootItem:nil];
 		[self setObservedKeyPathForRootItem:nil];
+//		[self reloadData];
     }	
+	else if ([bindingName isEqualToString:@"selectedObjects"])
+    {
+		[observedObjectForSelectedObjects removeObserver:self
+											  forKeyPath:observedKeyPathForSelectedObjects];
+		[self setObservedObjectForSelectedObjects:nil];
+		[self setObservedKeyPathForSelectedObjects:nil];
+    }
 	
 	[super unbind:bindingName];
 }
