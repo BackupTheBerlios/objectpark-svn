@@ -122,7 +122,7 @@
 
 - (void)windowDidLoad
 {
-	threadMailSplitter.dividerThickness = 2.0;
+	threadMailSplitter.dividerThickness = 8.0;
 	
 	// configuring manual bindings:
 	NSDictionary *options = nil;
