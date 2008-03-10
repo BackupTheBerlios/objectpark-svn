@@ -183,6 +183,7 @@
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
 {
+#warning implement by returning a set of all table column identifiers.
 	return nil;
 }
 
@@ -383,7 +384,8 @@
 		
 	NSString *columnKey = [tableColumn identifier];
 	if ([columnKey hasPrefix:@"empty"]) return @"";
-	return columnKey ? [item valueForKey:columnKey] : nil;
+	id result = columnKey ? [item valueForKey:columnKey] : nil;
+	return result;
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification

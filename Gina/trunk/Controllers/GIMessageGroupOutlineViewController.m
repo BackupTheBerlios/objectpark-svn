@@ -20,10 +20,22 @@
     //[outlineView registerForDraggedTypes:[NSArray arrayWithObjects:NSURLPboardType, nil]];
 	
 	[[outlineView tableColumnWithIdentifier:@"name"] setDataCell:[[[GIMessageGroupCell alloc] init] autorelease]];
+	[[outlineView tableColumnWithIdentifier:@"unreadMessageCount"] setDataCell:[[[GIMessageGroupCell alloc] init] autorelease]];
 	[outlineView sizeLastColumnToFit];
 	
 	[outlineView setColumnAutoresizingStyle:NSTableViewSequentialColumnAutoresizingStyle];
 }
+
+
+- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
+{
+	static NSSet* affectingKeyPaths = nil;
+	if (! affectingKeyPaths) {
+		affectingKeyPaths = [NSSet setWithObjects: @"name", @"unreadMessageCount", nil];
+	}
+	return affectingKeyPaths;
+}
+
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {	

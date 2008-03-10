@@ -146,6 +146,7 @@
 	return pillColor;
 }
 
+
 - (void)drawTextWithFrame:(NSRect)frame inView:(NSView *)controlView
 {	
 	NSColor *contrastingLabelColor = nil;
