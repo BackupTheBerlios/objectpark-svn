@@ -11,9 +11,20 @@
 
 @implementation GISplitView
 
-- (float)dividerThickness
+@synthesize dividerThickness;
+
+- (id)initWithFrame:(NSRect)aFrame
 {
-	return 1.0;
+	self = [super initWithFrame:aFrame];
+	
+	self.dividerThickness = 1.0;
+	
+	return self;
+}
+
+- (void)awakeFromNib
+{
+	self.dividerThickness = 1.0;
 }
 
 - (void)drawDividerInRect:(NSRect)aRect

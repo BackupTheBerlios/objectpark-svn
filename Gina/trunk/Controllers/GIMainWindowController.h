@@ -16,6 +16,7 @@
 @class GITextView;
 @class GIThreadOutlineViewController;
 @class OPOutlineViewController;
+@class GISplitView;
 
 @interface GIMainWindowController : NSWindowController 
 {
@@ -24,7 +25,7 @@
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
 	IBOutlet NSOutlineView *groupsOutlineView;
-	IBOutlet NSSplitView *threadMailSplitter;
+	IBOutlet GISplitView *threadMailSplitter;
 	IBOutlet NSSplitView *mailTreeSplitter;
 	IBOutlet GITextView *messageTextView;
 	

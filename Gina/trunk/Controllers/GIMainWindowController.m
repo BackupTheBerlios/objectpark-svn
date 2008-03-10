@@ -8,7 +8,7 @@
 
 #import "GIMainWindowController.h"
 #import "GIThreadOutlineViewController.h"
-//#import "GIMessageGroupTreeController.h"
+#import "GISplitView.h"
 
 #import "GIUserDefaultsKeys.h"
 
@@ -122,6 +122,8 @@
 
 - (void)windowDidLoad
 {
+	threadMailSplitter.dividerThickness = 2.0;
+	
 	// configuring manual bindings:
 	NSDictionary *options = nil;
 	

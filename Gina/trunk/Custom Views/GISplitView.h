@@ -11,7 +11,9 @@
 
 @interface GISplitView : NSSplitView 
 {
-
+	CGFloat dividerThickness;
 }
+
+@property (readwrite) CGFloat dividerThickness;
 
 @end
