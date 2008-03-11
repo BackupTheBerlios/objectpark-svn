@@ -263,7 +263,7 @@
 	
 	id selectedObject = [messageGroupsController selectedObject];
 	
-	GIMessageGroup *newGroup = [[[GIMessageGroup alloc] init] autorelease];
+	GIMessageGroup *newGroup = [[GIMessageGroup alloc] init];
 	newGroup.name = @"New Box";
 	GIHierarchyNode *hierarchyNode = [GIHierarchyNode messageGroupHierarchyRootNode];
 	
@@ -274,6 +274,7 @@
 	
 	NSUInteger position = [[hierarchyNode children] count];
 	[hierarchyNode insertObject:newGroup inChildrenAtIndex:position];
+	NSLog(@"done");
 }
 
 - (void) showMessage: (GIMessage*) message
