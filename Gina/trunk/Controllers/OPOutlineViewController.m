@@ -273,11 +273,7 @@
 	{ 
 		NSAssert(NO, @"should never be bound to selected objects");
 		// selectedObjects changed
-		id newSelectedObjects = [observedObjectForSelectedObjects valueForKeyPath: [self observedKeyPathForSelectedObjects]];
-		[self setSelectedObjects:newSelectedObjects];
-	}
-	else 
-	{
+	} else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}	
 }
@@ -434,37 +430,47 @@
 //	}
 //}
 
+- (NSUInteger) rowForItemPath: (NSArray*) path
+/*" Also expands the items in the given path as necessary. "*/
+{
+	NSInteger row = NSNotFound;
+	if (path.count) {
+		row = -1;
+		// root index is the minimum index the first item on the path can be on.
+		NSArray* container = [self.rootItem valueForKey: childKey];
+		for (id item in path) {
+			row += [container indexOfObjectIdenticalTo: item]; 
+			// Now do a linear search for item. This only happens if items are expanded on the way:
+			if (row == NSNotFound) 
+				break;
+			
+			row+=1; // adds one in order to skip the container item
+			while (row < [outlineView numberOfRows] && [outlineView itemAtRow: row] != item) {
+				row += 1;
+			}
+			if (row >= [outlineView numberOfRows]) {
+				NSLog(@"Unable to find item %@ in outline view.", item);
+				break;
+			}
+			if ([self outlineView: outlineView isItemExpandable: item]) {
+				[outlineView expandItemAtRow: row expandChildren: NO];
+				container = [item valueForKey: childKey];
+			} else {
+				break;
+			}
+		}
+	}
+	return row;
+}
+
 - (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend
 /*" Tries to set the selection to the item paths given as an array of arrays. "*/
 {
 	
 	[self willChangeValueForKey: @"selectedItems"];
 	for (NSArray* path in itemPaths) {
-		if (path.count) {
-			NSInteger row = -1;
-			// root index is the minimum index the first item on the path can be on.
-			NSArray* container = [self.rootItem valueForKey: childKey];
-			for (id item in path) {
-				row += [container indexOfObjectIdenticalTo: item]; 
-				// Now do a linear search for item. This only happens if items are expanded on the way:
-				if (row == NSNotFound) 
-					return;
-				
-				row+=1; // adds one in order to skip the container item
-				while (row < [outlineView numberOfRows] && [outlineView itemAtRow: row] != item) {
-					row += 1;
-				}
-				if (row >= [outlineView numberOfRows]) {
-					NSLog(@"Unable to find item %@ in outline view.", item);
-					break;
-				}
-				if ([self outlineView: outlineView isItemExpandable: item]) {
-					[outlineView expandItemAtRow: row expandChildren: NO];
-					container = [item valueForKey: childKey];
-				} else {
-					break;
-				}
-			}
+		NSInteger row = [self rowForItemPath: path];
+		if (row != NSNotFound) {
 			[outlineView selectRow: row byExtendingSelection: extend];
 			extend = YES;
 		}

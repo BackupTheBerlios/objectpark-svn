@@ -50,6 +50,8 @@
 
 - (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend;
 
+- (NSUInteger) rowForItemPath: (NSArray*) path;
+
 
 @end
 
