@@ -262,9 +262,6 @@
 	// if selection is a message group, add new message group after the selection
 	
 	id selectedObject = [messageGroupsController selectedObject];
-	
-	GIMessageGroup *newGroup = [[GIMessageGroup alloc] init];
-	newGroup.name = @"New Box";
 	GIHierarchyNode *hierarchyNode = [GIHierarchyNode messageGroupHierarchyRootNode];
 	
 	if (![selectedObject isKindOfClass:[GIMessageGroup class]])
@@ -273,8 +270,8 @@
 	}
 	
 	NSUInteger position = [[hierarchyNode children] count];
-	[hierarchyNode insertObject:newGroup inChildrenAtIndex:position];
-	NSLog(@"done");
+	
+	[GIMessageGroup newMessageGroupWithName:@"New Box" atHierarchyNode:hierarchyNode atIndex:position];
 }
 
 - (void) showMessage: (GIMessage*) message
