@@ -327,7 +327,9 @@ static int compare_oids(const void* entry1, const void* entry2)
 		result = [context objectForOID: oid];
 		if (!result)
 			result = [context objectForOID: oid];
-		NSAssert1(result!=nil, @"Error! Object in FaultArray %016llx no longer accessible!", self);
+		if (result == nil) {
+			NSAssert1(result!=nil, @"Error! Object in FaultArray %016llx no longer accessible!", self);
+		}
 		[[result retain] autorelease];
 	}
 	return result;

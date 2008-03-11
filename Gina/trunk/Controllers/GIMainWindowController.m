@@ -270,7 +270,7 @@
 	}
 	
 	NSUInteger position = [[hierarchyNode children] count];
-	
+
 	[GIMessageGroup newMessageGroupWithName:@"New Box" atHierarchyNode:hierarchyNode atIndex:position];
 }
 

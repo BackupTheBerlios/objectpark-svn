@@ -31,7 +31,7 @@
 {
 	static NSSet* affectingKeyPaths = nil;
 	if (! affectingKeyPaths) {
-		affectingKeyPaths = [NSSet setWithObjects: @"name", @"unreadMessageCount", nil];
+		affectingKeyPaths = [[NSSet setWithObjects: @"name", @"unreadMessageCount", nil] retain];
 	}
 	return affectingKeyPaths;
 }

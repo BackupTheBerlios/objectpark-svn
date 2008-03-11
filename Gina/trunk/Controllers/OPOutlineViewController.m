@@ -110,8 +110,6 @@
 		[self setObservedObjectForRootItem:observableController];
 		[self setObservedKeyPathForRootItem:keyPath];
 		[self setRootItem: [observableController valueForKeyPath: keyPath]];
-
-		[self reloadData];
 		
     } else if ([bindingName isEqualToString: @"selectedObjects"]) {
 		// observe the controller for changes
@@ -203,7 +201,11 @@
 /*" Call this instead of calling reloadData on the outline. "*/
 {
 	[self resetKnownItems];
-	[outlineView reloadData];
+	if (outlineView.dataSource) {
+		[outlineView reloadData];
+	} else {
+		[outlineView setDataSource: self];
+	}
 }
 
 - (NSOutlineView*) outlineView
@@ -237,6 +239,7 @@
 {
 	if (! [rootItem isEqual: newItem]) {
 		[rootItem removeObserver: self forKeyPath: [self childKey]];
+		[outlineView setDataSource: nil];
 		[rootItem release];
 		rootItem = [newItem retain];
 		[rootItem addObserver:self forKeyPath: [self childKey] options: 0 context: NULL];
@@ -442,8 +445,12 @@
 			// root index is the minimum index the first item on the path can be on.
 			NSArray* container = [self.rootItem valueForKey: childKey];
 			for (id item in path) {
-				row += [container indexOfObjectIdenticalTo: item] + 1; // adds one in order to skip the container item
+				row += [container indexOfObjectIdenticalTo: item]; 
 				// Now do a linear search for item. This only happens if items are expanded on the way:
+				if (row == NSNotFound) 
+					return;
+				
+				row+=1; // adds one in order to skip the container item
 				while (row < [outlineView numberOfRows] && [outlineView itemAtRow: row] != item) {
 					row += 1;
 				}
@@ -521,8 +528,10 @@ struct __NSOVRowEntry {
 		
 		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: -1];
 		@try {
-			if (rowEntry && !(rowEntry->flags.expanded)) { 
-				[self _expandItemEntry: rowEntry expandChildren: expand];
+			if (rowEntry && ![self isItemExpanded: rowEntry->item]) {
+				if (rowEntry && !(rowEntry->flags.expanded)) { 
+					[self _expandItemEntry: rowEntry expandChildren: expand];
+				}
 			}
 		} @catch (NSException* e) {
 			// ignore :-(

@@ -555,22 +555,19 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	[super outlineViewSelectionDidChange:notification];
 	
-	if ([self.rootItem isKindOfClass:[OPPersistentObject class]])
-	{
+	if (outlineView.dataSource && [self.rootItem isKindOfClass: [OPPersistentObject class]]) {
 		// remember selection for messsage group (root item):
-		NSArray *selectedObjects = self.selectedObjects;
+		NSArray* selectedObjects = self.selectedObjects;
 		
-		NSMutableArray *oidsOfSelectedObjects = [NSMutableArray arrayWithCapacity:[selectedObjects count]];
-		for (OPPersistentObject *selectedObject in selectedObjects)
-		{
-			if ([selectedObject conformsToProtocol:@protocol(OPPersisting)])
-			{
-				[oidsOfSelectedObjects addObject:[NSNumber numberWithOID:[selectedObject oid]]];
+		NSMutableArray* oidsOfSelectedObjects = [NSMutableArray arrayWithCapacity: [selectedObjects count]];
+		for (OPPersistentObject* selectedObject in selectedObjects) {
+			if ([selectedObject conformsToProtocol: @protocol(OPPersisting)]) {
+				[oidsOfSelectedObjects addObject: [NSNumber numberWithOID: [selectedObject oid]]];
 			}
 		}
 		
 		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)self.rootItem oid]];
-		[[NSUserDefaults standardUserDefaults] setObject:oidsOfSelectedObjects forKey:groupSelectionDefaultKey];
+		[[NSUserDefaults standardUserDefaults] setObject: oidsOfSelectedObjects forKey: groupSelectionDefaultKey];
 	}
 }
 
@@ -669,9 +666,15 @@ NSDateFormatter *timeAndDateFormatter()
 	return NO;
 }
 
+
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
 {
-	return [NSSet setWithObjects: @"isSeen", nil];
+	static NSSet* affectingKeyPaths = nil;
+	if (! affectingKeyPaths) {
+		affectingKeyPaths = [[NSSet setWithObjects: @"isSeen", nil] retain];
+	}
+	return affectingKeyPaths;
 }
+
 
 @end
