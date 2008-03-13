@@ -52,6 +52,11 @@
 
 - (NSUInteger) rowForItemPath: (NSArray*) path;
 
+@end
+
+@interface OPOutlineViewController (ConvenientSlowHelpers)
+
+- (NSArray *)itemPathForItem:(id)item;
 
 @end
 

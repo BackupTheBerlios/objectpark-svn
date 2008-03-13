@@ -271,7 +271,9 @@
 	
 	NSUInteger position = [[hierarchyNode children] count];
 
-	[GIMessageGroup newMessageGroupWithName:@"New Box" atHierarchyNode:hierarchyNode atIndex:position];
+	GIMessageGroup *newGroup = [GIMessageGroup newMessageGroupWithName:@"New Box" atHierarchyNode:hierarchyNode atIndex:position];
+	
+	[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject:[messageGroupsController itemPathForItem:newGroup]] byExtendingSelection:NO];
 }
 
 - (void) showMessage: (GIMessage*) message
