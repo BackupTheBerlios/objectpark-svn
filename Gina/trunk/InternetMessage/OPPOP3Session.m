@@ -319,7 +319,7 @@ UIDL. nil otherwise. "*/
 
 @implementation OPPOP3Session (OPCleaning)
 
-- (void) cleanUp
+- (void)cleanUp
 {
     if (NSDebugEnabled) NSLog(@"Starting cleanup...");
     
@@ -342,16 +342,19 @@ UIDL. nil otherwise. "*/
 				// try to get info from message
                 OPInternetMessage *message;
                 NSData *headerData = [self _headerDataAtPosition:i];
-                @try {
-                    message = [[[OPInternetMessage alloc] initWithTransferData: headerData] autorelease];
+                @try 
+				{
+                    message = [[[OPInternetMessage alloc] initWithTransferData:headerData] autorelease];
 					
-                    if (message) {
-                        [self _takeInfoFromTransferData: headerData forPosition: i];
+                    if (message) 
+					{
+                        [self _takeInfoFromTransferData:headerData forPosition:i];
 						
-                        messageId = [infoDict objectForKey: @"messageId"];
-                        date = [NSDate dateWithString: [[infoDict objectForKey: @"date"] description]];
+                        messageId = [infoDict objectForKey:@"messageId"];
+                        date = [NSDate dateWithString:[[infoDict objectForKey:@"date"] description]];
                     }
-                } @catch(id localException) {}
+                } 
+				@catch(id localException) {}
 			}
 			
             

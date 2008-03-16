@@ -12,7 +12,7 @@
 #import <OPNetwork/OPNetwork.h>
 #import <InternetMessage/OPPOP3Session.h>
 #import <InternetMessage/NSApplication+OPExtensions.h>
-#import <InternetMessage/OPMboxFile.h>
+//#import <InternetMessage/OPMboxFile.h>
 #import <InternetMessage/NSData+MessageUtils.h>
 #import <Foundation/NSDebug.h>
 
@@ -96,16 +96,17 @@
             [pop3session openSession]; // also sets current postion cursor for maildrop
             
             // creating unique mbox file:
-            NSString *mboxToImportDirectory = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"mboxes to import"];
-            if (![[NSFileManager defaultManager] fileExistsAtPath:mboxToImportDirectory])
+            NSString *importPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"TransferData to import"];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:importPath])
             {
-                NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:mboxToImportDirectory attributes: nil], @"Could not create directory %@", mboxToImportDirectory);
+                NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:importPath attributes: nil], @"Could not create directory %@", importPath);
             }
             
-            NSString *pathTemplate = [mboxToImportDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"POP3Fetched-%@-XX", [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"]]];
+			NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"];
+//            NSString *pathTemplate = [mboxToImportDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"POP3Fetched-%@-XX", [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"]]];
             
-            OPMBoxFile *mboxFile = [OPMBoxFile createMboxFileWithPathTemplate:pathTemplate];
-            NSAssert(mboxFile != nil, @"could not open unique mbox file");
+//            OPMBoxFile *mboxFile = [OPMBoxFile createMboxFileWithPathTemplate:pathTemplate];
+//            NSAssert(mboxFile != nil, @"could not open unique mbox file");
             
             // fetching messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -114,13 +115,21 @@
                 int numberOfMessagesToFetch = ([pop3session maildropSize] - [pop3session currentPosition]) + 1;
                 int fetchCount = 0;
                 NSData *transferData = nil;
-                
+                unsigned long runningNo = 0;
+				
                 while ((transferData = [pop3session nextTransferData]) && !self.isCancelled) 
 				{
                     [self setProgressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, self.account.incomingServerName]];
                     
                     // putting onto disk:
-                    [mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender:nil]];
+					NSString *transferDataPath = [importPath stringByAppendingPathComponent:[NSString stringWithFormat:@"TransferData-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
+
+					if (![transferData writeToFile:transferDataPath atomically:YES])
+					{
+						@throw [NSException exceptionWithName:NSGenericException reason:@"Transfer data couldn't be written." userInfo:nil];
+					}
+					
+                    //[mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender:nil]];
                     
                     fetchCount++;
                 }
@@ -128,11 +137,11 @@
                 // set result:
 				if (fetchCount > 0) 
 				{
-					[self setResult:[mboxFile path]];
+//					[self setResult:[mboxFile path]];
 				} 
 				else 
 				{
-					[mboxFile remove];
+//					[mboxFile remove];
 				}
                 
                 // cleaning up maildrop:
@@ -146,7 +155,7 @@
 			@catch (id localException) 
 			{
                 [pop3session abortSession];
-                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];     
+//                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];     
                 @throw;
             } 
 			[pool release]; pool = nil;

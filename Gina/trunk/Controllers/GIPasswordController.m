@@ -30,7 +30,7 @@
     return self;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [account release];
     [result release];

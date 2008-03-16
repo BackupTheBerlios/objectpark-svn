@@ -66,7 +66,7 @@
 {
     self = [self init];
     
-    if(fields != nil)
+    if (fields != nil)
     {
         fallbackFields = [[NSMutableDictionary allocWithZone:[self zone]] initWithDictionary:[[self class] _defaultFallbackHeaders]];
         [(NSMutableDictionary *)fallbackFields addEntriesFromDictionary:fields];

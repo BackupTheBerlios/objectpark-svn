@@ -162,7 +162,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 }
 
 
-- (IBAction) openFile: (id) sender
+- (IBAction)openFile:(id)sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;
@@ -179,7 +179,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
     
     result = [oPanel runModalForDirectory:directory file:nil types:fileTypes];
     
-    if (result == NSOKButton) {
+    if (result == NSOKButton) 
+	{
         [[NSUserDefaults standardUserDefaults] setObject:[oPanel directory] forKey:ImportPanelLastDirectory];
         
 		[self application: self openFiles: [oPanel filenames]];
