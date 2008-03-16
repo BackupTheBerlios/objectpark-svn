@@ -207,32 +207,34 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	NSLog(@"Finished successfully. Walked %u threads.", threadCounter);
 }
 
+- (NSOperationQueue *)operationQueue
+{
+	static NSOperationQueue *queue = nil;
+	
+	if (!queue)
+	{
+		queue = [[NSOperationQueue alloc] init];
+		[queue setMaxConcurrentOperationCount:NSOperationQueueDefaultMaxConcurrentOperationCount];
+	}
+	
+	return queue;
+}
+
 @end
 	
-#import "NSCharacterSet+MIME.h"
+#import "GIAccount.h"
 
-@implementation GIApplication (MessageLeakingTest)
+@implementation GIApplication (SendingAndReceiving)
 
-- (IBAction)findMissingMessageIds:(id)sender
+- (IBAction)sendAndReceiveInAllAccounts:(id)sender
+/*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Creates receive jobs for all accounts."*/
 {
-	NSString *messageIdsFilePath = [[NSBundle mainBundle] pathForResource:@"Message-Ids" ofType:@"txt"];
-	NSAssert(messageIdsFilePath != nil, @"could not find file");
 	
-	NSString *messageIdsString = [NSString stringWithContentsOfFile:messageIdsFilePath];
-	NSAssert(messageIdsString != nil, @"could not read file");
+	NSArray *allAccounts = [[OPPersistentObjectContext defaultContext].allObjectsByClass objectForKey:@"GIAccount"];
 	
-	NSArray *messageIds = [messageIdsString componentsSeparatedByCharactersInSet:[NSCharacterSet linebreakCharacterSet]];
-	
-	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-	
-	for (NSString *messageId in messageIds)
-	{
-		GIMessage *message = [context messageForMessageId:messageId];
-		if (!message)
-		{
-			NSLog(@"Found missing message with ID: %@", messageId);
-		}
-	}
+//	[allAccounts makeObjectsPerformSelector:@selector(send)];
+	[allAccounts makeObjectsPerformSelector:@selector(receive)];
+	[GIAccount resetAccountRetrieveAndSendTimers];
 }
 
 @end

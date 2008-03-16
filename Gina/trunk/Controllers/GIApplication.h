@@ -12,22 +12,28 @@
 
 @interface GIApplication : NSApplication 
 {
-	IBOutlet NSWindow* defaultEmailAppWindow;
+	IBOutlet NSWindow *defaultEmailAppWindow;
 }
 
 
-- (BOOL) isDefaultMailApplication;
-- (void) askForBecomingDefaultMailApplication;
+- (BOOL)isDefaultMailApplication;
+- (void)askForBecomingDefaultMailApplication;
+
+- (NSOperationQueue *)operationQueue;
 
 // Actions:
+- (IBAction)makeDefaultApp:(id)sender;
+- (IBAction)openFile:(id)sender;
 
-- (IBAction) makeDefaultApp: (id) sender;
-- (IBAction) openFile: (id) sender;
-
-- (void) runConsistencyChecks: (id) sender;
-
+- (void)runConsistencyChecks:(id)sender;
 
 @end
 
 extern NSString *GISuspendThreadViewUpdatesNotification;
 extern NSString *GIResumeThreadViewUpdatesNotification;
+
+@interface GIApplication (SendingAndReceiving)
+
+- (IBAction)sendAndReceiveInAllAccounts:(id)sender;
+
+@end

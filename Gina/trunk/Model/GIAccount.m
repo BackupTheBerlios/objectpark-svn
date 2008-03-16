@@ -11,9 +11,9 @@
 #import <Security/Security.h>
 #import <Foundation/NSDebug.h>
 #import "NSString+Extensions.h"
-//#import "GIPOPJob.h"
+#import "GIPOPOperation.h"
 //#import "GISMTPJob.h"
-//#import "GIApplication.h"
+#import "GIApplication.h"
 #import "GIProfile.h"
 #import "GIMessage.h"
 #import "OPPersistence.h"
@@ -750,15 +750,16 @@
 	[self sendMessagesRipeForSendingAtTimeIntervalSinceNow:0.0];
 }
 
-//- (void)receive
-///*" Starts an asynchronous receive job for the receiver. "*/
-//{
-//	if ([[self valueForKey:@"isEnabled"] boolValue] && [self isPOPAccount]) 
-//	{
-//		[self checkpointLastMessageRetrieval];
-//		[GIPOPJob retrieveMessagesFromPOPAccount:self];
-//	}
-//}
+- (void)receive
+/*" Starts an asynchronous receive job for the receiver. "*/
+{
+	if (self.enabled && [self isPOPAccount]) 
+	{
+		[self checkpointLastMessageRetrieval];
+		
+		[GIPOPOperation retrieveMessagesFromPOPAccount:self usingOperationQueue:[GIApp operationQueue]];
+	}
+}
 
 - (void)sendAndReceiveTimerFired:(NSTimer *)aTimer
 {

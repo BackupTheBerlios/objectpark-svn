@@ -77,7 +77,7 @@
 		7744CB990D32A60C008E6567 /* HeaderTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 7744CB980D32A60C008E6567 /* HeaderTemplate.html */; };
 		774FC3060D215A4100CE5FD6 /* GIAccountPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 774FC3050D215A4000CE5FD6 /* GIAccountPrefs.m */; };
 		774FC33B0D215F5400CE5FD6 /* GIAccountPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 774FC33A0D215F5400CE5FD6 /* GIAccountPrefs.xib */; };
-		774FC4BD0D2413DF00CE5FD6 /* NSError+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 774FC4BB0D2413DF00CE5FD6 /* NSError+Extensions.h */; };
+		774FC4BD0D2413DF00CE5FD6 /* NSError+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 774FC4BB0D2413DF00CE5FD6 /* NSError+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		774FC4BE0D2413DF00CE5FD6 /* NSError+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 774FC4BC0D2413DF00CE5FD6 /* NSError+Extensions.m */; };
 		774FC4C40D24149A00CE5FD6 /* GIProfilePrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 774FC4AD0D24061A00CE5FD6 /* GIProfilePrefs.m */; };
 		7759A8770D02E39800AD49CA /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
@@ -102,6 +102,10 @@
 		7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780E0D0707DC0091F21D /* CoreFoundation.framework */; };
 		7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
 		7781686B0D33F04D004AFCC1 /* ToggleSeen.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */; };
+		778866B30D8D8258006EF64D /* GIPOPOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 778866B20D8D8258006EF64D /* GIPOPOperation.m */; };
+		778866B60D8D8264006EF64D /* GIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 778866B50D8D8264006EF64D /* GIOperation.m */; };
+		778866BC0D8D87C2006EF64D /* NSHost+GIReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 778866BB0D8D87C2006EF64D /* NSHost+GIReachability.m */; };
+		7788670D0D8D90A7006EF64D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7788670C0D8D90A7006EF64D /* SystemConfiguration.framework */; };
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77A260990D3755DB0011FEE9 /* GIMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A260980D3755DB0011FEE9 /* GIMainWindow.m */; };
@@ -127,92 +131,92 @@
 		77AF83500D2B95E2002771BA /* NSWorkspace+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF834F0D2B95E2002771BA /* NSWorkspace+OPExtensions.m */; };
 		77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		77B647560D1E46A1001E21D8 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
-		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; };
+		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C5FD0D00546B00A7BEFF /* EDCompositeContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C00D00546B00A7BEFF /* EDCompositeContentCoder.m */; };
-		77B6C5FE0D00546B00A7BEFF /* EDContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C10D00546B00A7BEFF /* EDContentCoder.h */; };
+		77B6C5FE0D00546B00A7BEFF /* EDContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C10D00546B00A7BEFF /* EDContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C5FF0D00546B00A7BEFF /* EDContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C20D00546B00A7BEFF /* EDContentCoder.m */; };
-		77B6C6000D00546B00A7BEFF /* EDDateFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C30D00546B00A7BEFF /* EDDateFieldCoder.h */; };
+		77B6C6000D00546B00A7BEFF /* EDDateFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C30D00546B00A7BEFF /* EDDateFieldCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6010D00546B00A7BEFF /* EDDateFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C40D00546B00A7BEFF /* EDDateFieldCoder.m */; };
-		77B6C6020D00546B00A7BEFF /* EDEntityFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C50D00546B00A7BEFF /* EDEntityFieldCoder.h */; };
+		77B6C6020D00546B00A7BEFF /* EDEntityFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C50D00546B00A7BEFF /* EDEntityFieldCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6030D00546B00A7BEFF /* EDEntityFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C60D00546B00A7BEFF /* EDEntityFieldCoder.m */; };
-		77B6C6040D00546B00A7BEFF /* EDHeaderBearingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C70D00546B00A7BEFF /* EDHeaderBearingObject.h */; };
+		77B6C6040D00546B00A7BEFF /* EDHeaderBearingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C70D00546B00A7BEFF /* EDHeaderBearingObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6050D00546B00A7BEFF /* EDHeaderBearingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C80D00546B00A7BEFF /* EDHeaderBearingObject.m */; };
-		77B6C6060D00546B00A7BEFF /* EDHeaderFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C90D00546B00A7BEFF /* EDHeaderFieldCoder.h */; };
+		77B6C6060D00546B00A7BEFF /* EDHeaderFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5C90D00546B00A7BEFF /* EDHeaderFieldCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6070D00546B00A7BEFF /* EDHeaderFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5CA0D00546B00A7BEFF /* EDHeaderFieldCoder.m */; };
-		77B6C6080D00546B00A7BEFF /* EDIdListFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5CB0D00546B00A7BEFF /* EDIdListFieldCoder.h */; };
+		77B6C6080D00546B00A7BEFF /* EDIdListFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5CB0D00546B00A7BEFF /* EDIdListFieldCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6090D00546B00A7BEFF /* EDIdListFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5CC0D00546B00A7BEFF /* EDIdListFieldCoder.m */; };
-		77B6C60A0D00546B00A7BEFF /* EDMessagePart+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5CD0D00546B00A7BEFF /* EDMessagePart+OPExtensions.h */; };
+		77B6C60A0D00546B00A7BEFF /* EDMessagePart+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5CD0D00546B00A7BEFF /* EDMessagePart+OPExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C60B0D00546B00A7BEFF /* EDMessagePart+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5CE0D00546B00A7BEFF /* EDMessagePart+OPExtensions.m */; };
-		77B6C60C0D00546B00A7BEFF /* EDMessagePart.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5CF0D00546B00A7BEFF /* EDMessagePart.h */; };
+		77B6C60C0D00546B00A7BEFF /* EDMessagePart.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5CF0D00546B00A7BEFF /* EDMessagePart.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C60D0D00546B00A7BEFF /* EDMessagePart.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5D00D00546B00A7BEFF /* EDMessagePart.m */; };
-		77B6C60E0D00546B00A7BEFF /* EDPlainTextContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D10D00546B00A7BEFF /* EDPlainTextContentCoder.h */; };
+		77B6C60E0D00546B00A7BEFF /* EDPlainTextContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D10D00546B00A7BEFF /* EDPlainTextContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C60F0D00546B00A7BEFF /* EDPlainTextContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5D20D00546B00A7BEFF /* EDPlainTextContentCoder.m */; };
-		77B6C6100D00546B00A7BEFF /* EDTextContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D30D00546B00A7BEFF /* EDTextContentCoder.h */; };
+		77B6C6100D00546B00A7BEFF /* EDTextContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D30D00546B00A7BEFF /* EDTextContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6110D00546B00A7BEFF /* EDTextContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5D40D00546B00A7BEFF /* EDTextContentCoder.m */; };
-		77B6C6120D00546B00A7BEFF /* EDTextFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D50D00546B00A7BEFF /* EDTextFieldCoder.h */; };
+		77B6C6120D00546B00A7BEFF /* EDTextFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D50D00546B00A7BEFF /* EDTextFieldCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6130D00546B00A7BEFF /* EDTextFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5D60D00546B00A7BEFF /* EDTextFieldCoder.m */; };
-		77B6C6140D00546B00A7BEFF /* NSAttributedString+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D70D00546B00A7BEFF /* NSAttributedString+MessageUtils.h */; };
+		77B6C6140D00546B00A7BEFF /* NSAttributedString+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D70D00546B00A7BEFF /* NSAttributedString+MessageUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6150D00546B00A7BEFF /* NSAttributedString+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5D80D00546B00A7BEFF /* NSAttributedString+MessageUtils.m */; };
-		77B6C6160D00546B00A7BEFF /* NSCalendarDate+NetExt.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D90D00546B00A7BEFF /* NSCalendarDate+NetExt.h */; };
+		77B6C6160D00546B00A7BEFF /* NSCalendarDate+NetExt.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5D90D00546B00A7BEFF /* NSCalendarDate+NetExt.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6170D00546B00A7BEFF /* NSCalendarDate+NetExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5DA0D00546B00A7BEFF /* NSCalendarDate+NetExt.m */; };
-		77B6C6180D00546B00A7BEFF /* NSCharacterSet+MIME.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5DB0D00546B00A7BEFF /* NSCharacterSet+MIME.h */; };
+		77B6C6180D00546B00A7BEFF /* NSCharacterSet+MIME.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5DB0D00546B00A7BEFF /* NSCharacterSet+MIME.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6190D00546B00A7BEFF /* NSCharacterSet+MIME.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5DC0D00546B00A7BEFF /* NSCharacterSet+MIME.m */; };
-		77B6C61A0D00546B00A7BEFF /* NSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5DD0D00546B00A7BEFF /* NSData+MessageUtils.h */; };
+		77B6C61A0D00546B00A7BEFF /* NSData+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5DD0D00546B00A7BEFF /* NSData+MessageUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C61B0D00546B00A7BEFF /* NSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5DE0D00546B00A7BEFF /* NSData+MessageUtils.m */; };
-		77B6C61C0D00546B00A7BEFF /* NSFileWrapper+OPApplefileExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5DF0D00546B00A7BEFF /* NSFileWrapper+OPApplefileExtensions.h */; };
+		77B6C61C0D00546B00A7BEFF /* NSFileWrapper+OPApplefileExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5DF0D00546B00A7BEFF /* NSFileWrapper+OPApplefileExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C61D0D00546B00A7BEFF /* NSFileWrapper+OPApplefileExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5E00D00546B00A7BEFF /* NSFileWrapper+OPApplefileExtensions.m */; };
-		77B6C61E0D00546B00A7BEFF /* NSString+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5E10D00546B00A7BEFF /* NSString+MessageUtils.h */; };
+		77B6C61E0D00546B00A7BEFF /* NSString+MessageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5E10D00546B00A7BEFF /* NSString+MessageUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C61F0D00546B00A7BEFF /* NSString+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5E20D00546B00A7BEFF /* NSString+MessageUtils.m */; };
-		77B6C6200D00546B00A7BEFF /* OPAppleDoubleContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5E30D00546B00A7BEFF /* OPAppleDoubleContentCoder.h */; };
+		77B6C6200D00546B00A7BEFF /* OPAppleDoubleContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5E30D00546B00A7BEFF /* OPAppleDoubleContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6210D00546B00A7BEFF /* OPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5E40D00546B00A7BEFF /* OPAppleDoubleContentCoder.m */; };
-		77B6C6220D00546B00A7BEFF /* OPApplefileContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5E50D00546B00A7BEFF /* OPApplefileContentCoder.h */; };
+		77B6C6220D00546B00A7BEFF /* OPApplefileContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5E50D00546B00A7BEFF /* OPApplefileContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6230D00546B00A7BEFF /* OPApplefileContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5E60D00546B00A7BEFF /* OPApplefileContentCoder.m */; };
-		77B6C62A0D00548100A7BEFF /* OPInternetMessage+GinkoExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6240D00548000A7BEFF /* OPInternetMessage+GinkoExtensions.h */; };
+		77B6C62A0D00548100A7BEFF /* OPInternetMessage+GinkoExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6240D00548000A7BEFF /* OPInternetMessage+GinkoExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C62B0D00548100A7BEFF /* OPInternetMessage+GinkoExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6250D00548000A7BEFF /* OPInternetMessage+GinkoExtensions.m */; };
-		77B6C62C0D00548100A7BEFF /* OPInternetMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6260D00548000A7BEFF /* OPInternetMessage.h */; };
+		77B6C62C0D00548100A7BEFF /* OPInternetMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6260D00548000A7BEFF /* OPInternetMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C62D0D00548100A7BEFF /* OPInternetMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6270D00548000A7BEFF /* OPInternetMessage.m */; };
-		77B6C62E0D00548100A7BEFF /* OPMBoxFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6280D00548100A7BEFF /* OPMBoxFile.h */; };
+		77B6C62E0D00548100A7BEFF /* OPMBoxFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6280D00548100A7BEFF /* OPMBoxFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C62F0D00548100A7BEFF /* OPMBoxFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6290D00548100A7BEFF /* OPMBoxFile.m */; };
-		77B6C63E0D00548C00A7BEFF /* OPMultimediaContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6300D00548C00A7BEFF /* OPMultimediaContentCoder.h */; };
+		77B6C63E0D00548C00A7BEFF /* OPMultimediaContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6300D00548C00A7BEFF /* OPMultimediaContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C63F0D00548C00A7BEFF /* OPMultimediaContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6310D00548C00A7BEFF /* OPMultimediaContentCoder.m */; };
-		77B6C6400D00548C00A7BEFF /* OPMultipartContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6320D00548C00A7BEFF /* OPMultipartContentCoder.h */; };
+		77B6C6400D00548C00A7BEFF /* OPMultipartContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6320D00548C00A7BEFF /* OPMultipartContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6410D00548C00A7BEFF /* OPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6330D00548C00A7BEFF /* OPMultipartContentCoder.m */; };
-		77B6C6420D00548C00A7BEFF /* OPPOP3Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6340D00548C00A7BEFF /* OPPOP3Session.h */; };
+		77B6C6420D00548C00A7BEFF /* OPPOP3Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6340D00548C00A7BEFF /* OPPOP3Session.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6430D00548C00A7BEFF /* OPPOP3Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6350D00548C00A7BEFF /* OPPOP3Session.m */; };
-		77B6C6440D00548C00A7BEFF /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6360D00548C00A7BEFF /* OPSMTP.h */; };
+		77B6C6440D00548C00A7BEFF /* OPSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6360D00548C00A7BEFF /* OPSMTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6450D00548C00A7BEFF /* OPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6370D00548C00A7BEFF /* OPSMTP.m */; };
-		77B6C6460D00548C00A7BEFF /* OPSMTP+InternetMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6380D00548C00A7BEFF /* OPSMTP+InternetMessage.h */; };
+		77B6C6460D00548C00A7BEFF /* OPSMTP+InternetMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6380D00548C00A7BEFF /* OPSMTP+InternetMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6470D00548C00A7BEFF /* OPSMTP+InternetMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6390D00548C00A7BEFF /* OPSMTP+InternetMessage.m */; };
-		77B6C6480D00548C00A7BEFF /* OPURLFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C63A0D00548C00A7BEFF /* OPURLFieldCoder.h */; };
+		77B6C6480D00548C00A7BEFF /* OPURLFieldCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C63A0D00548C00A7BEFF /* OPURLFieldCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6490D00548C00A7BEFF /* OPURLFieldCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C63B0D00548C00A7BEFF /* OPURLFieldCoder.m */; };
-		77B6C64A0D00548C00A7BEFF /* OPXFolderContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C63C0D00548C00A7BEFF /* OPXFolderContentCoder.h */; };
+		77B6C64A0D00548C00A7BEFF /* OPXFolderContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C63C0D00548C00A7BEFF /* OPXFolderContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C64B0D00548C00A7BEFF /* OPXFolderContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C63D0D00548C00A7BEFF /* OPXFolderContentCoder.m */; };
-		77B6C64E0D00549A00A7BEFF /* OPSASL.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C64C0D00549A00A7BEFF /* OPSASL.h */; };
+		77B6C64E0D00549A00A7BEFF /* OPSASL.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C64C0D00549A00A7BEFF /* OPSASL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C64F0D00549A00A7BEFF /* OPSASL.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C64D0D00549A00A7BEFF /* OPSASL.m */; };
-		77B6C6720D0056CE00A7BEFF /* NSString+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6700D0056CE00A7BEFF /* NSString+Extensions.h */; };
+		77B6C6720D0056CE00A7BEFF /* NSString+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C6700D0056CE00A7BEFF /* NSString+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C6730D0056CE00A7BEFF /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6710D0056CE00A7BEFF /* NSString+Extensions.m */; };
-		77B6C71F0D00653A00A7BEFF /* NSString+OPHTMLTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C71D0D00653A00A7BEFF /* NSString+OPHTMLTools.h */; };
+		77B6C71F0D00653A00A7BEFF /* NSString+OPHTMLTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C71D0D00653A00A7BEFF /* NSString+OPHTMLTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7200D00653A00A7BEFF /* NSString+OPHTMLTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C71E0D00653A00A7BEFF /* NSString+OPHTMLTools.m */; };
-		77B6C7440D00669400A7BEFF /* NSAttributedString+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7420D00669400A7BEFF /* NSAttributedString+Extensions.h */; };
+		77B6C7440D00669400A7BEFF /* NSAttributedString+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7420D00669400A7BEFF /* NSAttributedString+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7450D00669400A7BEFF /* NSAttributedString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C7430D00669400A7BEFF /* NSAttributedString+Extensions.m */; };
-		77B6C7480D00669F00A7BEFF /* NSArray+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7460D00669F00A7BEFF /* NSArray+Extensions.h */; };
+		77B6C7480D00669F00A7BEFF /* NSArray+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7460D00669F00A7BEFF /* NSArray+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7490D00669F00A7BEFF /* NSArray+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C7470D00669F00A7BEFF /* NSArray+Extensions.m */; };
-		77B6C75C0D0067F000A7BEFF /* NSData+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C75A0D0067F000A7BEFF /* NSData+Extensions.h */; };
+		77B6C75C0D0067F000A7BEFF /* NSData+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C75A0D0067F000A7BEFF /* NSData+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C75D0D0067F000A7BEFF /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C75B0D0067F000A7BEFF /* NSData+Extensions.m */; };
-		77B6C7660D00683200A7BEFF /* OPInternetMessageAttachmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7640D00683200A7BEFF /* OPInternetMessageAttachmentCell.h */; };
+		77B6C7660D00683200A7BEFF /* OPInternetMessageAttachmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7640D00683200A7BEFF /* OPInternetMessageAttachmentCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7670D00683200A7BEFF /* OPInternetMessageAttachmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C7650D00683200A7BEFF /* OPInternetMessageAttachmentCell.m */; };
-		77B6C7710D00687200A7BEFF /* NSObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C76F0D00687200A7BEFF /* NSObject+Extensions.h */; };
+		77B6C7710D00687200A7BEFF /* NSObject+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C76F0D00687200A7BEFF /* NSObject+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7720D00687200A7BEFF /* NSObject+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C7700D00687200A7BEFF /* NSObject+Extensions.m */; };
-		77B6C7830D006A4000A7BEFF /* NSScanner+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7810D006A4000A7BEFF /* NSScanner+Extensions.h */; };
+		77B6C7830D006A4000A7BEFF /* NSScanner+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7810D006A4000A7BEFF /* NSScanner+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7840D006A4000A7BEFF /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C7820D006A4000A7BEFF /* NSScanner+Extensions.m */; };
-		77B6C7950D006AF000A7BEFF /* NSData+OPMD5.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7930D006AF000A7BEFF /* NSData+OPMD5.h */; };
+		77B6C7950D006AF000A7BEFF /* NSData+OPMD5.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7930D006AF000A7BEFF /* NSData+OPMD5.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7960D006AF000A7BEFF /* NSData+OPMD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C7940D006AF000A7BEFF /* NSData+OPMD5.m */; };
-		77B6C7E40D00746C00A7BEFF /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7E20D00746C00A7BEFF /* NSApplication+OPExtensions.h */; };
+		77B6C7E40D00746C00A7BEFF /* NSApplication+OPExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C7E20D00746C00A7BEFF /* NSApplication+OPExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C7E50D00746C00A7BEFF /* NSApplication+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C7E30D00746C00A7BEFF /* NSApplication+OPExtensions.m */; };
 		77B6C8010D00754600A7BEFF /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B6C7FF0D00754600A7BEFF /* libxml2.dylib */; };
 		77B6C8020D00754600A7BEFF /* libsasl2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B6C8000D00754600A7BEFF /* libsasl2.dylib */; };
 		77B6C80A0D0075AC00A7BEFF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		77B6C8160D00761E00A7BEFF /* EDObjcRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C8150D00761E00A7BEFF /* EDObjcRuntime.h */; };
+		77B6C8160D00761E00A7BEFF /* EDObjcRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C8150D00761E00A7BEFF /* EDObjcRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C9310D019BF400A7BEFF /* TestNSString+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B20D00546B00A7BEFF /* TestNSString+MessageUtils.m */; };
 		77B6C97E0D01A25900A7BEFF /* TestNSData+MessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5BA0D00546B00A7BEFF /* TestNSData+MessageUtils.m */; };
 		77B6C99C0D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt in Resources */ = {isa = PBXBuildFile; fileRef = 77B6C9990D01A37000A7BEFF /* multipartAlternativeTest-mbox.txt */; };
@@ -440,6 +444,13 @@
 		7780780E0D0707DC0091F21D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ToggleSeen.tiff; sourceTree = "<group>"; };
+		778866B10D8D8258006EF64D /* GIPOPOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPOPOperation.h; sourceTree = "<group>"; };
+		778866B20D8D8258006EF64D /* GIPOPOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPOPOperation.m; sourceTree = "<group>"; };
+		778866B40D8D8264006EF64D /* GIOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOperation.h; sourceTree = "<group>"; };
+		778866B50D8D8264006EF64D /* GIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOperation.m; sourceTree = "<group>"; };
+		778866BA0D8D87C2006EF64D /* NSHost+GIReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSHost+GIReachability.h"; sourceTree = "<group>"; };
+		778866BB0D8D87C2006EF64D /* NSHost+GIReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSHost+GIReachability.m"; sourceTree = "<group>"; };
+		7788670C0D8D90A7006EF64D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		77A260970D3755DB0011FEE9 /* GIMainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMainWindow.h; sourceTree = "<group>"; };
 		77A260980D3755DB0011FEE9 /* GIMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMainWindow.m; sourceTree = "<group>"; };
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
@@ -694,6 +705,7 @@
 				7736143B0D1C10D3007FC630 /* Security.framework in Frameworks */,
 				7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */,
 				77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */,
+				7788670D0D8D90A7006EF64D /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +715,7 @@
 		080E96DDFE201D6D7F000001 /* Gina */ = {
 			isa = PBXGroup;
 			children = (
+				7788669E0D8D81EE006EF64D /* Operations */,
 				77AF83130D2B94E9002771BA /* Cocoa Extensions */,
 				773612550D1AB796007FC630 /* Custom Views */,
 				775C312E0D0D45E50098DA07 /* Controllers */,
@@ -718,6 +731,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7788670C0D8D90A7006EF64D /* SystemConfiguration.framework */,
+				7761D9780D02FB8B0044E65A /* InternetMessage.framework */,
 				775C30FB0D0D40620098DA07 /* OPPreferences.framework */,
 				7759A8760D02E39800AD49CA /* OPNetwork.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
@@ -742,7 +757,6 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7761D9780D02FB8B0044E65A /* InternetMessage.framework */,
 				8D1107320486CEB800E47090 /* Gina.app */,
 				77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */,
 				777B05CB0D031DE40080B76F /* InternetMessage.framework */,
@@ -1040,9 +1054,22 @@
 			name = Spotlight;
 			sourceTree = "<group>";
 		};
+		7788669E0D8D81EE006EF64D /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				778866B40D8D8264006EF64D /* GIOperation.h */,
+				778866B50D8D8264006EF64D /* GIOperation.m */,
+				778866B10D8D8258006EF64D /* GIPOPOperation.h */,
+				778866B20D8D8258006EF64D /* GIPOPOperation.m */,
+			);
+			path = Operations;
+			sourceTree = "<group>";
+		};
 		77AF83130D2B94E9002771BA /* Cocoa Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				778866BA0D8D87C2006EF64D /* NSHost+GIReachability.h */,
+				778866BB0D8D87C2006EF64D /* NSHost+GIReachability.m */,
 				77AF83140D2B951B002771BA /* NSBezierPath+RoundedRect.h */,
 				77AF83150D2B951B002771BA /* NSBezierPath+RoundedRect.m */,
 				77AF831E0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.h */,
@@ -1774,6 +1801,9 @@
 				77F4F59F0D8276C1008B0103 /* GISplitView.m in Sources */,
 				77F4F5AE0D827EFA008B0103 /* GISeparatorButton.m in Sources */,
 				8DD1B0280D82964400E109BB /* GIMessageGroupOutlineViewController.m in Sources */,
+				778866B30D8D8258006EF64D /* GIPOPOperation.m in Sources */,
+				778866B60D8D8264006EF64D /* GIOperation.m in Sources */,
+				778866BC0D8D87C2006EF64D /* NSHost+GIReachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="29"/>
+			<integer value="395"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -657,6 +657,52 @@
 							<string key="NSTitle">Mailbox</string>
 							<object class="NSMutableArray" key="NSMenuItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMenuItem" id="521546652">
+									<reference key="NSMenu" ref="510989396"/>
+									<string key="NSTitle">Send and Receive</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="474889942"/>
+									<reference key="NSMixedImage" ref="648057667"/>
+									<string key="NSAction">submenuAction:</string>
+									<object class="NSMenu" key="NSSubmenu" id="85716777">
+										<string key="NSTitle">Send and Receive</string>
+										<object class="NSMutableArray" key="NSMenuItems">
+											<bool key="EncodedWithXMLCoder">YES</bool>
+											<object class="NSMenuItem" id="239607688">
+												<reference key="NSMenu" ref="85716777"/>
+												<string key="NSTitle">In All Accounts</string>
+												<string key="NSKeyEquiv">k</string>
+												<int key="NSKeyEquivModMask">1048576</int>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="474889942"/>
+												<reference key="NSMixedImage" ref="648057667"/>
+											</object>
+											<object class="NSMenuItem" id="145309005">
+												<reference key="NSMenu" ref="85716777"/>
+												<bool key="NSIsDisabled">YES</bool>
+												<bool key="NSIsSeparator">YES</bool>
+												<string key="NSTitle"/>
+												<string key="NSKeyEquiv"/>
+												<int key="NSKeyEquivModMask">1048576</int>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="474889942"/>
+												<reference key="NSMixedImage" ref="648057667"/>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="NSMenuItem" id="530446496">
+									<reference key="NSMenu" ref="510989396"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="474889942"/>
+									<reference key="NSMixedImage" ref="648057667"/>
+								</object>
 								<object class="NSMenuItem" id="79843027">
 									<reference key="NSMenu" ref="510989396"/>
 									<string key="NSTitle">New Mailbox</string>
@@ -1078,6 +1124,14 @@
 						<reference key="destination" ref="79843027"/>
 					</object>
 					<int key="connectionID">477</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sendAndReceiveInAllAccounts:</string>
+						<reference key="source" ref="1021"/>
+						<reference key="destination" ref="239607688"/>
+					</object>
+					<int key="connectionID">488</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1677,7 +1731,9 @@
 						<reference key="object" ref="510989396"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="530446496"/>
 							<reference ref="79843027"/>
+							<reference ref="521546652"/>
 						</object>
 						<reference key="parent" ref="500691702"/>
 					</object>
@@ -1690,6 +1746,40 @@
 						<int key="objectID">448</int>
 						<reference key="object" ref="941795371"/>
 						<reference key="parent" ref="1049"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">479</int>
+						<reference key="object" ref="530446496"/>
+						<reference key="parent" ref="510989396"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">484</int>
+						<reference key="object" ref="521546652"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="85716777"/>
+						</object>
+						<reference key="parent" ref="510989396"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">485</int>
+						<reference key="object" ref="85716777"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="145309005"/>
+							<reference ref="239607688"/>
+						</object>
+						<reference key="parent" ref="521546652"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">486</int>
+						<reference key="object" ref="145309005"/>
+						<reference key="parent" ref="85716777"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">487</int>
+						<reference key="object" ref="239607688"/>
+						<reference key="parent" ref="85716777"/>
 					</object>
 				</object>
 			</object>
@@ -1845,6 +1935,16 @@
 					<string>395.IBEditorWindowLastContentRect</string>
 					<string>395.IBPluginDependency</string>
 					<string>396.IBPluginDependency</string>
+					<string>479.IBPluginDependency</string>
+					<string>484.IBPluginDependency</string>
+					<string>484.ImportedFromIB2</string>
+					<string>485.IBEditorWindowLastContentRect</string>
+					<string>485.IBPluginDependency</string>
+					<string>485.ImportedFromIB2</string>
+					<string>486.IBPluginDependency</string>
+					<string>486.ImportedFromIB2</string>
+					<string>487.IBPluginDependency</string>
+					<string>487.ImportedFromIB2</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.ImportedFromIB2</string>
 					<string>56.IBPluginDependency</string>
@@ -2021,9 +2121,19 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{250, 745}, {195, 23}}</string>
+					<string>{{250, 715}, {225, 53}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<integer value="1" id="5"/>
+					<string>{{475, 735}, {180, 33}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<reference ref="5"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<reference ref="5"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<reference ref="5"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2074,7 +2184,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">477</int>
+			<int key="maxID">488</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2100,9 +2210,11 @@
 							<string>makeDefaultApp:</string>
 							<string>openFile:</string>
 							<string>runConsistencyChecks:</string>
+							<string>sendAndReceiveInAllAccounts:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
