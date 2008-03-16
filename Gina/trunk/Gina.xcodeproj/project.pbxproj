@@ -106,6 +106,8 @@
 		778866B60D8D8264006EF64D /* GIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 778866B50D8D8264006EF64D /* GIOperation.m */; };
 		778866BC0D8D87C2006EF64D /* NSHost+GIReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 778866BB0D8D87C2006EF64D /* NSHost+GIReachability.m */; };
 		7788670D0D8D90A7006EF64D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7788670C0D8D90A7006EF64D /* SystemConfiguration.framework */; };
+		778867810D8D9746006EF64D /* GIPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 778867800D8D9746006EF64D /* GIPasswordController.m */; };
+		778867830D8D979F006EF64D /* Password.nib in Resources */ = {isa = PBXBuildFile; fileRef = 778867820D8D979F006EF64D /* Password.nib */; };
 		778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77A260990D3755DB0011FEE9 /* GIMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A260980D3755DB0011FEE9 /* GIMainWindow.m */; };
@@ -451,6 +453,9 @@
 		778866BA0D8D87C2006EF64D /* NSHost+GIReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSHost+GIReachability.h"; sourceTree = "<group>"; };
 		778866BB0D8D87C2006EF64D /* NSHost+GIReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSHost+GIReachability.m"; sourceTree = "<group>"; };
 		7788670C0D8D90A7006EF64D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		7788677F0D8D9746006EF64D /* GIPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPasswordController.h; sourceTree = "<group>"; };
+		778867800D8D9746006EF64D /* GIPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPasswordController.m; sourceTree = "<group>"; };
+		778867820D8D979F006EF64D /* Password.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Password.nib; sourceTree = "<group>"; };
 		77A260970D3755DB0011FEE9 /* GIMainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMainWindow.h; sourceTree = "<group>"; };
 		77A260980D3755DB0011FEE9 /* GIMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMainWindow.m; sourceTree = "<group>"; };
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
@@ -836,6 +841,7 @@
 				77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */,
 				7736124D0D1AB69F007FC630 /* MainWindow.xib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				778867820D8D979F006EF64D /* Password.nib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1032,6 +1038,8 @@
 				775C31300D0D46280098DA07 /* GIApplication.m */,
 				773612500D1AB6F2007FC630 /* GIMainWindowController.h */,
 				773612510D1AB6F2007FC630 /* GIMainWindowController.m */,
+				7788677F0D8D9746006EF64D /* GIPasswordController.h */,
+				778867800D8D9746006EF64D /* GIPasswordController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1579,6 +1587,7 @@
 				8DD1B0270D82963C00E109BB /* SplitterHandle.tiff in Resources */,
 				776B78AB0D8581F9008317E5 /* Show_Status_Pressed.tiff in Resources */,
 				776B78AC0D8581F9008317E5 /* Show_Status.tiff in Resources */,
+				778867830D8D979F006EF64D /* Password.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1804,6 +1813,7 @@
 				778866B30D8D8258006EF64D /* GIPOPOperation.m in Sources */,
 				778866B60D8D8264006EF64D /* GIOperation.m in Sources */,
 				778866BC0D8D87C2006EF64D /* NSHost+GIReachability.m in Sources */,
+				778867810D8D9746006EF64D /* GIPasswordController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

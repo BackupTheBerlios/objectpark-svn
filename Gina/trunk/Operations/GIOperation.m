@@ -49,3 +49,57 @@ NSString *JobProgressDescription = @"OPJobProgressDescription";
 
 @end
 
+#import "GIPasswordController.h"
+#import "GIAccount.h"
+
+@implementation GIOperation (GinkoExtensions)
+
++ (void)openPasswordPanel:(NSMutableDictionary *)someParameters
+/*" Called in main thread to open the panel. "*/
+{
+    [[[GIPasswordController alloc] initWithParamenters:someParameters] autorelease];
+}
+
++ (NSString *)runPasswordPanelWithAccount:(GIAccount *)anAccount forIncomingPassword:(BOOL)isIncoming
+{
+    NSParameterAssert(anAccount != nil);
+	
+    NSMutableDictionary *rslt = [NSMutableDictionary dictionary];
+    // prepare parameter dictionary for cross thread method call
+    NSMutableDictionary *parameterDict = [NSMutableDictionary dictionary];
+    [parameterDict setObject:[NSNumber numberWithBool:isIncoming] forKey:@"isIncoming"];
+    [parameterDict setObject:anAccount forKey:@"account"];
+    [parameterDict setObject:rslt forKey:@"result"];
+    
+    // open panel in main thread
+    [self performSelectorOnMainThread:@selector(openPasswordPanel:) withObject:parameterDict waitUntilDone:YES];
+    
+    NSString *password = nil;
+    
+    // wait for the panel controller to set an object for key @"finished".
+    do
+    {
+        id finished;
+        
+        @synchronized(rslt) 
+        {
+            finished = [rslt objectForKey:@"finished"];
+            password = [rslt objectForKey:@"password"];
+        }
+		
+        if (finished) break;
+        
+        else
+        {
+            // sleep for 1 second
+            //[[NSRunLoop currentRunLoop] run];
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+        }
+    }
+    while (YES);
+    
+    return password;
+}
+
+@end
+

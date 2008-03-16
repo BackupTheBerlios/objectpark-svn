@@ -27,3 +27,11 @@ extern NSString *JobProgressMinValue;
 extern NSString *JobProgressMaxValue;
 extern NSString *JobProgressCurrentValue;
 extern NSString *JobProgressDescription;
+
+@class GIAccount;
+
+@interface GIOperation (GinkoExtensions)
+
++ (NSString *)runPasswordPanelWithAccount:(GIAccount *)anAccount forIncomingPassword:(BOOL)isIncoming;
+
+@end

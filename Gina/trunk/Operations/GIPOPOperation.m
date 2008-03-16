@@ -217,8 +217,7 @@
     
     if (![password length]) 
 	{
-#warning password panel here!
-//        password = [[[[OPJob alloc] init] autorelease] runPasswordPanelWithAccount:account forIncomingPassword:YES];
+        password = [GIOperation runPasswordPanelWithAccount:account forIncomingPassword:YES];
     }
     return password;
 }
