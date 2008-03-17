@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="132"/>
+			<integer value="83"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1012,7 +1012,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 												</object>
 												<object class="NSScrollView" id="813588827">
 													<reference key="NSNextResponder" ref="237807790"/>
-													<int key="NSvFlags">290</int>
+													<int key="NSvFlags">4386</int>
 													<object class="NSMutableArray" key="NSSubviews">
 														<bool key="EncodedWithXMLCoder">YES</bool>
 														<object class="NSClipView" id="529056180">
@@ -1022,22 +1022,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																<bool key="EncodedWithXMLCoder">YES</bool>
 																<object class="NSTableView" id="129684282">
 																	<reference key="NSNextResponder" ref="529056180"/>
-																	<int key="NSvFlags">256</int>
-																	<string key="NSFrameSize">{237, 120}</string>
+																	<int key="NSvFlags">4352</int>
+																	<string key="NSFrameSize">{237, 136}</string>
 																	<reference key="NSSuperview" ref="529056180"/>
 																	<bool key="NSEnabled">YES</bool>
-																	<object class="NSTableHeaderView" key="NSHeaderView" id="828873681">
-																		<reference key="NSNextResponder" ref="606062354"/>
-																		<int key="NSvFlags">256</int>
-																		<string key="NSFrameSize">{237, 17}</string>
-																		<reference key="NSSuperview" ref="606062354"/>
-																		<reference key="NSTableView" ref="129684282"/>
-																	</object>
-																	<object class="_NSCornerView" key="NSCornerView" id="940495202">
-																		<reference key="NSNextResponder" ref="813588827"/>
+																	<object class="_NSCornerView" key="NSCornerView">
+																		<nil key="NSNextResponder"/>
 																		<int key="NSvFlags">256</int>
 																		<string key="NSFrame">{{238, 0}, {16, 17}}</string>
-																		<reference key="NSSuperview" ref="813588827"/>
 																	</object>
 																	<object class="NSMutableArray" key="NSTableColumns">
 																		<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1118,7 +1110,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																	<bool key="NSAllowsTypeSelect">YES</bool>
 																</object>
 															</object>
-															<string key="NSFrame">{{1, 17}, {237, 120}}</string>
+															<string key="NSFrame">{{1, 1}, {237, 136}}</string>
 															<reference key="NSSuperview" ref="813588827"/>
 															<reference key="NSNextKeyView" ref="129684282"/>
 															<reference key="NSDocView" ref="129684282"/>
@@ -1128,12 +1120,11 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 														<object class="NSScroller" id="715480075">
 															<reference key="NSNextResponder" ref="813588827"/>
 															<int key="NSvFlags">256</int>
-															<string key="NSFrame">{{238, 17}, {15, 120}}</string>
+															<string key="NSFrame">{{238, 1}, {15, 136}}</string>
 															<reference key="NSSuperview" ref="813588827"/>
 															<reference key="NSTarget" ref="813588827"/>
 															<string key="NSAction">_doScroller:</string>
-															<double key="NSCurValue">3.700000e+01</double>
-															<double key="NSPercent">1.947368e-01</double>
+															<double key="NSPercent">9.927536e-01</double>
 														</object>
 														<object class="NSScroller" id="345185339">
 															<reference key="NSNextResponder" ref="813588827"/>
@@ -1145,21 +1136,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 															<string key="NSAction">_doScroller:</string>
 															<double key="NSPercent">5.714286e-01</double>
 														</object>
-														<object class="NSClipView" id="606062354">
-															<reference key="NSNextResponder" ref="813588827"/>
-															<int key="NSvFlags">2304</int>
-															<object class="NSMutableArray" key="NSSubviews">
-																<bool key="EncodedWithXMLCoder">YES</bool>
-																<reference ref="828873681"/>
-															</object>
-															<string key="NSFrame">{{1, 0}, {237, 17}}</string>
-															<reference key="NSSuperview" ref="813588827"/>
-															<reference key="NSNextKeyView" ref="828873681"/>
-															<reference key="NSDocView" ref="828873681"/>
-															<reference key="NSBGColor" ref="1037779458"/>
-															<int key="NScvFlags">4</int>
-														</object>
-														<reference ref="940495202"/>
 													</object>
 													<string key="NSFrame">{{2, 21}, {254, 138}}</string>
 													<reference key="NSSuperview" ref="237807790"/>
@@ -1168,8 +1144,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 													<reference key="NSVScroller" ref="715480075"/>
 													<reference key="NSHScroller" ref="345185339"/>
 													<reference key="NSContentView" ref="529056180"/>
-													<reference key="NSHeaderClipView" ref="606062354"/>
-													<reference key="NSCornerView" ref="940495202"/>
 													<bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
 												</object>
 											</object>
@@ -2052,10 +2026,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								</object>
 								<object class="NSMutableArray" key="dict.values">
 									<bool key="EncodedWithXMLCoder">YES</bool>
-									<integer value="0" id="6"/>
-									<reference ref="6"/>
-									<integer value="1" id="5"/>
-									<reference ref="5"/>
+									<real value="0.000000e+00" id="126606337"/>
+									<reference ref="126606337"/>
+									<reference ref="9"/>
+									<reference ref="9"/>
 									<string>cancel</string>
 								</object>
 							</object>
@@ -2500,7 +2474,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<reference ref="715480075"/>
 							<reference ref="345185339"/>
 							<reference ref="129684282"/>
-							<reference ref="828873681"/>
 						</object>
 						<reference key="parent" ref="352235746"/>
 					</object>
@@ -2522,11 +2495,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<reference ref="701358060"/>
 							<reference ref="866876492"/>
 						</object>
-						<reference key="parent" ref="813588827"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">133</int>
-						<reference key="object" ref="828873681"/>
 						<reference key="parent" ref="813588827"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -2594,7 +2562,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>130.IBPluginDependency</string>
 					<string>131.IBPluginDependency</string>
 					<string>132.IBPluginDependency</string>
-					<string>133.IBPluginDependency</string>
 					<string>134.IBPluginDependency</string>
 					<string>135.IBPluginDependency</string>
 					<string>137.IBPluginDependency</string>
@@ -2646,10 +2613,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{162, 199}, {759, 520}}</string>
+					<string>{{89, 199}, {759, 520}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{162, 199}, {759, 520}}</string>
-					<real value="0.000000e+00"/>
+					<string>{{89, 199}, {759, 520}}</string>
+					<reference ref="126606337"/>
 					<string>{196, 240}</string>
 					<string>{{195, 67}, {759, 520}}</string>
 					<object class="NSDictionary">
@@ -2665,7 +2632,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>{{86, 116}, {850, 584}}</string>
 						</object>
 					</object>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
