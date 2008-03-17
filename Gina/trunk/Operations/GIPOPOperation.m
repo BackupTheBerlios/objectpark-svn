@@ -122,7 +122,7 @@
                     [self setProgressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, self.account.incomingServerName]];
                     
                     // putting onto disk:
-					NSString *transferDataPath = [importPath stringByAppendingPathComponent:[NSString stringWithFormat:@"TransferData-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
+					NSString *transferDataPath = [importPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
 
 					if (![transferData writeToFile:transferDataPath atomically:YES])
 					{
