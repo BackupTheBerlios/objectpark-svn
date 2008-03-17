@@ -16,6 +16,9 @@
 #import <InternetMessage/NSData+MessageUtils.h>
 #import <Foundation/NSDebug.h>
 
+NSString *GIPOPOperationDidStartNotification = @"GIPOPOperationDidStartNotification";
+NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification";
+
 @implementation GIPOPOperation
 
 @synthesize account;
@@ -65,6 +68,8 @@
 {
 	@try
 	{
+		BOOL sentStartedNotification = NO;
+
 		// finding host:
 		[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"finding %@", @"progress description in POP job"), self.account.incomingServerName]];
 		
@@ -131,21 +136,19 @@
 						{
 							@throw [NSException exceptionWithName:NSGenericException reason:@"Transfer data couldn't be written." userInfo:nil];
 						}
-												
+									
+						if (!sentStartedNotification)
+						{
+							NSNotification *notification = [NSNotification notificationWithName:GIPOPOperationDidStartNotification object:self.account];
+							
+							[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
+
+							sentStartedNotification = YES;
+						}
+						
 						fetchCount++;
 					}
-					
-					// set result:
-					if (fetchCount > 0) 
-					{
-#warning signal success here for importing transfer data files?
-						//					[self setResult:[mboxFile path]];
-					} 
-					else 
-					{
-						//					[mboxFile remove];
-					}
-					
+										
 					// cleaning up maildrop:
 					if (![[self deletionDate] isEqualTo:[NSDate distantFuture]]) 
 					{
@@ -191,6 +194,13 @@
 			@finally
 			{
 				[stream close];
+				
+				if (sentStartedNotification)
+				{
+					NSNotification *notification = [NSNotification notificationWithName:GIPOPOperationDidEndNotification object:self.account];
+					
+					[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
+				}
 			}
 		} 
 		else 

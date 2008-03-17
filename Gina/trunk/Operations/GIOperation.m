@@ -16,7 +16,6 @@ NSString *JobProgressDescription = @"OPJobProgressDescription";
 @implementation GIOperation
 
 @synthesize progressInfo;
-@synthesize result;
 
 - (void)setProgressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription
 {
@@ -42,7 +41,6 @@ NSString *JobProgressDescription = @"OPJobProgressDescription";
 - (void)dealloc
 {
 	[progressInfo release];
-	[result release];
 	
 	[super dealloc];
 }

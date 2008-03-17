@@ -24,3 +24,6 @@
 - (id)initWithAccount:(GIAccount *)anAccount;
 
 @end
+
+extern NSString *GIPOPOperationDidStartNotification;
+extern NSString *GIPOPOperationDidEndNotification;

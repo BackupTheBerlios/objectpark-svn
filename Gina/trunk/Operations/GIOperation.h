@@ -12,11 +12,9 @@
 @interface GIOperation : NSOperation 
 {
 	NSDictionary *progressInfo;
-	id result;
 }
 
 @property (readwrite, copy) NSDictionary *progressInfo;
-@property (readwrite, retain) id result;
 
 - (void)setProgressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription;
 - (void)setIndeterminateProgressInfoWithDescription:(NSString *)aDescription;
