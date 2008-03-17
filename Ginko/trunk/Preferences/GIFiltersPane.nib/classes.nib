@@ -1,62 +1,128 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                actionMoveParameterDidChange = id; 
-                actionsChanged = id; 
-                addExpression = id; 
-                addFilter = id; 
-                cloneFilter = id; 
-                modeChanged = id; 
-                removeExpression = id; 
-                removeFilter = id; 
-            }; 
-            CLASS = GIFiltersPane; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                actionMoveCheckbox = NSButton; 
-                actionMoveParameter = NSPopUpButton; 
-                actionPreventCheckbox = NSButton; 
-                filtersTableView = NSTableView; 
-                markAsSpamCheckbox = NSButton; 
-                matchingModePopUp = NSPopUpButton; 
-                matchingTableView = NSTableView; 
-            }; 
-            SUPERCLASS = OPPreferencePane; 
-        }, 
-        {
-            ACTIONS = {acceptSheet = id; addExpression = id; dismissSheet = id; }; 
-            CLASS = GIFiltersPaneSheetController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                actionMoveCheckbox = NSButton; 
-                actionMoveParameter = NSPopUpButton; 
-                actionPreventCheckbox = NSButton; 
-                descriptionTextField = NSTextField; 
-                filtersPane = GIFiltersPane; 
-                matchingModePopUp = NSPopUpButton; 
-                matchingTableView = NSTableView; 
-                scopeIncomingCheckbox = NSButton; 
-                scopeManualCheckbox = NSButton; 
-                scopeOutgoingCheckbox = NSButton; 
-                sheet = NSWindow; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = NSPreferencePane; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "_firstKeyView" = NSView; 
-                "_initialKeyView" = NSView; 
-                "_lastKeyView" = NSView; 
-                "_window" = NSWindow; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = OPPreferencePane; LANGUAGE = ObjC; SUPERCLASS = NSPreferencePane; }, 
-        {CLASS = OPTableColumn; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>NSApplication</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>actionMoveParameterDidChange</key>
+				<string>id</string>
+				<key>actionsChanged</key>
+				<string>id</string>
+				<key>addExpression</key>
+				<string>id</string>
+				<key>addFilter</key>
+				<string>id</string>
+				<key>cloneFilter</key>
+				<string>id</string>
+				<key>modeChanged</key>
+				<string>id</string>
+				<key>removeExpression</key>
+				<string>id</string>
+				<key>removeFilter</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>GIFiltersPane</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>actionMoveCheckbox</key>
+				<string>NSButton</string>
+				<key>actionMoveParameter</key>
+				<string>NSPopUpButton</string>
+				<key>actionPreventCheckbox</key>
+				<string>NSButton</string>
+				<key>filtersTableView</key>
+				<string>NSTableView</string>
+				<key>markAsSpamCheckbox</key>
+				<string>NSButton</string>
+				<key>matchingModePopUp</key>
+				<string>NSPopUpButton</string>
+				<key>matchingTableView</key>
+				<string>NSTableView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>OPPreferencePane</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>OPPreferencePane</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSPreferencePane</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSPreferencePane</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>_firstKeyView</key>
+				<string>NSView</string>
+				<key>_initialKeyView</key>
+				<string>NSView</string>
+				<key>_lastKeyView</key>
+				<string>NSView</string>
+				<key>_window</key>
+				<string>NSWindow</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>OPTableColumn</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTableColumn</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

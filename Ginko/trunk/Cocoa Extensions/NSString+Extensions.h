@@ -23,7 +23,7 @@
 
 #import <Foundation/NSString.h>
 
-@class NSFileHandle, OPObjectPair;
+@class NSFileHandle;
 
 /*" Various common extensions to #NSString. "*/
 
@@ -58,7 +58,7 @@
 /*" Conversions "*/
 - (BOOL) boolValue;
 - (unsigned int) intValueForHex;
-- (long long) longLongValue;
+//- (long long) longLongValue;
 
 /*" Using MIME encoding names "*/
 + (NSString*) stringWithData: (NSData*) data 
@@ -88,7 +88,7 @@
 /*" Encryptions "*/
 - (NSString*) encryptedString;
 - (NSString*) encryptedStringWithSalt: (const char *)salt;
-- (BOOL)isValidEncryptionOfString: (NSString*) aString;
+//- (BOOL)isValidEncryptionOfString: (NSString*) aString;
 #endif
 
 

@@ -45,7 +45,7 @@
 }
 
 /*" Returns the selected object, if there is exactly one. "*/
-- (id) selectedObject
+- (id)selectedObject
 {
 	NSArray *selected = [self selectedObjects];
 	return [selected count] == 1 ? [selected objectAtIndex:0] : nil;

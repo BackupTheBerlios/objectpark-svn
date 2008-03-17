@@ -252,12 +252,14 @@ static NSCharacterSet *iwsSet = nil;
     return [self caseInsensitiveCompare: @"yes"] == NSOrderedSame;
 }
 
+/*
 - (long long) longLongValue
 {
 	char buffer[100];
 	[self getCString: buffer maxLength: 99];
 	return atoll(buffer);
 }
+*/
 
 /*" Assumes the string contains an integer written in hexadecimal notation and returns its value. Uses #scanHexInt in #NSScanner. "*/
 - (unsigned int)intValueForHex {
@@ -648,7 +650,7 @@ static BOOL _fileExists(char* filePath)
 This method is thread-safe.
 
 Note: This method is not available on Windows NT platforms. "*/
-
+/*
 - (BOOL)isValidEncryptionOfString: (NSString*) aString
 {
   char salt[3];
@@ -657,6 +659,7 @@ Note: This method is not available on Windows NT platforms. "*/
   salt[2] = '\0';
   return [self isEqualToString:[aString encryptedStringWithSalt:salt]];
 }
+ */
 #endif // !defined(WIN32)
 
 
