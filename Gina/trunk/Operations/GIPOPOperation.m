@@ -52,149 +52,156 @@
     return [NSDate dateWithTimeIntervalSinceNow:days * -86400]; // 86400 = seconds per day
 }
 
+- (void)cancel
+{
+	[super cancel];
+}
+
 // Socket timeout (60 secs)
 #define TIMEOUT 60
 
 /*" Retrieves using delegate for providing password. "*/
 - (void)main
 {
-    // finding host:
-    [self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"finding %@", @"progress description in POP job"), self.account.incomingServerName]];
-    
-    NSHost *host = [NSHost hostWithName:self.account.incomingServerName];
-    [host name]; // I remember that was important, but I can't remember why
-    
-    if ([host isReachableWithNoStringsAttached])
-    {
-        // connecting to host:
-        [self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in POP job"), self.account.incomingServerName, self.account.incomingServerPort]];
-        
-        OPStream *stream = [OPStream streamConnectedToHost:host
-                                                      port:self.account.incomingServerPort
-                                               sendTimeout:TIMEOUT
-                                            receiveTimeout:TIMEOUT];
-        
-        NSAssert2(stream != nil, @"No connection to server %@:%d", self.account.incomingServerName, self.account.incomingServerPort);
-        
-        @try
-        {
-            // starting SSL if needed:
-            if (self.account.incomingServerType == POP3S)
-            {
-                [self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"opening secure connection to %@", @"progress description in POP job"), self.account.incomingServerName]];
-                
-                [(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:self.account.allowAnyRootSSLCertificate];
-                
-                [stream negotiateEncryption];
-            }
-            
-            // logging into POP server:
-            [self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in POP job"), self.account.incomingServerName]];
-            
-            OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream andDelegate:self] autorelease];
-            [pop3session setAutosaveName:self.account.incomingServerName];
-            [pop3session openSession]; // also sets current postion cursor for maildrop
-            
-            // creating unique mbox file:
-            NSString *importPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"TransferData to import"];
-            if (![[NSFileManager defaultManager] fileExistsAtPath:importPath])
-            {
-                NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:importPath attributes: nil], @"Could not create directory %@", importPath);
-            }
-            
-			NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"];
-//            NSString *pathTemplate = [mboxToImportDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"POP3Fetched-%@-XX", [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"]]];
-            
-//            OPMBoxFile *mboxFile = [OPMBoxFile createMboxFileWithPathTemplate:pathTemplate];
-//            NSAssert(mboxFile != nil, @"could not open unique mbox file");
-            
-            // fetching messages:
-            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            @try
-            {
-                int numberOfMessagesToFetch = ([pop3session maildropSize] - [pop3session currentPosition]) + 1;
-                int fetchCount = 0;
-                NSData *transferData = nil;
-                unsigned long runningNo = 0;
-				
-                while ((transferData = [pop3session nextTransferData]) && !self.isCancelled) 
+	@try
+	{
+		// finding host:
+		[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"finding %@", @"progress description in POP job"), self.account.incomingServerName]];
+		
+		NSHost *host = [NSHost hostWithName:self.account.incomingServerName];
+		[host name]; // I remember that was important, but I can't remember why
+		
+		if ([host isReachableWithNoStringsAttached])
+		{
+			// connecting to host:
+			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in POP job"), self.account.incomingServerName, self.account.incomingServerPort]];
+			
+			OPStream *stream = [OPStream streamConnectedToHost:host
+														  port:self.account.incomingServerPort
+												   sendTimeout:TIMEOUT
+												receiveTimeout:TIMEOUT];
+			
+			NSAssert2(stream != nil, @"No connection to server %@:%d", self.account.incomingServerName, self.account.incomingServerPort);
+			
+			@try
+			{
+				// starting SSL if needed:
+				if (self.account.incomingServerType == POP3S)
 				{
-                    [self setProgressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, self.account.incomingServerName]];
-                    
-                    // putting onto disk:
-					NSString *transferDataPath = [importPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
-
-					if (![transferData writeToFile:transferDataPath atomically:YES])
+					[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"opening secure connection to %@", @"progress description in POP job"), self.account.incomingServerName]];
+					
+					[(OPSSLSocket*)[stream fileHandle] setAllowsAnyRootCertificate:self.account.allowAnyRootSSLCertificate];
+					
+					[stream negotiateEncryption];
+				}
+				
+				// logging into POP server:
+				[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in POP job"), self.account.incomingServerName]];
+				
+				OPPOP3Session *pop3session = [[[OPPOP3Session alloc] initWithStream:stream andDelegate:self] autorelease];
+				[pop3session setAutosaveName:self.account.incomingServerName];
+				[pop3session openSession]; // also sets current postion cursor for maildrop
+				
+				// creating unique mbox file:
+				NSString *importPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"TransferData to import"];
+				if (![[NSFileManager defaultManager] fileExistsAtPath:importPath])
+				{
+					NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:importPath attributes: nil], @"Could not create directory %@", importPath);
+				}
+				
+				NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"];
+				
+				// fetching messages:
+				NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+				@try
+				{
+					int numberOfMessagesToFetch = ([pop3session maildropSize] - [pop3session currentPosition]) + 1;
+					int fetchCount = 0;
+					NSData *transferData = nil;
+					unsigned long runningNo = 0;
+					
+					while ((transferData = [pop3session nextTransferData]) && !self.isCancelled) 
 					{
-						@throw [NSException exceptionWithName:NSGenericException reason:@"Transfer data couldn't be written." userInfo:nil];
+						[self setProgressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, self.account.incomingServerName]];
+						
+						// putting onto disk:
+						NSString *transferDataPath = [importPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
+						
+						if (![transferData writeToFile:transferDataPath atomically:YES])
+						{
+							@throw [NSException exceptionWithName:NSGenericException reason:@"Transfer data couldn't be written." userInfo:nil];
+						}
+												
+						fetchCount++;
 					}
 					
-                    //[mboxFile appendMBoxData:[transferData mboxDataFromTransferDataWithEnvSender:nil]];
-                    
-                    fetchCount++;
-                }
-                
-                // set result:
-				if (fetchCount > 0) 
-				{
-//					[self setResult:[mboxFile path]];
-				} 
-				else 
-				{
-//					[mboxFile remove];
-				}
-                
-                // cleaning up maildrop:
-				if (![[self deletionDate] isEqualTo:[NSDate distantFuture]]) 
-				{
-					[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), self.account.incomingServerName]];
+					// set result:
+					if (fetchCount > 0) 
+					{
+#warning signal success here for importing transfer data files?
+						//					[self setResult:[mboxFile path]];
+					} 
+					else 
+					{
+						//					[mboxFile remove];
+					}
 					
-					[pop3session cleanUp];
-				}
-            } 
-			@catch (id localException) 
-			{
-                [pop3session abortSession];
-//                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];     
-                @throw;
-            } 
-			[pool release]; pool = nil;
-			
-            [self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in POP job"), self.account.incomingServerName]];
-            
-            [pop3session closeSession];
-            
-            if (self.account.incomingServerType == POP3S)
-            {
-                [self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"closing secure connection to %@", @"progress description in POP job"), self.account.incomingServerName]];
-                
-                [stream shutdownEncryption];
-            }
-        }
-        @catch (id localException)
-        {
-            if ([[localException name] isEqualToString:OPPOP3AuthenticationFailedException])
-            {
-				[self performSelectorOnMainThread:@selector(runAuthenticationErrorDialog:) withObject:[localException reason] waitUntilDone:YES];
-				
-				if (authenticationErrorDialogResult != NSAlertFirstButtonReturn)
+					// cleaning up maildrop:
+					if (![[self deletionDate] isEqualTo:[NSDate distantFuture]]) 
+					{
+						[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"cleaning up %@", @"progress description in POP job"), self.account.incomingServerName]];
+						
+						[pop3session cleanUp];
+					}
+				} 
+				@catch (id localException) 
 				{
-					if (NSDebugEnabled) NSLog(@"Authentication failed (assuming that the password was wrong) -> clearing password");
-					// Authentication failed (assuming that the password was wrong) -> clearing password
-					self.account.incomingPassword = @"";
+					[pop3session abortSession];
+					//                [[NSFileManager defaultManager] removeFileAtPath:[mboxFile path] handler:NULL];     
+					@throw;
+				} 
+				[pool release]; pool = nil;
+				
+				[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in POP job"), self.account.incomingServerName]];
+				
+				[pop3session closeSession];
+				
+				if (self.account.incomingServerType == POP3S)
+				{
+					[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"closing secure connection to %@", @"progress description in POP job"), self.account.incomingServerName]];
+					
+					[stream shutdownEncryption];
 				}
-            }
-			else @throw;
-        }
-        @finally
-        {
-            [stream close];
-        }
-    } 
-    else 
-    {
-        NSLog(@"Host %@ not reachable. Skipping retrieval.\n", self.account.incomingServerName);
-    }
+			}
+			@catch (id localException)
+			{
+				if ([[localException name] isEqualToString:OPPOP3AuthenticationFailedException])
+				{
+					[self performSelectorOnMainThread:@selector(runAuthenticationErrorDialog:) withObject:[localException reason] waitUntilDone:YES];
+					
+					if (authenticationErrorDialogResult != NSAlertFirstButtonReturn)
+					{
+						if (NSDebugEnabled) NSLog(@"Authentication failed (assuming that the password was wrong) -> clearing password");
+						// Authentication failed (assuming that the password was wrong) -> clearing password
+						self.account.incomingPassword = @"";
+					}
+				}
+				else @throw;
+			}
+			@finally
+			{
+				[stream close];
+			}
+		} 
+		else 
+		{
+			NSLog(@"Host %@ not reachable. Skipping retrieval.\n", self.account.incomingServerName);
+		}
+	}
+	@catch (NSException *localException)
+	{
+		[[self class] presentException:localException];
+	}
 }
 
 - (id)initWithAccount:(GIAccount *)anAccount

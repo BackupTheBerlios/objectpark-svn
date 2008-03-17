@@ -3,7 +3,7 @@
 //  Gina
 //
 //  Created by Axel Katerbau on 16.03.08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Objectpark Group. All rights reserved.
 //
 
 #import "GIOperation.h"
@@ -99,6 +99,17 @@ NSString *JobProgressDescription = @"OPJobProgressDescription";
     while (YES);
     
     return password;
+}
+
++ (void)presentException:(NSException *)exception
+{
+	NSParameterAssert(exception != nil);
+	
+	NSString *localizedDescription = [[exception userInfo] objectForKey:NSLocalizedDescriptionKey];
+	
+	NSError *error = [NSError errorWithDomain:@"GinkoDomain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:localizedDescription ? localizedDescription : [exception reason], NSLocalizedDescriptionKey, 
+																			  nil]];
+	[[NSApplication sharedApplication] performSelectorOnMainThread:@selector(presentError:) withObject:error waitUntilDone:NO];
 }
 
 @end

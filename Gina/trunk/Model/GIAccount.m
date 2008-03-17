@@ -750,8 +750,8 @@
 	[self sendMessagesRipeForSendingAtTimeIntervalSinceNow:0.0];
 }
 
-- (void)receive
 /*" Starts an asynchronous receive job for the receiver. "*/
+- (void)receive
 {
 	if (self.enabled && [self isPOPAccount]) 
 	{
