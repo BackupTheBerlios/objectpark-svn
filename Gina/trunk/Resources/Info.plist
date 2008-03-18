@@ -9,6 +9,20 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>gml</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Gina Message</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
 				<string>mboxfile</string>
 				<string>mbox</string>
 				<string>mbx</string>
@@ -20,7 +34,7 @@
 			<key>LSTypeIsPackage</key>
 			<false/>
 			<key>NSPersistentStoreTypeKey</key>
-			<string>XML</string>
+			<string>Binary</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -28,13 +42,17 @@
 				<string>gml</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Gina Mail</string>
+			<string>Gina Message</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.objectpark.ginamessage</string>
+			</array>
 			<key>LSTypeIsPackage</key>
 			<false/>
 			<key>NSPersistentStoreTypeKey</key>
-			<string>XML</string>
+			<string>Binary</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -57,5 +75,25 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>GIApplication</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.message</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ginko Message Format</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.objectpark.ginamessage</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gml</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
