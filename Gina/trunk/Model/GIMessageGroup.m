@@ -652,7 +652,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 + (GIMessageGroup *)defaultMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:DefaultMessageGroupURLString defaultName:NSLocalizedString(@"Default Inbox", @"default group name for default inbox")];
+    return [self standardMessageGroupWithUserDefaultsKey:DefaultMessageGroupURLString defaultName:NSLocalizedString(@"All Threads", @"default group name for All Threads")];
 }
 
 + (void)setDefaultMessageGroup:(GIMessageGroup *)aMessageGroup

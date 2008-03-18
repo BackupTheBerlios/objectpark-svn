@@ -65,14 +65,15 @@
 		// Adding a message should be an atomic operation:
 		@synchronized(self)
 		{
-			if (![GIMessageFilter applyFiltersToMessage:aMessage]) 
-			{
-				// message was not put into any message group by the filters
-				[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup]];
-			}		
+			// puts message's thread potentially in message groups:
+			[GIMessageFilter applyFiltersToMessage:aMessage];
 			
+			// put in All Threads group:
+			[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup]];
+
 			if ([aMessage hasFlags:OPIsFromMeStatus]) 
 			{
+				// put in My Threads group if from "me":
 				[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup]];
 			}
 			
