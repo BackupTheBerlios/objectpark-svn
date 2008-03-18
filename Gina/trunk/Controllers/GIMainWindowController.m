@@ -438,33 +438,51 @@
 
 - (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset
 {
-	CGFloat result = [sender frame].size.height - 125.0;
-	return result;
+	if (sender == threadMailSplitter)
+	{
+		CGFloat result = [sender frame].size.height - 125.0;
+		return result;
+	}
+	return proposedMax;
 }
 
 - (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset
 {
-	return 17.0;
+	if (sender == threadMailSplitter)
+	{
+		return 17.0;
+	}
+	return proposedMin;
 }
 
-- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview
+- (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview
 {
-	return YES;
+	if (sender == threadMailSplitter)
+	{
+		return YES;
+	}
+	return NO;
 }
 
 static BOOL isShowingThreadsOnly = NO;
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
 {
-	if (![self isShowingThreadsOnly] && isShowingThreadsOnly)
+	if ([aNotification object] == threadMailSplitter)
 	{
-		[self performSetSeenBehaviorForMessage:self.selectedMessage];
+		if (![self isShowingThreadsOnly] && isShowingThreadsOnly)
+		{
+			[self performSetSeenBehaviorForMessage:self.selectedMessage];
+		}
 	}
 }
 
 - (void)splitViewWillResizeSubviews:(NSNotification *)aNotification
 {
-	isShowingThreadsOnly = [self isShowingThreadsOnly];
+	if ([aNotification object] == threadMailSplitter)
+	{
+		isShowingThreadsOnly = [self isShowingThreadsOnly];
+	}
 }
 
 @end
