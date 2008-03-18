@@ -1,5 +1,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h> 
+#import <Foundation/Foundation.h>;
+//#import <InternetMessage/OPInternetMessage.h>;
 
 /* -----------------------------------------------------------------------------
  Step 1
@@ -51,6 +53,17 @@ Boolean GetMetadataForFile(void *thisInterface,
     /* Return the attribute keys and attribute values in the dict */
     /* Return TRUE if successful, FALSE if there was no data provided */
     
-#warning To complete your importer please implement the function GetMetadataForFile in GetMetadataForFile.c
-    return FALSE;
+	NSLog(@"Gina Spotlight importer: Trying to index %@", pathToFile);
+	
+	if (YES) {
+		NSMutableString* textDescription = [NSMutableString string];
+		
+		[textDescription appendString: @"Mulle hat die Hose voll."];
+		
+		[(NSMutableDictionary*)attributes setObject: textDescription forKey:(id)kMDItemTextContent];
+		return YES;
+	}
+	
+	
+    return NO;
 }

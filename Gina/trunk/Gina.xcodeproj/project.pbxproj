@@ -98,7 +98,7 @@
 		778078000D0705F70091F21D /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = 778077FF0D0705F70091F21D /* schema.xml */; };
 		778078040D07065C0091F21D /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = 778078020D07065C0091F21D /* schema.strings */; };
 		778078390D070AAA0091F21D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FD0D0705D20091F21D /* main.c */; };
-		7780783B0D070AC50091F21D /* GetMetadataForFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.c */; };
+		7780783B0D070AC50091F21D /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.m */; };
 		7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780E0D0707DC0091F21D /* CoreFoundation.framework */; };
 		7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
 		7781686B0D33F04D004AFCC1 /* ToggleSeen.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */; };
@@ -246,6 +246,8 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D25888D0D4AE58D00AE413F /* BackToolbarImage.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D25888C0D4AE58D00AE413F /* BackToolbarImage.tiff */; };
+		8D82A4700D90189100C39ABF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		8D82A47D0D901B3F00C39ABF /* GinaSpotlight.mdimporter in Copy Spotlight Importer */ = {isa = PBXBuildFile; fileRef = 77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */; };
 		8DABA1AA0D1C1F8400991279 /* TestPersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA1A90D1C1F8400991279 /* TestPersistentObject.m */; };
 		8DABA1BC0D1E689C00991279 /* TestPersistentStringDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA1BB0D1E689C00991279 /* TestPersistentStringDictionary.m */; };
 		8DABA2570D1EA23000991279 /* OPPersistentTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */; };
@@ -295,6 +297,13 @@
 			remoteGlobalIDString = 77B6C58D0D0053AE00A7BEFF;
 			remoteInfo = InternetMessage;
 		};
+		8D82A48D0D901B6700C39ABF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77E5676C0D0702670016594D /* GinaSpotlight */;
+			remoteInfo = GinaSpotlight;
+		};
 		8DABA2A00D1EAAE500991279 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -317,6 +326,17 @@
 				77B647560D1E46A1001E21D8 /* OPPersistence.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D82A47A0D901B2000C39ABF /* Copy Spotlight Importer */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/Spotlight;
+			dstSubfolderSpec = 1;
+			files = (
+				8D82A47D0D901B3F00C39ABF /* GinaSpotlight.mdimporter in Copy Spotlight Importer */,
+			);
+			name = "Copy Spotlight Importer";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -439,9 +459,9 @@
 		77785C020D2F6368000694D8 /* ToDo.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ToDo.rtf; sourceTree = "<group>"; };
 		777B05CB0D031DE40080B76F /* InternetMessage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InternetMessage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		777B061A0D0320C80080B76F /* MailIcon_queue.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = MailIcon_queue.tiff; sourceTree = "<group>"; };
-		778077FB0D0705830091F21D /* GetMetadataForFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GetMetadataForFile.c; sourceTree = "<group>"; };
+		778077FB0D0705830091F21D /* GetMetadataForFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetMetadataForFile.m; sourceTree = "<group>"; };
 		778077FD0D0705D20091F21D /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		778077FF0D0705F70091F21D /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = schema.xml; sourceTree = "<group>"; };
+		778077FF0D0705F70091F21D /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = schema.xml; path = ../Resources/schema.xml; sourceTree = "<group>"; };
 		778078030D07065C0091F21D /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		7780780E0D0707DC0091F21D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
@@ -695,6 +715,7 @@
 			files = (
 				7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */,
 				7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */,
+				8D82A4700D90189100C39ABF /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -826,7 +847,6 @@
 				77C3BD020D103F860003634C /* Gina.tiff */,
 				7713AB4C0D0E97A300CBEC7B /* Localizable.strings */,
 				7708F07A0D0DB6CA008A4A2B /* ActivePrefPanes.plist */,
-				778078010D0706190091F21D /* Spotlight */,
 				7761D9CF0D0300E50044E65A /* MIME.plist */,
 				77B6C9860D01A2C200A7BEFF /* Test Resources */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -837,7 +857,6 @@
 				77B6C8950D008D7C00A7BEFF /* InternetMessageTest-Info.plist */,
 				7736145B0D1C152A007FC630 /* OPPersistence-Info.plist */,
 				773614CA0D1C1AB0007FC630 /* OPPersistenceTest-Info.plist */,
-				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */,
 				7736124D0D1AB69F007FC630 /* MainWindow.xib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
@@ -1048,18 +1067,12 @@
 			isa = PBXGroup;
 			children = (
 				778077FD0D0705D20091F21D /* main.c */,
-				778077FB0D0705830091F21D /* GetMetadataForFile.c */,
-			);
-			path = Spotlight;
-			sourceTree = "<group>";
-		};
-		778078010D0706190091F21D /* Spotlight */ = {
-			isa = PBXGroup;
-			children = (
+				778077FB0D0705830091F21D /* GetMetadataForFile.m */,
+				77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */,
 				778078020D07065C0091F21D /* schema.strings */,
 				778077FF0D0705F70091F21D /* schema.xml */,
 			);
-			name = Spotlight;
+			path = Spotlight;
 			sourceTree = "<group>";
 		};
 		7788669E0D8D81EE006EF64D /* Operations */ = {
@@ -1458,12 +1471,14 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				77B6CA9D0D01B66600A7BEFF /* Copy Frameworks */,
+				8D82A47A0D901B2000C39ABF /* Copy Spotlight Importer */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				773614A00D1C1897007FC630 /* PBXTargetDependency */,
 				77B6C5950D00540100A7BEFF /* PBXTargetDependency */,
+				8D82A48E0D901B6700C39ABF /* PBXTargetDependency */,
 			);
 			name = Gina;
 			productInstallPath = "$(HOME)/Applications";
@@ -1769,7 +1784,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				778078390D070AAA0091F21D /* main.c in Sources */,
-				7780783B0D070AC50091F21D /* GetMetadataForFile.c in Sources */,
+				7780783B0D070AC50091F21D /* GetMetadataForFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1840,6 +1855,11 @@
 			target = 77B6C58D0D0053AE00A7BEFF /* InternetMessage */;
 			targetProxy = 77B6C91A0D0094DF00A7BEFF /* PBXContainerItemProxy */;
 		};
+		8D82A48E0D901B6700C39ABF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77E5676C0D0702670016594D /* GinaSpotlight */;
+			targetProxy = 8D82A48D0D901B6700C39ABF /* PBXContainerItemProxy */;
+		};
 		8DABA2A10D1EAAE500991279 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 773614590D1C152A007FC630 /* OPPersistence */;
@@ -1870,6 +1890,7 @@
 				778078030D07065C0091F21D /* English */,
 			);
 			name = schema.strings;
+			path = ../Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -2262,6 +2283,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/build/Debug\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_SYMBOL_SEPARATION = NO;
@@ -2285,6 +2310,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/build/Debug\"",
+				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

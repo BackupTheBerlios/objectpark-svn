@@ -9,42 +9,30 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>gml</string>
+				<string>mbox</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Gina Message</string>
+			<string>Message Box File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.apple.mail.mbox</string>
+			</array>
 			<key>LSTypeIsPackage</key>
 			<false/>
 			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
+			<string>InMemory</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>mboxfile</string>
-				<string>mbox</string>
-				<string>mbx</string>
+				<string>gml</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Standard Email mbox File</string>
+			<string>Gina Message</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>gml</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>Gina Message</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>org.objectpark.ginamessage</string>
