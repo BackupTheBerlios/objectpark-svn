@@ -113,3 +113,108 @@ static NSMutableArray *filters = nil;
 
 @end
 
+#import "GIMessage.h"
+#import <InternetMessage/OPInternetMessage.h>
+#import <InternetMessage/EDTextFieldCoder.h>
+
+@implementation GIMessage (GIFilterSupport)
+
+- (NSString *)replyTo
+{
+	NSString *fBody;
+	NSString *result = @"";
+	
+	if (fBody = [self.internetMessage bodyForHeaderField:@"reply-to"])
+	{
+		result = [[EDTextFieldCoder decoderWithFieldBody:fBody] text];
+	}
+	
+	return result;
+}
+
+- (NSString *)listId
+{
+	NSString *fBody;
+	NSString *result = @"";
+	
+	if (fBody = [self.internetMessage bodyForHeaderField:@"list-id"])
+	{
+		result = [[EDTextFieldCoder decoderWithFieldBody:fBody] text];
+	}
+	
+	return result;
+}
+
+- (NSString *)to
+{
+	NSString *fBody;
+	NSString *result = @"";
+	
+	if (fBody = [self.internetMessage bodyForHeaderField:@"to"])
+	{
+		result = [[EDTextFieldCoder decoderWithFieldBody:fBody] text];
+	}
+	
+	return result;
+}
+
+- (NSString *)cc
+{
+	NSString *fBody;
+	NSString *result = @"";
+	
+	if (fBody = [self.internetMessage bodyForHeaderField:@"cc"])
+	{
+		result = [[EDTextFieldCoder decoderWithFieldBody:fBody] text];
+	}
+	
+	return result;
+}
+
+- (NSString *)mailinglist
+{
+	return [[self listId] stringByAppendingString:[self to]];
+}
+
+- (NSString *)newsgroups
+{
+	NSString *fBody;
+	NSString *result = @"";
+	
+	if (fBody = [self.internetMessage bodyForHeaderField:@"newsgroups"])
+	{
+		result = [[EDTextFieldCoder decoderWithFieldBody:fBody] text];
+	}
+	
+	return result;
+}
+
+- (NSString *)from
+{
+	NSString *fBody;
+	NSString *result = @"";
+	
+	if (fBody = [self.internetMessage bodyForHeaderField:@"from"])
+	{
+		result = [[EDTextFieldCoder decoderWithFieldBody:fBody] text];
+	}
+	
+	return result;
+}
+
+- (NSString *)subjectRaw
+{
+	return [self.internetMessage subject];
+}
+
+- (NSString *)contentType
+{
+	return [self.internetMessage contentType];
+}
+
+- (NSString *)anyRecipient
+{
+	return [[self to] stringByAppendingString:[self cc]];
+}
+
+@end
