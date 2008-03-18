@@ -13,9 +13,9 @@
 
 @interface  OPPersistentObjectContext (GIMessageBase)
 
-- (void)addMessage: (GIMessage*) aMessage;
-- (NSMutableDictionary*) messagesByMessageId;
-- (GIMessage*) messageForMessageId: (NSString*) messageId;
+- (void)addMessageByApplingFilters:(GIMessage *)aMessage;
+- (NSMutableDictionary *)messagesByMessageId;
+- (GIMessage *)messageForMessageId:(NSString *)messageId;
 
 - (NSArray*) importMboxFiles: (NSArray*) paths moveOnSuccess: (BOOL) doMove;
 - (NSArray*) importGmlFiles: gmls moveOnSuccess: (BOOL) move;

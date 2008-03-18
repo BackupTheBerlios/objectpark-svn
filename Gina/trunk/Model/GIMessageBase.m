@@ -46,33 +46,38 @@
 	return result;
 }
 
-- (void) addMessage: (GIMessage*) aMessage 
-	 toMessageGroup: (GIMessageGroup*) aGroup 
-  suppressThreading: (BOOL) suppressThreading
+- (void)addMessage:(GIMessage *)aMessage toMessageGroup:(GIMessageGroup *)aGroup
 {
     NSParameterAssert(aMessage != nil);
     
-	GIThread* thread = aMessage.thread;
+	GIThread *thread = aMessage.thread;
 	
-	if (! [thread.messageGroups containsObject: aGroup]) {
-		[[thread mutableArrayValueForKey: @"messageGroups"] addObject: aGroup];
+	if (! [thread.messageGroups containsObject:aGroup]) 
+	{
+		[[thread mutableArrayValueForKey:@"messageGroups"] addObject:aGroup];
 	}
 }
 
-- (void) addMessage: (GIMessage*) aMessage
+- (void)addMessageByApplingFilters:(GIMessage *)aMessage
 {
-	if (aMessage) {
+	if (aMessage) 
+	{
 		// Adding a message should be an atomic operation:
-		//if (![GIMessageFilter filterMessage:aMessage flags:0]) {
-			[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup] suppressThreading: NO];
-		//}
-		
-		if ([aMessage hasFlags:OPIsFromMeStatus]) 
+		@synchronized(self)
 		{
-			[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup] suppressThreading: NO];
+			if (![GIMessageFilter applyFiltersToMessage:aMessage]) 
+			{
+				// message was not put into any message group by the filters
+				[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup]];
+			}		
+			
+			if ([aMessage hasFlags:OPIsFromMeStatus]) 
+			{
+				[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup]];
+			}
+			
+			NSAssert(aMessage.thread.messageGroups.count > 0, @"message without group found");
 		}
-		
-		NSAssert(aMessage.thread.messageGroups.count > 0, @"message without group found");
 	} 	
 }
 
@@ -83,7 +88,7 @@
     if (thread) {
 		[[[GIMessageGroup queuedMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
 	}
-    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup] suppressThreading: YES];
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup]];
 }
 
 - (void) addQueuedMessage: (GIMessage*) aMessage
@@ -93,7 +98,8 @@
     if (thread) {
 		[[[GIMessageGroup draftMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
 	}
-    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup] suppressThreading: YES];
+	
+    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup]];
 }
 
 
@@ -191,7 +197,7 @@ NSString* MboxImportJobName = @"mbox import";
 					                    
                     if (persistentMessage) {
 						
-						[self addMessage: persistentMessage toMessageGroup: importGroup suppressThreading: NO];
+						[self addMessage: persistentMessage toMessageGroup: importGroup];
 						//[self addMessage: persistentMessage];
 						
                         if (flags) [persistentMessage addFlagsFromString: flags];
@@ -336,7 +342,7 @@ NSString* MboxImportJobName = @"mbox import";
 		[iMessage release];
 		
 		if (persistentMessage) {
-			[self addMessage: persistentMessage];
+			[self addMessageByApplingFilters:persistentMessage];
 		}
 	}
 	return result;

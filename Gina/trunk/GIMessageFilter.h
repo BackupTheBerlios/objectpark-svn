@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class GIMessage;
 
 @interface GIMessageFilter : NSObject 
 {
@@ -19,5 +20,6 @@
 + (void)saveFilters;
 
 + (NSArray *)filtersMatchingForMessage:(id)message;
++ (BOOL)applyFiltersToMessage:(GIMessage *)message;
 
 @end

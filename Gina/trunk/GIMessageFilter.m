@@ -76,7 +76,7 @@ static NSMutableArray *filters = nil;
 	
 	if (*putInBox)
 	{
-		NSString *messageBoxURLString = [filter objectForKey:@"performActionPutInMessageGroupURLString"];
+		NSString *messageBoxURLString = [filter objectForKey:@"putInMessageGroupObjectURLString"];
 		
 		GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString:messageBoxURLString];
 		
