@@ -124,7 +124,7 @@
 - (void) flushNumberOfReferencesCache;
 
 - (BOOL)hasFlags:(unsigned int)someFlags;
-- (void) toggleFlags: (unsigned) someFlags;
+- (void)toggleFlags:(unsigned)someFlags;
 
 
 /*" Special flag handling "*/

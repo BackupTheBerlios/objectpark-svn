@@ -9,6 +9,8 @@
 #import "GIFilterPrefs.h"
 #import <Foundation/NSDebug.h>
 #import "GIMessageFilter.h"
+#import "GIHierarchyNode.h"
+#import "GIMessageGroup.h"
 
 @implementation GIFilterPrefs
 
@@ -62,20 +64,50 @@
 	[[GIMessageFilter class] saveFilters];
 }
 
+- (void)collectGroupPathsAndURLRepresenations:(NSMutableArray *)paths startingAtNode:(GIHierarchyNode *)node prefix:(NSString *)prefix
+{
+	for (GIHierarchyNode *child in node.children)
+	{			
+        if ([child isKindOfClass:[GIMessageGroup class]]) 
+		{
+			if (child.name.length) 
+			{
+				NSMutableDictionary *entry = [NSMutableDictionary dictionary];
+				
+				[entry setObject:child.name forKey:@"name"];
+				[entry setObject:[prefix stringByAppendingString:child.name] forKey:@"treePathDescription"];
+				[entry setObject:[child objectURLString] forKey:@"objectURLString"];
+				
+				[paths addObject:entry];
+			}
+        }
+		else
+		{
+			[self collectGroupPathsAndURLRepresenations:paths startingAtNode:child prefix:[prefix stringByAppendingFormat:@"%@/", child.name]];
+        } 
+    }
+}
+
 - (NSArray *)messageGroupsByTree
 {
-	return [NSArray arrayWithObjects:
-			[NSDictionary dictionaryWithObjectsAndKeys:
-			 @"A Group", @"name",
-			 @"Private/A Group", @"treePathDescription",
-			 @"OPMessageGroup-fake1", @"objectURLString",
-			 nil, nil],
-			[NSDictionary dictionaryWithObjectsAndKeys:
-			 @"Another Group", @"name",
-			 @"Business/Another Group", @"treePathDescription",
-			 @"OPMessageGroup-fake2", @"objectURLString",
-			 nil, nil]
-			, nil];
+	NSMutableArray *result = [NSMutableArray array];
+	
+	[self collectGroupPathsAndURLRepresenations:result startingAtNode:[GIHierarchyNode messageGroupHierarchyRootNode] prefix:@""];
+
+	return result;
+	
+//	return [NSArray arrayWithObjects:
+//			[NSDictionary dictionaryWithObjectsAndKeys:
+//			 @"A Group", @"name",
+//			 @"Private/A Group", @"treePathDescription",
+//			 @"OPMessageGroup-fake1", @"objectURLString",
+//			 nil, nil],
+//			[NSDictionary dictionaryWithObjectsAndKeys:
+//			 @"Another Group", @"name",
+//			 @"Business/Another Group", @"treePathDescription",
+//			 @"OPMessageGroup-fake2", @"objectURLString",
+//			 nil, nil]
+//			, nil];
 }
 
 - (id)selectedFilterMessageGroup

@@ -3,7 +3,7 @@
 //  Gina
 //
 //  Created by Axel Katerbau on 16.03.08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Objectpark Group. All rights reserved.
 //
 
 #import "GIPOPOperation.h"
@@ -12,7 +12,6 @@
 #import <OPNetwork/OPNetwork.h>
 #import <InternetMessage/OPPOP3Session.h>
 #import <InternetMessage/NSApplication+OPExtensions.h>
-//#import <InternetMessage/OPMboxFile.h>
 #import <InternetMessage/NSData+MessageUtils.h>
 #import <Foundation/NSDebug.h>
 

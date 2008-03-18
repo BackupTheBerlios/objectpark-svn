@@ -7,7 +7,9 @@
 //
 
 #import "GIMessageFilter.h"
-
+#import "GIMessage.h"
+#import "GIMessageGroup.h"
+#import "OPPersistentObjectContext.h"
 
 @implementation GIMessageFilter
 
@@ -56,6 +58,57 @@ static NSMutableArray *filters = nil;
     }
     
     return result;
+}
+
++ (void)performFilterActions:(id)filter onMessage:(GIMessage *)message putIntoMessagebox:(BOOL *)putInBox shouldStop:(BOOL *)shouldStop
+{
+	BOOL markAsSpam = [[filter objectForKey:@"performActionMarkAsSpam"] boolValue];
+	if (markAsSpam)
+	{
+		if (![message hasFlags:OPJunkMailStatus])
+		{
+			[message toggleFlags:OPJunkMailStatus];
+		}
+	}
+	
+	(*shouldStop) = [[filter objectForKey:@"performActionPreventFurtherFiltering"] boolValue];
+	(*putInBox) = [[filter objectForKey:@"performActionPutInMessageGroup"] boolValue];
+	
+	if (*putInBox)
+	{
+		NSString *messageBoxURLString = [filter objectForKey:@"performActionPutInMessageGroupURLString"];
+		
+		GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString:messageBoxURLString];
+		
+		if (!group) 
+		{
+			(*putInBox) = NO;
+		}
+		else
+		{
+			[[group mutableSetValueForKey:@"threads"] addObject:[message thread]];;
+		}
+	}
+}
+
+/*" Applies matching filters to the given message. Returns YES if message was inserted/moved into a box different to currentBox. NO otherwise. "*/
++ (BOOL)applyFiltersToMessage:(GIMessage *)message
+{
+    BOOL inserted = NO;
+
+	for (id filter in [self filtersMatchingForMessage:message])
+	{
+		BOOL putInBox;
+		BOOL shouldStop;
+		
+		[self performFilterActions:filter onMessage:message putIntoMessagebox:&putInBox shouldStop:&shouldStop];
+		
+		if (shouldStop) break;
+		
+		inserted |= putInBox;
+	}
+	
+    return inserted;
 }
 
 @end
