@@ -12,6 +12,9 @@
 		7708F0C10D0DB8CD008A4A2B /* GIGeneralPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7708F0BF0D0DB8CD008A4A2B /* GIGeneralPrefs.m */; };
 		7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */; };
 		7708F11D0D0E8DDA008A4A2B /* DefaultEmailApp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */; };
+		77132FAD0D91629500094A0A /* MessageEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77132FAC0D91629500094A0A /* MessageEditor.nib */; };
+		77132FBA0D91634C00094A0A /* OPSizingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 77132FB90D91634C00094A0A /* OPSizingTextField.m */; };
+		77132FE30D9163BB00094A0A /* NSView+ViewMoving.m in Sources */ = {isa = PBXBuildFile; fileRef = 77132FE20D9163BB00094A0A /* NSView+ViewMoving.m */; };
 		7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB4C0D0E97A300CBEC7B /* Localizable.strings */; };
 		7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */; };
 		7736124E0D1AB69F007FC630 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7736124D0D1AB69F007FC630 /* MainWindow.xib */; };
@@ -301,7 +304,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 77E5676C0D0702670016594D /* GinaSpotlight */;
+			remoteGlobalIDString = 77E5676C0D0702670016594D;
 			remoteInfo = GinaSpotlight;
 		};
 		8DABA2A00D1EAAE500991279 /* PBXContainerItemProxy */ = {
@@ -355,6 +358,13 @@
 		7708F0D10D0DB9AE008A4A2B /* GIUserDefaultsKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIUserDefaultsKeys.h; sourceTree = "<group>"; };
 		7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIUserDefaultsKeys.m; sourceTree = "<group>"; };
 		7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DefaultEmailApp.xib; sourceTree = "<group>"; };
+		77132FAC0D91629500094A0A /* MessageEditor.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MessageEditor.nib; sourceTree = "<group>"; };
+		77132FB50D91630300094A0A /* GIMessageEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorController.h; sourceTree = "<group>"; };
+		77132FB60D91630300094A0A /* GIMessageEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorController.m; sourceTree = "<group>"; };
+		77132FB80D91634C00094A0A /* OPSizingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPSizingTextField.h; sourceTree = "<group>"; };
+		77132FB90D91634C00094A0A /* OPSizingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPSizingTextField.m; sourceTree = "<group>"; };
+		77132FE10D9163BB00094A0A /* NSView+ViewMoving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+ViewMoving.h"; sourceTree = "<group>"; };
+		77132FE20D9163BB00094A0A /* NSView+ViewMoving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+ViewMoving.m"; sourceTree = "<group>"; };
 		7713AB4C0D0E97A300CBEC7B /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIGeneralPrefs.xib; sourceTree = "<group>"; };
 		772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug InternetMessageTest.rtf"; sourceTree = "<group>"; };
@@ -860,6 +870,7 @@
 				77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */,
 				7736124D0D1AB69F007FC630 /* MainWindow.xib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				77132FAC0D91629500094A0A /* MessageEditor.nib */,
 				778867820D8D979F006EF64D /* Password.nib */,
 			);
 			path = Resources;
@@ -906,6 +917,8 @@
 				77F4F59E0D8276C1008B0103 /* GISplitView.m */,
 				77F4F5AC0D827EFA008B0103 /* GISeparatorButton.h */,
 				77F4F5AD0D827EFA008B0103 /* GISeparatorButton.m */,
+				77132FB80D91634C00094A0A /* OPSizingTextField.h */,
+				77132FB90D91634C00094A0A /* OPSizingTextField.m */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -1057,6 +1070,8 @@
 				778867800D8D9746006EF64D /* GIPasswordController.m */,
 				775C312F0D0D46280098DA07 /* GIApplication.h */,
 				775C31300D0D46280098DA07 /* GIApplication.m */,
+				77132FB50D91630300094A0A /* GIMessageEditorController.h */,
+				77132FB60D91630300094A0A /* GIMessageEditorController.m */,
 				773612500D1AB6F2007FC630 /* GIMainWindowController.h */,
 				773612510D1AB6F2007FC630 /* GIMainWindowController.m */,
 			);
@@ -1097,6 +1112,8 @@
 				77AF831F0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m */,
 				77AF834E0D2B95E2002771BA /* NSWorkspace+OPExtensions.h */,
 				77AF834F0D2B95E2002771BA /* NSWorkspace+OPExtensions.m */,
+				77132FE10D9163BB00094A0A /* NSView+ViewMoving.h */,
+				77132FE20D9163BB00094A0A /* NSView+ViewMoving.m */,
 			);
 			path = "Cocoa Extensions";
 			sourceTree = "<group>";
@@ -1603,6 +1620,7 @@
 				776B78AB0D8581F9008317E5 /* Show_Status_Pressed.tiff in Resources */,
 				776B78AC0D8581F9008317E5 /* Show_Status.tiff in Resources */,
 				778867830D8D979F006EF64D /* Password.nib in Resources */,
+				77132FAD0D91629500094A0A /* MessageEditor.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1829,6 +1847,8 @@
 				778866B60D8D8264006EF64D /* GIOperation.m in Sources */,
 				778866BC0D8D87C2006EF64D /* NSHost+GIReachability.m in Sources */,
 				778867810D8D9746006EF64D /* GIPasswordController.m in Sources */,
+				77132FBA0D91634C00094A0A /* OPSizingTextField.m in Sources */,
+				77132FE30D9163BB00094A0A /* NSView+ViewMoving.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
