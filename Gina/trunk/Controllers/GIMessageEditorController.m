@@ -11,10 +11,10 @@
 #import "NSAttributedString+Extensions.h"
 #import "NSString+MessageUtils.h"
 #import "NSArray+Extensions.h"
+#import "NSString+Extensions.h"
 #import "GIApplication.h"
 #import "GIProfile.h"
 #import "GIAccount.h"
-#import "NSToolbar+OPExtensions.h"
 #import "GITextView.h"
 #import "OPInternetMessage.h"
 #import "OPInternetMessage+GinkoExtensions.h"
@@ -22,8 +22,6 @@
 #import "GIMessageBase.h"
 #import "OPURLFieldCoder.h"
 #import "EDTextFieldCoder.h"
-#import "OPObjectPair.h"
-#import "OPPersistentObject+Extensions.h"
 #import <Foundation/NSDebug.h>
 #import "GIAddressFormatter.h"
 #import "GIPhraseBrowserController.h"
@@ -634,7 +632,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return YES;
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
     return [self validateSelector:[menuItem action]];
 }
@@ -1324,11 +1322,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     if (sendStatus == OPSendStatusDraft) 
 	{
         //add new message to database
-        [GIMessageBase addDraftMessage:message];
+        [[OPPersistentObjectContext defaultContext] addDraftMessage:message];
     } 
 	else 
 	{
-        [GIMessageBase addQueuedMessage:message];
+        [[OPPersistentObjectContext defaultContext] addQueuedMessage:message];
     }
     
     [oldMessage autorelease];
@@ -1927,269 +1925,269 @@ NSDictionary *maxLinesForCalendarName()
 @end
 
 
-#import <GPGME/GPGME.h>
-#import "EDCompositeContentCoder.h"
-#import "NSData+MessageUtils.h"
-#import "GIUserDefaultsKeys.h"
-#import <Security/Security.h>
-
-@interface GPGKey (Keychain)
-- (NSString *)passphraseFromKeychain;
-- (void)setPassphraseInKeychain:(NSString *)aPassword;
-- (NSString *)accountName;
-@end
-
-@implementation GPGKey (Keychain)
-
-- (GPGUserID *)primaryUID
-{
-	{
-		// It MIGHT happen that a key has NO userID!
-		NSArray	*userIDs = [self userIDs];
-		
-		if([userIDs lastObject] != nil)
-			return [userIDs objectAtIndex:0];
-		else
-			return nil;
-	}
-}
-
-- (NSString *)accountName
-{
-	if ([self isKindOfClass:[GPGSubkey class]])
-	{
-		return [[[(GPGSubkey *)self key] primaryUID] userID];
-	}
-	else
-	{
-		// self is a GPGKey:
-		return [[self primaryUID] userID];
-	}
-}
-
-- (NSString *)passphraseItemRef:(SecKeychainItemRef *)itemRef
-/*" Accesses keychain to get password. "*/
-{
-    const char *serviceName = [@"OpenPGP Passphrase" UTF8String];
-    const char *accountName = [[[self accountName] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
-    UInt32 passwordLength;
-    void *passwordData;
-    NSString *result = nil;
-    
-	OSStatus err = SecKeychainFindGenericPassword (
-												   NULL, // CFTypeRef keychainOrArray,
-												   strlen(serviceName), //UInt32 serviceNameLength,
-												   serviceName, // const char *serviceName,
-												   strlen(accountName), // UInt32 accountNameLength,
-												   accountName, // const char *accountName,
-												   &passwordLength, // UInt32 *passwordLength,
-												   &passwordData, // void **passwordData,
-												   itemRef // SecKeychainItemRef *itemRef
-												   );
-	
-    if (err != noErr) 
-	{
-        if (NSDebugEnabled) NSLog(@"Error getting password from keychain (%d)", err);
-    } 
-	else 
-	{
-        NSData *data = [NSData dataWithBytes:passwordData length:passwordLength];
-        result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
-        
-        err = SecKeychainItemFreeContent(NULL,           //No attribute data to release
-                                         passwordData);  //Release data buffer allocated 
-		
-        if (err != noErr) 
-		{
-            if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
-        }
-    }
-    
-    return result;
-}
-
-- (NSString *)passphraseFromKeychain
-{
-    SecKeychainItemRef itemRef;
-    NSString *result = [self passphraseItemRef:&itemRef];
-    return result;
-}
-
-- (void)setPassphraseInKeychain:(NSString *)aPassword
-	/*" Uses keychain to store password. "*/
-{
-    const char *serviceName = [@"OpenPGP Passphrase" UTF8String];
-    const char *accountName = [[[self accountName] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
-    const char *password = [aPassword UTF8String];
-    OSStatus err;
-    SecKeychainItemRef itemRef = NULL;
-    
-    if ([self passphraseItemRef:&itemRef]) 
-	{        
-        err = SecKeychainItemModifyAttributesAndData(itemRef, // the item reference
-                                                     NULL, // no change to attributes
-                                                     strlen(password),  // length of password
-                                                     password); // pointer to password data
-    } 
-	else 
-	{
-		err = SecKeychainAddGenericPassword (
-											 NULL, // SecKeychainRef keychain,
-											 strlen(serviceName), // UInt32 serviceNameLength,
-											 serviceName, // const char *serviceName,
-											 strlen(accountName), // UInt32 accountNameLength,
-											 accountName, // const char *accountName,
-											 strlen(password), // UInt32 passwordLength,
-											 password, //const void *passwordData,
-											 NULL //SecKeychainItemRef *itemRef
-											 );		
-	}
-}
-
-
-@end
-
-@implementation GIMessageEditorController (OpenPGP)
-
-- (NSArray *)matchingKeys
-{
-	return [profile matchingKeys];
-}
-
-- (GPGKey *)selectedKey
-{
-	if (!selectedKey)
-	{
-		selectedKey = [[[self matchingKeys] lastObject] retain];
-	}
-	
-	return selectedKey;
-}
-
-- (void)setSelectedKey:(GPGKey *)aKey
-{
-	[selectedKey autorelease];
-	selectedKey = [aKey retain];
-}
-
-- (void)profileChanged
-{
-	[signButton setState:[[profile valueForKey:@"shouldSignNewMessagesByDefault"] boolValue] ? NSOnState : NSOffState];
-	[encryptButton setState:[[profile valueForKey:@"shouldEncryptNewMessagesByDefault"] boolValue] ? NSOnState : NSOffState];
-	[self willChangeValueForKey:@"matchingKeys"];
-	[self didChangeValueForKey:@"matchingKeys"];
-	[self willChangeValueForKey:@"hasNoMatchingKey"];
-	[self didChangeValueForKey:@"hasNoMatchingKey"];
-	
-	[self setSelectedKey:nil];
-	[self willChangeValueForKey:@"setSelectedKey"];
-	[self didChangeValueForKey:@"setSelectedKey"];
-}
-
-- (BOOL)hasGPGAccess
-{
-	return [GIApp hasGPGAccess];
-}
-
-- (BOOL)hasNoMatchingKey
-{
-	return [[self matchingKeys] count] == 0;
-}
-
-- (BOOL)hasKeyEmailAmbiguity
-{
-	return [[self matchingKeys] count] > 1;
-}
-
-- (OPInternetMessage *)signedMessageWithSignedPart:(EDMessagePart *)partToSign
-{
-	NSParameterAssert(![partToSign isKindOfClass:[OPInternetMessage class]]);
-	NSParameterAssert([partToSign isKindOfClass:[EDMessagePart class]]);
-	
-	GPGContext *context = nil;
-	OPInternetMessage *result = nil;
-	
-	context = [[[GPGContext alloc] init] autorelease];
-	
-	[context setUsesArmor:YES];
-	[context setUsesTextMode:YES];
-	[context addSignerKey:[self selectedKey]];
-	[context setPassphraseDelegate:self];
-	
-	GPGData *dataToSign = [[GPGData alloc] initWithDataNoCopy:[partToSign transferData]];
-	GPGData *signatureData = [context signedData:dataToSign signatureMode:GPGSignatureModeDetach];
-	[dataToSign release];
-	
-	EDMessagePart *signaturePart = [[[EDMessagePart alloc] init] autorelease];
-	[signaturePart setContentType:@"application/pgp-signature" withParameters:[NSDictionary dictionary]];
-	[signaturePart setContentTransferEncoding:MIME7BitContentTransferEncoding];
-	[signaturePart setContentData:[signatureData data]];
-	
-	// construct OPInternetMessage:
-	NSArray *subparts = [NSArray arrayWithObjects:partToSign, signaturePart, nil];
-	EDCompositeContentCoder *coder = [[[EDCompositeContentCoder alloc] initWithSubparts:subparts] autorelease];
-	
-	result = [coder messageWithSubtype:@"signed"];
-	NSMutableDictionary *contentTypeParameters = [[[result contentTypeParameters] mutableCopy] autorelease];
-	[contentTypeParameters setObject:@"application/pgp-signature" forKey:@"protocol"];
-	[contentTypeParameters setObject:[[self selectedKey] algorithmDescription] forKey:@"micalg"];
-	[result setContentType:@"multipart/signed" withParameters:contentTypeParameters];
-	
-	return result;
-}
-
-- (NSString *)context:(GPGContext *)context passphraseForKey:(GPGKey *)key again:(BOOL)again
-{
-	if (!again)
-	{
-		wasPassphraseDialogDismissed = NO;
-
-		NSString *passphraseFromKeychain = [key passphraseFromKeychain];
-		if (passphraseFromKeychain) return passphraseFromKeychain;
-	}
-		
-	if (wasPassphraseDialogDismissed) return @"";
-	
-	if (!passphraseWindow)
-	{
-		[NSBundle loadNibNamed:@"Passphrase" owner:self];
-	}
-	
-	[errorMessage setHidden:!again];
-	
-	[keyField setStringValue:[[key accountName] stringByAppendingFormat:@", %@", [key shortKeyID]]];
-	
-    [storeInKeychainCheckbox setState:[[[NSUserDefaults standardUserDefaults] objectForKey:DisableKeychainForPasswortDefault] boolValue] ? NSOffState : NSOnState];
-	
-	[NSApp runModalForWindow:passphraseWindow];
-
-	[passphraseWindow orderOut:self];
-	
-	NSString *result = [[[passphraseField stringValue] retain] autorelease];
-	[passphraseField setStringValue:@""];
-
-	BOOL storeInKeychain = [storeInKeychainCheckbox state] == NSOnState ? YES : NO;
-	
-	if (storeInKeychain)
-	{
-		[key setPassphraseInKeychain:result];
-	}
-	
-	[[NSUserDefaults standardUserDefaults] setBool:!storeInKeychain forKey:DisableKeychainForPasswortDefault];
-	
-	return result;
-}
-
-- (IBAction)passphraseOkayAction:(id)sender
-{
-	[NSApp stopModal];
-}
-
-- (IBAction)passphraseDismissAction:(id)sender
-{
-	wasPassphraseDialogDismissed = YES;
-	[passphraseField setStringValue:@""];
-	[NSApp stopModal];
-}
-
-@end
+//#import <GPGME/GPGME.h>
+//#import "EDCompositeContentCoder.h"
+//#import "NSData+MessageUtils.h"
+//#import "GIUserDefaultsKeys.h"
+//#import <Security/Security.h>
+//
+//@interface GPGKey (Keychain)
+//- (NSString *)passphraseFromKeychain;
+//- (void)setPassphraseInKeychain:(NSString *)aPassword;
+//- (NSString *)accountName;
+//@end
+//
+//@implementation GPGKey (Keychain)
+//
+//- (GPGUserID *)primaryUID
+//{
+//	{
+//		// It MIGHT happen that a key has NO userID!
+//		NSArray	*userIDs = [self userIDs];
+//		
+//		if([userIDs lastObject] != nil)
+//			return [userIDs objectAtIndex:0];
+//		else
+//			return nil;
+//	}
+//}
+//
+//- (NSString *)accountName
+//{
+//	if ([self isKindOfClass:[GPGSubkey class]])
+//	{
+//		return [[[(GPGSubkey *)self key] primaryUID] userID];
+//	}
+//	else
+//	{
+//		// self is a GPGKey:
+//		return [[self primaryUID] userID];
+//	}
+//}
+//
+//- (NSString *)passphraseItemRef:(SecKeychainItemRef *)itemRef
+///*" Accesses keychain to get password. "*/
+//{
+//    const char *serviceName = [@"OpenPGP Passphrase" UTF8String];
+//    const char *accountName = [[[self accountName] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
+//    UInt32 passwordLength;
+//    void *passwordData;
+//    NSString *result = nil;
+//    
+//	OSStatus err = SecKeychainFindGenericPassword (
+//												   NULL, // CFTypeRef keychainOrArray,
+//												   strlen(serviceName), //UInt32 serviceNameLength,
+//												   serviceName, // const char *serviceName,
+//												   strlen(accountName), // UInt32 accountNameLength,
+//												   accountName, // const char *accountName,
+//												   &passwordLength, // UInt32 *passwordLength,
+//												   &passwordData, // void **passwordData,
+//												   itemRef // SecKeychainItemRef *itemRef
+//												   );
+//	
+//    if (err != noErr) 
+//	{
+//        if (NSDebugEnabled) NSLog(@"Error getting password from keychain (%d)", err);
+//    } 
+//	else 
+//	{
+//        NSData *data = [NSData dataWithBytes:passwordData length:passwordLength];
+//        result = [NSString stringWithData:data encoding:NSUTF8StringEncoding]; 
+//        
+//        err = SecKeychainItemFreeContent(NULL,           //No attribute data to release
+//                                         passwordData);  //Release data buffer allocated 
+//		
+//        if (err != noErr) 
+//		{
+//            if (NSDebugEnabled) NSLog(@"Error with getting password (%d)", err);
+//        }
+//    }
+//    
+//    return result;
+//}
+//
+//- (NSString *)passphraseFromKeychain
+//{
+//    SecKeychainItemRef itemRef;
+//    NSString *result = [self passphraseItemRef:&itemRef];
+//    return result;
+//}
+//
+//- (void)setPassphraseInKeychain:(NSString *)aPassword
+//	/*" Uses keychain to store password. "*/
+//{
+//    const char *serviceName = [@"OpenPGP Passphrase" UTF8String];
+//    const char *accountName = [[[self accountName] stringByAppendingFormat:@", %@", [self shortKeyID]] UTF8String];
+//    const char *password = [aPassword UTF8String];
+//    OSStatus err;
+//    SecKeychainItemRef itemRef = NULL;
+//    
+//    if ([self passphraseItemRef:&itemRef]) 
+//	{        
+//        err = SecKeychainItemModifyAttributesAndData(itemRef, // the item reference
+//                                                     NULL, // no change to attributes
+//                                                     strlen(password),  // length of password
+//                                                     password); // pointer to password data
+//    } 
+//	else 
+//	{
+//		err = SecKeychainAddGenericPassword (
+//											 NULL, // SecKeychainRef keychain,
+//											 strlen(serviceName), // UInt32 serviceNameLength,
+//											 serviceName, // const char *serviceName,
+//											 strlen(accountName), // UInt32 accountNameLength,
+//											 accountName, // const char *accountName,
+//											 strlen(password), // UInt32 passwordLength,
+//											 password, //const void *passwordData,
+//											 NULL //SecKeychainItemRef *itemRef
+//											 );		
+//	}
+//}
+//
+//
+//@end
+//
+//@implementation GIMessageEditorController (OpenPGP)
+//
+//- (NSArray *)matchingKeys
+//{
+//	return [profile matchingKeys];
+//}
+//
+//- (GPGKey *)selectedKey
+//{
+//	if (!selectedKey)
+//	{
+//		selectedKey = [[[self matchingKeys] lastObject] retain];
+//	}
+//	
+//	return selectedKey;
+//}
+//
+//- (void)setSelectedKey:(GPGKey *)aKey
+//{
+//	[selectedKey autorelease];
+//	selectedKey = [aKey retain];
+//}
+//
+//- (void)profileChanged
+//{
+//	[signButton setState:[[profile valueForKey:@"shouldSignNewMessagesByDefault"] boolValue] ? NSOnState : NSOffState];
+//	[encryptButton setState:[[profile valueForKey:@"shouldEncryptNewMessagesByDefault"] boolValue] ? NSOnState : NSOffState];
+//	[self willChangeValueForKey:@"matchingKeys"];
+//	[self didChangeValueForKey:@"matchingKeys"];
+//	[self willChangeValueForKey:@"hasNoMatchingKey"];
+//	[self didChangeValueForKey:@"hasNoMatchingKey"];
+//	
+//	[self setSelectedKey:nil];
+//	[self willChangeValueForKey:@"setSelectedKey"];
+//	[self didChangeValueForKey:@"setSelectedKey"];
+//}
+//
+//- (BOOL)hasGPGAccess
+//{
+//	return [GIApp hasGPGAccess];
+//}
+//
+//- (BOOL)hasNoMatchingKey
+//{
+//	return [[self matchingKeys] count] == 0;
+//}
+//
+//- (BOOL)hasKeyEmailAmbiguity
+//{
+//	return [[self matchingKeys] count] > 1;
+//}
+//
+//- (OPInternetMessage *)signedMessageWithSignedPart:(EDMessagePart *)partToSign
+//{
+//	NSParameterAssert(![partToSign isKindOfClass:[OPInternetMessage class]]);
+//	NSParameterAssert([partToSign isKindOfClass:[EDMessagePart class]]);
+//	
+//	GPGContext *context = nil;
+//	OPInternetMessage *result = nil;
+//	
+//	context = [[[GPGContext alloc] init] autorelease];
+//	
+//	[context setUsesArmor:YES];
+//	[context setUsesTextMode:YES];
+//	[context addSignerKey:[self selectedKey]];
+//	[context setPassphraseDelegate:self];
+//	
+//	GPGData *dataToSign = [[GPGData alloc] initWithDataNoCopy:[partToSign transferData]];
+//	GPGData *signatureData = [context signedData:dataToSign signatureMode:GPGSignatureModeDetach];
+//	[dataToSign release];
+//	
+//	EDMessagePart *signaturePart = [[[EDMessagePart alloc] init] autorelease];
+//	[signaturePart setContentType:@"application/pgp-signature" withParameters:[NSDictionary dictionary]];
+//	[signaturePart setContentTransferEncoding:MIME7BitContentTransferEncoding];
+//	[signaturePart setContentData:[signatureData data]];
+//	
+//	// construct OPInternetMessage:
+//	NSArray *subparts = [NSArray arrayWithObjects:partToSign, signaturePart, nil];
+//	EDCompositeContentCoder *coder = [[[EDCompositeContentCoder alloc] initWithSubparts:subparts] autorelease];
+//	
+//	result = [coder messageWithSubtype:@"signed"];
+//	NSMutableDictionary *contentTypeParameters = [[[result contentTypeParameters] mutableCopy] autorelease];
+//	[contentTypeParameters setObject:@"application/pgp-signature" forKey:@"protocol"];
+//	[contentTypeParameters setObject:[[self selectedKey] algorithmDescription] forKey:@"micalg"];
+//	[result setContentType:@"multipart/signed" withParameters:contentTypeParameters];
+//	
+//	return result;
+//}
+//
+//- (NSString *)context:(GPGContext *)context passphraseForKey:(GPGKey *)key again:(BOOL)again
+//{
+//	if (!again)
+//	{
+//		wasPassphraseDialogDismissed = NO;
+//
+//		NSString *passphraseFromKeychain = [key passphraseFromKeychain];
+//		if (passphraseFromKeychain) return passphraseFromKeychain;
+//	}
+//		
+//	if (wasPassphraseDialogDismissed) return @"";
+//	
+//	if (!passphraseWindow)
+//	{
+//		[NSBundle loadNibNamed:@"Passphrase" owner:self];
+//	}
+//	
+//	[errorMessage setHidden:!again];
+//	
+//	[keyField setStringValue:[[key accountName] stringByAppendingFormat:@", %@", [key shortKeyID]]];
+//	
+//    [storeInKeychainCheckbox setState:[[[NSUserDefaults standardUserDefaults] objectForKey:DisableKeychainForPasswortDefault] boolValue] ? NSOffState : NSOnState];
+//	
+//	[NSApp runModalForWindow:passphraseWindow];
+//
+//	[passphraseWindow orderOut:self];
+//	
+//	NSString *result = [[[passphraseField stringValue] retain] autorelease];
+//	[passphraseField setStringValue:@""];
+//
+//	BOOL storeInKeychain = [storeInKeychainCheckbox state] == NSOnState ? YES : NO;
+//	
+//	if (storeInKeychain)
+//	{
+//		[key setPassphraseInKeychain:result];
+//	}
+//	
+//	[[NSUserDefaults standardUserDefaults] setBool:!storeInKeychain forKey:DisableKeychainForPasswortDefault];
+//	
+//	return result;
+//}
+//
+//- (IBAction)passphraseOkayAction:(id)sender
+//{
+//	[NSApp stopModal];
+//}
+//
+//- (IBAction)passphraseDismissAction:(id)sender
+//{
+//	wasPassphraseDialogDismissed = YES;
+//	[passphraseField setStringValue:@""];
+//	[NSApp stopModal];
+//}
+//
+//@end
