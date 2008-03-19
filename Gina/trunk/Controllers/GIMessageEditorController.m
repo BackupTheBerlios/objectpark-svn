@@ -2079,7 +2079,10 @@ NSDictionary *maxLinesForCalendarName()
 //	selectedKey = [aKey retain];
 //}
 //
-//- (void)profileChanged
+- (void)profileChanged
+{
+}
+
 //{
 //	[signButton setState:[[profile valueForKey:@"shouldSignNewMessagesByDefault"] boolValue] ? NSOnState : NSOffState];
 //	[encryptButton setState:[[profile valueForKey:@"shouldEncryptNewMessagesByDefault"] boolValue] ? NSOnState : NSOffState];

@@ -1,69 +1,145 @@
-{
-    IBClasses = (
-        {
-            ACTIONS = {"" = id; }; 
-            CLASS = FirstResponder; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {
-                addBcc = id; 
-                addCc = id; 
-                addReplyTo = id; 
-                followup = id; 
-                replyAll = id; 
-                replySender = id; 
-                switchProfile = id; 
-            }; 
-            CLASS = G3MessageEditorController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                hiddenCaptionPrototype = NSTextField; 
-                hiddenTextFieldPrototype = OPSizingTextField; 
-                messageTextView = GITextView; 
-                profileButton = NSPopUpButton; 
-                subjectField = OPSizingTextField; 
-                toField = OPSizingTextField; 
-                toFieldOptionsButton = NSPopUpButton; 
-                window = NSWindow; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = G3MessageEditorWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
-        {
-            ACTIONS = {
-                addBcc = id; 
-                addCc = id; 
-                addReplyTo = id; 
-                followup = id; 
-                replyAll = id; 
-                replySender = id; 
-                saveMessage = id; 
-                switchProfile = id; 
-            }; 
-            CLASS = GIMessageEditorController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                encryptButton = NSButton; 
-                hiddenCaptionPrototype = NSTextField; 
-                hiddenTextFieldPrototype = OPSizingTextField; 
-                messageTextView = GITextView; 
-                profileButton = NSPopUpButton; 
-                profileValidationButton = NSButton; 
-                selectedKey = id; 
-                signButton = NSButton; 
-                subjectField = OPSizingTextField; 
-                toField = OPSizingTextField; 
-                toFieldOptionsButton = NSPopUpButton; 
-                window = NSWindow; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = GIMessageEditorWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
-        {CLASS = GIMessageTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
-        {CLASS = GITextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
-        {CLASS = OPSizingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>NSApplication</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>GITextView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTextView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>GIMessageEditorWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSWindow</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addBcc</key>
+				<string>id</string>
+				<key>addCc</key>
+				<string>id</string>
+				<key>addReplyTo</key>
+				<string>id</string>
+				<key>followup</key>
+				<string>id</string>
+				<key>replyAll</key>
+				<string>id</string>
+				<key>replySender</key>
+				<string>id</string>
+				<key>saveMessage</key>
+				<string>id</string>
+				<key>switchProfile</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>GIMessageEditorController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>encryptButton</key>
+				<string>NSButton</string>
+				<key>errorMessage</key>
+				<string>NSTextField</string>
+				<key>hiddenCaptionPrototype</key>
+				<string>NSTextField</string>
+				<key>hiddenTextFieldPrototype</key>
+				<string>OPSizingTextField</string>
+				<key>keyField</key>
+				<string>NSTextField</string>
+				<key>messageTextView</key>
+				<string>GITextView</string>
+				<key>passphraseField</key>
+				<string>NSSecureTextField</string>
+				<key>passphraseWindow</key>
+				<string>NSWindow</string>
+				<key>profileButton</key>
+				<string>NSPopUpButton</string>
+				<key>profileValidationButton</key>
+				<string>NSButton</string>
+				<key>selectedKey</key>
+				<string>id</string>
+				<key>signButton</key>
+				<string>NSButton</string>
+				<key>storeInKeychainCheckbox</key>
+				<string>NSButton</string>
+				<key>subjectField</key>
+				<string>OPSizingTextField</string>
+				<key>subtitleField</key>
+				<string>NSTextField</string>
+				<key>titleField</key>
+				<string>NSTextField</string>
+				<key>toField</key>
+				<string>OPSizingTextField</string>
+				<key>toFieldOptionsButton</key>
+				<string>NSPopUpButton</string>
+				<key>window</key>
+				<string>NSWindow</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key></key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>selectNextKeyView</key>
+				<string>id</string>
+				<key>selectPreviousKeyView</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>OPSizingTextField</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTextField</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
