@@ -263,7 +263,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 /*" Returns a new message with the internetmessage object.
  If message is a dupe, the message not inserted into the context nil is returned. "*/
-+ (id)messageWithInternetMessage: (OPInternetMessage *)anInternetMessage;
++ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 {
     id result = nil;
 	

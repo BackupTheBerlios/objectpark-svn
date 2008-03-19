@@ -853,7 +853,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [result setDate:[NSCalendarDate calendarDate]];
     
     // message id
-    [result generateMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", [[theProfile valueForKey:@"sendAccount"] outgoingServerName]]];
+	NSString *messageId = [result generatedMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", theProfile.sendAccount.outgoingServerName]];
+	
+	[result setBody:messageId forHeaderField:@"Message-Id"];
+//    [result generateMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", [[theProfile valueForKey:@"sendAccount"] outgoingServerName]]];
     
     // mailer info
 /*     if([result isUsenetMessage])
@@ -1002,7 +1005,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void)setHeadersFromMessage:(GIMessage *)aMessage
 {
     NSEnumerator *enumerator = [[[aMessage internetMessage] headerFields] objectEnumerator];
-	OPObjectPair *headerField;
+	NSArray *headerField;
 
     while ((headerField = [enumerator nextObject])) 
     {
@@ -1305,12 +1308,17 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	
 	if (!internetMessage) return nil;
 	
-    message = [GIMessage messageWithTransferData:[internetMessage transferData]];
+    message = [GIMessage messageWithInternetMessage:internetMessage];
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [internetMessage transferData]);
     
     // status
-    if (oldMessage) [message addFlags:[oldMessage flags]];
-    [message addFlags:OPSeenStatus | OPIsFromMeStatus];
+    if (oldMessage) 
+	{
+		[message toggleFlags:[oldMessage flags]];
+	}
+	
+	// adding flags:
+    [message toggleFlags:[message flags] ^ (OPSeenStatus | OPIsFromMeStatus)];
     [message setValue:[internetMessage toWithFallback:YES] forKey:@"to"];
 	
     // unmark message as blocked for sending
@@ -1333,14 +1341,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     oldMessage = [message retain];
     
     // Set answered status if reply:
-    [referencedMessage addFlags:OPAnsweredStatus];
+    [referencedMessage toggleFlags:[referencedMessage flags] ^ OPAnsweredStatus];
     
     // Set message in profile's messagesToSend:
-    [profile addValue:message forKey:@"messagesToSend"];
+	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];
+//    [profile addValue:message forKey:@"messagesToSend"];
 		
     [window setDocumentEdited:NO];
     
-    [NSApp saveAction:self];
+    [[OPPersistentObjectContext defaultContext] saveChanges];
 
     //if (NSDebugEnabled) NSLog(@"checkpointed message");
     
@@ -1429,27 +1438,27 @@ NSDictionary *maxLinesForCalendarName()
     return dict;
 }
 
-- (void) setupProfilePopUpButton
-{
-    NSEnumerator* enumerator;
-    GIProfile* aProfile;
-    
+- (void)setupProfilePopUpButton
+{    
     [profileButton removeAllItems];
     
     // fill profiles in:
-    enumerator = [[GIProfile allObjects] objectEnumerator];
-    while (aProfile = [enumerator nextObject]) {
-        [profileButton addItemWithTitle: [aProfile valueForKey: @"name"]];
+	NSSet *allProfiles = [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIProfile class]];
+	
+	for (GIProfile *aProfile in allProfiles)
+	{
+        [profileButton addItemWithTitle:aProfile.name];
         [[profileButton lastItem] setRepresentedObject:aProfile];
     }
 }
 
-- (void) validateSelectedProfile
+- (void)validateSelectedProfile
 {
-	// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
-	NSArray* validationErrors = [profile validationErrors];	
-	[profileValidationButton setHidden: validationErrors == nil];
-	if (validationErrors) [profileValidationButton setToolTip: [[validationErrors arrayByMappingWithSelector: @selector(localizedDescription)] componentsJoinedByString: @"\n"]];	
+#warning exclamation mark validation code missing
+//	// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
+//	NSArray *validationErrors = [profile validationErrors];	
+//	[profileValidationButton setHidden:validationErrors == nil];
+//	if (validationErrors) [profileValidationButton setToolTip:[[validationErrors arrayByMappingWithSelector:@selector(localizedDescription)] componentsJoinedByString:@"\n"]];	
 }
 
 - (void)selectProfile:(GIProfile *)aProfile
@@ -1861,66 +1870,66 @@ NSDictionary *maxLinesForCalendarName()
 
 @implementation GIMessageEditorController (ToolbarDelegate)
 
-- (void) awakeToolbar
+- (void)awakeToolbar
 {
-    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier: @"MessageEditorToolbar"];
-    
-    [toolbar setDelegate:self];
-    [toolbar setAllowsUserCustomization: YES];
-    [toolbar setAutosavesConfiguration: YES];
-
-    [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed: @"editor"];
-    [toolbarItems retain];
-    [defaultIdentifiers retain];
-        
-    [window setToolbar:toolbar];
+//    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier: @"MessageEditorToolbar"];
+//    
+//    [toolbar setDelegate:self];
+//    [toolbar setAllowsUserCustomization: YES];
+//    [toolbar setAutosavesConfiguration: YES];
+//
+//    [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed: @"editor"];
+//    [toolbarItems retain];
+//    [defaultIdentifiers retain];
+//        
+//    [window setToolbar:toolbar];
 }
 
-- (void) deallocToolbar
+- (void)deallocToolbar
 {
-    [[window toolbar] release];
-    [toolbarItems release];
-    [defaultIdentifiers release];
+//    [[window toolbar] release];
+//    [toolbarItems release];
+//    [defaultIdentifiers release];
 }
 
-- (BOOL)validateToolbarItem: (NSToolbarItem*) theItem
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
-    return [self validateSelector: [theItem action]];
+    return [self validateSelector:[theItem action]];
 }
 
-- (NSToolbarItem *)toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
-{
-    return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
-}
-
-- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*) toolbar
-{
-    return defaultIdentifiers;
-}
-
-- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
-{
-    static NSArray* allowedItemIdentifiers = nil;
-    
-    if (! allowedItemIdentifiers) {
-        NSEnumerator* enumerator;
-        NSToolbarItem* item;
-        NSMutableArray* allowed;
-        
-        allowed = [NSMutableArray arrayWithCapacity: [toolbarItems count] + 5];
-        
-        enumerator = [toolbarItems objectEnumerator];
-        while (item = [enumerator nextObject]) {
-            [allowed addObject: [item itemIdentifier]];
-        }
-        
-        [allowed addObjectsFromArray: [NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
-        
-        allowedItemIdentifiers = [allowed copy];
-    }
-    
-    return allowedItemIdentifiers;
-}
+//- (NSToolbarItem *)toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+//{
+//    return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
+//}
+//
+//- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*) toolbar
+//{
+//    return defaultIdentifiers;
+//}
+//
+//- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
+//{
+//    static NSArray* allowedItemIdentifiers = nil;
+//    
+//    if (! allowedItemIdentifiers) {
+//        NSEnumerator* enumerator;
+//        NSToolbarItem* item;
+//        NSMutableArray* allowed;
+//        
+//        allowed = [NSMutableArray arrayWithCapacity: [toolbarItems count] + 5];
+//        
+//        enumerator = [toolbarItems objectEnumerator];
+//        while (item = [enumerator nextObject]) {
+//            [allowed addObject: [item itemIdentifier]];
+//        }
+//        
+//        [allowed addObjectsFromArray: [NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
+//        
+//        allowedItemIdentifiers = [allowed copy];
+//    }
+//    
+//    return allowedItemIdentifiers;
+//}
 
 @end
 
@@ -2047,7 +2056,7 @@ NSDictionary *maxLinesForCalendarName()
 //
 //@end
 //
-//@implementation GIMessageEditorController (OpenPGP)
+@implementation GIMessageEditorController (OpenPGP)
 //
 //- (NSArray *)matchingKeys
 //{
@@ -2088,6 +2097,12 @@ NSDictionary *maxLinesForCalendarName()
 //{
 //	return [GIApp hasGPGAccess];
 //}
+
+- (BOOL)hasGPGAccess
+{
+	return NO;
+}
+
 //
 //- (BOOL)hasNoMatchingKey
 //{
@@ -2190,4 +2205,4 @@ NSDictionary *maxLinesForCalendarName()
 //	[NSApp stopModal];
 //}
 //
-//@end
+@end

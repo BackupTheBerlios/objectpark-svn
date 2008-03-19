@@ -23,6 +23,7 @@
 		771330260D916C8400094A0A /* PhraseBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 771330250D916C8400094A0A /* PhraseBrowser.nib */; };
 		7713302A0D91737E00094A0A /* GIHeaderFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 771330290D91737E00094A0A /* GIHeaderFieldEditor.m */; };
 		7713302F0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */ = {isa = PBXBuildFile; fileRef = 7713302E0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m */; };
+		771330FD0D91845D00094A0A /* GIMessageEditorWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 771330FC0D91845D00094A0A /* GIMessageEditorWindow.m */; };
 		7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB4C0D0E97A300CBEC7B /* Localizable.strings */; };
 		7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */; };
 		7736124E0D1AB69F007FC630 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7736124D0D1AB69F007FC630 /* MainWindow.xib */; };
@@ -385,6 +386,8 @@
 		771330290D91737E00094A0A /* GIHeaderFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIHeaderFieldEditor.m; sourceTree = "<group>"; };
 		7713302D0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPasteboard+OPExtendedFileTypeMatching.h"; sourceTree = "<group>"; };
 		7713302E0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPasteboard+OPExtendedFileTypeMatching.m"; sourceTree = "<group>"; };
+		771330FB0D91845C00094A0A /* GIMessageEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorWindow.h; sourceTree = "<group>"; };
+		771330FC0D91845D00094A0A /* GIMessageEditorWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorWindow.m; sourceTree = "<group>"; };
 		7713AB4C0D0E97A300CBEC7B /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIGeneralPrefs.xib; sourceTree = "<group>"; };
 		772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug InternetMessageTest.rtf"; sourceTree = "<group>"; };
@@ -922,6 +925,8 @@
 		773612550D1AB796007FC630 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				771330FB0D91845C00094A0A /* GIMessageEditorWindow.h */,
+				771330FC0D91845D00094A0A /* GIMessageEditorWindow.m */,
 				771330280D91737E00094A0A /* GIHeaderFieldEditor.h */,
 				771330290D91737E00094A0A /* GIHeaderFieldEditor.m */,
 				7736125D0D1AB80B007FC630 /* GIMatrixWithKeyboardSupport.h */,
@@ -1889,6 +1894,7 @@
 				771330240D916C6600094A0A /* GIPhraseBrowserController.m in Sources */,
 				7713302A0D91737E00094A0A /* GIHeaderFieldEditor.m in Sources */,
 				7713302F0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */,
+				771330FD0D91845D00094A0A /* GIMessageEditorWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

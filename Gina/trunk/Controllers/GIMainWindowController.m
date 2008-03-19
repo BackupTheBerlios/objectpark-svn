@@ -8,6 +8,7 @@
 
 #import "GIMainWindowController.h"
 #import "GIThreadOutlineViewController.h"
+#import "GIMessageEditorController.h"
 #import "GISplitView.h"
 
 #import "GIUserDefaultsKeys.h"
@@ -231,6 +232,14 @@
 }
 
 // -- handling menu commands --
+
+- (IBAction)newMessage:(id)sender
+{
+#warning better selection of profile here (e.g. mails profile, groups profile etc.)
+	GIProfile *profileForNewMessage = [GIProfile defaultProfile];
+	
+    [[[GIMessageEditorController alloc] initNewMessageWithProfile:profileForNewMessage] autorelease];
+}
 
 - (IBAction)markAsRead:(id)sender
 {

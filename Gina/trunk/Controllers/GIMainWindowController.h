@@ -43,6 +43,8 @@
 - (IBAction) commentTreeSelectionChanged: (id) sender;
 - (IBAction) groupTreeSelectionChanged: (id) sender;
 
+/*" Message creation actions "*/
+- (IBAction)newMessage:(id)sender;
 
 /*" Message meta info manipulation "*/
 - (IBAction)markAsRead:(id)sender;
