@@ -13,6 +13,7 @@
 @interface GIApplication : NSApplication 
 {
 	IBOutlet NSWindow *defaultEmailAppWindow;
+	NSTimer* importTimer;
 }
 
 

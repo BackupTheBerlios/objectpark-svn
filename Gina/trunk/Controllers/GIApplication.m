@@ -17,6 +17,7 @@
 #import "OPPersistence.h"
 #import "NSApplication+OPExtensions.h"
 #import <Foundation/NSDebug.h>
+#import "GIPOPOperation.h"
 
 NSString *GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
 NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNotification";
@@ -80,10 +81,39 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[[[GIMainWindowController alloc] init] autorelease];
 }
 
-- (void)finishLaunching 
+- (void) importFromImportFolder: (NSNotification*) notification
+{
+	unsigned importCount = 0;
+	NSString *importPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"TransferData to import"];
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+
+	NSDirectoryEnumerator* e = [[NSFileManager defaultManager] enumeratorAtPath: importPath];
+	NSString* filename;
+	while (importCount < 10 && (filename = [e nextObject])) {
+		NSDictionary* attrs = [e fileAttributes];
+		if ([attrs objectForKey: NSFileType] == NSFileTypeRegular) {
+			NSLog(@"Found %@ to import.", filename);
+
+			NSData* transferData = [[NSData alloc] initWithContentsOfFile: [importPath stringByAppendingPathComponent: filename]];
+			OPInternetMessage* inetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+			[transferData release];
+			GIMessage* message = [[GIMessage alloc] initWithInternetMessage: inetMessage];
+			[inetMessage release];
+			[context addMessageByApplingFilters: message];
+			[message release];
+			importCount += 1;
+		}
+	}
+	
+}
+
+- (void) finishLaunching 
 {
 	registerDefaultDefaults();
 	[super finishLaunching];
+	
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidStartNotification object: nil];
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidStartNotification object: nil];
 	
 	[self ensureMainWindowIsPresent];
 //	[self findMissingMessageIds:self];
@@ -121,6 +151,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	// shutting down persistence:
 	[[OPPersistentObjectContext defaultContext] saveChanges];
 	[[OPPersistentObjectContext defaultContext] close];	
+	
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	
 	[super terminate: sender];
 }
