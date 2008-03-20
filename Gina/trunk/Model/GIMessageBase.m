@@ -332,18 +332,23 @@ NSString* MboxImportJobName = @"mbox import";
 		OID oid = MakeOID(cidMessage, [oidString intValueForHex]);
 		
 		GIMessage* message = [self objectForOID: oid];
-		if (message) {
-			[result addObject: message];
-			continue;
+		if (! message) {
+			NSData* transferData = [NSData dataWithContentsOfFile: gmlPath];
+			OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+			message = [GIMessage messageWithInternetMessage: iMessage];
+			[iMessage release];
 		}
 		
-		NSData* transferData = [NSData dataWithContentsOfFile: gmlPath];
-		OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
-		GIMessage *persistentMessage = [GIMessage messageWithInternetMessage: iMessage];
-		[iMessage release];
-		
-		if (persistentMessage) {
-			[self addMessageByApplingFilters:persistentMessage];
+		if (message) {
+			[self addMessageByApplingFilters: message];
+			[result addObject: message];
+			
+			if (move) {
+				NSError* error = nil;
+				NSString* newPath = [message messageFilePath];
+				[[NSFileManager defaultManager] moveItemAtPath: gmlPath toPath: newPath error: &error];
+				if (error) NSLog(@"Error moving gml file: %@", error);
+			}
 		}
 	}
 	return result;

@@ -88,6 +88,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 
 	NSDirectoryEnumerator* e = [[NSFileManager defaultManager] enumeratorAtPath: importPath];
+	NSMutableArray* filePaths = [NSMutableArray array];
 	NSString* filename;
 	while (importCount < 10 && (filename = [e nextObject])) {
 		if ([filename hasSuffix: @".gml"]) {
@@ -96,23 +97,30 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 				NSString* filePath = [importPath stringByAppendingPathComponent: filename];
 				NSLog(@"Found %@ to import.", filename);
 				
-				NSData* transferData = [[NSData alloc] initWithContentsOfFile: filePath];
-				OPInternetMessage* inetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
-				[transferData release];
-				GIMessage* message = [[GIMessage alloc] initWithInternetMessage: inetMessage];
-				[inetMessage release];
-				[context addMessageByApplingFilters: message];
-				[message release];
+				[filePaths addObject: filePath];
+				
+//				NSData* transferData = [[NSData alloc] initWithContentsOfFile: filePath];
+//				OPInternetMessage* inetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+//				[transferData release];
+//				GIMessage* message = [[GIMessage alloc] initWithInternetMessage: inetMessage];
+//				[inetMessage release];
+//				[context addMessageByApplingFilters: message];
+//				[message release];
 				importCount += 1;
-				[[NSFileManager defaultManager] removeFileAtPath: filePath handler: nil];
+//				[[NSFileManager defaultManager] removeFileAtPath: filePath handler: nil];
 			}
 		}
 	}
-	if (filename) {
+	
+	[context importGmlFiles: filePaths moveOnSuccess: YES];
+
+	if (filename && importCount) {
 		// There are more messages in the folder to import.
 		// Call self to import the rest.
 		[self performSelector: _cmd withObject: notification afterDelay: 0.01];
 	}
+	
+	[context saveChanges];
 }
 
 - (void) finishLaunching 

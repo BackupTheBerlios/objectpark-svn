@@ -118,7 +118,7 @@
 - (id)initDummy;
 
 - (GIMessage *)reference;
-//- (GIMessage *)referenceFind:(BOOL)find;
+- (NSString*) messageFilePath;
 
 - (unsigned) numberOfReferences;
 - (void) flushNumberOfReferencesCache;
