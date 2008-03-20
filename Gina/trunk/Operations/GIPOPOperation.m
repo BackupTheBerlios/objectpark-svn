@@ -211,6 +211,9 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 	{
 		[[self class] presentException:localException];
 	}
+#warning Remove additional posting of GIPOPOperationDidEndNotification?
+	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:[NSNotification notificationWithName:GIPOPOperationDidEndNotification object:self.account] waitUntilDone:NO]; // just for testing!!
+
 }
 
 - (id)initWithAccount:(GIAccount *)anAccount

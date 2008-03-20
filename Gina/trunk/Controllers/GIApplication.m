@@ -90,21 +90,29 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	NSDirectoryEnumerator* e = [[NSFileManager defaultManager] enumeratorAtPath: importPath];
 	NSString* filename;
 	while (importCount < 10 && (filename = [e nextObject])) {
-		NSDictionary* attrs = [e fileAttributes];
-		if ([attrs objectForKey: NSFileType] == NSFileTypeRegular) {
-			NSLog(@"Found %@ to import.", filename);
-
-			NSData* transferData = [[NSData alloc] initWithContentsOfFile: [importPath stringByAppendingPathComponent: filename]];
-			OPInternetMessage* inetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
-			[transferData release];
-			GIMessage* message = [[GIMessage alloc] initWithInternetMessage: inetMessage];
-			[inetMessage release];
-			[context addMessageByApplingFilters: message];
-			[message release];
-			importCount += 1;
+		if ([filename hasSuffix: @".gml"]) {
+			NSDictionary* attrs = [e fileAttributes];
+			if ([attrs objectForKey: NSFileType] == NSFileTypeRegular) {
+				NSString* filePath = [importPath stringByAppendingPathComponent: filename];
+				NSLog(@"Found %@ to import.", filename);
+				
+				NSData* transferData = [[NSData alloc] initWithContentsOfFile: filePath];
+				OPInternetMessage* inetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+				[transferData release];
+				GIMessage* message = [[GIMessage alloc] initWithInternetMessage: inetMessage];
+				[inetMessage release];
+				[context addMessageByApplingFilters: message];
+				[message release];
+				importCount += 1;
+				[[NSFileManager defaultManager] removeFileAtPath: filePath handler: nil];
+			}
 		}
 	}
-	
+	if (filename) {
+		// There are more messages in the folder to import.
+		// Call self to import the rest.
+		[self performSelector: _cmd withObject: notification afterDelay: 0.01];
+	}
 }
 
 - (void) finishLaunching 
@@ -113,7 +121,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[super finishLaunching];
 	
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidStartNotification object: nil];
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidStartNotification object: nil];
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidEndNotification object: nil];
 	
 	[self ensureMainWindowIsPresent];
 //	[self findMissingMessageIds:self];
