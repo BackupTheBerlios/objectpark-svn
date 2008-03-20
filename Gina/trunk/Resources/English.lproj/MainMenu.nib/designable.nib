@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="81"/>
+			<integer value="491"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -712,6 +712,15 @@
 									<reference key="NSOnImage" ref="474889942"/>
 									<reference key="NSMixedImage" ref="648057667"/>
 								</object>
+								<object class="NSMenuItem" id="811553998">
+									<reference key="NSMenu" ref="510989396"/>
+									<string key="NSTitle">Rename Mailbox</string>
+									<string key="NSKeyEquiv">n</string>
+									<int key="NSKeyEquivModMask">1835008</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="474889942"/>
+									<reference key="NSMixedImage" ref="648057667"/>
+								</object>
 							</object>
 						</object>
 					</object>
@@ -1140,6 +1149,22 @@
 						<reference key="destination" ref="663116325"/>
 					</object>
 					<int key="connectionID">489</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">performClose:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="302596802"/>
+					</object>
+					<int key="connectionID">490</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">renameMessageGroup:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="811553998"/>
+					</object>
+					<int key="connectionID">492</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1742,6 +1767,7 @@
 							<reference ref="530446496"/>
 							<reference ref="79843027"/>
 							<reference ref="521546652"/>
+							<reference ref="811553998"/>
 						</object>
 						<reference key="parent" ref="500691702"/>
 					</object>
@@ -1788,6 +1814,11 @@
 						<int key="objectID">487</int>
 						<reference key="object" ref="239607688"/>
 						<reference key="parent" ref="85716777"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">491</int>
+						<reference key="object" ref="811553998"/>
+						<reference key="parent" ref="510989396"/>
 					</object>
 				</object>
 			</object>
@@ -1953,6 +1984,7 @@
 					<string>486.ImportedFromIB2</string>
 					<string>487.IBPluginDependency</string>
 					<string>487.ImportedFromIB2</string>
+					<string>491.IBPluginDependency</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.ImportedFromIB2</string>
 					<string>56.IBPluginDependency</string>
@@ -2041,7 +2073,7 @@
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
-					<string>{{156, 505}, {243, 263}}</string>
+					<string>{{154, 573}, {243, 263}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{154, 473}, {243, 263}}</string>
@@ -2089,13 +2121,13 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{248, 663}, {197, 73}}</string>
-					<string>{{51, 768}, {403, 20}}</string>
+					<string>{{49, 836}, {403, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{74, 862}</string>
 					<string>{{49, 736}, {331, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{200, 725}, {234, 43}}</string>
+					<string>{{198, 793}, {234, 43}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{264, 793}, {234, 43}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2129,7 +2161,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{250, 715}, {225, 53}}</string>
+					<string>{{248, 763}, {225, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2142,6 +2174,7 @@
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2162,7 +2195,7 @@
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
-					<string>{{114, 595}, {199, 173}}</string>
+					<string>{{112, 663}, {199, 173}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{112, 543}, {233, 193}}</string>
@@ -2192,7 +2225,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">489</int>
+			<int key="maxID">492</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2205,9 +2238,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>addNewMessageGroup:</string>
 							<string>newMessage:</string>
+							<string>renameMessageGroup:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>

@@ -36,7 +36,6 @@
 	return affectingKeyPaths;
 }
 
-
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {	
 	if ([item isKindOfClass:[GIMessageGroup class]]) 
@@ -52,6 +51,11 @@
 	{
 		[cell setHierarchyItem:item];
 	}
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+	return YES;
 }
 
 @end

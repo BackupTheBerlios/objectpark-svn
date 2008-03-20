@@ -241,6 +241,33 @@
     [[[GIMessageEditorController alloc] initNewMessageWithProfile:profileForNewMessage] autorelease];
 }
 
+- (IBAction)renameMessageGroup:(id)sender
+{
+	GIMessageGroup *group = messageGroupsController.selectedObject;
+	if (group)
+	{
+		messageGroupNameField.stringValue = group.name;
+		
+		[NSApp beginSheet:messageGroupRenameWindow modalForWindow:self.window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
+	}
+}
+
+- (IBAction)doRenameMessageGroup:(id)sender
+{
+	GIMessageGroup *group = messageGroupsController.selectedObject;
+	
+	group.name = messageGroupNameField.stringValue;
+	
+	[NSApp endSheet:messageGroupRenameWindow];
+	[messageGroupRenameWindow orderOut:self];
+}
+
+- (IBAction)cancelRenameMessageGroup:(id)sender
+{
+	[NSApp endSheet:messageGroupRenameWindow];
+	[messageGroupRenameWindow orderOut:self];
+}
+
 - (IBAction)markAsRead:(id)sender
 {
 	for (GIMessage* message in [threadsController selectedMessages]) {
@@ -283,6 +310,8 @@
 	GIMessageGroup *newGroup = [GIMessageGroup newMessageGroupWithName:@"New Box" atHierarchyNode:hierarchyNode atIndex:position];
 	
 	[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject:[messageGroupsController itemPathForItem:newGroup]] byExtendingSelection:NO];
+	
+	[self renameMessageGroup:sender];
 }
 
 - (void) showMessage: (GIMessage*) message

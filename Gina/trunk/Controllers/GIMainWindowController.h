@@ -28,8 +28,9 @@
 	IBOutlet GISplitView *threadMailSplitter;
 	IBOutlet NSSplitView *mailTreeSplitter;
 	IBOutlet GITextView *messageTextView;
+	IBOutlet NSWindow *messageGroupRenameWindow;
+	IBOutlet NSTextField *messageGroupNameField;
 	
-	//GIMessageGroup *selectedMessageGroup;
 	NSArray *selectedThreads;
 	
 	/* Binding stuff */
@@ -53,7 +54,10 @@
 
 /*" Message Group Actions "*/
 - (IBAction)addNewMessageGroup:(id)sender;
-
+- (IBAction)renameMessageGroup:(id)sender;
+- (IBAction)doRenameMessageGroup:(id)sender;
+- (IBAction)cancelRenameMessageGroup:(id)sender;
+	
 - (void) showMessage: (GIMessage*) message;
 
 - (void)setThreadsOnlyMode;

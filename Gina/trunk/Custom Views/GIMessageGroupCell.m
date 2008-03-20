@@ -288,6 +288,11 @@
 	 */
 }
 
+- (BOOL)isEditable
+{
+	return YES;
+}
+
 - (void)drawWithFrame:(NSRect)frame inView:(NSView *)controlView 
 {		
 	// draw the text:
