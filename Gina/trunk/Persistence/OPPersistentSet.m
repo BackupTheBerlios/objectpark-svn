@@ -417,7 +417,7 @@
 
 - (id) objectAtIndex: (NSUInteger) index
 {
-	NSLog(@"%@ requesting objectAtIndex: %u", pSet, index);
+	//NSLog(@"%@ requesting objectAtIndex: %u", pSet, index);
 	OID oid = [self oidAtIndex:index];
 	id result = [[pSet context] objectForOID: oid];
 	NSAssert3(result != nil, @"Warning: %@ objectAtIndex: %u is a dangling reference to %llx. Returning nil.", self, index, oid);

@@ -133,6 +133,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	
 	[self ensureMainWindowIsPresent];
 //	[self findMissingMessageIds:self];
+	[self importFromImportFolder: nil];
 }
 
 - (IBAction)makeDefaultApp:(id)sender

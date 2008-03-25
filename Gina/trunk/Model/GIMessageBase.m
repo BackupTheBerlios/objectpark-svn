@@ -323,19 +323,22 @@ NSString* MboxImportJobName = @"mbox import";
 - (NSArray*) importGmlFiles: gmls moveOnSuccess: (BOOL) move
 {
 	NSMutableArray* result = [NSMutableArray array];
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	CID cidMessage = [self cidForClass: [GIMessage class]];
 	for (NSString* gmlPath in gmls) {
 		NSString* gmlName = [gmlPath lastPathComponent];
 		// gmlName should have the format "Msg%014x.gml":
 		if (! [gmlName hasPrefix: @"Msg"]) continue;
-		NSString* oidString = [gmlName substringWithRange: NSMakeRange(3,14)];
-		OID oid = MakeOID(cidMessage, [oidString intValueForHex]);
+		//NSString* oidString = [gmlName substringWithRange: NSMakeRange(3,14)];
+		LID lid = 0; //[oidString intValueForHex];
+		OID oid = MakeOID(cidMessage, lid);
 		
-		GIMessage* message = [self objectForOID: oid];
+		GIMessage* message = lid ? [self objectForOID: oid] : nil;
 		if (! message) {
-			NSData* transferData = [NSData dataWithContentsOfFile: gmlPath];
+			NSData* transferData = [[NSData alloc] initWithContentsOfFile: gmlPath];
 			OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
 			message = [GIMessage messageWithInternetMessage: iMessage];
+			[transferData release];
 			[iMessage release];
 		}
 		
@@ -346,11 +349,19 @@ NSString* MboxImportJobName = @"mbox import";
 			if (move) {
 				NSError* error = nil;
 				NSString* newPath = [message messageFilePath];
-				[[NSFileManager defaultManager] moveItemAtPath: gmlPath toPath: newPath error: &error];
-				if (error) NSLog(@"Error moving gml file: %@", error);
+				NSFileManager* fm = [NSFileManager defaultManager];
+				if ([fm fileExistsAtPath: newPath]) {
+					[fm removeItemAtPath: newPath error: &error];
+				}
+				if (! error) {
+					[fm moveItemAtPath: gmlPath toPath: newPath error: &error];
+				}
+				if (error) 
+					NSLog(@"Error moving gml file: %@", error);
 			}
 		}
 	}
+	[pool release];
 	return result;
 }
 

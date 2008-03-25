@@ -254,7 +254,10 @@
 {
 	if (context == outlineView) {
 		// just redisplay the affected item:
+		NSLog(@"Redisplaying %@ due to change of %@ (%@)", object, keyPath, change);
 		[outlineView reloadItem: object reloadChildren: NO]; 
+		// - (void)_setNeedsDisplayInRow:(int)fp8;
+
 	}
 	
 	if ([keyPath isEqualToString:[self childKey]]) {
