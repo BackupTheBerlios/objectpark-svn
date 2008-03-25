@@ -9,6 +9,7 @@
 #import "GIMessageGroupOutlineViewController.h"
 #import "GIMessageGroup.h"
 #import "GIMessageGroupCell.h"
+#import "OPPersistentObjectContext.h"
 
 @implementation GIMessageGroupOutlineViewController
 
@@ -24,8 +25,10 @@
 	[outlineView sizeLastColumnToFit];
 	
 	[outlineView setColumnAutoresizingStyle:NSTableViewSequentialColumnAutoresizingStyle];
+	
+	// Register to grok GinaThreads and GinaMessagegroups drags:
+    [outlineView registerForDraggedTypes:[NSArray arrayWithObjects: @"GinaThreads", @"GinaMessagegroups", nil]];
 }
-
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
 {
@@ -58,6 +61,152 @@
 	return YES;
 }
 
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+	return ![item isKindOfClass:[GIMessageGroup class]];
+}
+
 @end
 
+@implementation GIMessageGroupOutlineViewController (OPDragNDrop)
 
+/*" Moves a hierarchy node sourceNode to another hierarchy node destinationNode at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
+- (BOOL)moveHierarchyNode:(id)sourceNode toHierarchyNode:(GIHierarchyNode *)destinationNode atIndex:(NSUInteger)anIndex testOnly:(BOOL)testOnly
+{
+    // find source's hierarchy and index
+	GIHierarchyNode *sourceParent = [outlineView parentForItem:sourceNode];
+	if (!sourceParent) sourceParent = [GIHierarchyNode messageGroupHierarchyRootNode];
+    NSUInteger sourceIndex = [sourceParent.children indexOfObject:sourceNode];
+        
+    // don't allow folders being moved to subfolders of themselves
+    if (![sourceNode isKindOfClass:[GIMessageGroup class]]) 
+	{				
+        if ([sourceNode isEqual:destinationNode]) return NO;
+        if ([GIHierarchyNode findHierarchyNode:destinationNode startingWithHierarchyNode:sourceNode]) {
+            return NO;
+        }
+    }
+    
+    if (! testOnly) 
+	{
+//        anIndex += 1; // first entry is the folder name
+        
+        // is entry's hierarchy equal target hierarchy?
+        if (sourceParent == destinationNode) 
+		{
+            // take care of indexes:
+            if (sourceIndex < anIndex) anIndex--;
+        }
+        
+        [sourceNode retain];
+        
+		NSMutableArray *children = [sourceParent mutableArrayValueForKey:@"children"];
+        [children removeObject:sourceNode];
+        
+        if (anIndex < [destinationNode.children count]) 
+		{
+            [[destinationNode mutableArrayValueForKey:@"children"] insertObject:sourceNode atIndex:anIndex];
+        } 
+		else 
+		{
+            [[destinationNode mutableArrayValueForKey:@"children"] addObject:sourceNode];
+        }
+        
+        [sourceNode release];        
+		
+		[[OPPersistentObjectContext defaultContext] saveChanges];
+    }
+    
+    return YES;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
+{
+	NSParameterAssert(anOutlineView == outlineView);
+	// ##WARNING works only for single selections. Not for multi selection!
+	
+	[pboard declareTypes:[NSArray arrayWithObject:@"GinaMessagegroups"] owner:self]; 
+	
+	NSMutableArray *nodeURLStrings = [NSMutableArray array];
+	for (GIHierarchyNode *node in items)
+	{
+		[nodeURLStrings addObject:[node objectURLString]];
+	}
+	
+	[pboard setPropertyList:nodeURLStrings forType:@"GinaMessagegroups"];
+	
+    return YES;
+}
+
+- (NSDragOperation)outlineView:(NSOutlineView *)anOutlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+{
+	NSParameterAssert(anOutlineView == outlineView);
+	// Message Groups
+	NSArray *objectURLStrings = [[info draggingPasteboard] propertyListForType:@"GinaMessagegroups"];
+	
+	if ([objectURLStrings count] == 1) 
+	{
+		if (index != NSOutlineViewDropOnItemIndex) 
+		{
+			GIHierarchyNode *sourceNode = [[OPPersistentObjectContext defaultContext] objectWithURLString:[objectURLStrings lastObject]];
+			// accept only when not on item:
+			if ([self moveHierarchyNode:sourceNode toHierarchyNode:item atIndex:index testOnly:YES])
+			{
+				[anOutlineView setDropItem:item dropChildIndex:index]; 
+				return NSDragOperationMove;
+			}
+		}
+	}
+	
+	NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
+	if ([threadURLs count]) 
+	{
+		if (index == NSOutlineViewDropOnItemIndex) return NSDragOperationMove;
+	}
+	
+	return NSDragOperationNone;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+{
+	NSParameterAssert(anOutlineView == outlineView);
+    
+	// Message Groups list
+	if (! item) item = [GIHierarchyNode messageGroupHierarchyRootNode];
+	
+	NSArray *objectURLStrings = [[info draggingPasteboard] propertyListForType:@"GinaMessagegroups"];
+	if ([objectURLStrings count] == 1) 
+	{		
+		GIHierarchyNode *sourceNode = [[OPPersistentObjectContext defaultContext] objectWithURLString:[objectURLStrings lastObject]];
+
+		[self moveHierarchyNode:sourceNode toHierarchyNode:item atIndex:index testOnly:NO];
+		 		
+//		[self reloadData];
+//		int row = [anOutlineView rowForItemEqualTo:[items lastObject] startingAtRow:0];
+//		[anOutlineView selectRow:row byExtendingSelection:NO];
+				
+		return YES;
+	}
+	
+//	NSArray *threadOids = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+//	
+//	if ([threadOids count]) 
+//	{
+//		GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
+//		GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item resolve: YES];
+//		
+//		[GIMessageGroup moveThreadsWithOids:threadOids fromGroup:sourceGroup toGroup:destinationGroup];
+//		
+//		// select all in dragging source:
+//		NSOutlineView *sourceView = [info draggingSource];        
+//		[sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
+//		
+//		[NSApp saveAction:self];
+//		
+//		return YES;
+//	}
+	
+	return NO;
+}
+
+@end

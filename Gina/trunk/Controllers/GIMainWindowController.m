@@ -342,6 +342,8 @@
 		hierarchyNode = selectedObject;
 	}
 	
+	[messageGroupsController.outlineView expandItem:hierarchyNode];
+	
 	NSUInteger position = [[hierarchyNode children] count];
 	
 	id newObject = [aClass newWithName:aName atHierarchyNode:hierarchyNode atIndex:position];

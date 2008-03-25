@@ -165,6 +165,25 @@
 	return result;
 }
 
+/*" Returns the hierarchy node in which entry is contained. Starts the search at the hierarchy node aHierarchy. Returns nil if entry couldn't be found in the hierarchy. "*/
++ (GIHierarchyNode *)findHierarchyNode:(id)searchedNode startingWithHierarchyNode:(GIHierarchyNode *)startNode
+{
+    GIHierarchyNode* result = nil;
+    
+    if ([startNode.children containsObject:searchedNode]) 
+	{
+        return startNode;
+    }
+    
+	for (GIHierarchyNode *node in startNode.children)
+	{
+		result = [self findHierarchyNode:searchedNode startingWithHierarchyNode:node];
+		if (result) break;
+    }
+	
+    return result;
+}
+
 - (int)unreadMessageCount
 {
 	return 0;

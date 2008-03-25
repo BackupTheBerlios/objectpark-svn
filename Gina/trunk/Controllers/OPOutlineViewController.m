@@ -505,43 +505,53 @@
 
 @implementation OPOutlineViewController (ConvenientSlowHelpers)
 
-- (BOOL)item:(id)pathCandidate isOnPathToItem:(id)item itemPath:(NSMutableArray *)itemPath
-{
-	if (pathCandidate == item)
-	{
-		[itemPath addObject:pathCandidate];
-		return YES;
-	}
-	
-	NSArray *children = [pathCandidate valueForKeyPath:[self childKey]];
-	if (children.count)
-	{
-		for (id child in children)
-		{
-			if ([self item:child isOnPathToItem:item itemPath:itemPath])
-			{
-				[itemPath insertObject:pathCandidate atIndex:0];
-				return YES;
-			}
-		}
-	}
-	
-	return NO;
-}
+//- (BOOL)item:(id)pathCandidate isOnPathToItem:(id)item itemPath:(NSMutableArray *)itemPath
+//{
+//	if (pathCandidate == item)
+//	{
+//		[itemPath addObject:pathCandidate];
+//		return YES;
+//	}
+//	
+//	NSArray *children = [pathCandidate valueForKeyPath:[self childKey]];
+//	if (children.count)
+//	{
+//		for (id child in children)
+//		{
+//			if ([self item:child isOnPathToItem:item itemPath:itemPath])
+//			{
+//				[itemPath insertObject:pathCandidate atIndex:0];
+//				return YES;
+//			}
+//		}
+//	}
+//	
+//	return NO;
+//}
 
 - (NSArray *)itemPathForItem:(id)item
 {
+	if (!item) return nil;
+	
 	NSMutableArray *result = [NSMutableArray array];
 	
-	if ([self item:self.rootItem isOnPathToItem:item itemPath:result])
-	{	
-		[result removeObjectAtIndex:0];
-		return result;
-	}
-	else
+	while (item)
 	{
-		return nil;
+		[result insertObject:item atIndex:0];
+		item = [outlineView parentForItem:item];
 	}
+	
+	return result;
+	
+//	if ([self item:self.rootItem isOnPathToItem:item itemPath:result])
+//	{	
+//		[result removeObjectAtIndex:0];
+//		return result;
+//	}
+//	else
+//	{
+//		return nil;
+//	}
 }
 
 @end
