@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="3"/>
+			<integer value="52"/>
 			<integer value="174"/>
 			<integer value="156"/>
 		</object>
@@ -1852,12 +1852,12 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<string key="NSMinSize">{264, 142}</string>
 				<string key="NSMaxSize">{800, 142}</string>
 			</object>
-			<object class="NSMenu" id="745181284">
+			<object class="NSMenu" id="912013777">
 				<string key="NSTitle"/>
 				<object class="NSMutableArray" key="NSMenuItems">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="NSMenuItem" id="644285363">
-						<reference key="NSMenu" ref="745181284"/>
+					<object class="NSMenuItem" id="728935592">
+						<reference key="NSMenu" ref="912013777"/>
 						<string type="base64-UTF8" key="NSTitle">TmV3IE1haWxib3jigKY</string>
 						<string key="NSKeyEquiv">n</string>
 						<int key="NSKeyEquivModMask">1835008</int>
@@ -1865,8 +1865,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="NSOnImage" ref="646649031"/>
 						<reference key="NSMixedImage" ref="604487905"/>
 					</object>
-					<object class="NSMenuItem" id="487951183">
-						<reference key="NSMenu" ref="745181284"/>
+					<object class="NSMenuItem" id="702450902">
+						<reference key="NSMenu" ref="912013777"/>
 						<string type="base64-UTF8" key="NSTitle">TmV3IEZvbGRlcuKApg</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
@@ -2199,7 +2199,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">menu</string>
 						<reference key="source" ref="410841950"/>
-						<reference key="destination" ref="745181284"/>
+						<reference key="destination" ref="912013777"/>
 					</object>
 					<int key="connectionID">178</int>
 				</object>
@@ -2207,7 +2207,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">addNewMessageGroup:</string>
 						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="644285363"/>
+						<reference key="destination" ref="728935592"/>
 					</object>
 					<int key="connectionID">179</int>
 				</object>
@@ -2215,7 +2215,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">addNewFolder:</string>
 						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="487951183"/>
+						<reference key="destination" ref="702450902"/>
 					</object>
 					<int key="connectionID">180</int>
 				</object>
@@ -2807,24 +2807,24 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">174</int>
-						<reference key="object" ref="745181284"/>
+						<reference key="object" ref="912013777"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="644285363"/>
-							<reference ref="487951183"/>
+							<reference ref="728935592"/>
+							<reference ref="702450902"/>
 						</object>
 						<reference key="parent" ref="1002"/>
 						<string key="objectName">New Group/Folder Menu</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">175</int>
-						<reference key="object" ref="644285363"/>
-						<reference key="parent" ref="745181284"/>
+						<reference key="object" ref="728935592"/>
+						<reference key="parent" ref="912013777"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">176</int>
-						<reference key="object" ref="487951183"/>
-						<reference key="parent" ref="745181284"/>
+						<reference key="object" ref="702450902"/>
+						<reference key="parent" ref="912013777"/>
 					</object>
 				</object>
 			</object>
@@ -2917,6 +2917,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>71.CustomClassName</string>
 					<string>73.IBPluginDependency</string>
 					<string>74.IBPluginDependency</string>
+					<string>75.CustomClassName</string>
 					<string>75.IBPluginDependency</string>
 					<string>76.IBPluginDependency</string>
 					<string>8.IBPluginDependency</string>
@@ -3037,6 +3038,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>GISeparatorButton</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>OPMenuButton</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

@@ -57,8 +57,8 @@
 		
 		NSRectFill(NSMakeRect(aRect.origin.x, aRect.origin.y, aRect.size.width, 1.0));
 		NSRectFill(NSMakeRect(aRect.origin.x, aRect.origin.y + (aRect.size.height - 1.0), aRect.size.width, 1.0));
-		
-		
+		NSImage *dotImage = [NSImage imageNamed:@"SplitViewDot"];
+		[dotImage drawAtPoint:NSMakePoint(aRect.origin.x + ((aRect.size.width + dotImage.size.width) / 2), aRect.origin.y + (dotImage.size.height / 2)) fromRect:NSMakeRect(0, 0, dotImage.size.width, dotImage.size.height) operation:NSCompositeSourceAtop fraction:1.0];
 	}
 	
 	//	[[NSGraphicsContext currentContext] setShouldAntialias:YES];
