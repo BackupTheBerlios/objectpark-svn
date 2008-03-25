@@ -116,13 +116,46 @@
 	[self autorelease];
 }
 
-- (IBAction) groupTreeSelectionChanged: (id) sender
+- (IBAction)groupTreeSelectionChanged:(id)sender
 {
 	[self setThreadsOnlyMode];
 }
 
+- (void)setProgressInfoVisible:(BOOL)aBool
+{
+	[[NSUserDefaults standardUserDefaults] setBool:aBool forKey:ProgressInfoShown];
+}
+
+- (BOOL)progressInfoVisible
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:ProgressInfoShown];
+}
+
+- (IBAction)toggleProgressInfo:(id)sender
+{
+	NSRect frame = progressInfoScrollView.frame;
+
+	if (frame.size.height != 0.0)
+	{
+		progressInfoHeight = progressInfoScrollView.frame.size.height;
+
+		// hide progress info:
+		frame.size.height = 0.0;
+		progressInfoScrollView.frame = frame;
+		[self setProgressInfoVisible:NO];
+	}
+	else
+	{
+	}
+}
+
 - (void)windowDidLoad
 {
+	if (![self progressInfoVisible])
+	{
+		[self toggleProgressInfo:self];
+	}
+	
 	threadMailSplitter.dividerThickness = 8.0;
 	
 	// configuring manual bindings:
@@ -241,28 +274,28 @@
     [[[GIMessageEditorController alloc] initNewMessageWithProfile:profileForNewMessage] autorelease];
 }
 
-- (IBAction)renameMessageGroup:(id)sender
+- (IBAction)rename:(id)sender
 {
-	GIMessageGroup *group = messageGroupsController.selectedObject;
-	if (group)
+	GIHierarchyNode *node = messageGroupsController.selectedObject;
+	if (node)
 	{
-		messageGroupNameField.stringValue = group.name;
+		messageGroupNameField.stringValue = node.name;
 		
 		[NSApp beginSheet:messageGroupRenameWindow modalForWindow:self.window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
 	}
 }
 
-- (IBAction)doRenameMessageGroup:(id)sender
+- (IBAction)doRename:(id)sender
 {
-	GIMessageGroup *group = messageGroupsController.selectedObject;
+	GIHierarchyNode *node = messageGroupsController.selectedObject;
 	
-	group.name = messageGroupNameField.stringValue;
+	node.name = messageGroupNameField.stringValue;
 	
 	[NSApp endSheet:messageGroupRenameWindow];
 	[messageGroupRenameWindow orderOut:self];
 }
 
-- (IBAction)cancelRenameMessageGroup:(id)sender
+- (IBAction)cancelRename:(id)sender
 {
 	[NSApp endSheet:messageGroupRenameWindow];
 	[messageGroupRenameWindow orderOut:self];
@@ -270,32 +303,36 @@
 
 - (IBAction)markAsRead:(id)sender
 {
-	for (GIMessage* message in [threadsController selectedMessages]) {
+	for (GIMessage *message in [threadsController selectedMessages]) 
+	{
 		message.isSeen = YES;
 	}
 }
 
-- (IBAction) markAsUnread: (id) sender
+- (IBAction)markAsUnread:(id)sender
 {
-	for (GIMessage* message in [threadsController selectedMessages]) {
+	for (GIMessage *message in [threadsController selectedMessages]) 
+	{
 		message.isSeen = NO;
 	}
 }
 
 - (IBAction)toggleRead:(id)sender
 {
-	if ([threadsController selectionHasUnreadMessages]) {
-		[self markAsRead: self];
-	} else {
-		[self markAsUnread: self];
+	if ([threadsController selectionHasUnreadMessages]) 
+	{
+		[self markAsRead:self];
+	} 
+	else 
+	{
+		[self markAsUnread:self];
 	}
 }
 
-- (IBAction)addNewMessageGroup:(id)sender
+- (void)addNew:(Class)aClass withName:(NSString *)aName
 {
-	// if selection of message hierarchy is a folder, add new message group in
+	// if selection of message hierarchy is a folder, add new object in
 	// this folder (at the end)
-	// if selection is a message group, add new message group after the selection
 	
 	id selectedObject = [messageGroupsController selectedObject];
 	GIHierarchyNode *hierarchyNode = [GIHierarchyNode messageGroupHierarchyRootNode];
@@ -306,12 +343,22 @@
 	}
 	
 	NSUInteger position = [[hierarchyNode children] count];
+	
+	id newObject = [aClass newWithName:aName atHierarchyNode:hierarchyNode atIndex:position];
+	
+	[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject:[messageGroupsController itemPathForItem:newObject]] byExtendingSelection:NO];
+	
+	[self performSelector:@selector(rename:) withObject:self afterDelay:0.0];
+}
 
-	GIMessageGroup *newGroup = [GIMessageGroup newMessageGroupWithName:@"New Box" atHierarchyNode:hierarchyNode atIndex:position];
-	
-	[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject:[messageGroupsController itemPathForItem:newGroup]] byExtendingSelection:NO];
-	
-	[self renameMessageGroup:sender];
+- (IBAction)addNewMessageGroup:(id)sender
+{
+	[self addNew:[GIMessageGroup class] withName:@"New Box"];
+}
+
+- (IBAction)addNewFolder:(id)sender
+{
+	[self addNew:[GIHierarchyNode class] withName:@"New Folder"];
 }
 
 - (void) showMessage: (GIMessage*) message

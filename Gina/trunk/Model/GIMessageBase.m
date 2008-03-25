@@ -154,7 +154,7 @@ NSString* MboxImportJobName = @"mbox import";
 	
 	NSDate *startDate = [NSDate date];
 	
-	GIMessageGroup* importGroup = [GIMessageGroup newMessageGroupWithName: groupName atHierarchyNode: nil atIndex: NSNotFound];
+	GIMessageGroup* importGroup = [GIMessageGroup newWithName: groupName atHierarchyNode: nil atIndex: NSNotFound];
 	
     NSAutoreleasePool *pool = nil;
     @try 

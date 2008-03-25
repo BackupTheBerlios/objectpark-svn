@@ -428,6 +428,12 @@ NSDateFormatter *timeAndDateFormatter()
 	return self;
 }
 
+- (void)setRootItem:(id)newItem
+{
+	if ([newItem isKindOfClass:[GIMessageGroup class]]) [super setRootItem:newItem];
+	else [super setRootItem:nil];
+}
+
 - (void)suspend:(NSNotification *)aNotification
 {
 	self.suspendUpdatesUntilNextReloadData = YES;

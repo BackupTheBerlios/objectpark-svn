@@ -26,4 +26,5 @@
 
 @interface GIHierarchyNode (MessageGroupHierarchy)
 + (id)messageGroupHierarchyRootNode;
++ (id)newWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
 @end

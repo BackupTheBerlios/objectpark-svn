@@ -127,6 +127,44 @@
 	return rootNode;
 }
 
+/*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
++ (id)newWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex
+{
+    if (!aName) 
+	{
+        aName = NSLocalizedString(@"New Group", @"Default name for new group");
+    }
+    
+    if (!aNode) 
+	{
+        aNode = [GIHierarchyNode messageGroupHierarchyRootNode];
+    }
+	if (anIndex == NSNotFound) anIndex = [[aNode children] count];
+	
+    // creating new group and setting name:
+    GIHierarchyNode *result = [[[self alloc] init] autorelease];
+	result.name = aName;
+	
+    // placing new group in hierarchy:
+    NSParameterAssert((anIndex >= 0) && (anIndex <= [[aNode children] count]));
+    
+	NSMutableArray *children = [aNode mutableArrayValueForKey:@"children"];
+	
+    if (anIndex >= [children count]) 
+	{
+        [children addObject:result];
+    } 
+	else 
+	{
+        [children insertObject:result atIndex:anIndex];
+    }
+	
+	NSAssert([[aNode children] objectAtIndex:anIndex] == result, @"hierarchy object not inserted.");
+	NSAssert([aNode hasUnsavedChanges], @"parent hierarchy node not dirty.");
+    
+	return result;
+}
+
 - (int)unreadMessageCount
 {
 	return 0;

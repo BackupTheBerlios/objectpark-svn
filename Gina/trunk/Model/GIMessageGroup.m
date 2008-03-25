@@ -65,38 +65,38 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     [self trashMessageGroup];
 }
 
-/*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
-+ (GIMessageGroup*) newMessageGroupWithName: (NSString*) aName atHierarchyNode: (GIHierarchyNode*) aNode atIndex: (int) anIndex
-{
-    if (!aName) {
-        aName = NSLocalizedString(@"New Group", @"Default name for new group");
-    }
-    
-    if (!aNode) {
-        aNode = [GIHierarchyNode messageGroupHierarchyRootNode];
-    }
-	if (anIndex == NSNotFound) anIndex = [[aNode children] count];
-
-    // creating new group and setting name:
-    GIMessageGroup* result = [[[self alloc] init] autorelease];
-    [result setName: aName];
-
-    // placing new group in hierarchy:
-    NSParameterAssert((anIndex >= 0) && (anIndex <= [[aNode children] count]));
-    
-	NSMutableArray *children = [aNode mutableArrayValueForKey: @"children"];
-	
-    if (anIndex >= [children count]) {
-        [children addObject: result];
-    } else {
-        [children insertObject: result atIndex: anIndex];
-    }
-
-	NSAssert([[aNode children] objectAtIndex: anIndex] == result, @"Message group not inserted.");
-	NSAssert([aNode hasUnsavedChanges], @"parent hierarchy node not dirty.");
-    
-	return result;
-}
+///*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
+//+ (GIMessageGroup*) newMessageGroupWithName: (NSString*) aName atHierarchyNode: (GIHierarchyNode*) aNode atIndex: (int) anIndex
+//{
+//    if (!aName) {
+//        aName = NSLocalizedString(@"New Group", @"Default name for new group");
+//    }
+//    
+//    if (!aNode) {
+//        aNode = [GIHierarchyNode messageGroupHierarchyRootNode];
+//    }
+//	if (anIndex == NSNotFound) anIndex = [[aNode children] count];
+//
+//    // creating new group and setting name:
+//    GIMessageGroup* result = [[[self alloc] init] autorelease];
+//    [result setName: aName];
+//
+//    // placing new group in hierarchy:
+//    NSParameterAssert((anIndex >= 0) && (anIndex <= [[aNode children] count]));
+//    
+//	NSMutableArray *children = [aNode mutableArrayValueForKey: @"children"];
+//	
+//    if (anIndex >= [children count]) {
+//        [children addObject: result];
+//    } else {
+//        [children insertObject: result atIndex: anIndex];
+//    }
+//
+//	NSAssert([[aNode children] objectAtIndex: anIndex] == result, @"Message group not inserted.");
+//	NSAssert([aNode hasUnsavedChanges], @"parent hierarchy node not dirty.");
+//    
+//	return result;
+//}
 
 /*" Returns the message group object referenced by the given reference string anUrl. See also: #{-URIReferenceString}. "*/
 //+ (id)messageGroupWithURLString:(NSString *)anUrl
@@ -618,7 +618,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		if (!result) 
 		{
 			// not found creating new:
-			result = [GIMessageGroup newMessageGroupWithName:defaultName atHierarchyNode:nil atIndex:NSNotFound];
+			result = [GIMessageGroup newWithName:defaultName atHierarchyNode:nil atIndex:NSNotFound];
 			
 			NSAssert1([result name] != nil, @"group should have a name: %@", defaultName);
 			

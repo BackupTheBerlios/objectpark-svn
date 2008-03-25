@@ -70,7 +70,7 @@ extern NSString *GIMessageGroupsChangedNotification;
 
 
 + (void)ensureDefaultGroups;
-+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
+//+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
 
 //- (void)exportAsMboxFileWithPath:(NSString *)path;
 

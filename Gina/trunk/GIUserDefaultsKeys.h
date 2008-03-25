@@ -51,6 +51,7 @@ extern NSString *ShowThreadInfoPanel;
 extern NSString *SelectFirstUnreadMessageInThread;
 extern NSString *SetSeenBehavior;
 extern NSString *SetSeenTimeinterval;
+extern NSString *ProgressInfoShown;
 
 extern NSArray *allAdditionalHeadersForDisplay();
 extern void registerDefaultDefaults();
