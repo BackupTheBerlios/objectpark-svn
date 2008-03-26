@@ -435,10 +435,11 @@ NSDateFormatter *timeAndDateFormatter()
 	NSArray* threadsToMove = self.selectedObjects;
 	NSLog(@"Should delete %@", threadsToMove);
 	for (GIThread* thread in threadsToMove) {
-		//[thread setValue: trash forKey: @"messageGroups"];
-		NSMutableArray* groups = [thread mutableArrayValueForKey: @"messageGroups"];
-		[groups removeAllObjects];
-		[groups addObject: trash];
+		if ([thread isKindOfClass: [GIThread class]]) {
+			NSMutableArray* groups = [thread mutableArrayValueForKey: @"messageGroups"];
+			[groups removeAllObjects];
+			[groups addObject: trash];
+		}
 	}
 }
 
