@@ -24,6 +24,13 @@
     }
 }
 
+- (IBAction) delete: (id) sender
+{
+	NSUInteger selectionIndex = [[self selectedRowIndexes] firstIndex];
+	[self.dataSource performSelector: @selector(moveSelectionToTrash)];
+	[self selectRow: selectionIndex byExtendingSelection: NO];
+}
+
 - (void)drawGridInClipRect:(NSRect)rect
 {
     if (highlightThreads)

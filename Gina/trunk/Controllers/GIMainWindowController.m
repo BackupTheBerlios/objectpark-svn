@@ -713,11 +713,10 @@ static BOOL isShowingThreadsOnly = NO;
 			GIMessage *selectedMessage = self.selectedMessage;		
 			[self performSetSeenBehaviorForMessage:selectedMessage];
 		}
+		return;
 	}
-	else
-	{
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}	
+
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 

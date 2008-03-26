@@ -119,7 +119,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[self removePrimitiveObjectFromMessageGroupsAtIndex: index];
 	NSSet* selfSet = [NSSet setWithObject: self];
 	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
-//	[(OPPersistentSet*) group.threads removeObject: self]; 
+	//[(OPPersistentSet*) group.threads removeObject: self]; // why was this commented out?
 	[group removePrimitiveThreadsObject: self];
 	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
 }

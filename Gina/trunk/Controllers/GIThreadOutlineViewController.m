@@ -428,6 +428,20 @@ NSDateFormatter *timeAndDateFormatter()
 	return self;
 }
 
+- (void) moveSelectionToTrash
+/*" Moves the selected threads to the trash group. "*/
+{
+	GIMessageGroup* trash = [GIMessageGroup trashMessageGroup];
+	NSArray* threadsToMove = self.selectedObjects;
+	NSLog(@"Should delete %@", threadsToMove);
+	for (GIThread* thread in threadsToMove) {
+		//[thread setValue: trash forKey: @"messageGroups"];
+		NSMutableArray* groups = [thread mutableArrayValueForKey: @"messageGroups"];
+		[groups removeAllObjects];
+		[groups addObject: trash];
+	}
+}
+
 - (void)setRootItem:(id)newItem
 {
 	if ([newItem isKindOfClass:[GIMessageGroup class]]) [super setRootItem:newItem];
