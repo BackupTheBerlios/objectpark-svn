@@ -27,7 +27,7 @@
 - (void)willDelete
 {
 	// delete dependent objects (cascade)
-	[children makeObjectsPerformSelector:@selector(willDelete)]; // ask user first!
+	[children makeObjectsPerformSelector:@selector(delete)]; // ask user first!
 	[super willDelete];
 }
 

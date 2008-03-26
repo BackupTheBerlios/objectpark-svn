@@ -8,6 +8,7 @@
 
 #import "GIMainWindowController.h"
 #import "GIThreadOutlineViewController.h"
+#import "GIMessageGroupOutlineViewController.h"
 #import "GIMessageEditorController.h"
 #import "GISplitView.h"
 
@@ -299,6 +300,28 @@
 {
 	[NSApp endSheet:messageGroupRenameWindow];
 	[messageGroupRenameWindow orderOut:self];
+}
+
+- (IBAction)delete:(id)sender
+{
+	GIHierarchyNode *node = messageGroupsController.selectedObject;
+
+	NSString *nodeType = [node isKindOfClass:[GIMessageGroup class]] ? NSLocalizedString(@"Mailbox", @"Delete warning dialog") : NSLocalizedString(@"Folder", @"Delete warning dialog");
+	NSAlert *alert = [[NSAlert alloc] init];
+	
+	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete warning dialog")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Delete warning dialog")];
+	[alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Delete %@ '%@' and all of its contents?", @"Delete warning dialog"), nodeType, node.name]];
+	[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The deleted %@ cannot be restored.", @"Delete warning dialog"), nodeType]];
+	[alert setAlertStyle:NSWarningAlertStyle];	
+	
+	if ([alert runModal] == NSAlertFirstButtonReturn) 
+	{
+		// Delete clicked, delete the node
+		[self.messageGroupsController deleteHierarchyNode:node];
+	}
+	
+	[alert release];
 }
 
 - (IBAction)markAsRead:(id)sender

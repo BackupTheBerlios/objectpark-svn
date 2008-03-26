@@ -66,6 +66,17 @@
 	return ![item isKindOfClass:[GIMessageGroup class]];
 }
 
+- (void)deleteHierarchyNode:(GIHierarchyNode *)aNode
+{
+	GIHierarchyNode *parent = [outlineView parentForItem:aNode];
+	
+	if (!parent) parent = [GIHierarchyNode messageGroupHierarchyRootNode];
+	
+	[[aNode retain] autorelease];
+	[[parent mutableArrayValueForKey:@"children"] removeObject:aNode];
+	[aNode delete];
+}
+
 @end
 
 @implementation GIMessageGroupOutlineViewController (OPDragNDrop)

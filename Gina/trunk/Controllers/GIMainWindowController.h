@@ -15,12 +15,12 @@
 @class GIMessageGroup;
 @class GITextView;
 @class GIThreadOutlineViewController;
-@class OPOutlineViewController;
+@class GIMessageGroupOutlineViewController;
 @class GISplitView;
 
 @interface GIMainWindowController : NSWindowController 
 {
-	IBOutlet OPOutlineViewController *messageGroupsController;
+	IBOutlet GIMessageGroupOutlineViewController *messageGroupsController;
 	IBOutlet GIThreadOutlineViewController *threadsController;
 	IBOutlet GICommentTreeView *commentTreeView;
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
@@ -41,7 +41,7 @@
 	NSString *observedKeyPathForSelectedThreads;
 }
 
-@property (readonly) OPOutlineViewController* messageGroupsController;
+@property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;
 @property (retain) NSArray *selectedThreads;
 
 - (IBAction) commentTreeSelectionChanged: (id) sender;
@@ -61,6 +61,7 @@
 - (IBAction)rename:(id)sender;
 - (IBAction)doRename:(id)sender;
 - (IBAction)cancelRename:(id)sender;
+- (IBAction)delete:(id)sender;
 	
 - (void) showMessage: (GIMessage*) message;
 

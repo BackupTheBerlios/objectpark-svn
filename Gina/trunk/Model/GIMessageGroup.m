@@ -379,8 +379,6 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     return result;
 }
 
-
-
 //+ (void)removeHierarchyNode:(id)entry
 ///*" Moves entry (either a hierarchy node or a group reference to another hierarchy node aHierarchy at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
 //{
@@ -400,59 +398,6 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 //}
 
 
-//+ (BOOL)moveEntry:(id)entry toHierarchyNode:(NSMutableArray *)aHierarchy atIndex:(int)anIndex testOnly:(BOOL)testOnly
-///*" Moves entry (either a hierarchy node or a group reference to another hierarchy node aHierarchy at the given index anIndex. If testOnly is YES, it only checks if the move was legal. Returns YES if the move was successful, NO otherwise. "*/
-//{
-//    NSMutableArray *entrysHierarchy;
-//    int entrysIndex;
-//    
-//    // find entry's hierarchy and index
-//    entrysHierarchy = [self findHierarchyNodeForEntry:entry startingWithHierarchyNode:[self hierarchyRootNode]];
-//    entrysIndex = [entrysHierarchy indexOfObject:entry];
-//    
-//    // don't allow folders being moved to subfolders of themselves
-//    if ([entry isKindOfClass:[NSMutableArray class]]) 
-//	{
-//        if ([entry isEqual:aHierarchy]) return NO;
-//        if ([entry containsObject:aHierarchy]) return NO;
-//        if ([self findHierarchyNodeForEntry:aHierarchy startingWithHierarchyNode: entry]) {
-//            return NO;
-//        }
-//    }
-//    
-//    if (! testOnly) 
-//	{
-//        anIndex += 1; // first entry is the folder name
-//        
-//        // is entry's hierarchy equal target hierarchy?
-//        if (entrysHierarchy == aHierarchy) 
-//		{
-//            // take care of indexes:
-//            if (entrysIndex < anIndex) anIndex--;
-//        }
-//        
-//        [entry retain];
-//        
-//        [entrysHierarchy removeObject:entry];
-//        
-//        if (anIndex < [aHierarchy count]) 
-//		{
-//            [aHierarchy insertObject:entry atIndex:anIndex];
-//        } 
-//		else 
-//		{
-//            [aHierarchy addObject:entry];
-//        }
-//        
-//        [entry release];
-//        
-//        [self saveHierarchy];
-//    }
-//    
-//	[[NSNotificationCenter defaultCenter] postNotificationName:GIMessageGroupsChangedNotification object:self];
-//
-//    return YES;
-//}
 
 - (NSArray*) children
 {
