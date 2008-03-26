@@ -101,6 +101,20 @@
 	[self didChangeValueForKey: @"children"];
 }
 
+- (BOOL)isDeletable
+{
+	BOOL result = YES;
+	for (id child in self.children)
+	{
+		if (![child isDeletable])
+		{
+			result = NO;
+			break;
+		}
+	}
+	return result;
+}
+
 @end
 
 #import "GIMessageGroup.h"

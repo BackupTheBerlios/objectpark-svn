@@ -1876,20 +1876,20 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 				</object>
 			</object>
-			<object class="NSMenu" id="535152861">
+			<object class="NSMenu" id="559415678">
 				<string key="NSTitle"/>
 				<object class="NSMutableArray" key="NSMenuItems">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="NSMenuItem" id="721476597">
-						<reference key="NSMenu" ref="535152861"/>
+					<object class="NSMenuItem" id="451647665">
+						<reference key="NSMenu" ref="559415678"/>
 						<string type="base64-UTF8" key="NSTitle">UmVuYW1l4oCmA</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="646649031"/>
 						<reference key="NSMixedImage" ref="604487905"/>
 					</object>
-					<object class="NSMenuItem" id="961229256">
-						<reference key="NSMenu" ref="535152861"/>
+					<object class="NSMenuItem" id="454213570">
+						<reference key="NSMenu" ref="559415678"/>
 						<string type="base64-UTF8" key="NSTitle">RGVsZXRl4oCmA</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
@@ -2262,7 +2262,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">menu</string>
 						<reference key="source" ref="437177781"/>
-						<reference key="destination" ref="535152861"/>
+						<reference key="destination" ref="559415678"/>
 					</object>
 					<int key="connectionID">187</int>
 				</object>
@@ -2270,7 +2270,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">rename:</string>
 						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="721476597"/>
+						<reference key="destination" ref="451647665"/>
 					</object>
 					<int key="connectionID">188</int>
 				</object>
@@ -2278,9 +2278,25 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">delete:</string>
 						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="961229256"/>
+						<reference key="destination" ref="454213570"/>
 					</object>
 					<int key="connectionID">189</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: selectedObject.isDeletable</string>
+						<reference key="source" ref="454213570"/>
+						<reference key="destination" ref="881660627"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="454213570"/>
+							<reference key="NSDestination" ref="881660627"/>
+							<string key="NSLabel">enabled: selectedObject.isDeletable</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">selectedObject.isDeletable</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">191</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2875,24 +2891,24 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">183</int>
-						<reference key="object" ref="535152861"/>
+						<reference key="object" ref="559415678"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="721476597"/>
-							<reference ref="961229256"/>
+							<reference ref="451647665"/>
+							<reference ref="454213570"/>
 						</object>
 						<reference key="parent" ref="1002"/>
 						<string key="objectName">Action Menu</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">184</int>
-						<reference key="object" ref="721476597"/>
-						<reference key="parent" ref="535152861"/>
+						<reference key="object" ref="451647665"/>
+						<reference key="parent" ref="559415678"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">185</int>
-						<reference key="object" ref="961229256"/>
-						<reference key="parent" ref="535152861"/>
+						<reference key="object" ref="454213570"/>
+						<reference key="parent" ref="559415678"/>
 					</object>
 				</object>
 			</object>
@@ -3145,7 +3161,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">189</int>
+			<int key="maxID">191</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3295,7 +3311,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>NSSplitView</string>
 							<string>NSTextField</string>
 							<string>NSWindow</string>
-							<string>OPOutlineViewController</string>
+							<string>GIMessageGroupOutlineViewController</string>
 							<string>GITextView</string>
 							<string>id</string>
 							<string>NSScrollView</string>

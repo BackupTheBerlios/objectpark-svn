@@ -421,6 +421,16 @@
 	return YES;
 }
 
+- (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
+{
+	if ([anItem action] == @selector(delete:))
+	{
+		return [(GIHierarchyNode *)[messageGroupsController selectedObject] isDeletable];
+	}
+	
+	return YES;
+}
+
 @end
 
 @implementation GIMainWindowController (GeneralBindings)

@@ -423,6 +423,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) willDelete
 {
 	// delete dependent objects
+#warning TODO: take care of contained threads (disconnect relation)
 	[super willDelete];
 }
 
@@ -655,12 +656,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:TrashMessageGroupURLString];
 }
 
-
-- (int) type
+- (int)type
 /*" Returns the special type of messageGroup (e.g. GIQueuedMessageGroup) or 0 for a regular messageGroup. "*/
 {
-	int type = [[self valueForKey: @"type"] intValue];
-	if (!type) {
+	if (!type) 
+	{
 		type = GIRegularMessageGroup;
 		Class c = [self class];
 		if (self == [c defaultMessageGroup]) type = GIDefaultMessageGroup;
@@ -674,6 +674,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return type;
 }
 
+- (BOOL)isDeletable
+{
+	return self.type == GIRegularMessageGroup;
+}
+
 - (NSString *)imageName
 {
 	static NSString *imageNames[] = {@"OtherMailbox", @"InMailbox", @"ToBeDeliveredMailbox", @"DraftsMailbox", @"OutMailbox", @"JunkMailbox", @"TrashMailbox"};
@@ -685,8 +690,6 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     NSString *imageName = [aMessageGroup imageName];    
     return [NSImage imageNamed:imageName];
 }
-
-
 
 - (BOOL) canHaveChildren
 {

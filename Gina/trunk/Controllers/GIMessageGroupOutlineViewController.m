@@ -43,7 +43,7 @@
 {	
 	if ([item isKindOfClass:[GIMessageGroup class]]) 
 	{
-		[cell setImage:[NSImage imageNamed:@"OtherMailbox"]];
+		[cell setImage:[GIMessageGroup imageForMessageGroup:item]];
 	} 
 	else 
 	{

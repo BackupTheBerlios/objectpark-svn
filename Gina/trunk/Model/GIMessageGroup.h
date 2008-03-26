@@ -14,19 +14,6 @@
 @class GIProfile;
 @class GIThread;
 
-@interface GIMessageGroup : GIHierarchyNode 
-{
-	//OPFaultingArray* threadsByDate;
-	OPPersistentSet* threads;
-	OID defaultProfileOID;
-	
-    // transient stats:
-    int unreadMessageCount;
-}
-
-@property (readonly) NSSet* threads;
-@property (readonly) int unreadMessageCount;
-
 /*" MessageGroup types "*/
 #define GIRegularMessageGroup 1
 #define GIDefaultMessageGroup 2
@@ -36,9 +23,24 @@
 #define GISpamMessageGroup 6
 #define GITrashMessageGroup 7
 
-/*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/
-extern NSString *GIMessageGroupWasAddedNotification;
-extern NSString *GIMessageGroupsChangedNotification;
+@interface GIMessageGroup : GIHierarchyNode 
+{
+	//OPFaultingArray* threadsByDate;
+	OPPersistentSet* threads;
+	OID defaultProfileOID;
+	
+    // transient stats:
+    int unreadMessageCount;
+	int type;
+}
+
+@property (readonly) NSSet *threads;
+@property (readonly) int unreadMessageCount;
+@property (readonly) int type;
+
+///*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/
+//extern NSString *GIMessageGroupWasAddedNotification;
+//extern NSString *GIMessageGroupsChangedNotification;
 
 - (GIProfile*) defaultProfile;
 - (void) setDefaultProfile: (GIProfile*) newProfile;
@@ -65,12 +67,11 @@ extern NSString *GIMessageGroupsChangedNotification;
 + (GIMessageGroup *)trashMessageGroup;
 + (void)setTrashMessageGroup:(GIMessageGroup *)aMessageGroup;
 
-- (NSString*) imageName;
-- (int) type;
+- (NSString *)imageName;
+- (BOOL)isDeletable;
 
 
 + (void)ensureDefaultGroups;
-//+ (GIMessageGroup *)newMessageGroupWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
 
 //- (void)exportAsMboxFileWithPath:(NSString *)path;
 
