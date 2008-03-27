@@ -207,7 +207,7 @@ NSString* MboxImportJobName = @"mbox import";
                         ++addedMessageCount;
                     }
                                         
-                    if ((++mboxDataCount % 100) == 0) {
+                    if ((++mboxDataCount % 500) == 0) {
                         if (messagesWereAdded) {   
 							NSDate *lapDate = [NSDate date];
 							
@@ -218,6 +218,7 @@ NSString* MboxImportJobName = @"mbox import";
 							double estimatedRemainingSeconds = (double)(elapsedSeconds / percentCompleted) * (double)(100.0 - percentCompleted);
 							
 							NSLog(@"Added %u messages so far... (overall average %.2lf, local average %.2lf (in messages/second)) %.2lf%% estimated remaining minutes: %.1lf", addedMessageCount, overallAverage, localAverage, percentCompleted, estimatedRemainingSeconds / 60.0);
+							
                             [self saveChanges];
                             messagesWereAdded = NO;
 							[lastLapDate release];

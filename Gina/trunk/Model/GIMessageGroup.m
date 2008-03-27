@@ -509,6 +509,24 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 //    [self saveHierarchy];
 //}
 
++ (void)moveThreadsWithURLs:(NSArray *)threadURLs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup
+{
+	if (sourceGroup != destinationGroup) 
+	{		
+		for (NSString *threadURL in threadURLs)
+		{
+			GIThread *thread = [[OPPersistentObjectContext defaultContext] objectWithURLString:threadURL];
+			
+			[[thread mutableArrayValueForKey:@"messageGroups"] addObject:destinationGroup];
+			[[thread mutableArrayValueForKey:@"messageGroups"] removeObject:sourceGroup];
+		}
+	} 
+	else 
+	{
+		NSLog(@"Warning: Try to move into same group %@", sourceGroup);
+	}
+}
+
 + (NSMutableArray*) hierarchyNodeForUid: (NSNumber*) anUid startHierarchyNode: (NSMutableArray*) aNode
 {
     NSMutableArray* result = nil;
@@ -685,18 +703,18 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return imageNames[MAX(0, [self type] - 1)];
 }
  
-+ (NSImage*) imageForMessageGroup:(GIMessageGroup *)aMessageGroup
++ (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup
 {
     NSString *imageName = [aMessageGroup imageName];    
     return [NSImage imageNamed:imageName];
 }
 
-- (BOOL) canHaveChildren
+- (BOOL)canHaveChildren
 {
 	return NO;
 }
 
-- (void) willSave
+- (void)willSave
 {
 	[super willSave];
 	if ([[self valueForKey:@"name"] length] == 0) {

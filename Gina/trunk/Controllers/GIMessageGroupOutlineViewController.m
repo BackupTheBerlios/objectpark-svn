@@ -26,15 +26,16 @@
 	
 	[outlineView setColumnAutoresizingStyle:NSTableViewSequentialColumnAutoresizingStyle];
 	
-	// Register to grok GinaThreads and GinaMessagegroups drags:
-    [outlineView registerForDraggedTypes:[NSArray arrayWithObjects: @"GinaThreads", @"GinaMessagegroups", nil]];
+	// Register to grok GinaThreads and GinaHierarchyNodes drags:
+    [outlineView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinaThreads", @"GinaHierarchyNodes", nil]];
 }
 
-- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
+- (NSSet *)keyPathsAffectingDisplayOfItem:(id)item
 {
-	static NSSet* affectingKeyPaths = nil;
-	if (! affectingKeyPaths) {
-		affectingKeyPaths = [[NSSet setWithObjects: @"name", @"unreadMessageCount", nil] retain];
+	static NSSet *affectingKeyPaths = nil;
+	if (! affectingKeyPaths) 
+	{
+		affectingKeyPaths = [[NSSet setWithObjects:@"name", @"unreadMessageCount", nil] retain];
 	}
 	return affectingKeyPaths;
 }
@@ -99,9 +100,7 @@
     }
     
     if (! testOnly) 
-	{
-//        anIndex += 1; // first entry is the folder name
-        
+	{        
         // is entry's hierarchy equal target hierarchy?
         if (sourceParent == destinationNode) 
 		{
@@ -136,7 +135,7 @@
 	NSParameterAssert(anOutlineView == outlineView);
 	// ##WARNING works only for single selections. Not for multi selection!
 	
-	[pboard declareTypes:[NSArray arrayWithObject:@"GinaMessagegroups"] owner:self]; 
+	[pboard declareTypes:[NSArray arrayWithObject:@"GinaHierarchyNodes"] owner:self]; 
 	
 	NSMutableArray *nodeURLStrings = [NSMutableArray array];
 	for (GIHierarchyNode *node in items)
@@ -144,7 +143,7 @@
 		[nodeURLStrings addObject:[node objectURLString]];
 	}
 	
-	[pboard setPropertyList:nodeURLStrings forType:@"GinaMessagegroups"];
+	[pboard setPropertyList:nodeURLStrings forType:@"GinaHierarchyNodes"];
 	
     return YES;
 }
@@ -153,7 +152,7 @@
 {
 	NSParameterAssert(anOutlineView == outlineView);
 	// Message Groups
-	NSArray *objectURLStrings = [[info draggingPasteboard] propertyListForType:@"GinaMessagegroups"];
+	NSArray *objectURLStrings = [[info draggingPasteboard] propertyListForType:@"GinaHierarchyNodes"];
 	
 	if ([objectURLStrings count] == 1) 
 	{
@@ -169,10 +168,15 @@
 		}
 	}
 	
-	NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
-	if ([threadURLs count]) 
+	// thread drop:
+	
+	if ([item isKindOfClass:[GIMessageGroup class]])
 	{
-		if (index == NSOutlineViewDropOnItemIndex) return NSDragOperationMove;
+		NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
+		if ([threadURLs count]) 
+		{
+			if (index == NSOutlineViewDropOnItemIndex) return NSDragOperationMove;
+		}
 	}
 	
 	return NSDragOperationNone;
@@ -185,37 +189,32 @@
 	// Message Groups list
 	if (! item) item = [GIHierarchyNode messageGroupHierarchyRootNode];
 	
-	NSArray *objectURLStrings = [[info draggingPasteboard] propertyListForType:@"GinaMessagegroups"];
+	NSArray *objectURLStrings = [[info draggingPasteboard] propertyListForType:@"GinaHierarchyNodes"];
 	if ([objectURLStrings count] == 1) 
 	{		
 		GIHierarchyNode *sourceNode = [[OPPersistentObjectContext defaultContext] objectWithURLString:[objectURLStrings lastObject]];
 
 		[self moveHierarchyNode:sourceNode toHierarchyNode:item atIndex:index testOnly:NO];
-		 		
-//		[self reloadData];
-//		int row = [anOutlineView rowForItemEqualTo:[items lastObject] startingAtRow:0];
-//		[anOutlineView selectRow:row byExtendingSelection:NO];
 				
 		return YES;
 	}
 	
-//	NSArray *threadOids = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
-//	
-//	if ([threadOids count]) 
-//	{
-//		GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
-//		GIMessageGroup *destinationGroup = [OPPersistentObjectContext objectWithURLString:item resolve: YES];
-//		
-//		[GIMessageGroup moveThreadsWithOids:threadOids fromGroup:sourceGroup toGroup:destinationGroup];
-//		
-//		// select all in dragging source:
-//		NSOutlineView *sourceView = [info draggingSource];        
-//		[sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
-//		
-//		[NSApp saveAction:self];
-//		
-//		return YES;
-//	}
+	// threads drop:
+	if ([item isKindOfClass:[GIMessageGroup class]])
+	{
+		NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
+		if ([threadURLs count]) 
+		{
+#warning assuming the drag began in the same window
+			GIMessageGroup *sourceGroup = self.selectedObject;
+			NSAssert([sourceGroup isKindOfClass:[GIMessageGroup class]], @"source should be a message group");
+			GIMessageGroup *destinationGroup = item;
+			
+			[GIMessageGroup moveThreadsWithURLs:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
+
+			return YES;
+		}
+	}
 	
 	return NO;
 }

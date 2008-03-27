@@ -428,6 +428,12 @@ NSDateFormatter *timeAndDateFormatter()
 	return self;
 }
 
+- (void)awakeFromNib
+{
+	// Register to grok GinaThreads drags:
+    [outlineView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinaThreads", nil]];
+}
+
 - (void) moveSelectionToTrash
 /*" Moves the selected threads to the trash group. "*/
 {
@@ -688,14 +694,125 @@ NSDateFormatter *timeAndDateFormatter()
 }
 
 
-- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
+- (NSSet *)keyPathsAffectingDisplayOfItem:(id)item
 {
-	static NSSet* affectingKeyPaths = nil;
-	if (! affectingKeyPaths) {
-		affectingKeyPaths = [[NSSet setWithObjects: @"isSeen", nil] retain];
+	static NSSet *affectingKeyPaths = nil;
+	if (! affectingKeyPaths) 
+	{
+		affectingKeyPaths = [[NSSet setWithObjects:@"isSeen", nil] retain];
 	}
 	return affectingKeyPaths;
 }
 
+@end
+
+@implementation GIThreadOutlineViewController (OPDragNDrop)
+
+- (NSSet *)threadsOfItems:(NSArray *)items
+{
+	NSMutableSet *result = [NSMutableSet set];
+	
+	for (id selectedObject in items)
+	{
+		if ([selectedObject isKindOfClass:[GIThread class]])
+		{
+			[result addObject:selectedObject];
+		}
+		else // assuming GIMessage
+		{
+			[result addObject:[selectedObject thread]];
+		}
+	}
+	
+	return result;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
+{
+	NSParameterAssert(outlineView == anOutlineView);
+		
+	[pboard declareTypes:[NSArray arrayWithObject:@"GinaThreads"] owner:self];
+	
+	NSSet *threads = [self threadsOfItems:items];
+	NSMutableArray *pbItems = [NSMutableArray arrayWithCapacity:[threads count]];
+	
+	for (GIThread *thread in threads)
+	{
+		NSString *url = [thread objectURLString];
+		[pbItems addObject:url];
+	}
+	
+	[pboard setPropertyList:pbItems forType:@"GinaThreads"];
+    
+    return YES;
+}
+
+
+//- (BOOL)outlineView:(NSOutlineView *)anOutlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+//{
+//	NSParameterAssert(outlineView == anOutlineView);
+//
+//	// move threads from source group to destination group:
+//	NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
+//        GIMessageGroup *sourceGroup = [(GIThreadListController *)[[info draggingSource] delegate] group];
+//        GIMessageGroup *destinationGroup = [self group];
+//        
+//        [GIMessageGroup moveThreadsWithOids:threadOids fromGroup:sourceGroup toGroup:destinationGroup];
+//        /*
+//		 NSEnumerator *enumerator = [threadURLs objectEnumerator];
+//		 NSString *threadURL;
+//		 
+//		 while (threadURL = [enumerator nextObject])
+//		 {
+//		 GIThread *thread = [OPPersistentObjectContext objectWithURLString:threadURL];
+//		 NSAssert([thread isKindOfClass: [GIThread class]], @"should be a thread");
+//		 
+//		 // remove thread from source group:
+//		 [thread removeGroup:sourceGroup];
+//		 
+//		 // add thread to destination group:
+//		 [thread addGroup:destinationGroup];
+//		 }
+//		 */
+//        
+//        // select all in dragging source:
+//        NSOutlineView *sourceView = [info draggingSource];        
+//        [sourceView selectRow:[sourceView selectedRow] byExtendingSelection:NO];
+//        
+//        [NSApp saveAction:self];
+//    
+//    return NO;
+//}
+//
+//- (NSDragOperation)outlineView:(NSOutlineView *)anOutlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+//{
+//    if (anOutlineView == threadsView) 
+//    {
+//        if ([info draggingSource] != threadsView) // don't let drop on itself
+//        {
+//            NSArray *items = [[info draggingPasteboard] propertyListForType:@"GinkoThreads"];
+//            
+//            if ([items count] > 0) 
+//            {
+//                [anOutlineView setDropItem:nil dropChildIndex:-1]; 
+//                return NSDragOperationMove;
+//            }
+//        }
+//    }
+//    
+//    return NSDragOperationNone;
+//}
+//
+/*
+ - (NSImage *)dragImageForRowsWithIndexes: (NSIndexSet*) dragRows tableColumns:(NSArray*) tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
+ {
+ if (outlineView == threadsView) // threads list
+ {
+ return nil;
+ } else {
+ return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
+ }
+ }
+ */
 
 @end
