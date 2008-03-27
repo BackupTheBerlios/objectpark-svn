@@ -321,7 +321,7 @@ NSString* MboxImportJobName = @"mbox import";
 }
 
 
-- (NSArray*) importGmlFiles: gmls moveOnSuccess: (BOOL) move
+- (NSArray*) importGmlFiles: (NSArray*) gmls moveOnSuccess: (BOOL) move
 {
 	NSMutableArray* result = [NSMutableArray array];
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -329,7 +329,7 @@ NSString* MboxImportJobName = @"mbox import";
 	for (NSString* gmlPath in gmls) {
 		NSString* gmlName = [gmlPath lastPathComponent];
 		// gmlName should have the format "Msg%014x.gml":
-		if (! [gmlName hasPrefix: @"Msg"]) continue;
+		// if (! [gmlName hasPrefix: @"Msg"]) continue;
 		//NSString* oidString = [gmlName substringWithRange: NSMakeRange(3,14)];
 		LID lid = 0; //[oidString intValueForHex];
 		OID oid = MakeOID(cidMessage, lid);
