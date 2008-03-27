@@ -205,8 +205,7 @@
 		NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
 		if ([threadURLs count]) 
 		{
-#warning assuming the drag began in the same window
-			GIMessageGroup *sourceGroup = self.selectedObject;
+			GIMessageGroup *sourceGroup = [[outlineView.window.windowController valueForKey:@"messageGroupsController"]selectedObject];
 			NSAssert([sourceGroup isKindOfClass:[GIMessageGroup class]], @"source should be a message group");
 			GIMessageGroup *destinationGroup = item;
 			
