@@ -509,7 +509,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 //    [self saveHierarchy];
 //}
 
-+ (void)moveThreadsWithURLs:(NSArray *)threadURLs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup
++ (void)copyThreadsWithURLs:(NSArray *)threadURLs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup move:(BOOL)move
 {
 	if (sourceGroup != destinationGroup) 
 	{		
@@ -517,8 +517,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		{
 			GIThread *thread = [[OPPersistentObjectContext defaultContext] objectWithURLString:threadURL];
 			
+			if (move)
+			{
+				[[thread mutableArrayValueForKey:@"messageGroups"] removeObject:sourceGroup];
+			}			
 			[[thread mutableArrayValueForKey:@"messageGroups"] addObject:destinationGroup];
-			[[thread mutableArrayValueForKey:@"messageGroups"] removeObject:sourceGroup];
 		}
 	} 
 	else 

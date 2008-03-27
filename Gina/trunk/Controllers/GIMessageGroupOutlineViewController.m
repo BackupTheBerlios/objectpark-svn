@@ -175,7 +175,18 @@
 		NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
 		if ([threadURLs count]) 
 		{
-			if (index == NSOutlineViewDropOnItemIndex) return NSDragOperationMove;
+			if (index == NSOutlineViewDropOnItemIndex) 
+			{
+				NSLog(@"%x copy, %x mask", NSDragOperationCopy, [info draggingSourceOperationMask]);
+				if (NSDragOperationCopy == [info draggingSourceOperationMask])
+				{
+					return NSDragOperationCopy;
+				}
+				else
+				{
+					return NSDragOperationMove;
+				}
+			}
 		}
 	}
 	
@@ -205,11 +216,18 @@
 		NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
 		if ([threadURLs count]) 
 		{
-			GIMessageGroup *sourceGroup = [[outlineView.window.windowController valueForKey:@"messageGroupsController"]selectedObject];
+			GIMessageGroup *sourceGroup = [[outlineView.window.windowController valueForKey:@"messageGroupsController"] selectedObject];
 			NSAssert([sourceGroup isKindOfClass:[GIMessageGroup class]], @"source should be a message group");
 			GIMessageGroup *destinationGroup = item;
 			
-			[GIMessageGroup moveThreadsWithURLs:threadURLs fromGroup:sourceGroup toGroup:destinationGroup];
+			if (NSDragOperationCopy == [info draggingSourceOperationMask])
+			{
+				[GIMessageGroup copyThreadsWithURLs:threadURLs fromGroup:sourceGroup toGroup:destinationGroup move:NO];
+			}
+			else
+			{
+				[GIMessageGroup copyThreadsWithURLs:threadURLs fromGroup:sourceGroup toGroup:destinationGroup move:YES];
+			}
 
 			return YES;
 		}

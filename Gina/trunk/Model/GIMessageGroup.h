@@ -46,7 +46,7 @@
 
 + (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup;
 
-+ (void)moveThreadsWithURLs:(NSArray *)threadURLs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup;
++ (void)copyThreadsWithURLs:(NSArray *)threadURLs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup move:(BOOL)move;
 
 /*" Standard message groups "*/
 + (GIMessageGroup *)defaultMessageGroup;
