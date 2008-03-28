@@ -20,8 +20,4 @@
 - (NSArray*) importMboxFiles: (NSArray*) paths moveOnSuccess: (BOOL) doMove;
 - (NSArray*) importGmlFiles: gmls moveOnSuccess: (BOOL) move;
 
-- (void) moveThreadsWithOids: (NSArray*) threadOids 
-				   fromGroup: (GIMessageGroup*) sourceGroup 
-					 toGroup: (GIMessageGroup*) destinationGroup;
-
 @end

@@ -262,6 +262,22 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
     return cachedEmailAddresses;
 }
 
+/*" Returns the send profile of the given message aMessage of nil, if message has no send profile. "*/
++ (GIProfile *)sendProfileForMessage:(GIMessage *)aMessage
+{
+	id allProfiles = [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIProfile class]];
+	
+	for (GIProfile *profile in allProfiles)
+	{
+		if ([profile.messagesToSend containsObject:aMessage])
+		{
+			return profile;
+		}
+	}
+	
+	return nil;
+}
+
 + (GIProfile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage
 /*" Tries to find a profile that matches the one meant by aMessage. Return nil if no profile could be guessed. "*/ 
 {    

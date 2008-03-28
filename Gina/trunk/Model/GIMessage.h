@@ -8,11 +8,10 @@
 
 #import <AppKit/AppKit.h>
 #import "OPPersistentObject.h"
-#import "OPInternetMessage.h"
 
-//@class GIThread;
 @class GIProfile;
 @class OPFaultingArray;
+@class OPInternetMessage;
 
 #define OPSeenStatus 1
 #define OPAnsweredStatus 2
@@ -47,117 +46,86 @@
 
 @class GIThread;
 
-@interface GIMessage : OPPersistentObject {
+@interface GIMessage : OPPersistentObject 
+{
 @private
-	NSString* messageId;
-	NSString* subject;
-	NSString* to;
-	NSDate* date;
-	NSString* senderName;
-	OID sendProfileOID;
+	NSString *messageId;
+	NSString *subject;
+	NSString *to;
+	NSDate *date;
+	NSString *senderName;
 	OID threadOID;
 	OID referenceOID;
-	NSArray* comments; // transient cache
+	NSArray *comments; // transient cache
     unsigned flags; 
-	OPInternetMessage* internetMessage;
+	OPInternetMessage *internetMessage;
 	unsigned referenceCount;
 	unsigned unreadMessageCount;
+	unsigned sendStatus;
 }
 
-@property (readonly) unsigned unreadMessageCount;
-@property BOOL isSeen;
-@property (readonly, retain) OPInternetMessage *internetMessage;
-@property OID referenceOID;
-@property (retain) GIMessage *reference;
-@property (readonly, retain) NSString* subject;
-@property (readonly, retain) NSDate* date;
-@property (readonly, retain) NSString* messageId;
-@property (retain) GIThread* thread;
-@property (readonly, retain) NSString *senderName;
+/*" Basic properties "*/
+@property (readonly) NSString *to;
+@property (readonly) NSString *subject;
+@property (readonly) NSDate *date;
+@property (readonly) NSString *messageId;
+@property (readonly) NSString *senderName;
+@property (readonly) NSUInteger unreadMessageCount;
 @property (readonly) unsigned flags;
+@property (readwrite) unsigned sendStatus;
 
-- (void) flushInternetMessageCache;
+@property (readonly) OPInternetMessage *internetMessage;
+@property (retain) GIThread *thread;
+@property (retain) GIMessage *reference;
 
+/*" Derived properties "*/
+@property BOOL isSeen;
+@property BOOL isDummy;
+@property (readonly) NSUInteger numberOfReferences;
+@property (readonly) NSString *messageFilePath;
+@property (readonly) NSString *recipientsForDisplay;
 
-//+ (NSString*) persistentAttributesPlist
-//{
-//	return 
-//	@"{"
-//	@"messageId = {ColumnName = ZMESSAGEID; AttributeClass = NSString;};"
-//	@"messageData = {ColumnName = ZMESSAGEDATA; AttributeClass = GIMessageData;};"
-//	@"subject = {ColumnName = ZSUBJECT; AttributeClass = NSString;};"
-//	@"to = {ColumnName = ZTO; AttributeClass = NSString;};"
-//	@"date = {ColumnName = ZDATE; AttributeClass = NSCalendarDate;};"
-//	@"senderName = {ColumnName = ZAUTHOR; AttributeClass = NSString;};"
-//	@"sendProfile = {ColumnName = ZPROFILE; AttributeClass = GIProfile; InverseRelationshipKey = messagesToSend;};"
-//	@"thread = {ColumnName = ZTHREAD; AttributeClass = GIThread; InverseRelationshipKey = messages;};"
-//	@"reference = {ColumnName = ZREFERENCE; AttributeClass = GIMessage;};"
-//	// Flags
-//	@"isSeen = {ColumnName = ZISSEEN; AttributeClass = NSNumber;};"
-//	@"isAnswered = {ColumnName = ZISANSWERED; AttributeClass = NSNumber;};"
-//	@"isFulltextIndexed = {ColumnName = ZISFULLTEXTINDEXED; AttributeClass = NSNumber;};"
-//	@"isFromMe = {ColumnName = ZISFROMME; AttributeClass = NSNumber;};"
-//	@"isFlagged = {ColumnName = ZISFLAGGED; AttributeClass = NSNumber;};"
-//	@"isJunk = {ColumnName = ZISJUNK; AttributeClass = NSNumber;};"
-//	@"isInteresting = {ColumnName = ZISINTERESTING; AttributeClass = NSNumber;};"
-//	@"sendStatus = {ColumnName = ZISQUEUED; AttributeClass = NSNumber;};"
-//	
-//	@"}";
-//}
-//
+/*" Message type inquiry "*/
+@property (readonly) BOOL isListMessage;
+@property (readonly) BOOL isUsenetMessage;
+@property (readonly) BOOL isEMailMessage;
+@property (readonly) BOOL isPublicMessage;
 
+/*" Accessing body content "*/
+@property (readonly) NSAttributedString *contentAsAttributedString;
+@property (readonly) NSString *contentAsString;
 
-
-
-
-
-+ (id) dummyMessageWithId:(NSString*)aMessageId andDate:(NSDate*)aDate;
+/*" Factory and init methods "*/
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
++ (id)dummyMessageWithId:(NSString *)aMessageId andDate:(NSDate *)aDate;
 
-- (id) initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
+- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
 - (id)initDummy;
 
-- (GIMessage *)reference;
-- (NSString*) messageFilePath;
+/*" Cache flushing "*/
+- (void)flushNumberOfReferencesCache;
+- (void)flushInternetMessageCache;
 
-- (unsigned) numberOfReferences;
-- (void) flushNumberOfReferencesCache;
-
+/*" Flag handling "*/
 - (BOOL)hasFlags:(unsigned int)someFlags;
 - (void)toggleFlags:(unsigned)someFlags;
-
-
-/*" Special flag handling "*/
-
-- (unsigned)sendStatus;
-- (void)setSendStatus:(unsigned)newStatus;
-- (NSDate *)earliestSendTime;
-- (void)setEarliestSendTime:(NSDate *)aDate;
-+ (void)repairEarliestSendTimes;
 
 - (NSString *)flagsString; // use only for export
 - (void)addFlagsFromString:(NSString *)flagsString; // use only for import
 
-- (NSAttributedString *)contentAsAttributedString;
-- (NSString*) contentAsString;
+/*" Earliest send time handling "*/
+- (NSDate *)earliestSendTime;
+- (void)setEarliestSendTime:(NSDate *)aDate;
++ (void)repairEarliestSendTimes;
 
+/*" Miscellaneous methods "*/
 //- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
-
-- (NSArray*) commentsInThread: (GIThread*) thread;
-
-- (BOOL) isListMessage;
-- (BOOL) isUsenetMessage;
-- (BOOL) isEMailMessage;
-- (BOOL) isPublicMessage;
-- (BOOL) isDummy;
-
-- (NSString*) recipientsForDisplay;
-
-- (void) addOrderedSubthreadToArray: (NSMutableArray*) result;
+- (NSArray *)commentsInThread:(GIThread *)thread;
+- (void)addOrderedSubthreadToArray:(NSMutableArray *)result;
 
 @end
 
-extern NSString* GIMessageDidChangeFlagsNotification;
+extern NSString *GIMessageDidChangeFlagsNotification;
 
 @interface GIMessageData : OPPersistentObject {
 }

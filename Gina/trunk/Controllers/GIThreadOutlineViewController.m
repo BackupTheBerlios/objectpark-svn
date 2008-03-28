@@ -128,6 +128,8 @@ NSDateFormatter *timeAndDateFormatter()
 	return timeAndDateFormatter;
 }
 
+#import "OPInternetMessage.h"
+
 @implementation GIMessage (ThreadControllerExtensions)
 
 - (NSAttributedString *)renderedMessage

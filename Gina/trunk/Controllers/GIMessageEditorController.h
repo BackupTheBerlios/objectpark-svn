@@ -87,7 +87,7 @@ typedef enum
 - (IBAction)replySender:(id)sender;
 - (IBAction)replyAll:(id)sender;
 - (IBAction)followup:(id)sender;
-- (IBAction)saveMessage:(id)sender;
+- (IBAction)saveDocument:(id)sender;
 
 @end
 

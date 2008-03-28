@@ -40,11 +40,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @implementation GIMessage
 
+@synthesize to;
 @synthesize date;
 @synthesize unreadMessageCount;
 @synthesize subject;
 
-- (GIThread*) thread
+- (GIThread *)thread
 {
 	return [[self context] objectForOID: threadOID];
 }
@@ -64,26 +65,33 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
-- (void) willDelete
+- (void)willDelete
 {
 	id thread = self.thread;
-	if (thread) {
+	if (thread) 
+	{
 		self.thread = nil;
-
-		if ([thread messageCount] <=1 ) {
+		
+		if ([thread messageCount] <= 1) 
+		{
 			[thread delete]; 
 		}
 	}
-#warning delete message file here!
+	
+	[[NSFileManager defaultManager] removeFileAtPath:self.messageFilePath handler:nil];
 	
 	[[[self context] messagesByMessageId] removeObjectForKey:self.messageId];
 	
+	// remove from any profiles:
+	GIProfile *sendProfile = [GIProfile sendProfileForMessage:self];
+	[[sendProfile mutableArrayValueForKey:@"messagesToSend"] removeObject:self];
+	 
 	[super willDelete];
 }
 
-- (NSString*) messageFilePath
+- (NSString *)messageFilePath
 {
-	NSString* filename = [[[self context] transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%014llx.gml", LIDFromOID([self oid])]];
+	NSString *filename = [[[self context] transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%014llx.gml", LIDFromOID([self oid])]];
 	
 //	[NSString stringWithFormat: @"%@/Msg%08x.gml", [[self context] transferDataDirectory], LIDFromOID([self oid])];
 	return filename;
@@ -339,7 +347,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return (flags & OPDummyStatus) != 0;
 }
 
-@synthesize referenceOID;
+- (void)setIsDummy:(BOOL)boolValue
+{
+	if (self.isDummy != boolValue) 
+	{
+		[self willChangeValueForKey:@"isDummy"];
+		[self toggleFlags:OPDummyStatus];
+		[self didChangeValueForKey:@"isDummy"];
+	}
+}
 
 - (BOOL)isSeen
 {
@@ -348,11 +364,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (void)setIsSeen:(BOOL)boolValue
 {
-	if (self.isSeen != boolValue) 
+	if (self.isSeen != boolValue && ![self isDummy]) 
 	{
-		[self willChangeValueForKey: @"isSeen"];
+		[self willChangeValueForKey:@"isSeen"];
 		[self toggleFlags:OPSeenStatus];
-		[self didChangeValueForKey: @"isSeen"];
+		[self didChangeValueForKey:@"isSeen"];
 	}
 }
 
@@ -496,9 +512,18 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return [NSString stringWithCString:result];
 }
 
+- (void)setTo:(NSString *)aString
+{
+	[self willChangeValueForKey:@"to"];
+	[to autorelease];
+	to = [aString retain];
+	[self didChangeValueForKey:@"to"];
+}
+
 - (NSString *)recipientsForDisplay
 {
-	NSString *result = [self valueForKey:@"to"];
+	NSString *result = self.to;
+	
 	if ([result length] == 0)
 	{
 		result = [self.internetMessage toWithFallback:YES];
@@ -507,7 +532,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		if ([self hasFlags:OPIsFromMeStatus])
 		{
 			NSLog(@"repairing to field");
-			[self setValue:result forKey:@"to"];
+			[self setTo:result];
 		}
 	}
 	
@@ -562,21 +587,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (unsigned)sendStatus
 {
-	[self willAccessValueForKey:@"sendStatus"];
-	id result = [self primitiveValueForKey:@"sendStatus"];
-	[self didAccessValueForKey:@"sendStatus"];	
-	unsigned intResult = [result intValue];
-	//NSLog(@"SendStatus of %@ is %u", self, result);
-	NSAssert2(intResult<=OPSendStatusSending, @"Illegal send status of %@: %@ detected.", self, result);
-	NSAssert(intResult==0 || [self valueForKey: @"sendProfile"] !=nil, @"No profile set, but send status");
-	return intResult;
+	NSAssert2(sendStatus<=OPSendStatusSending, @"Illegal send status of %@: %@ detected.", self, sendStatus);
+//	NSAssert(sendStatus == 0 || [[self sendProfile] != nil, @"No profile set, but send status");
+	return sendStatus;
 }
 
 - (void)setSendStatus:(unsigned)newStatus
 {
-	NSParameterAssert(newStatus<=OPSendStatusSending);
+	NSParameterAssert(newStatus <= OPSendStatusSending);
+	
 	[self willChangeValueForKey:@"sendStatus"];
-	[self setPrimitiveValue: newStatus == 0 ? nil : [NSNumber numberWithInt: newStatus] forKey: @"sendStatus"];
+	sendStatus = newStatus;
 	[self didChangeValueForKey:@"sendStatus"];
 	//NSLog(@"SendStatus of %@ changed to %u", self, newStatus);
 }
@@ -751,7 +772,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	to = [coder decodeObjectForKey: @"to"];
 	date = [coder decodeObjectForKey: @"date"];
 	senderName = [coder decodeObjectForKey: @"senderName"];
-	sendProfileOID = [coder decodeOIDForKey: @"sendProfileOID"];
+//	sendProfileOID = [coder decodeOIDForKey: @"sendProfileOID"];
 	threadOID = [coder decodeOIDForKey: @"threadOID"];
 	referenceOID = [coder decodeOIDForKey: @"referenceOID"];
 	flags = [coder decodeInt32ForKey: @"flags"];	
@@ -770,7 +791,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[coder encodeInt32: flags forKey: @"flags"];
 	[coder encodeInt32: unreadMessageCount forKey: @"unreadMessageCount"];
 
-	[coder encodeOID: sendProfileOID forKey: @"sendProfileOID"];
+//	[coder encodeOID: sendProfileOID forKey: @"sendProfileOID"];
 	[coder encodeOID: threadOID forKey: @"threadOID"];
 	[coder encodeOID: referenceOID forKey: @"referenceOID"];
 }

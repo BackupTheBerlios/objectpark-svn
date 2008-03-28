@@ -85,27 +85,27 @@
 	} 	
 }
 
-- (void) addDraftMessage: (GIMessage*) aMessage
-{
-    GIThread *thread = aMessage.thread;
-	// Remove it from the queued message box (if there):
-    if (thread) {
-		[[[GIMessageGroup queuedMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
-	}
-    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup]];
-}
-
-- (void) addQueuedMessage: (GIMessage*) aMessage
-{
-    GIThread *thread = aMessage.thread;
-	// Remove it from the queued message box (if there):
-    if (thread) {
-		[[[GIMessageGroup draftMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
-	}
-	
-    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup]];
-}
-
+//- (void)addDraftMessage:(GIMessage *)aMessage
+//{
+//    GIThread *thread = aMessage.thread;
+//	// Remove it from the queued message box (if there):
+//    if (thread) {
+//		[[[GIMessageGroup queuedMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
+//	}
+//    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup]];
+//}
+//
+//- (void) addQueuedMessage: (GIMessage*) aMessage
+//{
+//    GIThread *thread = aMessage.thread;
+//	// Remove it from the queued message box (if there):
+//    if (thread) {
+//		[[[GIMessageGroup draftMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
+//	}
+//	
+//    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup]];
+//}
+//
 
 NSString* MboxImportJobName = @"mbox import";
 
@@ -371,29 +371,29 @@ NSString* MboxImportJobName = @"mbox import";
 
 
 
-- (void) moveThreadsWithOids: (NSArray*) threadOids 
-				   fromGroup: (GIMessageGroup*) sourceGroup 
-					 toGroup: (GIMessageGroup*) destinationGroup
-{
-	if (sourceGroup != destinationGroup) {
-		
-		NSEnumerator *enumerator = [threadOids objectEnumerator];
-		NSNumber *oid;
-		
-		while (oid = [enumerator nextObject]) {
-			GIThread *thread = [[OPPersistentObjectContext defaultContext] objectForOID:[oid unsignedLongLongValue]];
-			
-			NSMutableArray* threadGroups = [thread mutableArrayValueForKey: @"messageGroups"];
-			// remove thread from source group:
-			[threadGroups removeObject: sourceGroup];
-			
-			// add thread to destination group:
-			[threadGroups addObject: destinationGroup];
-			
-		}
-	} else {
-		NSLog(@"Warning: Try to move thread into same group %@", self);
-	}
-}
+//- (void) moveThreadsWithOids: (NSArray*) threadOids 
+//				   fromGroup: (GIMessageGroup*) sourceGroup 
+//					 toGroup: (GIMessageGroup*) destinationGroup
+//{
+//	if (sourceGroup != destinationGroup) {
+//		
+//		NSEnumerator *enumerator = [threadOids objectEnumerator];
+//		NSNumber *oid;
+//		
+//		while (oid = [enumerator nextObject]) {
+//			GIThread *thread = [[OPPersistentObjectContext defaultContext] objectForOID:[oid unsignedLongLongValue]];
+//			
+//			NSMutableArray* threadGroups = [thread mutableArrayValueForKey: @"messageGroups"];
+//			// remove thread from source group:
+//			[threadGroups removeObject: sourceGroup];
+//			
+//			// add thread to destination group:
+//			[threadGroups addObject: destinationGroup];
+//			
+//		}
+//	} else {
+//		NSLog(@"Warning: Try to move thread into same group %@", self);
+//	}
+//}
 
 @end

@@ -26,6 +26,7 @@
 #import "GIAddressFormatter.h"
 #import "GIPhraseBrowserController.h"
 #import "GIHeaderFieldEditor.h"
+#import "GIMessageGroup.h"
 
 @interface GIMessageEditorController (PrivateAPI)
 - (OPInternetMessage *)message;
@@ -460,7 +461,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	}
 }
 
-- (IBAction)saveMessage:(id)sender
+- (IBAction)saveDocument:(id)sender
 {
     [self checkpointMessageWithStatus:OPSendStatusDraft];
 }
@@ -773,6 +774,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSString *headerField, *from;
     GIProfile *theProfile = [self profile];
 
+	NSAssert(theProfile != nil, @"No profile present");
+	
 	if ([self shouldSign]) // Sign
 	{;
 		@try 
@@ -1303,12 +1306,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (GIMessage *)checkpointMessageWithStatus:(unsigned)sendStatus
 {
-    GIMessage *message = nil;
     OPInternetMessage *internetMessage = [self message];
 	
 	if (!internetMessage) return nil;
 	
-    message = [GIMessage messageWithInternetMessage:internetMessage];
+    GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [internetMessage transferData]);
     
     // status
@@ -1324,17 +1326,23 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // unmark message as blocked for sending
     [message setSendStatus:sendStatus];
 	
-    // Remove old message from database if present:
-	[oldMessage delete];
+    // Remove old message from message groups:
+	[[oldMessage.thread mutableArrayValueForKey:@"messageGroups"] removeAllObjects];
+	
+	[oldMessage delete]; // removes the message also from any profile
     
+	GIThread *thread = message.thread;
+	NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
+	
     if (sendStatus == OPSendStatusDraft) 
 	{
-        //add new message to database
-        [[OPPersistentObjectContext defaultContext] addDraftMessage:message];
+        //add new message to draft message group:
+		[messageGroups addObject:[GIMessageGroup draftMessageGroup]];
     } 
 	else 
 	{
-        [[OPPersistentObjectContext defaultContext] addQueuedMessage:message];
+        //add new message to queued message group:
+		[messageGroups addObject:[GIMessageGroup queuedMessageGroup]];
     }
     
     [oldMessage autorelease];
@@ -1345,7 +1353,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // Set message in profile's messagesToSend:
 	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];
-//    [profile addValue:message forKey:@"messagesToSend"];
 		
     [window setDocumentEdited:NO];
     

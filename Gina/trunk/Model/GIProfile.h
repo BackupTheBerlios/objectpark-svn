@@ -54,7 +54,7 @@
 @property (readwrite) BOOL shouldEncryptNewMessagesByDefault;	
 
 /*" Accessing profiles "*/
-
++ (GIProfile *)sendProfileForMessage:(GIMessage *)aMessage;
 + (GIProfile *)guessedProfileForReplyingToMessage:(OPInternetMessage *)aMessage;
 
 /*" Utility methods "*/
