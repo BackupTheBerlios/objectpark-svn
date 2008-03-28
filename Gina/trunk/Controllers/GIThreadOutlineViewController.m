@@ -733,6 +733,10 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	NSParameterAssert(outlineView == anOutlineView);
 		
+	GIMessageGroup *sourceGroup = [[outlineView.window.windowController valueForKey:@"messageGroupsController"] selectedObject];
+	
+	if (![sourceGroup isValidUserCopyOrMoveSourceOrDestination]) return NO;
+	
 	[pboard declareTypes:[NSArray arrayWithObject:@"GinaThreads"] owner:self];
 	
 	NSSet *threads = [self threadsOfItems:items];

@@ -707,6 +707,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return self.type == GIRegularMessageGroup;
 }
 
+- (BOOL)isValidUserCopyOrMoveSourceOrDestination
+{
+	return type == GIRegularMessageGroup || type == GISpamMessageGroup || type == GITrashMessageGroup;
+}
+
 - (NSString *)imageName
 {
 	static NSString *imageNames[] = {@"OtherMailbox", @"InMailbox", @"ToBeDeliveredMailbox", @"DraftsMailbox", @"OutMailbox", @"JunkMailbox", @"TrashMailbox"};

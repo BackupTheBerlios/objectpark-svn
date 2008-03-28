@@ -41,8 +41,8 @@
 //extern NSString *GIMessageGroupWasAddedNotification;
 //extern NSString *GIMessageGroupsChangedNotification;
 
-- (GIProfile*) defaultProfile;
-- (void) setDefaultProfile: (GIProfile*) newProfile;
+- (GIProfile *)defaultProfile;
+- (void)setDefaultProfile:(GIProfile *)newProfile;
 
 + (NSImage *)imageForMessageGroup:(GIMessageGroup *)aMessageGroup;
 
@@ -64,6 +64,7 @@
 
 - (NSString *)imageName;
 - (BOOL)isDeletable;
+- (BOOL)isValidUserCopyOrMoveSourceOrDestination;
 
 + (void)ensureDefaultGroups;
 

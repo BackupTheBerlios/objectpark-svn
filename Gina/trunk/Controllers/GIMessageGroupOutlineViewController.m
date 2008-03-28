@@ -169,13 +169,16 @@
 	}
 	
 	// thread drop:
-	
 	if ([item isKindOfClass:[GIMessageGroup class]])
 	{
 		NSArray *threadURLs = [[info draggingPasteboard] propertyListForType:@"GinaThreads"];
 		if ([threadURLs count]) 
 		{
-			if (index == NSOutlineViewDropOnItemIndex) 
+			GIMessageGroup *sourceGroup = [[outlineView.window.windowController valueForKey:@"messageGroupsController"] selectedObject];
+
+			if (index == NSOutlineViewDropOnItemIndex 
+				&& [item isValidUserCopyOrMoveSourceOrDestination]
+				&& ![sourceGroup isEqual:item]) 
 			{
 				NSLog(@"%x copy, %x mask", NSDragOperationCopy, [info draggingSourceOperationMask]);
 				if (NSDragOperationCopy == [info draggingSourceOperationMask])
