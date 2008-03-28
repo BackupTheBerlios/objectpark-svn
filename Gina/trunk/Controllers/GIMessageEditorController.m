@@ -1353,7 +1353,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // Set message in profile's messagesToSend:
 	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];
-		
+	NSAssert(profile != nil, @"no profile in place");
+	NSAssert([profile.messagesToSend containsObject:message], @"message should be in messages to send");
+	NSLog(@"adding message %@ to sendProfile %@", message, profile);
+
     [window setDocumentEdited:NO];
     
     [[OPPersistentObjectContext defaultContext] saveChanges];

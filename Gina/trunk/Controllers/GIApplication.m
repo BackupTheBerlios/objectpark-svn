@@ -282,7 +282,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	
 	NSArray *allAccounts = [[OPPersistentObjectContext defaultContext].allObjectsByClass objectForKey:@"GIAccount"];
 	
-//	[allAccounts makeObjectsPerformSelector:@selector(send)];
+	[allAccounts makeObjectsPerformSelector:@selector(send)];
 	[allAccounts makeObjectsPerformSelector:@selector(receive)];
 	[GIAccount resetAccountRetrieveAndSendTimers];
 }

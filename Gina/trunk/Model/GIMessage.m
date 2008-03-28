@@ -85,7 +85,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	// remove from any profiles:
 	GIProfile *sendProfile = [GIProfile sendProfileForMessage:self];
 	[[sendProfile mutableArrayValueForKey:@"messagesToSend"] removeObject:self];
-	 
+	NSLog(@"removing message %@ from sendProfile %@", self, sendProfile);
+	
 	[super willDelete];
 }
 

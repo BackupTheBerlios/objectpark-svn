@@ -684,13 +684,11 @@
 	
 	for (GIProfile *profile in [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIProfile class]])
 	{
-		if ([profile valueForKey:@"sendAccount"] == self)
+		if ([profile.sendAccount isEqual:self])
 		{
-			NSEnumerator *messagesToSendEnumerator = [[profile valueForKey:@"messagesToSend"] objectEnumerator];
-			GIMessage *message;
 			NSDate *ripeDate = [NSDate dateWithTimeIntervalSinceNow:interval];
-			
-			while (message = [messagesToSendEnumerator nextObject]) 
+
+			for (GIMessage *message in profile.messagesToSend)
 			{
 				NSDate *earliestSendTime = [message earliestSendTime];
 				BOOL timeIsRipe = YES;
@@ -703,7 +701,7 @@
 					}
 				}
 				
-				if (([message sendStatus] == OPSendStatusQueuedReady) && (timeIsRipe)) 
+				if (([message sendStatus] == OPSendStatusQueuedReady) && timeIsRipe) 
 				{
 					[messagesQualifyingForSend addObject:message];
 				}
@@ -727,23 +725,23 @@
 	return NO;
 }
 
-//- (void)sendMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval
-//{
-//	NSArray *messagesQualifyingForSend = [self messagesRipeForSendingAtTimeIntervalSinceNow:interval];
-//	
-//	// something to send for the account?
-//	if ([messagesQualifyingForSend count]) 
-//	{
-//		NSEnumerator *enumerator = [messagesQualifyingForSend objectEnumerator];
-//		GIMessage *message;
-//		while (message = [enumerator nextObject])
-//		{
-//			[message setSendStatus:OPSendStatusSending];
-//		}
-//
+- (void)sendMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval
+{
+	NSArray *messagesQualifyingForSend = [self messagesRipeForSendingAtTimeIntervalSinceNow:interval];
+	
+	for (GIMessage *message in messagesQualifyingForSend)
+	{
+		[message setSendStatus:OPSendStatusSending];
+	}
+	
+	if (messagesQualifyingForSend.count)
+	{
+#warning use send operation here
 //		[GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:self];
-//	}
-//}
+
+		NSLog(@"Send %d messages with account %@", messagesQualifyingForSend.count, self);
+	}
+}
 
 - (void)send
 {

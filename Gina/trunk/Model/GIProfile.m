@@ -390,7 +390,7 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 
 - (BOOL)isDefaultProfile
 {
-	return self == [[self class] defaultProfile];
+	return [self isEqual:[[self class] defaultProfile]];
 }
 
 - (void)makeDefaultProfile
