@@ -176,12 +176,14 @@
 		{
 			GIMessageGroup *sourceGroup = [[outlineView.window.windowController valueForKey:@"messageGroupsController"] selectedObject];
 
+			BOOL copyOperation = (NSDragOperationCopy == [info draggingSourceOperationMask]);
 			if (index == NSOutlineViewDropOnItemIndex 
 				&& [item isValidUserCopyOrMoveSourceOrDestination]
-				&& ![sourceGroup isEqual:item]) 
+				&& ![sourceGroup isEqual:item]
+				&& ([sourceGroup isValidUserCopyOrMoveSourceOrDestination] || copyOperation)) 
 			{
-				NSLog(@"%x copy, %x mask", NSDragOperationCopy, [info draggingSourceOperationMask]);
-				if (NSDragOperationCopy == [info draggingSourceOperationMask])
+//				NSLog(@"%x copy, %x mask", NSDragOperationCopy, [info draggingSourceOperationMask]);
+				if (copyOperation)
 				{
 					return NSDragOperationCopy;
 				}

@@ -511,6 +511,9 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 + (void)copyThreadsWithURLs:(NSArray *)threadURLs fromGroup:(GIMessageGroup *)sourceGroup toGroup:(GIMessageGroup *)destinationGroup move:(BOOL)move
 {
+	NSParameterAssert([sourceGroup isValidUserCopyOrMoveSourceOrDestination] || !move);
+	NSParameterAssert([destinationGroup isValidUserCopyOrMoveSourceOrDestination]);
+		
 	if (sourceGroup != destinationGroup) 
 	{		
 		for (NSString *threadURL in threadURLs)
