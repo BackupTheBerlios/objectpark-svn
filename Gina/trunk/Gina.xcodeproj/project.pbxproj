@@ -25,6 +25,8 @@
 		7713302A0D91737E00094A0A /* GIHeaderFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 771330290D91737E00094A0A /* GIHeaderFieldEditor.m */; };
 		7713302F0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */ = {isa = PBXBuildFile; fileRef = 7713302E0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m */; };
 		771330FD0D91845D00094A0A /* GIMessageEditorWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 771330FC0D91845D00094A0A /* GIMessageEditorWindow.m */; };
+		7713924B0D9D52E6003BE8B1 /* GISMTPOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7713924A0D9D52E6003BE8B1 /* GISMTPOperation.m */; };
+		771392C70D9D5C00003BE8B1 /* Mail Sent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 771392C60D9D5C00003BE8B1 /* Mail Sent.aiff */; };
 		7713AB4D0D0E97A300CBEC7B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB4C0D0E97A300CBEC7B /* Localizable.strings */; };
 		7713AB530D0E983200CBEC7B /* GIGeneralPrefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */; };
 		7736124E0D1AB69F007FC630 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7736124D0D1AB69F007FC630 /* MainWindow.xib */; };
@@ -399,6 +401,9 @@
 		7713302E0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPasteboard+OPExtendedFileTypeMatching.m"; sourceTree = "<group>"; };
 		771330FB0D91845C00094A0A /* GIMessageEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorWindow.h; sourceTree = "<group>"; };
 		771330FC0D91845D00094A0A /* GIMessageEditorWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorWindow.m; sourceTree = "<group>"; };
+		771392490D9D52E6003BE8B1 /* GISMTPOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISMTPOperation.h; sourceTree = "<group>"; };
+		7713924A0D9D52E6003BE8B1 /* GISMTPOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISMTPOperation.m; sourceTree = "<group>"; };
+		771392C60D9D5C00003BE8B1 /* Mail Sent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Mail Sent.aiff"; sourceTree = "<group>"; };
 		7713AB4C0D0E97A300CBEC7B /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7713AB520D0E983200CBEC7B /* GIGeneralPrefs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GIGeneralPrefs.xib; sourceTree = "<group>"; };
 		772B4CA60D058BA600853BEF /* How to debug InternetMessageTest.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to debug InternetMessageTest.rtf"; sourceTree = "<group>"; };
@@ -904,6 +909,7 @@
 				77C3647A0D9A7AFD00D6461D /* JunkMailbox.tiff */,
 				77C3647B0D9A7AFD00D6461D /* TrashMailbox.tiff */,
 				77C3647C0D9A7AFD00D6461D /* ToBeDeliveredMailbox.tiff */,
+				771392C60D9D5C00003BE8B1 /* Mail Sent.aiff */,
 				8D8B1B9B0D11485D008E02D7 /* Gina.icns */,
 				77C3BD020D103F860003634C /* Gina.tiff */,
 				7713AB4C0D0E97A300CBEC7B /* Localizable.strings */,
@@ -1160,6 +1166,8 @@
 				778866B50D8D8264006EF64D /* GIOperation.m */,
 				778866B10D8D8258006EF64D /* GIPOPOperation.h */,
 				778866B20D8D8258006EF64D /* GIPOPOperation.m */,
+				771392490D9D52E6003BE8B1 /* GISMTPOperation.h */,
+				7713924A0D9D52E6003BE8B1 /* GISMTPOperation.m */,
 			);
 			path = Operations;
 			sourceTree = "<group>";
@@ -1697,6 +1705,7 @@
 				77C364800D9A7AFD00D6461D /* JunkMailbox.tiff in Resources */,
 				77C364810D9A7AFD00D6461D /* TrashMailbox.tiff in Resources */,
 				77C364820D9A7AFD00D6461D /* ToBeDeliveredMailbox.tiff in Resources */,
+				771392C70D9D5C00003BE8B1 /* Mail Sent.aiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1933,6 +1942,7 @@
 				7713302F0D9173D600094A0A /* NSPasteboard+OPExtendedFileTypeMatching.m in Sources */,
 				771330FD0D91845D00094A0A /* GIMessageEditorWindow.m in Sources */,
 				770C31CF0D98F76100FC5214 /* OPMenuButton.m in Sources */,
+				7713924B0D9D52E6003BE8B1 /* GISMTPOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

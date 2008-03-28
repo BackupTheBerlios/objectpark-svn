@@ -18,6 +18,8 @@
 #import "NSApplication+OPExtensions.h"
 #import <Foundation/NSDebug.h>
 #import "GIPOPOperation.h"
+#import "GIProfile.h"
+#import "GISMTPOperation.h"
 
 NSString *GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
 NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNotification";
@@ -26,7 +28,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 - (void)awakeFromNib
 {
-	NSLog(@"awakeFromNib");
+	//NSLog(@"awakeFromNib");
 	// Will be called multiple times, so guard against that:
 	if (! [OPPersistentObjectContext defaultContext]) {
 		// Setting up persistence:
@@ -37,6 +39,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		
 		[GIMessageGroup ensureDefaultGroups];
 	}
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object:nil];
 }
 
 - (BOOL)isDefaultMailApplication
@@ -285,6 +289,65 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[allAccounts makeObjectsPerformSelector:@selector(send)];
 	[allAccounts makeObjectsPerformSelector:@selector(receive)];
 	[GIAccount resetAccountRetrieveAndSendTimers];
+}
+
+- (void)resetStatusSending
+{
+	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
+	NSArray *allProfiles = [[OPPersistentObjectContext defaultContext].allObjectsByClass objectForKey:@"GIProfile"];
+	
+	for (GIProfile *profile in allProfiles)
+    {
+		for (GIMessage *message in profile.messagesToSend)
+        {
+			if (message.sendStatus == OPSendStatusSending) 
+            {
+				message.sendStatus = OPSendStatusQueuedReady;
+			}
+		}            
+	}
+}
+
+- (void)smtpOperationDidEnd:(NSNotification *)aNotification
+{
+	// Process all messages sent successfully:	
+	NSArray *messages = [aNotification.userInfo objectForKey:@"messages"];
+	NSAssert(messages != nil, @"userInfo does not contain 'messages'"); // RAISES!
+	
+	NSArray *sentMessages = [aNotification.userInfo objectForKey:@"sentMessages"];
+	NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
+	
+	for (GIMessage *sentMessage in sentMessages)
+    {
+        // remove from profile:
+		GIProfile *sendProfile = [GIProfile sendProfileForMessage:sentMessage];
+		[[sendProfile mutableArrayValueForKey:@"messagesToSend"] removeObject:sentMessage];
+		
+        // remove sent status:
+		sentMessage.sendStatus = OPSendStatusNone;
+		
+		// disconnect thread from queued group:
+		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] removeObject:[GIMessageGroup queuedMessageGroup]];
+
+		// Disconnect message from its thread:
+		[[sentMessage.thread mutableArrayValueForKey:@"messages"] removeObject:sentMessage];
+		
+		// Re-Insert message wherever it belongs:
+		[[OPPersistentObjectContext defaultContext] addMessageByApplingFilters:sentMessage];
+	}
+    
+	NSMutableArray *nonSentMessages = [messages mutableCopy];
+	[nonSentMessages removeObjectsInArray:sentMessages];
+
+	for (GIMessage *nonSentMessage in nonSentMessages)
+	{
+		if (nonSentMessage.sendStatus == OPSendStatusSending) 
+		{
+			nonSentMessage.sendStatus = OPSendStatusQueuedReady;
+		}
+	}
+	
+    [[OPPersistentObjectContext defaultContext] saveChanges];
 }
 
 @end
