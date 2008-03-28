@@ -516,12 +516,19 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		for (NSString *threadURL in threadURLs)
 		{
 			GIThread *thread = [[OPPersistentObjectContext defaultContext] objectWithURLString:threadURL];
+			NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
 			
 			if (move)
 			{
-				[[thread mutableArrayValueForKey:@"messageGroups"] removeObject:sourceGroup];
+				while ([messageGroups containsObject:sourceGroup])
+				{
+					[messageGroups removeObject:sourceGroup];
+				}
 			}			
-			[[thread mutableArrayValueForKey:@"messageGroups"] addObject:destinationGroup];
+			if (![messageGroups containsObject:destinationGroup])
+			{
+				[messageGroups addObject:destinationGroup];
+			}
 		}
 	} 
 	else 

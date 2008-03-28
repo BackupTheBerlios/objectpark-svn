@@ -68,8 +68,11 @@
 			// puts message's thread potentially in message groups:
 			[GIMessageFilter applyFiltersToMessage:aMessage];
 			
-			// put in All Threads group:
-			[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup]];
+			// put in All Threads group if not already in:
+			if (![aMessage.thread.messageGroups containsObject:[GIMessageGroup defaultMessageGroup]])
+			{
+				[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup]];
+			}
 
 			if ([aMessage hasFlags:OPIsFromMeStatus]) 
 			{
