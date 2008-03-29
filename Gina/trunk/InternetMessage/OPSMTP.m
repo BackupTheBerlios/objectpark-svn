@@ -30,6 +30,7 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
 #import "OPSASL.h"
 
 NSString *OPSMTPException = @"OPSMTPException";
+NSString *OPSMTPAuthenticationFailedException = @"OPSMTPAuthenticationFailedException";
 NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 
 @interface OPSMTP (PrivateAPI)
@@ -206,7 +207,7 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 							} 
 							else 
 							{
-								[NSException raise:OPSMTPException format:@"SMTP Authentication failed. Please check login and password."];
+								[NSException raise:OPSMTPAuthenticationFailedException format:@"SMTP Authentication failed. Please check login and password."];
 								
 								//OPDebugLog(SMTPDEBUG, OPWARNING, @"AUTHentication failed!");
 							}

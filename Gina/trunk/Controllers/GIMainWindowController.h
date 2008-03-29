@@ -49,6 +49,11 @@
 
 /*" Message creation actions "*/
 - (IBAction)newMessage:(id)sender;
+- (IBAction)replyAll:(id)sender;
+- (IBAction)replySender:(id)sender;
+- (IBAction)followup:(id)sender;
+- (IBAction)replyDefault:(id)sender;
+- (IBAction)forward:(id)sender;
 
 /*" Message meta info manipulation "*/
 - (IBAction)markAsRead:(id)sender;
@@ -69,6 +74,8 @@
 - (BOOL)isShowingThreadsOnly;
 
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
+
+- (GIMessageGroup *)selectedGroup;
 
 @end
 

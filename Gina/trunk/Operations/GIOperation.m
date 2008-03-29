@@ -105,7 +105,7 @@ NSString *JobProgressDescription = @"OPJobProgressDescription";
 	
 	NSString *localizedDescription = [[exception userInfo] objectForKey:NSLocalizedDescriptionKey];
 	
-	NSError *error = [NSError errorWithDomain:@"GinkoDomain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:localizedDescription ? localizedDescription : [exception reason], NSLocalizedDescriptionKey, 
+	NSError *error = [NSError errorWithDomain:@"GinaDomain" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:localizedDescription ? localizedDescription : [exception reason], NSLocalizedDescriptionKey, 
 																			  nil]];
 	[[NSApplication sharedApplication] performSelectorOnMainThread:@selector(presentError:) withObject:error waitUntilDone:NO];
 }

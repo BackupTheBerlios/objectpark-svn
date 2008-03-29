@@ -15,6 +15,7 @@
 {
     GIAccount *account;
     NSArray *messages;
+	int authenticationErrorDialogResult;
 }
 
 @property (readonly, retain) GIAccount *account;

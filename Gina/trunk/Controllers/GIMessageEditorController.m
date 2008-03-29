@@ -315,7 +315,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	{
 		awoken = YES;
 		[self awakeHeaders];
-		[self awakeToolbar];
         
 		[[messageTextView layoutManager] setDefaultAttachmentScaling:NSScaleProportionally];
 		
@@ -362,7 +361,6 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	
     [windowController release];
     
-    [self deallocToolbar];
     [window setDelegate:nil];
 
     [super dealloc];
@@ -420,7 +418,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     if ([self checkpointMessageWithStatus:OPSendStatusQueuedReady])
 	{
-		[[profile valueForKey:@"sendAccount"] send];
+		[profile.sendAccount send];
 		
 		[window performClose:self];
 		[window close];
@@ -450,10 +448,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	if (message)
 	{
 		// Send delay:
-		NSNumber *sendDelay = [profile valueForKey:@"sendDelay"];
-		if (sendDelay && ([sendDelay floatValue] > 0.1))
+		profile.sendDelay;
+		if (profile.sendDelay > 0.1)
 		{
-			[message setEarliestSendTime:[NSDate dateWithTimeIntervalSinceNow:[sendDelay floatValue] * 60.0]];
+			[message setEarliestSendTime:[NSDate dateWithTimeIntervalSinceNow:(float)profile.sendDelay * 60.0]];
 		}
 		
 		[window performClose:self];
@@ -740,7 +738,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 // ### message generation ###
 
-#define GINKOVERSION @"Ginko/%@ (See <http://www.objectpark.org>)"
+#define GINKOVERSION @"Gina/%@ (See http://www.objectpark.org)"
 
 - (NSString*) versionString
 /*" Returns the version string for use in new messages' headers. "*/
@@ -806,18 +804,18 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self takeValuesFromHeaderFields];
     
     // create from header:
-	if ([[theProfile valueForKey:@"realname"] length]) 
+	if (theProfile.realname.length) 
 	{
-		from = [NSString stringWithFormat:@"%@ <%@>", [theProfile realnameForSending], [theProfile valueForKey:@"mailAddress"]];
+		from = [NSString stringWithFormat:@"%@ <%@>", theProfile.realnameForSending, theProfile.mailAddress];
 	} 
 	else 
 	{
-		from = [theProfile valueForKey:@"mailAddress"];
+		from = theProfile.mailAddress;
 	}
 	[headerFields setObject:from forKey:@"From"];
     
     // organization:
-	NSString *orga = [theProfile valueForKey:@"organization"];
+	NSString *orga = theProfile.organization;
     if ((! [result bodyForHeaderField:@"Organization"]) && ([orga length])) 
 	{
         [headerFields setObject:orga forKey:@"Organization"];
@@ -1112,9 +1110,9 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     } 
 	else 
 	{
-        NSString *Cc = [[self profile] valueForKey:@"defaultCc"];
+        NSString *Cc = self.profile.defaultCc;
         if (![Cc length]) Cc = @"";
-        NSString *Bcc = [[self profile] valueForKey:@"defaultBcc"];
+        NSString *Bcc = self.profile.defaultBcc;
         if (![Bcc length]) Bcc = @"";
         
         [headerFields setObject:Cc forKey:@"Cc"];
@@ -1186,7 +1184,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {;	
 	@try 
 	{
-		NSAttributedString *signature = [[self profile] valueForKey:@"signature"];
+		NSAttributedString *signature = self.profile.signature;
 		
 		if ([signature length]) 
 		{
@@ -1464,11 +1462,11 @@ NSDictionary *maxLinesForCalendarName()
 
 - (void)validateSelectedProfile
 {
-#warning exclamation mark validation code missing
-//	// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
-//	NSArray *validationErrors = [profile validationErrors];	
-//	[profileValidationButton setHidden:validationErrors == nil];
-//	if (validationErrors) [profileValidationButton setToolTip:[[validationErrors arrayByMappingWithSelector:@selector(localizedDescription)] componentsJoinedByString:@"\n"]];	
+	// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
+#warning profile validation disabled
+	NSArray *validationErrors = nil; //[profile validationErrors];	
+	[profileValidationButton setHidden:validationErrors == nil];
+	if (validationErrors) [profileValidationButton setToolTip:[[validationErrors arrayByMappingWithSelector:@selector(localizedDescription)] componentsJoinedByString:@"\n"]];	
 }
 
 - (void)selectProfile:(GIProfile *)aProfile
@@ -1494,7 +1492,7 @@ NSDictionary *maxLinesForCalendarName()
 	{
         field = [self headerTextFieldWithFieldName:@"Cc"];
         
-        oldText = [oldProfile valueForKey:@"defaultCc"];
+        oldText = oldProfile.defaultCc;
         oldText = oldText ? oldText : @"";
         
         if ([[field stringValue] isEqualToString:oldText]) 
@@ -1503,7 +1501,7 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
 	
-    if ((text = [profile valueForKey:@"defaultCc"]))
+    if (text = profile.defaultCc)
     {
         field = [self headerTextFieldWithFieldName:@"Cc"];
         if (! [[field stringValue] length])
@@ -1517,7 +1515,7 @@ NSDictionary *maxLinesForCalendarName()
 	{
         field = [self headerTextFieldWithFieldName:@"Bcc"];
         
-        oldText = [oldProfile valueForKey:@"defaultBcc"];
+        oldText = oldProfile.defaultBcc;
         oldText = oldText ? oldText : @"";
         
         if ([[field stringValue] isEqualToString:oldText]) 
@@ -1526,7 +1524,7 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
 	
-    if ((text = [profile valueForKey:@"defaultBcc"])) 
+    if (text = profile.defaultBcc) 
 	{
         NSTextField *field = [self headerTextFieldWithFieldName:@"Bcc"];
         if (! [[field stringValue] length]) {
@@ -1539,7 +1537,7 @@ NSDictionary *maxLinesForCalendarName()
 	{
         field = [self headerTextFieldWithFieldName:@"Reply-To"];
         
-        oldText = [oldProfile valueForKey:@"defaultReplyTo"];
+        oldText = oldProfile.defaultReplyTo;
         oldText = oldText ? oldText : @"";
         
         if ([[field stringValue] isEqualToString:oldText]) 
@@ -1548,7 +1546,7 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
     
-    if ((text = [profile valueForKey:@"defaultReplyTo"])) 
+    if (text = profile.defaultReplyTo) 
 	{
         NSTextField *field = [self headerTextFieldWithFieldName:@"Reply-To"];
         if (! [[field stringValue] length]) 
@@ -1880,66 +1878,10 @@ NSDictionary *maxLinesForCalendarName()
 
 @implementation GIMessageEditorController (ToolbarDelegate)
 
-- (void)awakeToolbar
-{
-//    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier: @"MessageEditorToolbar"];
-//    
-//    [toolbar setDelegate:self];
-//    [toolbar setAllowsUserCustomization: YES];
-//    [toolbar setAutosavesConfiguration: YES];
-//
-//    [toolbar toolbarItems:&toolbarItems defaultIdentifiers:&defaultIdentifiers forToolbarNamed: @"editor"];
-//    [toolbarItems retain];
-//    [defaultIdentifiers retain];
-//        
-//    [window setToolbar:toolbar];
-}
-
-- (void)deallocToolbar
-{
-//    [[window toolbar] release];
-//    [toolbarItems release];
-//    [defaultIdentifiers release];
-}
-
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
     return [self validateSelector:[theItem action]];
 }
-
-//- (NSToolbarItem *)toolbar: (NSToolbar*) toolbar itemForItemIdentifier: (NSString*) itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
-//{
-//    return [NSToolbar toolbarItemForItemIdentifier:itemIdentifier fromToolbarItemArray:toolbarItems];
-//}
-//
-//- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*) toolbar
-//{
-//    return defaultIdentifiers;
-//}
-//
-//- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*) toolbar
-//{
-//    static NSArray* allowedItemIdentifiers = nil;
-//    
-//    if (! allowedItemIdentifiers) {
-//        NSEnumerator* enumerator;
-//        NSToolbarItem* item;
-//        NSMutableArray* allowed;
-//        
-//        allowed = [NSMutableArray arrayWithCapacity: [toolbarItems count] + 5];
-//        
-//        enumerator = [toolbarItems objectEnumerator];
-//        while (item = [enumerator nextObject]) {
-//            [allowed addObject: [item itemIdentifier]];
-//        }
-//        
-//        [allowed addObjectsFromArray: [NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil]];
-//        
-//        allowedItemIdentifiers = [allowed copy];
-//    }
-//    
-//    return allowedItemIdentifiers;
-//}
 
 @end
 

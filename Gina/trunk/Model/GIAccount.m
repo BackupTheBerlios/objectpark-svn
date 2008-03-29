@@ -12,7 +12,7 @@
 #import <Foundation/NSDebug.h>
 #import "NSString+Extensions.h"
 #import "GIPOPOperation.h"
-//#import "GISMTPJob.h"
+#import "GISMTPOperation.h"
 #import "GIApplication.h"
 #import "GIProfile.h"
 #import "GIMessage.h"
@@ -736,10 +736,7 @@
 	
 	if (messagesQualifyingForSend.count)
 	{
-#warning use send operation here
-//		[GISMTPJob sendMessages:messagesQualifyingForSend viaSMTPAccount:self];
-
-		NSLog(@"Send %d messages with account %@", messagesQualifyingForSend.count, self);
+		[GISMTPOperation sendMessages:messagesQualifyingForSend viaSMTPAccount:self usingOperationQueue:[GIApp operationQueue]];
 	}
 }
 

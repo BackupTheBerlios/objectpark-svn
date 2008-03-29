@@ -74,6 +74,13 @@
 	return result;
 }
 
+- (GIMessageGroup *)selectedGroup
+{
+	id result = [messageGroupsController selectedObject];
+	if (![result isKindOfClass:[GIMessageGroup class]]) result = nil;
+	return result;
+}
+
 + (NSSet *)keyPathsForValuesAffectingSelectedMessage
 {
 	return [NSSet setWithObject:@"selectedThreads"];
@@ -267,12 +274,89 @@
 
 // -- handling menu commands --
 
+- (GIProfile *)profileForMessage:(GIMessage *)aMessage
+/*" Return the profile to use for email replies. Tries first to guess a profile based on the replied email. If no matching profile can be found, the group default profile is chosen. May return nil in case of no group default and no match present. "*/
+{
+    GIProfile *result;
+    
+    result = [GIProfile guessedProfileForReplyingToMessage:[aMessage internetMessage]];
+    
+    if (!result)
+    {
+        result = [[self selectedGroup] defaultProfile];
+    }
+    
+    return result;
+}
+
+- (void)placeSelectedTextOnQuotePasteboard
+{
+    NSArray *types = [messageTextView writablePasteboardTypes];
+    NSPasteboard *quotePasteboard = [NSPasteboard pasteboardWithName:@"QuotePasteboard"];
+    
+    [quotePasteboard declareTypes:types owner:nil];
+    [messageTextView writeSelectionToPasteboard:quotePasteboard types:types];
+}
+
 - (IBAction)newMessage:(id)sender
 {
-#warning better selection of profile here (e.g. mails profile, groups profile etc.)
-	GIProfile *profileForNewMessage = [GIProfile defaultProfile];
+	GIProfile *profileForNewMessage = nil;
+	
+	id selectedObject = [messageGroupsController selectedObject];
+	if ([selectedObject isKindOfClass:[GIMessageGroup class]])
+	{
+		profileForNewMessage = [selectedObject defaultProfile];
+	}
 	
     [[[GIMessageEditorController alloc] initNewMessageWithProfile:profileForNewMessage] autorelease];
+}
+
+- (IBAction)replyAll:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
+}
+
+- (IBAction)replySender:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initReplyTo:message all:NO profile:[self profileForMessage:message]] autorelease];
+}
+
+- (IBAction)followup:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initFollowupTo:message profile:[[self selectedGroup] defaultProfile]] autorelease];
+}
+
+- (IBAction)replyDefault:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+	
+    if ([message isListMessage] || [message isUsenetMessage]) 
+	{
+        [self followup:sender];
+    } 
+	else 
+	{
+        [self replySender:sender];
+    }
+}
+
+- (IBAction)forward:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+	
+    [[[GIMessageEditorController alloc] initForward:message profile: [self profileForMessage:message]] autorelease];
 }
 
 - (IBAction)rename:(id)sender

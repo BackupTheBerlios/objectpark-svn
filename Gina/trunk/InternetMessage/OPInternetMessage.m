@@ -69,7 +69,7 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
     // case tag with our version.
     if((originalTransferData == nil) && ([self bodyForHeaderField: @"mime-version"] == nil))
     {
-        NSString *desig = @"Gina - http://www.objectpark.org";
+        NSString *desig = @"InternetMessage Framework - http://www.objectpark.org";
         [self setBody:[NSString stringWithFormat: @"1.0 (%@)", desig] forHeaderField:@"MIME-Version"];
     }
     return [super transferData];

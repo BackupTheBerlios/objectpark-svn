@@ -18,7 +18,7 @@
 {
 	NSArray *cachedEmailAddresses;
 	
-	unsigned sendDelay;
+	NSUInteger sendDelay;
 	NSString *additionalAddresses;
 	NSString *defaultCc;
 	NSString *defaultBcc;

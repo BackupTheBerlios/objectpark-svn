@@ -26,6 +26,23 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 @implementation GIApplication
 
+- (void)resetMessageStatusSending
+{
+	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
+	NSArray *allProfiles = [[OPPersistentObjectContext defaultContext].allObjectsByClass objectForKey:@"GIProfile"];
+	
+	for (GIProfile *profile in allProfiles)
+    {
+		for (GIMessage *message in profile.messagesToSend)
+        {
+			if (message.sendStatus == OPSendStatusSending) 
+            {
+				message.sendStatus = OPSendStatusQueuedReady;
+			}
+		}            
+	}
+}
+
 - (void)awakeFromNib
 {
 	//NSLog(@"awakeFromNib");
@@ -38,9 +55,9 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		[OPPersistentObjectContext setDefaultContext:context];
 		
 		[GIMessageGroup ensureDefaultGroups];
+		[self resetMessageStatusSending];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object:nil];
 	}
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object:nil];
 }
 
 - (BOOL)isDefaultMailApplication
@@ -289,23 +306,6 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[allAccounts makeObjectsPerformSelector:@selector(send)];
 	[allAccounts makeObjectsPerformSelector:@selector(receive)];
 	[GIAccount resetAccountRetrieveAndSendTimers];
-}
-
-- (void)resetStatusSending
-{
-	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
-	NSArray *allProfiles = [[OPPersistentObjectContext defaultContext].allObjectsByClass objectForKey:@"GIProfile"];
-	
-	for (GIProfile *profile in allProfiles)
-    {
-		for (GIMessage *message in profile.messagesToSend)
-        {
-			if (message.sendStatus == OPSendStatusSending) 
-            {
-				message.sendStatus = OPSendStatusQueuedReady;
-			}
-		}            
-	}
 }
 
 - (void)smtpOperationDidEnd:(NSNotification *)aNotification

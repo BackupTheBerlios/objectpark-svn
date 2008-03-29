@@ -32,7 +32,6 @@ typedef enum
     IBOutlet NSTextField *hiddenCaptionPrototype;
     IBOutlet NSPopUpButton *profileButton;
     IBOutlet GITextView *messageTextView;
-    IBOutlet NSPopUpButton *toFieldOptionsButton;
     IBOutlet NSButton *profileValidationButton;
 	
     NSWindowController *windowController;
@@ -106,8 +105,5 @@ typedef enum
 @end
 
 @interface GIMessageEditorController (ToolbarDelegate)
-
-- (void)awakeToolbar;
-- (void)deallocToolbar;
 
 @end

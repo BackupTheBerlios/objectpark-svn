@@ -14,6 +14,7 @@
 #import "OPPOP3Session.h"
 #import <OPNetwork/OPNetwork.h>
 #import "GIMessage.h"
+#import <Foundation/NSDebug.h>
 
 NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotification";
 
@@ -186,8 +187,21 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
         } 
 		@catch (id localException) 
 		{
-#warning We might have a wrong password, i.e. an auth failure. We should make sure, the respective dialog is displayed instead of failing silently!
-            @throw;
+			if ([[localException name] isEqualToString:OPSMTPAuthenticationFailedException])
+			{
+				[self performSelectorOnMainThread:@selector(runAuthenticationErrorDialog:) withObject:[localException reason] waitUntilDone:YES];
+				
+				if (authenticationErrorDialogResult != NSAlertFirstButtonReturn)
+				{
+					if (NSDebugEnabled) NSLog(@"Authentication failed (assuming that the password was wrong) -> clearing password");
+					// Authentication failed (assuming that the password was wrong) -> clearing password
+					self.account.outgoingPassword = @"";
+				}
+			}
+			else 
+			{
+				[[self class] presentException:localException];
+			}
         } 
 		@finally 
 		{
@@ -196,6 +210,21 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
 			[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
         }
     }
+}
+
+- (void)runAuthenticationErrorDialog:(NSString *)errorMessage
+{
+	NSAlert *alert = [[NSAlert alloc] init];
+	
+	[alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Authentication error with SMTP server '%@'.\nTry with new password next time?", @"AuthenticationErrorDialog"), self.account.outgoingServerName]];
+	[alert setInformativeText:errorMessage];
+	
+	[alert addButtonWithTitle:NSLocalizedString(@"Keep Password", @"AuthenticationErrorDialog")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Try with new Password next Time", @"AuthenticationErrorDialog")];
+	
+	authenticationErrorDialogResult = [alert runModal];
+	
+	[alert release];
 }
 
 @end

@@ -231,6 +231,21 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
     [super dealloc];
 }
 
+- (void)runAuthenticationErrorDialog:(NSString *)errorMessage
+{
+	NSAlert *alert = [[NSAlert alloc] init];
+	
+	[alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Authentication error with POP server '%@'.\nTry with new password next time?", @"AuthenticationErrorDialog"), [account incomingServerName]]];
+	[alert setInformativeText:errorMessage];
+	
+	[alert addButtonWithTitle:NSLocalizedString(@"Keep Password", @"AuthenticationErrorDialog")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Try with new Password next Time", @"AuthenticationErrorDialog")];
+	
+	authenticationErrorDialogResult = [alert runModal];
+	
+	[alert release];
+}
+
 /******** POP3 delegate methods **********/
 
 /*" required "*/
@@ -286,6 +301,5 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 	//NSLog(@"cleanup: %@", messageId);
     return [messageDate compare:[self deletionDate]] != NSOrderedDescending; /* date <= tooOldDate */
 }
-
 
 @end
