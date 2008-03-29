@@ -791,7 +791,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[coder encodeObject:senderName forKey:@"senderName"];
 	[coder encodeInt32:flags forKey:@"flags"];
 	[coder encodeInt32:unreadMessageCount forKey:@"unreadMessageCount"];
-	[coder encodeInt32:sendStatus forkey:@"sendStatus"];
+	[coder encodeInt32:sendStatus forKey:@"sendStatus"];
 	[coder encodeOID:threadOID forKey:@"threadOID"];
 	[coder encodeOID:referenceOID forKey:@"referenceOID"];
 }
