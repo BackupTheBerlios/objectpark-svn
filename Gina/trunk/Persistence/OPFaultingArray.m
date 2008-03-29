@@ -495,6 +495,16 @@ static int compare_oids(const void* entry1, const void* entry2)
 
 @end
 
+
+@implementation NSArray (OPPersistence) 
+
+- (BOOL) containsObjectIdenticalTo: (id) object
+{
+	return [self indexOfObjectIdenticalTo: object] != NSNotFound;
+}
+
+@end
+
 //@implementation NSMutableArray (CocotronTest)
 //
 //

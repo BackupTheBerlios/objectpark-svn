@@ -51,3 +51,9 @@
 
 
 @end
+
+@interface NSArray (OPPersistence) 
+
+- (BOOL) containsObjectIdenticalTo: (id) object;
+
+@end

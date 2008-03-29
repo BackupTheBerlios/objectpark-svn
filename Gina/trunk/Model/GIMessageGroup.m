@@ -523,9 +523,9 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 			
 			if (move)
 			{
-				while ([messageGroups containsObject:sourceGroup])
+				while ([messageGroups containsObjectIdenticalTo: sourceGroup])
 				{
-					[messageGroups removeObject:sourceGroup];
+					[messageGroups removeObjectIdenticalTo:sourceGroup];
 				}
 			}			
 			if (![messageGroups containsObject:destinationGroup])

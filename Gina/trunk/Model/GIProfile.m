@@ -208,9 +208,9 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 
 - (OPFaultingArray *)messagesToSend
 {
-	if (!messagesToSend)
-	{
+	if (!messagesToSend) {
 		messagesToSend = [[OPFaultingArray alloc] init];
+		[[self context] didChangeObject: self];
 	}
 	
 	return messagesToSend;
@@ -377,7 +377,13 @@ static GIProfile *defaultProfile = nil;
 		if (!defaultProfile) 
 		{
 			defaultProfile = [[context allObjectsOfClass:[self class]] anyObject];
-			if (defaultProfile) [self setDefaultProfile:defaultProfile];
+			if (! defaultProfile) {
+				defaultProfile = [[[GIProfile alloc] init] autorelease];
+				defaultProfile.name = @"Default Profile";
+				// todo: set realname from addressbook here
+				[context insertObject: defaultProfile];
+			}
+			[self setDefaultProfile:defaultProfile];
 		}
 		
 	}
@@ -458,6 +464,8 @@ static GIProfile *defaultProfile = nil;
 	sendAccountOID = [coder decodeOIDForKey:@"sendAccount"];
 	messagesToSend = [coder decodeObjectForKey:@"messagesToSend"];
 
+	NSLog(@"%@ has messagesToSend: %@", self, messagesToSend);
+	
 	return self;
 }
 

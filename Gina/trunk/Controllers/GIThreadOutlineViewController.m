@@ -733,7 +733,7 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	NSParameterAssert(outlineView == anOutlineView);
 		
-	GIMessageGroup *sourceGroup = [[outlineView.window.windowController valueForKey:@"messageGroupsController"] selectedObject];
+	GIMessageGroup *sourceGroup = [outlineView.dataSource selectedObject];
 	
 //	if (![sourceGroup isValidUserCopyOrMoveSourceOrDestination]) return NO;
 	
@@ -742,6 +742,7 @@ NSDateFormatter *timeAndDateFormatter()
 	NSSet *threads = [self threadsOfItems:items];
 	NSMutableArray *pbItems = [NSMutableArray arrayWithCapacity:[threads count]];
 	
+	// Numbers with oids as content would have worked as well for internal d&d, propably more efficient
 	for (GIThread *thread in threads)
 	{
 		NSString *url = [thread objectURLString];
