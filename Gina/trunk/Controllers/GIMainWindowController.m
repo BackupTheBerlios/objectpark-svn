@@ -695,7 +695,20 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (IBAction)threadsDoubleAction:(id)sender
 {
-	if ([threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
+	unsigned messageSendStatus = [[self selectedMessage] sendStatus];
+	if (messageSendStatus > OPSendStatusNone) 
+	{
+		if (messageSendStatus >= OPSendStatusSending) 
+		{
+			NSLog(@"message %@ is in send job", [self selectedMessage]); // replace by alert
+			NSBeep();
+		} 
+		else 
+		{
+			[[[GIMessageEditorController alloc] initWithMessage:[self selectedMessage]] autorelease];
+		}
+	} 
+	else if ([threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
 	{
 		// show message view and graphical thread view:
 		[threadMailSplitter setPosition:0.0 ofDividerAtIndex:0];

@@ -766,35 +766,34 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[internetMessage release]; internetMessage = nil;
 }
 
-- (id) initWithCoder: (NSCoder*) coder
+- (id)initWithCoder:(NSCoder *)coder
 {
-	messageId = [coder decodeObjectForKey: @"messageId"];
-	subject = [coder decodeObjectForKey: @"subject"];
-	to = [coder decodeObjectForKey: @"to"];
-	date = [coder decodeObjectForKey: @"date"];
-	senderName = [coder decodeObjectForKey: @"senderName"];
-//	sendProfileOID = [coder decodeOIDForKey: @"sendProfileOID"];
-	threadOID = [coder decodeOIDForKey: @"threadOID"];
-	referenceOID = [coder decodeOIDForKey: @"referenceOID"];
-	flags = [coder decodeInt32ForKey: @"flags"];	
-	unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];	
+	messageId = [coder decodeObjectForKey:@"messageId"];
+	subject = [coder decodeObjectForKey:@"subject"];
+	to = [coder decodeObjectForKey:@"to"];
+	date = [coder decodeObjectForKey:@"date"];
+	senderName = [coder decodeObjectForKey:@"senderName"];
+	threadOID = [coder decodeOIDForKey:@"threadOID"];
+	referenceOID = [coder decodeOIDForKey:@"referenceOID"];
+	flags = [coder decodeInt32ForKey:@"flags"];	
+	unreadMessageCount = [coder decodeInt32ForKey:@"unreadMessageCount"];	
 	referenceCount = NSNotFound;
+	sendStatus = [coder decodeInt32ForKey:@"sendStatus"];
 	return self;
 }
 
-- (void) encodeWithCoder: (NSCoder*) coder
+- (void)encodeWithCoder:(NSCoder *)coder
 {
-	[coder encodeObject: messageId forKey: @"messageId"];
-	[coder encodeObject: subject forKey: @"subject"];
-	[coder encodeObject: to forKey: @"to"];
-	[coder encodeObject: date forKey: @"date"];
-	[coder encodeObject: senderName forKey: @"senderName"];
-	[coder encodeInt32: flags forKey: @"flags"];
-	[coder encodeInt32: unreadMessageCount forKey: @"unreadMessageCount"];
-
-//	[coder encodeOID: sendProfileOID forKey: @"sendProfileOID"];
-	[coder encodeOID: threadOID forKey: @"threadOID"];
-	[coder encodeOID: referenceOID forKey: @"referenceOID"];
+	[coder encodeObject:messageId forKey:@"messageId"];
+	[coder encodeObject:subject forKey:@"subject"];
+	[coder encodeObject:to forKey:@"to"];
+	[coder encodeObject:date forKey:@"date"];
+	[coder encodeObject:senderName forKey:@"senderName"];
+	[coder encodeInt32:flags forKey:@"flags"];
+	[coder encodeInt32:unreadMessageCount forKey:@"unreadMessageCount"];
+	[coder encodeInt32:sendStatus forkey:@"sendStatus"];
+	[coder encodeOID:threadOID forKey:@"threadOID"];
+	[coder encodeOID:referenceOID forKey:@"referenceOID"];
 }
 
 @end

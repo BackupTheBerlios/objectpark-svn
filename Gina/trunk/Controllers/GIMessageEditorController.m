@@ -745,7 +745,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     static NSString* versionString = nil;
     
-    if (! versionString) {
+    if (! versionString) 
+	{
         NSMutableString *bundleVersion = [[NSMutableString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
         // We replace spaces in the version number to make the version string compliant with RFC2616 and draft-ietf-usefor-article-09.txt (internet draft for news article format)
         [bundleVersion replaceOccurrencesOfString:@" " withString:@"-" options:NSLiteralSearch range:NSMakeRange(0, [bundleVersion length])];
@@ -870,7 +871,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 /*     }*/
     
 	
-	NSLog(@"message =\n%@", [NSString stringWithData:[result transferData] encoding:NSUTF8StringEncoding]);
+//	NSLog(@"message =\n%@", [NSString stringWithData:[result transferData] encoding:NSUTF8StringEncoding]);
 
     return result;
 }
