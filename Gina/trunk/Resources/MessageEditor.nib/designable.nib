@@ -888,18 +888,18 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								<int key="NSPeriodicInterval">75</int>
 							</object>
 						</object>
-						<object class="NSButton" id="290765018">
+						<object class="NSButton" id="302846674">
 							<reference key="NSNextResponder" ref="456507497"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{20, 642}, {61, 17}}</string>
 							<reference key="NSSuperview" ref="456507497"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSButtonCell" key="NSCell" id="1024220573">
+							<object class="NSButtonCell" key="NSCell" id="19364223">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">67108864</int>
 								<string key="NSContents">To:</string>
 								<reference key="NSSupport" ref="526607721"/>
-								<reference key="NSControlView" ref="290765018"/>
+								<reference key="NSControlView" ref="302846674"/>
 								<int key="NSButtonFlags">-2046410497</int>
 								<int key="NSButtonFlags2">129</int>
 								<reference key="NSAlternateImage" ref="526607721"/>
@@ -918,12 +918,12 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<string key="NSFrameAutosaveName">New Message</string>
 			</object>
-			<object class="NSMenu" id="567920180">
+			<object class="NSMenu" id="510505680">
 				<string key="NSTitle"/>
 				<object class="NSMutableArray" key="NSMenuItems">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="NSMenuItem" id="188916059">
-						<reference key="NSMenu" ref="567920180"/>
+					<object class="NSMenuItem" id="317162866">
+						<reference key="NSMenu" ref="510505680"/>
 						<string key="NSTitle">Reply (to Sender)</string>
 						<string key="NSKeyEquiv">R</string>
 						<int key="NSKeyEquivModMask">1048576</int>
@@ -931,8 +931,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="NSOnImage" ref="641611303"/>
 						<reference key="NSMixedImage" ref="921432342"/>
 					</object>
-					<object class="NSMenuItem" id="821969654">
-						<reference key="NSMenu" ref="567920180"/>
+					<object class="NSMenuItem" id="588558242">
+						<reference key="NSMenu" ref="510505680"/>
 						<string key="NSTitle">Reply to All</string>
 						<string key="NSKeyEquiv">r</string>
 						<int key="NSKeyEquivModMask">1048576</int>
@@ -1110,7 +1110,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">replySender:</string>
 						<reference key="source" ref="255479443"/>
-						<reference key="destination" ref="188916059"/>
+						<reference key="destination" ref="317162866"/>
 					</object>
 					<int key="connectionID">141</int>
 				</object>
@@ -1118,15 +1118,15 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">replyAll:</string>
 						<reference key="source" ref="255479443"/>
-						<reference key="destination" ref="821969654"/>
+						<reference key="destination" ref="588558242"/>
 					</object>
 					<int key="connectionID">143</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">menu</string>
-						<reference key="source" ref="290765018"/>
-						<reference key="destination" ref="567920180"/>
+						<reference key="source" ref="302846674"/>
+						<reference key="destination" ref="510505680"/>
 					</object>
 					<int key="connectionID">150</int>
 				</object>
@@ -1186,7 +1186,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<reference ref="101122324"/>
 							<reference ref="412513236"/>
 							<reference ref="802613546"/>
-							<reference ref="290765018"/>
+							<reference ref="302846674"/>
 						</object>
 						<reference key="parent" ref="352463046"/>
 					</object>
@@ -1434,37 +1434,37 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">137</int>
-						<reference key="object" ref="567920180"/>
+						<reference key="object" ref="510505680"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="188916059"/>
-							<reference ref="821969654"/>
+							<reference ref="317162866"/>
+							<reference ref="588558242"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">138</int>
-						<reference key="object" ref="188916059"/>
-						<reference key="parent" ref="567920180"/>
+						<reference key="object" ref="317162866"/>
+						<reference key="parent" ref="510505680"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">140</int>
-						<reference key="object" ref="821969654"/>
-						<reference key="parent" ref="567920180"/>
+						<reference key="object" ref="588558242"/>
+						<reference key="parent" ref="510505680"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">148</int>
-						<reference key="object" ref="290765018"/>
+						<reference key="object" ref="302846674"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="1024220573"/>
+							<reference ref="19364223"/>
 						</object>
 						<reference key="parent" ref="456507497"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">149</int>
-						<reference key="object" ref="1024220573"/>
-						<reference key="parent" ref="290765018"/>
+						<reference key="object" ref="19364223"/>
+						<reference key="parent" ref="302846674"/>
 					</object>
 				</object>
 			</object>
