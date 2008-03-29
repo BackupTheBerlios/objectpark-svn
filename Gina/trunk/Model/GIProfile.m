@@ -365,26 +365,31 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 
 // Default Profile stuff:
 
+static GIProfile *defaultProfile = nil;
+
 + (GIProfile *)defaultProfile
 {
-	NSString *URLString = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultProfileURLString];
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	
-	GIProfile *result = [[OPPersistentObjectContext defaultContext] objectWithURLString:URLString];
-	
-	if (! result) 
+	if (! defaultProfile)
 	{
-		result = [[[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIProfile class]] anyObject];
-		if (result) [self setDefaultProfile:result];
+		defaultProfile = [[context rootObjectForKey:@"DefaultProfile"] retain];
+		if (!defaultProfile) 
+		{
+			defaultProfile = [[context allObjectsOfClass:[self class]] anyObject];
+			if (defaultProfile) [self setDefaultProfile:defaultProfile];
+		}
+		
 	}
 	
-	return result;
+	return defaultProfile;
 }
 
 + (void)setDefaultProfile:(GIProfile *)aProfile
 {
 	if (aProfile)
 	{
-		[[NSUserDefaults standardUserDefaults] setObject:[aProfile objectURLString] forKey:DefaultProfileURLString];
+		[[OPPersistentObjectContext defaultContext] setRootObject:aProfile forKey:@"DefaultProfile"];
 	}
 }
 

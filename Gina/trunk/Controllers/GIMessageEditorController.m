@@ -100,7 +100,12 @@
 		// Make sure, aMessage is not send during edit:
         if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus:OPSendStatusQueuedBlocked];
         
-        profile = [[aMessage valueForKey:@"sendProfile"] retain];
+        profile = [[GIProfile sendProfileForMessage:aMessage] retain];
+		if (!profile) 
+		{
+			NSLog(@"WARNING: message doesn't have a profile - setting default profile");
+			profile = [[GIProfile defaultProfile] retain];
+		}
         
         oldMessage = [aMessage retain];
         referencedMessage = nil;
@@ -1015,7 +1020,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [headerFields setObject:[coder stringValue] forKey:[headerField firstObject]];
     }
     
-    NSLog(@"headers = %@", headerFields);
+    //NSLog(@"headers = %@", headerFields);
 }
 
 - (NSMutableString *)stringByRemovingOwnAddressesFromString:(NSString *)addr
@@ -1351,14 +1356,16 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [referencedMessage toggleFlags:[referencedMessage flags] ^ OPAnsweredStatus];
     
     // Set message in profile's messagesToSend:
-	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];
+	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];	
+//	[profile.messagesToSend addObject:message];
+	
 	NSAssert(profile != nil, @"no profile in place");
-	NSAssert([profile.messagesToSend containsObject:message], @"message should be in messages to send");
 	NSLog(@"adding message %@ to sendProfile %@", message, profile);
 
     [window setDocumentEdited:NO];
     
     [[OPPersistentObjectContext defaultContext] saveChanges];
+	NSAssert([profile.messagesToSend containsObject:message], @"message should be in messages to send");
 
     //if (NSDebugEnabled) NSLog(@"checkpointed message");
     
