@@ -733,7 +733,7 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	NSParameterAssert(outlineView == anOutlineView);
 		
-	GIMessageGroup *sourceGroup = [outlineView.dataSource selectedObject];
+//	GIMessageGroup *sourceGroup = [outlineView.dataSource selectedObject];
 	
 //	if (![sourceGroup isValidUserCopyOrMoveSourceOrDestination]) return NO;
 	
@@ -810,16 +810,15 @@ NSDateFormatter *timeAndDateFormatter()
 //    return NSDragOperationNone;
 //}
 //
-/*
- - (NSImage *)dragImageForRowsWithIndexes: (NSIndexSet*) dragRows tableColumns:(NSArray*) tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
- {
- if (outlineView == threadsView) // threads list
- {
- return nil;
- } else {
- return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
- }
- }
- */
+
+@end
+
+@implementation GIThreadOutlineView
+
+- (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
+{
+	// TODO: pimp the drag image by adding a badge with numbers of threads/messages being dragged
+	return [NSImage imageNamed:@"drag"];
+}
 
 @end

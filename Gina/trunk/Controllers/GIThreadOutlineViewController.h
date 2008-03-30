@@ -43,3 +43,10 @@
 - (NSImage*) statusImage;
 @end
 
+#import "GIOutlineViewWithThreadColoring.h"
+
+@interface GIThreadOutlineView : GIOutlineViewWithThreadColoring
+{
+}
+
+@end

@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1" id="9"/>
+			<integer value="26"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -133,7 +133,7 @@
 													<object class="NSMutableArray" key="dict.values">
 														<bool key="EncodedWithXMLCoder">YES</bool>
 														<string>Abbrechen</string>
-														<reference ref="9"/>
+														<integer value="1" id="9"/>
 													</object>
 												</object>
 											</object>
@@ -1421,7 +1421,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																</object>
 															</object>
 															<string key="NSFrameSize">{483, 77}</string>
-															<string key="NSBounds">{{195, 42}, {483, 77}}</string>
+															<string key="NSBounds">{{185, 32}, {483, 77}}</string>
 															<reference key="NSSuperview" ref="353738654"/>
 															<reference key="NSNextKeyView" ref="462713901"/>
 															<reference key="NSDocView" ref="462713901"/>
@@ -1441,7 +1441,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 															<bool key="NSEnabled">YES</bool>
 															<reference key="NSTarget" ref="353738654"/>
 															<string key="NSAction">_doScroller:</string>
-															<double key="NSCurValue">4.400000e-01</double>
+															<double key="NSCurValue">5.733333e-01</double>
 															<double key="NSPercent">5.065789e-01</double>
 														</object>
 														<object class="NSScroller" id="39060931">
@@ -1453,7 +1453,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 															<int key="NSsFlags">1</int>
 															<reference key="NSTarget" ref="353738654"/>
 															<string key="NSAction">_doScroller:</string>
-															<double key="NSCurValue">9.750000e-01</double>
+															<double key="NSCurValue">9.250000e-01</double>
 															<double key="NSPercent">7.071742e-01</double>
 														</object>
 													</object>
@@ -3186,7 +3186,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>GIOutlineViewWithThreadColoring</string>
+					<string>GIThreadOutlineView</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3487,12 +3487,17 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">GIThreadOutlineViewController</string>
-					<string key="superclassName">OPOutlineViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+					<string key="className">GIThreadOutlineView</string>
+					<string key="superclassName">GIOutlineViewWithThreadColoring</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="1034314945">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Controllers/GIThreadOutlineViewController.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">GIThreadOutlineViewController</string>
+					<string key="superclassName">OPOutlineViewController</string>
+					<reference key="sourceIdentifier" ref="1034314945"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">GIThreadOutlineViewController</string>
