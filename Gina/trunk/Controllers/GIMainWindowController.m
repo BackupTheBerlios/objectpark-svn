@@ -485,11 +485,15 @@
 	[threadsOutlineView.window makeFirstResponder: threadsOutlineView];
 }
 
-- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+- (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
-	SEL action = [theItem action];
+	SEL action = [anItem action];
 	
-	if (action == @selector(markAsRead:))
+	if (action == @selector(delete:))
+	{
+		return [(GIHierarchyNode *)[messageGroupsController selectedObject] isDeletable];
+	}
+	else if (action == @selector(markAsRead:))
 	{
 		return [threadsController selectionHasUnreadMessages];
 	}
@@ -501,18 +505,17 @@
 	{
 		return [[threadsController selectedObjects] count] != 0;
 	}
+	else if (action == @selector(replyAll:) || action == @selector(replySender:) || action == @selector(forward:))
+	{
+		return [self selectedMessage] && [threadsController selectedObjects].count == 1;
+	}
 	
 	return YES;
 }
 
-- (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
-	if ([anItem action] == @selector(delete:))
-	{
-		return [(GIHierarchyNode *)[messageGroupsController selectedObject] isDeletable];
-	}
-	
-	return YES;
+	return [self validateUserInterfaceItem:theItem];
 }
 
 @end
