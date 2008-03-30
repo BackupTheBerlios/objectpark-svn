@@ -20,6 +20,7 @@
 #import "GIPOPOperation.h"
 #import "GIProfile.h"
 #import "GISMTPOperation.h"
+#import "GIAccount.h"
 
 NSString *GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
 NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNotification";
@@ -173,6 +174,69 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		[self askForBecomingDefaultMailApplication];
 		firstTime = NO;
 	}
+}
+
+- (IBAction)sendMessagesDueInNearFuture:(id)sender
+{
+	NSTimeInterval dueInterval = [[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes] * 60.0;
+
+	for (GIAccount *account in [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIAccount class]])
+	{
+		[account sendMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval];
+	}
+}
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+    NSApplicationTerminateReply result = NSTerminateNow;
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SoonRipeMessagesShouldBeSent])
+	{
+		NSTimeInterval dueInterval = (NSTimeInterval)[[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes] * 60.0;
+		
+		if ([GIAccount anyMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval])
+		{
+			[self sendMessagesDueInNearFuture:self];
+			sleep(1); // let the jobs begin
+			/*
+			 NSAlert *alert = [[NSAlert alloc] init];
+			 //[alert setTitle:NSLocalizedString(@"Unsent 'due soon' Messages", @"quit dialog due soon messages")];
+			 [alert setMessageText:NSLocalizedString(@"There are messages that are due for sending soon which will be send now. Quit canceled.", @"quit dialog due soon messages")];
+			 [alert addButtonWithTitle:NSLocalizedString(@"Close", @"quit dialog due soon messages")];
+			 [alert runModal];
+			 [alert release];
+			 return NSTerminateCancel;
+			 */
+		}
+	}
+	
+    // check open windows
+    // if an edit window is open with an edited message ask what to do with the open message
+    NSWindow *window;
+    NSArray *windows = [NSApp windows];
+    NSEnumerator *enumerator = [windows objectEnumerator];
+    while (window = [enumerator nextObject])
+    {
+        if ([[window delegate] respondsToSelector:@selector(windowShouldClose:)])
+        {
+            if (! [[window delegate] windowShouldClose:self])
+            {
+                return NSTerminateCancel;
+            }
+        }
+    }
+	
+//	isTerminating = YES;
+	
+	NSOperationQueue *queue = [self operationQueue];
+	if ([queue operations].count)
+	{
+		[[self operationQueue] cancelAllOperations];
+		[[self operationQueue] waitUntilAllOperationsAreFinished];
+		//        result = NSTerminateLater;
+	}
+    
+    return result;
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification
