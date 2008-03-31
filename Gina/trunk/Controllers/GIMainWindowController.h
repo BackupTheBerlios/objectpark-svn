@@ -25,7 +25,7 @@
 	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
 	IBOutlet NSOutlineView *groupsOutlineView;
 	IBOutlet GISplitView *threadMailSplitter;
-	IBOutlet NSSplitView *mailTreeSplitter;
+	IBOutlet GISplitView *mailTreeSplitter;
 	IBOutlet GISplitView *verticalSplitter;
 	IBOutlet GITextView *messageTextView;
 	IBOutlet NSWindow *messageGroupRenameWindow;

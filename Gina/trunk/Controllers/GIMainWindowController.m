@@ -169,6 +169,7 @@
 	threadMailSplitter.dividerThickness = 8.0;
 	[threadMailSplitter setPositionAutosaveName:@"KFThreadMailSplitter"];
 	[verticalSplitter setPositionAutosaveName:@"KFVerticalSplitter"];
+	[mailTreeSplitter setPositionAutosaveName:@"KFMailTreeSplitter"];
 	
 	// configuring manual bindings:
 	NSDictionary *options = nil;
