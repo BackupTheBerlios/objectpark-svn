@@ -379,6 +379,12 @@ static int compare_oids(const void* entry1, const void* entry2)
 	}
 }
 
+- (OPPersistentObjectContext*) context
+/*" Returns the context for the receiver. Currently, always returns the default context. "*/
+{
+    return [OPPersistentObjectContext defaultContext]; // simplistic implementation; prepared for multiple contexts.
+}
+
 - (BOOL) hasUnsavedChanges
 {
 	return [[[self context] changedObjects] containsObject: self];
