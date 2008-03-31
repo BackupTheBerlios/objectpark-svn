@@ -269,6 +269,8 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 	
 	for (GIProfile *profile in allProfiles)
 	{
+		NSLog(@"profile %@ with messagesToSend: %@", profile, profile.messagesToSend);
+		
 		if ([profile.messagesToSend containsObject:aMessage])
 		{
 			return profile;

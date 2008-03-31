@@ -1356,14 +1356,15 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [referencedMessage toggleFlags:[referencedMessage flags] ^ OPAnsweredStatus];
     
     // Set message in profile's messagesToSend:
-//	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];	
-	[profile.messagesToSend addObject:message];
+	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];	
+//	[profile.messagesToSend addObject:message];
 	
 	NSAssert(profile != nil, @"no profile in place");
 	NSLog(@"adding message %@ to sendProfile %@", message, profile);
 
     [window setDocumentEdited:NO];
     
+	NSAssert([profile hasUnsavedChanges], @"Should have unsaved changes");
     [[OPPersistentObjectContext defaultContext] saveChanges];
 	NSAssert([profile.messagesToSend containsObject:message], @"message should be in messages to send");
 
