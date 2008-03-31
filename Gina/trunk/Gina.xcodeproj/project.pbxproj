@@ -264,6 +264,7 @@
 		77DB2A120D03537500F23C06 /* TestOPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5BC0D00546B00A7BEFF /* TestOPMultipartContentCoder.m */; };
 		77DB2A4A0D03569F00F23C06 /* TestOPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5AE0D00546B00A7BEFF /* TestOPSMTP.m */; };
 		77E387D70D36193900C31A29 /* ThreadingTest.mbox in Resources */ = {isa = PBXBuildFile; fileRef = 77E387D60D36193900C31A29 /* ThreadingTest.mbox */; };
+		77ED0F8C0DA1A75200AE0591 /* KFSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77ED0F8B0DA1A75200AE0591 /* KFSplitView.m */; };
 		77F2E2EC0D1E4AF90003D25B /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		77F2E2ED0D1E4AFB0003D25B /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		77F2E2EF0D1E4B060003D25B /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
@@ -695,6 +696,8 @@
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
 		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		77E5676E0D0702670016594D /* GinaSpotlight-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GinaSpotlight-Info.plist"; path = "../GinaSpotlight-Info.plist"; sourceTree = "<group>"; };
+		77ED0F8A0DA1A75200AE0591 /* KFSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KFSplitView.h; sourceTree = "<group>"; };
+		77ED0F8B0DA1A75200AE0591 /* KFSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KFSplitView.m; sourceTree = "<group>"; };
 		77F2E3D90D1EB2DC0003D25B /* TestGIThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGIThread.h; sourceTree = "<group>"; };
 		77F2E3DA0D1EB2DC0003D25B /* TestGIThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGIThread.m; sourceTree = "<group>"; };
 		77F4F3A80D81A9AD008B0103 /* Action_Pressed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Action_Pressed.tiff; sourceTree = "<group>"; };
@@ -989,6 +992,8 @@
 		773612550D1AB796007FC630 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				77ED0F8A0DA1A75200AE0591 /* KFSplitView.h */,
+				77ED0F8B0DA1A75200AE0591 /* KFSplitView.m */,
 				771330FB0D91845C00094A0A /* GIMessageEditorWindow.h */,
 				771330FC0D91845D00094A0A /* GIMessageEditorWindow.m */,
 				771330280D91737E00094A0A /* GIHeaderFieldEditor.h */,
@@ -1983,6 +1988,7 @@
 				771330FD0D91845D00094A0A /* GIMessageEditorWindow.m in Sources */,
 				770C31CF0D98F76100FC5214 /* OPMenuButton.m in Sources */,
 				7713924B0D9D52E6003BE8B1 /* GISMTPOperation.m in Sources */,
+				77ED0F8C0DA1A75200AE0591 /* KFSplitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

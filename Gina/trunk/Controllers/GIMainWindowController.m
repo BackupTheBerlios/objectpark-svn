@@ -11,6 +11,7 @@
 #import "GIMessageGroupOutlineViewController.h"
 #import "GIMessageEditorController.h"
 #import "GISplitView.h"
+#import "KFSplitView.h"
 
 #import "GIUserDefaultsKeys.h"
 
@@ -157,6 +158,7 @@
 	}
 }
 
+
 - (void)windowDidLoad
 {
 	if (![self progressInfoVisible])
@@ -165,6 +167,8 @@
 	}
 	
 	threadMailSplitter.dividerThickness = 8.0;
+	[threadMailSplitter setPositionAutosaveName:@"KFThreadMailSplitter"];
+	[verticalSplitter setPositionAutosaveName:@"KFVerticalSplitter"];
 	
 	// configuring manual bindings:
 	NSDictionary *options = nil;

@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "GICommentTreeView.h"
 #import "GIOutlineViewWithThreadColoring.h"
-//#import "GIMessageGroupTreeController.h"
 #import "GIMainWindow.h"
 
 @class GIMessageGroup;
@@ -27,6 +26,7 @@
 	IBOutlet NSOutlineView *groupsOutlineView;
 	IBOutlet GISplitView *threadMailSplitter;
 	IBOutlet NSSplitView *mailTreeSplitter;
+	IBOutlet GISplitView *verticalSplitter;
 	IBOutlet GITextView *messageTextView;
 	IBOutlet NSWindow *messageGroupRenameWindow;
 	IBOutlet NSTextField *messageGroupNameField;
