@@ -478,6 +478,14 @@
 			extend = YES;
 		}
 	}
+	
+	// scroll to last entry:
+	if (itemPaths.count)
+	{
+		NSInteger visibleRow = [self rowForItemPath:[itemPaths lastObject]];
+		[outlineView scrollRowToVisible:visibleRow];
+	}
+	
 	[self didChangeValueForKey: @"selectedItems"];
 }
 
