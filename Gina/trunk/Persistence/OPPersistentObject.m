@@ -48,7 +48,11 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 @implementation OPPersistentObject
 
-
+- (NSMutableArray*) mutableArrayValueForKey: (NSString*) key
+{
+	// Expect the mutable array to be changed:
+	[[self context] didChangeObject: self];
+}
 
 + (BOOL) cachesAllObjects
 /*" Default implementation - returns NO. Subclasses mey override. "*/
