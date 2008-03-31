@@ -52,6 +52,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 {
 	// Expect the mutable array to be changed:
 	[[self context] didChangeObject: self];
+	return [super mutableArrayValueForKey: key];
 }
 
 + (BOOL) cachesAllObjects
