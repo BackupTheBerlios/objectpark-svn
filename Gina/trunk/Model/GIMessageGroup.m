@@ -584,13 +584,13 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 	@synchronized(self)
 	{
-		NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
-        
-		if (URLString) 
-		{
+//		NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
+//        
+//		if (URLString) 
+//		{
 			result = [context rootObjectForKey:defaultsKey];
 			if (!result) if (NSDebugEnabled) NSLog(@"Couldn't find standard box '%@'", defaultName);
-		}
+//		}
 		
 		if (!result) 
 		{
