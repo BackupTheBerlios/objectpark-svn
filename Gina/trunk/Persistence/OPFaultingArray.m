@@ -379,6 +379,11 @@ static int compare_oids(const void* entry1, const void* entry2)
 	}
 }
 
+- (BOOL) hasUnsavedChanges
+{
+	return [[[self context] changedObjects] containsObject: self];
+}
+
 - (NSString*) description
 {
 	// Keys are just for testing...
