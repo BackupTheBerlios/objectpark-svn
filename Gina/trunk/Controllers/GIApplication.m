@@ -52,8 +52,9 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		// Setting up persistence:
 		NSString *databasePath = [[self applicationSupportPath] stringByAppendingPathComponent:@"Gina.btrees"];
 		OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
-		[context setDatabaseFromPath:databasePath];
 		[OPPersistentObjectContext setDefaultContext:context];
+
+		[context setDatabaseFromPath:databasePath];
 		
 		[GIMessageGroup ensureDefaultGroups];
 		[self resetMessageStatusSending];

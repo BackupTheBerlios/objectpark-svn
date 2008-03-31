@@ -202,6 +202,10 @@ typedef struct {
 	}
 	
 	[instanceStatistic addObject: [(NSObject*)object classForCoder]];
+	
+	if ([self objectRegisteredForOID: [object oid]] != object) {
+		NSAssert([self objectRegisteredForOID: [object oid]] == object, @"registerObject: failed.");
+	}
 }
 
 - (void) unregisterObject: (id <OPPersisting>) object
@@ -219,7 +223,7 @@ typedef struct {
 {    
 	FakeObject searchStruct;
 	
-    searchStruct.isa = [OPPersistentObject class]; // optimize
+    searchStruct.isa = [OPPersistentObject class]; //classes[CIDFromOID(oid)]; // optimize
     searchStruct.oid = oid;
     
     OPPersistentObject *result = nil;
@@ -357,22 +361,18 @@ NSString* OPStringFromOID(OID oid)
 		Class theClass = [self classForCID: CIDFromOID(oid)];
 		result = [theClass alloc];
 		
-		if (YES || [theClass cachesAllObjects]) {
-			BOOL ok = [self unarchiveObject: result forOID: oid];
-			if (! ok) {
-				[result release];
-				return nil;
-			} 
-			[result setOID: oid]; // registers result - do not do that until we know there is data for oid
+		BOOL ok = [self unarchiveObject: result forOID: oid];
+		if (! ok) {
+			[result release];
+			return nil;
+		} 
+		[result setOID: oid]; // registers result - do not do that until we know there is data for oid
 
-		} else {
-			result = [[result initFaultWithContext: self oid: oid] autorelease];
-		}
 		//NSLog(@"Caching persistent object (oid 0x%016llx)", oid);
 		//result = [[self unarchiveObject: result] autorelease];
 		
 		//NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
-        //NSAssert(result == [self objectRegisteredForOid: oid ofClass: poClass], @"Problem with hash lookup");
+        NSAssert(result == [self objectRegisteredForOID: oid], @"Problem with hash lookup");
     } else {
 		// We already know this object.
 		// Put it into  the fault cache:
@@ -460,8 +460,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[self revertChanges]; // just to be sure
 
 	NSHashTableCallBacks htCallBacks = NSNonRetainedObjectHashCallBacks;
-	htCallBacks.hash = &oidHash;
-	htCallBacks.isEqual = &oidEqual;
+	//htCallBacks.hash = &oidHash; // does not work with classes that do not inherit from OPPersistentObject (like OPStringDictionary)
+	//htCallBacks.isEqual = &oidEqual; // does not work with classes that do not inherit from OPPersistentObject (like OPStringDictionary)
 	
 	[registeredObjects release];
 	registeredObjects = NSCreateHashTable(htCallBacks, 1000);
@@ -554,8 +554,13 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 				BOOL moveOk = YES;
 				do {
 					NSObject<OPPersisting>* instance = [classes[cid] alloc];
-					instance = [self unarchiveObject: instance atCursor: cursor];
-					[self cacheObject: instance];
+					instance = [self unarchiveObject: instance atCursor: cursor]; // also sets oid and registers instance and caches object
+					
+					OID oid = [instance oid];
+					NSAssert(CIDFromOID(oid) == cid, @"Problem with oid generation.");
+					if ([self objectRegisteredForOID: oid] != instance) {
+						NSAssert([self objectRegisteredForOID: oid] == instance, @"Object not properly registered.");
+					}
 					moveOk = [cursor moveToPrevious];
 					oidFound = [cursor currentEntryIntKey];
 				} while (moveOk && CIDFromOID(oidFound) == cid);

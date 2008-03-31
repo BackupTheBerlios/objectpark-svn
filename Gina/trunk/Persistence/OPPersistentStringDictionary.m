@@ -46,12 +46,7 @@
 
 - (NSUInteger) hash
 {
-	return LIDFromOID([self oid]);
-}
-
-- (BOOL) isEqual: (id) other
-{
-	return self == other;
+	return (NSUInteger)(LIDFromOID([self oid]) % NSUIntegerMax);
 }
 
 - (OPPersistentObjectContext*) context
@@ -94,6 +89,17 @@
 		}
 	}
 }
+
+
+- (BOOL) isEqual: (id) other
+{
+	if (![other respondsToSelector: @selector(oid)]) {
+		return NO;
+	}
+	
+	return [self oid] == [other oid];
+}
+
 
 + (BOOL) cachesAllObjects
 {
@@ -201,6 +207,11 @@
 		if (count!=NSNotFound) count++;
 		[self didChangeValueForKey: @"count"];
 	} 
+}
+
+- (BOOL) hasUnsavedChanges
+{
+	return [[[self context] changedObjects] containsObject: self];
 }
 
 - (NSString*) description

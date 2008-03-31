@@ -466,7 +466,7 @@ static GIProfile *defaultProfile = nil;
 	sendAccountOID = [coder decodeOIDForKey:@"sendAccount"];
 	messagesToSend = [coder decodeObjectForKey:@"messagesToSend"];
 
-	NSLog(@"%@ has messagesToSend: %@", self, messagesToSend);
+	//NSLog(@"%@ has messagesToSend: %@", self, messagesToSend);
 	
 	return self;
 }

@@ -55,6 +55,28 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	return [super mutableArrayValueForKey: key];
 }
 
+- (NSMutableArray *)mutableArrayValueForKeyPath:(NSString *)keyPath
+{
+	// Expect the mutable array to be changed:
+	[[self context] didChangeObject: self];
+	return [super mutableArrayValueForKeyPath: keyPath];
+}
+
+- (NSMutableSet *)mutableSetValueForKeyPath:(NSString *)keyPath
+{
+	// Expect the mutable array to be changed:
+	[[self context] didChangeObject: self];
+	return [super mutableSetValueForKeyPath: keyPath];
+}
+
+
+- (NSMutableSet*) mutableSetValueForKey: (NSString*) key
+{
+	// Expect the mutable array to be changed:
+	[[self context] didChangeObject: self];
+	return [super mutableSetValueForKey: key];
+}
+
 + (BOOL) cachesAllObjects
 /*" Default implementation - returns NO. Subclasses mey override. "*/
 {
@@ -204,7 +226,8 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 		if (oid != theOid) {
 			NSAssert(oid==0, @"Object ids can be set only once per instance.");
 			oid = theOid;
-			[[self context] registerObject: self];
+			OPPersistentObjectContext* c = [self context];
+			[c registerObject: self];
 		}
 	}
 }
