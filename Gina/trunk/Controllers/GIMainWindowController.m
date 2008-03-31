@@ -158,6 +158,9 @@
 	}
 }
 
+- (void)awakeFromNib
+{
+}
 
 - (void)windowDidLoad
 {
@@ -170,7 +173,7 @@
 	[threadMailSplitter setPositionAutosaveName:@"KFThreadMailSplitter"];
 	[verticalSplitter setPositionAutosaveName:@"KFVerticalSplitter"];
 	[mailTreeSplitter setPositionAutosaveName:@"KFMailTreeSplitter"];
-	
+
 	// configuring manual bindings:
 	NSDictionary *options = nil;
 	
@@ -216,7 +219,6 @@
 {
 	return [threadMailSplitter isSubviewCollapsed: mailTreeSplitter];
 }
-
 
 - (BOOL) isShowingMessageOnly
 {
