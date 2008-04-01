@@ -251,7 +251,7 @@
 {
 	[objectTree release];
 	sqlite3BtreeClose((Btree*) self); // releases, nulls the memory
-	// no missing dealloc call!
+	if (NO) [(id)super dealloc]; // keeping compiler happy
 }
 
 
@@ -588,7 +588,7 @@
 {
 	int error = sqlite3BtreeCloseCursor((BtCursor*) self);
 	NSAssert(error == SQLITE_OK, @"unable to close cursor.");
-	// no missing dealloc call
+	if (NO) [(id)super dealloc]; // keeping compiler happy
 }
 
 - (int) moveToLast
