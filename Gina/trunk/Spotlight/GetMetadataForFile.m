@@ -49,6 +49,21 @@ Boolean GetMetadataForFile(void *thisInterface,
 						   CFStringRef contentTypeUTI,
 						   CFStringRef pathToFile)
 {
+	static BOOL frameworksLoaded = NO;
+	if (! frameworksLoaded) {
+		
+		NSString* importerPath = [[NSBundle bundleWithIdentifier: @"org.objectpark.GinaMDImporter"] bundlePath];
+		NSString* applicationPath = [[[importerPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+		NSString* path1 = [applicationPath stringByAppendingPathComponent:@"/Frameworks/OPNetwork.framework"];
+		NSString* path2 = [applicationPath stringByAppendingPathComponent:@"/Frameworks/InternetMessage.framework"];
+
+		frameworksLoaded = [NSBundle bundleWithPath:path1] != nil;
+		frameworksLoaded &= [NSBundle bundleWithPath:path2] != nil;
+		NSLog(@"path1 = %@", path1);
+		NSLog(@"path2 = %@", path2);
+		assert(frameworksLoaded != NO);
+	}
+	
     /* Pull any available metadata from the file at the specified path */
     /* Return the attribute keys and attribute values in the dict */
     /* Return TRUE if successful, FALSE if there was no data provided */

@@ -211,11 +211,12 @@ typedef struct {
 - (void) unregisterObject: (id <OPPersisting>) object
 /*" Called by -[OPPersistentObject dealloc] to make sure we do not keep references to stale objects. "*/
 {
-    @synchronized((id)registeredObjects) {
-        NSHashRemove(registeredObjects, object);
-    }
-	
-	[instanceStatistic removeObject: [(NSObject*)object classForCoder]];
+	if ([object currentOID]) {
+		@synchronized((id)registeredObjects) {
+			NSHashRemove(registeredObjects, object);
+		}
+		[instanceStatistic removeObject: [(NSObject*)object classForCoder]];
+	}
 }
 
 - (id) objectRegisteredForOID: (OID) oid

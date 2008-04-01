@@ -297,6 +297,8 @@
 		8DD1B0260D82963B00E109BB /* MailboxViewSpacer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77F4F3B90D81BCC3008B0103 /* MailboxViewSpacer.tiff */; };
 		8DD1B0270D82963C00E109BB /* SplitterHandle.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 77F4F3BB0D81BD44008B0103 /* SplitterHandle.tiff */; };
 		8DD1B0280D82964400E109BB /* GIMessageGroupOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F3F10D81C7AD008B0103 /* GIMessageGroupOutlineViewController.m */; };
+		8DE95E7A0DA2CE7400EC1659 /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7761D9780D02FB8B0044E65A /* InternetMessage.framework */; };
+		8DE95E7B0DA2CE7900EC1659 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -791,6 +793,8 @@
 				7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */,
 				7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */,
 				8D82A4700D90189100C39ABF /* Foundation.framework in Frameworks */,
+				8DE95E7A0DA2CE7400EC1659 /* InternetMessage.framework in Frameworks */,
+				8DE95E7B0DA2CE7900EC1659 /* OPNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2444,6 +2448,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/build/Debug\"",
+					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -2454,7 +2459,12 @@
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "GinaSpotlight-Info.plist";
 				INSTALL_PATH = /Library/Spotlight;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					InternetMessage,
+					"-weak_framework",
+					OPNetwork,
+				);
 				PREBINDING = YES;
 				PRODUCT_NAME = GinaSpotlight;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
@@ -2471,6 +2481,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/build/Debug\"",
+					"\"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\"",
 				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
@@ -2479,10 +2490,10 @@
 				INFOPLIST_FILE = "GinaSpotlight-Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Bundles";
 				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
+					"-weak_framework",
+					InternetMessage,
+					"-weak_framework",
+					OPNetwork,
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = GinaSpotlight;
