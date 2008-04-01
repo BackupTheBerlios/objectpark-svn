@@ -95,7 +95,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	// ensure a main window:
 	for (NSWindow *window in [self windows])
 	{
-		if ([[window delegate] isKindOfClass:[GIMainWindowController class]])
+		if ([[window windowController] isKindOfClass:[GIMainWindowController class]])
 		{
 			return;
 		}
@@ -146,7 +146,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[context saveChanges];
 }
 
-- (void) finishLaunching 
+- (void)finishLaunching 
 {
 	registerDefaultDefaults();
 	[super finishLaunching];

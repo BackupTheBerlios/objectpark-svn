@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "KFSplitView.h"
 
-@interface GISplitView : KFSplitView 
+@interface GISplitView : NSSplitView 
 {
 	CGFloat dividerThickness;
 }
