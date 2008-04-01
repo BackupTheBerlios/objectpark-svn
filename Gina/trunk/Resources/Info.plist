@@ -29,6 +29,10 @@
 			<array>
 				<string>gml</string>
 			</array>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>message/rfc822</string>
+			</array>
 			<key>CFBundleTypeName</key>
 			<string>Gina Message</string>
 			<key>CFBundleTypeRole</key>
@@ -58,7 +62,7 @@
 	<key>CFBundleSignature</key>
 	<string>GINA</string>
 	<key>CFBundleVersion</key>
-	<string>0.1</string>
+	<string>0.2</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
@@ -66,12 +70,16 @@
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.objectpark.org</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.message</string>
+				<string>public.data</string>
+				<string>public.content</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Ginko Message Format</string>
+			<string>Gina Message Format</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.objectpark.ginamessage</string>
 			<key>UTTypeTagSpecification</key>

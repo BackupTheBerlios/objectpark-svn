@@ -17,6 +17,8 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Gina Mail Importer by Objectpark Group</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
@@ -24,7 +26,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
+	<string>Gina Mail Importer</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
@@ -45,5 +47,27 @@
 	</dict>
 	<key>CFPlugInUnloadFunction</key>
 	<string></string>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.message</string>
+				<string>public.data</string>
+				<string>public.content</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gina Message Format</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.objectpark.ginamessage</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gml</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
