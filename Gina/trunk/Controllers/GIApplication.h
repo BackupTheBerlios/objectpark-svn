@@ -18,6 +18,7 @@
 }
 
 - (GIMainWindow*) mainWindow;
+- (NSString *)documentPath;
 
 - (BOOL)isDefaultMailApplication;
 - (void)askForBecomingDefaultMailApplication;

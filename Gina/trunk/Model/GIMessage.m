@@ -805,7 +805,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	static NSString* result = nil;
 	if (result == nil) {
-		result = [[[GIApp applicationSupportPath] stringByAppendingPathComponent:@"TransferData"] retain];
+		result = [[[GIApp documentPath] stringByAppendingPathComponent:@"TransferData"] retain];
 		NSFileManager* fm = [NSFileManager defaultManager];
 		if (! [fm fileExistsAtPath: result isDirectory: NULL]) {
 			NSLog(@"Trying to create folder '%@'.", result);	

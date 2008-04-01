@@ -50,7 +50,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	// Will be called multiple times, so guard against that:
 	if (! [OPPersistentObjectContext defaultContext]) {
 		// Setting up persistence:
-		NSString *databasePath = [[self applicationSupportPath] stringByAppendingPathComponent:@"Gina.btrees"];
+		NSString *databasePath = [[self documentPath] stringByAppendingPathComponent:@"Gina.btrees"];
 		OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
 		[OPPersistentObjectContext setDefaultContext:context];
 
@@ -116,10 +116,33 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	}
 }
 
+- (NSString *)documentPath
+/*" Ensures that the receivers Application Support folder is in place and returns the path. "*/
+{
+    static NSString *path = nil;
+	
+    if (! path) 
+    {
+        NSString *identifier = [[[NSBundle mainBundle] bundleIdentifier] pathExtension];
+        //processName = [[NSProcessInfo processInfo] processName];
+        path = [[[NSHomeDirectory() stringByAppendingPathComponent: @"Documents"]  stringByAppendingPathComponent:identifier] retain];
+		
+        if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) 
+        {
+            if (! [[NSFileManager defaultManager] createDirectoryAtPath:path attributes: nil]) 
+            {
+                [NSException raise:NSGenericException format: @"Gina's Application Support folder could not be created!"];
+            }
+        }
+    }
+	
+    return path;
+}
+
 - (void) importFromImportFolder: (NSNotification*) notification
 {
 	unsigned importCount = 0;
-	NSString *importPath = [[NSApp applicationSupportPath] stringByAppendingPathComponent:@"TransferData to import"];
+	NSString *importPath = [[NSApp documentPath] stringByAppendingPathComponent:@"TransferData to import"];
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 
 	NSDirectoryEnumerator* e = [[NSFileManager defaultManager] enumeratorAtPath: importPath];
