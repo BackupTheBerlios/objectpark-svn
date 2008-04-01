@@ -83,7 +83,7 @@
 
 - (OPFaultingArray *)children
 {
-	NSLog(@"Requesting children of %@", self);
+//	NSLog(@"Requesting children of %@", self);
 	return children;
 }
 

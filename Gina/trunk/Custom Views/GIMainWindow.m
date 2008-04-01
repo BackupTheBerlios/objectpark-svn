@@ -32,4 +32,23 @@
 	[super dealloc];
 }
 
+//- (NSSize)windowWillResize:(NSWindow *)window toSize:(NSSize)proposedFrameSize
+//{
+//	return [self.delegate windowWillResize: window toSize:proposedFrameSize];
+//}
+//
+//
+//- (BOOL)setFrameUsingName:(NSString *)name force:(BOOL)force
+//{
+//	return [super setFrameUsingName: name force:force];
+//}
+//
+//- (BOOL)setFrameUsingName:(NSString *)name 
+//{
+//	NSString* framePos = [[NSUserDefaults standardUserDefaults] stringForKey: [@"NSWindow Frame " stringByAppendingString: name]];
+//	NSRect frameRect = NSRectFromString(framePos);
+//	return [super setFrameUsingName: name];
+//}
+
+
 @end

@@ -12,8 +12,6 @@
 @interface GISeparatorButton : NSImageView 
 {
 	IBOutlet NSSplitView *splitView;
-	CGFloat minWidthSubview1;
-	CGFloat minWidthSubview2;
 	NSPoint dragOffset;
 }
 

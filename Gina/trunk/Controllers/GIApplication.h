@@ -7,15 +7,17 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class GIMainWindow;
 
 #define GIApp ((GIApplication *)NSApp)
 
 @interface GIApplication : NSApplication 
 {
-	IBOutlet NSWindow *defaultEmailAppWindow;
+	IBOutlet NSWindow *defaultEmailAppDialog;
 	NSTimer* importTimer;
 }
 
+- (GIMainWindow*) mainWindow;
 
 - (BOOL)isDefaultMailApplication;
 - (void)askForBecomingDefaultMailApplication;

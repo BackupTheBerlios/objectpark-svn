@@ -306,6 +306,7 @@ typedef struct {
 {
 	NSAssert(rootObjectOIDs != nil, @"Root object oid table not set up");
 	NSNumber* oidNumber = [NSNumber numberWithUnsignedLongLong: [pObject oid]];
+	[self insertObject: pObject];
 	// Check, if we are indeed changing the value:
 	if (! [[rootObjectOIDs objectForKey: key] isEqual: oidNumber]) {
 //		if (! rootObjectOIDs) {

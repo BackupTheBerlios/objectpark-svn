@@ -62,6 +62,12 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	}
 }
 
+//- (void) windowDidMove: (NSNotification*) n
+//{
+//	NSLog(@"Window Moved.");
+//}
+
+
 - (BOOL)isDefaultMailApplication
 {
 	NSString *defaultMailAppBundleIdentifier = (NSString *)LSCopyDefaultHandlerForURLScheme((CFStringRef)@"mailto");
@@ -79,29 +85,35 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	{		
 		if (![self isDefaultMailApplication])
 		{
-			if (!defaultEmailAppWindow)
+			if (!defaultEmailAppDialog)
 			{
 				[NSBundle loadNibNamed:@"DefaultEmailApp" owner:self];
 			}
 			
-			[defaultEmailAppWindow center];
-			[defaultEmailAppWindow makeKeyAndOrderFront:self];
+			[defaultEmailAppDialog center];
+			[defaultEmailAppDialog makeKeyAndOrderFront:self];
 		}		
 	}
+}
+
+- (GIMainWindow*) mainWindow
+{
+	for (NSWindow *window in [self windows])
+	{
+		if ([[window windowController] isKindOfClass:[GIMainWindowController class]])
+		{
+			return (GIMainWindow*)window;
+		}
+	}
+	return nil;
 }
 
 - (void)ensureMainWindowIsPresent
 {
 	// ensure a main window:
-	for (NSWindow *window in [self windows])
-	{
-		if ([[window windowController] isKindOfClass:[GIMainWindowController class]])
-		{
-			return;
-		}
+	if (! self.mainWindow) {
+		[[[GIMainWindowController alloc] init] autorelease];
 	}
-	
-	[[[GIMainWindowController alloc] init] autorelease];
 }
 
 - (void) importFromImportFolder: (NSNotification*) notification
@@ -162,7 +174,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 - (IBAction)makeDefaultApp:(id)sender
 {
 	LSSetDefaultHandlerForURLScheme((CFStringRef)@"mailto", (CFStringRef)[[[NSBundle mainBundle] bundleIdentifier] lowercaseString]);
-	[defaultEmailAppWindow close];
+	[defaultEmailAppDialog close];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
@@ -283,15 +295,18 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];	
+	
+	GIMainWindowController* windowController = self.mainWindow.windowController;
+	
 	if (gmls.count) {
 		NSArray* messages = [context importGmlFiles: gmls moveOnSuccess: NO];	
 		GIMessage* lastMessage = [messages lastObject];
-		[defaultEmailAppWindow.windowController showMessage: lastMessage];
+		[windowController showMessage: lastMessage];
 	}
 	if (mboxPaths.count) {
 		NSArray* importGroups = [context importMboxFiles: mboxPaths moveOnSuccess: NO];
 		
-		[[defaultEmailAppWindow.windowController messageGroupsController] setSelectedObjects: importGroups];
+		[[windowController messageGroupsController] setSelectedObjects: importGroups];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
 }

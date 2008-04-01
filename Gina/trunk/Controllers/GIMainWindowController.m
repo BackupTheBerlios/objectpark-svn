@@ -662,9 +662,10 @@
 
 - (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset
 {
-	if (sender == threadMailSplitter)
-	{
+	if (sender == threadMailSplitter) {
 		return 17.0;
+	} else if (sender == verticalSplitter) {
+		return offset == 0 ? 120.0 : 320.0;
 	}
 	return proposedMin;
 }

@@ -16,15 +16,22 @@
 	[self addCursorRect:[self bounds] cursor:[NSCursor resizeLeftRightCursor]];
 }
 
-- (void)setMinWidthSubview1:(CGFloat)aWidth
+- (CGFloat) minWidthSubview1
 {
-	minWidthSubview1 = aWidth;
+	if ([splitView.delegate respondsToSelector: @selector(splitView:constrainMinCoordinate:ofSubviewAt:)]) {
+		return [splitView.delegate splitView: splitView constrainMinCoordinate: 0.0 ofSubviewAt: 0];
+	}
+	return 0.0;
 }
 
-- (void) setMinWidthSubview2:(CGFloat)aWidth
+- (CGFloat) minWidthSubview2
 {
-	minWidthSubview2 = aWidth;
+	if ([splitView.delegate respondsToSelector: @selector(splitView:constrainMinCoordinate:ofSubviewAt:)]) {
+		return [splitView.delegate splitView: splitView constrainMinCoordinate: 0.0 ofSubviewAt: 1];
+	}
+	return 0.0;
 }
+
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
@@ -72,16 +79,16 @@
 	frame1.size.width += deltaX;
 	frame2.size.width -= deltaX;
 	
-	if (frame1.size.width < minWidthSubview1) 
+	if (frame1.size.width < self.minWidthSubview1) 
 	{
-		frame1.size.width = minWidthSubview1;
-		frame2.size.width = [splitView bounds].size.width - minWidthSubview1 - [splitView dividerThickness];
+		frame1.size.width = self.minWidthSubview1;
+		frame2.size.width = [splitView bounds].size.width - self.minWidthSubview1 - [splitView dividerThickness];
 	}
 	
-	if (frame2.size.width < minWidthSubview2) 
+	if (frame2.size.width < self.minWidthSubview2) 
 	{
-		frame2.size.width = minWidthSubview2;
-		frame1.size.width = [splitView bounds].size.width - minWidthSubview2 - [splitView dividerThickness];
+		frame2.size.width = self.minWidthSubview2;
+		frame1.size.width = [splitView bounds].size.width - self.minWidthSubview2 - [splitView dividerThickness];
 	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NSSplitViewWillResizeSubviewsNotification object:splitView];
