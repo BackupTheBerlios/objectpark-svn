@@ -4,6 +4,7 @@
 #import <InternetMessage/OPInternetMessage.h>
 #import <InternetMessage/EDMessagePart+OPExtensions.h>
 #import <InternetMessage/EDTextFieldCoder.h>
+#import "NSString+MessageUtils.h"
 
 /* -----------------------------------------------------------------------------
  Step 1
