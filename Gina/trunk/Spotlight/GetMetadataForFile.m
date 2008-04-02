@@ -83,6 +83,8 @@ Boolean GetMetadataForFile(void *thisInterface,
 	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemHeadline];
 	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemDescription];
 	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemFSName];
+//	[(NSMutableDictionary *)attributes setObject:[NSArray arrayWithObject:originalSubject] forKey:(NSString *)kMDItemAlternateNames];
+	
 	
 	NSString *textContent = [message contentAsPlainString];
 	[(NSMutableDictionary*)attributes setObject:textContent forKey:(id)kMDItemTextContent];
