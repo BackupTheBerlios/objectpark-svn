@@ -25,7 +25,6 @@
 #import "OPInternetMessage.h"
 
 @class OPMessageAccount;
-@class OPObjectPair;
 
 @interface OPInternetMessage (GinkoExtensions)
 

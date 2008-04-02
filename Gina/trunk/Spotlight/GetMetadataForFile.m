@@ -78,20 +78,33 @@ Boolean GetMetadataForFile(void *thisInterface,
 	assert(message != nil);
 	
 	NSString *originalSubject = [message originalSubject];
-	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemTitle];
-	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemDisplayName];
-	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemHeadline];
-	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemDescription];
-	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemFSName];
-//	[(NSMutableDictionary *)attributes setObject:[NSArray arrayWithObject:originalSubject] forKey:(NSString *)kMDItemAlternateNames];
-	
+	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemSubject];
+	[(NSMutableDictionary *)attributes setObject:originalSubject forKey:(NSString *)kMDItemDisplayName];	
 	
 	NSString *textContent = [message contentAsPlainString];
-	[(NSMutableDictionary*)attributes setObject:textContent forKey:(id)kMDItemTextContent];
+	if (textContent) [(NSMutableDictionary*)attributes setObject:textContent forKey:(id)kMDItemTextContent];
 	
-	NSString *author = [[EDTextFieldCoder decoderWithFieldBody:[message bodyForHeaderField:@"from"]] text];
-	[(NSMutableDictionary *)attributes setObject:[NSArray arrayWithObject:author] forKey:(NSString *)kMDItemAuthors];
+	NSString *author = [message author];
+	if (author) [(NSMutableDictionary *)attributes setObject:[NSArray arrayWithObject:author] forKey:(NSString *)kMDItemAuthors];
 
+	NSArray *authorEmailAddresses = [[[EDTextFieldCoder decoderWithFieldBody:[message bodyForHeaderField:@"from"]] text] addressListFromEMailString];
+	if (authorEmailAddresses) [(NSMutableDictionary *)attributes setObject:authorEmailAddresses forKey:(NSString *)kMDItemAuthorEmailAddresses];
+
+	NSDate *date = [message date];
+	if (date) 
+	{
+		[(NSMutableDictionary *)attributes setObject:date forKey:(NSString *)kMDItemContentCreationDate];
+		[(NSMutableDictionary *)attributes setObject:date forKey:(NSString *)kMDItemLastUsedDate];
+	}
+	
+	/*
+	NSArray *recipients = [message realnameListFromAllRecipients];
+	if (recipients) [(NSMutableDictionary *)attributes setObject:recipients forKey:(NSString *)kMDItemRecipients];
+	
+	NSArray *recipientEmailAddresses = [message addressListFromAllRecipients];
+	if (recipientEmailAddresses) [(NSMutableDictionary *)attributes setObject:recipientEmailAddresses forKey:(NSString *)kMDItemRecipientEmailAddresses];
+	*/
+	
 	NSString *messageId = [message bodyForHeaderField:@"message-id"];
 	[(NSMutableDictionary *)attributes setObject:messageId forKey:(NSString *)kMDItemIdentifier];
 
