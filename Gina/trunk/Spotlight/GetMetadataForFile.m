@@ -98,13 +98,14 @@ Boolean GetMetadataForFile(void *thisInterface,
 		[(NSMutableDictionary *)attributes setObject:date forKey:(NSString *)kMDItemLastUsedDate];
 	}
 	
-	/*
-	NSArray *recipients = [message realnameListFromAllRecipients];
-	if (recipients) [(NSMutableDictionary *)attributes setObject:recipients forKey:(NSString *)kMDItemRecipients];
+	NSString *allRecipients = [message allRecipientsWithFallback:NO];
+//	NSLog(@"recipients = %@", allRecipients);
 	
-	NSArray *recipientEmailAddresses = [message addressListFromAllRecipients];
-	if (recipientEmailAddresses) [(NSMutableDictionary *)attributes setObject:recipientEmailAddresses forKey:(NSString *)kMDItemRecipientEmailAddresses];
-	*/
+	NSArray *recipients = [allRecipients realnameListFromEMailString];
+	if (recipients.count) [(NSMutableDictionary *)attributes setObject:recipients forKey:(NSString *)kMDItemRecipients];
+	
+	NSArray *recipientEmailAddresses = [allRecipients addressListFromEMailString];
+	if (recipientEmailAddresses.count) [(NSMutableDictionary *)attributes setObject:recipientEmailAddresses forKey:(NSString *)kMDItemRecipientEmailAddresses];
 	
 	NSString *messageId = [message bodyForHeaderField:@"message-id"];
 	[(NSMutableDictionary *)attributes setObject:messageId forKey:(NSString *)kMDItemIdentifier];

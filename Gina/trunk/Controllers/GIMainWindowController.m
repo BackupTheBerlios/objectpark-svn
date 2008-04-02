@@ -215,14 +215,14 @@
 	}
 }
 
-- (BOOL) isShowingThreadsOnly
+- (BOOL)isShowingThreadsOnly
 {
-	return [threadMailSplitter isSubviewCollapsed: mailTreeSplitter];
+	return [threadMailSplitter isSubviewCollapsed:mailTreeSplitter];
 }
 
-- (BOOL) isShowingMessageOnly
+- (BOOL)isShowingMessageOnly
 {
-	BOOL result = [threadMailSplitter isSubviewCollapsed: threadsOutlineView];
+	BOOL result = [threadMailSplitter isSubviewCollapsed:threadsOutlineView];
 	return result;
 }
 
@@ -270,12 +270,13 @@
 }
 
 // -- handling message tree view selection --
-- (IBAction) commentTreeSelectionChanged: (id) sender
+- (IBAction)commentTreeSelectionChanged:(id)sender
 {
-	GIMessage* message = [commentTreeView selectedMessage];
+	GIMessage *message = [commentTreeView selectedMessage];
 	
-	if (message) {
-		[self showMessage: message];
+	if (message) 
+	{
+		[self showMessage:message];
 	}
 }
 
@@ -363,7 +364,7 @@
 {
     GIMessage *message = [self selectedMessage];
 	
-    [[[GIMessageEditorController alloc] initForward:message profile: [self profileForMessage:message]] autorelease];
+    [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
 }
 
 - (IBAction)rename:(id)sender
@@ -477,7 +478,12 @@
 	[self addNew:[GIHierarchyNode class] withName:@"New Folder"];
 }
 
-- (void) showMessage: (GIMessage*) message
+- (IBAction)debug:(id)sender
+{
+	NSLog(@"to = %@", [[[self selectedMessage] internetMessage] toWithFallback:NO]);
+}
+
+- (void) showMessage:(GIMessage*) message
 /*" Tries to show the message given. Selects any group the thread is in. "*/
 {
 	GIMessageGroup* group = message.thread.messageGroups.lastObject;

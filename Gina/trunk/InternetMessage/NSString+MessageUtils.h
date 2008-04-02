@@ -36,6 +36,7 @@ extern NSString *OPAttachmentPathAttribute;
 - (NSString *)stringByRemovingBracketComments;
 
 - (NSString *)realnameFromEMailString;
+- (NSArray *)realnameListFromEMailString;
 - (NSString *)addressFromEMailString;
 - (NSArray *)addressListFromEMailString;
 

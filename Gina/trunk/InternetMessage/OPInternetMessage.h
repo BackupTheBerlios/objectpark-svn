@@ -54,6 +54,8 @@ typedef enum
 - (NSString *)ccWithFallback:(BOOL)fallback;
 - (NSString *)bccWithFallback:(BOOL)fallback;
 
+- (NSString *)allRecipientsWithFallback:(BOOL)fallback;
+
 - (NSString *)normalizedSubject;
 
 @end

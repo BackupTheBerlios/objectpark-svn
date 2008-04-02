@@ -152,30 +152,63 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
                                      withFallback:YES] sharedInstance];
 }
 
-
-- (NSString*) normalizedSubject
-    /*" Makes a best effort to generate a nice subject, suitable for display and threading.
-    Removes reply-prefixes etc. "*/
+- (NSString *)allRecipientsWithFallback:(BOOL)fallback
 {
-    NSString* subj;
+	NSString *to = [self toWithFallback:fallback];
+	NSString *cc = [self ccWithFallback:fallback];
+	NSString *bcc = [self bccWithFallback:fallback];
+	
+	id result = [NSMutableString string];
+	
+	if ([to length])
+	{
+		[result appendString:to];
+		[result appendString:@", "];
+	}
+	
+	if ([cc length])
+	{
+		[result appendString:cc];
+		[result appendString:@", "];
+	}
+	
+	if ([bcc length])
+	{
+		[result appendString:bcc];
+	}
+	
+	if ([result hasSuffix:@", "])
+	{
+		// cut off the last two chars:
+		result = [result substringToIndex:[result length] - 2];
+	}
+	
+	return result;
+}
+
+/*" Makes a best effort to generate a nice subject, suitable for display and threading.
+ Removes reply-prefixes etc. "*/
+- (NSString *)normalizedSubject
+{
+    NSString *subj;
     NSRange oldSubjRange;
     
     NS_DURING
         subj = [self originalSubject];
         subj = [subj stringByRemovingSurroundingWhitespace];
-        if ([subj hasSuffix: @")"])
+        if ([subj hasSuffix:@")"])
         {
             // english version
-            oldSubjRange = [subj rangeOfString: @"(was:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
+            oldSubjRange = [subj rangeOfString:@"(was:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
             if (oldSubjRange.location == NSNotFound)
                 // german version
-                oldSubjRange = [subj rangeOfString: @"(war:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
+                oldSubjRange = [subj rangeOfString:@"(war:" options:NSLiteralSearch|NSCaseInsensitiveSearch];
             
             if (oldSubjRange.location != NSNotFound)
                 subj = [subj substringToIndex:oldSubjRange.location];
         }
 	NS_HANDLER
-            subj = [self bodyForHeaderField: @"subject"];
+            subj = [self bodyForHeaderField:@"subject"];
 	NS_ENDHANDLER
         
     NSArray *junkPrefixes = [[NSUserDefaults standardUserDefaults] objectForKey:@"JunkReplySubjectPrefixes"];

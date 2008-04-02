@@ -1473,6 +1473,30 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
      */
 }
 
+- (NSArray *)realnameListFromEMailString 
+{
+    NSEnumerator *enumerator;
+    NSString *field;
+    NSMutableArray *result;
+    
+    result = [NSMutableArray array];
+    
+    enumerator = [[self fieldListFromEMailString] objectEnumerator];
+    
+    while (field = [enumerator nextObject])
+    {
+        field = [field stringByRemovingSurroundingWhitespace];
+        field = [field realnameFromEMailStringWithFallback];
+        
+        if ([field length])
+        {
+            [result addObject:field];
+        }
+    }
+    
+    return result;
+}
+
 - (NSString *)stringByWrappingToSoftLimit:(unsigned int)length
 /*" Returns a wrapped version of the receiver to the soft limit. Soft limit means that the string can only be wrapped on whitespaces. "*/
 {
