@@ -14,6 +14,7 @@
 @interface GIThreadOutlineViewController : OPOutlineViewController 
 {
 	BOOL suspendUpdatesUntilNextReloadData;
+	BOOL selectionRestoreInProgress;
 }
 
 @property BOOL suspendUpdatesUntilNextReloadData;

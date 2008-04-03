@@ -414,10 +414,10 @@
 	return result;
 }
 
-//- (void) setSelectedObjects: (NSArray*) anArray
-//{	
-//	[outlineView deselectAll:self];
-//	
+- (void) setSelectedObjects: (NSArray*) anArray
+{	
+	NSBeep();
+	
 //	if (anArray.count) {
 //		NSUInteger row;
 //		NSMutableIndexSet *indexesToSelect = [NSMutableIndexSet indexSet];
@@ -431,7 +431,7 @@
 //		
 //		//[outlineView scrollRowToVisible: row];
 //	}
-//}
+}
 
 - (NSUInteger) rowForItemPath: (NSArray*) path
 /*" Also expands the items in the given path as necessary. "*/

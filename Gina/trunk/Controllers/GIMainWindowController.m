@@ -735,7 +735,7 @@ static BOOL isShowingThreadsOnly = NO;
 	}
 	else
 	{
-		NSLog(@"NOT collapsed. Ignoring");
+		//NSLog(@"NOT collapsed. Ignoring");
 	}
 }
 

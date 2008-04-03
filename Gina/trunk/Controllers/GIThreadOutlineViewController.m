@@ -485,24 +485,22 @@ NSDateFormatter *timeAndDateFormatter()
 //	[self setCachesItems: YES];	
 //}
 
-- (void)restoreSelectionForMessageGroup:(GIMessageGroup *)aGroup
+- (void) restoreSelectionForMessageGroup: (GIMessageGroup*) aGroup
 {
-	if (!aGroup || ![aGroup isKindOfClass:[GIMessageGroup class]]) return;
-	
+	if (!aGroup || ![aGroup isKindOfClass: [GIMessageGroup class]]) return;
+		
 	// restore selection for message group (root item):
 	NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)aGroup oid]];
 	NSArray *oidsOfSelectedObjects = [[NSUserDefaults standardUserDefaults] objectForKey:groupSelectionDefaultKey];
 	
-	NSUInteger openThreadOffset = 0;
-	NSMutableIndexSet *rowIndexesToSelect = [NSMutableIndexSet indexSet];
-	
-	for (NSNumber *oidNumber in oidsOfSelectedObjects) {			
-		OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
+	NSMutableArray* itemPaths = [NSMutableArray arrayWithCapacity: oidsOfSelectedObjects.count];
+	for (NSNumber* oidNumber in oidsOfSelectedObjects) {			
+		OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID: [oidNumber OIDValue]];
 		if (selectedObject) {
 			GIMessage *message = nil;
 			GIThread *thread = nil;
 			
-			if ([selectedObject isKindOfClass:[GIMessage class]]) {
+			if ([selectedObject isKindOfClass: [GIMessage class]]) {
 				message = (GIMessage *)selectedObject;
 				if ([message.thread messageCount] < 1)  message = nil;
 				thread = message.thread;
@@ -510,66 +508,18 @@ NSDateFormatter *timeAndDateFormatter()
 				thread = (GIThread *)selectedObject;
 			}
 			// thread is now set
-			NSInteger messageOffset = 0;
-			
-			if (message) {
-				NSUInteger threadRow = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread];
-				
-				if (threadRow == NSNotFound)
-					continue;
-				threadRow += openThreadOffset;
-				
-				// make sure thread is expanded:
-				if (! [outlineView isItemExpandedAtRow: threadRow]) {			
-					//NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread] + openThreadOffset;
-					
-					//					[outlineView reloadItem:thread reloadChildren:NO];
-					//					[outlineView selectRow:indexOfThread byExtendingSelection:NO];
-					[outlineView expandItemAtRow: threadRow expandChildren: NO];
-					
-					//[outlineView expandItem:thread expandChildren:NO];
-					openThreadOffset += [thread messageCount];
-				}
-				messageOffset = ([[thread messagesByTree] indexOfObject:message] - [thread messageCount]) + 1;
-			}
-			
-			NSUInteger indexOfThread = [(OPPersistentSetArray *)[(OPPersistentSet *)[(GIMessageGroup *)[self rootItem] threads] sortedArray] indexOfObjectIdenticalTo: thread];
-			if (indexOfThread != NSNotFound) {
-				indexOfThread += openThreadOffset;
-				[rowIndexesToSelect addIndex:indexOfThread + messageOffset];
-			}
+			NSArray* itemPath = message ? [NSArray arrayWithObjects: thread, message, nil] : [NSArray arrayWithObject: thread];
+			[itemPaths addObject: itemPath];
+
 		} else {
 			NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
 		}
 	}
-
-	if ([rowIndexesToSelect count])
-	{
-		[outlineView selectRowIndexes:rowIndexesToSelect byExtendingSelection:NO];
-		[outlineView scrollRowToVisible:[rowIndexesToSelect lastIndex]];
-	}
 	
-//	for (NSNumber *oidNumber in oidsOfSelectedObjects)
-//	{
-//		OPPersistentObject *selectedObject = [[OPPersistentObjectContext defaultContext] objectForOID:[oidNumber OIDValue]];
-//		
-//		if (selectedObject)
-//		{
-//			[selectedObjects addObject:selectedObject];
-//			
-//			if ([selectedObject isKindOfClass:[GIMessage class]])
-//			{
-//				// make sure thread is expanded:
-//				[outlineView expandItem:[(GIMessage *)selectedObject thread] expandChildren:NO];
-//			}
-//		}
-//		else
-//		{
-//			NSLog(@"warning could not retrieve object with OID: 0x%llx", [oidNumber OIDValue]);
-//		}
-//	}
-//	
-//	self.selectedObjects = selectedObjects;
+	selectionRestoreInProgress = YES; // prevent items to be stored again:
+	[self setSelectedItemsPaths: itemPaths byExtendingSelection: NO];
+	selectionRestoreInProgress = NO;
+
 }
 
 - (void)reloadData
@@ -583,6 +533,8 @@ NSDateFormatter *timeAndDateFormatter()
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	[super outlineViewSelectionDidChange:notification];
+	
+	if ( selectionRestoreInProgress) return;
 	
 	if (outlineView.dataSource && [self.rootItem isKindOfClass: [OPPersistentObject class]]) {
 		// remember selection for messsage group (root item):
@@ -598,6 +550,7 @@ NSDateFormatter *timeAndDateFormatter()
 		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)self.rootItem oid]];
 		[[NSUserDefaults standardUserDefaults] setObject: oidsOfSelectedObjects forKey: groupSelectionDefaultKey];
 	}
+	
 }
 
 /*" Changes the text color to white, if the cell's background is darkish. "*/

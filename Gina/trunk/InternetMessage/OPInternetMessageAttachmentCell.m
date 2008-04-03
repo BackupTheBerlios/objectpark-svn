@@ -31,7 +31,7 @@ NSString *bytes2Display(unsigned int bytes)
     double result;
     
     if (bytes < 1024) {
-        unit = @"B";
+        unit = @"Byte";
         result = bytes;
     }
     else if (bytes < 1048525) {   // 1023.95 KB

@@ -7,7 +7,7 @@
 //
 
 #import "GIApplication.h"
-#import "OPPersistentObjectContext.h";
+#import "OPPersistentObjectContext.h"
 #import "GIUserDefaultsKeys.h"
 #import "GIMainWindowController.h"
 #import "GIMessage.h"
@@ -21,6 +21,7 @@
 #import "GIProfile.h"
 #import "GISMTPOperation.h"
 #import "GIAccount.h"
+#import "GIMessageGroupOutlineViewController.h"
 
 NSString *GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
 NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNotification";
@@ -329,7 +330,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	if (mboxPaths.count) {
 		NSArray* importGroups = [context importMboxFiles: mboxPaths moveOnSuccess: NO];
 		
-		[[windowController messageGroupsController] setSelectedObjects: importGroups];
+		[[windowController messageGroupsController] setSelectedItemsPaths: [NSArray arrayWithObject:[NSArray arrayWithObject:[importGroups lastObject]]] byExtendingSelection: NO];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
 }
