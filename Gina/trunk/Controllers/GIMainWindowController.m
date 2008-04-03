@@ -487,6 +487,7 @@
 /*" Tries to show the message given. Selects any group the thread is in. "*/
 {
 	GIMessageGroup* group = message.thread.messageGroups.lastObject;
+	// Todo: Do not show a message in the allThreads group!
 	if (group) {
 		// select group:
 		[messageGroupsController setSelectedItemsPaths: [NSArray arrayWithObject: [NSArray arrayWithObject: group]] byExtendingSelection: NO];

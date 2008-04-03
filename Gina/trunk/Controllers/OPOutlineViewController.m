@@ -447,7 +447,7 @@
 			if (row == NSNotFound) 
 				break;
 			
-			row+=1; // adds one in order to skip the container item
+			//row+=1; // adds one in order to skip the container item
 			while (row < [outlineView numberOfRows] && [outlineView itemAtRow: row] != item) {
 				row += 1;
 			}
@@ -469,24 +469,28 @@
 - (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend
 /*" Tries to set the selection to the item paths given as an array of arrays. "*/
 {
-	
-	[self willChangeValueForKey: @"selectedItems"];
-	for (NSArray* path in itemPaths) {
-		NSInteger row = [self rowForItemPath: path];
-		if (row != NSNotFound) {
-			[outlineView selectRow: row byExtendingSelection: extend];
-			extend = YES;
+	if (itemPaths.count) {
+		NSInteger row = NSNotFound;
+		NSLog(@"%@ selecting items at paths: %@", self, itemPaths);
+		[self willChangeValueForKey: @"selectedItems"];
+		for (NSArray* path in itemPaths) {
+			row = [self rowForItemPath: path];
+			if (row != NSNotFound) {
+				//[outlineView selectRow: row byExtendingSelection: extend]; // deprecated
+				[outlineView selectRowIndexes: [NSIndexSet indexSetWithIndex: row] byExtendingSelection: extend];
+				NSIndexSet*	selection = [outlineView selectedRowIndexes];
+				NSAssert([selection containsIndex: row], @"row not selected");
+				extend = YES;
+			}
 		}
+		
+		// scroll to last entry:
+		if (row != NSNotFound) {
+			[outlineView scrollRowToVisible: row];
+		}	
+		[self didChangeValueForKey: @"selectedItems"];
 	}
 	
-	// scroll to last entry:
-	if (itemPaths.count)
-	{
-		NSInteger visibleRow = [self rowForItemPath:[itemPaths lastObject]];
-		[outlineView scrollRowToVisible:visibleRow];
-	}
-	
-	[self didChangeValueForKey: @"selectedItems"];
 }
 
 //- (void) setSelectedObject: (id) object
