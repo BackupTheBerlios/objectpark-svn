@@ -42,6 +42,7 @@
 			8D8F7E5E0DA2189C00CB7923 /* -[NSWindow setFrame:] */,
 			8D8F7F190DA2393700CB7923 /* GIApplication.m:66 */,
 			8DE960680DA4E6FB00EC1659 /* OPOutlineViewController.m:419 */,
+			8DE9609C0DA5027100EC1659 /* GIMessageEditorController.m:1365 */,
 		);
 		codeSenseManager = 8DA22F700D04CDE600D24EBA /* Code sense */;
 		executables = (
@@ -507,6 +508,9 @@
 			8DE960940DA4E97100EC1659 /* PBXTextBookmark */ = 8DE960940DA4E97100EC1659 /* PBXTextBookmark */;
 			8DE960950DA4E97100EC1659 /* PBXTextBookmark */ = 8DE960950DA4E97100EC1659 /* PBXTextBookmark */;
 			8DE960960DA4E97100EC1659 /* PBXTextBookmark */ = 8DE960960DA4E97100EC1659 /* PBXTextBookmark */;
+			8DE960980DA4E9F200EC1659 /* PBXTextBookmark */ = 8DE960980DA4E9F200EC1659 /* PBXTextBookmark */;
+			8DE9609D0DA5027500EC1659 /* PBXTextBookmark */ = 8DE9609D0DA5027500EC1659 /* PBXTextBookmark */;
+			8DE960A10DA5074800EC1659 /* PBXTextBookmark */ = 8DE960A10DA5074800EC1659 /* PBXTextBookmark */;
 			8DFCE36F0D9DB0C8001C80AA = 8DFCE36F0D9DB0C8001C80AA /* PBXTextBookmark */;
 			8DFCE3730D9DB0C8001C80AA = 8DFCE3730D9DB0C8001C80AA /* PBXTextBookmark */;
 			8DFCE3860D9E7FE2001C80AA = 8DFCE3860D9E7FE2001C80AA /* PBXTextBookmark */;
@@ -524,7 +528,7 @@
 	};
 	77132FB60D91630300094A0A /* GIMessageEditorController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1041, 16170}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1041, 16142}}";
 			sepNavSelRange = "{42052, 0}";
 			sepNavVisRange = "{41610, 923}";
 		};
@@ -710,9 +714,9 @@
 	};
 	773613E10D1C0F12007FC630 /* OPPersistentSet.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {658, 6678}}";
-			sepNavSelRange = "{11208, 0}";
-			sepNavVisRange = "{10961, 565}";
+			sepNavIntBoundsRect = "{{0, 0}, {1041, 4802}}";
+			sepNavSelRange = "{11356, 0}";
+			sepNavVisRange = "{10965, 584}";
 		};
 	};
 	773613E50D1C0F12007FC630 /* OPPersistentStringDictionary.h */ = {
@@ -1285,9 +1289,9 @@
 	};
 	77B6C7650D00683200A7BEFF /* OPInternetMessageAttachmentCell.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {691, 1778}}";
+			sepNavIntBoundsRect = "{{0, 0}, {691, 1876}}";
 			sepNavSelRange = "{566, 0}";
-			sepNavVisRange = "{237, 725}";
+			sepNavVisRange = "{237, 731}";
 		};
 	};
 	77B6C7E30D00746C00A7BEFF /* NSApplication+OPExtensions.m */ = {
@@ -1388,7 +1392,7 @@
 		ignoreCount = 0;
 		lineNumber = 450;
 		location = Gina;
-		modificationTime = 228911365.462898;
+		modificationTime = 228911598.592;
 		state = 2;
 	};
 	8D73DF4B0D3B6586000A368A /* OPFaultingArray.m:322 */ = {
@@ -1405,7 +1409,7 @@
 		ignoreCount = 0;
 		lineNumber = 322;
 		location = OPPersistence;
-		modificationTime = 228911365.463294;
+		modificationTime = 228911598.592363;
 		state = 1;
 	};
 	8D8253F50D56AA260013861C /* OPOutlineViewController.m:316 */ = {
@@ -1422,7 +1426,7 @@
 		ignoreCount = 0;
 		lineNumber = 316;
 		location = Gina;
-		modificationTime = 228911365.464595;
+		modificationTime = 228911598.593714;
 		state = 2;
 	};
 	8D8254000D56AB2B0013861C /* OPPersistentObject.m:710 */ = {
@@ -1439,7 +1443,7 @@
 		ignoreCount = 0;
 		lineNumber = 710;
 		location = OPPersistence;
-		modificationTime = 228911365.464992;
+		modificationTime = 228911598.594549;
 		state = 2;
 	};
 	8D82541F0D56CFEA0013861C /* GIThreadOutlineViewController.m:509 */ = {
@@ -1456,7 +1460,7 @@
 		ignoreCount = 0;
 		lineNumber = 509;
 		location = Gina;
-		modificationTime = 228911365.465426;
+		modificationTime = 228911598.594943;
 		state = 2;
 	};
 	8D8254760D5813AA0013861C /* GIThread.m:162 */ = {
@@ -1473,7 +1477,7 @@
 		ignoreCount = 0;
 		lineNumber = 162;
 		location = Gina;
-		modificationTime = 228911365.465807;
+		modificationTime = 228911598.595311;
 		state = 2;
 	};
 	8D8255660D59B9C20013861C /* OPPersistentObject.m:670 */ = {
@@ -1490,7 +1494,7 @@
 		ignoreCount = 0;
 		lineNumber = 670;
 		location = OPPersistence;
-		modificationTime = 228911365.466296;
+		modificationTime = 228911598.595697;
 		state = 1;
 	};
 	8D82556E0D59C1470013861C /* OPPersistentObject.m:622 */ = {
@@ -1507,7 +1511,7 @@
 		ignoreCount = 0;
 		lineNumber = 622;
 		location = OPPersistence;
-		modificationTime = 228911365.466693;
+		modificationTime = 228911598.596059;
 		state = 2;
 	};
 	8D8546270D4238B90004DD84 /* GIMessageGroup.m:796 */ = {
@@ -1524,7 +1528,7 @@
 		ignoreCount = 0;
 		lineNumber = 796;
 		location = Gina;
-		modificationTime = 228911365.46415;
+		modificationTime = 228911598.593341;
 		state = 2;
 	};
 	8D8547AF0D443A540004DD84 /* -[NSException raise] */ = {
@@ -1538,7 +1542,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = CoreFoundation;
-		modificationTime = 228911365.473669;
+		modificationTime = 228911598.601929;
 		state = 1;
 		symbolName = "-[NSException raise]";
 	};
@@ -1566,7 +1570,7 @@
 		ignoreCount = 0;
 		lineNumber = 564;
 		location = OPPersistence;
-		modificationTime = 228911365.471284;
+		modificationTime = 228911598.599256;
 		state = 1;
 	};
 	8D8F7CF70DA11C5D00CB7923 /* PBXTextBookmark */ = {
@@ -1677,8 +1681,8 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = "";
-		modificationTime = 228911366.225401;
-		state = 0;
+		modificationTime = 228919110.500724;
+		state = 1;
 		symbolName = "-[NSWindow setFrame:]";
 	};
 	8D8F7E6A0DA219D200CB7923 /* PBXTextBookmark */ = {
@@ -1782,7 +1786,7 @@
 		ignoreCount = 0;
 		lineNumber = 66;
 		location = Gina;
-		modificationTime = 228911365.471672;
+		modificationTime = 228911598.59964;
 		state = 1;
 	};
 	8D8F7F1C0DA2393F00CB7923 /* PBXTextBookmark */ = {
@@ -1819,7 +1823,7 @@
 		ignoreCount = 0;
 		lineNumber = 802;
 		location = Gina;
-		modificationTime = 228911365.463739;
+		modificationTime = 228911598.592706;
 		state = 2;
 	};
 	8D9D92CB0DA23B7C00322BDB /* PBXTextBookmark */ = {
@@ -1993,7 +1997,7 @@
 		argumentStrings = (
 		);
 		autoAttachOnCrash = 1;
-		breakpointsEnabled = 0;
+		breakpointsEnabled = 1;
 		configStateDict = {
 		};
 		customDataFormattersEnabled = 1;
@@ -2079,7 +2083,7 @@
 		ignoreCount = 0;
 		lineNumber = 358;
 		location = OPPersistence;
-		modificationTime = 228911365.467086;
+		modificationTime = 228911598.596428;
 		state = 2;
 	};
 	8DAB5D2B0D68F2900037DF6F /* OPFaultingArray.m:327 */ = {
@@ -2096,7 +2100,7 @@
 		ignoreCount = 0;
 		lineNumber = 327;
 		location = OPPersistence;
-		modificationTime = 228911365.468568;
+		modificationTime = 228911598.596783;
 		state = 2;
 	};
 	8DAB66050D6FD2C10037DF6F /* GIMessageGroupTreeController.m:86 */ = {
@@ -2112,8 +2116,8 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		lineNumber = 86;
-		modificationTime = 228911366.382025;
-		state = 0;
+		modificationTime = 228919110.502465;
+		state = 1;
 	};
 	8DAB66BD0D70847F0037DF6F /* GIMessageGroupTreeController.m:103 */ = {
 		isa = PBXFileBreakpoint;
@@ -2128,8 +2132,8 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		lineNumber = 103;
-		modificationTime = 228911366.397583;
-		state = 0;
+		modificationTime = 228919110.500334;
+		state = 1;
 	};
 	8DABA1A80D1C1F8400991279 /* TestPersistentObject.h */ = {
 		uiCtxt = {
@@ -2341,7 +2345,7 @@
 		ignoreCount = 0;
 		lineNumber = 145;
 		location = OPPersistence;
-		modificationTime = 228911365.461992;
+		modificationTime = 228911598.591067;
 		state = 1;
 	};
 	8DCE48AB0D2B1C8900B47189 /* OPPersistentStringDictionary.m:132 */ = {
@@ -2358,7 +2362,7 @@
 		ignoreCount = 0;
 		lineNumber = 132;
 		location = OPPersistence;
-		modificationTime = 228911365.462498;
+		modificationTime = 228911598.591626;
 		state = 1;
 	};
 	8DCE4D890D2C7E6300B47189 /* GIMessageBase.h */ = {
@@ -2387,8 +2391,8 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = "";
-		modificationTime = 228911366.165344;
-		state = 0;
+		modificationTime = 228919110.502055;
+		state = 1;
 		symbolName = "-[NSE]";
 	};
 	8DD1B2E20D85630700E109BB /* GIMessageGroupCell.m:31 */ = {
@@ -2405,7 +2409,7 @@
 		ignoreCount = 0;
 		lineNumber = 31;
 		location = Gina;
-		modificationTime = 228911365.470072;
+		modificationTime = 228911598.598077;
 		state = 1;
 	};
 	8DD1B3790D856BA500E109BB /* -[NSOutlineView _rowEntryForRow:requiredRowEntryLoadMask:] */ = {
@@ -2419,7 +2423,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = AppKit;
-		modificationTime = 228911365.474523;
+		modificationTime = 228911598.602897;
 		state = 2;
 		symbolName = "-[NSOutlineView _rowEntryForRow:requiredRowEntryLoadMask:]";
 	};
@@ -5197,7 +5201,7 @@
 		ignoreCount = 0;
 		lineNumber = 419;
 		location = Gina;
-		modificationTime = 228911365.472281;
+		modificationTime = 228911598.600027;
 		state = 1;
 	};
 	8DE9606A0DA4E71200EC1659 /* PBXTextBookmark */ = {
@@ -5534,6 +5538,53 @@
 		vrLen = 725;
 		vrLoc = 237;
 	};
+	8DE960980DA4E9F200EC1659 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77B6C7650D00683200A7BEFF /* OPInternetMessageAttachmentCell.m */;
+		name = "OPInternetMessageAttachmentCell.m: 27";
+		rLen = 0;
+		rLoc = 566;
+		rType = 0;
+		vrLen = 725;
+		vrLoc = 237;
+	};
+	8DE9609C0DA5027100EC1659 /* GIMessageEditorController.m:1365 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 77132FB60D91630300094A0A /* GIMessageEditorController.m */;
+		functionName = "-checkpointMessageWithStatus:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 1365;
+		location = Gina;
+		modificationTime = 228917873.369459;
+		state = 1;
+	};
+	8DE9609D0DA5027500EC1659 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77B6C7650D00683200A7BEFF /* OPInternetMessageAttachmentCell.m */;
+		name = "OPInternetMessageAttachmentCell.m: 27";
+		rLen = 0;
+		rLoc = 566;
+		rType = 0;
+		vrLen = 725;
+		vrLoc = 237;
+	};
+	8DE960A10DA5074800EC1659 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77B6C7650D00683200A7BEFF /* OPInternetMessageAttachmentCell.m */;
+		name = "OPInternetMessageAttachmentCell.m: 27";
+		rLen = 0;
+		rLoc = 566;
+		rType = 0;
+		vrLen = 731;
+		vrLoc = 237;
+	};
 	8DF51F580D0590AB00AC01E2 /* Debug Tests */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -5621,7 +5672,7 @@
 		ignoreCount = 0;
 		lineNumber = 521;
 		location = Gina;
-		modificationTime = 228911365.470471;
+		modificationTime = 228911598.598477;
 		state = 1;
 	};
 	8DFCE36F0D9DB0C8001C80AA /* PBXTextBookmark */ = {
@@ -5664,11 +5715,11 @@
 		delayBeforeContinue = 0;
 		fileReference = 77132FB60D91630300094A0A /* GIMessageEditorController.m */;
 		functionName = "-checkpointMessageWithStatus:";
-		hitCount = 0;
+		hitCount = 1;
 		ignoreCount = 0;
 		lineNumber = 1362;
 		location = Gina;
-		modificationTime = 228911365.470854;
+		modificationTime = 228917862.436378;
 		state = 1;
 	};
 }
