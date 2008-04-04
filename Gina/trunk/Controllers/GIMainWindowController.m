@@ -105,6 +105,21 @@
 		
 	[self retain];
 	
+	// setting up query:
+	query = [[NSMetadataQuery alloc] init];
+	
+	// setup our Spotlight notifications
+	NSNotificationCenter *nf = [NSNotificationCenter defaultCenter];
+	[nf addObserver:self selector:@selector(queryNotification:) name:nil object:query];
+	
+	// initialize our Spotlight query
+	[query setSortDescriptors:
+	 [NSArray arrayWithObject:
+	  [[[NSSortDescriptor alloc] initWithKey:(id)kMDItemContentCreationDate ascending:NO] autorelease]]];
+	
+	[query setDelegate:self];
+	
+	// showin window:
 	[self showWindow:self];
 
 	return self;
@@ -113,6 +128,10 @@
 - (void)dealloc
 {
 	NSLog(@"GIMainWindowController dealloc");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [query release];
+	[selectedThreads release];
+	
  	[super dealloc];
 }
 
@@ -476,6 +495,74 @@
 - (IBAction)addNewFolder:(id)sender
 {
 	[self addNew:[GIHierarchyNode class] withName:@"New Folder"];
+}
+
+- (IBAction)search:(id)sender
+{
+	NSString *searchPhrase = [sender stringValue];
+	
+	if (searchPhrase.length)
+	{
+		[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@))", searchPhrase, searchPhrase, searchPhrase]];
+		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
+		[query startQuery];
+	}
+}
+
+- (void)processSearchResult:(NSMetadataQuery *)aQuery
+{		
+    // iterate through the array of results, and match to the existing stores
+    int count = [aQuery resultCount];
+    if (count == 0)
+    {
+        // no image files were found
+    }
+    else
+    {
+        // use Spotlight's search query results and load the images
+		
+        int i;
+        for (i = 0; i < count;  i++)
+        {
+            // get the result item
+            NSMetadataItem *item = [aQuery resultAtIndex:i];
+			NSString *date = [item valueForAttribute:(NSString *)kMDItemContentCreationDate];
+			NSArray *authors = [item valueForAttribute:(NSString *)kMDItemAuthors];
+			NSString *subject = [item valueForAttribute:(NSString *)kMDItemSubject];
+
+			NSLog(@"hit: date = %@, subject = %@, authors = %@", date, subject, authors);
+        }
+    }
+}
+
+- (void)queryNotification:(NSNotification*)note
+{
+    // the NSMetadataQuery will send back a note when updates are happening.
+	
+    // by looking at the [note name], we can tell what is happening
+    if ([[note name] isEqualToString:NSMetadataQueryDidStartGatheringNotification])
+    {
+        // the query has just started
+        NSLog(@"search: started gathering");
+    }
+    else if ([[note name] isEqualToString:NSMetadataQueryDidFinishGatheringNotification])
+    {
+        // at this point, the query will be done. You may recieve an update later on.
+        NSLog(@"search: finished gathering");
+		
+        [self processSearchResult:[note object]];
+    }
+    else if ([[note name] isEqualToString:NSMetadataQueryGatheringProgressNotification])
+    {
+        // the query is still gatherint results...
+        NSLog(@"search: progressing...");
+    }
+    else if ([[note name] isEqualToString:NSMetadataQueryDidUpdateNotification])
+    {
+        // an update will happen when Spotlight notices that a file as added,
+        // removed, or modified that affected the search results.
+        NSLog(@"search: an update happened.");
+    }
 }
 
 - (IBAction)debug:(id)sender

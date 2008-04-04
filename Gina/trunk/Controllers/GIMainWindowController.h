@@ -39,6 +39,8 @@
 	/* Binding stuff */
 	id observedObjectForSelectedThreads;
 	NSString *observedKeyPathForSelectedThreads;
+	
+	NSMetadataQuery *query;
 }
 
 @property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;
@@ -68,7 +70,8 @@
 - (IBAction)cancelRename:(id)sender;
 - (IBAction)delete:(id)sender;
 	
-- (void) showMessage: (GIMessage*) message;
+- (void)showMessage:(GIMessage *)message;
+- (IBAction)search:(id)sender;
 
 - (void)setThreadsOnlyMode;
 - (BOOL)isShowingThreadsOnly;
