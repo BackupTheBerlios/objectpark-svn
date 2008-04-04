@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "OPPersistentObjectContext.h"
 @class GIMainWindow;
 
 #define GIApp ((GIApplication *)NSApp)
@@ -16,6 +17,10 @@
 	IBOutlet NSWindow *defaultEmailAppDialog;
 	NSTimer* importTimer;
 }
+
+- (OPPersistentObjectContext*) context;
+
+- (IBAction) backupConfig: (id) sender;
 
 - (GIMainWindow*) mainWindow;
 - (NSString *)documentPath;

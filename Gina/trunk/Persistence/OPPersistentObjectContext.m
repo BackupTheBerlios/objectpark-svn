@@ -992,13 +992,14 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 }
 
 - (void) insertObject: (id <OPPersisting>) newObject
-/*" inserts newObject into the receiver context and sets an oid. Does nothing, if newObject already has an oid. "*/
+/*" inserts newObject into the receiver context and sets an oid. Does nothing, if newObject already has an oid. Ignores nil newObjects. "*/
 {
-	NSParameterAssert([newObject context] == NULL || [newObject context] == self);
-	if (![newObject currentOID]) {
-		OID newOID = [self nextOIDForClass: [newObject class]];
-		[newObject setOID: newOID]; // also registers newObject with self
-		[self didChangeObject: newObject];
+	if (newObject) {	NSParameterAssert([newObject context] == NULL || [newObject context] == self);
+		if (![newObject currentOID]) {
+			OID newOID = [self nextOIDForClass: [newObject class]];
+			[newObject setOID: newOID]; // also registers newObject with self
+			[self didChangeObject: newObject];
+		}
 	}
 }
 
@@ -1157,6 +1158,7 @@ static NSHashTable* allInstances;
 @implementation NSCoder (OPPersistence)
 
 - (OID) decodeOIDForKey: (NSString*) key
+/*" Regular decoders do encode the object, insert it as new object into the default context and return its oid. "*/
 {
 	NSObject<OPPersisting>* object = [self decodeObjectForKey: key];
 	[self.context insertObject: object];
@@ -1164,13 +1166,14 @@ static NSHashTable* allInstances;
 }
 
 - (void) encodeOID: (OID) oid forKey: (NSString*) key
+/*" Regular encoders do encode the object directly instead of the oid. "*/
 {
 	[self encodeObject: [self.context objectForOID: oid] forKey: key];
 }
 
 - (OPPersistentObjectContext*) context
 {
-	return nil;
+	return [OPPersistentObjectContext defaultContext];
 }
 
 @end

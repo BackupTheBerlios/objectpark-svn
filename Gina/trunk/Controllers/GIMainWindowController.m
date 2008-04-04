@@ -509,6 +509,18 @@
 	}
 }
 
+OID GIOIDFromFilename(NSString* filename) 
+{
+	OID oid = 0;
+	char cstring[16] = "";
+	[filename getBytes: cstring maxLength: 16 usedLength: nil 
+			  encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy 
+				 range: NSMakeRange(3, 14) remainingRange: NULL];
+	cstring[14] = 0x0;
+	sscanf(cstring, "%llx", &oid);
+	return oid;
+}
+
 - (void)processSearchResult:(NSMetadataQuery *)aQuery
 {		
     // iterate through the array of results, and match to the existing stores
@@ -524,13 +536,16 @@
         int i;
         for (i = 0; i < count;  i++)
         {
-            // get the result item
-            NSMetadataItem *item = [aQuery resultAtIndex:i];
+			// Get the result item:
+			NSMetadataItem *item = [aQuery resultAtIndex:i];
+			//NSLog(@"Available data: %@", [item attributes]);
+			NSString* filename = [item valueForAttribute: (NSString*) kMDItemFSName];
+			OID oid = GIOIDFromFilename(filename);
 			NSString *date = [item valueForAttribute:(NSString *)kMDItemContentCreationDate];
 			NSArray *authors = [item valueForAttribute:(NSString *)kMDItemAuthors];
 			NSString *subject = [item valueForAttribute:(NSString *)kMDItemSubject];
 
-			NSLog(@"hit: date = %@, subject = %@, authors = %@", date, subject, authors);
+			NSLog(@"hit: date = %@, subject = %@, authors = %@ oid = %014llx", date, subject, authors, oid);
         }
     }
 }

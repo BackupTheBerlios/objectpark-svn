@@ -57,6 +57,10 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 		[context setDatabaseFromPath:databasePath];
 		
+		if ([[self.context allObjectsOfClass: [GIProfile class]] count] == 0) {
+			[self restoreConfig];
+		}
+		
 		[GIMessageGroup ensureDefaultGroups];
 		[self resetMessageStatusSending];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object:nil];
@@ -308,8 +312,39 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	return YES;
 }
 
+- (OPPersistentObjectContext*) context
+{
+	return [OPPersistentObjectContext defaultContext];
+}
 
 
+- (IBAction) backupConfig: (id) sender
+{
+	[self.context saveChanges];
+	
+	NSSet* profiles = [self.context allObjectsOfClass: [GIProfile class]];
+	NSSet* accounts = [self.context allObjectsOfClass: [GIAccount class]];
+	
+	NSDictionary* config = [NSDictionary dictionaryWithObjectsAndKeys: 
+							profiles, @"Profiles", 
+							accounts, @"Accounts",
+							nil, nil];
+	
+	NSData* backupData = [NSKeyedArchiver archivedDataWithRootObject: accounts];
+	[[NSUserDefaults standardUserDefaults] setObject: backupData forKey: @"ConfigurationBackup"];
+}
+
+- (void) restoreConfig
+{
+	NSData* backupData = [[NSUserDefaults standardUserDefaults] dataForKey: @"ConfigurationBackup"];
+	if (NO && backupData.length) {
+		NSDictionary* config = [NSKeyedUnarchiver unarchiveObjectWithData: backupData];
+		//NSSet* profiles = [config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
+		NSSet* accounts = config; [config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
+		//NSLog(@"Restored %@", profiles);
+		NSLog(@"Restored %@", accounts);
+	}
+}
 
 - (void) application: (NSApplication*) sender openFiles: (NSArray*) filePaths
 {
