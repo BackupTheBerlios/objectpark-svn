@@ -136,6 +136,7 @@
 		778A68BC0D1699E900CAA693 /* Gina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8D8B1B9B0D11485D008E02D7 /* Gina.icns */; };
 		77A260990D3755DB0011FEE9 /* GIMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A260980D3755DB0011FEE9 /* GIMainWindow.m */; };
 		77A30A8B0D25724300B0F1DF /* TestURLString.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A30A8A0D25724300B0F1DF /* TestURLString.m */; };
+		77A5E9AD0DA6323200C8BCC8 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 77A5E9AB0DA6323200C8BCC8 /* Credits.rtf */; };
 		77AA23740D2BE559004EF1DF /* OPSASL.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C64D0D00549A00A7BEFF /* OPSASL.m */; };
 		77AA23750D2BE55C004EF1DF /* OPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C6370D00548C00A7BEFF /* OPSMTP.m */; };
 		77AA23770D2BE5AD004EF1DF /* NSCharacterSet+MIME.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5DC0D00546B00A7BEFF /* NSCharacterSet+MIME.m */; };
@@ -548,6 +549,7 @@
 		77A260980D3755DB0011FEE9 /* GIMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMainWindow.m; sourceTree = "<group>"; };
 		77A30A890D25724300B0F1DF /* TestURLString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestURLString.h; sourceTree = "<group>"; };
 		77A30A8A0D25724300B0F1DF /* TestURLString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestURLString.m; sourceTree = "<group>"; };
+		77A5E9AC0DA6323200C8BCC8 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		77AA236E0D2BE54B004EF1DF /* OPMailSending.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OPMailSending.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77AA23700D2BE54B004EF1DF /* OPMailSending-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OPMailSending-Info.plist"; path = "../OPMailSending-Info.plist"; sourceTree = "<group>"; };
 		77AA25040D2CE073004EF1DF /* GreetingMail.transferData */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GreetingMail.transferData; sourceTree = "<group>"; };
@@ -907,6 +909,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				77A5E9AB0DA6323200C8BCC8 /* Credits.rtf */,
 				772B2E3E0D9F872000EE91E0 /* Images */,
 				7744CB980D32A60C008E6567 /* HeaderTemplate.html */,
 				77AA25040D2CE073004EF1DF /* GreetingMail.transferData */,
@@ -1754,6 +1757,7 @@
 				772B2ED60D9FEEB900EE91E0 /* MailIcon_send.tiff in Resources */,
 				772B2EDB0D9FEFBA00EE91E0 /* MailIcon_reply.tiff in Resources */,
 				772B2EDD0D9FF24800EE91E0 /* MailIcon_replyall.tiff in Resources */,
+				77A5E9AD0DA6323200C8BCC8 /* Credits.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2053,6 +2057,14 @@
 			);
 			name = schema.strings;
 			path = ../Resources;
+			sourceTree = "<group>";
+		};
+		77A5E9AB0DA6323200C8BCC8 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77A5E9AC0DA6323200C8BCC8 /* English */,
+			);
+			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
