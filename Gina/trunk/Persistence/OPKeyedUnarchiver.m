@@ -86,11 +86,13 @@
 	if (objectPlist) {
 		[self pushStack: objectPlist];
 		Class poClass = [context classForCID: CIDFromOID(oid)];
-		
-		result = [poClass alloc];
-		[objectsByOid setObject: result forKey: oidString];
-		result = [result initWithCoder: self];
-		
+		if (poClass) {
+			result = [poClass alloc];
+			[objectsByOid setObject: result forKey: oidString];
+			result = [result initWithCoder: self];
+		} else {
+			NSLog(@"Warning, unknown ");
+		}
 		[self popStack];
 	}
 	return result;

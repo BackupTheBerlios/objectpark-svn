@@ -1158,12 +1158,14 @@ static NSHashTable* allInstances;
 
 - (OID) decodeOIDForKey: (NSString*) key
 {
-	return [self decodeInt64ForKey: key];
+	NSObject<OPPersisting>* object = [self decodeObjectForKey: key];
+	[self.context insertObject: object];
+	return [object oid];
 }
 
 - (void) encodeOID: (OID) oid forKey: (NSString*) key
 {
-	[self encodeInt64: oid forKey: key];
+	[self encodeObject: [self.context objectForOID: oid] forKey: key];
 }
 
 - (OPPersistentObjectContext*) context

@@ -479,7 +479,9 @@
 				//[outlineView selectRow: row byExtendingSelection: extend]; // deprecated
 				[outlineView selectRowIndexes: [NSIndexSet indexSetWithIndex: row] byExtendingSelection: extend];
 				NSIndexSet*	selection = [outlineView selectedRowIndexes];
-				NSAssert([selection containsIndex: row], @"row not selected");
+				if (! [selection containsIndex: row]) {
+					NSLog(@"row not selected");
+					}
 				extend = YES;
 			}
 		}
@@ -594,6 +596,8 @@ struct __NSOVRowEntry {
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
 {
 	BOOL isExpanded = [self isItemExpandedAtRow: row];
+	if (isExpanded && !expand) return; // Nothing to do, if the item is already expended
+	
 	if (row < [self numberOfRows]) {
 		
 //		struct __REFlags flags;

@@ -20,6 +20,8 @@
 	NSMapTable* lidsByObjectPtrs; // keys: object pointers, values: tids
 }
 
+@property (readonly) OPPersistentObjectContext* context;
+
 - (id) initWithContext: (OPPersistentObjectContext*) context;
 
 - (NSData*) resultData;

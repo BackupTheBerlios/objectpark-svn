@@ -210,6 +210,11 @@ static Class oppClass    = nil;
 	}
 }
 
+- (void) encodeOID: (OID) oid forKey: (NSString*) key
+{
+	[self encodeInt64: oid forKey: key];
+}
+
 - (void) encodeConditionalObject: (id) objv forKey: (NSString*) key
 {
 	// What else should we do here?
