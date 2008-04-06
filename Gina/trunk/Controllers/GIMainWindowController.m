@@ -41,6 +41,7 @@
 
 @synthesize selectedThreads;
 @synthesize messageGroupsController;
+@synthesize query;
 
 + (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
 {
@@ -608,7 +609,7 @@ OID GIOIDFromFilename(NSString* filename)
         // at this point, the query will be done. You may recieve an update later on.
         NSLog(@"search: finished gathering");
 		
-        [self processSearchResult:[note object]];
+//        [self processSearchResult:[note object]];
     }
     else if ([[note name] isEqualToString:NSMetadataQueryGatheringProgressNotification])
     {
@@ -1064,4 +1065,25 @@ static BOOL isShowingThreadsOnly = NO;
 	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status_Pressed" : @"Show_Status_Pressed"];
 }
 
+@end
+
+@implementation NSMetadataItem (GinkoExtensions)
+
+- (NSDate *)date
+{
+	return [self valueForAttribute:(NSString *)kMDItemContentCreationDate];
+}
+
+- (NSString *)author
+{
+	return [[self valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
+}
+
+- (NSString *)subject
+{
+	return [self valueForAttribute:(NSString *)kMDItemSubject];
+}
+
+//NSString* filename = [item valueForAttribute: (NSString*) kMDItemFSName];
+//OID oid = GIOIDFromFilename(filename);
 @end
