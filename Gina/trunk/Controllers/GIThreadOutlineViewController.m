@@ -256,6 +256,24 @@ NSDateFormatter *timeAndDateFormatter()
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
 
+- (NSAttributedString *)messageGroupsForDisplay
+{
+	NSMutableString *messageGroupsString = [NSMutableString string];
+	BOOL first = YES;
+	BOOL isRead = [self hasFlags:OPSeenStatus];
+	
+	for (GIMessageGroup *group in self.thread.messageGroups)
+	{
+		if (!first)	[messageGroupsString appendString:@", "];
+		else first = NO;
+		
+		[messageGroupsString appendString:group.name];
+	}
+	
+	return [[[NSAttributedString alloc] initWithString:messageGroupsString attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
+}
+
+
 - (NSImage *)statusImage
 {
 	if (!self.isSeen) return [NSImage imageNamed:@"unread"];
@@ -793,6 +811,49 @@ NSDateFormatter *timeAndDateFormatter()
 - (NSString *)subject
 {
 	return [self valueForAttribute:(NSString *)kMDItemSubject];
+}
+
+- (NSAttributedString *)subjectAndAuthor
+{
+	GIMessage *message = [self message];
+	NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
+	NSString *from = nil;
+	
+	if (message) 
+	{
+		unsigned flags  = [message flags];
+		NSString *subjectString = [self subject];
+		
+		NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subjectString) attributes:(flags & OPSeenStatus) ? readAttributes() : unreadAttributes()];
+		
+		[result appendAttributedString:aSubject];
+		
+		if (flags & OPIsFromMeStatus) 
+		{
+			from = [NSString stringWithFormat:@" (%C %@)", 0x279F/*Right Arrow*/, message.recipientsForDisplay];
+		} 
+		else 
+		{
+			from = [self author];
+			if (!from) from = @"- sender missing -";
+			from = [NSString stringWithFormat:@" (%@)", from];
+		}       
+		NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? readFromAttributes() : unreadFromAttributes();
+		
+		if (flags & OPJunkMailStatus) 
+		{
+			completeAttributes = spamMessageAttributes();
+		}
+		
+		NSAttributedString *aFrom = [[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes];
+		
+		[result appendAttributedString:aFrom];
+		
+		[aSubject release];
+		[aFrom release];
+	}
+	
+	return result;
 }
 
 @end
