@@ -551,18 +551,6 @@
 	}
 }
 
-OID GIOIDFromFilename(NSString* filename) 
-{
-	OID oid = 0;
-	char cstring[16] = "";
-	[filename getBytes: cstring maxLength: 16 usedLength: nil 
-			  encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy 
-				 range: NSMakeRange(3, 14) remainingRange: NULL];
-	cstring[14] = 0x0;
-	sscanf(cstring, "%llx", &oid);
-	return oid;
-}
-
 - (void)processSearchResult:(NSMetadataQuery *)aQuery
 {		
     // iterate through the array of results, and match to the existing stores
@@ -1065,25 +1053,4 @@ static BOOL isShowingThreadsOnly = NO;
 	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status_Pressed" : @"Show_Status_Pressed"];
 }
 
-@end
-
-@implementation NSMetadataItem (GinkoExtensions)
-
-- (NSDate *)date
-{
-	return [self valueForAttribute:(NSString *)kMDItemContentCreationDate];
-}
-
-- (NSString *)author
-{
-	return [[self valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
-}
-
-- (NSString *)subject
-{
-	return [self valueForAttribute:(NSString *)kMDItemSubject];
-}
-
-//NSString* filename = [item valueForAttribute: (NSString*) kMDItemFSName];
-//OID oid = GIOIDFromFilename(filename);
 @end

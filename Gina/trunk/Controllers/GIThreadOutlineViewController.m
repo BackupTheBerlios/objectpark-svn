@@ -766,6 +766,96 @@ NSDateFormatter *timeAndDateFormatter()
 
 @end
 
+@implementation NSMetadataItem (GinkoExtensions)
+
+OID GIOIDFromFilename(NSString* filename) 
+{st
+	OID oid = 0;
+	char cstring[16] = "";
+	[filename getBytes: cstring maxLength: 16 usedLength: nil 
+			  encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy 
+				 range: NSMakeRange(3, 14) remainingRange: NULL];
+	cstring[14] = 0x0;
+	sscanf(cstring, "%llx", &oid);
+	return oid;
+}
+
+- (GIMessage *)message
+{
+	NSString *filename = [self valueForAttribute:(NSString *)kMDItemFSName];
+	GIMessage *result = [[OPPersistentObjectContext defaultContext] objectForOID:GIOIDFromFilename(filename)];
+	return result;
+}
+
+- (NSDate *)date
+{
+	return [self valueForAttribute:(NSString *)kMDItemContentCreationDate];
+}
+
+- (NSString *)dateForDisplay
+{
+	BOOL isRead = [[self message] hasFlags:OPSeenStatus];
+	
+	NSString *dateString = [timeAndDateFormatter() stringFromDate:[self date]];
+	
+	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
+}
+
+- (NSString *)author
+{
+	return [[self valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
+}
+
+- (NSString *)subject
+{
+	return [self valueForAttribute:(NSString *)kMDItemSubject];
+}
+
+- (NSAttributedString *)subjectAndAuthor
+{
+	GIMessage *message = [self message];
+	NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
+	NSString *from = nil;
+	
+	if (message) 
+	{
+		unsigned flags  = [message flags];
+		NSString *subjectString = [self subject];
+		
+		NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subjectString) attributes:(flags & OPSeenStatus) ? readAttributes() : unreadAttributes()];
+		
+		[result appendAttributedString:aSubject];
+		
+		if (flags & OPIsFromMeStatus) 
+		{
+			from = [NSString stringWithFormat:@" (%C %@)", 0x279F/*Right Arrow*/, message.recipientsForDisplay];
+		} 
+		else 
+		{
+			from = [self author];
+			if (!from) from = @"- sender missing -";
+			from = [NSString stringWithFormat:@" (%@)", from];
+		}       
+		NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? readFromAttributes() : unreadFromAttributes();
+		
+		if (flags & OPJunkMailStatus) 
+		{
+			completeAttributes = spamMessageAttributes();
+		}
+		
+		NSAttributedString *aFrom = [[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes];
+		
+		[result appendAttributedString:aFrom];
+		
+		[aSubject release];
+		[aFrom release];
+	}
+	
+	return result;
+}
+
+@end
+
 @implementation GIThreadOutlineView
 
 - (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
