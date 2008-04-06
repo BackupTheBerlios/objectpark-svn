@@ -30,6 +30,12 @@
 	return [OPPersistentObjectContext defaultContext];
 }
 
+- (BOOL) containsObjectWithOID: (OID) oid sortKeyValue: (id) sortKeyValue
+{
+#warning implement containsObjectWithOID:sortKeyValue:
+	return NO;
+}
+
 - (NSData*) newKeyForObject: (id) anObject
 /*" Keys consist of the sort key data (if any), followed by the oid. "*/
 {

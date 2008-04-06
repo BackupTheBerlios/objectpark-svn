@@ -739,7 +739,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		NSLog(@"Pleased supply a name for %@.", self);
 	}
 }
-
+ 
 - (NSSet *)threads
 {
 	if (!threads) {

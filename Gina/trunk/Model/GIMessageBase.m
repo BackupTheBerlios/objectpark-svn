@@ -330,7 +330,7 @@ NSString* MboxImportJobName = @"mbox import";
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	CID cidMessage = [self cidForClass: [GIMessage class]];
 	for (NSString* gmlPath in gmls) {
-		NSString* gmlName = [gmlPath lastPathComponent];
+		//NSString* gmlName = [gmlPath lastPathComponent];
 		// gmlName should have the format "Msg%014x.gml":
 		// if (! [gmlName hasPrefix: @"Msg"]) continue;
 		//NSString* oidString = [gmlName substringWithRange: NSMakeRange(3,14)];
@@ -369,7 +369,22 @@ NSString* MboxImportJobName = @"mbox import";
 	return result;
 }
 
-
+- (OID) oidFromMessageFilename: (NSString*) filename
+{
+	static CID cidMessage = 0;
+	if (!cidMessage) cidMessage = [self cidForClass: [GIMessage class]];
+	
+	
+	if (! [filename hasPrefix: @"Msg"]) return NILOID;
+	LID lid = 0;
+	char cstring[16] = "";
+	[filename getBytes: cstring maxLength: 16 usedLength: nil 
+			  encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy 
+				 range: NSMakeRange(3, 14) remainingRange: NULL];
+	cstring[14] = 0x0;
+	sscanf(cstring, "%llx", &lid);
+	return MakeOID(cidMessage, lid);
+}
 
 //- (void) moveThreadsWithOids: (NSArray*) threadOids 
 //				   fromGroup: (GIMessageGroup*) sourceGroup 

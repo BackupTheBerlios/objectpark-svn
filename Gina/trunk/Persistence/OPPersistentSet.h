@@ -44,6 +44,8 @@
 
 @property (copy) NSString* sortKeyPath;
 
+- (BOOL) containsObjectWithOID: (OID) oid sortKeyValue: (id) sortKeyValue;
+
 - (OPPersistentObjectContext*) context;
 
 - (NSArray*) sortedArray;

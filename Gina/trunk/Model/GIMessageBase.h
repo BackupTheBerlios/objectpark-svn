@@ -18,6 +18,8 @@
 - (GIMessage *)messageForMessageId:(NSString *)messageId;
 
 - (NSArray*) importMboxFiles: (NSArray*) paths moveOnSuccess: (BOOL) doMove;
-- (NSArray*) importGmlFiles: gmls moveOnSuccess: (BOOL) move;
+- (NSArray*) importGmlFiles: (NSArray*) gmls moveOnSuccess: (BOOL) move;
+
+- (OID) oidFromMessageFilename: (NSString*) filename;
 
 @end

@@ -29,6 +29,7 @@
 #import "GIMessage+Rendering.h"
 #import "GIHierarchyNode.h"
 #import "GIMessageGroup.h"
+#import "GIMessageBase.h"
 
 @implementation GIMessageGroup (copying)
 - (id)copyWithZone:(NSZone *)aZone
@@ -564,7 +565,7 @@
     else
     {
         // use Spotlight's search query results
-		
+		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
         int i;
         for (i = 0; i < count;  i++)
         {
@@ -572,7 +573,7 @@
 			NSMetadataItem *item = [aQuery resultAtIndex:i];
 			//NSLog(@"Available data: %@", [item attributes]);
 			NSString* filename = [item valueForAttribute: (NSString*) kMDItemFSName];
-			OID oid = GIOIDFromFilename(filename);
+			OID oid = [context oidFromMessageFileName: filename];
 			NSString *date = [item valueForAttribute:(NSString *)kMDItemContentCreationDate];
 			NSArray *authors = [item valueForAttribute:(NSString *)kMDItemAuthors];
 			NSString *subject = [item valueForAttribute:(NSString *)kMDItemSubject];
