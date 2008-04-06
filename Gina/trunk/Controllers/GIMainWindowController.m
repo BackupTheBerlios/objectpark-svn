@@ -131,7 +131,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [query release];
 	[selectedThreads release];
-	
+	[searchResultView release];
+	[regularThreadsView release];
+
  	[super dealloc];
 }
 
@@ -183,6 +185,9 @@
 
 - (void)windowDidLoad
 {
+	[searchResultView retain];
+	[regularThreadsView retain];
+	
 	if (![self progressInfoVisible])
 	{
 		[self toggleProgressInfo:self];
@@ -497,6 +502,37 @@
 	[self addNew:[GIHierarchyNode class] withName:@"New Folder"];
 }
 
+- (void)setSearchMode:(BOOL)aBool
+{
+	if (aBool == searchMode) return;
+	
+	// ...otherwise switch views:
+	NSView *oldView = nil;
+	NSView *newView = nil;
+	
+	if (searchMode)
+	{
+		oldView = searchResultView;
+		newView = regularThreadsView;
+	}
+	else
+	{
+		oldView = regularThreadsView;
+		newView = searchResultView;
+	}
+	
+	newView.frame = oldView.frame;
+	
+	NSMutableArray *subviews = [[threadMailSplitter subviews] mutableCopy];
+	[subviews replaceObjectAtIndex:0 withObject:newView];
+	
+	[threadMailSplitter setSubviews:subviews];
+//	[oldView.superview setSubviews:[NSArray arrayWithObject:newView]];
+	[self.window display];
+	
+	searchMode = aBool;
+}
+
 - (IBAction)search:(id)sender
 {
 	NSString *searchPhrase = [sender stringValue];
@@ -506,6 +542,11 @@
 		[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@))", searchPhrase, searchPhrase, searchPhrase]];
 		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
 		[query startQuery];
+		[self setSearchMode:YES];
+	}
+	else
+	{
+		[self setSearchMode:NO];
 	}
 }
 
@@ -525,13 +566,15 @@ OID GIOIDFromFilename(NSString* filename)
 {		
     // iterate through the array of results, and match to the existing stores
     int count = [aQuery resultCount];
+	
+	if (count > 100) count = 100;
     if (count == 0)
     {
         // no image files were found
     }
     else
     {
-        // use Spotlight's search query results and load the images
+        // use Spotlight's search query results
 		
         int i;
         for (i = 0; i < count;  i++)
@@ -550,7 +593,7 @@ OID GIOIDFromFilename(NSString* filename)
     }
 }
 
-- (void)queryNotification:(NSNotification*)note
+- (void)queryNotification:(NSNotification *)note
 {
     // the NSMetadataQuery will send back a note when updates are happening.
 	

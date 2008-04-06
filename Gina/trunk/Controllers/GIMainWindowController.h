@@ -31,6 +31,10 @@
 	IBOutlet NSWindow *messageGroupRenameWindow;
 	IBOutlet NSTextField *messageGroupNameField;
 	IBOutlet NSScrollView *progressInfoScrollView;
+	IBOutlet NSBox *searchResultView;
+	IBOutlet NSScrollView *regularThreadsView;
+	
+	BOOL searchMode;
 	
 	CGFloat progressInfoHeight;
 	
