@@ -116,7 +116,7 @@ NSString* MboxImportJobName = @"mbox import";
 {
     NSString* mboxFilePath = [arguments objectForKey:@"mboxFilename"];
     NSParameterAssert(mboxFilePath != nil);
-	NSString* groupName = [mboxFilePath lastPathComponent];
+	NSString* groupName = [[mboxFilePath lastPathComponent] stringByDeletingPathExtension];
     BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
     NSDate* lastProgressSet = [[NSDate alloc] init];
