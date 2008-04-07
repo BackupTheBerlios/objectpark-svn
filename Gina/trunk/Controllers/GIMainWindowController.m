@@ -541,7 +541,28 @@
 	
 	if (searchPhrase.length)
 	{
-		[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@))", searchPhrase, searchPhrase, searchPhrase]];
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		NSInteger searchFields = [defaults integerForKey:@"SearchFields"];
+		
+		switch (searchFields)
+		{
+			case SEARCHFIELDS_ALL:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@) OR (kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhrase, searchPhrase, searchPhrase, searchPhrase, searchPhrase, searchPhrase]];
+				break;
+			case SEARCHFIELDS_AUTHOR:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@))", searchPhrase, searchPhrase]];
+				break;
+			case SEARCHFIELDS_SUBJECT:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND (kMDItemSubject like[cd] %@)", searchPhrase]];
+				break;
+			case SEARCHFIELDS_RECIPIENTS:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhrase, searchPhrase]];
+				break;
+			default:
+				NSAssert(NO, @"no search fields specified");
+				break;
+		}
+		
 		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
 		[query startQuery];
 		[self setSearchMode:YES];
@@ -552,36 +573,36 @@
 	}
 }
 
-- (void)processSearchResult:(NSMetadataQuery *)aQuery
-{		
-    // iterate through the array of results, and match to the existing stores
-    int count = [aQuery resultCount];
-	
-	if (count > 100) count = 100;
-    if (count == 0)
-    {
-        // no image files were found
-    }
-    else
-    {
-        // use Spotlight's search query results
-		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-        int i;
-        for (i = 0; i < count;  i++)
-        {
-			// Get the result item:
-			NSMetadataItem *item = [aQuery resultAtIndex:i];
-			//NSLog(@"Available data: %@", [item attributes]);
-			NSString* filename = [item valueForAttribute: (NSString*) kMDItemFSName];
-			OID oid = [context oidFromMessageFileName: filename];
-			NSString *date = [item valueForAttribute:(NSString *)kMDItemContentCreationDate];
-			NSArray *authors = [item valueForAttribute:(NSString *)kMDItemAuthors];
-			NSString *subject = [item valueForAttribute:(NSString *)kMDItemSubject];
-
-			NSLog(@"hit: date = %@, subject = %@, authors = %@ oid = %014llx", date, subject, authors, oid);
-        }
-    }
-}
+//- (void)processSearchResult:(NSMetadataQuery *)aQuery
+//{		
+//    // iterate through the array of results, and match to the existing stores
+//    int count = [aQuery resultCount];
+//	
+//	if (count > 100) count = 100;
+//    if (count == 0)
+//    {
+//        // no image files were found
+//    }
+//    else
+//    {
+//        // use Spotlight's search query results
+//		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+//        int i;
+//        for (i = 0; i < count;  i++)
+//        {
+//			// Get the result item:
+//			NSMetadataItem *item = [aQuery resultAtIndex:i];
+//			//NSLog(@"Available data: %@", [item attributes]);
+//			NSString* filename = [item valueForAttribute: (NSString*) kMDItemFSName];
+//			OID oid = [context oidFromMessageFileName: filename];
+//			NSString *date = [item valueForAttribute:(NSString *)kMDItemContentCreationDate];
+//			NSArray *authors = [item valueForAttribute:(NSString *)kMDItemAuthors];
+//			NSString *subject = [item valueForAttribute:(NSString *)kMDItemSubject];
+//
+//			NSLog(@"hit: date = %@, subject = %@, authors = %@ oid = %014llx", date, subject, authors, oid);
+//        }
+//    }
+//}
 
 - (void)queryNotification:(NSNotification *)note
 {

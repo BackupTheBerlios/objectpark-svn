@@ -273,7 +273,6 @@ NSDateFormatter *timeAndDateFormatter()
 	return [[[NSAttributedString alloc] initWithString:messageGroupsString attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
 
-
 - (NSImage *)statusImage
 {
 	if (!self.isSeen) return [NSImage imageNamed:@"unread"];

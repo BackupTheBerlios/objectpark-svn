@@ -11,6 +11,14 @@
 #import "GIOutlineViewWithThreadColoring.h"
 #import "GIMainWindow.h"
 
+#define SEARCHRANGE_ALLMESSAGEGROUPS 0
+#define SEARCHRANGE_CURRENTGROUP 1
+
+#define SEARCHFIELDS_ALL 0
+#define SEARCHFIELDS_AUTHOR 1
+#define SEARCHFIELDS_RECIPIENTS 2
+#define SEARCHFIELDS_SUBJECT 3
+
 @class GIMessageGroup;
 @class GITextView;
 @class GIThreadOutlineViewController;
