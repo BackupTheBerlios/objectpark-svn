@@ -564,6 +564,8 @@
 	
 	if (searchPhrase.length)
 	{
+		NSString *searchPhraseContains = [NSString stringWithFormat:@"*%@*", searchPhrase];
+		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		NSInteger searchFields = [defaults integerForKey:@"SearchFields"];
 		
@@ -572,16 +574,16 @@
 		switch (searchFields)
 		{
 			case SEARCHFIELDS_ALL:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@) OR (kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhrase, searchPhrase, searchPhrase, searchPhrase, searchPhrase, searchPhrase]];
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@) OR (kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhrase, searchPhraseContains, searchPhraseContains, searchPhraseContains, searchPhraseContains, searchPhraseContains]];
 				break;
 			case SEARCHFIELDS_AUTHOR:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@))", searchPhrase, searchPhrase]];
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@))", searchPhraseContains, searchPhraseContains]];
 				break;
 			case SEARCHFIELDS_SUBJECT:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND (kMDItemSubject like[cd] %@)", searchPhrase]];
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND (kMDItemSubject like[cd] %@)", searchPhraseContains]];
 				break;
 			case SEARCHFIELDS_RECIPIENTS:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhrase, searchPhrase]];
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhraseContains, searchPhraseContains]];
 				break;
 			default:
 				NSAssert(NO, @"no search fields specified");
