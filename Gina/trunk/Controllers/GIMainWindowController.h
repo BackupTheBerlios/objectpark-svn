@@ -41,6 +41,8 @@
 	IBOutlet NSScrollView *progressInfoScrollView;
 	IBOutlet NSBox *searchResultView;
 	IBOutlet NSScrollView *regularThreadsView;
+	IBOutlet NSTableView *searchResultTableView;
+	IBOutlet NSSearchField *searchField;
 	
 	BOOL searchMode;
 	

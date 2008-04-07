@@ -113,12 +113,7 @@
 	// setup our Spotlight notifications
 	NSNotificationCenter *nf = [NSNotificationCenter defaultCenter];
 	[nf addObserver:self selector:@selector(queryNotification:) name:nil object:query];
-	
-	// initialize our Spotlight query
-	[query setSortDescriptors:
-	 [NSArray arrayWithObject:
-	  [[[NSSortDescriptor alloc] initWithKey:(id)kMDItemContentCreationDate ascending:NO] autorelease]]];
-	
+		
 	[query setDelegate:self];
 	
 	// showin window:
@@ -190,6 +185,15 @@
 	[searchResultView retain];
 	[regularThreadsView retain];
 	
+	// configure sort keys of search result table view:
+	NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:(NSString *)kMDItemContentCreationDate ascending:YES] autorelease];
+	[[searchResultTableView tableColumnWithIdentifier:@"date"] setSortDescriptorPrototype:sortDescriptor];
+	
+	sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:(NSString *)kMDItemSubject ascending:YES] autorelease];
+	[[searchResultTableView tableColumnWithIdentifier:@"subjectAndAuthor"] setSortDescriptorPrototype:sortDescriptor];
+
+	[[searchResultTableView tableColumnWithIdentifier:@"messagegroups"] setSortDescriptorPrototype:nil];
+
 	if (![self progressInfoVisible])
 	{
 		[self toggleProgressInfo:self];
@@ -535,14 +539,35 @@
 	searchMode = aBool;
 }
 
+- (NSArray *)searchSortDescriptors
+{
+	NSData *sortDescriptorData = [[NSUserDefaults standardUserDefaults] objectForKey:@"SearchSortDescriptors"];
+	if (!sortDescriptorData) return [NSArray array];
+	
+	NSArray *result = [NSKeyedUnarchiver unarchiveObjectWithData:sortDescriptorData];
+	
+	return result;
+}
+
+- (void)setSearchSortDescriptors:(NSArray *)anArray
+{
+	if (!anArray) [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SearchSortDescriptors"];
+	NSData *sortDescriptorData = [NSKeyedArchiver archivedDataWithRootObject:anArray];
+	[[NSUserDefaults standardUserDefaults] setObject:sortDescriptorData forKey:@"SearchSortDescriptors"];
+	
+	[query setSortDescriptors:anArray];
+}
+
 - (IBAction)search:(id)sender
 {
-	NSString *searchPhrase = [sender stringValue];
+	NSString *searchPhrase = [searchField stringValue];
 	
 	if (searchPhrase.length)
 	{
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		NSInteger searchFields = [defaults integerForKey:@"SearchFields"];
+		
+		[query setSortDescriptors:[self searchSortDescriptors]];
 		
 		switch (searchFields)
 		{
@@ -636,7 +661,7 @@
 
 - (IBAction)debug:(id)sender
 {
-	NSLog(@"to = %@", [[[self selectedMessage] internetMessage] toWithFallback:NO]);
+//	NSLog(@"to = %@", [[[self selectedMessage] internetMessage] toWithFallback:NO]);
 }
 
 - (void) showMessage:(GIMessage*) message

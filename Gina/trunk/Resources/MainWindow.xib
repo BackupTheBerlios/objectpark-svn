@@ -8,8 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="83"/>
-			<integer value="210"/>
+			<integer value="1" id="9"/>
+			<integer value="214"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -134,7 +134,7 @@
 													<object class="NSMutableArray" key="dict.values">
 														<bool key="EncodedWithXMLCoder">YES</bool>
 														<string>Abbrechen</string>
-														<integer value="1" id="9"/>
+														<reference ref="9"/>
 													</object>
 												</object>
 											</object>
@@ -1818,6 +1818,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="NSMutableString">
 						<characters key="NS.bytes">SearchFields</characters>
 					</object>
+					<string>searchSortDescriptors</string>
+					<string>SearchSortDescriptors</string>
 				</object>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
@@ -2900,7 +2902,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<string key="label">selectionIndexes: selectionIndexes</string>
 						<reference key="source" ref="209019680"/>
 						<reference key="destination" ref="899646574"/>
-						<object class="NSNibBindingConnector" key="connector">
+						<object class="NSNibBindingConnector" key="connector" id="675145348">
 							<reference key="NSSource" ref="209019680"/>
 							<reference key="NSDestination" ref="899646574"/>
 							<string key="NSLabel">selectionIndexes: selectionIndexes</string>
@@ -3072,6 +3074,39 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="56067907"/>
 					</object>
 					<int key="connectionID">314</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">searchResultTableView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="209019680"/>
+					</object>
+					<int key="connectionID">322</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">sortDescriptors: searchSortDescriptors</string>
+						<reference key="source" ref="209019680"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="209019680"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">sortDescriptors: searchSortDescriptors</string>
+							<string key="NSBinding">sortDescriptors</string>
+							<string key="NSKeyPath">searchSortDescriptors</string>
+							<reference key="NSPreviousConnector" ref="675145348"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">324</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">searchField</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1001794160"/>
+					</object>
+					<int key="connectionID">325</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4078,9 +4113,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{4, 187}, {759, 520}}</string>
+					<string>{{62, 227}, {759, 520}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{4, 187}, {759, 520}}</string>
+					<string>{{62, 227}, {759, 520}}</string>
 					<reference ref="126606337"/>
 					<string>{196, 240}</string>
 					<string>{{195, 67}, {759, 520}}</string>
@@ -4204,7 +4239,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>GISplitView</string>
 					<string>GISplitView</string>
 					<string>GISplitView</string>
-					<string>{{162, 722}, {617, 0}}</string>
+					<string>{{35, 717}, {617, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{195, 615}, {617, 0}}</string>
 				</object>
@@ -4229,7 +4264,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">314</int>
+			<int key="maxID">325</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4383,6 +4418,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>observedObjectForSelectedThreads</string>
 							<string>progressInfoScrollView</string>
 							<string>regularThreadsView</string>
+							<string>searchField</string>
+							<string>searchResultTableView</string>
 							<string>searchResultView</string>
 							<string>threadMailSplitter</string>
 							<string>threadsController</string>
@@ -4401,6 +4438,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>id</string>
 							<string>NSScrollView</string>
 							<string>NSScrollView</string>
+							<string>NSSearchField</string>
+							<string>NSTableView</string>
 							<string>NSBox</string>
 							<string>GISplitView</string>
 							<string>GIThreadOutlineViewController</string>
