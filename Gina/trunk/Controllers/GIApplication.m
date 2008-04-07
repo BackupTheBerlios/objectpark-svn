@@ -370,6 +370,17 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
 }
 
+- (IBAction) emptyTrash: (id) sender
+{
+	GIMessageGroup* trashGroup = [GIMessageGroup trashMessageGroup];
+	
+	for (GIThread* trashedThread in [trashGroup threads]) {
+		NSLog(@"Should delete thread %@", trashedThread);
+		[trashedThread delete];
+	}
+	[self.context saveChanges];
+}
+
 
 - (IBAction)openFile:(id)sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/

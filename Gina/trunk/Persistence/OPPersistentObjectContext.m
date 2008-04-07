@@ -784,7 +784,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 //	}
 //}
 
-- (void) shouldDeleteObject: (OPPersistentObject*) object
+- (void) deleteObject: (OPPersistentObject*) object
 /*" Marks object for deletion on the next -saveChanges call. "*/
 {
 	if ([object currentOID]) {

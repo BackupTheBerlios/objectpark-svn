@@ -111,7 +111,7 @@ extern NSString* OPStringFromOID(OID oid);
 
 - (NSSet*) changedObjects;
 - (OPFaultingArray*) deletedObjects;
-- (void) shouldDeleteObject: (OPPersistentObject*) object;
+- (void) deleteObject: (OPPersistentObject*) object;
 
 + (OPPersistentObjectContext*) defaultContext;
 + (void) setDefaultContext: (OPPersistentObjectContext*) context;

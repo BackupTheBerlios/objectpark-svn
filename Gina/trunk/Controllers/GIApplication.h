@@ -21,6 +21,7 @@
 - (OPPersistentObjectContext*) context;
 
 - (IBAction) backupConfig: (id) sender;
+- (IBAction) emptyTrash: (id) sender;
 
 - (GIMainWindow*) mainWindow;
 - (NSString *)documentPath;

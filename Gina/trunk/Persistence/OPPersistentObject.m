@@ -280,7 +280,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 /*" Deletes the receiver from the persistent store associated with it's context. Does nothing, if the reciever does not have a context or has never been stored persistently. "*/
 {	
 	if (oid) {
-		[[self context] shouldDeleteObject: self];
+		[[self context] deleteObject: self];
 	}
 	//[self refault]; // free attribute resources
 }
