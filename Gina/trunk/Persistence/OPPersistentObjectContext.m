@@ -810,7 +810,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"%@ registered instances: %@,  faultCacheSize: %u, %@", [super description], NSCountHashTable(registeredObjects), faultCache.count, statistics];
+	return [NSString stringWithFormat: @"%@ registered instances: %u,  faultCacheSize: %u, %@", [super description], NSCountHashTable(registeredObjects), faultCache.count, statistics];
 }
 
 - (OPDBLite*) database
