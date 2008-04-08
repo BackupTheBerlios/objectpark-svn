@@ -260,7 +260,9 @@
 
 - (void)setThreadsOnlyMode
 {
-	if ([threadMailSplitter isSubviewCollapsed:[[threadsOutlineView superview] superview]])
+	id subview = [self searchMode] == YES ? (id)searchResultView : (id)regularThreadsView;
+	
+	if ([threadMailSplitter isSubviewCollapsed:subview])
 	{
 		NSLog(@"only mail visible. switching to only threads visible.");
 		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
