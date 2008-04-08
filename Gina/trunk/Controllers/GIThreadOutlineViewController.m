@@ -256,6 +256,55 @@ NSDateFormatter *timeAndDateFormatter()
 	return [[[NSAttributedString alloc] initWithString:nilGuard(dateString) attributes:isRead ? readAttributes() : unreadAttributes()] autorelease];
 }
 
++ (NSSet *)keyPathsForValuesAffectingSubjectForDisplay
+{
+	return [NSSet setWithObjects:@"flags", nil];
+}
+
+- (NSAttributedString *)subjectForDisplay
+{
+	BOOL isSeen = [self isSeen];
+	
+	NSAttributedString *result = [[[NSAttributedString alloc] initWithString:[self subject] attributes:isSeen ? readAttributes() : unreadAttributes()] autorelease];
+	return result;
+}
+
++ (NSSet *)keyPathsForValuesAffectingAuthorForDisplay
+{
+	return [NSSet setWithObjects:@"flags", nil];
+}
+
+- (NSAttributedString *)authorForDisplay
+{
+	NSString *from = nil;
+	
+	if (self.flags & OPIsFromMeStatus) 
+	{
+		from = [NSString stringWithFormat:@"%C %@", 0x279F/*Right Arrow*/, self.recipientsForDisplay];
+	} 
+	else 
+	{
+		from = [self senderName];
+		if (!from.length) from = @"- sender missing -";
+		from = [NSString stringWithFormat:@"%@", from];
+	}       
+	NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? readAttributes() : unreadAttributes();
+	
+	if (flags & OPJunkMailStatus) 
+	{
+		completeAttributes = spamMessageAttributes();
+	}
+	
+	NSAttributedString *result = [[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes];
+	
+	return result;
+}
+
++ (NSSet *)keyPathsForValuesAffectingMessageGroupsForDisplay
+{
+	return [NSSet setWithObjects:@"flags", nil];
+}
+
 - (NSAttributedString *)messageGroupsForDisplay
 {
 	NSMutableString *messageGroupsString = [NSMutableString string];
@@ -810,85 +859,6 @@ NSDateFormatter *timeAndDateFormatter()
 - (NSString *)subject
 {
 	return [self valueForAttribute:(NSString *)kMDItemSubject];
-}
-
-- (NSAttributedString *)subjectForDisplay
-{
-	BOOL isSeen = [[self message] isSeen];
-	
-	NSAttributedString *result = [[[NSAttributedString alloc] initWithString:[self subject] attributes:isSeen ? readAttributes() : unreadAttributes()] autorelease];
-	return result;
-}
-
-- (NSAttributedString *)authorForDisplay
-{
-	GIMessage *message = [self message];
-	unsigned flags  = [message flags];
-	NSString *from = nil;
-	
-	if (flags & OPIsFromMeStatus) 
-	{
-		from = [NSString stringWithFormat:@"%C %@", 0x279F/*Right Arrow*/, message.recipientsForDisplay];
-	} 
-	else 
-	{
-		from = [self author];
-		if (!from.length) from = @"- sender missing -";
-		from = [NSString stringWithFormat:@"%@", from];
-	}       
-	NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? readAttributes() : unreadAttributes();
-	
-	if (flags & OPJunkMailStatus) 
-	{
-		completeAttributes = spamMessageAttributes();
-	}
-	
-	NSAttributedString *result = [[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes];
-	
-	return result;
-}
-
-- (NSAttributedString *)subjectAndAuthor
-{
-	GIMessage *message = [self message];
-	NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
-	NSString *from = nil;
-	
-	if (message) 
-	{
-		unsigned flags  = [message flags];
-		NSString *subjectString = [self subject];
-		
-		NSAttributedString *aSubject = [[NSAttributedString alloc] initWithString:nilGuard(subjectString) attributes:(flags & OPSeenStatus) ? readAttributes() : unreadAttributes()];
-		
-		[result appendAttributedString:aSubject];
-		
-		if (flags & OPIsFromMeStatus) 
-		{
-			from = [NSString stringWithFormat:@" (%C %@)", 0x279F/*Right Arrow*/, message.recipientsForDisplay];
-		} 
-		else 
-		{
-			from = [self author];
-			if (!from) from = @"- sender missing -";
-			from = [NSString stringWithFormat:@" (%@)", from];
-		}       
-		NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? readFromAttributes() : unreadFromAttributes();
-		
-		if (flags & OPJunkMailStatus) 
-		{
-			completeAttributes = spamMessageAttributes();
-		}
-		
-		NSAttributedString *aFrom = [[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes];
-		
-		[result appendAttributedString:aFrom];
-		
-		[aSubject release];
-		[aFrom release];
-	}
-	
-	return result;
 }
 
 @end

@@ -8,8 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="39"/>
-			<integer value="210"/>
+			<integer value="38"/>
+			<integer value="211"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2228,7 +2228,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 											<bool key="EncodedWithXMLCoder">YES</bool>
 											<object class="NSTableView" id="209019680">
 												<reference key="NSNextResponder" ref="464454888"/>
-												<int key="NSvFlags">4352</int>
+												<int key="NSvFlags">4370</int>
 												<string key="NSFrameSize">{704, 461}</string>
 												<reference key="NSSuperview" ref="464454888"/>
 												<bool key="NSEnabled">YES</bool>
@@ -2365,7 +2365,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 												<reference key="NSBackgroundColor" ref="1053472009"/>
 												<reference key="NSGridColor" ref="827742145"/>
 												<double key="NSRowHeight">1.700000e+01</double>
-												<int key="NSTvFlags">-1019215872</int>
+												<int key="NSTvFlags">-884998144</int>
 												<string key="NSAutosaveName">Search Results</string>
 												<int key="NSColumnAutoresizingStyle">4</int>
 												<int key="NSDraggingSourceMaskForLocal">15</int>
@@ -2375,7 +2375,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 										</object>
 										<string key="NSFrame">{{1, 17}, {704, 461}}</string>
 										<reference key="NSSuperview" ref="983510706"/>
-										<reference key="NSNextKeyView" ref="209019680"/>
 										<reference key="NSDocView" ref="209019680"/>
 										<reference key="NSBGColor" ref="1037779458"/>
 										<int key="NScvFlags">4</int>
@@ -2409,7 +2408,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 										</object>
 										<string key="NSFrame">{{1, 0}, {704, 17}}</string>
 										<reference key="NSSuperview" ref="983510706"/>
-										<reference key="NSNextKeyView" ref="1017232368"/>
 										<reference key="NSDocView" ref="1017232368"/>
 										<reference key="NSBGColor" ref="1037779458"/>
 										<int key="NScvFlags">4</int>
@@ -2418,7 +2416,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								</object>
 								<string key="NSFrame">{{-1, -3}, {706, 479}}</string>
 								<reference key="NSSuperview" ref="1026060173"/>
-								<reference key="NSNextKeyView" ref="464454888"/>
 								<int key="NSsFlags">530</int>
 								<reference key="NSVScroller" ref="285261688"/>
 								<reference key="NSHScroller" ref="33003824"/>
@@ -2476,6 +2473,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 					<string>countAsNumber</string>
 					<string>representedObject.count</string>
+					<string>mesage.subjectForDisplay</string>
+					<string>message.authorForDisplay</string>
+					<string>message.subjectForDisplay</string>
 				</object>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
 				<bool key="NSAvoidsEmptySelection">YES</bool>
@@ -3005,8 +3005,37 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">arrangedObjects.message.messageGroupsForDisplay</string>
 							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSConditionallySetsEditable</string>
-								<reference key="NS.object.0" ref="9"/>
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSAllowsEditingMultipleValuesSelection</string>
+									<string>NSAlwaysPresentsApplicationModalAlerts</string>
+									<string>NSConditionallySetsEditable</string>
+									<string>NSConditionallySetsEnabled</string>
+									<string>NSContinuouslyUpdatesValue</string>
+									<string>NSCreatesSortDescriptor</string>
+									<string>NSMultipleValuesPlaceholder</string>
+									<string>NSNoSelectionPlaceholder</string>
+									<string>NSNotApplicablePlaceholder</string>
+									<string>NSNullPlaceholder</string>
+									<string>NSRaisesForNotApplicableKeys</string>
+									<string>NSValidatesImmediately</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<integer value="1" id="5"/>
+									<integer value="0" id="6"/>
+									<reference ref="5"/>
+									<reference ref="6"/>
+									<reference ref="6"/>
+									<reference ref="6"/>
+									<string/>
+									<string/>
+									<string/>
+									<string/>
+									<reference ref="5"/>
+									<reference ref="6"/>
+								</object>
 							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
@@ -3128,46 +3157,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: arrangedObjects.subjectForDisplay</string>
-						<reference key="source" ref="260227879"/>
-						<reference key="destination" ref="899646574"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="260227879"/>
-							<reference key="NSDestination" ref="899646574"/>
-							<string key="NSLabel">value: arrangedObjects.subjectForDisplay</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">arrangedObjects.subjectForDisplay</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSConditionallySetsEditable</string>
-								<reference key="NS.object.0" ref="9"/>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">337</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: arrangedObjects.authorForDisplay</string>
-						<reference key="source" ref="313315748"/>
-						<reference key="destination" ref="899646574"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="313315748"/>
-							<reference key="NSDestination" ref="899646574"/>
-							<string key="NSLabel">value: arrangedObjects.authorForDisplay</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">arrangedObjects.authorForDisplay</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSConditionallySetsEditable</string>
-								<reference key="NS.object.0" ref="9"/>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">339</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">displayPatternValue1: searchResultTableView.numberOfRows</string>
 						<reference key="source" ref="111124779"/>
 						<reference key="destination" ref="1001"/>
@@ -3185,6 +3174,54 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 					</object>
 					<int key="connectionID">348</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">searchResultsArrayController</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="899646574"/>
+					</object>
+					<int key="connectionID">349</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.message.authorForDisplay</string>
+						<reference key="source" ref="313315748"/>
+						<reference key="destination" ref="899646574"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="313315748"/>
+							<reference key="NSDestination" ref="899646574"/>
+							<string key="NSLabel">value: arrangedObjects.message.authorForDisplay</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.message.authorForDisplay</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSConditionallySetsEditable</string>
+								<reference key="NS.object.0" ref="5"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">351</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.message.subjectForDisplay</string>
+						<reference key="source" ref="260227879"/>
+						<reference key="destination" ref="899646574"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="260227879"/>
+							<reference key="NSDestination" ref="899646574"/>
+							<string key="NSLabel">value: arrangedObjects.message.subjectForDisplay</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.message.subjectForDisplay</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSConditionallySetsEditable</string>
+								<reference key="NS.object.0" ref="5"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">352</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4373,7 +4410,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">348</int>
+			<int key="maxID">352</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4480,7 +4517,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>doRename:</string>
 							<string>followup:</string>
 							<string>forward:</string>
-							<string>groupTreeSelectionChanged:</string>
 							<string>markAsRead:</string>
 							<string>markAsUnread:</string>
 							<string>messageGroupSelectionChanged:</string>
@@ -4489,15 +4525,12 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>replyAll:</string>
 							<string>replyDefault:</string>
 							<string>replySender:</string>
-							<string>search:</string>
-							<string>searchRangeChanged:</string>
 							<string>threadsDoubleAction:</string>
+							<string>toggleProgressInfo:</string>
 							<string>toggleRead:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -4530,12 +4563,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>messageGroupRenameWindow</string>
 							<string>messageGroupsController</string>
 							<string>messageTextView</string>
+							<string>observedObjectForSelectedSearchResults</string>
 							<string>observedObjectForSelectedThreads</string>
 							<string>progressInfoScrollView</string>
 							<string>regularThreadsView</string>
 							<string>searchField</string>
 							<string>searchResultTableView</string>
 							<string>searchResultView</string>
+							<string>searchResultsArrayController</string>
 							<string>threadMailSplitter</string>
 							<string>threadsController</string>
 							<string>threadsOutlineView</string>
@@ -4551,11 +4586,13 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>GIMessageGroupOutlineViewController</string>
 							<string>GITextView</string>
 							<string>id</string>
+							<string>id</string>
 							<string>NSScrollView</string>
 							<string>NSScrollView</string>
 							<string>NSSearchField</string>
 							<string>NSTableView</string>
 							<string>NSBox</string>
+							<string>NSArrayController</string>
 							<string>GISplitView</string>
 							<string>GIThreadOutlineViewController</string>
 							<string>GIOutlineViewWithThreadColoring</string>

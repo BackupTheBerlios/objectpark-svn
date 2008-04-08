@@ -43,22 +43,27 @@
 	IBOutlet NSScrollView *regularThreadsView;
 	IBOutlet NSTableView *searchResultTableView;
 	IBOutlet NSSearchField *searchField;
+	IBOutlet NSArrayController *searchResultsArrayController;
 	
 	BOOL searchMode;
 	
 	CGFloat progressInfoHeight;
 	
 	NSArray *selectedThreads;
+	NSArray *selectedSearchResults;
 	
 	/* Binding stuff */
 	id observedObjectForSelectedThreads;
 	NSString *observedKeyPathForSelectedThreads;
+	id observedObjectForSelectedSearchResults;
+	NSString *observedKeyPathForSelectedSearchResults;
 	
 	NSMetadataQuery *query;
 }
 
 @property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;
 @property (retain) NSArray *selectedThreads;
+@property (retain) NSArray *selectedSearchResults;
 @property (readonly) NSMetadataQuery *query;
 @property (readonly) NSTableView *searchResultTableView;
 	

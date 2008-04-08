@@ -51,3 +51,7 @@
 }
 
 @end
+
+@interface NSMetadataItem (GinkoExtensions)
+- (GIMessage *)message;
+@end
