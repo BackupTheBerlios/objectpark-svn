@@ -61,9 +61,31 @@
 @property (retain) NSArray *selectedThreads;
 @property (readonly) NSMetadataQuery *query;
 @property (readonly) NSTableView *searchResultTableView;
+	
+- (void)showMessage:(GIMessage *)message;
 
-- (IBAction) commentTreeSelectionChanged: (id) sender;
-- (IBAction) groupTreeSelectionChanged: (id) sender;
+- (void)setThreadsOnlyMode;
+- (BOOL)isShowingThreadsOnly;
+
+- (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
+
+- (GIMessageGroup *)selectedGroup;
+
+@end
+
+@interface GIMainWindowController (Actions)
+
+/*" Adding hierarchy objects "*/
+- (IBAction)addNewMessageGroup:(id)sender;
+- (IBAction)addNewFolder:(id)sender;
+
+/*" Deleting hierarchy objects "*/
+- (IBAction)delete:(id)sender;
+
+/*" Renaming hierarchy objects "*/
+- (IBAction)rename:(id)sender;
+- (IBAction)doRename:(id)sender;
+- (IBAction)cancelRename:(id)sender;
 
 /*" Message creation actions "*/
 - (IBAction)newMessage:(id)sender;
@@ -78,25 +100,21 @@
 - (IBAction)markAsUnread:(id)sender;
 - (IBAction)toggleRead:(id)sender;
 
-/*" Message Group Actions "*/
-- (IBAction)addNewMessageGroup:(id)sender;
-- (IBAction)addNewFolder:(id)sender;
-- (IBAction)rename:(id)sender;
-- (IBAction)doRename:(id)sender;
-- (IBAction)cancelRename:(id)sender;
-- (IBAction)delete:(id)sender;
-	
-- (void)showMessage:(GIMessage *)message;
-- (IBAction)search:(id)sender;
-- (IBAction)searchRangeChanged:(id)sender;
+/*" Progress info view handling "*/
+- (IBAction)toggleProgressInfo:(id)sender;
+
+/*" Miscellaneous "*/
+- (IBAction)commentTreeSelectionChanged:(id)sender;
 - (IBAction)messageGroupSelectionChanged:(id)sender;
 
-- (void)setThreadsOnlyMode;
-- (BOOL)isShowingThreadsOnly;
+@end
 
-- (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
+@interface GIMainWindowController (Search)
 
-- (GIMessageGroup *)selectedGroup;
+@property BOOL searchMode;
+
+- (IBAction)search:(id)sender;
+- (IBAction)searchRangeChanged:(id)sender;
 
 @end
 

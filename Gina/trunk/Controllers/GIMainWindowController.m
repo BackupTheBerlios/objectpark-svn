@@ -31,13 +31,6 @@
 #import "GIMessageGroup.h"
 #import "GIMessageBase.h"
 
-@implementation GIMessageGroup (copying)
-- (id)copyWithZone:(NSZone *)aZone
-{
-	return [self retain];
-}
-@end
-
 @implementation GIMainWindowController
 
 @synthesize selectedThreads;
@@ -144,11 +137,6 @@
 	[self autorelease];
 }
 
-- (IBAction)groupTreeSelectionChanged:(id)sender
-{
-	[self setThreadsOnlyMode];
-}
-
 - (void)setProgressInfoVisible:(BOOL)aBool
 {
 	[[NSUserDefaults standardUserDefaults] setBool:aBool forKey:ProgressInfoShown];
@@ -157,24 +145,6 @@
 - (BOOL)progressInfoVisible
 {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:ProgressInfoShown];
-}
-
-- (IBAction)toggleProgressInfo:(id)sender
-{
-	NSRect frame = progressInfoScrollView.frame;
-
-	if (frame.size.height != 0.0)
-	{
-		progressInfoHeight = progressInfoScrollView.frame.size.height;
-
-		// hide progress info:
-		frame.size.height = 0.0;
-		progressInfoScrollView.frame = frame;
-		[self setProgressInfoVisible:NO];
-	}
-	else
-	{
-	}
 }
 
 - (void)awakeFromNib
@@ -301,436 +271,6 @@
 		default:
 			break;
 	}	
-}
-
-// -- handling message tree view selection --
-- (IBAction)commentTreeSelectionChanged:(id)sender
-{
-	GIMessage *message = [commentTreeView selectedMessage];
-	
-	if (message) 
-	{
-		[self showMessage:message];
-	}
-}
-
-// -- handling menu commands --
-
-- (GIProfile *)profileForMessage:(GIMessage *)aMessage
-/*" Return the profile to use for email replies. Tries first to guess a profile based on the replied email. If no matching profile can be found, the group default profile is chosen. May return nil in case of no group default and no match present. "*/
-{
-    GIProfile *result;
-    
-    result = [GIProfile guessedProfileForReplyingToMessage:[aMessage internetMessage]];
-    
-    if (!result)
-    {
-        result = [[self selectedGroup] defaultProfile];
-    }
-    
-    return result;
-}
-
-- (void)placeSelectedTextOnQuotePasteboard
-{
-    NSArray *types = [messageTextView writablePasteboardTypes];
-    NSPasteboard *quotePasteboard = [NSPasteboard pasteboardWithName:@"QuotePasteboard"];
-    
-    [quotePasteboard declareTypes:types owner:nil];
-    [messageTextView writeSelectionToPasteboard:quotePasteboard types:types];
-}
-
-- (IBAction)newMessage:(id)sender
-{
-	GIProfile *profileForNewMessage = nil;
-	
-	id selectedObject = [messageGroupsController selectedObject];
-	if ([selectedObject isKindOfClass:[GIMessageGroup class]])
-	{
-		profileForNewMessage = [selectedObject defaultProfile];
-	}
-	
-    [[[GIMessageEditorController alloc] initNewMessageWithProfile:profileForNewMessage] autorelease];
-}
-
-- (IBAction)replyAll:(id)sender
-{
-    GIMessage *message = [self selectedMessage];
-    
-    [self placeSelectedTextOnQuotePasteboard];
-    
-    [[[GIMessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
-}
-
-- (IBAction)replySender:(id)sender
-{
-    GIMessage *message = [self selectedMessage];
-    
-    [self placeSelectedTextOnQuotePasteboard];
-    
-    [[[GIMessageEditorController alloc] initReplyTo:message all:NO profile:[self profileForMessage:message]] autorelease];
-}
-
-- (IBAction)followup:(id)sender
-{
-    GIMessage *message = [self selectedMessage];
-    
-    [self placeSelectedTextOnQuotePasteboard];
-    
-    [[[GIMessageEditorController alloc] initFollowupTo:message profile:[[self selectedGroup] defaultProfile]] autorelease];
-}
-
-- (IBAction)replyDefault:(id)sender
-{
-    GIMessage *message = [self selectedMessage];
-	
-    if ([message isListMessage] || [message isUsenetMessage]) 
-	{
-        [self followup:sender];
-    } 
-	else 
-	{
-        [self replySender:sender];
-    }
-}
-
-- (IBAction)forward:(id)sender
-{
-    GIMessage *message = [self selectedMessage];
-	
-    [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
-}
-
-- (IBAction)rename:(id)sender
-{
-	GIHierarchyNode *node = messageGroupsController.selectedObject;
-	if (node)
-	{
-		messageGroupNameField.stringValue = node.name;
-		
-		[NSApp beginSheet:messageGroupRenameWindow modalForWindow:self.window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
-	}
-}
-
-- (IBAction)doRename:(id)sender
-{
-	GIHierarchyNode *node = messageGroupsController.selectedObject;
-	
-	node.name = messageGroupNameField.stringValue;
-	
-	[NSApp endSheet:messageGroupRenameWindow];
-	[messageGroupRenameWindow orderOut:self];
-}
-
-- (IBAction)cancelRename:(id)sender
-{
-	[NSApp endSheet:messageGroupRenameWindow];
-	[messageGroupRenameWindow orderOut:self];
-}
-
-- (IBAction)delete:(id)sender
-{
-	GIHierarchyNode *node = messageGroupsController.selectedObject;
-
-	NSString *nodeType = [node isKindOfClass:[GIMessageGroup class]] ? NSLocalizedString(@"Mailbox", @"Delete warning dialog") : NSLocalizedString(@"Folder", @"Delete warning dialog");
-	NSAlert *alert = [[NSAlert alloc] init];
-	
-	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete warning dialog")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Delete warning dialog")];
-	[alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Delete %@ '%@' and all of its contents?", @"Delete warning dialog"), nodeType, node.name]];
-	[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The deleted %@ cannot be restored.", @"Delete warning dialog"), nodeType]];
-	[alert setAlertStyle:NSWarningAlertStyle];	
-	
-	if ([alert runModal] == NSAlertFirstButtonReturn) 
-	{
-		// Delete clicked, delete the node
-		[self.messageGroupsController deleteHierarchyNode:node];
-	}
-	
-	[alert release];
-}
-
-- (IBAction)markAsRead:(id)sender
-{
-	for (GIMessage *message in [threadsController selectedMessages]) 
-	{
-		message.isSeen = YES;
-	}
-}
-
-- (IBAction)markAsUnread:(id)sender
-{
-	for (GIMessage *message in [threadsController selectedMessages]) 
-	{
-		message.isSeen = NO;
-	}
-}
-
-- (IBAction)toggleRead:(id)sender
-{
-	if ([threadsController selectionHasUnreadMessages]) 
-	{
-		[self markAsRead:self];
-	} 
-	else 
-	{
-		[self markAsUnread:self];
-	}
-}
-
-- (void)addNew:(Class)aClass withName:(NSString *)aName
-{
-	// if selection of message hierarchy is a folder, add new object in
-	// this folder (at the end)
-	
-	id selectedObject = [messageGroupsController selectedObject];
-	GIHierarchyNode *hierarchyNode = [GIHierarchyNode messageGroupHierarchyRootNode];
-	
-	if (![selectedObject isKindOfClass:[GIMessageGroup class]])
-	{
-		hierarchyNode = selectedObject;
-	}
-	
-	[messageGroupsController.outlineView expandItem:hierarchyNode];
-	
-	NSUInteger position = [[hierarchyNode children] count];
-	
-	id newObject = [aClass newWithName:aName atHierarchyNode:hierarchyNode atIndex:position];
-	
-	[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject:[messageGroupsController itemPathForItem:newObject]] byExtendingSelection:NO];
-	
-	[self performSelector:@selector(rename:) withObject:self afterDelay:0.0];
-}
-
-- (IBAction)addNewMessageGroup:(id)sender
-{
-	[self addNew:[GIMessageGroup class] withName:@"New Box"];
-}
-
-- (IBAction)addNewFolder:(id)sender
-{
-	[self addNew:[GIHierarchyNode class] withName:@"New Folder"];
-}
-
-- (void)setSearchMode:(BOOL)aBool
-{
-	if (aBool == searchMode) return;
-	
-	if (aBool)
-	{
-		// switch to all mailboxes search:
-		[[NSUserDefaults standardUserDefaults] setInteger:SEARCHRANGE_ALLMESSAGEGROUPS forKey:@"SearchRange"];
-		
-		[self willChangeValueForKey:@"searchResultFilter"];
-		[self didChangeValueForKey:@"searchResultFilter"];
-	}
-	
-	// ...otherwise switch views:
-	NSView *oldView = nil;
-	NSView *newView = nil;
-	
-	if (searchMode)
-	{
-		oldView = searchResultView;
-		newView = regularThreadsView;
-	}
-	else
-	{
-		oldView = regularThreadsView;
-		newView = searchResultView;
-	}
-	
-	newView.frame = oldView.frame;
-	
-	NSMutableArray *subviews = [[threadMailSplitter subviews] mutableCopy];
-	[subviews replaceObjectAtIndex:0 withObject:newView];
-	
-	[threadMailSplitter setSubviews:subviews];
-	[self.window display];
-	
-	searchMode = aBool;
-}
-
-- (BOOL)searchMode
-{
-	return searchMode;
-}
-
-- (NSArray *)searchSortDescriptors
-{
-	NSData *sortDescriptorData = [[NSUserDefaults standardUserDefaults] objectForKey:@"SearchSortDescriptors"];
-	if (!sortDescriptorData) return [NSArray array];
-	
-	NSArray *result = [NSKeyedUnarchiver unarchiveObjectWithData:sortDescriptorData];
-	
-	return result;
-}
-
-- (void)setSearchSortDescriptors:(NSArray *)anArray
-{
-	if (!anArray) [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SearchSortDescriptors"];
-	NSData *sortDescriptorData = [NSKeyedArchiver archivedDataWithRootObject:anArray];
-	[[NSUserDefaults standardUserDefaults] setObject:sortDescriptorData forKey:@"SearchSortDescriptors"];
-	
-	[query setSortDescriptors:anArray];
-}
-
-- (IBAction)search:(id)sender
-{
-	NSString *searchPhrase = [searchField stringValue];
-	
-	if (searchPhrase.length)
-	{
-		NSString *searchPhraseContains = [NSString stringWithFormat:@"*%@*", searchPhrase];
-		
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		NSInteger searchFields = [defaults integerForKey:@"SearchFields"];
-		
-		[query setSortDescriptors:[self searchSortDescriptors]];
-		
-		[self setSearchMode:YES];
-
-		switch (searchFields)
-		{
-			case SEARCHFIELDS_ALL:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@) OR (kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhrase, searchPhraseContains, searchPhraseContains, searchPhraseContains, searchPhraseContains, searchPhraseContains]];
-				break;
-			case SEARCHFIELDS_AUTHOR:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@))", searchPhraseContains, searchPhraseContains]];
-				break;
-			case SEARCHFIELDS_SUBJECT:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND (kMDItemSubject like[cd] %@)", searchPhraseContains]];
-				break;
-			case SEARCHFIELDS_RECIPIENTS:
-				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhraseContains, searchPhraseContains]];
-				break;
-			default:
-				NSAssert(NO, @"no search fields specified");
-				break;
-		}
-		
-		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
-		[query startQuery];
-	}
-	else
-	{
-		[self setSearchMode:NO];
-	}
-}
-
-- (NSPredicate *)searchResultFilter
-{
-	// check if filtering needed:
-	NSInteger searchRange = [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"];
-	
-	GIMessageGroup *selectedGroup = self.messageGroupsController.selectedObject;
-	
-	if ([selectedGroup isKindOfClass:[GIMessageGroup class]])
-	{
-		if (searchRange == SEARCHRANGE_SELECTEDGROUP)
-		{
-//			NSLog(@"selected group");
-			NSPredicate *result = [NSPredicate predicateWithFormat:@"%@ in message.thread.messageGroups", selectedGroup]; 
-			return result;
-		}
-//		else
-//		{
-//			NSLog(@"all groups");
-//		}
-	}
-	
-	return nil;
-}
-
-- (IBAction)searchRangeChanged:(id)sender
-{
-	[self willChangeValueForKey:@"searchResultFilter"];
-	[self didChangeValueForKey:@"searchResultFilter"];
-	[self.searchResultTableView willChangeValueForKey:@"numberOfRows"];
-	[self.searchResultTableView didChangeValueForKey:@"numberOfRows"];
-}
-
-- (IBAction)messageGroupSelectionChanged:(id)sender
-{
-//	NSLog(@"messageGroupSelectionChanged");
-	
-	// if search with 'selected mailbox' is active then signal a filter change:
-	if ([self searchMode] && [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"] == SEARCHRANGE_SELECTEDGROUP)
-	{
-		[self searchRangeChanged:sender];
-	}
-	else
-	{
-		[searchField setStringValue:@""];
-		[self search:sender];
-	}
-}
-
-//- (void)processSearchResult:(NSMetadataQuery *)aQuery
-//{		
-//    // iterate through the array of results, and match to the existing stores
-//    int count = [aQuery resultCount];
-//	
-//	if (count > 100) count = 100;
-//    if (count == 0)
-//    {
-//        // no image files were found
-//    }
-//    else
-//    {
-//        // use Spotlight's search query results
-//		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-//        int i;
-//        for (i = 0; i < count;  i++)
-//        {
-//			// Get the result item:
-//			NSMetadataItem *item = [aQuery resultAtIndex:i];
-//			//NSLog(@"Available data: %@", [item attributes]);
-//			NSString* filename = [item valueForAttribute: (NSString*) kMDItemFSName];
-//			OID oid = [context oidFromMessageFileName: filename];
-//			NSString *date = [item valueForAttribute:(NSString *)kMDItemContentCreationDate];
-//			NSArray *authors = [item valueForAttribute:(NSString *)kMDItemAuthors];
-//			NSString *subject = [item valueForAttribute:(NSString *)kMDItemSubject];
-//
-//			NSLog(@"hit: date = %@, subject = %@, authors = %@ oid = %014llx", date, subject, authors, oid);
-//        }
-//    }
-//}
-
-- (void)queryNotification:(NSNotification *)note
-{
-    // the NSMetadataQuery will send back a note when updates are happening.
-	
-    // by looking at the [note name], we can tell what is happening
-    if ([[note name] isEqualToString:NSMetadataQueryDidStartGatheringNotification])
-    {
-        // the query has just started
-        NSLog(@"search: started gathering");
-    }
-    else if ([[note name] isEqualToString:NSMetadataQueryDidFinishGatheringNotification])
-    {
-        // at this point, the query will be done. You may recieve an update later on.
-        NSLog(@"search: finished gathering");
-		[self.searchResultTableView willChangeValueForKey:@"numberOfRows"];
-		[self.searchResultTableView didChangeValueForKey:@"numberOfRows"];
-//        [self processSearchResult:[note object]];
-    }
-    else if ([[note name] isEqualToString:NSMetadataQueryGatheringProgressNotification])
-    {
-        // the query is still gatherint results...
-        NSLog(@"search: progressing...");
-    }
-    else if ([[note name] isEqualToString:NSMetadataQueryDidUpdateNotification])
-    {
-        // an update will happen when Spotlight notices that a file as added,
-        // removed, or modified that affected the search results.
-        NSLog(@"search: an update happened.");
-    }
-}
-
-- (IBAction)debug:(id)sender
-{
-//	NSLog(@"to = %@", [[[self selectedMessage] internetMessage] toWithFallback:NO]);
 }
 
 - (void) showMessage:(GIMessage*) message
@@ -959,7 +499,7 @@ static BOOL isShowingThreadsOnly = NO;
 
 @end
 
-@implementation GIMainWindowController (OutlineViewDelegateAndActions)
+@implementation GIMainWindowController (OutlineViewActions)
 
 - (IBAction)threadsDoubleAction:(id)sender
 {
@@ -1184,6 +724,435 @@ static BOOL isShowingThreadsOnly = NO;
 - (NSImage *)statusPaneButtonAlternateImage
 {
 	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status_Pressed" : @"Show_Status_Pressed"];
+}
+
+@end
+
+@implementation GIMainWindowController (Actions)
+
+#pragma mark -- adding new hierarchy objects --
+- (void)addNew:(Class)aClass withName:(NSString *)aName
+{
+	// if selection of message hierarchy is a folder, add new object in
+	// this folder (at the end)
+	
+	id selectedObject = [messageGroupsController selectedObject];
+	GIHierarchyNode *hierarchyNode = [GIHierarchyNode messageGroupHierarchyRootNode];
+	
+	if (![selectedObject isKindOfClass:[GIMessageGroup class]])
+	{
+		hierarchyNode = selectedObject;
+	}
+	
+	[messageGroupsController.outlineView expandItem:hierarchyNode];
+	
+	NSUInteger position = [[hierarchyNode children] count];
+	
+	id newObject = [aClass newWithName:aName atHierarchyNode:hierarchyNode atIndex:position];
+	
+	[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject:[messageGroupsController itemPathForItem:newObject]] byExtendingSelection:NO];
+	
+	[self performSelector:@selector(rename:) withObject:self afterDelay:0.0];
+}
+
+- (IBAction)addNewMessageGroup:(id)sender
+{
+	[self addNew:[GIMessageGroup class] withName:@"New Box"];
+}
+
+- (IBAction)addNewFolder:(id)sender
+{
+	[self addNew:[GIHierarchyNode class] withName:@"New Folder"];
+}
+
+#pragma mark -- deletion of hierarchy objects  --
+- (IBAction)delete:(id)sender
+{
+	GIHierarchyNode *node = messageGroupsController.selectedObject;
+	
+	NSString *nodeType = [node isKindOfClass:[GIMessageGroup class]] ? NSLocalizedString(@"Mailbox", @"Delete warning dialog") : NSLocalizedString(@"Folder", @"Delete warning dialog");
+	NSAlert *alert = [[NSAlert alloc] init];
+	
+	[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete warning dialog")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Delete warning dialog")];
+	[alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Delete %@ '%@' and all of its contents?", @"Delete warning dialog"), nodeType, node.name]];
+	[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The deleted %@ cannot be restored.", @"Delete warning dialog"), nodeType]];
+	[alert setAlertStyle:NSWarningAlertStyle];	
+	
+	if ([alert runModal] == NSAlertFirstButtonReturn) 
+	{
+		// Delete clicked, delete the node
+		[self.messageGroupsController deleteHierarchyNode:node];
+	}
+	
+	[alert release];
+}
+
+#pragma mark -- renaming hierarchy objects --
+- (IBAction)rename:(id)sender
+{
+	GIHierarchyNode *node = messageGroupsController.selectedObject;
+	if (node)
+	{
+		messageGroupNameField.stringValue = node.name;
+		
+		[NSApp beginSheet:messageGroupRenameWindow modalForWindow:self.window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
+	}
+}
+
+- (IBAction)doRename:(id)sender
+{
+	GIHierarchyNode *node = messageGroupsController.selectedObject;
+	
+	node.name = messageGroupNameField.stringValue;
+	
+	[NSApp endSheet:messageGroupRenameWindow];
+	[messageGroupRenameWindow orderOut:self];
+}
+
+- (IBAction)cancelRename:(id)sender
+{
+	[NSApp endSheet:messageGroupRenameWindow];
+	[messageGroupRenameWindow orderOut:self];
+}
+
+#pragma mark -- message creation --
+- (GIProfile *)profileForMessage:(GIMessage *)aMessage
+/*" Return the profile to use for email replies. Tries first to guess a profile based on the replied email. If no matching profile can be found, the group default profile is chosen. May return nil in case of no group default and no match present. "*/
+{
+    GIProfile *result;
+    
+    result = [GIProfile guessedProfileForReplyingToMessage:[aMessage internetMessage]];
+    
+    if (!result)
+    {
+        result = [[self selectedGroup] defaultProfile];
+    }
+    
+    return result;
+}
+
+- (void)placeSelectedTextOnQuotePasteboard
+{
+    NSArray *types = [messageTextView writablePasteboardTypes];
+    NSPasteboard *quotePasteboard = [NSPasteboard pasteboardWithName:@"QuotePasteboard"];
+    
+    [quotePasteboard declareTypes:types owner:nil];
+    [messageTextView writeSelectionToPasteboard:quotePasteboard types:types];
+}
+
+- (IBAction)newMessage:(id)sender
+{
+	GIProfile *profileForNewMessage = nil;
+	
+	id selectedObject = [messageGroupsController selectedObject];
+	if ([selectedObject isKindOfClass:[GIMessageGroup class]])
+	{
+		profileForNewMessage = [selectedObject defaultProfile];
+	}
+	
+    [[[GIMessageEditorController alloc] initNewMessageWithProfile:profileForNewMessage] autorelease];
+}
+
+- (IBAction)replyAll:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initReplyTo:message all:YES profile:[self profileForMessage:message]] autorelease];
+}
+
+- (IBAction)replySender:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initReplyTo:message all:NO profile:[self profileForMessage:message]] autorelease];
+}
+
+- (IBAction)followup:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+    
+    [self placeSelectedTextOnQuotePasteboard];
+    
+    [[[GIMessageEditorController alloc] initFollowupTo:message profile:[[self selectedGroup] defaultProfile]] autorelease];
+}
+
+- (IBAction)replyDefault:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+	
+    if ([message isListMessage] || [message isUsenetMessage]) 
+	{
+        [self followup:sender];
+    } 
+	else 
+	{
+        [self replySender:sender];
+    }
+}
+
+- (IBAction)forward:(id)sender
+{
+    GIMessage *message = [self selectedMessage];
+	
+    [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
+}
+
+#pragma mark -- message flags manipulation --
+- (IBAction)markAsRead:(id)sender
+{
+	for (GIMessage *message in [threadsController selectedMessages]) 
+	{
+		message.isSeen = YES;
+	}
+}
+
+- (IBAction)markAsUnread:(id)sender
+{
+	for (GIMessage *message in [threadsController selectedMessages]) 
+	{
+		message.isSeen = NO;
+	}
+}
+
+- (IBAction)toggleRead:(id)sender
+{
+	if ([threadsController selectionHasUnreadMessages]) 
+	{
+		[self markAsRead:self];
+	} 
+	else 
+	{
+		[self markAsUnread:self];
+	}
+}
+
+#pragma mark -- progress info view handling --
+- (IBAction)toggleProgressInfo:(id)sender
+{
+	NSRect frame = progressInfoScrollView.frame;
+	
+	if (frame.size.height != 0.0)
+	{
+		progressInfoHeight = progressInfoScrollView.frame.size.height;
+		
+		// hide progress info:
+		frame.size.height = 0.0;
+		progressInfoScrollView.frame = frame;
+		[self setProgressInfoVisible:NO];
+	}
+	else
+	{
+	}
+}
+
+
+#pragma mark -- Miscellaneous --
+- (IBAction)commentTreeSelectionChanged:(id)sender
+{
+	GIMessage *message = [commentTreeView selectedMessage];
+	
+	if (message) 
+	{
+		[self showMessage:message];
+	}
+}
+
+- (IBAction)messageGroupSelectionChanged:(id)sender
+{
+	[self setThreadsOnlyMode];
+	
+	// if search with 'selected mailbox' is active then signal a filter change:
+	if ([self searchMode] && [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"] == SEARCHRANGE_SELECTEDGROUP)
+	{
+		[self searchRangeChanged:sender];
+	}
+	else
+	{
+		[searchField setStringValue:@""];
+		[self search:sender];
+	}
+}
+
+- (IBAction)debug:(id)sender
+{
+	//	NSLog(@"to = %@", [[[self selectedMessage] internetMessage] toWithFallback:NO]);
+}
+
+@end
+
+@implementation GIMainWindowController (Search)
+- (void)setSearchMode:(BOOL)aBool
+{
+	if (aBool == searchMode) return;
+	
+	if (aBool)
+	{
+		// switch to all mailboxes search:
+		[[NSUserDefaults standardUserDefaults] setInteger:SEARCHRANGE_ALLMESSAGEGROUPS forKey:@"SearchRange"];
+		
+		[self willChangeValueForKey:@"searchResultFilter"];
+		[self didChangeValueForKey:@"searchResultFilter"];
+	}
+	
+	// ...otherwise switch views:
+	NSView *oldView = nil;
+	NSView *newView = nil;
+	
+	if (searchMode)
+	{
+		oldView = searchResultView;
+		newView = regularThreadsView;
+	}
+	else
+	{
+		oldView = regularThreadsView;
+		newView = searchResultView;
+	}
+	
+	newView.frame = oldView.frame;
+	
+	NSMutableArray *subviews = [[threadMailSplitter subviews] mutableCopy];
+	[subviews replaceObjectAtIndex:0 withObject:newView];
+	
+	[threadMailSplitter setSubviews:subviews];
+	[self.window display];
+	
+	searchMode = aBool;
+}
+
+- (BOOL)searchMode
+{
+	return searchMode;
+}
+
+- (NSArray *)searchSortDescriptors
+{
+	NSData *sortDescriptorData = [[NSUserDefaults standardUserDefaults] objectForKey:@"SearchSortDescriptors"];
+	if (!sortDescriptorData) return [NSArray array];
+	
+	NSArray *result = [NSKeyedUnarchiver unarchiveObjectWithData:sortDescriptorData];
+	
+	return result;
+}
+
+- (void)setSearchSortDescriptors:(NSArray *)anArray
+{
+	if (!anArray) [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SearchSortDescriptors"];
+	NSData *sortDescriptorData = [NSKeyedArchiver archivedDataWithRootObject:anArray];
+	[[NSUserDefaults standardUserDefaults] setObject:sortDescriptorData forKey:@"SearchSortDescriptors"];
+	
+	[query setSortDescriptors:anArray];
+}
+
+- (IBAction)search:(id)sender
+{
+	NSString *searchPhrase = [searchField stringValue];
+	
+	if (searchPhrase.length)
+	{
+		NSString *searchPhraseContains = [NSString stringWithFormat:@"*%@*", searchPhrase];
+		
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		NSInteger searchFields = [defaults integerForKey:@"SearchFields"];
+		
+		[query setSortDescriptors:[self searchSortDescriptors]];
+		
+		[self setSearchMode:YES];
+		
+		switch (searchFields)
+		{
+			case SEARCHFIELDS_ALL:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemTextContent like[cd] %@) OR (kMDItemSubject like[cd] %@) OR (kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@) OR (kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhrase, searchPhraseContains, searchPhraseContains, searchPhraseContains, searchPhraseContains, searchPhraseContains]];
+				break;
+			case SEARCHFIELDS_AUTHOR:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemAuthors like[cd] %@) OR (kMDItemAuthorEmailAddresses like[cd] %@))", searchPhraseContains, searchPhraseContains]];
+				break;
+			case SEARCHFIELDS_SUBJECT:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND (kMDItemSubject like[cd] %@)", searchPhraseContains]];
+				break;
+			case SEARCHFIELDS_RECIPIENTS:
+				[query setPredicate:[NSPredicate predicateWithFormat:@"(kMDItemContentTypeTree == 'org.objectpark.gina.message') AND ((kMDItemRecipients like[cd] %@) OR (kMDItemRecipientEmailAddresses like[cd] %@))", searchPhraseContains, searchPhraseContains]];
+				break;
+			default:
+				NSAssert(NO, @"no search fields specified");
+				break;
+		}
+		
+		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
+		[query startQuery];
+	}
+	else
+	{
+		[self setSearchMode:NO];
+	}
+}
+
+- (NSPredicate *)searchResultFilter
+{
+	// check if filtering needed:
+	NSInteger searchRange = [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"];
+	
+	GIMessageGroup *selectedGroup = self.messageGroupsController.selectedObject;
+	
+	if ([selectedGroup isKindOfClass:[GIMessageGroup class]])
+	{
+		if (searchRange == SEARCHRANGE_SELECTEDGROUP)
+		{
+			//			NSLog(@"selected group");
+			NSPredicate *result = [NSPredicate predicateWithFormat:@"%@ in message.thread.messageGroups", selectedGroup]; 
+			return result;
+		}
+		//		else
+		//		{
+		//			NSLog(@"all groups");
+		//		}
+	}
+	
+	return nil;
+}
+
+- (IBAction)searchRangeChanged:(id)sender
+{
+	[self willChangeValueForKey:@"searchResultFilter"];
+	[self didChangeValueForKey:@"searchResultFilter"];
+	[self.searchResultTableView willChangeValueForKey:@"numberOfRows"];
+	[self.searchResultTableView didChangeValueForKey:@"numberOfRows"];
+}
+
+- (void)queryNotification:(NSNotification *)note
+{
+    // the NSMetadataQuery will send back a note when updates are happening.
+	
+    // by looking at the [note name], we can tell what is happening
+    if ([[note name] isEqualToString:NSMetadataQueryDidStartGatheringNotification])
+    {
+        // the query has just started
+        NSLog(@"search: started gathering");
+    }
+    else if ([[note name] isEqualToString:NSMetadataQueryDidFinishGatheringNotification])
+    {
+        // at this point, the query will be done. You may recieve an update later on.
+        NSLog(@"search: finished gathering");
+		[self.searchResultTableView willChangeValueForKey:@"numberOfRows"];
+		[self.searchResultTableView didChangeValueForKey:@"numberOfRows"];
+		//        [self processSearchResult:[note object]];
+    }
+    else if ([[note name] isEqualToString:NSMetadataQueryGatheringProgressNotification])
+    {
+        // the query is still gatherint results...
+        NSLog(@"search: progressing...");
+    }
+    else if ([[note name] isEqualToString:NSMetadataQueryDidUpdateNotification])
+    {
+        // an update will happen when Spotlight notices that a file as added,
+        // removed, or modified that affected the search results.
+        NSLog(@"search: an update happened.");
+    }
 }
 
 @end
