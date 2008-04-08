@@ -372,11 +372,11 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 - (IBAction) emptyTrash: (id) sender
 {
-	GIMessageGroup* trashGroup = [GIMessageGroup trashMessageGroup];
-	
-	for (GIThread* trashedThread in [trashGroup threads]) {
+	NSSet* threads = [[GIMessageGroup trashMessageGroup] threads];
+	GIThread* trashedThread;
+	while (trashedThread = [threads anyObject]) {
 		NSLog(@"Should delete thread %@", trashedThread);
-		[trashedThread delete];
+		[trashedThread delete]; // removes trashedThread from threads
 	}
 	[self.context saveChanges];
 }
