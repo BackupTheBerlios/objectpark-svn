@@ -326,9 +326,9 @@
 	}	
 }
 
-- (void) showMessage:(GIMessage*) message
+- (void)showMessage:(GIMessage *)message
 /*" Tries to show the message given. Selects any group the thread is in. "*/
-{
+{	
 	GIMessageGroup* group = message.thread.messageGroups.lastObject;
 	// Todo: Do not show a message in the allThreads group!
 	if (group) {
@@ -339,7 +339,10 @@
 
 		[threadsController setSelectedItemsPaths: [NSArray arrayWithObject: itemPath] byExtendingSelection: NO];
 	}
-	[threadsOutlineView.window makeFirstResponder: threadsOutlineView];
+	
+	[self setSearchMode:NO];
+
+	[threadsOutlineView.window makeFirstResponder: threadsOutlineView];	
 }
 
 - (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
@@ -1098,6 +1101,7 @@ static BOOL isShowingThreadsOnly = NO;
 @end
 
 @implementation GIMainWindowController (Search)
+
 - (void)setSearchMode:(BOOL)aBool
 {
 	if (aBool == searchMode) return;
@@ -1109,6 +1113,10 @@ static BOOL isShowingThreadsOnly = NO;
 		
 		[self willChangeValueForKey:@"searchResultFilter"];
 		[self didChangeValueForKey:@"searchResultFilter"];
+	}
+	else
+	{
+		[searchField setStringValue:@""];
 	}
 	
 	// ...otherwise switch views:
@@ -1132,6 +1140,8 @@ static BOOL isShowingThreadsOnly = NO;
 	[subviews replaceObjectAtIndex:0 withObject:newView];
 	
 	[threadMailSplitter setSubviews:subviews];
+//	[threadMailSplitter adjustSubviews];
+	
 	[self.window display];
 	
 	searchMode = aBool;
