@@ -50,6 +50,22 @@
 
 extern NSString* OPStringFromOID(OID oid);
 
+@interface OPPersistenceStatistics: NSObject {
+	
+@public 
+	unsigned instancesLoaded; // statistics
+	unsigned numberOfObjectsSaved; // statistics
+	unsigned numberOfObjectsDeleted; // statistics
+@private
+	NSCountedSet* faultFireCountsByKey; // statistics
+}
+
+- (NSCountedSet*) faultFireCountsByKey;
+- (void) reset;
+
+@end
+
+
 @interface OPPersistentObjectContext : NSObject {
     
 	@private
@@ -65,11 +81,7 @@ extern NSString* OPStringFromOID(OID oid);
     OPDBLite* database;
 	NSString* databasePath;
 	
-	unsigned numberOfFaultsFired; // statistics
-	unsigned numberOfFaultsCreated; // statistics
-	unsigned numberOfObjectsSaved; // statistics
-	unsigned numberOfObjectsDeleted; // statistics
-	NSCountedSet* faultFireCountsByKey; // statistics
+	OPPersistenceStatistics* statistics;
 	
 	/*" Maps join table names to OPObjectReleationship objects, recording the n:m relationship changes for that join table. Used to update fetched n:m relationships. "*/
 	NSMutableDictionary* relationshipChangesByJoinTable;

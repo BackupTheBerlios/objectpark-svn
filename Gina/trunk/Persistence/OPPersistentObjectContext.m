@@ -259,7 +259,7 @@ typedef struct {
 - (void) willFireFault: (OPPersistentObject*) fault forKey: (NSString*) key
 /*" The key parameter denotes the reason fault is fired (a key-value-coding key). Currently only used for statistics. "*/
 {
-	[faultFireCountsByKey addObject: key];
+	[statistics.faultFireCountsByKey addObject: key];
 }
 
 
@@ -358,7 +358,7 @@ NSString* OPStringFromOID(OID oid)
     OPPersistentObject* result = [self objectRegisteredForOID: oid];
     if (!result) { 
         // not found - create a fault object:
-		numberOfFaultsCreated++;
+		statistics->instancesLoaded++;
         //result = [[[poClass alloc] initFaultWithContext: self oid: oid] autorelease]; // also registers result with self
 		Class theClass = [self classForCID: CIDFromOID(oid)];
 		result = [theClass alloc];
@@ -488,12 +488,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	[decoder release];
 	decoder = [[OPKeyedUnarchiver alloc] initWithContext: self];
 	
-	// Reset statistics:
-	 numberOfFaultsFired = 0; 
-	 numberOfFaultsCreated = 0;
-	 numberOfObjectsSaved = 0;
-	 numberOfObjectsDeleted = 0;
-	 [faultFireCountsByKey release]; faultFireCountsByKey = [[NSCountedSet alloc] init];
+	[statistics reset];
 	
 	 @synchronized(changedObjects) {
 		 [changedObjects release]; changedObjects = [[NSMutableSet alloc] init]; 
@@ -518,6 +513,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (id) init 
 {
     if (self = [super init]) {
+		statistics = [[OPPersistenceStatistics alloc] init];
         [self reset];      
 
     }
@@ -668,7 +664,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		return;
 	}
 		
-		
 	NSLog(@"Saving %u changed objects...\n%@", [changedObjects count],  /*NSDebugEnabled ? changedObjects :*/ @"");
 	NSLog(@"Deleting %u objects...\n%@", [deletedObjects count],  /*NSDebugEnabled ? [deletedObjects allObjects] :*/ @"");
 
@@ -712,79 +707,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	NSLog(@"Allocated instances after -saveChanges: %@\nContext: %@", instanceStatistic, self);
 }
 
-//- (void) saveChanges
-///*" Central method. Writes all changes done to persistent objects to the database. Afterwards, those objects are no longer retained by the context. "*/
-//{
-//	@synchronized(self) {
-//		
-//
-//		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init]; // me might produce a lot of temp. objects
-//		
-//		[db beginTransaction];
-//		
-//		@synchronized(changedObjects) {
-//			
-//			[changedObjects minusSet: deletedObjects];
-//			
-//			if ([changedObjects count]) {
-//				if (NSDebugEnabled) NSLog(/*OPDebugLog OPPERSISTENCE, OPINFO, */@"Saving %u object(s) to the database.", [changedObjects count]);
-//				
-//			    // Process all updated objects and save their changed attribute sets:
-//				NSEnumerator* coe = [changedObjects objectEnumerator];
-//				OPPersistentObject* changedObject;
-//				while (changedObject = [coe nextObject]) {
-//					
-//					[changedObject willSave];
-//					OID newOid;
-//					@synchronized(db) { // to be gone
-//						newOid = [db updateEntryWithOid: [changedObject currentOid] 
-//												 values: [changedObject attributeValues]];
-//						//NSLog(@"Saving object: %@", changedObject);
-//					}
-//					
-//					[changedObject setOid: newOid]; // also registers object
-//					
-//				}
-//				
-//				numberOfObjectsSaved += [changedObjects count];
-//				// Release all changed objects:
-//				[changedObjects removeAllObjects];
-//			}	
-//			
-//			[pool release]; pool = [[NSAutoreleasePool alloc] init];
-//			
-//			
-//			if ([deletedObjects count]) {
-//				
-//				if (NSDebugEnabled) NSLog(@"Deleting %u objects from the database", [deletedObjects count]);
-//				NSEnumerator* coe = [deletedObjects objectEnumerator];
-//				OPPersistentObject* deletedObject;
-//				while (deletedObject = [coe nextObject]) {
-//					
-//					//NSLog(@"Will honk %@", deletedObject);
-//					@synchronized(db) { // to be gone
-//						
-//						[db deleteEntryWithOid: [deletedObject currentOid]];
-//					}
-//				}
-//				
-//				numberOfObjectsDeleted += [deletedObjects count];
-//				// Release all changed objects:
-//				[deletedObjects removeAllObjects];
-//			}
-//		}
-//		
-//		
-//		[pool release]; pool = [[NSAutoreleasePool alloc] init];
-//		
-//		@synchronized(db) { // to be gone
-//			[db commitTransaction];
-//		}
-//		
-//		[pool release];
-//	}
-//}
-
 - (void) deleteObject: (OPPersistentObject*) object
 /*" Marks object for deletion on the next -saveChanges call. "*/
 {
@@ -804,57 +726,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		}
 	}
 }
-
-//- (void) insertObject: (OPPersistentObject*) object
-//{
-//	// We cannot register object here because it does not yet have an oid.
-//	
-//	[[cachedObjectsByClass objectForKey: [object class]] addObject: object];
-//	[self didChangeObject: object];
-//}
-
-//
-//- (OPFaultingArray*) containerForObject: (id) object
-//						relationShipKey: (NSString*) key
-///*" Returns the container specified in the attribute description. Currently, only OPFaultingArray is supported or nil if key does not
-//	denote a to-many relationship. Called from OPPersistentObject willAccessValueForKey... "*/
-//{
-//	OPClassDescription* cd          = [[object class] persistentClassDescription];
-//	OPAttributeDescription* ad      = [cd attributeWithName: key];
-//	NSString* sql                   = [ad queryString];
-//	NSString* sortKey               = nil; 
-//	Class     sortKeyClass          = nil;
-//	OPFaultingArray* result         = nil;
-//	
-//	//OPPersistentObjectEnumerator* e = nil;
-//	
-//	if ([ad isToManyRelationship] && sql != nil) {
-//		// We might want to cache these:
-//		if (sortKey = [ad sortAttributeName]) {
-//			sortKeyClass = [[[[ad attributeClass] persistentClassDescription] attributeWithName: sortKey] attributeClass];
-//		}
-//		
-//		numberOfRelationshipsFired++;
-//		
-//		
-//		result = [self fetchObjectsOfClass: [ad attributeClass] 
-//							   sortedByKey: sortKey
-//								  keyClass: sortKeyClass
-//							   queryFormat: sql, object, nil];
-//		
-//		
-//		OPObjectRelationship* rchanges = [self manyToManyRelationshipForAttribute: ad];
-//		if (rchanges) {
-//			@synchronized(rchanges) { // do not lock the context here? Deadlock!
-//				
-//				// This is a many-to-many relation. Changes since the last -saveChanges are recorded in the OPObjectRelationship object and must be re-done:
-//				[rchanges updateRelationshipNamed: key from: object values: result];
-//			}
-//		}
-//	}
-//	return result;
-//}
-
 
 - (void) revertChanges
 {
@@ -924,7 +795,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 {
     [self close]; // ok, if already closed
 
-    [faultFireCountsByKey release];
+    [statistics release];
 	[deletedObjects release];
 	[changedObjects release];
 	[encoder release]; encoder = nil;
@@ -939,7 +810,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"%@ #faults registered/created: %u/%u, #saved: %u, #deleted: %u, \nfireKeys: %@ faultCacheSize: %u", [super description], NSCountHashTable(registeredObjects), numberOfFaultsCreated, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey, faultCache.count];
+	return [NSString stringWithFormat: @"%@ registered instances: %@,  faultCacheSize: %u, %@", [super description], NSCountHashTable(registeredObjects), faultCache.count, statistics];
 }
 
 - (OPDBLite*) database
@@ -1007,154 +878,6 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 @end
 
-/*
-@implementation OPPersistentObjectEnumerator 
-
-static NSHashTable* allInstances;
-
-+ (void) initialize
-{
-	if (!allInstances) {
-		allInstances = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 10);
-	}
-}
-
-- (id) initWithContext: (OPPersistentObjectContext*) aContext
-		   resultClass: (Class) poClass 
-		   queryString: (NSString*) sql
-{
-	if (self = [super init]) {
-		
-		context     = [aContext retain];
-		resultClass = poClass;
-		
-		id connection = [context databaseConnection];
-		
-		@synchronized(connection) {
-			
-			sqlite3_prepare([connection database], [sql UTF8String], -1, &statement, NULL);	
-			
-			if (!statement) {
-				//NSLog(@"Error preparing statement: %@", [[context databaseConnection] lastError]);
-				[connection raiseSQLiteError];
-				return nil;
-			}
-		}
-		
-		NSHashInsert(allInstances, self);
-		
-		//NSLog(@"Created enumerator statement %@ for table %@", sql, [resultClass databaseTableName]);
-	} 
-	return self;
-}
-
-- (id) initWithContext: (OPPersistentObjectContext*) aContext
-		   resultClass: (Class) poClass 
-		   whereClause: (NSString*) clause
-{	
-	NSString* queryString = [NSString stringWithFormat: ([clause length]>0 ? @"select ROWID from %@ where %@;" : @"select ROWID from %@;"), [[poClass persistentClassDescription] tableName], clause];
-
-	return [self initWithContext: aContext resultClass: poClass queryString: queryString];
-}
-
-// "select ZMESSAGE.ROWID from ZMESSAGE, ZJOIN where aaa=bbb;"
-
-
-- (void) bind: (id) variable, ...;
-
-{
-	// locking?
-	//NSParameterAssert([[variable class] canPersist]);
-	[variable bindValueToStatement: statement index: 1];
-#warning todo: Implement vararg to support more than one variable binding.
-	NSHashInsert(allInstances, self);
-}
-
-
-- (void) reset
-{
-	sqlite3_reset(statement);
-	NSHashRemove(allInstances, self);
-}
-
-- (BOOL) skipObject
-	//" Returns YES, if an object was skipped, NO otherwise (nothing to enumerate). Similar to nextObject, but does not create the result object (if any). "//
-{
-	int res;
-	res = sqlite3_step(statement);
-	
-	if (res!=SQLITE_ROW) {
-		[self reset]; // finished
-	}
-	return (res==SQLITE_ROW);
-}
-
-- (NSArray*) allObjects
-{
-	return (NSArray*)[self allObjectsSortedByKey: nil ofClass: nil];
-}
-
-- (OPFaultingArray*) allObjectsSortedByKey: (NSString*) sortKey 
-								   ofClass: (Class) sortKeyClass;
-//" Returns an OPFaultingArray containing all the faults.
-	If sortKey is a key-value-complient key for the resultClass, the result is sorted by the key given and the second result column is expected to contain the sort objects in ascending order while the first column must always contain ROWIDs. "//
-{
-	OPFaultingArray* result = [OPFaultingArray array];
-	[result setSortKey: sortKey];
-	[result setElementClass: resultClass];
-	while ([self skipObject]) {
-		ROWID rid = sqlite3_column_int64(statement, 0);
-		id sortObject = sortKey ? [sortKeyClass newFromStatement: statement index: 1] : nil;
-		[result addOid: rid sortObject: sortObject];
-	}
-	return result;
-}
-
-- (sqlite3_stmt*) statement
-{
-	return statement;
-}
-
-- (id) nextObject
-	//" Returns the next fetched object including all its attributes. "//
-{
-	id result = nil;
-	
-	if (sqlite3_step(statement)==SQLITE_ROW) {
-		result = [resultClass newFromStatement: statement index: 0];
-		//[context unlock];
-	} else {
-		//NSLog(@"%@: Stopping enumeration. return code=%d", self, res);
-		//[context unlock];
-		[self reset]; // finished
-	}
-	//NSLog(@"%@: Enumerated object %@", self, result);
-	return result;
-}
-
-+ (void) printAllRunningEnumerators
-{
-	NSHashEnumerator e = NSEnumerateHashTable(allInstances);
-	id item;
-	while (item = NSNextHashEnumeratorItem(&e)) {
-		NSLog(@"Running Enumerator: %@", item);
-	}
-	NSEndHashTableEnumeration(&e);
-}
-
-- (void) dealloc
-{
-	sqlite3_finalize(statement);
-	[context release]; context = nil;
-	NSHashRemove(allInstances, self);
-	[super dealloc];
-}
-
-
-@end
-
-*/
-
 
 @implementation NSCoder (OPPersistence)
 
@@ -1179,3 +902,40 @@ static NSHashTable* allInstances;
 
 @end
 
+@implementation OPPersistenceStatistics
+
+- (void) reset
+{
+	// Reset statistics:
+	instancesLoaded = 0;
+	numberOfObjectsSaved = 0;
+	numberOfObjectsDeleted = 0;
+	[faultFireCountsByKey autorelease]; faultFireCountsByKey = [[NSCountedSet alloc] init];
+}
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"Instance Statistics (total numbers):\n\n#created (total): %u\n #saved : %u\n#deleted : %u\nFiring keys: %@", instancesLoaded, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
+}
+
+- (NSCountedSet*) faultFireCountsByKey
+{
+	return faultFireCountsByKey;
+}
+
+- (id) init
+{
+	if (self = [super init]) {
+		[self reset];
+	}
+	return self;
+}
+
+
+- (void) dealloc 
+{
+	[faultFireCountsByKey release];
+	[super dealloc];
+}
+
+@end

@@ -220,6 +220,29 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[super willDelete];
 }
 
+- (GIMessage*) nextMessageForMessage: (GIMessage*) previousMessage
+/*" Delivers the next message the user might want to see. Pass nil for the first unread message. If there is no unread message in the receiver, the next message (byTree) will be returned. Pass in a previous messsage to start search there. "*/
+{
+	NSArray* sortedMessages = self.messagesByTree;
+	unsigned index = 0; // index of the previous message
+	if (previousMessage) {
+		unsigned found = [sortedMessages indexOfObjectIdenticalTo: previousMessage];
+		if (found != NSNotFound) index = found;
+	}
+	unsigned startIndex = index;
+	BOOL hasUnread = self.unreadMessageCount > 0;
+	// Start searching at index and find an unread message:
+	index = (index+1) % sortedMessages.count;
+	while (index != startIndex) {
+		GIMessage* nextMessage = [sortedMessages objectAtIndex: index];
+		if (! hasUnread || ! [nextMessage hasFlags: OPSeenStatus]) {
+			return nextMessage;
+		}
+		index = (index+1) % sortedMessages.count;
+	}
+	return [sortedMessages objectAtIndex: index];
+}
+
 /*" Sets the date attribute according to that of the latest message in the receiver. This method fires all message faults - so be careful."*/
 - (void)calculateDate
 {

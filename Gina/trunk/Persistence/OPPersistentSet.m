@@ -362,7 +362,7 @@
 	int error = 0;
 	//NSLog(@"Should position cursor to index: %u (from %u)", index, cursorPosition);
 	if (cursorPosition == NSNotFound || ! [arrayCursor isValid]) {
-		NSLog(@"Resetting cursor (valid = %u)", [arrayCursor isValid]);
+		//NSLog(@"Resetting cursor (valid = %u)", [arrayCursor isValid]);
 
 		error = [arrayCursor moveToFirst];
 		NSAssert1(error == 0, @"Unable to position to index %u. No entries?", index);			
