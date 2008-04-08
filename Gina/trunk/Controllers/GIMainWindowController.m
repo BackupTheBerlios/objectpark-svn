@@ -528,19 +528,14 @@ static BOOL isShowingThreadsOnly = NO;
 	else if (!selectedMessage)
 	{
 		NSArray *threads = [self selectedThreads];
-		if (threads.count == 1)
-		{
-			GIThread *selectedThread = [threads lastObject];
-			if ([[threadsController outlineView] isItemExpanded:selectedThread])
-			{
-				[[threadsController outlineView] collapseItem:selectedThread];
-			}
-			else
-			{
-				GIMessage *message = [[selectedThread messagesByTree] objectAtIndex:0];
-				message = [message.thread nextMessageForMessage:nil];
-				
-				[self showMessage:message];
+		NSOutlineView* outlineView = [threadsController outlineView];
+		if (threads.count == 1) {
+			GIThread* selectedThread = [threads lastObject];
+			if ([outlineView isItemExpanded:selectedThread]) {
+				[outlineView collapseItem:selectedThread];
+			} else {
+				GIMessage* message = [selectedThread nextMessageForMessage: nil];
+				[threadsController setSelectedItemsPaths: [NSArray arrayWithObject: [NSArray arrayWithObjects: selectedThread, message, nil]] byExtendingSelection: NO];
 			}
 		}
 	}

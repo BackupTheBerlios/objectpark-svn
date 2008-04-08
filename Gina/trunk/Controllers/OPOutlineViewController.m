@@ -458,6 +458,8 @@
 			if ([self outlineView: outlineView isItemExpandable: item]) {
 				[outlineView expandItemAtRow: row expandChildren: NO];
 				container = [item valueForKey: childKey];
+				NSRect redisplayRect = NSUnionRect([outlineView rectOfRow: row], [outlineView rectOfRow: row + container.count]);
+				[outlineView setNeedsDisplayInRect: redisplayRect];
 			} else {
 				break;
 			}

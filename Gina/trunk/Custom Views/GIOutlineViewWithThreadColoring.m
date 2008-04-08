@@ -24,6 +24,23 @@
     }
 }
 
+- (void)setNeedsDisplayInRect: (NSRect) invalidRect
+{
+	[super setNeedsDisplayInRect: invalidRect];
+}
+
+
+- (void)drawRow:(NSInteger)row clipRect:(NSRect)clipRect
+{
+	[super drawRow: row clipRect: clipRect];
+}
+
+- (void)drawRect:(NSRect)rect 
+{
+	[super drawRect:rect];
+    // Drawing code here.
+}
+
 - (IBAction) delete: (id) sender
 {
 	NSUInteger selectionIndex = [[self selectedRowIndexes] firstIndex];
