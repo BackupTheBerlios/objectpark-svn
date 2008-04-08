@@ -144,9 +144,13 @@
 
 - (id) anyObject
 {
+	if (count == 0) return nil;
+	
 	OPPersistentSetArray* sarray = (OPPersistentSetArray*) [self sortedArray];
 	NSUInteger pos = [sarray cursorPosition];
-	if (pos == NSNotFound) return nil;
+	if (pos == NSNotFound) {
+		pos = 0;
+	}
 	
 	id result = [sarray objectAtIndex: pos];
 	return result;

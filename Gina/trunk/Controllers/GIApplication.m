@@ -378,6 +378,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		NSLog(@"Should delete thread %@", trashedThread);
 		[trashedThread delete]; // removes trashedThread from threads
 	}
+	[threads anyObject];
 	[self.context saveChanges];
 }
 
