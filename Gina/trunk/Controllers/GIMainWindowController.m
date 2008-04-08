@@ -43,6 +43,7 @@
 @synthesize selectedThreads;
 @synthesize messageGroupsController;
 @synthesize query;
+@synthesize searchResultTableView;
 
 + (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
 {
@@ -515,6 +516,15 @@
 {
 	if (aBool == searchMode) return;
 	
+	if (aBool)
+	{
+		// switch to all mailboxes search:
+		[[NSUserDefaults standardUserDefaults] setInteger:SEARCHRANGE_ALLMESSAGEGROUPS forKey:@"SearchRange"];
+		
+		[self willChangeValueForKey:@"searchResultFilter"];
+		[self didChangeValueForKey:@"searchResultFilter"];
+	}
+	
 	// ...otherwise switch views:
 	NSView *oldView = nil;
 	NSView *newView = nil;
@@ -578,6 +588,8 @@
 		
 		[query setSortDescriptors:[self searchSortDescriptors]];
 		
+		[self setSearchMode:YES];
+
 		switch (searchFields)
 		{
 			case SEARCHFIELDS_ALL:
@@ -599,7 +611,6 @@
 		
 		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
 		[query startQuery];
-		[self setSearchMode:YES];
 	}
 	else
 	{
@@ -635,6 +646,8 @@
 {
 	[self willChangeValueForKey:@"searchResultFilter"];
 	[self didChangeValueForKey:@"searchResultFilter"];
+	[self.searchResultTableView willChangeValueForKey:@"numberOfRows"];
+	[self.searchResultTableView didChangeValueForKey:@"numberOfRows"];
 }
 
 - (IBAction)messageGroupSelectionChanged:(id)sender
@@ -698,7 +711,8 @@
     {
         // at this point, the query will be done. You may recieve an update later on.
         NSLog(@"search: finished gathering");
-		
+		[self.searchResultTableView willChangeValueForKey:@"numberOfRows"];
+		[self.searchResultTableView didChangeValueForKey:@"numberOfRows"];
 //        [self processSearchResult:[note object]];
     }
     else if ([[note name] isEqualToString:NSMetadataQueryGatheringProgressNotification])

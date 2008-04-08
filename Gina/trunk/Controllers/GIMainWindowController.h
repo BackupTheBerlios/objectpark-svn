@@ -60,6 +60,7 @@
 @property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;
 @property (retain) NSArray *selectedThreads;
 @property (readonly) NSMetadataQuery *query;
+@property (readonly) NSTableView *searchResultTableView;
 
 - (IBAction) commentTreeSelectionChanged: (id) sender;
 - (IBAction) groupTreeSelectionChanged: (id) sender;
