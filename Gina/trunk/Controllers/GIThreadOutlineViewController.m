@@ -812,6 +812,42 @@ NSDateFormatter *timeAndDateFormatter()
 	return [self valueForAttribute:(NSString *)kMDItemSubject];
 }
 
+- (NSAttributedString *)subjectForDisplay
+{
+	BOOL isSeen = [[self message] isSeen];
+	
+	NSAttributedString *result = [[[NSAttributedString alloc] initWithString:[self subject] attributes:isSeen ? readAttributes() : unreadAttributes()] autorelease];
+	return result;
+}
+
+- (NSAttributedString *)authorForDisplay
+{
+	GIMessage *message = [self message];
+	unsigned flags  = [message flags];
+	NSString *from = nil;
+	
+	if (flags & OPIsFromMeStatus) 
+	{
+		from = [NSString stringWithFormat:@"%C %@", 0x279F/*Right Arrow*/, message.recipientsForDisplay];
+	} 
+	else 
+	{
+		from = [self author];
+		if (!from.length) from = @"- sender missing -";
+		from = [NSString stringWithFormat:@"%@", from];
+	}       
+	NSDictionary *completeAttributes = ((flags & OPSeenStatus) || (flags & OPIsFromMeStatus)) ? readAttributes() : unreadAttributes();
+	
+	if (flags & OPJunkMailStatus) 
+	{
+		completeAttributes = spamMessageAttributes();
+	}
+	
+	NSAttributedString *result = [[NSAttributedString alloc] initWithString:nilGuard(from) attributes:completeAttributes];
+	
+	return result;
+}
+
 - (NSAttributedString *)subjectAndAuthor
 {
 	GIMessage *message = [self message];

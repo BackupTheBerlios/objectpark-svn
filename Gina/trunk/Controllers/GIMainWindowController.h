@@ -12,7 +12,7 @@
 #import "GIMainWindow.h"
 
 #define SEARCHRANGE_ALLMESSAGEGROUPS 0
-#define SEARCHRANGE_CURRENTGROUP 1
+#define SEARCHRANGE_SELECTEDGROUP 1
 
 #define SEARCHFIELDS_ALL 0
 #define SEARCHFIELDS_AUTHOR 1
@@ -87,6 +87,8 @@
 	
 - (void)showMessage:(GIMessage *)message;
 - (IBAction)search:(id)sender;
+- (IBAction)searchRangeChanged:(id)sender;
+- (IBAction)messageGroupSelectionChanged:(id)sender;
 
 - (void)setThreadsOnlyMode;
 - (BOOL)isShowingThreadsOnly;

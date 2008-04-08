@@ -190,7 +190,10 @@
 	[[searchResultTableView tableColumnWithIdentifier:@"date"] setSortDescriptorPrototype:sortDescriptor];
 	
 	sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:(NSString *)kMDItemSubject ascending:YES] autorelease];
-	[[searchResultTableView tableColumnWithIdentifier:@"subjectAndAuthor"] setSortDescriptorPrototype:sortDescriptor];
+	[[searchResultTableView tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:sortDescriptor];
+
+	sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:(NSString *)kMDItemAuthors ascending:YES selector:@selector(compareLastObject:)] autorelease];
+	[[searchResultTableView tableColumnWithIdentifier:@"author"] setSortDescriptorPrototype:sortDescriptor];
 
 	[[searchResultTableView tableColumnWithIdentifier:@"messagegroups"] setSortDescriptorPrototype:nil];
 
@@ -533,10 +536,14 @@
 	[subviews replaceObjectAtIndex:0 withObject:newView];
 	
 	[threadMailSplitter setSubviews:subviews];
-//	[oldView.superview setSubviews:[NSArray arrayWithObject:newView]];
 	[self.window display];
 	
 	searchMode = aBool;
+}
+
+- (BOOL)searchMode
+{
+	return searchMode;
 }
 
 - (NSArray *)searchSortDescriptors
@@ -597,6 +604,52 @@
 	else
 	{
 		[self setSearchMode:NO];
+	}
+}
+
+- (NSPredicate *)searchResultFilter
+{
+	// check if filtering needed:
+	NSInteger searchRange = [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"];
+	
+	GIMessageGroup *selectedGroup = self.messageGroupsController.selectedObject;
+	
+	if ([selectedGroup isKindOfClass:[GIMessageGroup class]])
+	{
+		if (searchRange == SEARCHRANGE_SELECTEDGROUP)
+		{
+//			NSLog(@"selected group");
+			NSPredicate *result = [NSPredicate predicateWithFormat:@"%@ in message.thread.messageGroups", selectedGroup]; 
+			return result;
+		}
+//		else
+//		{
+//			NSLog(@"all groups");
+//		}
+	}
+	
+	return nil;
+}
+
+- (IBAction)searchRangeChanged:(id)sender
+{
+	[self willChangeValueForKey:@"searchResultFilter"];
+	[self didChangeValueForKey:@"searchResultFilter"];
+}
+
+- (IBAction)messageGroupSelectionChanged:(id)sender
+{
+//	NSLog(@"messageGroupSelectionChanged");
+	
+	// if search with 'selected mailbox' is active then signal a filter change:
+	if ([self searchMode] && [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"] == SEARCHRANGE_SELECTEDGROUP)
+	{
+		[self searchRangeChanged:sender];
+	}
+	else
+	{
+		[searchField setStringValue:@""];
+		[self search:sender];
 	}
 }
 
@@ -1100,6 +1153,18 @@ static BOOL isShowingThreadsOnly = NO;
 - (NSImage *)statusPaneButtonAlternateImage
 {
 	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status_Pressed" : @"Show_Status_Pressed"];
+}
+
+@end
+
+@implementation NSArray (GIComparing)
+
+- (NSComparisonResult)compareLastObject:(id)otherArray
+{
+	id thisLastObject = [self lastObject];
+	id otherLastObject = [otherArray lastObject];
+	
+	return [thisLastObject compare:otherLastObject];
 }
 
 @end
