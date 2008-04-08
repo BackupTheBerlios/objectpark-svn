@@ -963,7 +963,9 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (IBAction)threadsDoubleAction:(id)sender
 {
-	unsigned messageSendStatus = [[self selectedMessage] sendStatus];
+	GIMessage *selectedMessage = [self selectedMessage];
+	unsigned messageSendStatus = [selectedMessage sendStatus];
+	
 	if (messageSendStatus > OPSendStatusNone) 
 	{
 		if (messageSendStatus >= OPSendStatusSending) 
@@ -976,16 +978,31 @@ static BOOL isShowingThreadsOnly = NO;
 			[[[GIMessageEditorController alloc] initWithMessage:[self selectedMessage]] autorelease];
 		}
 	} 
-	else if ([threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
+	else if (selectedMessage && [threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
 	{
 		// show message view and graphical thread view:
 		[threadMailSplitter setPosition:0.0 ofDividerAtIndex:0];
 		[self.window makeFirstResponder:(NSResponder *)messageTextView];
 		[self performSetSeenBehaviorForMessage:self.selectedMessage];
 	}
-	else
+	else if (!selectedMessage)
 	{
-		//NSLog(@"NOT collapsed. Ignoring");
+		NSArray *threads = [self selectedThreads];
+		if (threads.count == 1)
+		{
+			GIThread *selectedThread = [threads lastObject];
+			if ([[threadsController outlineView] isItemExpanded:selectedThread])
+			{
+				[[threadsController outlineView] collapseItem:selectedThread];
+			}
+			else
+			{
+				GIMessage *message = [[selectedThread messagesByTree] objectAtIndex:0];
+				message = [message.thread nextMessageForMessage:nil];
+				
+				[self showMessage:message];
+			}
+		}
 	}
 }
 
