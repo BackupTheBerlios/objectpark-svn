@@ -368,6 +368,7 @@ NSString* OPStringFromOID(OID oid)
 			[result release];
 			return nil;
 		} 
+		[result autorelease];
 		[result setOID: oid]; // registers result - do not do that until we know there is data for oid
 
 		//NSLog(@"Caching persistent object (oid 0x%016llx)", oid);
@@ -708,7 +709,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		
 	}
 	
-	NSLog(@"Allocated instances after -saveChanges: %@", instanceStatistic);
+	NSLog(@"Allocated instances after -saveChanges: %@\nContext: %@", instanceStatistic, self);
 }
 
 //- (void) saveChanges
@@ -938,7 +939,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"%@ #faults registered/created: %u/%u, #saved: %u, #deleted: %u, \nfireKeys: %@", [super description], NSCountHashTable(registeredObjects), numberOfFaultsCreated, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
+	return [NSString stringWithFormat: @"%@ #faults registered/created: %u/%u, #saved: %u, #deleted: %u, \nfireKeys: %@ faultCacheSize: %u", [super description], NSCountHashTable(registeredObjects), numberOfFaultsCreated, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey, faultCache.count];
 }
 
 - (OPDBLite*) database
