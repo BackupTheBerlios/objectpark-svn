@@ -68,8 +68,9 @@
 			// puts message's thread potentially in message groups:
 			[GIMessageFilter applyFiltersToMessage:aMessage];
 			
-			// put in All Threads group if not already in:
-			if (![aMessage.thread.messageGroups containsObject:[GIMessageGroup defaultMessageGroup]])
+			// put in Default group if not already in any other group:
+			if (aMessage.thread.messageGroups.count == 0)
+//			if (![aMessage.thread.messageGroups containsObject:[GIMessageGroup defaultMessageGroup]])
 			{
 				[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup]];
 			}
@@ -85,39 +86,11 @@
 	} 	
 }
 
-//- (void)addDraftMessage:(GIMessage *)aMessage
-//{
-//    GIThread *thread = aMessage.thread;
-//	// Remove it from the queued message box (if there):
-//    if (thread) {
-//		[[[GIMessageGroup queuedMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
-//	}
-//    [self addMessage:aMessage toMessageGroup:[GIMessageGroup draftMessageGroup]];
-//}
-//
-//- (void) addQueuedMessage: (GIMessage*) aMessage
-//{
-//    GIThread *thread = aMessage.thread;
-//	// Remove it from the queued message box (if there):
-//    if (thread) {
-//		[[[GIMessageGroup draftMessageGroup] mutableSetValueForKey: @"threads"] removeObject: thread];
-//	}
-//	
-//    [self addMessage:aMessage toMessageGroup:[GIMessageGroup queuedMessageGroup]];
-//}
-//
-
-NSString* MboxImportJobName = @"mbox import";
-
-- (GIMessageGroup*) importMessagesFromMboxFileWithArguments: (NSDictionary*) arguments
-/*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. 
- 
- Should run as job (#{see OPJobs})."*/
+/*" Adds messages from the given mbox file (dictionary @"mboxFilename") to the message database applying filters/sorters. "*/
+- (GIMessageGroup *)importMessagesFromMboxFile:(NSString *)mboxFilePath move:(BOOL)doMove
 {
-    NSString* mboxFilePath = [arguments objectForKey:@"mboxFilename"];
     NSParameterAssert(mboxFilePath != nil);
 	NSString* groupName = [[mboxFilePath lastPathComponent] stringByDeletingPathExtension];
-    BOOL shouldCopyOnly = [[arguments objectForKey:@"copyOnly"] boolValue];
     int percentComplete = -1;
     NSDate* lastProgressSet = [[NSDate alloc] init];
     
@@ -136,7 +109,6 @@ NSString* MboxImportJobName = @"mbox import";
 		// Error handling here
 	}
 	
-	
     NSAssert1(mboxFile != nil, @"mbox file at path %@ could not be opened.", mboxFilePath);
     unsigned int mboxFileSize = [mboxFile mboxFileSize];
     
@@ -148,12 +120,6 @@ NSString* MboxImportJobName = @"mbox import";
     unsigned addedMessageCount = 0;
 	
 	NSOperation* operation = nil;
-//	OPJob *job = [OPJob job];
-//	
-//    [job setProgressInfo:[job progressInfoWithMinValue:0 
-//											  maxValue:mboxFileSize 
-//										  currentValue:[enumerator offsetOfNextObject] 
-//										   description:@""]];
 	
 	NSDate *startDate = [NSDate date];
 	
@@ -285,40 +251,27 @@ NSString* MboxImportJobName = @"mbox import";
     // only move if not already there:
     if (![[NSFileManager defaultManager] fileExistsAtPath:destinationPath])
     {
-        if (shouldCopyOnly)
+        if (doMove)
         {
-            NSAssert2([[NSFileManager defaultManager] copyPath:mboxFilePath toPath:destinationPath handler: NULL], @"Could not copy imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+            NSAssert2([[NSFileManager defaultManager] movePath:mboxFilePath toPath:destinationPath handler: NULL], @"Could not move imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
         }
         else
         {
-            NSAssert2([[NSFileManager defaultManager] movePath:mboxFilePath toPath:destinationPath handler: NULL], @"Could not move imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
+            NSAssert2([[NSFileManager defaultManager] copyPath:mboxFilePath toPath:destinationPath handler: NULL], @"Could not copy imported mbox at path %@ to directory %@", mboxFilePath, destinationPath);
         }
     }
 	return importGroup;
 }
 
-- (NSArray*) importMboxFiles: (NSArray*) paths
-		   moveOnSuccess: (BOOL) doMove
-/*" Schedules jobs for paths given. If doMove is YES, the file is moved to the imported folder - copied otherwise. Returns an array of MessageBox objects created. "*/
+/*" Schedules jobs for paths given. If doMove is YES, the file is moved to the imported folder - copied otherwise. Returns an array of MessageGroup objects created. "*/
+- (NSArray *)importMboxFiles:(NSArray *)paths moveOnSuccess:(BOOL)doMove
 {
-	NSMutableArray* groups = [NSMutableArray array];
-	if ([paths count]) {
-		//[self showActivityPanel: self];
+	NSMutableArray *groups = [NSMutableArray array];
+	for (NSString *boxFilename in paths)
+	{
+		id group = [self importMessagesFromMboxFile:boxFilename move:doMove];
 		
-		NSEnumerator* enumerator = [paths objectEnumerator];
-		NSString* boxFilename;
-		
-		while (boxFilename = [enumerator nextObject]) {
-			NSMutableDictionary *jobArguments = [NSMutableDictionary dictionary];
-			
-			[jobArguments setObject: boxFilename forKey: @"mboxFilename"];
-			//[jobArguments setObject: [OPPersistentObjectContext threadContext] forKey: @"parentContext"];
-			if (!doMove) [jobArguments setObject: [NSNumber numberWithBool: YES] forKey: @"copyOnly"];
-			
-			id group = [self importMessagesFromMboxFileWithArguments: jobArguments]; // synchronious for now
-			//[OPJob scheduleJobWithName:MboxImportJobName target:[[[GIMessageBase alloc] init] autorelease] selector:@selector(importMessagesFromMboxFileJob:) argument:jobArguments synchronizedObject:@"mbox import"];
-			[groups addObject: group];
-		}
+		[groups addObject:group];
 	}
 	return groups;
 }

@@ -484,7 +484,10 @@
 - (id) nextObject
 {
 	id result = nil;
-	NSAssert(changeCount == pSet->changeCount, @"set/array mutated during enumeration.");
+	if (changeCount != pSet->changeCount)
+	{
+		NSAssert(changeCount == pSet->changeCount, @"set/array mutated during enumeration.");
+	}
 	if (nextIndex < arrayCount) {
 		NSLog(@"enumerating index %u/%u", nextIndex, arrayCount);
 		result = [array objectAtIndex: nextIndex];

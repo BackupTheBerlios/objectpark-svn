@@ -101,6 +101,7 @@
 - (IBAction)toggleRead:(id)sender;
 
 /*" Progress info view handling "*/
+- (BOOL)progressInfoVisible;
 - (IBAction)toggleProgressInfo:(id)sender;
 
 /*" Miscellaneous "*/

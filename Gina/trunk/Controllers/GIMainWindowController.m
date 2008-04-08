@@ -137,20 +137,6 @@
 	[self autorelease];
 }
 
-- (void)setProgressInfoVisible:(BOOL)aBool
-{
-	[[NSUserDefaults standardUserDefaults] setBool:aBool forKey:ProgressInfoShown];
-}
-
-- (BOOL)progressInfoVisible
-{
-	return [[NSUserDefaults standardUserDefaults] boolForKey:ProgressInfoShown];
-}
-
-- (void)awakeFromNib
-{
-}
-
 - (void)windowDidLoad
 {
 	[searchResultView retain];
@@ -927,6 +913,16 @@ static BOOL isShowingThreadsOnly = NO;
 }
 
 #pragma mark -- progress info view handling --
+- (void)setProgressInfoVisible:(BOOL)aBool
+{
+	[[NSUserDefaults standardUserDefaults] setBool:aBool forKey:ProgressInfoShown];
+}
+
+- (BOOL)progressInfoVisible
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:ProgressInfoShown];
+}
+
 - (IBAction)toggleProgressInfo:(id)sender
 {
 	NSRect frame = progressInfoScrollView.frame;
