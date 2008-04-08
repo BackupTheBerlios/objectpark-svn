@@ -915,7 +915,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"Instance Statistics (total numbers):\n\n#created (total): %u\n #saved : %u\n#deleted : %u\nFiring keys: %@", instancesLoaded, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
+	return [NSString stringWithFormat: @"Instance Statistics (total numbers):\n#created: %u\n#saved : %u\n#deleted : %u\nFiring keys: %@\n", instancesLoaded, numberOfObjectsSaved, numberOfObjectsDeleted, faultFireCountsByKey];
 }
 
 - (NSCountedSet*) faultFireCountsByKey
