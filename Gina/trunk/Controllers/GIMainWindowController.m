@@ -37,6 +37,7 @@
 @synthesize messageGroupsController;
 @synthesize query;
 @synthesize searchResultTableView;
+@synthesize selectedMessageInSearchMode;
 
 - (GIMessageGroup *)selectedGroup
 {
@@ -47,7 +48,7 @@
 
 + (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
 {
-	return [NSSet setWithObjects:@"selectedThreads", @"selectedSearchResults", nil];
+	return [NSSet setWithObjects:@"selectedThreads", @"selectedSearchResults", @"selectedMessageInSearchMode", nil];
 }
 
 - (id)selectedMessageOrThread
@@ -57,6 +58,10 @@
 		if ([self.selectedSearchResults count] == 1)
 		{
 			return [[self.selectedSearchResults lastObject] message];
+		}
+		else
+		{
+			return self.selectedMessageInSearchMode;
 		}
 	}
 	else
@@ -182,7 +187,8 @@
 	[selectedThreads release];
 	[searchResultView release];
 	[regularThreadsView release];
-
+	[selectedMessageInSearchMode release];
+	
  	[super dealloc];
 }
 
@@ -558,6 +564,24 @@ static BOOL isShowingThreadsOnly = NO;
 		if (![self isShowingThreadsOnly] && isShowingThreadsOnly)
 		{
 			[self performSetSeenBehaviorForMessage:self.selectedMessage];
+		}
+		
+		// taking care of selection staying visible:
+		if ([self searchMode])
+		{
+			NSUInteger index = [[searchResultsArrayController selectionIndexes] lastIndex];
+			if (index != NSNotFound)
+			{
+				[searchResultTableView scrollRowToVisible:index];
+			}
+		}
+		else
+		{
+			NSUInteger index = [[threadsController.outlineView selectedRowIndexes] lastIndex];
+			if (index != NSNotFound)
+			{
+				[threadsController.outlineView scrollRowToVisible:index];
+			}
 		}
 	}
 }
@@ -1085,9 +1109,21 @@ static BOOL isShowingThreadsOnly = NO;
 {
 	GIMessage *message = [commentTreeView selectedMessage];
 	
-	if (message) 
+	if ([self searchMode])
 	{
-		[self showMessage:message];
+		self.selectedMessageInSearchMode = message;
+		[searchResultTableView deselectAll:self];
+		if (message)
+		{
+			[self performSetSeenBehaviorForMessage:message];
+		}
+	}
+	else
+	{
+		if (message) 
+		{
+			[self showMessage:message];
+		}
 	}
 }
 
@@ -1131,6 +1167,7 @@ static BOOL isShowingThreadsOnly = NO;
 	else
 	{
 		[searchField setStringValue:@""];
+		self.selectedMessageInSearchMode = nil;
 	}
 	
 	// ...otherwise switch views:
@@ -1170,6 +1207,12 @@ static BOOL isShowingThreadsOnly = NO;
 	[self.window display];
 	
 	searchMode = aBool;
+	
+	if (!aBool)
+	{
+		[self willChangeValueForKey:@"selectedThreads"];
+		[self didChangeValueForKey:@"selectedThreads"];
+	}
 }
 
 - (BOOL)searchMode

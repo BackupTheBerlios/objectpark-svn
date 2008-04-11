@@ -52,6 +52,8 @@
 	NSArray *selectedThreads;
 	NSArray *selectedSearchResults;
 	
+	GIMessage *selectedMessageInSearchMode;
+	
 	/* Binding stuff */
 	id observedObjectForSelectedThreads;
 	NSString *observedKeyPathForSelectedThreads;
@@ -66,7 +68,8 @@
 @property (retain) NSArray *selectedSearchResults;
 @property (readonly) NSMetadataQuery *query;
 @property (readonly) NSTableView *searchResultTableView;
-	
+@property (retain) GIMessage *selectedMessageInSearchMode;
+
 - (void)showMessage:(GIMessage *)message;
 
 - (void)setThreadsOnlyMode;
