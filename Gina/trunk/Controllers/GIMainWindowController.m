@@ -251,7 +251,10 @@
 	[threadsOutlineView setHighlightThreads:YES];
 	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
 	[threadsOutlineView setTarget:self];
-	[self setThreadsOnlyMode];
+	if ([self isShowingMessageOnly])
+	{
+		[self setThreadsOnlyMode];
+	}
 	
 	// Configure group view:
 	messageGroupsController.childKey = @"children";
@@ -289,7 +292,7 @@
 - (BOOL)isShowingMessageOnly
 {
 	NSView *upperview = [[threadMailSplitter subviews] objectAtIndex:0];
-	NSLog(@"upperview frame = %@", NSStringFromRect([upperview frame]));
+//	NSLog(@"upperview frame = %@", NSStringFromRect([upperview frame]));
 	BOOL result = [threadMailSplitter isSubviewCollapsed:upperview];
 	return result;
 }
@@ -1129,7 +1132,10 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (IBAction)messageGroupSelectionChanged:(id)sender
 {
-	[self setThreadsOnlyMode];
+	if ([self isShowingMessageOnly])
+	{
+		[self setThreadsOnlyMode];
+	}
 	
 	// if search with 'selected mailbox' is active then signal a filter change:
 	if ([self searchMode] && [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"] == SEARCHRANGE_SELECTEDGROUP)

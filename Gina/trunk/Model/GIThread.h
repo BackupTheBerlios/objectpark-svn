@@ -37,6 +37,8 @@
 
 - (NSArray*) messagesByTree; // slow!!
 
+- (GIMessage*) nextMessageForMessage: (GIMessage*) previousMessage;
+
 
 /*" Used in inverse relationship handling. "*/
 - (void) insertPrimitiveObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index;
