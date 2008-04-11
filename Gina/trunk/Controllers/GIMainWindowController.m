@@ -254,18 +254,23 @@
 	
 	[messageTextView setEditable:NO];
 	NSAssert(![messageTextView isEditable], @"should be non editable");
+		
+	[verticalSplitter setAutosaveName:@"VerticalSplitterAutosave"];
+	[threadMailSplitter setAutosaveName:@"ThreadMailSplitterAutosave"];
+	[mailTreeSplitter setAutosaveName:@"MailTreeSplitterAutosave"];
 	
 	[self.window makeKeyAndOrderFront:self];
 }
 
 - (void)setThreadsOnlyMode
 {
-	id subview = [self searchMode] == YES ? (id)searchResultView : (id)regularThreadsView;
+//	id subview = [self searchMode] == YES ? (id)searchResultView : (id)regularThreadsView;
 	
-	if ([threadMailSplitter isSubviewCollapsed:subview])
+	if (![threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
 	{
 		NSLog(@"only mail visible. switching to only threads visible.");
 		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
+		[threadMailSplitter adjustSubviews];
 		[self.window makeFirstResponder:threadsOutlineView];
 	}
 }
@@ -277,8 +282,19 @@
 
 - (BOOL)isShowingMessageOnly
 {
-	BOOL result = [threadMailSplitter isSubviewCollapsed:threadsOutlineView];
+	NSView *upperview = [[threadMailSplitter subviews] objectAtIndex:0];
+	NSLog(@"upperview frame = %@", NSStringFromRect([upperview frame]));
+	BOOL result = [threadMailSplitter isSubviewCollapsed:upperview];
 	return result;
+}
+
+- (void)showMessageOnly
+{
+	// show message view and graphical thread view:
+	[threadMailSplitter setPosition:0.0 ofDividerAtIndex:0];
+	[threadMailSplitter adjustSubviews];
+	[self performSetSeenBehaviorForMessage:self.selectedMessage];
+	[self.window makeFirstResponder:(NSResponder *)messageTextView];
 }
 
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage
@@ -340,9 +356,10 @@
 		[threadsController setSelectedItemsPaths: [NSArray arrayWithObject: itemPath] byExtendingSelection: NO];
 	}
 	
-	[self setSearchMode:NO];
-
-	[threadsOutlineView.window makeFirstResponder: threadsOutlineView];	
+	if (![self isShowingMessageOnly])
+	{
+		[threadsOutlineView.window makeFirstResponder:threadsOutlineView];	
+	}
 }
 
 - (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
@@ -576,10 +593,7 @@ static BOOL isShowingThreadsOnly = NO;
 	} 
 	else if (selectedMessage && [threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
 	{
-		// show message view and graphical thread view:
-		[threadMailSplitter setPosition:0.0 ofDividerAtIndex:0];
-		[self.window makeFirstResponder:(NSResponder *)messageTextView];
-		[self performSetSeenBehaviorForMessage:self.selectedMessage];
+		[self showMessageOnly];
 	}
 	else if (!selectedMessage)
 	{
@@ -1135,12 +1149,23 @@ static BOOL isShowingThreadsOnly = NO;
 	}
 	
 	newView.frame = oldView.frame;
+
+	BOOL isShowingMessageOnly = [self isShowingMessageOnly];
+	BOOL isShowingThreadsOnly = [self isShowingThreadsOnly];
 	
 	NSMutableArray *subviews = [[threadMailSplitter subviews] mutableCopy];
 	[subviews replaceObjectAtIndex:0 withObject:newView];
 	
 	[threadMailSplitter setSubviews:subviews];
-//	[threadMailSplitter adjustSubviews];
+	
+	if (isShowingMessageOnly)
+	{
+		[self showMessageOnly];
+	}
+	else if (isShowingThreadsOnly)
+	{
+		[self setThreadsOnlyMode];
+	}
 	
 	[self.window display];
 	

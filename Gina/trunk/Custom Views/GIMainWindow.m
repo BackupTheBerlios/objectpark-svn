@@ -50,5 +50,11 @@
 //	return [super setFrameUsingName: name];
 //}
 
+//- (BOOL)makeFirstResponder:(id)bla
+//{
+//	NSLog(@"make first responder: %@", bla);
+//	
+//	return [super makeFirstResponder:bla];
+//}
 
 @end

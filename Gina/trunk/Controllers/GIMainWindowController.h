@@ -71,6 +71,7 @@
 
 - (void)setThreadsOnlyMode;
 - (BOOL)isShowingThreadsOnly;
+- (void)showMessageOnly;
 
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
 

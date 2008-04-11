@@ -198,8 +198,6 @@
 	}
 }
 
-
-
 - (GIMessage *)selectedMessage
 {
 	return [[self selectedCell] representedObject];
@@ -513,6 +511,11 @@ The return value is the row the message was placed in."*/
             return;
         }
         NSBeep();
+}
+
+- (BOOL)acceptsFirstResponder
+{
+	return NO;
 }
 
 @end
