@@ -14,6 +14,11 @@
 
 @implementation GIMessageFilter
 
++ (BOOL)cachesAllObjects
+{
+	return YES;
+}
+
 static NSMutableArray *filters = nil;
 
 + (NSMutableArray *)filters
@@ -83,6 +88,7 @@ static NSMutableArray *filters = nil;
 		
 		if (!group) 
 		{
+			// TODO: create message group with name of the filter
 			(*putInBox) = NO;
 		}
 		else
@@ -152,6 +158,113 @@ static NSMutableArray *filters = nil;
 		}
 //		[pool release];
 	}
+}
+
+- (NSString *)name
+{
+	return name;
+}
+
+- (void)setName:(NSString *)aString
+{
+	[self willChangeValueForKey:@"name"];
+	[name autorelease];
+	name = [aString copy];
+	[self didChangeValueForKey:@"name"];
+}
+
+- (NSPredicate *)predicate
+{
+	return predicate;
+}
+
+- (void)setPredicate:(NSPredicate *)aPredicate
+{
+	[self willChangeValueForKey:@"predicate"];
+	[predicate autorelease];
+	predicate = [aPredicate copy];
+	[self didChangeValueForKey:@"predicate"];
+}
+
+- (BOOL)performActionPutInMessageGroup
+{
+	return performActionPutInMessageGroup;
+}
+
+- (void)setPerformActionPutInMessageGroup:(BOOL)aBool
+{
+	[self willChangeValueForKey:@"performActionPutInMessageGroup"];
+	performActionPutInMessageGroup = aBool;
+	[self didChangeValueForKey:@"performActionPutInMessageGroup"];
+}
+
+- (GIMessageGroup *)putInMessageGroup
+{
+	return [[self context] objectForOID:putInMessageGroupOID];
+}
+
+- (void)setPutInMessageGroup:(GIMessageGroup *)aMessageGroup
+{
+	if (putInMessageGroupOID != [aMessageGroup oid]) 
+	{
+		[self willChangeValueForKey:@"putInMessageGroup"];		
+		putInMessageGroupOID = [aMessageGroup oid];
+		[self didChangeValueForKey:@"putInMessageGroup"];
+	}
+}
+
+- (BOOL)performActionMarkAsSpam
+{
+	return performActionMarkAsSpam;
+}
+
+- (void)setPerformActionMarkAsSpam:(BOOL)aBool
+{
+	[self willChangeValueForKey:@"performActionMarkAsSpam"];
+	performActionMarkAsSpam = aBool;
+	[self didChangeValueForKey:@"performActionMarkAsSpam"];
+}
+
+- (BOOL)performActionPreventFurtherFiltering
+{
+	return performActionPreventFurtherFiltering;
+}
+
+- (void)setPerformActionPreventFurtherFiltering:(BOOL)aBool
+{
+	[self willChangeValueForKey:@"performActionPreventFurtherFiltering"];
+	performActionPreventFurtherFiltering = aBool;
+	[self didChangeValueForKey:@"performActionPreventFurtherFiltering"];
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+	name = [coder decodeObjectForKey:@"name"];
+	predicate = [coder decodeObjectForKey:@"predicate"];
+	performActionPutInMessageGroup = [coder decodeBoolForKey:@"performActionPutInMessageGroup"];
+	putInMessageGroupOID = [coder decodeOIDForKey:@"putInMessageGroupOID"];
+	performActionMarkAsSpam = [coder decodeBoolForKey:@"performActionMarkAsSpam"];
+	performActionPreventFurtherFiltering = [coder decodeBoolForKey:@"performActionPreventFurtherFiltering"];
+	
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+	[coder encodeObject:name forKey:@"name"];
+	[coder encodeObject:predicate forKey:@"predicate"];
+	[coder encodeBool:performActionPutInMessageGroup forKey:@"performActionPutInMessageGroup"];
+	[coder encodeOID:putInMessageGroupOID forKey:@"putInMessageGroupOID"];
+	[coder encodeBool:performActionMarkAsSpam forKey:@"performActionMarkAsSpam"];
+	[coder encodeBool:performActionPreventFurtherFiltering forKey:@"performActionPreventFurtherFiltering"];
+}
+
+- (void)dealloc
+{
+	[name release];
+	[predicate release];
+	
+	[super dealloc];
 }
 
 @end
