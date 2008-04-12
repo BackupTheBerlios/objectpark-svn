@@ -25,7 +25,6 @@
 			77ED102A0DA218F200AE0591 /* GIPasswordController.m:127 */,
 			770951C40DAB92A4004B5973 /* OPPersistentSet.m:485 */,
 			777A4EE40DB1181D006F4F90 /* GIThreadOutlineViewController.m:767 */,
-			77686E660DB25DBD004D5A5F /* OPPersistentObjectContext.m:340 */,
 		);
 		codeSenseManager = 77B6C5730D00530D00A7BEFF /* Code sense */;
 		executables = (
@@ -459,6 +458,8 @@
 			77686F120DB26551004D5A5F /* PBXTextBookmark */ = 77686F120DB26551004D5A5F /* PBXTextBookmark */;
 			77686F140DB26566004D5A5F /* PBXTextBookmark */ = 77686F140DB26566004D5A5F /* PBXTextBookmark */;
 			77686F150DB26566004D5A5F /* PBXTextBookmark */ = 77686F150DB26566004D5A5F /* PBXTextBookmark */;
+			77686F160DB2662D004D5A5F /* PBXTextBookmark */ = 77686F160DB2662D004D5A5F /* PBXTextBookmark */;
+			77686F170DB2662D004D5A5F /* PBXTextBookmark */ = 77686F170DB2662D004D5A5F /* PBXTextBookmark */;
 			777A4D690DAF9B56006F4F90 = 777A4D690DAF9B56006F4F90 /* PBXTextBookmark */;
 			777A4D6A0DAF9B56006F4F90 = 777A4D6A0DAF9B56006F4F90 /* PBXTextBookmark */;
 			777A4DD10DAFCE18006F4F90 = 777A4DD10DAFCE18006F4F90 /* PBXTextBookmark */;
@@ -2624,23 +2625,6 @@
 		vrLen = 959;
 		vrLoc = 0;
 	};
-	77686E660DB25DBD004D5A5F /* OPPersistentObjectContext.m:340 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		breakpointStyle = 0;
-		continueAfterActions = 0;
-		countType = 0;
-		delayBeforeContinue = 0;
-		fileReference = 773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */;
-		functionName = "OPStringFromOID()";
-		hitCount = 0;
-		ignoreCount = 0;
-		lineNumber = 340;
-		location = OPPersistence;
-		modificationTime = 229795119.539876;
-		state = 1;
-	};
 	77686E680DB25DC1004D5A5F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 77BF5C240D1132A600BE0F31 /* GIFilterPrefs.m */;
@@ -3634,6 +3618,26 @@
 		vrLoc = 13870;
 	};
 	77686F150DB26566004D5A5F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773613560D1BBA11007FC630 /* GIMessageFilter.m */;
+		name = "GIMessageFilter.m: 19";
+		rLen = 27;
+		rLoc = 350;
+		rType = 0;
+		vrLen = 959;
+		vrLoc = 0;
+	};
+	77686F160DB2662D004D5A5F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */;
+		name = "OPPersistentObjectContext.m: 112";
+		rLen = 0;
+		rLoc = 3446;
+		rType = 0;
+		vrLen = 1126;
+		vrLoc = 13870;
+	};
+	77686F170DB2662D004D5A5F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 773613560D1BBA11007FC630 /* GIMessageFilter.m */;
 		name = "GIMessageFilter.m: 19";
@@ -5035,9 +5039,9 @@
 	};
 	77BF5C240D1132A600BE0F31 /* GIFilterPrefs.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {636, 2512}}";
-			sepNavSelRange = "{3655, 0}";
-			sepNavVisRange = "{3273, 812}";
+			sepNavIntBoundsRect = "{{0, 0}, {941, 2480}}";
+			sepNavSelRange = "{3823, 0}";
+			sepNavVisRange = "{3483, 554}";
 		};
 	};
 	77BF61A90D12882700BE0F31 /* GIFilterArrayController.h */ = {
