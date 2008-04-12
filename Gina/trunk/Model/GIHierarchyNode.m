@@ -179,6 +179,14 @@
 	return result;
 }
 
+- (GIHierarchyNode*) parentNode
+/*" Inefficient, reverse lookup! Returns nil for the root node. "*/
+{
+	GIHierarchyNode* result = [[self class] findHierarchyNode: self 
+									startingWithHierarchyNode: [[self class] messageGroupHierarchyRootNode]];
+	return result;
+}
+
 /*" Returns the hierarchy node in which entry is contained. Starts the search at the hierarchy node aHierarchy. Returns nil if entry couldn't be found in the hierarchy. "*/
 + (GIHierarchyNode *)findHierarchyNode:(id)searchedNode startingWithHierarchyNode:(GIHierarchyNode *)startNode
 {

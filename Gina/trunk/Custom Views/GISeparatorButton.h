@@ -3,7 +3,7 @@
 //  Gina
 //
 //  Created by Axel Katerbau on 08.03.08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Objectpark Group. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -15,7 +15,7 @@
 	NSPoint dragOffset;
 }
 
-- (void)setMinWidthSubview1:(CGFloat)aWidth;
-- (void)setMinWidthSubview2:(CGFloat)aWidth;
+//- (void)setMinWidthSubview1:(CGFloat)aWidth;
+//- (void)setMinWidthSubview2:(CGFloat)aWidth;
 
 @end

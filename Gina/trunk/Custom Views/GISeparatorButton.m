@@ -3,7 +3,7 @@
 //  Gina
 //
 //  Created by Axel Katerbau on 08.03.08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Objectpark Group. All rights reserved.
 //
 
 #import "GISeparatorButton.h"
@@ -36,15 +36,15 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	// if the event is a double click we let the delegate deal with it
-    if ([theEvent clickCount] > 1) 
-	{
-		id kfDelegate = [splitView delegate];
-        if ([kfDelegate respondsToSelector:@selector(splitView:didDoubleClickInDivider:)])
-        {
-            [kfDelegate splitView:self didDoubleClickInDivider:0];
-            return;
-        }
-    }
+//    if ([theEvent clickCount] > 1) 
+//	{
+//		id kfDelegate = [splitView delegate];
+//        if ([kfDelegate respondsToSelector:@selector(splitView:didDoubleClickInDivider:)])
+//        {
+//            [kfDelegate splitView:self didDoubleClickInDivider:0];
+//            return;
+//        }
+//    }
 	
 	NSPoint eventLocation = [theEvent locationInWindow];
 	NSPoint separatorLocation = [self frame].origin;

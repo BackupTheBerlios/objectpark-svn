@@ -10,7 +10,6 @@
 #import "GIThreadOutlineViewController.h"
 #import "GIMessageGroupOutlineViewController.h"
 #import "GIMessageEditorController.h"
-#import "GISplitView.h"
 
 #import "GIUserDefaultsKeys.h"
 
@@ -193,12 +192,12 @@
  	[super dealloc];
 }
 
-- (void)windowWillClose:(NSNotification *)notification
+- (void) windowWillClose: (NSNotification*) notification
 {
-	[self unbind:@"selectedThreads"];
-	[self unbind:@"selectedSearchResults"];
-	[threadsController unbind:@"rootItem"];
-	[commentTreeView unbind:@"selectedMessageOrThread"];
+	[self unbind: @"selectedThreads"];
+	[self unbind: @"selectedSearchResults"];
+	[threadsController unbind: @"rootItem"];
+	[commentTreeView unbind: @"selectedMessageOrThread"];
 	
 	[self autorelease];
 }
@@ -225,7 +224,7 @@
 		[self toggleProgressInfo:self];
 	}
 	
-	threadMailSplitter.dividerThickness = 8.0;
+	//threadMailSplitter.dividerThickness = 8.0;
 //	[threadMailSplitter setPositionAutosaveName:@"KFThreadMailSplitter"];
 //	[verticalSplitter setPositionAutosaveName:@"KFVerticalSplitter"];
 //	[mailTreeSplitter setPositionAutosaveName:@"KFMailTreeSplitter"];
@@ -276,8 +275,7 @@
 {
 //	id subview = [self searchMode] == YES ? (id)searchResultView : (id)regularThreadsView;
 	
-	if (![threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
-	{
+	if (![threadMailSplitter isSubviewCollapsed:mailTreeSplitter]) {
 		NSLog(@"only mail visible. switching to only threads visible.");
 		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
 		[threadMailSplitter adjustSubviews];

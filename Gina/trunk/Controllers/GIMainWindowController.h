@@ -71,6 +71,7 @@
 @property (retain) GIMessage *selectedMessageInSearchMode;
 
 - (void)showMessage:(GIMessage *)message;
+- (BOOL)isShowingMessageOnly;
 
 - (void)setThreadsOnlyMode;
 - (BOOL)isShowingThreadsOnly;

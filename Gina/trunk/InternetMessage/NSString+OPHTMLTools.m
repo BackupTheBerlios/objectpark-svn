@@ -28,23 +28,38 @@ static void charactersParsed(void* context, const xmlChar * ch, int len)
 		[parsedString release];
 }
 
+/* GCS: custom error function to ignore errors */
+static void structuredError(void * userData,
+							xmlErrorPtr error)
+{
+	/* ignore all errors */
+	(void)userData;
+	(void)error;
+}
 
 - (NSString*) stringByStrippingHTML
 	/*" interpretes the receiver als HTML and removes all tags and converts it to plain text. "*/
 {
-	int mem_base = xmlMemBlocks();
+	if (! [self length]) return self;
 	
+	int mem_base = xmlMemBlocks();
 	NSMutableString* result = [NSMutableString string];
-	xmlSAXHandler handler; bzero(&handler, sizeof(xmlSAXHandler)); // null structure
+	xmlSAXHandler handler; bzero(&handler,
+								 sizeof(xmlSAXHandler));
 	handler.characters = &charactersParsed;
 	
-	htmlSAXParseDoc((xmlChar*)[self UTF8String], "utf-8", &handler, result);
+	/* GCS: override structuredErrorFunc to mine so
+	 I can ignore errors */
+	xmlSetStructuredErrorFunc(xmlGenericErrorContext,
+							  &structuredError);
 	
+	htmlSAXParseDoc((xmlChar*)[self UTF8String], "utf-8",
+					&handler, result);
+    
 	if (mem_base != xmlMemBlocks()) {
-		printf("Leak of %d blocks found in htmlSAXParseDoc",
-	           xmlMemBlocks() - mem_base);
+		NSLog( @"Leak of %d blocks found in htmlSAXParseDoc",
+			  xmlMemBlocks() - mem_base);
 	}
-	
 	return result;
 }
 

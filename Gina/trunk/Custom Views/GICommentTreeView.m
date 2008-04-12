@@ -3,7 +3,7 @@
 //  Gina
 //
 //  Created by Axel Katerbau on 07.10.06.
-//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 Objectpark Group. All rights reserved.
 //
 
 #import "GICommentTreeView.h"
