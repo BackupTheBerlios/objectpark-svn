@@ -88,18 +88,21 @@
 
 @implementation OPPersistentObjectContext
 
-static long long OPLongLongStringValue(NSString* self)
+static long long OPLongLongStringValueBase16(NSString* self)
 {
 	char buffer[100];
 	[self getBytes: buffer maxLength: 99 usedLength: nil encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy range: NSMakeRange(0,[self length]) remainingRange: NULL];
-	return atoll(buffer);	
+	return strtoll(buffer, (char **)NULL, 16);
+//	return atoll(buffer);	
 }
 
-static long OPLongStringValue(NSString* self)
+static long OPLongStringValueBase16(NSString* self)
 {
 	char buffer[100];
 	[self getBytes: buffer maxLength: 99 usedLength: nil encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy range: NSMakeRange(0,[self length]) remainingRange: NULL];
-	return atol(buffer);	
+	
+	return strtol(buffer, (char **)NULL, 16);
+//	return atol(buffer);	
 }
 
 
@@ -406,7 +409,7 @@ NSString* OPStringFromOID(OID oid)
 
     if (pClass == NULL) return nil;
     
-	OID oid = MakeOID([self cidForClass: pClass], OPLongStringValue(lidString));
+	OID oid = MakeOID([self cidForClass: pClass], OPLongStringValueBase16(lidString));
 	//NSLog(@"Requesting object for oid %llx", oid);
 	id result = [self objectForOID: oid];
 	

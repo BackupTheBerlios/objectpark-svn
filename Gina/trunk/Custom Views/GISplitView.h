@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "KFSplitView.h"
 
 @interface GISplitView : NSSplitView 
 {

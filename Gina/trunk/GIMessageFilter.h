@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class GIMessage;
+@class GIMessageGroup;
 
 @interface GIMessageFilter : NSObject 
 {
@@ -21,5 +22,6 @@
 
 + (NSArray *)filtersMatchingForMessage:(id)message;
 + (BOOL)applyFiltersToMessage:(GIMessage *)message;
++ (void)applyFiltersToThreads:(id <NSFastEnumeration>)someThreads inGroup:(GIMessageGroup *)aGroup;
 
 @end

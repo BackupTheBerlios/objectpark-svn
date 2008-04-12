@@ -10,6 +10,7 @@
 #import "GIMessage.h"
 #import "GIMessageGroup.h"
 #import "OPPersistentObjectContext.h"
+#import "GIThread.h"
 
 @implementation GIMessageFilter
 
@@ -109,6 +110,47 @@ static NSMutableArray *filters = nil;
 	}
 	
     return inserted;
+}
+
+/*" Applies filtering to the threads someThreads. The threads are removed from the group aGroup and only added again if they fit in no group defined by filtering. "*/
++ (void)applyFiltersToThreads:(id <NSFastEnumeration>)someThreads inGroup:(GIMessageGroup *)aGroup
+{
+	NSParameterAssert([aGroup isKindOfClass:[GIMessageGroup class]]);
+	
+	for (GIThread *thread in someThreads)
+	{
+		NSAssert([thread isKindOfClass:[GIThread class]], @"threads only");
+//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
+		// Remove selected thread from receiver's group:
+		[messageGroups removeObject:aGroup];
+		
+		BOOL threadWasPutIntoAtLeastOneGroup = NO;
+		
+		@try 
+		{
+			// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
+			for (GIMessage *message in thread.messages)
+			{
+				threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter applyFiltersToMessage:message];
+			}
+		} 
+		@catch (id localException) 
+		{
+			@throw;
+		} 
+		@finally 
+		{
+			if (!threadWasPutIntoAtLeastOneGroup) 
+			{				
+				if (![messageGroups containsObject:aGroup])
+				{
+					[messageGroups addObject:aGroup];
+				}
+			}
+		}
+//		[pool release];
+	}
 }
 
 @end

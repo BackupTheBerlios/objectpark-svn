@@ -135,4 +135,9 @@
 	[[GIMessageFilter class] saveFilters];
 }
 
+- (IBAction)delete:(id)sender
+{
+	[filterArrayController remove:sender];
+}
+
 @end

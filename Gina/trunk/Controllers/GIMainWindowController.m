@@ -29,6 +29,7 @@
 #import "GIHierarchyNode.h"
 #import "GIMessageGroup.h"
 #import "GIMessageBase.h"
+#import "GIMessageFilter.h"
 
 @implementation GIMainWindowController
 
@@ -387,7 +388,7 @@
 	{
 		return [threadsController selectionHasReadMessages];
 	}
-	else if (action == @selector(toggleRead:))
+	else if (action == @selector(toggleRead:) || action == @selector(applyFilters:))
 	{
 		return [[threadsController selectedObjects] count] != 0;
 	}
@@ -1147,6 +1148,26 @@ static BOOL isShowingThreadsOnly = NO;
 		[searchField setStringValue:@""];
 		[self search:sender];
 	}
+}
+
+- (IBAction)applyFilters:(id)sender
+{
+	NSMutableSet *result = [NSMutableSet setWithCapacity:self.selectedThreads.count];
+	
+	for (id selectedObject in self.selectedThreads)
+	{
+		if ([selectedObject isKindOfClass:[GIMessage class]])
+		{
+			[result addObject:[selectedObject thread]];
+		}
+		else
+		{
+			NSAssert([selectedObject isKindOfClass:[GIThread class]], @"thread expected");
+			[result addObject:selectedObject];
+		}
+	}
+	
+	[GIMessageFilter applyFiltersToThreads:result inGroup:messageGroupsController.selectedObject];
 }
 
 - (IBAction)debug:(id)sender
