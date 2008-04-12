@@ -48,7 +48,16 @@
 {
 	id currentFilter = [[filterArrayController selectedObjects] lastObject];
 	NSString *predicateFormat = [currentFilter valueForKey:@"predicateFormat"];
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateFormat];
+	NSPredicate *predicate = nil;
+	
+	@try
+	{
+		predicate = [NSPredicate predicateWithFormat:predicateFormat];
+	}
+	@catch(id localException)
+	{
+		NSLog(@"Exception: %@", localException);
+	}
 	
 	return predicate;
 }
@@ -129,8 +138,8 @@
 - (void)setSelectedFilterMessageGroup:(id)aMessageGroup
 {
 	id currentFilter = [[filterArrayController selectedObjects] lastObject];
-	id objectURLString = [aMessageGroup valueForKey:@"objectURLString"];
-	if (!objectURLString) objectURLString = [NSNull null];
+	NSString *objectURLString = [aMessageGroup valueForKey:@"objectURLString"];
+	if (!objectURLString) objectURLString = @"nothing";
 	[currentFilter setValue:objectURLString forKey:@"putInMessageGroupObjectURLString"];
 	[[GIMessageFilter class] saveFilters];
 }

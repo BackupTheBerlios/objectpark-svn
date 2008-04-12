@@ -53,7 +53,13 @@
 #define CID unsigned short
 #define CIDFromOID(x) (((OID)x)>>LIDBITS)
 #define LIDFromOID(x) ((((OID)x)<<8)>>8)
-#define MakeOID(c,l)  ((((OID)c)<<LIDBITS)+l)
+#define MakeOID(c,l)  ((OID)(((OID)c)<<LIDBITS)+(LID)l)
+
+//extern
+//OID MakeOID(OID c, LID l)
+//{
+//	return 0;
+//}
 
 // Debug Domain
 #define OPPERSISTENCE OPL_DOMAIN @"OPPersistence"

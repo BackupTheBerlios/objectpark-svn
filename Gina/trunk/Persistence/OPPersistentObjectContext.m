@@ -91,15 +91,23 @@
 static long long OPLongLongStringValueBase16(NSString* self)
 {
 	char buffer[100];
-	[self getBytes: buffer maxLength: 99 usedLength: nil encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy range: NSMakeRange(0,[self length]) remainingRange: NULL];
+	NSUInteger usedLength = 0;
+	
+	[self getBytes: buffer maxLength:99 usedLength:&usedLength encoding:NSISOLatin1StringEncoding options:NSStringEncodingConversionAllowLossy range:NSMakeRange(0,[self length]) remainingRange:NULL];
+	buffer[usedLength] = '\0';
+	
 	return strtoll(buffer, (char **)NULL, 16);
 //	return atoll(buffer);	
 }
 
-static long OPLongStringValueBase16(NSString* self)
+static LID OPLongStringValueBase16(NSString* self)
 {
 	char buffer[100];
-	[self getBytes: buffer maxLength: 99 usedLength: nil encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy range: NSMakeRange(0,[self length]) remainingRange: NULL];
+	NSUInteger usedLength = 0;
+	
+	[self getBytes:buffer maxLength:99 usedLength:&usedLength encoding:NSISOLatin1StringEncoding options:NSStringEncodingConversionAllowLossy range:NSMakeRange(0, [self length]) remainingRange:NULL];
+	
+	buffer[usedLength] = '\0';
 	
 	return strtol(buffer, (char **)NULL, 16);
 //	return atol(buffer);	
@@ -328,8 +336,8 @@ NSString* OPStringFromOID(OID oid)
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
 	unsigned cid = CIDFromOID(oid);
 	Class theClass = [context classForCID: cid];
-	return [NSString stringWithFormat: @"%@, lid %llu", theClass, LIDFromOID(oid)];
-
+	NSString *result = [NSString stringWithFormat: @"%@, lid %llx", theClass, LIDFromOID(oid)];
+	return result;
 }
 
 - (BOOL) unarchiveObject: (NSObject<OPPersisting>*) object forOID: (OID) oid
@@ -409,8 +417,10 @@ NSString* OPStringFromOID(OID oid)
 
     if (pClass == NULL) return nil;
     
-	OID oid = MakeOID([self cidForClass: pClass], OPLongStringValueBase16(lidString));
-	//NSLog(@"Requesting object for oid %llx", oid);
+	CID cid = [self cidForClass:pClass];
+	LID lid = OPLongStringValueBase16(lidString);
+	OID oid = MakeOID(cid, lid);
+	NSLog(@"Requesting object for oid %llx", oid);
 	id result = [self objectForOID: oid];
 	
 	return result;

@@ -87,7 +87,8 @@ static NSMutableArray *filters = nil;
 		}
 		else
 		{
-			[[group mutableSetValueForKey:@"threads"] addObject:[message thread]];;
+			[[group mutableSetValueForKey:@"threads"] addObject:[message thread]];
+			(*putInBox) = YES;
 		}
 	}
 }
@@ -99,14 +100,14 @@ static NSMutableArray *filters = nil;
 
 	for (id filter in [self filtersMatchingForMessage:message])
 	{
-		BOOL putInBox;
-		BOOL shouldStop;
+		BOOL putInBox = NO;
+		BOOL shouldStop = NO;
 		
 		[self performFilterActions:filter onMessage:message putIntoMessagebox:&putInBox shouldStop:&shouldStop];
 		
-		if (shouldStop) break;
-		
 		inserted |= putInBox;
+
+		if (shouldStop) break;
 	}
 	
     return inserted;

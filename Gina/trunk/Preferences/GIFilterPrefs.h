@@ -17,4 +17,6 @@
 	NSIndexSet *selectedFilterIndexes;
 }
 
+- (IBAction)delete:(id)sender;
+
 @end
