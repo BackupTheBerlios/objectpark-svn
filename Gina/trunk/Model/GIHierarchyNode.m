@@ -10,6 +10,8 @@
 #import "OPFaultingArray.h"
 #import "OPPersistence.h"
 
+NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
+
 @implementation GIHierarchyNode
 
 + (BOOL)cachesAllObjects
@@ -17,10 +19,17 @@
 	return YES;
 }
 
+- (void)noteHierarchyChanged
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:GIHierarchyChangedNotification object:self];
+}
+
 - (void)dealloc
 {
 	[name release];
 	[children release];
+	[self noteHierarchyChanged];
+	
     [super dealloc];
 }
 
@@ -79,6 +88,8 @@
 	[name autorelease];
 	name = [aName copy];
 	[self didChangeValueForKey:@"name"];
+	
+	[self noteHierarchyChanged];
 }
 
 - (OPFaultingArray *)children
@@ -87,18 +98,22 @@
 	return children;
 }
 
-- (void) insertObject: (GIHierarchyNode*) node inChildrenAtIndex: (NSUInteger) index
+- (void)insertObject:(GIHierarchyNode *)node inChildrenAtIndex:(NSUInteger)index
 {
-	[self willChangeValueForKey: @"children"];
-	[children insertObject: node atIndex: index];
-	[self didChangeValueForKey: @"children"];
+	[self willChangeValueForKey:@"children"];
+	[children insertObject:node atIndex:index];
+	[self didChangeValueForKey:@"children"];
+	
+	[self noteHierarchyChanged];
 }
 
-- (void) removeObjectFromChildrenAtIndex: (NSUInteger) index
+- (void)removeObjectFromChildrenAtIndex:(NSUInteger)index
 {
-	[self willChangeValueForKey: @"children"];
-	[children removeObjectAtIndex: index];	
-	[self didChangeValueForKey: @"children"];
+	[self willChangeValueForKey:@"children"];
+	[children removeObjectAtIndex:index];	
+	[self didChangeValueForKey:@"children"];
+	
+	[self noteHierarchyChanged];
 }
 
 - (BOOL)isDeletable

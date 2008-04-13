@@ -33,3 +33,5 @@
 - (GIHierarchyNode*) parentNode;
 
 @end
+
+extern NSString *GIHierarchyChangedNotification;

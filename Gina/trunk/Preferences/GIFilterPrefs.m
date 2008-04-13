@@ -15,6 +15,26 @@
 
 @implementation GIFilterPrefs
 
+- (void)didSelect
+/*" Invoked when the pref panel was selected. Initialization stuff. "*/
+{
+    // register for notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hierarchyDidChange:) name:GIHierarchyChangedNotification object:nil];    
+}
+
+- (void)willUnselect
+/*" Invoked when the pref panel is about to be quit. "*/
+{
+    // unregister for notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self];    
+}
+
+- (void)hierarchyDidChange:(NSNotification *)note
+{
+	[self willChangeValueForKey:@"messageGroupsByTree"];
+	[self didChangeValueForKey:@"messageGroupsByTree"];
+}
+
 - (Class)messageFilterListClass
 {
 	return [GIMessageFilterList class];
