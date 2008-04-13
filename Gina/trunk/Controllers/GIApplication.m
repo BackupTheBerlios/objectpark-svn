@@ -195,20 +195,6 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidEndNotification object: nil];
 	
 	[self ensureMainWindowIsPresent];
-
-	// Restore group selection:
-	NSString* urlString = [[NSUserDefaults standardUserDefaults] stringForKey: @"SelectedGroupURL"];
-	GIHierarchyNode* node = [[OPPersistentObjectContext defaultContext] objectWithURLString: urlString];
-	if (node) {
-		NSMutableArray* itemPath = [NSMutableArray arrayWithObject: node];
-		while (node = node.parentNode) {
-			[itemPath insertObject: node atIndex: 0];
-		}
-		[itemPath removeObjectAtIndex: 0]; // remove root node as the controller does not know anything about it. Different semantics - should this be changed?
-		NSArray* itemPaths = [NSArray arrayWithObject: itemPath];
-		GIMainWindowController* windowController = self.mainWindow.windowController;
-		[windowController.messageGroupsController setSelectedItemsPaths: itemPaths byExtendingSelection: NO];
-	}
 	
 	[self importFromImportFolder: nil];
 }

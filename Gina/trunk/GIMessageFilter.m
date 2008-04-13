@@ -17,11 +17,6 @@
 
 @synthesize filters;
 
-+ (BOOL)cachesAllObjects
-{
-	return YES;
-}
-
 - (id)init
 {
 	self = [super init];
@@ -69,6 +64,11 @@
 	}
 	
 	return filterList.filters;
+}
+
+- (void) didChangeValueForKey: (NSString*) key
+{
+	[super didChangeValueForKey: key];
 }
 
 + (void)insertObject:(GIMessageFilter *)aFilter inFiltersAtIndex:(unsigned int)index 

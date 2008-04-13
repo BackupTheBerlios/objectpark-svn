@@ -224,13 +224,29 @@
 		[self toggleProgressInfo:self];
 	}
 	
-	//threadMailSplitter.dividerThickness = 8.0;
-//	[threadMailSplitter setPositionAutosaveName:@"KFThreadMailSplitter"];
-//	[verticalSplitter setPositionAutosaveName:@"KFVerticalSplitter"];
-//	[mailTreeSplitter setPositionAutosaveName:@"KFMailTreeSplitter"];
+	threadMailSplitter.dividerThickness = 8.0;
 
-	// configuring manual bindings:
 	NSDictionary *options = nil;
+
+	// Configure group view:
+	messageGroupsController.childKey = @"children";
+	//messageGroupsController.childCountKey = @"threadChildrenCount";
+	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
+		
+	// Restore group selection:
+	NSString* urlString = [[NSUserDefaults standardUserDefaults] stringForKey: @"SelectedGroupURL"];
+	GIHierarchyNode* node = [[OPPersistentObjectContext defaultContext] objectWithURLString: urlString];
+	if (node) {
+		NSMutableArray* itemPath = [NSMutableArray arrayWithObject: node];
+		while (node = node.parentNode) {
+			[itemPath insertObject: node atIndex: 0];
+		}
+		[itemPath removeObjectAtIndex: 0]; // remove root node as the controller does not know anything about it. Different semantics - should this be changed?
+		NSArray* itemPaths = [NSArray arrayWithObject: itemPath];
+		[self.messageGroupsController setSelectedItemsPaths: itemPaths byExtendingSelection: NO];
+	}	
+	
+	// configuring manual bindings:
 	
 	threadsController.childKey = @"threadChildren";
 	threadsController.childCountKey = @"threadChildrenCount";
@@ -255,11 +271,6 @@
 	{
 		[self setThreadsOnlyMode];
 	}
-	
-	// Configure group view:
-	messageGroupsController.childKey = @"children";
-	//messageGroupsController.childCountKey = @"threadChildrenCount";
-	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
 	
 	[messageTextView setEditable:NO];
 	NSAssert(![messageTextView isEditable], @"should be non editable");
