@@ -296,7 +296,7 @@
 		NSLog(@"only mail visible. switching to only threads visible.");
 		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
 		[threadMailSplitter adjustSubviews];
-		[self.window makeFirstResponder:threadsOutlineView];
+		[self.window makeFirstResponder:[self searchMode] ? searchResultTableView : threadsOutlineView];
 	}
 }
 
@@ -370,8 +370,21 @@
 - (void)showMessage:(GIMessage *)message
 /*" Tries to show the message given. Selects any group the thread is in. "*/
 {	
-	GIMessageGroup* group = message.thread.messageGroups.lastObject;
-	// Todo: Do not show a message in the allThreads group!
+	id selectedHierarchyObject = [self.messageGroupsController selectedObject];
+	NSArray *messageGroups = message.thread.messageGroups;
+	
+	GIMessageGroup *group = nil;
+	
+	// prefer selected message group:
+	if ([messageGroups containsObject:selectedHierarchyObject])
+	{
+		group = (GIMessageGroup *)selectedHierarchyObject;
+	}
+	else
+	{
+		group = messageGroups.lastObject;
+	}
+	
 	if (group) {
 		// select group:
 		[messageGroupsController setSelectedItemsPaths: [NSArray arrayWithObject: [NSArray arrayWithObject: group]] byExtendingSelection: NO];
@@ -846,6 +859,11 @@ static BOOL isShowingThreadsOnly = NO;
 		}
 		case RETURN:
 			if ([self.window firstResponder] == threadsOutlineView)
+			{
+				[self threadsDoubleAction:threadsOutlineView];
+				return YES;
+			}
+			else if ([self.window firstResponder] == searchResultTableView)
 			{
 				[self threadsDoubleAction:threadsOutlineView];
 				return YES;

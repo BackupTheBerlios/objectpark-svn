@@ -13,6 +13,7 @@
 		7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 7708F0D20D0DB9AE008A4A2B /* GIUserDefaultsKeys.m */; };
 		7708F11D0D0E8DDA008A4A2B /* DefaultEmailApp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */; };
 		770C31CF0D98F76100FC5214 /* OPMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 770C31CE0D98F76100FC5214 /* OPMenuButton.m */; };
+		771069890DB3B8E300376DA3 /* GITableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 771069880DB3B8E300376DA3 /* GITableView.m */; };
 		77132FAD0D91629500094A0A /* MessageEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 77132FAC0D91629500094A0A /* MessageEditor.nib */; };
 		77132FBA0D91634C00094A0A /* OPSizingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 77132FB90D91634C00094A0A /* OPSizingTextField.m */; };
 		77132FE30D9163BB00094A0A /* NSView+ViewMoving.m in Sources */ = {isa = PBXBuildFile; fileRef = 77132FE20D9163BB00094A0A /* NSView+ViewMoving.m */; };
@@ -389,6 +390,8 @@
 		7708F11C0D0E8DDA008A4A2B /* DefaultEmailApp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DefaultEmailApp.xib; sourceTree = "<group>"; };
 		770C31CD0D98F76100FC5214 /* OPMenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPMenuButton.h; sourceTree = "<group>"; };
 		770C31CE0D98F76100FC5214 /* OPMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPMenuButton.m; sourceTree = "<group>"; };
+		771069870DB3B8E300376DA3 /* GITableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GITableView.h; sourceTree = "<group>"; };
+		771069880DB3B8E300376DA3 /* GITableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITableView.m; sourceTree = "<group>"; };
 		77132FAC0D91629500094A0A /* MessageEditor.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MessageEditor.nib; sourceTree = "<group>"; };
 		77132FB50D91630300094A0A /* GIMessageEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageEditorController.h; sourceTree = "<group>"; };
 		77132FB60D91630300094A0A /* GIMessageEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageEditorController.m; sourceTree = "<group>"; };
@@ -1020,6 +1023,8 @@
 				77132FB90D91634C00094A0A /* OPSizingTextField.m */,
 				770C31CD0D98F76100FC5214 /* OPMenuButton.h */,
 				770C31CE0D98F76100FC5214 /* OPMenuButton.m */,
+				771069870DB3B8E300376DA3 /* GITableView.h */,
+				771069880DB3B8E300376DA3 /* GITableView.m */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -1987,6 +1992,7 @@
 				771330FD0D91845D00094A0A /* GIMessageEditorWindow.m in Sources */,
 				770C31CF0D98F76100FC5214 /* OPMenuButton.m in Sources */,
 				7713924B0D9D52E6003BE8B1 /* GISMTPOperation.m in Sources */,
+				771069890DB3B8E300376DA3 /* GITableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

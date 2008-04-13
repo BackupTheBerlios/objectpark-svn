@@ -130,7 +130,7 @@
 
 @end
 
-@interface GIMainWindowController (OutlineViewDelegateAndActions)
+@interface GIMainWindowController (OutlineViewActions)
 
 - (IBAction)threadsDoubleAction:(id)sender;
 
