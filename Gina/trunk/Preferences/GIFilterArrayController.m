@@ -19,12 +19,12 @@
 	[super awakeFromNib];
 }
 
-- (id)newObject
-{
-	id result = [super newObject];
-//	[result setObject:[NSPredicate predicateWithFormat:@"name CONTAINS \"Dirky\""] forKey:@"predicate"];
-	return result;
-}
+//- (id)newObject
+//{
+//	id result = [super newObject];
+////	[result setObject:[NSPredicate predicateWithFormat:@"name CONTAINS \"Dirky\""] forKey:@"predicate"];
+//	return result;
+//}
 
 - (IBAction)clone:(id)sender
 {

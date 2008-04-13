@@ -712,7 +712,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (BOOL)isValidUserCopyOrMoveSourceOrDestination
 {
-	return type == GIRegularMessageGroup || type == GISpamMessageGroup || type == GITrashMessageGroup;
+	return type == GIRegularMessageGroup || type == GISpamMessageGroup || type == GITrashMessageGroup || type == GIDefaultMessageGroup;
 }
 
 - (NSString *)imageName

@@ -228,6 +228,13 @@
 
 - (NSPredicate *)predicate
 {
+	if (!predicate)
+	{
+		NSPredicate *innerPredicate = [NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForKeyPath:@"from"] rightExpression:[NSExpression expressionForConstantValue:@""] modifier:NSDirectPredicateModifier type:NSContainsPredicateOperatorType options:NSCaseInsensitivePredicateOption];
+		
+		predicate = [[NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObject:innerPredicate]] retain];
+	}
+	
 	return predicate;
 }
 
@@ -235,7 +242,7 @@
 {
 	[self willChangeValueForKey:@"predicate"];
 	[predicate autorelease];
-	predicate = [aPredicate copy];
+	predicate = [aPredicate retain];
 	[self didChangeValueForKey:@"predicate"];
 }
 

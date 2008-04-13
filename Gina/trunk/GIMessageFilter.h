@@ -27,7 +27,7 @@
 
 @property (copy) NSString *name;
 @property BOOL enabled;
-@property (copy) NSPredicate *predicate;
+@property (retain) NSPredicate *predicate;
 @property BOOL performActionPutInMessageGroup;
 @property (assign) GIMessageGroup *putInMessageGroup;
 @property BOOL performActionMarkAsSpam;
