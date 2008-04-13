@@ -92,9 +92,9 @@ static long long OPLongLongStringValueBase16(NSString* self)
 {
 	char buffer[100];
 	NSUInteger usedLength = 0;
-	[self getBytes: buffer maxLength: 99 usedLength: &usedLength encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy range: NSMakeRange(0,[self length]) remainingRange: NULL];
+	[self getBytes:buffer maxLength:99 usedLength:&usedLength encoding:NSISOLatin1StringEncoding options:NSStringEncodingConversionAllowLossy range:NSMakeRange(0,[self length]) remainingRange:NULL];
 	buffer[usedLength] = '\0'; // terminate
-	return atoll(buffer);	
+	return strtoll(buffer, (char **)NULL, 16);	
 }
 
 static LID OPLongStringValueBase16(NSString* self)
@@ -103,7 +103,7 @@ static LID OPLongStringValueBase16(NSString* self)
 	NSUInteger usedLength = 0;
 	[self getBytes: buffer maxLength: 99 usedLength: &usedLength encoding: NSISOLatin1StringEncoding options: NSStringEncodingConversionAllowLossy range: NSMakeRange(0,[self length]) remainingRange: NULL];
 	buffer[usedLength] = '\0'; // terminate
-	return atol(buffer);	
+	return strtol(buffer, (char **)NULL, 16);	
 }
 
 

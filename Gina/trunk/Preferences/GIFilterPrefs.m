@@ -161,7 +161,8 @@
 	GIMessageFilter *currentFilter = [[filterArrayController selectedObjects] lastObject];
 	NSString *objectURLString = [aMessageGroup valueForKey:@"objectURLString"];
 	if (!objectURLString) objectURLString = @"nothing";
-	currentFilter.putInMessageGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:objectURLString];
+	GIMessageGroup *messageGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:objectURLString];
+	currentFilter.putInMessageGroup = messageGroup;
 }
 
 - (IBAction)delete:(id)sender
