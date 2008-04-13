@@ -398,6 +398,19 @@
 	return result;
 }
 
+- (NSString *)resentTo
+{
+	NSString *fBody;
+	NSString *result = @"";
+	
+	if (fBody = [self.internetMessage bodyForHeaderField:@"resent-to"])
+	{
+		result = [[EDTextFieldCoder decoderWithFieldBody:fBody] text];
+	}
+	
+	return result;
+}
+
 - (NSString *)cc
 {
 	NSString *fBody;
@@ -454,7 +467,7 @@
 
 - (NSString *)anyRecipient
 {
-	return [[self to] stringByAppendingString:[self cc]];
+	return [[[self to] stringByAppendingString:[self cc]] stringByAppendingString:[self resentTo]];
 }
 
 @end

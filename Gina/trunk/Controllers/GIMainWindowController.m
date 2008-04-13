@@ -275,11 +275,14 @@
 	[messageTextView setEditable:NO];
 	NSAssert(![messageTextView isEditable], @"should be non editable");
 		
+	//	deferred enabling of autosave (timing problems otherwise):
 	[verticalSplitter setAutosaveName:@"VerticalSplitterAutosave"];
 	[threadMailSplitter setAutosaveName:@"ThreadMailSplitterAutosave"];
 	[mailTreeSplitter setAutosaveName:@"MailTreeSplitterAutosave"];
 	
-	//	deferred enabling of autosave (timing problems otherwise):
+//	[threadsOutlineView setAutosaveTableColumns:NO];
+//	[threadsOutlineView setAutosaveName:@"ThreadsAutosave"];
+//	[threadsOutlineView setAutosaveTableColumns:YES];
 	[groupsOutlineView setAutosaveExpandedItems:YES];
 	
 	[self.window makeKeyAndOrderFront:self];
