@@ -174,7 +174,8 @@
 	[query setDelegate:self];
 	
 	// showin window:
-	[self showWindow:self];
+	[self window];
+//	[self showWindow:self];
 
 	return self;
 }
@@ -247,7 +248,6 @@
 	}	
 	
 	// configuring manual bindings:
-	
 	threadsController.childKey = @"threadChildren";
 	threadsController.childCountKey = @"threadChildrenCount";
 	[threadsController bind:@"rootItem" toObject:messageGroupsController withKeyPath:@"selectedObject" options:options];
@@ -278,6 +278,9 @@
 	[verticalSplitter setAutosaveName:@"VerticalSplitterAutosave"];
 	[threadMailSplitter setAutosaveName:@"ThreadMailSplitterAutosave"];
 	[mailTreeSplitter setAutosaveName:@"MailTreeSplitterAutosave"];
+	
+	//	deferred enabling of autosave (timing problems otherwise):
+	[groupsOutlineView setAutosaveExpandedItems:YES];
 	
 	[self.window makeKeyAndOrderFront:self];
 }

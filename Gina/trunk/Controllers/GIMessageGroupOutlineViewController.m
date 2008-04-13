@@ -78,6 +78,17 @@
 	[aNode delete];
 }
 
+- (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(id)object
+{
+	NSParameterAssert([object isKindOfClass:[NSString class]]);
+	return [[OPPersistentObjectContext defaultContext] objectWithURLString:object];
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item
+{
+	return [item objectURLString];
+}
+
 @end
 
 @implementation GIMessageGroupOutlineViewController (OPDragNDrop)

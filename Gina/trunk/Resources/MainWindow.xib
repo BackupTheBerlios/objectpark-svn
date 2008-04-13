@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1" id="9"/>
+			<integer value="3"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -133,7 +133,7 @@
 													<object class="NSMutableArray" key="dict.values">
 														<bool key="EncodedWithXMLCoder">YES</bool>
 														<string>Abbrechen</string>
-														<reference ref="9"/>
+														<integer value="1" id="9"/>
 													</object>
 												</object>
 											</object>
@@ -1159,6 +1159,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																	<reference key="NSGridColor" ref="827742145"/>
 																	<double key="NSRowHeight">2.000000e+01</double>
 																	<int key="NSTvFlags">37748736</int>
+																	<string key="NSAutosaveName">GroupAutosave</string>
 																	<int key="NSColumnAutoresizingStyle">4</int>
 																	<int key="NSDraggingSourceMaskForLocal">15</int>
 																	<int key="NSDraggingSourceMaskForNonLocal">0</int>
@@ -2371,6 +2372,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 										</object>
 										<string key="NSFrame">{{1, 17}, {704, 461}}</string>
 										<reference key="NSSuperview" ref="983510706"/>
+										<reference key="NSNextKeyView" ref="209019680"/>
 										<reference key="NSDocView" ref="209019680"/>
 										<reference key="NSBGColor" ref="1037779458"/>
 										<int key="NScvFlags">4</int>
@@ -2404,6 +2406,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 										</object>
 										<string key="NSFrame">{{1, 0}, {704, 17}}</string>
 										<reference key="NSSuperview" ref="983510706"/>
+										<reference key="NSNextKeyView" ref="1017232368"/>
 										<reference key="NSDocView" ref="1017232368"/>
 										<reference key="NSBGColor" ref="1037779458"/>
 										<int key="NScvFlags">4</int>
@@ -2412,6 +2415,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								</object>
 								<string key="NSFrame">{{-1, -3}, {706, 479}}</string>
 								<reference key="NSSuperview" ref="1026060173"/>
+								<reference key="NSNextKeyView" ref="464454888"/>
 								<int key="NSsFlags">530</int>
 								<reference key="NSVScroller" ref="285261688"/>
 								<reference key="NSHScroller" ref="33003824"/>
@@ -3224,6 +3228,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">356</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">groupsOutlineView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="724564600"/>
+					</object>
+					<int key="connectionID">357</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4259,9 +4271,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{63, 201}, {759, 520}}</string>
+					<string>{{64, 196}, {759, 520}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{63, 201}, {759, 520}}</string>
+					<string>{{64, 196}, {759, 520}}</string>
 					<reference ref="126606337"/>
 					<string>{196, 240}</string>
 					<string>{{195, 67}, {759, 520}}</string>
@@ -4412,7 +4424,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">356</int>
+			<int key="maxID">357</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
