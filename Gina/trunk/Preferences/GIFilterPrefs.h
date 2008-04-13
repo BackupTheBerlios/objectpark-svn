@@ -17,6 +17,9 @@
 	NSIndexSet *selectedFilterIndexes;
 }
 
+- (Class) messageFilterClass;
+
+
 - (IBAction)delete:(id)sender;
 
 @end

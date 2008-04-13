@@ -43,6 +43,7 @@
 - (OID) currentOID; // internal method
 - (void) setOID: (OID) theOID; // for internal use
 - (OPPersistentObjectContext*) context;
++ (BOOL) canPersist;
 
 @end
 
@@ -68,7 +69,7 @@
 - (void) willSave;
 - (void) willRevert;
 - (void) willDelete;
-
++ (BOOL) cachesAllObjects;
 
 
 @end
@@ -77,11 +78,6 @@
 	@private
 	OID oid;
 }
-
-
-+ (BOOL) cachesAllObjects;
-
-//- (void) insertIntoContext: (OPPersistentObjectContext*) context;
 
 
 - (BOOL) hasChanged;

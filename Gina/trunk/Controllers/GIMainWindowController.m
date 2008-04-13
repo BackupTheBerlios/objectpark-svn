@@ -1182,7 +1182,7 @@ static BOOL isShowingThreadsOnly = NO;
 		}
 	}
 	
-	[GIMessageFilterList applyFiltersToThreads:result inGroup:messageGroupsController.selectedObject];
+	[GIMessageFilter applyFiltersToThreads:result inGroup:messageGroupsController.selectedObject];
 }
 
 - (IBAction)debug:(id)sender

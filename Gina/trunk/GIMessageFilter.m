@@ -13,77 +13,52 @@
 #import "GIThread.h"
 #import "OPFaultingArray.h"
 
-@implementation GIMessageFilterList
+//@implementation GIMessageFilterList
+//
+//@synthesize filters;
+//
+//- (id)init
+//{
+//	self = [super init];
+//	
+//	filters = [[OPFaultingArray alloc] init];
+//	
+//	return self;
+//}
+//
+//- (id)initWithCoder:(NSCoder *)coder
+//{
+//	filters = [coder decodeObjectForKey:@"filters"];
+//	
+//	return self;
+//}
+//
+//- (void)encodeWithCoder:(NSCoder *)coder
+//{
+//	[coder encodeObject:filters forKey:@"filters"];
+//}
+//
+//- (void)dealloc
+//{
+//	[filters release];
+//	
+//	[super dealloc];
+//}
+//
+//
+//- (NSArray*) messageFilters
+//{	
+//	return [[OPPersistentObjectContext defaultContext] allObjectsOfClass: [GIMessageFilter class]];
+//}
+//
+//- (void) addMessageFiltersObject: (GIMessageFilter*) aFilter inMessageFiltersAtIndex: (unsigned int)index 
+//{
+//	[[self messageFilters] insertObject:aFilter atIndex: index];
+//}
+//
 
-@synthesize filters;
 
-- (id)init
-{
-	self = [super init];
-	
-	filters = [[OPFaultingArray alloc] init];
-	
-	return self;
-}
-
-- (id)initWithCoder:(NSCoder *)coder
-{
-	filters = [coder decodeObjectForKey:@"filters"];
-	
-	return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder
-{
-	[coder encodeObject:filters forKey:@"filters"];
-}
-
-- (void)dealloc
-{
-	[filters release];
-	
-	[super dealloc];
-}
-
-+ (OPFaultingArray *)filters
-{	
-	static GIMessageFilterList *filterList = nil;
-		
-	if (!filterList)
-	{
-		OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-
-		filterList = [[context rootObjectForKey:@"FilterList"] retain];
-		
-		if (!filterList)
-		{
-			filterList = [[GIMessageFilterList alloc] init];
-			[context insertObject:filterList];
-			[context setRootObject:filterList forKey:@"FilterList"];
-		}
-	}
-	
-	return filterList.filters;
-}
-
-- (void) didChangeValueForKey: (NSString*) key
-{
-	[super didChangeValueForKey: key];
-}
-
-+ (void)insertObject:(GIMessageFilter *)aFilter inFiltersAtIndex:(unsigned int)index 
-{
-	[[OPPersistentObjectContext defaultContext] insertObject:aFilter];
-	[[self filters] insertObject:aFilter atIndex:index];
-}
-
-+ (void)removeObjectFromFiltersAtIndex:(unsigned int)index 
-{
-	id objectToRemove = [[[self filters] objectAtIndex:index] retain];
-	[[self filters] removeObjectAtIndex:index];
-	[objectToRemove delete];
-	[objectToRemove release];
-}
+@implementation GIMessageFilter
 
 /*" Returns a (sub)set of the receiver's filters which match for the given message. "*/
 + (NSArray *)filtersMatchingForMessage:(id)message
@@ -162,14 +137,44 @@
 	}
 }
 
-@end
 
-@implementation GIMessageFilter
 
 + (BOOL)cachesAllObjects
 {
 	return YES;
 }
+
++ (NSArray*) filters
+{	
+	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+	
+	OPFaultingArray* result = [context rootObjectForKey: @"Filters"];
+	
+	if (!result) {
+		result = [[[OPFaultingArray alloc] init] autorelease];
+		[context setRootObject: result forKey: @"Filters"];
+	}
+	return result;
+}
+
+//- (void) didChangeValueForKey: (NSString*) key
+//{
+//	[super didChangeValueForKey: key];
+//}
+
++ (void) insertObject: (GIMessageFilter*) aFilter inFiltersAtIndex: (NSUInteger) index 
+{
+	[(OPFaultingArray*)[self filters] insertObject: aFilter atIndex: index];
+}
+
++ (void) removeObjectFromFiltersAtIndex: (NSUInteger)index 
+{
+	OPFaultingArray* allFilters = (OPFaultingArray*)[self filters];
+	id objectToRemove = [allFilters objectAtIndex: index];
+	[allFilters removeObjectAtIndex: index];
+	[objectToRemove delete];
+}
+
 
 - (void)performFilterActionsOnMessage:(GIMessage *)message putIntoMessagebox:(BOOL *)putInBox shouldStop:(BOOL *)shouldStop
 {

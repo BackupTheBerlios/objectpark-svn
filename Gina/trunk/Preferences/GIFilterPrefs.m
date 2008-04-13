@@ -35,9 +35,9 @@
 	[self didChangeValueForKey:@"messageGroupsByTree"];
 }
 
-- (Class)messageFilterListClass
+- (Class) messageFilterClass
 {
-	return [GIMessageFilterList class];
+	return [GIMessageFilter class];
 }
 
 - (void)ruleEditorRowsDidChange:(NSNotification *)notification

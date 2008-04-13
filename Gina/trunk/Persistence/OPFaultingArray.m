@@ -48,16 +48,43 @@
 	return selfOID;
 }
 
++ (BOOL) canPersist
+{
+	return YES;
+}
 
 - (OID) currentOID
 {
 	return selfOID;
 }
 
-- (void) setOID: (OID) theOID; // for internal use
+- (void) setOID: (OID) theOid
+/*" Registers the receiver with the context, if neccessary. "*/
 {
-	selfOID = theOID;
+	@synchronized(self) {
+		if (selfOID != theOid) {
+			NSAssert(selfOID==0, @"Object ids can be set only once per instance.");
+			selfOID = theOid;
+			OPPersistentObjectContext* c = [self context];
+			[c registerObject: self];
+		}
+	}
 }
+- (NSUInteger) hash
+{
+	return (NSUInteger)(LIDFromOID([self oid]) % NSUIntegerMax);
+}
+
+- (BOOL) isEqual: (id) other
+{
+	if (self == other) return YES;
+	if (![other respondsToSelector: @selector(oid)]) {
+		return NO;
+	}
+	
+	return [self oid] == [other oid];
+}
+
 
 - (OPPersistentObjectContext*) context
 /*" Returns the context for the receiver. Currently, always returns the default context. "*/
@@ -205,6 +232,7 @@
 			}
 			count--;
 		}
+		[self didChange];
 		//NSLog(@"Removed element. Now %@.", self);
 	}
 #warning Implement array shrinking!
@@ -324,7 +352,11 @@ static int compare_oids(const void* entry1, const void* entry2)
 	return [self indexOfOID: [anObject currentOID]];
 }
 
-
+- (void) didChange
+/*" Notifies the context of a change so it can update on the persistent store. "*/
+{
+	[[self context] didChangeObject: self];
+}
 
 
 - (void) addOID: (OID) oid
@@ -337,6 +369,8 @@ static int compare_oids(const void* entry1, const void* entry2)
 		*oidPtr(count) = oid;
 		
 		count+=1;
+		
+		[self didChange];
 	}
 }
 
@@ -388,6 +422,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 {
 	NSParameterAssert( anIndex < count );
 	*oidPtr(anIndex) = anOid;
+	[self didChange];
 }
 
 
@@ -411,6 +446,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 		*oidPtr(anIndex) = [object oid];
 		count+=1;
 	}
+	[self didChange];
 }
 
 

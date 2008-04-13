@@ -291,6 +291,7 @@ typedef struct {
 }
 
 - (id) rootObjectForKey: (NSString*) key
+/*" Root objects are retained by the context upon first useage. "*/
 {
 	NSAssert(rootObjectOIDs != nil, @"rootObjectOIDs dictionary not set up.");
 	id result = [rootObjects objectForKey: key];
@@ -357,7 +358,7 @@ NSString* OPStringFromOID(OID oid)
 {
 	if (!oid) return nil;
 	//int oidSize = sizeof(oid);
-	//if (NSDebugEnabled) NSLog(@"Requesting object for oid %016llx", oid);
+	if (NSDebugEnabled) NSLog(@"Requesting object for oid %016llx", oid);
 	// First, look up oid in registered objects cache:
     OPPersistentObject* result = [self objectRegisteredForOID: oid];
     if (!result) { 
@@ -379,7 +380,9 @@ NSString* OPStringFromOID(OID oid)
 		//result = [[self unarchiveObject: result] autorelease];
 		
 		//NSLog(@"Registered object %@, lookup returns %@", result, [self objectRegisteredForOid: oid ofClass: poClass]);
-        NSAssert(result == [self objectRegisteredForOID: oid], @"Problem with hash lookup");
+		if (result != [self objectRegisteredForOID: oid]) {
+			NSAssert(result == [self objectRegisteredForOID: oid], @"Problem with hash lookup. -hash method noch implemented by returning LID?");
+		}
     } else {
 		// We already know this object.
 		// Put it into  the fault cache:

@@ -35,19 +35,24 @@
 
 - (void)performFilterActionsOnMessage:(GIMessage *)message putIntoMessagebox:(BOOL *)putInBox shouldStop:(BOOL *)shouldStop;
 
-@end
++ (NSArray*) filters;
 
-@interface GIMessageFilterList : OPPersistentObject
-{
-	@private
-	OPFaultingArray *filters;
-}
-
-@property (readonly) OPFaultingArray *filters;
-
-+ (OPFaultingArray *)filters;
-+ (NSArray *)filtersMatchingForMessage:(id)message;
-+ (BOOL)applyFiltersToMessage:(GIMessage *)message;
 + (void)applyFiltersToThreads:(id <NSFastEnumeration>)someThreads inGroup:(GIMessageGroup *)aGroup;
++ (BOOL)applyFiltersToMessage:(GIMessage *)message;
 
 @end
+
+//@interface GIMessageFilterList : OPPersistentObject
+//{
+//	@private
+//	//OPFaultingArray *filters;
+//}
+//
+//@property (readonly) OPFaultingArray *filters;
+//
+//+ (OPFaultingArray *)filters;
+//+ (NSArray *)filtersMatchingForMessage:(id)message;
+//+ (BOOL)applyFiltersToMessage:(GIMessage *)message;
+//+ (void)applyFiltersToThreads:(id <NSFastEnumeration>)someThreads inGroup:(GIMessageGroup *)aGroup;
+//
+//@end

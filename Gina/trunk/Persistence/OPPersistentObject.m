@@ -77,11 +77,6 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 	return [super mutableSetValueForKey: key];
 }
 
-+ (BOOL) cachesAllObjects
-/*" Default implementation - returns NO. Subclasses mey override. "*/
-{
-	return NO;
-}
 
 //+ (BOOL) accessInstanceVariablesDirectly
 //{
@@ -767,6 +762,11 @@ static Class OPPersistentObjectFaultClass = Nil;
 	// subclass hook
 }
 
++ (BOOL) cachesAllObjects
+/*" Default implementation - returns NO. Subclasses mey override. "*/
+{
+	return NO;
+}
 
 @end
 

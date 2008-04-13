@@ -13,6 +13,7 @@
 
 @implementation OPKeyedArchiver
 
+@synthesize context;
 
 - (id) init
 {
@@ -108,7 +109,9 @@
 - (void) encodeRootObject: (id) rootObject
 /*" rootObject must be an OPPersistentObject. "*/
 {
+	//if (![[rootObject classForCoder] canPersist]) {
 	NSParameterAssert([[rootObject classForCoder] canPersist]);
+	//}
 	[plistStack removeAllObjects];
 	[encodingsByOid removeAllObjects];
 	if (lidsByObjectPtrs) NSFreeMapTable(lidsByObjectPtrs);
