@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="518"/>
+			<integer value="519"/>
 			<integer value="801"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -1486,7 +1486,7 @@
 																						<reference ref="439908408"/>
 																					</object>
 																				</object>
-																				<object class="NSMutableDictionary" id="719012759">
+																				<object class="NSMutableDictionary" id="717933585">
 																					<bool key="EncodedWithXMLCoder">YES</bool>
 																					<object class="NSMutableArray" key="dict.sortedKeys">
 																						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1612,7 +1612,7 @@
 																							<bool key="EncodedWithXMLCoder">YES</bool>
 																							<reference ref="84832586"/>
 																							<reference ref="769916242"/>
-																							<reference ref="719012759"/>
+																							<reference ref="717933585"/>
 																						</object>
 																						<object class="NSMutableArray">
 																							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1794,7 +1794,9 @@
 					<string>performActionPreventFurtherFiltering</string>
 					<string>performActionMarkAsSpam</string>
 					<string>performActionPutInMessageGroup</string>
+					<string>enabled</string>
 				</object>
+				<string key="NSObjectClassName">GIMessageFilter</string>
 				<bool key="NSEditable">YES</bool>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
 				<bool key="NSAvoidsEmptySelection">YES</bool>
@@ -1918,26 +1920,6 @@
 					<int key="connectionID">613</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: arrangedObjects.disabled</string>
-						<reference key="source" ref="1062675525"/>
-						<reference key="destination" ref="241357316"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1062675525"/>
-							<reference key="NSDestination" ref="241357316"/>
-							<string key="NSLabel">value: arrangedObjects.disabled</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">arrangedObjects.disabled</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">NSNegateBoolean</string>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">616</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">remove:</string>
 						<reference key="source" ref="241357316"/>
@@ -1993,45 +1975,6 @@
 						<reference key="destination" ref="241357316"/>
 					</object>
 					<int key="connectionID">630</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selectedFilterPredicate</string>
-						<reference key="source" ref="485236722"/>
-						<reference key="destination" ref="1067310751"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="485236722"/>
-							<reference key="NSDestination" ref="1067310751"/>
-							<string key="NSLabel">value: selectedFilterPredicate</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selectedFilterPredicate</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMutableArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSAllowsEditingMultipleValuesSelection</string>
-									<string>NSAlwaysPresentsApplicationModalAlerts</string>
-									<string>NSConditionallySetsEditable</string>
-									<string>NSConditionallySetsEnabled</string>
-									<string>NSConditionallySetsHidden</string>
-									<string>NSRaisesForNotApplicableKeys</string>
-									<string>NSValidatesImmediately</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<reference ref="9"/>
-									<reference ref="8"/>
-									<reference ref="8"/>
-									<reference ref="9"/>
-									<reference ref="8"/>
-									<reference ref="9"/>
-									<reference ref="8"/>
-								</object>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">632</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -2146,63 +2089,6 @@
 					<int key="connectionID">695</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentValues: arrangedObjects.treePathDescription</string>
-						<reference key="source" ref="469087258"/>
-						<reference key="destination" ref="160441882"/>
-						<object class="NSNibBindingConnector" key="connector" id="153893346">
-							<reference key="NSSource" ref="469087258"/>
-							<reference key="NSDestination" ref="160441882"/>
-							<string key="NSLabel">contentValues: arrangedObjects.treePathDescription</string>
-							<string key="NSBinding">contentValues</string>
-							<string key="NSKeyPath">arrangedObjects.treePathDescription</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMutableArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSContentPlacementTag</string>
-									<string>NSInsertsNullPlaceholder</string>
-									<string>NSMultipleValuesPlaceholder</string>
-									<string>NSNoSelectionPlaceholder</string>
-									<string>NSNotApplicablePlaceholder</string>
-									<string>NSNullPlaceholder</string>
-									<string>NSRaisesForNotApplicableKeys</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<reference ref="8"/>
-									<reference ref="8"/>
-									<string/>
-									<string/>
-									<string/>
-									<string>No message box selected</string>
-									<reference ref="9"/>
-								</object>
-							</object>
-							<reference key="NSPreviousConnector" ref="361014785"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">758</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedObject: selectedFilterMessageGroup</string>
-						<reference key="source" ref="469087258"/>
-						<reference key="destination" ref="1067310751"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="469087258"/>
-							<reference key="NSDestination" ref="1067310751"/>
-							<string key="NSLabel">selectedObject: selectedFilterMessageGroup</string>
-							<string key="NSBinding">selectedObject</string>
-							<string key="NSKeyPath">selectedFilterMessageGroup</string>
-							<reference key="NSPreviousConnector" ref="153893346"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">760</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">clone:</string>
 						<reference key="source" ref="241357316"/>
@@ -2227,22 +2113,6 @@
 					<int key="connectionID">763</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentArray: messageFilterClass.filters</string>
-						<reference key="source" ref="241357316"/>
-						<reference key="destination" ref="1067310751"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="241357316"/>
-							<reference key="NSDestination" ref="1067310751"/>
-							<string key="NSLabel">contentArray: messageFilterClass.filters</string>
-							<string key="NSBinding">contentArray</string>
-							<string key="NSKeyPath">messageFilterClass.filters</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">798</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">delete:</string>
 						<reference key="source" ref="1067310751"/>
@@ -2257,6 +2127,105 @@
 						<reference key="destination" ref="958921540"/>
 					</object>
 					<int key="connectionID">806</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">contentArray: messageFilterListClass.filters</string>
+						<reference key="source" ref="241357316"/>
+						<reference key="destination" ref="1067310751"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="241357316"/>
+							<reference key="NSDestination" ref="1067310751"/>
+							<string key="NSLabel">contentArray: messageFilterListClass.filters</string>
+							<string key="NSBinding">contentArray</string>
+							<string key="NSKeyPath">messageFilterListClass.filters</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">807</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.enabled</string>
+						<reference key="source" ref="1062675525"/>
+						<reference key="destination" ref="241357316"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1062675525"/>
+							<reference key="NSDestination" ref="241357316"/>
+							<string key="NSLabel">value: arrangedObjects.enabled</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.enabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">811</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.predicate</string>
+						<reference key="source" ref="485236722"/>
+						<reference key="destination" ref="241357316"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="485236722"/>
+							<reference key="NSDestination" ref="241357316"/>
+							<string key="NSLabel">value: selection.predicate</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.predicate</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">814</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">contentValues: arrangedObjects.treePathDescription</string>
+						<reference key="source" ref="469087258"/>
+						<reference key="destination" ref="160441882"/>
+						<object class="NSNibBindingConnector" key="connector" id="111874002">
+							<reference key="NSSource" ref="469087258"/>
+							<reference key="NSDestination" ref="160441882"/>
+							<string key="NSLabel">contentValues: arrangedObjects.treePathDescription</string>
+							<string key="NSBinding">contentValues</string>
+							<string key="NSKeyPath">arrangedObjects.treePathDescription</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSMultipleValuesPlaceholder</string>
+									<string>NSNoSelectionPlaceholder</string>
+									<string>NSNotApplicablePlaceholder</string>
+									<string>NSNullPlaceholder</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string/>
+									<string/>
+									<string/>
+									<string>No message box selected</string>
+								</object>
+							</object>
+							<reference key="NSPreviousConnector" ref="361014785"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">815</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">selectedObject: selectedFilterMessageGroup</string>
+						<reference key="source" ref="469087258"/>
+						<reference key="destination" ref="1067310751"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="469087258"/>
+							<reference key="NSDestination" ref="1067310751"/>
+							<string key="NSLabel">selectedObject: selectedFilterMessageGroup</string>
+							<string key="NSBinding">selectedObject</string>
+							<string key="NSKeyPath">selectedFilterMessageGroup</string>
+							<reference key="NSPreviousConnector" ref="111874002"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">817</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3031,7 +3000,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">806</int>
+			<int key="maxID">817</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

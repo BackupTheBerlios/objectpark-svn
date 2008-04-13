@@ -11,53 +11,88 @@
 #import "GIMessageGroup.h"
 #import "OPPersistentObjectContext.h"
 #import "GIThread.h"
+#import "OPFaultingArray.h"
 
-@implementation GIMessageFilter
+@implementation GIMessageFilterList
+
+@synthesize filters;
 
 + (BOOL)cachesAllObjects
 {
 	return YES;
 }
 
-static NSMutableArray *filters = nil;
+- (id)init
+{
+	self = [super init];
+	
+	filters = [[OPFaultingArray alloc] init];
+	
+	return self;
+}
 
-+ (NSMutableArray *)filters
+- (id)initWithCoder:(NSCoder *)coder
+{
+	filters = [coder decodeObjectForKey:@"filters"];
+	
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+	[coder encodeObject:filters forKey:@"filters"];
+}
+
+- (void)dealloc
+{
+	[filters release];
+	
+	[super dealloc];
+}
+
++ (OPFaultingArray *)filters
 {	
-	if (!filters)
+	static GIMessageFilterList *filterList = nil;
+		
+	if (!filterList)
 	{
-		filters = [[[NSUserDefaults standardUserDefaults] objectForKey:@"Filters"] mutableCopy];
-		if (!filters)
+		OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
+
+		filterList = [[context rootObjectForKey:@"FilterList"] retain];
+		
+		if (!filterList)
 		{
-			filters = [[NSMutableArray alloc] init];
+			filterList = [[GIMessageFilterList alloc] init];
+			[context insertObject:filterList];
+			[context setRootObject:filterList forKey:@"FilterList"];
 		}
 	}
 	
-	return filters;
+	return filterList.filters;
 }
 
-+ (void)setFilters:(NSMutableArray *)someFilters
++ (void)insertObject:(GIMessageFilter *)aFilter inFiltersAtIndex:(unsigned int)index 
 {
-	[filters autorelease];
-	filters = [someFilters retain];
-	[self saveFilters];
+	[[OPPersistentObjectContext defaultContext] insertObject:aFilter];
+	[[self filters] insertObject:aFilter atIndex:index];
 }
 
-+ (void)saveFilters
++ (void)removeObjectFromFiltersAtIndex:(unsigned int)index 
 {
-	[[NSUserDefaults standardUserDefaults] setObject:filters forKey:@"Filters"];
+	id objectToRemove = [[[self filters] objectAtIndex:index] retain];
+	[[self filters] removeObjectAtIndex:index];
+	[objectToRemove delete];
+	[objectToRemove release];
 }
 
 /*" Returns a (sub)set of the receiver's filters which match for the given message. "*/
 + (NSArray *)filtersMatchingForMessage:(id)message
 {
     NSMutableArray *result = [NSMutableArray array];
-	    
-    for (id filter in [self filters]) 
+	
+    for (GIMessageFilter *filter in [self filters]) 
     {
-		NSString *predicateFormat = [filter valueForKey:@"predicateFormat"];
-		NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateFormat];
-		
-        if ([predicate evaluateWithObject:message]) 
+        if (filter.enabled && [filter.predicate evaluateWithObject:message]) 
         {
             [result addObject:filter];
         }
@@ -66,53 +101,20 @@ static NSMutableArray *filters = nil;
     return result;
 }
 
-+ (void)performFilterActions:(id)filter onMessage:(GIMessage *)message putIntoMessagebox:(BOOL *)putInBox shouldStop:(BOOL *)shouldStop
-{
-	BOOL markAsSpam = [[filter objectForKey:@"performActionMarkAsSpam"] boolValue];
-	if (markAsSpam)
-	{
-		if (![message hasFlags:OPJunkMailStatus])
-		{
-			[message toggleFlags:OPJunkMailStatus];
-		}
-	}
-	
-	(*shouldStop) = [[filter objectForKey:@"performActionPreventFurtherFiltering"] boolValue];
-	(*putInBox) = [[filter objectForKey:@"performActionPutInMessageGroup"] boolValue];
-	
-	if (*putInBox)
-	{
-		NSString *messageBoxURLString = [filter objectForKey:@"putInMessageGroupObjectURLString"];
-		
-		GIMessageGroup *group = [[OPPersistentObjectContext defaultContext] objectWithURLString:messageBoxURLString];
-		
-		if (!group) 
-		{
-			// TODO: create message group with name of the filter
-			(*putInBox) = NO;
-		}
-		else
-		{
-			[[group mutableSetValueForKey:@"threads"] addObject:[message thread]];
-			(*putInBox) = YES;
-		}
-	}
-}
-
 /*" Applies matching filters to the given message. Returns YES if message was inserted/moved into a box different to currentBox. NO otherwise. "*/
 + (BOOL)applyFiltersToMessage:(GIMessage *)message
 {
     BOOL inserted = NO;
-
+	
 	for (id filter in [self filtersMatchingForMessage:message])
 	{
 		BOOL putInBox = NO;
 		BOOL shouldStop = NO;
 		
-		[self performFilterActions:filter onMessage:message putIntoMessagebox:&putInBox shouldStop:&shouldStop];
+		[filter performFilterActionsOnMessage:message putIntoMessagebox:&putInBox shouldStop:&shouldStop];
 		
 		inserted |= putInBox;
-
+		
 		if (shouldStop) break;
 	}
 	
@@ -127,7 +129,7 @@ static NSMutableArray *filters = nil;
 	for (GIThread *thread in someThreads)
 	{
 		NSAssert([thread isKindOfClass:[GIThread class]], @"threads only");
-//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
 		// Remove selected thread from receiver's group:
 		[messageGroups removeObject:aGroup];
@@ -139,7 +141,7 @@ static NSMutableArray *filters = nil;
 			// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
 			for (GIMessage *message in thread.messages)
 			{
-				threadWasPutIntoAtLeastOneGroup |= [GIMessageFilter applyFiltersToMessage:message];
+				threadWasPutIntoAtLeastOneGroup |= [self applyFiltersToMessage:message];
 			}
 		} 
 		@catch (id localException) 
@@ -156,7 +158,46 @@ static NSMutableArray *filters = nil;
 				}
 			}
 		}
-//		[pool release];
+		//		[pool release];
+	}
+}
+
+@end
+
+@implementation GIMessageFilter
+
++ (BOOL)cachesAllObjects
+{
+	return YES;
+}
+
+- (void)performFilterActionsOnMessage:(GIMessage *)message putIntoMessagebox:(BOOL *)putInBox shouldStop:(BOOL *)shouldStop
+{
+	if (self.performActionMarkAsSpam)
+	{
+		if (![message hasFlags:OPJunkMailStatus])
+		{
+			[message toggleFlags:OPJunkMailStatus];
+		}
+	}
+	
+	(*shouldStop) = self.performActionPreventFurtherFiltering;
+	(*putInBox) = self.performActionPutInMessageGroup;
+	
+	if (*putInBox)
+	{
+		GIMessageGroup *group = self.putInMessageGroup;
+		
+		if (!group) 
+		{
+			// TODO: create message group with name of the filter
+			(*putInBox) = NO;
+		}
+		else
+		{
+			[[group mutableSetValueForKey:@"threads"] addObject:[message thread]];
+			(*putInBox) = YES;
+		}
 	}
 }
 
@@ -171,6 +212,18 @@ static NSMutableArray *filters = nil;
 	[name autorelease];
 	name = [aString copy];
 	[self didChangeValueForKey:@"name"];
+}
+
+- (BOOL)enabled
+{
+	return enabled;
+}
+
+- (void)setEnabled:(BOOL)aBool
+{
+	[self willChangeValueForKey:@"enabled"];
+	enabled = aBool;
+	[self didChangeValueForKey:@"enabled"];
 }
 
 - (NSPredicate *)predicate
@@ -237,9 +290,17 @@ static NSMutableArray *filters = nil;
 	[self didChangeValueForKey:@"performActionPreventFurtherFiltering"];
 }
 
+- (id)init
+{
+	self = [super init];
+	enabled = YES;
+	return self;
+}
+
 - (id)initWithCoder:(NSCoder *)coder
 {
 	name = [coder decodeObjectForKey:@"name"];
+	enabled = [coder decodeBoolForKey:@"enabled"];
 	predicate = [coder decodeObjectForKey:@"predicate"];
 	performActionPutInMessageGroup = [coder decodeBoolForKey:@"performActionPutInMessageGroup"];
 	putInMessageGroupOID = [coder decodeOIDForKey:@"putInMessageGroupOID"];
@@ -252,11 +313,27 @@ static NSMutableArray *filters = nil;
 - (void)encodeWithCoder:(NSCoder *)coder
 {
 	[coder encodeObject:name forKey:@"name"];
+	[coder encodeBool:enabled forKey:@"enabled"];
 	[coder encodeObject:predicate forKey:@"predicate"];
 	[coder encodeBool:performActionPutInMessageGroup forKey:@"performActionPutInMessageGroup"];
 	[coder encodeOID:putInMessageGroupOID forKey:@"putInMessageGroupOID"];
 	[coder encodeBool:performActionMarkAsSpam forKey:@"performActionMarkAsSpam"];
 	[coder encodeBool:performActionPreventFurtherFiltering forKey:@"performActionPreventFurtherFiltering"];
+}
+
+- (id)mutableCopyWithZone:(NSZone *)aZone
+{
+	GIMessageFilter *result = [[[self class] alloc] init];
+
+	result.name = [self.name stringByAppendingString:NSLocalizedString(@" Clone", @"Clone")];
+	result.enabled = self.enabled;
+	result.predicate = self.predicate;
+	result.performActionPutInMessageGroup = self.performActionPutInMessageGroup;
+	result->putInMessageGroupOID = self->putInMessageGroupOID;
+	result.performActionMarkAsSpam = self.performActionMarkAsSpam;
+	result.performActionPreventFurtherFiltering = self.performActionPreventFurtherFiltering;
+	
+	return result;
 }
 
 - (void)dealloc

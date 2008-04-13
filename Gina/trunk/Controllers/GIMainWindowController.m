@@ -10,7 +10,7 @@
 #import "GIThreadOutlineViewController.h"
 #import "GIMessageGroupOutlineViewController.h"
 #import "GIMessageEditorController.h"
-
+#import "GISplitView.h"
 #import "GIUserDefaultsKeys.h"
 
 // helper
@@ -528,7 +528,7 @@
 
 @implementation GIMainWindowController (SplitViewDelegate)
 
-- (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset
+- (CGFloat)splitView:(id)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset
 {
 	if (sender == threadMailSplitter)
 	{
@@ -538,7 +538,7 @@
 	return proposedMax;
 }
 
-- (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset
+- (CGFloat)splitView:(id)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset
 {
 	if (sender == threadMailSplitter) {
 		return 32.0;
@@ -1165,7 +1165,7 @@ static BOOL isShowingThreadsOnly = NO;
 		}
 	}
 	
-	[GIMessageFilter applyFiltersToThreads:result inGroup:messageGroupsController.selectedObject];
+	[GIMessageFilterList applyFiltersToThreads:result inGroup:messageGroupsController.selectedObject];
 }
 
 - (IBAction)debug:(id)sender

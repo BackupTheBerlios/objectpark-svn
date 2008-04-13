@@ -11,11 +11,13 @@
 
 @class GIMessage;
 @class GIMessageGroup;
+@class OPFaultingArray;
 
 @interface GIMessageFilter : OPPersistentObject 
 {
 	@private
 	NSString *name;
+	BOOL enabled;
 	NSPredicate *predicate;
 	BOOL performActionPutInMessageGroup;
 	OID putInMessageGroupOID;
@@ -24,16 +26,26 @@
 }
 
 @property (copy) NSString *name;
+@property BOOL enabled;
 @property (copy) NSPredicate *predicate;
 @property BOOL performActionPutInMessageGroup;
 @property (assign) GIMessageGroup *putInMessageGroup;
 @property BOOL performActionMarkAsSpam;
 @property BOOL performActionPreventFurtherFiltering;
 
-+ (NSMutableArray *)filters;
-+ (void)setFilters:(NSMutableArray *)someFilters;
-+ (void)saveFilters;
+- (void)performFilterActionsOnMessage:(GIMessage *)message putIntoMessagebox:(BOOL *)putInBox shouldStop:(BOOL *)shouldStop;
 
+@end
+
+@interface GIMessageFilterList : OPPersistentObject
+{
+	@private
+	OPFaultingArray *filters;
+}
+
+@property (readonly) OPFaultingArray *filters;
+
++ (OPFaultingArray *)filters;
 + (NSArray *)filtersMatchingForMessage:(id)message;
 + (BOOL)applyFiltersToMessage:(GIMessage *)message;
 + (void)applyFiltersToThreads:(id <NSFastEnumeration>)someThreads inGroup:(GIMessageGroup *)aGroup;

@@ -11,12 +11,13 @@
 #import "GIMessageFilter.h"
 #import "GIHierarchyNode.h"
 #import "GIMessageGroup.h"
+#import "OPPersistentObjectContext.h"
 
 @implementation GIFilterPrefs
 
-- (Class)messageFilterClass
+- (Class)messageFilterListClass
 {
-	return [GIMessageFilter class];
+	return [GIMessageFilterList class];
 }
 
 - (void)ruleEditorRowsDidChange:(NSNotification *)notification
@@ -44,34 +45,34 @@
 	}		
 }
 
-- (NSPredicate *)selectedFilterPredicate
-{
-	id currentFilter = [[filterArrayController selectedObjects] lastObject];
-	NSString *predicateFormat = [currentFilter valueForKey:@"predicateFormat"];
-	NSPredicate *predicate = nil;
-	
-	@try
-	{
-		predicate = [NSPredicate predicateWithFormat:predicateFormat];
-	}
-	@catch(id localException)
-	{
-		NSLog(@"Exception: %@", localException);
-	}
-	
-	return predicate;
-}
-
-- (void)setSelectedFilterPredicate:(NSPredicate *)aPredicate
-{
-	id currentFilter = [[filterArrayController selectedObjects] lastObject];
-	NSString *predicateFormat = [aPredicate predicateFormat];
-	[currentFilter setValue:predicateFormat forKey:@"predicateFormat"];
-	
-	if (NSDebugEnabled) NSLog(@"predicate = %@", predicateFormat);
-	
-	[[GIMessageFilter class] saveFilters];
-}
+//- (NSPredicate *)selectedFilterPredicate
+//{
+//	id currentFilter = [[filterArrayController selectedObjects] lastObject];
+//	NSString *predicateFormat = [currentFilter valueForKey:@"predicateFormat"];
+//	NSPredicate *predicate = nil;
+//	
+//	@try
+//	{
+//		predicate = [NSPredicate predicateWithFormat:predicateFormat];
+//	}
+//	@catch(id localException)
+//	{
+//		NSLog(@"Exception: %@", localException);
+//	}
+//	
+//	return predicate;
+//}
+//
+//- (void)setSelectedFilterPredicate:(NSPredicate *)aPredicate
+//{
+//	id currentFilter = [[filterArrayController selectedObjects] lastObject];
+//	NSString *predicateFormat = [aPredicate predicateFormat];
+//	[currentFilter setValue:predicateFormat forKey:@"predicateFormat"];
+//	
+//	if (NSDebugEnabled) NSLog(@"predicate = %@", predicateFormat);
+//	
+//	[[GIMessageFilter class] saveFilters];
+//}
 
 - (void)collectGroupPathsAndURLRepresenations:(NSMutableArray *)paths startingAtNode:(GIHierarchyNode *)node prefix:(NSString *)prefix
 {
@@ -121,8 +122,8 @@
 
 - (id)selectedFilterMessageGroup
 {
-	id currentFilter = [[filterArrayController selectedObjects] lastObject];
-	id objectURLString = [currentFilter valueForKey:@"putInMessageGroupObjectURLString"];
+	GIMessageFilter *currentFilter = [[filterArrayController selectedObjects] lastObject];
+	id objectURLString = [currentFilter.putInMessageGroup objectURLString];
 	
 	for (id result in [self messageGroupsByTree])
 	{
@@ -137,11 +138,10 @@
 
 - (void)setSelectedFilterMessageGroup:(id)aMessageGroup
 {
-	id currentFilter = [[filterArrayController selectedObjects] lastObject];
+	GIMessageFilter *currentFilter = [[filterArrayController selectedObjects] lastObject];
 	NSString *objectURLString = [aMessageGroup valueForKey:@"objectURLString"];
 	if (!objectURLString) objectURLString = @"nothing";
-	[currentFilter setValue:objectURLString forKey:@"putInMessageGroupObjectURLString"];
-	[[GIMessageFilter class] saveFilters];
+	currentFilter.putInMessageGroup = [[OPPersistentObjectContext defaultContext] objectWithURLString:objectURLString];
 }
 
 - (IBAction)delete:(id)sender
