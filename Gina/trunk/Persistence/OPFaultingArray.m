@@ -30,6 +30,40 @@
 
 #define sortObjectPtr(oindex) (id*)(data+((oindex)*entrySize)+sizeof(OID))
 
+- (OID) oid
+/*" Returns the object id for the receiver or NILOID if the object has no context.
+ Currently, the defaultContext is always used. "*/
+{
+	if (!selfOID) {
+		@synchronized(self) {
+			// Create oid on demand, this means that this is now becoming persistent.
+			// Persistent objects unarchived are explicitly given an oid:
+			
+			OPPersistentObjectContext* context = [self context];
+			if (context) {
+				[context insertObject: self];
+			}
+		}
+	}
+	return selfOID;
+}
+
+
+- (OID) currentOID
+{
+	return selfOID;
+}
+
+- (void) setOID: (OID) theOID; // for internal use
+{
+	selfOID = theOID;
+}
+
+- (OPPersistentObjectContext*) context
+/*" Returns the context for the receiver. Currently, always returns the default context. "*/
+{
+    return [OPPersistentObjectContext defaultContext]; // simplistic implementation; prepared for multiple contexts.
+}
 
 + (id) array
 {
@@ -323,7 +357,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 		}
 		NSParameterAssert(anIndex<count);
 		OID oid = *oidPtr(anIndex);
-		OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext]; // todo - obtain context from either coder or inserted objects
+		OPPersistentObjectContext* context = [self context]; // todo - obtain context from either coder or inserted objects
 		result = [context objectForOID: oid];
 		if (!result)
 			result = [context objectForOID: oid];
@@ -379,11 +413,6 @@ static int compare_oids(const void* entry1, const void* entry2)
 	}
 }
 
-- (OPPersistentObjectContext*) context
-/*" Returns the context for the receiver. Currently, always returns the default context. "*/
-{
-    return [OPPersistentObjectContext defaultContext]; // simplistic implementation; prepared for multiple contexts.
-}
 
 - (BOOL) hasUnsavedChanges
 {

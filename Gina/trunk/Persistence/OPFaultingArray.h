@@ -8,14 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "OPPersistenceConstants.h"
+#import "OPPersistentObject.h"
 
 @class OPPersistentObject;
 @class OPFaultingArray;
 @class OPPersistentObjectContext;
 
-@interface OPFaultingArray : NSMutableArray {
+/*" A mutable array for objects obeying to the OPPersisting. "*/
+@interface OPFaultingArray : NSMutableArray <OPPersisting> {
 	
 	@private
+	OID selfOID;
 	char* data;
 	unsigned count; // number of objects contained
 	unsigned capacity; // max number of objects without reallocing
@@ -23,7 +26,6 @@
 }
 
 + (id) array;
-
 
 - (NSUInteger) count;
 
