@@ -832,7 +832,7 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (BOOL)keyPressed:(NSEvent *)event
 {
-	if ([event modifierFlags] && NSDeviceIndependentModifierFlagsMask) return NO;
+	if ([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) return NO;
 	
 	
 	int keyCode = event.keyCode;
