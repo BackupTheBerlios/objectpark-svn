@@ -496,7 +496,7 @@ NSDateFormatter *timeAndDateFormatter()
 	return self;
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
 	// Register to grok GinaThreads drags:
     [outlineView registerForDraggedTypes:[NSArray arrayWithObjects:@"GinaThreads", nil]];
@@ -507,6 +507,9 @@ NSDateFormatter *timeAndDateFormatter()
 {
 	GIMessageGroup* trash = [GIMessageGroup trashMessageGroup];
 	NSArray* threadsToMove = self.selectedObjects;
+	// Select the item at previous first selection index:
+	NSUInteger firstSelectedIndex = [self.outlineView selectedRow];
+	[self.outlineView selectRow: firstSelectedIndex byExtendingSelection: NO]; 
 	NSLog(@"Should delete %@", threadsToMove);
 	for (GIThread* thread in threadsToMove) {
 		if ([thread isKindOfClass: [GIThread class]]) {
@@ -517,10 +520,10 @@ NSDateFormatter *timeAndDateFormatter()
 	}
 }
 
-- (void)setRootItem:(id)newItem
+- (void) setRootItem: (id) newItem
 {
-	if ([newItem isKindOfClass:[GIMessageGroup class]]) [super setRootItem:newItem];
-	else [super setRootItem:nil];
+	if ([newItem isKindOfClass: [GIMessageGroup class]]) [super setRootItem: newItem];
+	else [super setRootItem: nil];
 }
 
 - (void)suspend:(NSNotification *)aNotification
