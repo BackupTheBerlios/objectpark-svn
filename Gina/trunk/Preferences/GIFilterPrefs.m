@@ -54,15 +54,15 @@
 {
 	selectedFilterIndexes = anIndexSet;
 	
-	[self willChangeValueForKey:@"selectedFilterPredicate"];
-	[self didChangeValueForKey:@"selectedFilterPredicate"];
+//	[self willChangeValueForKey:@"selectedFilterPredicate"];
+//	[self didChangeValueForKey:@"selectedFilterPredicate"];
 	[self willChangeValueForKey:@"selectedFilterMessageGroup"];
 	[self didChangeValueForKey:@"selectedFilterMessageGroup"];
 	
-	if ([predicateEditor numberOfRows] == 0)
-	{
-		[predicateEditor addRow:self];
-	}		
+//	if ([predicateEditor numberOfRows] == 0)
+//	{
+//		[predicateEditor addRow:self];
+//	}		
 }
 
 //- (NSPredicate *)selectedFilterPredicate
