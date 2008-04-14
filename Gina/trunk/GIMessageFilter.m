@@ -170,9 +170,7 @@
 + (void) removeObjectFromFiltersAtIndex: (NSUInteger)index 
 {
 	OPFaultingArray* allFilters = (OPFaultingArray*)[self filters];
-	id objectToRemove = [allFilters objectAtIndex: index];
 	[allFilters removeObjectAtIndex: index];
-	[objectToRemove delete];
 }
 
 

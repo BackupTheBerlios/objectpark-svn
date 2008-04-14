@@ -21,12 +21,14 @@
 	[super awakeFromNib];
 }
 
-//- (id)newObject
-//{
-//	id result = [super newObject];
-////	[result setObject:[NSPredicate predicateWithFormat:@"name CONTAINS \"Dirky\""] forKey:@"predicate"];
-//	return result;
-//}
+- (void) remove: (id) sender
+/*  Removes the selected objects and deletes them from the persistent store. */
+{
+	NSArray* objectsToDelete = self.selectedObjects;
+	[super remove: sender]; // actual removal
+	[objectsToDelete makeObjectsPerformSelector: @selector(delete)];
+}
+
 
 - (IBAction)clone:(id)sender
 {
