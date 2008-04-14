@@ -7,6 +7,8 @@
 //
 
 #import "GIFilterArrayController.h"
+#import "OPPersistentObjectContext.h"
+
 #define GIFILTERPREFTYPE @"GinkoFilterPrefType"
 
 @implementation GIFilterArrayController
@@ -62,14 +64,10 @@
 
 @implementation GIFilterArrayController (DragNDrop)
 
-- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
+- (BOOL)tableView:(NSTableView *)aTableView writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard
 {
-    NSArray *rows = [[info draggingPasteboard] propertyListForType:GIFILTERPREFTYPE];
-    
-    NSAssert([rows count] == 1, @"More than one filter per drag is not supported");
-    
-    NSUInteger oldIndex = [[rows objectAtIndex:0] unsignedIntValue];
-    [self moveObjectAtArrangedObjectIndex:oldIndex toArrangedObjectIndex:row];
+    [pboard declareTypes:[NSArray arrayWithObject:GIFILTERPREFTYPE] owner:self];
+    [pboard setPropertyList:rows forType:GIFILTERPREFTYPE];
     
     return YES;
 }
@@ -80,12 +78,18 @@
     return [info draggingSourceOperationMask];
 }
 
-- (BOOL)tableView:(NSTableView *)aTableView writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard
+- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
 {
-    [pboard declareTypes:[NSArray arrayWithObject:GIFILTERPREFTYPE] owner:self];
-    [pboard setPropertyList:rows forType:GIFILTERPREFTYPE];
+    NSArray *rows = [[info draggingPasteboard] propertyListForType:GIFILTERPREFTYPE];
+    
+    NSAssert([rows count] == 1, @"More than one filter per drag is not supported");
+    
+    NSUInteger oldIndex = [[rows objectAtIndex:0] unsignedIntValue];
+    [self moveObjectAtArrangedObjectIndex:oldIndex toArrangedObjectIndex:row];
     
     return YES;
+	
+	[[OPPersistentObjectContext defaultContext] saveChanges];
 }
 
 @end
