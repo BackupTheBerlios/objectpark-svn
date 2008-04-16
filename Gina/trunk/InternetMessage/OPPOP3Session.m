@@ -138,7 +138,15 @@ static BOOL isOK(NSString* response)
     if ((_state != UPDATE) && (_state != DISCONNECTED)) 
 	{
         // stream needs closing
-        [self responseForCommand:@"QUIT"];
+		@try
+		{
+			[self responseForCommand:@"QUIT"];
+		}
+		@catch (NSException *localException)
+		{
+			NSLog(@"QUIT command caused exception: %@", [localException reason]);
+		}
+		
         [self _autosaveUIDLs];
         _state = UPDATE;
     }

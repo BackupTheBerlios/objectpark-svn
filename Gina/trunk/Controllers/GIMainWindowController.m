@@ -21,6 +21,7 @@
 
 // model stuff
 #import "OPPersistentObject.h"
+#import "OPPersistentSet.h"
 
 #import "GIThread.h"
 #import "GIMessage.h"
@@ -821,6 +822,124 @@ static BOOL isShowingThreadsOnly = NO;
 
 @implementation GIMainWindowController (KeyboardShortcuts)
 
+/*" Returns YES if the message view was scrolled down. NO otherwise. "*/
+- (BOOL)scrollMessageTextViewPageDown
+{
+	NSPoint currentScrollPosition = [[messageTextScrollView contentView] bounds].origin;
+	
+	if (currentScrollPosition.y == (NSMaxY([[messageTextScrollView documentView] frame]) 
+									- NSHeight([[messageTextScrollView contentView] bounds]))) return NO;
+	
+	// scroll page down:
+	float height = NSHeight([[messageTextScrollView contentView] bounds]);
+	currentScrollPosition.y += height;
+	if (height > (16 * 2)) // overlapping
+	{
+		currentScrollPosition.y -= 16;
+	}
+	
+	if (currentScrollPosition.y > (NSMaxY([[messageTextScrollView documentView] frame]) 
+								   - NSHeight([[messageTextScrollView contentView] bounds]))) 
+	{
+		currentScrollPosition.y = (NSMaxY([[messageTextScrollView documentView] frame]) 
+								   - NSHeight([[messageTextScrollView contentView] bounds]));
+	}
+	
+	[[messageTextScrollView documentView] scrollPoint:currentScrollPosition];
+	
+	return YES;
+}
+
+/*" Returns the next message appropriate for viewing (in this case the next unread which might be eventually change/be user customizable). Or nil if no such message can be found. "*/
+- (GIMessage *)nextMessage
+{
+	id selectedMessageOrThread = [self selectedMessageOrThread];
+	GIThread *thread = nil;
+	GIMessage *message = nil;
+	
+	if ([selectedMessageOrThread isKindOfClass:[GIMessage class]])
+	{
+		message = selectedMessageOrThread;
+		thread = message.thread;
+	}
+	else
+	{
+		thread = selectedMessageOrThread;
+	}
+	
+	GIMessage *result = [thread nextMessageForMessage:message];
+	
+	if (result.isSeen) result = nil;
+	
+	while (thread != nil && result == nil)
+	{
+		// look for next thread:
+		NSArray *threadsArray = [(OPPersistentSet *)self.selectedGroup.threads sortedArray];
+		NSUInteger index = [threadsArray indexOfObjectIdenticalTo:thread];
+		
+		index += 1;
+		
+		if (index < threadsArray.count)
+		{
+			thread = [threadsArray objectAtIndex:index];
+		}
+		else
+		{
+			thread = nil;
+		}
+		
+		result = [thread nextMessageForMessage:nil];
+		if (result.isSeen) result = nil;
+	}
+	
+	return result;	
+}
+
+- (IBAction)goAhead:(id)sender
+{
+	// scroll message text view down if possible...
+	// ...go to "next" message otherwise:
+	if (![self scrollMessageTextViewPageDown])
+	{
+		GIMessage *nextMessage = [self nextMessage];
+		
+		if (nextMessage)
+		{
+			[self showMessage:nextMessage];
+		}
+		else
+		{
+			NSBeep();
+		}
+	}
+}
+
+- (IBAction)goNextAndMarkSeen:(id)sender
+{
+	[self selectedMessage].isSeen = YES;
+	
+	GIMessage *nextMessage = [self nextMessage];
+	
+	if (nextMessage)
+	{
+		[self showMessage:nextMessage];
+	}
+	else
+	{
+		NSBeep();
+	}
+}
+
+- (IBAction)goAheadAndMarkSeen:(id)sender
+{
+	// scroll message text view down if possible...
+	// ...mark as seen and go to "next" message otherwise:
+	if (![self scrollMessageTextViewPageDown])
+	{
+		[self goNextAndMarkSeen:sender];
+	}
+}
+
 #define LEFT_A 0
 #define DOWN_S 1
 #define RIGHT_D 2
@@ -829,6 +948,9 @@ static BOOL isShowingThreadsOnly = NO;
 #define BACKSPACE 51
 #define RETURN 36
 #define SPACE 49
+#define N_KEY 45
+#define B_KEY 11
+#define R_KEY 15
 
 - (BOOL)keyPressed:(NSEvent *)event
 {
@@ -861,6 +983,7 @@ static BOOL isShowingThreadsOnly = NO;
 			return YES;
 		}
 		case RETURN:
+		{
 			if ([self.window firstResponder] == threadsOutlineView)
 			{
 				[self threadsDoubleAction:threadsOutlineView];
@@ -872,6 +995,25 @@ static BOOL isShowingThreadsOnly = NO;
 				return YES;
 			}
 			break;
+		}
+		case SPACE:
+		{
+			if ([event modifierFlags] & NSControlKeyMask) // Control pressed
+			{
+				[self goAhead:self];
+			}
+			else
+			{
+				[self goAheadAndMarkSeen:self];
+			}
+			return YES;
+		}
+		case N_KEY:
+			[self goNextAndMarkSeen:self];
+			return YES;
+		case R_KEY:
+			[self toggleRead:self];
+			return YES;
 		default:
 			break;
 	}

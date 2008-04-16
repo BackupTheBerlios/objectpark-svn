@@ -35,6 +35,7 @@
 	IBOutlet GISplitView *threadMailSplitter;
 	IBOutlet GISplitView *mailTreeSplitter;
 	IBOutlet GISplitView *verticalSplitter;
+	IBOutlet NSScrollView *messageTextScrollView;
 	IBOutlet GITextView *messageTextView;
 	IBOutlet NSWindow *messageGroupRenameWindow;
 	IBOutlet NSTextField *messageGroupNameField;

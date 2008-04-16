@@ -152,11 +152,18 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
                                      withFallback:YES] sharedInstance];
 }
 
+- (NSString *)resentToWithFallback:(BOOL)fallback 
+{
+    return [[EDTextFieldCoder stringFromFieldBody:[self bodyForHeaderField:@"resent-to"]
+                                     withFallback:YES] sharedInstance];
+}
+
 - (NSString *)allRecipientsWithFallback:(BOOL)fallback
 {
 	NSString *to = [self toWithFallback:fallback];
 	NSString *cc = [self ccWithFallback:fallback];
 	NSString *bcc = [self bccWithFallback:fallback];
+	NSString *resentTo = [self resentToWithFallback:fallback];
 	
 	id result = [NSMutableString string];
 	
@@ -175,6 +182,12 @@ NSString *EDMessageFormatException = @"EDMessageFormatException";
 	if ([bcc length])
 	{
 		[result appendString:bcc];
+		[result appendString:@", "];
+	}
+	
+	if ([resentTo length])
+	{
+		[result appendString:resentTo];
 	}
 	
 	if ([result hasSuffix:@", "])

@@ -159,9 +159,9 @@
 - (NSString *)incomingPasswordItemRef:(SecKeychainItemRef *)itemRef
 /*" Accesses keychain to get password. "*/
 {
-    NSAssert([self incomingServerName] > 0, @"server name not set");
+    NSAssert1([self incomingServerName] > 0, @"Server name not set in account %@", self.name);
     const char *serverName = [[self incomingServerName] UTF8String];
-    NSAssert([self valueForKey:@"incomingUsername"] > 0, @"user name not set");
+    NSAssert1([self valueForKey:@"incomingUsername"] > 0, @"User name not set in account %@", self.name);
     const char *accountName = [[self valueForKey: @"incomingUsername"] UTF8String];
     UInt32 passwordLength;
     void *passwordData;

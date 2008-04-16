@@ -8,8 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="211"/>
 			<integer value="26"/>
+			<integer value="211"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3248,6 +3248,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 					<int key="connectionID">358</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">messageTextScrollView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="440559076"/>
+					</object>
+					<int key="connectionID">359</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -4437,7 +4445,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">358</int>
+			<int key="maxID">359</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4609,6 +4617,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>messageGroupNameField</string>
 							<string>messageGroupRenameWindow</string>
 							<string>messageGroupsController</string>
+							<string>messageTextScrollView</string>
 							<string>messageTextView</string>
 							<string>observedObjectForSelectedSearchResults</string>
 							<string>observedObjectForSelectedThreads</string>
@@ -4631,6 +4640,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>NSTextField</string>
 							<string>NSWindow</string>
 							<string>GIMessageGroupOutlineViewController</string>
+							<string>NSScrollView</string>
 							<string>GITextView</string>
 							<string>id</string>
 							<string>id</string>
