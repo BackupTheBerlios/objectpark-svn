@@ -287,18 +287,24 @@
 
 - (NSUInteger) hash
 {
-	return LIDFromOID([self oid]);
+	return (NSUInteger)(LIDFromOID([self oid]) % NSUIntegerMax);
 }
 
 - (BOOL) isEqual: (id) other
 {
-	return self == other;
+	if (self == other) return YES;
+	if (![other respondsToSelector: @selector(oid)]) {
+		return NO;
+	}
+	
+	return [self oid] == [other oid];
 }
 
 - (NSString*) description
 {
 	return [NSString stringWithFormat: @"<%@ 0x%x> with %u items.", [self class], self, [self count]];
 }
+
 
 @end
 

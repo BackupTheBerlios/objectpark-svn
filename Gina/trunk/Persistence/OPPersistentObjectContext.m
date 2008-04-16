@@ -439,6 +439,11 @@ NSString* OPStringFromOID(OID oid)
 	}
 }
 
+- (BOOL) oidIsValid: (OID) oid
+{
+	return oid == NILOID || [self classForCID: LIDFromOID(oid)] != nil;
+}
+
 static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object2)
 {	
 	//const FakeObject* o1 = object1;

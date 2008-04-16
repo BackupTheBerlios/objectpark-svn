@@ -582,31 +582,19 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	GIMessageGroup *result = nil;
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 
-	@synchronized(self)
-	{
-//		NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey];
-//        
-//		if (URLString) 
-//		{
+	@synchronized(self) {
 			result = [context rootObjectForKey:defaultsKey];
 			if (!result) if (NSDebugEnabled) NSLog(@"Couldn't find standard box '%@'", defaultName);
-//		}
 		
-		if (!result) 
-		{
+		if (!result) {
 			// not found creating new:
 			result = [GIMessageGroup newWithName:defaultName atHierarchyNode:nil atIndex:NSNotFound];
 			
 			NSAssert1([result name] != nil, @"group should have a name: %@", defaultName);
 			
 			[context setRootObject:result forKey:defaultsKey];
-//			[[NSUserDefaults standardUserDefaults] setObject:[result objectURLString] forKey:defaultsKey];
-//			[[NSUserDefaults standardUserDefaults] synchronize];
 			
-//			NSAssert([[[NSUserDefaults standardUserDefaults] stringForKey:defaultsKey] isEqualToString:[result objectURLString]], @"Fatal error. User defaults are wrong.");
-			
-			if ([defaultsKey isEqualToString:DefaultMessageGroupURLString])
-			{
+			if ([defaultsKey isEqualToString:DefaultMessageGroupURLString]) {
 				// generate greeting e-mail in default group:
 				NSString *transferDataPath = [[NSBundle mainBundle] pathForResource:@"GreetingMail" ofType:@"transferData"];				
 				NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];				
@@ -617,13 +605,10 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 				GIThread *thread = [GIThread threadForMessage:message];				
 				[[result mutableSetValueForKey:@"threads"] addObject:thread];
 			}
-			
 			[context saveChanges];
 		}
-		
 		NSAssert1(result != nil, @"Could not create default message group named '%@'", defaultName);
     }
-	
     return result;
 }
 

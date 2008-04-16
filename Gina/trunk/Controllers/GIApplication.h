@@ -20,6 +20,7 @@
 
 - (OPPersistentObjectContext*) context;
 
+- (IBAction) restoreConfig: (id) sender;
 - (IBAction) backupConfig: (id) sender;
 - (IBAction) emptyTrash: (id) sender;
 

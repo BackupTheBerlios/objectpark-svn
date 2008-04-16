@@ -48,11 +48,6 @@
 	return selfOID;
 }
 
-+ (BOOL) canPersist
-{
-	return YES;
-}
-
 - (OID) currentOID
 {
 	return selfOID;
@@ -200,6 +195,11 @@
 	return result;
 }
 
+- (void) didChange
+/*" Notifies the context of a change so it can update on the persistent store. "*/
+{
+	[[self context] didChangeObject: self];
+}
 
 - (void) _growTo: (unsigned) newCapacity
 // caller must syncronize!
@@ -350,12 +350,6 @@ static int compare_oids(const void* entry1, const void* entry2)
 {
 	if (! [anObject isKindOfClass: [OPPersistentObject class]]) return NSNotFound;
 	return [self indexOfOID: [anObject currentOID]];
-}
-
-- (void) didChange
-/*" Notifies the context of a change so it can update on the persistent store. "*/
-{
-	[[self context] didChangeObject: self];
 }
 
 

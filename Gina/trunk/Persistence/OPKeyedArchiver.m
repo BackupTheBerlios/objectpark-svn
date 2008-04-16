@@ -109,9 +109,7 @@
 - (void) encodeRootObject: (id) rootObject
 /*" rootObject must be an OPPersistentObject. "*/
 {
-	//if (![[rootObject classForCoder] canPersist]) {
-	NSParameterAssert([[rootObject classForCoder] canPersist]);
-	//}
+	NSAssert1([[rootObject classForCoder] conformsToProtocol: @protocol(OPPersisting)], @"Persistent objects must conform to the OPPersisting protocol, but %@ does not.", [rootObject classForCoder]);
 	[plistStack removeAllObjects];
 	[encodingsByOid removeAllObjects];
 	if (lidsByObjectPtrs) NSFreeMapTable(lidsByObjectPtrs);
@@ -131,6 +129,7 @@
 	}
 	
 	NSParameterAssert(oid != NILOID);
+	NSParameterAssert([self.context classForCID: LIDFromOID(oid)]);
 
 	// Record root objects lid:
 	NSMapInsertKnownAbsent(lidsByObjectPtrs, rootObject, (void*)(unsigned)LIDFromOID(oid));
@@ -180,14 +179,15 @@ static Class oppClass    = nil;
 {
 	if (!objv) return;
 	
-	OID oid;
+	OID oid = NILOID;
 	// Persistent objects are encoded as their oids;
-	if ([objv isKindOfClass: oppClass]) {
-		if ([objv oid] == NILOID) {
-			[context insertObject: objv];
-			oid = [objv oid];
-		}
-	} else {
+//	if ([objv conformsToProtocol: @protocol(OPPersisting)]) {
+//		if ([objv oid] == NILOID) {
+//			[context insertObject: objv];
+//			oid = [objv oid];
+//		}
+//	} else 
+	{
 		
 		// Put plist types into the plist directly:
 		if ([objv isPlistMemberClass]) {
@@ -215,6 +215,9 @@ static Class oppClass    = nil;
 
 - (void) encodeOID: (OID) oid forKey: (NSString*) key
 {
+	if (! [context oidIsValid: oid]) {
+		NSParameterAssert([context oidIsValid: oid]);
+	}
 	[self encodeInt64: oid forKey: key];
 }
 

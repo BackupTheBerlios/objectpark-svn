@@ -43,6 +43,44 @@
 #define PERSISTENTOBJECT  OPL_DOMAIN  @"PersistentObject"
 #define FAULTS            OPL_ASPECT  0x01
 
+@implementation NSObject (OPPersistence)
+
+
+- (BOOL) canPersist
+{
+	return NO;
+}
+
+
+- (BOOL) isPlistMemberClass
+{
+	return NO;
+}
+
+- (void) willSave
+/*" Subclass hook. Called prior to the object's attribute values being saved to the database. "*/
+{
+}
+
+
+- (void) willDelete
+/*" Subclass hook. Called whenever the receiver is marked for deletion. Delete any dependent objects here. After this call, -refault will free all attribute values. Default implementation does nothing. "*/
+{
+}
+
+- (void) willRevert
+{
+	// subclass hook
+}
+
++ (BOOL) cachesAllObjects
+/*" Default implementation - returns NO. Subclasses mey override. "*/
+{
+	return NO;
+}
+
+@end
+
 /*" This class should be thread-safe. It should synchronize(self) all accesses to the attributes dictionary.
 In addition to that, it should synchronize([self context]) all write-accesses to the attributes dictionary. "*/
 
@@ -353,7 +391,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (void) setValue: (id) value forUndefinedKey: (NSString*) key
 {
-	if (![self canPersist]) return [super setValue: value forUndefinedKey: key];
+	//if (![self canPersist]) return [super setValue: value forUndefinedKey: key];
 	// Do not allow setting values during e.g. a commit:
 	@synchronized([self context]) {
 		if ([key hasSuffix: @"OID"]) {
@@ -477,11 +515,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 {
 	return NO;
 }
- 
-+ (BOOL) canPersist
-{
-	return YES;
-}
+
 
 - (BOOL) canPersist
 {
@@ -490,6 +524,8 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (BOOL) isEqual: (id) other
 {
+	if (self == other) return YES;
+	
 	if (![other respondsToSelector: @selector(oid)]) {
 		return NO;
 	}
@@ -578,24 +614,24 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 //	}
 //	return validationErrors;
 //}
-
-- (void) turnIntoFault
-{
-	Class faultClass = [OPPersistentObjectFault class];
-	isa = faultClass;
-}
-
-- (id) initFaultWithContext: (OPPersistentObjectContext*) context oid: (OID) anOID
-{
-	[self turnIntoFault];
-	[self setOID: anOID];
-	return self;
-}
-
-- (BOOL) resolveFault
-{
-	return YES;
-}
+//
+//- (void) turnIntoFault
+//{
+//	Class faultClass = [OPPersistentObjectFault class];
+//	isa = faultClass;
+//}
+//
+//- (id) initFaultWithContext: (OPPersistentObjectContext*) context oid: (OID) anOID
+//{
+//	[self turnIntoFault];
+//	[self setOID: anOID];
+//	return self;
+//}
+//
+//- (BOOL) resolveFault
+//{
+//	return YES;
+//}
 
 
 //- (void) awakeAfterUsingCoder: (NSCoder*) aCoder
@@ -607,168 +643,127 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 @end
 
-@implementation OPPersistentObjectFault : OPPersistentObject
-
-- (BOOL) resolveFault
-{
-	Class theClass = [[self context] classForCID: CIDFromOID(self.currentOID)];
-	isa = theClass;
-	BOOL ok = [[self context] unarchiveObject: self forOID: self.currentOID];
-	return ok;
-}
-
-
-//static IMP nsObjectPerform = NULL;
-static Class OPPersistentObjectFaultClass = Nil;
-
-+ (void) initialize {
-    if (! OPPersistentObjectFaultClass) {
-        //Class NSObjectClass = objc_getClass("NSObject");
-        OPPersistentObjectFaultClass  = self;
-        //nsObjectPerform = [NSObjectClass instanceMethodForSelector: @selector(performv::)];
-		
-        [super initialize];
-        //NSLog(@"%@ class initialized.\n", self);
-    }
-}
-
-
-+ allocWithZone: (NSZone*) aZone 
-{
-    NSParameterAssert(NO);
-    return nil;
-}
-
-+ (id) alloc
-{
-	NSParameterAssert(NO);
-    return nil;
-}
-
-- (Class) class
-{
-	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
-	return theClass;
-}
-
-+ (BOOL) isFault
-{
-	return YES;	
-}
-
-
-- (BOOL) conformsToProtocol: (id) fp8
-{
-	NSLog(@"oops! implement!");
-	return YES;
-}
-
-- (id) methodSignatureForSelector: (SEL) aSelector
-{
-	return [[self class] instanceMethodSignatureForSelector: (SEL) aSelector];
-}
-
-- (BOOL) respondsToSelector: (SEL) aSelector
-{
-	return [[self class] instancesRespondToSelector: aSelector];
-}
-
-- (void) forwardInvocation: (NSInvocation*) invocation
-{
-	NSLog(@"Firing %@ after call to '%@'.", isa, NSStringFromSelector([invocation selector]));
-
-	BOOL ok = [self resolveFault];
-	
-	if (ok) [invocation invokeWithTarget: self];
-}
-
-- (void) setValue: (id) value forKey: (NSString*) key
-{
-	// For some reason, faults do not fire automatically:
-	NSLog(@"Firing %@ after call to 'setValue:forKey: %@'.", isa, key);
-	BOOL ok = [self resolveFault];
-    if (ok) [self setValue: value forKey: key];
-}
-
-
-- (id) valueForKey: (NSString*) key 
-{
-    // For some reason, faults do not fire automatically:
-	NSLog(@"Firing %@ after call to 'valueForKey: %@'.", isa, key);
-	BOOL ok = [self resolveFault];
-    return ok ? [self valueForKey: key] : nil;
-}
-
-//- (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
-//{
-////	if ([[self "class"] automaticallyNotifiesObserversForKey:(NSString *)key]) {
-////		
-////	}
-////])
-//	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
-//	BOOL ok = [self resolveFault];
-//    if (ok) [self addObserver: observer forKeyPath: keyPath options: options context: context];
-//}
-
-//- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
-//{
-//	
-//}
-
-//-  forward: (SEL) sel : (marg_list) args 
-//{
-//    //NSLog(@"Firing %@ triggered by a call to \"%s\" ... ", NSStringFromClass(selfClass), SELNAME(sel));
+//@implementation OPPersistentObjectFault : OPPersistentObject
 //
-//	
-//	[self resolveFault];
-//    //return nsObjectPerform(self, _cmd, sel, args);
-//	[self performv: _cmd];
+//- (BOOL) resolveFault
+//{
+//	Class theClass = [[self context] classForCID: CIDFromOID(self.currentOID)];
+//	isa = theClass;
+//	BOOL ok = [[self context] unarchiveObject: self forOID: self.currentOID];
+//	return ok;
 //}
+//
+//
+////static IMP nsObjectPerform = NULL;
+//static Class OPPersistentObjectFaultClass = Nil;
+//
+//+ (void) initialize {
+//    if (! OPPersistentObjectFaultClass) {
+//        //Class NSObjectClass = objc_getClass("NSObject");
+//        OPPersistentObjectFaultClass  = self;
+//        //nsObjectPerform = [NSObjectClass instanceMethodForSelector: @selector(performv::)];
+//		
+//        [super initialize];
+//        //NSLog(@"%@ class initialized.\n", self);
+//    }
+//}
+//
+//
+//+ allocWithZone: (NSZone*) aZone 
+//{
+//    NSParameterAssert(NO);
+//    return nil;
+//}
+//
+//+ (id) alloc
+//{
+//	NSParameterAssert(NO);
+//    return nil;
+//}
+//
+//- (Class) class
+//{
+//	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
+//	return theClass;
+//}
+//
+//+ (BOOL) isFault
+//{
+//	return YES;	
+//}
+//
+//
+//- (BOOL) conformsToProtocol: (id) fp8
+//{
+//	NSLog(@"oops! implement!");
+//	return YES;
+//}
+//
+//- (id) methodSignatureForSelector: (SEL) aSelector
+//{
+//	return [[self class] instanceMethodSignatureForSelector: (SEL) aSelector];
+//}
+//
+//- (BOOL) respondsToSelector: (SEL) aSelector
+//{
+//	return [[self class] instancesRespondToSelector: aSelector];
+//}
+//
+//- (void) forwardInvocation: (NSInvocation*) invocation
+//{
+//	NSLog(@"Firing %@ after call to '%@'.", isa, NSStringFromSelector([invocation selector]));
+//
+//	BOOL ok = [self resolveFault];
+//	
+//	if (ok) [invocation invokeWithTarget: self];
+//}
+//
+//- (void) setValue: (id) value forKey: (NSString*) key
+//{
+//	// For some reason, faults do not fire automatically:
+//	NSLog(@"Firing %@ after call to 'setValue:forKey: %@'.", isa, key);
+//	BOOL ok = [self resolveFault];
+//    if (ok) [self setValue: value forKey: key];
+//}
+//
+//
+//- (id) valueForKey: (NSString*) key 
+//{
+//    // For some reason, faults do not fire automatically:
+//	NSLog(@"Firing %@ after call to 'valueForKey: %@'.", isa, key);
+//	BOOL ok = [self resolveFault];
+//    return ok ? [self valueForKey: key] : nil;
+//}
+//
+////- (void) addObserver: (NSObject*) observer forKeyPath: (NSString*) keyPath options: (NSKeyValueObservingOptions) options context: (void*) context
+////{
+//////	if ([[self "class"] automaticallyNotifiesObserversForKey:(NSString *)key]) {
+//////		
+//////	}
+//////])
+////	NSLog(@"Firing %@ after call to 'addObserver:forKeyPath: %@'.", isa, keyPath);
+////	BOOL ok = [self resolveFault];
+////    if (ok) [self addObserver: observer forKeyPath: keyPath options: options context: context];
+////}
+//
+////- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
+////{
+////	
+////}
+//
+////-  forward: (SEL) sel : (marg_list) args 
+////{
+////    //NSLog(@"Firing %@ triggered by a call to \"%s\" ... ", NSStringFromClass(selfClass), SELNAME(sel));
+////
+////	
+////	[self resolveFault];
+////    //return nsObjectPerform(self, _cmd, sel, args);
+////	[self performv: _cmd];
+////}
+//
+//@end
 
-@end
 
-
-@implementation NSObject (OPPersistence)
-
-+ (BOOL) canPersist
-{
-	return NO;
-}
-
-- (BOOL) canPersist
-{
-	return NO;
-}
-
-
-- (BOOL) isPlistMemberClass
-{
-	return NO;
-}
-
-- (void) willSave
-/*" Subclass hook. Called prior to the object's attribute values being saved to the database. "*/
-{
-}
-
-
-- (void) willDelete
-/*" Subclass hook. Called whenever the receiver is marked for deletion. Delete any dependent objects here. After this call, -refault will free all attribute values. Default implementation does nothing. "*/
-{
-}
-
-- (void) willRevert
-{
-	// subclass hook
-}
-
-+ (BOOL) cachesAllObjects
-/*" Default implementation - returns NO. Subclasses mey override. "*/
-{
-	return NO;
-}
-
-@end
 
 @implementation NSString (OPPersistence)
 

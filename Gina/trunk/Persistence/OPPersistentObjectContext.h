@@ -136,6 +136,7 @@ extern NSString* OPStringFromOID(OID oid);
 
 - (Class) classForCID: (CID) cid;
 - (CID) cidForClass: (Class) poClass;
+- (BOOL) oidIsValid: (OID) oid;
 
 
 // Methods for use by the appication developer:

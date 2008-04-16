@@ -61,19 +61,19 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[[NSUserDefaults standardUserDefaults] setObject: backupData forKey: @"ConfigurationBackup"];
 }
 
-- (void) restoreConfig
+- (IBAction) restoreConfig: (id) sender
 {
 	NSData* backupData = [[NSUserDefaults standardUserDefaults] dataForKey: @"ConfigurationBackup"];
 	if (NO && backupData.length) {
-		NSDictionary* config = [NSKeyedUnarchiver unarchiveObjectWithData: backupData];
+		NSSet* accounts = [NSKeyedUnarchiver unarchiveObjectWithData: backupData];
 		//NSSet* profiles = [config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
-		NSSet* accounts = config; [config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
+		//NSSet* accounts = config; [config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
 		//NSLog(@"Restored %@", profiles);
 		NSLog(@"Restored %@", accounts);
 	}
 }
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
 	//NSLog(@"awakeFromNib");
 	// Will be called multiple times, so guard against that:
@@ -86,7 +86,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		[context setDatabaseFromPath:databasePath];
 		
 		if ([[self.context allObjectsOfClass: [GIProfile class]] count] == 0) {
-			[self restoreConfig];
+			[self restoreConfig: self];
 		}
 		
 		[GIMessageGroup ensureDefaultGroups];
@@ -214,17 +214,23 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[context saveChanges];
 }
 
+- (void) startImportFromImportFolder: (NSNotification*) notification
+{
+	[self performSelector: @selector(importFromImportFolder:) withObject: nil afterDelay: 0.0];
+	[self performSelector: @selector(importFromImportFolder:) withObject: nil afterDelay: 10.0];
+}
+
 - (void) finishLaunching 
 {
 	registerDefaultDefaults();
 	[super finishLaunching];
 	
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidStartNotification object: nil];
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(startImportFromImportFolder:) name: GIPOPOperationDidStartNotification object: nil];
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidEndNotification object: nil];
 	
 	[self ensureMainWindowIsPresent];
 	
-	[self importFromImportFolder: nil];
+	[self importFromImportFolder: nil];		
 }
 
 - (IBAction)makeDefaultApp:(id)sender

@@ -43,7 +43,6 @@
 - (OID) currentOID; // internal method
 - (void) setOID: (OID) theOID; // for internal use
 - (OPPersistentObjectContext*) context;
-+ (BOOL) canPersist;
 
 @end
 
@@ -61,8 +60,6 @@
 
 @interface NSObject (OPPersistence)
 
-+ (BOOL) canPersist;
-- (BOOL) canPersist;
 - (BOOL) isPlistMemberClass;
 
 // Subclass hooks:
@@ -98,17 +95,17 @@
 //- (void) willAccessValueForKey: (NSString*) key;
 //- (void) didChangeValueForKey: (NSString*) key;
 //- (void) didAccessValueForKey: (NSString*) key;
-- (id) initFaultWithContext: (OPPersistentObjectContext*) context oid: (OID) anOID;
-
-- (void) turnIntoFault;
+//- (id) initFaultWithContext: (OPPersistentObjectContext*) context oid: (OID) anOID;
+//
+//- (void) turnIntoFault;
 
 - (BOOL) hasUnsavedChanges;
 
 
 @end
 
-@interface OPPersistentObjectFault : OPPersistentObject
-
-- (BOOL) resolveFault;
-
-@end
+//@interface OPPersistentObjectFault : OPPersistentObject
+//
+//- (BOOL) resolveFault;
+//
+//@end

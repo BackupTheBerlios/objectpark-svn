@@ -91,7 +91,7 @@
 			[objectsByOid setObject: result forKey: oidString];
 			result = [result initWithCoder: self];
 		} else {
-			NSLog(@"Warning, unknown ");
+			NSLog(@"Warning, unknown class for oid 0x%llx", oid);
 		}
 		[self popStack];
 	}
