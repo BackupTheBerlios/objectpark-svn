@@ -441,7 +441,7 @@ NSString* OPStringFromOID(OID oid)
 
 - (BOOL) oidIsValid: (OID) oid
 {
-	return oid == NILOID || [self classForCID: LIDFromOID(oid)] != nil;
+	return oid == NILOID || [self classForCID: CIDFromOID(oid)] != nil;
 }
 
 static BOOL	oidEqual(NSHashTable* table, const void* object1, const void* object2)
@@ -864,7 +864,9 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 
 - (Class) classForCID: (CID) cid
 {
+	if (cid>=256) {
 	NSParameterAssert(cid<256);
+	}
 	return classes[cid];
 }
 

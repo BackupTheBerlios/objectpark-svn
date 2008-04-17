@@ -60,7 +60,7 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	name = [coder decodeObjectForKey:@"name"];
+	name     = [coder decodeObjectForKey:@"name"];
 	children = [coder decodeObjectForKey:@"children"];
 	
 	return self;
@@ -69,7 +69,7 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 - (void)encodeWithCoder:(NSCoder *)coder
 {
 	[coder encodeObject:name forKey:@"name"];
-	[coder encodeObject:children forKey:@"children"];
+	[coder encodeObject: children forKey:@"children"];
 }
 
 - (NSString *)description

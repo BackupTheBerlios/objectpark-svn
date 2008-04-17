@@ -129,7 +129,7 @@
 	}
 	
 	NSParameterAssert(oid != NILOID);
-	NSParameterAssert([self.context classForCID: LIDFromOID(oid)]);
+	NSParameterAssert([self.context classForCID: CIDFromOID(oid)]);
 
 	// Record root objects lid:
 	NSMapInsertKnownAbsent(lidsByObjectPtrs, rootObject, (void*)(unsigned)LIDFromOID(oid));
@@ -175,19 +175,19 @@ static Class oppClass    = nil;
 //	dataClass   = [NSData classForCoder];
 }
 
+
 - (void) encodeObject: (id) objv forKey: (NSString *) key
 {
 	if (!objv) return;
 	
 	OID oid = NILOID;
 	// Persistent objects are encoded as their oids;
-//	if ([objv conformsToProtocol: @protocol(OPPersisting)]) {
-//		if ([objv oid] == NILOID) {
-//			[context insertObject: objv];
-//			oid = [objv oid];
-//		}
-//	} else 
-	{
+	if (NO && [objv conformsToProtocol: @protocol(OPPersisting)]) {
+		if ([objv currentOID] == NILOID) {
+			[context insertObject: objv];
+		}
+		oid = [objv oid];
+	} else {
 		
 		// Put plist types into the plist directly:
 		if ([objv isPlistMemberClass]) {
