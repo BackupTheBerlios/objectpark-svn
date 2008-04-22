@@ -263,6 +263,7 @@
 		77CFC5140D02F32D0039A2E8 /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
 		77DB2A120D03537500F23C06 /* TestOPMultipartContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5BC0D00546B00A7BEFF /* TestOPMultipartContentCoder.m */; };
 		77DB2A4A0D03569F00F23C06 /* TestOPSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5AE0D00546B00A7BEFF /* TestOPSMTP.m */; };
+		77DC88FE0DB7617B00A32C7F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DC88FD0DB7617B00A32C7F /* WebKit.framework */; };
 		77E387D70D36193900C31A29 /* ThreadingTest.mbox in Resources */ = {isa = PBXBuildFile; fileRef = 77E387D60D36193900C31A29 /* ThreadingTest.mbox */; };
 		77F2E2EC0D1E4AF90003D25B /* OPPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775C30FB0D0D40620098DA07 /* OPPreferences.framework */; };
 		77F2E2ED0D1E4AFB0003D25B /* OPNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7759A8760D02E39800AD49CA /* OPNetwork.framework */; };
@@ -696,6 +697,7 @@
 		77C3647B0D9A7AFD00D6461D /* TrashMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = TrashMailbox.tiff; sourceTree = "<group>"; };
 		77C3647C0D9A7AFD00D6461D /* ToBeDeliveredMailbox.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ToBeDeliveredMailbox.tiff; sourceTree = "<group>"; };
 		77C3BD020D103F860003634C /* Gina.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Gina.tiff; sourceTree = "<group>"; };
+		77DC88FD0DB7617B00A32C7F /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		77E387D60D36193900C31A29 /* ThreadingTest.mbox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ThreadingTest.mbox; sourceTree = "<group>"; };
 		77E567580D05A3550016594D /* How to set up.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "How to set up.rtf"; sourceTree = "<group>"; };
 		77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GinaSpotlight.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -813,6 +815,7 @@
 				77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */,
 				7788670D0D8D90A7006EF64D /* SystemConfiguration.framework in Frameworks */,
 				771330000D916BD000094A0A /* AddressBook.framework in Frameworks */,
+				77DC88FE0DB7617B00A32C7F /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -838,6 +841,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				77DC88FD0DB7617B00A32C7F /* WebKit.framework */,
 				77132FFF0D916BD000094A0A /* AddressBook.framework */,
 				7788670C0D8D90A7006EF64D /* SystemConfiguration.framework */,
 				7761D9780D02FB8B0044E65A /* InternetMessage.framework */,

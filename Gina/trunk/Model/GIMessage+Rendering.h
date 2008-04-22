@@ -43,3 +43,13 @@
 - (NSImage *)personImage;
 
 @end
+
+#import "OPInternetMessage.h"
+
+@class WebArchive;
+
+@interface OPInternetMessage (WebResourceSupport)
+
+- (WebArchive *)webArchive;
+
+@end

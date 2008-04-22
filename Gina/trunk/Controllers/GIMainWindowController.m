@@ -14,6 +14,7 @@
 #import "GIUserDefaultsKeys.h"
 
 // helper
+#import <WebKit/WebKit.h>
 #import <Foundation/NSDebug.h>
 #import "NSArray+Extensions.h"
 #import "NSAttributedString+Extensions.h"
@@ -155,6 +156,25 @@
 	
 	NSAttributedString *result = [selectedObject messageForDisplay];
 	//NSLog(@"message for display: %@", [result string]);
+		
+	return result;
+}
+
++ (NSSet *)keyPathsForValuesAffectingWebArchiveForDisplay
+{
+	return [NSSet setWithObject:@"selectedMessageOrThread"];
+}
+
+- (WebArchive *)webArchiveForDisplay
+{
+	GIMessage *message = self.selectedMessage;
+	
+	if (!message) return nil;
+	
+	WebArchive *result = [message.internetMessage webArchive];
+	//NSLog(@"message for display: %@", [result string]);
+	
+	NSLog(@"Web archive = %@", result);
 	
 	return result;
 }
@@ -793,6 +813,8 @@ static BOOL isShowingThreadsOnly = NO;
 		id newSelectedThreads = [observedObjectForSelectedThreads valueForKeyPath:observedKeyPathForSelectedThreads];
 		[self setSelectedThreads:newSelectedThreads];
 		
+		[[messageWebView mainFrame] loadArchive:[self webArchiveForDisplay]];
+		
 		if (!self.isShowingThreadsOnly)
 		{
 			GIMessage *selectedMessage = self.selectedMessage;		
@@ -802,7 +824,7 @@ static BOOL isShowingThreadsOnly = NO;
 	}
 	else if (object == searchResultsArrayController && [keyPath isEqualToString:[self observedKeyPathForSelectedSearchResults]])
 	{ 
-		// selected threads changed
+		// search hits changed
 		id newSelectedSearchResults = [observedObjectForSelectedSearchResults valueForKeyPath:observedKeyPathForSelectedSearchResults];
 		[self setSelectedSearchResults:newSelectedSearchResults];
 		

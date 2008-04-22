@@ -24,6 +24,7 @@
 @class GIThreadOutlineViewController;
 @class GIMessageGroupOutlineViewController;
 @class GISplitView;
+@class WebView;
 
 @interface GIMainWindowController : NSWindowController 
 {
@@ -45,6 +46,7 @@
 	IBOutlet NSTableView *searchResultTableView;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController *searchResultsArrayController;
+	IBOutlet WebView *messageWebView;
 	
 	BOOL searchMode;
 	

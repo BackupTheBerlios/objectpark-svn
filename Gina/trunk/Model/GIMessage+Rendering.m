@@ -420,6 +420,204 @@ static NSString *templatePostfix = nil;
     }
 }
 
+@end
 
+#import <WebKit/WebKit.h>
+#import "EDContentCoder.h"
+#import "EDPlainTextContentCoder.h"
+
+@interface EDContentCoder (WebResourceSupport)
+- (WebResource *)webResource;
+- (NSArray *)subresources;
+@end
+
+@implementation EDContentCoder (WebResourceSupport)
+
+- (WebResource *)webResource
+{
+	return nil;
+}
+
+- (NSArray *)subresources
+{
+	return nil;
+}
 
 @end
+@interface NSString (WebResourceSupport)
+- (NSString *)stringByConvertingToHTML;
+- (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges;
+@end
+
+@implementation NSString (WebResourceSupport)
+- (NSString *)stringByConvertingToHTML
+{
+	NSString *result = [self stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
+	result = [result stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
+	result = [result stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
+	result = [result stringByReplacingOccurrencesOfString:@"\"" withString:@"&quot;"];
+	result = [result stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n</p>\n<p>\n"];
+	result = [result stringByReplacingOccurrencesOfString:@"\n" withString:@"<br />\n"];
+//	result = [result stringByReplacingOccurrencesOfString:@"\n " withString:@"\n&nbsp;"];
+	result = [[@"<p>\n" stringByAppendingString:result] stringByAppendingString:@"\n</p>"];
+
+	NSMutableArray *urlRanges;
+	
+	result = [result HTMLUrlifyInRange:NSMakeRange(0, [self length]) urlRanges:&urlRanges];
+	
+	return result;
+}
+
+- (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges
+{
+    static NSCharacterSet *colon = nil, *alpha, *urlstop, *ulfurlstop;
+    static NSString *scheme[] = { @"http", @"https", @"ftp", @"mailto", @"gopher", @"news", nil };
+    static unsigned int maxServLength = 6;
+    NSMutableString *string;
+    NSMutableString *url;
+    NSRange	r, remainingRange, possSchemeRange, schemeRange, urlRange, badCharRange;
+    unsigned int nextLocation, endLocation, i;
+    // ulfs stuff
+    BOOL schemeRangeIsAtBeginning = NO;
+    BOOL urlIsWrappedByBrackets = NO;
+    
+	(*urlRanges) = [NSMutableArray array];
+	
+    if(colon == nil)
+    {
+        colon = [[NSCharacterSet characterSetWithCharactersInString: @":"] retain];
+        alpha = [[NSCharacterSet alphanumericCharacterSet] retain];
+        //urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]',; \t\n\r"] retain];
+        urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]' \t\n\r"] retain];
+        // if the url is wrapped by brackets we will use this one:
+        ulfurlstop = [[NSCharacterSet characterSetWithCharactersInString: @">"] retain];
+        // problem is that if there is no closing '>' everything until the end of string will be treated as url
+    }
+    
+    string = [self mutableCopy];
+    nextLocation = range.location;
+    endLocation = NSMaxRange(range);
+    while(1)
+    {
+        remainingRange = NSMakeRange(nextLocation, endLocation - nextLocation);
+        r = [string rangeOfCharacterFromSet:colon options:0 range:remainingRange];
+        if(r.length == 0)
+            break;
+        nextLocation = NSMaxRange(r);
+        
+        if(r.location < maxServLength) 
+        {
+            possSchemeRange = NSMakeRange(0, r.location);
+            schemeRangeIsAtBeginning = YES;
+        }    
+        else
+        {
+            possSchemeRange = NSMakeRange(r.location - 6,  6);
+            schemeRangeIsAtBeginning = NO;
+        }
+        // no need to clean up composed chars becasue they are not allowed in URLs anyway
+        for(i = 0; scheme[i] != nil; i++)
+        {
+            schemeRange = [string rangeOfString:scheme[i] options:(NSBackwardsSearch|NSAnchoredSearch|NSLiteralSearch) range:possSchemeRange];
+            if(schemeRange.length != 0)
+            {
+                // if the char before schemeRange is a '<' we need to look for it as the end of the string
+                if ((schemeRange.location > 0) && ([string characterAtIndex:(schemeRange.location - 1)] == '<'))
+                    urlIsWrappedByBrackets = YES;
+                else
+                    urlIsWrappedByBrackets = NO;
+                
+                r.length = endLocation - r.location;
+                
+                // check to determine the correct urlstop CharacterSet
+                if (urlIsWrappedByBrackets)
+                    r = [string rangeOfCharacterFromSet:ulfurlstop options:0 range:r];
+                else
+                    r = [string rangeOfCharacterFromSet:urlstop options:0 range:r];
+                
+                if(r.length == 0) // not found, assume URL extends to end of string
+                    r.location = [string length];
+                urlRange = NSMakeRange(schemeRange.location, r.location - schemeRange.location);
+                if([string characterAtIndex:NSMaxRange(urlRange) - 1] == (unichar)'.')
+                    urlRange.length -= 1;
+                url = [NSMutableString stringWithString:[string substringWithRange:urlRange]];
+                
+                // remove bad characters (like CR LF) from url
+                badCharRange = [url rangeOfCharacterFromSet:urlstop options:0 range:NSMakeRange(0, [url length])];
+                while (badCharRange.location != NSNotFound)
+                {
+                    [url deleteCharactersInRange:badCharRange];
+                    badCharRange = [url rangeOfCharacterFromSet:urlstop options:0 range:NSMakeRange(0, [url length])];
+                }
+                
+				NSString *openAnchorTag = [[@"<a href=\"" stringByAppendingString:url] stringByAppendingString:@"\">"];
+				NSString *closeAnchorTag = @"</a>";
+				
+				[string insertString:openAnchorTag atIndex:urlRange.location];
+				[string insertString:closeAnchorTag atIndex:urlRange.location + urlRange.length + openAnchorTag.length];
+
+				NSRange urlRange = NSMakeRange(urlRange.location, urlRange.location + urlRange.length + openAnchorTag.length + closeAnchorTag.length);
+				
+				[(*urlRanges) addObject:NSStringFromRange(urlRange)];
+				
+                //[self addAttribute:NSLinkAttributeName value:url range:urlRange];
+                nextLocation = NSMaxRange(urlRange);
+                break;
+            }
+        }
+    }
+    
+    return string;
+}
+
+@end
+
+@implementation EDPlainTextContentCoder (WebResourceSupport)
+
+- (WebResource *)webResource
+{
+	NSData *data = [[self.string stringByConvertingToHTML] dataUsingEncoding:NSUTF8StringEncoding];
+	NSURL *URL = [NSURL URLWithString:@"/"];
+	NSString *MIMEType = @"text/html";
+	NSString *textEncodingName = @"UTF-8";
+	
+	return [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+}
+
+@end
+
+@implementation OPInternetMessage (WebResourceSupport)
+
+- (WebArchive *)webArchive
+{
+	EDContentCoder *coder = [[[[EDContentCoder contentDecoderClass:self] alloc] initWithMessagePart:self] autorelease];
+	
+	WebResource *topLevelResource = [coder webResource];
+	NSArray *subresources = [coder subresources];
+							 
+	NSString *contentString = [[[NSString alloc] initWithData:[topLevelResource data] encoding:NSUTF8StringEncoding] autorelease];
+	
+	NSString *cssString = @"<style type=\"text/css\"><!--\nbody {\n"
+	@"font-size : 10pt;\n" 
+	@"font-family : Arial, Helvetica, sans-serif;\n" 
+	@"font-weight : normal;\n"
+	@"color : #000000;\n" 
+  	@"}\n"
+	@"--></style>\n";
+	
+	NSString *htmlContent = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\" />%@</head><body>%@</body></html>", cssString, contentString];
+
+	NSData *data = [htmlContent dataUsingEncoding:NSUTF8StringEncoding];
+	NSURL *URL = [NSURL URLWithString:@"/"];
+	NSString *MIMEType = @"text/html";
+	NSString *textEncodingName = @"UTF-8";
+	
+	WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+	
+	WebArchive *result = [[[WebArchive alloc] initWithMainResource:mainResource subresources:subresources subframeArchives:nil] autorelease];
+								   
+	return result;
+}
+
+@end
+
