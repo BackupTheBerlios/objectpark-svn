@@ -442,6 +442,18 @@
 		// root index is the minimum index the first item on the path can be on.
 		NSArray* container = [self.rootItem valueForKey: childKey];
 		for (id item in path) {
+			
+			if (row>=0) {
+				if ([self outlineView: outlineView isItemExpandable: item]) {
+					[outlineView expandItemAtRow: row expandChildren: NO];
+					container = [item valueForKey: childKey];
+					NSRect redisplayRect = NSUnionRect([outlineView rectOfRow: row], [outlineView rectOfRow: row + container.count]);
+					[outlineView setNeedsDisplayInRect: redisplayRect];
+				} else {
+					break;
+				}	
+			}
+			
 			NSUInteger containerOffset = [container indexOfObjectIdenticalTo: item];
 			
 			// Now do a linear search for item. This only happens if items are expanded on the way:
@@ -458,14 +470,6 @@
 				NSLog(@"Unable to find item %@ in outline view.", item);
 				break;
 			}
-			if ([self outlineView: outlineView isItemExpandable: item]) {
-				[outlineView expandItemAtRow: row expandChildren: NO];
-				container = [item valueForKey: childKey];
-				NSRect redisplayRect = NSUnionRect([outlineView rectOfRow: row], [outlineView rectOfRow: row + container.count]);
-				[outlineView setNeedsDisplayInRect: redisplayRect];
-			} else {
-				break;
-			}
 		}
 	}
 	return row;
@@ -476,7 +480,7 @@
 {
 	if (itemPaths.count) {
 		NSInteger row = NSNotFound;
-		NSLog(@"%@ selecting items at paths: %@", self, itemPaths);
+		//NSLog(@"%@ selecting items at paths: %@", self, itemPaths);
 		[self willChangeValueForKey: @"selectedItems"];
 		for (NSArray* path in itemPaths) {
 			row = [self rowForItemPath: path];

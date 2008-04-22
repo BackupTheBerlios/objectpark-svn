@@ -30,6 +30,11 @@
 
 #define sortObjectPtr(oindex) (id*)(data+((oindex)*entrySize)+sizeof(OID))
 
+- (BOOL) canPersist
+{
+	return NO;
+}
+
 - (OID) oid
 /*" Returns the object id for the receiver or NILOID if the object has no context.
  Currently, the defaultContext is always used. "*/

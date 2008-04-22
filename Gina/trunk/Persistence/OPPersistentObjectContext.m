@@ -882,7 +882,8 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 - (void) insertObject: (id <OPPersisting>) newObject
 /*" inserts newObject into the receiver context and sets an oid. Does nothing, if newObject already has an oid. Ignores nil newObjects. "*/
 {
-	if (newObject) {	NSParameterAssert([newObject context] == NULL || [newObject context] == self);
+	if (newObject) {	
+		NSParameterAssert([newObject context] == NULL || [newObject context] == self);
 		if (![newObject currentOID]) {
 			OID newOID = [self nextOIDForClass: [newObject class]];
 			[newObject setOID: newOID]; // also registers newObject with self
