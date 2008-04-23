@@ -100,7 +100,7 @@
 	{			
         if ([child isKindOfClass:[GIMessageGroup class]]) 
 		{
-			if (child.name.length) 
+			if (child.name.length && [(GIMessageGroup *)child isValidUserCopyOrMoveSourceOrDestination]) 
 			{
 				NSMutableDictionary *entry = [NSMutableDictionary dictionary];
 				
