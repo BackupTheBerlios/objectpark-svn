@@ -373,19 +373,18 @@ static GIProfile *defaultProfile = nil;
 {
 	if (! defaultProfile) {
 		OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-		defaultProfile = [[context rootObjectForKey:@"DefaultProfile"] retain];
-		if (!defaultProfile) 
-		{
-			defaultProfile = [[context allObjectsOfClass:[self class]] anyObject];
+		defaultProfile = [[context rootObjectForKey: @"DefaultProfile"] retain];
+		
+		if (! defaultProfile) {
+			defaultProfile = [[context allObjectsOfClass: [self class]] anyObject];
 			if (! defaultProfile) {
 				defaultProfile = [[[GIProfile alloc] init] autorelease];
 				defaultProfile.name = @"Default Profile";
 				// todo: set realname from addressbook here
 				[context insertObject: defaultProfile];
 			}
-			[self setDefaultProfile:defaultProfile];
+			[self setDefaultProfile: defaultProfile];
 		}
-		
 	}
 	
 	return defaultProfile;
