@@ -92,7 +92,7 @@
 		[self didChangeValueForKey: @"sortedArray"]; // test, if we should post the indexed notification here
 	} else {
 		// nothing to do, anObject already present
-		//NSLog(@"Ignoring addition of existing object to persistent set.");
+		NSLog(@"Ignoring addition of existing object to persistent set.");
 	}
 	//}
 	[keyData release];

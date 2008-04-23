@@ -779,6 +779,8 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) addThreadsObject: (GIThread*) newThread
 /*" Sent by the mutableSet proxy. "*/
 {
+	if ([self.threads containsObject: newThread]) return; // already present, nothing to do
+	
 	NSIndexSet* insertSet = [NSIndexSet indexSetWithIndex: newThread.messages.count];
 	[self addPrimitiveThreadsObject: newThread];
 	// Update the inverse relation:
@@ -797,6 +799,8 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) removeThreadsObject: (GIThread*) oldThread
 /*" Sent by the mutableSet proxy. "*/
 {
+	if (! [self.threads containsObject: oldThread]) return; // not present, nothing to do
+	
 	NSIndexSet* removeSet = [NSIndexSet indexSetWithIndex: [oldThread.messages indexOfObjectIdenticalTo: self]];
 	[self removePrimitiveThreadsObject: oldThread];
 	// Update the inverse relation:

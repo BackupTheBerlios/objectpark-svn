@@ -367,12 +367,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (void)setIsSeen:(BOOL)boolValue
 {
-	if (self.isSeen != boolValue && ![self isDummy]) 
-	{
-		[self willChangeValueForKey:@"isSeen"];
-		[self toggleFlags:OPSeenStatus];
-		[self didChangeValueForKey:@"isSeen"];
-	}
+	if (self.isSeen == boolValue) return;
+	if ([self isDummy]) return;
+
+	[self willChangeValueForKey:@"isSeen"];
+	[self toggleFlags:OPSeenStatus];
+	[self didChangeValueForKey:@"isSeen"];
 }
 
 - (unsigned)flags
