@@ -20,16 +20,16 @@
 #import "GIUserDefaultsKeys.h"
 #import "OPPersistence.h"
 
-NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
+NSString* GIProfileDidChangeNotification = @"GIProfileDidChangeNotification";
 
 @implementation GIProfile
 
-+ (BOOL)cachesAllObjects
++ (BOOL) cachesAllObjects
 {
 	return YES;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
 	[cachedEmailAddresses release];
 	[super dealloc];
@@ -369,12 +369,10 @@ NSString *GIProfileDidChangNotification = @"GIProfileDidChangNotification";
 
 static GIProfile *defaultProfile = nil;
 
-+ (GIProfile *)defaultProfile
++ (GIProfile*) defaultProfile
 {
-	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
-	
-	if (! defaultProfile)
-	{
+	if (! defaultProfile) {
+		OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 		defaultProfile = [[context rootObjectForKey:@"DefaultProfile"] retain];
 		if (!defaultProfile) 
 		{
@@ -393,37 +391,42 @@ static GIProfile *defaultProfile = nil;
 	return defaultProfile;
 }
 
-+ (void)setDefaultProfile:(GIProfile *)aProfile
++ (void)setDefaultProfile:(GIProfile *) newProfile
 {
-	if (aProfile)
-	{
-		[[OPPersistentObjectContext defaultContext] setRootObject:aProfile forKey:@"DefaultProfile"];
+	GIProfile* oldProfile = [self defaultProfile];
+	if (oldProfile != newProfile) {
+		[oldProfile willChangeValueForKey: @"isDefaultProfile"];
+		[newProfile willChangeValueForKey: @"isDefaultProfile"];
+		[defaultProfile release]; defaultProfile = nil; // clear cache
+		[[OPPersistentObjectContext defaultContext] setRootObject: newProfile forKey: @"DefaultProfile"];
+		[newProfile didChangeValueForKey: @"isDefaultProfile"];
+		[oldProfile didChangeValueForKey: @"isDefaultProfile"];
 	}
 }
 
-- (BOOL)isDefaultProfile
+- (BOOL) isDefaultProfile
 {
-	return [self isEqual:[[self class] defaultProfile]];
+	BOOL result = [self isEqual: [[self class] defaultProfile]];
+	return result;
 }
 
-- (void)makeDefaultProfile
+- (void) makeDefaultProfile
 {
-	[[self class] setDefaultProfile:self];
-	[self willChangeValueForKey:@"isDefaultProfile"];
-	[self didChangeValueForKey:@"isDefaultProfile"];
+	[self willChangeValueForKey: @"isDefaultProfile"];
+	[[self class] setDefaultProfile: self];
+	[self didChangeValueForKey: @"isDefaultProfile"];
 }
 
 - (void)didChangeValueForKey:(NSString *)key
 {
-	if ([key isEqualToString:@"additionalAddresses"])
-	{
+	if ([key isEqualToString:@"additionalAddresses"]) {
 		[cachedEmailAddresses release];
 		cachedEmailAddresses = nil;
 	}
 	
 	[super didChangeValueForKey:key];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GIProfileDidChangNotification object:self userInfo:[NSDictionary dictionaryWithObject:key forKey:@"key"]];
+	[[NSNotificationCenter defaultCenter] postNotificationName: GIProfileDidChangeNotification object: self userInfo:[NSDictionary dictionaryWithObject: key forKey: @"key"]];
 }
 
 - (NSString *)realnameForSending
@@ -494,7 +497,7 @@ static GIProfile *defaultProfile = nil;
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"%@ '%@'", [super description], [self valueForKey:@"name"]];
+	return [NSString stringWithFormat:@"%@ '%@'", [super description], self.name];
 }
 
 @end

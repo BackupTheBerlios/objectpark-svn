@@ -32,14 +32,14 @@
 	return accountSortDescriptors;
 }
 
-- (IBAction)makeDefaultProfile:(id)sender
+- (IBAction) makeDefaultProfile: (id) sender
 {
-    GIProfile *selectedProfile = [[profilesController selectedObjects] lastObject];
-	[selectedProfile makeDefaultProfile];
+    GIProfile* selectedProfile = [[profilesController selectedObjects] lastObject];
+	[GIProfile setDefaultProfile: selectedProfile];
 	[profilesController rearrangeObjects];
 }
 
-- (BOOL)hasGPGAccess
+- (BOOL) hasGPGAccess
 {
 	return NO;
 	

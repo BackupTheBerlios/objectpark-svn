@@ -309,9 +309,11 @@ typedef struct {
 }
 
 - (void) setRootObject: (id <OPPersisting>) pObject forKey: (NSString*) key
+/*" Pass nil key to remove then entry for key. "*/
 {
+	NSParameterAssert([key length]);
 	NSAssert(rootObjectOIDs != nil, @"Root object oid table not set up");
-	NSNumber* oidNumber = [NSNumber numberWithUnsignedLongLong: [pObject oid]];
+	NSNumber* oidNumber = pObject ? [NSNumber numberWithUnsignedLongLong: [pObject oid]] : nil;
 	[self insertObject: pObject];
 	// Check, if we are indeed changing the value:
 	if (! [[rootObjectOIDs objectForKey: key] isEqual: oidNumber]) {
@@ -319,8 +321,13 @@ typedef struct {
 //			rootObjectOIDs = [[NSMutableDictionary alloc] init];
 //			rootObjects = [[NSMutableDictionary alloc] init];
 //		}
-		[rootObjectOIDs setObject: oidNumber forKey: key];
-		[rootObjects setObject: pObject forKey: key];
+		if (pObject) {
+			[rootObjectOIDs setObject: oidNumber forKey: key];
+			[rootObjects setObject: pObject forKey: key];
+		} else {
+			[rootObjectOIDs removeObjectForKey: key];
+			[rootObjects removeObjectForKey: key];
+		}
 		[database setPlist: rootObjectOIDs forOid: ROOTOBJECTSOID error: NULL];
 	}
 }

@@ -70,7 +70,7 @@
 
 @end
 
-extern NSString *GIProfileDidChangNotification;
+extern NSString *GIProfileDidChangeNotification;
 
 @interface GIProfile (OpenPGP)
 - (NSArray *)matchingKeys;
