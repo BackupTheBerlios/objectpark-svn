@@ -129,24 +129,24 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
     
     if ([host isReachableWithNoStringsAttached]) 
 	{
-        // connecting to host:
-		[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), self.account.outgoingServerName, self.account.outgoingServerPort]];
-        
-        OPStream *stream = [OPStream streamConnectedToHost:host
-                                                      port:self.account.outgoingServerPort
-                                               sendTimeout:TIMEOUT
-                                            receiveTimeout:TIMEOUT];
-        
-        NSAssert2(stream != nil, @"could not connect to server %@:%d", self.account.outgoingServerName, self.account.outgoingServerPort);
-        
         @try {
+			// connecting to host:
+			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), self.account.outgoingServerName, self.account.outgoingServerPort]];
+			
+			OPStream *stream = [OPStream streamConnectedToHost:host
+														  port:self.account.outgoingServerPort
+												   sendTimeout:TIMEOUT
+												receiveTimeout:TIMEOUT];
+			
+			NSAssert2(stream != nil, @"Could not connect to SMTP server %@:%d.", self.account.outgoingServerName, self.account.outgoingServerPort);
+			
             // logging into SMTP server:
 			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), self.account.outgoingServerName]];
             
             OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
 			
 			[SMTP connect];
-			            
+			
             // sending messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
             @try 
