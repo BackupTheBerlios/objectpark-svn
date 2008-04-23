@@ -154,7 +154,7 @@ NSString* GIProfileDidChangeNotification = @"GIProfileDidChangeNotification";
 
 - (NSString *)name
 {
-	return name;
+	return name ? name : @"";
 }
 
 - (void)setName:(NSString *)aString
