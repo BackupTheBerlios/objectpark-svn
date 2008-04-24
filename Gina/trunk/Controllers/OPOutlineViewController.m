@@ -260,7 +260,7 @@
 
 	}
 	
-	if ([keyPath isEqualToString:[self childKey]]) {
+	if ([keyPath isEqualToString: [self childKey]]) {
 		// if the childKey relation changes, reload that item:
 		if (object == rootItem) object = nil;
 		[outlineView reloadItem: object reloadChildren: YES]; 

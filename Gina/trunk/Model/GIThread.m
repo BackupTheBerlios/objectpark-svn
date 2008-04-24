@@ -69,7 +69,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {
 	[messagesByTree release]; messagesByTree = nil;
 	[messages insertObject: message atIndex: index];
-	// No inverse relationship handling here - use only setThread in GIMessage.
+	// Warning: No inverse relationship handling here - use only setThread in GIMessage.
 	if (! message.isSeen) {
 		[self adjustUnreadMessageCountBy: 1];
 	}
@@ -85,7 +85,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	[messagesByTree release]; messagesByTree = nil;
 	GIMessage* message = [messages objectAtIndex: index];
 	[messages removeObjectAtIndex: index];
-	// No inverse relationship handling here - use only setThread in GIMessage.
+	// Warning: No inverse relationship handling here - use only setThread in GIMessage.
 
 	if (! message.isSeen) {
 		[self adjustUnreadMessageCountBy: -1];

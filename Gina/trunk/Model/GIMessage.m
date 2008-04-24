@@ -416,9 +416,14 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	NSArray* result = comments;
 	if (!result) {
-		comments = [[self commentsInThread: [self thread]] retain]; // fires fault
+		comments = [[self commentsInThread: [self thread]] retain]; 
 	}
 	return result;
+}
+
+- (void) clearCommentsCache
+{
+	[comments release]; comments = nil;
 }
 
 - (void) willRevert
@@ -433,7 +438,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[to release];
 	[date release];
 	[senderName release];
-	[comments release];
+	[self clearCommentsCache];
 	[internetMessage release]; internetMessage = nil;
 	[super dealloc];
 }
@@ -703,6 +708,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	[self willChangeValueForKey:@"reference"];
 	referenceOID = [aReferencedMessage oid];
+	[aReferencedMessage clearCommentsCache];
 	[self didChangeValueForKey:@"reference"];
 }
 

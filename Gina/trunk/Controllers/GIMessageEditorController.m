@@ -1318,9 +1318,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [internetMessage transferData]);
     
     // status
-    if (oldMessage) 
-	{
-		[message toggleFlags:[oldMessage flags]];
+    if (oldMessage) {
+		[message toggleFlags:[oldMessage flags]]; // set all flags of oldMessage
 	}
 	
 	// adding flags:
