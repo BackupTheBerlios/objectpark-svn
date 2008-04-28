@@ -66,7 +66,7 @@
 		@synchronized(self)
 		{
 			// puts message's thread potentially in message groups:
-			[GIMessageFilter applyFiltersToMessage: aMessage];
+			[GIMessageFilter applyFiltersToMessage:aMessage];
 			
 			// put in Default group if not already in any other group:
 			if (aMessage.thread.messageGroups.count == 0)
@@ -161,7 +161,7 @@
 					
                     // Moved addition to background thread:
 					OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
-					GIMessage *persistentMessage = [GIMessage messageWithInternetMessage: iMessage];
+					GIMessage *persistentMessage = [GIMessage messageWithInternetMessage:iMessage appendToAppropriateThread:YES];
 					[iMessage release];
 					
 					                    
@@ -277,7 +277,7 @@
 }
 
 
-- (NSArray*) importGmlFiles: (NSArray*) gmls moveOnSuccess: (BOOL) move
+- (NSArray *)importGmlFiles:(NSArray *)gmls moveOnSuccess:(BOOL)move
 {
 	NSMutableArray* result = [NSMutableArray array];
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -294,7 +294,7 @@
 		if (! message) {
 			NSData* transferData = [[NSData alloc] initWithContentsOfFile: gmlPath];
 			OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
-			message = [GIMessage messageWithInternetMessage: iMessage];
+			message = [GIMessage messageWithInternetMessage:iMessage appendToAppropriateThread:YES];
 			[transferData release];
 			[iMessage release];
 		}

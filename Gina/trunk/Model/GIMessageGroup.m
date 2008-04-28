@@ -604,7 +604,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 				NSString *transferDataPath = [[NSBundle mainBundle] pathForResource:@"GreetingMail" ofType:@"transferData"];				
 				NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];				
 				OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
-				GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
+				GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage appendToAppropriateThread:NO];
 				NSAssert(message != nil, @"couldn't create greeting message");
 				
 				GIThread *thread = [GIThread threadForMessage:message];				

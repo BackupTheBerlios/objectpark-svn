@@ -1314,7 +1314,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	
 	if (!internetMessage) return nil;
 	
-    GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
+    GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage appendToAppropriateThread:NO];
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [internetMessage transferData]);
     
     // status

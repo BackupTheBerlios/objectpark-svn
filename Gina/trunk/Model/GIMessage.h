@@ -96,10 +96,10 @@
 @property (readonly) NSString *contentAsString;
 
 /*" Factory and init methods "*/
-+ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
++ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread;
 + (id)dummyMessageWithId:(NSString *)aMessageId andDate:(NSDate *)aDate;
 
-- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
+- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread;
 - (id)initDummy;
 
 /*" Cache flushing "*/

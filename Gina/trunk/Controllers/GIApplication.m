@@ -505,7 +505,11 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] removeObject:[GIMessageGroup queuedMessageGroup]];
 
 		// Disconnect message from its thread:
-		[[sentMessage.thread mutableArrayValueForKey:@"messages"] removeObject:sentMessage];
+//		sentMessage.thread = nil;
+//		[[sentMessage.thread mutableArrayValueForKey:@"messages"] removeObject:sentMessage];
+		
+		// Put in appropriate thread (sent message had a single message thread before):
+		[GIThread addMessageToAppropriateThread:sentMessage];
 		
 		// Re-Insert message wherever it belongs:
 		[[OPPersistentObjectContext defaultContext] addMessageByApplingFilters:sentMessage];

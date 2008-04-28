@@ -47,20 +47,22 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (GIThread *)thread
 {
-	return [[self context] objectForOID: threadOID];
+	return [[self context] objectForOID:threadOID];
 }
 
-- (void) setThread: (GIThread*) aThread
+- (void)setThread:(GIThread *)aThread
 {
-	if (threadOID != [aThread oid]) {
-		[self willChangeValueForKey: @"thread"];
+	if (threadOID != [aThread oid]) 
+	{
+		[self willChangeValueForKey:@"thread"];
 
-		if (threadOID) {
-			[[self.thread mutableArrayValueForKey: @"messages"] removeObjectIdenticalTo: self];
+		if (threadOID) 
+		{
+			[[self.thread mutableArrayValueForKey:@"messages"] removeObjectIdenticalTo:self];
 		}
 		threadOID = [aThread oid];
-		[[aThread mutableArrayValueForKey: @"messages"] addObject: self];
-		[self didChangeValueForKey: @"thread"];
+		[[aThread mutableArrayValueForKey:@"messages"] addObject:self];
+		[self didChangeValueForKey:@"thread"];
 	}
 }
 
@@ -83,8 +85,9 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[[[self context] messagesByMessageId] removeObjectForKey:self.messageId];
 	
 	// remove from any profiles:
-	GIProfile* sendProfile = [GIProfile sendProfileForMessage:self];
-	if (sendProfile) {
+	GIProfile *sendProfile = [GIProfile sendProfileForMessage:self];
+	if (sendProfile) 
+	{
 		[[sendProfile mutableArrayValueForKey:@"messagesToSend"] removeObject:self];
 		NSLog(@"removing message %@ from sendProfile %@", self, sendProfile);
 	}
@@ -176,15 +179,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return dummy;
 }
 
-- (void) setContentFromInternetMessage: (OPInternetMessage*) im
+- (void)setContentFromInternetMessage:(OPInternetMessage *)im appendToAppropriateThread:(BOOL)doThread
 /*" Does not set the reference ivar. "*/
 {
 	NSParameterAssert(im != nil);
 	
-    NSString* fromHeader = [im fromWithFallback: YES];
+    NSString *fromHeader = [im fromWithFallback:YES];
     
-	[self toggleFlags: flags & OPDummyStatus]; // remove Dummy status
-	[self toggleFlags: flags & OPSeenStatus]; // remove read status
+	[self toggleFlags:flags & OPDummyStatus]; // remove Dummy status
+	[self toggleFlags:flags & OPSeenStatus]; // remove read status
 	
 	[internetMessage release];
 	internetMessage = [im retain];
@@ -192,15 +195,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
 	// Add self to global message id index:
 	if (messageId.length) {
-		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setObject: self forKey: messageId];  
+		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setObject:self forKey:messageId];  
 	}
 	
     [subject release]; subject = [[im normalizedSubject] copy];
-    [self setValue: [fromHeader realnameFromEMailStringWithFallback] forKey: @"senderName"];
+    [self setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"senderName"];
     
     // sanity check for date header field:
-    [date release]; date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate: [[im date] timeIntervalSinceReferenceDate]];
-    if ([(NSDate*) [NSDate dateWithTimeIntervalSinceNow: 15 * 60.0] compare: date] != NSOrderedDescending) {
+    [date release]; date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:[[im date] timeIntervalSinceReferenceDate]];
+    if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare: date] != NSOrderedDescending) 
+	{
         // if message's date is a future date
         // broken message, set current date:
 		[date release]; date = [[NSDate date] retain];
@@ -209,48 +213,56 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
-    if ([GIProfile isMyEmailAddress: fromHeader]) {
-        [self toggleFlags: OPIsFromMeStatus]; // never changes, hopefully
+    if ([GIProfile isMyEmailAddress:fromHeader]) 
+	{
+        [self toggleFlags:OPIsFromMeStatus]; // never changes, hopefully
     }
 	
 	// Setting thread:
-	
-	NSMutableArray* references = [NSMutableArray arrayWithArray: [im references]];
-    [references removeObject: messageId];  // no self referencing allowed
-	
-    GIMessage* referencingMsg = self;
-    GIMessage* referencedMsg;
-    GIThread* thread = self.thread;
+	GIThread *thread = self.thread;
+	GIMessage *referencingMsg = self;
+	GIMessage *referencedMsg = nil;
 	BOOL didCreateDummy = NO;
-	
-	// Find the appropriate thread by walking the references list:
-    NSString *refId;
-    while (refId = [references lastObject]) {
-        referencedMsg = [[self context] messageForMessageId: refId];
-        
-        if (referencedMsg) {
+
+	if (doThread)
+	{
+		NSMutableArray *references = [NSMutableArray arrayWithArray:[im references]];
+		[references removeObject:messageId];  // no self referencing allowed
+
+		// Find the appropriate thread by walking the references list:
+		NSString *refId;
+		while (refId = [references lastObject]) 
+		{
+			referencedMsg = [[self context] messageForMessageId:refId];
+			
+			if (referencedMsg) 
+			{
+				if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", referencingMsg.messageId, referencingMsg.oid, referencedMsg.messageId, referencedMsg.oid);
+				referencingMsg.reference = referencedMsg; // create message chain
+				
+				if (!thread) thread = referencedMsg.thread;
+				[thread mergeMessagesFromThread:referencedMsg.thread]; // usually does nothing as thread == referencedMsg.thread
+			} 
+			else 
+			{
+				// create dummy message for refId:
+				referencedMsg = [GIMessage dummyMessageWithId:refId andDate:self.date];
+				didCreateDummy = YES;
+			}
+			// referencedMsg is now set.
+			
+			
 			if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", referencingMsg.messageId, referencingMsg.oid, referencedMsg.messageId, referencedMsg.oid);
-            referencingMsg.reference = referencedMsg; // create message chain
-            
-			if (!thread) thread = referencedMsg.thread;
-            [thread mergeMessagesFromThread: referencedMsg.thread]; // usually does nothing as thread == referencedMsg.thread
-        } else {
-			// create dummy message for refId:
-			referencedMsg = [GIMessage dummyMessageWithId: refId andDate: self.date];
-			didCreateDummy = YES;
+			referencingMsg.reference = referencedMsg;
+			
+			referencingMsg = referencedMsg;
+			[references removeLastObject];
+			[references removeObject:refId]; // buggy messages can have circles in their references
 		}
-		// referencedMsg is now set.
-		
-		
-		if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", referencingMsg.messageId, referencingMsg.oid, referencedMsg.messageId, referencedMsg.oid);
-        referencingMsg.reference = referencedMsg;
-        
-        referencingMsg = referencedMsg;
-		[references removeLastObject];
-		[references removeObject: refId]; // buggy messages can have circles in their references
-    }
+	}
 	
-	if (! thread) {
+	if (! thread) 
+	{
 		// create a new thread:
 		thread = [[GIThread alloc] init];
 		thread.subject = subject;
@@ -261,41 +273,46 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	referencingMsg = self;	
 	referencingMsg.thread = thread;
 	
-	if (didCreateDummy) {
+	if (didCreateDummy) 
+	{
 		// Make sure, all referenced messages, esp the dummies have the same thread set:
 		int refCounter = 1000; // stop after 1000 hops => probably a circle.
-		while (refCounter > 0 && (referencedMsg = referencingMsg.reference)) {
+		while (refCounter > 0 && (referencedMsg = referencingMsg.reference)) 
+		{
 			referencedMsg.thread = thread;
 			referencingMsg = referencedMsg;
-			refCounter--;
+			refCounter -= 1;
 		}
 	}
 }
 
 /*" Returns a new message with the internetmessage object.
  If message is a dupe, the message not inserted into the context nil is returned. "*/
-+ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage;
++ (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread
 {
     id result = nil;
 	
     GIMessage* dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId: [anInternetMessage messageId]];
 	if (dupe) {
-        if ([dupe isDummy]) {
+        if ([dupe isDummy]) 
+		{
             // replace message
 			if (NSDebugEnabled) NSLog(@"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
-            [dupe setContentFromInternetMessage: anInternetMessage];
+            [dupe setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread];
             //[dupe referenceFind:YES];
-        } else if ([GIProfile isMyEmailAddress:[anInternetMessage fromWithFallback:YES]]) {
+        } 
+		else if ([GIProfile isMyEmailAddress:[anInternetMessage fromWithFallback:YES]]) 
+		{
             // replace old message with new:
 			if (NSDebugEnabled) NSLog(@"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
-            [dupe setContentFromInternetMessage:anInternetMessage];
+            [dupe setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread];
         } else {
 			if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [anInternetMessage messageId]);    
 		}
 		result = dupe;
     } else  {
         // Create a new message in the default context:
-        result = [[[GIMessage alloc] initWithInternetMessage: anInternetMessage] autorelease];
+        result = [[[GIMessage alloc] initWithInternetMessage:anInternetMessage appendToAppropriateThread:doThread] autorelease];
 		NSAssert(result != nil, @"Could not create message object");
     }
     
@@ -304,12 +321,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 /*" Returns a new message with the internetmessage object.
  If message is a dupe, the message not inserted into the context nil is returned. "*/
-- (id) initWithInternetMessage:(OPInternetMessage *)anInternetMessage;
+- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread
 {
     if (self = [super init]) {
 		// Create a new message in the default context:
 		referenceCount = NSNotFound;
-        [self setContentFromInternetMessage: anInternetMessage]; // also retains anInternetMessage
+        [self setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:(BOOL)doThread]; // also retains anInternetMessage
     }
     
     return self;
