@@ -40,6 +40,7 @@
 @synthesize query;
 @synthesize searchResultTableView;
 @synthesize selectedMessageInSearchMode;
+@synthesize redirectProfile;
 
 - (GIMessageGroup *)selectedGroup
 {
@@ -210,6 +211,7 @@
 	[searchResultView release];
 	[regularThreadsView release];
 	[selectedMessageInSearchMode release];
+	[redirectProfile release];
 	
  	[super dealloc];
 }
@@ -1176,6 +1178,11 @@ static BOOL isShowingThreadsOnly = NO;
         result = [[self selectedGroup] defaultProfile];
     }
     
+	if (!result)
+	{
+		result = [GIProfile defaultProfile];
+	}
+	
     return result;
 }
 
@@ -1251,9 +1258,10 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (IBAction)redirect:(id)sender
 {
-	// TODO: Redirect
-	NSLog(@"redirect here");
-	return;
+	self.redirectProfile = [self profileForMessage:self.selectedMessage];
+	
+	// show sheet:	
+	[NSApp beginSheet:redirectSheet modalForWindow:self.window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
 }
 
 #pragma mark -- message flags manipulation --
@@ -1577,6 +1585,39 @@ static BOOL isShowingThreadsOnly = NO;
         // removed, or modified that affected the search results.
         NSLog(@"search: an update happened.");
     }
+}
+
+@end
+
+@implementation GIMainWindowController (MessageRedirect)
+
+- (NSArray *)allProfiles
+{
+	return [[[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIProfile class]] allObjects];
+}
+
+- (NSArray *)profileSortDescriptors
+{
+	static NSArray *sortDescriptors = nil;
+	
+	if (! sortDescriptors) 
+	{
+		sortDescriptors = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES] autorelease], nil];
+	}
+	
+	return sortDescriptors;
+}
+
+- (IBAction)doRedirect:(id)sender
+{
+	[NSApp endSheet:redirectSheet];
+    [redirectSheet orderOut:sender];
+}
+
+- (IBAction)cancelRedirect:(id)sender
+{
+	[NSApp endSheet:redirectSheet];
+    [redirectSheet orderOut:sender];
 }
 
 @end

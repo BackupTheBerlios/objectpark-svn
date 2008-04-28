@@ -25,6 +25,7 @@
 @class GIMessageGroupOutlineViewController;
 @class GISplitView;
 @class WebView;
+@class GIProfile;
 
 @interface GIMainWindowController : NSWindowController 
 {
@@ -47,6 +48,7 @@
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController *searchResultsArrayController;
 	IBOutlet WebView *messageWebView;
+	IBOutlet NSWindow *redirectSheet;
 	
 	BOOL searchMode;
 	
@@ -64,6 +66,8 @@
 	NSString *observedKeyPathForSelectedSearchResults;
 	
 	NSMetadataQuery *query;
+	
+	GIProfile *redirectProfile;
 }
 
 @property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;
@@ -72,6 +76,7 @@
 @property (readonly) NSMetadataQuery *query;
 @property (readonly) NSTableView *searchResultTableView;
 @property (retain) GIMessage *selectedMessageInSearchMode;
+@property (retain) GIProfile *redirectProfile;
 
 - (void)showMessage:(GIMessage *)message;
 - (BOOL)isShowingMessageOnly;
@@ -144,4 +149,9 @@
 
 - (NSArray*) messageGroupHierarchyRootNode;
 
+@end
+
+@interface GIMainWindowController (MessageRedirect)
+- (IBAction)doRedirect:(id)sender;
+- (IBAction)cancelRedirect:(id)sender;
 @end

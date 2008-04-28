@@ -124,6 +124,7 @@
 		7780783B0D070AC50091F21D /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.m */; };
 		7780785A0D070BD20091F21D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780E0D0707DC0091F21D /* CoreFoundation.framework */; };
 		7780785B0D070BD30091F21D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780780F0D0707DC0091F21D /* CoreServices.framework */; };
+		7780FE420DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7780FE410DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.m */; };
 		7781686B0D33F04D004AFCC1 /* ToggleSeen.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */; };
 		778866B30D8D8258006EF64D /* GIPOPOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 778866B20D8D8258006EF64D /* GIPOPOperation.m */; };
 		778866B60D8D8264006EF64D /* GIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 778866B50D8D8264006EF64D /* GIOperation.m */; };
@@ -536,6 +537,8 @@
 		778078030D07065C0091F21D /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		7780780E0D0707DC0091F21D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		7780780F0D0707DC0091F21D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		7780FE400DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMailAddressTokenFieldDelegate.h; sourceTree = "<group>"; };
+		7780FE410DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMailAddressTokenFieldDelegate.m; sourceTree = "<group>"; };
 		7781686A0D33F04D004AFCC1 /* ToggleSeen.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = ToggleSeen.tiff; sourceTree = "<group>"; };
 		778866B10D8D8258006EF64D /* GIPOPOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIPOPOperation.h; sourceTree = "<group>"; };
 		778866B20D8D8258006EF64D /* GIPOPOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIPOPOperation.m; sourceTree = "<group>"; };
@@ -1029,6 +1032,8 @@
 				770C31CE0D98F76100FC5214 /* OPMenuButton.m */,
 				771069870DB3B8E300376DA3 /* GITableView.h */,
 				771069880DB3B8E300376DA3 /* GITableView.m */,
+				7780FE400DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.h */,
+				7780FE410DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.m */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -1997,6 +2002,7 @@
 				770C31CF0D98F76100FC5214 /* OPMenuButton.m in Sources */,
 				7713924B0D9D52E6003BE8B1 /* GISMTPOperation.m in Sources */,
 				771069890DB3B8E300376DA3 /* GITableView.m in Sources */,
+				7780FE420DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
