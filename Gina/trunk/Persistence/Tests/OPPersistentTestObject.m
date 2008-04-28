@@ -30,7 +30,7 @@
 
 - (id) initWithCoder: (NSCoder*) coder
 {
-	name = [coder decodeObjectForKey: @"name"];
+	name = [[coder decodeObjectForKey: @"name"] retain];
 	
 	return self;
 }

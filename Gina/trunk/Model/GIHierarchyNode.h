@@ -20,16 +20,18 @@
 @property (readwrite, copy) NSString *name;
 @property (readonly, retain) OPFaultingArray *children;
 
-- (void)insertObject:(GIHierarchyNode *)node inChildrenAtIndex:(NSUInteger)index;
-- (BOOL)isDeletable;
+- (void) insertObject: (GIHierarchyNode*) node inChildrenAtIndex: (NSUInteger) index;
+- (BOOL) isDeletable;
 
 @end
 
 @interface GIHierarchyNode (MessageGroupHierarchy)
 
-+ (id)messageGroupHierarchyRootNode;
-+ (id)newWithName:(NSString *)aName atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex;
-+ (GIHierarchyNode *)findHierarchyNode:(id)searchedNode startingWithHierarchyNode:(GIHierarchyNode *)startNode;
++ (id) messageGroupHierarchyRootNode;
++ (void) setMessageGroupHierarchyRootNode: (GIHierarchyNode*) rootNode;
+
++ (id) newWithName:(NSString *)aName atHierarchyNode: (GIHierarchyNode*) aNode atIndex: (int) anIndex;
++ (GIHierarchyNode*) findHierarchyNode: (id) searchedNode startingWithHierarchyNode: (GIHierarchyNode*) startNode;
 - (GIHierarchyNode*) parentNode;
 
 @end

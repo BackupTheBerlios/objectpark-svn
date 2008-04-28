@@ -455,18 +455,18 @@ static GIProfile *defaultProfile = nil;
 	shouldSignNewMessagesByDefault = [coder decodeBoolForKey:@"shouldSignNewMessagesByDefault"];
 	shouldEncryptNewMessagesByDefault = [coder decodeBoolForKey:@"shouldEncryptNewMessagesByDefault"];
 	sendDelay = [coder decodeInt32ForKey:@"sendDelay"];
-	additionalAddresses = [coder decodeObjectForKey:@"additionalAddresses"];
-	defaultCc = [coder decodeObjectForKey:@"defaultCc"];
-	defaultBcc = [coder decodeObjectForKey:@"defaultBcc"];
-	realname = [coder decodeObjectForKey:@"realname"];
-	defaultReplyTo = [coder decodeObjectForKey:@"defaultReplyTo"];
-	mailAddress = [coder decodeObjectForKey:@"mailAddress"];
-	organization = [coder decodeObjectForKey:@"organization"];
-	name = [coder decodeObjectForKey:@"name"];
-	signature = [coder decodeObjectForKey:@"signature"];
-	messageTemplate = [coder decodeObjectForKey:@"messageTemplate"];
+	additionalAddresses = [[coder decodeObjectForKey:@"additionalAddresses"] retain];
+	defaultCc = [[coder decodeObjectForKey:@"defaultCc"] retain];
+	defaultBcc = [[coder decodeObjectForKey:@"defaultBcc"] retain];
+	realname = [[coder decodeObjectForKey:@"realname"] retain];
+	defaultReplyTo = [[coder decodeObjectForKey:@"defaultReplyTo"] retain];
+	mailAddress = [[coder decodeObjectForKey:@"mailAddress"] retain];
+	organization = [[coder decodeObjectForKey:@"organization"] retain];
+	name = [[coder decodeObjectForKey:@"name"] retain];
+	signature = [[coder decodeObjectForKey:@"signature"] retain];
+	messageTemplate = [[coder decodeObjectForKey:@"messageTemplate"] retain];
 	sendAccountOID = [coder decodeOIDForKey:@"sendAccount"];
-	messagesToSend = [coder decodeObjectForKey:@"messagesToSend"];
+	messagesToSend = [[coder decodeObjectForKey:@"messagesToSend"] retain];
 
 	//NSLog(@"%@ has messagesToSend: %@", self, messagesToSend);
 	
@@ -485,7 +485,10 @@ static GIProfile *defaultProfile = nil;
 	[coder encodeObject:name forKey:@"name"];
 	[coder encodeObject:signature forKey:@"signature"];
 	[coder encodeObject:messageTemplate forKey:@"messageTemplate"];
-	[coder encodeObject:messagesToSend forKey:@"messagesToSend"];
+	
+	if ([coder isPartialCoder]) {
+		[coder encodeObject:messagesToSend forKey:@"messagesToSend"];
+	}
 	[coder encodeOID:sendAccountOID forKey:@"sendAccount"];
 	
 	[coder encodeInt32:sendDelay forKey:@"sendDelay"];

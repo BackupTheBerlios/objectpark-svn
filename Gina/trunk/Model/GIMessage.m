@@ -776,11 +776,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	messageId = [coder decodeObjectForKey:@"messageId"];
-	subject = [coder decodeObjectForKey:@"subject"];
-	to = [coder decodeObjectForKey:@"to"];
-	date = [coder decodeObjectForKey:@"date"];
-	senderName = [coder decodeObjectForKey:@"senderName"];
+	messageId = [[coder decodeObjectForKey:@"messageId"] retain];
+	subject = [[coder decodeObjectForKey:@"subject"] retain];
+	to = [[coder decodeObjectForKey:@"to"] retain];
+	date = [[coder decodeObjectForKey:@"date"] retain];
+	senderName = [[coder decodeObjectForKey:@"senderName"] retain];
 	threadOID = [coder decodeOIDForKey:@"threadOID"];
 	referenceOID = [coder decodeOIDForKey:@"referenceOID"];
 	flags = [coder decodeInt32ForKey:@"flags"];	

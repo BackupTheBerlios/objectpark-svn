@@ -309,9 +309,9 @@
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	name = [coder decodeObjectForKey:@"name"];
+	name = [[coder decodeObjectForKey:@"name"] retain];
 	enabled = [coder decodeBoolForKey:@"enabled"];
-	predicate = [coder decodeObjectForKey:@"predicate"];
+	predicate = [[coder decodeObjectForKey:@"predicate"] retain];
 	performActionPutInMessageGroup = [coder decodeBoolForKey:@"performActionPutInMessageGroup"];
 	putInMessageGroupOID = [coder decodeOIDForKey:@"putInMessageGroupOID"];
 	performActionMarkAsSpam = [coder decodeBoolForKey:@"performActionMarkAsSpam"];

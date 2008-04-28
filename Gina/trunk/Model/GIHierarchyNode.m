@@ -60,8 +60,8 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	name     = [coder decodeObjectForKey:@"name"];
-	children = [coder decodeObjectForKey:@"children"];
+	name     = [[coder decodeObjectForKey:@"name"] retain];
+	children = [[coder decodeObjectForKey:@"children"] retain];
 	
 	return self;
 }
@@ -136,24 +136,28 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 
 @implementation GIHierarchyNode (MessageGroupHierarchy)
 
-+ (id)messageGroupHierarchyRootNode
++ (id) messageGroupHierarchyRootNode 
 {
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	
 	static id rootNode = nil;
 	
-	if (!rootNode) 
-	{
+	if (!rootNode) {
 		rootNode = [[context rootObjectForKey:@"MessageGroupHierarchyRootNode"] retain];
-		if (!rootNode) 
-		{
+		if (!rootNode) {
 			rootNode = [[self alloc] init];
 
-			[context setRootObject:rootNode forKey:@"MessageGroupHierarchyRootNode"];
+			[self setMessageGroupHierarchyRootNode: rootNode];
 		}
 	}
 	
 	return rootNode;
+}
+
++ (void) setMessageGroupHierarchyRootNode: (GIHierarchyNode*) rootNode 
+{	
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	[context setRootObject:rootNode forKey:@"MessageGroupHierarchyRootNode"];
 }
 
 /*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 

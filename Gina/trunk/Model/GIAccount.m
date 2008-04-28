@@ -79,6 +79,11 @@
 }
 
 
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ ('%@')", [super description], self.name];
+}
+
 - (void)dealloc
 {
 	[name release];
@@ -777,21 +782,21 @@
 
 @implementation GIAccount (Coding)
 
-- (id)initWithCoder:(NSCoder *)coder
+- (id) initWithCoder: (NSCoder*) coder
 {
 	enabled = [coder decodeBoolForKey:@"enabled"];
-	name = [coder decodeObjectForKey:@"name"];
-	incomingUsername = [coder decodeObjectForKey:@"incomingUsername"];
-	outgoingUsername = [coder decodeObjectForKey:@"outgoingUsername"];
+	name = [[coder decodeObjectForKey:@"name"] retain];
+	incomingUsername = [[coder decodeObjectForKey:@"incomingUsername"] retain];
+	outgoingUsername = [[coder decodeObjectForKey:@"outgoingUsername"] retain];
 	retrieveMessageInterval = [coder decodeInt32ForKey:@"retrieveMessageInterval"];
 
 	leaveOnServerDuration = [coder decodeInt32ForKey:@"leaveOnServerDuration"];
 	outgoingAuthenticationMethod = [coder decodeInt32ForKey:@"outgoingAuthenticationMethod"];
 	incomingServerPort = [coder decodeInt32ForKey:@"incomingServerPort"];
 	outgoingServerPort = [coder decodeInt32ForKey:@"outgoingServerPort"];
-	outgoingServerName = [coder decodeObjectForKey:@"outgoingServerName"];
+	outgoingServerName = [[coder decodeObjectForKey:@"outgoingServerName"] retain];
 	outgoingServerType = [coder decodeInt32ForKey:@"outgoingServerType"];
-	incomingServerName = [coder decodeObjectForKey:@"incomingServerName"];
+	incomingServerName = [[coder decodeObjectForKey:@"incomingServerName"] retain];
 	incomingServerType = [coder decodeInt32ForKey:@"incomingServerType"];
 	incomingAuthenticationMethod = [coder decodeInt32ForKey:@"incomingAuthenticationMethod"];
 	
@@ -799,7 +804,7 @@
 	allowExpiredSSLCertificates = [coder decodeBoolForKey:@"allowExpiredSSLCertificates"];
 	verifySSLCertificateChain = [coder decodeBoolForKey:@"verifySSLCertificateChain"];
 	
-	profiles = [coder decodeObjectForKey:@"profiles"];
+	profiles = [[coder decodeObjectForKey:@"profiles"] retain];
 	
 	return self;
 }

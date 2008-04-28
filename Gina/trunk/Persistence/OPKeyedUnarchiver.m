@@ -32,6 +32,12 @@
 	[super dealloc];
 }
 
+- (BOOL) isPartialCoder
+/*" Returns YES; if the receiver can efficiently store a large number of objects where only the needed parts can be loaded. "*/
+{
+	YES;
+}
+
 - (BOOL) allowsKeyedCoding
 {
 	return YES;
@@ -79,7 +85,7 @@
 	
 	id result = [objectsByOid objectForKey: oidString];
 	
-	if (result) return result;
+	if (result) return [[result retain] autorelease]; // found it in the current plist
  	
 	NSDictionary* objectPlist = [encodingsByOid objectForKey: oidString];	
 	
@@ -95,7 +101,7 @@
 		}
 		[self popStack];
 	}
-	return result;
+	return [[result retain] autorelease];
 }
 
 - (OID) decodeOIDForKey: (NSString*) key

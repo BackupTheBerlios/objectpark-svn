@@ -186,10 +186,10 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 - (id) initWithCoder: (NSCoder*) coder
 {
-	subject = [coder decodeObjectForKey: @"subject"];
-	date = [coder decodeObjectForKey: @"date"];
-	messages = [coder decodeObjectForKey: @"messages"];
-	messageGroups = [coder decodeObjectForKey: @"messageGroups"];
+	subject = [[coder decodeObjectForKey: @"subject"] retain];
+	date = [[coder decodeObjectForKey: @"date"] retain];
+	messages = [[coder decodeObjectForKey: @"messages"] retain];
+	messageGroups = [[coder decodeObjectForKey: @"messageGroups"] retain];
 	unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];
 	//[messages setParent: self];
 	return self;

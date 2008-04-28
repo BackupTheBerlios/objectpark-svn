@@ -274,6 +274,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     [super dealloc];
 }
 
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"%@ #unread=%u", [super description], unreadMessageCount];
+}
+
 
 
 //static NSMutableArray* root = nil;
@@ -750,7 +755,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (id) initWithCoder: (NSCoder*) coder
 {
 	if (self = [super initWithCoder: coder]) {
-		threads = [coder decodeObjectForKey: @"threads"];
+		threads = [[coder decodeObjectForKey: @"threads"] retain];
 		defaultProfileOID = [coder decodeOIDForKey: @"defaultProfile"];
 		unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];
 	}
@@ -822,9 +827,12 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) encodeWithCoder: (NSCoder*) coder
 {
 	[super encodeWithCoder: coder];
-	[coder encodeObject: threads forKey: @"threads"];
 	[coder encodeOID: defaultProfileOID forKey: @"defaultProfile"];
-	[coder encodeInt: unreadMessageCount forKey: @"unreadMessageCount"];
+	// Encode threads only with encoders that support big object archives:
+	if ([coder isPartialCoder]) {
+		[coder encodeObject: threads forKey: @"threads"];
+		[coder encodeInt: unreadMessageCount forKey: @"unreadMessageCount"];
+	}
 }
 
 - (void) addThreadsByDateObject: (GIThread*) aThread

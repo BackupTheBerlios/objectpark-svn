@@ -55,21 +55,32 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	NSDictionary* config = [NSDictionary dictionaryWithObjectsAndKeys: 
 							profiles, @"Profiles", 
 							accounts, @"Accounts",
+							[GIHierarchyNode messageGroupHierarchyRootNode] , @"GroupHierarchyRoot",
 							nil, nil];
 	
-	NSData* backupData = [NSKeyedArchiver archivedDataWithRootObject: accounts];
+	NSData* backupData = [NSKeyedArchiver archivedDataWithRootObject: config];
 	[[NSUserDefaults standardUserDefaults] setObject: backupData forKey: @"ConfigurationBackup"];
 }
 
 - (IBAction) restoreConfig: (id) sender
 {
 	NSData* backupData = [[NSUserDefaults standardUserDefaults] dataForKey: @"ConfigurationBackup"];
-	if (NO && backupData.length) {
-		NSSet* accounts = [NSKeyedUnarchiver unarchiveObjectWithData: backupData];
-		//NSSet* profiles = [config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
-		//NSSet* accounts = config; [config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
-		//NSLog(@"Restored %@", profiles);
-		NSLog(@"Restored %@", accounts);
+	if (backupData.length) {
+		NSAlert* restoreAlert = [NSAlert alertWithMessageText: @"Restore Preferences" defaultButton: @"Restore" alternateButton: @"Cancel" otherButton: nil informativeTextWithFormat: @"Your Gina preferences are not set, but a backup of the preferences exists. This happens if the Gina database has been deleted or cannot be found. Do you want to restore some preferences from the backup?"];
+		int result = [restoreAlert runModal];
+		if (result == NSAlertDefaultReturn) {
+			
+			NSDictionary* config = [NSKeyedUnarchiver unarchiveObjectWithData: backupData];
+			NSSet* profiles = [config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
+			NSSet* accounts = [config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
+			GIHierarchyNode* rootGroup = [config objectForKey: @"GroupHierarchyRoot"];
+			[GIHierarchyNode setMessageGroupHierarchyRootNode: rootGroup];
+			NSLog(@"Restored Groups: %@", rootGroup.children);
+			NSLog(@"Restored %@", config);
+			
+		}
+		//GIAccount* anyAccount = [accounts anyObject];
+		//NSLog(@"Restored %@", accounts);
 	}
 }
 

@@ -211,13 +211,13 @@
 - (id) initWithCoder: (NSCoder*) coder
 {
 	int rootPage = [coder decodeInt32ForKey: @"BTreeRootPage"];
-	NSString* keyCompareFunctionName = [coder decodeObjectForKey: @"BTreeKeyCompareFunctionName"];
+	NSString* keyCompareFunctionName = [[coder decodeObjectForKey: @"BTreeKeyCompareFunctionName"] retain];
 	
 	btree = [[OPKeyOnlyBTree alloc] initWithCompareFunctionName: keyCompareFunctionName 
 													   withRoot: rootPage 
 													 inDatabase: [[coder context] database]];
 	
-	sortKeyPath = [coder decodeObjectForKey: @"OPSortKeyPath"];
+	sortKeyPath = [[coder decodeObjectForKey: @"OPSortKeyPath"] retain];
 	count = NSNotFound;
 	return self;
 }
