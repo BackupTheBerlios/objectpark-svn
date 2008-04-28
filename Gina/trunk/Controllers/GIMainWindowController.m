@@ -441,7 +441,7 @@
 	{
 		return [[threadsController selectedObjects] count] != 0;
 	}
-	else if (action == @selector(replyAll:) || action == @selector(replySender:) || action == @selector(forward:))
+	else if (action == @selector(replyAll:) || action == @selector(replySender:) || action == @selector(forward:) || action == @selector(redirect:))
 	{
 		return [self selectedMessage] && [threadsController selectedObjects].count == 1;
 	}
@@ -1247,6 +1247,13 @@ static BOOL isShowingThreadsOnly = NO;
     GIMessage *message = [self selectedMessage];
 	
     [[[GIMessageEditorController alloc] initForward:message profile:[self profileForMessage:message]] autorelease];
+}
+
+- (IBAction)redirect:(id)sender
+{
+	// TODO: Redirect
+	NSLog(@"redirect here");
+	return;
 }
 
 #pragma mark -- message flags manipulation --

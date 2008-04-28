@@ -17,7 +17,7 @@
 #define OPAnsweredStatus 2
 #define OPFlaggedStatus 4
 #define OPDummyStatus 8
-//#define OPDraftStatus 16
+#define OPResentStatus 16 // redirected
 //#define OPRecentStatus 32
 //#define OPQueuedStatus 64
 //#define OPExpungedStatus 128

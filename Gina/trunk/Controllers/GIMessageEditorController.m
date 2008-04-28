@@ -149,9 +149,11 @@
         [self updateWindowTitle];
         
 		// HACK ensure To is first responder:
-		[window performSelector:@selector(makeFirstResponder:) withObject:[self headerTextFieldWithFieldName:@"To"] afterDelay:0.01];
+		[window performSelector:@selector(makeFirstResponder:) withObject:toField afterDelay:0.1];
 		
+		[window makeFirstResponder:toField];
 		[window makeKeyAndOrderFront:self];
+		[window makeFirstResponder:toField];
     }
     
     return self;

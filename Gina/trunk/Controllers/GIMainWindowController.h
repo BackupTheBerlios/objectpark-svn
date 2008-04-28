@@ -108,6 +108,7 @@
 - (IBAction)followup:(id)sender;
 - (IBAction)replyDefault:(id)sender;
 - (IBAction)forward:(id)sender;
+- (IBAction)redirect:(id)sender;
 
 /*" Message meta info manipulation "*/
 - (IBAction)markAsRead:(id)sender;

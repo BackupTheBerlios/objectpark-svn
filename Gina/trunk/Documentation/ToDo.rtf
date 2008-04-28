@@ -8,22 +8,21 @@
 
 \b0\fs24 \cf0 \
 Bugs:\
-- Dirk: make deletion of GIMessageGroup objects right (handle threads deletion)\
-- Axel: To: header not set in replying message editor\
+- fix deletion of GIMessageGroup objects right (handle threads deletion)\
+- fix regular serialization of persistent objects\
+- fix message selection by itemspaths during paging with the space key.\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 Axel:\
 - Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
-- ANNOYANCE: "new message" has "Reply-To" instead of "To:" field as first responder\
-- next message with spacebar handling\
+- next message with spacebar handling (waiting on bug: "fix message selection by itemspaths during paging with the space key")\
 - read and next shortcuts like in Ginko Voyager\
 - implement message redirection\
 - optimization: suppress message rendering in threads only mode\
+- NSTokenField for message editor and redirect sheet\
 \
 Dirk:\
-- fix regular serialization of persistent objects\
-- fix message selection by itemspaths during paging with the space key.\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
@@ -45,6 +44,8 @@ Axel:\
 - fixed: predicates from message filters are not always persistent\
 - FIlter Prefs: Target mailboxes popup contains Illegal boxes like "Queued".\
 - New and unsent messages should have an own thread and been thrown in the "real" thread when sent\
+- ANNOYANCE: "new message" has "Reply-To" instead of "To:" field as first responder\
+- To: header not set in replying message editor\
 \
 Dirk:\
 - restore selected message group on startup\
