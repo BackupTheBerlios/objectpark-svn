@@ -428,7 +428,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) willDelete
 {
 	// delete dependent objects
-#warning TODO: take care of contained threads (disconnect relation)
+#warning IMPORTANT axel->Dirk TODO: take care of contained threads (disconnect relation)
 	[super willDelete];
 }
 

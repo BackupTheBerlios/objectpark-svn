@@ -1645,7 +1645,7 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
     
-#warning TODO: reenable newsgroup support here
+// TODO: reenable newsgroup support here
     /*
     // Handle "Newsgroups" key:
     {
