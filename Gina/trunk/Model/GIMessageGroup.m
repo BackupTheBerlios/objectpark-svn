@@ -580,26 +580,41 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	}
 }
 
++ (id) newWithName:(NSString *)aName type: (int) groupType atHierarchyNode:(GIHierarchyNode *)aNode atIndex:(int)anIndex
+{
+	GIMessageGroup* result = [self newWithName: aName atHierarchyNode: aNode atIndex: anIndex];
+	result->type = groupType;
+	return result;
+}
+
 /*" Returns the standard message group (e.g. outgoing group) defined by defaultsKey. If not present, a group is created with the name defaultName and set as this standard group. "*/
-+ (GIMessageGroup *)standardMessageGroupWithUserDefaultsKey:(NSString *)defaultsKey defaultName:(NSString *)defaultName
++ (GIMessageGroup *)standardMessageGroupWithType: (int) groupType defaultName: (NSString*) defaultName
 {
     NSParameterAssert(defaultName != nil);
+	defaultName = NSLocalizedString(defaultName, @"");
 	GIMessageGroup *result = nil;
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 
 	@synchronized(self) {
-			result = [context rootObjectForKey:defaultsKey];
-			if (!result) if (NSDebugEnabled) NSLog(@"Couldn't find standard box '%@'", defaultName);
+		for (id node in [context allObjectsOfClass: [GIMessageGroup class]]) {
+			if ([(GIMessageGroup*)node type] == groupType) {
+				return node;
+			}
+		}
+		
+		// result = [context rootObjectForKey:defaultsKey];
+		if (!result) if (NSDebugEnabled) NSLog(@"Couldn't find standard box '%@'", defaultName);
 		
 		if (!result) {
-			// not found creating new:
-			result = [GIMessageGroup newWithName:defaultName atHierarchyNode:nil atIndex:NSNotFound];
+			// Group not found - create a new one:
+			result = [GIMessageGroup newWithName: defaultName type: groupType 
+								 atHierarchyNode: nil atIndex: NSNotFound];
 			
 			NSAssert1([result name] != nil, @"group should have a name: %@", defaultName);
 			
-			[context setRootObject:result forKey:defaultsKey];
+			[context insertObject: result];
 			
-			if ([defaultsKey isEqualToString:DefaultMessageGroupURLString]) {
+			if (groupType == GIDefaultMessageGroup) {
 				// generate greeting e-mail in default group:
 				NSString *transferDataPath = [[NSBundle mainBundle] pathForResource:@"GreetingMail" ofType:@"transferData"];				
 				NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];				
@@ -617,81 +632,82 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
     return result;
 }
 
+
 + (GIMessageGroup *)defaultMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:DefaultMessageGroupURLString defaultName:NSLocalizedString(@"Default", @"default group name for All Threads")];
+    return [self standardMessageGroupWithType: GIDefaultMessageGroup defaultName: @"Default"];
 }
 
-+ (void)setDefaultMessageGroup:(GIMessageGroup *)aMessageGroup
-{
-	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:DefaultMessageGroupURLString];
-}
+//+ (void)setDefaultMessageGroup:(GIMessageGroup *)aMessageGroup
+//{
+//	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:DefaultMessageGroupURLString];
+//}
 
 + (GIMessageGroup *)sentMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:SentMessageGroupURLString defaultName:NSLocalizedString(@"My Threads", @"default group name for outgoing messages")];
+    return [self standardMessageGroupWithType: GISentMessageGroup defaultName: @"My Threads"];
 }
 
-+ (void)setSentMessageGroup:(GIMessageGroup *)aMessageGroup
-{
-	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:SentMessageGroupURLString];
-}
+//+ (void)setSentMessageGroup:(GIMessageGroup *)aMessageGroup
+//{
+//	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:SentMessageGroupURLString];
+//}
 
 + (GIMessageGroup *)draftMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:DraftsMessageGroupURLString defaultName:NSLocalizedString(@"Draft Messages", @"default group name for drafts")];
+    return [self standardMessageGroupWithType: GIDraftMessageGroup defaultName: @"Draft Messages"];
 }
 
-+ (void)setDraftMessageGroup:(GIMessageGroup *)aMessageGroup
-{
-	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:DraftsMessageGroupURLString];
-}
+//+ (void)setDraftMessageGroup:(GIMessageGroup *)aMessageGroup
+//{
+//	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:DraftsMessageGroupURLString];
+//}
 
 + (GIMessageGroup *)queuedMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:QueuedMessageGroupURLString defaultName:NSLocalizedString(@"Queued Messages", @"default group name for queued")];
+    return [self standardMessageGroupWithType: GIQueuedMessageGroup defaultName: @"Queued Messages"];
 }
 
-+ (void)setQueuedMessageGroup:(GIMessageGroup *)aMessageGroup
-{
-	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:QueuedMessageGroupURLString];
-}
+//+ (void)setQueuedMessageGroup:(GIMessageGroup *)aMessageGroup
+//{
+//	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:QueuedMessageGroupURLString];
+//}
 
 + (GIMessageGroup *)spamMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:SpamMessageGroupURLString defaultName:NSLocalizedString(@"Spam", @"default group name for spam")];
+    return [self standardMessageGroupWithType: GISpamMessageGroup defaultName: @"Spam"];
 }
 
-+ (void)setSpamMessageGroup:(GIMessageGroup *)aMessageGroup
-{
-	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:SpamMessageGroupURLString];
-}
+//+ (void)setSpamMessageGroup:(GIMessageGroup *)aMessageGroup
+//{
+//	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:SpamMessageGroupURLString];
+//}
 
 + (GIMessageGroup *)trashMessageGroup
 {
-    return [self standardMessageGroupWithUserDefaultsKey:TrashMessageGroupURLString defaultName:NSLocalizedString(@"Trash", @"default group name for trash")];
+    return [self standardMessageGroupWithType: GITrashMessageGroup defaultName: @"Trash"];
 }
 
-+ (void)setTrashMessageGroup:(GIMessageGroup *)aMessageGroup
-{
-	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:TrashMessageGroupURLString];
-}
+//+ (void)setTrashMessageGroup:(GIMessageGroup *)aMessageGroup
+//{
+//	[self setStandardMessageGroup:aMessageGroup forDefaultsKey:TrashMessageGroupURLString];
+//}
 
 - (int)type
 /*" Returns the special type of messageGroup (e.g. GIQueuedMessageGroup) or 0 for a regular messageGroup. "*/
 {
-	if (!type) 
-	{
-		type = GIRegularMessageGroup;
-		Class c = [self class];
-		if (self == [c defaultMessageGroup]) type = GIDefaultMessageGroup;
-		else if (self == [c sentMessageGroup]) type = GISentMessageGroup;
-		else if (self == [c queuedMessageGroup]) type = GIQueuedMessageGroup;
-		else if (self == [c draftMessageGroup]) type = GIDraftMessageGroup;
-		else if (self == [c spamMessageGroup]) type = GISpamMessageGroup;
-		else if (self == [c trashMessageGroup]) type = GITrashMessageGroup;
-		[self setValue: [NSNumber numberWithInt: type] forKey: @"type"];
-	}
+//	if (!type) 
+//	{
+//		type = GIRegularMessageGroup;
+//		Class c = [self class];
+//		if (self == [c defaultMessageGroup]) type = GIDefaultMessageGroup;
+//		else if (self == [c sentMessageGroup]) type = GISentMessageGroup;
+//		else if (self == [c queuedMessageGroup]) type = GIQueuedMessageGroup;
+//		else if (self == [c draftMessageGroup]) type = GIDraftMessageGroup;
+//		else if (self == [c spamMessageGroup]) type = GISpamMessageGroup;
+//		else if (self == [c trashMessageGroup]) type = GITrashMessageGroup;
+//		[self setValue: [NSNumber numberWithInt: type] forKey: @"type"];
+//	}
 	return type;
 }
 
@@ -756,6 +772,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 {
 	if (self = [super initWithCoder: coder]) {
 		defaultProfileOID = [coder decodeOIDForKey: @"defaultProfile"];
+		type = [coder decodeInt32ForKey: @"type"];
 		if ([coder allowsPartialCoding]) {
 			threads = [[coder decodeObjectForKey: @"threads"] retain];
 			unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];
@@ -830,6 +847,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 {
 	[super encodeWithCoder: coder];
 	[coder encodeOID: defaultProfileOID forKey: @"defaultProfile"];
+	[coder encodeInt32: type forKey: @"type"];
 	// Encode threads only with encoders that support big object archives:
 	if ([coder allowsPartialCoding]) {
 		[coder encodeObject: threads forKey: @"threads"];

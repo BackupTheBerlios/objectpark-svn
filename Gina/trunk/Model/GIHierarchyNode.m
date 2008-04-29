@@ -142,27 +142,23 @@ static id rootNode = nil;
 {
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	
-	
 	if (!rootNode) {
 		rootNode = [[context rootObjectForKey:@"MessageGroupHierarchyRootNode"] retain];
 		if (!rootNode) {
-			rootNode = [[[self alloc] init] autorelease];
-
-			[self setMessageGroupHierarchyRootNode: rootNode];
+			[self setMessageGroupHierarchyRootNode: [[[self alloc] init] autorelease]];
 		}
 	}
 	
 	return rootNode;
 }
 
-+ (void) setMessageGroupHierarchyRootNode: (GIHierarchyNode*) rootNode 
++ (void) setMessageGroupHierarchyRootNode: (GIHierarchyNode*) aNode 
 {	
 	[self willChangeValueForKey: @"MessageGroupHierarchyRootNode"];
-	[rootNode autorelease]; rootNode = nil;
+	[rootNode autorelease]; rootNode = [aNode retain];
 	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
-	[context setRootObject:rootNode forKey:@"MessageGroupHierarchyRootNode"];
+	[context setRootObject: aNode forKey:@"MessageGroupHierarchyRootNode"];
 	[self didChangeValueForKey: @"MessageGroupHierarchyRootNode"];
-
 }
 
 /*" Returns a new message group with name aName at the hierarchy node aNode on position anIndex. If aName is nil, the default name for new groups is being used. If aNode is nil, the group is being put on the root node at last position (anIndex is ignored in this case). "*/ 
@@ -197,7 +193,7 @@ static id rootNode = nil;
         [children insertObject:result atIndex:anIndex];
     }
 	
-	NSAssert([[aNode children] objectAtIndex:anIndex] == result, @"hierarchy object not inserted.");
+	NSAssert([[aNode children] objectAtIndex:anIndex] == result, @"Hierarchy object not inserted.");
 	NSAssert([aNode hasUnsavedChanges], @"parent hierarchy node not dirty.");
     
 	return result;

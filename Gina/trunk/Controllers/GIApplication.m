@@ -62,6 +62,18 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[[NSUserDefaults standardUserDefaults] setObject: backupData forKey: @"ConfigurationBackup"];
 }
 
+- (void) ensureSomeWindowIsPresent
+{
+	// ensure a main window:
+	if (! [self.windows count]) {
+		if (! self.mainWindow) {
+			[[[GIMainWindowController alloc] init] autorelease];
+		} else {
+			[self.mainWindow makeKeyAndOrderFront: self];
+		}
+	}
+}
+
 - (IBAction) restoreConfig: (id) sender
 {
 	NSData* backupData = [[NSUserDefaults standardUserDefaults] dataForKey: @"ConfigurationBackup"];
@@ -77,11 +89,10 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 			[GIHierarchyNode setMessageGroupHierarchyRootNode: rootGroup];
 			NSLog(@"Restored Groups: %@", rootGroup.children);
 			NSLog(@"Restored %@", config);
-			
 		}
 		//GIAccount* anyAccount = [accounts anyObject];
 		//NSLog(@"Restored %@", accounts);
-		[self ensureMainWindowIsPresent];
+		[self performSelector: @selector(ensureSomeWindowIsPresent) withObject: nil afterDelay: 0.1]; // otherwise, the alert panel is still in the window list
 	}
 }
 
@@ -151,14 +162,6 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		}
 	}
 	return nil;
-}
-
-- (void) ensureMainWindowIsPresent
-{
-	// ensure a main window:
-	if (! [self.windows count]) {
-		[[[GIMainWindowController alloc] init] autorelease];
-	}
 }
 
 - (NSString*) documentPath
@@ -240,7 +243,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(startImportFromImportFolder:) name: GIPOPOperationDidStartNotification object: nil];
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(importFromImportFolder:) name: GIPOPOperationDidEndNotification object: nil];
 	
-	[self ensureMainWindowIsPresent];
+	[self ensureSomeWindowIsPresent];
 	
 	[self importFromImportFolder: nil];		
 }
@@ -255,7 +258,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 {
 	static BOOL firstTime = YES;
 	
-	[self ensureMainWindowIsPresent];
+	[self ensureSomeWindowIsPresent];
 	
 	if (firstTime) {
 		[self askForBecomingDefaultMailApplication];
