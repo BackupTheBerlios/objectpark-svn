@@ -486,7 +486,7 @@ static GIProfile *defaultProfile = nil;
 	[coder encodeObject:signature forKey:@"signature"];
 	[coder encodeObject:messageTemplate forKey:@"messageTemplate"];
 	
-	if ([coder isPartialCoder]) {
+	if ([coder allowsPartialCoding]) {
 		[coder encodeObject:messagesToSend forKey:@"messagesToSend"];
 	}
 	[coder encodeOID:sendAccountOID forKey:@"sendAccount"];

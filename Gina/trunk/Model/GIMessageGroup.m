@@ -755,9 +755,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (id) initWithCoder: (NSCoder*) coder
 {
 	if (self = [super initWithCoder: coder]) {
-		threads = [[coder decodeObjectForKey: @"threads"] retain];
 		defaultProfileOID = [coder decodeOIDForKey: @"defaultProfile"];
-		unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];
+		if ([coder allowsPartialCoding]) {
+			threads = [[coder decodeObjectForKey: @"threads"] retain];
+			unreadMessageCount = [coder decodeIntForKey: @"unreadMessageCount"];
+		}
 	}
 	return self;
 }
@@ -829,7 +831,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	[super encodeWithCoder: coder];
 	[coder encodeOID: defaultProfileOID forKey: @"defaultProfile"];
 	// Encode threads only with encoders that support big object archives:
-	if ([coder isPartialCoder]) {
+	if ([coder allowsPartialCoding]) {
 		[coder encodeObject: threads forKey: @"threads"];
 		[coder encodeInt: unreadMessageCount forKey: @"unreadMessageCount"];
 	}

@@ -66,7 +66,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 {
 	NSData* backupData = [[NSUserDefaults standardUserDefaults] dataForKey: @"ConfigurationBackup"];
 	if (backupData.length) {
-		NSAlert* restoreAlert = [NSAlert alertWithMessageText: @"Restore Preferences" defaultButton: @"Restore" alternateButton: @"Cancel" otherButton: nil informativeTextWithFormat: @"Your Gina preferences are not set, but a backup of the preferences exists. This happens if the Gina database has been deleted or cannot be found. Do you want to restore some preferences from the backup?"];
+		NSAlert* restoreAlert = [NSAlert alertWithMessageText: @"Restore Preferences?" defaultButton: @"Restore" alternateButton: @"Cancel" otherButton: nil informativeTextWithFormat: @"Your Gina preferences are not set, but a backup of the preferences exists. This happens if the Gina database has been deleted or cannot be found. Do you want to restore some preferences from the backup?"];
 		int result = [restoreAlert runModal];
 		if (result == NSAlertDefaultReturn) {
 			
@@ -81,6 +81,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		}
 		//GIAccount* anyAccount = [accounts anyObject];
 		//NSLog(@"Restored %@", accounts);
+		[self ensureMainWindowIsPresent];
 	}
 }
 
@@ -155,7 +156,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 - (void) ensureMainWindowIsPresent
 {
 	// ensure a main window:
-	if (! self.mainWindow) {
+	if (! [self.windows count]) {
 		[[[GIMainWindowController alloc] init] autorelease];
 	}
 }
