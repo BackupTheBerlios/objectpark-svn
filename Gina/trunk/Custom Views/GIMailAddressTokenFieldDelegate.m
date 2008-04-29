@@ -11,6 +11,9 @@
 #import <AddressBook/AddressBook.h>
 #import "ABPerson+Convenience.h"
 
+// TODO: take LRU addresses into account
+// TODO: match also first and last name
+
 @implementation GIMailAddressTokenFieldDelegate
 
 - (NSArray *)tokenField:(NSTokenField *)tokenField completionsForSubstring:(NSString *) substring indexOfToken:(int)tokenIndex indexOfSelectedItem:(int *)selectedIndex

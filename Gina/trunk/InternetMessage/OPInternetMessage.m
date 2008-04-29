@@ -514,6 +514,10 @@ static NSCharacterSet *gremlinCharacterSet()
     [fCoder release];
 }
 
+- (BOOL)isResentMessage
+{
+	return [self bodyForHeaderField:@"Resent-To"] != nil;
+}
 
 //---------------------------------------------------------------------------------------
     @end

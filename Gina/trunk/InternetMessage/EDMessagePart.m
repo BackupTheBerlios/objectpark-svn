@@ -165,6 +165,11 @@
     [super setBody:fieldBody forHeaderField:fieldName];
 }
 
+- (void)addToHeaderFieldsName:(NSString *)aName body:(NSString *)aBody
+{
+	[self _forgetOriginalTransferData];
+	[super addToHeaderFieldsName:aName body:aBody];
+}
 
 - (void)addToHeaderFields:(NSArray *)headerField
 {
@@ -379,7 +384,7 @@
     fbodyData = nil;
 	
     //NSLog(@"Decoding headers of message:\n%s", p);
-    
+	
     for(;p < pmax; p++)
 	{
         if((*p == COLON) && (fbodyPtr == NULL))
@@ -417,7 +422,13 @@
                 // by uniqueing the string here we avoid creating another pair.
                 name = [name sharedInstance];
 				//field = [[OPObjectPair allocWithZone:[self zone]] initWithObjects:name: fbodyContents];
-				[self addToHeaderFieldsName:name body:fbodyContents];
+				
+				// making sure not to replace already set fields:
+				if (![self bodyForHeaderField:name])
+				{
+					[self addToHeaderFieldsName:name body:fbodyContents];
+				}
+				
                 fbodyData = nil;
                 fnamePtr = p;
                 fbodyPtr = NULL;
@@ -426,7 +437,7 @@
 			}
 		}
 	}
-	
+		
     p = skipnewline(p, pmax);
     if(p > pmax)
 		return NSMakeRange(-1, 0);

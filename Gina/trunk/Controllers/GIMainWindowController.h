@@ -68,6 +68,9 @@
 	NSMetadataQuery *query;
 	
 	GIProfile *redirectProfile;
+	NSArray *resentTo;
+	NSArray *resentCc;
+	NSArray *resentBcc;
 }
 
 @property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;
@@ -77,6 +80,9 @@
 @property (readonly) NSTableView *searchResultTableView;
 @property (retain) GIMessage *selectedMessageInSearchMode;
 @property (retain) GIProfile *redirectProfile;
+@property (retain) NSArray *resentTo;
+@property (retain) NSArray *resentCc;
+@property (retain) NSArray *resentBcc;
 
 - (void)showMessage:(GIMessage *)message;
 - (BOOL)isShowingMessageOnly;

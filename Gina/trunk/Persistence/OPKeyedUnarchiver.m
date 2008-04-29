@@ -35,7 +35,7 @@
 - (BOOL) allowsPartialCoding
 /*" Returns YES; if the receiver can efficiently store a large number of objects where only the needed parts can be loaded. "*/
 {
-	YES;
+	return YES;
 }
 
 - (BOOL) allowsKeyedCoding

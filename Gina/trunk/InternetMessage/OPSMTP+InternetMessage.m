@@ -29,21 +29,32 @@ an exception if the 'message' will not be consumed. */
     if (! [self willAcceptMessage])
         [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: SMTP server will not accept messages.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
     
+	NSString *toFieldName = @"To";
+	NSString *ccFieldName = @"Cc";
+	NSString *bccFieldName = @"Bcc";
+	
+	if ([message isResentMessage])
+	{
+		toFieldName = @"Resent-To";
+		ccFieldName = @"Resent-Cc";
+		bccFieldName = @"Resent-Bcc";
+	}
+	
     NSMutableArray *recipients = [NSMutableArray array];
-    if (newRecipients = [message bodyForHeaderField:@"To"]) {
+    if (newRecipients = [message bodyForHeaderField:toFieldName]) {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
         [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
         NSLog(@"recipients = %@", recipients);
         [coder release];
     }
     
-    if (newRecipients = [message bodyForHeaderField:@"Cc"]) {
+    if (newRecipients = [message bodyForHeaderField:ccFieldName]) {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
         [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
         [coder release];
     }
     
-    if (bccBody = [message bodyForHeaderField:@"Bcc"])
+    if (bccBody = [message bodyForHeaderField:bccFieldName])
     {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:bccBody];
         [recipients addObjectsFromArray: [[coder text] addressListFromEMailString]];
@@ -95,7 +106,7 @@ an exception if the 'message' will not be consumed. */
     }
     
     if (bccBody) {
-        [message removeHeaderField:@"Bcc"];
+        [message removeHeaderField:bccFieldName];
         if (NSDebugEnabled) NSLog(@"Bcc removed.");
     }
     
@@ -104,13 +115,13 @@ an exception if the 'message' will not be consumed. */
         [self sendTransferData:transferData from:sender to:recipients];
     } @catch (id localException) {
         if (bccBody) {
-            [message setBody:bccBody forHeaderField:@"Bcc"];
+            [message setBody:bccBody forHeaderField:bccFieldName];
         }
 		@throw;
 	}
     
     if (bccBody) {
-        [message setBody: bccBody forHeaderField:@"Bcc"];
+        [message setBody: bccBody forHeaderField:bccFieldName];
     }
 }
 

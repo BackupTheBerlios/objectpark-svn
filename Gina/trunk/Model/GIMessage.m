@@ -179,7 +179,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return dummy;
 }
 
-- (void)setContentFromInternetMessage:(OPInternetMessage *)im appendToAppropriateThread:(BOOL)doThread
+- (void)setContentFromInternetMessage:(OPInternetMessage *)im appendToAppropriateThread:(BOOL)doThread forcedMessageId:(NSString *)forcedMessageId
 /*" Does not set the reference ivar. "*/
 {
 	NSParameterAssert(im != nil);
@@ -191,7 +191,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
 	[internetMessage release];
 	internetMessage = [im retain];
-	messageId = [[im messageId] retain];
+	messageId = forcedMessageId.length ? forcedMessageId : [[im messageId] retain];
 	
 	// Add self to global message id index:
 	if (messageId.length) {
@@ -292,27 +292,27 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
     id result = nil;
 	
-    GIMessage* dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId: [anInternetMessage messageId]];
+    GIMessage *dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId:[anInternetMessage messageId]];
 	if (dupe) {
         if ([dupe isDummy]) 
 		{
             // replace message
 			if (NSDebugEnabled) NSLog(@"Replacing content for dummy message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
-            [dupe setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread];
+            [dupe setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread forcedMessageId:nil];
             //[dupe referenceFind:YES];
         } 
 		else if ([GIProfile isMyEmailAddress:[anInternetMessage fromWithFallback:YES]]) 
 		{
             // replace old message with new:
 			if (NSDebugEnabled) NSLog(@"Replacing content for own message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
-            [dupe setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread];
+            [dupe setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread forcedMessageId:nil];
         } else {
 			if (NSDebugEnabled) NSLog(@"Dupe for message id %@ detected.", [anInternetMessage messageId]);    
 		}
 		result = dupe;
     } else  {
         // Create a new message in the default context:
-        result = [[[GIMessage alloc] initWithInternetMessage:anInternetMessage appendToAppropriateThread:doThread] autorelease];
+        result = [[[GIMessage alloc] initWithInternetMessage:anInternetMessage appendToAppropriateThread:doThread forcedMessageId:nil] autorelease];
 		NSAssert(result != nil, @"Could not create message object");
     }
     
@@ -321,12 +321,12 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 /*" Returns a new message with the internetmessage object.
  If message is a dupe, the message not inserted into the context nil is returned. "*/
-- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread
+- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread forcedMessageId:(NSString *)forcedMessageId
 {
     if (self = [super init]) {
 		// Create a new message in the default context:
 		referenceCount = NSNotFound;
-        [self setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:(BOOL)doThread]; // also retains anInternetMessage
+        [self setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread forcedMessageId:forcedMessageId]; // also retains anInternetMessage
     }
     
     return self;

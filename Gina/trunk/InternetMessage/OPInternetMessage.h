@@ -58,4 +58,6 @@ typedef enum
 
 - (NSString *)normalizedSubject;
 
+- (BOOL)isResentMessage;
+
 @end

@@ -67,6 +67,8 @@
 //	ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
+/*" Adds headerfield with name fieldName and body fieldBody 
+ at the top of the list of header fields. "*/
 - (void)addToHeaderFieldsName:(NSString *)fieldName body:(NSString *)fieldBody;
 {
     NSString *sharedName;
@@ -75,7 +77,16 @@
     sharedName = [fieldName sharedInstance];
 	NSArray *headerField = [[NSArray alloc] initWithObjects:sharedName, fieldBody, nil];
         //headerField = [[[OPObjectPair allocWithZone:[self zone]] initWithObjects:sharedName:fieldBody] autorelease];
-    [headerFields addObject:headerField];
+	
+	if (headerFields.count)
+	{
+		[headerFields insertObject:headerField atIndex:0];
+	}
+	else
+	{
+		[headerFields addObject:headerField];
+	}
+	
     [headerDictionary setObject:fieldBody forKey:[[fieldName lowercaseString] sharedInstance]];
 	[headerField release];
 }

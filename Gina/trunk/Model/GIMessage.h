@@ -99,8 +99,10 @@
 + (id)messageWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread;
 + (id)dummyMessageWithId:(NSString *)aMessageId andDate:(NSDate *)aDate;
 
-- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread;
+- (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread forcedMessageId:(NSString *)forcedMessageId;
 - (id)initDummy;
+
+- (void)setContentFromInternetMessage:(OPInternetMessage *)im appendToAppropriateThread:(BOOL)doThread forcedMessageId:(NSString *)forcedMessageId;
 
 /*" Cache flushing "*/
 - (void)flushNumberOfReferencesCache;
