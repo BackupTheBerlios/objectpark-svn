@@ -297,6 +297,8 @@ static NSString *templatePostfix = nil;
                     }
                 }
             }
+			
+			[displayString appendString:@"\n"];
         }
         
         /*
@@ -331,9 +333,7 @@ static NSString *templatePostfix = nil;
 	[messageContent appendAttachmentWithFileWrapper: paperClip
 							   showInlineIfPossible: YES];
 	*/
-	
-	[messageContent appendString:@"\n"];
-	
+		
     if (theMessage) [messageContent appendAttributedString:[[self class] renderedBodyForMessage:theMessage]];
     
     return messageContent;

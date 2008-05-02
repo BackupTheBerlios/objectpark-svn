@@ -235,9 +235,9 @@
 }
 
 
-- (void) setContentDisposition: (NSString*) aDispositionDirective withParameters: (NSDictionary*) someParameters
+- (void)setContentDisposition:(NSString *)aDispositionDirective withParameters:(NSDictionary *)someParameters
 {
-    EDEntityFieldCoder* fCoder;
+    EDEntityFieldCoder *fCoder;
 
     [aDispositionDirective retain];
     [contentDisposition release];
@@ -246,19 +246,19 @@
     [contentDispositionParameters release];
     contentDispositionParameters = someParameters;
 
-    fCoder = [[EDEntityFieldCoder alloc] initWithValue: contentDisposition 
-                                         andParameters: contentDispositionParameters];
-    [self setBody:[fCoder fieldBody] forHeaderField: @"Content-Disposition"];
+    fCoder = [[EDEntityFieldCoder alloc] initWithValue:contentDisposition andParameters:contentDispositionParameters];
+    [self setBody:[fCoder fieldBody] forHeaderField:@"Content-Disposition"];
     [fCoder release];
 }
 
 
-- (NSString*) contentDisposition
+- (NSString *)contentDisposition
 {
-    NSString* fBody;
-    EDEntityFieldCoder* coder;
+    NSString *fBody;
+    EDEntityFieldCoder *coder;
     
-    if((contentDisposition == nil) && ((fBody = [self bodyForHeaderField: @"content-disposition"]) != nil)) {
+    if((contentDisposition == nil) && ((fBody = [self bodyForHeaderField:@"content-disposition"]) != nil)) 
+	{
         coder = [EDEntityFieldCoder decoderWithFieldBody:fBody];
         contentDisposition = [[coder value] retain];
         contentDispositionParameters = [[coder parameters] retain];
@@ -278,36 +278,37 @@
 //	CONTENT TRANSFER ENCODING
 //---------------------------------------------------------------------------------------
 
-- (void) setContentTransferEncoding: (NSString*) anEncoding
+- (void)setContentTransferEncoding:(NSString *)anEncoding
 {
-    [self setBody:anEncoding forHeaderField: @"Content-Transfer-Encoding"];
+    [self setBody:anEncoding forHeaderField:@"Content-Transfer-Encoding"];
 }
 
 
-- (NSString*) contentTransferEncoding
+- (NSString *)contentTransferEncoding
 {
-    return [[[[EDTextFieldCoder decoderWithFieldBody:[self bodyForHeaderField: @"content-transfer-encoding"]] text] stringByRemovingSurroundingWhitespace] lowercaseString];
+    return [[[[EDTextFieldCoder decoderWithFieldBody:[self bodyForHeaderField:@"content-transfer-encoding"]] text] stringByRemovingSurroundingWhitespace] lowercaseString];
 }
-
 
 //---------------------------------------------------------------------------------------
 //	CONTENT DATA ACCESSOR METHODS
 //---------------------------------------------------------------------------------------
 
-- (void) setContentData: (NSData*) data
+- (void)setContentData:(NSData *)data
 {
     [self _forgetOriginalTransferData];
 		
-	if (data != contentData) {
+	if (data != contentData) 
+	{
 		[contentData release];
 		contentData = [data copy];
 	}
 }
 
 
-- (NSData*) contentData
+- (NSData *)contentData
 {
-    if ((contentData == nil) && (originalTransferData != nil)) {
+    if ((contentData == nil) && (originalTransferData != nil)) 
+	{
        [self _takeContentDataFromOriginalTransferData];
 	}
     return contentData;
@@ -318,28 +319,26 @@
 //	DERIVED ATTRIBUTES
 //---------------------------------------------------------------------------------------
 
-- (NSString*) pathExtensionForContentType
+- (NSString *)pathExtensionForContentType
 {	
-    NSString* extension = [NSString pathExtensionForContentType: [self contentType]];
-    if(extension == nil) {
-        NSString* subtype = [[[self contentType] componentsSeparatedByString: @"/"] lastObject];
-        if([subtype hasPrefix: @"x-"]) subtype = [subtype substringFromIndex:2];
+    NSString *extension = [NSString pathExtensionForContentType:[self contentType]];
+    if(extension == nil) 
+	{
+        NSString *subtype = [[[self contentType] componentsSeparatedByString:@"/"] lastObject];
+        if([subtype hasPrefix:@"x-"]) subtype = [subtype substringFromIndex:2];
         extension = subtype;
     }
     return extension;
 }
 
-
-
 //----------------------------------------------------------------------------
 //	DESCRIPTION
 //----------------------------------------------------------------------------
 
-- (NSString*) description
+- (NSString *)description
 {
-    return [NSString stringWithFormat: @"<%@ 0x%x: %@>", NSStringFromClass(isa), self, [self bodyForHeaderField:@"content-type"]];
+    return [NSString stringWithFormat:@"<%@ 0x%x: %@>", NSStringFromClass(isa), self, [self bodyForHeaderField:@"content-type"]];
 }
-
 
 //---------------------------------------------------------------------------------------
 //	INTERNAL STUFF
@@ -349,20 +348,16 @@
 {
     static NSDictionary	*defaultFallbackHeaders = nil;
 
-    if(defaultFallbackHeaders == nil) {
-        NSMutableDictionary* temp;
-        NSDictionary* parameters;
-        NSString* fBody;
-        
-        temp = [NSMutableDictionary dictionary];
-        parameters = [NSDictionary dictionaryWithObject: MIMEAsciiStringEncoding forKey: @"charset"];
-        fBody = [[EDEntityFieldCoder encoderWithValue: @"text/plain"
-                                        andParameters: parameters] fieldBody];
-        [temp setObject: fBody forKey: @"content-type"];
-        [temp setObject: MIME8BitContentTransferEncoding forKey: @"content-transfer-encoding"];
-        fBody = [[EDEntityFieldCoder encoderWithValue: MIMEInlineContentDisposition andParameters: nil] fieldBody];
-        [temp setObject: fBody forKey: @"content-disposition"];
-        defaultFallbackHeaders = [[NSDictionary alloc] initWithDictionary: temp];
+    if(defaultFallbackHeaders == nil) 
+	{
+        NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObject: MIMEAsciiStringEncoding forKey:@"charset"];
+        NSString *fBody = [[EDEntityFieldCoder encoderWithValue:@"text/plain" andParameters:parameters] fieldBody];
+        [temp setObject:fBody forKey:@"content-type"];
+        [temp setObject:MIME8BitContentTransferEncoding forKey:@"content-transfer-encoding"];
+        fBody = [[EDEntityFieldCoder encoderWithValue:MIMEInlineContentDisposition andParameters:nil] fieldBody];
+        [temp setObject:fBody forKey:@"content-disposition"];
+        defaultFallbackHeaders = [[NSDictionary alloc] initWithDictionary:temp];
     }
 
     return defaultFallbackHeaders;
@@ -372,18 +367,16 @@
 /*" Parses the header fields and returns the NSRange belonging to the message body (for seperate processing). */
 - (NSRange)takeHeadersFromData:(NSData *)data
 {
-    const char		 *p, *pmax, *fnamePtr, *fbodyPtr, *eolPtr;
-    NSMutableData	 *fbodyData;
-    NSString 		 *name, *fbodyContents;
-    NSStringEncoding     encoding = NSISOLatin1StringEncoding;
+    const char *p, *eolPtr;
+    NSString *fbodyContents;
+    NSStringEncoding encoding = NSISOLatin1StringEncoding;
     
-    name = nil;
-    fnamePtr = p = [data bytes];
-    pmax = p + [data length];
-    fbodyPtr = NULL;
-    fbodyData = nil;
-	
-	NSMutableSet *knownFieldNames = [NSMutableSet set];
+    NSString *name = nil;
+    const char *fnamePtr = p = [data bytes];
+    const char *pmax = p + [data length];
+    const char *fbodyPtr = NULL;
+    NSMutableData *fbodyData = nil;
+	NSMutableSet *knownFieldNames = [[NSMutableSet alloc] initWithCapacity:15];
 	
 //    NSLog(@"Decoding headers of message:\n%s", p);
 	
@@ -393,7 +386,9 @@
 		{
             fbodyPtr = p + 1;
             if((fbodyPtr < pmax) && (iswhitespace(*fbodyPtr)))
+			{
                 fbodyPtr += 1;
+			}
             name = [NSString stringWithCString:fnamePtr length:(p - fnamePtr)];
 			NSLog(@"name = %@", name);
 		}
@@ -412,17 +407,26 @@
             if((p < pmax) && iswhitespace(*p)) // folded header!
 			{
                 if(fbodyData == nil)
+				{
                     fbodyData = [NSMutableData dataWithBytes:fbodyPtr length:(eolPtr - fbodyPtr)];
+				}
                 else
+				{
                     [fbodyData appendBytes:fbodyPtr length:(eolPtr - fbodyPtr)];
+				}
                 fbodyPtr = p;
 			}
             else
 			{
                 if(fbodyData == nil)
+				{
                     fbodyData = (id)[NSData dataWithBytes:fbodyPtr length:(eolPtr - fbodyPtr)];
+				}
                 else
+				{
                     [fbodyData appendBytes:fbodyPtr length:(eolPtr - fbodyPtr)];
+				}
+				
                 fbodyContents = [NSString stringWithData:fbodyData encoding:encoding];
                 // we know something about the implementation of addToHeaderFields ;-)
                 // by uniqueing the string here we avoid creating another pair.
@@ -445,9 +449,13 @@
 		}
 	}
 		
+	[knownFieldNames release];
+	
     p = skipnewline(p, pmax);
     if(p > pmax)
+	{
 		return NSMakeRange(-1, 0);
+	}
 	
     return NSMakeRange(p - (char *)[data bytes], pmax - p);
 }
