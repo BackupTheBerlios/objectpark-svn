@@ -43,7 +43,6 @@
 			8DB6919F0DCABF1B00F80E92 /* GIApplication.m:166 */,
 			8D2BE24B0DCB3D0100167F76 /* TestGIMessageGroup.m:37 */,
 			8D2BE2DC0DCB3F3C00167F76 /* main.m:26 */,
-			8D2BE3070DCB435A00167F76 /* TestGIMessage.m:73 */,
 		);
 		codeSenseManager = 8DA22F700D04CDE600D24EBA /* Code sense */;
 		executables = (
@@ -254,6 +253,17 @@
 			8D2BE3690DCB466500167F76 /* PBXTextBookmark */ = 8D2BE3690DCB466500167F76 /* PBXTextBookmark */;
 			8D2BE36A0DCB466800167F76 /* PBXTextBookmark */ = 8D2BE36A0DCB466800167F76 /* PBXTextBookmark */;
 			8D2BE36B0DCB466C00167F76 /* PBXTextBookmark */ = 8D2BE36B0DCB466C00167F76 /* PBXTextBookmark */;
+			8D2BE36F0DCB46B200167F76 /* PBXTextBookmark */ = 8D2BE36F0DCB46B200167F76 /* PBXTextBookmark */;
+			8D2BE3700DCB46B200167F76 /* PBXTextBookmark */ = 8D2BE3700DCB46B200167F76 /* PBXTextBookmark */;
+			8D2BE3710DCB46B200167F76 /* PBXTextBookmark */ = 8D2BE3710DCB46B200167F76 /* PBXTextBookmark */;
+			8D2BE3720DCB46B200167F76 /* PBXTextBookmark */ = 8D2BE3720DCB46B200167F76 /* PBXTextBookmark */;
+			8D2BE3730DCB46B200167F76 /* PBXTextBookmark */ = 8D2BE3730DCB46B200167F76 /* PBXTextBookmark */;
+			8D2BE3740DCB46B200167F76 /* PBXTextBookmark */ = 8D2BE3740DCB46B200167F76 /* PBXTextBookmark */;
+			8D2BE3760DCB46EB00167F76 /* PBXTextBookmark */ = 8D2BE3760DCB46EB00167F76 /* PBXTextBookmark */;
+			8D2BE3770DCB46EB00167F76 /* PBXTextBookmark */ = 8D2BE3770DCB46EB00167F76 /* PBXTextBookmark */;
+			8D2BE3780DCB46EB00167F76 /* PBXTextBookmark */ = 8D2BE3780DCB46EB00167F76 /* PBXTextBookmark */;
+			8D2BE3790DCB46EB00167F76 /* PBXTextBookmark */ = 8D2BE3790DCB46EB00167F76 /* PBXTextBookmark */;
+			8D2BE37A0DCB46EB00167F76 /* PBXTextBookmark */ = 8D2BE37A0DCB46EB00167F76 /* PBXTextBookmark */;
 			8D8B63AC0DC09606005AA3D1 = 8D8B63AC0DC09606005AA3D1 /* PBXTextBookmark */;
 			8D8B63D60DC17183005AA3D1 = 8D8B63D60DC17183005AA3D1 /* PBXTextBookmark */;
 			8D8B63E60DC17183005AA3D1 = 8D8B63E60DC17183005AA3D1 /* PBXTextBookmark */;
@@ -1234,10 +1244,10 @@
 	};
 	7736141C0D1C1041007FC630 /* GIAccount.m */ = {
 		uiCtxt = {
-			sepNavFolds = "{\n    c =     (\n                {\n            l = \"CFTypeRef keychainOrArray\";\n            r = \"{3884, 29}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 serverNameLength\";\n            r = \"{3987, 27}\";\n            s = 1;\n        },\n                {\n            l = \"const char * serverName\";\n            r = \"{4080, 27}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 securityDomainLength\";\n            r = \"{4164, 31}\";\n            s = 1;\n        },\n                {\n            l = \"const char * securityDomain\";\n            r = \"{4255, 31}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 accountNameLength\";\n            r = \"{4361, 28}\";\n            s = 1;\n        },\n                {\n            l = \"const char * accountName\";\n            r = \"{4456, 28}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 pathLength\";\n            r = \"{4541, 21}\";\n            s = 1;\n        },\n                {\n            l = \"const char * path\";\n            r = \"{4622, 21}\";\n            s = 1;\n        },\n                {\n            l = \"UInt16 port\";\n            r = \"{4732, 15}\";\n            s = 1;\n        },\n                {\n            l = \"SecProtocolType protocol\";\n            r = \"{4833, 28}\";\n            s = 1;\n        },\n                {\n            l = \"SecAuthenticationType authenticationType\";\n            r = \"{4946, 44}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 * passwordLength\";\n            r = \"{5061, 27}\";\n            s = 1;\n        },\n                {\n            l = \"void * * passwordData\";\n            r = \"{5157, 25}\";\n            s = 1;\n        },\n                {\n            l = \"SecKeychainItemRef * itemRef\";\n            r = \"{5246, 32}\";\n            s = 1;\n        },\n                {\n            l = \"CFTypeRef keychainOrArray\";\n            r = \"{9127, 29}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 serverNameLength\";\n            r = \"{9230, 27}\";\n            s = 1;\n        },\n                {\n            l = \"const char * serverName\";\n            r = \"{9323, 27}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 securityDomainLength\";\n            r = \"{9407, 31}\";\n            s = 1;\n        },\n                {\n            l = \"const char * securityDomain\";\n            r = \"{9498, 31}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 accountNameLength\";\n            r = \"{9604, 28}\";\n            s = 1;\n        },\n                {\n            l = \"const char * accountName\";\n            r = \"{9699, 28}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 pathLength\";\n            r = \"{9784, 21}\";\n            s = 1;\n        },\n                {\n            l = \"const char * path\";\n            r = \"{9865, 21}\";\n            s = 1;\n        },\n                {\n            l = \"UInt16 port\";\n            r = \"{9975, 15}\";\n            s = 1;\n        },\n                {\n            l = \"SecProtocolType protocol\";\n            r = \"{10076, 28}\";\n            s = 1;\n        },\n                {\n            l = \"SecAuthenticationType authenticationType\";\n            r = \"{10189, 44}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 * passwordLength\";\n            r = \"{10304, 27}\";\n            s = 1;\n        },\n                {\n            l = \"void * * passwordData\";\n            r = \"{10400, 25}\";\n            s = 1;\n        },\n                {\n            l = \"SecKeychainItemRef * itemRef\";\n            r = \"{10487, 32}\";\n            s = 1;\n        }\n    );\n    r = \"{0, 26276}\";\n    s = 0;\n}";
-			sepNavIntBoundsRect = "{{0, 0}, {696, 8162}}";
-			sepNavSelRange = "{22205, 12}";
-			sepNavVisRange = "{21846, 705}";
+			sepNavFolds = "{\n    c =     (\n                {\n            l = \"CFTypeRef keychainOrArray\";\n            r = \"{3910, 29}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 serverNameLength\";\n            r = \"{4013, 27}\";\n            s = 1;\n        },\n                {\n            l = \"const char * serverName\";\n            r = \"{4106, 27}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 securityDomainLength\";\n            r = \"{4190, 31}\";\n            s = 1;\n        },\n                {\n            l = \"const char * securityDomain\";\n            r = \"{4281, 31}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 accountNameLength\";\n            r = \"{4387, 28}\";\n            s = 1;\n        },\n                {\n            l = \"const char * accountName\";\n            r = \"{4482, 28}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 pathLength\";\n            r = \"{4567, 21}\";\n            s = 1;\n        },\n                {\n            l = \"const char * path\";\n            r = \"{4648, 21}\";\n            s = 1;\n        },\n                {\n            l = \"UInt16 port\";\n            r = \"{4758, 15}\";\n            s = 1;\n        },\n                {\n            l = \"SecProtocolType protocol\";\n            r = \"{4859, 28}\";\n            s = 1;\n        },\n                {\n            l = \"SecAuthenticationType authenticationType\";\n            r = \"{4972, 44}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 * passwordLength\";\n            r = \"{5087, 27}\";\n            s = 1;\n        },\n                {\n            l = \"void * * passwordData\";\n            r = \"{5183, 25}\";\n            s = 1;\n        },\n                {\n            l = \"SecKeychainItemRef * itemRef\";\n            r = \"{5272, 32}\";\n            s = 1;\n        },\n                {\n            l = \"CFTypeRef keychainOrArray\";\n            r = \"{9153, 29}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 serverNameLength\";\n            r = \"{9256, 27}\";\n            s = 1;\n        },\n                {\n            l = \"const char * serverName\";\n            r = \"{9349, 27}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 securityDomainLength\";\n            r = \"{9433, 31}\";\n            s = 1;\n        },\n                {\n            l = \"const char * securityDomain\";\n            r = \"{9524, 31}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 accountNameLength\";\n            r = \"{9630, 28}\";\n            s = 1;\n        },\n                {\n            l = \"const char * accountName\";\n            r = \"{9725, 28}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 pathLength\";\n            r = \"{9810, 21}\";\n            s = 1;\n        },\n                {\n            l = \"const char * path\";\n            r = \"{9891, 21}\";\n            s = 1;\n        },\n                {\n            l = \"UInt16 port\";\n            r = \"{10001, 15}\";\n            s = 1;\n        },\n                {\n            l = \"SecProtocolType protocol\";\n            r = \"{10102, 28}\";\n            s = 1;\n        },\n                {\n            l = \"SecAuthenticationType authenticationType\";\n            r = \"{10215, 44}\";\n            s = 1;\n        },\n                {\n            l = \"UInt32 * passwordLength\";\n            r = \"{10330, 27}\";\n            s = 1;\n        },\n                {\n            l = \"void * * passwordData\";\n            r = \"{10426, 25}\";\n            s = 1;\n        },\n                {\n            l = \"SecKeychainItemRef * itemRef\";\n            r = \"{10513, 32}\";\n            s = 1;\n        }\n    );\n    r = \"{0, 26302}\";\n    s = 0;\n}";
+			sepNavIntBoundsRect = "{{0, 0}, {696, 6146}}";
+			sepNavSelRange = "{459, 0}";
+			sepNavVisRange = "{0, 649}";
 		};
 	};
 	7736141D0D1C1041007FC630 /* GIHierarchyNode.h */ = {
@@ -1339,9 +1349,9 @@
 	};
 	773615AF0D1CFA68007FC630 /* TestGIMessage.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {696, 1288}}";
-			sepNavSelRange = "{1507, 108}";
-			sepNavVisRange = "{836, 1084}";
+			sepNavIntBoundsRect = "{{0, 0}, {1042, 1330}}";
+			sepNavSelRange = "{2578, 0}";
+			sepNavVisRange = "{1920, 990}";
 			sepNavWindowFrame = "{{1240, -206}, {626, 705}}";
 		};
 	};
@@ -1375,9 +1385,9 @@
 	};
 	77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1042, 826}}";
+			sepNavIntBoundsRect = "{{0, 0}, {696, 840}}";
 			sepNavSelRange = "{1124, 0}";
-			sepNavVisRange = "{642, 794}";
+			sepNavVisRange = "{510, 1206}";
 		};
 	};
 	7741A62E0D33960400654FA7 /* GIThreadOutlineViewController.h */ = {
@@ -1499,7 +1509,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {696, 3472}}";
 			sepNavSelRange = "{3460, 0}";
-			sepNavVisRange = "{2859, 1329}";
+			sepNavVisRange = "{2859, 1428}";
 		};
 	};
 	778867800D8D9746006EF64D /* GIPasswordController.m */ = {
@@ -2029,12 +2039,12 @@
 		delayBeforeContinue = 0;
 		fileReference = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */;
 		functionName = "-observeValueForKeyPath:ofObject:change:context:";
-		hitCount = 0;
+		hitCount = 1;
 		ignoreCount = 0;
 		lineNumber = 37;
 		location = GinaTest;
-		modificationTime = 231425642.466337;
-		state = 0;
+		modificationTime = 231425656.309497;
+		state = 1;
 	};
 	8D2BE24D0DCB3D0800167F76 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2453,23 +2463,6 @@
 		vrLen = 1640;
 		vrLoc = 7480;
 	};
-	8D2BE3070DCB435A00167F76 /* TestGIMessage.m:73 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		breakpointStyle = 0;
-		continueAfterActions = 0;
-		countType = 0;
-		delayBeforeContinue = 0;
-		fileReference = 773615AF0D1CFA68007FC630 /* TestGIMessage.m */;
-		functionName = "-testMessageAddition";
-		hitCount = 0;
-		ignoreCount = 0;
-		lineNumber = 73;
-		location = GinaTest;
-		modificationTime = 231425642.493621;
-		state = 0;
-	};
 	8D2BE3090DCB436A00167F76 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 773613DF0D1C0F12007FC630 /* OPPersistentObjectContext.m */;
@@ -2752,7 +2745,7 @@
 		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
 		name = "GIAccount.m: 760";
 		rLen = 12;
-		rLoc = 23003;
+		rLoc = 23029;
 		rType = 0;
 		vrLen = 705;
 		vrLoc = 22644;
@@ -2829,7 +2822,7 @@
 		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
 		name = "GIAccount.m: 760";
 		rLen = 12;
-		rLoc = 23003;
+		rLoc = 23029;
 		rType = 0;
 		vrLen = 705;
 		vrLoc = 22644;
@@ -2863,6 +2856,111 @@
 		rType = 0;
 		vrLen = 1329;
 		vrLoc = 2859;
+	};
+	8D2BE36F0DCB46B200167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 778866B20D8D8258006EF64D /* GIPOPOperation.m */;
+		name = "GIPOPOperation.m: 99";
+		rLen = 0;
+		rLoc = 3460;
+		rType = 0;
+		vrLen = 989;
+		vrLoc = 3009;
+	};
+	8D2BE3700DCB46B200167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773615AF0D1CFA68007FC630 /* TestGIMessage.m */;
+		name = "TestGIMessage.m: 73";
+		rLen = 0;
+		rLoc = 2578;
+		rType = 0;
+		vrLen = 990;
+		vrLoc = 1920;
+	};
+	8D2BE3710DCB46B200167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */;
+		rLen = 0;
+		rLoc = 36;
+		rType = 1;
+	};
+	8D2BE3720DCB46B200167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 778866B20D8D8258006EF64D /* GIPOPOperation.m */;
+		name = "GIPOPOperation.m: 99";
+		rLen = 0;
+		rLoc = 3460;
+		rType = 0;
+		vrLen = 989;
+		vrLoc = 3009;
+	};
+	8D2BE3730DCB46B200167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 773615AF0D1CFA68007FC630 /* TestGIMessage.m */;
+		name = "TestGIMessage.m: 73";
+		rLen = 0;
+		rLoc = 2578;
+		rType = 0;
+		vrLen = 990;
+		vrLoc = 1920;
+	};
+	8D2BE3740DCB46B200167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */;
+		name = "TestGIMessageGroup.m: 37";
+		rLen = 0;
+		rLoc = 1124;
+		rType = 0;
+		vrLen = 794;
+		vrLoc = 642;
+	};
+	8D2BE3760DCB46EB00167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 778866B20D8D8258006EF64D /* GIPOPOperation.m */;
+		name = "GIPOPOperation.m: 99";
+		rLen = 0;
+		rLoc = 3460;
+		rType = 0;
+		vrLen = 1428;
+		vrLoc = 2859;
+	};
+	8D2BE3770DCB46EB00167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */;
+		name = "TestGIMessageGroup.m: 37";
+		rLen = 0;
+		rLoc = 1124;
+		rType = 0;
+		vrLen = 1206;
+		vrLoc = 510;
+	};
+	8D2BE3780DCB46EB00167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "warning: 'OPPersistentObjectContext' may not respond to '-documentPath'";
+		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
+		rLen = 1;
+		rLoc = 760;
+		rType = 1;
+	};
+	8D2BE3790DCB46EB00167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 77369CE60D1FB078004D1DCF /* TestGIMessageGroup.m */;
+		name = "TestGIMessageGroup.m: 37";
+		rLen = 0;
+		rLoc = 1124;
+		rType = 0;
+		vrLen = 1206;
+		vrLoc = 510;
+	};
+	8D2BE37A0DCB46EB00167F76 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
+		name = "GIAccount.m: 20";
+		rLen = 0;
+		rLoc = 459;
+		rType = 0;
+		vrLen = 649;
+		vrLoc = 0;
 	};
 	8D2D14B60DB3A3D500DE1B17 /* OPPersistentObjectContext.m:393 */ = {
 		isa = PBXFileBreakpoint;
@@ -2985,7 +3083,7 @@
 		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
 		name = "GIAccount.m: 739";
 		rLen = 12;
-		rLoc = 21760;
+		rLoc = 21786;
 		rType = 0;
 		vrLen = 1042;
 		vrLoc = 20871;
@@ -3015,7 +3113,7 @@
 		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
 		name = "GIAccount.m: 780";
 		rLen = 13;
-		rLoc = 23514;
+		rLoc = 23540;
 		rType = 0;
 		vrLen = 1443;
 		vrLoc = 22992;
@@ -10441,7 +10539,7 @@
 		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
 		name = "GIAccount.m: 760";
 		rLen = 0;
-		rLoc = 23018;
+		rLoc = 23044;
 		rType = 0;
 		vrLen = 685;
 		vrLoc = 22662;
@@ -10471,7 +10569,7 @@
 		fRef = 7736141C0D1C1041007FC630 /* GIAccount.m */;
 		name = "GIAccount.m: 760";
 		rLen = 0;
-		rLoc = 23018;
+		rLoc = 23044;
 		rType = 0;
 		vrLen = 685;
 		vrLoc = 22662;

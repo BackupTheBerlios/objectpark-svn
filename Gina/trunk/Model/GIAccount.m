@@ -17,6 +17,7 @@
 #import "GIProfile.h"
 #import "GIMessage.h"
 #import "OPPersistence.h"
+#import "GIMessageBase.h"
 
 @implementation GIAccount
 
