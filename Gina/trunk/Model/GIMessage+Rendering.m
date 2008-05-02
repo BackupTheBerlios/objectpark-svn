@@ -183,8 +183,8 @@ static NSString *templatePostfix = nil;
     [displayString applyFontTraits:NSUnboldFontMask range:NSMakeRange(startLocation, endLocation - startLocation)];
 }
 
-+ (NSMutableAttributedString *)renderedHeaders:(NSArray*) headers forMessage:(OPInternetMessage *)aMessage showOthers:(BOOL)showOthers
 /*" Returns empty string if aMessage is nil. "*/
++ (NSMutableAttributedString *)renderedHeaders:(NSArray *)headers forMessage:(OPInternetMessage *)aMessage showOthers:(BOOL)showOthers
 {
     NSMutableAttributedString *displayString = [[[NSMutableAttributedString alloc] init] autorelease];
     if (aMessage) 
@@ -331,6 +331,8 @@ static NSString *templatePostfix = nil;
 	[messageContent appendAttachmentWithFileWrapper: paperClip
 							   showInlineIfPossible: YES];
 	*/
+	
+	[messageContent appendString:@"\n"];
 	
     if (theMessage) [messageContent appendAttributedString:[[self class] renderedBodyForMessage:theMessage]];
     

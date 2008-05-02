@@ -159,7 +159,7 @@
     [super removeHeaderField:fieldName];
 }
 
-- (void) setBody: (NSString*) fieldBody forHeaderField: (NSString*) fieldName
+- (void)setBody:(NSString *)fieldBody forHeaderField:(NSString *)fieldName
 {
     [self _forgetOriginalTransferData];
     [super setBody:fieldBody forHeaderField:fieldName];
@@ -383,7 +383,9 @@
     fbodyPtr = NULL;
     fbodyData = nil;
 	
-    //NSLog(@"Decoding headers of message:\n%s", p);
+	NSMutableSet *knownFieldNames = [NSMutableSet set];
+	
+//    NSLog(@"Decoding headers of message:\n%s", p);
 	
     for(;p < pmax; p++)
 	{
@@ -393,6 +395,7 @@
             if((fbodyPtr < pmax) && (iswhitespace(*fbodyPtr)))
                 fbodyPtr += 1;
             name = [NSString stringWithCString:fnamePtr length:(p - fnamePtr)];
+			NSLog(@"name = %@", name);
 		}
         else if(iscrlf(*p))
 		{
@@ -401,8 +404,11 @@
             
             // Ignore header fields without body; which shouldn't exist...
             if(fbodyPtr == NULL)
+			{
+				NSLog(@"Ignore header fields without body; which shouldn't exist...");
                 continue;
-            
+            }
+			
             if((p < pmax) && iswhitespace(*p)) // folded header!
 			{
                 if(fbodyData == nil)
@@ -423,10 +429,11 @@
                 name = [name sharedInstance];
 				//field = [[OPObjectPair allocWithZone:[self zone]] initWithObjects:name: fbodyContents];
 				
-				// making sure not to replace already set fields:
-				if (![self bodyForHeaderField:name])
+				// making sure not to replace already set fields (but overwrite default values!):
+				if (![knownFieldNames containsObject:name])
 				{
 					[self addToHeaderFieldsName:name body:fbodyContents];
+					[knownFieldNames addObject:name];
 				}
 				
                 fbodyData = nil;

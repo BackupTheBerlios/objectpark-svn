@@ -1300,6 +1300,25 @@ static BOOL isShowingThreadsOnly = NO;
 	}
 }
 
+#pragma mark -- message display option handling --
+- (IBAction)toggleShowRawSource:(id)sender
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setBool:![defaults boolForKey:ShowRawSource] forKey:ShowRawSource];
+	
+	[self willChangeValueForKey:@"messageForDisplay"];
+	[self didChangeValueForKey:@"messageForDisplay"];
+}
+
+- (IBAction)toggleShowAllHeaders:(id)sender
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setBool:![defaults boolForKey:ShowAllHeaders] forKey:ShowAllHeaders];
+	
+	[self willChangeValueForKey:@"messageForDisplay"];
+	[self didChangeValueForKey:@"messageForDisplay"];
+}
+
 #pragma mark -- progress info view handling --
 - (void)setProgressInfoVisible:(BOOL)aBool
 {
@@ -1624,8 +1643,13 @@ static BOOL isShowingThreadsOnly = NO;
     [redirectSheet orderOut:sender];
 	
 	// copy selected message:
+#warning copying does not function right (e.g. Content-Type is missing). Why?
 	GIMessage *selectedMessage = self.selectedMessage;
-	OPInternetMessage *resentInternetMessage = [[OPInternetMessage alloc] initWithTransferData:selectedMessage.internetMessage.transferData];
+	OPInternetMessage *selectedInternetMessage = selectedMessage.internetMessage;
+	
+	[selectedInternetMessage _forgetOriginalTransferData];
+	
+	OPInternetMessage *resentInternetMessage = [[OPInternetMessage alloc] initWithTransferData:selectedInternetMessage.transferData];
 	
 	// set additional informal resent header fields:
 	NSString *resentMessageId = [resentInternetMessage generatedMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", redirectProfile.sendAccount.outgoingServerName]];

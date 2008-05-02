@@ -244,7 +244,34 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (NSAttributedString *)messageForDisplay
 {
-	return [self renderedMessage];
+	NSAttributedString *messageText = nil;
+	BOOL showRawSource = [[NSUserDefaults standardUserDefaults] boolForKey:ShowRawSource];
+	
+	if (showRawSource) 
+	{
+		NSData *transferData = self.internetMessage.transferData;
+		NSString *transferString = [NSString stringWithData:transferData encoding:NSUTF8StringEncoding];
+		
+		// joerg: this is a quick hack (but seems sufficient here) to handle 8 bit transfer encoded messages (body) without having to do the mime parsing
+		if (! transferString) 
+		{
+			transferString = [NSString stringWithData:transferData encoding:NSISOLatin1StringEncoding];
+		}
+		
+		static NSDictionary *fixedFont = nil;
+		if (!fixedFont) 
+		{
+			fixedFont = [[NSDictionary alloc] initWithObjectsAndKeys: [NSFont userFixedPitchFontOfSize:10], NSFontAttributeName, nil, nil];
+		}
+		
+		messageText = [[[NSAttributedString alloc] initWithString:transferString attributes:fixedFont] autorelease]; 
+	} 
+	else 
+	{
+		messageText = [self renderedMessageIncludingAllHeaders:[[NSUserDefaults standardUserDefaults] boolForKey:ShowAllHeaders]];
+	}
+	
+	return messageText;
 }
 
 - (NSAttributedString *)dateForDisplay
