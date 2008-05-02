@@ -41,6 +41,8 @@
 	[internetMessage release];
 	NSAssert(message != nil, @"couldn't create message from internetMessage");
 	
+	[[message.thread mutableArrayValueForKey: @"messageGroups"] addObject: [GIMessageGroup defaultMessageGroup]];
+	
 	//NSString *subject = message.subject;
 	//NSAssert([subject isEqualToString:@"strained"], @"wrong subject in message");
 	return message;
