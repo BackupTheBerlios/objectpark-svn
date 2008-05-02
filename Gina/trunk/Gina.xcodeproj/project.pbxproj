@@ -275,6 +275,8 @@
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D25888D0D4AE58D00AE413F /* BackToolbarImage.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D25888C0D4AE58D00AE413F /* BackToolbarImage.tiff */; };
+		8D2BE2C00DCB3E2200167F76 /* InternetMessageTest.octest in Copy Tests */ = {isa = PBXBuildFile; fileRef = 77B6C8940D008D7C00A7BEFF /* InternetMessageTest.octest */; };
+		8D2BE2C10DCB3E2200167F76 /* OPPersistenceTest.octest in Copy Tests */ = {isa = PBXBuildFile; fileRef = 773614C90D1C1AB0007FC630 /* OPPersistenceTest.octest */; };
 		8D82A4700D90189100C39ABF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		8D82A47D0D901B3F00C39ABF /* GinaSpotlight.mdimporter in Copy Spotlight Importer */ = {isa = PBXBuildFile; fileRef = 77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */; };
 		8D8F232F0D92EF6300E22D4D /* GIProfilePrefs.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D8F232E0D92EF6300E22D4D /* GIProfilePrefs.tiff */; };
@@ -287,7 +289,7 @@
 		8DB68FE90DCA65C200F80E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		8DB690830DCAB1C300F80E92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		8DB690BE0DCAB6F900F80E92 /* SenTestingKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DB68FA70DCA65B100F80E92 /* SenTestingKit.framework */; };
-		8DB690D90DCAB89000F80E92 /* GinaTest.octest in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 773615130D1C30A7007FC630 /* GinaTest.octest */; };
+		8DB690D90DCAB89000F80E92 /* GinaTest.octest in Copy Tests */ = {isa = PBXBuildFile; fileRef = 773615130D1C30A7007FC630 /* GinaTest.octest */; };
 		8DCE4D8B0D2C7E6300B47189 /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */; };
 		8DCE4D8C0D2C7E6400B47189 /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */; };
 		8DCE4F730D2D2F0700B47189 /* prop.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5AA0D00546B00A7BEFF /* prop.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -327,6 +329,20 @@
 			remoteGlobalIDString = 77B6C58D0D0053AE00A7BEFF;
 			remoteInfo = InternetMessage;
 		};
+		8D2BE2CD0DCB3E5A00167F76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77B6C8930D008D7C00A7BEFF /* InternetMessageTest */;
+			remoteInfo = InternetMessageTest;
+		};
+		8D2BE2CF0DCB3E5E00167F76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 773614C80D1C1AB0007FC630 /* OPPersistenceTest */;
+			remoteInfo = OPPersistenceTest;
+		};
 		8D82A48D0D901B6700C39ABF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -357,7 +373,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8DB690D90DCAB89000F80E92 /* GinaTest.octest in Copy Frameworks */,
 				8DB690BE0DCAB6F900F80E92 /* SenTestingKit.framework in Copy Frameworks */,
 				778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */,
 				775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */,
@@ -365,6 +380,19 @@
 				77B647560D1E46A1001E21D8 /* OPPersistence.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D2BE2AD0DCB3E0700167F76 /* Copy Tests */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				8D2BE2C00DCB3E2200167F76 /* InternetMessageTest.octest in Copy Tests */,
+				8D2BE2C10DCB3E2200167F76 /* OPPersistenceTest.octest in Copy Tests */,
+				8DB690D90DCAB89000F80E92 /* GinaTest.octest in Copy Tests */,
+			);
+			name = "Copy Tests";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8D82A47A0D901B2000C39ABF /* Copy Spotlight Importer */ = {
@@ -1631,6 +1659,7 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				77B6CA9D0D01B66600A7BEFF /* Copy Frameworks */,
 				8D82A47A0D901B2000C39ABF /* Copy Spotlight Importer */,
+				8D2BE2AD0DCB3E0700167F76 /* Copy Tests */,
 			);
 			buildRules = (
 			);
@@ -1639,6 +1668,8 @@
 				77B6C5950D00540100A7BEFF /* PBXTargetDependency */,
 				8D82A48E0D901B6700C39ABF /* PBXTargetDependency */,
 				8DB6913D0DCABC2E00F80E92 /* PBXTargetDependency */,
+				8D2BE2CE0DCB3E5A00167F76 /* PBXTargetDependency */,
+				8D2BE2D00DCB3E5E00167F76 /* PBXTargetDependency */,
 			);
 			name = Gina;
 			productInstallPath = "$(HOME)/Applications";
@@ -2040,6 +2071,16 @@
 			isa = PBXTargetDependency;
 			target = 77B6C58D0D0053AE00A7BEFF /* InternetMessage */;
 			targetProxy = 77B6C91A0D0094DF00A7BEFF /* PBXContainerItemProxy */;
+		};
+		8D2BE2CE0DCB3E5A00167F76 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77B6C8930D008D7C00A7BEFF /* InternetMessageTest */;
+			targetProxy = 8D2BE2CD0DCB3E5A00167F76 /* PBXContainerItemProxy */;
+		};
+		8D2BE2D00DCB3E5E00167F76 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 773614C80D1C1AB0007FC630 /* OPPersistenceTest */;
+			targetProxy = 8D2BE2CF0DCB3E5E00167F76 /* PBXContainerItemProxy */;
 		};
 		8D82A48E0D901B6700C39ABF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

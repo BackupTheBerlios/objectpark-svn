@@ -13,15 +13,19 @@ int main(int argc, char *argv[])
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	NSArray* arguments = [[NSProcessInfo processInfo] arguments];
 	if ([arguments containsObject: @"-SenTest"]) {
-		NSLog(@"Running Tests...");
-		NSString* testBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent: @"/Contents/Frameworks/GinaTest.octest"];
-		NSBundle* testBundle = [NSBundle bundleWithPath: testBundlePath];
+		NSLog(@"Test mode active.");
+		NSArray* testBundlePaths = [[NSBundle mainBundle] pathsForResourcesOfType: @"octest" inDirectory: nil];
+		
+		for (NSString* bundlePath in testBundlePaths) {
+			NSBundle* testBundle = [NSBundle bundleWithPath: bundlePath];
+			NSLog(@"Loading test bundle at '%@'", bundlePath);
+			[testBundle load];
+		}
 
-		[testBundle load];
 		
 		id testProbe = NSClassFromString (@"SenTestProbe");
         if (testProbe != nil) {
-            [testProbe performSelector:@selector(runTests:) withObject:nil];
+            [testProbe performSelector: @selector(runTests:) withObject:nil];
         }
 	}
 	[pool release];

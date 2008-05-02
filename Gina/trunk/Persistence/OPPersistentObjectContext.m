@@ -117,7 +117,9 @@ static OPPersistentObjectContext* defaultContext = nil;
 + (void) setDefaultContext: (OPPersistentObjectContext*) context
 /*" A default context can only be set once. Use -reset to trim memory usage after no persistent objects are in use any more. "*/
 {
+	if (! NSDebugEnabled) {
     NSAssert(context == nil || defaultContext==nil || defaultContext==context, @"Default context can not be changed.");
+	}
     
     if (context!=defaultContext) {
         id oldContext = defaultContext;
