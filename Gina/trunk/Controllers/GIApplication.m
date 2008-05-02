@@ -168,7 +168,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 - (void) importFromImportFolder: (NSNotification*) notification
 {
 	unsigned importCount = 0;
-	NSString *importPath = [[self.context documentPath] stringByAppendingPathComponent:@"TransferData to import"];
+	NSString *importPath = [[self.context documentPath] stringByAppendingPathComponent:@"Import Queue"];
 	OPPersistentObjectContext* context = self.context;
 
 	NSDirectoryEnumerator* e = [[NSFileManager defaultManager] enumeratorAtPath: importPath];

@@ -339,6 +339,42 @@
 	return MakeOID(cidMessage, lid);
 }
 
+- (NSString*) documentPath
+/*" Ensures that the receivers Application Support folder is in place and returns the path. "*/
+{
+    static NSString *path = nil;
+	
+    if (! path) {
+        NSString *identifier = [[[NSBundle mainBundle] bundleIdentifier] pathExtension];
+        //processName = [[NSProcessInfo processInfo] processName];
+        path = [[[NSHomeDirectory() stringByAppendingPathComponent: @"Documents"]  stringByAppendingPathComponent:identifier] retain];
+		
+        if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            if (! [[NSFileManager defaultManager] createDirectoryAtPath:path attributes: nil]) {
+                [NSException raise:NSGenericException format: @"Gina's Application Support folder could not be created!"];
+            }
+        }
+    }
+	
+    return path;
+}
+
+- (NSString*) transferDataDirectory
+{
+	static NSString* result = nil;
+	if (result == nil) {
+		result = [[[self documentPath] stringByAppendingPathComponent:@"TransferData"] retain];
+		NSFileManager* fm = [NSFileManager defaultManager];
+		if (! [fm fileExistsAtPath: result isDirectory: NULL]) {
+			NSLog(@"Trying to create folder '%@'.", result);	
+			BOOL created = [fm createDirectoryAtPath: result withIntermediateDirectories: YES attributes: nil error: nil];
+			NSAssert1(created, @"Unable to create support directory at '%@'", result);
+		}
+	}
+	return result;
+}
+
+
 //- (void) moveThreadsWithOids: (NSArray*) threadOids 
 //				   fromGroup: (GIMessageGroup*) sourceGroup 
 //					 toGroup: (GIMessageGroup*) destinationGroup

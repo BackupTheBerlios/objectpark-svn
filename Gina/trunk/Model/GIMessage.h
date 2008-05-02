@@ -130,9 +130,3 @@ extern NSString *GIMessageDidChangeFlagsNotification;
 @end
 
 
-@interface OPPersistentObjectContext (GIModelExtensions)
-
-- (NSString*) transferDataDirectory;
-- (NSString*) documentPath;
-
-@end

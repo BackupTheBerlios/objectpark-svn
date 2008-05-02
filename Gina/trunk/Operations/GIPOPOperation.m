@@ -107,7 +107,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 				[pop3session openSession]; // also sets current postion cursor for maildrop
 				
 				// creating unique mbox file:
-				//NSString *importPath = [[[NSApp context] documentPath] stringByAppendingPathComponent:@"TransferData to import"];
+				//NSString *importPath = [[[NSApp context] documentPath] stringByAppendingPathComponent:@"Import Queue"];
 				if (![[NSFileManager defaultManager] fileExistsAtPath: transferDataPath]) {
 					NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath: transferDataPath attributes: nil], @"Could not create directory %@", transferDataPath);
 				}

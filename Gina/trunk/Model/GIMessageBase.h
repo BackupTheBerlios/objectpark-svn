@@ -22,4 +22,7 @@
 
 - (OID) oidFromMessageFilename: (NSString*) filename;
 
+- (NSString*) transferDataDirectory;
+- (NSString*) documentPath;
+
 @end
