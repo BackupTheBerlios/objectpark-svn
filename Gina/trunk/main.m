@@ -10,5 +10,20 @@
 
 int main(int argc, char *argv[])
 {
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	NSArray* arguments = [[NSProcessInfo processInfo] arguments];
+	if ([arguments containsObject: @"-SenTest"]) {
+		NSLog(@"Running Tests...");
+		NSString* testBundlePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent: @"/Contents/Frameworks/GinaTest.octest"];
+		NSBundle* testBundle = [NSBundle bundleWithPath: testBundlePath];
+
+		[testBundle load];
+		
+		id testProbe = NSClassFromString (@"SenTestProbe");
+        if (testProbe != nil) {
+            [testProbe performSelector:@selector(runTests:) withObject:nil];
+        }
+	}
+	[pool release];
     return NSApplicationMain(argc,  (const char **) argv);
 }

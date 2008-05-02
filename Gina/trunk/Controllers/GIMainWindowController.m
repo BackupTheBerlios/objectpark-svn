@@ -1135,8 +1135,7 @@ static BOOL isShowingThreadsOnly = NO;
 	[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The deleted %@ cannot be restored.", @"Delete warning dialog"), nodeType]];
 	[alert setAlertStyle:NSWarningAlertStyle];	
 	
-	if ([alert runModal] == NSAlertFirstButtonReturn) 
-	{
+	if ([alert runModal] == NSAlertFirstButtonReturn) {
 		// Delete clicked, delete the node
 		[self.messageGroupsController deleteHierarchyNode:node];
 	}

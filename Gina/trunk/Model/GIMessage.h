@@ -7,7 +7,7 @@
 //
 
 #import <AppKit/AppKit.h>
-#import "OPPersistentObject.h"
+#import "OPPersistentObjectContext.h"
 
 @class GIProfile;
 @class OPFaultingArray;
@@ -43,6 +43,8 @@
 
 // The message is being send to the server and may not be edited any more:
 #define OPSendStatusSending 4
+
+extern NSString *GIMessageDidChangeFlagsNotification;
 
 @class GIThread;
 
@@ -127,9 +129,10 @@
 
 @end
 
-extern NSString *GIMessageDidChangeFlagsNotification;
 
-@interface GIMessageData : OPPersistentObject {
-}
- 
+@interface OPPersistentObjectContext (GIModelExtensions)
+
+- (NSString*) transferDataDirectory;
+- (NSString*) documentPath;
+
 @end

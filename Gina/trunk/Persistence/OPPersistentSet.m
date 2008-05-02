@@ -495,7 +495,7 @@
 		NSAssert(changeCount == pSet->changeCount, @"set/array mutated during enumeration.");
 	}
 	if (nextIndex < arrayCount) {
-		NSLog(@"enumerating index %u/%u", nextIndex, arrayCount);
+		//NSLog(@"enumerating index %u/%u", nextIndex, arrayCount);
 		result = [array objectAtIndex: nextIndex];
 		nextIndex++;
 	}

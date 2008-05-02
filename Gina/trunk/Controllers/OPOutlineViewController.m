@@ -261,8 +261,11 @@
 	}
 	
 	if ([keyPath isEqualToString: [self childKey]]) {
-		// if the childKey relation changes, reload that item:
+		NSLog(@"outlineview %@ change: %@", self, change);
+		// todo: if the childKey relation changes, reload that item:
+		
 		if (object == rootItem) object = nil;
+		// we need to get rid of knownItems in the old relation state and establish them for the new ones.
 		[outlineView reloadItem: object reloadChildren: YES]; 
 		// todo: if we got a qualified notification, could we be more efficient?
 	}
@@ -310,19 +313,18 @@
 
 - (void) addToKnownItems: (id) item
 {
-	if (YES) {
-		if (item) {
-			[knownItems addObject: item];
-			// Observe the child relation so we can react on that.
-			if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", item, [self childKey]);
-			[item addObserver:self forKeyPath:[self childKey] options:0 context:NULL];
-			// Also observe additional keyPaths that will affect display:
-			for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
-				[item addObserver: self forKeyPath: keyPath options: 0 context: outlineView];
-			}
-		} else {
-			NSLog(@"Warning: nil item in outline data detected.");
+	if (item) {
+		[knownItems addObject: item];
+		// Observe the child relation so we can react on that.
+		if (NSDebugEnabled) NSLog(@"Controller observes %@.%@", item, [self childKey]);
+		// Make KVO provide the old value. This way we can get rid of the keyPathsAffectingDisplayOfItem observation in case of a child deletion.
+		[item addObserver: self forKeyPath: [self childKey] options: NSKeyValueObservingOptionOld | NSKeyValueObservingOptionPrior context:NULL];
+		// Also observe additional keyPaths that will affect display:
+		for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
+			[item addObserver: self forKeyPath: keyPath options: 0 context: outlineView];
 		}
+	} else {
+		NSLog(@"Warning: nil item in outline data detected.");
 	}
 }
 

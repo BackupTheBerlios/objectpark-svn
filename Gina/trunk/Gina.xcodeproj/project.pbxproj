@@ -118,7 +118,6 @@
 		7761DADA0D0318D60044E65A /* TestOPAppleDoubleContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5B80D00546B00A7BEFF /* TestOPAppleDoubleContentCoder.m */; };
 		776B78AB0D8581F9008317E5 /* Show_Status_Pressed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 776B78A90D8581F9008317E5 /* Show_Status_Pressed.tiff */; };
 		776B78AC0D8581F9008317E5 /* Show_Status.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 776B78AA0D8581F9008317E5 /* Show_Status.tiff */; };
-		777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777B05CB0D031DE40080B76F /* InternetMessage.framework */; };
 		777B061B0D0320C80080B76F /* MailIcon_queue.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 777B061A0D0320C80080B76F /* MailIcon_queue.tiff */; };
 		778078390D070AAA0091F21D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 778077FD0D0705D20091F21D /* main.c */; };
 		7780783B0D070AC50091F21D /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 778077FB0D0705830091F21D /* GetMetadataForFile.m */; };
@@ -156,7 +155,6 @@
 		77AF83200D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF831F0D2B9535002771BA /* NSColor+ContrastingLabelExtensions.m */; };
 		77AF834C0D2B95AD002771BA /* GITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF834B0D2B95AD002771BA /* GITextView.m */; };
 		77AF83500D2B95E2002771BA /* NSWorkspace+OPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF834F0D2B95E2002771BA /* NSWorkspace+OPExtensions.m */; };
-		77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		77B647560D1E46A1001E21D8 /* OPPersistence.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7736145A0D1C152A007FC630 /* OPPersistence.framework */; };
 		77B6C5FC0D00546B00A7BEFF /* EDCompositeContentCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5BF0D00546B00A7BEFF /* EDCompositeContentCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77B6C5FD0D00546B00A7BEFF /* EDCompositeContentCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B6C5C00D00546B00A7BEFF /* EDCompositeContentCoder.m */; };
@@ -276,7 +274,6 @@
 		77F4F5AE0D827EFA008B0103 /* GISeparatorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F5AD0D827EFA008B0103 /* GISeparatorButton.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
-		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D25888D0D4AE58D00AE413F /* BackToolbarImage.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 8D25888C0D4AE58D00AE413F /* BackToolbarImage.tiff */; };
 		8D82A4700D90189100C39ABF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		8D82A47D0D901B3F00C39ABF /* GinaSpotlight.mdimporter in Copy Spotlight Importer */ = {isa = PBXBuildFile; fileRef = 77E5676D0D0702670016594D /* GinaSpotlight.mdimporter */; };
@@ -286,6 +283,11 @@
 		8DABA2570D1EA23000991279 /* OPPersistentTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */; };
 		8DABA4640D1F46D300991279 /* GICommentTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773612590D1AB7CE007FC630 /* GICommentTreeView.m */; };
 		8DABA47C0D1F497B00991279 /* OPPersistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DABA47B0D1F497B00991279 /* OPPersistence.h */; };
+		8DB68FA80DCA65B100F80E92 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DB68FA70DCA65B100F80E92 /* SenTestingKit.framework */; };
+		8DB68FE90DCA65C200F80E92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		8DB690830DCAB1C300F80E92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		8DB690BE0DCAB6F900F80E92 /* SenTestingKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DB68FA70DCA65B100F80E92 /* SenTestingKit.framework */; };
+		8DB690D90DCAB89000F80E92 /* GinaTest.octest in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 773615130D1C30A7007FC630 /* GinaTest.octest */; };
 		8DCE4D8B0D2C7E6300B47189 /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */; };
 		8DCE4D8C0D2C7E6400B47189 /* GIMessageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */; };
 		8DCE4F730D2D2F0700B47189 /* prop.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B6C5AA0D00546B00A7BEFF /* prop.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -310,13 +312,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 773614590D1C152A007FC630;
 			remoteInfo = OPPersistence;
-		};
-		773615190D1C30CB007FC630 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D1107260486CEB800E47090;
-			remoteInfo = Gina;
 		};
 		77B6C5940D00540100A7BEFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -346,6 +341,13 @@
 			remoteGlobalIDString = 773614590D1C152A007FC630;
 			remoteInfo = OPPersistence;
 		};
+		8DB6913C0DCABC2E00F80E92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 773615120D1C30A6007FC630;
+			remoteInfo = GinaTest;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -355,6 +357,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				8DB690D90DCAB89000F80E92 /* GinaTest.octest in Copy Frameworks */,
+				8DB690BE0DCAB6F900F80E92 /* SenTestingKit.framework in Copy Frameworks */,
 				778A68A10D16985500CAA693 /* InternetMessage.framework in Copy Frameworks */,
 				775C31130D0D40EA0098DA07 /* OPPreferences.framework in Copy Frameworks */,
 				775C31140D0D40EA0098DA07 /* OPNetwork.framework in Copy Frameworks */,
@@ -372,6 +376,16 @@
 				8D82A47D0D901B3F00C39ABF /* GinaSpotlight.mdimporter in Copy Spotlight Importer */,
 			);
 			name = "Copy Spotlight Importer";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DB690A70DCAB34300F80E92 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -733,6 +747,7 @@
 		8DABA2550D1EA23000991279 /* OPPersistentTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentTestObject.h; sourceTree = "<group>"; };
 		8DABA2560D1EA23000991279 /* OPPersistentTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentTestObject.m; sourceTree = "<group>"; };
 		8DABA47B0D1F497B00991279 /* OPPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistence.h; sourceTree = "<group>"; };
+		8DB68FA70DCA65B100F80E92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = ../../Library/Frameworks/SenTestingKit.framework; sourceTree = SDKROOT; };
 		8DCE4D890D2C7E6300B47189 /* GIMessageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageBase.h; sourceTree = "<group>"; };
 		8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageBase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -761,6 +776,8 @@
 				77F2E2ED0D1E4AFB0003D25B /* OPNetwork.framework in Frameworks */,
 				77F2E2EF0D1E4B060003D25B /* OPPersistence.framework in Frameworks */,
 				77F2E2F00D1E4B160003D25B /* InternetMessage.framework in Frameworks */,
+				8DB68FA80DCA65B100F80E92 /* SenTestingKit.framework in Frameworks */,
+				8DB68FE90DCA65C200F80E92 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -810,12 +827,10 @@
 			files = (
 				77CFC5090D02F2CC0039A2E8 /* OPNetwork.framework in Frameworks */,
 				7761D97A0D02FB8B0044E65A /* InternetMessage.framework in Frameworks */,
-				777B05CC0D031DE40080B76F /* InternetMessage.framework in Frameworks */,
 				775C30FC0D0D40620098DA07 /* OPPreferences.framework in Frameworks */,
 				7736143A0D1C10D1007FC630 /* Cocoa.framework in Frameworks */,
 				7736143B0D1C10D3007FC630 /* Security.framework in Frameworks */,
 				7736149E0D1C1890007FC630 /* OPPersistence.framework in Frameworks */,
-				77B647470D1E4698001E21D8 /* OPPersistence.framework in Frameworks */,
 				7788670D0D8D90A7006EF64D /* SystemConfiguration.framework in Frameworks */,
 				771330000D916BD000094A0A /* AddressBook.framework in Frameworks */,
 				77DC88FE0DB7617B00A32C7F /* WebKit.framework in Frameworks */,
@@ -848,6 +863,7 @@
 				77132FFF0D916BD000094A0A /* AddressBook.framework */,
 				7788670C0D8D90A7006EF64D /* SystemConfiguration.framework */,
 				7761D9780D02FB8B0044E65A /* InternetMessage.framework */,
+				8DB68FA70DCA65B100F80E92 /* SenTestingKit.framework */,
 				775C30FB0D0D40620098DA07 /* OPPreferences.framework */,
 				7759A8760D02E39800AD49CA /* OPNetwork.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
@@ -1523,11 +1539,11 @@
 				7736150F0D1C30A6007FC630 /* Sources */,
 				773615100D1C30A6007FC630 /* Frameworks */,
 				773615110D1C30A6007FC630 /* ShellScript */,
+				8DB690A70DCAB34300F80E92 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				7736151A0D1C30CB007FC630 /* PBXTargetDependency */,
 			);
 			name = GinaTest;
 			productName = GinaTest;
@@ -1622,6 +1638,7 @@
 				773614A00D1C1897007FC630 /* PBXTargetDependency */,
 				77B6C5950D00540100A7BEFF /* PBXTargetDependency */,
 				8D82A48E0D901B6700C39ABF /* PBXTargetDependency */,
+				8DB6913D0DCABC2E00F80E92 /* PBXTargetDependency */,
 			);
 			name = Gina;
 			productInstallPath = "$(HOME)/Applications";
@@ -1953,7 +1970,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				775C31310D0D46280098DA07 /* GIApplication.m in Sources */,
 				7708F0C10D0DB8CD008A4A2B /* GIGeneralPrefs.m in Sources */,
 				7708F0D30D0DB9AE008A4A2B /* GIUserDefaultsKeys.m in Sources */,
@@ -2003,6 +2019,7 @@
 				7713924B0D9D52E6003BE8B1 /* GISMTPOperation.m in Sources */,
 				771069890DB3B8E300376DA3 /* GITableView.m in Sources */,
 				7780FE420DC63AEA003F5935 /* GIMailAddressTokenFieldDelegate.m in Sources */,
+				8DB690830DCAB1C300F80E92 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2013,11 +2030,6 @@
 			isa = PBXTargetDependency;
 			target = 773614590D1C152A007FC630 /* OPPersistence */;
 			targetProxy = 7736149F0D1C1897007FC630 /* PBXContainerItemProxy */;
-		};
-		7736151A0D1C30CB007FC630 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8D1107260486CEB800E47090 /* Gina */;
-			targetProxy = 773615190D1C30CB007FC630 /* PBXContainerItemProxy */;
 		};
 		77B6C5950D00540100A7BEFF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2038,6 +2050,11 @@
 			isa = PBXTargetDependency;
 			target = 773614590D1C152A007FC630 /* OPPersistence */;
 			targetProxy = 8DABA2A00D1EAAE500991279 /* PBXContainerItemProxy */;
+		};
+		8DB6913D0DCABC2E00F80E92 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 773615120D1C30A6007FC630 /* GinaTest */;
+			targetProxy = 8DB6913C0DCABC2E00F80E92 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2216,6 +2233,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
 				INFOPLIST_FILE = "GinaTest-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\" \"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Cocoa,
@@ -2248,6 +2266,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
 				INFOPLIST_FILE = "GinaTest-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\" \"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Cocoa,

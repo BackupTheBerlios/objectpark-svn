@@ -38,7 +38,7 @@
 	NSAssert(transferData != nil, @"couldn't read transferdata");
 	
 	OPInternetMessage *internetMessage = [[[OPInternetMessage alloc] initWithTransferData:transferData] autorelease];
-	GIMessage *message = [[GIMessage alloc] initWithInternetMessage: internetMessage];
+	GIMessage *message = [[GIMessage alloc] initWithInternetMessage: internetMessage appendToAppropriateThread: NO forcedMessageId: nil];
 	NSAssert(message != nil, @"couldn't create message from internetMessage");
 
 	return message;

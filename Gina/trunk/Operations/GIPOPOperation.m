@@ -23,7 +23,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 @synthesize account;
 
 /*" Starts a background job for retrieving messages from the given POP account anAccount. One account can only be 'popped' by at most one pop job at a time. "*/
-+ (void)retrieveMessagesFromPOPAccount:(GIAccount *)anAccount usingOperationQueue:(NSOperationQueue *)queue
++ (void) retrieveMessagesFromPOPAccount: (GIAccount*) anAccount usingOperationQueue: (NSOperationQueue*) queue putIntoDirectory: (NSString*) path
 {
     NSParameterAssert([anAccount isPOPAccount]);
 	
@@ -39,7 +39,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 		}
 	}
 	
-	id newOperation = [[[self alloc] initWithAccount:anAccount] autorelease];
+	id newOperation = [[[self alloc] initWithAccount: anAccount transferDataPath: path] autorelease];
 	[queue addOperation:newOperation];
 }
 
@@ -107,10 +107,9 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 				[pop3session openSession]; // also sets current postion cursor for maildrop
 				
 				// creating unique mbox file:
-				NSString *importPath = [[NSApp documentPath] stringByAppendingPathComponent:@"TransferData to import"];
-				if (![[NSFileManager defaultManager] fileExistsAtPath:importPath])
-				{
-					NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:importPath attributes: nil], @"Could not create directory %@", importPath);
+				//NSString *importPath = [[[NSApp context] documentPath] stringByAppendingPathComponent:@"TransferData to import"];
+				if (![[NSFileManager defaultManager] fileExistsAtPath: transferDataPath]) {
+					NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath: transferDataPath attributes: nil], @"Could not create directory %@", transferDataPath);
 				}
 				
 				NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"];
@@ -129,7 +128,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 						[self setProgressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, self.account.incomingServerName]];
 						
 						// putting onto disk:
-						NSString *transferDataPath = [importPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
+						NSString *transferDataFile = [transferDataPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
 						
 						if (![transferData writeToFile:transferDataPath atomically:YES])
 						{
@@ -216,18 +215,20 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 
 }
 
-- (id)initWithAccount:(GIAccount *)anAccount
+- (id) initWithAccount: (GIAccount*) anAccount transferDataPath: (NSString*) dataPath
 {
-    self = [super init];
-    
-    account = [anAccount retain];
-    
+    if (self = [super init]) {
+		NSParameterAssert(dataPath);
+		account = [anAccount retain];
+		transferDataPath = [dataPath copy];
+	}
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
     [account release];
+	[transferDataPath release];
     [super dealloc];
 }
 

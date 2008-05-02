@@ -292,6 +292,11 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 	[super didChangeValueForKey: key];
 }
 
+- (void)willChange:(NSKeyValueChange)changeKind valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key;
+{
+	[super willChange: changeKind valuesAtIndexes: indexes forKey: key]; // debug only
+}
+
 - (void)didChange:(NSKeyValueChange)changeKind valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key
 {
 	[[self context] didChangeObject: self];

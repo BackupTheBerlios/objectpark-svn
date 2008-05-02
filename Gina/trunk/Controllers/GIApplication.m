@@ -31,7 +31,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 - (void)resetMessageStatusSending
 {
 	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
-	NSArray *allProfiles = [[OPPersistentObjectContext defaultContext].allObjectsByClass objectForKey:@"GIProfile"];
+	NSArray *allProfiles = [self.context.allObjectsByClass objectForKey:@"GIProfile"];
 	
 	for (GIProfile *profile in allProfiles)
     {
@@ -100,13 +100,13 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 {
 	//NSLog(@"awakeFromNib");
 	// Will be called multiple times, so guard against that:
-	if (! [OPPersistentObjectContext defaultContext]) {
+	if (! self.context) {
 		// Setting up persistence:
-		NSString *databasePath = [[self documentPath] stringByAppendingPathComponent:@"Gina.btrees"];
-		OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
-		[OPPersistentObjectContext setDefaultContext:context];
+		OPPersistentObjectContext* context = [[[OPPersistentObjectContext alloc] init] autorelease];
+		[OPPersistentObjectContext setDefaultContext: context];
+		NSString* databasePath = [context.documentPath stringByAppendingPathComponent: @"Gina.btrees"];
 
-		[context setDatabaseFromPath:databasePath];
+		[context setDatabaseFromPath: databasePath];
 		
 		if ([[self.context allObjectsOfClass: [GIProfile class]] count] == 0) {
 			[self restoreConfig: self];
@@ -114,7 +114,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		
 		[GIMessageGroup ensureDefaultGroups];
 		[self resetMessageStatusSending];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object: nil];
 	}
 }
 
@@ -164,34 +164,12 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	return nil;
 }
 
-- (NSString*) documentPath
-/*" Ensures that the receivers Application Support folder is in place and returns the path. "*/
-{
-    static NSString *path = nil;
-	
-    if (! path) 
-    {
-        NSString *identifier = [[[NSBundle mainBundle] bundleIdentifier] pathExtension];
-        //processName = [[NSProcessInfo processInfo] processName];
-        path = [[[NSHomeDirectory() stringByAppendingPathComponent: @"Documents"]  stringByAppendingPathComponent:identifier] retain];
-		
-        if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) 
-        {
-            if (! [[NSFileManager defaultManager] createDirectoryAtPath:path attributes: nil]) 
-            {
-                [NSException raise:NSGenericException format: @"Gina's Application Support folder could not be created!"];
-            }
-        }
-    }
-	
-    return path;
-}
 
 - (void) importFromImportFolder: (NSNotification*) notification
 {
 	unsigned importCount = 0;
-	NSString *importPath = [[NSApp documentPath] stringByAppendingPathComponent:@"TransferData to import"];
-	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	NSString *importPath = [[self.context documentPath] stringByAppendingPathComponent:@"TransferData to import"];
+	OPPersistentObjectContext* context = self.context;
 
 	NSDirectoryEnumerator* e = [[NSFileManager defaultManager] enumeratorAtPath: importPath];
 	NSMutableArray* filePaths = [NSMutableArray array];
@@ -270,7 +248,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 {
 	NSTimeInterval dueInterval = [[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes] * 60.0;
 
-	for (GIAccount *account in [[OPPersistentObjectContext defaultContext] allObjectsOfClass:[GIAccount class]])
+	for (GIAccount *account in [self.context allObjectsOfClass: [GIAccount class]])
 	{
 		[account sendMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval];
 	}
@@ -346,8 +324,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 											  forKey: @"SelectedGroupURL"];
 	
 	// shutting down persistence:
-	[[OPPersistentObjectContext defaultContext] saveChanges];
-	[[OPPersistentObjectContext defaultContext] close];	
+	[self.context saveChanges];
+	[self.context close];	
 	
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	
@@ -372,14 +350,12 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 }
 
 
-
-
 - (void) application: (NSApplication*) sender openFiles: (NSArray*) filePaths
 {
 	filePaths = [self filePathsSortedByCreationDate: filePaths];
 	NSArray* mboxPaths = [filePaths pathsMatchingExtensions: [NSArray arrayWithObjects: @"mbox", @"mboxfile", @"mbx", nil]];
 	NSArray* gmls = [filePaths pathsMatchingExtensions: [NSArray arrayWithObjects: @"gml", nil]];
-	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	OPPersistentObjectContext* context = self.context;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];	
 	
@@ -480,7 +456,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 /*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Creates receive jobs for all accounts."*/
 {
 	
-	NSArray *allAccounts = [[OPPersistentObjectContext defaultContext].allObjectsByClass objectForKey:@"GIAccount"];
+	NSArray *allAccounts = [self.context.allObjectsByClass objectForKey:@"GIAccount"];
 	
 	[allAccounts makeObjectsPerformSelector:@selector(send)];
 	[allAccounts makeObjectsPerformSelector:@selector(receive)];
@@ -516,7 +492,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		[GIThread addMessageToAppropriateThread:sentMessage];
 		
 		// Re-Insert message wherever it belongs:
-		[[OPPersistentObjectContext defaultContext] addMessageByApplingFilters:sentMessage];
+		[self.context addMessageByApplingFilters:sentMessage];
 	}
     
 	NSMutableArray *nonSentMessages = [messages mutableCopy];
@@ -530,7 +506,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		}
 	}
 	
-    [[OPPersistentObjectContext defaultContext] saveChanges];
+    [self.context saveChanges];
 }
 
 @end

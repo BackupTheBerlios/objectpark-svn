@@ -31,11 +31,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 #define DUMMYCREATION     OPL_ASPECT  0x04
 #define MESSAGEREPLACING  OPL_ASPECT  0x08
 
-@interface OPPersistentObjectContext (GIModelExtensions)
-
-- (NSString*) transferDataDirectory;
-
-@end
 
 
 @implementation GIMessage
@@ -108,33 +103,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return senderName;
 }
 
-/*
-- (NSData*) transferData
-{
-	if (! transferData) {
-		transferData = [[NSData alloc] initWithContentsOfMappedFile: [self messageFilename]];
-	}
-	return transferData;
-}
-*/
-
-//- (void) setTransferData: (NSData*) newData
-//{
-//	GIMessageData* messageData = newData ? [self valueForKey: @"messageData"] : nil;
-//	if (messageData) {
-//		// Reuse existing GIMessageData object!
-//		// Make sure we re-index this message.
-//		[self removeFlags: OPFulltextIndexedStatus];
-//	} else {
-//		if (newData) messageData = [[[GIMessageData alloc] init] autorelease];
-//		[self willChangeValueForKey: @"transferData"];
-//		[self setPrimitiveValue: messageData forKey: @"messageData"];
-//		[self didChangeValueForKey: @"transferData"];
-//	} 
-//	[self flushInternetMessageCache];
-//	// We now have a valid messageData object to upate:
-//	[messageData setValue: newData forKey: @"transferData"];	
-//}
 
 //- (OPInternetMessage*) internetMessage
 //{
@@ -826,11 +794,31 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 @implementation OPPersistentObjectContext (GIModelExtensions)
 
+- (NSString*) documentPath
+/*" Ensures that the receivers Application Support folder is in place and returns the path. "*/
+{
+    static NSString *path = nil;
+	
+    if (! path) {
+        NSString *identifier = [[[NSBundle mainBundle] bundleIdentifier] pathExtension];
+        //processName = [[NSProcessInfo processInfo] processName];
+        path = [[[NSHomeDirectory() stringByAppendingPathComponent: @"Documents"]  stringByAppendingPathComponent:identifier] retain];
+		
+        if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            if (! [[NSFileManager defaultManager] createDirectoryAtPath:path attributes: nil]) {
+                [NSException raise:NSGenericException format: @"Gina's Application Support folder could not be created!"];
+            }
+        }
+    }
+	
+    return path;
+}
+
 - (NSString*) transferDataDirectory
 {
 	static NSString* result = nil;
 	if (result == nil) {
-		result = [[[GIApp documentPath] stringByAppendingPathComponent:@"TransferData"] retain];
+		result = [[[self documentPath] stringByAppendingPathComponent:@"TransferData"] retain];
 		NSFileManager* fm = [NSFileManager defaultManager];
 		if (! [fm fileExistsAtPath: result isDirectory: NULL]) {
 			NSLog(@"Trying to create folder '%@'.", result);	

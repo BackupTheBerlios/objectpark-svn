@@ -751,13 +751,15 @@
 }
 
 /*" Starts an asynchronous receive job for the receiver. "*/
-- (void)receive
+- (void) receive
 {
 	if (self.enabled && [self isPOPAccount]) 
 	{
 		[self checkpointLastMessageRetrieval];
 		
-		[GIPOPOperation retrieveMessagesFromPOPAccount:self usingOperationQueue:[GIApp operationQueue]];
+		NSString* path = [[[GIApp context] documentPath] stringByAppendingPathComponent: @"Import Queue"];
+		
+		[GIPOPOperation retrieveMessagesFromPOPAccount:self usingOperationQueue: [GIApp operationQueue] putIntoDirectory: path];
 	}
 }
 

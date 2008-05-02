@@ -37,7 +37,7 @@
 	NSAssert(transferData != nil, @"couldn't read transferdata");
 	
 	OPInternetMessage *internetMessage = [self newInternetMessageForTest];
-	GIMessage *message = [GIMessage messageWithInternetMessage:internetMessage];
+	GIMessage *message = [GIMessage messageWithInternetMessage: internetMessage appendToAppropriateThread: NO];
 	[internetMessage release];
 	NSAssert(message != nil, @"couldn't create message from internetMessage");
 	
@@ -66,7 +66,7 @@
 - (void) testMessageAddition
 {
 	GIMessage* message = [[self class] messageForTest];
-	[[OPPersistentObjectContext defaultContext] addMessage: message];
+	[[OPPersistentObjectContext defaultContext] insertObject: message];
 	NSAssert(message.thread != nil, @"No thread assigned to message.");
 	NSAssert(message.thread.messageGroups.count, @"No group assigned to message thread.");
 	NSAssert([GIMessageGroup defaultMessageGroup].threads.count > 0, @"Inverse relationships not set.");

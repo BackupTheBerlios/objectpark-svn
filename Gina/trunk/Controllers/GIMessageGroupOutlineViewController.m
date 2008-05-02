@@ -69,12 +69,12 @@
 
 - (void)deleteHierarchyNode:(GIHierarchyNode *)aNode
 {
-	GIHierarchyNode *parent = [outlineView parentForItem:aNode];
+	//GIHierarchyNode *parent = [outlineView parentForItem:aNode];
 	
-	if (!parent) parent = [GIHierarchyNode messageGroupHierarchyRootNode];
+	//if (!parent) parent = [GIHierarchyNode messageGroupHierarchyRootNode];
 	
-	[[aNode retain] autorelease];
-	[[parent mutableArrayValueForKey:@"children"] removeObject:aNode];
+	//[[aNode retain] autorelease];
+	//[[parent mutableArrayValueForKey:@"children"] removeObject:aNode];
 	[aNode delete];
 }
 

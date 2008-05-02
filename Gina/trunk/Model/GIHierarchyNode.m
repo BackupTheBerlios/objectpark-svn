@@ -33,12 +33,11 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
     [super dealloc];
 }
 
-- (void)willDelete
-{
-	// delete dependent objects (cascade)
-	[children makeObjectsPerformSelector:@selector(delete)]; // ask user first!
-	[super willDelete];
-}
+//- (void)willDelete
+//{
+//	// delete dependent objects (cascade)
+//	[super willDelete];
+//}
 
 - (BOOL)canHaveChildren
 {
@@ -109,10 +108,7 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 
 - (void)removeObjectFromChildrenAtIndex:(NSUInteger)index
 {
-	[self willChangeValueForKey:@"children"];
-	[children removeObjectAtIndex:index];	
-	[self didChangeValueForKey:@"children"];
-	
+	[children removeObjectAtIndex:index];		
 	[self noteHierarchyChanged];
 }
 
@@ -128,6 +124,13 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 		}
 	}
 	return result;
+}
+
+- (void) willDelete
+{
+	[children makeObjectsPerformSelector:@selector(delete)]; // ask user first!
+
+	[[self.parentNode mutableArrayValueForKey: @"children"] removeObjectIdenticalTo: self];
 }
 
 @end
@@ -198,6 +201,7 @@ static id rootNode = nil;
     
 	return result;
 }
+
 
 - (GIHierarchyNode*) parentNode
 /*" Inefficient, reverse lookup! Returns nil for the root node. "*/

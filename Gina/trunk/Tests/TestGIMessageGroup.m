@@ -31,4 +31,28 @@
 	NSAssert([group.threads containsObject: thread], @"inverse relaionship not set.");
 }
 
+- (void) observeValueForKeyPath: (NSString*) keyPath ofObject: (id) object change: (NSDictionary*) change context:(void*) context
+{
+	NSArray* oldValues = [change objectForKey: NSKeyValueChangeOldKey];
+	NSAssert(oldValues.count, @"NSKeyValueChangeOldKey not set.");
+	//[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+
+- (void) testHierarchyObservation
+{
+	GIHierarchyNode* parent = [[GIHierarchyNode alloc] init];
+	GIHierarchyNode* child = [[GIHierarchyNode alloc] init];
+	
+	[[parent mutableArrayValueForKey: @"children"] addObject: child];
+	
+	[parent addObserver: self forKeyPath: @"children" options: NSKeyValueObservingOptionNew |
+	 NSKeyValueObservingOptionOld context: nil];
+	
+	[[parent mutableArrayValueForKey: @"children"] removeObject: child];
+	
+	[parent removeObserver: self forKeyPath: @"children"];
+	[parent release];
+}
+
 @end

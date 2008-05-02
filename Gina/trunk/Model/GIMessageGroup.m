@@ -19,6 +19,7 @@
 #import "OPPersistence.h"
 #import <Foundation/NSDebug.h>
 
+
 #define MESSAGEGROUP     OPL_DOMAIN  @"MessageGroup"
 
 #define EXPORT_FILE      OPL_ASPECT  0x01
@@ -427,9 +428,21 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (void) willDelete
 {
-	// delete dependent objects
-#warning IMPORTANT axel->Dirk TODO: take care of contained threads (disconnect relation)
-	[super willDelete];
+	[super willDelete]; // removes itself from the node hierarchy
+
+	OPPersistentObjectContext* theContext = self.context;
+	// Delete dependent objects:
+	GIThread* thread;
+	NSMutableSet* mutableThreads = [self mutableSetValueForKey: @"threads"];
+
+	// Remove all threads:
+	while (thread = mutableThreads.anyObject) {
+		[mutableThreads removeObject: thread];
+		// Delete thread, if contained in no other group:
+		if (mutableThreads.count<=0) {
+			[theContext deleteObject: thread];
+		} 
+	}
 }
 
 /*
@@ -825,11 +838,14 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 {
 	if (! [self.threads containsObject: oldThread]) return; // not present, nothing to do
 	
-	NSIndexSet* removeSet = [NSIndexSet indexSetWithIndex: [oldThread.messages indexOfObjectIdenticalTo: self]];
+	NSUInteger groupIndex = [oldThread.messageGroups indexOfObjectIdenticalTo: self];
+	NSIndexSet* removeSet = [NSIndexSet indexSetWithIndex: groupIndex];
+	
 	[self removePrimitiveThreadsObject: oldThread];
+	
 	// Update the inverse relation:
 	[oldThread willChange: NSKeyValueChangeRemoval valuesAtIndexes: removeSet forKey: @"messageGroups"];
-	[(OPFaultingArray*)oldThread removeObject: self];  
+	[oldThread removePrimitiveObjectFromMessageGroupsAtIndex: groupIndex];
 	[oldThread didChange: NSKeyValueChangeRemoval valuesAtIndexes: removeSet forKey: @"messageGroups"];
 }
 
