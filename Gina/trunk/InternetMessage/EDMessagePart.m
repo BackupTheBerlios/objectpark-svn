@@ -390,7 +390,6 @@
                 fbodyPtr += 1;
 			}
             name = [NSString stringWithCString:fnamePtr length:(p - fnamePtr)];
-			NSLog(@"name = %@", name);
 		}
         else if(iscrlf(*p))
 		{

@@ -130,9 +130,9 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 						// putting onto disk:
 						NSString *transferDataFile = [transferDataPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
 						
-						if (![transferData writeToFile:transferDataPath atomically:YES])
+						if (![transferData writeToFile:transferDataFile atomically:YES])
 						{
-							@throw [NSException exceptionWithName:NSGenericException reason:@"Transfer data couldn't be written." userInfo:nil];
+							@throw [NSException exceptionWithName:NSGenericException reason:[NSString stringWithFormat:@"Transfer data couldn't be written to %@.", transferDataFile] userInfo:nil];
 						}
 									
 						if (!sentStartedNotification)
