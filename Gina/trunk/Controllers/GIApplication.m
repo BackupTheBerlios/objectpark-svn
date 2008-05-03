@@ -83,8 +83,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		if (result == NSAlertDefaultReturn) {
 			
 			NSDictionary* config = [NSKeyedUnarchiver unarchiveObjectWithData: backupData];
-			NSSet* profiles = [config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
-			NSSet* accounts = [config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
+			/*NSSet* profiles = */[config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
+			/*NSSet* accounts = */[config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
 			GIHierarchyNode* rootGroup = [config objectForKey: @"GroupHierarchyRoot"];
 			[GIHierarchyNode setMessageGroupHierarchyRootNode: rootGroup];
 			NSLog(@"Restored Groups: %@", rootGroup.children);
@@ -196,7 +196,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		}
 	}
 	
-	NSArray* importedMessages = [context importGmlFiles: filePaths moveOnSuccess: YES];
+//	NSArray* importedMessages = [context importGmlFiles: filePaths moveOnSuccess: YES];
 
 	if (filename && importCount) {
 		// There are more messages in the folder to import.
@@ -334,7 +334,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 - (NSArray *)filePathsSortedByCreationDate:(NSArray *)someFilePaths
 {
-#warning Implement filePathsSortedByCreationDate for better mbox restore
+// TODO: Implement filePathsSortedByCreationDate for better mbox restore
     return someFilePaths;
 }
 
@@ -452,10 +452,9 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 
 @implementation GIApplication (SendingAndReceiving)
 
+/*" Creates send operations for accounts with messages that qualify for sending. These are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Creates receive operations for all accounts."*/
 - (IBAction)sendAndReceiveInAllAccounts:(id)sender
-/*" Creates send jobs for accounts with messages that qualify for sending. That are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Creates receive jobs for all accounts."*/
 {
-	
 	NSArray *allAccounts = [self.context.allObjectsByClass objectForKey:@"GIAccount"];
 	
 	[allAccounts makeObjectsPerformSelector:@selector(send)];
@@ -484,18 +483,22 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		// disconnect thread from queued group:
 		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] removeObject:[GIMessageGroup queuedMessageGroup]];
 
-		// Disconnect message from its thread:
-//		sentMessage.thread = nil;
-//		[[sentMessage.thread mutableArrayValueForKey:@"messages"] removeObject:sentMessage];
-		
-		// Put in appropriate thread (sent message had a single message thread before):
-		[GIThread addMessageToAppropriateThread:sentMessage];
-		
-		// Re-Insert message wherever it belongs:
-		[self.context addMessageByApplingFilters:sentMessage];
+		if ([sentMessage hasFlags:OPResentStatus])
+		{
+			[sentMessage delete]; // delete sent resent messages
+		}
+		else
+		{
+			// Put in appropriate thread (sent message had a single message thread before):
+			[GIThread addMessageToAppropriateThread:sentMessage];
+			
+			// Re-Insert message wherever it belongs:
+			[self.context addMessageByApplingFilters:sentMessage];
+		}
 	}
     
-	NSMutableArray *nonSentMessages = [messages mutableCopy];
+	// mark all messages that were not sent as ready for sending again:
+	NSMutableArray *nonSentMessages = [[messages mutableCopy] autorelease];
 	[nonSentMessages removeObjectsInArray:sentMessages];
 
 	for (GIMessage *nonSentMessage in nonSentMessages)

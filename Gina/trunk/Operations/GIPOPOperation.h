@@ -13,16 +13,16 @@
 
 @interface GIPOPOperation : GIOperation 
 {
-	GIAccount* account;
-	NSString* transferDataPath;
+	GIAccount *account;
+	NSString *transferDataPath;
 	int authenticationErrorDialogResult;
 }
 
 @property (readonly, retain) GIAccount *account;
 
-+ (void) retrieveMessagesFromPOPAccount: (GIAccount*) anAccount usingOperationQueue: (NSOperationQueue*) queue putIntoDirectory: (NSString*) path;
++ (void)retrieveMessagesFromPOPAccount:(GIAccount *)anAccount usingOperationQueue:(NSOperationQueue *)queue putIntoDirectory:(NSString *)path;
 
-- (id) initWithAccount: (GIAccount*) anAccount transferDataPath: (NSString*) dataPath;
+- (id)initWithAccount:(GIAccount *)anAccount transferDataPath:(NSString *)dataPath;
 
 @end
 

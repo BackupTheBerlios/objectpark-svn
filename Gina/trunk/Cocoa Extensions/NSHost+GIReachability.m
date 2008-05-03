@@ -34,7 +34,7 @@ Beware! NSHost is not thread-safe. So is this category. Lock in user code if nee
     BOOL success, isReachable, noStringsAttached;
     SCNetworkConnectionFlags flags;
 
-    success = SCNetworkCheckReachabilityByName([[self name] lossyCString], &flags);
+    success = SCNetworkCheckReachabilityByName([[self name] UTF8String], &flags);
 
     isReachable = (flags & kSCNetworkFlagsReachable) != 0;
     noStringsAttached = (flags & (kSCNetworkFlagsConnectionRequired | kSCNetworkFlagsInterventionRequired)) == 0;

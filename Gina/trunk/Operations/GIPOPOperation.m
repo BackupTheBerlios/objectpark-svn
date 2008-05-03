@@ -23,7 +23,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 @synthesize account;
 
 /*" Starts a background job for retrieving messages from the given POP account anAccount. One account can only be 'popped' by at most one pop job at a time. "*/
-+ (void) retrieveMessagesFromPOPAccount: (GIAccount*) anAccount usingOperationQueue: (NSOperationQueue*) queue putIntoDirectory: (NSString*) path
++ (void)retrieveMessagesFromPOPAccount:(GIAccount *)anAccount usingOperationQueue:(NSOperationQueue *)queue putIntoDirectory:(NSString *)path
 {
     NSParameterAssert([anAccount isPOPAccount]);
 	
@@ -39,7 +39,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 		}
 	}
 	
-	id newOperation = [[[self alloc] initWithAccount: anAccount transferDataPath: path] autorelease];
+	id newOperation = [[[self alloc] initWithAccount:anAccount transferDataPath:path] autorelease];
 	[queue addOperation:newOperation];
 }
 
@@ -108,8 +108,9 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 				
 				// creating unique mbox file:
 				//NSString *importPath = [[[NSApp context] documentPath] stringByAppendingPathComponent:@"Import Queue"];
-				if (![[NSFileManager defaultManager] fileExistsAtPath: transferDataPath]) {
-					NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath: transferDataPath attributes: nil], @"Could not create directory %@", transferDataPath);
+				if (![[NSFileManager defaultManager] fileExistsAtPath:transferDataPath]) 
+				{
+					NSAssert1([[NSFileManager defaultManager] createDirectoryAtPath:transferDataPath attributes:nil], @"Could not create directory %@", transferDataPath);
 				}
 				
 				NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:@"%d%m%y%H%M%S"];
@@ -210,14 +211,15 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 	{
 		[[self class] presentException:localException];
 	}
-#warning Remove additional posting of GIPOPOperationDidEndNotification?
+// TODO: Remove additional posting of GIPOPOperationDidEndNotification?
 	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:[NSNotification notificationWithName:GIPOPOperationDidEndNotification object:self.account] waitUntilDone:NO]; // just for testing!!
 
 }
 
-- (id) initWithAccount: (GIAccount*) anAccount transferDataPath: (NSString*) dataPath
+- (id)initWithAccount:(GIAccount *)anAccount transferDataPath:(NSString *)dataPath
 {
-    if (self = [super init]) {
+    if (self = [super init]) 
+	{
 		NSParameterAssert(dataPath);
 		account = [anAccount retain];
 		transferDataPath = [dataPath copy];

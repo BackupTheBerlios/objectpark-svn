@@ -339,7 +339,7 @@
 	return MakeOID(cidMessage, lid);
 }
 
-- (NSString*) documentPath
+- (NSString *)documentPath
 /*" Ensures that the receivers Application Support folder is in place and returns the path. "*/
 {
     static NSString *path = nil;

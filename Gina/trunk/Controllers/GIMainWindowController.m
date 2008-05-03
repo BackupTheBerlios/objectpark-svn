@@ -1642,12 +1642,9 @@ static BOOL isShowingThreadsOnly = NO;
     [redirectSheet orderOut:sender];
 	
 	// copy selected message:
-#warning copying does not function right (e.g. Content-Type is missing). Why?
 	GIMessage *selectedMessage = self.selectedMessage;
 	OPInternetMessage *selectedInternetMessage = selectedMessage.internetMessage;
-	
-	[selectedInternetMessage _forgetOriginalTransferData];
-	
+		
 	OPInternetMessage *resentInternetMessage = [[OPInternetMessage alloc] initWithTransferData:selectedInternetMessage.transferData];
 	
 	// set additional informal resent header fields:
@@ -1660,6 +1657,17 @@ static BOOL isShowingThreadsOnly = NO;
     fCoder = [[EDDateFieldCoder alloc] initWithDate:date];
 	[resentInternetMessage addToHeaderFieldsName:@"Resent-Date" body:[fCoder fieldBody]];
     [fCoder release];
+	
+	NSString *fromString = nil;
+	if (redirectProfile.realname.length) 
+	{
+		fromString = [NSString stringWithFormat:@"%@ <%@>", redirectProfile.realnameForSending, redirectProfile.mailAddress];
+	} 
+	else 
+	{
+		fromString = redirectProfile.mailAddress;
+	}
+	[resentInternetMessage addToHeaderFieldsName:@"Resent-From" body:fromString];
 	
 	NSString *bccString = self.resentBcc.count ? [self.resentBcc componentsJoinedByString:@", "] : nil;
 	if (bccString)

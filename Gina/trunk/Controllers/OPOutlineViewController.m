@@ -182,7 +182,7 @@
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
 {
-#warning implement by returning a set of all table column identifiers.
+// TODO: implement by returning a set of all table column identifiers.
 	return nil;
 }
 

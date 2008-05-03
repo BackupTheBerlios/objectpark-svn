@@ -160,10 +160,12 @@
 	[super dealloc];
 }
 
+/*
 - (void)drawRow:(NSInteger)row clipRect:(NSRect)clipRect
 {
 	[super drawRow: row clipRect: clipRect];
 }
+*/
 
 - (void)drawRect:(NSRect)rect 
 {

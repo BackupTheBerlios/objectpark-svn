@@ -32,7 +32,7 @@
 
 - (BOOL) containsObjectWithOID: (OID) oid sortKeyValue: (id) sortKeyValue
 {
-#warning implement containsObjectWithOID:sortKeyValue:
+// TODO: implement containsObjectWithOID:sortKeyValue:
 	return NO;
 }
 
@@ -41,7 +41,7 @@
 {
 	NSMutableData* result = [[NSMutableData alloc] init];
 	if (sortKeyPath) {
-#warning implement [anObject appendBTreeBytesForKey: sortKeyPath to: result]
+// TODO: implement [anObject appendBTreeBytesForKey: sortKeyPath to: result]
 		//[anObject appendBTreeBytesForKey: sortKeyPath to: result];
 		int time = [(NSDate*)[anObject valueForKey: sortKeyPath] timeIntervalSince1970];
 		time = NSSwapHostIntToBig(time);

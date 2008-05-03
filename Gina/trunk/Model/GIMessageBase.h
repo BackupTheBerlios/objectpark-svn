@@ -17,12 +17,12 @@
 - (NSMutableDictionary *)messagesByMessageId;
 - (GIMessage *)messageForMessageId:(NSString *)messageId;
 
-- (NSArray*) importMboxFiles: (NSArray*) paths moveOnSuccess: (BOOL) doMove;
-- (NSArray*) importGmlFiles: (NSArray*) gmls moveOnSuccess: (BOOL) move;
+- (NSArray *)importMboxFiles:(NSArray *)paths moveOnSuccess:(BOOL)doMove;
+- (NSArray *)importGmlFiles:(NSArray *)gmls moveOnSuccess:(BOOL)move;
 
-- (OID) oidFromMessageFilename: (NSString*) filename;
+- (OID)oidFromMessageFilename:(NSString *)filename;
 
-- (NSString*) transferDataDirectory;
-- (NSString*) documentPath;
+- (NSString *)transferDataDirectory;
+- (NSString *)documentPath;
 
 @end

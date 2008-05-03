@@ -752,7 +752,7 @@
 }
 
 /*" Starts an asynchronous receive job for the receiver. "*/
-- (void) receive
+- (void)receive
 {
 	if (self.enabled && [self isPOPAccount]) 
 	{

@@ -426,8 +426,8 @@ NSString *OPFinderInfo = @"OPFinderInfo";
 			if (NSDebugEnabled) NSLog(@"adding finder info.");
 			
 			FInfo*    fInfo   = (FInfo *)[finderInfo bytes];
-			NSNumber* type    = [NSNumber numberWithUnsignedLong:fInfo->fdType];
-			NSNumber* creator = [NSNumber numberWithUnsignedLong:fInfo->fdCreator];
+//			NSNumber* type    = [NSNumber numberWithUnsignedLong:fInfo->fdType];
+//			NSNumber* creator = [NSNumber numberWithUnsignedLong:fInfo->fdCreator];
 			//            [attributes setObject: type forKey:NSFileHFSTypeCode];
 			//            [attributes setObject: creator forKey:NSFileHFSCreatorCode];
 			//    #warning axel->axel: report NSFileWrapper bug (type and creator are not set and resource forks not supported)

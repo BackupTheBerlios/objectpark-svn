@@ -240,7 +240,7 @@
 		[self didChange];
 		//NSLog(@"Removed element. Now %@.", self);
 	}
-#warning Implement array shrinking!
+// TODO: Implement array shrinking!
 }
 
 //- (void) removeObject: (OPPersistentObject*) anObject

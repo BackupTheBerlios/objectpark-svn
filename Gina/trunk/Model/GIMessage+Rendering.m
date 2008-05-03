@@ -237,70 +237,75 @@ static NSString *templatePostfix = nil;
 		}
 		 */
 		
-#warning Exception occurs when [fieldNames count] delivers 0!
-        NSMutableAttributedString *fieldTable = [self fieldTableWithRowCount:[fieldNames count]];
-        int i, count = [fieldNames count];
-        int startPosition = 0;
-        
-        // replace templates
-        for (i = 0; i < count; i++)
-        {
-            NSRange nameRange = [[fieldTable string] rangeOfString:@"$fieldname$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
-            NSAssert(nameRange.location != NSNotFound, @"name template could not be found");
-            NSString *nameString = NSLocalizedString([fieldNames objectAtIndex:i], @"A field name in the message header like 'Subject'");
-            [fieldTable replaceCharactersInRange:nameRange withString:nameString];
-            
-            startPosition = nameRange.location + [nameString length];
-            
-            NSRange valueRange = [[fieldTable string] rangeOfString:@"$fieldvalue$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
-            NSAssert(valueRange.location != NSNotFound, @"value template could not be found");
-            [fieldTable replaceCharactersInRange:valueRange withString:[fieldValues objectAtIndex:i]];
-            
-            startPosition = valueRange.location + [[fieldValues objectAtIndex:i] length];
-        }
-        
-        [displayString appendAttributedString:fieldTable];
-                
-        
-    // other headers
-        if (showOthers) 
-        {
-            NSEnumerator *enumerator;
-            NSArray *headerField;
-            
-            enumerator = [[aMessage headerFields] objectEnumerator];
-            while (headerField = [enumerator nextObject])
-            {
-                decodedHeader = nil;
-                fieldName = [headerField objectAtIndex:0];
-                
-                if ([headers indexOfObject:fieldName] == NSNotFound) // only when not in standard headers
-                {
-                    if ([aMessage isMultiHeader:headerField])
-                    {
-                    // is header field with multiple entries
-                        decodedHeader = [headerField objectAtIndex:1];
-                    }
-                    else
-                    {
-                        NS_DURING
+		if (fieldNames.count == 0)
+		{
+			NSLog(@"No header fields in message? Seems like a severely broken message. %@", self);
+		}
+		else
+		{
+			NSMutableAttributedString *fieldTable = [self fieldTableWithRowCount:[fieldNames count]];
+			int i, count = [fieldNames count];
+			int startPosition = 0;
+			
+			// replace templates
+			for (i = 0; i < count; i++)
+			{
+				NSRange nameRange = [[fieldTable string] rangeOfString:@"$fieldname$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+				NSAssert(nameRange.location != NSNotFound, @"name template could not be found");
+				NSString *nameString = NSLocalizedString([fieldNames objectAtIndex:i], @"A field name in the message header like 'Subject'");
+				[fieldTable replaceCharactersInRange:nameRange withString:nameString];
+				
+				startPosition = nameRange.location + [nameString length];
+				
+				NSRange valueRange = [[fieldTable string] rangeOfString:@"$fieldvalue$" options:0 range:NSMakeRange(startPosition, [[fieldTable string] length] - startPosition)];
+				NSAssert(valueRange.location != NSNotFound, @"value template could not be found");
+				[fieldTable replaceCharactersInRange:valueRange withString:[fieldValues objectAtIndex:i]];
+				
+				startPosition = valueRange.location + [[fieldValues objectAtIndex:i] length];
+			}
+			
+			[displayString appendAttributedString:fieldTable];
+			
+			
+			// other headers
+			if (showOthers) 
+			{
+				NSEnumerator *enumerator;
+				NSArray *headerField;
+				
+				enumerator = [[aMessage headerFields] objectEnumerator];
+				while (headerField = [enumerator nextObject])
+				{
+					decodedHeader = nil;
+					fieldName = [headerField objectAtIndex:0];
+					
+					if ([headers indexOfObject:fieldName] == NSNotFound) // only when not in standard headers
+					{
+						if ([aMessage isMultiHeader:headerField])
+						{
+							// is header field with multiple entries
+							decodedHeader = [headerField objectAtIndex:1];
+						}
+						else
+						{
+							NS_DURING
                             coder = [aMessage decoderForHeaderFieldNamed:fieldName];
                             decodedHeader = [coder stringValue];
-                        NS_HANDLER
+							NS_HANDLER
                             decodedHeader = [aMessage bodyForHeaderField:fieldName];
-                        NS_ENDHANDLER
-                    }
-                    
-                    if (decodedHeader)
-                    {
-                        [self _appendFieldName:fieldName andDecodedHeader:decodedHeader toAttributedString:displayString];
-                    }
-                }
-            }
-			
-			[displayString appendString:@"\n"];
+							NS_ENDHANDLER
+						}
+						
+						if (decodedHeader)
+						{
+							[self _appendFieldName:fieldName andDecodedHeader:decodedHeader toAttributedString:displayString];
+						}
+					}
+				}
+				
+				[displayString appendString:@"\n"];
+			}
         }
-        
         /*
         if([displayString length] > 0) 
         {
@@ -319,7 +324,6 @@ static NSString *templatePostfix = nil;
     [bodyContent prepareQuotationsForDisplay];
     return bodyContent;
 }
-
 
 - (NSAttributedString *)renderedMessageIncludingAllHeaders:(BOOL)allHeaders
 /*" Eagerly renderes the internetmessage contained in the receiver. Includes all headers if flag set. Default list if headers otherise. Can be slow! Cache it somewhere! "*/
