@@ -12,6 +12,7 @@
 #import "GIProfile.h"
 
 @class GITextView;
+@class OPSizingTokenField;
 
 typedef enum 
 {
@@ -26,7 +27,7 @@ typedef enum
 @interface GIMessageEditorController : NSObject 
 {
     IBOutlet NSWindow *window;
-    IBOutlet OPSizingTextField *toField;
+    IBOutlet OPSizingTokenField *toField;
     IBOutlet OPSizingTextField *subjectField;
     IBOutlet OPSizingTextField *hiddenTextFieldPrototype; /*" prototype for dynamic text fields "*/
     IBOutlet NSTextField *hiddenCaptionPrototype;

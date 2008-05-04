@@ -27,6 +27,8 @@
 #import "GIPhraseBrowserController.h"
 #import "GIHeaderFieldEditor.h"
 #import "GIMessageGroup.h"
+#import "OPSizingTextField.h"
+#import "OPSizingTokenField.h"
 
 @interface GIMessageEditorController (PrivateAPI)
 - (OPInternetMessage *)message;
@@ -1606,9 +1608,9 @@ NSDictionary *maxLinesForCalendarName()
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [subjectField setMaxLines:maxLines];
     
-    NSFormatter *addressFormatter = [[GIAddressFormatter alloc] init];
-    [toField setFormatter:addressFormatter];
-    [addressFormatter release];
+//    NSFormatter *addressFormatter = [[GIAddressFormatter alloc] init];
+//    [toField setFormatter:addressFormatter];
+//    [addressFormatter release];
     
     // target/action for profile popup:
     [profileButton setTarget:self];
@@ -1745,7 +1747,15 @@ NSDictionary *maxLinesForCalendarName()
     topY = predecessorFrame.origin.y - 8; // gap
 
     // configuring text field:
-    result = [[[OPSizingTextField alloc] initWithFrame:[hiddenTextFieldPrototype frame]] autorelease];
+	if ([self isAddressListField:aFieldName])
+	{
+		result = [[[OPSizingTokenField alloc] initWithFrame:[hiddenTextFieldPrototype frame]] autorelease];
+	}
+	else
+	{
+		result = [[[OPSizingTextField alloc] initWithFrame:[hiddenTextFieldPrototype frame]] autorelease];
+	}
+	
     frame = [result frame];
     frame.origin.y = topY - frame.size.height;
     [result setFrame:frame];
@@ -1781,9 +1791,10 @@ NSDictionary *maxLinesForCalendarName()
     // if address entry field set formatter
     if ([self isAddressListField:aFieldName])
     {
-        NSFormatter *addressFormatter = [[GIAddressFormatter alloc] init];
-        [result setFormatter:addressFormatter];
-        [addressFormatter release];
+		[result setDelegate:[toField delegate]];
+//        NSFormatter *addressFormatter = [[GIAddressFormatter alloc] init];
+//        [result setFormatter:addressFormatter];
+//        [addressFormatter release];
     }
     
     return result;
