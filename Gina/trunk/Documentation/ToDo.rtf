@@ -1,6 +1,5 @@
 {\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf270
-{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\fmodern\fcharset0 Courier;\f2\fmodern\fcharset0 Courier-Bold;
-}
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
@@ -21,53 +20,11 @@ Allow message deletion while only the message is shown.\
 - optimization: suppress message rendering in threads only mode\
 \
 Dirk:\
-- fix deletion of GIMessageGroup objects right (handle threads deletion)\
 - fix -showMessage:\
 - fix message selection by itemspaths during paging with the space key\
+\
 - prevent threads from setting messages, only messages should set their threads (hard)\
 \
-- fix OPOutlineViewController - remove itself as an observer for additional keys when children are removed:\
-\pard\tx480\tx960\tx1440\tx1920\tx2400\tx2880\tx3360\tx3840\tx4320\tx4800\tx5280\tx5760\tx6240\tx6720\tx7200\tx7680\tx8160\tx8640\tx9120\tx9600\tx10080\tx10560\tx11040\tx11520\tx12000\tx12480\tx12960\tx13440\tx13920\tx14400\tx14880\tx15360\tx15840\tx16320\tx16800\tx17280\tx17760\tx18240\tx18720\tx19200\tx19680\tx20160\tx20640\tx21120\tx21600\tx22080\tx22560\tx23040\tx23520\tx24000\tx24480\tx24960\tx25440\tx25920\tx26400\tx26880\tx27360\tx27840\tx28320\tx28800\tx29280\tx29760\tx30240\tx30720\tx31200\tx31680\tx32160\tx32640\tx33120\tx33600\tx34080\tx34560\tx35040\tx35520\tx36000\tx36480\tx36960\tx37440\tx37920\tx38400\tx38880\tx39360\tx39840\tx40320\tx40800\tx41280\tx41760\tx42240\tx42720\tx43200\tx43680\tx44160\tx44640\tx45120\tx45600\tx46080\tx46560\tx47040\tx47520\tx48000\li560\fi-560\ql\qnatural\pardirnatural
-
-\f1 \cf0 \CocoaLigature0 #0  -[TestGIMessageGroup observeValueForKeyPath:ofObject:change:context:] (self=0x1502ffe0, _cmd=0x91b1dba0, keyPath=0x1bd22c, object=0x29bc70, change=0x240de0, context=0x0) at /Users/theisen/Projects/Work/Gina/Tests/TestGIMessageGroup.m:37\
-#1  0x9177b58e in NSKVONotify ()\
-#2  0x9178b7b2 in -[NSObject(NSKeyValueObserverNotification) didChange:valuesAtIndexes:forKey:] ()\
-#3  0x00120f56 in -[OPPersistentObject didChange:valuesAtIndexes:forKey:] (self=0x29bc70, _cmd=0x91ac3a5c, changeKind=3, indexes=0x14f08c80, key=0x1bd22c) at /Users/theisen/Projects/Work/Gina/Persistence/OPPersistentObject.m:303\
-#4  0x9182aec7 in -[NSKeyValueNotifyingMutableArray removeObjectAtIndex:] ()\
-#5  0x96109288 in -[NSMutableArray removeObject:range:identical:] ()\
-#6  0x96109720 in -[NSMutableArray removeObject:] ()\
-#7  0x001b9b34 in -[TestGIMessageGroup testHierarchyObservation] (self=0x1502ffe0, _cmd=0x1502ee80) at /Users/theisen/Projects/Work/Gina/Tests/TestGIMessageGroup.m:52
-\f0 \CocoaLigature1 \
-
-\f1 \CocoaLigature0 Printing description of change:\
-\pard\tx480\tx960\tx1440\tx1920\tx2400\tx2880\tx3360\tx3840\tx4320\tx4800\tx5280\tx5760\tx6240\tx6720\tx7200\tx7680\tx8160\tx8640\tx9120\tx9600\tx10080\tx10560\tx11040\tx11520\tx12000\tx12480\tx12960\tx13440\tx13920\tx14400\tx14880\tx15360\tx15840\tx16320\tx16800\tx17280\tx17760\tx18240\tx18720\tx19200\tx19680\tx20160\tx20640\tx21120\tx21600\tx22080\tx22560\tx23040\tx23520\tx24000\tx24480\tx24960\tx25440\tx25920\tx26400\tx26880\tx27360\tx27840\tx28320\tx28800\tx29280\tx29760\tx30240\tx30720\tx31200\tx31680\tx32160\tx32640\tx33120\tx33600\tx34080\tx34560\tx35040\tx35520\tx36000\tx36480\tx36960\tx37440\tx37920\tx38400\tx38880\tx39360\tx39840\tx40320\tx40800\tx41280\tx41760\tx42240\tx42720\tx43200\tx43680\tx44160\tx44640\tx45120\tx45600\tx46080\tx46560\tx47040\tx47520\tx48000\li560\fi-560\ql\qnatural\pardirnatural
-
-\f2\b \cf0 <CFDictionary 0x240de0 [0xa08371a0]>\{type = mutable, count = 3, capacity = 3, pairs = (\
-\pard\tx480\tx960\tx1440\tx1920\tx2400\tx2880\tx3360\tx3840\tx4320\tx4800\tx5280\tx5760\tx6240\tx6720\tx7200\tx7680\tx8160\tx8640\tx9120\tx9600\tx10080\tx10560\tx11040\tx11520\tx12000\tx12480\tx12960\tx13440\tx13920\tx14400\tx14880\tx15360\tx15840\tx16320\tx16800\tx17280\tx17760\tx18240\tx18720\tx19200\tx19680\tx20160\tx20640\tx21120\tx21600\tx22080\tx22560\tx23040\tx23520\tx24000\tx24480\tx24960\tx25440\tx25920\tx26400\tx26880\tx27360\tx27840\tx28320\tx28800\tx29280\tx29760\tx30240\tx30720\tx31200\tx31680\tx32160\tx32640\tx33120\tx33600\tx34080\tx34560\tx35040\tx35520\tx36000\tx36480\tx36960\tx37440\tx37920\tx38400\tx38880\tx39360\tx39840\tx40320\tx40800\tx41280\tx41760\tx42240\tx42720\tx43200\tx43680\tx44160\tx44640\tx45120\tx45600\tx46080\tx46560\tx47040\tx47520\tx48000\li1120\fi-1120\ql\qnatural\pardirnatural
-\cf0 	0 : <CFString 0xa0339718 [0xa08371a0]>\{contents = "kind"\} = <CFNumber 0x217080 [0xa08371a0]>\{value = +3, type = kCFNumberSInt32Type\}\
-	2 : <CFString 0xa03396f8 [0xa08371a0]>\{contents = "old"\} = <CFArray 0x14f08650 [0xa08371a0]>\{type = immutable, count = 1, values = (\
-	0 : <GIHierarchyNode: 0x2b5090, lid 1> '(null)' with 0 children\
-\pard\tx480\tx960\tx1440\tx1920\tx2400\tx2880\tx3360\tx3840\tx4320\tx4800\tx5280\tx5760\tx6240\tx6720\tx7200\tx7680\tx8160\tx8640\tx9120\tx9600\tx10080\tx10560\tx11040\tx11520\tx12000\tx12480\tx12960\tx13440\tx13920\tx14400\tx14880\tx15360\tx15840\tx16320\tx16800\tx17280\tx17760\tx18240\tx18720\tx19200\tx19680\tx20160\tx20640\tx21120\tx21600\tx22080\tx22560\tx23040\tx23520\tx24000\tx24480\tx24960\tx25440\tx25920\tx26400\tx26880\tx27360\tx27840\tx28320\tx28800\tx29280\tx29760\tx30240\tx30720\tx31200\tx31680\tx32160\tx32640\tx33120\tx33600\tx34080\tx34560\tx35040\tx35520\tx36000\tx36480\tx36960\tx37440\tx37920\tx38400\tx38880\tx39360\tx39840\tx40320\tx40800\tx41280\tx41760\tx42240\tx42720\tx43200\tx43680\tx44160\tx44640\tx45120\tx45600\tx46080\tx46560\tx47040\tx47520\tx48000\li560\fi-560\ql\qnatural\pardirnatural
-\cf0 )\}\
-\pard\tx480\tx960\tx1440\tx1920\tx2400\tx2880\tx3360\tx3840\tx4320\tx4800\tx5280\tx5760\tx6240\tx6720\tx7200\tx7680\tx8160\tx8640\tx9120\tx9600\tx10080\tx10560\tx11040\tx11520\tx12000\tx12480\tx12960\tx13440\tx13920\tx14400\tx14880\tx15360\tx15840\tx16320\tx16800\tx17280\tx17760\tx18240\tx18720\tx19200\tx19680\tx20160\tx20640\tx21120\tx21600\tx22080\tx22560\tx23040\tx23520\tx24000\tx24480\tx24960\tx25440\tx25920\tx26400\tx26880\tx27360\tx27840\tx28320\tx28800\tx29280\tx29760\tx30240\tx30720\tx31200\tx31680\tx32160\tx32640\tx33120\tx33600\tx34080\tx34560\tx35040\tx35520\tx36000\tx36480\tx36960\tx37440\tx37920\tx38400\tx38880\tx39360\tx39840\tx40320\tx40800\tx41280\tx41760\tx42240\tx42720\tx43200\tx43680\tx44160\tx44640\tx45120\tx45600\tx46080\tx46560\tx47040\tx47520\tx48000\li1120\fi-1120\ql\qnatural\pardirnatural
-\cf0 	3 : <CFString 0xa03396e8 [0xa08371a0]>\{contents = "indexes"\} = <NSIndexSet: 0x14f08c80>[number of indexes: 1 (in 1 ranges), indexes: (0)]\
-\pard\tx480\tx960\tx1440\tx1920\tx2400\tx2880\tx3360\tx3840\tx4320\tx4800\tx5280\tx5760\tx6240\tx6720\tx7200\tx7680\tx8160\tx8640\tx9120\tx9600\tx10080\tx10560\tx11040\tx11520\tx12000\tx12480\tx12960\tx13440\tx13920\tx14400\tx14880\tx15360\tx15840\tx16320\tx16800\tx17280\tx17760\tx18240\tx18720\tx19200\tx19680\tx20160\tx20640\tx21120\tx21600\tx22080\tx22560\tx23040\tx23520\tx24000\tx24480\tx24960\tx25440\tx25920\tx26400\tx26880\tx27360\tx27840\tx28320\tx28800\tx29280\tx29760\tx30240\tx30720\tx31200\tx31680\tx32160\tx32640\tx33120\tx33600\tx34080\tx34560\tx35040\tx35520\tx36000\tx36480\tx36960\tx37440\tx37920\tx38400\tx38880\tx39360\tx39840\tx40320\tx40800\tx41280\tx41760\tx42240\tx42720\tx43200\tx43680\tx44160\tx44640\tx45120\tx45600\tx46080\tx46560\tx47040\tx47520\tx48000\li560\fi-560\ql\qnatural\pardirnatural
-\cf0 )\}\
-\pard\tx480\tx960\tx1440\tx1920\tx2400\tx2880\tx3360\tx3840\tx4320\tx4800\tx5280\tx5760\tx6240\tx6720\tx7200\tx7680\tx8160\tx8640\tx9120\tx9600\tx10080\tx10560\tx11040\tx11520\tx12000\tx12480\tx12960\tx13440\tx13920\tx14400\tx14880\tx15360\tx15840\tx16320\tx16800\tx17280\tx17760\tx18240\tx18720\tx19200\tx19680\tx20160\tx20640\tx21120\tx21600\tx22080\tx22560\tx23040\tx23520\tx24000\tx24480\tx24960\tx25440\tx25920\tx26400\tx26880\tx27360\tx27840\tx28320\tx28800\tx29280\tx29760\tx30240\tx30720\tx31200\tx31680\tx32160\tx32640\tx33120\tx33600\tx34080\tx34560\tx35040\tx35520\tx36000\tx36480\tx36960\tx37440\tx37920\tx38400\tx38880\tx39360\tx39840\tx40320\tx40800\tx41280\tx41760\tx42240\tx42720\tx43200\tx43680\tx44160\tx44640\tx45120\tx45600\tx46080\tx46560\tx47040\tx47520\tx48000\li560\fi-560\ql\qnatural\pardirnatural
-
-\f0\b0 \cf0 \CocoaLigature1 Real World:\
-
-\f1 \CocoaLigature0 #0  -[OPOutlineViewController observeValueForKeyPath:ofObject:change:context:] (self=0x29d0f0, _cmd=0x91b1dba0, keyPath=0x54bc0, object=0x247990, change=0x15f5c580, context=0x0) at /Users/theisen/Projects/Work/Gina/Controllers/OPOutlineViewController.m:264\
-#1  0x9177b58e in NSKVONotify ()\
-#2  0x9178b7b2 in -[NSObject(NSKeyValueObserverNotification) didChange:valuesAtIndexes:forKey:] ()\
-#3  0x00120f42 in -[OPPersistentObject didChange:valuesAtIndexes:forKey:] (self=0x247990, _cmd=0x91ac3a5c, changeKind=3, indexes=0x15f58a60, key=0x54bc0) at /Users/theisen/Projects/Work/Gina/Persistence/OPPersistentObject.m:303\
-#4  0x9182aec7 in -[NSKeyValueNotifyingMutableArray removeObjectAtIndex:] ()\
-#5  0x96109288 in -[NSMutableArray removeObject:range:identical:] ()\
-#6  0x961096b0 in -[NSMutableArray removeObjectIdenticalTo:] ()\
-#7  0x0000f9d4 in -[GIHierarchyNode willDelete] (self=0x244420, _cmd=0x1420d3) at /Users/theisen/Projects/Work/Gina/Model/GIHierarchyNode.m:133
-\f0 \CocoaLigature1 \
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
-\cf0 \
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
@@ -97,6 +54,8 @@ Dirk:\
 - fix regular serialization of persistent objects\
 - restore selected message group on startup\
 - fix setting of 'default profile' in profile prefs\
+- fix OPOutlineViewController - remove itself as an observer for additional keys when children are removed\
+- fix deletion of GIMessageGroup objects right (handle threads deletion)\
 \
 
 \b\fs26 Future Work:

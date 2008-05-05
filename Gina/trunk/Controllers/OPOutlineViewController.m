@@ -186,16 +186,6 @@
 	return nil;
 }
 
-- (void) resetKnownItems
-{
-	for (id item in knownItems) {
-		[item removeObserver: self forKeyPath: [self childKey]];
-		for (id keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
-			[item removeObserver: self forKeyPath: keyPath];
-		}
-	}
-	[knownItems removeAllObjects];
-}
 
 - (void) reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
@@ -275,6 +265,14 @@
 	}
 }
 
+- (void) resetKnownItems
+{
+	id item;
+	while (item = [knownItems anyObject]) {
+		[self removeFromKnownItems: item]; // also removes item from knownItems
+	}
+}
+
 - (void) observeValueForKeyPath: (NSString*) keyPath 
 					   ofObject: (id) object 
 						 change: (NSDictionary*) change 
@@ -282,7 +280,7 @@
 {
 	if (context == outlineView) {
 		// just redisplay the affected item:
-		NSLog(@"Redisplaying %@ due to change of %@ (%@)", object, keyPath, change);
+		// if (NSDebugEnabled) NSLog(@"Redisplaying %@ due to change of %@ (%@)", object, keyPath, change);
 		[outlineView reloadItem: object reloadChildren: NO]; 
 		// - (void)_setNeedsDisplayInRow:(int)fp8;
 
@@ -456,16 +454,17 @@
 /*" Also expands the items in the given path as necessary. "*/
 {
 	NSInteger row = NSNotFound;
+	id lastItem = nil;
 	if (path.count) {
 		row = -1;
 		// root index is the minimum index the first item on the path can be on.
 		NSArray* container = [self.rootItem valueForKey: childKey];
 		for (id item in path) {
 			
-			if (row>=0) {
-				if ([self outlineView: outlineView isItemExpandable: item]) {
+			if (lastItem) {
+				if ([self outlineView: outlineView isItemExpandable: lastItem]) {
 					[outlineView expandItemAtRow: row expandChildren: NO];
-					container = [item valueForKey: childKey];
+					container = [lastItem valueForKey: childKey];
 					NSRect redisplayRect = NSUnionRect([outlineView rectOfRow: row], [outlineView rectOfRow: row + container.count]);
 					[outlineView setNeedsDisplayInRect: redisplayRect];
 				} else {
@@ -489,6 +488,7 @@
 				NSLog(@"Unable to find item %@ in outline view.", item);
 				break;
 			}
+			lastItem = item;
 		}
 	}
 	return row;
