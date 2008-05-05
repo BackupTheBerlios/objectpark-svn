@@ -147,4 +147,22 @@ static NSMutableArray *LRUMailAddresses;
  }
  */
 
+//- (void)textViewDidChangeSelection:(NSNotification *)notification;
+//{
+//	NSLog(@"textViewDidChangeSelection");
+//}
+//
+//- (NSArray *)textView:(NSTextView *)textView willChangeSelectionFromCharacterRanges:(NSArray *)oldSelectedCharRanges toCharacterRanges:(NSArray *)newSelectedCharRanges
+//{
+//	NSLog(@"willChangeSelectionFromCharacterRanges");
+//	return nil;
+//}
+//
+//- (BOOL)textView:(NSTextView *)textView shouldChangeTextInRanges:(NSArray *)affectedRanges replacementStrings:(NSArray *)replacementStrings
+//{
+//	NSLog(@"shouldChangeTextInRanges");
+//	
+//	return YES;
+//}
+
 @end

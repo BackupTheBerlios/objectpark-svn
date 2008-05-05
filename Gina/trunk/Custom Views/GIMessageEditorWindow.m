@@ -37,4 +37,10 @@
     [super sendEvent:theEvent];
 }
 
+//- (BOOL)makeFirstResponder:(NSResponder *)responder
+//{
+//	NSLog(@"Making first responder: %@", responder);
+//	return [super makeFirstResponder:responder];
+//}
+
 @end

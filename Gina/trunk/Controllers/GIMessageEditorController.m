@@ -1579,29 +1579,32 @@ NSDictionary *maxLinesForCalendarName()
 {
     unsigned maxLines;
     
-    // prepare dictionary for looking up header fields:
-    headerTextFieldsForName = [[NSMutableDictionary alloc] init];
-    [headerTextFieldsForName setObject:toField forKey:@"To"];
-    [headerTextFieldsForName setObject:subjectField forKey:@"Subject"];
-    bottomTextField = subjectField;
-    
+	// setting up to: field:
     maxLines = [[maxLinesForCalendarName() objectForKey:@"To"] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
 	
+//	OPSizingTokenField *newToField = [[[OPSizingTokenField alloc] initWithFrame:[hiddenTextFieldPrototype frame]] autorelease];
+//	newToField.frame = toField.frame;
+//	[newToField setNextKeyView:[toField nextKeyView]];
+//    [newToField setAutoresizingMask:[toField autoresizingMask]];  
+//    newToField.font = toField.font;
+//	[newToField setDelegate:[toField delegate]];
+//	[messageTextView setNextKeyView:newToField];
+//	
+//	[[toField superview] addSubview:newToField];
+//	[toField removeFromSuperview];
+//	toField = newToField;
 	
 	if ([toField respondsToSelector:@selector(setMaxLines:)])
 	{
 		[toField setMaxLines:maxLines];
     }
 	
-//	[self createTextFieldWithFieldName:@"To"];
-	
-    //NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
-
-    //[[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] removeCharactersInString: @" ."];
-    //NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
-
-    //NSLog(@"toField charset = %d", [[toField tokenizingCharacterSet] characterIsMember:' ']);
+    // prepare dictionary for looking up header fields:
+    headerTextFieldsForName = [[NSMutableDictionary alloc] init];
+    [headerTextFieldsForName setObject:toField forKey:@"To"];
+    [headerTextFieldsForName setObject:subjectField forKey:@"Subject"];
+    bottomTextField = subjectField;
     
     maxLines = [[maxLinesForCalendarName() objectForKey:@"Subject"] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;

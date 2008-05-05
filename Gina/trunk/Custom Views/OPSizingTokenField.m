@@ -215,14 +215,14 @@
 
 - (void)textDidChange:(NSNotification *)notification
 {
-	if (![self.lastStringValue isEqualToString:self.stringValue])
-	{
+//	if (![self.lastStringValue isEqualToString:self.stringValue])
+//	{
 		// Instead of calling -sizeToFit directly, we call it delayed, to take any changes in the selection, (e.g. introduces by the formatter) into account.
 		[self performSelectorOnMainThread:@selector(sizeToFit) withObject:nil waitUntilDone:NO];
 		//[self sizeToFit]; 
-		NSLog(@"performing");
-		self.lastStringValue = self.stringValue;
-	}
+//		NSLog(@"performing");
+//		self.lastStringValue = self.stringValue;
+//	}
 	
 	NSLog(@"textDidChange: %@", [self stringValue]);
     [super textDidChange:notification];
@@ -279,5 +279,15 @@
 {
 	[[self window] selectKeyViewPrecedingView:self];
 }
+
+//- (void)drawRect:(NSRect)aRect
+//{
+//	[super drawRect: aRect];
+//}
+//
+//- (BOOL)resignFirstResponder
+//{
+//	return [super resignFirstResponder];
+//}
 
 @end
