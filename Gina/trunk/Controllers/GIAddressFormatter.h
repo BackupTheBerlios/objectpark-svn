@@ -29,5 +29,6 @@ $Id: GIAddressFormatter.h,v 1.1 2004/12/13 13:20:41 mikesch Exp $
 
 + (void)addToLRUMailAddresses:(NSString *)anAddressString;
 + (void)removeFromLRUMailAddresses:(NSString *)anAddressString;
++ (NSMutableArray *)LRUMailAddresses;
 
 @end

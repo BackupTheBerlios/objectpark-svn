@@ -14,4 +14,7 @@
 
 }
 
++ (void)addToLRUMailAddresses:(NSString *)anAddressString;
++ (void)removeFromLRUMailAddresses:(NSString *)anAddressString;
+
 @end

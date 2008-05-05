@@ -28,6 +28,7 @@
 #import "GIMessageGroup.h"
 #import "OPSizingTextField.h"
 #import "OPSizingTokenField.h"
+#import "GIMailAddressTokenFieldDelegate.h"
 
 @interface GIMessageEditorController (PrivateAPI)
 - (OPInternetMessage *)message;
@@ -1825,22 +1826,19 @@ NSDictionary *maxLinesForCalendarName()
 {
     NSTextField *sender = [aNotification object];
     
-#warning LRU handling here!
-//    if ([sender isKindOfClass:[NSTextField class]] && [[sender formatter] isKindOfClass:[GIAddressFormatter class]]) 
-//    {
-//        NSString* addressList = [sender stringValue];
-//        NSArray* components = [addressList componentsSeparatedByString: @","];
-//        NSEnumerator* enumerator = [components objectEnumerator];
-//        NSString*component;
-//        
-//        while (component = [enumerator nextObject])
-//        {
-//            if ([[component addressFromEMailString] length])
-//            {
-//                [GIAddressFormatter addToLRUMailAddresses: [component stringByRemovingSurroundingWhitespace]];
-//            }
-//        }
-//    }
+    if ([sender isKindOfClass:[OPSizingTokenField class]]) 
+    {
+        NSString *addressList = [sender stringValue];
+        NSArray *components = [addressList componentsSeparatedByString:@","];
+		
+		for (NSString *component in components)
+		{
+            if ([[component addressFromEMailString] length])
+            {
+                [GIMailAddressTokenFieldDelegate addToLRUMailAddresses:[component stringByRemovingSurroundingWhitespace]];
+            }
+        }
+    }
 }
 
 @end

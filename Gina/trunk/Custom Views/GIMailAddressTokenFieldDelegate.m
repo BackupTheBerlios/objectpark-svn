@@ -10,25 +10,71 @@
 
 #import <AddressBook/AddressBook.h>
 #import "ABPerson+Convenience.h"
-
-// TODO: take LRU addresses into account
-// TODO: match also first and last name
+#import "NSString+Extensions.h"
+#import "GIAddressFormatter.h"
 
 @implementation GIMailAddressTokenFieldDelegate
 
-- (NSArray *)tokenField:(NSTokenField *)tokenField completionsForSubstring:(NSString *) substring indexOfToken:(int)tokenIndex indexOfSelectedItem:(int *)selectedIndex
+#define LRUCACHESIZE 100
+
+static NSMutableArray *LRUMailAddresses;
+
++ (NSMutableArray *)LRUMailAddresses
 {
-	NSMutableSet *candidates = [NSMutableSet set];
+    if (!LRUMailAddresses)
+    {
+        LRUMailAddresses = [[[NSUserDefaults standardUserDefaults] objectForKey:@"LRUMailAddresses"] mutableCopy];
+        if (!LRUMailAddresses) LRUMailAddresses = [[NSMutableArray alloc] initWithCapacity:LRUCACHESIZE];
+    }
+    
+    return LRUMailAddresses;
+}
+
++ (void)addToLRUMailAddresses:(NSString *)anAddressString
+{
+    NSMutableArray *addresses = [self LRUMailAddresses];
 	
-    ABSearchElement *searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-    //ABSearchElement* searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-    //ABSearchElement* searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label: nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    [addresses removeObject:anAddressString];
+    
+    if ([addresses count] == LRUCACHESIZE) [addresses removeObjectAtIndex:0];
+    
+    [addresses addObject:anAddressString];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];
+}
+
++ (void)removeFromLRUMailAddresses:(NSString *)anAddressString
+{
+    NSMutableArray *addresses = [self LRUMailAddresses];
+    
+    if ([addresses containsObject:anAddressString]) 
+    {
+        [addresses removeObject:anAddressString];
+        [[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];        
+    }
+}
+
+- (NSArray *)tokenField:(NSTokenField *)tokenField completionsForSubstring:(NSString *)substring indexOfToken:(int)tokenIndex indexOfSelectedItem:(int *)selectedIndex
+{
+	NSMutableArray *result = [NSMutableArray array];
+	
+	// LRU cache:
+	NSEnumerator *reverseEnumerator = [[[self class] LRUMailAddresses] reverseObjectEnumerator];
+	NSString *cachedAddress;
+
+	while (cachedAddress = [reverseEnumerator nextObject]) 
+	{
+		if ([cachedAddress hasPrefix:substring]) [result addObject:cachedAddress];
+	}	
+	
+	NSMutableSet *candidates = [NSMutableSet set];
+
+	// add email address candidates:
+    ABSearchElement *searchElementEmailAddress = [ABPerson searchElementForProperty:kABEmailProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
     
     NSArray *searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementEmailAddress];
 	
-    NSEnumerator *enumerator = [searchResult objectEnumerator];
-	id record;
-    while (record = [enumerator nextObject]) 
+	for (id record in searchResult)
 	{
         if ([record isKindOfClass:[ABPerson class]]) // only persons (not groups!) at this time
         {
@@ -53,13 +99,44 @@
 				{
 					[candidates addObject:entryCandidate];
 				}
-				
-                //if ([entryCandidate hasPrefix:substring]) [candidates addObject:entryCandidate];
             }
         }
     }
 	
-    NSMutableArray *result = (id)[[candidates allObjects] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+	// add first and last name candidates:
+	ABSearchElement *searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+    ABSearchElement *searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
+	ABSearchElement *searchElementConjunction = [ABSearchElement searchElementForConjunction:kABSearchOr children:[NSArray arrayWithObjects:searchElementFirstname, searchElementLastname, nil]];
+	
+    searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementConjunction];
+
+	for (id record in searchResult)
+	{
+        if ([record isKindOfClass:[ABPerson class]]) // only persons (not groups!) at this time
+        {
+			static NSCharacterSet *problematicSet = nil;
+			if (!problematicSet) problematicSet = [[NSCharacterSet characterSetWithCharactersInString:@"(),\""] retain];
+			
+			ABMultiValue *addresses = [record valueForProperty:kABEmailProperty];
+			NSString *realnameA = [[NSString stringWithFormat:@"%@ %@", [record firstname], [record lastname]] stringByRemovingCharactersFromSet:problematicSet];
+			NSString *realnameB = [[NSString stringWithFormat:@"%@ %@", [record lastname], [record firstname]] stringByRemovingCharactersFromSet:problematicSet];
+			int i, count = [addresses count];
+			
+			for (i = 0; i < count; i++)
+			{
+				NSString *address = [addresses valueAtIndex:i];
+				NSString *candidate = [realnameA stringByAppendingFormat:@" <%@>", address];
+				
+				if ([candidate hasPrefixCaseInsensitive:substring]) [candidates addObject:candidate];
+				
+				candidate = [realnameB stringByAppendingFormat:@" <%@>", address];
+				
+				if ([candidate hasPrefixCaseInsensitive:substring]) [candidates addObject:candidate];
+			}                        
+		}
+    }
+	
+	[result addObjectsFromArray:[[candidates allObjects] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
     return [result count] ? result : nil;
 }
 
