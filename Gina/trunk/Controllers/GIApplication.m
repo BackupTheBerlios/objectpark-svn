@@ -165,6 +165,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 }
 
 
+
+
 - (void) importFromImportFolder: (NSNotification*) notification
 {
 	unsigned importCount = 0;
@@ -513,3 +515,26 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 }
 
 @end
+
+//- (void) observeValueForKeyPath: (NSString*) keyPath ofObject: (id) object change: (NSDictionary*) change context:(void*) context
+//{
+//	NSArray* oldValues = [change objectForKey: NSKeyValueChangeOldKey];
+//	NSAssert(oldValues.count, @"NSKeyValueChangeOldKey not set.");
+//	//[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+//}
+//
+//
+//- (IBAction) testHierarchyObservation: (id) sender
+//{
+//	GIHierarchyNode* parent = [GIHierarchyNode messageGroupHierarchyRootNode];
+//	GIHierarchyNode* child = parent.children.lastObject;
+//		
+//	[parent addObserver: self forKeyPath: @"children" options: NSKeyValueObservingOptionNew |
+//	 NSKeyValueObservingOptionOld context: nil];
+//	
+//	[[parent mutableArrayValueForKey: @"children"] removeObjectIdenticalTo: child];
+//	
+//	[parent removeObserver: self forKeyPath: @"children"];
+//	[parent release];
+//}
+

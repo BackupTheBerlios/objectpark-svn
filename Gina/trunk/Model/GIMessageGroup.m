@@ -435,11 +435,11 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	GIThread* thread;
 	NSMutableSet* mutableThreads = [self mutableSetValueForKey: @"threads"];
 
-	// Remove all threads:
+	// Remove all threads from the receiver:
 	while (thread = mutableThreads.anyObject) {
 		[mutableThreads removeObject: thread];
 		// Delete thread, if contained in no other group:
-		if (mutableThreads.count<=0) {
+		if (! thread.messageGroups.count) {
 			[theContext deleteObject: thread];
 		} 
 	}

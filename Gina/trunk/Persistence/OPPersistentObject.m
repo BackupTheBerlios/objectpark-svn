@@ -88,21 +88,21 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (NSMutableArray*) mutableArrayValueForKey: (NSString*) key
 {
-	// Expect the mutable array to be changed:
+	// Expect the mutable array to be changed - necessary?
 	[[self context] didChangeObject: self];
 	return [super mutableArrayValueForKey: key];
 }
 
 - (NSMutableArray *)mutableArrayValueForKeyPath:(NSString *)keyPath
 {
-	// Expect the mutable array to be changed:
+	// Expect the mutable array to be changed - necessary?
 	[[self context] didChangeObject: self];
 	return [super mutableArrayValueForKeyPath: keyPath];
 }
 
 - (NSMutableSet *)mutableSetValueForKeyPath:(NSString *)keyPath
 {
-	// Expect the mutable array to be changed:
+	// Expect the mutable array to be changed - necessary?
 	[[self context] didChangeObject: self];
 	return [super mutableSetValueForKeyPath: keyPath];
 }
@@ -110,7 +110,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (NSMutableSet*) mutableSetValueForKey: (NSString*) key
 {
-	// Expect the mutable array to be changed:
+	// Expect the mutable array to be changed - necessary?
 	[[self context] didChangeObject: self];
 	return [super mutableSetValueForKey: key];
 }

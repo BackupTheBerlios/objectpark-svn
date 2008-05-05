@@ -41,15 +41,15 @@
 
 - (void) testHierarchyObservation
 {
-	GIHierarchyNode* parent = [[GIHierarchyNode alloc] init];
-	GIHierarchyNode* child = [[GIHierarchyNode alloc] init];
+	GIHierarchyNode* parent = [[GIHierarchyNode alloc] init]; parent.name = @"Parent";
+	GIHierarchyNode* child = [[GIHierarchyNode alloc] init]; child.name = @"Child";
 	
 	[[parent mutableArrayValueForKey: @"children"] addObject: child];
 	
 	[parent addObserver: self forKeyPath: @"children" options: NSKeyValueObservingOptionNew |
 	 NSKeyValueObservingOptionOld context: nil];
 	
-	[[parent mutableArrayValueForKey: @"children"] removeObject: child];
+	[[parent mutableArrayValueForKey: @"children"] removeObjectIdenticalTo: child];
 	
 	[parent removeObserver: self forKeyPath: @"children"];
 	[parent release];

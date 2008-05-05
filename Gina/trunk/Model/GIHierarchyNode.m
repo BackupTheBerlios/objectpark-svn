@@ -128,7 +128,10 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 
 - (void) willDelete
 {
-	[children makeObjectsPerformSelector:@selector(delete)]; // ask user first!
+	id child;
+	while (child = children.lastObject) {
+		[child delete];
+	}
 
 	[[self.parentNode mutableArrayValueForKey: @"children"] removeObjectIdenticalTo: self];
 }
