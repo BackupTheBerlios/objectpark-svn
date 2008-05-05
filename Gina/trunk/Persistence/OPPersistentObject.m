@@ -320,6 +320,13 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 	[[self context] deleteObject: self];
 }
 
++ (void) context: (OPPersistentObjectContext*) context willDeleteInstanceWithOID: (OID) oid
+{
+	if ([self instancesRespondToSelector: @selector(willDelete)]) {
+		[[context objectForOID: oid] willDelete]; // loads instance (slow)
+	}
+}
+
 
 //- (id) primitiveValueForKey: (NSString*) key
 ///*" Fills the attributes dictionary, if necessary, i.e. fires the fault. The result is autoreleased in the calling thread. "*/

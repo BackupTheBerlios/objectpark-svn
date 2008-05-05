@@ -153,7 +153,7 @@ extern NSString* OPStringFromOID(OID oid);
 - (void) willRevertObject: (id <OPPersisting>) object;
 - (void) didRevertObject: (id <OPPersisting>) object;
 
-- (void) willFireFault: (OPPersistentObject*) fault forKey: (NSString*) key;
+//- (void) willFireFault: (OPPersistentObject*) fault forKey: (NSString*) key;
 //- (void) willAccessObject: (id <OPPersisting>) fault forKey: (NSString*) key;
 
 

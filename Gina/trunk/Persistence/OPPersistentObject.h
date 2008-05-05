@@ -101,6 +101,7 @@
 
 - (BOOL) hasUnsavedChanges;
 
++ (void) context: (OPPersistentObjectContext*) context willDeleteInstanceWithOID: (OID) oid;
 
 @end
 

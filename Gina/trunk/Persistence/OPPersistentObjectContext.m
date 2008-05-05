@@ -750,6 +750,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	}
 }
 
+
 - (void) revertChanges
 {
 	@synchronized(self) {

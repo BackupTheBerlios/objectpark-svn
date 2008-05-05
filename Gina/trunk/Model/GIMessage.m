@@ -62,18 +62,40 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 }
 
 
+//+ (void) context: (OPPersistentObjectContext*) context willDeleteInstanceWithOID: (OID) oid
+//{
+//	
+//	
+//	//[[context objectForOID: oid] willDelete]; // loads instance (slow)
+//	
+//	// Optimization:
+//	
+//	[[NSFileManager defaultManager] removeFileAtPath: [self messageFilePathForOID: oid inContext: context] handler: nil];
+//	
+//	[[[self context] messagesByMessageId] removeObjectForKey:self.messageId];
+//	
+//	// remove from any profiles:
+//	GIProfile *sendProfile = [GIProfile sendProfileForMessage:self];
+//	if (sendProfile) 
+//	{
+//		[[sendProfile mutableArrayValueForKey:@"messagesToSend"] removeObject:self];
+//		NSLog(@"removing message %@ from sendProfile %@", self, sendProfile);
+//	}
+//}
+
+
 - (void)willDelete
 {
-	id thread = self.thread;
-	if (thread) 
-	{
-		self.thread = nil;
-		
-		if ([thread messageCount] <= 1) 
-		{
-			[thread delete]; 
-		}
-	}
+//	id thread = self.thread;
+//	if (thread) 
+//	{
+//		self.thread = nil;
+//		
+//		if ([thread messageCount] <= 1) 
+//		{
+//			[thread delete]; 
+//		}
+//	}
 	
 	[[NSFileManager defaultManager] removeFileAtPath:self.messageFilePath handler:nil];
 	
@@ -90,12 +112,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[super willDelete];
 }
 
++ (NSString*) messageFilePathForOID: (OID) oid
+						  inContext: (OPPersistentObjectContext*) context
+{
+	NSString *filename = [[context transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%014llx.gml", LIDFromOID(oid)]];
+	return filename;
+}
+
 - (NSString *)messageFilePath
 {
-	NSString *filename = [[[self context] transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%014llx.gml", LIDFromOID([self oid])]];
-	
-//	[NSString stringWithFormat: @"%@/Msg%08x.gml", [[self context] transferDataDirectory], LIDFromOID([self oid])];
-	return filename;
+	return [[self class] messageFilePathForOID: self.oid inContext: self.context];
 }
 
 - (NSString *)senderName

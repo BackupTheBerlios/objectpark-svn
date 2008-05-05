@@ -209,14 +209,26 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	return [NSString stringWithFormat:@"%@ '%@' with %u messages", [super description], subject, [messages count]];
 }
 
++ (void) context: (OPPersistentObjectContext*) context willDeleteInstanceWithOID: (OID) oid
+{
+	[[context objectForOID: oid] willDelete]; // loads instance (slow)
+}
+
 - (void) willDelete
 {
-//	if (LIDFromOID(self.oid) == 366) {
-//		NSBeep();
-//	}
 	NSLog(@"Will delete Thread %@ from %@", self, self.messageGroups);
+//	NSMutableArray* mmessages = [self mutableArrayValueForKey: @"messages"];
+//	while (mmessages.count) {
+//		[[mmessages removeLastObject] 
+//	}
+	
+	NSMutableArray* ggroups = [self mutableArrayValueForKey: @"messageGroups"];
+	while (ggroups.count) {
+		[ggroups removeLastObject];
+	}
+	
 	[self.messages makeObjectsPerformSelector: @selector(delete)];
-	[[self mutableArrayValueForKey: @"messageGroups"] removeAllObjects];
+	
 	[super willDelete];
 }
 
