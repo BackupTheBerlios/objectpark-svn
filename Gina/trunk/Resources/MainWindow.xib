@@ -3,13 +3,12 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
 		<string key="IBDocument.SystemVersion">9C7010</string>
-		<string key="IBDocument.InterfaceBuilderVersion">649</string>
+		<string key="IBDocument.InterfaceBuilderVersion">652</string>
 		<string key="IBDocument.AppKitVersion">949.26</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="156"/>
-			<integer value="26"/>
+			<integer value="38"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1043,7 +1042,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																	<int key="NSColumnAutoresizingStyle">4</int>
 																	<int key="NSDraggingSourceMaskForLocal">15</int>
 																	<int key="NSDraggingSourceMaskForNonLocal">0</int>
-																	<bool key="NSAllowsTypeSelect">YES</bool>
+																	<bool key="NSAllowsTypeSelect">NO</bool>
 																</object>
 															</object>
 															<string key="NSFrame">{{1, 1}, {237, 136}}</string>
@@ -1187,7 +1186,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																	<int key="NSColumnAutoresizingStyle">4</int>
 																	<int key="NSDraggingSourceMaskForLocal">15</int>
 																	<int key="NSDraggingSourceMaskForNonLocal">0</int>
-																	<bool key="NSAllowsTypeSelect">YES</bool>
+																	<bool key="NSAllowsTypeSelect">NO</bool>
 																	<int key="NSTableViewSelectionHighlightStyle">1</int>
 																	<bool key="NSOutlineViewAutoresizesOutlineColumnKey">NO</bool>
 																	<float key="NSOutlineViewIndentationPerLevelKey">2.000000e+01</float>
@@ -1704,7 +1703,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																				<bool key="EncodedWithXMLCoder">YES</bool>
 																				<reference ref="869923238"/>
 																			</object>
-																			<int key="NSLMFlags">6</int>
+																			<int key="NSLMFlags">134</int>
 																			<nil key="NSDelegate"/>
 																		</object>
 																		<reference key="NSTextView" ref="751445563"/>
@@ -1712,7 +1711,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																		<int key="NSTCFlags">1</int>
 																	</object>
 																	<object class="NSTextViewSharedData" key="NSSharedData">
-																		<int key="NSFlags">10509</int>
+																		<int key="NSFlags">10525</int>
 																		<reference key="NSBackgroundColor" ref="1053472009"/>
 																		<reference key="NSInsertionColor" ref="384322412"/>
 																		<object class="NSDictionary" key="NSSelectedAttributes">
@@ -1860,7 +1859,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<string key="NSWindowContentMaxSize">{800, 120}</string>
 				<string key="NSWindowContentMinSize">{264, 120}</string>
 				<object class="NSView" key="NSWindowView" id="984671429">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1944,7 +1943,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 					</object>
 					<string key="NSFrameSize">{264, 120}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{264, 142}</string>
@@ -4079,6 +4077,22 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 					<int key="connectionID">468</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">editable: textViewIsEditable</string>
+						<reference key="source" ref="751445563"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="751445563"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">editable: textViewIsEditable</string>
+							<string key="NSBinding">editable</string>
+							<string key="NSKeyPath">textViewIsEditable</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">470</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -5760,7 +5774,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">468</int>
+			<int key="maxID">470</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

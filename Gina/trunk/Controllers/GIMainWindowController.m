@@ -250,6 +250,8 @@
 
 	[[searchResultTableView tableColumnWithIdentifier:@"messagegroups"] setSortDescriptorPrototype:nil];
 
+	[searchResultTableView setAllowsTypeSelect:NO];
+	
 	if (![self progressInfoVisible])
 	{
 		[self toggleProgressInfo:self];
@@ -302,8 +304,8 @@
 		[self setThreadsOnlyMode];
 	}
 	
-	[messageTextView setEditable:NO];
-	NSAssert(![messageTextView isEditable], @"should be non editable");
+//	[messageTextView setEditable:NO];
+//	NSAssert(![messageTextView isEditable], @"should be non editable");
 		
 	//	deferred enabling of autosave (timing problems otherwise):
 	[verticalSplitter setAutosaveName:@"VerticalSplitterAutosave"];
@@ -316,6 +318,11 @@
 	[groupsOutlineView setAutosaveExpandedItems:YES];
 	
 	[self.window makeKeyAndOrderFront:self];
+}
+
+- (BOOL)textViewIsEditable
+{
+	return NO;
 }
 
 - (void)setThreadsOnlyMode
