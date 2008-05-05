@@ -23,7 +23,6 @@
 #import "OPURLFieldCoder.h"
 #import "EDTextFieldCoder.h"
 #import <Foundation/NSDebug.h>
-#import "GIAddressFormatter.h"
 #import "GIPhraseBrowserController.h"
 #import "GIHeaderFieldEditor.h"
 #import "GIMessageGroup.h"
@@ -1826,21 +1825,22 @@ NSDictionary *maxLinesForCalendarName()
 {
     NSTextField *sender = [aNotification object];
     
-    if ([sender isKindOfClass:[NSTextField class]] && [[sender formatter] isKindOfClass:[GIAddressFormatter class]]) 
-    {
-        NSString* addressList = [sender stringValue];
-        NSArray* components = [addressList componentsSeparatedByString: @","];
-        NSEnumerator* enumerator = [components objectEnumerator];
-        NSString*component;
-        
-        while (component = [enumerator nextObject])
-        {
-            if ([[component addressFromEMailString] length])
-            {
-                [GIAddressFormatter addToLRUMailAddresses: [component stringByRemovingSurroundingWhitespace]];
-            }
-        }
-    }
+#warning LRU handling here!
+//    if ([sender isKindOfClass:[NSTextField class]] && [[sender formatter] isKindOfClass:[GIAddressFormatter class]]) 
+//    {
+//        NSString* addressList = [sender stringValue];
+//        NSArray* components = [addressList componentsSeparatedByString: @","];
+//        NSEnumerator* enumerator = [components objectEnumerator];
+//        NSString*component;
+//        
+//        while (component = [enumerator nextObject])
+//        {
+//            if ([[component addressFromEMailString] length])
+//            {
+//                [GIAddressFormatter addToLRUMailAddresses: [component stringByRemovingSurroundingWhitespace]];
+//            }
+//        }
+//    }
 }
 
 @end
