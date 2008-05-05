@@ -21,7 +21,7 @@
 /*" common initializer, since -init is not called. "*/
 - (void)awake 
 {
-	maxlines    = 5;
+	maxlines = 5;
     lineHeight = 17;	
 }
 
@@ -131,7 +131,7 @@
     NSTextContainer* tc = [self textContainer];
     if (tc && [self currentEditor]) {
 		
-		NSLog(@"sizeToFit");
+//		NSLog(@"sizeToFit");
         NSRect frame = [self frame];
         NSRect usedRect = [[tc layoutManager] usedRectForTextContainer: tc];
         NSSize newSize = NSMakeSize(frame.size.width, MAX(lineHeight, MIN(maxlines*lineHeight, usedRect.size.height))+5);
@@ -224,7 +224,7 @@
 //		self.lastStringValue = self.stringValue;
 //	}
 	
-	NSLog(@"textDidChange: %@", [self stringValue]);
+//	NSLog(@"textDidChange: %@", [self stringValue]);
     [super textDidChange:notification];
 }
 

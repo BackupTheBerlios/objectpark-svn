@@ -67,7 +67,11 @@ typedef enum
 	
 	id selectedKey;
 	BOOL wasPassphraseDialogDismissed;
+	
+	NSArray *toFieldValue;
 }
+
+@property (retain) NSArray *toFieldValue;
 
 - (id)initWithMessage:(GIMessage *)aMessage;
 - (id)initNewMessageWithProfile:(GIProfile *)aProfile;

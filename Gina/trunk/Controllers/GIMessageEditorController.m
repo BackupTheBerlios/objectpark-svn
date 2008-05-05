@@ -55,6 +55,14 @@
 
 @implementation GIMessageEditorController
 
+@synthesize toFieldValue;
+
+//- (void)setToFieldValue:(NSArray *)anArrayString
+//{
+//	[toFieldValue autorelease];
+//	toFieldValue = [aString retain];
+//}
+
 + (NSWindow *)windowForMessage:(GIMessage *)aMessage
 /*" Returns the window for the message aMessage or nil, if no such window exists. "*/
 {
@@ -367,11 +375,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [content release];
 	[selectedKey release];
 	[passphraseWindow release];
+	[toFieldValue release];
 	
     [windowController release];
     
     [window setDelegate:nil];
-
+	
     [super dealloc];
 }
 
@@ -722,6 +731,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     {
         return headerFieldEditor;
     }
+	
+    if ([anObject isKindOfClass:[OPSizingTokenField class]])
+    {
+        return headerFieldEditor;
+    }
+	
     return nil;
 }
 
@@ -1373,9 +1388,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (BOOL)messageIsSendable
 /*" A message is sendable if "to" and "subject" is filled out (nonempty). "*/
 {
-    NSString* to = [toField stringValue];
     NSString* subject = [subjectField stringValue];
-    
+    NSString *to = [self.toFieldValue componentsJoinedByString:@", "];
     if (([to length]) && ([subject length])) {
 				
         static NSCharacterSet* forbiddenCharacters = nil;
@@ -1603,6 +1617,7 @@ NSDictionary *maxLinesForCalendarName()
     // prepare dictionary for looking up header fields:
     headerTextFieldsForName = [[NSMutableDictionary alloc] init];
     [headerTextFieldsForName setObject:toField forKey:@"To"];
+		
     [headerTextFieldsForName setObject:subjectField forKey:@"Subject"];
     bottomTextField = subjectField;
     
