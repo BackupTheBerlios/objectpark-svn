@@ -14,7 +14,10 @@
     float lineHeight;
     unsigned maxlines;
     NSTextView *privateFieldEditor;
+	NSString *lastStringValue;
 }
+
+@property (retain) NSString *lastStringValue;
 
 - (void)setMaxLines:(unsigned)maximum;
 - (unsigned)maxLines;

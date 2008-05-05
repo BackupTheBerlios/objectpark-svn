@@ -497,6 +497,21 @@ static GIProfile *defaultProfile = nil;
 	[coder encodeBool:shouldEncryptNewMessagesByDefault forKey:@"shouldEncryptNewMessagesByDefault"];
 }
 
+- (NSString *)fromString
+{
+	NSString *result = nil;
+	if (self.realname.length) 
+	{
+		result = [NSString stringWithFormat:@"%@ <%@>", self.realnameForSending, self.mailAddress];
+	} 
+	else 
+	{
+		result = self.mailAddress;
+	}
+	
+	return result;
+}
+
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"%@ '%@'", [super description], self.name];

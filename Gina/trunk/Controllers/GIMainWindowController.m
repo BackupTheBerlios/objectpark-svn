@@ -1658,15 +1658,7 @@ static BOOL isShowingThreadsOnly = NO;
 	[resentInternetMessage addToHeaderFieldsName:@"Resent-Date" body:[fCoder fieldBody]];
     [fCoder release];
 	
-	NSString *fromString = nil;
-	if (redirectProfile.realname.length) 
-	{
-		fromString = [NSString stringWithFormat:@"%@ <%@>", redirectProfile.realnameForSending, redirectProfile.mailAddress];
-	} 
-	else 
-	{
-		fromString = redirectProfile.mailAddress;
-	}
+	NSString *fromString = [redirectProfile fromString];
 	[resentInternetMessage addToHeaderFieldsName:@"Resent-From" body:fromString];
 	
 	NSString *bccString = self.resentBcc.count ? [self.resentBcc componentsJoinedByString:@", "] : nil;

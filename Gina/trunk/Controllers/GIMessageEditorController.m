@@ -779,7 +779,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     OPInternetMessage *result = nil;
     NSEnumerator *enumerator;
-    NSString *headerField, *from;
+    NSString *headerField;
     GIProfile *theProfile = [self profile];
 
 	NSAssert(theProfile != nil, @"No profile present");
@@ -814,15 +814,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [self takeValuesFromHeaderFields];
     
     // create from header:
-	if (theProfile.realname.length) 
-	{
-		from = [NSString stringWithFormat:@"%@ <%@>", theProfile.realnameForSending, theProfile.mailAddress];
-	} 
-	else 
-	{
-		from = theProfile.mailAddress;
-	}
-	[headerFields setObject:from forKey:@"From"];
+	[headerFields setObject:[theProfile fromString] forKey:@"From"];
     
     // organization:
 	NSString *orga = theProfile.organization;
@@ -1595,8 +1587,15 @@ NSDictionary *maxLinesForCalendarName()
     
     maxLines = [[maxLinesForCalendarName() objectForKey:@"To"] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
-    [toField setMaxLines:maxLines];
-    
+	
+	
+	if ([toField respondsToSelector:@selector(setMaxLines:)])
+	{
+		[toField setMaxLines:maxLines];
+    }
+	
+//	[self createTextFieldWithFieldName:@"To"];
+	
     //NSLog(@"toField _fancyTokenizingCharacterSet = %d", [[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] characterIsMember:' ']);
 
     //[[[toField cell] valueForKey: @"_fancyTokenizingCharacterSet"] removeCharactersInString: @" ."];
@@ -1764,7 +1763,8 @@ NSDictionary *maxLinesForCalendarName()
     maxLines = [[maxLinesForCalendarName() objectForKey:aFieldName] unsignedIntValue];
     maxLines = maxLines ? maxLines : DEFAULTMAXLINES;
     [result setMaxLines:maxLines];
-    
+    [result setFont:hiddenTextFieldPrototype.font];
+	
     [predecessor setNextKeyView:result];
 
     // configuring the caption:
@@ -1772,6 +1772,7 @@ NSDictionary *maxLinesForCalendarName()
     frame = [caption frame];
     frame.origin.y = topY - frame.size.height - 3; // center positionsa
     [caption setFrame:frame];
+	[caption setFont:[hiddenCaptionPrototype font]];
     [caption setStringValue:[displayNameForHeaderField stringByAppendingString:@":"]];
     [caption setAlignment:NSRightTextAlignment];
     [caption setEditable:NO];

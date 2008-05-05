@@ -67,6 +67,7 @@
 - (void)makeDefaultProfile;
 
 - (NSString *)realnameForSending;
+- (NSString *)fromString;
 
 @end
 

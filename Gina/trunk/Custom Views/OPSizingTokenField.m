@@ -11,6 +11,8 @@
 
 @implementation OPSizingTokenField
 
+@synthesize lastStringValue;
+
 - (id)init
 {
     return [super init];
@@ -33,11 +35,16 @@
     return self;
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
 	[self awake];
 }
 
+- (void)dealloc
+{
+	[lastStringValue release];
+	[super dealloc];
+}
 
 /*
  - (NSLayoutManager*) layoutManager
@@ -123,6 +130,8 @@
 {
     NSTextContainer* tc = [self textContainer];
     if (tc && [self currentEditor]) {
+		
+		NSLog(@"sizeToFit");
         NSRect frame = [self frame];
         NSRect usedRect = [[tc layoutManager] usedRectForTextContainer: tc];
         NSSize newSize = NSMakeSize(frame.size.width, MAX(lineHeight, MIN(maxlines*lineHeight, usedRect.size.height))+5);
@@ -188,26 +197,35 @@
 //}
 
 
-- (void) textDidBeginEditing: (NSNotification*) notification
+- (void)textDidBeginEditing:(NSNotification *)notification
 {
-    NSTextContainer* tc = [self textContainer];
-    NSLayoutManager* lm = [tc layoutManager];
+    NSTextContainer *tc = [self textContainer];
+    NSLayoutManager *lm = [tc layoutManager];
     
-    NSFont* typingFont = [[[tc textView] typingAttributes] objectForKey: NSFontAttributeName];
-    lineHeight = [lm defaultLineHeightForFont: typingFont];
+    NSFont *typingFont = [[[tc textView] typingAttributes] objectForKey:NSFontAttributeName];
+    lineHeight = [lm defaultLineHeightForFont:typingFont];
     
-    [super textDidBeginEditing: notification];
+    [super textDidBeginEditing:notification];
 }
-//- (void) textDidEndEditing: (NSNotification*) notification;
 
-- (void) textDidChange: (NSNotification*) notification
+//- (void)textDidEndEditing:(NSNotification *)notification;
+//{
+////	[super textDidEditing:notification];
+//}
+
+- (void)textDidChange:(NSNotification *)notification
 {
-	// Instead of calling -sizeToFit directly, we call it delayed, to take any changes in the selection, (e.g. introduces by the formatter) into account.
-	[self performSelectorOnMainThread: @selector(sizeToFit) withObject: nil waitUntilDone: NO];
-    //[self sizeToFit]; 
+	if (![self.lastStringValue isEqualToString:self.stringValue])
+	{
+		// Instead of calling -sizeToFit directly, we call it delayed, to take any changes in the selection, (e.g. introduces by the formatter) into account.
+		[self performSelectorOnMainThread:@selector(sizeToFit) withObject:nil waitUntilDone:NO];
+		//[self sizeToFit]; 
+		NSLog(@"performing");
+		self.lastStringValue = self.stringValue;
+	}
 	
-	//NSLog(@"textDidChange: %@", [self stringValue]);
-    [super textDidChange: notification];
+	NSLog(@"textDidChange: %@", [self stringValue]);
+    [super textDidChange:notification];
 }
 
 - (void)forceSizeToFit
@@ -223,9 +241,10 @@
 	[self performSelector:@selector(forceSizeToFit) withObject:nil afterDelay:0.1];
 }
 
-- (BOOL) becomeFirstResponder
+- (BOOL)becomeFirstResponder
 {
-    if ([super becomeFirstResponder]) {
+    if ([super becomeFirstResponder]) 
+	{
         [self sizeToFit];
         return YES;
     }
