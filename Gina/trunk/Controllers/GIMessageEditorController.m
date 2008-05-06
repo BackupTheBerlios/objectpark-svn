@@ -56,6 +56,7 @@
 @implementation GIMessageEditorController
 
 @synthesize toFieldValue;
+@synthesize profile;
 
 //- (void)setToFieldValue:(NSArray *)anArrayString
 //{
@@ -68,10 +69,8 @@
 {
     NSWindow *win;
     NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
-    while (win = [enumerator nextObject]) 
-	{
-        if ([[win delegate] isKindOfClass:self]) 
-		{
+    while (win = [enumerator nextObject]) {
+        if ([[win delegate] isKindOfClass:self]) {
             if ([[win delegate] oldMessage] == aMessage) return win;
         }
     }
@@ -81,8 +80,7 @@
 
 - (id)init
 {
-    if (self = [super init]) 
-	{
+    if (self = [super init]) {
         // eager, isn't it?
         if (NSDebugEnabled) NSLog(@"GIMessageEditorController init");
         headerFields = [[NSMutableDictionary alloc] init];
@@ -95,12 +93,10 @@
 - (id)initWithMessage:(GIMessage *)aMessage
 /*" For reopening an unsent message. "*/
 {
-    if (self = [self init]) 
-    {        
+    if (self = [self init]) {        
 		// check if aMessage is already be edited:
 		NSWindow *existingEditorWindow = [[self class] windowForMessage:aMessage];
-		if (existingEditorWindow)
-		{
+		if (existingEditorWindow) {
 			[existingEditorWindow makeKeyAndOrderFront:self];
 			
 			[self autorelease];
@@ -111,8 +107,7 @@
         if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus:OPSendStatusQueuedBlocked];
         
         profile = [[GIProfile sendProfileForMessage:aMessage] retain];
-		if (!profile) 
-		{
+		if (!profile) {
 			NSLog(@"WARNING: message doesn't have a profile - setting default profile");
 			profile = [[GIProfile defaultProfile] retain];
 		}
@@ -141,8 +136,7 @@
 
 - (id)initNewMessageWithProfile:(GIProfile *)aProfile
 {
-    if (self = [self init]) 
-    {
+    if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -171,8 +165,7 @@
 
 - (id)initNewMessageWithMailToDictionary:(NSDictionary *)aMailToDict
 {
-    if(self = [self init])
-    {
+    if(self = [self init]) {
         profile = [[GIProfile defaultProfile] retain]; // can a better profile be guessed?
         referencedMessage = nil;
 		
@@ -184,28 +177,23 @@
 		
 		NSString *component;
 		
-		if (component = [aMailToDict objectForKey:@"to"])
-		{
+		if (component = [aMailToDict objectForKey:@"to"]) {
 			[headerFields setObject:component forKey:@"To"];
 		}
 		
-		if (component = [aMailToDict objectForKey:@"subject"])
-		{
+		if (component = [aMailToDict objectForKey:@"subject"]) {
 			[headerFields setObject:component forKey:@"Subject"];
 		}
 		
-		if (component = [aMailToDict objectForKey:@"cc"])
-		{
+		if (component = [aMailToDict objectForKey:@"cc"]) {
 			[headerFields setObject:component forKey:@"Cc"];
 		}
 		
-		if (component = [aMailToDict objectForKey:@"bcc"])
-		{
+		if (component = [aMailToDict objectForKey:@"bcc"]) {
 			[headerFields setObject:component forKey:@"Bcc"];
 		}
 		
-		if (component = [aMailToDict objectForKey:@"body"])
-		{
+		if (component = [aMailToDict objectForKey:@"body"]) {
 			[content appendString:component];
 		}
 		
@@ -220,8 +208,7 @@
 
 - (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile
 {
-    if (self = [self init]) 
-    {
+    if (self = [self init]) {
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -352,7 +339,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
     [GIPhraseBrowserController setTextView:messageTextView];
-	[self validateSelectedProfile];
+	//[self validateSelectedProfile];
 }
 
 /*
@@ -1479,30 +1466,29 @@ NSDictionary *maxLinesForCalendarName()
     }
 }
 
-- (void) validateSelectedProfile
-// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
-{
-	[profile willChangeValueForKey: @"validationErrors"];
-	[profile didChangeValueForKey: @"validationErrors"];
-}
+//- (void) validateSelectedProfile
+//// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
+//{
+//	[profile willChangeValueForKey: @"validationErrors"];
+//	[profile didChangeValueForKey: @"validationErrors"];
+//}
 	
 - (void) selectProfile: (GIProfile*) aProfile
 {
     NSString *text;
 	NSString *oldText;
     NSTextField *field;
-    
-    GIProfile *oldProfile = profile;
-    [profile autorelease];
-    profile = [aProfile retain];
-    
+    GIProfile* oldProfile = self.profile;
+	
+	
+	self.profile = aProfile;
 	
     if (profile) // select active profile:
 	{
         [profileButton selectItemAtIndex:[profileButton indexOfItemWithRepresentedObject:profile]];
     }
 	
-	[self validateSelectedProfile];
+	//[self validateSelectedProfile];
     
     // Cc:
     if ([self hasHeaderTextFieldWithFieldName:@"Cc"]) 
@@ -1578,8 +1564,7 @@ NSDictionary *maxLinesForCalendarName()
 {
     GIProfile *newProfile = [[profileButton selectedItem] representedObject];
 	// Check if something to do:
-    if ([self profile] != newProfile) 
-	{
+    if ([self profile] != newProfile) {
         [self selectProfile:newProfile];
         [self updateSignature];
         [window setDocumentEdited:YES];

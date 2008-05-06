@@ -106,7 +106,6 @@ typedef enum
 - (OPSizingTextField*) headerTextFieldWithFieldName: (NSString*) aFieldName;
 - (IBAction)switchProfile: (id) sender;
 - (void)takeValuesFromHeaderFields;
-- (void)validateSelectedProfile;
 
 @end
 
