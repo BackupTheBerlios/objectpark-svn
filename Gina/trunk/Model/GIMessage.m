@@ -197,8 +197,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     // sanity check for date header field:
     [date release]; date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:[[im date] timeIntervalSinceReferenceDate]];
-    if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare: date] != NSOrderedDescending) 
-	{
+    if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare: date] != NSOrderedDescending) {
         // if message's date is a future date
         // broken message, set current date:
 		[date release]; date = [[NSDate date] retain];
@@ -207,9 +206,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
-    if ([GIProfile isMyEmailAddress:fromHeader]) 
-	{
-        [self toggleFlags:OPIsFromMeStatus]; // never changes, hopefully
+    if ([GIProfile isMyEmailAddress:fromHeader]) {
+        [self toggleFlags: OPIsFromMeStatus]; // never changes, hopefully
     }
 	
 	// Setting thread:
@@ -573,7 +571,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		result = [self.internetMessage toWithFallback:YES];
 		
 		// self repairing:
-		if ([self hasFlags:OPIsFromMeStatus])
+		if ([self hasFlags: OPIsFromMeStatus])
 		{
 			NSLog(@"repairing to field");
 			[self setTo:result];

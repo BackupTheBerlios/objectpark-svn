@@ -69,16 +69,14 @@
 			[GIMessageFilter applyFiltersToMessage:aMessage];
 			
 			// put in Default group if not already in any other group:
-			if (aMessage.thread.messageGroups.count == 0)
-//			if (![aMessage.thread.messageGroups containsObject:[GIMessageGroup defaultMessageGroup]])
-			{
-				[self addMessage:aMessage toMessageGroup:[GIMessageGroup defaultMessageGroup]];
+			if (aMessage.thread.messageGroups.count == 0)			{
+				[self addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup]];
 			}
 
-			if ([aMessage hasFlags:OPIsFromMeStatus]) 
+			if ([aMessage hasFlags: OPIsFromMeStatus]) 
 			{
 				// put in My Threads group if from "me":
-				[self addMessage:aMessage toMessageGroup:[GIMessageGroup sentMessageGroup]];
+				[self addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup]];
 			}
 			
 			NSAssert(aMessage.thread.messageGroups.count > 0, @"message without group found");
