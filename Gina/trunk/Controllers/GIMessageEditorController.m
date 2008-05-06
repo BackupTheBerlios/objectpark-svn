@@ -1343,7 +1343,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     // Remove old message from message groups:
 	[[oldMessage.thread mutableArrayValueForKey:@"messageGroups"] removeAllObjects];
 	
-	[oldMessage delete]; // removes the message also from any profile
+	[oldMessage.thread delete]; // removes the message also from any profile
     
 	GIThread *thread = message.thread;
 	NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];

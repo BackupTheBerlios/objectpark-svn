@@ -198,7 +198,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 		}
 	}
 	
-//	NSArray* importedMessages = [context importGmlFiles: filePaths moveOnSuccess: YES];
+	NSArray* importedMessages = [context importGmlFiles: filePaths moveOnSuccess: YES];
 
 	if (filename && importCount) {
 		// There are more messages in the folder to import.

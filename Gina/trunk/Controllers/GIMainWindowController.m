@@ -176,7 +176,7 @@
 	
 	if (!message) return nil;
 	
-	WebArchive *result = [message.internetMessage webArchive];
+	WebArchive *result = nil; //[message.internetMessage webArchive];
 	//NSLog(@"message for display: %@", [result string]);
 	
 	NSLog(@"Web archive = %@", result);
@@ -440,7 +440,7 @@
 - (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
 	SEL action = [anItem action];
-	NSLog(@"Validating %@", anItem);
+	//NSLog(@"Validating %@", anItem);
 	if (action == @selector(delete:))
 	{
 		return YES; //[(GIHierarchyNode *)[messageGroupsController selectedObject] isDeletable];
