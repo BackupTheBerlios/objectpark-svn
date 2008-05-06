@@ -1677,22 +1677,13 @@ static BOOL isShowingThreadsOnly = NO;
 	[resentInternetMessage addToHeaderFieldsName:@"Resent-From" body:fromString];
 	
 	NSString *bccString = self.resentBcc.count ? [self.resentBcc componentsJoinedByString:@", "] : nil;
-	if (bccString)
-	{
-		[resentInternetMessage addToHeaderFieldsName:@"Resent-Bcc" body:bccString];
-	}
+	[resentInternetMessage addToHeaderFieldsName:@"Resent-Bcc" body:bccString];
 	
 	NSString *ccString = self.resentCc.count ? [self.resentCc componentsJoinedByString:@", "] : nil;
-	if (ccString)
-	{
-		[resentInternetMessage addToHeaderFieldsName:@"Resent-Cc" body:ccString];
-	}
+	[resentInternetMessage addToHeaderFieldsName:@"Resent-Cc" body:ccString];
 	
 	NSString *toString = self.resentTo.count ? [self.resentTo componentsJoinedByString:@", "] : nil;
-	if (toString)
-	{
-		[resentInternetMessage addToHeaderFieldsName:@"Resent-To" body:toString];
-	}
+	[resentInternetMessage addToHeaderFieldsName:@"Resent-To" body:toString];
 	
 	// construct resent message:
 	GIMessage *resentMessage = [[[GIMessage alloc] initWithInternetMessage:resentInternetMessage appendToAppropriateThread:NO forcedMessageId:resentMessageId] autorelease];

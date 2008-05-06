@@ -68,27 +68,25 @@
 //---------------------------------------------------------------------------------------
 
 /*" Adds headerfield with name fieldName and body fieldBody 
- at the top of the list of header fields. "*/
-- (void)addToHeaderFieldsName:(NSString *)fieldName body:(NSString *)fieldBody;
+ at the top of the list of header fields. Does nothing, if body is nil. Raises, if fieldName is nil. "*/
+- (void) addToHeaderFieldsName: (NSString*) fieldName body: (NSString*) fieldBody;
 {
-    NSString *sharedName;
-	
-	// todo: optimize by setting the firstObject to sharedName
-    sharedName = [fieldName sharedInstance];
-	NSArray *headerField = [[NSArray alloc] initWithObjects:sharedName, fieldBody, nil];
-        //headerField = [[[OPObjectPair allocWithZone:[self zone]] initWithObjects:sharedName:fieldBody] autorelease];
-	
-	if (headerFields.count)
-	{
-		[headerFields insertObject:headerField atIndex:0];
+	NSParameterAssert(fieldName.length);
+	if (fieldBody) {
+		NSString* sharedName = [fieldName sharedInstance];
+		
+		// todo: optimize by setting the firstObject to sharedName
+		NSArray* headerField = [[NSArray alloc] initWithObjects: sharedName, fieldBody, nil];
+		
+		if (headerFields.count) {
+			[headerFields insertObject: headerField atIndex: 0];
+		} else {
+			[headerFields addObject: headerField];
+		}
+		
+		[headerDictionary setObject: fieldBody forKey: [[fieldName lowercaseString] sharedInstance]];
+		[headerField release];
 	}
-	else
-	{
-		[headerFields addObject:headerField];
-	}
-	
-    [headerDictionary setObject:fieldBody forKey:[[fieldName lowercaseString] sharedInstance]];
-	[headerField release];
 }
 
 - (NSArray *)headerFields

@@ -29,6 +29,12 @@ NSString* GIProfileDidChangeNotification = @"GIProfileDidChangeNotification";
 	return YES;
 }
 
++ (void) initialize 
+{
+    [self setKeys: [NSArray arrayWithObjects: @"validationErrors",nil] triggerChangeNotificationsForDependentKey: @"validationErrorsDescription"];
+	[self setKeys: [NSArray arrayWithObjects: @"sendAccount",nil] triggerChangeNotificationsForDependentKey: @"validationErrors"];
+}
+
 - (void) dealloc
 {
 	[cachedEmailAddresses release];
@@ -489,6 +495,23 @@ static GIProfile *defaultProfile = nil;
 	[coder encodeBool:shouldSignNewMessagesByDefault forKey:@"shouldSignNewMessagesByDefault"];
 	[coder encodeBool:shouldEncryptNewMessagesByDefault forKey:@"shouldEncryptNewMessagesByDefault"];
 }
+
+- (NSArray*) validationErrors
+/*" Returns an array of NSError objects, one for each invalid property. "*/
+{
+	NSMutableArray* errors = [NSMutableArray array];
+	if (!self.sendAccount) {
+		[errors addObject: [NSError errorWithDomain: [self.class description]
+										description: @"Current profile has no send account set."]];
+	}
+	return errors.count ? errors : nil;
+}
+
+- (NSString*) validationErrorsDescription
+{
+	return [[self.validationErrors arrayByMappingWithSelector: @selector(localizedDescription)] componentsJoinedByString: @"\n"];
+}
+
 
 - (NSString *)fromString
 {

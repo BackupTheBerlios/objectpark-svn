@@ -3,13 +3,13 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
 		<string key="IBDocument.SystemVersion">9C7010</string>
-		<string key="IBDocument.InterfaceBuilderVersion">652</string>
+		<string key="IBDocument.InterfaceBuilderVersion">649</string>
 		<string key="IBDocument.AppKitVersion">949.26</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5"/>
 			<integer value="137"/>
+			<integer value="5"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -947,7 +947,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<object class="NSButton" id="802613546">
 							<reference key="NSNextResponder" ref="456507497"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{5, 574}, {18, 20}}</string>
+							<string key="NSFrame">{{226, 571}, {28, 24}}</string>
 							<reference key="NSSuperview" ref="456507497"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="591427190">
@@ -956,12 +956,11 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								<string key="NSContents">!</string>
 								<reference key="NSSupport" ref="526607721"/>
 								<reference key="NSControlView" ref="802613546"/>
-								<int key="NSButtonFlags">-2038021889</int>
-								<int key="NSButtonFlags2">32</int>
-								<object class="NSFont" key="NSAlternateImage">
-									<string key="NSName">LucidaGrande</string>
-									<double key="NSSize">1.300000e+01</double>
-									<int key="NSfFlags">16</int>
+								<int key="NSButtonFlags">-2042347265</int>
+								<int key="NSButtonFlags2">2</int>
+								<object class="NSCustomResource" key="NSNormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">error_triangle</string>
 								</object>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
@@ -1260,24 +1259,60 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								</object>
 								<object class="NSMutableArray" key="dict.values">
 									<bool key="EncodedWithXMLCoder">YES</bool>
-									<integer value="1" id="5"/>
-									<integer value="0" id="6"/>
-									<reference ref="5"/>
-									<reference ref="6"/>
-									<reference ref="6"/>
-									<reference ref="6"/>
+									<reference ref="9"/>
+									<reference ref="8"/>
+									<reference ref="9"/>
+									<reference ref="8"/>
+									<reference ref="8"/>
+									<reference ref="8"/>
 									<string/>
 									<string/>
 									<string/>
 									<string/>
-									<reference ref="5"/>
-									<reference ref="6"/>
+									<reference ref="9"/>
+									<reference ref="8"/>
 								</object>
 							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
 					<int key="connectionID">163</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">toolTip: profile.validationErrorsDescription</string>
+						<reference key="source" ref="802613546"/>
+						<reference key="destination" ref="255479443"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="802613546"/>
+							<reference key="NSDestination" ref="255479443"/>
+							<string key="NSLabel">toolTip: profile.validationErrorsDescription</string>
+							<string key="NSBinding">toolTip</string>
+							<string key="NSKeyPath">profile.validationErrorsDescription</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">170</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: profile.validationErrors.@count</string>
+						<reference key="source" ref="802613546"/>
+						<reference key="destination" ref="255479443"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="802613546"/>
+							<reference key="NSDestination" ref="255479443"/>
+							<string key="NSLabel">hidden: profile.validationErrors.@count</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">profile.validationErrors.@count</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">171</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1334,8 +1369,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<reference ref="824737109"/>
 							<reference ref="101122324"/>
 							<reference ref="412513236"/>
-							<reference ref="802613546"/>
 							<reference ref="302846674"/>
+							<reference ref="802613546"/>
 						</object>
 						<reference key="parent" ref="352463046"/>
 					</object>
@@ -1746,7 +1781,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{1346, 916}, {206, 43}}</string>
+					<string>{{2170, 872}, {206, 43}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1789,9 +1824,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
-					<string>{{345, 101}, {531, 671}}</string>
+					<string>{{1785, 172}, {531, 671}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{345, 101}, {531, 671}}</string>
+					<string>{{1785, 172}, {531, 671}}</string>
 					<reference ref="9"/>
 					<reference ref="9"/>
 					<reference ref="9"/>
@@ -1826,7 +1861,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">163</int>
+			<int key="maxID">171</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

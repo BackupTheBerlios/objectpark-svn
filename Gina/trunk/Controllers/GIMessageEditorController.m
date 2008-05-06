@@ -1479,16 +1479,14 @@ NSDictionary *maxLinesForCalendarName()
     }
 }
 
-- (void)validateSelectedProfile
+- (void) validateSelectedProfile
+// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
 {
-	// Validate button with exclamation mark to indicate that the selected profile is not set up correctly.
-#warning profile validation disabled
-	NSArray *validationErrors = nil; //[profile validationErrors];	
-	[profileValidationButton setHidden:validationErrors == nil];
-	if (validationErrors) [profileValidationButton setToolTip:[[validationErrors arrayByMappingWithSelector:@selector(localizedDescription)] componentsJoinedByString:@"\n"]];	
+	[profile willChangeValueForKey: @"validationErrors"];
+	[profile didChangeValueForKey: @"validationErrors"];
 }
-
-- (void)selectProfile:(GIProfile *)aProfile
+	
+- (void) selectProfile: (GIProfile*) aProfile
 {
     NSString *text;
 	NSString *oldText;

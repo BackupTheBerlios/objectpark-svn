@@ -69,6 +69,8 @@
 - (NSString *)realnameForSending;
 - (NSString *)fromString;
 
+- (NSArray*) validationErrors;
+
 @end
 
 extern NSString *GIProfileDidChangeNotification;
