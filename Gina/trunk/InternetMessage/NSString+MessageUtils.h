@@ -39,6 +39,7 @@ extern NSString *OPAttachmentPathAttribute;
 - (NSArray *)realnameListFromEMailString;
 - (NSString *)addressFromEMailString;
 - (NSArray *)addressListFromEMailString;
+- (NSArray *)addressWithRealnameListFromEMailString;
 
 - (NSString *)stringByRemovingReplyPrefix;
 

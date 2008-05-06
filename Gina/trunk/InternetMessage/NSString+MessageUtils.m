@@ -1404,7 +1404,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
 }
 
 
-- (NSArray*) fieldListFromEMailString 
+- (NSArray *)fieldListFromEMailString 
 {
     NSCharacterSet *stopSet, *quoteSet, *nonWhitespaceSet;
     NSString *chunk;
@@ -1444,6 +1444,32 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
     }
     
     return result;
+}
+
+- (NSArray *)addressWithRealnameListFromEMailString
+{
+    NSEnumerator *enumerator;
+    NSString *field;
+    NSMutableArray *result;
+    
+    result = [NSMutableArray array];
+    
+    enumerator = [[self fieldListFromEMailString] objectEnumerator];
+    
+    while (field = [enumerator nextObject])
+    {
+        field = [field stringByRemovingSurroundingWhitespace];
+        
+        if ([field length])
+        {
+            [result addObject:field];
+        }
+    }
+    
+    return result;
+    /*
+	 return [[[self fieldListFromEMailString] arrayByMappingWithSelector:@selector(stringByRemovingSurroundingWhitespace)] arrayByMappingWithSelector:@selector(addressFromEMailString)];
+     */
 }
 
 - (NSArray *)addressListFromEMailString 

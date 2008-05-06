@@ -1031,6 +1031,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [headerFields setObject:[coder stringValue] forKey:[headerField firstObject]];
     }
     
+	self.toFieldValue = [[headerFields objectForKey:@"To"] addressWithRealnameListFromEMailString];
     //NSLog(@"headers = %@", headerFields);
 }
 
@@ -1666,6 +1667,8 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
     
+//	self.toFieldValue = [headerFields objectForKey:@"to"];
+	
 // TODO: reenable newsgroup support here
     /*
     // Handle "Newsgroups" key:

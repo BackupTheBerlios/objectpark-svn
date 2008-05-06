@@ -12,6 +12,7 @@
 #import "OPPersistentObjectContext.h"
 #import "GIThread.h"
 #import "OPFaultingArray.h"
+#import "GIApplication.h"
 
 //@implementation GIMessageFilterList
 //
@@ -101,43 +102,54 @@
 {
 	NSParameterAssert([aGroup isKindOfClass:[GIMessageGroup class]]);
 	
-	for (GIThread *thread in someThreads)
+	@try
 	{
-		NSAssert([thread isKindOfClass:[GIThread class]], @"threads only");
-		//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
-		// Remove selected thread from receiver's group:
-		[messageGroups removeObject:aGroup];
+		[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];
 		
-		BOOL threadWasPutIntoAtLeastOneGroup = NO;
-		
-		@try 
+		for (GIThread *thread in someThreads)
 		{
-			// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
-			for (GIMessage *message in thread.messages)
+			NSAssert([thread isKindOfClass:[GIThread class]], @"threads only");
+			//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+			NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
+			// Remove selected thread from receiver's group:
+			[messageGroups removeObject:aGroup];
+			
+			BOOL threadWasPutIntoAtLeastOneGroup = NO;
+			
+			@try 
 			{
-				threadWasPutIntoAtLeastOneGroup |= [self applyFiltersToMessage:message];
-			}
-		} 
-		@catch (id localException) 
-		{
-			@throw;
-		} 
-		@finally 
-		{
-			if (!threadWasPutIntoAtLeastOneGroup) 
-			{				
-				if (![messageGroups containsObject:aGroup])
+				// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
+				for (GIMessage *message in thread.messages)
 				{
-					[messageGroups addObject:aGroup];
+					threadWasPutIntoAtLeastOneGroup |= [self applyFiltersToMessage:message];
+				}
+			} 
+			@catch (id localException) 
+			{
+				@throw;
+			} 
+			@finally 
+			{
+				if (!threadWasPutIntoAtLeastOneGroup) 
+				{				
+					if (![messageGroups containsObject:aGroup])
+					{
+						[messageGroups addObject:aGroup];
+					}
 				}
 			}
+			//		[pool release];
 		}
-		//		[pool release];
+	}
+	@catch (id localException)
+	{
+		@throw;
+	}
+	@finally
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
 	}
 }
-
-
 
 + (BOOL)cachesAllObjects
 {
