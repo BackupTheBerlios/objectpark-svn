@@ -42,10 +42,14 @@
 }
 
 - (IBAction) delete: (id) sender
+// needs validation?
 {
-	NSUInteger selectionIndex = [[self selectedRowIndexes] firstIndex];
-	[self.dataSource performSelector: @selector(moveSelectionToTrash)];
-	[self selectRow: selectionIndex byExtendingSelection: NO];
+	NSIndexSet* selections = [self selectedRowIndexes];
+	if (selections.count) {
+		NSUInteger selectionIndex = [[self selectedRowIndexes] firstIndex];
+		[self.dataSource performSelector: @selector(moveSelectionToTrash)];
+		[self selectRow: selectionIndex byExtendingSelection: NO];
+	}
 }
 
 - (void)drawGridInClipRect:(NSRect)rect

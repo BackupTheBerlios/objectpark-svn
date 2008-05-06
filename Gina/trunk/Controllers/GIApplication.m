@@ -388,6 +388,11 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	[self.context saveChanges];
 }
 
+- (IBAction) delete: (id) sender
+{
+	NSLog(@"delete: called.");
+}
+
 
 - (IBAction)openFile:(id)sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/

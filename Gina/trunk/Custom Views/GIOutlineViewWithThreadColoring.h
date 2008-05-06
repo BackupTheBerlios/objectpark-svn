@@ -15,5 +15,7 @@
 
 - (BOOL)highlightThreads;
 - (void)setHighlightThreads:(BOOL)aBool;
+- (IBAction) delete: (id) sender;
+
 
 @end

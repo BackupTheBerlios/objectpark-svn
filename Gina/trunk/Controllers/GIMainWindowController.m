@@ -440,10 +440,10 @@
 - (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
 	SEL action = [anItem action];
-	
+	NSLog(@"Validating %@", anItem);
 	if (action == @selector(delete:))
 	{
-		return [(GIHierarchyNode *)[messageGroupsController selectedObject] isDeletable];
+		return YES; //[(GIHierarchyNode *)[messageGroupsController selectedObject] isDeletable];
 	}
 	else if (action == @selector(markAsRead:))
 	{
@@ -1129,8 +1129,16 @@ static BOOL isShowingThreadsOnly = NO;
 }
 
 #pragma mark -- deletion of hierarchy objects  --
-- (IBAction)delete:(id)sender
+- (IBAction) delete: (id) sender
 {
+	if ([[messageTextView window] firstResponder] == (NSResponder*)messageTextView) {
+		[threadsOutlineView delete: sender];
+		if ([self isShowingMessageOnly]) {
+			[self setThreadsOnlyMode];
+		}
+		return;
+	}
+	
 	GIHierarchyNode *node = messageGroupsController.selectedObject;
 	
 	NSString *nodeType = [node isKindOfClass:[GIMessageGroup class]] ? NSLocalizedString(@"Mailbox", @"Delete warning dialog") : NSLocalizedString(@"Folder", @"Delete warning dialog");

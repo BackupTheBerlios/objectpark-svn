@@ -393,6 +393,24 @@ NSString *OPAttributedStringPboardType = @"OPAttributedStringPboardType";
 	return result;
 }
 
+//- (IBAction) delete: (id) sender
+//{
+//	NSLog(@"delete: called.");
+//}
+//
+//- (BOOL) validateMenuItem: (NSMenuItem*) menuItem
+//{
+//	if (menuItem.action == @selector(delete:)) return YES;
+//    return [super validateMenuItem: menuItem];
+//}
+
+- (BOOL) respondsToSelector: (SEL) selector
+{
+	if (selector == @selector(delete:)) {
+		return NO;
+	}
+	return [super respondsToSelector: selector];
+}
 
 /*" Enables in the case of a non editable text view the use of the spacebar. "*/
 - (void)keyDown:(NSEvent *)theEvent
