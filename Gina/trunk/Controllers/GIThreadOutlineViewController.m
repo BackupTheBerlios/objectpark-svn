@@ -632,19 +632,28 @@ NSDateFormatter *timeAndDateFormatter()
 	
 	if ( selectionRestoreInProgress) return;
 	
-	if (outlineView.dataSource && [self.rootItem isKindOfClass: [OPPersistentObject class]]) {
+	if (outlineView.dataSource && [self.rootItem isKindOfClass: [OPPersistentObject class]]) 
+	{
 		// remember selection for messsage group (root item):
-		NSArray* selectedObjects = self.selectedObjects;
+		NSArray *selectedObjects = self.selectedObjects;
 		
-		NSMutableArray* oidsOfSelectedObjects = [NSMutableArray arrayWithCapacity: [selectedObjects count]];
-		for (OPPersistentObject* selectedObject in selectedObjects) {
-			if ([selectedObject conformsToProtocol: @protocol(OPPersisting)]) {
-				[oidsOfSelectedObjects addObject: [NSNumber numberWithOID: [selectedObject oid]]];
+#warning restricted remembering of selected threads to 1 thread max.
+		if (selectedObjects.count > 1)
+		{
+			selectedObjects = [NSArray arrayWithObject:[selectedObjects lastObject]];
+		}
+		
+		NSMutableArray *oidsOfSelectedObjects = [NSMutableArray arrayWithCapacity:[selectedObjects count]];
+		for (OPPersistentObject *selectedObject in selectedObjects) 
+		{
+			if ([selectedObject conformsToProtocol:@protocol(OPPersisting)]) 
+			{
+				[oidsOfSelectedObjects addObject:[NSNumber numberWithOID:[selectedObject oid]]];
 			}
 		}
 		
 		NSString *groupSelectionDefaultKey = [NSString stringWithFormat:@"GroupSelection-%llu", [(OPPersistentObject *)self.rootItem oid]];
-		[[NSUserDefaults standardUserDefaults] setObject: oidsOfSelectedObjects forKey: groupSelectionDefaultKey];
+		[[NSUserDefaults standardUserDefaults] setObject:oidsOfSelectedObjects forKey:groupSelectionDefaultKey];
 	}
 	
 }

@@ -9,23 +9,22 @@
 \b0\fs24 \cf0 \
 Features:\
 \
-- (PRO) Wiedervolage - erstellt todo item im Calendar Framework samt Erinnerung und Aufruf der gml Datei.\
-- Timed "Receive Messages"\
+- (PRO) Wiedervolage - erstellt todo item im Calendar Framework samt Erinnerung und Aufruf der gml Datei. (oder anders)\
 \
 Bugs:\
-- Draft messages are opened in a new editor each time (even if already open)\
-- Each "save" of a draft message creates a copy in the drafts message groups\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 Axel:\
+- Fix Bug: Draft messages are opened in a new editor each time (even if already open)\
+- Fix Bug: Each "save" of a draft message creates a copy in the drafts message groups\
+- Timed "Receive Messages"\
 - Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
-- next message with spacebar handling (waiting on bug: "fix message selection by itemspaths during paging with the space key")\
-- read and next shortcuts like in Ginko Voyager\
 - optimization: suppress message rendering in threads only mode\
 \
 Dirk:\
-\
+- Fix Bug: On startup the selected message group and the group from which the threads are shown doesn't match.\
+- Fix Bug: thread selection is not kept to the selected object when inserting new messages (e.g. when POPing) or deleting -> unpredictable selection (NSTreeControllers can keep the selection right. OPOutlineViewControllers should too.)\
 - prevent threads from setting messages, only messages should set their threads (hard)\
 \
 \
@@ -54,6 +53,9 @@ Axel:\
 - implement message redirection\
 - NSTokenField for message editor and redirect sheet (OPSizingTokenField)\
 - Message views are editable sometimes\
+- next message with spacebar handling (waiting on bug: "fix message selection by itemspaths during paging with the space key")\
+- read and next shortcuts like in Ginko Voyager\
+- restrict thread selection remembering to max. 1\
 \
 Dirk:\
 - fix regular serialization of persistent objects\
