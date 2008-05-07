@@ -23,7 +23,9 @@
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 - (major) thread list view does not recognize threads addition correctly (e.g. scroll bar not shown when needed etc.) row count problem?\
 - (minor) sometimes the progress info is not cleaned up after an operation finished\
-- (minor) import does stop after first bunch after receive begins (finishes after recieve ended).\
+- (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
+- (major) resent messages are deleted - shoud replace the original after send finished\
+- (major) sent messages seem to vanish - should be assigned to the thred of their "in-reply-to" message and the thread assigned to groups through the filters\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
@@ -38,9 +40,9 @@
 
 \b Dirk:
 \b0 \
-- Fix Bug: On startup the selected message group and the group from which the threads are shown doesn't match.\
-- Fix Bug: thread selection is not kept to the selected object when inserting new messages (e.g. when POPing) or deleting -> unpredictable selection (NSTreeControllers can keep the selection right. OPOutlineViewControllers should too.)\
-- prevent threads from setting messages, only messages should set their threads (hard)\
+- (minor) Fix Bug: On startup the selected message group and the group from which the threads are shown doesn't match.\
+- (minor) Fix Bug: thread selection is not kept to the selected object when inserting new messages (e.g. when POPing) or deleting -> unpredictable selection (NSTreeControllers can keep the selection right. OPOutlineViewControllers should too.)\
+- (minor) prevent threads from setting messages, only messages should set their threads (hard)\
 \
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
