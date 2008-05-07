@@ -22,45 +22,27 @@
 #import "GISMTPOperation.h"
 #import "GIAccount.h"
 #import "GIMessageGroupOutlineViewController.h"
+#import "GIMessageFilter.h"
 
-NSString *GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
-NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNotification";
+NSString* GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
+NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNotification";
 
 @implementation GIApplication
 
-- (void)resetMessageStatusSending
+- (void) resetMessageStatusSending
 {
 	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
 	NSArray *allProfiles = [self.context.allObjectsByClass objectForKey:@"GIProfile"];
 	
-	for (GIProfile *profile in allProfiles)
-    {
-		for (GIMessage *message in profile.messagesToSend)
-        {
-			if (message.sendStatus == OPSendStatusSending) 
-            {
+	for (GIProfile *profile in allProfiles) {
+		for (GIMessage *message in profile.messagesToSend) {
+			if (message.sendStatus == OPSendStatusSending) {
 				message.sendStatus = OPSendStatusQueuedReady;
 			}
 		}            
 	}
 }
 
-- (IBAction) backupConfig: (id) sender
-{
-	[self.context saveChanges];
-	
-	NSSet* profiles = [self.context allObjectsOfClass: [GIProfile class]];
-	NSSet* accounts = [self.context allObjectsOfClass: [GIAccount class]];
-	
-	NSDictionary* config = [NSDictionary dictionaryWithObjectsAndKeys: 
-							profiles, @"Profiles", 
-							accounts, @"Accounts",
-							[GIHierarchyNode messageGroupHierarchyRootNode] , @"GroupHierarchyRoot",
-							nil, nil];
-	
-	NSData* backupData = [NSKeyedArchiver archivedDataWithRootObject: config];
-	[[NSUserDefaults standardUserDefaults] setObject: backupData forKey: @"ConfigurationBackup"];
-}
 
 - (void) ensureSomeWindowIsPresent
 {
@@ -74,6 +56,25 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	}
 }
 
+- (IBAction) backupConfig: (id) sender
+{
+	[self.context saveChanges];
+	
+	NSSet*   profiles = [self.context allObjectsOfClass: [GIProfile class]];
+	NSSet*   accounts = [self.context allObjectsOfClass: [GIAccount class]];
+	NSArray* filters  = [GIMessageFilter filters];
+	
+	NSDictionary* config = [NSDictionary dictionaryWithObjectsAndKeys: 
+							profiles, @"Profiles", 
+							accounts, @"Accounts",
+							filters,  @"Filters",
+							[GIHierarchyNode messageGroupHierarchyRootNode] , @"GroupHierarchyRoot",
+							nil, nil];
+	
+	NSData* backupData = [NSKeyedArchiver archivedDataWithRootObject: config];
+	[[NSUserDefaults standardUserDefaults] setObject: backupData forKey: @"ConfigurationBackup"];
+}
+
 - (IBAction) restoreConfig: (id) sender
 {
 	NSData* backupData = [[NSUserDefaults standardUserDefaults] dataForKey: @"ConfigurationBackup"];
@@ -85,6 +86,8 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 			NSDictionary* config = [NSKeyedUnarchiver unarchiveObjectWithData: backupData];
 			/*NSSet* profiles = */[config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
 			/*NSSet* accounts = */[config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
+			OPFaultingArray* filters  = [config objectForKey: @"Filters"]; // will automatically be put into the default context und cached.
+			[self.context setRootObject: filters forKey: @"Filters"];
 			GIHierarchyNode* rootGroup = [config objectForKey: @"GroupHierarchyRoot"];
 			[GIHierarchyNode setMessageGroupHierarchyRootNode: rootGroup];
 			NSLog(@"Restored Groups: %@", rootGroup.children);
@@ -199,7 +202,7 @@ NSString *GIResumeThreadViewUpdatesNotification = @"GIResumeThreadViewUpdatesNot
 	}
 	
 	NSArray* importedMessages = [context importGmlFiles: filePaths moveOnSuccess: YES];
-
+	if (NSDebugEnabled) NSLog(@"Imported %u messages.", importedMessages.count);
 	if (filename && importCount) {
 		// There are more messages in the folder to import.
 		// Call self to import the rest.

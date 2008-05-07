@@ -206,7 +206,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
-    if ([GIProfile isMyEmailAddress:fromHeader]) {
+    if ([GIProfile isMyEmailAddress: fromHeader] && ! (flags & OPIsFromMeStatus)) {
         [self toggleFlags: OPIsFromMeStatus]; // never changes, hopefully
     }
 	
