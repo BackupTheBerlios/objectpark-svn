@@ -40,6 +40,7 @@ NSString *JobProgressDescription = @"OPJobProgressDescription";
 
 - (void)dealloc
 {
+	self.progressInfo = nil;
 	[progressInfo release];
 	
 	[super dealloc];
