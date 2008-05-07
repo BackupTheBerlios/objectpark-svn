@@ -100,11 +100,14 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) insertObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. "*/
 {
-	[self insertPrimitiveObject: group inMessageGroupsAtIndex: index];
-	NSSet* selfSet = [NSSet setWithObject: self];
-	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
-	[group addPrimitiveThreadsObject: self];
-	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+	// retain set semantics:
+	if (! [messageGroups containsObjectIdenticalTo: group]) {
+		[self insertPrimitiveObject: group inMessageGroupsAtIndex: index];
+		NSSet* selfSet = [NSSet setWithObject: self];
+		[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+		[group addPrimitiveThreadsObject: self];
+		[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+	}
 }
 
 - (void) removePrimitiveObjectFromMessageGroupsAtIndex: (NSUInteger) index

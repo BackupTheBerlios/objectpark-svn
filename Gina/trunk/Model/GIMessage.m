@@ -735,15 +735,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (GIMessage *)reference
 /*" Returns the direct message reference stored. "*/
 {
-	return [self.context objectForOID:referenceOID];
+	return [self.context objectForOID: referenceOID];
 }
 
-- (void)setReference:(GIMessage *)aReferencedMessage
+- (void) setReference: (GIMessage*) aReferencedMessage
 {
-	[self willChangeValueForKey:@"reference"];
-	referenceOID = [aReferencedMessage oid];
-	[aReferencedMessage clearCommentsCache];
-	[self didChangeValueForKey:@"reference"];
+	if (aReferencedMessage.oid != referenceOID) {
+		[self willChangeValueForKey:@"reference"];
+		referenceOID = aReferencedMessage.oid;
+		[aReferencedMessage clearCommentsCache];
+		[self didChangeValueForKey:@"reference"];
+	}
 }
 
 /*" Returns the direct message reference stored.

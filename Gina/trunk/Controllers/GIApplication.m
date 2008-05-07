@@ -481,8 +481,11 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 	NSArray *sentMessages = [aNotification.userInfo objectForKey:@"sentMessages"];
 	NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 	
-	for (GIMessage *sentMessage in sentMessages)
-    {
+	for (GIMessage* sentMessage in sentMessages) {
+		
+		if (! (sentMessage.flags & OPIsFromMeStatus)) {
+			NSLog(@"sent message not marked as from me.");
+		}
         // remove from profile:
 		GIProfile *sendProfile = [GIProfile sendProfileForMessage:sentMessage];
 		[[sendProfile mutableArrayValueForKey:@"messagesToSend"] removeObject:sentMessage];
@@ -491,14 +494,13 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 		sentMessage.sendStatus = OPSendStatusNone;
 		
 		// disconnect thread from queued group:
-		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] removeObject:[GIMessageGroup queuedMessageGroup]];
+		NSMutableArray* groups = [sentMessage.thread mutableArrayValueForKey:@"messageGroups"];
+		[groups removeObject: [GIMessageGroup queuedMessageGroup]];
+		[groups addObject: [GIMessageGroup sentMessageGroup]];
 
-		if ([sentMessage hasFlags:OPResentStatus])
-		{
+		if ([sentMessage hasFlags:OPResentStatus]) {
 			[sentMessage delete]; // delete sent resent messages
-		}
-		else
-		{
+		} else {
 			// Put in appropriate thread (sent message had a single message thread before):
 			[GIThread addMessageToAppropriateThread:sentMessage];
 			
@@ -511,10 +513,8 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 	NSMutableArray *nonSentMessages = [[messages mutableCopy] autorelease];
 	[nonSentMessages removeObjectsInArray:sentMessages];
 
-	for (GIMessage *nonSentMessage in nonSentMessages)
-	{
-		if (nonSentMessage.sendStatus == OPSendStatusSending) 
-		{
+	for (GIMessage *nonSentMessage in nonSentMessages) {
+		if (nonSentMessage.sendStatus == OPSendStatusSending) {
 			nonSentMessage.sendStatus = OPSendStatusQueuedReady;
 		}
 	}
