@@ -354,8 +354,7 @@ The return value is the row the message was placed in."*/
     [self setToolTip:[message valueForKey:@"senderName"] forCell:cell];
     
     // set color
-    if ([message flags] & OPIsFromMeStatus)
-	{
+    if (message.flags & OPIsFromMeStatus) {
         [cell setColorIndex:5];  // blue
 	}
     else 

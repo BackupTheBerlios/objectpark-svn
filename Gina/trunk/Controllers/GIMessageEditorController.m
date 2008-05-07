@@ -1328,7 +1328,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	}
 	
 	// adding flags:
-    [message toggleFlags:[message flags] ^ (OPSeenStatus | OPIsFromMeStatus)];
+    [message toggleFlags: message.flags ^ (OPSeenStatus | OPIsFromMeStatus)];
     [message setValue:[internetMessage toWithFallback:YES] forKey:@"to"];
 	
     // unmark message as blocked for sending

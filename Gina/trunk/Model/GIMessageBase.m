@@ -66,15 +66,14 @@
 		@synchronized(self)
 		{
 			// puts message's thread potentially in message groups:
-			[GIMessageFilter applyFiltersToMessage:aMessage];
+			[GIMessageFilter applyFiltersToMessage: aMessage];
 			
 			// put in Default group if not already in any other group:
 			if (aMessage.thread.messageGroups.count == 0)			{
 				[self addMessage: aMessage toMessageGroup: [GIMessageGroup defaultMessageGroup]];
 			}
 
-			if ([aMessage hasFlags: OPIsFromMeStatus]) 
-			{
+			if ([aMessage hasFlags: OPIsFromMeStatus]) {
 				// put in My Threads group if from "me":
 				[self addMessage: aMessage toMessageGroup: [GIMessageGroup sentMessageGroup]];
 			}
