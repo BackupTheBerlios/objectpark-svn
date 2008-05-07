@@ -1726,10 +1726,10 @@ NSDictionary *maxLinesForCalendarName()
     ? YES : NO;
 }
 
-- (OPSizingTextField *)createTextFieldWithFieldName:(NSString *)aFieldName
+- (id)createTextFieldWithFieldName:(NSString *)aFieldName
 /*" Creates a new OPSizingTextField for the given field name aFieldName. It is inserted in the window by respecting the header ordering (as defined by -headerOrder). "*/
 {
-    OPSizingTextField *result;
+    id result;
     NSTextField *caption;
     NSString *displayNameForHeaderField;
     int i;

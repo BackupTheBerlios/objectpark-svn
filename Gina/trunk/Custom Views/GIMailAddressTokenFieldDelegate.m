@@ -104,9 +104,16 @@ static NSMutableArray *LRUMailAddresses;
     }
 	
 	// add first and last name candidates:
-	ABSearchElement *searchElementFirstname = [ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-    ABSearchElement *searchElementLastname = [ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:substring comparison:kABPrefixMatchCaseInsensitive];
-	ABSearchElement *searchElementConjunction = [ABSearchElement searchElementForConjunction:kABSearchOr children:[NSArray arrayWithObjects:searchElementFirstname, searchElementLastname, nil]];
+	NSArray *components = [substring componentsSeparatedByString:@" "];
+	NSMutableArray *searchElements = [NSMutableArray array];
+	
+	for (NSString *component in components)
+	{
+		[searchElements addObject:[ABPerson searchElementForProperty:kABFirstNameProperty label:nil key:nil value:component comparison:kABPrefixMatchCaseInsensitive]];
+		[searchElements addObject:[ABPerson searchElementForProperty:kABLastNameProperty label:nil key:nil value:component comparison:kABPrefixMatchCaseInsensitive]];
+	}
+	
+	ABSearchElement *searchElementConjunction = [ABSearchElement searchElementForConjunction:kABSearchOr children:searchElements];
 	
     searchResult = [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElementConjunction];
 
