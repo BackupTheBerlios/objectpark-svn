@@ -69,9 +69,12 @@
 {
     NSWindow *win;
     NSEnumerator *enumerator = [[NSApp windows] objectEnumerator];
-    while (win = [enumerator nextObject]) {
-        if ([[win delegate] isKindOfClass:self]) {
-            if ([[win delegate] oldMessage] == aMessage) return win;
+    while (win = [enumerator nextObject]) 
+	{
+		id delegate = [win delegate];
+        if ([delegate isKindOfClass:self]) 
+		{
+            if ([delegate oldMessage] == aMessage) return win;
         }
     }
     
@@ -90,13 +93,15 @@
     return self;
 }
 
-- (id)initWithMessage:(GIMessage *)aMessage
 /*" For reopening an unsent message. "*/
+- (id)initWithMessage:(GIMessage *)aMessage
 {
-    if (self = [self init]) {        
+    if (self = [self init]) 
+	{        
 		// check if aMessage is already be edited:
 		NSWindow *existingEditorWindow = [[self class] windowForMessage:aMessage];
-		if (existingEditorWindow) {
+		if (existingEditorWindow) 
+		{
 			[existingEditorWindow makeKeyAndOrderFront:self];
 			
 			[self autorelease];
@@ -107,7 +112,8 @@
         if ([aMessage sendStatus] == OPSendStatusQueuedReady) [aMessage setSendStatus:OPSendStatusQueuedBlocked];
         
         profile = [[GIProfile sendProfileForMessage:aMessage] retain];
-		if (!profile) {
+		if (!profile) 
+		{
 			NSLog(@"WARNING: message doesn't have a profile - setting default profile");
 			profile = [[GIProfile defaultProfile] retain];
 		}

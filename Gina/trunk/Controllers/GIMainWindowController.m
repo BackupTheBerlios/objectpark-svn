@@ -155,14 +155,19 @@
 
 - (NSAttributedString *)messageForDisplay
 {
-	id selectedObject = self.selectedMessageOrThread;
-	
-	if (!selectedObject) return [[[NSAttributedString alloc] init] autorelease];
-	
-	NSAttributedString *result = [selectedObject messageForDisplay];
-	//NSLog(@"message for display: %@", [result string]);
+	if (![self isShowingThreadsOnly])
+	{
+		id selectedObject = self.selectedMessageOrThread;
 		
-	return result;
+		if (!selectedObject) return [[[NSAttributedString alloc] init] autorelease];
+		
+		NSAttributedString *result = [selectedObject messageForDisplay];
+		//NSLog(@"message for display: %@", [result string]);
+		
+		return result;
+	}
+	
+	return nil;
 }
 
 + (NSSet *)keyPathsForValuesAffectingWebArchiveForDisplay
@@ -632,6 +637,8 @@ static BOOL isShowingThreadsOnly = NO;
 	{
 		if (![self isShowingThreadsOnly] && isShowingThreadsOnly)
 		{
+			[self willChangeValueForKey:@"messageForDisplay"];
+			[self didChangeValueForKey:@"messageForDisplay"];
 			[self performSetSeenBehaviorForMessage:self.selectedMessage];
 		}
 		
