@@ -40,6 +40,11 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 @synthesize unreadMessageCount;
 @synthesize subject;
 
+- (void) clearCommentsCache
+{
+	[comments release]; comments = nil;
+}
+
 - (GIThread *)thread
 {
 	return [[self context] objectForOID:threadOID];
@@ -461,11 +466,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		comments = [newComments retain];
 	}
 	return comments;
-}
-
-- (void) clearCommentsCache
-{
-	[comments release]; comments = nil;
 }
 
 - (void) willRevert
