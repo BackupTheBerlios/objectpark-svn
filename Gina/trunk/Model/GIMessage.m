@@ -51,9 +51,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	{
 		[self willChangeValueForKey:@"thread"];
 
-		if (threadOID) 
-		{
-			[[self.thread mutableArrayValueForKey:@"messages"] removeObjectIdenticalTo:self];
+		if (threadOID) {
+			[[self.thread mutableArrayValueForKey:@"messages"] removeObjectIdenticalTo: self];
 		}
 		threadOID = [aThread oid];
 		[[aThread mutableArrayValueForKey:@"messages"] addObject:self];

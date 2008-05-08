@@ -7,6 +7,7 @@
 //
 
 #import "OPFaultingArray.h"
+#import "OPPersistentObject.h"
 #import <Foundation/Foundation.h>
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentObject.h"
@@ -342,6 +343,8 @@ static int compare_oids(const void* entry1, const void* entry2)
 - (NSUInteger) indexOfObject: (id) anObject
 	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. Optentially much slower than indexOfObjectIdenticalTo: due to faulting. "*/
 {
+	if (! [anObject conformsToProtocol: @protocol(OPPersisting)]) return NSNotFound;
+
 	if (! [anObject isKindOfClass: [OPPersistentObject class]]) return NSNotFound;
 	NSUInteger result = [self indexOfOID: [anObject currentOID]];
 	if (result == NSNotFound) {
@@ -350,10 +353,17 @@ static int compare_oids(const void* entry1, const void* entry2)
 	return result;
 }
 
+- (void) removeObjectIdenticalTo: (id) anObject
+{
+	NSUInteger index =  [self indexOfOID: [anObject currentOID]];
+	if (index != NSNotFound) {
+		[self removeObjectAtIndex: index];
+	}
+}
 
 - (NSUInteger) indexOfObjectIdenticalTo: (OPPersistentObject*) anObject
 {
-	if (! [anObject isKindOfClass: [OPPersistentObject class]]) return NSNotFound;
+	if (! [anObject conformsToProtocol: @protocol(OPPersisting)]) return NSNotFound;
 	return [self indexOfOID: [anObject currentOID]];
 }
 

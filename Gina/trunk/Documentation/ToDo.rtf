@@ -24,8 +24,10 @@
 \cf0 - (major) thread list view does not recognize threads addition correctly (e.g. scroll bar not shown when needed etc.) row count problem?\
 - (minor) sometimes the progress info is not cleaned up after an operation finished\
 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
-- (major) resent messages are deleted - shoud replace the original after send finished\
-- (major) sent messages seem to vanish - should be assigned to the thred of their "in-reply-to" message and the thread assigned to groups through the filters\
+
+\b - (major) resent messages are deleted - should replace the original after send finished\
+- (major) sent messages seem to vanish - should be assigned to the thred of their "in-reply-to" message and the thread assigned to groups through the filters
+\b0 \
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
@@ -34,8 +36,8 @@
 - (minor) Timed "Receive Messages"\
 - (minor) Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
 - (major) In Messsage Editor, fields BCC: and Reply-To: do not mark the email as dirty after typing\
-- (?) In Messsage Editor, deleting the only token sometimes shrinks the text field to 1 pixel height.\
-- Message Editors are never dealloc'ed (fixed?)\
+- (needs reproduction) In Messsage Editor, deleting the only token sometimes shrinks the text field to 1 pixel height.\
+- (fixed?) Message Editors are never dealloc'ed (fixed?)\
 \
 
 \b Dirk:

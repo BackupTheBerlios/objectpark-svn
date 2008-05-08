@@ -494,28 +494,30 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 		sentMessage.sendStatus = OPSendStatusNone;
 		
 		// disconnect thread from queued group:
-		NSMutableArray* groups = [sentMessage.thread mutableArrayValueForKey:@"messageGroups"];
-		[groups removeObject: [GIMessageGroup queuedMessageGroup]];
-		[groups addObject: [GIMessageGroup sentMessageGroup]];
+		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] removeObject: [GIMessageGroup queuedMessageGroup]];
 
 		if ([sentMessage hasFlags:OPResentStatus]) {
-			[sentMessage delete]; // delete sent resent messages
+			// todo: replace original with sentMessage here
+
+			[sentMessage delete]; // delete sent resent messages - not good!
 		} else {
 			// Put in appropriate thread (sent message had a single message thread before):
-			[GIThread addMessageToAppropriateThread:sentMessage];
+			[GIThread addMessageToAppropriateThread: sentMessage];
 			
 			// Re-Insert message wherever it belongs:
-			[self.context addMessageByApplingFilters:sentMessage];
+			[self.context addMessageByApplingFilters: sentMessage];
 		}
+		// Make sure it belongs to the sent message group:
+		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] addObject: [GIMessageGroup sentMessageGroup]];
 	}
     
 	// mark all messages that were not sent as ready for sending again:
-	NSMutableArray *nonSentMessages = [[messages mutableCopy] autorelease];
-	[nonSentMessages removeObjectsInArray:sentMessages];
+	NSMutableArray* notSentMessages = [[messages mutableCopy] autorelease];
+	[notSentMessages removeObjectsInArray: sentMessages];
 
-	for (GIMessage *nonSentMessage in nonSentMessages) {
-		if (nonSentMessage.sendStatus == OPSendStatusSending) {
-			nonSentMessage.sendStatus = OPSendStatusQueuedReady;
+	for (GIMessage* notSentMessage in notSentMessages) {
+		if (notSentMessage.sendStatus == OPSendStatusSending) {
+			notSentMessage.sendStatus = OPSendStatusQueuedReady;
 		}
 	}
 	

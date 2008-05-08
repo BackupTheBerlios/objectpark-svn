@@ -377,7 +377,6 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     if (NSDebugEnabled) NSLog(@"Merging messages %@ into thread %@ with messages %@", [otherThread messages], self, [self messages]);
     
     while (message = [[otherThread messages] lastObject]) {
-		//[message referenceFind: YES];
         message.thread = self; // removes message from messages
     }
 	NSAssert1([otherThread messageCount] ==  0, @"Thread not empty: %@ - loosing message.", otherThread);
@@ -436,14 +435,15 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 */
 
 /*" Returns an array containing the result of a depth first search over all tree roots. "*/
-- (NSArray *)messagesByTree
+- (NSArray*) messagesByTree
 {
+	NSArray* allMessages = [self messages];
 	if (!messagesByTree) {
-		NSArray* allMessages = [self messages];
-		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: [allMessages count]];
-		//[messagesByTree setParent: self];
+		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: allMessages.count];
 		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: messagesByTree];
 	}	
+	NSAssert2(messagesByTree.count == allMessages.count, @"MessagesByTree does not deliver same number of messages (%u) as allMessages (%u)", 
+			  messagesByTree.count, allMessages.count);
     return messagesByTree;
 }
 
@@ -547,16 +547,17 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     GIMessage *referencedMsg;
     
     NSString *refId;
-    while (refId = [references lastObject]) 
-	{
-        referencedMsg = [[OPPersistentObjectContext defaultContext] messageForMessageId:refId];
+	OPPersistentObjectContext* context = [OPPersistentObjectContext defaultContext];
+	
+    while (refId = [references lastObject]) {
+        referencedMsg = [context messageForMessageId: refId];
         
         if (referencedMsg) 
 		{
 			if (NSDebugEnabled) NSLog(@"%@ (%qu) -> %@ (%qu)", referencingMsg.messageId, referencingMsg.oid, referencedMsg.messageId, referencedMsg.oid);
             referencingMsg.reference = referencedMsg;
             
-            [[referencedMsg thread] mergeMessagesFromThread:thread];
+            [referencedMsg.thread mergeMessagesFromThread:thread];
             
             return;
         }
