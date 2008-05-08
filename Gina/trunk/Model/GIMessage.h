@@ -102,30 +102,30 @@ extern NSString *GIMessageDidChangeFlagsNotification;
 + (id)dummyMessageWithId:(NSString *)aMessageId andDate:(NSDate *)aDate;
 
 - (id)initWithInternetMessage:(OPInternetMessage *)anInternetMessage appendToAppropriateThread:(BOOL)doThread forcedMessageId:(NSString *)forcedMessageId;
-- (id)initDummy;
+- (id) initDummy;
 
 - (void)setContentFromInternetMessage:(OPInternetMessage *)im appendToAppropriateThread:(BOOL)doThread forcedMessageId:(NSString *)forcedMessageId;
 
 /*" Cache flushing "*/
-- (void)flushNumberOfReferencesCache;
-- (void)flushInternetMessageCache;
+- (void) flushNumberOfReferencesCache;
+- (void) flushInternetMessageCache;
 
 /*" Flag handling "*/
-- (BOOL)hasFlags:(unsigned int)someFlags;
-- (void)toggleFlags:(unsigned)someFlags;
+- (BOOL) hasFlags: (unsigned int) someFlags;
+- (void) toggleFlags: (unsigned) someFlags;
 
 - (NSString *)flagsString; // use only for export
 - (void)addFlagsFromString:(NSString *)flagsString; // use only for import
 
 /*" Earliest send time handling "*/
-- (NSDate *)earliestSendTime;
-- (void)setEarliestSendTime:(NSDate *)aDate;
-+ (void)repairEarliestSendTimes;
+- (NSDate*) earliestSendTime;
+- (void) setEarliestSendTime: (NSDate*) aDate;
++ (void) repairEarliestSendTimes;
 
 /*" Miscellaneous methods "*/
-//- (GIThread*) assignThreadUseExisting: (BOOL) useExisting;
-- (NSArray *)commentsInThread:(GIThread *)thread;
-- (void)addOrderedSubthreadToArray:(NSMutableArray *)result;
+
+- (NSMutableArray*) commentsInThread: (GIThread*) aThread;
+- (void) addOrderedSubthreadToArray: (NSMutableArray*) result;
 
 @end
 

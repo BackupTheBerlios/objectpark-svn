@@ -432,8 +432,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	referenceCount = NSNotFound;
 }
 
-- (NSArray*) commentsInThread: (GIThread*) aThread
-	/* Returns all directly commenting messages in the thread given. */
+- (NSMutableArray*) commentsInThread: (GIThread*) aThread
+	/* Returns all directly commenting messages in the thread given as a new autorleased mutable array. */
 {
     NSMutableArray* result = [NSMutableArray array];
 	for (GIMessage* other in [aThread messages]) {
@@ -447,8 +447,18 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (NSArray*) comments
 /*" Returns the (cached) comments in the receiver's thread. "*/
 {
+	static NSArray *descriptors = nil;
+	if (! descriptors)
+	{
+		descriptors = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:YES] autorelease], nil];
+	}
+	
 	if (!comments) {
-		comments = [[self commentsInThread: [self thread]] retain]; 
+		NSMutableArray* newComments = [self commentsInThread: self.thread]; 
+		if (newComments.count > 1) {
+			[newComments sortUsingDescriptors:descriptors];
+		}
+		comments = [newComments retain];
 	}
 	return comments;
 }
@@ -478,7 +488,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat: @"%@ msgId %@, flags %@", super.description, self.messageId, self.flagsString];
+	return [NSString stringWithFormat: @"%@ msgId %@, %@, flags %@", super.description, self.messageId, self.date, self.flagsString];
 }
 //- (void) flushCommentsCache
 ///*" Needs to be called whenever any other message changes its reference to the receiver (additions or removals). Preferable in -setPrimitiviveReference:. "*/
