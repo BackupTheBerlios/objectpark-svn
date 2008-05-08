@@ -792,7 +792,7 @@ NSColor* OPColorFromString(NSString* string)
     {
         NSRange range;
         NSMutableAttributedString *string;
-        OPObjectPair *typeAndContent;
+        NSArray *typeAndContent;
         unsigned int partContentStringsCount;
         id attribute;
         
@@ -808,24 +808,37 @@ NSColor* OPColorFromString(NSString* string)
         
         if (partContentStringsCount == 0) 
         {
-            typeAndContent = [NSArray arrayWithObjects:attribute, string, nil];
+            typeAndContent = [NSArray arrayWithObjects:attribute ? attribute : [NSNull null], string, nil];
+			NSAssert(typeAndContent.count == 2, @"broken type and content");
             [partContentStrings addObject:typeAndContent];
         } 
         else 
         {
-            if(attribute) 
+            if (attribute) 
             {
                 typeAndContent = [NSArray arrayWithObjects:attribute, string, nil];
+				NSAssert(typeAndContent.count == 2, @"broken type and content");
                 [partContentStrings addObject:typeAndContent];
             } 
             else 
             {
-                NSMutableAttributedString* lastString;
-                lastString = [[partContentStrings objectAtIndex:partContentStringsCount - 1] objectAtIndex:1];
+                NSMutableAttributedString* lastString = [[[NSMutableAttributedString alloc] initWithString:@""] autorelease];
+				NSArray *partContentString = nil;
+				
+				if (partContentString.count)
+				{
+					partContentString = [partContentStrings objectAtIndex:partContentStringsCount - 1];
+				}
+				
+				if (partContentString.count)
+				{
+					lastString = [partContentString objectAtIndex:1];
+				}
                 
                 if ([lastString containsAttachments]) 
                 {
-                    typeAndContent = [NSArray arrayWithObjects:attribute, string, nil];
+                    typeAndContent = [NSArray arrayWithObjects:[NSNull null], string, nil];
+					NSAssert(typeAndContent.count == 2, @"broken type and content");
                     [partContentStrings addObject:typeAndContent];
                 } 
                 else {

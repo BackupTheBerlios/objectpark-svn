@@ -1179,12 +1179,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSAttributedString *forwardSuffix = [[[NSAttributedString allocWithZone:[self zone]] initWithString:@"\n==== END FORWARDED MESSAGE ====\n\n"] autorelease];
     
     NSAttributedString *forwardHeaders = [GIMessage renderedHeaders:[NSArray arrayWithObjects:@"From", @"Subject", @"To", @"Cc", @"Bcc", @"Reply-To", @"Date", nil] forMessage:internetMessage showOthers:NO];
+
+    NSAttributedString *forwardContent = [internetMessage editableBodyContent];
     
     NSMutableAttributedString *result = [[[NSMutableAttributedString alloc] init] autorelease];
-    
     [result appendAttributedString:forwardPrefix];
     [result appendAttributedString:forwardSuffix];
-    [result insertAttributedString:[internetMessage editableBodyContent] atIndex:[forwardPrefix length]];
+    [result insertAttributedString:forwardContent atIndex:[forwardPrefix length]];
     [result insertAttributedString:forwardHeaders atIndex:[forwardPrefix length]];
     
     [content appendAttributedString:result];
