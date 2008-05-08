@@ -637,6 +637,7 @@ struct __NSOVRowEntry {
 	}
 }
 
+/*" Does not seem to work at all as sometimes struct members are non initialized "*/
 - (BOOL) isItemExpandedAtRow: (int) row
 {
 	if (row < [self numberOfRows]) {
