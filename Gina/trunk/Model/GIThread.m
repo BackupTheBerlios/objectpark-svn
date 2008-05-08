@@ -309,25 +309,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {
 	// invalidating cache:
 	[messagesByTree release]; messagesByTree = nil;
-
-	// notifying main thread about message relation changes:
-//	if ([key isEqualToString:@"messages"])
-//	{
-//		[self performSelectorOnMainThread:@selector(noteChange) withObject:nil waitUntilDone:NO];
-//	}
-//	
 	[super didChangeValueForKey:key];
-	
-	/*
-	if ([key isEqualToString: @"messages"]) {
-		OPFaultingArray* messages = [self valueForKey: @"messages"]; //inefficient!! //[attributes objectForKey: @"messages"];
-		if (messages) {
-			int messageCount = [messages count];
-			[self setValue: [NSNumber numberWithUnsignedInt: messageCount] forKey: @"numberOfMessages"];
-		}
-		[messages makeObjectsPerformSelector: @selector(flushNumberOfReferencesCache)];
-	}
-	 */
 }
 
 /*
@@ -437,12 +419,15 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 /*" Returns an array containing the result of a depth first search over all tree roots. "*/
 - (NSArray*) messagesByTree
 {
+	NSArray* previousMessagesByTree = messagesByTree;
 	NSArray* allMessages = [self messages];
 	if (!messagesByTree) {
 		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: allMessages.count];
 		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: messagesByTree];
 	}	
 	if (messagesByTree.count != allMessages.count) {
+		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: allMessages.count];
+		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: messagesByTree];
 		NSAssert2(messagesByTree.count == allMessages.count, @"MessagesByTree does not deliver same number of messages (%u) as allMessages (%u)", 
 			  messagesByTree.count, allMessages.count);
 	}

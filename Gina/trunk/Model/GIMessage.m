@@ -45,15 +45,15 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return [[self context] objectForOID:threadOID];
 }
 
-- (void)setThread:(GIThread *)aThread
+- (void) setThread: (GIThread*) aThread
 {
-	if (threadOID != [aThread oid]) 
-	{
+	if (threadOID != [aThread oid]) {
 		[self willChangeValueForKey:@"thread"];
 
 		if (threadOID) {
 			[[self.thread mutableArrayValueForKey:@"messages"] removeObjectIdenticalTo: self];
 		}
+		[self.reference clearCommentsCache];
 		threadOID = [aThread oid];
 		[[aThread mutableArrayValueForKey:@"messages"] addObject:self];
 		[self didChangeValueForKey:@"thread"];
@@ -447,11 +447,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (NSArray*) comments
 /*" Returns the (cached) comments in the receiver's thread. "*/
 {
-	NSArray* result = comments;
-	if (!result) {
+	if (!comments) {
 		comments = [[self commentsInThread: [self thread]] retain]; 
 	}
-	return result;
+	return comments;
 }
 
 - (void) clearCommentsCache
@@ -782,13 +781,18 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (void) addOrderedSubthreadToArray: (NSMutableArray*) result
 /*" Adds the receiver and all messages of this thread directly or indirectly referencing the receiver, sorted by tree. "*/
 {
+	
     [result addObject: self];
-    [self comments]; // makes sure those are cached
-    int i;
-    int commentCount = [comments count];
-    for (i=0; i<commentCount; i++) {
-        [[comments objectAtIndex: i] addOrderedSubthreadToArray: result];
-    }
+//    [self comments]; // makes sure those are cached
+//    int i;
+//    int commentCount = [comments count];
+	for (GIMessage* comment in [self comments]) {
+		[comment addOrderedSubthreadToArray: result];
+	}
+	
+//    for (i=0; i<commentCount; i++) {
+//        [[comments objectAtIndex: i] addOrderedSubthreadToArray: result];
+//    }
 } 
 
 - (OPInternetMessage*) internetMessage
