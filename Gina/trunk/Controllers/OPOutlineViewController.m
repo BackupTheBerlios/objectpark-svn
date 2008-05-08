@@ -628,6 +628,7 @@ struct __NSOVRowEntry {
 			if (rowEntry && ![self isItemExpanded: rowEntry->item]) {
 				if (rowEntry && !(rowEntry->flags.expanded)) { 
 					[self _expandItemEntry: rowEntry expandChildren: expand];
+					[self noteNumberOfRowsChanged];
 				}
 			}
 		} @catch (NSException* e) {
