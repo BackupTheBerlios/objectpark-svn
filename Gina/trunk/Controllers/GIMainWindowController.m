@@ -996,25 +996,34 @@ static BOOL isShowingThreadsOnly = NO;
 #define N_KEY 45
 #define B_KEY 11
 #define R_KEY 15
+#define LEFT_KEYPAD_4 86
+#define RIGHT_KEYPAD_6 88
+#define UP_KEYPAD_8 91
+#define DOWN_KEYPAD_5 87
+#define DOWN_KEYPAD_2 84
 
 - (BOOL)keyPressed:(NSEvent *)event
 {
-	if ([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) return NO;
-	
+//	if ([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) return NO;
 	
 	int keyCode = event.keyCode;
 	switch(keyCode)
 	{
 		case LEFT_A:
+		case LEFT_KEYPAD_4:
 			[commentTreeView navigateLeftInMatrix:self];
 			return YES;
 		case DOWN_S:
+		case DOWN_KEYPAD_2:
+		case DOWN_KEYPAD_5:
 			[commentTreeView navigateDownInMatrix:self];
 			return YES;
 		case RIGHT_D:
+		case RIGHT_KEYPAD_6:
 			[commentTreeView navigateRightInMatrix:self];
 			return YES;
 		case UP_W:
+		case UP_KEYPAD_8:
 			[commentTreeView navigateUpInMatrix:self];
 			return YES;
 		case ESC:

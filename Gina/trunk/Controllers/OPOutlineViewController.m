@@ -615,8 +615,8 @@ struct __NSOVRowEntry {
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
 {
-	BOOL isExpanded = [self isItemExpandedAtRow: row];
-	if (isExpanded && !expand) return; // Nothing to do, if the item is already expended
+//	BOOL isExpanded = [self isItemExpandedAtRow: row];
+//	if (isExpanded && !expand) return; // Nothing to do, if the item is already expended
 	
 	if (row < [self numberOfRows]) {
 		
