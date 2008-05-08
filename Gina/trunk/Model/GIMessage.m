@@ -793,15 +793,18 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (OPInternetMessage*) internetMessage
 {
-	if (!internetMessage) {
-
-		NSString* transferDataPath = [self messageFilePath];
-		NSData* transferData = [NSData dataWithContentsOfFile: transferDataPath];
-		if (transferData) {
-			internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
-		} // else return nil
+	@synchronized(self) {
+		if (!internetMessage) {
+			
+			NSString* transferDataPath = [self messageFilePath];
+			NSData* transferData = [NSData dataWithContentsOfFile: transferDataPath];
+			if (transferData) {
+				internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
+			} // else return nil
+		}
+		[internetMessage retain];
 	}
-	return internetMessage;
+	return [internetMessage autorelease];
 }
 
 - (void) flushInternetMessageCache

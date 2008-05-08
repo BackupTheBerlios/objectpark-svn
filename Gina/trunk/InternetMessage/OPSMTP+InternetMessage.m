@@ -121,7 +121,7 @@ an exception if the 'message' will not be consumed. */
 	}
     
     if (bccBody) {
-        [message setBody: bccBody forHeaderField:bccFieldName];
+        [message setBody: bccBody forHeaderField:bccFieldName]; // *** -[OPInternetMessage setBody:forHeaderField:]: message sent to deallocated instance
     }
 }
 

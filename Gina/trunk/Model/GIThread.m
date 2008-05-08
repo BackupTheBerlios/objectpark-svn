@@ -442,8 +442,10 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: allMessages.count];
 		[[self rootMessages] makeObjectsPerformSelector: @selector(addOrderedSubthreadToArray:) withObject: messagesByTree];
 	}	
-	NSAssert2(messagesByTree.count == allMessages.count, @"MessagesByTree does not deliver same number of messages (%u) as allMessages (%u)", 
+	if (messagesByTree.count != allMessages.count) {
+		NSAssert2(messagesByTree.count == allMessages.count, @"MessagesByTree does not deliver same number of messages (%u) as allMessages (%u)", 
 			  messagesByTree.count, allMessages.count);
+	}
     return messagesByTree;
 }
 
