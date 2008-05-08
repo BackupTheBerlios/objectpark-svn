@@ -26,8 +26,9 @@
 - (major) new messages cannot be sent because the "send" toolbar item is disabled - gets enabled after editing the subject\
 - (minor) sometimes the progress info is not cleaned up after an operation finished\
 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 
-\b - (major) resent messages are deleted - should replace the original after send finished\
+\b \cf0 - (major) resent messages are deleted - should replace the original after send finished\
 - (major) sent messages seem to vanish - should be assigned to the thred of their "in-reply-to" message and the thread assigned to groups through the filters
 \b0 \
 \
@@ -37,7 +38,6 @@
 \b0 \
 - (minor) Timed "Receive Messages"\
 - (minor) Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
-- (major) In Messsage Editor, fields BCC: and Reply-To: do not mark the email as dirty after typing\
 - (needs reproduction) In Messsage Editor, deleting the only token sometimes shrinks the text field to 1 pixel height.\
 - (fixed?) Message Editors are never dealloc'ed (fixed?)\
 \
@@ -82,6 +82,7 @@ Axel:\
 - optimization: suppress message rendering in threads only mode\
 - "spacebar" should not end completion in address token fields\
 - fixed crash when creating editableMessageContent (don't know, if this method is really correct at all)\
+- (major) In Messsage Editor, fields BCC: and Reply-To: do not mark the email as dirty after typing\
 \
 Dirk:\
 - fix regular serialization of persistent objects\

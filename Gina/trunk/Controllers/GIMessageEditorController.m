@@ -360,6 +360,8 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     NSLog(@"GIMessageEditorController dealloc");
     
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
     [headerTextFieldsForName release];
     [profile release];
     [referencedMessage release];
@@ -1605,6 +1607,8 @@ NSDictionary *maxLinesForCalendarName()
 		[toField setMaxLines:maxLines];
     }
 	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controlTextDidChange:) name:NSControlTextDidChangeNotification object:toField];
+	
     // prepare dictionary for looking up header fields:
     headerTextFieldsForName = [[NSMutableDictionary alloc] init];
     [headerTextFieldsForName setObject:toField forKey:@"To"];
@@ -1760,6 +1764,7 @@ NSDictionary *maxLinesForCalendarName()
 	if ([self isAddressListField:aFieldName])
 	{
 		result = [[[OPSizingTokenField alloc] initWithFrame:[hiddenTextFieldPrototype frame]] autorelease];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(controlTextDidChange:) name:NSControlTextDidChangeNotification object:result];
 	}
 	else
 	{
