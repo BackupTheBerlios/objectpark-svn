@@ -71,30 +71,30 @@ typedef enum
 	NSArray *toFieldValue;
 }
 
-@property (retain) GIProfile* profile;
-@property (retain) NSArray* toFieldValue;
+@property (retain) GIProfile *profile;
+@property (retain) NSArray *toFieldValue;
 
-- (id) initWithMessage: (GIMessage*) aMessage;
-- (id) initNewMessageWithProfile: (GIProfile*) aProfile;
-- (id) initReplyTo: (GIMessage*) aMessage all: (BOOL) toAll profile: (GIProfile*) aProfile;
-- (id) initFollowupTo: (GIMessage*)  aMessage profile: (GIProfile*) aProfile;
-- (id) initForward: (GIMessage*) aMessage profile: (GIProfile*) aProfile;
-- (id) initNewMessageWithMailToDictionary: (NSDictionary*) aMailToDict;
+- (id)initWithMessage:(GIMessage *)aMessage;
+- (id)initNewMessageWithProfile:(GIProfile *)aProfile;
+- (id)initReplyTo:(GIMessage *)aMessage all:(BOOL)toAll profile:(GIProfile *)aProfile;
+- (id)initFollowupTo:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
+- (id)initForward:(GIMessage *)aMessage profile:(GIProfile *)aProfile;
+- (id)initNewMessageWithMailToDictionary:(NSDictionary *)aMailToDict;
 
-- (GIMessage*) oldMessage;
+- (GIMessage *)oldMessage;
 
-- (BOOL)validateSelector: (SEL) aSelector;
-- (GIProfile*) profile;
+- (BOOL)validateSelector:(SEL)aSelector;
+- (GIProfile *)profile;
 
-- (IBAction) addCc: (id) sender;
-- (IBAction) addBcc: (id) sender;
-- (IBAction) addReplyTo: (id) sender;
-- (IBAction) replySender: (id) sender;
-- (IBAction) replyAll: (id) sender;
-- (IBAction) followup: (id) sender;
-- (IBAction) saveDocument: (id) sender;
-- (IBAction) send: (id) sender;
-- (IBAction) queue: (id) sender;
+- (IBAction)addCc:(id)sender;
+- (IBAction)addBcc:(id)sender;
+- (IBAction)addReplyTo:(id)sender;
+- (IBAction)replySender:(id)sender;
+- (IBAction)replyAll:(id)sender;
+- (IBAction)followup:(id)sender;
+- (IBAction)saveDocument:(id)sender;
+- (IBAction)send:(id)sender;
+- (IBAction)queue:(id)sender;
 
 @end
 
@@ -102,9 +102,9 @@ typedef enum
 
 - (void)awakeHeaders;
 - (void)updateHeaders;
-- (BOOL)hasHeaderTextFieldWithFieldName: (NSString*) aFieldName;
-- (OPSizingTextField*) headerTextFieldWithFieldName: (NSString*) aFieldName;
-- (IBAction)switchProfile: (id) sender;
+- (BOOL)hasHeaderTextFieldWithFieldName:(NSString *)aFieldName;
+- (OPSizingTextField *)headerTextFieldWithFieldName:(NSString *)aFieldName;
+- (IBAction)switchProfile:(id)sender;
 - (void)takeValuesFromHeaderFields;
 
 @end

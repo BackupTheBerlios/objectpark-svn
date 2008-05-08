@@ -39,7 +39,6 @@
 - (minor) Timed "Receive Messages"\
 - (minor) Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
 - (needs reproduction) In Messsage Editor, deleting the only token sometimes shrinks the text field to 1 pixel height.\
-- (fixed?) Message Editors are never dealloc'ed (fixed?)\
 \
 
 \b Dirk:
@@ -83,6 +82,7 @@ Axel:\
 - "spacebar" should not end completion in address token fields\
 - fixed crash when creating editableMessageContent (don't know, if this method is really correct at all)\
 - (major) In Messsage Editor, fields BCC: and Reply-To: do not mark the email as dirty after typing\
+- Message Editors are never dealloc'ed\
 \
 Dirk:\
 - fix regular serialization of persistent objects\

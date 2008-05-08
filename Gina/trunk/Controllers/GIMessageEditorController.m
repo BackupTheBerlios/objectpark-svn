@@ -83,7 +83,8 @@
 
 - (id)init
 {
-    if (self = [super init]) {
+    if (self = [super init]) 
+	{
         // eager, isn't it?
         if (NSDebugEnabled) NSLog(@"GIMessageEditorController init");
         headerFields = [[NSMutableDictionary alloc] init];
@@ -142,7 +143,8 @@
 
 - (id)initNewMessageWithProfile:(GIProfile *)aProfile
 {
-    if (self = [self init]) {
+    if (self = [self init]) 
+	{
         if (! aProfile) aProfile = [GIProfile defaultProfile];
         
         profile = [aProfile retain];
@@ -373,9 +375,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	[toFieldValue release];
 	
     [windowController release];
-    
-    [window setDelegate:nil];
-	
+    	
     [super dealloc];
 }
 
@@ -649,11 +649,25 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     return [self validateSelector:[menuItem action]];
 }
 
+//- (void)retain
+//{
+//	[super retain];
+////	NSLog(@"retain: count after = %d", [self retainCount]); 
+//}
+
+- (void)release
+{
+	NSLog(@"release: count = %d", [self retainCount] - 1); 
+	[super release];
+}
+
 - (void)windowWillClose:(NSNotification *)notification 
 {
     [GIPhraseBrowserController invalidateTextView:messageTextView];
     lastTopLeftPoint = NSMakePoint(0.0, 0.0);
     
+	[toField unbind:@"value"]; // don't know why this is necessary. the binding retains the editor controller.
+	
     [self autorelease]; // balance self-retaining
 }
 
