@@ -458,14 +458,14 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		descriptors = [[NSArray alloc] initWithObjects:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:YES] autorelease], nil];
 	}
 	
-	if (!comments) {
+	// if (!comments) {
 		NSMutableArray* newComments = [self commentsInThread: self.thread]; 
 		if (newComments.count > 1) {
 			[newComments sortUsingDescriptors:descriptors];
 		}
-		comments = [newComments retain];
-	}
-	return comments;
+		//comments = [newComments retain];
+	// }
+	return newComments;
 }
 
 - (void) willRevert

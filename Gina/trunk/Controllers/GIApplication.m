@@ -111,7 +111,7 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 
 		[context setDatabaseFromPath: databasePath];
 		
-		if ([[self.context allObjectsOfClass: [GIProfile class]] count] == 0) {
+		if ([[[self context] allObjectsOfClass: [GIProfile class]] count] == 0) {
 			[self restoreConfig: self];
 		}
 		
