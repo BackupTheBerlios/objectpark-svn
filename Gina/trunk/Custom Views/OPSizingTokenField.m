@@ -135,7 +135,8 @@
         NSRect frame = [self frame];
         NSRect usedRect = [[tc layoutManager] usedRectForTextContainer: tc];
         NSSize newSize = NSMakeSize(frame.size.width, MAX(lineHeight, MIN(maxlines*lineHeight, usedRect.size.height))+5);
-        if (frame.size.height!=newSize.height) {
+	
+        if (newSize.height > 8 && frame.size.height!=newSize.height) {
             float diff = frame.size.height-newSize.height;
             [self moveSisterViewsBy: diff];
             frame.origin.y += diff; // move down
@@ -165,46 +166,15 @@
     return maxlines;
 }
 
-
-//- (BOOL) textShouldBeginEditing: (NSText*) fieldEditor
-//{
-//	BOOL result = [super textShouldBeginEditing: fieldEditor];
-//	if (result) {
-////		[[NSNotificationCenter defaultCenter] addObserver: self 
-////												 selector: @selector(tvsDidChange:) 
-////													 name: NSTextViewDidChangeSelectionNotification
-////												   object: fieldEditor];
-//	}
-//	return result;
-//}
-
-
-// Set Text Container to 1 line height
-//NSSize tcs = [tc containerSize];
-//tcs.height = lineHeight;
-//[tc setContainerSize: tcs];
-//NSRect bounds = [self bounds];
-// Make sure we get called on textcontainer overflow:
-//[lm setDelegate: self];
-// return [super textShouldBeginEditing: fieldEditor];
-//}
-//
-
-//- (BOOL) textShouldEndEditing: (NSText*) textObject
-//{
-//	NSLog(@"textShouldEndEditing: %@", textObject);
-//	return [super textShouldEndEditing: textObject];
-//}
-
-
 - (void)textDidBeginEditing:(NSNotification *)notification
 {
     NSTextContainer *tc = [self textContainer];
     NSLayoutManager *lm = [tc layoutManager];
     
     NSFont *typingFont = [[[tc textView] typingAttributes] objectForKey:NSFontAttributeName];
-    lineHeight = [lm defaultLineHeightForFont:typingFont];
-    
+    CGFloat defaultLineHeight = [lm defaultLineHeightForFont:typingFont];
+    if (defaultLineHeight > 0) lineHeight = defaultLineHeight;
+	
     [super textDidBeginEditing:notification];
 }
 
