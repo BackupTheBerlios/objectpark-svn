@@ -317,9 +317,9 @@
 	[threadMailSplitter setAutosaveName:@"ThreadMailSplitterAutosave"];
 	[mailTreeSplitter setAutosaveName:@"MailTreeSplitterAutosave"];
 	
-//	[threadsOutlineView setAutosaveTableColumns:NO];
-//	[threadsOutlineView setAutosaveName:@"ThreadsAutosave"];
-//	[threadsOutlineView setAutosaveTableColumns:YES];
+	[threadsOutlineView setAutosaveName:@"ThreadsAutosave"];
+	[threadsOutlineView setAutosaveTableColumns:YES];
+	
 	[groupsOutlineView setAutosaveExpandedItems:YES];
 	
 	[self.window makeKeyAndOrderFront:self];

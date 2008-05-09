@@ -481,11 +481,14 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 	NSArray *sentMessages = [aNotification.userInfo objectForKey:@"sentMessages"];
 	NSAssert(sentMessages != nil, @"result does not contain 'sentMessages'");
 	
-	for (GIMessage* sentMessage in sentMessages) {
-		
-		if (! (sentMessage.flags & OPIsFromMeStatus)) {
-			NSLog(@"sent message not marked as from me.");
+	for (GIMessage *sentMessage in sentMessages) 
+	{
+		if (! (sentMessage.flags & OPIsFromMeStatus)) 
+		{
+			[sentMessage toggleFlags:OPIsFromMeStatus];
+			NSLog(@"Sent message not marked as 'from me'. Corrected That.");
 		}
+		
         // remove from profile:
 		GIProfile *sendProfile = [GIProfile sendProfileForMessage:sentMessage];
 		[[sendProfile mutableArrayValueForKey:@"messagesToSend"] removeObject:sentMessage];
@@ -496,27 +499,37 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 		// disconnect thread from queued group:
 		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] removeObject: [GIMessageGroup queuedMessageGroup]];
 
-		if ([sentMessage hasFlags:OPResentStatus]) {
-			// todo: replace original with sentMessage here
-
+		if ([sentMessage hasFlags:OPResentStatus]) 
+		{
+			// TODO: replace original with sentMessage here
 			[sentMessage delete]; // delete sent resent messages - not good!
-		} else {
+		} 
+		else 
+		{
 			// Put in appropriate thread (sent message had a single message thread before):
-			[GIThread addMessageToAppropriateThread: sentMessage];
+			[GIThread addMessageToAppropriateThread:sentMessage];
 			
 			// Re-Insert message wherever it belongs:
-			[self.context addMessageByApplingFilters: sentMessage];
+			[self.context addMessageByApplingFilters:sentMessage];
 		}
-		// Make sure it belongs to the sent message group:
-		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] addObject: [GIMessageGroup sentMessageGroup]];
+
+// This has already been done in -addMessageByApplingFilters:
+//		// Make sure it belongs to the sent message group:
+//		NSMutableArray *messageGroups = [sentMessage.thread mutableArrayValueForKey:@"messageGroups"];
+//		if (![messageGroups containsObject:[GIMessageGroup sentMessageGroup]])
+//		{
+//			[messageGroups addObject:[GIMessageGroup sentMessageGroup]];
+//		}
 	}
     
 	// mark all messages that were not sent as ready for sending again:
-	NSMutableArray* notSentMessages = [[messages mutableCopy] autorelease];
-	[notSentMessages removeObjectsInArray: sentMessages];
+	NSMutableArray *notSentMessages = [[messages mutableCopy] autorelease];
+	[notSentMessages removeObjectsInArray:sentMessages];
 
-	for (GIMessage* notSentMessage in notSentMessages) {
-		if (notSentMessage.sendStatus == OPSendStatusSending) {
+	for (GIMessage *notSentMessage in notSentMessages) 
+	{
+		if (notSentMessage.sendStatus == OPSendStatusSending) 
+		{
 			notSentMessage.sendStatus = OPSendStatusQueuedReady;
 		}
 	}

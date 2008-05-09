@@ -26,17 +26,14 @@
 \b0 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
+- (major) resent messages are deleted - should replace the original after send finished\
+- (minor) sometimes the progress info is not cleaned up after an operation finished\
+\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 
-\b \cf0 - (major) resent messages are deleted - should replace the original after send finished\
-- (major) sent messages seem to vanish - should be assigned to the thread of their "in-reply-to" message and the thread assigned to groups through the filters
-\b0 \
-\
-
-\b Fixes needing comfirmation:
+\b \cf0 Fixes needing comfirmation:
 \b0 \
 (fixed?) - (major) new messages cannot be sent because the "send" toolbar item is disabled - gets enabled after editing the subject\
-(fixed?) - (minor) sometimes the progress info is not cleaned up after an operation finished\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
@@ -96,7 +93,10 @@ Axel:\
 \cf0 - (major) thread list view does not recognize threads addition correctly (e.g. scroll bar not shown when needed etc.) row count problem?\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 - (needs reproduction) In Messsage Editor, deleting the only token sometimes shrinks the text field to 1 pixel height.\
-\
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
+\cf0 - (major) sent messages should be assigned to the thread of their "in-reply-to" message and the thread assigned to groups through the filters\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
 Dirk:\
 - fix regular serialization of persistent objects\
 - restore selected message group on startup\
