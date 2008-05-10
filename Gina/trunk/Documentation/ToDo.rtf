@@ -7,19 +7,20 @@
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
 \b0\fs24 \cf0 \
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
-\b \cf0 Non-Assigned Features:
+\b Non-Assigned Features:
 \b0 \
 - (PRO) Wiedervolage - erstellt todo item im Calendar Framework samt Erinnerung und Aufruf der gml Datei. (oder anders)\
 - (PRO) ability to attach (searchable) metadata to threads and messages (sth like MailTags)\
 - (PRO) message status syncing\
+- (PRO) Ticket-System interfacing (eg. creating new tickets from e-mail)\
 - history for visited messages/recent new created/searches\
 - message groups should have an optional "redirect when mails put in" feature\
 - Replying to a message with a reply-to that's associated with a local profile, with sender self, reply goes to self\
 - Pressing esc (or back button) should move first responder from thread list to group list\
 - Thread list table column width not persistent\
 - double click on a group should show the thread list AND ALSO make the thread list first responder\
+- (minor) Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
 - implement back button\
 \
 
@@ -27,22 +28,20 @@
 \b0 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
-- (major) resent messages are deleted - should replace the original after send finished\
 - (minor) sometimes the progress info is not cleaned up after an operation finished\
 - (minor) collapse message tree, for 1-message-threads\
 \
 
 \b Fixes needing comfirmation:
 \b0 \
-(fixed?) - (major) new messages cannot be sent because the "send" toolbar item is disabled - gets enabled after editing the subject\
+(fixed? waiting until May, 15th) - (major) new messages cannot be sent because the "send" toolbar item is disabled - gets enabled after editing the subject\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
 \b \cf0 Axel:
 \b0 \
 - (minor) Timed "Receive Messages"\
-- (minor) Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
-- tree view selection not synchronized with search result\
+- tree view selection is not synchronized with search result\
 \
 
 \b Dirk:
@@ -96,6 +95,7 @@ Axel:\
 \cf0 - (needs reproduction) In Messsage Editor, deleting the only token sometimes shrinks the text field to 1 pixel height.\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 - (major) sent messages should be assigned to the thread of their "in-reply-to" message and the thread assigned to groups through the filters\
+- (major) resent messages are deleted after sending - should replace the original after send finished\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 \
 Dirk:\

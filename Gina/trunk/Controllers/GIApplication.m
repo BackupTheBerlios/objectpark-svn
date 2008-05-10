@@ -501,7 +501,14 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 
 		if ([sentMessage hasFlags:OPResentStatus]) 
 		{
-			// TODO: replace original with sentMessage here
+			// create new message with original message id (note: resent message is registered with Resent-Message-Id)
+			// this should replace the message that has been resent
+			// TODO: test if the original message is replaced
+			GIMessage *replacementMessage = [[[GIMessage alloc] initWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES forcedMessageId:nil] autorelease];
+			
+			// let filters run 'again':
+			[self.context addMessageByApplingFilters:replacementMessage];
+			
 			[sentMessage delete]; // delete sent resent messages - not good!
 		} 
 		else 
@@ -512,14 +519,6 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 			// Re-Insert message wherever it belongs:
 			[self.context addMessageByApplingFilters:sentMessage];
 		}
-
-// This has already been done in -addMessageByApplingFilters:
-//		// Make sure it belongs to the sent message group:
-//		NSMutableArray *messageGroups = [sentMessage.thread mutableArrayValueForKey:@"messageGroups"];
-//		if (![messageGroups containsObject:[GIMessageGroup sentMessageGroup]])
-//		{
-//			[messageGroups addObject:[GIMessageGroup sentMessageGroup]];
-//		}
 	}
     
 	// mark all messages that were not sent as ready for sending again:
