@@ -1,54 +1,25 @@
 //
 //  OPPersistentSet.h
-//  BTreeLite
+//  Gina
 //
-//  Created by Dirk Theisen on 15.11.07.
-//  Copyright 2007 Dirk Theisen. All rights reserved.
+//  Created by Dirk Theisen on 09.05.08.
+//  Copyright 2008 Objectpark Software GbR. All rights reserved.
 //
 
-#import "OPPersistentObject.h"
-#import "OPDBLite.h"
+#import <Foundation/Foundation.h>
+#import "OPPersistenceConstants.h"
 
-@class OPPersistentSet;
 
-@interface OPPersistentSetArray : NSArray {
-@public
-	OPPersistentSet* pSet;
-	OPBTreeCursor* arrayCursor;
-	NSUInteger cursorPosition;
-}
-
-@property (readonly) OPPersistentSet* pSet;
-@property (readonly) NSUInteger cursorPosition;
-
-- (id) initWithPersistentSet: (OPPersistentSet*) aSet;
-- (void) forgetSet;
-
-- (void) noteEntryAddedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
-- (void) noteEntryRemovedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
-
-@end
-
-/*" Backed directly by a btree "*/
-@interface OPPersistentSet : NSMutableSet <OPPersisting> {
-	NSString* sortKeyPath;
-	OPBTree* btree;
-	OPBTreeCursor* setterCursor;
-	NSUInteger count;
-	OPPersistentSetArray* array;
+typedef struct OPHashBucket {
+	NSUInteger hash;
 	OID oid;
-	
-	@public 
-	NSUInteger changeCount; // increased on every add/remove; do not change from outside
+} OPHashBucket;
+
+@interface OPPersistentSet : NSMutableSet {
+	NSUInteger     count; // number of elements stored
+	NSUInteger     entryCount; // number of bOPHashentries allocated. Always > count
+	NSUInteger     usedentryCount;
+	OPHashBucket** entries;
 }
 
-@property (copy) NSString* sortKeyPath;
-
-- (BOOL) containsObjectWithOID: (OID) oid sortKeyValue: (id) sortKeyValue;
-
-- (OPPersistentObjectContext*) context;
-
-- (NSArray*) sortedArray;
-
 @end
-

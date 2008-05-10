@@ -15,4 +15,5 @@
 #import "OPPersistentObject.h"
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentSet.h"
+#import "OPLargePersistentSet.h"
 #import "OPPersistentStringDictionary.h"

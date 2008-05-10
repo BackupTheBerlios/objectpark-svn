@@ -341,7 +341,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 //}
 
 - (NSUInteger) indexOfObject: (id) anObject
-	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. Optentially much slower than indexOfObjectIdenticalTo: due to faulting. "*/
+	/*" Returns an index containing the anObject or NSNotFound. If anObject is contained multiple times, any of the occurrence-indexes is returned. Potentially much slower than indexOfObjectIdenticalTo: due to object loading from external storage. "*/
 {
 	if (! [anObject conformsToProtocol: @protocol(OPPersisting)]) return NSNotFound;
 

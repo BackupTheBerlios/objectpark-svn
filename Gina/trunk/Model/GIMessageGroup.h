@@ -9,7 +9,7 @@
 #import <AppKit/AppKit.h>
 #import "OPPersistentObject.h"
 #import "GIHierarchyNode.h"
-#import "OPPersistentSet.h"
+#import "OPLargePersistentSet.h"
 
 @class GIProfile;
 @class GIThread;
@@ -25,7 +25,7 @@
 
 @interface GIMessageGroup : GIHierarchyNode 
 {
-	OPPersistentSet *threads;
+	OPLargePersistentSet *threads;
 	OID defaultProfileOID;
 	
     // transient stats:

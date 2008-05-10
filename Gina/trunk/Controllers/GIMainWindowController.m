@@ -919,7 +919,7 @@ static BOOL isShowingThreadsOnly = NO;
 	while (thread != nil && result == nil)
 	{
 		// look for next thread:
-		NSArray *threadsArray = [(OPPersistentSet *)self.selectedGroup.threads sortedArray];
+		NSArray *threadsArray = [(OPLargePersistentSet *)self.selectedGroup.threads sortedArray];
 		NSUInteger index = [threadsArray indexOfObjectIdenticalTo:thread];
 		
 		index += 1;

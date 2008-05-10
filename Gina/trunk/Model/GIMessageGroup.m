@@ -418,7 +418,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (NSArray *)threadChildren
 {
-	return [(OPPersistentSet*)[self threads] sortedArray];
+	return [(OPLargePersistentSet*)[self threads] sortedArray];
 }
 
 - (unsigned) threadChildrenCount
@@ -762,7 +762,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (NSSet *)threads
 {
 	if (!threads) {
-		threads = [[OPPersistentSet alloc] init];
+		threads = [[OPLargePersistentSet alloc] init];
 		threads.sortKeyPath = @"date";
 	}
 	return threads;
@@ -809,7 +809,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (void) addPrimitiveThreadsObject: (GIThread*) newThread
 {
-	[(OPPersistentSet*)self.threads addObject: newThread];
+	[(OPLargePersistentSet*)self.threads addObject: newThread];
 	[self adjustUnreadMessageCountBy: newThread.unreadMessageCount];
 }
 
@@ -829,7 +829,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (void) removePrimitiveThreadsObject: (GIThread*) oldThread
 {
-	[(OPPersistentSet*)self.threads removeObject: oldThread];
+	[(OPLargePersistentSet*)self.threads removeObject: oldThread];
 	[self adjustUnreadMessageCountBy: -oldThread.unreadMessageCount];
 }
 

@@ -101,13 +101,13 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 /*" Sent by the mutableArray proxy. "*/
 {
 	// retain set semantics:
-	if (! [messageGroups containsObjectIdenticalTo: group]) {
-		[self insertPrimitiveObject: group inMessageGroupsAtIndex: index];
-		NSSet* selfSet = [NSSet setWithObject: self];
-		[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
-		[group addPrimitiveThreadsObject: self];
-		[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
-	}
+	if ([messageGroups containsObjectIdenticalTo: group]) return;
+	
+	[self insertPrimitiveObject: group inMessageGroupsAtIndex: index];
+	NSSet* selfSet = [NSSet setWithObject: self];
+	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+	[group addPrimitiveThreadsObject: self];
+	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];	
 }
 
 - (void) removePrimitiveObjectFromMessageGroupsAtIndex: (NSUInteger) index
@@ -161,7 +161,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	if (! [date isEqualToDate: newDate]) {
 		
 		// The group's thread relation (the set array) is sorted by date. Update it:
-		OPPersistentSet* threadIndex = (OPPersistentSet*)[self.messageGroups.lastObject threads];
+		OPLargePersistentSet* threadIndex = (OPLargePersistentSet*)[self.messageGroups.lastObject threads];
 		[threadIndex removeObject: self];
 		[self willChangeValueForKey:@"date"];
 		[date release];
