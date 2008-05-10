@@ -11,7 +11,7 @@
 
 @class OPLargePersistentSet;
 
-@interface OPPersistentSetArray : NSArray {
+@interface OPLargePersistentSetArray : NSArray {
 @public
 	OPLargePersistentSet* pSet;
 	OPBTreeCursor* arrayCursor;
@@ -35,7 +35,7 @@
 	OPBTree* btree;
 	OPBTreeCursor* setterCursor;
 	NSUInteger count;
-	OPPersistentSetArray* array;
+	OPLargePersistentSetArray* array;
 	OID oid;
 	
 	@public 

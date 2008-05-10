@@ -419,7 +419,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 /*" Returns an array containing the result of a depth first search over all tree roots. "*/
 - (NSArray*) messagesByTree
 {
-	NSArray* previousMessagesByTree = messagesByTree;
+	//NSArray* previousMessagesByTree = messagesByTree;
 	NSArray* allMessages = [self messages];
 	if (!messagesByTree) {
 		messagesByTree = [[OPFaultingArray alloc] initWithCapacity: allMessages.count];

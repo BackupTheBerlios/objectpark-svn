@@ -11,8 +11,8 @@
 
 
 
-@interface OPPersistentSetArrayEnumerator : NSEnumerator {
-	OPPersistentSetArray* array;
+@interface OPLargePersistentSetArrayEnumerator : NSEnumerator {
+	OPLargePersistentSetArray* array;
 	OPLargePersistentSet* pSet;
 	NSUInteger arrayCount;
 	NSUInteger changeCount;
@@ -146,7 +146,7 @@
 {
 	if (count == 0) return nil;
 	
-	OPPersistentSetArray* sarray = (OPPersistentSetArray*) [self sortedArray];
+	OPLargePersistentSetArray* sarray = (OPLargePersistentSetArray*) [self sortedArray];
 	NSUInteger pos = [sarray cursorPosition];
 	if (pos == NSNotFound) {
 		pos = 0;
@@ -192,7 +192,7 @@
 /*" Array is sorted by oid, if no sortKey has been set, by sortKey, otherwise. "*/
 {
 	if (!array) {
-		array = [[OPPersistentSetArray alloc] initWithPersistentSet: self];
+		array = [[OPLargePersistentSetArray alloc] initWithPersistentSet: self];
 	}
 	return array;
 }
@@ -268,7 +268,7 @@
 - (NSEnumerator*) objectEnumerator
 {
 	//return self.sortedArray.objectEnumerator;
-	return [[[OPPersistentSetArrayEnumerator alloc] initWithPersistentSet: self] autorelease];
+	return [[[OPLargePersistentSetArrayEnumerator alloc] initWithPersistentSet: self] autorelease];
 }
 
 - (Class) classForCoder
@@ -308,7 +308,7 @@
 
 @end
 
-@implementation OPPersistentSetArray
+@implementation OPLargePersistentSetArray
 
 - (id) initWithPersistentSet: (OPLargePersistentSet*) aSet
 {
@@ -436,7 +436,7 @@
 	//NSLog(@"%@ requesting objectAtIndex: %u", pSet, index);
 	OID oid = [self oidAtIndex:index];
 	id result = [[pSet context] objectForOID: oid];
-	NSAssert3(result != nil, @"Warning: <OPPersistentSetArray 0x%x> objectAtIndex: %u is a dangling reference to %llx. Returning nil.", self, index, oid);
+	NSAssert3(result != nil, @"Warning: <OPLargePersistentSetArray 0x%x> objectAtIndex: %u is a dangling reference to %llx. Returning nil.", self, index, oid);
 	return result;
 }
 
@@ -448,7 +448,7 @@
 
 - (NSEnumerator*) objectEnumerator
 {
-	return [[[OPPersistentSetArrayEnumerator alloc] initWithPersistentSet: pSet] autorelease];
+	return [[[OPLargePersistentSetArrayEnumerator alloc] initWithPersistentSet: pSet] autorelease];
 }
 
 - (OPLargePersistentSet*) pSet
@@ -469,12 +469,12 @@
 
 @end
 
-@implementation OPPersistentSetArrayEnumerator
+@implementation OPLargePersistentSetArrayEnumerator
 
 - (id) initWithPersistentSet: (OPLargePersistentSet*) theSet
 {
 	pSet = [theSet retain];
-	array = [(OPPersistentSetArray*)[pSet sortedArray] retain];
+	array = [(OPLargePersistentSetArray*)[pSet sortedArray] retain];
 	arrayCount = array.count;
 	changeCount = pSet->changeCount;
 	return self;
