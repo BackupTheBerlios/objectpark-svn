@@ -150,6 +150,11 @@
 	return nil;
 }
 
+//- (id) initWithCoder: (NSCoder*) coder
+
+
+//- (void) encodeWithCoder: (NSCoder*) coder
+
 @end
 
 
