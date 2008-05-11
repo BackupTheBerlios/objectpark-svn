@@ -54,6 +54,7 @@
 {
 	OID        objectOID  = [object oid];
 	NSUInteger objectHash = [object hash];
+#warning crashes with EXC_ARITHMETIC when entryCount is 0 (division by zero?)
 	NSUInteger index = objectHash % entryCount; // 1st pobe position
 	NSUInteger result;
 	NSUInteger lastIndex = NSNotFound;
