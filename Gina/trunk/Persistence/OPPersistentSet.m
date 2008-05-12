@@ -34,48 +34,42 @@
 
 - (float) usageFactor
 {
-	return (float) usedentryCount / (float) entryCount;
+	return (float) usedEntryCount / (float) entryCount;
 }
 
-- (id) initWithObjects: (id*) objects count: (NSUInteger) ocount
+- (NSUInteger) entryIndexForObject: (NSObject<OPPersisting>*) object 
+							   oid: (OID) objectOID
+							  hash: (NSUInteger) objectHash
+						returnFree: (BOOL) returnFree
+/*" Returns a entries index or NSNotFound if the object is not contained (returnFree==NO) or already contained (returnFree=YES) "*/
 {
-	if (self = [super init]) {
-		for (int i=0; i<ocount; i++) {
-			[self addObject: objects[i]];
-		}
-	}
-	return self;
-}
-
-
-
-- (NSUInteger) bucketIndexForObject: (NSObject<OPPersisting>*) object returnFree: (BOOL) returnFree
-/*" Returns a bucket index or NSNotFound if the object is not contained (returnFree==NO) or already contained (returnFree=YES) "*/
-{
-	OID        objectOID  = [object oid];
-	NSUInteger objectHash = [object hash];
-#warning crashes with EXC_ARITHMETIC when entryCount is 0 (division by zero?)
 	NSUInteger index = objectHash % entryCount; // 1st pobe position
 	NSUInteger result;
 	NSUInteger lastIndex = NSNotFound;
-	OPHashBucket* bucket;
+	OPHashEntry* entry;
 	NSUInteger step  = 0;
-
-	while ((bucket = entries[result = ((index+step) % entryCount)])->oid) {
+	
+	while ((entry = entries[result = ((index+step) % entryCount)])->oid) {
 		if (returnFree) {
-			bucket->oid;
-			if (bucket->oid == InvalidOID) {
+			entry->oid;
+			if (entry->oid == InvalidOID) {
 				// while looking for a free spot, found a deleted entry
 				return result;
 			}
 		} else {
-			// We are looking for a matching bucket
-			if (bucket->hash == objectHash) {
-				if (bucket->oid == objectOID) 
+			// We are looking for a matching entry
+			if (entry->hash == objectHash) {
+				if (entry->oid == objectOID) 
 					return result;
 				// Found equal hash values, but different oids - need to ask the object:
-				id bucketObject = [self.context objectForOID: (bucket->oid)]; // potentially slow
-				if ([bucketObject isEqual: object]) {
+				id entryObject = [self.context objectForOID: (entry->oid)]; // potentially slow
+				if (! entryObject) {
+					NSLog(@"Warning - dangling oid reference in persistent set.");
+				}
+				if (! object) {
+					object = [self.context objectForOID: objectOID];
+				}
+				if ([entryObject isEqual: object]) {
 					return result;
 				}
 			}
@@ -84,7 +78,7 @@
 		lastIndex = index;
 		step = MAX(1, step*2); // square probing
 	}
-	// No bucket found, result points to an empty entry
+	// No entry found, result points to an empty entry
 	if (returnFree) {
 		return result;
 	}
@@ -93,37 +87,94 @@
 	return NSNotFound;
 }
 
+- (void) rebuildWithMinCapacity: (NSUInteger) minCapacity
+{
+	NSUInteger    oldEntryCount = entryCount;
+	OPHashEntry** oldEntries    = entries;
+	
+	entryCount = minCapacity * 2 + 1;
+	entries    = calloc(entryCount, sizeof(OPHashEntry));
+	NSLog(@"Resizing persistent set to hold max %u entries (%u bytes each).", entryCount, sizeof(OPHashEntry));
+	// copy over old entries by adding them:
+	for (int i = 0; i < oldEntryCount; i++) {
+		OPHashEntry* oldEntry = oldEntries[i];
+		if (oldEntry->oid > 1) {
+			NSUInteger eIndex = [self entryIndexForObject: nil
+													  oid: oldEntry->oid
+													 hash: oldEntry->hash
+											   returnFree: YES];
+			NSAssert(eIndex != NSNotFound, @"No free hash entry found during hash rebuild in OPPersistentSet.");
+			OPHashEntry* entry = entries[eIndex];
+			usedEntryCount++;
+			count++;
+			// copy over entry
+			*entry = *oldEntry;
+			
+		}
+	}
+	if (oldEntries) free(oldEntries);
+}
+
+
+- (id) initWithObjects: (id*) objects count: (NSUInteger) ocount
+{
+	if (self = [super init]) {
+		[self rebuildWithMinCapacity: ocount];
+		for (int i=0; i<ocount; i++) {
+			[self addObject: objects[i]];
+		}
+	}
+	return self;
+}
+
+
 //- (OID) oidMember: (OID) queryOID hash: (NSUInteger) queryHash
 /*" Return, the oid of an object contained in the receiver and equal to the object referenced by queryOID as determined by -hash and isEqual. "*/
 
 - (id) member: (id) object
 {
-	NSUInteger bIndex = [self bucketIndexForObject: object returnFree: NO];
+	NSUInteger bIndex = [self entryIndexForObject: object 
+											  oid: [object oid]
+											 hash: [object hash]
+									   returnFree: NO];
 	if (bIndex == NSNotFound) return nil;
 	OID resultOid = entries[bIndex]->oid;
 	return [self.context objectForOID: resultOid];
 }
 
 
+
+		
 - (void) addObject: (id) object
 {
-	NSUInteger bIndex = [self bucketIndexForObject: object returnFree: YES];
+	if (usedEntryCount + 1 <= entryCount) {
+		[self rebuildWithMinCapacity: count];
+	}
+	
+	NSUInteger bIndex = [self entryIndexForObject: object 
+											  oid: [object oid]
+											 hash: [object hash]
+									   returnFree: YES];
 	if (bIndex != NSNotFound) {
-		NSAssert(entries[bIndex]->oid == NILOID, @"bucket found for insertion not free.");
-		OPHashBucket* bucket = entries[bIndex];
-		if (bucket->oid == 0) usedentryCount++;
-		bucket->oid  = [object oid];
-		bucket->hash = [object hash];
+		NSAssert(entries[bIndex]->oid == NILOID, @"entry found for insertion not free.");
+		OPHashEntry* entry = entries[bIndex];
+		if (entry->oid == 0) usedEntryCount++;
+		entry->oid  = [object oid];
+		entry->hash = [object hash];
+		count++;
 		[[object retain] autorelease]; // docu says we should retain, but we don't want to.
 	}
 }
 
 - (void) removeObject:  (id) object
 {
-	// Mark bucket for object as invalid:
-	NSUInteger bIndex = [self bucketIndexForObject: object returnFree: NO];
+	// Mark entry for object as invalid:
+	NSUInteger bIndex = [self entryIndexForObject: object 
+											  oid: [object oid]
+											 hash: [object hash]
+									   returnFree: NO];
 	if (bIndex != NSNotFound) {
-		NSAssert(entries[bIndex]->oid != NILOID, @"bucket found for insertion not free.");
+		NSAssert(entries[bIndex]->oid != NILOID, @"entry found for insertion not free.");
 
 		entries[bIndex]->oid = InvalidOID;
 	}
@@ -136,7 +187,7 @@
 
 - (NSEnumerator*) objectEnumerator
 {
-	return nil;
+	return [[[OPPSetEnumerator alloc] initWithSet: self] autorelease];
 }
 
 - (id) nextObjectWithEntryIndex: (NSUInteger*) entryIndex

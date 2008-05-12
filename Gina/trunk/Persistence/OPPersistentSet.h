@@ -10,16 +10,16 @@
 #import "OPPersistenceConstants.h"
 
 
-typedef struct OPHashBucket {
+typedef struct OPHashEntry {
 	NSUInteger hash;
 	OID oid;
-} OPHashBucket;
+} OPHashEntry;
 
 @interface OPPersistentSet : NSMutableSet {
 	NSUInteger     count; // number of elements stored
 	NSUInteger     entryCount; // number of bOPHashentries allocated. Always > count
-	NSUInteger     usedentryCount;
-	OPHashBucket** entries;
+	NSUInteger     usedEntryCount;
+	OPHashEntry**  entries;
 }
 
 @end

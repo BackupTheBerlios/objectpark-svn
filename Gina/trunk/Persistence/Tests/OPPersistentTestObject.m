@@ -31,13 +31,14 @@
 - (id) initWithCoder: (NSCoder*) coder
 {
 	name = [[coder decodeObjectForKey: @"name"] retain];
-	
+	// TODO: implement
 	return self;
 }
 
 - (void) encodeWithCoder: (NSCoder*) coder
 {
 	[coder encodeObject: name forKey: @"name"];
+	// TODO: implement
 }
 
 @end
