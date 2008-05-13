@@ -14,50 +14,6 @@
 #import "OPFaultingArray.h"
 #import "OPOutlineViewController.h"
 
-//@implementation GIMessageFilterList
-//
-//@synthesize filters;
-//
-//- (id)init
-//{
-//	self = [super init];
-//	
-//	filters = [[OPFaultingArray alloc] init];
-//	
-//	return self;
-//}
-//
-//- (id)initWithCoder:(NSCoder *)coder
-//{
-//	filters = [coder decodeObjectForKey:@"filters"];
-//	
-//	return self;
-//}
-//
-//- (void)encodeWithCoder:(NSCoder *)coder
-//{
-//	[coder encodeObject:filters forKey:@"filters"];
-//}
-//
-//- (void)dealloc
-//{
-//	[filters release];
-//	
-//	[super dealloc];
-//}
-//
-//
-//- (NSArray*) messageFilters
-//{	
-//	return [[OPPersistentObjectContext defaultContext] allObjectsOfClass: [GIMessageFilter class]];
-//}
-//
-//- (void) addMessageFiltersObject: (GIMessageFilter*) aFilter inMessageFiltersAtIndex: (unsigned int)index 
-//{
-//	[[self messageFilters] insertObject:aFilter atIndex: index];
-//}
-//
-
 
 @implementation GIMessageFilter
 
