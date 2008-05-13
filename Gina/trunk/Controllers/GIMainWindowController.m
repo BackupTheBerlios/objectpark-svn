@@ -888,21 +888,25 @@ static BOOL isShowingThreadsOnly = NO;
 									- NSHeight([[messageTextScrollView contentView] bounds]))) return NO;
 	
 	// scroll page down:
-	float height = NSHeight([[messageTextScrollView contentView] bounds]);
-	currentScrollPosition.y += height;
-	if (height > (16 * 2)) // overlapping
-	{
-		currentScrollPosition.y -= 16;
-	}
+	NSClipView *clipView = [messageTextScrollView documentView];
+	[clipView scrollPageDown:self];
 	
-	if (currentScrollPosition.y > (NSMaxY([[messageTextScrollView documentView] frame]) 
-								   - NSHeight([[messageTextScrollView contentView] bounds]))) 
-	{
-		currentScrollPosition.y = (NSMaxY([[messageTextScrollView documentView] frame]) 
-								   - NSHeight([[messageTextScrollView contentView] bounds]));
-	}
 	
-	[[messageTextScrollView documentView] scrollPoint:currentScrollPosition];
+//	float height = NSHeight([[messageTextScrollView contentView] bounds]);
+//	currentScrollPosition.y += height;
+//	if (height > (16 * 2)) // overlapping
+//	{
+//		currentScrollPosition.y -= 16;
+//	}
+//	
+//	if (currentScrollPosition.y > (NSMaxY([[messageTextScrollView documentView] frame]) 
+//								   - NSHeight([[messageTextScrollView contentView] bounds]))) 
+//	{
+//		currentScrollPosition.y = (NSMaxY([[messageTextScrollView documentView] frame]) 
+//								   - NSHeight([[messageTextScrollView contentView] bounds]));
+//	}
+//	
+//	[[messageTextScrollView documentView] scrollPoint:currentScrollPosition];
 	
 	return YES;
 }
