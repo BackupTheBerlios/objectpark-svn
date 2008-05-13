@@ -27,11 +27,11 @@
 	NSString* observedKeyPathForRootItem;
 	id observedObjectForSelectedObjects;
 	NSString* observedKeyPathForSelectedObjects;
-	
-	//BOOL cachesItems;
+
+	BOOL suspendUpdatesUntilNextReloadData;
 }
 
-//@property BOOL cachesItems;
+@property BOOL suspendUpdatesUntilNextReloadData;
 @property (copy) NSString *childKey;
 @property (copy) NSString *childCountKey;
 @property (retain) id rootItem;
@@ -70,3 +70,7 @@
 - (BOOL) isItemExpandedAtRow: (int) row;
 
 @end
+
+extern NSString *OPSuspendOutlineViewUpdatesNotification;
+extern NSString *OPResumeOutlineViewUpdatesNotification;
+

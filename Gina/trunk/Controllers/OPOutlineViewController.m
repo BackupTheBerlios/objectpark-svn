@@ -9,23 +9,14 @@
 #import "OPOutlineViewController.h"
 #import <Foundation/NSDebug.h>
 
+NSString *OPSuspendOutlineViewUpdatesNotification = @"OPSuspendOutlineViewUpdatesNotification";
+NSString *OPResumeOutlineViewUpdatesNotification  = @"OPResumeOutlineViewUpdatesNotification";
+
 @implementation OPOutlineViewController
 
-
-
+@synthesize suspendUpdatesUntilNextReloadData;
 
 // -- binding stuff --
-
-//+ (NSSet*) keyPathsForValuesAffectingSelectedObject
-//{
-//	return [NSSet setWithObjects: @"selectedObjects", nil];
-//}
-//
-//+ (NSSet*) keyPathsForValuesAffectingSelectedObjects
-//{
-//	return [NSSet setWithObjects: @"selectedObject", nil];
-//}
-
 
 + (void)initialize
 {
@@ -166,11 +157,14 @@
 
 // -- regular stuff --
 
-- (id) init
+- (id)init
 {
-	if (self = [super init]) {
+	if (self = [super init]) 
+	{
 		knownItems = [[NSMutableSet alloc] init];
-		//cachesItems = YES;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(suspend:) name:OPSuspendOutlineViewUpdatesNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resume:) name:OPResumeOutlineViewUpdatesNotification object:nil];
 	}
 	return self;
 }
@@ -187,9 +181,21 @@
 }
 
 
+- (void)suspend:(NSNotification *)aNotification
+{
+	self.suspendUpdatesUntilNextReloadData = YES;
+}
+
+- (void)resume:(NSNotification *)aNotification
+{
+	[self reloadData];
+}
+
 - (void) reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
 {
+	self.suspendUpdatesUntilNextReloadData = NO;
+	
 	[self resetKnownItems];
 	if (outlineView.dataSource) {
 		[outlineView reloadData];
@@ -284,7 +290,10 @@
 	if (context == outlineView) {
 		// just redisplay the affected item:
 		// if (NSDebugEnabled) NSLog(@"Redisplaying %@ due to change of %@ (%@)", object, keyPath, change);
-		[outlineView reloadItem: object reloadChildren: NO]; 
+		if (!self.suspendUpdatesUntilNextReloadData)
+		{
+			[outlineView reloadItem:object reloadChildren:YES]; 
+		}
 		// - (void)_setNeedsDisplayInRow:(int)fp8;
 
 	}
@@ -299,10 +308,15 @@
 				[self removeFromKnownItems: item];
 			}
 		}
-		// todo: if the childKey relation changed, reload that item:
+		// TODO: if the childKey relation changed, reload that item:
 		if (object == rootItem) object = nil;
-		[outlineView reloadItem: object reloadChildren: YES]; 
-		// todo: if we got a qualified notification, could we be more efficient?
+		
+		if (!self.suspendUpdatesUntilNextReloadData)
+		{
+			[outlineView reloadItem:object reloadChildren:YES]; 
+		}
+		
+		// TODO: if we got a qualified notification, could we be more efficient?
 	}
 	else if ([keyPath isEqualToString: [self observedKeyPathForRootItem]])
 	{ 
@@ -529,6 +543,7 @@
 
 - (void) dealloc 
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self resetKnownItems];
 	[knownItems release];
 	[childKey release];

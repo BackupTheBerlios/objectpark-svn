@@ -39,9 +39,6 @@
 
 @end
 
-extern NSString *GISuspendThreadViewUpdatesNotification;
-extern NSString *GIResumeThreadViewUpdatesNotification;
-
 @interface GIApplication (SendingAndReceiving)
 
 - (IBAction)sendAndReceiveInAllAccounts:(id)sender;

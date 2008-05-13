@@ -511,18 +511,6 @@ NSDateFormatter *timeAndDateFormatter()
 
 @implementation GIThreadOutlineViewController
 
-@synthesize suspendUpdatesUntilNextReloadData;
-
-- (id) init
-{
-	if (self = [super init]) 
-	{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(suspend:) name:GISuspendThreadViewUpdatesNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resume:) name:GIResumeThreadViewUpdatesNotification object:nil];
-	}
-	return self;
-}
-
 - (void) awakeFromNib
 {
 	// Register to grok GinaThreads drags:
@@ -552,28 +540,6 @@ NSDateFormatter *timeAndDateFormatter()
 	if ([newItem isKindOfClass: [GIMessageGroup class]]) [super setRootItem: newItem];
 	else [super setRootItem: nil];
 }
-
-- (void)suspend:(NSNotification *)aNotification
-{
-	[self resetKnownItems];
-	self.suspendUpdatesUntilNextReloadData = YES;
-}
-
-- (void)resume:(NSNotification *)aNotification
-{
-	[self reloadData];
-}
-
-- (void) observeValueForKeyPath: (NSString*) keyPath 
-					   ofObject: (id) object 
-						 change: (NSDictionary*) change 
-						context: (void*) context
-{
-	if (!self.suspendUpdatesUntilNextReloadData)
-	{
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
-}	
 
 //- (void) expandItem: (id) item expandChildren: (BOOL) expandChildren
 //{
@@ -622,7 +588,6 @@ NSDateFormatter *timeAndDateFormatter()
 - (void)reloadData
 /*" Call this instead of calling reloadData on the outline. "*/
 {
-	self.suspendUpdatesUntilNextReloadData = NO;
 	[super reloadData];
 	[self restoreSelectionForMessageGroup:self.rootItem];
 }

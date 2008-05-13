@@ -12,7 +12,7 @@
 #import "OPPersistentObjectContext.h"
 #import "GIThread.h"
 #import "OPFaultingArray.h"
-#import "GIApplication.h"
+#import "OPOutlineViewController.h"
 
 //@implementation GIMessageFilterList
 //
@@ -104,7 +104,7 @@
 	
 	@try
 	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OPSuspendOutlineViewUpdatesNotification object:self];
 		
 		for (GIThread *thread in someThreads)
 		{
@@ -147,7 +147,7 @@
 	}
 	@finally
 	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OPResumeOutlineViewUpdatesNotification object:self];
 	}
 }
 

@@ -24,9 +24,6 @@
 #import "GIMessageGroupOutlineViewController.h"
 #import "GIMessageFilter.h"
 
-NSString* GISuspendThreadViewUpdatesNotification = @"GISuspendThreadViewUpdatesNotification";
-NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNotification";
-
 @implementation GIApplication
 
 - (void) resetMessageStatusSending
@@ -362,7 +359,7 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 	NSArray* gmls = [filePaths pathsMatchingExtensions: [NSArray arrayWithObjects: @"gml", nil]];
 	OPPersistentObjectContext* context = self.context;
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:GISuspendThreadViewUpdatesNotification object:self];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:OPSuspendOutlineViewUpdatesNotification object:self];	
 	
 	GIMainWindowController* windowController = self.mainWindow.windowController;
 	
@@ -376,7 +373,7 @@ NSString* GIResumeThreadViewUpdatesNotification  = @"GIResumeThreadViewUpdatesNo
 		
 		[[windowController messageGroupsController] setSelectedItemsPaths: [NSArray arrayWithObject:[NSArray arrayWithObject:[importGroups lastObject]]] byExtendingSelection: NO];
 	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:GIResumeThreadViewUpdatesNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:OPResumeOutlineViewUpdatesNotification object:self];
 }
 
 - (IBAction) emptyTrash: (id) sender
