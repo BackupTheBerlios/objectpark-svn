@@ -1040,7 +1040,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
         [headerFields setObject:[coder stringValue] forKey:[headerField firstObject]];
     }
     
-	self.toFieldValue = [[headerFields objectForKey:@"To"] addressWithRealnameListFromEMailString];
+//	self.toFieldValue = [[headerFields objectForKey:@"To"] addressWithRealnameListFromEMailString];
     //NSLog(@"headers = %@", headerFields);
 }
 
@@ -1399,7 +1399,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 - (BOOL)messageIsSendable
 /*" A message is sendable if "to" and "subject" is filled out (nonempty). "*/
 {
-    NSString* subject = [subjectField stringValue];
+    NSString *subject = [subjectField stringValue];
     NSString *to = [self.toFieldValue componentsJoinedByString:@", "];
     if (([to length]) && ([subject length])) {
 				
@@ -1646,8 +1646,8 @@ NSDictionary *maxLinesForCalendarName()
     [self selectProfile:[self profile]];
 }
 
-- (void)updateHeaders
 /*" Updates headers so that they are set to the values in headerFields. "*/
+- (void)updateHeaders
 {
     NSEnumerator *enumerator;
     NSString *fieldName;
@@ -1675,9 +1675,9 @@ NSDictionary *maxLinesForCalendarName()
         }
     }
     
-//	self.toFieldValue = [headerFields objectForKey:@"to"];
+	// TODO: reenable newsgroup support here
+	self.toFieldValue = [[headerFields objectForKey:@"To"] addressWithRealnameListFromEMailString];
 	
-// TODO: reenable newsgroup support here
     /*
     // Handle "Newsgroups" key:
     {

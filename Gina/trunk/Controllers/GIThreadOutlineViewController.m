@@ -555,6 +555,7 @@ NSDateFormatter *timeAndDateFormatter()
 
 - (void)suspend:(NSNotification *)aNotification
 {
+	[self resetKnownItems];
 	self.suspendUpdatesUntilNextReloadData = YES;
 }
 

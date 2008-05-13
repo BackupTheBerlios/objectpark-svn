@@ -194,7 +194,8 @@
 	if (outlineView.dataSource) {
 		[outlineView reloadData];
 	} else {
-		[outlineView setDataSource: self];
+		[outlineView setDataSource:self];
+		[outlineView reloadData];
 	}
 }
 
