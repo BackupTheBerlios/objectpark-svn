@@ -274,7 +274,19 @@ static NSUInteger prims[] = {3,5,7,11,17,23,29,37,43,53,113,193,271,359,443,541,
 }
 
 
-//- (void) encodeWithCoder: (NSCoder*) coder
+- (void) encodeWithCoder: (NSCoder*) coder
+{
+	[coder encodeInt32: count forKey: @"count"];
+	NSMutableData* tableData = [NSMutableData data];
+	for (int i = 0; i<entryCount; i++) {
+		OPHashEntry* entry = entries+i;
+		if (entry->oid > InvalidOID) {
+			[tableData appendBytes: &entry->hash length: sizeof(uint32)];
+			[tableData appendBytes: &entry->oid  length: sizeof(OID)];
+		}
+	}
+	[coder encodeObject: tableData forKey: @"tableData"];
+}
 
 @end
 

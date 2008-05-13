@@ -33,10 +33,9 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 
 - (id) init
 {
-	if (self = [super init]) 
-	{
+	if (self = [super init]) {
 		messages = [[OPFaultingArray alloc] init];
-		messageGroups = [[OPFaultingArray alloc] init];
+		messageGroups = [[OPPersistentSet alloc] init];
 	}
 	return self;
 }
