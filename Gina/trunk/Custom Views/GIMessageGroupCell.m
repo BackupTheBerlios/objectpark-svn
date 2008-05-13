@@ -329,6 +329,11 @@
 		{
 			point.x += 1.0;
 		}
+		else
+		{
+			point.x += 0.51;
+		}
+		
 		point.y = point.y - (stringSize.height / 2);
 		
 		NSRect numberRect = NSMakeRect(point.x , point.y + NSMinY(countRect), stringSize.width, stringSize.height);
