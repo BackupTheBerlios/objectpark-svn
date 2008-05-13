@@ -38,7 +38,23 @@
 	[context release]; context = nil;
 }
 
-- (void) testSet
+- (void) testMultiElementSet
+{	
+	NSMutableArray* elements = [NSMutableArray array];
+	for (int i=0; i<100; i++) {
+		OPPersistentTestObject* newElement = [[OPPersistentTestObject alloc] initWithName: [NSString stringWithFormat: @"Element %04u", i]];
+		[[o1 mutableSetValueForKey: @"bunch"] addObject: newElement];
+
+		NSAssert1([o1.bunch member: newElement] == newElement, @"%@ not added.", newElement);
+		[elements addObject: newElement];
+	}	
+	
+	[context saveChanges];
+	
+}
+
+
+- (void) testSingleElementSet
 {
 	OPPersistentTestObject* newElement = [[OPPersistentTestObject alloc] initWithName: @"newElement"];
 
