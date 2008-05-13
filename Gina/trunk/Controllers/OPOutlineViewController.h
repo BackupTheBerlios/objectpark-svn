@@ -53,6 +53,9 @@
 - (NSUInteger) rowForItemPath: (NSArray*) path;
 - (void) resetKnownItems;
 
+- (void)suspendUpdates;
+- (void)resumeUpdates;
+
 @end
 
 @interface OPOutlineViewController (ConvenientSlowHelpers)
@@ -61,16 +64,15 @@
 
 @end
 
-@interface NSOutlineView (OPPrivate)
-
+@interface NSOutlineView (OPPrivateAPI)
 - (void)_expandItemEntry:(struct __NSOVRowEntry *)fp8 expandChildren:(BOOL)fp12;
 - (struct __NSOVRowEntry *)_rowEntryForRow:(int)fp8 requiredRowEntryLoadMask:(unsigned int)fp12;
+@end
+
+@interface NSOutlineView (OPPrivate)
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand;
 - (BOOL) isItemExpandedAtRow: (int) row;
 
 @end
-
-extern NSString *OPSuspendOutlineViewUpdatesNotification;
-extern NSString *OPResumeOutlineViewUpdatesNotification;
 

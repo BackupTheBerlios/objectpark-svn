@@ -475,6 +475,18 @@
 	return [self validateUserInterfaceItem:theItem];
 }
 
+- (void)suspendOutlineViewUpdates
+{
+	[messageGroupsController suspendUpdates];
+	[threadsController suspendUpdates];
+}
+
+- (void)resumeOutlineViewUpdates
+{
+	[messageGroupsController resumeUpdates];
+	[threadsController resumeUpdates];
+}
+
 @end
 
 @implementation GIMainWindowController (GeneralBindings)
@@ -484,7 +496,7 @@
 	return [[GIHierarchyNode messageGroupHierarchyRootNode] children];
 }
 
-- (NSArray*) messageGroupHierarchyRootNode
+- (NSArray *)messageGroupHierarchyRootNode
 {
 	return [GIHierarchyNode messageGroupHierarchyRootNode];
 }
@@ -1437,8 +1449,16 @@ static BOOL isShowingThreadsOnly = NO;
 			[result addObject:selectedObject];
 		}
 	}
-	
-	[GIMessageFilter applyFiltersToThreads:result inGroup:messageGroupsController.selectedObject];
+
+	@try
+	{
+		[self suspendOutlineViewUpdates];
+		[GIMessageFilter applyFiltersToThreads:result inGroup:messageGroupsController.selectedObject];
+	}
+	@finally
+	{
+		[self resumeOutlineViewUpdates];
+	}
 }
 
 - (IBAction)debug:(id)sender

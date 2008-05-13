@@ -12,7 +12,6 @@
 #import "OPPersistentObjectContext.h"
 #import "GIThread.h"
 #import "OPFaultingArray.h"
-#import "OPOutlineViewController.h"
 
 
 @implementation GIMessageFilter
@@ -60,8 +59,6 @@
 	
 	@try
 	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:OPSuspendOutlineViewUpdatesNotification object:self];
-		
 		for (GIThread *thread in someThreads)
 		{
 			NSAssert([thread isKindOfClass:[GIThread class]], @"threads only");
@@ -103,7 +100,6 @@
 	}
 	@finally
 	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:OPResumeOutlineViewUpdatesNotification object:self];
 	}
 }
 

@@ -9,9 +9,6 @@
 #import "OPOutlineViewController.h"
 #import <Foundation/NSDebug.h>
 
-NSString *OPSuspendOutlineViewUpdatesNotification = @"OPSuspendOutlineViewUpdatesNotification";
-NSString *OPResumeOutlineViewUpdatesNotification  = @"OPResumeOutlineViewUpdatesNotification";
-
 @implementation OPOutlineViewController
 
 @synthesize suspendUpdatesUntilNextReloadData;
@@ -161,10 +158,7 @@ NSString *OPResumeOutlineViewUpdatesNotification  = @"OPResumeOutlineViewUpdates
 {
 	if (self = [super init]) 
 	{
-		knownItems = [[NSMutableSet alloc] init];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(suspend:) name:OPSuspendOutlineViewUpdatesNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resume:) name:OPResumeOutlineViewUpdatesNotification object:nil];
+		knownItems = [[NSMutableSet alloc] init];		
 	}
 	return self;
 }
@@ -180,13 +174,12 @@ NSString *OPResumeOutlineViewUpdatesNotification  = @"OPResumeOutlineViewUpdates
 	return nil;
 }
 
-
-- (void)suspend:(NSNotification *)aNotification
+- (void)suspendUpdates
 {
 	self.suspendUpdatesUntilNextReloadData = YES;
 }
 
-- (void)resume:(NSNotification *)aNotification
+- (void)resumeUpdates
 {
 	[self reloadData];
 }
@@ -543,7 +536,6 @@ NSString *OPResumeOutlineViewUpdatesNotification  = @"OPResumeOutlineViewUpdates
 
 - (void) dealloc 
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self resetKnownItems];
 	[knownItems release];
 	[childKey release];

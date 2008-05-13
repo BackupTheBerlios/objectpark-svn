@@ -352,28 +352,36 @@
 }
 
 
-- (void) application: (NSApplication*) sender openFiles: (NSArray*) filePaths
+- (void)application:(NSApplication *)sender openFiles:(NSArray *)filePaths
 {
-	filePaths = [self filePathsSortedByCreationDate: filePaths];
-	NSArray* mboxPaths = [filePaths pathsMatchingExtensions: [NSArray arrayWithObjects: @"mbox", @"mboxfile", @"mbx", nil]];
-	NSArray* gmls = [filePaths pathsMatchingExtensions: [NSArray arrayWithObjects: @"gml", nil]];
-	OPPersistentObjectContext* context = self.context;
+	filePaths = [self filePathsSortedByCreationDate:filePaths];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:OPSuspendOutlineViewUpdatesNotification object:self];	
+	NSArray *mboxPaths = [filePaths pathsMatchingExtensions:[NSArray arrayWithObjects:@"mbox", @"mboxfile", @"mbx", nil]];
+	NSArray *gmls = [filePaths pathsMatchingExtensions:[NSArray arrayWithObjects:@"gml", nil]];
+	OPPersistentObjectContext *context = self.context;
 	
-	GIMainWindowController* windowController = self.mainWindow.windowController;
 	
-	if (gmls.count) {
-		NSArray* messages = [context importGmlFiles: gmls moveOnSuccess: NO];	
-		GIMessage* lastMessage = [messages lastObject];
-		[windowController showMessage: lastMessage];
-	}
-	if (mboxPaths.count) {
-		NSArray* importGroups = [context importMboxFiles: mboxPaths moveOnSuccess: NO];
+	GIMainWindowController *windowController = self.mainWindow.windowController;
+
+	@try
+	{
+		[windowController suspendOutlineViewUpdates];
 		
-		[[windowController messageGroupsController] setSelectedItemsPaths: [NSArray arrayWithObject:[NSArray arrayWithObject:[importGroups lastObject]]] byExtendingSelection: NO];
+		if (gmls.count) {
+			NSArray* messages = [context importGmlFiles: gmls moveOnSuccess: NO];	
+			GIMessage* lastMessage = [messages lastObject];
+			[windowController showMessage: lastMessage];
+		}
+		if (mboxPaths.count) {
+			NSArray* importGroups = [context importMboxFiles: mboxPaths moveOnSuccess: NO];
+			
+			[[windowController messageGroupsController] setSelectedItemsPaths: [NSArray arrayWithObject:[NSArray arrayWithObject:[importGroups lastObject]]] byExtendingSelection: NO];
+		}
 	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:OPResumeOutlineViewUpdatesNotification object:self];
+	@finally
+	{
+		[windowController resumeOutlineViewUpdates];
+	}
 }
 
 - (IBAction) emptyTrash: (id) sender

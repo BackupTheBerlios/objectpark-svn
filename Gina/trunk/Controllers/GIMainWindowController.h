@@ -96,6 +96,9 @@
 
 - (GIMessageGroup *)selectedGroup;
 
+- (void)suspendOutlineViewUpdates;
+- (void)resumeOutlineViewUpdates;
+
 @end
 
 @interface GIMainWindowController (Actions)
