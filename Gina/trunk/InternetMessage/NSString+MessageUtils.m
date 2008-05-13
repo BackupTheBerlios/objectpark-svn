@@ -1660,6 +1660,14 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
          characters.
          */
         
+		// special handling of signature:
+		if ([paragraph isEqualToString:@"-- "])
+		{
+			[flowedText appendString:paragraph];
+			[flowedText appendString:lineBreakSeq];
+			continue;
+		}
+		
         /*
          2.  Trim spaces before user-inserted hard line breaks.
          */
@@ -1695,7 +1703,7 @@ Attempts to parse a date according to the rules in RFC 2822. However, some maile
                 NSString *line;
                 
                 line = [paragraphLines objectAtIndex:i];
-								
+												
                 /*
                  3.  Space-stuff lines which start with a space, "From ", or ">".
                  */  
