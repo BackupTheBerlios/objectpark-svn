@@ -40,12 +40,24 @@
 
 - (void) testSet
 {
-	OPPersistentTestObject* newElement = [[OPPersistentTestObject alloc] init];
-	newElement.name = @"newElement";
+	OPPersistentTestObject* newElement = [[OPPersistentTestObject alloc] initWithName: @"newElement"];
 
 	[[o1 mutableSetValueForKey: @"bunch"] addObject: newElement];
 	
 	NSAssert(o1.bunch.anyObject == newElement, @"newElement not added.");
+	NSAssert([o1.bunch member: newElement] == newElement, @"newElement not added.");
+	
+	[[o1 mutableSetValueForKey: @"bunch"] removeObject: newElement];
+	
+	NSAssert(o1.bunch.anyObject == nil, @"newElement not removed.");
+	NSAssert(o1.bunch.count == 0, @"newElement not removed.");
+	NSAssert([o1.bunch member: newElement] == nil, @"newElement not removed.");
+
+	[[o1 mutableSetValueForKey: @"bunch"] addObject: newElement];
+	NSAssert([o1.bunch member: newElement] == newElement, @"newElement not added again.");
+
+	
+	[context saveChanges];
 	
 	[newElement release];
 }

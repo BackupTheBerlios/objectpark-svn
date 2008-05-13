@@ -19,7 +19,9 @@ int main(int argc, char *argv[])
 		for (NSString* bundlePath in testBundlePaths) {
 			NSBundle* testBundle = [NSBundle bundleWithPath: bundlePath];
 			NSLog(@"Loading test bundle at '%@'", bundlePath);
-			[testBundle load];
+			if (! testBundle.isLoaded) {
+				[testBundle load];
+			}
 		}
 
 		
@@ -27,6 +29,7 @@ int main(int argc, char *argv[])
         if (testProbe != nil) {
             [testProbe performSelector: @selector(runTests:) withObject:nil];
         }
+		return 0;
 	}
 	[pool release];
     return NSApplicationMain(argc,  (const char **) argv);

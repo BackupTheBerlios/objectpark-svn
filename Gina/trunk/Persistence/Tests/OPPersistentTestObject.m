@@ -13,6 +13,11 @@
 
 @synthesize name;
 
++ (id) objectWithName: (NSString*) aName
+{
+	return [[[self alloc] initWithName: aName] autorelease];
+}
+
 - (id) initWithName: (NSString*) aName
 {
 	if (self = [super init]) {

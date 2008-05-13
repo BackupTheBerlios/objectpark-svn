@@ -19,6 +19,8 @@
 
 - (NSSet*) bunch; // unordered relation, KVO complient
 
++ (id) objectWithName: (NSString*) aName;
+
 - (id) initWithName: (NSString*) aName;
 
 @end
