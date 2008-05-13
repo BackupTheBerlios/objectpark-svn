@@ -502,7 +502,7 @@
 		sentMessage.sendStatus = OPSendStatusNone;
 		
 		// disconnect thread from queued group:
-		[[sentMessage.thread mutableArrayValueForKey:@"messageGroups"] removeObject: [GIMessageGroup queuedMessageGroup]];
+		[[sentMessage.thread mutableSetValueForKey:@"messageGroups"] removeObject: [GIMessageGroup queuedMessageGroup]];
 
 		if ([sentMessage hasFlags:OPResentStatus]) 
 		{

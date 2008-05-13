@@ -1352,12 +1352,12 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     [message setSendStatus:sendStatus];
 	
     // Remove old message from message groups:
-	[[oldMessage.thread mutableArrayValueForKey:@"messageGroups"] removeAllObjects];
+	[[oldMessage.thread mutableSetValueForKey:@"messageGroups"] removeAllObjects];
 	
 	[oldMessage.thread delete]; // removes the message also from any profile
     
 	GIThread *thread = message.thread;
-	NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
+	NSMutableSet *messageGroups = [thread mutableSetValueForKey:@"messageGroups"];
 	
     if (sendStatus == OPSendStatusDraft) 
 	{

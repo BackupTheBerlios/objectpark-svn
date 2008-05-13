@@ -54,7 +54,7 @@
 	
 	if (! [thread.messageGroups containsObject:aGroup]) 
 	{
-		[[thread mutableArrayValueForKey:@"messageGroups"] addObject:aGroup];
+		[[thread mutableSetValueForKey:@"messageGroups"] addObject:aGroup];
 	}
 }
 

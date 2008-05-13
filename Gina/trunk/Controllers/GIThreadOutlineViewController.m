@@ -528,7 +528,7 @@ NSDateFormatter *timeAndDateFormatter()
 	NSLog(@"Should delete %@", threadsToMove);
 	for (GIThread* thread in threadsToMove) {
 		if ([thread isKindOfClass: [GIThread class]]) {
-			NSMutableArray* groups = [thread mutableArrayValueForKey: @"messageGroups"];
+			NSMutableSet* groups = [thread mutableSetValueForKey: @"messageGroups"];
 			[groups removeAllObjects];
 			[groups addObject: trash];
 		}

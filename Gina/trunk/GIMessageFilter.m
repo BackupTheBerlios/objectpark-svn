@@ -57,49 +57,28 @@
 {
 	NSParameterAssert([aGroup isKindOfClass:[GIMessageGroup class]]);
 	
-	@try
-	{
-		for (GIThread *thread in someThreads)
-		{
-			NSAssert([thread isKindOfClass:[GIThread class]], @"threads only");
-			//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-			NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
-			// Remove selected thread from receiver's group:
-			[messageGroups removeObject:aGroup];
-			
-			BOOL threadWasPutIntoAtLeastOneGroup = NO;
-			
-			@try 
+	for (GIThread *thread in someThreads) {
+		NSAssert([thread isKindOfClass:[GIThread class]], @"threads only");
+		//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		NSMutableSet *messageGroups = [thread mutableSetValueForKey:@"messageGroups"];
+		// Remove selected thread from receiver's group:
+		[messageGroups removeObject:aGroup];
+		
+		BOOL threadWasPutIntoAtLeastOneGroup = NO;
+		
+		@try {
+			// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
+			for (GIMessage *message in thread.messages)
 			{
-				// apply sorters and filters (and readd threads that have no fit to avoid dangling threads):
-				for (GIMessage *message in thread.messages)
-				{
-					threadWasPutIntoAtLeastOneGroup |= [self applyFiltersToMessage:message];
-				}
-			} 
-			@catch (id localException) 
-			{
-				@throw;
-			} 
-			@finally 
-			{
-				if (!threadWasPutIntoAtLeastOneGroup) 
-				{				
-					if (![messageGroups containsObject:aGroup])
-					{
-						[messageGroups addObject:aGroup];
-					}
-				}
+				threadWasPutIntoAtLeastOneGroup |= [self applyFiltersToMessage:message];
 			}
-			//		[pool release];
+		} @catch (id localException) {
+			@throw;
+		} @finally {
+			if (!threadWasPutIntoAtLeastOneGroup) {				
+				[messageGroups addObject:aGroup];
+			}
 		}
-	}
-	@catch (id localException)
-	{
-		@throw;
-	}
-	@finally
-	{
 	}
 }
 

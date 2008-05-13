@@ -50,6 +50,11 @@
 	}	
 	
 	id element;
+	
+	for (element in elements) {
+		NSAssert1([o1.bunch member: element] == element, @"%@ cannot be retrieved.", element);
+	}
+	
 	while (element = o1.bunch.anyObject) {
 		[[o1 mutableSetValueForKey: @"bunch"] removeObject: element];
 	}

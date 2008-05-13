@@ -92,42 +92,38 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	}
 }
 
-- (void) insertPrimitiveObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index
+- (void) addPrimitiveMessageGroupsObject: (GIMessageGroup*) group
 {
-	[messageGroups insertObject: group atIndex: index];
+	[messageGroups addObject: group];
 }
 
-- (void) insertObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index
+- (void) addMessageGroupsObject: (GIMessageGroup*) group
 /*" Sent by the mutableArray proxy. "*/
-{
-	// retain set semantics:
-	if ([messageGroups containsObjectIdenticalTo: group]) return;
-	
-	[self insertPrimitiveObject: group inMessageGroupsAtIndex: index];
+{	
+	[self addPrimitiveMessageGroupsObject: group];
 	NSSet* selfSet = [NSSet setWithObject: self];
 	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
 	[group addPrimitiveThreadsObject: self];
 	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];	
 }
 
-- (void) removePrimitiveObjectFromMessageGroupsAtIndex: (NSUInteger) index
+- (void) removePrimitiveMessageGroupsObject: (GIMessageGroup*) group
 {
-	[messageGroups removeObjectAtIndex: index];
+	[messageGroups removeObject: group];
 }
 
-- (void) removeObjectFromMessageGroupsAtIndex: (NSUInteger) index
+- (void) removeMessageGroupsObject:  (GIMessageGroup*) group
 /*" Sent by the mutableArray proxy. "*/
 {
-	GIMessageGroup* group = [messageGroups objectAtIndex: index];
-	[self removePrimitiveObjectFromMessageGroupsAtIndex: index];
+	[self removePrimitiveMessageGroupsObject: group];
 	NSSet* selfSet = [NSSet setWithObject: self];
 	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
-	//[(OPPersistentSet*) group.threads removeObject: self]; // why was this commented out?
+	[(OPPersistentSet*) group.threads removeObject: self];
 	[group removePrimitiveThreadsObject: self];
 	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
 }
 
-- (NSArray *)messageGroups
+- (NSSet*) messageGroups
 {
 	return messageGroups;
 }
@@ -161,14 +157,15 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	if (! [date isEqualToDate: newDate]) {
 		
 		// The group's thread relation (the set array) is sorted by date. Update it:
-		OPLargePersistentSet* threadIndex = (OPLargePersistentSet*)[self.messageGroups.lastObject threads];
-		[threadIndex removeObject: self];
-		[self willChangeValueForKey:@"date"];
-		[date release];
-		date = [newDate retain];
-		[self didChangeValueForKey:@"date"];
-		[threadIndex addObject: self];
-		//[self.messageGroups makeObjectsPerformSelector: @selector(updateIndexForThread)
+		for (GIMessageGroup* group in self.messageGroups) {
+			NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
+			[threadIndex removeObject: self];
+			[self willChangeValueForKey:@"date"];
+			[date release];
+			date = [newDate retain];
+			[self didChangeValueForKey:@"date"];
+			[threadIndex addObject: self];
+		}
 	}
 }
 
@@ -220,15 +217,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) willDelete
 {
 	NSLog(@"Will delete Thread %@ from %@", self, self.messageGroups);
-//	NSMutableArray* mmessages = [self mutableArrayValueForKey: @"messages"];
-//	while (mmessages.count) {
-//		[[mmessages removeLastObject] 
-//	}
 	
-	NSMutableArray* ggroups = [self mutableArrayValueForKey: @"messageGroups"];
-	while (ggroups.count) {
-		[ggroups removeLastObject];
-	}
+	NSMutableSet* ggroups = [self mutableSetValueForKey: @"messageGroups"];
+//	while (ggroups.count) {
+//		[ggroups removeLastObject];
+//	}
+	[ggroups removeAllObjects]; // TODO: check, if this notifies
 	
 	[self.messages makeObjectsPerformSelector: @selector(delete)];
 	

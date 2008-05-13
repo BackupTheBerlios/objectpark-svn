@@ -105,7 +105,6 @@ static NSUInteger prims[] = {3,5,7,11,17,23,29,37,43,53,113,193,271,359,443,541,
 		return result;
 	}
 	
-	
 	return NSNotFound;
 }
 

@@ -27,7 +27,7 @@
 	GIMessageGroup *group = [[[GIMessageGroup alloc] init] autorelease];
 	GIThread *thread = [TestGIThread threadForTest];
 	
-	[[thread mutableArrayValueForKey: @"messageGroups"] addObject: group];
+	[[thread mutableSetValueForKey: @"messageGroups"] addObject: group];
 	NSAssert([group.threads containsObject: thread], @"inverse relaionship not set.");
 }
 

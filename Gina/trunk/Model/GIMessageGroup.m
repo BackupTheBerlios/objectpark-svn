@@ -537,19 +537,12 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		for (NSString *threadURL in threadURLs)
 		{
 			GIThread *thread = [[OPPersistentObjectContext defaultContext] objectWithURLString:threadURL];
-			NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
+			NSMutableSet *messageGroups = [thread mutableSetValueForKey:@"messageGroups"];
 			
-			if (move)
-			{
-				while ([messageGroups containsObject:sourceGroup])
-				{
-					[messageGroups removeObject:sourceGroup];
-				}
+			if (move) {
+				[messageGroups removeObject:sourceGroup];
 			}			
-			if (![messageGroups containsObject:destinationGroup])
-			{
-				[messageGroups addObject:destinationGroup];
-			}
+			[messageGroups addObject:destinationGroup];
 		}
 	} 
 	else 
@@ -809,44 +802,39 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 
 - (void) addPrimitiveThreadsObject: (GIThread*) newThread
 {
-	[(OPLargePersistentSet*)self.threads addObject: newThread];
+	[(NSMutableSet*)self.threads addObject: newThread];
 	[self adjustUnreadMessageCountBy: newThread.unreadMessageCount];
 }
 
 - (void) addThreadsObject: (GIThread*) newThread
 /*" Sent by the mutableSet proxy. "*/
-{
-	if ([self.threads containsObject: newThread]) return; // already present, nothing to do
-	
-	NSIndexSet* insertSet = [NSIndexSet indexSetWithIndex: newThread.messages.count];
+{	
 	[self addPrimitiveThreadsObject: newThread];
-	// Update the inverse relation:
-	[newThread willChange: NSKeyValueChangeInsertion valuesAtIndexes: insertSet forKey: @"messageGroups"];
-	[(OPFaultingArray*)newThread.messageGroups addObject: self]; 
-	[newThread didChange: NSKeyValueChangeInsertion valuesAtIndexes: insertSet forKey: @"messageGroups"];
+	
+	// Update the inverse relation:	
+	NSSet* selfSet = [NSSet setWithObject: self];
+	[newThread willChangeValueForKey: @"messageGroups" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+	[newThread addPrimitiveMessageGroupsObject: self];
+	[newThread didChangeValueForKey: @"messageGroups" withSetMutation:NSKeyValueUnionSetMutation usingObjects: selfSet];
 }
 
 
 - (void) removePrimitiveThreadsObject: (GIThread*) oldThread
 {
-	[(OPLargePersistentSet*)self.threads removeObject: oldThread];
+	[(NSMutableSet*)self.threads removeObject: oldThread];
 	[self adjustUnreadMessageCountBy: -oldThread.unreadMessageCount];
 }
 
 - (void) removeThreadsObject: (GIThread*) oldThread
 /*" Sent by the mutableSet proxy. "*/
 {
-	if (! [self.threads containsObject: oldThread]) return; // not present, nothing to do
-	
-	NSUInteger groupIndex = [oldThread.messageGroups indexOfObjectIdenticalTo: self];
-	NSIndexSet* removeSet = [NSIndexSet indexSetWithIndex: groupIndex];
-	
 	[self removePrimitiveThreadsObject: oldThread];
 	
 	// Update the inverse relation:
-	[oldThread willChange: NSKeyValueChangeRemoval valuesAtIndexes: removeSet forKey: @"messageGroups"];
-	[oldThread removePrimitiveObjectFromMessageGroupsAtIndex: groupIndex];
-	[oldThread didChange: NSKeyValueChangeRemoval valuesAtIndexes: removeSet forKey: @"messageGroups"];
+	NSSet* selfSet = [NSSet setWithObject: self];
+	[oldThread willChangeValueForKey: @"messageGroups" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
+	[oldThread removePrimitiveMessageGroupsObject: self];
+	[oldThread didChangeValueForKey: @"messageGroups" withSetMutation:NSKeyValueMinusSetMutation usingObjects: selfSet];
 }
 
 - (void) increaseUnreadMessageCount
@@ -875,18 +863,18 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 /*" Should be called by the mutableSetProxy. "*/
 {
 	[threads addObject: aThread];
-	if (! [[aThread messageGroups] containsObject: self]) {
-		[[aThread mutableArrayValueForKey: @"messageGroups"] addObject: self];	
-	}
+	//if (! [[aThread messageGroups] containsObject: self]) {
+		[[aThread mutableSetValueForKey: @"messageGroups"] addObject: self];	
+	//}
 }
 
 - (void) removeThreadsByDateObject: (GIThread*) aThread
 /*" Should be called by the mutableSetProxy. "*/
 {
 	[threads removeObject: aThread];
-	if ([[aThread messageGroups] containsObject: self]) {
-		[[aThread mutableArrayValueForKey: @"messageGroups"] removeObject: self];	
-	}
+	//if ([[aThread messageGroups] containsObject: self]) {
+		[[aThread mutableSetValueForKey: @"messageGroups"] removeObject: self];	
+	//}
 }
 
 

@@ -12,13 +12,14 @@
 @class GIMessageGroup;
 @class GIMessage;
 @class OPFaultingArray;
+@class OPPersistentSet;
 
 @interface GIThread : OPPersistentObject {
 @private
 	NSString* subject;  // persistent
 	NSDate* date;       // persistent
 	OPFaultingArray* messages;           // persistent
-	OPFaultingArray* messageGroups;      // persistent
+	OPPersistentSet* messageGroups;      // persistent
 	OPFaultingArray* messagesByTree;     // transient cache - needed?
 	int unreadMessageCount;
 }
@@ -33,7 +34,7 @@
 
 - (void) calculateDate;
 - (NSArray*) messages;
-- (NSArray*) messageGroups;
+- (NSSet*) messageGroups;
 
 - (NSArray*) messagesByTree; // slow!!
 
@@ -41,8 +42,8 @@
 
 
 /*" Used in inverse relationship handling. "*/
-- (void) insertPrimitiveObject: (GIMessageGroup*) group inMessageGroupsAtIndex: (NSUInteger) index;
-- (void) removePrimitiveObjectFromMessageGroupsAtIndex: (NSUInteger) index;
+- (void) addPrimitiveMessageGroupsObject: (GIMessageGroup*) group;
+- (void) removePrimitiveMessageGroupsObject: (GIMessageGroup*) group;
 
 /*" Groups handling "*/
 

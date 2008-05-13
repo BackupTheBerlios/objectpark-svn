@@ -1737,7 +1737,7 @@ static BOOL isShowingThreadsOnly = NO;
 	
 	// queue message:
 	GIThread *thread = resentMessage.thread;
-	NSMutableArray *messageGroups = [thread mutableArrayValueForKey:@"messageGroups"];
+	NSMutableSet *messageGroups = [thread mutableSetValueForKey:@"messageGroups"];
 	
 	//add new message to queued message group:
 	[messageGroups addObject:[GIMessageGroup queuedMessageGroup]];
