@@ -49,6 +49,12 @@
 		[elements addObject: newElement];
 	}	
 	
+	id element;
+	while (element = o1.bunch.anyObject) {
+		[[o1 mutableSetValueForKey: @"bunch"] removeObject: element];
+	}
+	NSAssert(o1.bunch.count == 0, @"test set not empty.");
+	
 	[context saveChanges];
 	
 }
