@@ -19,7 +19,7 @@ typedef struct OPHashEntry {
 	NSUInteger     count; // number of elements stored
 	NSUInteger     entryCount; // number of bOPHashentries allocated. Always > count
 	NSUInteger     usedEntryCount;
-	OPHashEntry**  entries;
+	OPHashEntry*   entries;
 }
 
 @end

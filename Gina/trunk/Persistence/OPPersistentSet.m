@@ -37,19 +37,25 @@
 	return (float) usedEntryCount / (float) entryCount;
 }
 
+- (void) dealloc
+{
+	if (entries) free(entries);
+	[super dealloc];	
+}
+
 - (NSUInteger) entryIndexForObject: (NSObject<OPPersisting>*) object 
 							   oid: (OID) objectOID
 							  hash: (NSUInteger) objectHash
 						returnFree: (BOOL) returnFree
 /*" Returns a entries index or NSNotFound if the object is not contained (returnFree==NO) or already contained (returnFree=YES) "*/
 {
-	NSUInteger index = objectHash % entryCount; // 1st pobe position
-	NSUInteger result;
-	NSUInteger lastIndex = NSNotFound;
+	NSUInteger  index = objectHash % entryCount; // 1st pobe position
+	NSUInteger  result;
+	NSUInteger  lastIndex = NSNotFound;
 	OPHashEntry* entry;
-	NSUInteger step  = 0;
+	NSUInteger  step  = 0;
 	
-	while ((entry = entries[result = ((index+step) % entryCount)])->oid) {
+	while ((entry = entries + (result = ((index+step) % entryCount)))->oid) {
 		if (returnFree) {
 			entry->oid;
 			if (entry->oid == InvalidOID) {
@@ -90,25 +96,24 @@
 - (void) rebuildWithMinCapacity: (NSUInteger) minCapacity
 {
 	NSUInteger    oldEntryCount = entryCount;
-	OPHashEntry** oldEntries    = entries;
+	OPHashEntry*  oldEntries    = entries;
 	
-	entryCount = minCapacity * 2 + 1;
+	entryCount = MIN(minCapacity * 2 + 1, 5);
 	entries    = calloc(entryCount, sizeof(OPHashEntry));
 	NSLog(@"Resizing persistent set to hold max %u entries (%u bytes each).", entryCount, sizeof(OPHashEntry));
 	// copy over old entries by adding them:
 	for (int i = 0; i < oldEntryCount; i++) {
-		OPHashEntry* oldEntry = oldEntries[i];
+		OPHashEntry* oldEntry = oldEntries + i;
 		if (oldEntry->oid > 1) {
 			NSUInteger eIndex = [self entryIndexForObject: nil
 													  oid: oldEntry->oid
 													 hash: oldEntry->hash
 											   returnFree: YES];
 			NSAssert(eIndex != NSNotFound, @"No free hash entry found during hash rebuild in OPPersistentSet.");
-			OPHashEntry* entry = entries[eIndex];
 			usedEntryCount++;
 			count++;
 			// copy over entry
-			*entry = *oldEntry;
+			entries[eIndex] = *oldEntry;
 			
 		}
 	}
@@ -138,7 +143,7 @@
 											 hash: [object hash]
 									   returnFree: NO];
 	if (bIndex == NSNotFound) return nil;
-	OID resultOid = entries[bIndex]->oid;
+	OID resultOid = entries[bIndex].oid;
 	return [self.context objectForOID: resultOid];
 }
 
@@ -147,18 +152,18 @@
 		
 - (void) addObject: (id) object
 {
-	if (usedEntryCount + 1 <= entryCount) {
+	if (usedEntryCount + 1 >= entryCount) {
 		[self rebuildWithMinCapacity: count];
 	}
 	
-	NSUInteger bIndex = [self entryIndexForObject: object 
+	NSUInteger eIndex = [self entryIndexForObject: object 
 											  oid: [object oid]
 											 hash: [object hash]
 									   returnFree: YES];
-	if (bIndex != NSNotFound) {
-		NSAssert(entries[bIndex]->oid == NILOID, @"entry found for insertion not free.");
-		OPHashEntry* entry = entries[bIndex];
-		if (entry->oid == 0) usedEntryCount++;
+	if (eIndex != NSNotFound) {
+		NSAssert(entries[eIndex].oid == NILOID, @"entry found for insertion not free.");
+		OPHashEntry* entry = entries + eIndex;
+		if (entry->oid == NILOID) usedEntryCount++;
 		entry->oid  = [object oid];
 		entry->hash = [object hash];
 		count++;
@@ -174,9 +179,9 @@
 											 hash: [object hash]
 									   returnFree: NO];
 	if (bIndex != NSNotFound) {
-		NSAssert(entries[bIndex]->oid != NILOID, @"entry found for insertion not free.");
-
-		entries[bIndex]->oid = InvalidOID;
+		NSAssert(entries[bIndex].oid != NILOID, @"entry found for insertion not free.");
+		count--;
+		entries[bIndex].oid = InvalidOID;
 	}
 }
 
@@ -193,11 +198,12 @@
 - (id) nextObjectWithEntryIndex: (NSUInteger*) entryIndex
 {
 	while (*entryIndex < entryCount) {
-		OID oid = entries[*entryIndex]->oid;
+		OID oid = entries[*entryIndex].oid;
+		(*entryIndex)++;
+
 		if (oid > InvalidOID) {
 			return [self.context objectForOID: oid];
 		}
-		*entryIndex++;
 	}
 	return nil;
 }

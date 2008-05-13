@@ -9,10 +9,12 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "OPPersistentObjectContext.h"
 #import "OPPersistentStringDictionary.h"
+#import "OPPersistentTestObject.h"
 
 
 @interface TestPersistentObject : SenTestCase {
 	OPPersistentObjectContext* context;
+	OPPersistentTestObject* o1;
 }
 
 @end

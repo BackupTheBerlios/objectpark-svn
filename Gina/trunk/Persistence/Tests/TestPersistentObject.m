@@ -21,7 +21,12 @@
 	[[NSFileManager defaultManager] removeFileAtPath: @"/tmp/persistent-testobjects.btrees" handler: nil];
 	[context setDatabaseFromPath: @"/tmp/persistent-testobjects.btrees"];
 		
+	o1 = [[OPPersistentTestObject alloc] init];
+	[context insertObject: o1];
+	
 	[context saveChanges];
+	
+	[o1 release];
 }
 
 
@@ -31,6 +36,18 @@
 	[context saveChanges];
 	[context close];
 	[context release]; context = nil;
+}
+
+- (void) testSet
+{
+	OPPersistentTestObject* newElement = [[OPPersistentTestObject alloc] init];
+	newElement.name = @"newElement";
+
+	[[o1 mutableSetValueForKey: @"bunch"] addObject: newElement];
+	
+	NSAssert(o1.bunch.anyObject == newElement, @"newElement not added.");
+	
+	[newElement release];
 }
 
 @end

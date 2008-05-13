@@ -21,24 +21,42 @@
 	return self;
 }
 
+- (NSSet*) bunch
+{
+	return bunch;
+}
+
+- (void) addBunchObject: (id) newObject
+{
+	if (!bunch) {
+		bunch = [[OPPersistentSet alloc] init];
+	}
+	[bunch addObject: newObject];
+}
+
+- (void) removeBunchObject: (id) oldObject
+{
+	[bunch removeObject: oldObject];
+}
 
 - (void) dealloc
 {
 	[name release];
+	[bunch release];
 	[super dealloc];
 }
 
 - (id) initWithCoder: (NSCoder*) coder
 {
-	name = [[coder decodeObjectForKey: @"name"] retain];
-	// TODO: implement
+	name  = [[coder decodeObjectForKey: @"name"] retain];
+	bunch = [[coder decodeObjectForKey: @"bunch"] retain];
 	return self;
 }
 
 - (void) encodeWithCoder: (NSCoder*) coder
 {
 	[coder encodeObject: name forKey: @"name"];
-	// TODO: implement
+	[coder encodeObject: bunch forKey: @"bunch"];
 }
 
 @end
