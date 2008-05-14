@@ -112,13 +112,12 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 }
 
 - (void) removeMessageGroupsObject:  (GIMessageGroup*) group
-/*" Sent by the mutableArray proxy. "*/
+/*" Sent by the mutableSet proxy. "*/
 {
 	[self removePrimitiveMessageGroupsObject: group];
 	NSSet* selfSet = [NSSet setWithObject: self];
 	[group willChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
-	[(OPPersistentSet*) group.threads removeObject: self];
-	[group removePrimitiveThreadsObject: self];
+	[group removePrimitiveThreadsObject: self]; // primitive operation (no inverse relationship tracked)
 	[group didChangeValueForKey: @"threads" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
 }
 
@@ -155,21 +154,27 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 {
 	if (! [date isEqualToDate: newDate]) {
 		
-		// The group's thread relation (the set array) is sorted by date. Update it:
-		for (GIMessageGroup* group in self.messageGroups) {
-			NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
-			[threadIndex removeObject: self];
-			[self willChangeValueForKey: @"date"];
+		[self willChangeValueForKey: @"date"];
+		
+		if (messageGroups.count) {
+			NSArray* groupList = messageGroups.count ? self.messageGroups.allObjects : nil;
+			// The group's thread relation (the set array) is sorted by date. Update it:
+			for (GIMessageGroup* group in groupList) {
+				NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
+				[threadIndex removeObject: self];
+			}
+			
+			[date release]; date = [newDate retain];
+			
+			for (GIMessageGroup* group in groupList) {
+				NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
+				[threadIndex addObject: self];
+			}
+		} else {
+			[date release]; date = [newDate retain];
 		}
 		
-		[date release];
-		date = [newDate retain];
-		
-		for (GIMessageGroup* group in self.messageGroups) {
-			NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
-			[self didChangeValueForKey: @"date"];
-			[threadIndex addObject: self];
-		}
+		[self didChangeValueForKey: @"date"];
 	}
 }
 
@@ -224,7 +229,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	
 	NSMutableSet* ggroups = [self mutableSetValueForKey: @"messageGroups"];
 //	while (ggroups.count) {
-//		[ggroups removeLastObject];
+//		[ggroups removeObject: [ggroups anyObject]];
 //	}
 	[ggroups removeAllObjects]; // TODO: check, if this notifies
 	

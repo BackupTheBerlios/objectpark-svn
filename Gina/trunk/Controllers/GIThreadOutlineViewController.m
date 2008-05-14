@@ -532,12 +532,12 @@ NSDateFormatter *timeAndDateFormatter()
 	// Select the item at previous first selection index:
 	NSUInteger firstSelectedIndex = [self.outlineView selectedRow];
 	[self.outlineView selectRow: firstSelectedIndex byExtendingSelection: NO]; 
-	NSLog(@"Should delete %@", threadsToMove);
+	NSLog(@"Will move %@ to trash.", threadsToMove);
 	for (GIThread* thread in threadsToMove) {
 		if ([thread isKindOfClass: [GIThread class]]) {
+			//[thread setValue:  forKey: @"messageGroups"];
 			NSMutableSet* groups = [thread mutableSetValueForKey: @"messageGroups"];
-			[groups removeAllObjects];
-			[groups addObject: trash];
+			[groups setSet: [NSSet setWithObject: trash]];
 		}
 	}
 }

@@ -55,6 +55,8 @@
 		NSAssert1([o1.bunch member: element] == element, @"%@ cannot be retrieved.", element);
 	}
 	
+	NSAssert(o1.bunch.allObjects.count == o1.bunch.count, @"allObjects delivers different number of elements.");
+	
 	while (element = o1.bunch.anyObject) {
 		[[o1 mutableSetValueForKey: @"bunch"] removeObject: element];
 	}
@@ -73,6 +75,10 @@
 	
 	NSAssert(o1.bunch.anyObject == newElement, @"newElement not added.");
 	NSAssert([o1.bunch member: newElement] == newElement, @"newElement not added.");
+	
+	[[o1 mutableSetValueForKey: @"bunch"] addObject: newElement];
+	NSAssert(o1.bunch.allObjects.count == 1, @"allObjects delivers not exatly one element after double addition.");
+
 	
 	[[o1 mutableSetValueForKey: @"bunch"] removeObject: newElement];
 	

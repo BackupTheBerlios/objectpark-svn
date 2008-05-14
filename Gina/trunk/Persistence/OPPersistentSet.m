@@ -8,6 +8,7 @@
 
 #import "OPPersistentSet.h"
 #import "OPPersistentObjectContext.h"
+#import "OPFaultingArray.h"
 
 #define InvalidOID 1
 
@@ -70,39 +71,36 @@ static NSUInteger prims[] = {3,5,7,11,17,23,29,37,43,53,113,193,271,359,443,541,
 	
 	if (!entries) return NSNotFound;
 	
+	NSUInteger firstFree = NSNotFound;
+	
 	while ((entry = entries + (result = ((objectHash + step * (1+objectHash % (entryCount-2))) % entryCount)))->oid) {
-		if (returnFree) {
-			entry->oid;
-			if (entry->oid == InvalidOID) {
-				// while looking for a free spot, found a deleted entry
-				return result;
-			}
-		} else {
-			if (entry->oid != InvalidOID) {
-				// We are looking for a matching entry
-				if (entry->hash == objectHash) {
-					if (entry->oid == objectOID) 
-						return result;
-					// Found equal hash values, but different oids - need to ask the object:
-					id entryObject = [self.context objectForOID: (entry->oid)]; // potentially slow
-					if (! entryObject) {
-						NSLog(@"Warning - dangling oid reference in persistent set.");
-					}
-					if (! object) {
-						object = [self.context objectForOID: objectOID];
-					}
-					if ([entryObject isEqual: object]) {
-						return result;
-					}
+		if (entry->oid != InvalidOID) {
+			// We are looking for a matching entry
+			if (entry->hash == objectHash) {
+				if (entry->oid == objectOID) {
+					return result;
+				}
+				// Found equal hash values, but different oids - need to ask the object:
+				id entryObject = [self.context objectForOID: (entry->oid)]; // potentially slow
+				if (! entryObject) {
+					NSLog(@"Warning - dangling oid reference in persistent set.");
+				}
+				if (! object) {
+					object = [self.context objectForOID: objectOID];
+				}
+				if ([entryObject isEqual: object]) {
+					return result;
 				}
 			}
+		} else {
+			if (firstFree == NSNotFound) firstFree = result;
 		}
 		
 		step += 1;
 	}
-	// No entry found, result points to an empty entry
+	// No entry found, result points to an empty entry, firstFree might point to a deleted entry we can use
 	if (returnFree) {
-		return result;
+		return firstFree == NSNotFound ? result : firstFree;
 	}
 	
 	return NSNotFound;
@@ -195,7 +193,7 @@ static NSUInteger prims[] = {3,5,7,11,17,23,29,37,43,53,113,193,271,359,443,541,
 		
 - (void) addObject: (id) object
 {	
-	if (entryCount <= usedEntryCount) {
+	if (entryCount <= usedEntryCount + 1) {
 		NSLog(@"Expanding persistent set...");
 		[self rebuildWithMinCapacity: count];
 	}
@@ -208,13 +206,15 @@ static NSUInteger prims[] = {3,5,7,11,17,23,29,37,43,53,113,193,271,359,443,541,
 	NSAssert2(eIndex != NSNotFound, @"Unable to find room for object %@ in set %@", object, self);
 	
 	OPHashEntry* entry = entries + eIndex;
-	NSAssert(entry->oid <= InvalidOID, @"entry found for insertion not free.");
 	
-	if (entry->oid == NILOID) usedEntryCount++;
-	entry->oid  = [object oid];
-	entry->hash = [object hash];
-	count++;
-	[[object retain] autorelease]; // docu says we should retain, but we don't want to.
+	// Check, if we found a free spot or an equal object. Igrnore double additions.
+	if (entry->oid <= InvalidOID) {
+		if (entry->oid == NILOID) usedEntryCount++;
+		entry->oid  = [object oid];
+		entry->hash = [object hash];
+		count++;
+		[[object retain] autorelease]; // docu says we should retain, but we don't want to.
+	}
 }
 
 - (void) removeObject:  (id) object
@@ -250,13 +250,20 @@ static NSUInteger prims[] = {3,5,7,11,17,23,29,37,43,53,113,193,271,359,443,541,
 {
 	while (*entryIndex < entryCount) {
 		OID oid = entries[*entryIndex].oid;
-		(*entryIndex)++;
+		(*entryIndex) += 1;
 
 		if (oid > InvalidOID) {
 			return [self.context objectForOID: oid];
 		}
 	}
 	return nil;
+}
+
+
+- (Class) classForCoder
+{
+	// SuperClass did override this.
+	return [self class];
 }
 
 - (id) initWithCoder: (NSCoder*) coder
@@ -271,6 +278,20 @@ static NSUInteger prims[] = {3,5,7,11,17,23,29,37,43,53,113,193,271,359,443,541,
 		[self addObjectWithOID: oid hash: hash];
 	}
 	return self;
+}
+
+- (NSArray*) allObjects
+{
+	OPFaultingArray* result = [OPFaultingArray arrayWithCapacity: count];
+
+	for (int i = 0; i<entryCount; i++) {
+		OPHashEntry* entry = entries+i;
+		if (entry->oid > InvalidOID) {
+			[result addOID: entry->oid];
+		}
+	}
+	NSAssert1(result.count == self.count, @"Problem extracting all %u objects.", count);
+	return result;
 }
 
 

@@ -124,7 +124,7 @@
 		if (pos == 0)  {
 			changeCount++;
 			
-			// todo: also do the set notification here
+			// TODO: also do the set notification here
 			[self willChangeValueForKey: @"sortedArray"];
 			[[self setterCursor] deleteCurrentEntry];
 			if (count != NSNotFound) {
@@ -140,6 +140,7 @@
 		[keyData release];
 	}
 }
+
 
 
 - (id) anyObject
