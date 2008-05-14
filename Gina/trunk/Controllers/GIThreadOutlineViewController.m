@@ -73,21 +73,26 @@ static NSDictionary *spamMessageAttributes()
 
 static NSDictionary *fromAttributes()
 {
-//	return readAttributes();
+	static NSDictionary *fromAttributes = nil;
 	
-	static NSDictionary *attributes = nil;
-	
-	if (! attributes) 
+	if (! fromAttributes) 
 	{
-		attributes = newAttributesWithColor([[NSColor darkGrayColor] shadowWithLevel:0.3]);
+		fromAttributes = newAttributesWithColor([[NSColor blueColor] shadowWithLevel:0.5]);
 	}
-	return attributes;
+	return fromAttributes;
 }
 
 static NSDictionary *unreadFromAttributes()
 {
-	return fromAttributes();
-//  return unreadAttributes();
+	static NSMutableDictionary *unreadFromAttributes = nil;
+	
+	if (!unreadFromAttributes)
+	{
+		unreadFromAttributes = [fromAttributes() mutableCopy];
+		[unreadFromAttributes setObject:[NSFont boldSystemFontOfSize:12] forKey:NSFontAttributeName];
+	}
+
+	return unreadFromAttributes;
 }
 
 static NSDictionary *readFromAttributes()
@@ -109,7 +114,7 @@ static NSAttributedString *spacer()
     static NSAttributedString *spacer = nil;
     if (! spacer)
 	{
-        spacer = [[NSAttributedString alloc] initWithString:@"     "];
+        spacer = [[NSAttributedString alloc] initWithString:@"      "];
     }
     return spacer;
 }
@@ -230,7 +235,9 @@ NSDateFormatter *timeAndDateFormatter()
 	//	
 	//	[result appendAttributedString: (indentation > MAX_INDENTATION)? spacer2() : spacer()];
 	
-	NSDictionary *completeAttributes = (self.flags & OPSeenStatus) ? readAttributes() : unreadAttributes();
+	NSDictionary *completeAttributes = (self.flags & OPSeenStatus) ? readFromAttributes() : unreadFromAttributes();
+
+//	NSDictionary *completeAttributes = (self.flags & OPSeenStatus) ? readAttributes() : unreadAttributes();
 	
 	if (flags & OPJunkMailStatus) 
 	{

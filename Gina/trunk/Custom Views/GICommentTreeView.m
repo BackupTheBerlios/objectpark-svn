@@ -351,7 +351,9 @@ The return value is the row the message was placed in."*/
     [cell setIsDummyMessage:[message isDummy]];
     [cell setHasConnectionToDummyMessage:[[message reference] isDummy]];
     
-    [self setToolTip:[message valueForKey:@"senderName"] forCell:cell];
+	// TODO: add message date also with right formatter
+	NSString *toolTip = message.senderName;
+    [self setToolTip:toolTip forCell:cell];
     
     // set color
     if (message.flags & OPIsFromMeStatus) {

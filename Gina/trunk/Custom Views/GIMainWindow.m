@@ -7,6 +7,8 @@
 //
 
 #import "GIMainWindow.h"
+#import "GIMainWindowController.h"
+#import <Foundation/NSDebug.h>
 
 @implementation GIMainWindow
 
@@ -15,7 +17,7 @@
 {
 	unsigned short keyCode = [event keyCode];
 	
-	NSLog(@"KeyCode = %d", keyCode);
+	if (NSDebugEnabled) NSLog(@"KeyCode = %d", keyCode);
 	
 	if ([self.delegate respondsToSelector:@selector(keyPressed:)])
 	{
@@ -28,7 +30,7 @@
 
 - (void)dealloc
 {
-	NSLog(@"GIMainWindow dealloc");
+	if (NSDebugEnabled) NSLog(@"GIMainWindow dealloc");
 	[super dealloc];
 }
 
@@ -50,11 +52,33 @@
 //	return [super setFrameUsingName: name];
 //}
 
-- (BOOL)makeFirstResponder:(id)bla
+- (void)selectKeyViewFollowingView:(NSView *)referenceView
 {
-//	NSLog(@"make first responder: %@", bla);
+//	NSView *nextKeyView = [referenceView nextValidKeyView];
+//	while (![nextKeyView isKindOfClass:[NSOutlineView class]])
+//	{
+//		referenceView = nextKeyView;
+//		nextKeyView = [referenceView nextValidKeyView];
+//	}
 	
-	return [super makeFirstResponder:bla];
+	[super selectKeyViewFollowingView:referenceView];
+}
+
+- (void)selectNextKeyView:(id)sender
+{
+	
+	//	while (![[self windowController] shouldMakeFirstResponder:candidate])
+	//	{
+	//		[(NSResponder *)candidate nextResponder]
+	//	}
+	[super selectNextKeyView:sender];
+}
+
+- (BOOL)makeFirstResponder:(id)candidate
+{
+	NSLog(@"make first responder: %@", candidate);
+	
+	return [super makeFirstResponder:candidate];
 }
 
 @end

@@ -313,12 +313,12 @@
 //	NSAssert(![messageTextView isEditable], @"should be non editable");
 		
 	//	deferred enabling of autosave (timing problems otherwise):
+	[threadsOutlineView setAutosaveName:@"ThreadsAutosave"];
+	[threadsOutlineView setAutosaveTableColumns:YES];
+	
 	[verticalSplitter setAutosaveName:@"VerticalSplitterAutosave"];
 	[threadMailSplitter setAutosaveName:@"ThreadMailSplitterAutosave"];
 	[mailTreeSplitter setAutosaveName:@"MailTreeSplitterAutosave"];
-	
-	[threadsOutlineView setAutosaveName:@"ThreadsAutosave"];
-	[threadsOutlineView setAutosaveTableColumns:YES];
 	
 	[groupsOutlineView setAutosaveExpandedItems:YES];
 	
@@ -413,7 +413,7 @@
 /*" Tries to show the message given. Selects any group the thread is in. "*/
 {	
 	id selectedHierarchyObject = [self.messageGroupsController selectedObject];
-	NSArray *messageGroups = message.thread.messageGroups;
+	NSSet *messageGroups = message.thread.messageGroups;
 	
 	GIMessageGroup *group = nil;
 	
@@ -424,16 +424,17 @@
 	}
 	else
 	{
-		group = messageGroups.lastObject;
+		group = [messageGroups anyObject];
 	}
 	
-	if (group) {
+	if (group) 
+	{
 		// select group:
-		[messageGroupsController setSelectedItemsPaths: [NSArray arrayWithObject: [NSArray arrayWithObject: group]] byExtendingSelection: NO];
+		[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject: [NSArray arrayWithObject:group]] byExtendingSelection:NO];
 		// expand thread, if necessary:
-		NSArray* itemPath =  (message.thread.messageCount > 1) ? [NSArray arrayWithObjects: message.thread, message, nil] : [NSArray arrayWithObjects: message.thread, nil];
+		NSArray *itemPath =  (message.thread.messageCount > 1) ? [NSArray arrayWithObjects:message.thread, message, nil] : [NSArray arrayWithObjects:message.thread, nil];
 
-		[threadsController setSelectedItemsPaths: [NSArray arrayWithObject: itemPath] byExtendingSelection: NO];
+		[threadsController setSelectedItemsPaths:[NSArray arrayWithObject:itemPath] byExtendingSelection:NO];
 	}
 	
 	if (![self isShowingMessageOnly])
