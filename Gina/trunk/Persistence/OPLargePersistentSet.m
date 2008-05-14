@@ -135,7 +135,7 @@
 			
 			[self didChangeValueForKey: @"sortedArray"];
 		} else {
-			NSLog(@"Warning: Unable to delete set element %@ from %@", anObject, self);
+			NSLog(@"Warning: Unable to find set element %@ for deletion in %@", anObject, self);
 		}
 		[keyData release];
 	}

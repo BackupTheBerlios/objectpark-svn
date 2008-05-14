@@ -159,10 +159,15 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 		for (GIMessageGroup* group in self.messageGroups) {
 			NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
 			[threadIndex removeObject: self];
-			[self willChangeValueForKey:@"date"];
-			[date release];
-			date = [newDate retain];
-			[self didChangeValueForKey:@"date"];
+			[self willChangeValueForKey: @"date"];
+		}
+		
+		[date release];
+		date = [newDate retain];
+		
+		for (GIMessageGroup* group in self.messageGroups) {
+			NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
+			[self didChangeValueForKey: @"date"];
 			[threadIndex addObject: self];
 		}
 	}
