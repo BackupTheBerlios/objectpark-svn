@@ -396,7 +396,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 {
 	id result = nil;
 	@synchronized(self) {
-		if (anIndex  >= count) {
+		if (anIndex >= count) {
 			NSBeep();
 		}
 		NSParameterAssert(anIndex<count);
