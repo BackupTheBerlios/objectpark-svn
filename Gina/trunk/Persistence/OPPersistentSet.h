@@ -15,6 +15,8 @@ typedef struct OPHashEntry {
 	OID oid;
 } OPHashEntry;
 
+/*" Implementation of open double hashing. See Ottmann/Wiemayr, Algorithmen und Datenstrukturen. "*/
+
 @interface OPPersistentSet : NSMutableSet {
 	NSUInteger     count; // number of elements stored
 	NSUInteger     entryCount; // number of bOPHashentries allocated. Always > count

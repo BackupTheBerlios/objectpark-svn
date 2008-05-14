@@ -226,7 +226,7 @@ typedef struct {
 }
 
 - (id) objectRegisteredForOID: (OID) oid
-/*" Returns a subclass of OPPersistentObject. "*/
+/*" Returns a subclass of OPPersistentObject. The result is autoreleased. "*/
 {    
 	FakeObject searchStruct;
 	

@@ -408,7 +408,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 		if (result == nil) {
 			//NSAssert1(result!=nil, @"Error! Object in FaultArray %016llx no longer accessible!", self);
 		}
-		[[result retain] autorelease];
+		//[[result retain] autorelease]; done in objectForOID
 	}
 	return result;
 }
@@ -563,9 +563,10 @@ static int compare_oids(const void* entry1, const void* entry2)
 
 
 - (id) nextObject
+/*" The result is autoreleased. "*/
 {	
-	if ([hostArray count]>eindex) {
-		return [[[hostArray objectAtIndex: eindex++] retain] autorelease];
+	if ([hostArray count] > eindex) {
+		return [hostArray objectAtIndex: eindex++];
 	}
 	[hostArray release]; hostArray = nil;
 	return nil;

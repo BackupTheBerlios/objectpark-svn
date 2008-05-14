@@ -85,7 +85,7 @@
 	
 	id result = [objectsByOid objectForKey: oidString];
 	
-	if (result) return [[result retain] autorelease]; // found it in the current plist
+	//if (result) return [[result retain] autorelease]; // found it in the current plist - needed? done in return!
  	
 	NSDictionary* objectPlist = [encodingsByOid objectForKey: oidString];	
 	
