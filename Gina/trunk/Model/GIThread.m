@@ -228,9 +228,6 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 	NSLog(@"Will delete Thread %@ from %@", self, self.messageGroups);
 	
 	NSMutableSet* ggroups = [self mutableSetValueForKey: @"messageGroups"];
-//	while (ggroups.count) {
-//		[ggroups removeObject: [ggroups anyObject]];
-//	}
 	[ggroups removeAllObjects]; // TODO: check, if this notifies
 	
 	[self.messages makeObjectsPerformSelector: @selector(delete)];

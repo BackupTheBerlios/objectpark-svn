@@ -13,6 +13,18 @@
     Must be delegate and data source of the outline view to control.
  "*/
 
+#import "OPPersistentObject.h"
+
+//@interface OPPersistentObjectReference : NSObject {
+//	OID referencedObjectOID; 
+//}
+//
+//- (id) initWithReferencedObjectOID: (OID) oid;
+//- (id <OPPersisting>) referencedObject;
+//- (OID) referencedObjectOID;
+//
+//@end
+
 @interface OPOutlineViewController : NSController 
 {
 	IBOutlet NSOutlineView* outlineView;
@@ -20,7 +32,8 @@
 	NSString* childKey;
 	NSString* childCountKey;
 	id rootItem;
-	NSMutableSet* expandedItems;
+//	NSMutableSet* expandedItems; // unused
+	NSMutableArray* selectedItemsPaths;
 	
 	@private
 	id observedObjectForRootItem;
@@ -48,6 +61,7 @@
 
 - (NSSet*) keyPathsAffectingDisplayOfItem: (id) item;
 
+- (NSArray*) selectedItemsPaths;
 - (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend;
 
 - (NSUInteger) rowForItemPath: (NSArray*) path;

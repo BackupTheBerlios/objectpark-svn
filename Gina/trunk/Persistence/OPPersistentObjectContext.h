@@ -145,7 +145,7 @@ extern NSString* OPStringFromOID(OID oid);
 - (void) close;
 
 - (id) objectWithURLString: (NSString*) urlString;
-- (id) objectForOID: (OID) oid;
+- (id <OPPersisting>) objectForOID: (OID) oid;
 
 //- (void) willChangeObject: (id <OPPersisting>) object;
 - (void) didChangeObject: (id <OPPersisting>) object;

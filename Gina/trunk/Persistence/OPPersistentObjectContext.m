@@ -362,7 +362,7 @@ NSString* OPStringFromOID(OID oid)
 // 2008-01-17 00:59:12.223 Gina[1533:10b] Warning - no object data found for GIThread, lid 30
 
 
-- (id) objectForOID: (OID) oid
+- (id <OPPersisting>) objectForOID: (OID) oid
 /*" Returns (a fault for) the persistent object (subclass of OPPersistentObject) with the oid given. It does so, regardless wether such an object is contained in the database or not. The result is autoreleased. For NILOID, returns nil. "*/
 {
 	if (!oid) {

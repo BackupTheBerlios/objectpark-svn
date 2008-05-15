@@ -848,7 +848,7 @@ static BOOL isShowingThreadsOnly = NO;
 		// selected threads changed
 		id newSelectedThreads = [observedObjectForSelectedThreads valueForKeyPath:observedKeyPathForSelectedThreads];
 		
-		NSLog(@"observation info: %@", [self observationInfo]);
+		//NSLog(@"observation info: %@", [self observationInfo]);
 		
 		[self setSelectedThreads:newSelectedThreads];
 		

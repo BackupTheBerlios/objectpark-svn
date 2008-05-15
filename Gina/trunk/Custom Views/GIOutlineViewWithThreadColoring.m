@@ -48,7 +48,8 @@
 	if (selections.count) {
 		NSUInteger selectionIndex = [[self selectedRowIndexes] firstIndex];
 		[self.dataSource performSelector: @selector(moveSelectionToTrash)];
-		[self selectRow: selectionIndex byExtendingSelection: NO];
+#warning Selection after delete disabled.
+		//[self selectRow: selectionIndex byExtendingSelection: NO];
 	}
 }
 
