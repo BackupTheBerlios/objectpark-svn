@@ -354,7 +354,7 @@
 		{
 			[outlineView reloadItem:object reloadChildren:YES]; 
 			if (selectedItemsPaths.count) {
-				NSLog(@"Selecting the following items: %@", selectedItemsPaths);
+				//NSLog(@"Selecting the following items: %@", selectedItemsPaths);
 				[self setSelectedItemsPaths: selectedItemsPaths byExtendingSelection: NO];
 			}
 		}
@@ -589,10 +589,10 @@
 			}
 		}
 		
-		// scroll to last entry:
-		if (row != NSNotFound) {
-			[outlineView scrollRowToVisible: row];
-		}	
+//		// scroll to last entry:
+//		if (row != NSNotFound) {
+//			[outlineView scrollRowToVisible: row];
+//		}	
 		[self didChangeValueForKey: @"selectedItems"];
 	} else {
 		if (! extend) [outlineView deselectAll: self];
