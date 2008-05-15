@@ -37,25 +37,28 @@
 /*" Renders a message as an attributed string. This includes header lines as defined in the preferences (plus the default ones). */
 
 
-static NSArray* _headersShown = nil;
 
-+ (NSArray*) headersShown
-    /*" Returns an array of all the header names that Ginko is set up to display (if existent). "*/
+/*" Returns an array of all the header names that Ginko is set up to display (if existent). "*/
++ (NSArray *)headersShown
 {
-    if (!_headersShown) 
+	static NSArray *headersShown = nil;
+	
+    if (!headersShown) 
     {
-        _headersShown = [[NSArray arrayWithObjects:
-            @"From",
-            @"Newsgroups",
-            @"Subject",
-            @"To",
-            @"Cc",
-            @"Bcc",
-            @"Reply-To",
-            @"Date",
-            nil] retain];
+        headersShown = [[NSArray alloc] initWithObjects:
+						  @"Resent-From",
+						  @"Resent-To",
+						  @"From",
+						  @"Newsgroups",
+						  @"Subject",
+						  @"To",
+						  @"Cc",
+						  @"Bcc",
+						  @"Reply-To",
+						  @"Date",
+						  nil];
     }
-    return _headersShown;
+    return headersShown;
 }
 
 static NSString *templatePrefix = nil;
