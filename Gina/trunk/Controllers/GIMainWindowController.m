@@ -1413,7 +1413,7 @@ static BOOL isShowingThreadsOnly = NO;
 			[self performSetSeenBehaviorForMessage:message];
 		}
 	}
-	else
+	else	
 	{
 		if (message) 
 		{
