@@ -119,5 +119,7 @@ enum LeaveOnServerDuration
 - (void)sendMessagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval;
 - (void)send;
 - (void)receive;
+- (void)sendAndReceive;
+- (void)setUpSendAndReceiveTimer;
 
 @end

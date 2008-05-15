@@ -613,6 +613,9 @@
 /*" Returns a new autoreleased timer that is already scheduled. "*/
 - (void)setUpSendAndReceiveTimer
 {
+	[self.sendAndReceiveTimer invalidate];
+	
+	self.sendAndReceiveTimer = nil;
 	if (self.enabled) 
 	{
 		NSTimeInterval timeIntervalSinceLastMessageRetrieval = [self timeIntervalSinceLastMessageRetrieval];
@@ -739,7 +742,7 @@
 	
 	if ([key isEqualToString:@"retrieveMessageInterval"])
 	{
-		[[self class] resetAccountRetrieveAndSendTimers];
+		[self setUpSendAndReceiveTimer];
 	}
 }
 
