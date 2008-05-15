@@ -65,6 +65,8 @@ enum LeaveOnServerDuration
 	BOOL verifySSLCertificateChain;
 	
 	OPFaultingArray *profiles;
+	
+	NSTimer *sendAndReceiveTimer;
 }
 
 /*" Incoming Properties "*/
@@ -77,6 +79,8 @@ enum LeaveOnServerDuration
 @property(readwrite, copy) NSString *incomingPassword;
 @property(readwrite) int retrieveMessageInterval;
 @property(readwrite) int leaveOnServerDuration;
+@property(readwrite, retain) NSTimer *sendAndReceiveTimer;
+
 - (BOOL)isPOPAccount;
 
 /*" Outgoing Properties "*/

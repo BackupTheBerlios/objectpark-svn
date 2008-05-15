@@ -15,8 +15,13 @@
 {
 	IBOutlet NSTableView *accountTableView;
     IBOutlet NSArrayController *accountsController;
+	
+	NSTimer *updateTimer;
 }
 
-@property (readonly) OPPersistentObjectContext* context;
+@property (readonly) OPPersistentObjectContext *context;
+@property (readwrite, retain) NSTimer *updateTimer;
+
+- (IBAction)sendAndReceive:(id)sender;
 
 @end

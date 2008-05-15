@@ -100,21 +100,26 @@
 {
 	//NSLog(@"awakeFromNib");
 	// Will be called multiple times, so guard against that:
-	if (! self.context) {
+	if (! self.context) 
+	{
 		// Setting up persistence:
-		OPPersistentObjectContext* context = [[[OPPersistentObjectContext alloc] init] autorelease];
-		[OPPersistentObjectContext setDefaultContext: context];
-		NSString* databasePath = [context.documentPath stringByAppendingPathComponent: @"Gina.btrees"];
+		OPPersistentObjectContext *context = [[[OPPersistentObjectContext alloc] init] autorelease];
+		[OPPersistentObjectContext setDefaultContext:context];
+		NSString *databasePath = [context.documentPath stringByAppendingPathComponent:@"Gina.btrees"];
 
-		[context setDatabaseFromPath: databasePath];
+		[context setDatabaseFromPath:databasePath];
 		
-		if ([[[self context] allObjectsOfClass: [GIProfile class]] count] == 0) {
-			[self restoreConfig: self];
+		if ([[[self context] allObjectsOfClass:[GIProfile class]] count] == 0) 
+		{
+			[self restoreConfig:self];
 		}
 		
 		[GIMessageGroup ensureDefaultGroups];
 		[self resetMessageStatusSending];
-		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object: nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(smtpOperationDidEnd:) name:GISMTPOperationDidEndNotification object:nil];
+		
+		[GIAccount resetAccountRetrieveAndSendTimers];
 	}
 }
 
@@ -250,7 +255,7 @@
 {
 	NSTimeInterval dueInterval = [[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes] * 60.0;
 
-	for (GIAccount *account in [self.context allObjectsOfClass: [GIAccount class]])
+	for (GIAccount *account in [self.context allObjectsOfClass:[GIAccount class]])
 	{
 		[account sendMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval];
 	}

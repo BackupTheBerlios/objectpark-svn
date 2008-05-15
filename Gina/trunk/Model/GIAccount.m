@@ -21,6 +21,8 @@
 
 @implementation GIAccount
 
+@synthesize sendAndReceiveTimer;
+
 + (BOOL)cachesAllObjects
 {
 	return YES;
@@ -87,6 +89,8 @@
 
 - (void)dealloc
 {
+	[sendAndReceiveTimer invalidate];
+	[sendAndReceiveTimer release];
 	[name release];
 	[incomingUsername release];
 	[outgoingUsername release];
@@ -606,22 +610,9 @@
 	[[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:[self dateOfLastMessageRetrievalDefaultsKey]];
 }
 
-+ (NSMutableArray *)timers
-{
-	static NSMutableArray *timers = nil;
-	
-	if (!timers) 
-	{
-		timers = [[NSMutableArray alloc] init];
-	}
-	return timers;
-}
-
 /*" Returns a new autoreleased timer that is already scheduled. "*/
-- (NSTimer *)receiveTimer
+- (void)setUpSendAndReceiveTimer
 {
-	NSTimer *result = nil;
-	
 	if (self.enabled) 
 	{
 		NSTimeInterval timeIntervalSinceLastMessageRetrieval = [self timeIntervalSinceLastMessageRetrieval];
@@ -635,52 +626,18 @@
 				interval = MAX(0.1, interval - timeIntervalSinceLastMessageRetrieval);				
 			}
 			
-			result = [NSTimer scheduledTimerWithTimeInterval:interval
+			self.sendAndReceiveTimer = [NSTimer scheduledTimerWithTimeInterval:interval
 													  target:self 
 													selector:@selector(sendAndReceiveTimerFired:)
 													userInfo:self 
 													 repeats:NO];
 		}
 	}
-	
-	return result;
-}
-
-- (void)resetReceiveTimer
-{	
-	// find timer with userinfo == self
-	NSTimer *timer = nil;
-	for (timer in [[self class] timers])
-	{
-		if ([timer userInfo] == self) break;
-	}
-	
-	if (timer) 
-	{
-		[timer invalidate];
-		[[[self class] timers] removeObjectIdenticalTo:timer];
-	}
-	
-	if (timer = [self receiveTimer]) 
-	{
-		[[[self class] timers] addObject:timer];
-	}
 }
 
 + (void)resetAccountRetrieveAndSendTimers
 {
-	[[self timers] makeObjectsPerformSelector:@selector(invalidate)];
-	[[self timers] removeAllObjects];
-	
-	for (GIAccount *account in [[OPPersistentObjectContext defaultContext] allObjectsOfClass:self])
-	{
-		NSTimer *timer = [account receiveTimer];
-		
-		if (timer) 
-		{
-			[[self timers] addObject: timer];
-		}
-	}
+	[[[OPPersistentObjectContext defaultContext] allObjectsOfClass:self] makeObjectsPerformSelector:@selector(setUpSendAndReceiveTimer)];
 }
 
 - (NSArray *)messagesRipeForSendingAtTimeIntervalSinceNow:(NSTimeInterval)interval
@@ -764,11 +721,16 @@
 	}
 }
 
-- (void)sendAndReceiveTimerFired:(NSTimer *)aTimer
+- (void)sendAndReceive
 {
 	[self receive];
 	[self send];
-	[self resetReceiveTimer];
+	[self setUpSendAndReceiveTimer];
+}
+
+- (void)sendAndReceiveTimerFired:(NSTimer *)aTimer
+{
+	[self sendAndReceive];
 }
 
 - (void)didChangeValueForKey:(NSString *)key
@@ -835,6 +797,20 @@
 	[coder encodeBool:verifySSLCertificateChain forKey:@"verifySSLCertificateChain"];
 	
 	[coder encodeObject:profiles forKey:@"profiles"];
+}
+
+@end
+
+@implementation NSTimer (MinutesUntilFire)
+
+- (NSString *)minutesUntilFire
+{
+	NSTimeInterval interval = [[self fireDate] timeIntervalSinceDate:[NSDate date]];
+	unsigned minutes = (unsigned) (interval / 60.0);
+	unsigned seconds = (unsigned) (interval - (minutes * 60.0));
+	
+	return [NSString stringWithFormat:@"%u:%.02u", minutes, seconds];
+//	return (NSUInteger)([[self fireDate] timeIntervalSinceDate:[NSDate date]] / (NSTimeInterval)60.0);
 }
 
 @end
