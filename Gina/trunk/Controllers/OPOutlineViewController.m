@@ -568,7 +568,7 @@
 - (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend
 /*" Tries to set the selection to the item paths given as an array of arrays. "*/
 {
-	[selectedItemsPaths release]; selectedItemsPaths = [[NSMutableArray alloc] initWithCapacity: itemPaths.count];
+	[selectedItemsPaths autorelease]; selectedItemsPaths = [[NSMutableArray alloc] initWithCapacity: itemPaths.count];
 	if (itemPaths.count) {
 		NSInteger row = NSNotFound;
 		//NSLog(@"%@ selecting items at paths: %@", self, itemPaths);
