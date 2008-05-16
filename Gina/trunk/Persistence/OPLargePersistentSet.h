@@ -22,10 +22,13 @@
 @property (readonly) NSUInteger cursorPosition;
 
 - (id) initWithPersistentSet: (OPLargePersistentSet*) aSet;
-- (void) forgetSet;
+//- (void) forgetSet;
 
 - (void) noteEntryAddedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
 - (void) noteEntryRemovedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength;
+
+- (void) willChangeSortKeyValueForObject: (id) object;
+- (void) didChangeSortKeyValueForObject: (id) object;
 
 @end
 
@@ -48,7 +51,12 @@
 
 - (OPPersistentObjectContext*) context;
 
-- (NSArray*) sortedArray;
+- (OPLargePersistentSetArray*) sortedArray;
+
+- (void) addPrimitiveObject: (id) anObject;
+- (void) removePrimitiveObject: (id) anObject;
+
+- (OPBTree*) btree; // private
 
 @end
 

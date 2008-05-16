@@ -66,7 +66,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) insertObject: (GIMessage*) message inMessagesAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
 {
-	[messagesByTree release]; messagesByTree = nil;
+	[messagesByTree release]; messagesByTree = nil; // release cache
 	[messages insertObject: message atIndex: index];
 	// Warning: No inverse relationship handling here - use only setThread in GIMessage.
 	if (! message.isSeen) {
@@ -160,15 +160,19 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 			NSArray* groupList = messageGroups.count ? self.messageGroups.allObjects : nil;
 			// The group's thread relation (the set array) is sorted by date. Update it:
 			for (GIMessageGroup* group in groupList) {
-				NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
-				[threadIndex removeObject: self];
+				//NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
+				//[threadIndex removeObject: self];
+				[[group.threads sortedArray] willChangeSortKeyValueForObject: self];
+				[group willChangeValueForKey: @"threads"]; // in fact, only threads.sortedArray changed
 			}
 			
 			[date release]; date = [newDate retain];
 			
 			for (GIMessageGroup* group in groupList) {
-				NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
-				[threadIndex addObject: self];
+				//NSMutableSet* threadIndex = [group mutableSetValueForKey: @"threads"];
+				//[threadIndex addObject: self];
+				[[group.threads sortedArray] didChangeSortKeyValueForObject: self];
+				[group didChangeValueForKey: @"threads"]; // in fact, only threads.sortedArray changed
 			}
 		} else {
 			[date release]; date = [newDate retain];

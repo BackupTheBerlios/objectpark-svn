@@ -23,6 +23,180 @@
 
 @end
 
+@implementation OPLargePersistentSetArray
+
+- (id) initWithPersistentSet: (OPLargePersistentSet*) aSet
+{
+	int error = 0;
+	pSet = aSet; // non-retained
+	arrayCursor = [[pSet btree] newCursorWithError: &error];
+	cursorPosition = NSNotFound;
+	return self;
+}
+
+- (NSUInteger) cursorPosition
+{
+	return cursorPosition;
+}
+
+- (void) forgetSet
+{
+	pSet = nil;
+}
+
+- (void) noteEntryAddedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength
+{
+	cursorPosition = NSNotFound;
+	//	int error = 0; 
+	//	i64 cursorKeyLength = [arrayCursor currentEntryKeyLengthError: &error];
+	//	char cursorKeyBytes[cursorKeyLength];	
+	//	[arrayCursor getCurrentEntryKeyBytes: cursorKeyBytes length: cursorKeyLength offset: 0];
+	//	
+	//	// compare the keys. If key < cursorKey, adjust cursorPosition:
+	//	int cmp = [arrayCursor compareFunction](NULL, cursorKeyLength, cursorKeyBytes, keyLength, keyBytes);
+	//	if (cmp > 0)
+	//	{
+	//		cursorPosition++;
+	//	}
+}
+
+
+- (void) noteEntryRemovedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength
+{
+	cursorPosition = NSNotFound;
+	
+	//	int error = 0; 
+	//	i64 cursorKeyLength = [arrayCursor currentEntryKeyLengthError: &error];
+	//	char cursorKeyBytes[cursorKeyLength];	
+	//	[arrayCursor getCurrentEntryKeyBytes: cursorKeyBytes length: cursorKeyLength offset: 0];
+	//	
+	//	// compare the keys. If key < cursorKey, adjust cursorPosition:
+	//	int cmp = [arrayCursor compareFunction](NULL, cursorKeyLength, cursorKeyBytes, keyLength, keyBytes);
+	//	if (cmp > 0) {
+	//		if (cursorPosition > 0) {
+	//			cursorPosition--;
+	//		} else {
+	//			// Make sure, cursor is undefined, if the cursor element has been deleted.
+	//			cursorPosition = NSNotFound;
+	//		}
+	//	}
+}
+
+- (void) positionCursorToIndex: (NSUInteger) index
+{
+	int error = 0;
+	//NSLog(@"Should position cursor to index: %u (from %u)", index, cursorPosition);
+	if (cursorPosition == NSNotFound || ! [arrayCursor isValid]) {
+		//NSLog(@"Resetting cursor (valid = %u)", [arrayCursor isValid]);
+		
+		error = [arrayCursor moveToFirst];
+		NSAssert1(error == 0, @"Unable to position to index %u. No entries?", index);			
+		cursorPosition = 0;
+	}
+	
+	while (cursorPosition<index) {
+		error = [arrayCursor moveToNext]; cursorPosition++;
+		i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
+		NSAssert1(keyLength > 0, @"invalid (empty key) btree entry (error %u).", error);
+		if (error) NSLog(@"Moved cursor forward to %u, error? %u", cursorPosition, error);
+	}
+	while (cursorPosition>index) {
+		error = [arrayCursor moveToPrevious]; cursorPosition--;
+		i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
+		NSAssert1(keyLength > 0, @"invalid (empty key) btree entry (error %u).", error);
+		if (error) NSLog(@"Moved cursor back to %u, error? %u", cursorPosition, error);
+	}
+	NSAssert1(cursorPosition == index, @"Moving the cursor to position %u failed.", index);
+}
+
+- (OID) oidAtIndex: (NSUInteger) index
+{
+	//NSLog(@"objectAtIndex: %u", index);
+	
+	NSParameterAssert(index < [pSet count]);
+	[self positionCursorToIndex: index];
+	
+	OID oid = NILOID;
+	int error = 0; 
+	i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
+	NSAssert2(keyLength >= sizeof(OID), @"Not enough key data (%u bytes) found (error %d).", keyLength, error);
+	
+	error = [arrayCursor getCurrentEntryKeyBytes: &oid length: sizeof(OID) offset: keyLength-sizeof(OID)];
+	oid = NSSwapBigLongLongToHost(oid);
+	return oid;
+}
+
+- (NSUInteger)indexOfOID: (OID) anOID
+{
+	NSUInteger count = self.count;
+	
+	for (NSUInteger i = 0; i < count; i++)
+	{
+		if ([self oidAtIndex:i] == anOID)
+		{
+			return i;
+		}
+	}
+	
+	return NSNotFound;
+}
+
+- (NSUInteger) indexOfObjectIdenticalTo: (id) other
+{
+	return [self indexOfOID: [other oid]];
+}
+
+- (id) objectAtIndex: (NSUInteger) index
+{
+	//NSLog(@"%@ requesting objectAtIndex: %u", pSet, index);
+	OID oid = [self oidAtIndex:index];
+	id result = [[pSet context] objectForOID: oid];
+	NSAssert3(result != nil, @"Warning: <OPLargePersistentSetArray 0x%x> objectAtIndex: %u is a dangling reference to %llx. Returning nil.", self, index, oid);
+	return result;
+}
+
+- (void) willChangeSortKeyValueForObject: (id) object
+/*" Notifies the array that [object valueForKey: sortKey] will change. "*/
+{
+	[pSet willChangeValueForKey: @"sortedArray"];
+	[pSet removePrimitiveObject: object]; // without letting anyone know
+}
+
+- (void) didChangeSortKeyValueForObject: (id) object
+/*" Notifies the array that [object valueForKey: sortKey] did change. "*/
+{
+	[pSet addPrimitiveObject: object]; // again, without letting anyone know
+	[pSet didChangeValueForKey: @"sortedArray"];
+}
+
+- (NSUInteger) count
+{
+	return [pSet count];
+}
+
+- (NSEnumerator*) objectEnumerator
+{
+	return [[[OPLargePersistentSetArrayEnumerator alloc] initWithPersistentSet: pSet] autorelease];
+}
+
+- (OPLargePersistentSet*) pSet
+{
+	return pSet;
+}
+
+- (NSString*) description
+{
+	return [NSString stringWithFormat: @"<%@ 0x%x, cursor at %u/%u>", [self class], self, cursorPosition, [self count]];
+}
+
+- (void) dealloc
+{
+	[arrayCursor release];
+	[super dealloc];
+}
+
+@end
+
 @implementation OPLargePersistentSet
 
 - (OPPersistentObjectContext*) context
@@ -70,7 +244,7 @@
 	return setterCursor;
 }
 
-- (void) addObject: (id) anObject
+- (void) addObject: (id) anObject notify: (BOOL) doNotify
 {
 	NSData* keyData = [self newKeyForObject: anObject];
 	//@synchronized(setCursor) {
@@ -82,14 +256,16 @@
 		changeCount++;
 		
 		// todo: also do the set notification here
-		[self willChangeValueForKey: @"sortedArray"]; // test, if we should post the indexed notification here
-		[self willChangeValueForKey: @"count"];
+		if (doNotify) {
+			[self willChangeValueForKey: @"sortedArray"]; // test, if we need to post the indexed notification here
+		}
 		[[self setterCursor] insertValueBytes: NULL ofLength: 0 
 								  forKeyBytes: keyBytes ofLength: keyLength isAppend: NO];
 		if (count!=NSNotFound) count++;
 		[array noteEntryAddedWithKeyBytes: keyBytes length: keyLength]; // does nothing, if no sortedArray set.
-		[self didChangeValueForKey: @"count"];
-		[self didChangeValueForKey: @"sortedArray"]; // test, if we should post the indexed notification here
+		if (doNotify) {
+			[self didChangeValueForKey: @"sortedArray"]; // test, if we should post the indexed notification here
+		}
 	} else {
 		// nothing to do, anObject already present
 		NSLog(@"Ignoring addition of existing object to persistent set.");
@@ -97,6 +273,16 @@
 	//}
 	[keyData release];
 } 
+
+- (void) addObject: (id) anObject
+{
+	[self addObject: anObject notify: YES];
+}
+
+- (void) addPrimitiveObject: (id) anObject
+{
+	[self addObject: anObject notify: NO];
+}
 
 - (id) member: (id) anObject
 {
@@ -113,7 +299,7 @@
 }
 
 
-- (void) removeObject: (id) anObject
+- (void) removeObject: (id) anObject notify: (BOOL) doNotify
 {
 	if (btree) {
 		NSData* keyData = [self newKeyForObject: anObject];
@@ -125,15 +311,18 @@
 			changeCount++;
 			
 			// TODO: also do the set notification here
-			[self willChangeValueForKey: @"sortedArray"];
+			if (doNotify) {
+				[self willChangeValueForKey: @"sortedArray"];
+			}
 			[[self setterCursor] deleteCurrentEntry];
 			if (count != NSNotFound) {
 				count--;
 			}
 			
 			[array noteEntryRemovedWithKeyBytes: keyBytes length: keyLength];
-			
-			[self didChangeValueForKey: @"sortedArray"];
+			if (doNotify) {
+				[self didChangeValueForKey: @"sortedArray"];
+			}
 		} else {
 			NSLog(@"Warning: Unable to find set element %@ for deletion in %@", anObject, self);
 		}
@@ -141,7 +330,15 @@
 	}
 }
 
+- (void) removeObject: (id) anObject
+{
+	[self removeObject: anObject notify: YES];
+}
 
+- (void) removePrimitiveObject: (id) anObject
+{
+	[self removeObject: anObject notify: NO];
+}
 
 - (id) anyObject
 {
@@ -189,7 +386,7 @@
 	[super dealloc];
 }
 
-- (NSArray*) sortedArray
+- (OPLargePersistentSetArray*) sortedArray
 /*" Array is sorted by oid, if no sortKey has been set, by sortKey, otherwise. "*/
 {
 	if (!array) {
@@ -309,166 +506,6 @@
 
 @end
 
-@implementation OPLargePersistentSetArray
-
-- (id) initWithPersistentSet: (OPLargePersistentSet*) aSet
-{
-	int error = 0;
-	pSet = aSet; // non-retained
-	arrayCursor = [[pSet btree] newCursorWithError: &error];
-	cursorPosition = NSNotFound;
-	return self;
-}
-
-- (NSUInteger) cursorPosition
-{
-	return cursorPosition;
-}
-
-- (void) forgetSet
-{
-	pSet = nil;
-}
-
-- (void) noteEntryAddedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength
-{
-	cursorPosition = NSNotFound;
-//	int error = 0; 
-//	i64 cursorKeyLength = [arrayCursor currentEntryKeyLengthError: &error];
-//	char cursorKeyBytes[cursorKeyLength];	
-//	[arrayCursor getCurrentEntryKeyBytes: cursorKeyBytes length: cursorKeyLength offset: 0];
-//	
-//	// compare the keys. If key < cursorKey, adjust cursorPosition:
-//	int cmp = [arrayCursor compareFunction](NULL, cursorKeyLength, cursorKeyBytes, keyLength, keyBytes);
-//	if (cmp > 0)
-//	{
-//		cursorPosition++;
-//	}
-}
-
-
-- (void) noteEntryRemovedWithKeyBytes: (const char*) keyBytes length: (i64) keyLength
-{
-	cursorPosition = NSNotFound;
-
-//	int error = 0; 
-//	i64 cursorKeyLength = [arrayCursor currentEntryKeyLengthError: &error];
-//	char cursorKeyBytes[cursorKeyLength];	
-//	[arrayCursor getCurrentEntryKeyBytes: cursorKeyBytes length: cursorKeyLength offset: 0];
-//	
-//	// compare the keys. If key < cursorKey, adjust cursorPosition:
-//	int cmp = [arrayCursor compareFunction](NULL, cursorKeyLength, cursorKeyBytes, keyLength, keyBytes);
-//	if (cmp > 0) {
-//		if (cursorPosition > 0) {
-//			cursorPosition--;
-//		} else {
-//			// Make sure, cursor is undefined, if the cursor element has been deleted.
-//			cursorPosition = NSNotFound;
-//		}
-//	}
-}
-
-- (void) positionCursorToIndex: (NSUInteger) index
-{
-	int error = 0;
-	//NSLog(@"Should position cursor to index: %u (from %u)", index, cursorPosition);
-	if (cursorPosition == NSNotFound || ! [arrayCursor isValid]) {
-		//NSLog(@"Resetting cursor (valid = %u)", [arrayCursor isValid]);
-
-		error = [arrayCursor moveToFirst];
-		NSAssert1(error == 0, @"Unable to position to index %u. No entries?", index);			
-		cursorPosition = 0;
-	}
-	
-	while (cursorPosition<index) {
-		error = [arrayCursor moveToNext]; cursorPosition++;
-		i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
-		NSAssert1(keyLength > 0, @"invalid (empty key) btree entry (error %u).", error);
-		if (error) NSLog(@"Moved cursor forward to %u, error? %u", cursorPosition, error);
-	}
-	while (cursorPosition>index) {
-		error = [arrayCursor moveToPrevious]; cursorPosition--;
-		i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
-		NSAssert1(keyLength > 0, @"invalid (empty key) btree entry (error %u).", error);
-		if (error) NSLog(@"Moved cursor back to %u, error? %u", cursorPosition, error);
-	}
-	NSAssert1(cursorPosition == index, @"Moving the cursor to position %u failed.", index);
-}
-
-- (OID) oidAtIndex: (NSUInteger) index
-{
-	//NSLog(@"objectAtIndex: %u", index);
-	
-	NSParameterAssert(index < [pSet count]);
-	[self positionCursorToIndex: index];
-	
-	OID oid = NILOID;
-	int error = 0; 
-	i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
-	NSAssert2(keyLength >= sizeof(OID), @"Not enough key data (%u bytes) found (error %d).", keyLength, error);
-	
-	error = [arrayCursor getCurrentEntryKeyBytes: &oid length: sizeof(OID) offset: keyLength-sizeof(OID)];
-	oid = NSSwapBigLongLongToHost(oid);
-	return oid;
-}
-
-- (NSUInteger)indexOfOID: (OID) anOID
-{
-	NSUInteger count = self.count;
-	
-	for (NSUInteger i = 0; i < count; i++)
-	{
-		if ([self oidAtIndex:i] == anOID)
-		{
-			return i;
-		}
-	}
-	
-	return NSNotFound;
-}
-
-- (NSUInteger) indexOfObjectIdenticalTo: (id) other
-{
-	return [self indexOfOID: [other oid]];
-}
-
-- (id) objectAtIndex: (NSUInteger) index
-{
-	//NSLog(@"%@ requesting objectAtIndex: %u", pSet, index);
-	OID oid = [self oidAtIndex:index];
-	id result = [[pSet context] objectForOID: oid];
-	NSAssert3(result != nil, @"Warning: <OPLargePersistentSetArray 0x%x> objectAtIndex: %u is a dangling reference to %llx. Returning nil.", self, index, oid);
-	return result;
-}
-
-
-- (NSUInteger) count
-{
-	return [pSet count];
-}
-
-- (NSEnumerator*) objectEnumerator
-{
-	return [[[OPLargePersistentSetArrayEnumerator alloc] initWithPersistentSet: pSet] autorelease];
-}
-
-- (OPLargePersistentSet*) pSet
-{
-	return pSet;
-}
-
-- (NSString*) description
-{
-	return [NSString stringWithFormat: @"<%@ 0x%x, cursor at %u/%u>", [self class], self, cursorPosition, [self count]];
-}
-
-- (void) dealloc
-{
-	[arrayCursor release];
-	[super dealloc];
-}
-
-@end
 
 @implementation OPLargePersistentSetArrayEnumerator
 

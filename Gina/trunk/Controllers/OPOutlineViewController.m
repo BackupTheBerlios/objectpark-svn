@@ -344,17 +344,14 @@
 			for (id item in [change objectForKey: NSKeyValueChangeOldKey]) {
 				[self removeFromKnownItems: item];
 			}
-		}
-		// TODO: if the childKey relation changed, reload that item:
-		
-		// try to keep the selection?
+		}		
+		// try to keep the selection:
 		
 		if (object == rootItem) object = nil;
-		if (!self.suspendUpdatesUntilNextReloadData)
-		{
-			[outlineView reloadItem:object reloadChildren:YES]; 
-			if (selectedItemsPaths.count) {
-				//NSLog(@"Selecting the following items: %@", selectedItemsPaths);
+		if (! self.suspendUpdatesUntilNextReloadData) {
+			[outlineView reloadItem: object reloadChildren: YES]; 
+			if (selectedItemsPaths.count && (object == nil || [outlineView isItemExpanded: object])) {
+				NSLog(@"Selecting %u items paths", selectedItemsPaths.count);
 				[self setSelectedItemsPaths: selectedItemsPaths byExtendingSelection: NO];
 			}
 		}
@@ -472,7 +469,7 @@
 			[selectedItemsPaths addObject: [self itemPathForItem: item]];
 			index += 1;
 		}
-		NSLog(@"Selected items paths: %@", selectedItemsPaths);
+		NSLog(@"Selected %u items paths.", selectedItemsPaths.count);
 	}
 	
 	[self willChangeValueForKey:@"selectedObject"];

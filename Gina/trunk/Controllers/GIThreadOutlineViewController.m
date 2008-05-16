@@ -588,6 +588,7 @@ NSDateFormatter *timeAndDateFormatter()
 	
 	selectionRestoreInProgress = YES; // prevent items to be stored again:
 	[self setSelectedItemsPaths: itemPaths byExtendingSelection: NO];
+	[outlineView scrollRowToVisible: [[outlineView selectedRowIndexes] lastIndex]];
 	selectionRestoreInProgress = NO;
 
 }
