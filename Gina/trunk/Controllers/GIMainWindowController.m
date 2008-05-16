@@ -197,16 +197,16 @@
 	
 	// setting up query:
 	query = [[NSMetadataQuery alloc] init];
-	
+	[query setSearchScopes:[NSArray arrayWithObjects:[[OPPersistentObjectContext defaultContext] transferDataDirectory], nil]];
+
 	// setup our Spotlight notifications
 	NSNotificationCenter *nf = [NSNotificationCenter defaultCenter];
 	[nf addObserver:self selector:@selector(queryNotification:) name:nil object:query];
 		
 	[query setDelegate:self];
 	
-	// showin window:
+	// show window:
 	[self window];
-//	[self showWindow:self];
 
 	return self;
 }
@@ -228,12 +228,15 @@
  	[super dealloc];
 }
 
-- (void) windowWillClose: (NSNotification*) notification
+- (void)windowWillClose:(NSNotification *)notification
 {
-	[self unbind: @"selectedThreads"];
-	[self unbind: @"selectedSearchResults"];
-	[threadsController unbind: @"rootItem"];
-	[commentTreeView unbind: @"selectedMessageOrThread"];
+	// Store group selection:
+	[[NSUserDefaults standardUserDefaults] setObject:[[self.messageGroupsController selectedObject] objectURLString] forKey:@"SelectedGroupURL"];
+	
+	[self unbind:@"selectedThreads"];
+	[self unbind:@"selectedSearchResults"];
+	[threadsController unbind:@"rootItem"];
+	[commentTreeView unbind:@"selectedMessageOrThread"];
 	
 	[self autorelease];
 }
@@ -271,19 +274,6 @@
 	//messageGroupsController.childCountKey = @"threadChildrenCount";
 	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
 		
-	// Restore group selection:
-	NSString* urlString = [[NSUserDefaults standardUserDefaults] stringForKey: @"SelectedGroupURL"];
-	GIHierarchyNode* node = [[OPPersistentObjectContext defaultContext] objectWithURLString: urlString];
-	if (node) {
-		NSMutableArray* itemPath = [NSMutableArray arrayWithObject: node];
-		while (node = node.parentNode) {
-			[itemPath insertObject: node atIndex: 0];
-		}
-		[itemPath removeObjectAtIndex: 0]; // remove root node as the controller does not know anything about it. Different semantics - should this be changed?
-		NSArray* itemPaths = [NSArray arrayWithObject: itemPath];
-		[self.messageGroupsController setSelectedItemsPaths: itemPaths byExtendingSelection: NO];
-	}	
-	
 	// configuring manual bindings:
 	threadsController.childKey = @"threadChildren";
 	threadsController.childCountKey = @"threadChildrenCount";
@@ -322,6 +312,22 @@
 	
 	[groupsOutlineView setAutosaveExpandedItems:YES];
 	
+	// Restore group selection:
+	NSString *urlString = [[NSUserDefaults standardUserDefaults] stringForKey:@"SelectedGroupURL"];
+	GIHierarchyNode *node = [[OPPersistentObjectContext defaultContext] objectWithURLString:urlString];
+	if (node) 
+	{
+		NSMutableArray *itemPath = [NSMutableArray arrayWithObject:node];
+		while (node = node.parentNode) 
+		{
+			[itemPath insertObject: node atIndex: 0];
+		}
+		
+		[itemPath removeObjectAtIndex:0]; // remove root node as the controller does not know anything about it. Different semantics - should this be changed?
+		NSArray *itemPaths = [NSArray arrayWithObject:itemPath];
+		[self.messageGroupsController setSelectedItemsPaths:itemPaths byExtendingSelection:NO];
+	}	
+		
 	[self.window makeKeyAndOrderFront:self];
 }
 
@@ -1607,7 +1613,8 @@ static BOOL isShowingThreadsOnly = NO;
 				break;
 		}
 		
-		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
+//		[query setSearchScopes:[NSArray arrayWithObjects:NSMetadataQueryUserHomeScope, nil]];
+		
 		[query startQuery];
 	}
 	else

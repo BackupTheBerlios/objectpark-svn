@@ -323,13 +323,8 @@
 //	[[GIJunkFilter sharedInstance] writeJunkFilterDefintion];
 }
 
-- (void) terminate: (id) sender
-{
-	// Store group selection:
-	GIMainWindowController* windowController = self.mainWindow.windowController;
-	[[NSUserDefaults standardUserDefaults] setObject: [[windowController.messageGroupsController selectedObject] objectURLString]
-											  forKey: @"SelectedGroupURL"];
-	
+- (void)terminate:(id)sender
+{	
 	// shutting down persistence:
 	[self.context saveChanges];
 	[self.context close];	
