@@ -389,6 +389,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 //}
 
 - (NSUInteger) messageCount
+/* TODO: Make -messageCount go away! */
 {
     return [[self messages] count]; 
 }

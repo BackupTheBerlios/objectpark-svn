@@ -426,6 +426,53 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 	return self.threads.count;
 }
 
+- (NSUInteger) messageCount
+{
+	NSUInteger result = 0;
+	for (GIThread* thread in self.threads) {
+		result += thread.messages.count;
+	}
+	return result;
+}
+
+- (NSUInteger) calculatedUnreadMessageCount
+/*" debug only "*/
+{
+	NSUInteger result = 0;
+	for (GIThread* thread in self.threads) {
+		result += thread.unreadMessageCount;
+	}
+	return result;
+}
+
+- (NSUInteger) calculatedUnreadMessageCount2
+/*" debug only "*/
+{
+	NSUInteger result = 0;
+	
+	for (GIThread* thread in self.threads) {
+		for (GIMessage* message in thread.messages) {
+			if (! [message isSeen]) {
+				result += 1;
+			}
+		}
+	}
+	return result;
+}
+
+- (NSUInteger) calculatedMessageCount
+/*" debug only "*/
+{
+	NSUInteger result = 0;
+	
+	for (GIThread* thread in self.threads) {
+		for (GIMessage* message in thread.messages) {
+				result += 1;
+		}
+	}
+	return result;
+}
+
 - (void) willDelete
 {
 	[super willDelete]; // removes itself from the node hierarchy
@@ -795,9 +842,13 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 		[self willChangeValueForKey: @"unreadMessageCount"];
 		unreadMessageCount += changeCount;
 		[self didChangeValueForKey: @"unreadMessageCount"];
-//		[self willChangeValueForKey:@"self"];
-//		[self didChangeValueForKey:@"self"];
 	}
+	
+//	NSUInteger umc  = self.unreadMessageCount;
+//	NSUInteger cumc = self.calculatedUnreadMessageCount;
+//	if (umc != cumc) {
+//		NSLog(@"Warning! unreadMessageCount out of sync.");
+//	}
 }
 
 - (void) addPrimitiveThreadsObject: (GIThread*) newThread
@@ -809,13 +860,16 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) addThreadsObject: (GIThread*) newThread
 /*" Sent by the mutableSet proxy. "*/
 {	
-	[self addPrimitiveThreadsObject: newThread];
-	
-	// Update the inverse relation:	
-	NSSet* selfSet = [NSSet setWithObject: self];
-	[newThread willChangeValueForKey: @"messageGroups" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
-	[newThread addPrimitiveMessageGroupsObject: self];
-	[newThread didChangeValueForKey: @"messageGroups" withSetMutation:NSKeyValueUnionSetMutation usingObjects: selfSet];
+	// Prevent newThread from being added multiple times:
+	if (! [self.threads containsObject: newThread]) {
+		[self addPrimitiveThreadsObject: newThread];
+		
+		// Update the inverse relation:	
+		NSSet* selfSet = [NSSet setWithObject: self];
+		[newThread willChangeValueForKey: @"messageGroups" withSetMutation: NSKeyValueUnionSetMutation usingObjects: selfSet];
+		[newThread addPrimitiveMessageGroupsObject: self];
+		[newThread didChangeValueForKey: @"messageGroups" withSetMutation:NSKeyValueUnionSetMutation usingObjects: selfSet];
+	}
 }
 
 
@@ -828,13 +882,16 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 - (void) removeThreadsObject: (GIThread*) oldThread
 /*" Sent by the mutableSet proxy. "*/
 {
-	[self removePrimitiveThreadsObject: oldThread];
-	
-	// Update the inverse relation:
-	NSSet* selfSet = [NSSet setWithObject: self];
-	[oldThread willChangeValueForKey: @"messageGroups" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
-	[oldThread removePrimitiveMessageGroupsObject: self];
-	[oldThread didChangeValueForKey: @"messageGroups" withSetMutation:NSKeyValueMinusSetMutation usingObjects: selfSet];
+	// Prevent newThread from being added multiple times:
+	if ([self.threads containsObject: oldThread]) {
+		[self removePrimitiveThreadsObject: oldThread];
+		
+		// Update the inverse relation:
+		NSSet* selfSet = [NSSet setWithObject: self];
+		[oldThread willChangeValueForKey: @"messageGroups" withSetMutation: NSKeyValueMinusSetMutation usingObjects: selfSet];
+		[oldThread removePrimitiveMessageGroupsObject: self];
+		[oldThread didChangeValueForKey: @"messageGroups" withSetMutation:NSKeyValueMinusSetMutation usingObjects: selfSet];
+	}
 }
 
 - (void) increaseUnreadMessageCount

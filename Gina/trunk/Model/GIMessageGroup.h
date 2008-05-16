@@ -78,4 +78,7 @@
 - (void) addPrimitiveThreadsObject: (GIThread*) newThread;
 - (void) removePrimitiveThreadsObject: (GIThread*) oldThread;
 
+- (NSUInteger) messageCount;
+- (NSUInteger) calculatedUnreadMessageCount;
+
 @end

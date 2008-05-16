@@ -114,6 +114,9 @@ extern NSString *GIMessageDidChangeFlagsNotification;
 - (BOOL) hasFlags: (unsigned int) someFlags;
 - (void) toggleFlags: (unsigned) someFlags;
 
+- (BOOL)isSeen;
+- (void)setIsSeen:(BOOL)boolValue;
+
 - (NSString *)flagsString; // use only for export
 - (void)addFlagsFromString:(NSString *)flagsString; // use only for import
 

@@ -186,7 +186,7 @@
 			NSDictionary* attrs = [e fileAttributes];
 			if ([attrs objectForKey: NSFileType] == NSFileTypeRegular) {
 				NSString* filePath = [importPath stringByAppendingPathComponent: filename];
-				NSLog(@"Found %@ to import.", filename);
+				if (NSDebugEnabled) NSLog(@"Found %@ to import.", filename);
 				
 				[filePaths addObject: filePath];
 				

@@ -1424,6 +1424,14 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (IBAction)messageGroupSelectionChanged:(id)sender
 {
+//	NSUInteger threadCount = [messageGroupsController.selectedObject threads].count;
+//	NSUInteger totalMessageCount = [messageGroupsController.selectedObject messageCount];
+//	NSUInteger totalMessageCount2 = [messageGroupsController.selectedObject calculatedMessageCount];
+//	NSUInteger unreadMessageCount = [messageGroupsController.selectedObject unreadMessageCount];
+//	NSUInteger unreadMessageCount2 = [messageGroupsController.selectedObject calculatedUnreadMessageCount];
+//	NSUInteger unreadMessageCount3 = [messageGroupsController.selectedObject calculatedUnreadMessageCount2];
+//	
+	
 	if ([self isShowingMessageOnly])
 	{
 		[self setThreadsOnlyMode];
