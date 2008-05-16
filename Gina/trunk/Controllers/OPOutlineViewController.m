@@ -183,7 +183,8 @@
 	if (self = [super init]) 
 	{
 		knownItems   = [[NSMutableSet alloc] init];		
-		//expandedItems = [[NSMutableSet alloc] init];		
+		//expandedItems = [[NSMutableSet alloc] init];	
+		doCalculateSelectedItemPaths = YES;
 	}
 	return self;
 }
@@ -456,7 +457,7 @@
 
 - (void) outlineViewSelectionDidChange: (NSNotification*) notification
 {
-	if (outlineView) {
+	if (outlineView && doCalculateSelectedItemPaths) {
 		NSIndexSet* selectedRowIndexes = [outlineView selectedRowIndexes];
 
 		[selectedItemsPaths release];
@@ -565,11 +566,13 @@
 - (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend
 /*" Tries to set the selection to the item paths given as an array of arrays. "*/
 {
-	[selectedItemsPaths autorelease]; selectedItemsPaths = [[NSMutableArray alloc] initWithCapacity: itemPaths.count];
+	[selectedItemsPaths autorelease]; selectedItemsPaths = nil; //[[NSMutableArray alloc] initWithCapacity: itemPaths.count];
 	if (itemPaths.count) {
+		BOOL allPathsSelected = YES;
+		doCalculateSelectedItemPaths = NO;
 		NSInteger row = NSNotFound;
 		//NSLog(@"%@ selecting items at paths: %@", self, itemPaths);
-		[self willChangeValueForKey: @"selectedItems"];
+		//[self willChangeValueForKey: @"selectedItems"];
 		for (NSArray* path in itemPaths) {
 			row = [self rowForItemPath: path];
 			if (row != NSNotFound) {
@@ -578,6 +581,7 @@
 				NSIndexSet*	selectionIndexes = [outlineView selectedRowIndexes];
 				if (! [selectionIndexes containsIndex: row]) {
 					NSLog(@"row not selected");
+					allPathsSelected = NO;
 				} else {
 					// row was successfully selected.
 					[selectedItemsPaths addObject: path];
@@ -586,15 +590,17 @@
 			}
 		}
 		
-//		// scroll to last entry:
-//		if (row != NSNotFound) {
-//			[outlineView scrollRowToVisible: row];
-//		}	
-		[self didChangeValueForKey: @"selectedItems"];
+		doCalculateSelectedItemPaths = YES;
+		if (allPathsSelected) {
+			selectedItemsPaths = [itemPaths retain];
+		} else {
+			[self outlineViewSelectionDidChange: nil]; // rebuild selectedItemsPaths
+		}
+		
+		//[self didChangeValueForKey: @"selectedItems"];
 	} else {
 		if (! extend) [outlineView deselectAll: self];
-	}
-	
+	}	
 }
 
 //- (void) setSelectedObject: (id) object

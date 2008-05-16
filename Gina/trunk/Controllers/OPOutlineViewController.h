@@ -42,6 +42,7 @@
 	NSString* observedKeyPathForSelectedObjects;
 
 	BOOL suspendUpdatesUntilNextReloadData;
+	BOOL doCalculateSelectedItemPaths;
 }
 
 @property BOOL suspendUpdatesUntilNextReloadData;
