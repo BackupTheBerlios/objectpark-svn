@@ -233,6 +233,9 @@
 	// Store group selection:
 	[[NSUserDefaults standardUserDefaults] setObject:[[self.messageGroupsController selectedObject] objectURLString] forKey:@"SelectedGroupURL"];
 	
+	NSLog(@"saving group selection %@ ", [self.messageGroupsController selectedObject]);
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
 	[self unbind:@"selectedThreads"];
 	[self unbind:@"selectedSearchResults"];
 	[threadsController unbind:@"rootItem"];
@@ -313,8 +316,11 @@
 	[groupsOutlineView setAutosaveExpandedItems:YES];
 	
 	// Restore group selection:
+	
 	NSString *urlString = [[NSUserDefaults standardUserDefaults] stringForKey:@"SelectedGroupURL"];
 	GIHierarchyNode *node = [[OPPersistentObjectContext defaultContext] objectWithURLString:urlString];
+	
+	NSLog(@"restoring group selection %@", node);
 	if (node) 
 	{
 		NSMutableArray *itemPath = [NSMutableArray arrayWithObject:node];

@@ -318,6 +318,11 @@
 {
 //	[self saveOpenWindowsFromThisSession];
 			
+	for (NSWindow *window in self.windows)
+	{
+		[window performClose:self];
+	}
+	
 	[GIMessage repairEarliestSendTimes];
 	
 //	[[GIJunkFilter sharedInstance] writeJunkFilterDefintion];
