@@ -27,7 +27,7 @@
 \b Non-Assigned Bugs:
 \b0 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
-\cf0 - (major) often the unread count of a message group is out-of-sync (reproduce by importing a bunch of messages and then select all threads/messages of a group and use "toggle seen" -> unread count of group won't go to 0 as it should)\
+\cf0 - (major) after deletion of messages the selection should be set to the message after the last deleted message or if not possible to the last message in the group\
 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
 - (minor) sometimes the progress info is not cleaned up after an operation finished\
 - (minor) collapse message tree, for 1-message-threads (what does that mean?)\
@@ -41,7 +41,6 @@
 
 \b \cf0 Axel:
 \b0 \
-- (minor) keep thread/message selection visible when using space bar or "n" navigation\
 - make -
 \f1 \CocoaLigature0 toggleProgressInfo
 \f0 \CocoaLigature1  work\
@@ -106,6 +105,7 @@ Axel:\
 \cf0 - (minor) Timed "Receive Messages"\
 - (minor) restrict spotlight search to Gina directory in the Documents folder\
 - (minor) Fix Bug: On startup the selected message group and the group from which the threads are shown doesn't match.\
+- (minor) keep thread/message selection visible when using space bar or "n" navigation\
 \
 Dirk:\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
@@ -122,5 +122,8 @@ Dirk:\
 - too many messages sorted into "My Threads" during import\
 - "Reply" does not fill in the To: header\
 -  messages from self are marked as seen automatically during import\
-\
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
+\cf0 - (major) often the unread count of a message group is out-of-sync (reproduce by importing a bunch of messages and then select all threads/messages of a group and use "toggle seen" -> unread count of group won't go to 0 as it should)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
 }

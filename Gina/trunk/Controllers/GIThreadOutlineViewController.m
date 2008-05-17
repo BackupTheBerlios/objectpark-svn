@@ -531,7 +531,6 @@ NSDateFormatter *timeAndDateFormatter()
 	NSArray* threadsToMove = self.selectedObjects;
 	// Select the item at previous first selection index:
 	NSUInteger firstSelectedIndex = [self.outlineView selectedRow];
-	[self.outlineView selectRow: firstSelectedIndex byExtendingSelection: NO]; 
 	NSLog(@"Will move %@ to trash.", threadsToMove);
 	for (GIThread* thread in threadsToMove) {
 		if ([thread isKindOfClass: [GIThread class]]) {
@@ -540,6 +539,8 @@ NSDateFormatter *timeAndDateFormatter()
 			[groups setSet: [NSSet setWithObject: trash]];
 		}
 	}
+	
+	[self.outlineView selectRow:firstSelectedIndex byExtendingSelection:NO]; 
 }
 
 - (void) setRootItem: (id) newItem

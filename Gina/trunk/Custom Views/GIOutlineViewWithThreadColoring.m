@@ -41,15 +41,21 @@
     // Drawing code here.
 }
 
-- (IBAction) delete: (id) sender
+- (IBAction)delete:(id)sender
 // needs validation?
 {
-	NSIndexSet* selections = [self selectedRowIndexes];
-	if (selections.count) {
-		NSUInteger selectionIndex = [[self selectedRowIndexes] firstIndex];
-		[self.dataSource performSelector: @selector(moveSelectionToTrash)];
-#warning Selection after delete disabled.
-		//[self selectRow: selectionIndex byExtendingSelection: NO];
+	NSIndexSet *selections = [self selectedRowIndexes];
+	if (selections.count) 
+	{
+//		NSUInteger selectionIndex = [[self selectedRowIndexes] lastIndex];
+		[self.dataSource performSelector:@selector(moveSelectionToTrash)];
+		
+//		if ([self numberOfRows] <= selectionIndex)
+//		{
+//			selectionIndex = [self numberOfRows] - 1;
+//		}
+//		
+//		[self selectRow:selectionIndex byExtendingSelection:NO];
 	}
 }
 
