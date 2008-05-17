@@ -590,7 +590,6 @@ NSDateFormatter *timeAndDateFormatter()
 	[self setSelectedItemsPaths: itemPaths byExtendingSelection: NO];
 	[outlineView scrollRowToVisible: [[outlineView selectedRowIndexes] lastIndex]];
 	selectionRestoreInProgress = NO;
-
 }
 
 - (void)reloadData

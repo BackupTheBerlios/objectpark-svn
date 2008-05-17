@@ -455,6 +455,11 @@
 	return result;
 }
 
+- (void)scrollSelectionToVisible
+{
+	[outlineView scrollRowToVisible:[[outlineView selectedRowIndexes] lastIndex]];
+}
+
 - (void) outlineViewSelectionDidChange: (NSNotification*) notification
 {
 	if (outlineView && doCalculateSelectedItemPaths) {

@@ -71,6 +71,8 @@
 - (void)suspendUpdates;
 - (void)resumeUpdates;
 
+- (void)scrollSelectionToVisible;
+
 @end
 
 @interface OPOutlineViewController (ConvenientSlowHelpers)

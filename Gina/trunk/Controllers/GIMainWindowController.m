@@ -447,6 +447,8 @@
 		NSArray *itemPath =  (message.thread.messageCount > 1) ? [NSArray arrayWithObjects:message.thread, message, nil] : [NSArray arrayWithObjects:message.thread, nil];
 
 		[threadsController setSelectedItemsPaths:[NSArray arrayWithObject:itemPath] byExtendingSelection:NO];
+		
+		[threadsController scrollSelectionToVisible];
 	}
 	
 	if (![self isShowingMessageOnly])
