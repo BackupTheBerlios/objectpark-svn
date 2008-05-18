@@ -53,7 +53,8 @@
 	BOOL searchMode;
 	
 	CGFloat progressInfoHeight;
-	
+	CGFloat treeViewHeight;
+	 
 	NSArray *selectedThreads;
 	NSArray *selectedSearchResults;
 	

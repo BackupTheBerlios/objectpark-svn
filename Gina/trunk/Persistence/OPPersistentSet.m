@@ -119,7 +119,7 @@ static NSUInteger prims[] = {3,11,17,23,29,37,43,53,113,193,271,359,443,541,619,
 			break;
 		}
 	}
-	if (entryCount == oldEntryCount) return; // No better suitable prime number as table size found - do nothing
+	if (entryCount == oldEntryCount && usedEntryCount == count) return; // No better suitable prime number as table size found and nothing to compress - do nothing
 	
 	entries        = calloc(entryCount, sizeof(OPHashEntry));
 	count          = 0;
@@ -204,8 +204,9 @@ static NSUInteger prims[] = {3,11,17,23,29,37,43,53,113,193,271,359,443,541,619,
 											 hash: [object hash]
 									   returnFree: YES];
 	
-	NSAssert2(eIndex != NSNotFound, @"Unable to find room for object %@ in set %@", object, self);
-	
+	if (eIndex == NSNotFound) {
+		NSAssert2(eIndex != NSNotFound, @"Unable to find room for object %@ in set %@", object, self);
+	}
 	OPHashEntry* entry = entries + eIndex;
 	
 	// Check, if we found a free spot or an equal object. Igrnore double additions.

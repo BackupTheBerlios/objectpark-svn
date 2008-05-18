@@ -12,6 +12,7 @@
 #import "GIMessageEditorController.h"
 #import "GISplitView.h"
 #import "GIUserDefaultsKeys.h"
+#import "GITextView.h"
 
 // helper
 #import <WebKit/WebKit.h>
@@ -191,23 +192,25 @@
 
 - (id)init
 {
-	self = [self initWithWindowNibName:@"MainWindow"];
+	if (self = [self initWithWindowNibName:@"MainWindow"]) {
 		
-	[self retain];
-	
-	// setting up query:
-	query = [[NSMetadataQuery alloc] init];
-	[query setSearchScopes:[NSArray arrayWithObjects:[[OPPersistentObjectContext defaultContext] transferDataDirectory], nil]];
-
-	// setup our Spotlight notifications
-	NSNotificationCenter *nf = [NSNotificationCenter defaultCenter];
-	[nf addObserver:self selector:@selector(queryNotification:) name:nil object:query];
+		treeViewHeight = 200; // just some default, improve!
 		
-	[query setDelegate:self];
-	
-	// show window:
-	[self window];
-
+		[self retain];
+		
+		// setting up query:
+		query = [[NSMetadataQuery alloc] init];
+		[query setSearchScopes:[NSArray arrayWithObjects:[[OPPersistentObjectContext defaultContext] transferDataDirectory], nil]];
+		
+		// setup our Spotlight notifications
+		NSNotificationCenter *nf = [NSNotificationCenter defaultCenter];
+		[nf addObserver:self selector:@selector(queryNotification:) name:nil object:query];
+		
+		[query setDelegate:self];
+		
+		// show window:
+		[self window];
+	}
 	return self;
 }
 
@@ -346,7 +349,7 @@
 {
 //	id subview = [self searchMode] == YES ? (id)searchResultView : (id)regularThreadsView;
 	
-	if (![threadMailSplitter isSubviewCollapsed:mailTreeSplitter]) {
+	if (! self.isShowingThreadsOnly) {
 		NSLog(@"only mail visible. switching to only threads visible.");
 		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
 		[threadMailSplitter adjustSubviews];
@@ -362,9 +365,27 @@
 - (BOOL)isShowingMessageOnly
 {
 	NSView *upperview = [[threadMailSplitter subviews] objectAtIndex:0];
-//	NSLog(@"upperview frame = %@", NSStringFromRect([upperview frame]));
 	BOOL result = [threadMailSplitter isSubviewCollapsed:upperview];
 	return result;
+}
+
+- (void) adjustMailTreeSplitter
+{
+	CGFloat currentTreeViewHeight = [commentTreeView.superview frame].size.height;
+	if (self.selectedMessage.thread.messages.count < 2) {
+		// Collapse the graphical thread view, if it's too boring:
+		if (currentTreeViewHeight > 0.1) {
+			treeViewHeight = currentTreeViewHeight;
+			[mailTreeSplitter setPosition:0.0 ofDividerAtIndex:0];
+			[mailTreeSplitter adjustSubviews];
+		}
+	} else {
+		// Uncollapse the graphical thread view, if it's useful:
+		if (currentTreeViewHeight <= 0.1) {
+			[mailTreeSplitter setPosition: treeViewHeight ofDividerAtIndex: 0];
+			[mailTreeSplitter adjustSubviews];
+		}
+	}	
 }
 
 - (void)showMessageOnly
@@ -372,8 +393,11 @@
 	// show message view and graphical thread view:
 	[threadMailSplitter setPosition:0.0 ofDividerAtIndex:0];
 	[threadMailSplitter adjustSubviews];
+
+	[self adjustMailTreeSplitter];
+	
 	[self performSetSeenBehaviorForMessage:self.selectedMessage];
-	[self.window makeFirstResponder:(NSResponder *)messageTextView];
+	[self.window makeFirstResponder: messageTextView];
 }
 
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage
@@ -451,8 +475,9 @@
 		[threadsController scrollSelectionToVisible];
 	}
 	
-	if (![self isShowingMessageOnly])
-	{
+	if ([self isShowingMessageOnly]) {
+		[self adjustMailTreeSplitter];
+	} else {
 		[threadsOutlineView.window makeFirstResponder:threadsOutlineView];	
 	}
 }
@@ -664,12 +689,13 @@ static BOOL isShowingThreadsOnly = NO;
 	{
 		if (![self isShowingThreadsOnly] && isShowingThreadsOnly)
 		{
+			// The message view became visible, so make sure it is uptodate:
 			[self willChangeValueForKey:@"messageForDisplay"];
 			[self didChangeValueForKey:@"messageForDisplay"];
 			[self performSetSeenBehaviorForMessage:self.selectedMessage];
 		}
 		
-		// taking care of selection staying visible:
+		// Make sure selection is visible:
 		if ([self searchMode])
 		{
 			NSUInteger index = [[searchResultsArrayController selectionIndexes] lastIndex];
@@ -718,7 +744,7 @@ static BOOL isShowingThreadsOnly = NO;
 			[[[GIMessageEditorController alloc] initWithMessage:[self selectedMessage]] autorelease];
 		}
 	} 
-	else if (selectedMessage && [threadMailSplitter isSubviewCollapsed:mailTreeSplitter])
+	else if (selectedMessage && self.isShowingThreadsOnly)
 	{
 		[self showMessageOnly];
 	}
