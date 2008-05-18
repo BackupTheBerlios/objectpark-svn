@@ -27,14 +27,17 @@
 \b Non-Assigned Bugs:
 \b0 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
-\cf0 - (major) after deletion of messages the selection should be set to the message after the last deleted message or if not possible to the last message in the group\
+\cf0 \
 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
 - (minor) sometimes the progress info is not cleaned up after an operation finished\
-- (minor) collapse message tree, for 1-message-threads (what does that mean?)\
-\
+- (minor) collapse message tree, for single-message-threads\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 - (major) tree view selection is not synchronized with search result - needs discussion\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
+\cf0 - (major, needs confimation) sometimes messages cannot be found in the outline view tree when using space bar navigation or clicking on tree view cells -> exception\
+\
 
-\b \cf0 Fixes needing comfirmation:
+\b Fixes needing comfirmation:
 \b0 \
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
@@ -48,13 +51,7 @@
 
 \b Dirk:\
 
-\b0 - (major) tree view selection is not synchronized with search result - needs discussion\
-\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
-\cf0 - (major) sometimes messages cannot be found in the outline view tree when using space bar navigation or clicking on tree view cells -> exception\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
-\cf0 - (minor) Fix Bug: thread selection is not kept to the selected object when inserting new messages (e.g. when POPing) or deleting -> unpredictable selection (NSTreeControllers can keep the selection right. OPOutlineViewControllers should too.)\
-- (minor) prevent threads from setting messages, only messages should set their threads (hard)\
-\
+\b0 - (minor) prevent threads from setting messages, only messages should set their threads (hard)\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
@@ -124,6 +121,7 @@ Dirk:\
 -  messages from self are marked as seen automatically during import\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 - (major) often the unread count of a message group is out-of-sync (reproduce by importing a bunch of messages and then select all threads/messages of a group and use "toggle seen" -> unread count of group won't go to 0 as it should)\
+- (major) after deletion of messages the selection should be set to the message after the last deleted message or if not possible to the last message in the group\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
-\cf0 \
+\cf0 - (minor) Fix Bug: thread selection is not kept to the selected object when inserting new messages (e.g. when POPing) or deleting -> unpredictable selection (NSTreeControllers can keep the selection right. OPOutlineViewControllers should too.)\
 }

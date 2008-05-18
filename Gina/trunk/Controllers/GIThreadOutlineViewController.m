@@ -531,6 +531,9 @@ NSDateFormatter *timeAndDateFormatter()
 	NSArray* threadsToMove = self.selectedObjects;
 	// Select the item at previous first selection index:
 	NSUInteger firstSelectedIndex = [self.outlineView selectedRow];
+
+	[self.outlineView deselectAll: self]; // performance improvement - the controller does not try to keep the selection
+	
 	NSLog(@"Will move %@ to trash.", threadsToMove);
 	for (GIThread* thread in threadsToMove) {
 		if ([thread isKindOfClass: [GIThread class]]) {
@@ -540,7 +543,7 @@ NSDateFormatter *timeAndDateFormatter()
 		}
 	}
 	
-	[self.outlineView selectRow:firstSelectedIndex byExtendingSelection:NO]; 
+	[self.outlineView selectRow: MIN(firstSelectedIndex, self.outlineView.numberOfRows - 1) byExtendingSelection: NO]; 
 }
 
 - (void) setRootItem: (id) newItem
