@@ -27,19 +27,17 @@
 
 @interface OPOutlineViewController : NSController 
 {
-	IBOutlet NSOutlineView* outlineView;
+	IBOutlet NSOutlineView *outlineView;
 	NSMutableSet* knownItems; // used to keep track of the observed items and to retain them
-	NSString* childKey;
-	NSString* childCountKey;
+	NSString *childKey;
+	NSString *childCountKey;
 	id rootItem;
 //	NSMutableSet* expandedItems; // unused
 	NSMutableArray* selectedItemsPaths;
 	
 	@private
 	id observedObjectForRootItem;
-	NSString* observedKeyPathForRootItem;
-	id observedObjectForSelectedObjects;
-	NSString* observedKeyPathForSelectedObjects;
+	NSString *observedKeyPathForRootItem;
 
 	BOOL suspendUpdatesUntilNextReloadData;
 	BOOL doCalculateSelectedItemPaths;
@@ -50,23 +48,23 @@
 @property (copy) NSString *childCountKey;
 @property (retain) id rootItem;
 @property (retain, readonly) NSSet *knownItems;
-@property (retain, readwrite) NSOutlineView* outlineView;
+@property (retain, readwrite) NSOutlineView *outlineView;
 
-- (NSArray*) selectedObjects;
+- (NSArray *)selectedObjects;
 //- (void) setSelectedObjects: (NSArray*) anArray;
 
 //- (void) setSelectedObject: (id) object;
-- (id) selectedObject;
+- (id)selectedObject;
 
-- (void) reloadData;
+- (void)reloadData;
 
-- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item;
+- (NSSet *)keyPathsAffectingDisplayOfItem:(id)item;
 
-- (NSArray*) selectedItemsPaths;
-- (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend;
+- (NSArray *)selectedItemsPaths;
+- (void)setSelectedItemsPaths:(NSArray *)itemPaths byExtendingSelection:(BOOL)extend;
 
-- (NSUInteger) rowForItemPath: (NSArray*) path;
-- (void) resetKnownItems;
+- (NSUInteger)rowForItemPath:(NSArray *)path;
+- (void)resetKnownItems;
 
 - (void)suspendUpdates;
 - (void)resumeUpdates;
@@ -88,8 +86,8 @@
 
 @interface NSOutlineView (OPPrivate)
 
-- (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand;
-- (BOOL) isItemExpandedAtRow: (int) row;
+- (void)expandItemAtRow:(int)row expandChildren:(BOOL)expand;
+- (BOOL)isItemExpandedAtRow:(int)row;
 
 @end
 
