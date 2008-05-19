@@ -276,6 +276,7 @@
 	NSDictionary *options = nil;
 
 	// Configure group view:
+	messageGroupsController.refreshOutlineViewOnSetRootItem = NO;
 	messageGroupsController.childKey = @"children";
 	//messageGroupsController.childCountKey = @"threadChildrenCount";
 	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
