@@ -826,12 +826,13 @@ static BOOL isShowingThreadsOnly = NO;
 		// associated with this binding
 		[self setObservedObjectForSelectedSearchResults:observableController];
 		[self setObservedKeyPathForSelectedSearchResults:keyPath];	
-    }
+    } else {
 	
 	[super bind:bindingName
 	   toObject:observableController
 	withKeyPath:keyPath
 		options:options];
+	}
 }
 
 - (void)unbind:bindingName
@@ -856,12 +857,14 @@ static BOOL isShowingThreadsOnly = NO;
 	{ 
 		[[messageWebView mainFrame] loadArchive:[self webArchiveForDisplay]];
 		
+		[self willChangeValueForKey: @"messageForDisplay"];
+		[self didChangeValueForKey: @"messageForDisplay"];
+		
 		if (!self.isShowingThreadsOnly)
 		{
 			GIMessage *selectedMessage = self.selectedMessage;		
 			[self performSetSeenBehaviorForMessage:selectedMessage];
 		}
-		return;
 	}
 	else if (object == searchResultsArrayController && [keyPath isEqualToString:[self observedKeyPathForSelectedSearchResults]])
 	{ 
@@ -874,10 +877,11 @@ static BOOL isShowingThreadsOnly = NO;
 			GIMessage *selectedMessage = self.selectedMessage;		
 			[self performSetSeenBehaviorForMessage:selectedMessage];
 		}
-		return;
 	}
-	
-	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	else
+	{
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
 }
 
 
