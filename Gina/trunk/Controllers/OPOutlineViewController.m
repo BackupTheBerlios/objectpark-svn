@@ -42,18 +42,11 @@
 + (void)initialize
 {
     [self exposeBinding:@"rootItem"];	
-    [self exposeBinding:@"selectedObjects"];	
-    [self exposeBinding:@"selectedObject"];	
 }
 
 - (Class)valueClassForBinding:(NSString *)binding
 {
-	if ([binding isEqualToString:@"selectedObjects"]) 
-	{
-		return [NSArray class];
-	} else {
-		return [NSObject class];	
-	}
+	return [NSObject class];	
 }
 
 - (id)observedObjectForRootItem { return observedObjectForRootItem; }
