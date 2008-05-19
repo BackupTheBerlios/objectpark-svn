@@ -36,6 +36,7 @@
 
 @implementation GIMainWindowController
 
+@synthesize selectedThreads;
 @synthesize selectedSearchResults;
 @synthesize messageGroupsController;
 @synthesize query;
@@ -55,10 +56,9 @@
 
 + (NSSet *)keyPathsForValuesAffectingSelectedMessageOrThread
 {
-	return [NSSet setWithObjects:@"threadsController.selectedObjects", @"selectedSearchResults", @"selectedMessageInSearchMode", nil];
+	return [NSSet setWithObjects:@"selectedThreads", @"selectedSearchResults", @"selectedMessageInSearchMode", nil];
 }
 
-/*" Returns either the selected thread or message object. "*/
 - (id)selectedMessageOrThread
 {
 	if ([self searchMode])
@@ -74,7 +74,7 @@
 	}
 	else
 	{
-		NSArray *threads = threadsController.selectedObjects;
+		NSArray *threads = self.selectedThreads;
 		if ([threads count] == 1)
 		{
 			return [threads lastObject];
@@ -86,7 +86,7 @@
 
 + (NSSet *)keyPathsForValuesAffectingSelectedMessage
 {
-	return [NSSet setWithObjects:@"threadsController.selectedObjects", @"selectedSearchResults", nil];
+	return [NSSet setWithObjects:@"selectedThreads", @"selectedSearchResults", nil];
 }
 
 - (GIMessage *)selectedMessage
@@ -102,18 +102,13 @@
 	}
 	else
 	{
-		if ([threadsController.selectedObjects count] == 1)
+		if ([[self selectedThreads] count] == 1)
 		{
-			result = [(GIThread *)[threadsController.selectedObjects lastObject] message];
+			result = [(GIThread *)[[self selectedThreads] lastObject] message];
 		}
 	}
 	
 	return result;
-}
-
-+ (NSSet *)keyPathsForValuesAffectingSelectedMessages
-{
-	return [NSSet setWithObjects:@"threadsController.selectedObjects", @"selectedSearchResults", nil];
 }
 
 - (NSArray *)selectedMessages
@@ -156,7 +151,7 @@
 
 + (NSSet *)keyPathsForValuesAffectingMessageForDisplay
 {
-	return [NSSet setWithObjects:@"threadsController.selectedObject", @"threadsController.selectedObjects", @"selectedSearchResults", @"selectedMessageInSearchMode", nil];
+	return [NSSet setWithObject:@"selectedMessageOrThread"];
 }
 
 - (NSAttributedString *)messageForDisplay
@@ -224,6 +219,7 @@
 	NSLog(@"GIMainWindowController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [query release];
+	[selectedThreads release];
 	[searchResultView release];
 	[regularThreadsView release];
 	[selectedMessageInSearchMode release];
@@ -243,10 +239,7 @@
 	NSLog(@"saving group selection %@ ", [self.messageGroupsController selectedObject]);
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
-//	[self unbind:@"selectedThreads"];
-
-	[threadsController removeObserver:self forKeyPath:@"selectedObjects"];
-
+	[self unbind:@"selectedThreads"];
 	[self unbind:@"selectedSearchResults"];
 	[threadsController unbind:@"rootItem"];
 	[commentTreeView unbind:@"selectedMessageOrThread"];
@@ -292,7 +285,6 @@
 	threadsController.childCountKey = @"threadChildrenCount";
 	[threadsController bind:@"rootItem" toObject:messageGroupsController withKeyPath:@"selectedObject" options:options];
 	
-	// observe thread controller's selected objects:
 	[threadsController addObserver:self forKeyPath:@"selectedObjects" options:0 context:NULL];
 	
 	//if (threadsController) [self bind:@"selectedThreads" toObject:threadsController withKeyPath:@"selectedObjects" options:options];
@@ -760,7 +752,7 @@ static BOOL isShowingThreadsOnly = NO;
 	}
 	else if (!selectedMessage)
 	{
-		NSArray *threads = threadsController.selectedObjects;
+		NSArray *threads = [self selectedThreads];
 		NSOutlineView* outlineView = [threadsController outlineView];
 		if (threads.count == 1) {
 			GIThread* selectedThread = [threads lastObject];
@@ -826,13 +818,12 @@ static BOOL isShowingThreadsOnly = NO;
 		// associated with this binding
 		[self setObservedObjectForSelectedSearchResults:observableController];
 		[self setObservedKeyPathForSelectedSearchResults:keyPath];	
-    } else {
+    }
 	
 	[super bind:bindingName
 	   toObject:observableController
 	withKeyPath:keyPath
 		options:options];
-	}
 }
 
 - (void)unbind:bindingName
@@ -855,16 +846,17 @@ static BOOL isShowingThreadsOnly = NO;
 {
 	if (object == threadsController && [keyPath isEqualToString:@"selectedObjects"])
 	{ 
+		//NSLog(@"observation info: %@", [self observationInfo]);
+		
+		self.selectedThreads = threadsController.selectedObjects;
+		
 		[[messageWebView mainFrame] loadArchive:[self webArchiveForDisplay]];
-		
-		[self willChangeValueForKey: @"messageForDisplay"];
-		[self didChangeValueForKey: @"messageForDisplay"];
-		
+				
 		if (!self.isShowingThreadsOnly)
 		{
 			GIMessage *selectedMessage = self.selectedMessage;		
 			[self performSetSeenBehaviorForMessage:selectedMessage];
-		}
+		}		
 	}
 	else if (object == searchResultsArrayController && [keyPath isEqualToString:[self observedKeyPathForSelectedSearchResults]])
 	{ 
@@ -1457,9 +1449,9 @@ static BOOL isShowingThreadsOnly = NO;
 
 - (IBAction)applyFilters:(id)sender
 {
-	NSMutableSet *result = [NSMutableSet setWithCapacity:threadsController.selectedObjects.count];
+	NSMutableSet *result = [NSMutableSet setWithCapacity:self.selectedThreads.count];
 	
-	for (id selectedObject in threadsController.selectedObjects)
+	for (id selectedObject in self.selectedThreads)
 	{
 		if ([selectedObject isKindOfClass:[GIMessage class]])
 		{

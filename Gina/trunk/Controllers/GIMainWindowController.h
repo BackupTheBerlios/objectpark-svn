@@ -55,13 +55,12 @@
 	CGFloat progressInfoHeight;
 	CGFloat treeViewHeight;
 	 
+	NSArray *selectedThreads;
 	NSArray *selectedSearchResults;
 	
 	GIMessage *selectedMessageInSearchMode;
 	
 	/* Binding stuff */
-	id observedObjectForSelectedThreads;
-	NSString *observedKeyPathForSelectedThreads;
 	id observedObjectForSelectedSearchResults;
 	NSString *observedKeyPathForSelectedSearchResults;
 	
@@ -74,6 +73,7 @@
 }
 
 @property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;
+@property (retain) NSArray *selectedThreads;
 @property (retain) NSArray *selectedSearchResults;
 @property (readonly) NSMetadataQuery *query;
 @property (readonly) NSTableView *searchResultTableView;
@@ -155,7 +155,7 @@
 
 @interface GIMainWindowController (GeneralBindings)
 
-- (NSArray *)messageGroupHierarchyRootNode;
+- (NSArray*) messageGroupHierarchyRootNode;
 
 @end
 

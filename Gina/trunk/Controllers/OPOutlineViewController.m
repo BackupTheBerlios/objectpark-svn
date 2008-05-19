@@ -42,11 +42,18 @@
 + (void)initialize
 {
     [self exposeBinding:@"rootItem"];	
+    [self exposeBinding:@"selectedObjects"];	
+    [self exposeBinding:@"selectedObject"];	
 }
 
 - (Class)valueClassForBinding:(NSString *)binding
 {
-	return [NSObject class];	
+	if ([binding isEqualToString:@"selectedObjects"]) 
+	{
+		return [NSArray class];
+	} else {
+		return [NSObject class];	
+	}
 }
 
 - (id)observedObjectForRootItem { return observedObjectForRootItem; }
@@ -91,6 +98,7 @@
 		[self setObservedObjectForRootItem:observableController];
 		[self setObservedKeyPathForRootItem:keyPath];
 		[self setRootItem: [observableController valueForKeyPath: keyPath]];
+		
     } 
 	
 	[super bind:bindingName
@@ -109,7 +117,7 @@
 		[self setObservedKeyPathForRootItem:nil];
 //		[self reloadData];
     }	
-	
+		
 	[super unbind:bindingName];
 }
 
@@ -141,12 +149,12 @@
 //	return YES;
 //}
 
-- (NSSet *)knownItems
+- (NSSet*) knownItems
 {
 	return knownItems;
 }
 
-- (NSSet *)keyPathsAffectingDisplayOfItem:(id)item
+- (NSSet*) keyPathsAffectingDisplayOfItem: (id) item
 {
 // TODO: implement by returning a set of all table column identifiers.
 	return nil;
@@ -201,6 +209,7 @@
 	NSLog(@"%@ is now observing %@.%@", observer, self, keyPath);
 }
 
+
 - (id) rootItem
 {
 	return rootItem;
@@ -213,9 +222,9 @@
 		[outlineView setDataSource: nil];
 		[rootItem release];
 		rootItem = [newItem retain];
+		[self reloadData];
 		[rootItem addObserver:self forKeyPath: [self childKey] options: 
 		 NSKeyValueObservingOptionOld context: NULL];
-		[self reloadData];
 	}
 }
 
@@ -393,36 +402,28 @@
 	[outlineView scrollRowToVisible:[[outlineView selectedRowIndexes] lastIndex]];
 }
 
-- (void)noteSelectionChanged
+- (void) outlineViewSelectionDidChange: (NSNotification*) notification
 {
-	NSLog(@"-noteSelectionChanged");
-	
-	[self willChangeValueForKey:@"selectedObject"];
-	[self didChangeValueForKey:@"selectedObject"];
-	[self willChangeValueForKey:@"selectedObjects"];
-	[self didChangeValueForKey:@"selectedObjects"];
-}
-
-- (void)outlineViewSelectionDidChange:(NSNotification *)notification
-{
-	if (outlineView && doCalculateSelectedItemPaths) 
-	{
-		NSIndexSet *selectedRowIndexes = [outlineView selectedRowIndexes];
+	if (outlineView && doCalculateSelectedItemPaths) {
+		NSIndexSet* selectedRowIndexes = [outlineView selectedRowIndexes];
 
 		[selectedItemsPaths release];
-		selectedItemsPaths = [[NSMutableArray alloc] initWithCapacity:selectedRowIndexes.count];
+		selectedItemsPaths = [[NSMutableArray alloc] initWithCapacity: selectedRowIndexes.count];
 		
 		NSUInteger index = 0;
-		while ((index = [selectedRowIndexes indexGreaterThanOrEqualToIndex:index]) != NSNotFound) 
-		{
-			id item = [outlineView itemAtRow:index];
-			[selectedItemsPaths addObject:[self itemPathForItem:item]];
+		while ((index = [selectedRowIndexes indexGreaterThanOrEqualToIndex:index]) != NSNotFound) {
+			
+			id item = [outlineView itemAtRow: index];
+			[selectedItemsPaths addObject: [self itemPathForItem: item]];
 			index += 1;
 		}
 		NSLog(@"Selected %u items paths.", selectedItemsPaths.count);
 	}
 	
-	[self noteSelectionChanged];
+	[self willChangeValueForKey:@"selectedObject"];
+	[self didChangeValueForKey:@"selectedObject"];
+	[self willChangeValueForKey:@"selectedObjects"];
+	[self didChangeValueForKey:@"selectedObjects"];
 }
 
 - (NSArray *)selectedObjects
@@ -441,9 +442,28 @@
 	return result;
 }
 
-- (NSArray *)selectedItemsPaths
+- (NSArray*) selectedItemsPaths
 {
 	return [[selectedItemsPaths retain] autorelease];
+}
+
+- (void) setSelectedObjects: (NSArray*) anArray
+{	
+	NSBeep();
+	
+//	if (anArray.count) {
+//		NSUInteger row;
+//		NSMutableIndexSet *indexesToSelect = [NSMutableIndexSet indexSet];
+//		
+//		for (id itemToSelect in anArray) {
+//			row = [outlineView rowForItem:itemToSelect];
+//			[indexesToSelect addIndex: row];
+//		}
+//		
+//		[outlineView selectRowIndexes:indexesToSelect byExtendingSelection:NO];
+//		
+//		//[outlineView scrollRowToVisible: row];
+//	}
 }
 
 - (NSUInteger) rowForItemPath: (NSArray*) path
@@ -490,68 +510,58 @@
 	return row;
 }
 
-- (void)setSelectedItemsPaths:(NSArray *)itemPaths byExtendingSelection:(BOOL)extend
+- (void) setSelectedItemsPaths: (NSArray*) itemPaths byExtendingSelection: (BOOL) extend
 /*" Tries to set the selection to the item paths given as an array of arrays. "*/
 {
 	[selectedItemsPaths autorelease]; selectedItemsPaths = nil; //[[NSMutableArray alloc] initWithCapacity: itemPaths.count];
-	if (itemPaths.count) 
-	{
+	if (itemPaths.count) {
 		BOOL allPathsSelected = YES;
 		doCalculateSelectedItemPaths = NO;
 		NSInteger row = NSNotFound;
 		//NSLog(@"%@ selecting items at paths: %@", self, itemPaths);
 		//[self willChangeValueForKey: @"selectedItems"];
-		for (NSArray *path in itemPaths) 
-		{
-			row = [self rowForItemPath:path];
-			if (row != NSNotFound) 
-			{
+		for (NSArray* path in itemPaths) {
+			row = [self rowForItemPath: path];
+			if (row != NSNotFound) {
 				//[outlineView selectRow: row byExtendingSelection: extend]; // deprecated
-				[outlineView selectRowIndexes: [NSIndexSet indexSetWithIndex:row] byExtendingSelection: extend];
-				NSIndexSet *selectionIndexes = [outlineView selectedRowIndexes];
-				if (! [selectionIndexes containsIndex:row]) 
-				{
+				[outlineView selectRowIndexes: [NSIndexSet indexSetWithIndex: row] byExtendingSelection: extend];
+				NSIndexSet*	selectionIndexes = [outlineView selectedRowIndexes];
+				if (! [selectionIndexes containsIndex: row]) {
 					NSLog(@"row not selected");
 					allPathsSelected = NO;
-				} 
-				else 
-				{
+				} else {
 					// row was successfully selected.
-					[selectedItemsPaths addObject:path];
+					[selectedItemsPaths addObject: path];
 				}
 				extend = YES;
 			}
 		}
 		
 		doCalculateSelectedItemPaths = YES;
-		
-		if (allPathsSelected) 
-		{
+		if (allPathsSelected) {
 			selectedItemsPaths = [itemPaths retain];
-			[self noteSelectionChanged];
-		} 
-		else 
-		{
-			[self outlineViewSelectionDidChange:nil]; // rebuild selectedItemsPaths
-		}		
-	} 
-	else 
-	{
-		if (! extend) 
-		{
-			[outlineView deselectAll:self];
-			[self noteSelectionChanged];
+		} else {
+			[self outlineViewSelectionDidChange: nil]; // rebuild selectedItemsPaths
 		}
+		
+		//[self didChangeValueForKey: @"selectedItems"];
+	} else {
+		if (! extend) [outlineView deselectAll: self];
 	}	
 }
 
-- (id)selectedObject
+//- (void) setSelectedObject: (id) object
+//{
+//	self.selectedObjects = [NSArray arrayWithObject: object];
+//}
+
+- (id) selectedObject
 {
 	NSAssert([outlineView allowsMultipleSelection] == NO, @"selectedObject only available for single selection outline views.");
 	return self.selectedObjects.lastObject;
 }
 
-- (void)dealloc 
+- (void) dealloc 
 {
 	[self resetKnownItems];
 	[knownItems release];
