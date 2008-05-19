@@ -148,7 +148,8 @@
 
 @interface GIMainWindowController (OutlineViewActions)
 
-- (IBAction)threadsDoubleAction:(id)sender;
+- (IBAction) threadsDoubleAction: (id) sender;
+- (IBAction) groupsDoubleAction: (id) sender;
 
 @end
 

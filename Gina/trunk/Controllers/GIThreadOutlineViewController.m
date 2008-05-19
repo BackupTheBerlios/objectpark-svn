@@ -530,7 +530,7 @@ NSDateFormatter *timeAndDateFormatter()
 	GIMessageGroup* trash = [GIMessageGroup trashMessageGroup];
 	NSArray* threadsToMove = self.selectedObjects;
 	// Select the item at previous first selection index:
-	NSUInteger firstSelectedIndex = [self.outlineView selectedRow];
+	NSUInteger firstSelectedIndex = [self.outlineView.selectedRowIndexes firstIndex];
 
 	[self.outlineView deselectAll: self]; // performance improvement - the controller does not try to keep the selection
 	

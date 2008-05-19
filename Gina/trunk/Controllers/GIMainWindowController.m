@@ -308,6 +308,8 @@
 		[self setThreadsOnlyMode];
 	}
 	
+	[groupsOutlineView setDoubleAction:@selector(groupsDoubleAction:)];
+	
 //	[messageTextView setEditable:NO];
 //	NSAssert(![messageTextView isEditable], @"should be non editable");
 		
@@ -478,9 +480,9 @@
 		[threadsController scrollSelectionToVisible];
 	}
 	
-	if ([self isShowingMessageOnly]) {
-		[self adjustMailTreeSplitter];
-	} else {
+	[self adjustMailTreeSplitter];
+	
+	if (![self isShowingMessageOnly]) {
 		[threadsController.outlineView.window makeFirstResponder:threadsController.outlineView];	
 	}
 }
@@ -729,6 +731,13 @@ static BOOL isShowingThreadsOnly = NO;
 @end
 
 @implementation GIMainWindowController (OutlineViewActions)
+
+- (IBAction) groupsDoubleAction: (id) sender
+{
+	if ([self isShowingMessageOnly]) {
+		[self setThreadsOnlyMode];
+	}
+}
 
 - (IBAction)threadsDoubleAction:(id)sender
 {
