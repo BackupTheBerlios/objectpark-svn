@@ -299,9 +299,9 @@
 	[commentTreeView setAction:@selector(commentTreeSelectionChanged:)];
 	
 	// Configure thread view:
-	[threadsOutlineView setHighlightThreads:YES];
-	[threadsOutlineView setDoubleAction:@selector(threadsDoubleAction:)];
-	[threadsOutlineView setTarget:self];
+	[(id)threadsController.outlineView setHighlightThreads:YES];
+	[threadsController.outlineView setDoubleAction:@selector(threadsDoubleAction:)];
+	[threadsController.outlineView setTarget:self];
 	if ([self isShowingMessageOnly])
 	{
 		[self setThreadsOnlyMode];
@@ -311,8 +311,8 @@
 //	NSAssert(![messageTextView isEditable], @"should be non editable");
 		
 	//	deferred enabling of autosave (timing problems otherwise):
-	[threadsOutlineView setAutosaveName:@"ThreadsAutosave"];
-	[threadsOutlineView setAutosaveTableColumns:YES];
+	[threadsController.outlineView setAutosaveName:@"ThreadsAutosave"];
+	[threadsController.outlineView setAutosaveTableColumns:YES];
 	
 	[verticalSplitter setAutosaveName:@"VerticalSplitterAutosave"];
 	[threadMailSplitter setAutosaveName:@"ThreadMailSplitterAutosave"];
@@ -355,7 +355,7 @@
 		NSLog(@"only mail visible. switching to only threads visible.");
 		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
 		[threadMailSplitter adjustSubviews];
-		[self.window makeFirstResponder:[self searchMode] ? searchResultTableView : threadsOutlineView];
+		[self.window makeFirstResponder:[self searchMode] ? searchResultTableView : threadsController.outlineView];
 	}
 }
 
@@ -480,7 +480,7 @@
 	if ([self isShowingMessageOnly]) {
 		[self adjustMailTreeSplitter];
 	} else {
-		[threadsOutlineView.window makeFirstResponder:threadsOutlineView];	
+		[threadsController.outlineView.window makeFirstResponder:threadsController.outlineView];	
 	}
 }
 
@@ -1049,21 +1049,21 @@ static BOOL isShowingThreadsOnly = NO;
 		{
 			// if only mail is visible, switch back to only thread list visible
 			NSLog(@"subviews of thread mail splitter = %@", [threadMailSplitter subviews]);
-			NSLog(@"[threadsOutlineView superview] = %@", [[threadsOutlineView superview] superview]);
+			NSLog(@"[threadsOutlineView superview] = %@", [[threadsController.outlineView superview] superview]);
 			
 			[self setThreadsOnlyMode];
 			return YES;
 		}
 		case RETURN:
 		{
-			if ([self.window firstResponder] == threadsOutlineView)
+			if ([self.window firstResponder] == threadsController.outlineView)
 			{
-				[self threadsDoubleAction:threadsOutlineView];
+				[self threadsDoubleAction:threadsController.outlineView];
 				return YES;
 			}
 			else if ([self.window firstResponder] == searchResultTableView)
 			{
-				[self threadsDoubleAction:threadsOutlineView];
+				[self threadsDoubleAction:threadsController.outlineView];
 				return YES;
 			}
 			break;
@@ -1163,11 +1163,13 @@ static BOOL isShowingThreadsOnly = NO;
 }
 
 #pragma mark -- deletion of hierarchy objects  --
-- (IBAction) delete: (id) sender
+- (IBAction)delete:(id)sender
 {
-	if ([[messageTextView window] firstResponder] == (NSResponder*)messageTextView) {
-		[threadsOutlineView delete: sender];
-		if ([self isShowingMessageOnly]) {
+	if ([[messageTextView window] firstResponder] == (NSResponder *)messageTextView) 
+	{
+		[(id)threadsController.outlineView delete:sender];
+		if ([self isShowingMessageOnly]) 
+		{
 			[self setThreadsOnlyMode];
 		}
 		return;

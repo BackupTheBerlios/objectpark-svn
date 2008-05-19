@@ -10,6 +10,11 @@
 
 @implementation GIOutlineViewWithThreadColoring
 
+//- (void)dealloc
+//{
+//	[super dealloc];
+//}
+
 - (BOOL)highlightThreads;
 {
     return highlightThreads;

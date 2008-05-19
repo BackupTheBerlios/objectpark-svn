@@ -32,7 +32,6 @@
 	IBOutlet GIMessageGroupOutlineViewController *messageGroupsController;
 	IBOutlet GIThreadOutlineViewController *threadsController;
 	IBOutlet GICommentTreeView *commentTreeView;
-	IBOutlet GIOutlineViewWithThreadColoring *threadsOutlineView;
 	IBOutlet NSOutlineView *groupsOutlineView;
 	IBOutlet GISplitView *threadMailSplitter;
 	IBOutlet GISplitView *mailTreeSplitter;

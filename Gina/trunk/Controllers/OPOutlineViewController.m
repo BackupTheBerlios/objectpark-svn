@@ -36,6 +36,7 @@
 @implementation OPOutlineViewController
 
 @synthesize suspendUpdatesUntilNextReloadData;
+@synthesize refreshOutlineViewOnSetRootItem;
 
 // -- binding stuff --
 
@@ -123,6 +124,7 @@
 		knownItems   = [[NSMutableSet alloc] init];		
 		//expandedItems = [[NSMutableSet alloc] init];	
 		doCalculateSelectedItemPaths = YES;
+		refreshOutlineViewOnSetRootItem = YES;
 	}
 	return self;
 }
@@ -174,6 +176,7 @@
 	
 	[self resetKnownItems];
 	if (outlineView.dataSource) {
+		[outlineView setDataSource:self];
 		[outlineView reloadData];
 	} else {
 		[outlineView setDataSource:self];
@@ -208,11 +211,43 @@
 	return rootItem;
 }
 
+- (void)useClonedOutlineView
+{
+	NSOutlineView *oldOutlineView = outlineView;	
+	
+	oldOutlineView.dataSource = nil;
+	oldOutlineView.delegate = nil;
+	
+	NSOutlineView *newOutlineView = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:outlineView]];
+	
+	outlineView = newOutlineView;
+		
+	NSScrollView *scrollView = (id)[[oldOutlineView superview] superview];
+	NSAssert([scrollView isKindOfClass:[NSScrollView class]], @"should be a scroll view");
+	
+	[scrollView setDocumentView:newOutlineView];
+	
+	newOutlineView.dataSource = self;
+	newOutlineView.delegate = self;
+	
+//	NSLog(@"old outline view = %@", oldOutlineView);
+//	NSLog(@"new outline view = %@", newOutlineView);	
+}
+
 - (void) setRootItem: (id) newItem
 {
-	if (! [rootItem isEqual: newItem]) {
+	if (! [rootItem isEqual: newItem]) 
+	{
+		[outlineView setDataSource:nil];
+		
+		if (refreshOutlineViewOnSetRootItem)
+		{
+			[self useClonedOutlineView];
+		}
+
 		[rootItem removeObserver: self forKeyPath: [self childKey]];
-		[outlineView setDataSource: nil];
+		[self resetKnownItems];
+
 		[rootItem release];
 		rootItem = [newItem retain];
 		[self reloadData];
@@ -333,8 +368,6 @@
 	NSParameterAssert(childCountKey == nil || [childCountKey isEqualToString:aChildCountKey]);
 	childCountKey = [aChildCountKey copy];
 }
-
-
 
 - (id) outlineView: (NSOutlineView*) outlineView child: (NSInteger) index ofItem: (id) item
 {

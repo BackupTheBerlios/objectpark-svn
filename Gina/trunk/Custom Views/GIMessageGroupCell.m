@@ -230,6 +230,8 @@
 		[attributes setObject:contrastingLabelColor forKey:NSForegroundColorAttributeName];
 	}
 	
+	NSAssert([self hierarchyItem] != nil, @"hierarchy item not set");
+	
 	NSString *name = [[self hierarchyItem] valueForKey:@"name"];
 	if (!name) name = @"<unknown>";
 	NSMutableAttributedString *nameString = [[[NSMutableAttributedString alloc] initWithString:name attributes:attributes] autorelease];

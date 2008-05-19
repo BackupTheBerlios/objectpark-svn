@@ -41,6 +41,7 @@
 
 	BOOL suspendUpdatesUntilNextReloadData;
 	BOOL doCalculateSelectedItemPaths;
+	BOOL refreshOutlineViewOnSetRootItem;
 }
 
 @property BOOL suspendUpdatesUntilNextReloadData;
@@ -49,11 +50,9 @@
 @property (retain) id rootItem;
 @property (retain, readonly) NSSet *knownItems;
 @property (retain, readwrite) NSOutlineView *outlineView;
+@property (readwrite) BOOL refreshOutlineViewOnSetRootItem;
 
 - (NSArray *)selectedObjects;
-//- (void) setSelectedObjects: (NSArray*) anArray;
-
-//- (void) setSelectedObject: (id) object;
 - (id)selectedObject;
 
 - (void)reloadData;
