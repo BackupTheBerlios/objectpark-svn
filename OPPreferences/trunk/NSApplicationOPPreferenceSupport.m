@@ -47,8 +47,15 @@
         activePrefPanes = [[NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @"ActivePrefPanes" ofType: @"plist"]] propertyList];
         
         if (!activePrefPanes) {
-            NSLog(@"OPPreferences: Warning - Unable to load 'ActivePrefPanes.plist' resource.");
-            return nil;
+			
+			NSBundle* appBundle = [NSBundle bundleForClass: [self class]];
+			
+			activePrefPanes = [appBundle objectForInfoDictionaryKey: @"OPActivePrefPanes"];
+			
+			if (!activePrefPanes) {
+				NSLog(@"OPPreferences: Warning - Unable to load 'ActivePrefPanes.plist' resource.");
+				return nil;
+			}
         }
     }
     return activePrefPanes;

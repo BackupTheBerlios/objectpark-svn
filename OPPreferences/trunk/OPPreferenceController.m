@@ -164,11 +164,32 @@ static NSArray *EDSubclassesOfClass(Class aClass) {
     [_window setFrame: currentFrame display: YES animate: YES];
 }
 
+- (NSView*) loadMainViewOfPane: (OPPreferencePane*) pane
+{
+    if (![pane mainView]) {
+		NSString* nibName = [pane mainNibName];
+		NSBundle* prefBundle = [NSBundle bundleForClass: [pane class]];
+		NSDictionary* nameTable = [NSDictionary dictionaryWithObjectsAndKeys: pane, @"NSOwner", nil, nil];
+        if (! [prefBundle loadNibFile: nibName 
+					externalNameTable: nameTable
+							 withZone: nil]) {
+            NSLog(@"[%@ %@]: %@ Couldn't load nib '%@' from Resources!",
+                  [self class], NSStringFromSelector(_cmd), prefBundle, [pane mainNibName]);
+            return nil;
+        }
+		
+        if ([pane valueForKey: @"_window"]==nil)
+            NSLog(@"OPPreferencePane: Warning - Window outlet in %@.nib not connected!", nibName);
+        [pane assignMainView];
+        [pane mainViewDidLoad];
+    }
+    return [pane mainView];
+}
 
 - (void) exchangeViewFromPane: (OPPreferencePane*) pane
 {
     //NSLog(@"Loading %@.nib", [pane mainNibName]);
-    NSView* newView = [pane loadMainView];
+    NSView* newView = [self loadMainViewOfPane: pane];
     
     NSRect newViewFrame = [newView frame];
     int xSizeWindow;
@@ -191,7 +212,7 @@ static NSArray *EDSubclassesOfClass(Class aClass) {
     [newView setFrame:newViewFrame];
     [self setCurrentView:newView];
     if (newView) {
-        [[_window contentView] addSubview:newView];
+        [[_window contentView] addSubview: newView];
     }
 }
 
@@ -201,13 +222,25 @@ static NSArray *EDSubclassesOfClass(Class aClass) {
     if (!result) {
         // try to load one:
         Class paneClass = NSClassFromString(name);
-        if (paneClass) {
+        if (!paneClass) {
+			// Try to load a bundle:
+			NSString* panePath = [[NSBundle mainBundle] pathForResource: name ofType: @"prefPane"];
+			NSBundle* prefBundle = [NSBundle bundleWithPath: panePath];
+			[prefBundle load];
+			if (! prefBundle.isLoaded) {
+				NSLog(@"Error loading bundle %@.", prefBundle);
+			}
+			NSString* className = [[prefBundle infoDictionary] objectForKey: @"NSPrincipalClass"];
+			paneClass = NSClassFromString(className);
+		}
+		if (paneClass) {
             result = [[[paneClass alloc] init] autorelease];
             if (NSDebugEnabled) NSLog(@"Created pane %@", result);
             // Cache the result object:
             [preferencesPanes setObject: result forKey: name];
         } else {
-            NSLog(@"OPPreferences: Warning: Unable to load preferences pane class called '%@'", name);
+			NSLog(@"OPPreferences: Warning: Unable to load Preferences pane class called '%@'", name);
+			return nil;
         }
     }
     return result;
@@ -361,6 +394,7 @@ static NSArray *EDSubclassesOfClass(Class aClass) {
 
     [self retain];
     if (NSDebugEnabled) NSLog(@"Preferences awaking From nib.");
+	NSAssert1([_window isKindOfClass: [NSWindow class]], @"Error: _window outlet connected to %@", [_window class]);
     windowHeight = [_window frame].size.height;
 
     toolbar = [[NSToolbar alloc] initWithIdentifier: @"GIPreferencesToolbar"];
