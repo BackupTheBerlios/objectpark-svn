@@ -614,8 +614,8 @@ NSDateFormatter *timeAndDateFormatter()
 		// remember selection for messsage group (root item):
 		NSArray *selectedObjects = self.selectedObjects;
 		
-#warning restricted remembering of selected threads to 1 thread max.
-		if (selectedObjects.count > 1)
+#warning restricted remembering of selected threads to 100 thread max.
+		if (selectedObjects.count > 100)
 		{
 			selectedObjects = [NSArray arrayWithObject:[selectedObjects lastObject]];
 		}

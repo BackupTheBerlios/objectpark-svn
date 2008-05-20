@@ -679,6 +679,8 @@ struct __NSOVRowEntry {
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
 {
+	[self expandItem: [self itemAtRow: row] expandChildren: expand];
+	return;
 //	BOOL isExpanded = [self isItemExpandedAtRow: row];
 //	if (isExpanded && !expand) return; // Nothing to do, if the item is already expended
 	
@@ -697,7 +699,10 @@ struct __NSOVRowEntry {
 			}
 		} @catch (NSException* e) {
 			// ignore :-(
+			NSLog(@"Exception trying to expand item at row %u in %@: %@", row, self, e);
 		}
+		
+		NSAssert1([self isItemExpanded: [self itemAtRow: row]], @"Item at row %u not expanded.", row);
 	}
 }
 

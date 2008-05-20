@@ -1159,6 +1159,8 @@ static BOOL isShowingThreadsOnly = NO;
 	
 	[messageGroupsController setSelectedItemsPaths:[NSArray arrayWithObject:[messageGroupsController itemPathForItem:newObject]] byExtendingSelection:NO];
 	
+	[messageGroupsController.outlineView scrollRowToVisible:[messageGroupsController.outlineView rowForItem:newObject]];
+	
 	[self performSelector:@selector(rename:) withObject:self afterDelay:0.0];
 }
 
