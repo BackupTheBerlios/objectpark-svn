@@ -8,7 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1" id="9"/>
+			<integer value="83"/>
+			<integer value="362"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -135,7 +136,7 @@
 													<object class="NSMutableArray" key="dict.values">
 														<bool key="EncodedWithXMLCoder">YES</bool>
 														<string>Abbrechen</string>
-														<reference ref="9"/>
+														<integer value="1" id="9"/>
 													</object>
 												</object>
 											</object>
@@ -1510,7 +1511,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																<object class="NSTextView" id="751445563">
 																	<reference key="NSNextResponder" ref="227750452"/>
 																	<int key="NSvFlags">6418</int>
-																	<string key="NSFrameSize">{0.001, 6120}</string>
+																	<string key="NSFrameSize">{0, 0}</string>
 																	<reference key="NSSuperview" ref="227750452"/>
 																	<object class="NSTextContainer" key="NSTextContainer" id="869923238">
 																		<object class="NSLayoutManager" key="NSLayoutManager">
@@ -1706,7 +1707,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																			<nil key="NSDelegate"/>
 																		</object>
 																		<reference key="NSTextView" ref="751445563"/>
-																		<double key="NSWidth">1.000000e-03</double>
+																		<double key="NSWidth">0.000000e+00</double>
 																		<int key="NSTCFlags">1</int>
 																	</object>
 																	<object class="NSTextViewSharedData" key="NSSharedData">
@@ -1757,11 +1758,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																	</object>
 																	<int key="NSTVFlags">7</int>
 																	<string key="NSMaxSize">{996, 1e+07}</string>
-																	<string key="NSMinize">{0, 0}</string>
 																	<nil key="NSDelegate"/>
 																</object>
 															</object>
-															<string key="NSFrameSize">{498, 314}</string>
+															<string key="NSFrameSize">{483, 314}</string>
 															<reference key="NSSuperview" ref="440559076"/>
 															<reference key="NSNextKeyView" ref="751445563"/>
 															<reference key="NSDocView" ref="751445563"/>
@@ -1774,9 +1774,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 														</object>
 														<object class="NSScroller" id="287699792">
 															<reference key="NSNextResponder" ref="440559076"/>
-															<int key="NSvFlags">-2147483392</int>
+															<int key="NSvFlags">256</int>
 															<string key="NSFrame">{{483, 0}, {15, 299}}</string>
 															<reference key="NSSuperview" ref="440559076"/>
+															<bool key="NSEnabled">YES</bool>
 															<reference key="NSTarget" ref="440559076"/>
 															<string key="NSAction">_doScroller:</string>
 															<double key="NSPercent">5.130719e-02</double>
@@ -1786,6 +1787,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 															<int key="NSvFlags">256</int>
 															<string key="NSFrame">{{-100, -100}, {87, 18}}</string>
 															<reference key="NSSuperview" ref="440559076"/>
+															<bool key="NSEnabled">YES</bool>
 															<int key="NSsFlags">1</int>
 															<reference key="NSTarget" ref="440559076"/>
 															<string key="NSAction">_doScroller:</string>
@@ -1796,7 +1798,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 													<string key="NSFrame">{{0, 93}, {498, 314}}</string>
 													<reference key="NSSuperview" ref="979681536"/>
 													<reference key="NSNextKeyView" ref="227750452"/>
-													<int key="NSsFlags">528</int>
+													<int key="NSsFlags">720</int>
 													<reference key="NSVScroller" ref="287699792"/>
 													<reference key="NSHScroller" ref="1053703996"/>
 													<reference key="NSContentView" ref="227750452"/>
@@ -2501,15 +2503,15 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<bool key="NSClearsFilterPredicateOnInsertion">YES</bool>
 			</object>
 			<object class="NSWindowTemplate" id="440011240">
-				<int key="NSWindowStyleMask">13</int>
+				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{196, 240}, {480, 270}}</string>
-				<int key="NSWTFlags">603979776</int>
+				<int key="NSWTFlags">1677721600</int>
 				<string key="NSWindowTitle">HTML View</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<object class="NSView" key="NSWindowView" id="72521837">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2563,6 +2565,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 					</object>
 					<string key="NSFrameSize">{480, 270}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
@@ -3140,14 +3143,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="198493819"/>
 					</object>
 					<int key="connectionID">114</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">threadsOutlineView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="931269309"/>
-					</object>
-					<int key="connectionID">118</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -4123,14 +4118,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">nextKeyView</string>
-						<reference key="source" ref="440559076"/>
-						<reference key="destination" ref="724564600"/>
-					</object>
-					<int key="connectionID">476</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">nextKeyView</string>
 						<reference key="source" ref="751445563"/>
 						<reference key="destination" ref="724564600"/>
 					</object>
@@ -4139,10 +4126,26 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">nextKeyView</string>
-						<reference key="source" ref="739064572"/>
-						<reference key="destination" ref="751445563"/>
+						<reference key="source" ref="724564600"/>
+						<reference key="destination" ref="931269309"/>
 					</object>
-					<int key="connectionID">478</int>
+					<int key="connectionID">479</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">nextKeyView</string>
+						<reference key="source" ref="739064572"/>
+						<reference key="destination" ref="440559076"/>
+					</object>
+					<int key="connectionID">480</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">nextKeyView</string>
+						<reference key="source" ref="440559076"/>
+						<reference key="destination" ref="724564600"/>
+					</object>
+					<int key="connectionID">481</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -5828,7 +5831,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">478</int>
+			<int key="maxID">481</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5968,6 +5971,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>doRename:</string>
 							<string>followup:</string>
 							<string>forward:</string>
+							<string>groupsDoubleAction:</string>
 							<string>markAsRead:</string>
 							<string>markAsUnread:</string>
 							<string>messageGroupSelectionChanged:</string>
@@ -5983,6 +5987,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -6021,7 +6026,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>messageTextView</string>
 							<string>messageWebView</string>
 							<string>observedObjectForSelectedSearchResults</string>
-							<string>observedObjectForSelectedThreads</string>
 							<string>progressInfoScrollView</string>
 							<string>redirectSheet</string>
 							<string>regularThreadsView</string>
@@ -6031,7 +6035,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>searchResultsArrayController</string>
 							<string>threadMailSplitter</string>
 							<string>threadsController</string>
-							<string>threadsOutlineView</string>
 							<string>verticalSplitter</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -6046,7 +6049,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>GITextView</string>
 							<string>WebView</string>
 							<string>id</string>
-							<string>id</string>
 							<string>NSScrollView</string>
 							<string>NSWindow</string>
 							<string>NSScrollView</string>
@@ -6056,7 +6058,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>NSArrayController</string>
 							<string>GISplitView</string>
 							<string>GIThreadOutlineViewController</string>
-							<string>GIOutlineViewWithThreadColoring</string>
 							<string>GISplitView</string>
 						</object>
 					</object>
@@ -6240,13 +6241,11 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>observedObjectForRootItem</string>
-							<string>observedObjectForSelectedObjects</string>
 							<string>outlineView</string>
 							<string>rootItem</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>NSOutlineView</string>
 							<string>id</string>

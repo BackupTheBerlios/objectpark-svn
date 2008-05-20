@@ -167,6 +167,11 @@
 	if (selectedItemsPaths.count) {
 		[self setSelectedItemsPaths: selectedItemsPaths byExtendingSelection: NO];
 	}
+	
+	[self willChangeValueForKey:@"selectedObjects"];
+	[self didChangeValueForKey:@"selectedObjects"];
+	[self willChangeValueForKey:@"selectedObject"];
+	[self didChangeValueForKey:@"selectedObjects"];
 }
 
 - (void) reloadData
@@ -214,9 +219,12 @@
 - (void)useClonedOutlineView
 {
 	NSOutlineView *oldOutlineView = outlineView;	
+	NSView *nextKeyView = [oldOutlineView nextKeyView];
+	NSView *previousKeyView = [oldOutlineView previousKeyView];
 	
 	oldOutlineView.dataSource = nil;
 	oldOutlineView.delegate = nil;
+	[oldOutlineView setNextKeyView:nil];
 	
 	NSOutlineView *newOutlineView = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:outlineView]];
 	
@@ -229,6 +237,8 @@
 	
 	newOutlineView.dataSource = self;
 	newOutlineView.delegate = self;
+	newOutlineView.nextKeyView = nextKeyView;
+	[previousKeyView setNextKeyView:newOutlineView];
 	
 //	NSLog(@"old outline view = %@", oldOutlineView);
 //	NSLog(@"new outline view = %@", newOutlineView);	

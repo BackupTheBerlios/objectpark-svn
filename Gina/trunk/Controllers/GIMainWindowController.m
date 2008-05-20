@@ -1198,7 +1198,18 @@ static BOOL isShowingThreadsOnly = NO;
 	
 	if ([alert runModal] == NSAlertFirstButtonReturn) {
 		// Delete clicked, delete the node
-		[self.messageGroupsController deleteHierarchyNode:node];
+		@try
+		{
+			[self.messageGroupsController suspendUpdates];
+			[threadsController suspendUpdates];
+			
+			[self.messageGroupsController deleteHierarchyNode:node];
+		}
+		@finally
+		{
+			[self.messageGroupsController resumeUpdates];
+			[threadsController resumeUpdates];
+		}
 	}
 	
 	[alert release];
@@ -1693,6 +1704,7 @@ static BOOL isShowingThreadsOnly = NO;
 @end
 
 #import "EDDateFieldCoder.h"
+#import "GIMailAddressTokenFieldDelegate.h"
 
 @implementation GIMainWindowController (MessageRedirect)
 
@@ -1756,7 +1768,7 @@ static BOOL isShowingThreadsOnly = NO;
 	// mark message as to send:
 	[resentMessage setSendStatus:OPSendStatusQueuedReady];
 	
-	NSLog(@"resentMessage = %@", resentMessage);
+//	NSLog(@"resentMessage = %@", resentMessage);
 	
 	// queue message:
 	GIThread *thread = resentMessage.thread;
@@ -1768,6 +1780,11 @@ static BOOL isShowingThreadsOnly = NO;
 	// Set message in profile's messagesToSend:
 	[[redirectProfile mutableArrayValueForKey:@"messagesToSend"] addObject:resentMessage];	
 	[redirectProfile.sendAccount send];
+	
+	// housekeeping LRU address cache:
+	[GIMailAddressTokenFieldDelegate addToLRUMailAddresses:toString];
+	[GIMailAddressTokenFieldDelegate addToLRUMailAddresses:ccString];
+	[GIMailAddressTokenFieldDelegate addToLRUMailAddresses:bccString];
 }
 
 - (IBAction)cancelRedirect:(id)sender

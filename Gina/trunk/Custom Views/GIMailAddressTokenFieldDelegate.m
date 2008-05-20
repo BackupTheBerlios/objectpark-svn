@@ -17,10 +17,10 @@
 
 #define LRUCACHESIZE 100
 
-static NSMutableArray *LRUMailAddresses;
-
 + (NSMutableArray *)LRUMailAddresses
 {
+	static NSMutableArray *LRUMailAddresses = nil;
+
     if (!LRUMailAddresses)
     {
         LRUMailAddresses = [[[NSUserDefaults standardUserDefaults] objectForKey:@"LRUMailAddresses"] mutableCopy];
