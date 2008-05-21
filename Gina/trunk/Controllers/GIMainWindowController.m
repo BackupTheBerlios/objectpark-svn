@@ -61,7 +61,7 @@
 
 - (id)selectedMessageOrThread
 {
-	if ([self searchMode])
+	if ([self isSearchMode])
 	{
 		if ([self.selectedSearchResults count] == 1)
 		{
@@ -93,7 +93,7 @@
 {
 	GIMessage *result = nil;
 	
-	if ([self searchMode])
+	if ([self isSearchMode])
 	{
 		if ([self.selectedSearchResults count] == 1)
 		{
@@ -113,7 +113,7 @@
 
 - (NSArray *)selectedMessages
 {
-	if ([self searchMode])
+	if ([self isSearchMode])
 	{
 		NSArray *selectedObjects = [searchResultsArrayController selectedObjects];
 		NSMutableArray *result = [NSMutableArray arrayWithCapacity:selectedObjects.count];
@@ -133,7 +133,7 @@
 
 - (BOOL)selectionHasUnreadMessages
 {
-	if ([self searchMode])
+	if ([self isSearchMode])
 	{
 		NSArray *selectedObjects = [searchResultsArrayController selectedObjects];
 		
@@ -200,7 +200,7 @@
 		
 		// setting up query:
 		query = [[NSMetadataQuery alloc] init];
-		[query setSearchScopes:[NSArray arrayWithObjects:[[OPPersistentObjectContext defaultContext] transferDataDirectory], nil]];
+		[query setSearchScopes:[NSArray arrayWithObjects: /*NSMetadataQueryUserHomeScope*/[[OPPersistentObjectContext defaultContext] transferDataDirectory], nil]];
 		
 		// setup our Spotlight notifications
 		NSNotificationCenter *nf = [NSNotificationCenter defaultCenter];
@@ -352,13 +352,13 @@
 
 - (void)setThreadsOnlyMode
 {
-//	id subview = [self searchMode] == YES ? (id)searchResultView : (id)regularThreadsView;
+//	id subview = [self isSearchMode] == YES ? (id)searchResultView : (id)regularThreadsView;
 	
 	if (! self.isShowingThreadsOnly) {
 		NSLog(@"only mail visible. switching to only threads visible.");
 		[threadMailSplitter setPosition:[threadMailSplitter frame].size.height ofDividerAtIndex:0];
 		[threadMailSplitter adjustSubviews];
-		[self.window makeFirstResponder:[self searchMode] ? searchResultTableView : threadsController.outlineView];
+		[self.window makeFirstResponder:[self isSearchMode] ? searchResultTableView : threadsController.outlineView];
 	}
 }
 
@@ -701,7 +701,7 @@ static BOOL isShowingThreadsOnly = NO;
 		}
 		
 		// Make sure selection is visible:
-		if ([self searchMode])
+		if ([self isSearchMode])
 		{
 			NSUInteger index = [[searchResultsArrayController selectionIndexes] lastIndex];
 			if (index != NSNotFound)
@@ -874,8 +874,7 @@ static BOOL isShowingThreadsOnly = NO;
 		id newSelectedSearchResults = [observedObjectForSelectedSearchResults valueForKeyPath:observedKeyPathForSelectedSearchResults];
 		[self setSelectedSearchResults:newSelectedSearchResults];
 		
-		if (!self.isShowingThreadsOnly)
-		{
+		if (! self.isShowingThreadsOnly) {
 			GIMessage *selectedMessage = self.selectedMessage;		
 			[self performSetSeenBehaviorForMessage:selectedMessage];
 		}
@@ -1030,6 +1029,15 @@ static BOOL isShowingThreadsOnly = NO;
 #define DOWN_KEYPAD_5 87
 #define DOWN_KEYPAD_2 84
 
+- (IBAction) navigateBack: (id) sender
+{
+	// if only mail is visible, switch back to only thread list visible
+	NSLog(@"subviews of thread mail splitter = %@", [threadMailSplitter subviews]);
+	NSLog(@"[threadsOutlineView superview] = %@", [[threadsController.outlineView superview] superview]);
+	
+	[self setThreadsOnlyMode];
+}
+
 - (BOOL)keyPressed:(NSEvent *)event
 {
 //	if ([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) return NO;
@@ -1057,11 +1065,7 @@ static BOOL isShowingThreadsOnly = NO;
 		case ESC:
 		case BACKSPACE:
 		{
-			// if only mail is visible, switch back to only thread list visible
-			NSLog(@"subviews of thread mail splitter = %@", [threadMailSplitter subviews]);
-			NSLog(@"[threadsOutlineView superview] = %@", [[threadsController.outlineView superview] superview]);
-			
-			[self setThreadsOnlyMode];
+			[self navigateBack: self];
 			return YES;
 		}
 		case RETURN:
@@ -1427,7 +1431,7 @@ static BOOL isShowingThreadsOnly = NO;
 {
 	GIMessage *message = [commentTreeView selectedMessage];
 	
-	if ([self searchMode])
+	if ([self isSearchMode])
 	{
 		self.selectedMessageInSearchMode = message;
 		[searchResultTableView deselectAll:self];
@@ -1461,7 +1465,7 @@ static BOOL isShowingThreadsOnly = NO;
 	}
 	
 	// if search with 'selected mailbox' is active then signal a filter change:
-	if ([self searchMode] && [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"] == SEARCHRANGE_SELECTEDGROUP)
+	if ([self isSearchMode] && [[NSUserDefaults standardUserDefaults] integerForKey:@"SearchRange"] == SEARCHRANGE_SELECTEDGROUP)
 	{
 		[self searchRangeChanged:sender];
 	}
@@ -1513,8 +1517,7 @@ static BOOL isShowingThreadsOnly = NO;
 {
 	if (aBool == searchMode) return;
 	
-	if (aBool)
-	{
+	if (aBool) {
 		// switch to all mailboxes search:
 		[[NSUserDefaults standardUserDefaults] setInteger:SEARCHRANGE_ALLMESSAGEGROUPS forKey:@"SearchRange"];
 		
@@ -1546,7 +1549,7 @@ static BOOL isShowingThreadsOnly = NO;
 
 	BOOL isShowingMessageOnly = [self isShowingMessageOnly];
 	BOOL isShowingThreadsOnly = [self isShowingThreadsOnly];
-	
+#warning Bug: Will dealloc outline view -> outlineView reference in outlineView Controller will dangle.
 	NSMutableArray *subviews = [[threadMailSplitter subviews] mutableCopy];
 	[subviews replaceObjectAtIndex:0 withObject:newView];
 	
@@ -1572,7 +1575,7 @@ static BOOL isShowingThreadsOnly = NO;
 	}
 }
 
-- (BOOL)searchMode
+- (BOOL) isSearchMode
 {
 	return searchMode;
 }
@@ -1610,6 +1613,11 @@ static BOOL isShowingThreadsOnly = NO;
 		[query setSortDescriptors:[self searchSortDescriptors]];
 		
 		[self setSearchMode:YES];
+		
+		// Switch away from message only mode, so search results are visible:
+		if (self.isShowingMessageOnly) {
+			[self setThreadsOnlyMode];
+		}
 		
 		switch (searchFields)
 		{

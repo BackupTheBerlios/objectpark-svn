@@ -90,6 +90,8 @@
 - (BOOL)isShowingMessageOnly;
 - (void)showMessageOnly;
 
+- (IBAction) navigateBack: (id) sender;
+
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
 
 - (GIMessageGroup *)selectedGroup;
@@ -139,8 +141,7 @@
 
 @interface GIMainWindowController (Search)
 
-@property BOOL searchMode;
-
+- (BOOL) isSearchMode;
 - (IBAction)search:(id)sender;
 - (IBAction)searchRangeChanged:(id)sender;
 

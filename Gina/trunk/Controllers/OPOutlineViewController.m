@@ -288,6 +288,7 @@
 - (void) removeFromKnownItems: (id) item
 {
 	if ([knownItems containsObject: item]) {
+		[item removeObserver: self forKeyPath: [self childKey]];
 		for (NSString* keyPath in [self keyPathsAffectingDisplayOfItem: item]) {
 			[item removeObserver: self forKeyPath: keyPath];
 		}
@@ -679,30 +680,29 @@ struct __NSOVRowEntry {
 
 - (void) expandItemAtRow: (int) row expandChildren: (BOOL) expand
 {
-	[self expandItem: [self itemAtRow: row] expandChildren: expand];
-	return;
+
 //	BOOL isExpanded = [self isItemExpandedAtRow: row];
 //	if (isExpanded && !expand) return; // Nothing to do, if the item is already expended
 	
 	if (row < [self numberOfRows]) {
+
+		[self expandItem: [self itemAtRow: row] expandChildren: expand];
+		return;
 		
-//		struct __REFlags flags;
-//		flags.expanded = YES;
+		//struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: -1];
+//		@try {
+//			if (rowEntry && ![self isItemExpanded: rowEntry->item]) {
+//				if (rowEntry && !(rowEntry->flags.expanded)) { 
+//					[self _expandItemEntry: rowEntry expandChildren: expand];
+//					[self noteNumberOfRowsChanged];
+//				}
+//			}
+//		} @catch (NSException* e) {
+//			// ignore :-(
+//			NSLog(@"Exception trying to expand item at row %u in %@: %@", row, self, e);
+//		}
 		
-		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: -1];
-		@try {
-			if (rowEntry && ![self isItemExpanded: rowEntry->item]) {
-				if (rowEntry && !(rowEntry->flags.expanded)) { 
-					[self _expandItemEntry: rowEntry expandChildren: expand];
-					[self noteNumberOfRowsChanged];
-				}
-			}
-		} @catch (NSException* e) {
-			// ignore :-(
-			NSLog(@"Exception trying to expand item at row %u in %@: %@", row, self, e);
-		}
-		
-		NSAssert1([self isItemExpanded: [self itemAtRow: row]], @"Item at row %u not expanded.", row);
+		//NSAssert1([self isItemExpanded: [self itemAtRow: row]], @"Item at row %u not expanded.", row);
 	}
 }
 
@@ -710,8 +710,10 @@ struct __NSOVRowEntry {
 - (BOOL) isItemExpandedAtRow: (int) row
 {
 	if (row < [self numberOfRows]) {
-		struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
-		return rowEntry ? rowEntry->flags.expanded : NO;
+		return [self isItemExpanded: [self itemAtRow: row]];
+		
+		//struct __NSOVRowEntry* rowEntry = [self _rowEntryForRow: row requiredRowEntryLoadMask: 0];
+		//return rowEntry ? rowEntry->flags.expanded : NO;
 	}
 	return NO;
 }

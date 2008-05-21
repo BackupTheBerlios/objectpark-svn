@@ -83,7 +83,7 @@ static NSMutableArray *LRUMailAddresses;
 
 - (NSAttributedString *)attributedStringForObjectValue:(id)obj withDefaultAttributes:(NSDictionary *)attrs
 {
-    return [[[NSAttributedString alloc] initWithString:[obj description]] autorelease];
+    return [[[NSAttributedString alloc] initWithString: nilGuard([obj description])] autorelease];
 }
 
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error

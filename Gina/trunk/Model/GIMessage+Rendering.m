@@ -33,6 +33,11 @@
 
 #define DEFAULTCACHECAPACITY ((unsigned int)10)
 
+static inline NSString *nilGuard(NSString *str)
+{
+    return str ? str : @"";
+}
+
 @implementation GIMessage (Rendering)
 /*" Renders a message as an attributed string. This includes header lines as defined in the preferences (plus the default ones). */
 
@@ -114,7 +119,7 @@ static NSString *templatePostfix = nil;
     [block release];
 	
     NSMutableAttributedString *cellString = 
-        [[NSMutableAttributedString alloc] initWithString:string];
+        [[NSMutableAttributedString alloc] initWithString: nilGuard(string)];
     [cellString addAttribute:NSParagraphStyleAttributeName 
 					   value:paragraphStyle 
 					   range:NSMakeRange(0, [cellString length])];
