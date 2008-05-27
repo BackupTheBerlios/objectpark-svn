@@ -13,35 +13,46 @@ NSString *JobProgressMaxValue = @"OPJobProgressMaxValue";
 NSString *JobProgressCurrentValue = @"OPJobProgressCurrentValue";
 NSString *JobProgressDescription = @"OPJobProgressDescription";
 
+NSString *GIOperationLock = @"GIOperationLock";
+
 @implementation GIOperation
 
 @synthesize progressInfo;
 
 - (void)setProgressInfoWithMinValue:(double)aMinValue maxValue:(double)aMaxValue currentValue:(double)currentValue description:(NSString *)aDescription
 {
-    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithDouble:aMinValue], JobProgressMinValue,
-			[NSNumber numberWithDouble:aMaxValue], JobProgressMaxValue,
-			[NSNumber numberWithDouble:currentValue], JobProgressCurrentValue,
-			aDescription, JobProgressDescription,
-			nil, nil];
-	
-	self.progressInfo = info;
+	@synchronized(GIOperationLock)
+	{
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+							  [NSNumber numberWithDouble:aMinValue], JobProgressMinValue,
+							  [NSNumber numberWithDouble:aMaxValue], JobProgressMaxValue,
+							  [NSNumber numberWithDouble:currentValue], JobProgressCurrentValue,
+							  aDescription, JobProgressDescription,
+							  nil, nil];
+		
+		self.progressInfo = info;
+	}
 }
 
 - (void)setIndeterminateProgressInfoWithDescription:(NSString *)aDescription
 {
-    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-			aDescription, JobProgressDescription,
-			nil, nil];
-	
-	self.progressInfo = info;
+	@synchronized(GIOperationLock)
+	{
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+							  aDescription, JobProgressDescription,
+							  nil, nil];
+		
+		self.progressInfo = info;
+	}
 }
 
 - (void)dealloc
 {
-	self.progressInfo = nil;
-	[progressInfo release];
+	@synchronized(GIOperationLock)
+	{
+		self.progressInfo = nil;
+		[progressInfo release];
+	}
 	
 	[super dealloc];
 }

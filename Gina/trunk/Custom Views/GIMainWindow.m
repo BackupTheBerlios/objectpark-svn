@@ -54,7 +54,12 @@
 
 - (void)selectKeyViewFollowingView:(NSView *)referenceView
 {
-//	NSView *nextKeyView = [referenceView nextValidKeyView];
+	NSView *nextKeyView = [referenceView nextValidKeyView];
+	if (!nextKeyView)
+	{
+		[self makeFirstResponder:referenceView.nextKeyView];
+		return;
+	}
 //	while (![nextKeyView isKindOfClass:[NSOutlineView class]])
 //	{
 //		referenceView = nextKeyView;

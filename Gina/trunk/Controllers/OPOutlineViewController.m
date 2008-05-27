@@ -219,7 +219,7 @@
 - (void)useClonedOutlineView
 {
 	NSOutlineView *oldOutlineView = outlineView;	
-	NSView *nextKeyView = [oldOutlineView nextKeyView];
+	NSView *nextKeyView = [[oldOutlineView nextKeyView] retain];
 	NSView *previousKeyView = [oldOutlineView previousKeyView];
 	
 	oldOutlineView.dataSource = nil;
@@ -238,6 +238,8 @@
 	newOutlineView.dataSource = self;
 	newOutlineView.delegate = self;
 	newOutlineView.nextKeyView = nextKeyView;
+	[nextKeyView release];
+	
 	[previousKeyView setNextKeyView:newOutlineView];
 	
 //	NSLog(@"old outline view = %@", oldOutlineView);
