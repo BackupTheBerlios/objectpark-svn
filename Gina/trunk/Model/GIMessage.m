@@ -184,6 +184,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
     NSString *fromHeader = [im fromWithFallback:YES];
     
+	NSLog(@"removing dummy and read status from %@", self);
 	[self toggleFlags:flags & OPDummyStatus]; // remove Dummy status
 	[self toggleFlags:flags & OPSeenStatus]; // remove read status
 	
@@ -211,7 +212,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
     if ([GIProfile isMyEmailAddress: fromHeader]) {
-        [self toggleFlags: flags ^ (OPIsFromMeStatus | OPSeenStatus)]; // never changes, hopefully
+        [self toggleFlags: (flags & (OPIsFromMeStatus | OPSeenStatus)) ^ (OPIsFromMeStatus | OPSeenStatus)]; // never changes, hopefully
     }
 	
 	// Setting thread:
@@ -409,7 +410,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	if ([self isDummy]) return;
 
 	[self willChangeValueForKey:@"isSeen"];
-	[self toggleFlags:OPSeenStatus];
+	[self toggleFlags:OPSeenStatus];	
 	[self didChangeValueForKey:@"isSeen"];
 }
 
@@ -708,12 +709,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 /*" Inverts the flags given. "*/
 {
 	if (!someFlags) return;
-
-	[self willChangeValueForKey: @"flags"];
-	flags ^= someFlags;
-	[self didChangeValueForKey: @"flags"];
 	
-	[self.thread didToggleFlags: someFlags ofContainedMessage: self];
+	if (someFlags & OPSeenStatus) 
+	{
+		NSLog(@"toggling seen status of %@", self);
+	}
+
+	[self willChangeValueForKey:@"flags"];
+	flags ^= someFlags;
+	[self didChangeValueForKey:@"flags"];
+	
+	[self.thread didToggleFlags:someFlags ofContainedMessage:self];
 }
 
 - (void)willSave

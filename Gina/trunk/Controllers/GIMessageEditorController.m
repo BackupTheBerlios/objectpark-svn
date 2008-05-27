@@ -1341,11 +1341,11 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     
     // status
     if (oldMessage) {
-		[message toggleFlags:[oldMessage flags]]; // set all flags of oldMessage
+		[message setFlags:[oldMessage flags]]; // set all flags of oldMessage
 	}
 	
 	// adding flags:
-    [message toggleFlags: message.flags ^ (OPSeenStatus | OPIsFromMeStatus)];
+    [message toggleFlags: (message.flags & (OPSeenStatus | OPIsFromMeStatus)) ^ (OPSeenStatus | OPIsFromMeStatus)];
     [message setValue:[internetMessage toWithFallback:YES] forKey:@"to"];
 	
     // unmark message as blocked for sending
@@ -1374,7 +1374,10 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     oldMessage = [message retain];
     
     // Set answered status if reply:
-    [referencedMessage toggleFlags:[referencedMessage flags] ^ OPAnsweredStatus];
+	if (![referencedMessage hasFlags:OPAnsweredStatus])
+	{
+		[referencedMessage toggleFlags:OPAnsweredStatus];
+	}
     
     // Set message in profile's messagesToSend:
 	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];	

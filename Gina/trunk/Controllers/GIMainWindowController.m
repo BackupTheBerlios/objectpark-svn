@@ -1774,7 +1774,11 @@ static BOOL isShowingThreadsOnly = NO;
 	GIMessage *resentMessage = [[[GIMessage alloc] initWithInternetMessage:resentInternetMessage appendToAppropriateThread:NO forcedMessageId:resentMessageId] autorelease];
 		
 	// mark message as resent:
-	[resentMessage toggleFlags:OPResentStatus];
+	if (![resentMessage hasFlags:OPResentStatus])
+	{
+		[resentMessage toggleFlags:OPResentStatus];
+	}
+	
 	// mark message as to send:
 	[resentMessage setSendStatus:OPSendStatusQueuedReady];
 	
