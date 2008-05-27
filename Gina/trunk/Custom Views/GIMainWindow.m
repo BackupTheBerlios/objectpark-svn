@@ -9,6 +9,7 @@
 #import "GIMainWindow.h"
 #import "GIMainWindowController.h"
 #import <Foundation/NSDebug.h>
+#import "GIOutlineViewWithThreadColoring.h"
 
 @implementation GIMainWindow
 
@@ -55,7 +56,7 @@
 - (void)selectKeyViewFollowingView:(NSView *)referenceView
 {
 	NSView *nextKeyView = [referenceView nextValidKeyView];
-	if (!nextKeyView)
+	if (!nextKeyView && [referenceView.nextKeyView isKindOfClass:[GIOutlineViewWithThreadColoring class]])
 	{
 		[self makeFirstResponder:referenceView.nextKeyView];
 		return;

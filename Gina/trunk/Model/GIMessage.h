@@ -73,7 +73,7 @@ extern NSString *GIMessageDidChangeFlagsNotification;
 @property (readonly) NSString *messageId;
 @property (readonly) NSString *senderName;
 @property (readonly) NSUInteger unreadMessageCount;
-@property (readonly) unsigned flags;
+@property (readwrite) unsigned flags;
 @property (readwrite) unsigned sendStatus;
 
 @property (readonly) OPInternetMessage *internetMessage;

@@ -414,6 +414,13 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[self didChangeValueForKey:@"isSeen"];
 }
 
+- (void)setFlags:(unsigned)someFlags
+{
+	[self willChangeValueForKey:@"flags"];
+	flags = someFlags;
+	[self didChangeValueForKey:@"flags"];
+}
+
 - (unsigned)flags
 {
     return flags;
