@@ -1340,12 +1340,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     NSAssert1(message != nil, @"-[GIMessageEditorController checkpointMessageWithStatus]: Message should be created with transferData: %@", [internetMessage transferData]);
     
     // status
-    if (oldMessage) {
+    if (oldMessage) 
+	{
 		[message setFlags:[oldMessage flags]]; // set all flags of oldMessage
 	}
 	
 	// adding flags:
-    [message toggleFlags: (message.flags & (OPSeenStatus | OPIsFromMeStatus)) ^ (OPSeenStatus | OPIsFromMeStatus)];
+    [message addFlags:OPSeenStatus | OPIsFromMeStatus];
     [message setValue:[internetMessage toWithFallback:YES] forKey:@"to"];
 	
     // unmark message as blocked for sending
@@ -1374,10 +1375,7 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
     oldMessage = [message retain];
     
     // Set answered status if reply:
-	if (![referencedMessage hasFlags:OPAnsweredStatus])
-	{
-		[referencedMessage toggleFlags:OPAnsweredStatus];
-	}
+	[referencedMessage addFlags:OPAnsweredStatus];
     
     // Set message in profile's messagesToSend:
 	[[profile mutableArrayValueForKey:@"messagesToSend"] addObject:message];	

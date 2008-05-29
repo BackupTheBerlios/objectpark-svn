@@ -426,6 +426,16 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     return flags;
 }
 
+- (void)addFlags:(unsigned)someFlags
+{
+	[self toggleFlags:(flags & someFlags) ^ someFlags];
+}
+
+- (void)removeFlags:(unsigned)someFlags
+{
+	[self toggleFlags:flags & someFlags];
+}
+
 - (NSString *)messageId
 {
 	return [[messageId retain] autorelease];

@@ -111,8 +111,10 @@ extern NSString *GIMessageDidChangeFlagsNotification;
 - (void) flushInternetMessageCache;
 
 /*" Flag handling "*/
-- (BOOL) hasFlags: (unsigned int) someFlags;
-- (void) toggleFlags: (unsigned) someFlags;
+- (BOOL)hasFlags:(unsigned int)someFlags;
+- (void)toggleFlags:(unsigned)someFlags;
+- (void)addFlags:(unsigned)someFlags;
+- (void)removeFlags:(unsigned)someFlags;
 
 - (BOOL)isSeen;
 - (void)setIsSeen:(BOOL)boolValue;

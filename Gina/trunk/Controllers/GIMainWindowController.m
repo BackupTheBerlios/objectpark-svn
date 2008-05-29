@@ -182,7 +182,7 @@
 	
 	if (!message) return nil;
 	
-	WebArchive *result = nil; //[message.internetMessage webArchive];
+	WebArchive *result = [message.internetMessage webArchive];
 	//NSLog(@"message for display: %@", [result string]);
 	
 	NSLog(@"Web archive = %@", result);

@@ -388,46 +388,47 @@ static NSString *templatePostfix = nil;
 }
 
 
-+ (NSFont*) font
++ (NSFont *)font
     /*" Returns the font that is used as base font for message rendering. "*/
 {    
-    NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString* fontName = [userDefaults objectForKey: MessageRendererFontName];
-    float     fontSize = [userDefaults integerForKey: MessageRendererFontSize];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *fontName = [userDefaults objectForKey:MessageRendererFontName];
+    float fontSize = [userDefaults integerForKey:MessageRendererFontSize];
     
     return fontName ? [NSFont fontWithName:fontName size:fontSize] 
         : [NSFont userFontOfSize:-1];
 }
 
-+ (void) setFont: (NSFont*) aFont
-    /*" Sets the base font to use for message rendering. "*/
+/*" Sets the base font to use for message rendering. "*/
++ (void) setFont:(NSFont *)aFont
 {
-    NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     NSParameterAssert(aFont != nil);
     
-    [userDefaults setObject: [aFont fontName] forKey: MessageRendererFontName];
-    [userDefaults setInteger:[aFont pointSize] forKey: MessageRendererFontSize];
+    [userDefaults setObject:[aFont fontName] forKey:MessageRendererFontName];
+    [userDefaults setInteger:[aFont pointSize] forKey:MessageRendererFontSize];
     
     // synching the content coders' default font
     //[EDContentCoder setDefaultFont:aFont];
     //[self flushCache: nil];
 }
 
-+ (BOOL) shouldRenderAttachmentsInlineIfPossible
-    /*" Returns if attachments should be rendered inline. "*/
+/*" Returns if attachments should be rendered inline. "*/
++ (BOOL)shouldRenderAttachmentsInlineIfPossible
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey: MessageRendererShouldRenderAttachmentsInlineIfPossible];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:MessageRendererShouldRenderAttachmentsInlineIfPossible];
 }
 
-+ (void) setShouldRenderAttachmentsInlineIfPossible: (BOOL)aBool
-    /*" Sets if attachments should be rendered inline. "*/
+/*" Sets if attachments should be rendered inline. "*/
++ (void)setShouldRenderAttachmentsInlineIfPossible:(BOOL)aBool
 {
     NSUserDefaults *userDefaults;
     
-    if (aBool != [self shouldRenderAttachmentsInlineIfPossible]) {
+    if (aBool != [self shouldRenderAttachmentsInlineIfPossible]) 
+	{
         userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setBool:aBool forKey: MessageRendererShouldRenderAttachmentsInlineIfPossible];
+        [userDefaults setBool:aBool forKey:MessageRendererShouldRenderAttachmentsInlineIfPossible];
         
         // synching the content coders' default font
         //[EDContentCoder setShouldRenderAttachmentsInlineIfPossible:aBool];
@@ -463,21 +464,92 @@ static NSString *templatePostfix = nil;
 - (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges;
 @end
 
+@interface NSAttributedString (WebResourceSupport)
+- (NSString *)stringByConvertingToHTML;
+@end
+
+@implementation NSAttributedString (WebResourceSupport)
+
+- (NSString *)stringByConvertingToHTML
+{
+	NSMutableString *result = [NSMutableString string];
+	NSString *string = self.string;
+	
+	NSUInteger quoteLevel = 0;
+	[result appendString:@"<p>"];
+	
+	NSUInteger length = string.length;
+	NSUInteger currentPos = 0;
+	while (currentPos < length)
+	{
+		NSRange effectiveRange;
+		NSDictionary *attributes = [self attributesAtIndex:currentPos longestEffectiveRange:&effectiveRange inRange:NSMakeRange(currentPos, length - currentPos)];
+		NSString *urlString = [attributes objectForKey:NSLinkAttributeName];
+		NSUInteger excerptDepth = [[attributes objectForKey:OPQuotationAttributeName] unsignedIntegerValue];
+		
+		if (urlString)
+		{
+			[result appendString:@"<a href=\""];
+			[result appendString:urlString];
+			[result appendString:@"\">"];
+			[result appendString:[string substringWithRange:effectiveRange]];
+			[result appendString:@"</a>"];
+		}
+		else if (quoteLevel != excerptDepth)
+		{
+			while (quoteLevel < excerptDepth)
+			{
+				[result appendString:@"<blockquote>"];
+				quoteLevel += 1;
+			}
+			
+			while (quoteLevel > excerptDepth)
+			{
+				[result appendString:@"</blockquote>"];
+				quoteLevel -= 1;
+			}
+			
+			[result appendString:[[string substringWithRange:effectiveRange] stringByConvertingToHTML]];
+		}
+		else
+		{
+			[result appendString:[[string substringWithRange:effectiveRange] stringByConvertingToHTML]];
+		}
+		
+		currentPos = MAX(currentPos + 1, NSMaxRange(effectiveRange));
+	}
+	
+	while (quoteLevel > 0)
+	{
+		[result appendString:@"</blockquote>"];
+		quoteLevel -= 1;
+	}
+	
+	[result appendString:@"</p>"];
+
+	return result;
+}
+
+@end
+
 @implementation NSString (WebResourceSupport)
 - (NSString *)stringByConvertingToHTML
 {
-	NSString *result = [self stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
+	NSString *result = [self stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
+	result = [result stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
 	result = [result stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
-	result = [result stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
 	result = [result stringByReplacingOccurrencesOfString:@"\"" withString:@"&quot;"];
-	result = [result stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n</p>\n<p>\n"];
+	result = [result stringByReplacingOccurrencesOfString:@"\n\n" withString:@"</p><p>"];
+	result = [result stringByReplacingOccurrencesOfString:@"  " withString:@"&nbsp;&nbsp;"];
+
+//	result = [result stringByReplacingOccurrencesOfString:@"\n\n" withString:@"<div><br/></div><div><br/></div>\n"];
 	result = [result stringByReplacingOccurrencesOfString:@"\n" withString:@"<br />\n"];
 //	result = [result stringByReplacingOccurrencesOfString:@"\n " withString:@"\n&nbsp;"];
-	result = [[@"<p>\n" stringByAppendingString:result] stringByAppendingString:@"\n</p>"];
+//	result = [[@"<p>\n" stringByAppendingString:result] stringByAppendingString:@"\n</p>"];
 
-	NSMutableArray *urlRanges;
-	
-	result = [result HTMLUrlifyInRange:NSMakeRange(0, [self length]) urlRanges:&urlRanges];
+//	NSMutableArray *urlRanges;
+//	
+//	result = [result HTMLUrlifyInRange:NSMakeRange(0, [self length]) urlRanges:&urlRanges];
 	
 	return result;
 }
@@ -590,7 +662,7 @@ static NSString *templatePostfix = nil;
 
 - (WebResource *)webResource
 {
-	NSData *data = [[self.string stringByConvertingToHTML] dataUsingEncoding:NSUTF8StringEncoding];
+	NSData *data = [[[self attributedString] stringByConvertingToHTML] dataUsingEncoding:NSUTF8StringEncoding];
 	NSURL *URL = [NSURL URLWithString:@"/"];
 	NSString *MIMEType = @"text/html";
 	NSString *textEncodingName = @"UTF-8";
@@ -612,11 +684,36 @@ static NSString *templatePostfix = nil;
 	NSString *contentString = [[[NSString alloc] initWithData:[topLevelResource data] encoding:NSUTF8StringEncoding] autorelease];
 	
 	NSString *cssString = @"<style type=\"text/css\"><!--\nbody {\n"
-	@"font-size : 10pt;\n" 
+	@"font-size : 9pt;\n" 
 	@"font-family : Arial, Helvetica, sans-serif;\n" 
 	@"font-weight : normal;\n"
 	@"color : #000000;\n" 
+//	@"padding: 0px;"
   	@"}\n"
+	@"blockquote {"
+	@"border-left: 2px solid #0080FF;"
+	@"background-color: #F2F1FF;"
+	@"margin: 0px;"
+	@"padding-top: 2px;"
+	@"padding-left: 6px;"
+	@"padding-bottom: 2px;"
+	@"}"
+	@"blockquote blockquote {"
+	@"border-left: 2px solid #FF8000;"
+	@"background-color: #FFFEED;"
+	@"margin: 0px;"
+	@"padding-top: 2px;"
+	@"padding-left: 6px;"
+	@"padding-bottom: 2px;"
+	@"}"
+	@"blockquote blockquote blockquote {"
+	@"border-left: 2px solid #008040;"
+	@"background-color: #EEFFF2;"
+	@"margin: 0px;"
+	@"padding-top: 2px;"
+	@"padding-left: 6px;"
+	@"padding-bottom: 2px;"
+	@"}"
 	@"--></style>\n";
 	
 	NSString *htmlContent = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\" />%@</head><body>%@</body></html>", cssString, contentString];
