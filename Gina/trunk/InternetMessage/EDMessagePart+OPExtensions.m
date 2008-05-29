@@ -288,7 +288,7 @@
 /*" Returns the receivers content as a user presentable attributed string. Returns nil if not decodable. "*/
 {
     id content = nil;
-    Class contentCoderClass = [EDContentCoder contentDecoderClass: self];
+    Class contentCoderClass = [EDContentCoder contentDecoderClass:self];
     
     //if (NSDebugEnabled) NSLog(@"Using DecoderClass = %@", contentCoderClass);
     

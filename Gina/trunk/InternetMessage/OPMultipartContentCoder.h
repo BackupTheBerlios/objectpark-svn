@@ -32,6 +32,9 @@
 - (NSString*) subtype;
 
 - (NSAttributedString *)attributedString;
+
+- (EDMessagePart *)mostPreferredSubpartWithPreferredContentTypes:(NSArray *)preferredContentTypes;
+
 - (id)contentWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 
 @end

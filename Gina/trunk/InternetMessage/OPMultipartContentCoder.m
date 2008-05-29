@@ -32,14 +32,14 @@
 */
 
 @interface EDCompositeContentCoder(PrivateAPI)
-- (void) _takeSubpartsFromMultipartContent: (EDMessagePart*) mpart;
-- (void) _takeSubpartsFromMessageContent: (EDMessagePart*) mpart;
+- (void)_takeSubpartsFromMultipartContent:(EDMessagePart *)mpart;
+- (void)_takeSubpartsFromMessageContent:(EDMessagePart *)mpart;
 - (id)_encodeSubpartsWithClass:(Class)targetClass;
 @end
 
 @interface OPMultipartContentCoder (PrivateAPI)
 
-- (id)_contentFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes attributed:(BOOL)shouldBeAttributed;
+- (id)_contentFromMultipartAlternativeWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 - (id)_contentFromMultipartMixedWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 - (id)_contentFromMultipartSignedWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed;
 //- (NSAttributedString *)_attributedStringFromMultipartRelatedWithPreferredContentTypes:(NSArray*) preferredContentTypes;
@@ -59,7 +59,7 @@
     return self;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [subtype release];
     [super dealloc];
@@ -111,11 +111,7 @@
     return result;
 }
 
-@end
-
-@implementation OPMultipartContentCoder (PrivateAPI)
-
-- (EDMessagePart *)_mostPreferredSubpartWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (EDMessagePart *)mostPreferredSubpartWithPreferredContentTypes:(NSArray *)preferredContentTypes
 {
     EDMessagePart *subpart;
     EDMessagePart *result = nil;
@@ -144,7 +140,7 @@
     {
         [alternativeContentTypes release];
         [alternativeSubparts release];
-
+		
         return nil;
     }
     
@@ -182,10 +178,14 @@
     return [result autorelease];
 }
 
+@end
+
+@implementation OPMultipartContentCoder (PrivateAPI)
+
 // alternative
-- (id)_contentFromMultipartAlternativeWithPreferredContentTypes:(NSArray*) preferredContentTypes attributed:(BOOL)shouldBeAttributed
+- (id)_contentFromMultipartAlternativeWithPreferredContentTypes:(NSArray *)preferredContentTypes attributed:(BOOL)shouldBeAttributed
 {
-    EDMessagePart *preferredSubpart = [self _mostPreferredSubpartWithPreferredContentTypes:preferredContentTypes];
+    EDMessagePart *preferredSubpart = [self mostPreferredSubpartWithPreferredContentTypes:preferredContentTypes];
     
     if (preferredSubpart) 
     {

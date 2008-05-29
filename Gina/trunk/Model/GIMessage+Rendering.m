@@ -506,7 +506,7 @@ static NSString *templatePostfix = nil;
 			// handling quotes:
 			while (quoteLevel < excerptDepth)
 			{
-				[result appendString:@"<blockquote>"];
+				[result appendString:@"<blockquote type=\"cite\">"];
 				quoteLevel += 1;
 			}
 			
@@ -680,6 +680,77 @@ static NSString *templatePostfix = nil;
 
 @end
 
+#import "OPMultipartContentCoder.h"
+
+@implementation OPMultipartContentCoder (WebResourceSupport)
+
+- (WebResource *)webResourceWithPreferredContentTypes:(NSArray *)preferredContentTypes
+{    
+	if ([subtype caseInsensitiveCompare:@"alternative"] == NSOrderedSame)
+	{
+		EDMessagePart *preferredSubpart = [self mostPreferredSubpartWithPreferredContentTypes:preferredContentTypes];
+		
+		if (preferredSubpart) 
+		{
+			Class contentCoderClass = [EDContentCoder contentDecoderClass:preferredSubpart];
+						
+			if (contentCoderClass != nil) // found a content coder willing to decode self
+			{
+				EDContentCoder *contentCoder = [[contentCoderClass alloc] initWithMessagePart:preferredSubpart];
+				
+				return [contentCoder webResource];
+			}
+		} 
+		else 
+		{
+			NSString *MIMEType = @"text/html";
+			NSString *textEncodingName = @"UTF-8";
+			NSData *data = [@"<p><br/>multipart/alternative message part with no decodable alternative.<br/></p>" dataUsingEncoding:NSUTF8StringEncoding];
+			NSURL *URL = [NSURL URLWithString:@"/"];
+
+			return [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+		}
+	}
+    else if ([subtype caseInsensitiveCompare:@"mixed"] == NSOrderedSame)
+	{
+		NSString *MIMEType = @"text/html";
+		NSString *textEncodingName = @"UTF-8";
+		NSMutableData *data = [NSMutableData data];
+		NSURL *URL = [NSURL URLWithString:@"/"];
+		
+		for (EDMessagePart *subpart in [self subparts])
+		{
+			Class contentCoderClass = [EDContentCoder contentDecoderClass:subpart];
+			
+			if (contentCoderClass != nil) // found a content coder willing to decode self
+			{
+				EDContentCoder *contentCoder = [[contentCoderClass alloc] initWithMessagePart:subpart];
+				
+				WebResource *resource = [contentCoder webResource];
+				if (resource)
+				{
+					[data appendData:[resource data]];
+				}
+				else
+				{
+					[data appendData:[[NSString stringWithFormat:@"<p><br/>no resource for subpart %@.<br/></p>", [subpart contentType]] dataUsingEncoding:NSUTF8StringEncoding]];
+				}
+			}
+		}
+		
+		return [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+	}
+
+	return nil;
+}
+
+- (WebResource *)webResource
+{
+	return [self webResourceWithPreferredContentTypes:nil];
+}
+
+@end
+
 @implementation OPInternetMessage (WebResourceSupport)
 
 - (WebArchive *)webArchive
@@ -698,7 +769,7 @@ static NSString *templatePostfix = nil;
 	@"color : #000000;\n" 
 	@"padding-bottom: 2px;"
   	@"}\n"
-	@"blockquote {"
+	@"blockquote[type=cite] {"
 	@"border-left: 2px solid #0080FF;"
 	@"background-color: #F2F1FF;"
 	@"margin: 0px;"
@@ -706,37 +777,21 @@ static NSString *templatePostfix = nil;
 	@"padding-left: 6px;"
 	@"padding-bottom: 2px;"
 	@"}"
-	@"blockquote blockquote {"
+	@"blockquote[type=cite] blockquote[type=cite] {"
 	@"border-left: 2px solid #FF8000;"
 	@"background-color: #FFFEED;"
-	@"margin: 0px;"
-	@"padding-top: 2px;"
-	@"padding-left: 6px;"
-	@"padding-bottom: 2px;"
 	@"}"
-	@"blockquote blockquote blockquote {"
+	@"blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] {"
 	@"border-left: 2px solid #008040;"
 	@"background-color: #EEFFF2;"
-	@"margin: 0px;"
-	@"padding-top: 2px;"
-	@"padding-left: 6px;"
-	@"padding-bottom: 2px;"
 	@"}"
-	@"blockquote blockquote blockquote blockquote {"
+	@"blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] {"
 	@"border-left: 2px solid #0080FF;"
 	@"background-color: #F2F1FF;"
-	@"margin: 0px;"
-	@"padding-top: 2px;"
-	@"padding-left: 6px;"
-	@"padding-bottom: 2px;"
 	@"}"
-	@"blockquote blockquote blockquote blockquote blockquote {"
+	@"blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] {"
 	@"border-left: 2px solid #FF8000;"
 	@"background-color: #FFFEED;"
-	@"margin: 0px;"
-	@"padding-top: 2px;"
-	@"padding-left: 6px;"
-	@"padding-bottom: 2px;"
 	@"}"
 	@"--></style>\n";
 	
