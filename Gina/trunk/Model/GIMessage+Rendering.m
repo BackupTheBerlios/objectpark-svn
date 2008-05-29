@@ -461,7 +461,7 @@ static NSString *templatePostfix = nil;
 @end
 @interface NSString (WebResourceSupport)
 - (NSString *)stringByConvertingToHTML;
-- (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges;
+//- (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges;
 @end
 
 @interface NSAttributedString (WebResourceSupport)
@@ -477,6 +477,8 @@ static NSString *templatePostfix = nil;
 	
 	NSUInteger quoteLevel = 0;
 	[result appendString:@"<p>"];
+	[result appendString:@"<blockquote style=\"padding: 0px;\">"];
+	[result appendString:@"</blockquote>"];
 	
 	NSUInteger length = string.length;
 	NSUInteger currentPos = 0;
@@ -492,7 +494,7 @@ static NSString *templatePostfix = nil;
 			[result appendString:@"<a href=\""];
 			[result appendString:urlString];
 			[result appendString:@"\">"];
-			[result appendString:[string substringWithRange:effectiveRange]];
+			[result appendString:[[string substringWithRange:effectiveRange] stringByConvertingToHTML]];
 			[result appendString:@"</a>"];
 		}
 		else if (quoteLevel != excerptDepth)
@@ -554,107 +556,107 @@ static NSString *templatePostfix = nil;
 	return result;
 }
 
-- (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges
-{
-    static NSCharacterSet *colon = nil, *alpha, *urlstop, *ulfurlstop;
-    static NSString *scheme[] = { @"http", @"https", @"ftp", @"mailto", @"gopher", @"news", nil };
-    static unsigned int maxServLength = 6;
-    NSMutableString *string;
-    NSMutableString *url;
-    NSRange	r, remainingRange, possSchemeRange, schemeRange, urlRange, badCharRange;
-    unsigned int nextLocation, endLocation, i;
-    // ulfs stuff
-    BOOL schemeRangeIsAtBeginning = NO;
-    BOOL urlIsWrappedByBrackets = NO;
-    
-	(*urlRanges) = [NSMutableArray array];
-	
-    if(colon == nil)
-    {
-        colon = [[NSCharacterSet characterSetWithCharactersInString: @":"] retain];
-        alpha = [[NSCharacterSet alphanumericCharacterSet] retain];
-        //urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]',; \t\n\r"] retain];
-        urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]' \t\n\r"] retain];
-        // if the url is wrapped by brackets we will use this one:
-        ulfurlstop = [[NSCharacterSet characterSetWithCharactersInString: @">"] retain];
-        // problem is that if there is no closing '>' everything until the end of string will be treated as url
-    }
-    
-    string = [self mutableCopy];
-    nextLocation = range.location;
-    endLocation = NSMaxRange(range);
-    while(1)
-    {
-        remainingRange = NSMakeRange(nextLocation, endLocation - nextLocation);
-        r = [string rangeOfCharacterFromSet:colon options:0 range:remainingRange];
-        if(r.length == 0)
-            break;
-        nextLocation = NSMaxRange(r);
-        
-        if(r.location < maxServLength) 
-        {
-            possSchemeRange = NSMakeRange(0, r.location);
-            schemeRangeIsAtBeginning = YES;
-        }    
-        else
-        {
-            possSchemeRange = NSMakeRange(r.location - 6,  6);
-            schemeRangeIsAtBeginning = NO;
-        }
-        // no need to clean up composed chars becasue they are not allowed in URLs anyway
-        for(i = 0; scheme[i] != nil; i++)
-        {
-            schemeRange = [string rangeOfString:scheme[i] options:(NSBackwardsSearch|NSAnchoredSearch|NSLiteralSearch) range:possSchemeRange];
-            if(schemeRange.length != 0)
-            {
-                // if the char before schemeRange is a '<' we need to look for it as the end of the string
-                if ((schemeRange.location > 0) && ([string characterAtIndex:(schemeRange.location - 1)] == '<'))
-                    urlIsWrappedByBrackets = YES;
-                else
-                    urlIsWrappedByBrackets = NO;
-                
-                r.length = endLocation - r.location;
-                
-                // check to determine the correct urlstop CharacterSet
-                if (urlIsWrappedByBrackets)
-                    r = [string rangeOfCharacterFromSet:ulfurlstop options:0 range:r];
-                else
-                    r = [string rangeOfCharacterFromSet:urlstop options:0 range:r];
-                
-                if(r.length == 0) // not found, assume URL extends to end of string
-                    r.location = [string length];
-                urlRange = NSMakeRange(schemeRange.location, r.location - schemeRange.location);
-                if([string characterAtIndex:NSMaxRange(urlRange) - 1] == (unichar)'.')
-                    urlRange.length -= 1;
-                url = [NSMutableString stringWithString:[string substringWithRange:urlRange]];
-                
-                // remove bad characters (like CR LF) from url
-                badCharRange = [url rangeOfCharacterFromSet:urlstop options:0 range:NSMakeRange(0, [url length])];
-                while (badCharRange.location != NSNotFound)
-                {
-                    [url deleteCharactersInRange:badCharRange];
-                    badCharRange = [url rangeOfCharacterFromSet:urlstop options:0 range:NSMakeRange(0, [url length])];
-                }
-                
-				NSString *openAnchorTag = [[@"<a href=\"" stringByAppendingString:url] stringByAppendingString:@"\">"];
-				NSString *closeAnchorTag = @"</a>";
-				
-				[string insertString:openAnchorTag atIndex:urlRange.location];
-				[string insertString:closeAnchorTag atIndex:urlRange.location + urlRange.length + openAnchorTag.length];
-
-				NSRange urlRange = NSMakeRange(urlRange.location, urlRange.location + urlRange.length + openAnchorTag.length + closeAnchorTag.length);
-				
-				[(*urlRanges) addObject:NSStringFromRange(urlRange)];
-				
-                //[self addAttribute:NSLinkAttributeName value:url range:urlRange];
-                nextLocation = NSMaxRange(urlRange);
-                break;
-            }
-        }
-    }
-    
-    return string;
-}
+//- (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges
+//{
+//    static NSCharacterSet *colon = nil, *alpha, *urlstop, *ulfurlstop;
+//    static NSString *scheme[] = { @"http", @"https", @"ftp", @"mailto", @"gopher", @"news", nil };
+//    static unsigned int maxServLength = 6;
+//    NSMutableString *string;
+//    NSMutableString *url;
+//    NSRange	r, remainingRange, possSchemeRange, schemeRange, urlRange, badCharRange;
+//    unsigned int nextLocation, endLocation, i;
+//    // ulfs stuff
+//    BOOL schemeRangeIsAtBeginning = NO;
+//    BOOL urlIsWrappedByBrackets = NO;
+//    
+//	(*urlRanges) = [NSMutableArray array];
+//	
+//    if(colon == nil)
+//    {
+//        colon = [[NSCharacterSet characterSetWithCharactersInString: @":"] retain];
+//        alpha = [[NSCharacterSet alphanumericCharacterSet] retain];
+//        //urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]',; \t\n\r"] retain];
+//        urlstop = [[NSCharacterSet characterSetWithCharactersInString: @"\"<>()[]' \t\n\r"] retain];
+//        // if the url is wrapped by brackets we will use this one:
+//        ulfurlstop = [[NSCharacterSet characterSetWithCharactersInString: @">"] retain];
+//        // problem is that if there is no closing '>' everything until the end of string will be treated as url
+//    }
+//    
+//    string = [self mutableCopy];
+//    nextLocation = range.location;
+//    endLocation = NSMaxRange(range);
+//    while(1)
+//    {
+//        remainingRange = NSMakeRange(nextLocation, endLocation - nextLocation);
+//        r = [string rangeOfCharacterFromSet:colon options:0 range:remainingRange];
+//        if(r.length == 0)
+//            break;
+//        nextLocation = NSMaxRange(r);
+//        
+//        if(r.location < maxServLength) 
+//        {
+//            possSchemeRange = NSMakeRange(0, r.location);
+//            schemeRangeIsAtBeginning = YES;
+//        }    
+//        else
+//        {
+//            possSchemeRange = NSMakeRange(r.location - 6,  6);
+//            schemeRangeIsAtBeginning = NO;
+//        }
+//        // no need to clean up composed chars becasue they are not allowed in URLs anyway
+//        for(i = 0; scheme[i] != nil; i++)
+//        {
+//            schemeRange = [string rangeOfString:scheme[i] options:(NSBackwardsSearch|NSAnchoredSearch|NSLiteralSearch) range:possSchemeRange];
+//            if(schemeRange.length != 0)
+//            {
+//                // if the char before schemeRange is a '<' we need to look for it as the end of the string
+//                if ((schemeRange.location > 0) && ([string characterAtIndex:(schemeRange.location - 1)] == '<'))
+//                    urlIsWrappedByBrackets = YES;
+//                else
+//                    urlIsWrappedByBrackets = NO;
+//                
+//                r.length = endLocation - r.location;
+//                
+//                // check to determine the correct urlstop CharacterSet
+//                if (urlIsWrappedByBrackets)
+//                    r = [string rangeOfCharacterFromSet:ulfurlstop options:0 range:r];
+//                else
+//                    r = [string rangeOfCharacterFromSet:urlstop options:0 range:r];
+//                
+//                if(r.length == 0) // not found, assume URL extends to end of string
+//                    r.location = [string length];
+//                urlRange = NSMakeRange(schemeRange.location, r.location - schemeRange.location);
+//                if([string characterAtIndex:NSMaxRange(urlRange) - 1] == (unichar)'.')
+//                    urlRange.length -= 1;
+//                url = [NSMutableString stringWithString:[string substringWithRange:urlRange]];
+//                
+//                // remove bad characters (like CR LF) from url
+//                badCharRange = [url rangeOfCharacterFromSet:urlstop options:0 range:NSMakeRange(0, [url length])];
+//                while (badCharRange.location != NSNotFound)
+//                {
+//                    [url deleteCharactersInRange:badCharRange];
+//                    badCharRange = [url rangeOfCharacterFromSet:urlstop options:0 range:NSMakeRange(0, [url length])];
+//                }
+//                
+//				NSString *openAnchorTag = [[@"<a href=\"" stringByAppendingString:url] stringByAppendingString:@"\">"];
+//				NSString *closeAnchorTag = @"</a>";
+//				
+//				[string insertString:openAnchorTag atIndex:urlRange.location];
+//				[string insertString:closeAnchorTag atIndex:urlRange.location + urlRange.length + openAnchorTag.length];
+//
+//				NSRange urlRange = NSMakeRange(urlRange.location, urlRange.location + urlRange.length + openAnchorTag.length + closeAnchorTag.length);
+//				
+//				[(*urlRanges) addObject:NSStringFromRange(urlRange)];
+//				
+//                //[self addAttribute:NSLinkAttributeName value:url range:urlRange];
+//                nextLocation = NSMaxRange(urlRange);
+//                break;
+//            }
+//        }
+//    }
+//    
+//    return string;
+//}
 
 @end
 
@@ -688,7 +690,7 @@ static NSString *templatePostfix = nil;
 	@"font-family : Arial, Helvetica, sans-serif;\n" 
 	@"font-weight : normal;\n"
 	@"color : #000000;\n" 
-//	@"padding: 0px;"
+	@"padding-bottom: 2px;"
   	@"}\n"
 	@"blockquote {"
 	@"border-left: 2px solid #0080FF;"
@@ -709,6 +711,22 @@ static NSString *templatePostfix = nil;
 	@"blockquote blockquote blockquote {"
 	@"border-left: 2px solid #008040;"
 	@"background-color: #EEFFF2;"
+	@"margin: 0px;"
+	@"padding-top: 2px;"
+	@"padding-left: 6px;"
+	@"padding-bottom: 2px;"
+	@"}"
+	@"blockquote blockquote blockquote blockquote {"
+	@"border-left: 2px solid #0080FF;"
+	@"background-color: #F2F1FF;"
+	@"margin: 0px;"
+	@"padding-top: 2px;"
+	@"padding-left: 6px;"
+	@"padding-bottom: 2px;"
+	@"}"
+	@"blockquote blockquote blockquote blockquote blockquote {"
+	@"border-left: 2px solid #FF8000;"
+	@"background-color: #FFFEED;"
 	@"margin: 0px;"
 	@"padding-top: 2px;"
 	@"padding-left: 6px;"

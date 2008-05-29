@@ -27,20 +27,23 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 {
     NSParameterAssert([anAccount isPOPAccount]);
 	
-	for (NSOperation *operation in queue.operations)
+	@synchronized(queue)
 	{
-		if ([operation isKindOfClass:self])
+		for (NSOperation *operation in queue.operations)
 		{
-			if ([(GIPOPOperation *)operation account] == anAccount)
+			if ([operation isKindOfClass:self])
 			{
-				NSLog(@"GIPOPOperation: conflicting operation %@. New operation will not be set up.", operation);
-				return;
+				if ([(GIPOPOperation *)operation account] == anAccount)
+				{
+					NSLog(@"GIPOPOperation: conflicting operation %@. New operation will not be set up.", operation);
+					return;
+				}
 			}
 		}
+		
+		id newOperation = [[[self alloc] initWithAccount:anAccount transferDataPath:path] autorelease];
+		[queue addOperation:newOperation];
 	}
-	
-	id newOperation = [[[self alloc] initWithAccount:anAccount transferDataPath:path] autorelease];
-	[queue addOperation:newOperation];
 }
 
 - (NSDate *)deletionDate

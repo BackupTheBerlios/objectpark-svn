@@ -29,20 +29,23 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
 	NSParameterAssert(someMessages.count);
     NSParameterAssert(anAccount != nil); // maybe check if anAccount has sufficient SMTP configuration
 	
-	for (NSOperation *operation in queue.operations)
+	@synchronized(queue)
 	{
-		if ([operation isKindOfClass:self])
+		for (NSOperation *operation in queue.operations)
 		{
-			if ([(GISMTPOperation *)operation account] == anAccount)
+			if ([operation isKindOfClass:self])
 			{
-				NSLog(@"GISMTPOperation: conflicting operation %@. New operation will not be set up.", operation);
-				return;
+				if ([(GISMTPOperation *)operation account] == anAccount)
+				{
+					NSLog(@"GISMTPOperation: conflicting operation %@. New operation will not be set up.", operation);
+					return;
+				}
 			}
 		}
+		
+		id newOperation = [[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease];
+		[queue addOperation:newOperation];
 	}
-	
-	id newOperation = [[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease];
-	[queue addOperation:newOperation];
 }
 
 - (id)initWithMessages:(NSArray *)someMessages andAccount:(GIAccount *)anAccount
