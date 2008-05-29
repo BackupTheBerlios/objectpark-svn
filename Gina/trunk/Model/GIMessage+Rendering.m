@@ -477,6 +477,9 @@ static NSString *templatePostfix = nil;
 	
 	NSUInteger quoteLevel = 0;
 	[result appendString:@"<p>"];
+	
+	// fixes the gap problem before the first blockquote
+	// (maybe a more experienced css coder can help to avoid this hack):
 	[result appendString:@"<blockquote style=\"padding: 0px;\">"];
 	[result appendString:@"</blockquote>"];
 	
@@ -491,6 +494,7 @@ static NSString *templatePostfix = nil;
 		
 		if (urlString)
 		{
+			// handling URLs:
 			[result appendString:@"<a href=\""];
 			[result appendString:urlString];
 			[result appendString:@"\">"];
@@ -499,6 +503,7 @@ static NSString *templatePostfix = nil;
 		}
 		else if (quoteLevel != excerptDepth)
 		{
+			// handling quotes:
 			while (quoteLevel < excerptDepth)
 			{
 				[result appendString:@"<blockquote>"];
@@ -515,6 +520,7 @@ static NSString *templatePostfix = nil;
 		}
 		else
 		{
+			// handling normal text:
 			[result appendString:[[string substringWithRange:effectiveRange] stringByConvertingToHTML]];
 		}
 		

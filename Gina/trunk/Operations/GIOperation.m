@@ -30,7 +30,9 @@ NSString *GIOperationLock = @"GIOperationLock";
 							  aDescription, JobProgressDescription,
 							  nil, nil];
 		
+		[self willChangeValueForKey:@"progessInfo"];
 		self.progressInfo = info;
+		[self didChangeValueForKey:@"progessInfo"];
 	}
 }
 
@@ -42,7 +44,9 @@ NSString *GIOperationLock = @"GIOperationLock";
 							  aDescription, JobProgressDescription,
 							  nil, nil];
 		
+		[self willChangeValueForKey:@"progessInfo"];
 		self.progressInfo = info;
+		[self didChangeValueForKey:@"progessInfo"];
 	}
 }
 
@@ -50,7 +54,10 @@ NSString *GIOperationLock = @"GIOperationLock";
 {
 	@synchronized(GIOperationLock)
 	{
+		[self willChangeValueForKey:@"progessInfo"];
 		self.progressInfo = nil;
+		[self didChangeValueForKey:@"progessInfo"];
+
 		[progressInfo release];
 	}
 	
