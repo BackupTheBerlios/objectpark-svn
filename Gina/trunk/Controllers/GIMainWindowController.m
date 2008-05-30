@@ -190,6 +190,7 @@
 	return result;
 }
 
+
 - (id)init
 {
 	if (self = [self initWithWindowNibName:@"MainWindow"]) {
@@ -1140,6 +1141,58 @@ static BOOL isShowingThreadsOnly = NO;
 @end
 
 @implementation GIMainWindowController (Actions)
+
+- (void) expandDetailView
+{
+	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+	
+	if (dividerPos >= [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
+		
+		// expanding right pane
+		NSLog(@"Expanding right pane...");
+		NSRect newWindowFrame = [verticalSplitter.window frame];
+		newWindowFrame.size.width += expansionWidth;
+		[verticalSplitter.window setFrame: newWindowFrame display: NO animate: NO];
+		//[verticalSplitter adjustSubviews];
+		
+		[verticalSplitter setPosition: dividerPos ofDividerAtIndex: 0];
+		
+	}
+}
+
+- (void) collapseDetailView
+{
+	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+	
+	if (dividerPos < [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
+		
+		// collapse subview
+		NSLog(@"Collapsing right pane...");
+		[verticalSplitter setPosition: [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0] ofDividerAtIndex: 0];
+		[verticalSplitter adjustSubviews];
+		CGFloat newDividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+		NSRect newWindowFrame = [verticalSplitter.window frame];
+		expansionWidth = newDividerPos - dividerPos;
+		
+		newWindowFrame.size.width -= expansionWidth;
+		[verticalSplitter.window setFrame: newWindowFrame display: NO animate: NO];
+	}
+}
+
+- (IBAction) toggleDetailsPane: (id) sender
+{
+	//NSArray* views = [verticalSplitter subviews];
+	//NSView*  leftView  = [views objectAtIndex: 0];
+	//NSView*  rightView = [views objectAtIndex: 1];
+	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+
+	if (dividerPos >= [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
+		[self expandDetailView];
+	} else {
+		[self collapseDetailView];
+	}
+}
+
 
 #pragma mark -- adding new hierarchy objects --
 - (void)addNew:(Class)aClass withName:(NSString *)aName

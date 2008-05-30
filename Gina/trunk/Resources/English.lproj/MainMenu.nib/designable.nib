@@ -3,12 +3,12 @@
 	<data>
 		<int key="IBDocument.SystemTarget">0</int>
 		<string key="IBDocument.SystemVersion">9C7010</string>
-		<string key="IBDocument.InterfaceBuilderVersion">658</string>
+		<string key="IBDocument.InterfaceBuilderVersion">644</string>
 		<string key="IBDocument.AppKitVersion">949.26</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="578"/>
+			<integer value="106"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1033,7 +1033,7 @@
 								</object>
 								<object class="NSMenuItem" id="1038292746">
 									<reference key="NSMenu" ref="374024848"/>
-									<string key="NSTitle">Test: Delete last Group</string>
+									<string key="NSTitle">Test: Toggle Detail Pane</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="474889942"/>
@@ -1510,19 +1510,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">testHierarchyObservation:</string>
-						<reference key="source" ref="1050"/>
-						<reference key="destination" ref="1038292746"/>
-					</object>
-					<int key="connectionID">576</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleRead:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="388404354"/>
 					</object>
 					<int key="connectionID">579</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleDetailsPane:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="1038292746"/>
+					</object>
+					<int key="connectionID">580</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2593,7 +2593,7 @@
 					<string>com.apple.InterfaceBuilderKit</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1" id="9"/>
-					<string>{{481, 604}, {230, 83}}</string>
+					<string>{{539, 653}, {239, 83}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{319, 693}, {225, 43}}</string>
@@ -2696,7 +2696,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{248, 663}, {197, 73}}</string>
-					<string>{{120, 887}, {480, 20}}</string>
+					<string>{{120, 736}, {480, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{74, 862}</string>
@@ -2749,7 +2749,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{391, 744}, {180, 143}}</string>
+					<string>{{391, 593}, {180, 143}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
@@ -2842,7 +2842,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">579</int>
+			<int key="maxID">580</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2869,12 +2869,14 @@
 							<string>replyAll:</string>
 							<string>replyDefault:</string>
 							<string>replySender:</string>
+							<string>toggleDetailsPane:</string>
 							<string>toggleRead:</string>
 							<string>toggleShowAllHeaders:</string>
 							<string>toggleShowRawSource:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2944,317 +2946,6 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">GICommentTreeView</string>
-					<string key="superclassName">GIMatrixWithKeyboardSupport</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>navigateDownInMatrix:</string>
-							<string>navigateLeftInMatrix:</string>
-							<string>navigateRightInMatrix:</string>
-							<string>navigateUpInMatrix:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>observedObjectForSelectedMessageOrThread</string>
-							<string>selectedMessageOrThread</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/GICommentTreeView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GIFilterPrefs</string>
-					<string key="superclassName">OPPreferencePane</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">delete:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>filterArrayController</string>
-							<string>predicateEditor</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSArrayController</string>
-							<string>NSPredicateEditor</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Preferences/GIFilterPrefs.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GIMainWindowController</string>
-					<string key="superclassName">NSWindowController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addNewFolder:</string>
-							<string>addNewMessageGroup:</string>
-							<string>cancelRedirect:</string>
-							<string>cancelRename:</string>
-							<string>commentTreeSelectionChanged:</string>
-							<string>delete:</string>
-							<string>doRedirect:</string>
-							<string>doRename:</string>
-							<string>followup:</string>
-							<string>forward:</string>
-							<string>markAsRead:</string>
-							<string>markAsUnread:</string>
-							<string>messageGroupSelectionChanged:</string>
-							<string>newMessage:</string>
-							<string>redirect:</string>
-							<string>rename:</string>
-							<string>replyAll:</string>
-							<string>replyDefault:</string>
-							<string>replySender:</string>
-							<string>threadsDoubleAction:</string>
-							<string>toggleProgressInfo:</string>
-							<string>toggleRead:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>commentTreeView</string>
-							<string>groupsOutlineView</string>
-							<string>mailTreeSplitter</string>
-							<string>messageGroupNameField</string>
-							<string>messageGroupRenameWindow</string>
-							<string>messageGroupsController</string>
-							<string>messageTextScrollView</string>
-							<string>messageTextView</string>
-							<string>messageWebView</string>
-							<string>observedObjectForSelectedSearchResults</string>
-							<string>observedObjectForSelectedThreads</string>
-							<string>progressInfoScrollView</string>
-							<string>redirectSheet</string>
-							<string>regularThreadsView</string>
-							<string>searchField</string>
-							<string>searchResultTableView</string>
-							<string>searchResultView</string>
-							<string>searchResultsArrayController</string>
-							<string>threadMailSplitter</string>
-							<string>threadsController</string>
-							<string>threadsOutlineView</string>
-							<string>verticalSplitter</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>GICommentTreeView</string>
-							<string>NSOutlineView</string>
-							<string>GISplitView</string>
-							<string>NSTextField</string>
-							<string>NSWindow</string>
-							<string>GIMessageGroupOutlineViewController</string>
-							<string>NSScrollView</string>
-							<string>GITextView</string>
-							<string>WebView</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSScrollView</string>
-							<string>NSWindow</string>
-							<string>NSScrollView</string>
-							<string>NSSearchField</string>
-							<string>NSTableView</string>
-							<string>NSBox</string>
-							<string>NSArrayController</string>
-							<string>GISplitView</string>
-							<string>GIThreadOutlineViewController</string>
-							<string>GIOutlineViewWithThreadColoring</string>
-							<string>GISplitView</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Controllers/GIMainWindowController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GIMatrixWithKeyboardSupport</string>
-					<string key="superclassName">NSMatrix</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/GIMatrixWithKeyboardSupport.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GIMessageEditorController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addBcc:</string>
-							<string>addCc:</string>
-							<string>addReplyTo:</string>
-							<string>followup:</string>
-							<string>queue:</string>
-							<string>replyAll:</string>
-							<string>replySender:</string>
-							<string>saveDocument:</string>
-							<string>send:</string>
-							<string>switchProfile:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>encryptButton</string>
-							<string>errorMessage</string>
-							<string>hiddenCaptionPrototype</string>
-							<string>hiddenTextFieldPrototype</string>
-							<string>keyField</string>
-							<string>messageTextView</string>
-							<string>passphraseField</string>
-							<string>passphraseWindow</string>
-							<string>profileButton</string>
-							<string>profileValidationButton</string>
-							<string>selectedKey</string>
-							<string>signButton</string>
-							<string>storeInKeychainCheckbox</string>
-							<string>subjectField</string>
-							<string>subtitleField</string>
-							<string>titleField</string>
-							<string>toField</string>
-							<string>window</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSButton</string>
-							<string>NSTextField</string>
-							<string>NSTextField</string>
-							<string>OPSizingTextField</string>
-							<string>NSTextField</string>
-							<string>GITextView</string>
-							<string>NSSecureTextField</string>
-							<string>NSWindow</string>
-							<string>NSPopUpButton</string>
-							<string>NSButton</string>
-							<string>id</string>
-							<string>NSButton</string>
-							<string>NSButton</string>
-							<string>OPSizingTextField</string>
-							<string>NSTextField</string>
-							<string>NSTextField</string>
-							<string>OPSizingTokenField</string>
-							<string>NSWindow</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Controllers/GIMessageEditorController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GIMessageGroupOutlineViewController</string>
-					<string key="superclassName">OPOutlineViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Controllers/GIMessageGroupOutlineViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GIOutlineViewWithThreadColoring</string>
-					<string key="superclassName">NSOutlineView</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">delete:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/GIOutlineViewWithThreadColoring.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GISplitView</string>
-					<string key="superclassName">NSSplitView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/GISplitView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GITextView</string>
-					<string key="superclassName">NSTextView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/GITextView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GIThreadOutlineViewController</string>
-					<string key="superclassName">OPOutlineViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Controllers/GIThreadOutlineViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -3274,13 +2965,6 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSMatrix</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/GICommentTreeCell.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -3295,81 +2979,10 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSOutlineView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="706555586">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Controllers/OPOutlineViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Cocoa Extensions/NSView+ViewMoving.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">OPOutlineViewController</string>
-					<string key="superclassName">NSController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>observedObjectForRootItem</string>
-							<string>observedObjectForSelectedObjects</string>
-							<string>outlineView</string>
-							<string>rootItem</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>NSOutlineView</string>
-							<string>id</string>
-						</object>
-					</object>
-					<reference key="sourceIdentifier" ref="706555586"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">OPSizingTextField</string>
-					<string key="superclassName">NSTextField</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>selectNextKeyView:</string>
-							<string>selectPreviousKeyView:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/OPSizingTextField.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">OPSizingTokenField</string>
-					<string key="superclassName">NSTokenField</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>selectNextKeyView:</string>
-							<string>selectPreviousKeyView:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Custom Views/OPSizingTokenField.h</string>
 					</object>
 				</object>
 			</object>

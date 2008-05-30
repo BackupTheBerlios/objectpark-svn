@@ -15,4 +15,7 @@
 
 @property (readwrite) CGFloat dividerThickness;
 
+- (CGFloat) positionOfDividerAtIndex: (NSInteger) dividerIndex;
+
+
 @end

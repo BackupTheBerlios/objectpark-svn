@@ -53,6 +53,8 @@
 	
 	CGFloat progressInfoHeight;
 	CGFloat treeViewHeight;
+	CGFloat expansionWidth; // width of the right view of the vertivalSplitter
+
 	 
 	NSArray *selectedThreads;
 	NSArray *selectedSearchResults;
@@ -102,6 +104,8 @@
 @end
 
 @interface GIMainWindowController (Actions)
+
+- (IBAction) toggleDetailsPane: (id) sender;
 
 /*" Adding hierarchy objects "*/
 - (IBAction)addNewMessageGroup:(id)sender;

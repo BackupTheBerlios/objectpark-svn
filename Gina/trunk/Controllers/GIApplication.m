@@ -546,6 +546,15 @@
     [self.context saveChanges];
 }
 
+//- (void)applicationDidBecomeActive:(NSNotification *)notification
+//{
+//	[self.mainWindow.windowController expandDetailView];
+//}
+//- (void)applicationWillResignActive:(NSNotification *)notification;
+//{
+//	[self.mainWindow.windowController collapseDetailView];
+//}
+
 @end
 
 //- (void) observeValueForKeyPath: (NSString*) keyPath ofObject: (id) object change: (NSDictionary*) change context:(void*) context

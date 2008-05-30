@@ -22,6 +22,20 @@
 	return self;
 }
 
+- (CGFloat) positionOfDividerAtIndex: (NSInteger) dividerIndex
+{
+	NSView* viewLeft = [self.subviews objectAtIndex: dividerIndex];
+	CGFloat position = NSMaxX([viewLeft frame]); // adapt to horizontal splitters
+	
+	//[self setPosition: position ofDividerAtIndex: dividerIndex];
+	//[self adjustSubviews];
+	//CGFloat position2 = NSMaxX([viewLeft frame]); // adapt to horizontal splitters
+
+	//NSAssert(position == position2, @"positionOfDividerAtIndex: wrong result.");
+	
+	return position;
+}
+
 - (void)awakeFromNib
 {
 //	[super awakeFromNib];
