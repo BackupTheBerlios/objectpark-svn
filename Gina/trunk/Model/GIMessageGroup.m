@@ -33,7 +33,7 @@
 
 - (GIProfile*) defaultProfile
 {
-	return [[self context] objectForOID: defaultProfileOID];
+	return [self.objectContext objectForOID: defaultProfileOID];
 }
 
 - (void) setDefaultProfile: (GIProfile*) newProfile
@@ -156,7 +156,7 @@ GIMessageGroups are ordered hierarchically. The hierarchy is build by nested NSM
     
     [request setSortDescriptors: [NSArray arrayWithObject: [[[NSSortDescriptor alloc] initWithKey: @"date" ascending: NO] autorelease]]];
     
-    result = [[self context] executeFetchRequest: request error: &error];
+    result = [self.objectContext executeFetchRequest: request error: &error];
     if (error) NSLog(@"Error fetching threads: %@", error);
     
     //#warning for debugging only as it is inefficient
@@ -477,7 +477,7 @@ static int collectThreadURIStringsCallback(void *this, int columns, char **value
 {
 	[super willDelete]; // removes itself from the node hierarchy
 
-	OPPersistentObjectContext* theContext = self.context;
+	OPPersistentObjectContext* theContext = self.objectContext;
 	// Delete dependent objects:
 	GIThread* thread;
 	NSMutableSet* mutableThreads = [self mutableSetValueForKey: @"threads"];

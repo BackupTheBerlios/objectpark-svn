@@ -22,7 +22,7 @@
 
 @property (readonly) OPPersistentObjectContext* context;
 
-- (id) initWithContext: (OPPersistentObjectContext*) context;
+- (id) initWithObjectContext: (OPPersistentObjectContext*) context;
 
 - (NSData*) resultData;
 - (NSData*) dataFromObject: (NSObject <OPPersisting>*) object;

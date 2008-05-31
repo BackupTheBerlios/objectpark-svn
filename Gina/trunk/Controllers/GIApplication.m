@@ -29,7 +29,7 @@
 - (void) resetMessageStatusSending
 {
 	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
-	NSArray *allProfiles = [self.context.allObjectsByClass objectForKey:@"GIProfile"];
+	NSArray *allProfiles = [self.objectContext.allObjectsByClass objectForKey:@"GIProfile"];
 	
 	for (GIProfile *profile in allProfiles) {
 		for (GIMessage *message in profile.messagesToSend) {
@@ -55,10 +55,10 @@
 
 - (IBAction) backupConfig: (id) sender
 {
-	[self.context saveChanges];
+	[self.objectContext saveChanges];
 	
-	NSSet*   profiles = [self.context allObjectsOfClass: [GIProfile class]];
-	NSSet*   accounts = [self.context allObjectsOfClass: [GIAccount class]];
+	NSSet*   profiles = [self.objectContext allObjectsOfClass: [GIProfile class]];
+	NSSet*   accounts = [self.objectContext allObjectsOfClass: [GIAccount class]];
 	NSArray* filters  = [GIMessageFilter filters];
 	
 	NSDictionary* config = [NSDictionary dictionaryWithObjectsAndKeys: 
@@ -84,7 +84,7 @@
 			/*NSSet* profiles = */[config objectForKey: @"Profiles"]; // will automatically be put into the default context und cached.
 			/*NSSet* accounts = */[config objectForKey: @"Accounts"]; // will automatically be put into the default context und cached.
 			OPFaultingArray* filters  = [config objectForKey: @"Filters"]; // will automatically be put into the default context und cached.
-			[self.context setRootObject: filters forKey: @"Filters"];
+			[self.objectContext setRootObject: filters forKey: @"Filters"];
 			GIHierarchyNode* rootGroup = [config objectForKey: @"GroupHierarchyRoot"];
 			[GIHierarchyNode setMessageGroupHierarchyRootNode: rootGroup];
 			NSLog(@"Restored Groups: %@", rootGroup.children);
@@ -109,7 +109,7 @@
 
 		[context setDatabaseFromPath:databasePath];
 		
-		if ([[[self context] allObjectsOfClass:[GIProfile class]] count] == 0) 
+		if ([[self.objectContext allObjectsOfClass:[GIProfile class]] count] == 0) 
 		{
 			[self restoreConfig:self];
 		}
@@ -175,8 +175,8 @@
 - (void) importFromImportFolder: (NSNotification*) notification
 {
 	unsigned importCount = 0;
-	NSString *importPath = [[self.context documentPath] stringByAppendingPathComponent:@"Import Queue"];
-	OPPersistentObjectContext* context = self.context;
+	NSString *importPath = [[self.objectContext documentPath] stringByAppendingPathComponent:@"Import Queue"];
+	OPPersistentObjectContext* context = self.objectContext;
 
 	NSDirectoryEnumerator* e = [[NSFileManager defaultManager] enumeratorAtPath: importPath];
 	NSMutableArray* filePaths = [NSMutableArray array];
@@ -239,7 +239,7 @@
 	[defaultEmailAppDialog close];
 }
 
-- (void)applicationDidBecomeActive:(NSNotification *)aNotification
+- (void) applicationDidBecomeActive: (NSNotification*) aNotification
 {
 	static BOOL firstTime = YES;
 	
@@ -249,13 +249,20 @@
 		[self askForBecomingDefaultMailApplication];
 		firstTime = NO;
 	}
+	
+	[self.mainWindow.windowController expandDetailView];
+}
+
+- (void) applicationWillResignActive: (NSNotification*) notification;
+{
+	[self.mainWindow.windowController collapseDetailView];
 }
 
 - (IBAction)sendMessagesDueInNearFuture:(id)sender
 {
 	NSTimeInterval dueInterval = [[NSUserDefaults standardUserDefaults] integerForKey:SoonRipeMessageMinutes] * 60.0;
 
-	for (GIAccount *account in [self.context allObjectsOfClass:[GIAccount class]])
+	for (GIAccount *account in [self.objectContext allObjectsOfClass:[GIAccount class]])
 	{
 		[account sendMessagesRipeForSendingAtTimeIntervalSinceNow:dueInterval];
 	}
@@ -318,6 +325,7 @@
 {
 //	[self saveOpenWindowsFromThisSession];
 			
+	
 	for (NSWindow *window in self.windows)
 	{
 		[window performClose:self];
@@ -331,8 +339,8 @@
 - (void)terminate:(id)sender
 {	
 	// shutting down persistence:
-	[self.context saveChanges];
-	[self.context close];	
+	[self.objectContext saveChanges];
+	[self.objectContext close];	
 	
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	
@@ -351,7 +359,7 @@
 	return YES;
 }
 
-- (OPPersistentObjectContext*) context
+- (OPPersistentObjectContext*) objectContext
 {
 	return [OPPersistentObjectContext defaultContext];
 }
@@ -363,7 +371,7 @@
 	
 	NSArray *mboxPaths = [filePaths pathsMatchingExtensions:[NSArray arrayWithObjects:@"mbox", @"mboxfile", @"mbx", nil]];
 	NSArray *gmls = [filePaths pathsMatchingExtensions:[NSArray arrayWithObjects:@"gml", nil]];
-	OPPersistentObjectContext *context = self.context;
+	OPPersistentObjectContext *context = self.objectContext;
 	
 	
 	GIMainWindowController *windowController = self.mainWindow.windowController;
@@ -398,7 +406,7 @@
 		[trashedThread delete]; // removes trashedThread from threads
 	}
 	[threads anyObject];
-	[self.context saveChanges];
+	[self.objectContext saveChanges];
 }
 
 - (IBAction) delete: (id) sender
@@ -475,7 +483,7 @@
 /*" Creates send operations for accounts with messages that qualify for sending. These are messages that are not blocked (e.g. because they are in the editor) and having flag set (to select send now and queued messages). Creates receive operations for all accounts."*/
 - (IBAction)sendAndReceiveInAllAccounts:(id)sender
 {
-	NSArray *allAccounts = [self.context.allObjectsByClass objectForKey:@"GIAccount"];
+	NSArray *allAccounts = [self.objectContext.allObjectsByClass objectForKey:@"GIAccount"];
 	
 	[allAccounts makeObjectsPerformSelector:@selector(send)];
 	[allAccounts makeObjectsPerformSelector:@selector(receive)];
@@ -517,7 +525,7 @@
 			GIMessage *replacementMessage = [[[GIMessage alloc] initWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES forcedMessageId:nil] autorelease];
 			
 			// let filters run 'again':
-			[self.context addMessageByApplingFilters:replacementMessage];
+			[self.objectContext addMessageByApplingFilters:replacementMessage];
 			
 			[sentMessage delete]; // delete sent resent messages - not good!
 		} 
@@ -527,7 +535,7 @@
 			[GIThread addMessageToAppropriateThread:sentMessage];
 			
 			// Re-Insert message wherever it belongs:
-			[self.context addMessageByApplingFilters:sentMessage];
+			[self.objectContext addMessageByApplingFilters:sentMessage];
 		}
 	}
     
@@ -543,17 +551,10 @@
 		}
 	}
 	
-    [self.context saveChanges];
+    [self.objectContext saveChanges];
 }
 
-//- (void)applicationDidBecomeActive:(NSNotification *)notification
-//{
-//	[self.mainWindow.windowController expandDetailView];
-//}
-//- (void)applicationWillResignActive:(NSNotification *)notification;
-//{
-//	[self.mainWindow.windowController collapseDetailView];
-//}
+
 
 @end
 

@@ -28,7 +28,7 @@ static NSUInteger prims[] = {3,11,17,23,29,37,43,53,113,193,271,359,443,541,619,
 
 @implementation OPPersistentSet
 
-- (OPPersistentObjectContext*) context
+- (OPPersistentObjectContext*) objectContext
 {
 	return [OPPersistentObjectContext defaultContext];
 }
@@ -82,12 +82,12 @@ static NSUInteger prims[] = {3,11,17,23,29,37,43,53,113,193,271,359,443,541,619,
 					return result;
 				}
 				// Found equal hash values, but different oids - need to ask the object:
-				id entryObject = [self.context objectForOID: (entry->oid)]; // potentially slow
+				id entryObject = [self.objectContext objectForOID: (entry->oid)]; // potentially slow
 				if (! entryObject) {
 					NSLog(@"Warning - dangling oid reference in persistent set.");
 				}
 				if (! object) {
-					object = [self.context objectForOID: objectOID];
+					object = [self.objectContext objectForOID: objectOID];
 				}
 				if ([entryObject isEqual: object]) {
 					return result;
@@ -170,7 +170,7 @@ static NSUInteger prims[] = {3,11,17,23,29,37,43,53,113,193,271,359,443,541,619,
 									   returnFree: NO];
 	if (bIndex == NSNotFound) return nil;
 	OID resultOid = entries[bIndex].oid;
-	id result = [self.context objectForOID: resultOid];
+	id result = [self.objectContext objectForOID: resultOid];
 	return [object isEqual: result] ? result : nil;
 }
 
@@ -255,7 +255,7 @@ static NSUInteger prims[] = {3,11,17,23,29,37,43,53,113,193,271,359,443,541,619,
 		(*entryIndex) += 1;
 
 		if (oid > InvalidOID) {
-			return [self.context objectForOID: oid];
+			return [self.objectContext objectForOID: oid];
 		}
 	}
 	return nil;

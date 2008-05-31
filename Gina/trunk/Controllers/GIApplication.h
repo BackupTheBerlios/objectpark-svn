@@ -18,7 +18,7 @@
 	NSTimer* importTimer;
 }
 
-- (OPPersistentObjectContext*) context;
+- (OPPersistentObjectContext*) objectContext;
 
 - (IBAction) restoreConfig: (id) sender;
 - (IBAction) backupConfig: (id) sender;

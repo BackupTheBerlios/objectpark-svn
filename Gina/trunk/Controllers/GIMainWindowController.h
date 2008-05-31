@@ -92,7 +92,6 @@
 - (BOOL)isShowingMessageOnly;
 - (void)showMessageOnly;
 
-- (IBAction) navigateBack: (id) sender;
 
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
 
@@ -101,11 +100,14 @@
 - (void)suspendOutlineViewUpdates;
 - (void)resumeOutlineViewUpdates;
 
+- (void) expandDetailView;
+- (void) collapseDetailView;
+
 @end
 
 @interface GIMainWindowController (Actions)
 
-- (IBAction) toggleDetailsPane: (id) sender;
+- (IBAction) navigateBack: (id) sender;
 
 /*" Adding hierarchy objects "*/
 - (IBAction)addNewMessageGroup:(id)sender;

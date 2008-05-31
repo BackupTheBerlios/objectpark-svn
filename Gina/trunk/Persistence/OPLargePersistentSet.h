@@ -49,7 +49,7 @@
 
 - (BOOL) containsObjectWithOID: (OID) oid sortKeyValue: (id) sortKeyValue;
 
-- (OPPersistentObjectContext*) context;
+- (OPPersistentObjectContext*) objectContext;
 
 - (OPLargePersistentSetArray*) sortedArray;
 

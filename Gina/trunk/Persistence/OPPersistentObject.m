@@ -82,28 +82,28 @@
 @end
 
 /*" This class should be thread-safe. It should synchronize(self) all accesses to the attributes dictionary.
-In addition to that, it should synchronize([self context]) all write-accesses to the attributes dictionary. "*/
+In addition to that, it should synchronize(self.objectContext) all write-accesses to the attributes dictionary. "*/
 
 @implementation OPPersistentObject
 
 - (NSMutableArray*) mutableArrayValueForKey: (NSString*) key
 {
 	// Expect the mutable array to be changed - necessary?
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 	return [super mutableArrayValueForKey: key];
 }
 
 - (NSMutableArray *)mutableArrayValueForKeyPath:(NSString *)keyPath
 {
 	// Expect the mutable array to be changed - necessary?
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 	return [super mutableArrayValueForKeyPath: keyPath];
 }
 
 - (NSMutableSet *)mutableSetValueForKeyPath:(NSString *)keyPath
 {
 	// Expect the mutable array to be changed - necessary?
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 	return [super mutableSetValueForKeyPath: keyPath];
 }
 
@@ -111,7 +111,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 - (NSMutableSet*) mutableSetValueForKey: (NSString*) key
 {
 	// Expect the mutable array to be changed - necessary?
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 	return [super mutableSetValueForKey: key];
 }
 
@@ -121,7 +121,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 //	return NO; // all setters must be instrumented with -didChangeValueForKey
 //}
 
-- (OPPersistentObjectContext*) context
+- (OPPersistentObjectContext*) objectContext
 /*" Returns the context for the receiver. Currently, always returns the default context. "*/
 {
     return [OPPersistentObjectContext defaultContext]; // simplistic implementation; prepared for multiple contexts.
@@ -133,7 +133,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 //	BOOL result = YES;
 //	@synchronized(self) {
 //		if (attributes==nil) {
-//			NSDictionary* attributesDict = [[[self context] persistentValuesForObject: self] retain];
+//			NSDictionary* attributesDict = [[self.objectContext persistentValuesForObject: self] retain];
 //			attributes = attributesDict;
 //			
 //			if (!attributes && oid==0) {
@@ -185,7 +185,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 
 - (BOOL) isDeleted
 {
-	return [[[self context] deletedObjects] containsObject: self];
+	return [[self.objectContext deletedObjects] containsObject: self];
 }
 
 
@@ -216,7 +216,7 @@ In addition to that, it should synchronize([self context]) all write-accesses to
 			// Create oid on demand, this means that this is now becoming persistent.
 			// Persistent objects unarchived are explicitly given an oid:
 			
-			OPPersistentObjectContext* context = [self context];
+			OPPersistentObjectContext* context = self.objectContext;
 			if (context) {
 				[context insertObject: self];
 			}
@@ -245,7 +245,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (NSString*) objectURLString
 {
-	NSString* databaseName = [[[[self context] databasePath] lastPathComponent] stringByDeletingPathExtension]; // cache this!
+	NSString* databaseName = [[[self.objectContext databasePath] lastPathComponent] stringByDeletingPathExtension]; // cache this!
 	NSString* uriString = [[[NSString alloc] initWithFormat: @"x-oppk-%@://%@/%llx", 
 							[databaseName stringByAddingPercentEscapesUsingEncoding: NSISOLatin1StringEncoding], [[self classForCoder] description],
 							LIDFromOID([self oid])] autorelease];
@@ -259,7 +259,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 		if (oid != theOid) {
 			NSAssert(oid==0, @"Object ids can be set only once per instance.");
 			oid = theOid;
-			OPPersistentObjectContext* c = [self context];
+			OPPersistentObjectContext* c = self.objectContext;
 			[c registerObject: self];
 		}
 	}
@@ -288,7 +288,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 - (void) didChangeValueForKey: (NSString*) key
 /*" Notify context of the change. "*/
 {
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 	[super didChangeValueForKey: key];
 }
 
@@ -299,25 +299,25 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (void)didChange:(NSKeyValueChange)changeKind valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key
 {
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 	[super didChange: changeKind valuesAtIndexes: indexes forKey: key];
 }
 
 - (void)didChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
 {
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 	[super didChangeValueForKey: key withSetMutation: mutationKind usingObjects: objects];
 }
 
 - (BOOL) hasUnsavedChanges
 {
-	return [[[self context] changedObjects] containsObject: self];
+	return [[self.objectContext changedObjects] containsObject: self];
 }
 
 - (void) delete
 /*" Deletes the receiver from the persistent store associated with it's context. Does nothing, if the reciever does not have a context or has never been stored persistently. "*/
 {	
-	[[self context] deleteObject: self];
+	[self.objectContext deleteObject: self];
 }
 
 + (void) context: (OPPersistentObjectContext*) context willDeleteInstanceWithOID: (OID) oid
@@ -345,7 +345,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 //{	
 //	
 //#warning Stop resolving faults for deleted objects!
-//	@synchronized([self context]) {
+//	@synchronized(self.objectContext) {
 //		@synchronized(self) {
 //			[self xwillAccessValueForKey: key];
 //
@@ -405,7 +405,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 {
 	//if (![self canPersist]) return [super setValue: value forUndefinedKey: key];
 	// Do not allow setting values during e.g. a commit:
-	@synchronized([self context]) {
+	@synchronized(self.objectContext) {
 		if ([key hasSuffix: @"OID"]) {
 
 		} else {
@@ -424,7 +424,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (BOOL) hasChanged
 {
-	return [[[self context] changedObjects] containsObject: self];
+	return [[self.objectContext changedObjects] containsObject: self];
 }
 
 - (id) valueForUndefinedKey: (NSString*) key
@@ -434,7 +434,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 		NSString* oidKey = [[NSString alloc] initWithFormat: @"%@OID", key];
 		NSNumber* oidNumber = [self valueForKey: oidKey];
 		OID resultOID = [oidNumber unsignedLongLongValue];
-		id result = [[self context] objectForOID: resultOID];
+		id result = [self.objectContext objectForOID: resultOID];
 		[oidKey release];
 		return result;
 	}
@@ -445,7 +445,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 - (void) dealloc
 {
-    [[self context] unregisterObject: self];
+    [self.objectContext unregisterObject: self];
     [super dealloc];
 }
 
@@ -496,7 +496,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 //- (void) addPrimitiveValue: (id) value forKey: (NSString*) key
 //{
-//	@synchronized([self context]) {
+//	@synchronized(self.objectContext) {
 //		id container = [self primitiveValueForKey: key];	
 //		[container addObject: value]; // thread-safe
 //	}
@@ -553,13 +553,13 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 
 //- (void) removeValue: (id) value forKey: (NSString*) key
 //{
-//	@synchronized([self context]) {
+//	@synchronized(self.objectContext) {
 //		@synchronized(self) {
 //			if ([[self valueForKey: key] containsObject: value]) { // check only necessary for n:m relations?
 //				
 //				OPClassDescription* cd = [[self class] persistentClassDescription];
 //				OPAttributeDescription* ad = [cd attributeWithName: key];
-//				OPObjectRelationship* r = [[self context] manyToManyRelationshipForAttribute: ad];
+//				OPObjectRelationship* r = [self.objectContext manyToManyRelationshipForAttribute: ad];
 //				NSString* inverseKey = [ad inverseRelationshipKey];
 //				
 //				// Check, if it is a many-to-many relation:
@@ -659,9 +659,9 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 //
 //- (BOOL) resolveFault
 //{
-//	Class theClass = [[self context] classForCID: CIDFromOID(self.currentOID)];
+//	Class theClass = [self.objectContext classForCID: CIDFromOID(self.currentOID)];
 //	isa = theClass;
-//	BOOL ok = [[self context] unarchiveObject: self forOID: self.currentOID];
+//	BOOL ok = [self.objectContext unarchiveObject: self forOID: self.currentOID];
 //	return ok;
 //}
 //
@@ -695,7 +695,7 @@ NSString* OPURLStringFromOidAndDatabaseName(OID oid, NSString* databaseName)
 //
 //- (Class) class
 //{
-//	Class theClass = [[self context] classForCID: CIDFromOID(self.oid)];
+//	Class theClass = [self.objectContext classForCID: CIDFromOID(self.oid)];
 //	return theClass;
 //}
 //

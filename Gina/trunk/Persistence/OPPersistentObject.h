@@ -42,7 +42,7 @@
 - (OID) oid;
 - (OID) currentOID; // internal method
 - (void) setOID: (OID) theOID; // for internal use
-- (OPPersistentObjectContext*) context;
+- (OPPersistentObjectContext*) objectContext;
 
 @end
 
@@ -79,7 +79,7 @@
 
 - (BOOL) hasChanged;
 
-- (OPPersistentObjectContext*) context;
+- (OPPersistentObjectContext*) objectContext;
 - (BOOL) isDeleted;
 - (void) delete;
 

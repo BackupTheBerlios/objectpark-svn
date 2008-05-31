@@ -150,7 +150,7 @@
 {
 	//NSLog(@"%@ requesting objectAtIndex: %u", pSet, index);
 	OID oid = [self oidAtIndex:index];
-	id result = [[pSet context] objectForOID: oid];
+	id result = [pSet.objectContext objectForOID: oid];
 	NSAssert3(result != nil, @"Warning: <OPLargePersistentSetArray 0x%x> objectAtIndex: %u is a dangling reference to %llx. Returning nil.", self, index, oid);
 	return result;
 }
@@ -199,7 +199,7 @@
 
 @implementation OPLargePersistentSet
 
-- (OPPersistentObjectContext*) context
+- (OPPersistentObjectContext*) objectContext
 {
 	return [OPPersistentObjectContext defaultContext];
 }
@@ -229,7 +229,7 @@
 - (OPBTree*) btree
 {
 	if (!btree) {
-		btree = [[OPKeyOnlyBTree alloc] initWithCompareFunctionName: NULL withRoot: 0 inDatabase: [[self context] database]];
+		btree = [[OPKeyOnlyBTree alloc] initWithCompareFunctionName: NULL withRoot: 0 inDatabase: [self.objectContext database]];
 	}
 	return btree;
 }
@@ -413,7 +413,7 @@
 	
 	btree = [[OPKeyOnlyBTree alloc] initWithCompareFunctionName: keyCompareFunctionName 
 													   withRoot: rootPage 
-													 inDatabase: [[coder context] database]];
+													 inDatabase: [coder.objectContext database]];
 	
 	sortKeyPath = [[coder decodeObjectForKey: @"OPSortKeyPath"] retain];
 	count = NSNotFound;
@@ -436,7 +436,7 @@
 			// Create oid on demand, this means that this is now becoming persistent.
 			// Persistent objects unarchived are explicitly given an oid:
 			
-			OPPersistentObjectContext* context = [self context];
+			OPPersistentObjectContext* context = self.objectContext;
 			if (context) {
 				[context insertObject: self];
 			}
@@ -458,7 +458,7 @@
 		if (oid != theOid) {
 			NSAssert(oid==0, @"Object ids can be set only once per instance.");
 			oid = theOid;
-			[[self context] registerObject: self];
+			[self.objectContext registerObject: self];
 		}
 	}
 }

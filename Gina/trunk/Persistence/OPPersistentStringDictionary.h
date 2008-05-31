@@ -20,7 +20,7 @@
 
 }
 
-- (OPPersistentObjectContext*) context;
+- (OPPersistentObjectContext*) objectContext;
 
 - (OID) oid;
 

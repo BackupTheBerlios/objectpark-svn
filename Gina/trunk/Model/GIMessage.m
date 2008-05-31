@@ -47,7 +47,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (GIThread *)thread
 {
-	return [[self context] objectForOID:threadOID];
+	return [self.objectContext objectForOID:threadOID];
 }
 
 - (void) setThread: (GIThread*) aThread
@@ -76,7 +76,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 //	
 //	[[NSFileManager defaultManager] removeFileAtPath: [self messageFilePathForOID: oid inContext: context] handler: nil];
 //	
-//	[[[self context] messagesByMessageId] removeObjectForKey:self.messageId];
+//	[[self.objectContext messagesByMessageId] removeObjectForKey:self.messageId];
 //	
 //	// remove from any profiles:
 //	GIProfile *sendProfile = [GIProfile sendProfileForMessage:self];
@@ -103,7 +103,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
 	[[NSFileManager defaultManager] removeFileAtPath:self.messageFilePath handler:nil];
 	
-	[[[self context] messagesByMessageId] removeObjectForKey:self.messageId];
+	[[self.objectContext messagesByMessageId] removeObjectForKey:self.messageId];
 	
 	// remove from any profiles:
 	GIProfile *sendProfile = [GIProfile sendProfileForMessage:self];
@@ -125,7 +125,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (NSString *)messageFilePath
 {
-	return [[self class] messageFilePathForOID: self.oid inContext: self.context];
+	return [[self class] messageFilePathForOID: self.oid inContext: self.objectContext];
 }
 
 - (NSString *)senderName
@@ -230,7 +230,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 		NSString *refId;
 		while (refId = [references lastObject]) 
 		{
-			referencedMsg = [[self context] messageForMessageId:refId];
+			referencedMsg = [self.objectContext messageForMessageId:refId];
 			
 			if (referencedMsg) 
 			{
@@ -766,7 +766,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 - (GIMessage *)reference
 /*" Returns the direct message reference stored. "*/
 {
-	return [self.context objectForOID: referenceOID];
+	return [self.objectContext objectForOID: referenceOID];
 }
 
 - (void) setReference: (GIMessage*) aReferencedMessage

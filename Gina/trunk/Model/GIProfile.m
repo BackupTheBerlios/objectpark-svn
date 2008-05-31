@@ -199,7 +199,7 @@ NSString* GIProfileDidChangeNotification = @"GIProfileDidChangeNotification";
 
 - (GIAccount *)sendAccount
 {
-	return [[self context] objectForOID:sendAccountOID];
+	return [self.objectContext objectForOID:sendAccountOID];
 }
 
 - (void)setSendAccount:(GIAccount *)anAccount
@@ -216,7 +216,7 @@ NSString* GIProfileDidChangeNotification = @"GIProfileDidChangeNotification";
 {
 	if (!messagesToSend) {
 		messagesToSend = [[OPFaultingArray alloc] init];
-		[[self context] didChangeObject: self];
+		[self.objectContext didChangeObject: self];
 	}
 	
 	return messagesToSend;

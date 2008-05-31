@@ -503,7 +503,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 	}
 	
 	[encoder release];
-	encoder = [[OPKeyedArchiver alloc] initWithContext: self];
+	encoder = [[OPKeyedArchiver alloc] initWithObjectContext: self];
 	
 	[rootObjects release]; rootObjects = [[NSMutableDictionary alloc] init];
 	[rootObjectOIDs release];
@@ -545,6 +545,12 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
     return self;
 }
 
+- (BOOL) isDrawingToScreen
+{
+	NSLog(@"Nope!");
+	return YES;
+}
+
 - (void) populateMaxLidArray
 {
 	unsigned cid = 1;
@@ -572,7 +578,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 		if (CIDFromOID(oidFound) == cid) {
 			// Found maximum oid for cid
 			maxLid[cid] = LIDFromOID(oidFound);
-			NSLog(@"Found max lid for cid %u (%@) to be %llu", cid, [self classForCID: cid], maxLid[cid]);
+			if (NSDebugEnabled) NSLog(@"Found max lid for cid %u (%@) to be %llu", cid, [self classForCID: cid], maxLid[cid]);
 			// Cache all instances, if the class wants that:
 			if ([classes[cid] cachesAllObjects]) {
 				BOOL moveOk = YES;
@@ -895,7 +901,7 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" inserts newObject into the receiver context and sets an oid. Does nothing, if newObject already has an oid. Ignores nil newObjects. "*/
 {
 	if (newObject) {	
-		NSParameterAssert([newObject context] == NULL || [newObject context] == self);
+		NSParameterAssert([newObject objectContext] == NULL || [newObject objectContext] == self);
 		if (![newObject currentOID]) {
 			OID newOID = [self nextOIDForClass: [newObject class]];
 			[newObject setOID: newOID]; // also registers newObject with self
@@ -914,17 +920,17 @@ static unsigned	oidHash(NSHashTable* table, const void * object)
 /*" Regular decoders do encode the object, insert it as new object into the default context and return its oid. "*/
 {
 	NSObject<OPPersisting>* object = [self decodeObjectForKey: key];
-	[self.context insertObject: object];
+	[self.objectContext insertObject: object];
 	return [object oid];
 }
 
 - (void) encodeOID: (OID) oid forKey: (NSString*) key
 /*" Regular encoders do encode the object directly instead of the oid. "*/
 {
-	[self encodeObject: [self.context objectForOID: oid] forKey: key];
+	[self encodeObject: [self.objectContext objectForOID: oid] forKey: key];
 }
 
-- (OPPersistentObjectContext*) context
+- (OPPersistentObjectContext*) objectContext
 {
 	return [OPPersistentObjectContext defaultContext];
 }

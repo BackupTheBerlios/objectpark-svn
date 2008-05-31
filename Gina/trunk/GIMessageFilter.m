@@ -206,7 +206,7 @@
 
 - (GIMessageGroup *)putInMessageGroup
 {
-	return [[self context] objectForOID:putInMessageGroupOID];
+	return [self.objectContext objectForOID:putInMessageGroupOID];
 }
 
 - (void)setPutInMessageGroup:(GIMessageGroup *)aMessageGroup

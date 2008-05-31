@@ -49,7 +49,7 @@
 	return (NSUInteger)(LIDFromOID([self oid]) % NSUIntegerMax);
 }
 
-- (OPPersistentObjectContext*) context
+- (OPPersistentObjectContext*) objectContext
 {
 	return [OPPersistentObjectContext defaultContext];
 }
@@ -63,7 +63,7 @@
 			// Create oid on demand, this means that this is now becoming persistent.
 			// Persistent objects unarchived are explicitly given an oid:
 			
-			OPPersistentObjectContext* context = [self context];
+			OPPersistentObjectContext* context = self.objectContext;
 			if (context) {
 				[context insertObject: self];
 			}
@@ -85,7 +85,7 @@
 		if (oid != theOid) {
 			NSAssert(oid==0, @"Object ids can be set only once per instance.");
 			oid = theOid;
-			[[self context] registerObject: self];
+			[self.objectContext registerObject: self];
 		}
 	}
 }
@@ -122,7 +122,7 @@
 - (OPBTree*) btree
 {
 	if (!btree) {
-		OPDBLite* db = [[self context] database];
+		OPDBLite* db = [self.objectContext database];
 		btree = [[OPBTree alloc] initWithCompareFunctionName: nil withRoot: 0 inDatabase: db flags: 0]; // only used for new objects, also set in -initWithCoder.
 		if (!btree) {
 			btree = [[OPBTree alloc] initWithCompareFunctionName: nil withRoot: 0 inDatabase: db flags: 0]; // only used for new objects, also set in -initWithCoder.
@@ -207,7 +207,7 @@
 
 - (BOOL) hasUnsavedChanges
 {
-	return [[[self context] changedObjects] containsObject: self];
+	return [[self.objectContext changedObjects] containsObject: self];
 }
 
 - (NSString*) description
@@ -240,7 +240,7 @@
 		if ([theCursor currentEntryKeyLengthError: NULL] == 0) 
 			return nil;
 		OID objectOID = [theCursor currentEntryIntValue];
-		result = [[self context] objectForOID: objectOID];
+		result = [self.objectContext objectForOID: objectOID];
 	}	
 	return result;
 }
@@ -268,7 +268,7 @@
 
 	btree = [[OPBTree alloc] initWithCompareFunctionName: nil 
 												withRoot: rootPage 
-											  inDatabase: [[coder context] database]
+											  inDatabase: [[coder objectContext] database]
 												   flags: 0];
 	
 	count = NSNotFound;

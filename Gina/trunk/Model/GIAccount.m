@@ -718,7 +718,7 @@
 	{
 		[self checkpointLastMessageRetrieval];
 		
-		NSString* path = [[[GIApp context] documentPath] stringByAppendingPathComponent: @"Import Queue"];
+		NSString* path = [[[GIApp objectContext] documentPath] stringByAppendingPathComponent: @"Import Queue"];
 		
 		[GIPOPOperation retrieveMessagesFromPOPAccount:self usingOperationQueue: [GIApp operationQueue] putIntoDirectory: path];
 	}

@@ -167,7 +167,7 @@ extern NSString* OPStringFromOID(OID oid);
 
 - (OID) decodeOIDForKey: (NSString*) key;
 - (void) encodeOID: (OID) oid forKey: (NSString*) key;
-- (OPPersistentObjectContext*) context;
+- (OPPersistentObjectContext*) objectContext;
 - (BOOL) allowsPartialCoding;
 
 

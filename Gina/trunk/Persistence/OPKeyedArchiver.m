@@ -52,7 +52,7 @@
 	return [self resultData];
 }
 
-- (id) initWithContext: (OPPersistentObjectContext*) theContext
+- (id) initWithObjectContext: (OPPersistentObjectContext*) theContext
 {
 	if (self = [super init]) {
 		context    = theContext;

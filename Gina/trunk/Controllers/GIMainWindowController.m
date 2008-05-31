@@ -234,16 +234,19 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
+	[self expandDetailView];
+
 	// Store group selection:
 	[[NSUserDefaults standardUserDefaults] setObject:[[self.messageGroupsController selectedObject] objectURLString] forKey:@"SelectedGroupURL"];
 	
-	NSLog(@"saving group selection %@ ", [self.messageGroupsController selectedObject]);
+	//NSLog(@"saving group selection %@ ", [self.messageGroupsController selectedObject]);
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	[self unbind:@"selectedThreads"];
 	[self unbind:@"selectedSearchResults"];
 	[threadsController unbind:@"rootItem"];
-	[commentTreeView unbind:@"selectedMessageOrThread"];
+#warning To Axel: unbind:@"selectedMessageOrThread" constantly produces an exception on quit
+	//[commentTreeView unbind:@"selectedMessageOrThread"];
 	
 	[self autorelease];
 }
@@ -449,6 +452,47 @@
 		default:
 			break;
 	}	
+}
+
+- (void) expandDetailView
+{
+	//if (! [[NSUserDefaults sharedUserDefaults] boolForKey: @"HideRightPaneInBackground"]) return;
+	
+	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+	
+	if (expansionWidth && dividerPos >= [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
+		
+		// expanding right pane
+		NSLog(@"Expanding right pane...");
+		NSRect newWindowFrame = [verticalSplitter.window frame];
+		newWindowFrame.size.width += expansionWidth;
+		[verticalSplitter.window setFrame: newWindowFrame display: NO animate: NO];
+		//[verticalSplitter adjustSubviews];
+		
+		[verticalSplitter setPosition: dividerPos ofDividerAtIndex: 0];
+		
+	}
+}
+
+- (void) collapseDetailView
+{
+	if (! [[NSUserDefaults sharedUserDefaults] boolForKey: @"HideRightPaneInBackground"]) return;
+	
+	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+	
+	if (dividerPos < [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
+		
+		// collapse subview
+		NSLog(@"Collapsing right pane...");
+		[verticalSplitter setPosition: [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0] ofDividerAtIndex: 0];
+		[verticalSplitter adjustSubviews];
+		CGFloat newDividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+		NSRect newWindowFrame = [verticalSplitter.window frame];
+		expansionWidth = newDividerPos - dividerPos;
+		
+		newWindowFrame.size.width -= expansionWidth;
+		[verticalSplitter.window setFrame: newWindowFrame display: NO animate: NO];
+	}
 }
 
 - (void)showMessage:(GIMessage *)message
@@ -1030,14 +1074,7 @@ static BOOL isShowingThreadsOnly = NO;
 #define DOWN_KEYPAD_5 87
 #define DOWN_KEYPAD_2 84
 
-- (IBAction) navigateBack: (id) sender
-{
-	// if only mail is visible, switch back to only thread list visible
-	NSLog(@"subviews of thread mail splitter = %@", [threadMailSplitter subviews]);
-	NSLog(@"[threadsOutlineView superview] = %@", [[threadsController.outlineView superview] superview]);
-	
-	[self setThreadsOnlyMode];
-}
+
 
 - (BOOL)keyPressed:(NSEvent *)event
 {
@@ -1142,56 +1179,18 @@ static BOOL isShowingThreadsOnly = NO;
 
 @implementation GIMainWindowController (Actions)
 
-- (void) expandDetailView
+- (IBAction) navigateBack: (id) sender
 {
-	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
+	// if only mail is visible, switch back to only thread list visible
+	NSLog(@"subviews of thread mail splitter = %@", [threadMailSplitter subviews]);
+	NSLog(@"[threadsOutlineView superview] = %@", [[threadsController.outlineView superview] superview]);
 	
-	if (dividerPos >= [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
-		
-		// expanding right pane
-		NSLog(@"Expanding right pane...");
-		NSRect newWindowFrame = [verticalSplitter.window frame];
-		newWindowFrame.size.width += expansionWidth;
-		[verticalSplitter.window setFrame: newWindowFrame display: NO animate: NO];
-		//[verticalSplitter adjustSubviews];
-		
-		[verticalSplitter setPosition: dividerPos ofDividerAtIndex: 0];
-		
-	}
+	[self setThreadsOnlyMode];
 }
 
-- (void) collapseDetailView
-{
-	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
-	
-	if (dividerPos < [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
-		
-		// collapse subview
-		NSLog(@"Collapsing right pane...");
-		[verticalSplitter setPosition: [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0] ofDividerAtIndex: 0];
-		[verticalSplitter adjustSubviews];
-		CGFloat newDividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
-		NSRect newWindowFrame = [verticalSplitter.window frame];
-		expansionWidth = newDividerPos - dividerPos;
-		
-		newWindowFrame.size.width -= expansionWidth;
-		[verticalSplitter.window setFrame: newWindowFrame display: NO animate: NO];
-	}
-}
 
-- (IBAction) toggleDetailsPane: (id) sender
-{
-	//NSArray* views = [verticalSplitter subviews];
-	//NSView*  leftView  = [views objectAtIndex: 0];
-	//NSView*  rightView = [views objectAtIndex: 1];
-	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
 
-	if (dividerPos >= [verticalSplitter maxPossiblePositionOfDividerAtIndex: 0]) {
-		[self expandDetailView];
-	} else {
-		[self collapseDetailView];
-	}
-}
+
 
 
 #pragma mark -- adding new hierarchy objects --
@@ -1873,3 +1872,4 @@ static BOOL isShowingThreadsOnly = NO;
 }
 
 @end
+

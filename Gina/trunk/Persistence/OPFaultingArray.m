@@ -45,7 +45,7 @@
 			// Create oid on demand, this means that this is now becoming persistent.
 			// Persistent objects unarchived are explicitly given an oid:
 			
-			OPPersistentObjectContext* context = [self context];
+			OPPersistentObjectContext* context = self.objectContext;
 			if (context) {
 				[context insertObject: self];
 			}
@@ -66,7 +66,7 @@
 		if (selfOID != theOid) {
 			NSAssert(selfOID==0, @"Object ids can be set only once per instance.");
 			selfOID = theOid;
-			OPPersistentObjectContext* c = [self context];
+			OPPersistentObjectContext* c = self.objectContext;
 			[c registerObject: self];
 		}
 	}
@@ -87,7 +87,7 @@
 }
 
 
-- (OPPersistentObjectContext*) context
+- (OPPersistentObjectContext*) objectContext
 /*" Returns the context for the receiver. Currently, always returns the default context. "*/
 {
     return [OPPersistentObjectContext defaultContext]; // simplistic implementation; prepared for multiple contexts.
@@ -204,7 +204,7 @@
 - (void) didChange
 /*" Notifies the context of a change so it can update on the persistent store. "*/
 {
-	[[self context] didChangeObject: self];
+	[self.objectContext didChangeObject: self];
 }
 
 - (void) _growTo: (unsigned) newCapacity
@@ -401,7 +401,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 		}
 		NSParameterAssert(anIndex<count);
 		OID oid = *oidPtr(anIndex);
-		OPPersistentObjectContext* context = [self context]; // todo - obtain context from either coder or inserted objects
+		OPPersistentObjectContext* context = self.objectContext; // todo - obtain context from either coder or inserted objects
 		result = [context objectForOID: oid];
 		if (!result)
 			result = [context objectForOID: oid];
@@ -462,7 +462,7 @@ static int compare_oids(const void* entry1, const void* entry2)
 
 - (BOOL) hasUnsavedChanges
 {
-	return [[[self context] changedObjects] containsObject: self];
+	return [[self.objectContext changedObjects] containsObject: self];
 }
 
 - (NSString*) description

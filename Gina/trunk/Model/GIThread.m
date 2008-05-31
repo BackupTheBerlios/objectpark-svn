@@ -505,7 +505,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
     if (thread) return thread;
         
     thread = [[[self alloc] init] autorelease];
-	[[aMessage context] insertObject:thread];
+	[aMessage.objectContext insertObject:thread];
 	
 	thread.subject = aMessage.subject;
 	thread.date = aMessage.date;
