@@ -129,7 +129,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 					
 					while ((transferData = [pop3session nextTransferData]) && !self.isCancelled) 
 					{
-						[self setProgressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"getting message #%u/%u from server %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, self.account.incomingServerName]];
+						[self setProgressInfoWithMinValue:0 maxValue:numberOfMessagesToFetch currentValue:fetchCount description:[NSString stringWithFormat:NSLocalizedString(@"Fetching #%u/%u from %@", @"progress description in POP job"), fetchCount, numberOfMessagesToFetch, self.account.incomingServerName]];
 						
 						// putting onto disk:
 						NSString *transferDataFile = [transferDataPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg-%@-%@-%lu.gml", self.account.incomingServerName, dateString, runningNo++]];
