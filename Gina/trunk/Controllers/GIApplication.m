@@ -484,9 +484,23 @@
 - (IBAction)sendAndReceiveInAllAccounts:(id)sender
 {
 	NSArray *allAccounts = [self.objectContext.allObjectsByClass objectForKey:@"GIAccount"];
+	NSMutableArray *allActiveAccounts = [NSMutableArray arrayWithCapacity:allAccounts.count];
 	
-	[allAccounts makeObjectsPerformSelector:@selector(send)];
-	[allAccounts makeObjectsPerformSelector:@selector(receive)];
+	for (GIAccount *account in allAccounts)
+	{
+		if (account.enabled)
+		{
+			[allActiveAccounts addObject:account];
+		}
+	}
+	
+	if (allActiveAccounts.count == 0)
+	{
+		NSBeep();
+	}
+	
+	[allActiveAccounts makeObjectsPerformSelector:@selector(send)];
+	[allActiveAccounts makeObjectsPerformSelector:@selector(receive)];
 	[GIAccount resetAccountRetrieveAndSendTimers];
 }
 
@@ -515,17 +529,19 @@
 		sentMessage.sendStatus = OPSendStatusNone;
 		
 		// disconnect thread from queued group:
-		[[sentMessage.thread mutableSetValueForKey:@"messageGroups"] removeObject: [GIMessageGroup queuedMessageGroup]];
+		[[sentMessage.thread mutableSetValueForKey:@"messageGroups"] removeObject:[GIMessageGroup queuedMessageGroup]];
 
 		if ([sentMessage hasFlags:OPResentStatus]) 
 		{
 			// create new message with original message id (note: resent message is registered with Resent-Message-Id)
 			// this should replace the message that has been resent
 			// TODO: test if the original message is replaced
-			GIMessage *replacementMessage = [[[GIMessage alloc] initWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES forcedMessageId:nil] autorelease];
+			GIMessage *replacementMessage = [GIMessage messageWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES];
+//			GIMessage *replacementMessage = [[[GIMessage alloc] initWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES forcedMessageId:nil] autorelease];
 			
 			// let filters run 'again':
 			[self.objectContext addMessageByApplingFilters:replacementMessage];
+			[replacementMessage addFlags:OPResentStatus | OPSeenStatus];
 			
 			[sentMessage delete]; // delete sent resent messages - not good!
 		} 

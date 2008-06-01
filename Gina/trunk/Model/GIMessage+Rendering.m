@@ -442,23 +442,18 @@ static NSString *templatePostfix = nil;
 #import "EDPlainTextContentCoder.h"
 
 @interface EDContentCoder (WebResourceSupport)
-- (WebResource *)webResource;
-- (NSArray *)subresources;
+- (WebArchive *)webArchive;
 @end
 
 @implementation EDContentCoder (WebResourceSupport)
 
-- (WebResource *)webResource
-{
-	return nil;
-}
-
-- (NSArray *)subresources
+- (WebArchive *)webArchive
 {
 	return nil;
 }
 
 @end
+
 @interface NSString (WebResourceSupport)
 - (NSString *)stringByConvertingToHTML;
 //- (NSString *)HTMLUrlifyInRange:(NSRange)range urlRanges:(NSMutableArray **)urlRanges;
@@ -668,14 +663,16 @@ static NSString *templatePostfix = nil;
 
 @implementation EDPlainTextContentCoder (WebResourceSupport)
 
-- (WebResource *)webResource
+- (WebResource *)webArchive
 {
 	NSData *data = [[[self attributedString] stringByConvertingToHTML] dataUsingEncoding:NSUTF8StringEncoding];
 	NSURL *URL = [NSURL URLWithString:@"/"];
 	NSString *MIMEType = @"text/html";
 	NSString *textEncodingName = @"UTF-8";
 	
-	return [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+	WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+	
+	return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];
 }
 
 @end
@@ -684,7 +681,7 @@ static NSString *templatePostfix = nil;
 
 @implementation OPMultipartContentCoder (WebResourceSupport)
 
-- (WebResource *)webResourceWithPreferredContentTypes:(NSArray *)preferredContentTypes
+- (WebArchive *)webArchiveWithPreferredContentTypes:(NSArray *)preferredContentTypes
 {    
 	if ([subtype caseInsensitiveCompare:@"alternative"] == NSOrderedSame)
 	{
@@ -698,7 +695,7 @@ static NSString *templatePostfix = nil;
 			{
 				EDContentCoder *contentCoder = [[contentCoderClass alloc] initWithMessagePart:preferredSubpart];
 				
-				return [contentCoder webResource];
+				return [contentCoder webArchive];
 			}
 		} 
 		else 
@@ -708,7 +705,9 @@ static NSString *templatePostfix = nil;
 			NSData *data = [@"<p><br/>multipart/alternative message part with no decodable alternative.<br/></p>" dataUsingEncoding:NSUTF8StringEncoding];
 			NSURL *URL = [NSURL URLWithString:@"/"];
 
-			return [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+			WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+			
+			return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];
 		}
 	}
     else if ([subtype caseInsensitiveCompare:@"mixed"] == NSOrderedSame)
@@ -717,6 +716,7 @@ static NSString *templatePostfix = nil;
 		NSString *textEncodingName = @"UTF-8";
 		NSMutableData *data = [NSMutableData data];
 		NSURL *URL = [NSURL URLWithString:@"/"];
+		NSMutableArray *subresources = [NSMutableArray array];
 		
 		for (EDMessagePart *subpart in [self subparts])
 		{
@@ -726,10 +726,11 @@ static NSString *templatePostfix = nil;
 			{
 				EDContentCoder *contentCoder = [[contentCoderClass alloc] initWithMessagePart:subpart];
 				
-				WebResource *resource = [contentCoder webResource];
-				if (resource)
+				WebArchive *archive = [contentCoder webArchive];
+				if (archive)
 				{
-					[data appendData:[resource data]];
+					[data appendData:[[archive mainResource] data]];
+					[subresources addObjectsFromArray:[archive subresources]];
 				}
 				else
 				{
@@ -738,15 +739,17 @@ static NSString *templatePostfix = nil;
 			}
 		}
 		
-		return [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+		WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+
+		return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];
 	}
 
 	return nil;
 }
 
-- (WebResource *)webResource
+- (WebArchive *)webArchive
 {
-	return [self webResourceWithPreferredContentTypes:nil];
+	return [self webArchiveWithPreferredContentTypes:nil];
 }
 
 @end
@@ -757,10 +760,9 @@ static NSString *templatePostfix = nil;
 {
 	EDContentCoder *coder = [[[[EDContentCoder contentDecoderClass:self] alloc] initWithMessagePart:self] autorelease];
 	
-	WebResource *topLevelResource = [coder webResource];
-	NSArray *subresources = [coder subresources];
-							 
-	NSString *contentString = [[[NSString alloc] initWithData:[topLevelResource data] encoding:NSUTF8StringEncoding] autorelease];
+	WebArchive *archive = [coder webArchive];
+								 
+	NSString *contentString = [[[NSString alloc] initWithData:[[archive mainResource] data] encoding:NSUTF8StringEncoding] autorelease];
 	
 	NSString *cssString = @"<style type=\"text/css\"><!--\nbody {\n"
 	@"font-size : 9pt;\n" 
@@ -804,7 +806,7 @@ static NSString *templatePostfix = nil;
 	
 	WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
 	
-	WebArchive *result = [[[WebArchive alloc] initWithMainResource:mainResource subresources:subresources subframeArchives:nil] autorelease];
+	WebArchive *result = [[[WebArchive alloc] initWithMainResource:mainResource subresources:[archive subresources] subframeArchives:nil] autorelease];
 								   
 	return result;
 }

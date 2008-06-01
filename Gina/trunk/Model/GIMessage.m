@@ -31,8 +31,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 #define DUMMYCREATION     OPL_ASPECT  0x04
 #define MESSAGEREPLACING  OPL_ASPECT  0x08
 
-
-
 @implementation GIMessage
 
 @synthesize to;
@@ -116,8 +114,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[super willDelete];
 }
 
-+ (NSString*) messageFilePathForOID: (OID) oid
-						  inContext: (OPPersistentObjectContext*) context
++ (NSString *)messageFilePathForOID:(OID)oid inContext:(OPPersistentObjectContext *)context
 {
 	NSString *filename = [[context transferDataDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"Msg%014llx.gml", LIDFromOID(oid)]];
 	return filename;
@@ -125,7 +122,45 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 
 - (NSString *)messageFilePath
 {
-	return [[self class] messageFilePathForOID: self.oid inContext: self.objectContext];
+	return [[self class] messageFilePathForOID:self.oid inContext:self.objectContext];
+}
+
+- (void)setInternetMessage:(OPInternetMessage *)aMessage
+{
+	@synchronized(self)
+	{
+		if (aMessage != self.internetMessage)
+		{
+			[self willChangeValueForKey:@"internetMessage"];
+			[self.internetMessage release];
+			internetMessage = [aMessage retain];
+			[[NSFileManager defaultManager] removeFileAtPath:self.messageFilePath handler:nil];
+			[self didChangeValueForKey:@"internetMessage"];
+		}
+	}
+}
+
+- (OPInternetMessage *)internetMessage
+{
+	@synchronized(self) 
+	{
+		if (!internetMessage) 
+		{
+			NSString *transferDataPath = [self messageFilePath];
+			NSData *transferData = [NSData dataWithContentsOfFile:transferDataPath];
+			if (transferData) 
+			{
+				internetMessage = [[OPInternetMessage alloc] initWithTransferData:transferData];
+			} // else return nil
+		}
+		[internetMessage retain];
+	}
+	return [internetMessage autorelease];
+}
+
+- (void)flushInternetMessageCache
+{
+	[internetMessage release]; internetMessage = nil;
 }
 
 - (NSString *)senderName
@@ -188,8 +223,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	[self toggleFlags:flags & OPDummyStatus]; // remove Dummy status
 	[self toggleFlags:flags & OPSeenStatus]; // remove read status
 	
-	[internetMessage release];
-	internetMessage = [im retain];
+	[self setInternetMessage:im];
+	
 	messageId = forcedMessageId.length ? forcedMessageId : [[im messageId] retain];
 	
 	// Add self to global message id index:
@@ -291,10 +326,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
 	// now expensive to compare fields:
 	OPInternetMessage *im = self.internetMessage;
-	if (![[im subject] isEqualToString:[otherInternetMessage subject]]) return NO;
-	if (![[im fromWithFallback:YES] isEqualToString:[otherInternetMessage fromWithFallback:YES]]) return NO;
-	if (![[im toWithFallback:YES] isEqualToString:[otherInternetMessage toWithFallback:YES]]) return NO;
-	if (![[im ccWithFallback:YES] isEqualToString:[otherInternetMessage ccWithFallback:YES]]) return NO;
+	if (([im subject] != [otherInternetMessage subject]) && (![[im subject] isEqualToString:[otherInternetMessage subject]])) return NO;
+	if (([im fromWithFallback:YES] != [otherInternetMessage fromWithFallback:YES]) && (![[im fromWithFallback:YES] isEqualToString:[otherInternetMessage fromWithFallback:YES]])) return NO;
+	if (([im toWithFallback:YES] != [otherInternetMessage toWithFallback:YES]) && (![[im toWithFallback:YES] isEqualToString:[otherInternetMessage toWithFallback:YES]])) return NO;
+	if (([im ccWithFallback:YES] != [otherInternetMessage ccWithFallback:YES]) && (![[im ccWithFallback:YES] isEqualToString:[otherInternetMessage ccWithFallback:YES]])) return NO;
 	
 	// now most expensive compare:
 	if (![[im contentData] isEqualToData:[otherInternetMessage contentData]]) return NO;
@@ -315,7 +350,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 			([anInternetMessage isResentMessage] && [dupe isSimilarToInternetMessage:anInternetMessage]))
 		{
             // replace message
-			if (NSDebugEnabled) NSLog(@"Replacing content for (dummy/resent) message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
+			NSLog(@"Replacing content for (dummy/resent) message with oid %qu (msgId: %@)", [dupe oid], [anInternetMessage messageId]);
             [dupe setContentFromInternetMessage:anInternetMessage appendToAppropriateThread:doThread forcedMessageId:nil];
             //[dupe referenceFind:YES];
         } 
@@ -749,19 +784,18 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
 	if (! [self isDummy])
 	{
-		NSString* transferDataPath = [self messageFilePath];
-		if (! [[NSFileManager defaultManager] fileExistsAtPath: transferDataPath]) {
-			if (! internetMessage) {
+		NSString *transferDataPath = [self messageFilePath];
+		if (! [[NSFileManager defaultManager] fileExistsAtPath:transferDataPath]) 
+		{
+			if (! internetMessage) 
+			{
 				NSLog(@"Warning! TransferDataFile at %@ not available on save.", transferDataPath);
 			}
-			[self.internetMessage.transferData writeToFile: transferDataPath atomically: NO];
+			[self.internetMessage.transferData writeToFile:transferDataPath atomically:NO];
 		}
 		[self flushInternetMessageCache]; // free some memory
 	}
 }
-
-
-
 
 - (GIMessage *)reference
 /*" Returns the direct message reference stored. "*/
@@ -827,27 +861,6 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 //        [[comments objectAtIndex: i] addOrderedSubthreadToArray: result];
 //    }
 } 
-
-- (OPInternetMessage*) internetMessage
-{
-	@synchronized(self) {
-		if (!internetMessage) {
-			
-			NSString* transferDataPath = [self messageFilePath];
-			NSData* transferData = [NSData dataWithContentsOfFile: transferDataPath];
-			if (transferData) {
-				internetMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
-			} // else return nil
-		}
-		[internetMessage retain];
-	}
-	return [internetMessage autorelease];
-}
-
-- (void) flushInternetMessageCache
-{
-	[internetMessage release]; internetMessage = nil;
-}
 
 - (id)initWithCoder:(NSCoder *)coder
 {
