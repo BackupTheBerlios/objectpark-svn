@@ -1725,6 +1725,11 @@ NSDictionary *maxLinesForCalendarName()
         
         if ([fieldContent length])
         {
+			if ([self isAddressListField:headerName])
+			{
+				NSArray *addresses = [fieldContent addressWithRealnameListFromEMailString];
+				fieldContent = [addresses componentsJoinedByString:@", "];
+			}
             [headerFields setObject:fieldContent forKey:headerName];
         }
         else
