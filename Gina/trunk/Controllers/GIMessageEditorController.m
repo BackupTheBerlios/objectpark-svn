@@ -1712,6 +1712,18 @@ NSDictionary *maxLinesForCalendarName()
      */
 }
 
+- (BOOL)isAddressListField:(NSString *)fieldName
+/*" Returns YES if the given field (non-localized!) is an address field. NO otherwise. "*/
+{
+    // Idea: do it via the tag instead?
+    return ( ([fieldName caseInsensitiveCompare:@"to"] == NSOrderedSame)
+			|| ([fieldName caseInsensitiveCompare:@"from"] == NSOrderedSame)
+			|| ([fieldName caseInsensitiveCompare:@"reply-to"] == NSOrderedSame)
+			|| ([fieldName caseInsensitiveCompare:@"cc"] == NSOrderedSame)
+			|| ([fieldName caseInsensitiveCompare:@"bcc"] == NSOrderedSame) )
+    ? YES : NO;
+}
+
 - (void)takeValuesFromHeaderFields
 /*" Takes values from ui header fields into the header fields dictionary. "*/
 {
@@ -1737,18 +1749,6 @@ NSDictionary *maxLinesForCalendarName()
             [headerFields removeObjectForKey:headerName];
         }
     }
-}
-
-- (BOOL)isAddressListField:(NSString *)fieldName
-/*" Returns YES if the given field (non-localized!) is an address field. NO otherwise. "*/
-{
-    // Idea: do it via the tag instead?
-    return ( ([fieldName caseInsensitiveCompare:@"to"])
-        || ([fieldName caseInsensitiveCompare:@"from"])
-        || ([fieldName caseInsensitiveCompare:@"reply-to"])
-        || ([fieldName caseInsensitiveCompare:@"cc"])
-        || ([fieldName caseInsensitiveCompare:@"bcc"]) )
-    ? YES : NO;
 }
 
 - (id)createTextFieldWithFieldName:(NSString *)aFieldName
