@@ -427,7 +427,7 @@ NSString* OPStringFromOID(OID oid)
 	CID cid = [self cidForClass:pClass];
 	LID lid = OPLongStringValueBase16(lidString);
 	OID oid = MakeOID(cid, lid);
-	NSLog(@"Requesting object for oid %llx", oid);
+	if (NSDebugEnabled) NSLog(@"Requesting object for oid %016lx", oid);
 	id result = [self objectForOID: oid];
 	
 	return result;
