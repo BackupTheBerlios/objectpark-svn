@@ -36,13 +36,7 @@
 @property (readonly) NSSet *threads;
 @property (readonly) int unreadMessageCount;
 @property (readonly) int type;
-
-///*" Sent when a new message group was added. %{object} holds the added GIMessageGroup object. "*/
-//extern NSString *GIMessageGroupWasAddedNotification;
-//extern NSString *GIMessageGroupsChangedNotification;
-
-- (GIProfile *)defaultProfile;
-- (void)setDefaultProfile:(GIProfile *)newProfile;
+@property (retain) GIProfile *defaultProfile;
 
 + (id) newWithName: (NSString*) aName type: (int) groupType atHierarchyNode: (GIHierarchyNode*) aNode atIndex: (int) anIndex;
 

@@ -245,8 +245,7 @@
 	[self unbind:@"selectedThreads"];
 	[self unbind:@"selectedSearchResults"];
 	[threadsController unbind:@"rootItem"];
-#warning To Axel: unbind:@"selectedMessageOrThread" constantly produces an exception on quit
-	//[commentTreeView unbind:@"selectedMessageOrThread"];
+	[self unbind:@"selectedMessageOrThread"];
 	
 	[self autorelease];
 }
