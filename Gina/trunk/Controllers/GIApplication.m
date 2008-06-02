@@ -169,9 +169,6 @@
 	return nil;
 }
 
-
-
-
 - (void) importFromImportFolder: (NSNotification*) notification
 {
 	unsigned importCount = 0;
@@ -372,7 +369,6 @@
 	NSArray *mboxPaths = [filePaths pathsMatchingExtensions:[NSArray arrayWithObjects:@"mbox", @"mboxfile", @"mbx", nil]];
 	NSArray *gmls = [filePaths pathsMatchingExtensions:[NSArray arrayWithObjects:@"gml", nil]];
 	OPPersistentObjectContext *context = self.objectContext;
-	
 	
 	GIMainWindowController *windowController = self.mainWindow.windowController;
 

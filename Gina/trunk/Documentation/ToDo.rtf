@@ -46,13 +46,11 @@
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 \
 - (major) resent functionality behaves incorrectly\
-- (major) some message don't render\
 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 - (major) tree view selection is not synchronized with search result - needs discussion\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
-\cf0 - (major, needs confimation) sometimes messages cannot be found in the outline view tree when using space bar navigation or clicking on tree view cells -> exception\
-- (minor) add delete Mailbox/Folder menu entry (little refactoring)\
+\cf0 - (minor) add delete Mailbox/Folder menu entry (little refactoring)\
 - send state is "" until the smtp host name is resolved (which may be slow or happen never).\
 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
@@ -102,7 +100,6 @@ Problem might be the context->objectContext renaming
 - make 
 \f2 \CocoaLigature0 toggleProgressInfo
 \f0 \CocoaLigature1  work\
-- refactor mainWindowController to have a central method called when a new message and/or a new thread is displayed to the user\
 \
 \
 
@@ -176,6 +173,11 @@ Axel:\
 \f2\fs20 \CocoaLigature0 fix raising call \cf2 [commentTreeView unbind:@"selectedMessageOrThread"];
 \f0\fs24 \cf0 \CocoaLigature1 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 - refactor mainWindowController to have a central method called when a new message and/or a new thread is displayed to the user\
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
+\cf0 - (major, investigate) sometimes transferDatas of Internet messages are not written to disk (empty transferdata is the result)\
+- (major) some messages don't render\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 \
 Dirk:\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
@@ -206,7 +208,9 @@ Dirk:\
 2008-05-29 22:59:12.256 Gina[1057:10b] An uncaught exception was raised\
 2008-05-29 22:59:12.258 Gina[1057:10b] *** -[OPPersistentObjectContext isDrawingToScreen]: unrecognized selector sent to instance 0x827c00\
 2008-05-29 22:59:12.259 Gina[1057:10b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[OPPersistentObjectContext isDrawingToScreen]: unrecognized selector sent to instance 0x827c00'\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 
-\f0\b0 \cf0 \CocoaLigature1 \
+\f0\b0 \cf0 \CocoaLigature1 - (major, needs confimation) sometimes messages cannot be found in the outline view tree when using space bar navigation or clicking on tree view cells -> exception\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
 }

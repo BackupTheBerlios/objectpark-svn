@@ -475,7 +475,7 @@
 
 - (void) collapseDetailView
 {
-	if (! [[NSUserDefaults standardUserDefaults] boolForKey: @"HideRightPaneInBackground"]) return;
+	if (! [[NSUserDefaults standardUserDefaults] boolForKey:HideRightPaneInBackground]) return;
 	
 	CGFloat dividerPos = [verticalSplitter positionOfDividerAtIndex: 0];
 	

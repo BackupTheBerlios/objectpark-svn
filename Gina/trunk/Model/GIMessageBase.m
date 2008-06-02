@@ -290,7 +290,7 @@
 		OID oid = MakeOID(cidMessage, lid);
 		
 		GIMessage* message = lid ? [self objectForOID: oid] : nil;
-		if (! message) {
+		if (! message.internetMessage) {
 			NSData* transferData = [[NSData alloc] initWithContentsOfFile: gmlPath];
 			OPInternetMessage* iMessage = [[OPInternetMessage alloc] initWithTransferData: transferData];
 			message = [GIMessage messageWithInternetMessage:iMessage appendToAppropriateThread:YES];

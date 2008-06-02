@@ -346,7 +346,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     GIMessage *dupe = [[OPPersistentObjectContext defaultContext] messageForMessageId:[anInternetMessage messageId]];
 	if (dupe)
 	{
-        if ([dupe isDummy] || 
+        if ([dupe isDummy] || (!dupe.internetMessage) || 
 			([anInternetMessage isResentMessage] && [dupe isSimilarToInternetMessage:anInternetMessage]))
 		{
             // replace message

@@ -49,6 +49,7 @@ NSString *SelectFirstUnreadMessageInThread = @"SelectFirstUnreadMessageInThread"
 NSString *SetSeenBehavior = @"SetSeenBehavior";
 NSString *SetSeenTimeinterval = @"SetSeenTimeinterval";
 NSString *ProgressInfoShown = @"ProgressInfoShown";
+NSString *HideRightPaneInBackground = @"HideRightPaneInBackground";
 
 NSArray *allAdditionalHeadersForDisplay()
 {
