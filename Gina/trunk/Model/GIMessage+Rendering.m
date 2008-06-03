@@ -666,13 +666,64 @@ static NSString *templatePostfix = nil;
 - (WebResource *)webArchive
 {
 	NSData *data = [[[self attributedString] stringByConvertingToHTML] dataUsingEncoding:NSUTF8StringEncoding];
-	NSURL *URL = [NSURL URLWithString:@"/"];
+	NSURL *URL = [NSURL URLWithString:@""];
 	NSString *MIMEType = @"text/html";
 	NSString *textEncodingName = @"UTF-8";
 	
 	WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
 	
 	return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];
+}
+
+@end
+
+#import "OPMultimediaContentCoder.h"
+
+@implementation OPMultimediaContentCoder (WebResourceSupport)
+
+- (WebArchive *)webArchive
+{
+	BOOL displayInline = shouldBeDisplayedInline;
+	
+	if (!displayInline)
+	{
+//		NSString *MIMEType = @"image/tiff";	
+//		NSURL *URL = [NSURL URLWithString:@"."];
+//		NSString *textEncodingName = nil;
+//		NSData *iconData = [[[NSWorkspace sharedWorkspace] iconForFileType:[filename pathExtension]] TIFFRepresentation];
+//
+//		WebResource *mainResource = [[[WebResource alloc] initWithData:iconData URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+//		return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];		
+//
+		
+		NSString *MIMEType = @"text/html";	
+		NSURL *URL = [NSURL URLWithString:@""];
+		NSString *textEncodingName = @"UTF-8";
+		NSData *htmlData = [@"<a href=\"bildchen.tiff\">Bild = <img src=\"bildchen.tiff\"/></a>" dataUsingEncoding:NSUTF8StringEncoding];
+		
+		WebResource *mainResource = [[[WebResource alloc] initWithData:htmlData URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+		
+		NSURL *subResourceURL = [NSURL URLWithString:@"bildchen.tiff"];
+		NSString *pathExtension = [filename pathExtension];
+//		NSData *iconData = [[[NSWorkspace sharedWorkspace] iconForFileType:[filename pathExtension]] TIFFRepresentation];
+		NSData *iconData = [[[NSWorkspace sharedWorkspace] iconForFileType:pathExtension] TIFFRepresentation];
+		
+		WebResource *subResource = [[[WebResource alloc] initWithData:iconData URL:subResourceURL MIMEType:@"image/tiff" textEncodingName:nil frameName:nil] autorelease];
+
+		return [[[WebArchive alloc] initWithMainResource:mainResource subresources:[NSArray arrayWithObject:subResource] subframeArchives:nil] autorelease];		
+	}
+	else
+	{
+		NSString *MIMEType = @"text/html";
+		NSString *textEncodingName = @"UTF-8";
+		NSData *htmlData = [[NSString stringWithFormat:@"<p><br/>%@ message part not yet decodable in HTML (should displayed inline = %d).<br/></p>", 
+							 [self contentType], shouldBeDisplayedInline] dataUsingEncoding:NSUTF8StringEncoding];
+		NSURL *URL = [NSURL URLWithString:@""];
+		
+		WebResource *mainResource = [[[WebResource alloc] initWithData:htmlData URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+		
+		return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];
+	}
 }
 
 @end
@@ -687,7 +738,7 @@ static NSString *templatePostfix = nil;
 	{
 		NSString *MIMEType = @"text/html";
 		NSString *textEncodingName = @"UTF-8";
-		NSURL *URL = [NSURL URLWithString:@"/"];
+		NSURL *URL = [NSURL URLWithString:@""];
 		NSString *string = [self stringFromMessagePart:part];
 		NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
 
@@ -700,7 +751,7 @@ static NSString *templatePostfix = nil;
 		NSString *MIMEType = @"text/html";
 		NSString *textEncodingName = @"UTF-8";
 		NSData *data = [[NSString stringWithFormat:@"<p><br/>%@ message part not yet decodable in HTML.<br/></p>", [part contentType]] dataUsingEncoding:NSUTF8StringEncoding];
-		NSURL *URL = [NSURL URLWithString:@"/"];
+		NSURL *URL = [NSURL URLWithString:@""];
 		
 		WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
 		
@@ -738,7 +789,7 @@ static NSString *templatePostfix = nil;
 			NSString *MIMEType = @"text/html";
 			NSString *textEncodingName = @"UTF-8";
 			NSData *data = [@"<p><br/>multipart/alternative message part with no decodable alternative.<br/></p>" dataUsingEncoding:NSUTF8StringEncoding];
-			NSURL *URL = [NSURL URLWithString:@"/"];
+			NSURL *URL = [NSURL URLWithString:@""];
 
 			WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
 			
@@ -750,7 +801,7 @@ static NSString *templatePostfix = nil;
 		NSString *MIMEType = @"text/html";
 		NSString *textEncodingName = @"UTF-8";
 		NSMutableData *data = [NSMutableData data];
-		NSURL *URL = [NSURL URLWithString:@"/"];
+		NSURL *URL = [NSURL URLWithString:@""];
 		NSMutableArray *subresources = [NSMutableArray array];
 		
 		for (EDMessagePart *subpart in [self subparts])
@@ -839,7 +890,7 @@ static NSString *templatePostfix = nil;
 	}
 
 	NSData *data = [htmlContent dataUsingEncoding:NSUTF8StringEncoding];
-	NSURL *URL = [NSURL URLWithString:@"/"];
+	NSURL *URL = [NSURL URLWithString:@""];
 	NSString *MIMEType = @"text/html";
 	NSString *textEncodingName = @"UTF-8";
 	
