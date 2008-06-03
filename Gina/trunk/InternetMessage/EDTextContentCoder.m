@@ -35,7 +35,6 @@
 #define EDTEXTCONTENTCONTROLLER OPL_DOMAIN @"EDTEXTCONTENTCONTROLLER"
 
 @interface EDTextContentCoder(PrivateAPI)
-- (NSString *)_stringFromMessagePart:(EDMessagePart *)mpart;
 - (void)_takeTextFromPlainTextMessagePart:(EDMessagePart *)mpart;
 - (void)_takeTextFromEnrichedTextMessagePart:(EDMessagePart *)mpart;
 - (void)_takeTextFromHTMLMessagePart:(EDMessagePart *)mpart;
@@ -115,7 +114,7 @@
 //	DECODING
 //---------------------------------------------------------------------------------------
 
-- (NSString *)_stringFromMessagePart:(EDMessagePart *)mpart
+- (NSString *)stringFromMessagePart:(EDMessagePart *)mpart
 {
     NSString			*charset;
     NSStringEncoding	textEncoding;
@@ -132,7 +131,7 @@
 {
     NSString *string;
     
-    if ((string = [self _stringFromMessagePart:mpart]) != nil)
+    if ((string = [self stringFromMessagePart:mpart]) != nil)
         text = [[NSAttributedString allocWithZone:[self zone]] initWithString:string];
 }
 
@@ -156,7 +155,7 @@
         newlineSet = [[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] retain];
     }
     
-    if((string = [self _stringFromMessagePart:mpart]) == nil)
+    if((string = [self stringFromMessagePart:mpart]) == nil)
         return;
     scanner = [NSScanner scannerWithString:string];
     [scanner setCharactersToBeSkipped:nil];
@@ -347,7 +346,7 @@
     }
 	*/
     
-    NSData *data = [[self _stringFromMessagePart:mpart] dataUsingEncoding:NSUnicodeStringEncoding];
+    NSData *data = [[self stringFromMessagePart:mpart] dataUsingEncoding:NSUnicodeStringEncoding];
     text = [[NSMutableAttributedString allocWithZone:[self zone]] initWithHTML:data documentAttributes:NULL];
 	
 	//text = [[NSMutableAttributedString alloc] initWithHTML:data options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", nil, @"BaseURL", nil] documentAttributes:NULL];
@@ -381,7 +380,7 @@
 	// Prevent HTML rendering - strip HTML instead!
 	if ([type isEqualToString:@"text/html"]) 
 	{
-		NSString *html = [self _stringFromMessagePart:part];
+		NSString *html = [self stringFromMessagePart:part];
 		//return @"";
 		NSString *result = [html stringByStrippingHTML];
 		//if (NSDebugEnabled) NSLog(@"Converted html to the following text:\n%@", result);

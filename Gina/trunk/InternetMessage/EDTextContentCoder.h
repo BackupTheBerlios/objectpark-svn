@@ -31,3 +31,7 @@
 - (NSAttributedString *)text;
 
 @end
+
+@interface EDTextContentCoder (Private)
+- (NSString *)stringFromMessagePart:(EDMessagePart *)mpart;
+@end

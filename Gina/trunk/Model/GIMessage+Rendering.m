@@ -677,6 +677,41 @@ static NSString *templatePostfix = nil;
 
 @end
 
+#import "EDTextContentCoder.h"
+
+@implementation EDTextContentCoder (WebResourceSupport)
+
+- (WebArchive *)webArchive
+{
+	if ([[part contentType] isEqualToString:@"text/html"])
+	{
+		NSString *MIMEType = @"text/html";
+		NSString *textEncodingName = @"UTF-8";
+		NSURL *URL = [NSURL URLWithString:@"/"];
+		NSString *string = [self stringFromMessagePart:part];
+		NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+
+		WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+		
+		return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];		
+	}
+	else
+	{
+		NSString *MIMEType = @"text/html";
+		NSString *textEncodingName = @"UTF-8";
+		NSData *data = [[NSString stringWithFormat:@"<p><br/>%@ message part not yet decodable in HTML.<br/></p>", [part contentType]] dataUsingEncoding:NSUTF8StringEncoding];
+		NSURL *URL = [NSURL URLWithString:@"/"];
+		
+		WebResource *mainResource = [[[WebResource alloc] initWithData:data URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
+		
+		return [[[WebArchive alloc] initWithMainResource:mainResource subresources:nil subframeArchives:nil] autorelease];
+	}
+	
+	return nil;
+}
+
+@end
+
 #import "OPMultipartContentCoder.h"
 
 @implementation OPMultipartContentCoder (WebResourceSupport)
@@ -797,7 +832,11 @@ static NSString *templatePostfix = nil;
 	@"}"
 	@"--></style>\n";
 	
-	NSString *htmlContent = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\" />%@</head><body>%@</body></html>", cssString, contentString];
+	NSString *htmlContent = contentString;
+//	if ([contentString rangeOfString:@"<html" options:NSCaseInsensitiveSearch].location == NSNotFound)
+	{
+		htmlContent = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\" />%@</head><body>%@</body></html>", cssString, contentString];
+	}
 
 	NSData *data = [htmlContent dataUsingEncoding:NSUTF8StringEncoding];
 	NSURL *URL = [NSURL URLWithString:@"/"];
