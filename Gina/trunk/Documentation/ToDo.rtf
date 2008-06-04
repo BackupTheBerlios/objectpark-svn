@@ -45,7 +45,6 @@
 \b0 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 - (major) resent functionality behaves incorrectly\
-- (minor) import does stop after first bunch after receive begins (finishes after recieve ended)\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 - (major) tree view selection is not synchronized with search result - needs discussion\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
@@ -64,11 +63,18 @@
 \b0 - make 
 \f2 \CocoaLigature0 toggleProgressInfo
 \f0 \CocoaLigature1  work\
+- (major) replying to an email (e.g. from Axel) leaves the to: NSTextField empty\
+- (major) entering all information but the To: field into a new email window, then entering the to: field does not enable the "send" and "send later" toolbar buttons (validation problem)\
 \
 
 \b Dirk:\
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 
-\b0 - view tabbing broken (again) - seems to have a 
+\b0 \cf0 - (minor) import does stop after first bunch after receive begins (finishes after recieve ended)
+\b \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\b0 \cf0 - view tabbing broken (again) - seems to have a 
 \f3\b \CocoaLigature0 GIThreadOutlineView 
 \f0\b0 \CocoaLigature1 as first responder which isn't used anymore\
 - (minor) prevent threads from setting messages, only messages should set their threads (hard)\
