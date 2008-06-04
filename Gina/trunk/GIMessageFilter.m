@@ -87,15 +87,16 @@
 	return YES;
 }
 
-+ (NSArray*) filters
++ (NSArray *)filters
 {	
 	OPPersistentObjectContext *context = [OPPersistentObjectContext defaultContext];
 	
-	OPFaultingArray* result = [context rootObjectForKey: @"Filters"];
+	OPFaultingArray *result = [context rootObjectForKey:@"Filters"];
 	
-	if (!result) {
+	if (!result) 
+	{
 		result = [[[OPFaultingArray alloc] init] autorelease];
-		[context setRootObject: result forKey: @"Filters"];
+		[context setRootObject:result forKey:@"Filters"];
 	}
 	return result;
 }
@@ -105,17 +106,17 @@
 //	[super didChangeValueForKey: key];
 //}
 
-+ (void) insertObject: (GIMessageFilter*) aFilter inFiltersAtIndex: (NSUInteger) index 
++ (void)insertObject:(GIMessageFilter *)aFilter inFiltersAtIndex:(NSUInteger)index 
 {
-	[(OPFaultingArray*)[self filters] insertObject: aFilter atIndex: index];
+	NSParameterAssert(aFilter != nil);
+	[(OPFaultingArray *)[self filters] insertObject:aFilter atIndex:index];
 }
 
-+ (void) removeObjectFromFiltersAtIndex: (NSUInteger)index 
++ (void)removeObjectFromFiltersAtIndex:(NSUInteger)index 
 {
-	OPFaultingArray* allFilters = (OPFaultingArray*)[self filters];
-	[allFilters removeObjectAtIndex: index];
+	OPFaultingArray *allFilters = (OPFaultingArray *)[self filters];
+	[allFilters removeObjectAtIndex:index];
 }
-
 
 - (void)performFilterActionsOnMessage:(GIMessage *)message putIntoMessagebox:(BOOL *)putInBox shouldStop:(BOOL *)shouldStop
 {
@@ -141,7 +142,11 @@
 		}
 		else
 		{
-			[[group mutableSetValueForKey:@"threads"] addObject:[message thread]];
+			NSMutableSet *threads = [group mutableSetValueForKey:@"threads"];
+			if (![threads containsObject:message.thread])
+			{
+				[threads addObject:message.thread];
+			}
 			(*putInBox) = YES;
 		}
 	}

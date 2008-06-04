@@ -48,6 +48,7 @@
 	IBOutlet NSArrayController *searchResultsArrayController;
 	IBOutlet WebView *messageWebView;
 	IBOutlet NSWindow *redirectSheet;
+	IBOutlet NSObjectController *resentMessageController;
 	
 	BOOL searchMode;
 	

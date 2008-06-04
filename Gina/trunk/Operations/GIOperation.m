@@ -55,7 +55,7 @@ NSString *GIOperationLock = @"GIOperationLock";
 	@synchronized(GIOperationLock)
 	{
 		[self willChangeValueForKey:@"progessInfo"];
-		self.progressInfo = nil;
+		self.progressInfo = @"";
 		[self didChangeValueForKey:@"progessInfo"];
 
 		[progressInfo release];

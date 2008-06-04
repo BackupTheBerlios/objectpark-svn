@@ -99,6 +99,7 @@ NSString *GIHierarchyChangedNotification = @"GIHierarchyChangedNotification";
 
 - (void)insertObject:(GIHierarchyNode *)node inChildrenAtIndex:(NSUInteger)index
 {
+	NSParameterAssert(node != nil);
 	[self willChangeValueForKey:@"children"];
 	[children insertObject:node atIndex:index];
 	[self didChangeValueForKey:@"children"];

@@ -14,6 +14,7 @@
 #import "OPPOP3Session.h"
 #import <OPNetwork/OPNetwork.h>
 #import "GIMessage.h"
+#import "GIMailAddressTokenFieldDelegate.h"
 #import <Foundation/NSDebug.h>
 
 NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotification";
@@ -44,6 +45,7 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
 		}
 		
 		id newOperation = [[[self alloc] initWithMessages:someMessages andAccount:anAccount] autorelease];
+		NSAssert(newOperation != nil, @"operation couldn't be established");
 		[queue addOperation:newOperation];
 	}
 }
@@ -132,7 +134,8 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
     
     if ([host isReachableWithNoStringsAttached]) 
 	{
-        @try {
+        @try 
+		{
 			// connecting to host:
 			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), self.account.outgoingServerName, self.account.outgoingServerPort]];
 			
@@ -149,6 +152,8 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
             OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
 			
 			[SMTP connect];
+			
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleSMTPServerDoesNotLikeRecipient:) name:OPSMTPServerDoesNotLikeRecipientNotification object:SMTP];
 			
             // sending messages:
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -208,6 +213,8 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
         } 
 		@finally 
 		{
+			[[NSNotificationCenter defaultCenter] removeObserver:self];
+			
 			NSNotification *notification = [NSNotification notificationWithName:GISMTPOperationDidEndNotification object:self.account userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sentMessages, @"sentMessages", self.messages, @"messages", nil, nil]];
 			
 			[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
@@ -228,6 +235,20 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
 	authenticationErrorDialogResult = [alert runModal];
 	
 	[alert release];
+}
+
+- (void)removeRecipientFromLRUCache:(NSString *)recipient
+{
+	NSParameterAssert([NSThread currentThread] == [NSThread mainThread]);
+	[GIMailAddressTokenFieldDelegate removeFromLRUMailAddresses:recipient];
+}
+
+- (void)handleSMTPServerDoesNotLikeRecipient:(NSNotification *)aNotification
+{
+	NSString *recipient = [[aNotification userInfo] objectForKey:@"Recipient"];
+	NSAssert (recipient != nil, @"nil recipient not expected");
+	
+	[self performSelectorOnMainThread:@selector(removeRecipientFromLRUCache:) withObject:recipient waitUntilDone:YES];
 }
 
 @end

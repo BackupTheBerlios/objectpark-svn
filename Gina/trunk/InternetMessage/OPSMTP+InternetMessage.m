@@ -43,21 +43,21 @@ an exception if the 'message' will not be consumed. */
     NSMutableArray *recipients = [NSMutableArray array];
     if (newRecipients = [message bodyForHeaderField:toFieldName]) {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
-        [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
+        [recipients addObjectsFromArray:[[coder text] addressWithRealnameListFromEMailString]];
         NSLog(@"recipients = %@", recipients);
         [coder release];
     }
     
     if (newRecipients = [message bodyForHeaderField:ccFieldName]) {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:newRecipients];
-        [recipients addObjectsFromArray:[[coder text] addressListFromEMailString]];
+        [recipients addObjectsFromArray:[[coder text] addressWithRealnameListFromEMailString]];
         [coder release];
     }
     
     if (bccBody = [message bodyForHeaderField:bccFieldName])
     {
         coder = [[EDTextFieldCoder alloc] initWithFieldBody:bccBody];
-        [recipients addObjectsFromArray: [[coder text] addressListFromEMailString]];
+        [recipients addObjectsFromArray: [[coder text] addressWithRealnameListFromEMailString]];
         [coder release];
     }
     
@@ -83,7 +83,7 @@ an exception if the 'message' will not be consumed. */
         if (fromField = [message bodyForHeaderField:@"From"]) {
             coder = [[EDTextFieldCoder alloc] initWithFieldBody:fromField];
             
-            authors = [[coder text] addressListFromEMailString];
+            authors = [[coder text] addressWithRealnameListFromEMailString];
         }
         
         if (! [authors count]) {

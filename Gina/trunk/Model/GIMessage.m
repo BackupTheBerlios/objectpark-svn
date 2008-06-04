@@ -99,7 +99,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 //		}
 //	}
 	
-	[[NSFileManager defaultManager] removeFileAtPath:self.messageFilePath handler:nil];
+	[self purgeInternetMessageFile];
 	
 	[[self.objectContext messagesByMessageId] removeObjectForKey:self.messageId];
 	
@@ -125,6 +125,17 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	return [[self class] messageFilePathForOID:self.oid inContext:self.objectContext];
 }
 
+- (void)purgeInternetMessageFile
+{
+	[[NSFileManager defaultManager] removeFileAtPath:self.messageFilePath handler:nil];
+}
+
+- (void)writeInternetMessageFile
+{
+	[self purgeInternetMessageFile];
+	[self.internetMessage.transferData writeToFile:self.messageFilePath atomically:NO];
+}
+
 - (void)setInternetMessage:(OPInternetMessage *)aMessage
 {
 	@synchronized(self)
@@ -134,7 +145,7 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 			[self willChangeValueForKey:@"internetMessage"];
 			[self.internetMessage release];
 			internetMessage = [aMessage retain];
-			[[NSFileManager defaultManager] removeFileAtPath:self.messageFilePath handler:nil];
+			[self writeInternetMessageFile];
 			[self didChangeValueForKey:@"internetMessage"];
 		}
 	}
@@ -225,19 +236,32 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
 	[self setInternetMessage:im];
 	
-	messageId = forcedMessageId.length ? forcedMessageId : [[im messageId] retain];
+	if (!messageId) messageId = forcedMessageId.length ? forcedMessageId : [[im messageId] retain];
 	
 	// Add self to global message id index:
-	if (messageId.length) {
+	if (messageId.length) 
+	{
 		[[[OPPersistentObjectContext defaultContext] messagesByMessageId] setObject:self forKey:messageId];  
 	}
 	
-    [subject release]; subject = [[im normalizedSubject] copy];
-    [self setValue:[fromHeader realnameFromEMailStringWithFallback] forKey:@"senderName"];
+	if (!subject)
+	{
+		[subject release]; subject = [[im normalizedSubject] copy];
+	}
+	
+	if (!senderName)
+	{
+		[senderName release]; senderName = [[fromHeader realnameFromEMailStringWithFallback] copy];
+	}
     
     // sanity check for date header field:
-    [date release]; date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:[[im date] timeIntervalSinceReferenceDate]];
-    if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare: date] != NSOrderedDescending) {
+	if (!date)
+	{
+		[date release]; date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:[[im date] timeIntervalSinceReferenceDate]];
+	}
+	
+    if ([(NSDate *)[NSDate dateWithTimeIntervalSinceNow:15 * 60.0] compare: date] != NSOrderedDescending) 
+	{
         // if message's date is a future date
         // broken message, set current date:
 		[date release]; date = [[NSDate date] retain];
@@ -246,7 +270,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
     
     // Note that this method operates on the encoded header field. It's OK because email
     // addresses are 7bit only.
-    if ([GIProfile isMyEmailAddress: fromHeader]) {
+    if ([GIProfile isMyEmailAddress: fromHeader]) 
+	{
         [self toggleFlags: (flags & (OPIsFromMeStatus | OPSeenStatus)) ^ (OPIsFromMeStatus | OPSeenStatus)]; // never changes, hopefully
     }
 	

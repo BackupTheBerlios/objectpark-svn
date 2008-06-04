@@ -103,7 +103,9 @@
 	while (cursorPosition>index) {
 		error = [arrayCursor moveToPrevious]; cursorPosition--;
 		i64 keyLength = [arrayCursor currentEntryKeyLengthError: &error];
-		NSAssert1(keyLength > 0, @"invalid (empty key) btree entry (error %u).", error);
+		if (! keyLength > 0) {
+			NSAssert1(keyLength > 0, @"invalid (empty key) btree entry (error %u).", error);
+		}
 		if (error) NSLog(@"Moved cursor back to %u, error? %u", cursorPosition, error);
 	}
 	NSAssert1(cursorPosition == index, @"Moving the cursor to position %u failed.", index);
@@ -244,6 +246,7 @@
 	return setterCursor;
 }
 
+#warning -> Dirk: Appears to do the wrong thing if anObject is already in the set (e.g. notifying)
 - (void) addObject: (id) anObject notify: (BOOL) doNotify
 {
 	NSData* keyData = [self newKeyForObject: anObject];

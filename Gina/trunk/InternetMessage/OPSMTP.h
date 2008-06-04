@@ -102,3 +102,4 @@ typedef enum _OPSMTPState {
 extern NSString *OPSMTPException;
 extern NSString *OPSMTPAuthenticationFailedException;
 extern NSString *OPBrokenSMPTServerHint;
+extern NSString *OPSMTPServerDoesNotLikeRecipientNotification;

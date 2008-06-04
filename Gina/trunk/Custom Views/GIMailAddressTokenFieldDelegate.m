@@ -11,6 +11,7 @@
 #import <AddressBook/AddressBook.h>
 #import "ABPerson+Convenience.h"
 #import "NSString+Extensions.h"
+#import "NSString+MessageUtils.h"
 #import "GIAddressFormatter.h"
 
 @implementation GIMailAddressTokenFieldDelegate
@@ -32,26 +33,28 @@
 
 + (void)addToLRUMailAddresses:(NSString *)anAddressString
 {
-    NSMutableArray *addresses = [self LRUMailAddresses];
+	NSParameterAssert([NSThread currentThread] == [NSThread mainThread]);
+	NSMutableArray *addresses = [self LRUMailAddresses];
 	
-    [addresses removeObject:anAddressString];
-    
-    if ([addresses count] == LRUCACHESIZE) [addresses removeObjectAtIndex:0];
-    
-    [addresses addObject:anAddressString];
-    
-    [[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];
+	[addresses removeObject:anAddressString];
+	
+	if ([addresses count] == LRUCACHESIZE) [addresses removeObjectAtIndex:0];
+	
+	[addresses addObject:anAddressString];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];
 }
 
 + (void)removeFromLRUMailAddresses:(NSString *)anAddressString
 {
-    NSMutableArray *addresses = [self LRUMailAddresses];
-    
-    if ([addresses containsObject:anAddressString]) 
-    {
-        [addresses removeObject:anAddressString];
-        [[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];        
-    }
+	NSParameterAssert([NSThread currentThread] == [NSThread mainThread]);
+	NSMutableArray *addresses = [self LRUMailAddresses];
+	
+	if ([addresses containsObject:anAddressString]) 
+	{
+		[addresses removeObject:anAddressString];
+		[[NSUserDefaults standardUserDefaults] setObject:addresses forKey:@"LRUMailAddresses"];        
+	}
 }
 
 - (NSArray *)tokenField:(NSTokenField *)tokenField completionsForSubstring:(NSString *)substring indexOfToken:(int)tokenIndex indexOfSelectedItem:(int *)selectedIndex
@@ -145,6 +148,22 @@
 	
 	[result addObjectsFromArray:[[candidates allObjects] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
     return [result count] ? result : nil;
+}
+
+- (void)controlTextDidEndEditing:(NSNotification *)aNotification
+{
+    NSTextField *sender = [aNotification object];
+    
+	NSString *addressList = [sender stringValue];
+	NSArray *components = [addressList componentsSeparatedByString:@","];
+	
+	for (NSString *component in components)
+	{
+		if ([[component addressFromEMailString] length])
+		{
+			[[self class] addToLRUMailAddresses:[component stringByRemovingSurroundingWhitespace]];
+		}
+	}
 }
 
 /*

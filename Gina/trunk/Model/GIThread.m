@@ -66,6 +66,7 @@ NSString *GIThreadDidChangeNotification = @"GIThreadDidChangeNotification";
 - (void) insertObject: (GIMessage*) message inMessagesAtIndex: (NSUInteger) index
 /*" Sent by the mutableArray proxy. Use setThread: in GIMessage in high-level code. "*/
 {
+	NSParameterAssert(message != nil);
 	[messagesByTree release]; messagesByTree = nil; // release cache
 	[messages insertObject: message atIndex: index];
 	// Warning: No inverse relationship handling here - use only setThread in GIMessage.

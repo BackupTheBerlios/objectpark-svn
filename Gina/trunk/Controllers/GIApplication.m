@@ -511,9 +511,9 @@
 	
 	for (GIMessage *sentMessage in sentMessages) 
 	{
-		if (! (sentMessage.flags & OPIsFromMeStatus)) 
+		if ((!(sentMessage.flags & OPIsFromMeStatus)) && !(sentMessage.flags & OPResentStatus)) 
 		{
-			[sentMessage toggleFlags:OPIsFromMeStatus];
+			[sentMessage addFlags:OPIsFromMeStatus];
 			NSLog(@"Sent message not marked as 'from me'. Corrected That.");
 		}
 		
@@ -527,28 +527,28 @@
 		// disconnect thread from queued group:
 		[[sentMessage.thread mutableSetValueForKey:@"messageGroups"] removeObject:[GIMessageGroup queuedMessageGroup]];
 
-		if ([sentMessage hasFlags:OPResentStatus]) 
-		{
-			// create new message with original message id (note: resent message is registered with Resent-Message-Id)
-			// this should replace the message that has been resent
-			// TODO: test if the original message is replaced
-			GIMessage *replacementMessage = [GIMessage messageWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES];
-//			GIMessage *replacementMessage = [[[GIMessage alloc] initWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES forcedMessageId:nil] autorelease];
-			
-			// let filters run 'again':
-			[self.objectContext addMessageByApplingFilters:replacementMessage];
-			[replacementMessage addFlags:OPResentStatus | OPSeenStatus];
-			
-			[sentMessage delete]; // delete sent resent messages - not good!
-		} 
-		else 
-		{
+//		if ([sentMessage hasFlags:OPResentStatus]) 
+//		{
+//			// create new message with original message id (note: resent message is registered with Resent-Message-Id)
+//			// this should replace the message that has been resent
+//			// TODO: test if the original message is replaced
+//			GIMessage *replacementMessage = [GIMessage messageWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES];
+////			GIMessage *replacementMessage = [[[GIMessage alloc] initWithInternetMessage:sentMessage.internetMessage appendToAppropriateThread:YES forcedMessageId:nil] autorelease];
+//			
+//			// let filters run 'again':
+//			[self.objectContext addMessageByApplingFilters:replacementMessage];
+//			[replacementMessage addFlags:OPResentStatus | OPSeenStatus];
+//			
+//			[sentMessage delete]; // delete sent resent messages - not good!
+//		} 
+//		else 
+//		{
 			// Put in appropriate thread (sent message had a single message thread before):
 			[GIThread addMessageToAppropriateThread:sentMessage];
 			
 			// Re-Insert message wherever it belongs:
 			[self.objectContext addMessageByApplingFilters:sentMessage];
-		}
+//		}
 	}
     
 	// mark all messages that were not sent as ready for sending again:

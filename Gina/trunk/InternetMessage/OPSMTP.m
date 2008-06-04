@@ -32,6 +32,7 @@ OPSMTP.m created by axel on Sat 02-Jun-2001
 NSString *OPSMTPException = @"OPSMTPException";
 NSString *OPSMTPAuthenticationFailedException = @"OPSMTPAuthenticationFailedException";
 NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
+NSString *OPSMTPServerDoesNotLikeRecipientNotification = @"OPSMTPServerDoesNotLikeRecipientNotification";
 
 @interface OPSMTP (PrivateAPI)
 - (void)assertServerAcceptedCommand;
@@ -363,24 +364,24 @@ NSString *OPBrokenSMPTServerHint = @"OPBrokenSMPTServerHint";
 			}
 		}
 				
-		NSString* headerLine = [NSString stringWithFormat: @"%@: %@\r\n", headerName, headerValue];
+		NSString *headerLine = [NSString stringWithFormat: @"%@: %@\r\n", headerName, headerValue];
 		
 		NSAssert2([headerLine length]<950, @"Encoded Header '%@' too long: %u characters.", headerName, [headerLine length]);
 
-		[transferData appendData: [headerLine dataUsingEncoding: NSASCIIStringEncoding]];
+		[transferData appendData:[headerLine dataUsingEncoding: NSASCIIStringEncoding]];
 	}
 	
-	[transferData appendData: [@"\r\n" dataUsingEncoding: NSASCIIStringEncoding]]; // could be more efficient
+	[transferData appendData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]]; // could be more efficient
 	
 	body = [body stringWithCanonicalLinebreaks];
 	body = [body stringByEncodingFlowedFormatUsingDelSp:YES];
 	body = [body stringWithCanonicalLinebreaks];
 
-	[transferData appendData:[body dataUsingEncoding: NSISOLatin1StringEncoding]];
+	[transferData appendData:[body dataUsingEncoding:NSISOLatin1StringEncoding]];
 	
-	if (NSDebugEnabled) NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData: transferData encoding: NSISOLatin1StringEncoding]);
+	if (NSDebugEnabled) NSLog(@"PlainTextEmail:\n%@", [NSString stringWithData:transferData encoding:NSISOLatin1StringEncoding]);
 		
-	[self sendTransferData: transferData from: from to: recipients];
+	[self sendTransferData:transferData from:from to:recipients];
 }
 
 - (void) dealloc
@@ -422,29 +423,52 @@ Raises an exception if the message could not be sent. "*/
     if ([self allowsPipelining]) 
 	{
         [self writeSender:[sender addressFromEMailString]];
-        
+		[self assertServerAcceptedCommand];
+				
         enumerator = [recipients objectEnumerator];
         while (recipient = [enumerator nextObject])
             [self writeRecipient:[recipient addressFromEMailString]];
         
-        [self beginBody];
-        
         // check if all in order
+		unsigned i = 0;
         while ([self hasPendingResponses])
-            [self assertServerAcceptedCommand];
+		{
+			@try
+			{
+				[self assertServerAcceptedCommand];
+			}
+			@catch (id localException)
+			{
+				[[NSNotificationCenter defaultCenter] postNotificationName:OPSMTPServerDoesNotLikeRecipientNotification object:self userInfo:[NSDictionary dictionaryWithObject:[recipients objectAtIndex:i] forKey:@"Recipient"]];
+				@throw;
+			}
+			
+			i += 1;
+		}
+		
+        [self beginBody];
+		[self assertServerAcceptedCommand];
     } 
 	else 
 	{
 		// No pipelining:
         
-        [self writeSender:sender];
+        [self writeSender:[sender addressFromEMailString]];
         [self assertServerAcceptedCommand];
         
         enumerator = [recipients objectEnumerator];
         while (recipient = [enumerator nextObject]) 
 		{
-            [self writeRecipient:recipient];
-            [self assertServerAcceptedCommand];
+            [self writeRecipient:[recipient addressFromEMailString]];
+			@try
+			{
+				[self assertServerAcceptedCommand];
+			}
+			@catch (id localException)
+			{
+				[[NSNotificationCenter defaultCenter] postNotificationName:OPSMTPServerDoesNotLikeRecipientNotification object:self userInfo:[NSDictionary dictionaryWithObject:recipient forKey:@"Recipient"]];
+				@throw;
+			}
         }
         
         [self beginBody];
@@ -457,68 +481,6 @@ Raises an exception if the message could not be sent. "*/
     [self finishBody];
     [self assertServerAcceptedCommand];
 }
-
-/*
-- (void)sendMailWithHeaders:(NSDictionary *)userHeaders andBody:(NSString *)body {
-//    EDPlainTextContentCoder	 *textCoder;
-    NSEnumerator			 *headerFieldNameEnum;
-    NSString				 *sender, *newRecipients, *headerFieldName;
-    NSMutableArray 			 *recipients;
-    NSArray					 *authors;
-    NSData					 *transferData;
-    id						 headerFieldBody;
-    
-    recipients = [NSMutableArray array];
-    if((newRecipients = [userHeaders objectForKey:@"To"]) != nil)
-        [recipients addObjectsFromArray:[newRecipients addressListFromEMailString]];
-    if((newRecipients = [userHeaders objectForKey:@"CC"]) != nil)
-        [recipients addObjectsFromArray:[newRecipients addressListFromEMailString]];
-    if((newRecipients = [userHeaders objectForKey:@"BCC"]) != nil)
-        [recipients addObjectsFromArray:[newRecipients addressListFromEMailString]];
-    if([recipients count] == 0)
-        [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: No recipients in header list.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
-    
-    if((sender = [userHeaders objectForKey:@"Sender"]) == nil)
-    {
-        authors = [[userHeaders objectForKey:@"From"] addressListFromEMailString];
-        if([authors count] == 0)
-            [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: No sender or from field in header list.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
-        if([authors count] > 1)
-            [NSException raise:NSInvalidArgumentException format:@"-[%@ %@]: Multiple from addresses and no sender field in header list.", NSStringFromClass(isa), NSStringFromSelector(_cmd)];
-        sender = [authors objectAtIndex:0];
-    }
-    
-    body = [body stringWithCanonicalLinebreaks];
-        
-    textCoder = [[[EDPlainTextContentCoder alloc] initWithText:body] autorelease];
-    [textCoder setDataMustBe7Bit:([stream handles8BitBodies] == NO)];
-
-    // only plain text
-    bodyPart = message = [textCoder message];
-    
-    headerFieldNameEnum = [userHeaders keyEnumerator];
-    while((headerFieldName = [headerFieldNameEnum nextObject]) != nil)
-    {
-        headerFieldBody = [userHeaders objectForKey:headerFieldName];
-        if([headerFieldName caseInsensitiveCompare:@"BCC"] != NSOrderedSame)
-        {
-            if([headerFieldBody isKindOfClass:[NSDate class]])
-                headerFieldBody = [[EDDateFieldCoder encoderWithDate:headerFieldBody] fieldBody];
-            else
-                // Doesn't do any harm as all fields that shouldn't have MIME words
-                // should only have ASCII (in which case no transformation will take
-                // place.) A case of garbage in, garbage out...
-                headerFieldBody = [[EDTextFieldCoder encoderWithText:headerFieldBody] fieldBody];
-            [message addToHeaderFields:[EDObjectPair pairWithObjects:headerFieldName:headerFieldBody]];
-        }
-    }
-    
-    transferData = [message transferData];
-    
-    //    [stream setStringEncoding:[NSString stringEncodingForMIMEEncoding:charset]];
-    [self _sendMail:transferData from:sender to:recipients usingStream:stream];
-}
-*/
 
 - (void) quit
 /*" Logs off from the SMTP server. "*/

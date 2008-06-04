@@ -190,7 +190,6 @@
 	return result;
 }
 
-
 - (id)init
 {
 	if (self = [self initWithWindowNibName:@"MainWindow"]) {
@@ -1394,6 +1393,7 @@ static BOOL isShowingThreadsOnly = NO;
 - (IBAction)redirect:(id)sender
 {
 	self.redirectProfile = [self profileForMessage:self.selectedMessage];
+	resentMessageController.content = self.selectedMessage;
 	
 	// show sheet:	
 	[NSApp beginSheet:redirectSheet modalForWindow:self.window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
@@ -1791,59 +1791,61 @@ static BOOL isShowingThreadsOnly = NO;
 	[redirectSheet endEditingFor:[redirectSheet firstResponder]];
 	[NSApp endSheet:redirectSheet];
     [redirectSheet orderOut:sender];
+
+	resentMessageController.content = nil;
 	
-	// copy selected message:
+	// modify selected message:
 	GIMessage *selectedMessage = self.selectedMessage;
 	OPInternetMessage *selectedInternetMessage = selectedMessage.internetMessage;
 		
-	OPInternetMessage *resentInternetMessage = [[OPInternetMessage alloc] initWithTransferData:selectedInternetMessage.transferData];
+//	OPInternetMessage *resentInternetMessage = [[OPInternetMessage alloc] initWithTransferData:selectedInternetMessage.transferData];
 	
 	// set additional informal resent header fields:
-	NSString *resentMessageId = [resentInternetMessage generatedMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", redirectProfile.sendAccount.outgoingServerName]];
+	NSString *resentMessageId = [selectedInternetMessage generatedMessageIdWithSuffix:[NSString stringWithFormat:@"@%@", redirectProfile.sendAccount.outgoingServerName]];
 	
-	[resentInternetMessage addToHeaderFieldsName:@"Resent-Message-ID" body:resentMessageId];
+	[selectedInternetMessage addToHeaderFieldsName:@"Resent-Message-ID" body:resentMessageId];
 	
 	EDDateFieldCoder *fCoder;
     NSCalendarDate *date = [NSCalendarDate date];
     fCoder = [[EDDateFieldCoder alloc] initWithDate:date];
-	[resentInternetMessage addToHeaderFieldsName:@"Resent-Date" body:[fCoder fieldBody]];
+	[selectedInternetMessage addToHeaderFieldsName:@"Resent-Date" body:[fCoder fieldBody]];
     [fCoder release];
 	
 	NSString *fromString = [redirectProfile fromString];
-	[resentInternetMessage addToHeaderFieldsName:@"Resent-From" body:fromString];
+	[selectedInternetMessage addToHeaderFieldsName:@"Resent-From" body:fromString];
 	
 	NSString *bccString = self.resentBcc.count ? [self.resentBcc componentsJoinedByString:@", "] : nil;
-	[resentInternetMessage addToHeaderFieldsName:@"Resent-Bcc" body:bccString];
+	[selectedInternetMessage addToHeaderFieldsName:@"Resent-Bcc" body:bccString];
 	
 	NSString *ccString = self.resentCc.count ? [self.resentCc componentsJoinedByString:@", "] : nil;
-	[resentInternetMessage addToHeaderFieldsName:@"Resent-Cc" body:ccString];
+	[selectedInternetMessage addToHeaderFieldsName:@"Resent-Cc" body:ccString];
 	
 	NSString *toString = self.resentTo.count ? [self.resentTo componentsJoinedByString:@", "] : nil;
-	[resentInternetMessage addToHeaderFieldsName:@"Resent-To" body:toString];
+	[selectedInternetMessage addToHeaderFieldsName:@"Resent-To" body:toString];
+	
+	// after manipulating the internetMessage purge transfer data file:
+	[selectedMessage writeInternetMessageFile];
 	
 	// construct resent message:
-	GIMessage *resentMessage = [[[GIMessage alloc] initWithInternetMessage:resentInternetMessage appendToAppropriateThread:NO forcedMessageId:resentMessageId] autorelease];
+//	GIMessage *resentMessage = [[[GIMessage alloc] initWithInternetMessage:resentInternetMessage appendToAppropriateThread:NO forcedMessageId:resentMessageId] autorelease];
 		
 	// mark message as resent:
-	if (![resentMessage hasFlags:OPResentStatus])
-	{
-		[resentMessage toggleFlags:OPResentStatus];
-	}
+	[selectedMessage addFlags:OPResentStatus];
 	
 	// mark message as to send:
-	[resentMessage setSendStatus:OPSendStatusQueuedReady];
+	[selectedMessage setSendStatus:OPSendStatusQueuedReady];
 	
 //	NSLog(@"resentMessage = %@", resentMessage);
 	
 	// queue message:
-	GIThread *thread = resentMessage.thread;
+	GIThread *thread = selectedMessage.thread;
 	NSMutableSet *messageGroups = [thread mutableSetValueForKey:@"messageGroups"];
 	
 	//add new message to queued message group:
 	[messageGroups addObject:[GIMessageGroup queuedMessageGroup]];
 	
 	// Set message in profile's messagesToSend:
-	[[redirectProfile mutableArrayValueForKey:@"messagesToSend"] addObject:resentMessage];	
+	[[redirectProfile mutableArrayValueForKey:@"messagesToSend"] addObject:selectedMessage];	
 	[redirectProfile.sendAccount send];
 	
 	// housekeeping LRU address cache:
@@ -1856,6 +1858,8 @@ static BOOL isShowingThreadsOnly = NO;
 {
 	[NSApp endSheet:redirectSheet];
     [redirectSheet orderOut:sender];
+	
+	resentMessageController.content = nil;
 }
 
 @end

@@ -1858,24 +1858,24 @@ NSDictionary *maxLinesForCalendarName()
     return result;
 }
 
-- (void)controlTextDidEndEditing:(NSNotification *)aNotification
-{
-    NSTextField *sender = [aNotification object];
-    
-    if ([sender isKindOfClass:[OPSizingTokenField class]]) 
-    {
-        NSString *addressList = [sender stringValue];
-        NSArray *components = [addressList componentsSeparatedByString:@","];
-		
-		for (NSString *component in components)
-		{
-            if ([[component addressFromEMailString] length])
-            {
-                [GIMailAddressTokenFieldDelegate addToLRUMailAddresses:[component stringByRemovingSurroundingWhitespace]];
-            }
-        }
-    }
-}
+//- (void)controlTextDidEndEditing:(NSNotification *)aNotification
+//{
+//    NSTextField *sender = [aNotification object];
+//    
+//    if ([sender isKindOfClass:[OPSizingTokenField class]]) 
+//    {
+//        NSString *addressList = [sender stringValue];
+//        NSArray *components = [addressList componentsSeparatedByString:@","];
+//		
+//		for (NSString *component in components)
+//		{
+//            if ([[component addressFromEMailString] length])
+//            {
+//                [GIMailAddressTokenFieldDelegate addToLRUMailAddresses:[component stringByRemovingSurroundingWhitespace]];
+//            }
+//        }
+//    }
+//}
 
 @end
 

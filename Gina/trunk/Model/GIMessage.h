@@ -107,8 +107,8 @@ extern NSString *GIMessageDidChangeFlagsNotification;
 - (void)setContentFromInternetMessage:(OPInternetMessage *)im appendToAppropriateThread:(BOOL)doThread forcedMessageId:(NSString *)forcedMessageId;
 
 /*" Cache flushing "*/
-- (void) flushNumberOfReferencesCache;
-- (void) flushInternetMessageCache;
+- (void)flushNumberOfReferencesCache;
+- (void)flushInternetMessageCache;
 
 /*" Flag handling "*/
 - (BOOL)hasFlags:(unsigned int)someFlags;
@@ -123,14 +123,16 @@ extern NSString *GIMessageDidChangeFlagsNotification;
 - (void)addFlagsFromString:(NSString *)flagsString; // use only for import
 
 /*" Earliest send time handling "*/
-- (NSDate*) earliestSendTime;
-- (void) setEarliestSendTime: (NSDate*) aDate;
-+ (void) repairEarliestSendTimes;
+- (NSDate *)earliestSendTime;
+- (void)setEarliestSendTime:(NSDate *)aDate;
++ (void)repairEarliestSendTimes;
 
 /*" Miscellaneous methods "*/
 
 - (NSMutableArray*) commentsInThread: (GIThread*) aThread;
-- (void) addOrderedSubthreadToArray: (NSMutableArray*) result;
+- (void)addOrderedSubthreadToArray: (NSMutableArray*) result;
+- (void)purgeInternetMessageFile;
+- (void)writeInternetMessageFile;
 
 @end
 
