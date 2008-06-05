@@ -41,6 +41,7 @@
 	IBOutlet NSWindow *messageGroupRenameWindow;
 	IBOutlet NSTextField *messageGroupNameField;
 	IBOutlet NSScrollView *progressInfoScrollView;
+	IBOutlet NSScrollView *groupsOutlineScrollView;
 	IBOutlet NSBox *searchResultView;
 	IBOutlet NSScrollView *regularThreadsView;
 	IBOutlet NSTableView *searchResultTableView;
@@ -54,9 +55,8 @@
 	
 	CGFloat progressInfoHeight;
 	CGFloat treeViewHeight;
-	CGFloat expansionWidth; // width of the right view of the vertivalSplitter
+	CGFloat expansionWidth; // width of the right view of the verticalSplitter
 
-	 
 	NSArray *selectedThreads;
 	NSArray *selectedSearchResults;
 	
@@ -92,7 +92,6 @@
 - (BOOL)isShowingThreadsOnly;
 - (BOOL)isShowingMessageOnly;
 - (void)showMessageOnly;
-
 
 - (void)performSetSeenBehaviorForMessage:(GIMessage *)aMessage;
 

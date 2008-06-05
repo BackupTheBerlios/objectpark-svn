@@ -1152,30 +1152,24 @@ static BOOL isShowingThreadsOnly = NO;
 
 @implementation GIMainWindowController (StatusPane)
 
-- (BOOL)showsStatusPane
-{
-// TODO: dummy for now (status/progress pane)
-	return NO;
-}
-
 + (NSSet *)keyPathsForValuesAffectingStatusPaneButtonImage
 {
-	return [NSSet setWithObject:@"showsStatusPane"];
+	return [NSSet setWithObject:@"progressInfoVisible"];
 }
 
 - (NSImage *)statusPaneButtonImage
 {
-	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status" : @"Show_Status"];
+	return [NSImage imageNamed:self.progressInfoVisible ? @"Hide_Status" : @"Show_Status"];
 }
 
 + (NSSet *)keyPathsForValuesAffectingStatusPaneButtonAlternateImage
 {
-	return [NSSet setWithObject:@"showsStatusPane"];
+	return [NSSet setWithObject:@"progressInfoVisible"];
 }
 
 - (NSImage *)statusPaneButtonAlternateImage
 {
-	return [NSImage imageNamed:[self showsStatusPane] ? @"Hide_Status_Pressed" : @"Show_Status_Pressed"];
+	return [NSImage imageNamed:self.progressInfoVisible ? @"Hide_Status_Pressed" : @"Show_Status_Pressed"];
 }
 
 @end
@@ -1475,12 +1469,26 @@ static BOOL isShowingThreadsOnly = NO;
 		frame.size.height = 0.0;
 		progressInfoScrollView.frame = frame;
 		[self setProgressInfoVisible:NO];
+		
+		// make groups outline view bigger:
+		frame = groupsOutlineScrollView.frame;
+		frame.size.height += progressInfoHeight;
+		frame.origin.y -= progressInfoHeight;
+		groupsOutlineScrollView.frame = frame;
 	}
 	else
 	{
+		frame.size.height = progressInfoHeight;
+		progressInfoScrollView.frame = frame;
+		[self setProgressInfoVisible:YES];
+		
+		// make groups outline view smaller:
+		frame = groupsOutlineScrollView.frame;
+		frame.size.height -= progressInfoHeight;
+		frame.origin.y += progressInfoHeight;		
+		groupsOutlineScrollView.frame = frame;
 	}
 }
-
 
 #pragma mark -- Miscellaneous --
 - (IBAction)commentTreeSelectionChanged:(id)sender
