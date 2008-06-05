@@ -1074,16 +1074,13 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 {
     // Build the new to: header line. This includes the original to: content
     // sans myself plus the sender's ReplyTo:
-    NSString *oldTo;
-    NSMutableString* toAllButMe;
+    NSString *allTo = [NSString stringWithFormat:@"%@, %@", [[replyMessage internetMessage] replyToWithFallback:YES], makeStringIfNil([[replyMessage internetMessage] toWithFallback:YES])];
     
-    oldTo = [NSString stringWithFormat:@"%@, %@", [[replyMessage internetMessage] replyToWithFallback:YES], makeStringIfNil([[replyMessage internetMessage] toWithFallback:YES])];
-    
-    // Try to remove myself from list (if included):
-    toAllButMe = [self stringByRemovingOwnAddressesFromString:oldTo];
+//    // Try to remove myself from list (if included):
+//    NSMutableString *toAllButMe = [self stringByRemovingOwnAddressesFromString:allTo];
     
     // Write the new to: header:
-    [headerFields setObject:toAllButMe forKey:@"To"];
+    [headerFields setObject:allTo forKey:@"To"];
     
     // Build the new cc: header line. This includes the original cc: content
     // sans myself:
