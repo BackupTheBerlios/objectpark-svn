@@ -807,13 +807,18 @@ static BOOL isShowingThreadsOnly = NO;
 	{
 		NSArray *threads = [self selectedThreads];
 		NSOutlineView* outlineView = [threadsController outlineView];
-		if (threads.count == 1) {
-			GIThread* selectedThread = [threads lastObject];
-			if ([outlineView isItemExpanded:selectedThread]) {
+		if (threads.count == 1) 
+		{
+			GIThread *selectedThread = [threads lastObject];
+			if ([outlineView isItemExpanded:selectedThread]) 
+			{
 				[outlineView collapseItem:selectedThread];
-			} else {
-				GIMessage* message = [selectedThread nextMessageForMessage: nil];
-				[threadsController setSelectedItemsPaths: [NSArray arrayWithObject: [NSArray arrayWithObjects: selectedThread, message, nil]] byExtendingSelection: NO];
+			} 
+			else 
+			{
+				GIMessage *message = [selectedThread nextMessageForMessage:nil];
+				[threadsController setSelectedItemsPaths:[NSArray arrayWithObject: [NSArray arrayWithObjects:selectedThread, message, nil]] byExtendingSelection:NO];
+				[threadsController scrollSelectionToVisible];
 			}
 		}
 	}

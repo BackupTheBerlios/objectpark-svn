@@ -390,44 +390,44 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 	return oldMessage;
 }
 
-- (void)sendSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    if (returnCode == NSAlertDefaultReturn) 
-	{
-		if ([self checkpointMessageWithStatus:OPSendStatusQueuedReady])
-		{
-			BOOL sendNow = [(NSNumber *)contextInfo boolValue];
-			if (sendNow) 
-			{
-				[[profile valueForKey:@"sendAccount"] send];
-			}
-			[window performClose:self];
-			[window close];
-		}
-    }
-    
-    [(NSNumber *)contextInfo release];
-}
+//- (void)sendSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+//{
+//    if (returnCode == NSAlertDefaultReturn) 
+//	{
+//		if ([self checkpointMessageWithStatus:OPSendStatusQueuedReady])
+//		{
+//			BOOL sendNow = [(NSNumber *)contextInfo boolValue];
+//			if (sendNow) 
+//			{
+//				[[profile valueForKey:@"sendAccount"] send];
+//			}
+//			[window performClose:self];
+//			[window close];
+//		}
+//    }
+//    
+//    [(NSNumber *)contextInfo release];
+//}
 
 // actions
 - (IBAction)send:(id)sender
 {
-	NSString *emailAddress = [[self profile] valueForKey:@"mailAddress"];
-	
-    if (emailAddress && ([[toField stringValue] rangeOfString:emailAddress].location != NSNotFound)) {
-        NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
-                          NSLocalizedString(@"Send", @"sendSoliloquySheet"),
-                          NSLocalizedString(@"Edit", @"sendSoliloquySheet"),
-                          nil,    // other Button
-                          window,
-                          self,   // delegate
-                          @selector(sendSheetDidEnd:returnCode:contextInfo:),
-                          NULL,   // didDismissSelector,
-                          [[NSNumber alloc] initWithBool: YES], // contextinfo
-                          NSLocalizedString(@"The To: field contains one of your own email addresses. You can now send the message or edit it and remove the address.", @"sendSoliloquySheet")
-                          );
-        return;
-    }
+//	NSString *emailAddress = [[self profile] valueForKey:@"mailAddress"];
+//	
+//    if (emailAddress && ([[toField stringValue] rangeOfString:emailAddress].location != NSNotFound)) {
+//        NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
+//                          NSLocalizedString(@"Send", @"sendSoliloquySheet"),
+//                          NSLocalizedString(@"Edit", @"sendSoliloquySheet"),
+//                          nil,    // other Button
+//                          window,
+//                          self,   // delegate
+//                          @selector(sendSheetDidEnd:returnCode:contextInfo:),
+//                          NULL,   // didDismissSelector,
+//                          [[NSNumber alloc] initWithBool: YES], // contextinfo
+//                          NSLocalizedString(@"The To: field contains one of your own email addresses. You can now send the message or edit it and remove the address.", @"sendSoliloquySheet")
+//                          );
+//        return;
+//    }
     
     if ([self checkpointMessageWithStatus:OPSendStatusQueuedReady])
 	{
@@ -440,21 +440,21 @@ static NSPoint lastTopLeftPoint = {0.0, 0.0};
 
 - (IBAction)queue:(id)sender
 {
-    if ([[toField stringValue] rangeOfString:[[self profile] valueForKey:@"mailAddress"]].location != NSNotFound)
-    {
-        NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
-                          NSLocalizedString(@"Send", @"sendSoliloquySheet"),
-                          NSLocalizedString(@"Edit", @"sendSoliloquySheet"),
-                          nil,    // other Button
-                          window,
-                          self,   // delegate
-                          @selector(sendSheetDidEnd:returnCode:contextInfo:),
-                          NULL,   // didDismissSelector,
-                          [[NSNumber alloc] initWithBool:NO],   // contextinfo
-                          NSLocalizedString(@"The To: field contains one of your own email addresses. You can now send the message or edit it and remove the address.", @"sendSoliloquySheet")
-                          );
-        return;
-    }
+//    if ([[toField stringValue] rangeOfString:[[self profile] valueForKey:@"mailAddress"]].location != NSNotFound)
+//    {
+//        NSBeginAlertSheet(NSLocalizedString(@"Do you really want to send this message to yourself?", @"sendSoliloquySheet"),
+//                          NSLocalizedString(@"Send", @"sendSoliloquySheet"),
+//                          NSLocalizedString(@"Edit", @"sendSoliloquySheet"),
+//                          nil,    // other Button
+//                          window,
+//                          self,   // delegate
+//                          @selector(sendSheetDidEnd:returnCode:contextInfo:),
+//                          NULL,   // didDismissSelector,
+//                          [[NSNumber alloc] initWithBool:NO],   // contextinfo
+//                          NSLocalizedString(@"The To: field contains one of your own email addresses. You can now send the message or edit it and remove the address.", @"sendSoliloquySheet")
+//                          );
+//        return;
+//    }
     
     GIMessage *message = [self checkpointMessageWithStatus:OPSendStatusQueuedReady];
 	
