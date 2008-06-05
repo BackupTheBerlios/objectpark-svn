@@ -26,20 +26,22 @@
 
 @implementation GIApplication
 
-- (void) resetMessageStatusSending
+- (void)resetMessageStatusSending
 {
 	// Set status of all messages with OPSendStatusSending back to OPSendStatusQueuedReady:
 	NSArray *allProfiles = [self.objectContext.allObjectsByClass objectForKey:@"GIProfile"];
 	
-	for (GIProfile *profile in allProfiles) {
-		for (GIMessage *message in profile.messagesToSend) {
-			if (message.sendStatus == OPSendStatusSending) {
+	for (GIProfile *profile in allProfiles) 
+	{
+		for (GIMessage *message in profile.messagesToSend) 
+		{
+			//if (message.sendStatus == OPSendStatusSending) 
+			{
 				message.sendStatus = OPSendStatusQueuedReady;
 			}
 		}            
 	}
 }
-
 
 - (void) ensureSomeWindowIsPresent
 {

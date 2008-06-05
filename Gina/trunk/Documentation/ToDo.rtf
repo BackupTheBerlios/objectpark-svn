@@ -53,6 +53,7 @@
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 \cf0 - (minor) add delete Mailbox/Folder menu entry (little refactoring)\
 - send state is "" until the smtp host name is resolved (which may be slow or happen never).\
+- (minor) sometimes the progress info is not cleaned up after an operation finished\
 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 
@@ -139,7 +140,6 @@ Axel:\
 - (minor) make new Mailbox/Folder visible (scroll to visible)\
 - (regression) tab switching to threads list doesn't work anymore\
 - (major) answered messages become unseen/unread again\
-- (minor) sometimes the progress info is not cleaned up after an operation finished\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 - 
 \f2\fs20 \CocoaLigature0 fix raising call \cf2 [commentTreeView unbind:@"selectedMessageOrThread"];

@@ -217,6 +217,7 @@ NSString *GIPOPOperationDidEndNotification = @"GIPOPOperationDidEndNotification"
 // TODO: Remove additional posting of GIPOPOperationDidEndNotification?
 	[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:[NSNotification notificationWithName:GIPOPOperationDidEndNotification object:self.account] waitUntilDone:NO]; // just for testing!!
 
+	[self setIndeterminateProgressInfoWithDescription:@""];
 }
 
 - (id)initWithAccount:(GIAccount *)anAccount transferDataPath:(NSString *)dataPath

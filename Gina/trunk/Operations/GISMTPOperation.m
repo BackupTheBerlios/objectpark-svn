@@ -220,6 +220,8 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
 			[[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:notification waitUntilDone:NO];
         }
     }
+	
+	[self setIndeterminateProgressInfoWithDescription:@""];
 }
 
 - (void)runAuthenticationErrorDialog:(NSString *)errorMessage
