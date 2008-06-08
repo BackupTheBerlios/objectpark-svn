@@ -111,7 +111,7 @@
 	return self.threads.count;
 }
 
-- (NSUInteger) messageCount
+- (NSUInteger)messageCount
 {
 	NSUInteger result = 0;
 	for (GIThread* thread in self.threads) {
@@ -120,15 +120,24 @@
 	return result;
 }
 
-//- (NSUInteger) calculatedUnreadMessageCount
-///*" debug only "*/
-//{
-//	NSUInteger result = 0;
-//	for (GIThread* thread in self.threads) {
-//		result += thread.unreadMessageCount;
-//	}
-//	return result;
-//}
+- (NSUInteger)calculatedUnreadMessageCount
+/*" debug only "*/
+{
+	NSUInteger result = 0;
+	for (GIThread *thread in self.threads) 
+	{
+		result += thread.unreadMessageCount;
+	}
+	return result;
+}
+
+- (void)fixUnreadMessageCount
+{
+	[self willChangeValueForKey:@"unreadMessageCount"];
+	unreadMessageCount = [self calculatedUnreadMessageCount];
+	[self didChangeValueForKey:@"unreadMessageCount"];
+}
+
 //
 //- (NSUInteger) calculatedUnreadMessageCount2
 ///*" debug only "*/

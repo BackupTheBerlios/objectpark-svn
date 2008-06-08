@@ -1446,6 +1446,19 @@ static BOOL isShowingThreadsOnly = NO;
 	[self didChangeValueForKey:@"messageForDisplay"];
 }
 
+- (IBAction)fixUnreadMessageCount:(id)sender
+{
+	GIHierarchyNode *selectedNode = messageGroupsController.selectedObject;
+	if ([selectedNode isKindOfClass:[GIMessageGroup class]])
+	{
+		[(GIMessageGroup *)selectedNode fixUnreadMessageCount];
+	}
+	else
+	{
+		NSBeep();
+	}
+}
+
 #pragma mark -- progress info view handling --
 - (void)setProgressInfoVisible:(BOOL)aBool
 {

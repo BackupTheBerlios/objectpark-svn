@@ -143,6 +143,8 @@
 - (IBAction)commentTreeSelectionChanged:(id)sender;
 - (IBAction)messageGroupSelectionChanged:(id)sender;
 
+- (IBAction)fixUnreadMessageCount:(id)sender;
+
 @end
 
 @interface GIMainWindowController (Search)
