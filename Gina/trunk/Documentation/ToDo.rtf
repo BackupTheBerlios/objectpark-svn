@@ -23,13 +23,12 @@
 - double click on a group should show the thread list AND ALSO make the thread list first responder\
 - (minor) Message groups have a predicate which decides, if a message "belongs" to them instead of global filtering\
 - implement back button\
-- Add option to delete spam and deleted email from server ASAP to keep webmail accounts clean\
+- (major feature) Add option to delete spam and deleted email from server ASAP to keep webmail accounts clean\
 - Add option to move spam to trash after given time (2 months or so)\
 - implement "Merge Threads"\
 - implement "Extract Thread"\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
-\cf0 - message groups need default profile\
-- message status column in threads list\
+\cf0 - message status column in threads list\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 - 'play sound' for filters\
 - 
@@ -38,7 +37,7 @@
 \f0 - 
 \f1 Es fehlt auch noch das Men\'fc im Suchfeld mit den "recent searches".\
 
-\f0 - automatically set isSeen for emails I replied to.
+\f0 - automatically set isSeen for emails I replied to (even if Gina was not used for replying)
 \f1 \
 
 \f0 \
@@ -51,6 +50,13 @@
 \cf0 - (minor) add delete Mailbox/Folder menu entry (little refactoring)\
 - send state is "" until the smtp host name is resolved (which may be slow or happen never).\
 - (minor) sometimes the progress info is not cleaned up after an operation finished\
+- (minor) window resizing should not affect the left (groups) pane\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 - (needs clarification) view tabbing broken, seems to have a 
+\f2\b \CocoaLigature0 GIThreadOutlineView 
+\f0\b0 \CocoaLigature1 as first responder which isn't used anymore\
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
+\cf0 \
 \
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 
@@ -71,10 +77,7 @@
 \b \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
-\b0 \cf0 - view tabbing broken (again) - seems to have a 
-\f2\b \CocoaLigature0 GIThreadOutlineView 
-\f0\b0 \CocoaLigature1 as first responder which isn't used anymore\
-- (minor) prevent threads from setting messages, only messages should set their threads (hard)\
+\b0 \cf0 - (minor) prevent threads from setting messages, only messages should set their threads (hard)\
 - double clicking a group should aways show its thread list\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
@@ -216,6 +219,7 @@ Dirk:\
 \pard\tx560\pardeftab560\ql\qnatural\pardirnatural
 
 \f0\b0 \cf0 \CocoaLigature1 - (major, needs confimation) sometimes messages cannot be found in the outline view tree when using space bar navigation or clicking on tree view cells -> exception\
+- message groups need default profile\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 \
 }

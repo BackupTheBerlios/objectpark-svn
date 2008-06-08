@@ -412,8 +412,16 @@
 	NSLog(@"delete: called.");
 }
 
+- (IBAction) toggleGroupInspector: (id) sender;
+{
+	if (groupInspector.isVisible) {
+		[groupInspector close];
+	} else {
+		[groupInspector makeKeyAndOrderFront: self];
+	}
+}
 
-- (IBAction)openFile:(id)sender
+- (IBAction) openFile: (id) sender
 /*" Imports one or more mbox files. Recognizes plain mbox files with extension .mboxfile and .mbx and NeXT/Apple style bundles with the .mbox extension. "*/
 {
     int result;

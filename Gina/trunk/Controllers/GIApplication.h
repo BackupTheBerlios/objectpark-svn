@@ -10,11 +10,12 @@
 #import "OPPersistentObjectContext.h"
 @class GIMainWindow;
 
-#define GIApp ((GIApplication *)NSApp)
+#define GIApp ((GIApplication*) NSApp)
 
 @interface GIApplication : NSApplication 
 {
-	IBOutlet NSWindow *defaultEmailAppDialog;
+	IBOutlet NSWindow* defaultEmailAppDialog;
+	IBOutlet NSWindow* groupInspector;
 	NSTimer* importTimer;
 }
 
@@ -32,8 +33,9 @@
 - (NSOperationQueue *)operationQueue;
 
 // Actions:
-- (IBAction)makeDefaultApp:(id)sender;
-- (IBAction)openFile:(id)sender;
+- (IBAction) makeDefaultApp: (id) sender;
+- (IBAction) openFile: (id) sender;
+- (IBAction) toggleGroupInspector: (id) sender;
 
 - (void)runConsistencyChecks:(id)sender;
 
