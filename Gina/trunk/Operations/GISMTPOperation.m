@@ -137,7 +137,7 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
         @try 
 		{
 			// connecting to host:
-			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"connecting to %@:%d", @"progress description in SMTP job"), self.account.outgoingServerName, self.account.outgoingServerPort]];
+			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"Connecting to %@:%d", @"progress description in SMTP job"), self.account.outgoingServerName, self.account.outgoingServerPort]];
 			
 			OPStream *stream = [OPStream streamConnectedToHost:host
 														  port:self.account.outgoingServerPort
@@ -147,7 +147,7 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
 			NSAssert2(stream != nil, @"Could not connect to SMTP server %@:%d.", self.account.outgoingServerName, self.account.outgoingServerPort);
 			
             // logging into SMTP server:
-			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging in to %@", @"progress description in SMTP job"), self.account.outgoingServerName]];
+			[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"Logging into %@", @"progress description in SMTP job"), self.account.outgoingServerName]];
             
             OPSMTP *SMTP = [[[OPSMTP alloc] initWithStream:stream andDelegate:self] autorelease];
 			
@@ -161,7 +161,7 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
 			{
 				for (GIMessage *message in self.messages)
 				{
-					[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"sending message '%@'", @"progress description in SMTP job"), message.subject]];
+					[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat: NSLocalizedString(@"Sending '%@'", @"progress description in SMTP job"), message.subject]];
                     
                     @try 
 					{
@@ -188,7 +188,7 @@ NSString *GISMTPOperationDidEndNotification = @"GISMTPOperationDidEndNotificatio
             } 
 			@finally 
 			{
-				[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"logging off from %@", @"progress description in SMTP job"), self.account.incomingServerName]];
+				[self setIndeterminateProgressInfoWithDescription:[NSString stringWithFormat:NSLocalizedString(@"Logging off from %@", @"progress description in SMTP job"), self.account.incomingServerName]];
                 [SMTP quit];
             }
 			[pool release];
