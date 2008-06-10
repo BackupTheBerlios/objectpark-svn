@@ -773,6 +773,8 @@ static BOOL isShowingThreadsOnly = NO;
 
 @end
 
+
+
 @implementation GIMainWindowController (OutlineViewActions)
 
 - (IBAction) groupsDoubleAction: (id) sender
@@ -1590,20 +1592,27 @@ static BOOL isShowingThreadsOnly = NO;
 
 @implementation GIMainWindowController (Search)
 
-- (void)setSearchMode:(BOOL)aBool
+- (void) setSearchMode: (BOOL) aBool
 {
 	if (aBool == searchMode) return;
 	
 	if (aBool) {
-		// switch to all mailboxes search:
-		[[NSUserDefaults standardUserDefaults] setInteger:SEARCHRANGE_ALLMESSAGEGROUPS forKey:@"SearchRange"];
 		
-		[self willChangeValueForKey:@"searchResultFilter"];
-		[self didChangeValueForKey:@"searchResultFilter"];
+		hiddenSelectedGroupItemsPaths = [[messageGroupsController selectedItemsPaths] retain];
+		[messageGroupsController setSelectedItemsPaths: nil byExtendingSelection: NO];
+
+		// switch to all mailboxes search:
+		[[NSUserDefaults standardUserDefaults] setInteger: SEARCHRANGE_ALLMESSAGEGROUPS forKey: @"SearchRange"];
+		
+		[self willChangeValueForKey: @"searchResultFilter"];
+		[self didChangeValueForKey: @"searchResultFilter"];
 	}
 	else
 	{
-		[searchField setStringValue:@""];
+		[messageGroupsController setSelectedItemsPaths: hiddenSelectedGroupItemsPaths byExtendingSelection: NO];
+		[hiddenSelectedGroupItemsPaths release]; hiddenSelectedGroupItemsPaths = nil;
+
+		[searchField setStringValue: @""];
 		self.selectedMessageInSearchMode = nil;
 	}
 	
@@ -1686,7 +1695,7 @@ static BOOL isShowingThreadsOnly = NO;
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		NSInteger searchFields = [defaults integerForKey:@"SearchFields"];
-		
+				
 		[query setSortDescriptors:[self searchSortDescriptors]];
 		
 		[self setSearchMode:YES];

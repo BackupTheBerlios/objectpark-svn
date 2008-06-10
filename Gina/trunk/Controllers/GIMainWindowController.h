@@ -72,6 +72,8 @@
 	NSArray *resentTo;
 	NSArray *resentCc;
 	NSArray *resentBcc;
+	
+	NSArray* hiddenSelectedGroupItemsPaths;
 }
 
 @property (readonly) GIMessageGroupOutlineViewController *messageGroupsController;

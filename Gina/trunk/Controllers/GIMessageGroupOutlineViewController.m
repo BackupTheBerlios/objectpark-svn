@@ -57,6 +57,14 @@
 	}
 }
 
+- (NSIndexSet *)outlineView:(NSOutlineView *)ov selectionIndexesForProposedSelection:(NSIndexSet *)proposedSelectionIndexes
+/*" Prevent setting an empty selection by the user. There will be empty selection during search result display. "*/
+{
+	if ([proposedSelectionIndexes count]) return proposedSelectionIndexes;
+	
+	return [ov selectedRowIndexes];
+}
+
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	return YES;
