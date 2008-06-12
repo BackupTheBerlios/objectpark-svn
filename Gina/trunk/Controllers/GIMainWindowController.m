@@ -284,6 +284,8 @@
 	[messageGroupsController bind:@"rootItem" toObject:self withKeyPath:@"messageGroupHierarchyRootNode" options:options];
 		
 	// configuring manual bindings:
+#warning Switch outline view hack here.
+	threadsController.refreshOutlineViewOnSetRootItem = YES;
 	threadsController.childKey = @"threadChildren";
 	threadsController.childCountKey = @"threadChildrenCount";
 	[threadsController bind:@"rootItem" toObject:messageGroupsController withKeyPath:@"selectedObject" options:options];

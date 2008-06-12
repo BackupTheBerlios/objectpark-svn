@@ -230,9 +230,8 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 	
     NSString *fromHeader = [im fromWithFallback:YES];
     
-	NSLog(@"removing dummy and read status from %@", self);
-	[self toggleFlags:flags & OPDummyStatus]; // remove Dummy status
-	[self toggleFlags:flags & OPSeenStatus]; // remove read status
+	//NSLog(@"removing dummy and read status from %@", self);
+	[self toggleFlags:flags & OPDummyStatus & OPSeenStatus]; // remove Dummy status
 	
 	[self setInternetMessage:im];
 	
@@ -787,10 +786,10 @@ NSString *GIMessageDidChangeFlagsNotification = @"GIMessageDidChangeFlagsNotific
 {
 	if (!someFlags) return;
 	
-	if (someFlags & OPSeenStatus) 
-	{
-		NSLog(@"toggling seen status of %@", self);
-	}
+//	if (someFlags & OPSeenStatus) 
+//	{
+//		NSLog(@"toggling seen status of %@", self);
+//	}
 
 	[self willChangeValueForKey:@"flags"];
 	flags ^= someFlags;

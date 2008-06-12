@@ -180,13 +180,19 @@
 	self.suspendUpdatesUntilNextReloadData = NO;
 	
 	[self resetKnownItems];
-	if (outlineView.dataSource) {
-		[outlineView setDataSource:self];
-		[outlineView reloadData];
-	} else {
-		[outlineView setDataSource:self];
-		[outlineView reloadData];
-	}
+	
+	[outlineView setDataSource:nil];
+	[outlineView reloadItem: nil];
+	[outlineView numberOfRows];
+	[outlineView setDataSource:self];
+
+//	if (outlineView.dataSource) {
+//		[outlineView setDataSource:self];
+//		[outlineView reloadData];
+//	} else {
+//		[outlineView setDataSource:self];
+//		[outlineView reloadData];
+//	}
 }
 
 - (NSOutlineView*) outlineView
@@ -216,7 +222,7 @@
 	return rootItem;
 }
 
-- (void)useClonedOutlineView
+- (void)replaceOutlineViewWithClone
 {
 	NSOutlineView *oldOutlineView = outlineView;	
 	NSView *nextKeyView = [[oldOutlineView nextKeyView] retain];
@@ -254,7 +260,7 @@
 		
 		if (refreshOutlineViewOnSetRootItem)
 		{
-			[self useClonedOutlineView];
+			[self replaceOutlineViewWithClone];
 		}
 
 		[rootItem removeObserver: self forKeyPath: [self childKey]];
@@ -384,6 +390,7 @@
 
 - (id) outlineView: (NSOutlineView*) outlineView child: (NSInteger) index ofItem: (id) item
 {
+	//NSLog(@"Requesting child#%u of item %@ of %@", index, item, self);
 	if (! item) item = [self rootItem];
 	id result = [[item valueForKeyPath: [self childKey]] objectAtIndex: index];
 	
