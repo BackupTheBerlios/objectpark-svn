@@ -697,13 +697,13 @@ static NSString *templatePostfix = nil;
 //
 		
 		NSString *MIMEType = @"text/html";	
-		NSURL *URL = [NSURL URLWithString:@""];
+		NSURL *URL = [NSURL URLWithString:@"http://localhost/index.html"];
 		NSString *textEncodingName = @"UTF-8";
-		NSData *htmlData = [@"<a href=\"bildchen.tiff\">Bild = <img src=\"bildchen.tiff\"/></a>" dataUsingEncoding:NSUTF8StringEncoding];
+		NSData *htmlData = [@"<a href=\"bildchen.tiff\">Bild = <img src=\"/bildchen.tiff\"/></a>" dataUsingEncoding:NSUTF8StringEncoding];
 		
 		WebResource *mainResource = [[[WebResource alloc] initWithData:htmlData URL:URL MIMEType:MIMEType textEncodingName:textEncodingName frameName:nil] autorelease];
 		
-		NSURL *subResourceURL = [NSURL URLWithString:@"bildchen.tiff"];
+		NSURL *subResourceURL = [NSURL URLWithString:@"http://localhost/bildchen.tiff"];
 		NSString *pathExtension = [filename pathExtension];
 //		NSData *iconData = [[[NSWorkspace sharedWorkspace] iconForFileType:[filename pathExtension]] TIFFRepresentation];
 		NSData *iconData = [[[NSWorkspace sharedWorkspace] iconForFileType:pathExtension] TIFFRepresentation];
