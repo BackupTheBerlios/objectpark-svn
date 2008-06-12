@@ -733,8 +733,8 @@
 
 - (void)sendAndReceiveTimerFired:(NSTimer *)aTimer
 {
-#warning comented out sendAndReceiveTimerFired, because it thows at startup with [<GIPOPOperation 0x157dad40> valueForUndefinedKey:]: this class is not key value coding-compliant for the key name 
-	// [self sendAndReceive];
+// #warning comented out sendAndReceiveTimerFired, because it thows at startup with [<GIPOPOperation 0x157dad40> valueForUndefinedKey:]: this class is not key value coding-compliant for the key name 
+	[self sendAndReceive];
 }
 
 - (void)didChangeValueForKey:(NSString *)key
