@@ -181,10 +181,8 @@
 	
 	[self resetKnownItems];
 	
-	[outlineView setDataSource:nil];
+	[outlineView noteNumberOfRowsChanged];
 	[outlineView reloadItem: nil];
-	[outlineView numberOfRows];
-	[outlineView setDataSource:self];
 	
 //	if (outlineView.dataSource) {
 //		[outlineView setDataSource:self];
@@ -256,7 +254,7 @@
 {
 	if (! [rootItem isEqual: newItem]) 
 	{
-		[outlineView setDataSource:nil];
+		//[outlineView setDataSource:nil];
 		
 		if (refreshOutlineViewOnSetRootItem)
 		{
