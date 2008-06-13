@@ -185,7 +185,7 @@
 	[outlineView reloadItem: nil];
 	[outlineView numberOfRows];
 	[outlineView setDataSource:self];
-
+	
 //	if (outlineView.dataSource) {
 //		[outlineView setDataSource:self];
 //		[outlineView reloadData];

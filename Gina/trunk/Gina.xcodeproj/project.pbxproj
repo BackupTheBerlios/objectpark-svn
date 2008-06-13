@@ -783,7 +783,7 @@
 		8DABA47B0D1F497B00991279 /* OPPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistence.h; sourceTree = "<group>"; };
 		8DAE1A6F0DD48DE000FB346D /* OPPersistentSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPPersistentSet.h; sourceTree = "<group>"; };
 		8DAE1A700DD48DE000FB346D /* OPPersistentSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OPPersistentSet.m; sourceTree = "<group>"; };
-		8DB68FA70DCA65B100F80E92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = ../../Library/Frameworks/SenTestingKit.framework; sourceTree = SDKROOT; };
+		8DB68FA70DCA65B100F80E92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		8DCE4D890D2C7E6300B47189 /* GIMessageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIMessageBase.h; sourceTree = "<group>"; };
 		8DCE4D8A0D2C7E6300B47189 /* GIMessageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIMessageBase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2656,7 +2656,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\" \"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"";
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				ZERO_LINK = NO;
@@ -2675,7 +2674,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks \"$(SRCROOT)/../GPGME-1.0.2/build/EmbDeployment (@rpath)\" \"$(SRCROOT)/../OPNetwork/build/Release (@rpath)\" \"$(SRCROOT)/../OPPreferences/build/Release (@rpath)\"";
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				ZERO_LINK = NO;
 			};
